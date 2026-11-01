@@ -1,0 +1,970 @@
+{
+  "source": "gen_core_kit_hbm.macro_reg_guide_spec",
+  "scope": null,
+  "grow_um": 15.0,
+  "guides": [],
+  "relays": [],
+  "explicit_guides": [
+    {
+      "name": "pstore_l0_capture",
+      "prefixes": [
+        "g_leaf[0].u_leaf.captured",
+        "g_leaf[0].u_leaf.pc0",
+        "g_leaf[0].u_leaf.pc1",
+        "g_leaf[0].u_leaf.ord0",
+        "g_leaf[0].u_leaf.ord1",
+        "g_leaf[0].u_leaf.read_page",
+        "g_leaf[0].u_leaf.running",
+        "g_leaf[0].u_leaf.base",
+        "g_leaf[0].u_leaf.rem",
+        "g_leaf[0].u_leaf.span",
+        "g_leaf[0].u_leaf.loops_left",
+        "g_leaf[0].u_leaf.issued",
+        "g_leaf[0].u_leaf.valid0",
+        "g_leaf[0].u_leaf.valid1",
+        "g_leaf[0].u_leaf.last0",
+        "g_leaf[0].u_leaf.last1",
+        "g_leaf[0].u_leaf.pc[",
+        "g_leaf[0].u_leaf.addr_q",
+        "g_leaf[0].u_leaf.data_q",
+        "g_leaf[0].u_leaf.we_q",
+        "g_leaf[0].u_leaf.start_v_q",
+        "g_leaf[0].u_leaf.start_base_q",
+        "g_leaf[0].u_leaf.legal_q",
+        "g_leaf[0].u_leaf.loops_one_q",
+        "g_leaf[0].u_leaf.span_q",
+        "g_leaf[0].u_leaf.loops_q"
+      ],
+      "box_um": [
+        120.42,
+        93.39,
+        146.34,
+        261.39
+      ]
+    },
+    {
+      "name": "pstore_l0_calendar",
+      "prefixes": [
+        "g_leaf[0].u_leaf.calendar",
+        "g_leaf[0].u_leaf.out_hz",
+        "g_leaf[0].u_leaf.ordinal",
+        "g_leaf[0].u_leaf.active",
+        "g_leaf[0].u_leaf.done",
+        "g_leaf[0].u_leaf.fault"
+      ],
+      "box_um": [
+        96.837,
+        69.042,
+        232.485,
+        197.042
+      ]
+    },
+    {
+      "name": "pstore_l0_relay",
+      "prefixes": [
+        "g_leaf[0].u_leaf.relay"
+      ],
+      "box_um": [
+        128.118,
+        24.695,
+        263.766,
+        152.695
+      ]
+    },
+    {
+      "name": "pstore_l0_output",
+      "prefixes": [
+        "g_leaf[0].u_leaf.out_cal",
+        "g_leaf[0].u_leaf.cv_q"
+      ],
+      "box_um": [
+        159.398,
+        4.32,
+        295.046,
+        128.0
+      ]
+    },
+    {
+      "name": "pstore_l1_capture",
+      "prefixes": [
+        "g_leaf[1].u_leaf.captured",
+        "g_leaf[1].u_leaf.pc0",
+        "g_leaf[1].u_leaf.pc1",
+        "g_leaf[1].u_leaf.ord0",
+        "g_leaf[1].u_leaf.ord1",
+        "g_leaf[1].u_leaf.read_page",
+        "g_leaf[1].u_leaf.running",
+        "g_leaf[1].u_leaf.base",
+        "g_leaf[1].u_leaf.rem",
+        "g_leaf[1].u_leaf.span",
+        "g_leaf[1].u_leaf.loops_left",
+        "g_leaf[1].u_leaf.issued",
+        "g_leaf[1].u_leaf.valid0",
+        "g_leaf[1].u_leaf.valid1",
+        "g_leaf[1].u_leaf.last0",
+        "g_leaf[1].u_leaf.last1",
+        "g_leaf[1].u_leaf.pc[",
+        "g_leaf[1].u_leaf.addr_q",
+        "g_leaf[1].u_leaf.data_q",
+        "g_leaf[1].u_leaf.we_q",
+        "g_leaf[1].u_leaf.start_v_q",
+        "g_leaf[1].u_leaf.start_base_q",
+        "g_leaf[1].u_leaf.legal_q",
+        "g_leaf[1].u_leaf.loops_one_q",
+        "g_leaf[1].u_leaf.span_q",
+        "g_leaf[1].u_leaf.loops_q"
+      ],
+      "box_um": [
+        120.42,
+        438.99,
+        146.34,
+        606.99
+      ]
+    },
+    {
+      "name": "pstore_l1_calendar",
+      "prefixes": [
+        "g_leaf[1].u_leaf.calendar",
+        "g_leaf[1].u_leaf.out_hz",
+        "g_leaf[1].u_leaf.ordinal",
+        "g_leaf[1].u_leaf.active",
+        "g_leaf[1].u_leaf.done",
+        "g_leaf[1].u_leaf.fault"
+      ],
+      "box_um": [
+        107.735,
+        328.243,
+        243.383,
+        456.243
+      ]
+    },
+    {
+      "name": "pstore_l1_relay",
+      "prefixes": [
+        "g_leaf[1].u_leaf.relay"
+      ],
+      "box_um": [
+        149.913,
+        197.495,
+        285.561,
+        325.495
+      ]
+    },
+    {
+      "name": "pstore_l1_output",
+      "prefixes": [
+        "g_leaf[1].u_leaf.out_cal",
+        "g_leaf[1].u_leaf.cv_q"
+      ],
+      "box_um": [
+        192.092,
+        66.748,
+        327.74,
+        194.748
+      ]
+    },
+    {
+      "name": "pstore_l2_capture",
+      "prefixes": [
+        "g_leaf[2].u_leaf.captured",
+        "g_leaf[2].u_leaf.pc0",
+        "g_leaf[2].u_leaf.pc1",
+        "g_leaf[2].u_leaf.ord0",
+        "g_leaf[2].u_leaf.ord1",
+        "g_leaf[2].u_leaf.read_page",
+        "g_leaf[2].u_leaf.running",
+        "g_leaf[2].u_leaf.base",
+        "g_leaf[2].u_leaf.rem",
+        "g_leaf[2].u_leaf.span",
+        "g_leaf[2].u_leaf.loops_left",
+        "g_leaf[2].u_leaf.issued",
+        "g_leaf[2].u_leaf.valid0",
+        "g_leaf[2].u_leaf.valid1",
+        "g_leaf[2].u_leaf.last0",
+        "g_leaf[2].u_leaf.last1",
+        "g_leaf[2].u_leaf.pc[",
+        "g_leaf[2].u_leaf.addr_q",
+        "g_leaf[2].u_leaf.data_q",
+        "g_leaf[2].u_leaf.we_q",
+        "g_leaf[2].u_leaf.start_v_q",
+        "g_leaf[2].u_leaf.start_base_q",
+        "g_leaf[2].u_leaf.legal_q",
+        "g_leaf[2].u_leaf.loops_one_q",
+        "g_leaf[2].u_leaf.span_q",
+        "g_leaf[2].u_leaf.loops_q"
+      ],
+      "box_um": [
+        120.42,
+        590.19,
+        146.34,
+        758.19
+      ]
+    },
+    {
+      "name": "pstore_l2_calendar",
+      "prefixes": [
+        "g_leaf[2].u_leaf.calendar",
+        "g_leaf[2].u_leaf.out_hz",
+        "g_leaf[2].u_leaf.ordinal",
+        "g_leaf[2].u_leaf.active",
+        "g_leaf[2].u_leaf.done",
+        "g_leaf[2].u_leaf.fault"
+      ],
+      "box_um": [
+        118.632,
+        441.642,
+        254.28,
+        569.642
+      ]
+    },
+    {
+      "name": "pstore_l2_relay",
+      "prefixes": [
+        "g_leaf[2].u_leaf.relay"
+      ],
+      "box_um": [
+        171.709,
+        273.095,
+        307.357,
+        401.095
+      ]
+    },
+    {
+      "name": "pstore_l2_output",
+      "prefixes": [
+        "g_leaf[2].u_leaf.out_cal",
+        "g_leaf[2].u_leaf.cv_q"
+      ],
+      "box_um": [
+        224.785,
+        104.547,
+        360.433,
+        232.547
+      ]
+    },
+    {
+      "name": "pstore_l3_capture",
+      "prefixes": [
+        "g_leaf[3].u_leaf.captured",
+        "g_leaf[3].u_leaf.pc0",
+        "g_leaf[3].u_leaf.pc1",
+        "g_leaf[3].u_leaf.ord0",
+        "g_leaf[3].u_leaf.ord1",
+        "g_leaf[3].u_leaf.read_page",
+        "g_leaf[3].u_leaf.running",
+        "g_leaf[3].u_leaf.base",
+        "g_leaf[3].u_leaf.rem",
+        "g_leaf[3].u_leaf.span",
+        "g_leaf[3].u_leaf.loops_left",
+        "g_leaf[3].u_leaf.issued",
+        "g_leaf[3].u_leaf.valid0",
+        "g_leaf[3].u_leaf.valid1",
+        "g_leaf[3].u_leaf.last0",
+        "g_leaf[3].u_leaf.last1",
+        "g_leaf[3].u_leaf.pc[",
+        "g_leaf[3].u_leaf.addr_q",
+        "g_leaf[3].u_leaf.data_q",
+        "g_leaf[3].u_leaf.we_q",
+        "g_leaf[3].u_leaf.start_v_q",
+        "g_leaf[3].u_leaf.start_base_q",
+        "g_leaf[3].u_leaf.legal_q",
+        "g_leaf[3].u_leaf.loops_one_q",
+        "g_leaf[3].u_leaf.span_q",
+        "g_leaf[3].u_leaf.loops_q"
+      ],
+      "box_um": [
+        120.42,
+        266.19,
+        146.34,
+        434.19
+      ]
+    },
+    {
+      "name": "pstore_l3_calendar",
+      "prefixes": [
+        "g_leaf[3].u_leaf.calendar",
+        "g_leaf[3].u_leaf.out_hz",
+        "g_leaf[3].u_leaf.ordinal",
+        "g_leaf[3].u_leaf.active",
+        "g_leaf[3].u_leaf.done",
+        "g_leaf[3].u_leaf.fault"
+      ],
+      "box_um": [
+        129.53,
+        198.642,
+        265.178,
+        326.642
+      ]
+    },
+    {
+      "name": "pstore_l3_relay",
+      "prefixes": [
+        "g_leaf[3].u_leaf.relay"
+      ],
+      "box_um": [
+        193.504,
+        111.095,
+        329.152,
+        239.095
+      ]
+    },
+    {
+      "name": "pstore_l3_output",
+      "prefixes": [
+        "g_leaf[3].u_leaf.out_cal",
+        "g_leaf[3].u_leaf.cv_q"
+      ],
+      "box_um": [
+        257.478,
+        23.547,
+        393.126,
+        151.548
+      ]
+    },
+    {
+      "name": "pstore_l4_capture",
+      "prefixes": [
+        "g_leaf[4].u_leaf.captured",
+        "g_leaf[4].u_leaf.pc0",
+        "g_leaf[4].u_leaf.pc1",
+        "g_leaf[4].u_leaf.ord0",
+        "g_leaf[4].u_leaf.ord1",
+        "g_leaf[4].u_leaf.read_page",
+        "g_leaf[4].u_leaf.running",
+        "g_leaf[4].u_leaf.base",
+        "g_leaf[4].u_leaf.rem",
+        "g_leaf[4].u_leaf.span",
+        "g_leaf[4].u_leaf.loops_left",
+        "g_leaf[4].u_leaf.issued",
+        "g_leaf[4].u_leaf.valid0",
+        "g_leaf[4].u_leaf.valid1",
+        "g_leaf[4].u_leaf.last0",
+        "g_leaf[4].u_leaf.last1",
+        "g_leaf[4].u_leaf.pc[",
+        "g_leaf[4].u_leaf.addr_q",
+        "g_leaf[4].u_leaf.data_q",
+        "g_leaf[4].u_leaf.we_q",
+        "g_leaf[4].u_leaf.start_v_q",
+        "g_leaf[4].u_leaf.start_base_q",
+        "g_leaf[4].u_leaf.legal_q",
+        "g_leaf[4].u_leaf.loops_one_q",
+        "g_leaf[4].u_leaf.span_q",
+        "g_leaf[4].u_leaf.loops_q"
+      ],
+      "box_um": [
+        256.068,
+        6.99,
+        281.988,
+        174.99
+      ]
+    },
+    {
+      "name": "pstore_l4_calendar",
+      "prefixes": [
+        "g_leaf[4].u_leaf.calendar",
+        "g_leaf[4].u_leaf.out_hz",
+        "g_leaf[4].u_leaf.ordinal",
+        "g_leaf[4].u_leaf.active",
+        "g_leaf[4].u_leaf.done",
+        "g_leaf[4].u_leaf.fault"
+      ],
+      "box_um": [
+        242.164,
+        4.32,
+        377.812,
+        132.243
+      ]
+    },
+    {
+      "name": "pstore_l4_relay",
+      "prefixes": [
+        "g_leaf[4].u_leaf.relay"
+      ],
+      "box_um": [
+        283.124,
+        4.32,
+        418.772,
+        128.0
+      ]
+    },
+    {
+      "name": "pstore_l4_output",
+      "prefixes": [
+        "g_leaf[4].u_leaf.out_cal",
+        "g_leaf[4].u_leaf.cv_q"
+      ],
+      "box_um": [
+        324.084,
+        4.32,
+        459.732,
+        128.0
+      ]
+    },
+    {
+      "name": "pstore_l5_capture",
+      "prefixes": [
+        "g_leaf[5].u_leaf.captured",
+        "g_leaf[5].u_leaf.pc0",
+        "g_leaf[5].u_leaf.pc1",
+        "g_leaf[5].u_leaf.ord0",
+        "g_leaf[5].u_leaf.ord1",
+        "g_leaf[5].u_leaf.read_page",
+        "g_leaf[5].u_leaf.running",
+        "g_leaf[5].u_leaf.base",
+        "g_leaf[5].u_leaf.rem",
+        "g_leaf[5].u_leaf.span",
+        "g_leaf[5].u_leaf.loops_left",
+        "g_leaf[5].u_leaf.issued",
+        "g_leaf[5].u_leaf.valid0",
+        "g_leaf[5].u_leaf.valid1",
+        "g_leaf[5].u_leaf.last0",
+        "g_leaf[5].u_leaf.last1",
+        "g_leaf[5].u_leaf.pc[",
+        "g_leaf[5].u_leaf.addr_q",
+        "g_leaf[5].u_leaf.data_q",
+        "g_leaf[5].u_leaf.we_q",
+        "g_leaf[5].u_leaf.start_v_q",
+        "g_leaf[5].u_leaf.start_base_q",
+        "g_leaf[5].u_leaf.legal_q",
+        "g_leaf[5].u_leaf.loops_one_q",
+        "g_leaf[5].u_leaf.span_q",
+        "g_leaf[5].u_leaf.loops_q"
+      ],
+      "box_um": [
+        391.716,
+        266.19,
+        417.636,
+        434.19
+      ]
+    },
+    {
+      "name": "pstore_l5_calendar",
+      "prefixes": [
+        "g_leaf[5].u_leaf.calendar",
+        "g_leaf[5].u_leaf.out_hz",
+        "g_leaf[5].u_leaf.ordinal",
+        "g_leaf[5].u_leaf.active",
+        "g_leaf[5].u_leaf.done",
+        "g_leaf[5].u_leaf.fault"
+      ],
+      "box_um": [
+        354.798,
+        198.642,
+        490.446,
+        326.642
+      ]
+    },
+    {
+      "name": "pstore_l5_relay",
+      "prefixes": [
+        "g_leaf[5].u_leaf.relay"
+      ],
+      "box_um": [
+        372.743,
+        111.095,
+        508.391,
+        239.095
+      ]
+    },
+    {
+      "name": "pstore_l5_output",
+      "prefixes": [
+        "g_leaf[5].u_leaf.out_cal",
+        "g_leaf[5].u_leaf.cv_q"
+      ],
+      "box_um": [
+        390.689,
+        23.547,
+        526.337,
+        151.547
+      ]
+    },
+    {
+      "name": "pstore_l6_capture",
+      "prefixes": [
+        "g_leaf[6].u_leaf.captured",
+        "g_leaf[6].u_leaf.pc0",
+        "g_leaf[6].u_leaf.pc1",
+        "g_leaf[6].u_leaf.ord0",
+        "g_leaf[6].u_leaf.ord1",
+        "g_leaf[6].u_leaf.read_page",
+        "g_leaf[6].u_leaf.running",
+        "g_leaf[6].u_leaf.base",
+        "g_leaf[6].u_leaf.rem",
+        "g_leaf[6].u_leaf.span",
+        "g_leaf[6].u_leaf.loops_left",
+        "g_leaf[6].u_leaf.issued",
+        "g_leaf[6].u_leaf.valid0",
+        "g_leaf[6].u_leaf.valid1",
+        "g_leaf[6].u_leaf.last0",
+        "g_leaf[6].u_leaf.last1",
+        "g_leaf[6].u_leaf.pc[",
+        "g_leaf[6].u_leaf.addr_q",
+        "g_leaf[6].u_leaf.data_q",
+        "g_leaf[6].u_leaf.we_q",
+        "g_leaf[6].u_leaf.start_v_q",
+        "g_leaf[6].u_leaf.start_base_q",
+        "g_leaf[6].u_leaf.legal_q",
+        "g_leaf[6].u_leaf.loops_one_q",
+        "g_leaf[6].u_leaf.span_q",
+        "g_leaf[6].u_leaf.loops_q"
+      ],
+      "box_um": [
+        391.716,
+        590.19,
+        417.636,
+        758.19
+      ]
+    },
+    {
+      "name": "pstore_l6_calendar",
+      "prefixes": [
+        "g_leaf[6].u_leaf.calendar",
+        "g_leaf[6].u_leaf.out_hz",
+        "g_leaf[6].u_leaf.ordinal",
+        "g_leaf[6].u_leaf.active",
+        "g_leaf[6].u_leaf.done",
+        "g_leaf[6].u_leaf.fault"
+      ],
+      "box_um": [
+        365.695,
+        441.643,
+        501.343,
+        569.643
+      ]
+    },
+    {
+      "name": "pstore_l6_relay",
+      "prefixes": [
+        "g_leaf[6].u_leaf.relay"
+      ],
+      "box_um": [
+        394.539,
+        273.095,
+        530.187,
+        401.095
+      ]
+    },
+    {
+      "name": "pstore_l6_output",
+      "prefixes": [
+        "g_leaf[6].u_leaf.out_cal",
+        "g_leaf[6].u_leaf.cv_q"
+      ],
+      "box_um": [
+        423.382,
+        104.548,
+        559.03,
+        232.548
+      ]
+    },
+    {
+      "name": "pstore_l7_capture",
+      "prefixes": [
+        "g_leaf[7].u_leaf.captured",
+        "g_leaf[7].u_leaf.pc0",
+        "g_leaf[7].u_leaf.pc1",
+        "g_leaf[7].u_leaf.ord0",
+        "g_leaf[7].u_leaf.ord1",
+        "g_leaf[7].u_leaf.read_page",
+        "g_leaf[7].u_leaf.running",
+        "g_leaf[7].u_leaf.base",
+        "g_leaf[7].u_leaf.rem",
+        "g_leaf[7].u_leaf.span",
+        "g_leaf[7].u_leaf.loops_left",
+        "g_leaf[7].u_leaf.issued",
+        "g_leaf[7].u_leaf.valid0",
+        "g_leaf[7].u_leaf.valid1",
+        "g_leaf[7].u_leaf.last0",
+        "g_leaf[7].u_leaf.last1",
+        "g_leaf[7].u_leaf.pc[",
+        "g_leaf[7].u_leaf.addr_q",
+        "g_leaf[7].u_leaf.data_q",
+        "g_leaf[7].u_leaf.we_q",
+        "g_leaf[7].u_leaf.start_v_q",
+        "g_leaf[7].u_leaf.start_base_q",
+        "g_leaf[7].u_leaf.legal_q",
+        "g_leaf[7].u_leaf.loops_one_q",
+        "g_leaf[7].u_leaf.span_q",
+        "g_leaf[7].u_leaf.loops_q"
+      ],
+      "box_um": [
+        391.716,
+        438.99,
+        417.636,
+        606.99
+      ]
+    },
+    {
+      "name": "pstore_l7_calendar",
+      "prefixes": [
+        "g_leaf[7].u_leaf.calendar",
+        "g_leaf[7].u_leaf.out_hz",
+        "g_leaf[7].u_leaf.ordinal",
+        "g_leaf[7].u_leaf.active",
+        "g_leaf[7].u_leaf.done",
+        "g_leaf[7].u_leaf.fault"
+      ],
+      "box_um": [
+        376.593,
+        328.243,
+        512.241,
+        456.243
+      ]
+    },
+    {
+      "name": "pstore_l7_relay",
+      "prefixes": [
+        "g_leaf[7].u_leaf.relay"
+      ],
+      "box_um": [
+        416.334,
+        197.495,
+        551.982,
+        325.495
+      ]
+    },
+    {
+      "name": "pstore_l7_output",
+      "prefixes": [
+        "g_leaf[7].u_leaf.out_cal",
+        "g_leaf[7].u_leaf.cv_q"
+      ],
+      "box_um": [
+        456.075,
+        66.748,
+        591.723,
+        194.748
+      ]
+    },
+    {
+      "name": "pstore_l8_capture",
+      "prefixes": [
+        "g_leaf[8].u_leaf.captured",
+        "g_leaf[8].u_leaf.pc0",
+        "g_leaf[8].u_leaf.pc1",
+        "g_leaf[8].u_leaf.ord0",
+        "g_leaf[8].u_leaf.ord1",
+        "g_leaf[8].u_leaf.read_page",
+        "g_leaf[8].u_leaf.running",
+        "g_leaf[8].u_leaf.base",
+        "g_leaf[8].u_leaf.rem",
+        "g_leaf[8].u_leaf.span",
+        "g_leaf[8].u_leaf.loops_left",
+        "g_leaf[8].u_leaf.issued",
+        "g_leaf[8].u_leaf.valid0",
+        "g_leaf[8].u_leaf.valid1",
+        "g_leaf[8].u_leaf.last0",
+        "g_leaf[8].u_leaf.last1",
+        "g_leaf[8].u_leaf.pc[",
+        "g_leaf[8].u_leaf.addr_q",
+        "g_leaf[8].u_leaf.data_q",
+        "g_leaf[8].u_leaf.we_q",
+        "g_leaf[8].u_leaf.start_v_q",
+        "g_leaf[8].u_leaf.start_base_q",
+        "g_leaf[8].u_leaf.legal_q",
+        "g_leaf[8].u_leaf.loops_one_q",
+        "g_leaf[8].u_leaf.span_q",
+        "g_leaf[8].u_leaf.loops_q"
+      ],
+      "box_um": [
+        391.716,
+        93.39,
+        417.636,
+        261.39
+      ]
+    },
+    {
+      "name": "pstore_l8_calendar",
+      "prefixes": [
+        "g_leaf[8].u_leaf.calendar",
+        "g_leaf[8].u_leaf.out_hz",
+        "g_leaf[8].u_leaf.ordinal",
+        "g_leaf[8].u_leaf.active",
+        "g_leaf[8].u_leaf.done",
+        "g_leaf[8].u_leaf.fault"
+      ],
+      "box_um": [
+        277.186,
+        69.042,
+        412.834,
+        197.042
+      ]
+    },
+    {
+      "name": "pstore_l8_relay",
+      "prefixes": [
+        "g_leaf[8].u_leaf.relay"
+      ],
+      "box_um": [
+        217.52,
+        24.695,
+        353.168,
+        152.695
+      ]
+    },
+    {
+      "name": "pstore_l8_output",
+      "prefixes": [
+        "g_leaf[8].u_leaf.out_cal",
+        "g_leaf[8].u_leaf.cv_q"
+      ],
+      "box_um": [
+        157.853,
+        4.32,
+        293.501,
+        128.0
+      ]
+    },
+    {
+      "name": "pstore_l9_capture",
+      "prefixes": [
+        "g_leaf[9].u_leaf.captured",
+        "g_leaf[9].u_leaf.pc0",
+        "g_leaf[9].u_leaf.pc1",
+        "g_leaf[9].u_leaf.ord0",
+        "g_leaf[9].u_leaf.ord1",
+        "g_leaf[9].u_leaf.read_page",
+        "g_leaf[9].u_leaf.running",
+        "g_leaf[9].u_leaf.base",
+        "g_leaf[9].u_leaf.rem",
+        "g_leaf[9].u_leaf.span",
+        "g_leaf[9].u_leaf.loops_left",
+        "g_leaf[9].u_leaf.issued",
+        "g_leaf[9].u_leaf.valid0",
+        "g_leaf[9].u_leaf.valid1",
+        "g_leaf[9].u_leaf.last0",
+        "g_leaf[9].u_leaf.last1",
+        "g_leaf[9].u_leaf.pc[",
+        "g_leaf[9].u_leaf.addr_q",
+        "g_leaf[9].u_leaf.data_q",
+        "g_leaf[9].u_leaf.we_q",
+        "g_leaf[9].u_leaf.start_v_q",
+        "g_leaf[9].u_leaf.start_base_q",
+        "g_leaf[9].u_leaf.legal_q",
+        "g_leaf[9].u_leaf.loops_one_q",
+        "g_leaf[9].u_leaf.span_q",
+        "g_leaf[9].u_leaf.loops_q"
+      ],
+      "box_um": [
+        527.364,
+        93.39,
+        553.284,
+        261.39
+      ]
+    },
+    {
+      "name": "pstore_l9_calendar",
+      "prefixes": [
+        "g_leaf[9].u_leaf.calendar",
+        "g_leaf[9].u_leaf.out_hz",
+        "g_leaf[9].u_leaf.ordinal",
+        "g_leaf[9].u_leaf.active",
+        "g_leaf[9].u_leaf.done",
+        "g_leaf[9].u_leaf.fault"
+      ],
+      "box_um": [
+        389.821,
+        69.042,
+        525.469,
+        197.042
+      ]
+    },
+    {
+      "name": "pstore_l9_relay",
+      "prefixes": [
+        "g_leaf[9].u_leaf.relay"
+      ],
+      "box_um": [
+        307.143,
+        24.695,
+        442.791,
+        152.695
+      ]
+    },
+    {
+      "name": "pstore_l9_output",
+      "prefixes": [
+        "g_leaf[9].u_leaf.out_cal",
+        "g_leaf[9].u_leaf.cv_q"
+      ],
+      "box_um": [
+        224.464,
+        4.32,
+        360.112,
+        128.0
+      ]
+    },
+    {
+      "name": "pstore_l10_capture",
+      "prefixes": [
+        "g_leaf[10].u_leaf.captured",
+        "g_leaf[10].u_leaf.pc0",
+        "g_leaf[10].u_leaf.pc1",
+        "g_leaf[10].u_leaf.ord0",
+        "g_leaf[10].u_leaf.ord1",
+        "g_leaf[10].u_leaf.read_page",
+        "g_leaf[10].u_leaf.running",
+        "g_leaf[10].u_leaf.base",
+        "g_leaf[10].u_leaf.rem",
+        "g_leaf[10].u_leaf.span",
+        "g_leaf[10].u_leaf.loops_left",
+        "g_leaf[10].u_leaf.issued",
+        "g_leaf[10].u_leaf.valid0",
+        "g_leaf[10].u_leaf.valid1",
+        "g_leaf[10].u_leaf.last0",
+        "g_leaf[10].u_leaf.last1",
+        "g_leaf[10].u_leaf.pc[",
+        "g_leaf[10].u_leaf.addr_q",
+        "g_leaf[10].u_leaf.data_q",
+        "g_leaf[10].u_leaf.we_q",
+        "g_leaf[10].u_leaf.start_v_q",
+        "g_leaf[10].u_leaf.start_base_q",
+        "g_leaf[10].u_leaf.legal_q",
+        "g_leaf[10].u_leaf.loops_one_q",
+        "g_leaf[10].u_leaf.span_q",
+        "g_leaf[10].u_leaf.loops_q"
+      ],
+      "box_um": [
+        527.364,
+        438.99,
+        553.284,
+        606.99
+      ]
+    },
+    {
+      "name": "pstore_l10_calendar",
+      "prefixes": [
+        "g_leaf[10].u_leaf.calendar",
+        "g_leaf[10].u_leaf.out_hz",
+        "g_leaf[10].u_leaf.ordinal",
+        "g_leaf[10].u_leaf.active",
+        "g_leaf[10].u_leaf.done",
+        "g_leaf[10].u_leaf.fault"
+      ],
+      "box_um": [
+        396.597,
+        328.243,
+        532.245,
+        456.243
+      ]
+    },
+    {
+      "name": "pstore_l10_relay",
+      "prefixes": [
+        "g_leaf[10].u_leaf.relay"
+      ],
+      "box_um": [
+        320.694,
+        197.495,
+        456.342,
+        325.495
+      ]
+    },
+    {
+      "name": "pstore_l10_output",
+      "prefixes": [
+        "g_leaf[10].u_leaf.out_cal",
+        "g_leaf[10].u_leaf.cv_q"
+      ],
+      "box_um": [
+        244.791,
+        66.748,
+        380.439,
+        194.748
+      ]
+    },
+    {
+      "name": "pstore_l0_cfg_forward",
+      "prefixes": [
+        "g_leaf[0].u_leaf.out_addr",
+        "g_leaf[0].u_leaf.out_data"
+      ],
+      "box_um": [
+        65.556,
+        286.19,
+        201.204,
+        414.19
+      ]
+    },
+    {
+      "name": "pstore_l1_cfg_forward",
+      "prefixes": [
+        "g_leaf[1].u_leaf.out_addr",
+        "g_leaf[1].u_leaf.out_data"
+      ],
+      "box_um": [
+        65.556,
+        534.59,
+        201.204,
+        662.59
+      ]
+    },
+    {
+      "name": "pstore_l3_cfg_forward",
+      "prefixes": [
+        "g_leaf[3].u_leaf.out_addr",
+        "g_leaf[3].u_leaf.out_data"
+      ],
+      "box_um": [
+        133.38,
+        156.59,
+        269.028,
+        284.59
+      ]
+    },
+    {
+      "name": "pstore_l4_cfg_forward",
+      "prefixes": [
+        "g_leaf[4].u_leaf.out_addr",
+        "g_leaf[4].u_leaf.out_data"
+      ],
+      "box_um": [
+        269.028,
+        156.59,
+        404.676,
+        284.59
+      ]
+    },
+    {
+      "name": "pstore_l6_cfg_forward",
+      "prefixes": [
+        "g_leaf[6].u_leaf.out_addr",
+        "g_leaf[6].u_leaf.out_data"
+      ],
+      "box_um": [
+        336.852,
+        534.59,
+        472.5,
+        662.59
+      ]
+    },
+    {
+      "name": "pstore_l8_cfg_forward",
+      "prefixes": [
+        "g_leaf[8].u_leaf.out_addr",
+        "g_leaf[8].u_leaf.out_data"
+      ],
+      "box_um": [
+        404.676,
+        113.39,
+        540.324,
+        241.39
+      ]
+    },
+    {
+      "name": "pstore_l9_cfg_forward",
+      "prefixes": [
+        "g_leaf[9].u_leaf.out_addr",
+        "g_leaf[9].u_leaf.out_data"
+      ],
+      "box_um": [
+        472.5,
+        286.19,
+        608.148,
+        414.19
+      ]
+    }
+  ],
+  "relay_src": null
+}

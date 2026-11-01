@@ -1,0 +1,100 @@
+{
+  "scope": "SELECTORS_ONLY_NATIVE11C",
+  "changes": {
+    "pstore_l0_cfg_forward": {
+      "old": [
+        "g_leaf[0].u_leaf.fwd_addr_q",
+        "g_leaf[0].u_leaf.fwd_data_q"
+      ],
+      "new": [
+        "g_leaf[0].u_leaf.out_addr",
+        "g_leaf[0].u_leaf.out_data"
+      ],
+      "actual_unique_ff": 267,
+      "before_status": "NONE",
+      "after_face_status": "NONE"
+    },
+    "pstore_l1_cfg_forward": {
+      "old": [
+        "g_leaf[1].u_leaf.fwd_addr_q",
+        "g_leaf[1].u_leaf.fwd_data_q"
+      ],
+      "new": [
+        "g_leaf[1].u_leaf.out_addr",
+        "g_leaf[1].u_leaf.out_data"
+      ],
+      "actual_unique_ff": 267,
+      "before_status": "NONE",
+      "after_face_status": "NONE"
+    },
+    "pstore_l3_cfg_forward": {
+      "old": [
+        "g_leaf[3].u_leaf.fwd_addr_q",
+        "g_leaf[3].u_leaf.fwd_data_q"
+      ],
+      "new": [
+        "g_leaf[3].u_leaf.out_addr",
+        "g_leaf[3].u_leaf.out_data"
+      ],
+      "actual_unique_ff": 267,
+      "before_status": "NONE",
+      "after_face_status": "NONE"
+    },
+    "pstore_l4_cfg_forward": {
+      "old": [
+        "g_leaf[4].u_leaf.fwd_addr_q",
+        "g_leaf[4].u_leaf.fwd_data_q"
+      ],
+      "new": [
+        "g_leaf[4].u_leaf.out_addr",
+        "g_leaf[4].u_leaf.out_data"
+      ],
+      "actual_unique_ff": 267,
+      "before_status": "NONE",
+      "after_face_status": "NONE"
+    },
+    "pstore_l6_cfg_forward": {
+      "old": [
+        "g_leaf[6].u_leaf.fwd_addr_q",
+        "g_leaf[6].u_leaf.fwd_data_q"
+      ],
+      "new": [
+        "g_leaf[6].u_leaf.out_addr",
+        "g_leaf[6].u_leaf.out_data"
+      ],
+      "actual_unique_ff": 267,
+      "before_status": "NONE",
+      "after_face_status": "NONE"
+    },
+    "pstore_l8_cfg_forward": {
+      "old": [
+        "g_leaf[8].u_leaf.fwd_addr_q",
+        "g_leaf[8].u_leaf.fwd_data_q"
+      ],
+      "new": [
+        "g_leaf[8].u_leaf.out_addr",
+        "g_leaf[8].u_leaf.out_data"
+      ],
+      "actual_unique_ff": 267,
+      "before_status": "NONE",
+      "after_face_status": "NONE"
+    },
+    "pstore_l9_cfg_forward": {
+      "old": [
+        "g_leaf[9].u_leaf.fwd_addr_q",
+        "g_leaf[9].u_leaf.fwd_data_q"
+      ],
+      "new": [
+        "g_leaf[9].u_leaf.out_addr",
+        "g_leaf[9].u_leaf.out_data"
+      ],
+      "actual_unique_ff": 267,
+      "before_status": "NONE",
+      "after_face_status": "NONE"
+    }
+  },
+  "geometry_model_source_cycles": "UNCHANGED",
+  "mandatory_face_ownership": 0,
+  "new_ff": 0,
+  "new_cycles": 0
+}
