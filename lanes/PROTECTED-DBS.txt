@@ -1,5 +1,5 @@
-# PROTECTED-DBS (SIGNOFF-SPRINT-14, 2026-10-31 19:55 PDT; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
-# Source: counted records in release_tree_plan cache (generated 19:39, main 71baea837b) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
+# PROTECTED-DBS (SIGNOFF-SPRINT-15, 2026-10-31 20:28 PDT; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
+# Source: counted records in release_tree_plan cache (generated 20:12, main f3e4659f55) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
 # Format: host<TAB>path<TAB>die/design kind[, ...]. Regenerated after every forced refresh.
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/vmrV1_declared_ft	qwen_compute/qfd_dv_s8x_vmr provenance_dir, qwen_compute/qfd_dv_s8x_vmr record_dir
 epyc2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA	qwen_kvsys/qkd_ectlk_q0 kit_root
@@ -152,5 +152,3 @@ intel2	/srv/opentallas-scratch2/claude/qc-rp1-1/rp1_fqc	qwen_compute/qfd_dv_s8_c
 intel2	/srv/opentallas-scratch2/claude/qc-rp1-1/rp1_fqc/signoff	qwen_compute/qfd_dv_s8_crh_rp1 record_dir
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-6/sstn_e1027_ds81	s81/ot_s81_sstn_payload536 provenance_dir
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-6/sstn_e1027_ds81/signoff	s81/ot_s81_sstn_payload536 record_dir
-intel2	/srv/opentallas-scratch2/claude/die-head-48/prd52/stm_w_D	s81_head/hd_st_m kit_dir (DIE-HEAD-52 PRD D, LOCAL_PASS_NEEDS_PARENT)
-intel2	/srv/opentallas-scratch2/claude/die-head-48/prd52/stm_w_D/signoff	s81_head/hd_st_m record_dir

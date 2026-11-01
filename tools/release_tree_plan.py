@@ -42,8 +42,9 @@ REFRESH_S = 50 * 60
 # 'results/...' tables the plan names are fetched too.  Re-point a line here when a die's plan of record changes.
 _HBM_POR = 'physical/die_plan/hbm/plan_of_record/'
 PLANS = [('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),                         # event3 composed (12.20)
-         ('s81_head', 's81_head', 'results/die_head_47_1031/l47/source_plan_l47.json.gz',
-          ('../../results/die_head_47_1031/l47',)),   # SIGNOFF-SPRINT-11 10-31: plan-relative native_domains/ + core_pins/ (DIE-HEAD-48 fd132f2b694) laid beside the por__ copy   # HEAD l47 (APPROVED, main c68675660; ROOT-MERGE-AI 04:20 READY, SIGNOFF-SPRINT-11 10-31; was l46a)
+         ('s81_head', 's81_head', 'results/die_head_52_1031/pin/source_plan_l48x.json',
+          ('../../results/die_head_47_1031/l47',)),   # HEAD l48x (= l48w + 51 rst_start_raw pin moves; plan of record per COORD 19:0x 10-31, merged f3e4659f5; SIGNOFF-SPRINT-15); same plan-relative core_pins/native_domains refs as l47, laid from the l47 dir
+         # was:   # SIGNOFF-SPRINT-11 10-31: plan-relative native_domains/ + core_pins/ (DIE-HEAD-48 fd132f2b694) laid beside the por__ copy   # HEAD l47 (APPROVED, main c68675660; ROOT-MERGE-AI 04:20 READY, SIGNOFF-SPRINT-11 10-31; was l46a)
          ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json', ()),  # QC plan of record qc52 (0735589d; binds btab P8eco), COORD 12:43 10-31 SIGNOFF-SPRINT-13 (was plan_qc50)
          ('qwen_kvsys', 'qwen_kvsys/plan_of_record', 'physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json', ()),  # event28w_c
          ('hbm', 'hbm/plan_of_record/d44c', _HBM_POR + 'd44c/die_plan.json.gz',   # d44c = HBM POR + freeze plan (COORD 20:19)
