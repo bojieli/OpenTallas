@@ -31,6 +31,9 @@ D=/var/tmp/ot-heavy; mkdir -p $D 2>/dev/null; chmod 1777 $D 2>/dev/null
 UNIT="oth-$(id -un)-$$-$(date +%s)"
 waited=0; T0=$(date +%s)
 LASTRES=""
+# DIE_WATCHDOG_1021 (live since 10-21, restored to the repo 11-01 by FLOW-21: the 11:38 repo install dropped it): use the
+# admission classifier for both priority and hard protection.
+if /usr/local/bin/ot-heavy-reconcile --is-die -- "$@" || /usr/local/bin/ot-protect-die --is-die -- "$@"; then export OT_HEAVY_PRIO=die; fi
 while :; do
   [ -f /etc/ot-heavy.conf ] && . /etc/ot-heavy.conf   # v5: every attempt, so a headroom change reaches queued waiters
   exec 8>>"$D/admit.lock"; flock 8
@@ -98,6 +101,10 @@ while :; do
     # 100) against its sibling user scopes, and the ot-heavy-docker shim gives its containers cpu.weight ~1000 against
     # the sibling (volume kit) containers in system.slice.  No admission change beyond bypassing LOADCAP_1101.
     _CW=(); [ "${OT_HEAVY_CPU:-}" = crit ] && _CW=(-p CPUWeight=1000)
+    # DIE_WATCHDOG_1021: user scopes cannot set OOMScoreAdjust; set the launching PID as root (-999), then inherit.
+    if [ "${OT_HEAVY_PRIO:-}" = die ]; then
+      sudo -n /usr/local/bin/ot-protect-die --pid "$$" || { echo "ot-heavy: NOT RUN: die protection failed" >&2; exit 70; }
+    fi
     # OOMADJ_999_1022: a non-die job starts at oom_score_adj 0 (its launcher may sit in a protected die tree at -999,
     # or a legacy -1000 one, which would make the job un-killable by its own scope's memcg OOM: livelock at the cap).
     if [ "${OT_HEAVY_PRIO:-}" != die ]; then echo 0 > /proc/self/oom_score_adj 2>/dev/null || true; fi

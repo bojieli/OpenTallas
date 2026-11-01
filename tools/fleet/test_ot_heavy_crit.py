@@ -37,7 +37,7 @@ class Heavy(unittest.TestCase):
         def w(name, body):
             p = d / 'bin' / name; p.write_text('#!/bin/bash\n' + body + '\n'); p.chmod(0o755); return p
         self.rec = w('reconcile', '[ "$1" = --is-die ] && exit 1; echo "OK 4 cls | need 4, available 100 GB, growth charged 0 GB"')
-        self.prot = w('protect', 'exit 1')
+        self.prot = w('protect', '[ "$1" = --pid ] && { echo "$2" > "$OUT_ARGS.prot"; exit 0; }; [ -n "${DIE_TEST:-}" ]')
         w('systemd-run', 'printf "%s\\n" "$@" > "$OUT_ARGS"')
         w('nproc', 'echo 10')
         self.load = d / 'loadavg'
@@ -45,6 +45,7 @@ class Heavy(unittest.TestCase):
         s = s.replace('/usr/local/bin/ot-heavy-reconcile', str(self.rec)).replace('/usr/local/bin/ot-protect-die', str(self.prot))
         s = s.replace('/proc/loadavg', str(self.load)).replace('D=/var/tmp/ot-heavy', f'D={d}/state')
         s = s.replace('/etc/ot-heavy.conf', str(d / 'conf')).replace('/usr/local/lib/ot-heavy', str(d / 'nolib'))
+        s = s.replace('sudo -n ' + str(self.prot), str(self.prot))
         s = s.replace('sleep 20', 'sleep 0.2').replace('sleep 5;', 'sleep 0.2;')
         self.h = d / 'ot-heavy'; self.h.write_text(s); self.h.chmod(0o755)
 
@@ -72,6 +73,21 @@ class Heavy(unittest.TestCase):
     def test_crit_bypasses_cap_and_gets_weight(self):
         r, a = self.run_('500', crit=True)
         self.assertIsNotNone(a, r.stderr); self.assertIn('CPUWeight=1000', a)
+
+    def test_die_job_is_protected(self):
+        # DIE_WATCHDOG_1021 restored (FLOW-21 11-01): a host-classified die job gets ot-protect-die --pid before its scope
+        os.environ['DIE_TEST'] = '1'
+        try:
+            r, a = self.run_('1', crit=True)
+        finally:
+            os.environ.pop('DIE_TEST', None)
+        self.assertIsNotNone(a, r.stderr)
+        self.assertTrue((self.d / 'args.prot').exists(), r.stderr)
+
+    def test_non_die_not_protected(self):
+        r, a = self.run_('1')
+        self.assertIsNotNone(a, r.stderr)
+        self.assertFalse((self.d / 'args.prot').exists())
 
     def test_cap_disabled(self):
         (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
