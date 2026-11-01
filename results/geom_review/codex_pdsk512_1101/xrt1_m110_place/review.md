@@ -1,0 +1,9 @@
+XRT1 PDSK512 actual placement review — 2026-11-01 07:48:49 PST
+
+Personally LOOK-viewed auto_geom.png from the completed fresh3_place ODB. Verdict: FAIL; hold CTS/GRT/route. Raw auto_geom.json/check.log are preserved. No new GRT probe was run.
+
+The fixed311.04x395.28 outline has dense registered face bands, a sparse open interior and no macros. Pins retain their canonical positions; pin-to-register p90 is8.44um, max130.53um, no unregistered data pins, peak6.0pins/um/layer/face. These local boundary checks pass, but long data paths span the outline: max register-to-register682.05um and1208 captures exceed405um. Worst is u.egd_c[19] to u.g_d[19]. RTL directly captures eg_d into egd_c and then registers g_d from egd_c (ot_s81sl_xrt.sv:306,856); the input and output face registers are on opposite far corners. Repeated placement/CTS margin variants cannot shorten that fixed endpoint pair. A plan/pin or internal transport change is required and belongs to the die/core owner; no external-cycle change is authorised here.
+
+Vertical cut demand0.743 exceeds0.6. Low fill0.0933 and empty-area0.7 are also real AUTO findings; this profile retained the source pin-bound outline. Clock reach499.32um is INFO before CTS because no fixed clock cells exist; GRT is NOTRUN. Those two informational conditions do not explain or excuse the data reach failure.
+
+Numbers remain UNCHECKED by an independent reviewer. Candidate is unadopted; the output-anchor equation remains conditional on current programme alignment. The completed physical checkpoint was copied unchanged to the separately proved continuationC, SHA2562c47e4af85e19bcf3e9df3badb186e611cdb1431e80157ae324e63072bf764fe. Official fresh LEC remains queued under24GB admission. Original paused proof/controller was retired only after preserving the completed placement.
