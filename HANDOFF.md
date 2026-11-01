@@ -2815,3 +2815,5 @@ CODEX: 2026-11-01 resumed cap_rt actual whole-clock-class A/B after second actua
 
 CODEX Xfin RESUMED on explicit user correction that Claude remains limited; no implicit time park. As of 13:27 PST, existing Intel1 GRT scope3694704/container87f1272d remains active at native NDR-fallback21/30, authorized priority preserved, no duplicate/new job. Latest iter20 overflow899 (nonterminal), best recorded fallback15=595. Source96f935 and width forecast remain PREP only. Parent priorities now actual SIGNED-child PINCOPY consumption; no diagnostic variant while this GRT advances.
 2026-11-01 13:38 PST [COORD] reconcile 2: Codex still active after owner resume 13:17; split rule (no jobs on items with CODEX line <60 min); my 18 lanes live; SS18 + PRUNE-1101D started.
+
+CODEX:13:45 QC d90 combined immutable rollout actual44 starts; runtimeca7. Ready PRD margins3f2, physical audit metadata c971, clockmesh snapshot d2b to root. Active jobs preserved; S81 explicitlanding/current-source refresh next.
