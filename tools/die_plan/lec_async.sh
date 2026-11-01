@@ -18,10 +18,14 @@ set -u
 # may reuse this proof only while the exact RTL, proof driver and synth netlist agree.
 identity() {
   python3 - "$1" "${2:-all}" <<'PYID'
-import hashlib,glob,re,shlex,sys,os
+import hashlib,glob,re,shlex,sys,os,json
 from pathlib import Path
 k=Path(sys.argv[1]);h=hashlib.sha256();cfg=(k/'config.mk').read_text() if (k/'config.mk').exists() else ''
-paths=[k/'lec.py']
+paths=[k/'lec.py']+[k/n for n in ('lec_options.json','lec_hints.json','reset_contract.json') if (k/n).is_file()]
+try:
+ receipt=json.loads((k/'reset_contract.json').read_text()).get('proof',{}).get('receipt')
+ if receipt:paths.append(k/receipt[6:] if receipt.startswith('/work/') else k/receipt)
+except (OSError,ValueError,AttributeError):pass
 for key in sorted(os.environ):
  if key.startswith('OT_LEC_') and key not in ('OT_LEC_ASYNC','OT_LEC_ASYNC_POLL','OT_LEC_MEM_GB'):
   h.update((key+'='+os.environ[key]).encode())
@@ -70,13 +74,23 @@ try:
   return d
  base=inspect(owner);separate=inspect(owner+'-lec')
  if base:
-  top=subprocess.run(dk+['top',owner,'-eo','args'],capture_output=True,text=True,check=True).stdout
-  if not any(re.match(r'^\s*(?:/[^ ]*/)?bash\s+/work/lec_async.sh\s+wait\s+/work(?:\s|$)',x) for x in top.splitlines()):
+  top=subprocess.run(dk+['top',owner,'-eo','pid,args'],capture_output=True,text=True,check=True).stdout
+  if not any(re.match(r'^\s*\d+\s+(?:/[^ ]*/)?bash\s+/work/lec_async.sh\s+wait\s+/work(?:\s|$)',x) for x in top.splitlines()):
    raise ValueError('original physical scope has not reached its proof wait')
  if not base and not separate:raise ValueError('no live original proof container')
  if separate:owner += '-lec'
  epoch=ready.stat().st_mtime
- files=[k/'lec.py']+list((k/'rtl').rglob('*'))
+ files=[k/'lec.py',k/'config.mk',k/'freeze.json']+list((k/'rtl').rglob('*'))
+ files += [k/n for n in ('lec_options.json','lec_hints.json','reset_contract.json') if (k/n).is_file()]
+ try:
+  receipt=json.loads((k/'reset_contract.json').read_text()).get('proof',{}).get('receipt')
+  if receipt:files.append(k/receipt[6:] if receipt.startswith('/work/') else k/receipt)
+ except (OSError,ValueError,AttributeError):pass
+ cfg=(k/'config.mk').read_text()
+ for line in cfg.splitlines():
+  if re.match(r'^(?:override )?export (?:VERILOG_FILES|ADDITIONAL_LIBS)\s*=',line):
+   for x in shlex.split(line.split('=',1)[1]):
+    if '$' not in x:files.append(k/x[6:] if x.startswith('/work/') else Path(x))
  cmd=shlex.split('\n'.join(ready.read_text().splitlines()[1:]));net=None
  if '--netlist' in cmd:net=cmd[cmd.index('--netlist')+1]
  if net:files += [k/net[6:] if net.startswith('/work/') else Path(net)]

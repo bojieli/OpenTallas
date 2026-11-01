@@ -19,7 +19,7 @@ inspect) if [ "$1" != -f ]; then
            printf '[{"State":{"Running":true},"Mounts":[{"Source":"%s"}]}]\n' "$FAKE_K"
          elif [[ "$*" = *range*Mounts* ]]; then echo "$FAKE_K";
          else [ -f "$FAKE_K/flow.exited" ] && echo false || echo true; fi;;
-top) printf 'COMMAND\nbash /work/lec_async.sh wait /work\n';;
+top) printf 'PID COMMAND\n123 bash /work/lec_async.sh wait /work\n';;
 stop) touch "$FAKE_K/flow.stopped";;
 rm) ;;
 esac
@@ -143,16 +143,27 @@ def test_changed_inputs_do_not_reset_or_duplicate_existing_proof(tmp_path):
     _ready(k, "1", 0)
     assert _finish(k, env, 0) == "0"
     previous = {n: (k / n).read_bytes() for n in ("lec_async.pid", "lec_async.ready", "lec_async.identity")}
-    (k / "lec.py").write_text("changed proof driver")
-    p = subprocess.run(["bash", str(TOOL), "start", str(k), "different", "img", "4", "2", str(tmp_path / "docker"), "cts"],
+    for filename, content in (("lec.py", "changed proof driver"), ("reset_contract.json", "{}")):
+        old = (k / filename).read_bytes() if (k / filename).exists() else None
+        (k / filename).write_text(content)
+        p = subprocess.run(["bash", str(TOOL), "start", str(k), "different", "img", "4", "2", str(tmp_path / "docker"), "cts"],
+                           env=env, capture_output=True, text=True)
+        assert p.returncode == 11
+        assert {n: (k / n).read_bytes() for n in previous} == previous
+        if old is None:(k / filename).unlink()
+        else:(k / filename).write_bytes(old)
+    # Correspondence discovery remains free to update its output without changing proof inputs.
+    (k / "lec").mkdir(exist_ok=True);(k / "lec/hyp.json").write_text("new discovery output")
+    p = subprocess.run(["bash", str(TOOL), "start", str(k), "reuse", "img", "4", "2", str(tmp_path / "docker"), "cts"],
                        env=env, capture_output=True, text=True)
-    assert p.returncode == 11
-    assert {n: (k / n).read_bytes() for n in previous} == previous
+    assert p.returncode == 0,p.stderr
+    assert (k / "lec_async.pid").read_bytes() == previous["lec_async.pid"]
 
 
 def test_live_legacy_proof_bootstrap_preserves_markers_and_requires_pinned_inputs(tmp_path):
     import json
     k,env=_kit(tmp_path,0)
+    (k/"config.mk").write_text("export DESIGN_NAME = fixture\n")
     (k/"freeze.json").write_text(json.dumps({"source_commit":"a"*40}))
     net=k/"run/results/asap7/t/base/1_2_yosys.v";net.parent.mkdir(parents=True);net.write_text("module t; endmodule")
     (k/"lec_async.ready").write_text("1\nsleep 3; echo EQ >> /work/lec_run.log\n")
