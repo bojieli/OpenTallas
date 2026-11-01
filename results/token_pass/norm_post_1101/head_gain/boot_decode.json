@@ -1,0 +1,15 @@
+{
+ "status": "PASS_RELEASED_HEAD_GAIN_BOOT_ENCODER",
+ "writes": 1280,
+ "FP32_values": 5120,
+ "target": 5,
+ "rows": [
+  480,
+  495
+ ],
+ "source_tensor": "norm.weight",
+ "all_source_words_exact": true,
+ "boot_calendar_sealed": false,
+ "actual_global_residency": false,
+ "HOST_START_authority": false
+}
