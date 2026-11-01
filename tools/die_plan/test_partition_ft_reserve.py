@@ -63,3 +63,43 @@ def test_exact_complement_never_double_owns_die_tracks():
 def test_clock_pg_layers_cannot_be_admitted_as_ft_signal_share():
     P,typ=plan();P.types[typ]['die_ft_bands'][0]['layers']=['M8']
     with pytest.raises(ValueError,match='lower signal'):F.reservation(P,typ)
+
+
+def test_other_placed_type_layer_default_is_reserved_in_this_opted_in_type():
+    P,typ=plan()
+    other=copy.deepcopy(P.raw['partitions'][0]);other.update(name='other',type='other')
+    other['origin_um']=[P.types[typ]['outline_um'][0],0]
+    P.raw['partitions'].append(other)
+    P.raw['partition_types']['other']=copy.deepcopy(P.types[typ])
+    P.raw['partition_types']['other']['module']='other_module'
+    P.raw['partition_types']['other']['die_ft_bands']=[dict(
+        dir='NS',span_um=[0,P.types[typ]['outline_um'][0]],layers=['M7'],die_share=.5)]
+    P=schema.Plan(P.raw)
+    r=F.reservation(P,typ)
+    assert {row['layer'] for row in r['rectangles_um']}=={'M4','M7'}
+    own=[row for row in r['rectangles_um'] if row['layer']=='M7']
+    # The M7 band is in the neighbour; this type still owes the die its
+    # default quarter of each global gcell on M7.
+    assert inside(own,2,20)
+    assert not inside(own,8,20)
+    from tools.die_plan import die_trial as D
+    _,regs=D.band_region_adjust(P,.75)
+    blocked=[dict(rect=list(rect)) for layer,*rect in D.band_share_obs(P,regs) if layer=='M7']
+    for x in (2,8,12,18,23,29):
+        for y in (20,50,100):
+            assert inside(own,x,y)==(not inside(blocked,x,y))
+
+
+def test_unplaced_type_band_does_not_add_an_unreal_global_layer():
+    P,typ=plan()
+    P.raw['partition_types']['unplaced']=copy.deepcopy(P.types[typ])
+    P.raw['partition_types']['unplaced']['die_ft_bands'][0]['layers']=['M7']
+    P=schema.Plan(P.raw)
+    assert {row['layer'] for row in F.reservation(P,typ)['rectangles_um']}=={'M4'}
+
+
+def test_no_band_type_remains_unchanged_even_with_global_bands():
+    P,typ=plan()
+    other=copy.deepcopy(P.types[typ]);other.pop('die_ft_bands')
+    P.types['no_bands']=other
+    assert F.reservation(P,'no_bands') is None
