@@ -2819,7 +2819,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
-    if [ \$rc = 0 ] && grep -q '^export OT_TAP_GRT_PRE = 1' /work/config.mk; then \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
+    if [ \$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk; then \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS GRT-RC tap pre-pass (tapbal_grt.tcl)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; \
     if [ \$rc = 0 ]; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
