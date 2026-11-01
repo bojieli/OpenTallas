@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eu
+B=$(pwd)
+docker run --rm --cpus 1 --memory 4g --memory-swap 4g -v "$B":/work -w /work openroad/orfs:asap7lock bash -lc 'set -eu; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; yosys -Q -p "read_verilog /work/mode.v; prep -top mode_miter; setattr -mod -unset keep_hierarchy; setattr -unset keep_hierarchy; flatten; async2sync; opt; select mode_miter; sat -seq 6 -set-at 1 rst_n 0 -prove eq 1 -verify" > /work/base.log 2>&1; set +e; yosys -Q -p "read_verilog /work/mode.v; chparam -set MUT 1 mode_miter; prep -top mode_miter; setattr -mod -unset keep_hierarchy; setattr -unset keep_hierarchy; flatten; async2sync; opt; select mode_miter; sat -seq 6 -set-at 1 rst_n 0 -prove eq 1 -verify" > /work/mutant.log 2>&1; rc=$?; set -e; test "$rc" -ne 0; grep -q "proof did fail" /work/mutant.log; echo MUTANT_CAUGHT > /work/mode_pass.txt'

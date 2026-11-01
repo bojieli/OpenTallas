@@ -277,6 +277,14 @@ def write_partition_freeze(P, tn, kd, recs):
         reset_contract = kit_reset_contract.stage(kd, P.types[tn]["module"], source)
         if reset_contract is not None:
             fz["reset_contract"] = reset_contract
+    # Match the core-generator recipe form: candidates only, never an EQ waiver.
+    # Stage before freeze/hash and asynchronous proof-policy input capture.
+    hints = P.types[tn].get("lec_hints")
+    if hints:
+        body = json.dumps(hints, indent=1) + "\n"
+        (kd / "lec_hints.json").write_text(body)
+        fz["lec_hints"] = dict(file="lec_hints.json", count=len(hints),
+                               sha256=hashlib.sha256(body.encode()).hexdigest())
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     return fz
 
