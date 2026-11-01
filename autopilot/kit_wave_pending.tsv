@@ -38,3 +38,5 @@
 85a695234520	hub	qwen_kvsys	qkd_hr_phy_pad@1	CODEX-KV/HR-FACE	Fresh exact fp-root receipt post0/mut1/emitted_v0; 547private copies, all physical face residual counts0,0cycles; normal kit gates retained
 6e18d711c	src	s81_head	hd_host@1	KIT-TRIAGE-1/LEC	11-01 08:56 LEC STALE-TOOL class: kit ran lec.py cbfbd85d7 (10-30); renamed-vector retry 6e18d711c (DIE-HEAD-53 relayout pairing artefact, 593 differs); head src 85a69523452 already has it
 6e18d711c	src	s81_head	hd_mesh@1	KIT-TRIAGE-1/LEC	11-01 08:56 LEC STALE-TOOL class: kit ran lec.py cbfbd85d7 (10-30); renamed-vector retry 6e18d711c (u_wtx.oq_p 14 differs, beat_tx#t); head src 85a69523452 already has it
+6e18d711c0dd04d1f1cf66e63904a96b21eda8a0	src	qwen_compute	sle_st_b_v1@1	KIT-TRIAGE-1/LEC	11-01 10:37 STALE-TOOL: main lec.py on the same netlists = EQUIVALENT (epyc2 kt1-lec probes); QC src 5271d9d7f70 lacks a32f29b96/a88c30731/6e18d711c
+6e18d711c0dd04d1f1cf66e63904a96b21eda8a0	src	qwen_compute	sle_st_b_v2__cl14c98df5@1	KIT-TRIAGE-1/LEC	11-01 10:37 STALE-TOOL: main lec.py on the same netlists = EQUIVALENT (epyc2 kt1-lec probes); QC src 5271d9d7f70 lacks a32f29b96/a88c30731/6e18d711c
