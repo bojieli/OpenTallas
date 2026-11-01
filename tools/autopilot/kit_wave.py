@@ -1434,6 +1434,11 @@ def _step(AP, ap_dir):
     notices = {}
     collect(AP, cfg, st, notices)
     follow_queue(st, ap_dir, notices)
+    auto_rejudge(AP, cfg, st, notices)
+    try:
+        release_pending(cfg, st, parse_pending(AP.read_coord(PENDING_FILE)), _merged(AP, cfg), notices)
+    except Exception as e:                               # a missing/unreadable pending file never blocks the wave
+        AP.log(f"KIT-WAVE pending retries skipped: {type(e).__name__}: {e}")
     stagger = float(cfg.get("launch_stagger_s", DEFAULTS["launch_stagger_s"]))
     nl = 0                                               # items launched this tick: start delay nl * stagger
     for key, rec in list(st["items"].items()):           # INFRA relaunch (up to infra_attempts)
@@ -1812,6 +1817,23 @@ def rejudge_geom(AP, cfg, st, ap_dir, write=False, include_old=False):
     try:
         st = load_state(ap_dir)                          # fresh copy under the lock
         notices = {}
+        rejudge_release(AP, cfg, st, rel, notices)
+        for die, msgs in notices.items():
+            lane = (cfg["dies"].get(die) or {}).get("owner_lane", f"{die} owner")
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
+                            f"- {now_s()} KIT-WAVE [{die}] -> {lane}: rejudge-geom {len(msgs)} event(s): "
+                            + "; ".join(msgs)[:1800])
+        if not AP.DRY:
+            save_state(st, ap_dir)
+            write_stages(st, ap_dir, cfg)
+    finally:
+        lk.close()
+    return rows
+
+
+def rejudge_release(AP, cfg, st, rel, notices, log=print):
+    """release the re-judged passes (rows of rejudge_rows) through enqueue_pass(); caller holds kit_wave.lock"""
+    if True:
         for x in rel:
             rec = st["items"].get(x["key"])
             if not rec or rec.get("status") != "FAIL" or rec.get("stage") != "geom":
@@ -1826,18 +1848,95 @@ def rejudge_geom(AP, cfg, st, ap_dir, write=False, include_old=False):
                        **{"class": ""}, reason=f"rejudge-geom {now_s()}: {x['new']} {x['tag']}"[:240],
                        updated=time.time())
             enqueue_pass(AP, cfg, st, rec, notices)
-            print(f"released {x['die']}/{x['ia']}: {rec['status']} {rec.get('reason', '')[:160]}")
-        for die, msgs in notices.items():
-            lane = (cfg["dies"].get(die) or {}).get("owner_lane", f"{die} owner")
-            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
-                            f"- {now_s()} KIT-WAVE [{die}] -> {lane}: rejudge-geom {len(msgs)} event(s): "
-                            + "; ".join(msgs)[:1800])
-        if not AP.DRY:
-            save_state(st, ap_dir)
-            write_stages(st, ap_dir)
-    finally:
-        lk.close()
-    return rows
+            log(f"released {x['die']}/{x['ia']}: {rec['status']} {rec.get('reason', '')[:160]}")
+
+
+# ------------------------------------------------------------------------------------------------ queue-full (OWNER 11-01)
+# OWNER 11-01 (COORD 05:3x): keep the queue full without a live agent.  Two tick-time mechanisms:
+#  (1) auto_rejudge: when the wave code (kit_wave.py + geom_rules.py) changes on the hub, the next tick re-reads every
+#      stored FAIL with the current RULES (reclassify) and re-judges every FAIL@geom with today's geom rules, releasing
+#      the current-plan passes -- the one-time 'reclassify --write' / 'rejudge-geom --write' runs happen at merge.
+#  (2) pending retries: lanes queue "item@attempt" retries that a fix unlocks in coord autopilot/kit_wave_pending.tsv
+#      (sha, scope, die, item@attempt, lane, note); a row joins the die's retry set once its fix sha is merged
+#      (scope hub: ancestor of the hub origin/main; scope src: ancestor of the die's src_sha).
+PENDING_FILE = "autopilot/kit_wave_pending.tsv"
+AUTO_REJUDGE_FILES = ("kit_wave.py", "geom_rules.py")
+
+
+def wave_code_id():
+    h = hashlib.sha1()
+    for f in AUTO_REJUDGE_FILES:
+        try:
+            h.update((Path(__file__).resolve().parent / f).read_bytes())
+        except OSError:
+            h.update(f.encode())
+    return h.hexdigest()[:12]
+
+
+def auto_rejudge(AP, cfg, st, notices, log=None):
+    """once per wave-code version: reclassify stored FAILs + re-judge FAIL@geom and release current-plan passes"""
+    log = log or AP.log
+    cid = wave_code_id()
+    if st.get("auto_rejudge_code") == cid:
+        return None
+    try:
+        ch = reclassify(st, write=True, log=lambda *_: None)
+        probe = lambda h, items: AP.rpy(h, PROBE_GEOM, {"items": items}, timeout=600)
+        rows = rejudge_rows(cfg, st, probe)
+        rel = [x for x in rows if x["new"] in ("PASS", "PASS-COND") and x["kit_ok"] and x["current"]]
+        rejudge_release(AP, cfg, st, rel, notices, log=log)
+    except Exception as e:                               # never block the wave on it; retried next tick
+        log(f"KIT-WAVE auto-rejudge {cid} failed: {type(e).__name__}: {e}")
+        return None
+    st["auto_rejudge_code"] = cid
+    log(f"KIT-WAVE auto-rejudge {cid}: reclassified {len(ch)}, geom re-judged {len(rows)}, released {len(rel)}")
+    return len(ch), len(rows), len(rel)
+
+
+def parse_pending(text):
+    out = []
+    for ln in (text or "").splitlines():
+        if not ln.strip() or ln.lstrip().startswith("#"):
+            continue
+        f = ln.split("\t")
+        if len(f) < 4 or not re.fullmatch(r"[0-9a-f]{7,40}", f[0].strip()) or f[1].strip() not in ("hub", "src") \
+                or not re.fullmatch(r"[^@\s]+@\d+", f[3].strip()):
+            continue
+        out.append(dict(sha=f[0].strip(), scope=f[1].strip(), die=f[2].strip(), retry=f[3].strip(),
+                        lane=(f[4].strip() if len(f) > 4 else ""), note=(f[5].strip() if len(f) > 5 else "")))
+    return out
+
+
+def release_pending(cfg, st, rows, merged, notices):
+    """merged(sha, scope, die) -> bool.  Adds each merged row's item@attempt to the die's in-memory retry set
+    (kit_wave.json is never written); a first release posts one notice per die."""
+    seen = st.setdefault("pending_released", {})
+    for r in rows:
+        d = (cfg.get("dies") or {}).get(r["die"])
+        if not d:
+            continue
+        k = f"{r['sha']}|{r['scope']}|{r['die']}|{r['retry']}"
+        if k not in seen:
+            if not merged(r["sha"], r["scope"], r["die"]):
+                continue
+            seen[k] = now_s()
+            notices.setdefault(r["die"], []).append(f"{r['retry']} retry released (fix {r['sha']} merged, {r['lane']})")
+        rt = d.setdefault("retry", [])
+        if r["retry"] not in rt:
+            rt.append(r["retry"])
+
+
+def _merged(AP, cfg):
+    cache = {}
+    def f(sha, scope, die):
+        tip = "origin/main" if scope == "hub" else ((cfg.get("dies") or {}).get(die) or {}).get("src_sha") or ""
+        if not tip:
+            return False
+        if (sha, tip) not in cache:
+            rc, _, _ = AP.sh(["git", "-C", str(AP.REPO), "merge-base", "--is-ancestor", sha, tip], timeout=60)
+            cache[(sha, tip)] = rc == 0
+        return cache[(sha, tip)]
+    return f
 
 
 # ------------------------------------------------------------------------------------------------ CLI
