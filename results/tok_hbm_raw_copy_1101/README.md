@@ -1,0 +1,3 @@
+The first real RAW/COPY composition reaches native simulation and fails `RAW_COPY_ROLE_NOT_ARMED`. The 118-row F20 calendar performs an installed-row bitmap scan, one row per clock, before its descriptor can arm. The earlier 16-edge fixture guard was insufficient; the new caller waits 140 initialization edges after installing that descriptor. This corrects fixture initialization, without changing the endpoint, its clock, on-die dataflow latency or post-launch issue dates.
+
+The corrected combined mission is pending in `codex-hbm-raw-copy-portable2` on intel2. This is not a passing native token or physical sign-off record. The prior failure remains immutable in `first_role_arm_FAIL.log`.

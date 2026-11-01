@@ -11,7 +11,8 @@
  if(ci==116)begin cal_entry[52]=1;cal_entry[53]=ebank;cal_entry[69:54]=epoch;cal_entry[84:70]=15'd20752;end
  write_word(12'(ci),cal_entry);
  end
- repeat(16)tick();desc_v=1;tick();desc_v=0;repeat(16)tick();
+ repeat(16)tick();desc_v=1;tick();desc_v=0;repeat(140)tick();
+ // The actual F20 installed-row bitmap scans all118rows before arming.
  if(!cal_configured)$fatal(1,"RAW_COPY_ROLE_NOT_ARMED");
  final_drain=6000;
  if(phase<3)begin
