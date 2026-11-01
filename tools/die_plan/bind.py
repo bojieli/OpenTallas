@@ -2837,6 +2837,14 @@ class Binder:
                     res.setdefault(p, []).append(dict(ci=ci, rel=rel, pin=pin, dir=d, width=w,
                                                       pport=short_id(f"bump_{rel}__{pin}", 90),
                                                       dport=short_id(f"{sv_id(p)}__{pin}", 120)))
+        # Multiple receivers in one partition may expose the same line-side pin (e.g. two signal bump pads).
+        # Keep every existing unique die-port name byte-identical; disambiguate only collisions by bound leaf.
+        names = [b["dport"] for bs in res.values() for b in bs]
+        collisions = {n for n in names if names.count(n) > 1}
+        for p, bs in res.items():
+            for b in bs:
+                if b["dport"] in collisions:
+                    b["dport"] = short_id(f"{sv_id(p)}__{b['rel']}__{b['pin']}", 120)
         names = [b["dport"] for bs in res.values() for b in bs]
         if len(names) != len(set(names)):
             raise BindError(f"bump_ports: die-top port names collide {sorted(n for n in names if names.count(n) > 1)[:5]}")

@@ -16,14 +16,6 @@
       "sha256": "713858300e2a534ca739afa5579d673f3acc0832cb97386d98a63f4adc53ae2a"
     },
     {
-      "path": "rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl_rope.sv",
-      "sha256": "077d2495c3092744f5f455c72d1f2809db9a5ac4af0a4db81e71dc1ac57d55bd"
-    },
-    {
-      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv",
-      "sha256": "c95d2e34a217a5eb15051de213c28e5c7917ba415ef899603d2db83bb62a01e9"
-    },
-    {
       "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv",
       "sha256": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688"
     },
@@ -49,7 +41,7 @@
     },
     {
       "path": "rtl/qwen_split/qfd_sys_face_lctx3_core.sv",
-      "sha256": "e5ffb716604dbb212cc9bcc80db796a25e5ce7b8538dd78a656bc5810c5c9ff8"
+      "sha256": "f5f9e5eae95fb72b45af64b64b8158704414248204fde7803b1cda864ab34bdb"
     },
     {
       "path": "rtl/qwen_split/qfd_sys_face_lctx3_wrapped.sv",
@@ -78,6 +70,14 @@
     {
       "path": "rtl/qwen_sys/d2d_static_20261015/qfd_syscal_lctx3.sv",
       "sha256": "30d81d178256505b6a88b299e3fd3277851115ef0274754034b8c7f60b0400d8"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sysface_cseq_single.sv",
+      "sha256": "d6b819560ac35a07f3a276e6a283556851aff1ec8aa36a518afb985deec78d2a"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_qc_pair.svh",
+      "sha256": "3cac847aee830b5c426b933caaec71749cc04fd2be3ec5e567b0d1b5253f66e4"
     }
   ],
   "input_capture_edges": 1,
@@ -97,5 +97,6 @@
     "record": "exact5caf source inputs; existing SAT2069comparisons and1887check1024PW+8DW lockstep/causals retained"
   },
   "abi_port_count": 93,
-  "frontend_note": "Wrapper production-only MU/MU_HEAD/ROPE defaults set1 so Yosys evaluates its declared profile before chparam; selected1 profile behavior/ages unchanged. L_CONTEXTS remains default0."
+  "frontend_note": "Wrapper production-only MU/MU_HEAD/ROPE defaults set1 so Yosys evaluates its declared profile before chparam; selected1 profile behavior/ages unchanged. L_CONTEXTS remains default0.",
+  "cseq_note": "DIE-QC-59Q 2026-11-01: u_cseq = qfd_sysface_cseq_single (ot_qwen_d2d_cal_seq on the QC+KV pair image, MU single-seq form, COORD 11-01 05:0x); OVL list producer sources dropped"
 }

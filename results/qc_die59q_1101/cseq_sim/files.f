@@ -1,0 +1,16 @@
+physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
+physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.v
+rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv
+rtl/lib/ot_rst_pipe.sv
+rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv
+rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe5.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe7.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv
+rtl/qwen_split/qfd_sysface_cseq_single.sv
+results/qc_die59q_1101/cseq_sim/dly.sv
+results/qc_die59q_1101/cseq_sim/tb_qc59q.sv
