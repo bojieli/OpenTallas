@@ -32,8 +32,10 @@
   "actual_macro_area_um2": 4447.442304,
   "free_area_um2": 25412.397696,
   "existing_limits": {
-    "min_free_fill": 0.2,
+    "min_free_fill": 0.15,
     "max_empty_area": 0.5
   },
-  "action": "CTS not launched; parent native envelope/ports/clock event repair required; no filler/waiver/source/pad ties"
+  "action": "CTS not launched; parent native envelope/ports/clock event repair required; no filler/waiver/source/pad ties",
+  "documented_planning_target_free_fill": 0.2,
+  "limit_source": "tools/autopilot/geom_rules.py FILL_LO=0.15, EMPTY_MAX=0.5; module header documents20% target. Measured6.57% failsboth."
 }
