@@ -1,0 +1,357 @@
+{
+  "native_ports": 181,
+  "native_bits": 17874,
+  "exact_native_direction_width_differences": {},
+  "actual_IO_contacts": 17874,
+  "native_reset_entry": "relayed",
+  "entry_path": "u_bound.u_rst_in",
+  "native_reset_relays": 167,
+  "native_symbols": 260,
+  "actual_emitted_reset_start_sites": 260,
+  "no_phantom_root": true,
+  "SDC_byte_equal_frozen": true,
+  "clock_binding_byte_equal_frozen": true,
+  "core_area_line": "export CORE_AREA = 4.32 4.32 306.72 609.12",
+  "fill": {
+    "stdcell_area": 30846.92058,
+    "macro_area": 30682.301184,
+    "core_area": 182891.52,
+    "free_core": 152209.218816,
+    "std_fill_free": 0.202661315917334
+  },
+  "tool": "58964d6ef",
+  "native_source": "d90b109213c6949da87b330ef143d96bbe937934",
+  "qualification": "GEN only. No CAD, actual placement/load/clock-source identity, parent adoption or asset qualification.",
+  "nonFF_regional_area_obligation": 10691.5869,
+  "max_tiny_projected_FF_overlap": 0.8422200520833125,
+  "bank_windows": "Estimated model intent only; actual generator uses existing emitted ring/FT/reset decks.",
+  "port_bind": {
+    "verdict": "PASS",
+    "top": "qfd_qc_slw_stm",
+    "straps": [
+      "strap_ca_efall",
+      "strap_ca_k_cws1_i",
+      "strap_ca_k_flt_ctl_i",
+      "strap_ca_k_x_ctl_fw_p1_i",
+      "strap_ca_k_x_ctl_i",
+      "strap_ca_k_x_fe_fw_i",
+      "strap_ca_k_x_fe_fw_p1_i",
+      "strap_ca_k_x_fe_i",
+      "strap_ca_k_x_fe_p1_i",
+      "strap_ca_k_x_sc_fw_i",
+      "strap_ca_k_x_su_c_ctl_i",
+      "strap_ca_k_x_su_l0_i",
+      "strap_ca_k_x_su_l1_i",
+      "strap_ca_pad"
+    ],
+    "bad_straps": [],
+    "plan_bits": 17874,
+    "netlist_bits": 17874,
+    "missing": 0,
+    "extra": 0,
+    "missing_examples": [],
+    "extra_examples": []
+  },
+  "face_guard": {
+    "top": "qfd_qc_slw_stm",
+    "checked": 17698,
+    "ok": 17698,
+    "fails": {},
+    "flops": {
+      "b_tw_data_ctl_o[2103]": "u_bound.u_bout_b_tw_data_ctl_o/eq$_DFF_PN0_",
+      "b_tw_data_ctl_o[2102]": "u_bound.u_bout_b_tw_data_ctl_o/q[2102]$_DFF_P_",
+      "b_tw_data_ctl_o[2101]": "u_bound.u_bout_b_tw_data_ctl_o/q[2101]$_DFF_P_",
+      "b_tw_data_ctl_o[2100]": "u_bound.u_bout_b_tw_data_ctl_o/q[2100]$_DFF_P_",
+      "b_tw_data_ctl_o[2099]": "u_bound.u_bout_b_tw_data_ctl_o/q[2099]$_DFF_P_",
+      "b_tw_data_ctl_o[2098]": "u_bound.u_bout_b_tw_data_ctl_o/q[2098]$_DFF_P_",
+      "b_tw_data_ctl_o[2097]": "u_bound.u_bout_b_tw_data_ctl_o/q[2097]$_DFF_P_",
+      "b_tw_data_ctl_o[2096]": "u_bound.u_bout_b_tw_data_ctl_o/q[2096]$_DFF_P_",
+      "b_tw_data_ctl_o[2095]": "u_bound.u_bout_b_tw_data_ctl_o/q[2095]$_DFF_P_",
+      "b_tw_data_ctl_o[2094]": "u_bound.u_bout_b_tw_data_ctl_o/q[2094]$_DFF_P_",
+      "b_tw_data_ctl_o[2093]": "u_bound.u_bout_b_tw_data_ctl_o/q[2093]$_DFF_P_",
+      "b_tw_data_ctl_o[2092]": "u_bound.u_bout_b_tw_data_ctl_o/q[2092]$_DFF_P_",
+      "b_tw_data_ctl_o[2091]": "u_bound.u_bout_b_tw_data_ctl_o/q[2091]$_DFF_P_",
+      "b_tw_data_ctl_o[2090]": "u_bound.u_bout_b_tw_data_ctl_o/q[2090]$_DFF_P_",
+      "b_tw_data_ctl_o[2089]": "u_bound.u_bout_b_tw_data_ctl_o/q[2089]$_DFF_P_",
+      "b_tw_data_ctl_o[2088]": "u_bound.u_bout_b_tw_data_ctl_o/q[2088]$_DFF_P_",
+      "b_tw_data_ctl_o[2087]": "u_bound.u_bout_b_tw_data_ctl_o/q[2087]$_DFF_P_",
+      "b_tw_data_ctl_o[2086]": "u_bound.u_bout_b_tw_data_ctl_o/q[2086]$_DFF_P_",
+      "b_tw_data_ctl_o[2085]": "u_bound.u_bout_b_tw_data_ctl_o/q[2085]$_DFF_P_",
+      "b_tw_data_ctl_o[2084]": "u_bound.u_bout_b_tw_data_ctl_o/q[2084]$_DFF_P_"
+    },
+    "straps_exempt": [
+      "strap_ca_efall",
+      "strap_ca_k_cws1_i",
+      "strap_ca_k_flt_ctl_i",
+      "strap_ca_k_x_ctl_fw_p1_i",
+      "strap_ca_k_x_ctl_i",
+      "strap_ca_k_x_fe_fw_i",
+      "strap_ca_k_x_fe_fw_p1_i",
+      "strap_ca_k_x_fe_i",
+      "strap_ca_k_x_fe_p1_i",
+      "strap_ca_k_x_sc_fw_i",
+      "strap_ca_k_x_su_c_ctl_i",
+      "strap_ca_k_x_su_l0_i",
+      "strap_ca_k_x_su_l1_i",
+      "strap_ca_pad"
+    ],
+    "dead_declared": [],
+    "bumps_exempt": [],
+    "clock_exports": {
+      "fclk_out_b_tw_data_ctl_o": "clk",
+      "fclk_out_cws1_o": "clk",
+      "fclk_out_x_fe_o": "clk",
+      "fclk_out_x_fe_p1_o": "clk",
+      "fclk_out_x_fw_ctl_p1_o": "clk",
+      "fclk_out_x_fw_ctl_p2_o": "clk",
+      "fclk_out_x_fw_fe_o": "clk",
+      "fclk_out_x_fw_fe_p1_o": "clk",
+      "fclk_out_x_fw_fe_p2_o": "clk",
+      "fclk_out_x_st_a_fe_o": "clk",
+      "fclk_out_x_su_c_ctl_o": "clk",
+      "fclk_out_cland_up": "clk"
+    },
+    "land_mux_depth": {
+      "1": 458,
+      "2": 15478
+    },
+    "land_slot_bits": 3984,
+    "land_mux_bits": 3984,
+    "ring_start": {
+      "cland_fstart_in_cws1_i[0]": {
+        "ring": [
+          "cws1_i"
+        ],
+        "ring_clock": [
+          "u_bound.u_cland_cws1_i/fclk"
+        ],
+        "writer_flops": 2094,
+        "writer_groups": {
+          "u_bound.u_cland_cws1_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+          "u_bound.u_cland_cws1_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+          "u_bound.u_cland_cws1_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+          "u_bound.u_cland_cws1_i/u_ring.s_d[N][N]$_DFFE_PP_": 2068,
+          "u_bound.u_cland_cws1_i/u_ring.tc[N]$_SDFF_PN0_": 6
+        },
+        "sampler_flops": [],
+        "sampler_clock": null
+      },
+      "cland_fstart_in_flt_ctl_i[0]": {
+        "ring": [
+          "flt_ctl_i"
+        ],
+        "ring_clock": [
+          "u_bound.u_cland_flt_ctl_i/fclk"
+        ],
+        "writer_flops": 34,
+        "writer_groups": {
+          "u_bound.u_cland_flt_ctl_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+          "u_bound.u_cland_flt_ctl_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+          "u_bound.u_cland_flt_ctl_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+          "u_bound.u_cland_flt_ctl_i/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+          "u_bound.u_cland_flt_ctl_i/u_ring.tc[N]$_SDFF_PN0_": 6
+        },
+        "sampler_flops": [],
+        "sampler_clock": null
+      },
+      "cland_fstart_in_x_ctl_fw_p1_i[0]": {
+        "ring": [
+          "x_ctl_fw_p1_i"
+        ],
+        "ring_clock": [
+          "u_bound.u_cland_x_ctl_fw_p1_i/fclk"
+        ],
+        "writer_flops": 2554,
+        "writer_groups": {
+          "u_bound.u_cland_x_ctl_fw_p1_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+          "u_bound.u_cland_x_ctl_fw_p1_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+          "u_bound.u_cland_x_ctl_fw_p1_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+          "u_bound.u_cland_x_ctl_fw_p1_i/u_ring.s_d[N][N]$_DFFE_PP_": 2528,
+          "u_bound.u_cland_x_ctl_fw_p1_i/u_ring.tc[N]$_SDFF_PN0_": 6
+        },
+        "sampler_flops": [],
+        "sampler_clock": null
+      },
+      "cland_fstart_in_x_ctl_i[0]": {
+        "ring": [
+          "x_ctl_i"
+        ],
+        "ring_clock": [
+          "u_bound.u_cland_x_ctl_i/fclk"
+        ],
+        "writer_flops": 166,
+        "writer_groups": {
+          "u_bound.u_cland_x_ctl_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+          "u_bound.u_cland_x_ctl_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+          "u_bound.u_cland_x_ctl_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+          "u_bound.u_cland_x_ctl_i/u_ring.s_d[N][N]$_DFFE_PP_": 140,
+          "u_bound.u_cland_x_ctl_i/u_ring.tc[N]$_SDFF_PN0_": 6
+        },
+        "sampler_flops": [],
+        "sampler_clock": null
+      },
+      "cland_fstart_in_x_fe_fw_i[0]": {
+        "ring": [
+          "x_fe_fw_i"
+        ],
+        "ring_clock": [
+          "u_bound.u_cland_x_fe_fw_i/fclk"
+        ],
+        "writer_flops": 2242,
+        "writer_groups": {
+          "u_bound.u_cland_x_fe_fw_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+          "u_bound.u_cland_x_fe_fw_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+          "u_bound.u_cland_x_fe_fw_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+          "u_bound.u_cland_x_fe_fw_i/u_ring.s_d[N][N]$_DFFE_PP_": 2216,
+          "u_bound.u_cland_x_fe_fw_i/u_ring.tc[N]$_SDFF_PN0_": 6
+        },
+        "sampler_flops": [],
+        "sampler_clock": null
+      },
+      "cland_fstart_in_x_fe_fw_p1_i[0]": {
+        "ring": [
+          "x_fe_fw_p1_i"
+        ],
+        "ring_clock": [
+          "u_bound.u_cland_x_fe_fw_p1_i/fclk"
+        ],
+        "writer_flops": 2238,
+        "writer_groups": {
+          "u_bound.u_cland_x_fe_fw_p1_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+          "u_bound.u_cland_x_fe_fw_p1_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+          "u_bound.u_cland_x_fe_fw_p1_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+          "u_bound.u_cland_x_fe_fw_p1_i/u_ring.s_d[N][N]$_DFFE_PP_": 2212,
+          "u_bound.u_cland_x_fe_fw_p1_i/u_ring.tc[N]$_SDFF_PN0_": 6
+        },
+        "sampler_flops": [],
+        "sampler_clock": null
+      },
+      "cland_fstart_in_x_fe_i[0]": {
+        "ring": [
+          "x_fe_i"
+        ],
+        "ring_clock": [
+          "u_bound.u_cland_x_fe_i/fclk"
+        ],
+        "writer_flops": 2206,
+        "writer_groups": {
+          "u_bound.u_cland_x_fe_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+          "u_bound.u_cland_x_fe_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+          "u_bound.u_cland_x_fe_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+          "u_bound.u_cland_x_fe_i/u_ring.s_d[N][N]$_DFFE_PP_": 2180,
+          "u_bound.u_cland_x_fe_i/u_ring.tc[N]$_SDFF_PN0_": 6
+        },
+        "sampler_flops": [],
+        "sampler_clock": null
+      },
+      "cland_fstart_in_x_fe_p1_i[0]": {
+        "ring": [
+          "x_fe_p1_i"
+        ],
+        "ring_clock": [
+          "u_bound.u_cland_x_fe_p1_i/fclk"
+        ],
+        "writer_flops": 2206,
+        "writer_groups": {
+          "u_bound.u_cland_x_fe_p1_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+          "u_bound.u_cland_x_fe_p1_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+          "u_bound.u_cland_x_fe_p1_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+          "u_bound.u_cland_x_fe_p1_i/u_ring.s_d[N][N]$_DFFE_PP_": 2180,
+          "u_bound.u_cland_x_fe_p1_i/u_ring.tc[N]$_SDFF_PN0_": 6
+        },
+        "sampler_flops": [],
+        "sampler_clock": null
+      },
+      "cland_fstart_in_x_sc_fw_i[0]": {
+        "ring": [
+          "x_sc_fw_i"
+        ],
+        "ring_clock": [
+          "u_bound.u_cland_x_sc_fw_i/fclk"
+        ],
+        "writer_flops": 222,
+        "writer_groups": {
+          "u_bound.u_cland_x_sc_fw_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+          "u_bound.u_cland_x_sc_fw_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+          "u_bound.u_cland_x_sc_fw_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+          "u_bound.u_cland_x_sc_fw_i/u_ring.s_d[N][N]$_DFFE_PP_": 196,
+          "u_bound.u_cland_x_sc_fw_i/u_ring.tc[N]$_SDFF_PN0_": 6
+        },
+        "sampler_flops": [],
+        "sampler_clock": null
+      },
+      "cland_fstart_in_x_su_c_ctl_i[0]": {
+        "ring": [
+          "x_su_c_ctl_i"
+        ],
+        "ring_clock": [
+          "u_bound.u_cland_x_su_c_ctl_i/fclk"
+        ],
+        "writer_flops": 402,
+        "writer_groups": {
+          "u_bound.u_cland_x_su_c_ctl_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+          "u_bound.u_cland_x_su_c_ctl_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+          "u_bound.u_cland_x_su_c_ctl_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+          "u_bound.u_cland_x_su_c_ctl_i/u_ring.s_d[N][N]$_DFFE_PP_": 376,
+          "u_bound.u_cland_x_su_c_ctl_i/u_ring.tc[N]$_SDFF_PN0_": 6
+        },
+        "sampler_flops": [],
+        "sampler_clock": null
+      },
+      "cland_fstart_in_x_su_l0_i[0]": {
+        "ring": [
+          "x_su_l0_i"
+        ],
+        "ring_clock": [
+          "u_bound.u_cland_x_su_l0_i/fclk"
+        ],
+        "writer_flops": 942,
+        "writer_groups": {
+          "u_bound.u_cland_x_su_l0_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+          "u_bound.u_cland_x_su_l0_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+          "u_bound.u_cland_x_su_l0_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+          "u_bound.u_cland_x_su_l0_i/u_ring.s_d[N][N]$_DFFE_PP_": 916,
+          "u_bound.u_cland_x_su_l0_i/u_ring.tc[N]$_SDFF_PN0_": 6
+        },
+        "sampler_flops": [],
+        "sampler_clock": null
+      },
+      "cland_fstart_in_x_su_l1_i[0]": {
+        "ring": [
+          "x_su_l1_i"
+        ],
+        "ring_clock": [
+          "u_bound.u_cland_x_su_l1_i/fclk"
+        ],
+        "writer_flops": 942,
+        "writer_groups": {
+          "u_bound.u_cland_x_su_l1_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+          "u_bound.u_cland_x_su_l1_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+          "u_bound.u_cland_x_su_l1_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+          "u_bound.u_cland_x_su_l1_i/u_ring.s_d[N][N]$_DFFE_PP_": 916,
+          "u_bound.u_cland_x_su_l1_i/u_ring.tc[N]$_SDFF_PN0_": 6
+        },
+        "sampler_flops": [],
+        "sampler_clock": null
+      },
+      "cland_tstart_in[0]": {
+        "ring": [],
+        "ring_clock": [],
+        "writer_flops": 0,
+        "writer_groups": {},
+        "sampler_flops": [
+          "u_bound.u_cland_origin/s0$_SDFF_PN0_",
+          "u_bound.u_cland_origin/sf$_DFF_N_"
+        ],
+        "sampler_clock": "u_bound.u_srl_95/clk"
+      }
+    },
+    "ring_start_bits": 13,
+    "pairs_declared": [],
+    "planned_bits": 17671,
+    "missing_ports": 0,
+    "fail_counts": {},
+    "verdict": "PASS",
+    "netlist": "/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/phys/slw_stm_v3/run/results/asap7/dp_slw_stm_v3/base/1_2_yosys.v"
+  }
+}

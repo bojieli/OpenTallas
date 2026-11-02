@@ -1,0 +1,9 @@
+Corrected private isolated GEN589: native source d90 PRE-D13, exact original13 source files, reviewed76sameclockhomes and finite planning model. Tool58964d6ef uses explicit default-off --bound-native-reset slw_stm_v3; all38 isolated bundles explicitly retain their native epoch bit.
+
+StandardGEN0; native landing25records identical to previously guarded target metadata. Generated exact181port directions/widths and17874 IO contacts match native. PORT_BIND PASS17874/17874; FACE_GUARD PASS17698/17698. Native reset entry remains relayed u_bound.u_rst_in/u_run_in with167relays/260verified symbols+260scoped placement targets, no phantom root. Generated constraint.sdc and clock_binding.json are byte-equal to frozen originals. Four actual ROMs retain exact dimensions/views/trackoffset.
+
+Actual config CORE_AREA4.32 4.32 306.72 609.12 yields core182891.52 minus4macro30682.301184=free152209.218816; measuredstd30846.92058/free=20.2661315917334% nominal model fill. Rawoutline/free denominator gives19.2646% and is not the generated placement-core denominator. No assumed clock buffer credit. Actual post-synth/place census/fill remains to measure.
+
+I personally VIEWED generated_physical_intent.png. It renders ONLY actual emitted I/O/macros/ring/reset decks. Shared bank/stream finite windows are planning/model input, NOT custom enforced placement constraints. Tiny projected84.22% overlap and10,691.5869um2 nonFF regional obligation remain explicit; no actual placed clock/source identity, routing/PG/asset, parent-view/profile adoption or SIGNED/EQ credit. Other10STMtypes held.
+
+QC owner must review this actual bundle before ONE ordinary fresh native SYNTH→PLACE (explicitly allowed duplicate count only after review), with actual placed LOOK before CTS. No CAD launched by this receipt. Originalreset/epoch and density/packing failures remain preserved independently. The full exact emitted bundle and source commands are attached; no handcrafted successful verdicts.

@@ -1,0 +1,63 @@
+{
+  "native_ports": 181,
+  "native_bits": 17874,
+  "exact_native_direction_width_differences": {},
+  "actual_IO_contacts": 17874,
+  "native_reset_entry": "relayed",
+  "entry_path": "u_bound.u_rst_in",
+  "native_reset_relays": 167,
+  "native_symbols": 260,
+  "actual_emitted_reset_start_sites": 260,
+  "no_phantom_root": true,
+  "SDC_byte_equal_frozen": true,
+  "clock_binding_byte_equal_frozen": true,
+  "core_area_line": "export CORE_AREA = 4.32 4.32 306.72 609.12",
+  "fill": {
+    "stdcell_area": 30846.92058,
+    "macro_area": 30682.301184,
+    "core_area": 182891.52,
+    "free_core": 152209.218816,
+    "std_fill_free": 0.202661315917334
+  },
+  "tool": "58964d6ef",
+  "native_source": "d90b109213c6949da87b330ef143d96bbe937934",
+  "qualification": "GEN only. No CAD, actual placement/load/clock-source identity, parent adoption or asset qualification.",
+  "nonFF_regional_area_obligation": 10691.5869,
+  "max_tiny_projected_FF_overlap": 0.8422200520833125,
+  "bank_windows": "Estimated model intent only; actual generator uses existing emitted ring/FT/reset decks.",
+  "port_bind": {
+    "verdict": "PASS",
+    "top": "qfd_qc_slw_stm",
+    "straps": [
+      "strap_ca_efall",
+      "strap_ca_k_cws1_i",
+      "strap_ca_k_flt_ctl_i",
+      "strap_ca_k_x_ctl_fw_p1_i",
+      "strap_ca_k_x_ctl_i",
+      "strap_ca_k_x_fe_fw_i",
+      "strap_ca_k_x_fe_fw_p1_i",
+      "strap_ca_k_x_fe_i",
+      "strap_ca_k_x_fe_p1_i",
+      "strap_ca_k_x_sc_fw_i",
+      "strap_ca_k_x_su_c_ctl_i",
+      "strap_ca_k_x_su_l0_i",
+      "strap_ca_k_x_su_l1_i",
+      "strap_ca_pad"
+    ],
+    "bad_straps": [],
+    "plan_bits": 17874,
+    "netlist_bits": 17874,
+    "missing": 0,
+    "extra": 0,
+    "missing_examples": [],
+    "extra_examples": []
+  },
+  "face_guard": {
+    "top": "qfd_qc_slw_stm",
+    "checked": 17698,
+    "ok": 17698,
+    "fails": {},
+    "verdict": "PASS"
+  },
+  "review": "Personally VIEWED generated_physical_intent.png; ordinary PLACE decision belongs QC owner; no CAD launched."
+}
