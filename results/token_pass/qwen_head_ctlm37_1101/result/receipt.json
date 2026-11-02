@@ -1,0 +1,39 @@
+{
+  "status": "PASS_COMPONENT",
+  "host": "epyc2/dear-crayfish",
+  "unit": "oth-ubuntu-3262639-1793604579",
+  "remote": "/srv/opentallas-scratch2/claude/codex-head-ctlm37-native-1101/gate1",
+  "admission": {
+    "mem_gb": 2,
+    "threads": 1,
+    "disk_gb": 2,
+    "critical": true
+  },
+  "build": {
+    "exit": 0,
+    "seconds": 99.67,
+    "peak_rss_kb": 364132
+  },
+  "nominal": {
+    "exit": 0,
+    "seconds": 9.16,
+    "cycles": 10844,
+    "existing_stage_user_loads": 144,
+    "new_head_user_loads": 4,
+    "nent": 1013,
+    "shared_head_range": [
+      1012,
+      1
+    ],
+    "defaultoff_reject": true
+  },
+  "controls": {
+    "MUT_USER": {
+      "exit": 1,
+      "assertion": "CTLM_WRONG_REQUEST stage37/37 user0/1"
+    }
+  },
+  "source_packet_sha256": "a13e4f2c1de7f7b43492fa3f0f158f73ee3b7e44b31bcb1acce1a2c601c8b056",
+  "boundary": "Actual selected CALR and CTLM stage37/user request; no table payload reload, native H arithmetic, ROOT lease, physical timing or token qualification",
+  "canonical_activation": false
+}

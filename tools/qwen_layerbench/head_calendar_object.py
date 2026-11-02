@@ -27,6 +27,9 @@ def build(calendar):
             patches.append(dict(index=p['index'],old_cmd=f"{p['cmd']:029x}",new_cmd=f'{c:029x}',edge=p['edge'],changed_field='amnb0->6'))
     if len(patches)!=1 or any(e['decoded']['kind']==6 or e['decoded'].get('amax')for e in base):
         raise ValueError('BASE AMAX traffic or ROOT ownership differs')
+    streams=[e for e in base if e['decoded']['kind']==5][-12:]
+    if len(streams)!=12 or any(e['cmd']!=D.cmd_stream(s,1 if s==0 else 3,1)for s,e in enumerate(streams)) or any(e['decoded']['kind']==5 for e in head):
+        raise ValueError('actual retained residual2 STREAM setup differs')
     nent=dw[0]&1023
     if nent!=1009:raise ValueError('selected1009-entry layout required')
     for s in range(1,37):
@@ -41,6 +44,7 @@ def build(calendar):
     return dict(schema='opentallas.qwen.native-head-calr-object.v1',status='RELOCATABLE_NOT_EXECUTABLE',
       source_calendar_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest()for p in calendar.iterdir()if p.name in ('dw.hex','calendar_m0.viamap.hex','calendar_m1.viamap.hex')},
       root_patches=patches,retired_head_cfg=[dict(index=e['index'],edge=e['edge'],cmd=f"{e['cmd']:029x}")for e in cfg],
+      retained_stream_setup=dict(extra_commands=0,tag=1,source_calls=[dict(index=e['index'],slice=i,edge=e['edge'],dirs=1 if i==0 else 3,cmd=f"{e['cmd']:029x}")for i,e in enumerate(streams)],lifetime='retained through HEAD; LOCAL4 tables do not rewrite cfg',headtap='actual s6 tap exposes X valid/address/data, no tag'),
       native_apply_commands=[dict(slice=s,cmd=f'{D.cmd_su(16,s):029x}',pidx=16,user_relocation='actual CALR +128*user',issue_symbol=f'HEAD_APPLY_S{s}_ISSUE')for s in range(12)],
       retained_head_commands=[dict(old_index=e['index'],old_edge=e['edge'],cmd=f"{e['cmd']:029x}")for e in head if e['index']not in retired],
       local37_range=dict(first=1012,count=1,entry=f'{((8<<116)|local37):032x}',stage=37,users='same range invoked peruser by existing OPSEG',start_symbol='HEAD_TABLE_INSTALL_START'),
