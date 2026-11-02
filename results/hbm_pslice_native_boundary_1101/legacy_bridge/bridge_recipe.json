@@ -1,0 +1,46 @@
+{
+ "gold_commit": "d34578d6f",
+ "candidate_commit": "8a0367f73",
+ "gold_actualC4_file_hashes_match": true,
+ "source_files": [
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "macro": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+ "fixture": "tools/hbm_b2/pslice_native_boundary_1101/tb.sv",
+ "gold_fixture_exact_edit": "old_ot_hbm_su_programme_pslice_c5 #(.SB(2470),.NCX(1)) gold -> old_ot_hbm_su_programme_pslice_c5 #(.SB(2470)) gold",
+ "gold_namespace": "Rename everygold-definedmodule identifier old_ prefix, preservingall modulebodies/ports. Candidate8a unmodified.",
+ "controls": [
+  {
+   "tb.MUT": 0,
+   "required": "allreference-definedbits match everyedge inclvalid0; no validmask, explicitunknowncounter"
+  },
+  {
+   "tb.MUT": 1,
+   "required": "phasecontrolmustdiffer"
+  }
+ ],
+ "baseline_failure": {
+  "candidate": "8b0491c04",
+  "unit": "oth-ubuntu-1802109-1793576552",
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-pslice-legacybridge-1400",
+  "MUT0_diff": 768,
+  "MUT1_diff": 6544,
+  "reason": "NCXunresetcommand loseslegacyknown0 oncoldreset cycle2; threeLcolumns\u00d7256bits"
+ },
+ "repair": {
+  "unit": "oth-ubuntu-2087123-1793577301",
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-pslice-legacybridge-resetfix-1400",
+  "exit": 0,
+  "verdict": "PASS",
+  "MUT0_diff": 0,
+  "known_bit_comparisons": 4419751,
+  "unknown_reference_observations": 2489,
+  "edges": 1776,
+  "MUT1_diff": 5776,
+  "short_warm_resets": 2,
+  "all_existing_public_cycles": 0
+ },
+ "release": false
+}

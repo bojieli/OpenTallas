@@ -1,0 +1,2482 @@
+{
+ "schema": "opentallas.hbm.native_source_graft_request.v1",
+ "status": "SOURCE_QUALIFIED_PREP_ONLY_NOT_ADOPTED",
+ "canonical_modified": false,
+ "bind_replayed": false,
+ "current_manifest": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/asbuilt_c11e_portable.json",
+ "current_manifest_sha256": "fc8d60084ed9d790eb3b93e11300608b4d080e68a485550fa06da64347f85e9a",
+ "requests": [
+  {
+   "canonical_instance": "pgp_NW",
+   "physical_part": "NW_hub",
+   "physical_home": "u_pgp_Q__q1",
+   "qualified_emitted_instance": "NW_hub.u_u_pgp_Q_q1",
+   "current_master": "ot_hbm_su_programme_pslice_c5",
+   "current_parameter_expressions": {
+    "SB": "2470"
+   },
+   "current_port_expressions": {
+    "busy": "w_u_pgp_Q_q1_busy",
+    "cfg_bank": "L172_i_q[25:10]",
+    "cfg_data": "L172_i_q[281:26]",
+    "cfg_row": "L172_i_q[304:298]",
+    "cfg_we": "L172_i_q[306]",
+    "clk": "clk",
+    "command": "w_u_pgp_Q_q1_command",
+    "done": "w_u_pgp_Q_q1_done",
+    "edge_index": "w_u_pgp_Q_q1_edge_index",
+    "fault": "w_u_pgp_Q_q1_fault",
+    "length": "L172_i_q[297:282]",
+    "rst_n": "rst_n_t334",
+    "start": "L172_i_q[305]",
+    "valid": "w_u_pgp_Q_q1_valid"
+   },
+   "clock": "clk",
+   "reset": "rst_n_t334",
+   "raw_current_instance_text": "    ot_hbm_su_programme_pslice_c5 #(.SB(2470)) u_u_pgp_Q_q1 (\n        .busy(w_u_pgp_Q_q1_busy),\n        .cfg_bank(L172_i_q[25:10]),\n        .cfg_data(L172_i_q[281:26]),\n        .cfg_row(L172_i_q[304:298]),\n        .cfg_we(L172_i_q[306]),\n        .clk(clk),\n        .command(w_u_pgp_Q_q1_command),\n        .done(w_u_pgp_Q_q1_done),\n        .edge_index(w_u_pgp_Q_q1_edge_index),\n        .fault(w_u_pgp_Q_q1_fault),\n        .length(L172_i_q[297:282]),\n        .rst_n(rst_n_t334),\n        .start(L172_i_q[305]),\n        .valid(w_u_pgp_Q_q1_valid)\n    );",
+   "bound_wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv",
+   "bound_wrapper_sha256": "39e4cf48f23ae3a13679b3a45bc3c62ea68e8a4ed9212886ebb7c45903c6d49b",
+   "requested_parameter_expressions": {
+    "SB": "2470",
+    "NCX": "1",
+    "NATIVE_PINS": "1"
+   },
+   "requested_parameter_delta": {
+    "NCX": "1",
+    "NATIVE_PINS": "1"
+   },
+   "requested_port_expressions": {
+    "busy": "w_u_pgp_Q_q1_busy",
+    "cfg_bank": "L172_i_q[25:10]",
+    "cfg_data": "L172_i_q[281:26]",
+    "cfg_row": "L172_i_q[304:298]",
+    "cfg_we": "L172_i_q[306]",
+    "clk": "clk",
+    "command": "w_u_pgp_Q_q1_command",
+    "done": "w_u_pgp_Q_q1_done",
+    "edge_index": "w_u_pgp_Q_q1_edge_index",
+    "fault": "w_u_pgp_Q_q1_fault",
+    "length": "L172_i_q[297:282]",
+    "rst_n": "rst_n_t334",
+    "start": "L172_i_q[305]",
+    "valid": "w_u_pgp_Q_q1_valid"
+   },
+   "preservation_checks": {
+    "all_existing_parameters_byte_identical": true,
+    "all_existing_port_expressions_byte_identical": true,
+    "public_port_set_unchanged": true,
+    "clock_expression_unchanged": true,
+    "reset_expression_unchanged": true
+   },
+   "public_abi": {
+    "ports": {
+     "clk": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "rst_n": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "cfg_we": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "cfg_bank": {
+      "width_bits": 16,
+      "direction": "input"
+     },
+     "cfg_row": {
+      "width_bits": 7,
+      "direction": "input"
+     },
+     "cfg_data": {
+      "width_bits": 256,
+      "direction": "input"
+     },
+     "start": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "length": {
+      "width_bits": 16,
+      "direction": "input"
+     },
+     "busy": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "valid": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "done": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "fault": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "edge_index": {
+      "width_bits": 16,
+      "direction": "output"
+     },
+     "command": {
+      "width_bits": 2470,
+      "direction": "output"
+     }
+    },
+    "total_pin_bits": 2789,
+    "new_ports": [],
+    "removed_ports": []
+   },
+   "source_selection_request": {
+    "master": "ot_hbm_su_programme_pslice_c5",
+    "commit": "8a0367f73",
+    "dependency_readset": "PSlice programme_pgcol/programme/relay+real128x256macro",
+    "scope": "Namedinstance only; source-only request, no canonicalmanifest write."
+   },
+   "proof_scope": {
+    "public_sameedge_native_fix": "8aactuallegacybridgePASS; freshmappedguards32/64PASS; freshsourceAIGactual4FULLLECPASS108839/108839,KEEP1064/1064,0diff/undecided. Thisiscomponentqualification, notcanonicalgraphadoption.",
+    "baseline_to_selected_profile": "ActualC4d345SB2470-only\u21928aSB2470/NCX1/NATIVE_PINS1 100macro sameedgebridgePASS all4,419,751knownbits inclvalid0/cold/2shortwarm; phase5776caught. Newresetpreservesfirstlegacydefinedcommandedge; no valid/datamasking.",
+    "public_cycle_delta_proved_for_native_fix": 0,
+    "reset_release_cycle_delta_proved_for_native_fix": 0
+   },
+   "canonical_adoption_gate": "HELD; no strictbind/sourcegraph/plan/clock/physicaladoption in this request"
+  },
+  {
+   "canonical_instance": "sfup_NW",
+   "physical_part": "NW_hub",
+   "physical_home": "u_sfup_Q__q1",
+   "qualified_emitted_instance": "NW_hub.u_u_sfup_Q_q1",
+   "current_master": "ot_hgi_sfu_programme_store_r10",
+   "current_parameter_expressions": {
+    "PAGE_AW": "1"
+   },
+   "current_port_expressions": {
+    "cfg_addr": "w_u_col_sfu_Q_pw_addr[10:0]",
+    "cfg_data": "w_u_col_sfu_Q_pw_data[255:0]",
+    "cfg_stripe": "w_u_col_sfu_Q_pw_addr[13:11]",
+    "cfg_we": "w_u_col_sfu_Q_pw_we[0]",
+    "clk": "clk",
+    "compiler_control": "w_u_sfup_Q_q1_compiler_control",
+    "fault": "w_u_sfup_Q_q1_fault",
+    "io_active": "w_u_sfup_Q_q1_io_active",
+    "io_cfg_addr": "w_u_col_sfu_Q_pw_addr[10:0]",
+    "io_cfg_data": "w_u_col_sfu_Q_pw_data[255:0]",
+    "io_cfg_stripe": "w_u_col_sfu_Q_pw_addr[12:11]",
+    "io_cfg_we": "w_u_col_sfu_Q_pw_we[1]",
+    "io_done": "w_u_sfup_Q_q1_io_done",
+    "io_ordinal": "w_u_sfup_Q_q1_io_ordinal",
+    "io_start_base": "w_u_col_sfu_Q_prm[49:39]",
+    "io_start_limit": "w_u_col_sfu_Q_prm[61:50]",
+    "io_start_loops": "w_u_col_sfu_Q_prm[77:62]",
+    "io_start_v": "w_u_col_sfu_Q_start_v[0]",
+    "io_word": "w_u_sfup_Q_q1_io_word",
+    "programme_active": "w_u_sfup_Q_q1_programme_active",
+    "programme_done": "w_u_sfup_Q_q1_programme_done",
+    "programme_ordinal": "w_u_sfup_Q_q1_programme_ordinal",
+    "rst_n": "rst_n_t352",
+    "start_base": "w_u_col_sfu_Q_prm[10:0]",
+    "start_limit": "w_u_col_sfu_Q_prm[22:11]",
+    "start_loops": "w_u_col_sfu_Q_prm[38:23]"
+   },
+   "clock": "clk",
+   "reset": "rst_n_t352",
+   "raw_current_instance_text": "    ot_hgi_sfu_programme_store_r10 #(.PAGE_AW(1)) u_u_sfup_Q_q1 (\n        .cfg_addr(w_u_col_sfu_Q_pw_addr[10:0]),\n        .cfg_data(w_u_col_sfu_Q_pw_data[255:0]),\n        .cfg_stripe(w_u_col_sfu_Q_pw_addr[13:11]),\n        .cfg_we(w_u_col_sfu_Q_pw_we[0]),\n        .clk(clk),\n        .compiler_control(w_u_sfup_Q_q1_compiler_control),\n        .fault(w_u_sfup_Q_q1_fault),\n        .io_active(w_u_sfup_Q_q1_io_active),\n        .io_cfg_addr(w_u_col_sfu_Q_pw_addr[10:0]),\n        .io_cfg_data(w_u_col_sfu_Q_pw_data[255:0]),\n        .io_cfg_stripe(w_u_col_sfu_Q_pw_addr[12:11]),\n        .io_cfg_we(w_u_col_sfu_Q_pw_we[1]),\n        .io_done(w_u_sfup_Q_q1_io_done),\n        .io_ordinal(w_u_sfup_Q_q1_io_ordinal),\n        .io_start_base(w_u_col_sfu_Q_prm[49:39]),\n        .io_start_limit(w_u_col_sfu_Q_prm[61:50]),\n        .io_start_loops(w_u_col_sfu_Q_prm[77:62]),\n        .io_start_v(w_u_col_sfu_Q_start_v[0]),\n        .io_word(w_u_sfup_Q_q1_io_word),\n        .programme_active(w_u_sfup_Q_q1_programme_active),\n        .programme_done(w_u_sfup_Q_q1_programme_done),\n        .programme_ordinal(w_u_sfup_Q_q1_programme_ordinal),\n        .rst_n(rst_n_t352),\n        .start_base(w_u_col_sfu_Q_prm[10:0]),\n        .start_limit(w_u_col_sfu_Q_prm[22:11]),\n        .start_loops(w_u_col_sfu_Q_prm[38:23])\n    );",
+   "bound_wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv",
+   "bound_wrapper_sha256": "39e4cf48f23ae3a13679b3a45bc3c62ea68e8a4ed9212886ebb7c45903c6d49b",
+   "requested_parameter_expressions": {
+    "PAGE_AW": "1",
+    "NATIVE_FAULT_PIN": "1"
+   },
+   "requested_parameter_delta": {
+    "NATIVE_FAULT_PIN": "1"
+   },
+   "requested_port_expressions": {
+    "cfg_addr": "w_u_col_sfu_Q_pw_addr[10:0]",
+    "cfg_data": "w_u_col_sfu_Q_pw_data[255:0]",
+    "cfg_stripe": "w_u_col_sfu_Q_pw_addr[13:11]",
+    "cfg_we": "w_u_col_sfu_Q_pw_we[0]",
+    "clk": "clk",
+    "compiler_control": "w_u_sfup_Q_q1_compiler_control",
+    "fault": "w_u_sfup_Q_q1_fault",
+    "io_active": "w_u_sfup_Q_q1_io_active",
+    "io_cfg_addr": "w_u_col_sfu_Q_pw_addr[10:0]",
+    "io_cfg_data": "w_u_col_sfu_Q_pw_data[255:0]",
+    "io_cfg_stripe": "w_u_col_sfu_Q_pw_addr[12:11]",
+    "io_cfg_we": "w_u_col_sfu_Q_pw_we[1]",
+    "io_done": "w_u_sfup_Q_q1_io_done",
+    "io_ordinal": "w_u_sfup_Q_q1_io_ordinal",
+    "io_start_base": "w_u_col_sfu_Q_prm[49:39]",
+    "io_start_limit": "w_u_col_sfu_Q_prm[61:50]",
+    "io_start_loops": "w_u_col_sfu_Q_prm[77:62]",
+    "io_start_v": "w_u_col_sfu_Q_start_v[0]",
+    "io_word": "w_u_sfup_Q_q1_io_word",
+    "programme_active": "w_u_sfup_Q_q1_programme_active",
+    "programme_done": "w_u_sfup_Q_q1_programme_done",
+    "programme_ordinal": "w_u_sfup_Q_q1_programme_ordinal",
+    "rst_n": "rst_n_t352",
+    "start_base": "w_u_col_sfu_Q_prm[10:0]",
+    "start_limit": "w_u_col_sfu_Q_prm[22:11]",
+    "start_loops": "w_u_col_sfu_Q_prm[38:23]"
+   },
+   "preservation_checks": {
+    "all_existing_parameters_byte_identical": true,
+    "all_existing_port_expressions_byte_identical": true,
+    "public_port_set_unchanged": true,
+    "clock_expression_unchanged": true,
+    "reset_expression_unchanged": true
+   },
+   "public_abi": {
+    "ports": {
+     "clk": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "rst_n": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "cfg_we": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "cfg_stripe": {
+      "width_bits": 3,
+      "direction": "input"
+     },
+     "cfg_addr": {
+      "width_bits": 11,
+      "direction": "input"
+     },
+     "cfg_data": {
+      "width_bits": 256,
+      "direction": "input"
+     },
+     "start_base": {
+      "width_bits": 11,
+      "direction": "input"
+     },
+     "start_limit": {
+      "width_bits": 12,
+      "direction": "input"
+     },
+     "start_loops": {
+      "width_bits": 16,
+      "direction": "input"
+     },
+     "programme_active": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "programme_done": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "programme_ordinal": {
+      "width_bits": 32,
+      "direction": "output"
+     },
+     "io_cfg_we": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "io_cfg_stripe": {
+      "width_bits": 2,
+      "direction": "input"
+     },
+     "io_cfg_addr": {
+      "width_bits": 11,
+      "direction": "input"
+     },
+     "io_cfg_data": {
+      "width_bits": 256,
+      "direction": "input"
+     },
+     "io_start_v": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "io_start_base": {
+      "width_bits": 11,
+      "direction": "input"
+     },
+     "io_start_limit": {
+      "width_bits": 12,
+      "direction": "input"
+     },
+     "io_start_loops": {
+      "width_bits": 16,
+      "direction": "input"
+     },
+     "io_active": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "io_done": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "io_ordinal": {
+      "width_bits": 32,
+      "direction": "output"
+     },
+     "io_word": {
+      "width_bits": 471,
+      "direction": "output"
+     },
+     "compiler_control": {
+      "width_bits": 1742,
+      "direction": "output"
+     },
+     "fault": {
+      "width_bits": 1,
+      "direction": "output"
+     }
+    },
+    "total_pin_bits": 2904,
+    "new_ports": [],
+    "removed_ports": []
+   },
+   "source_selection_request": {
+    "master": "ot_hgi_sfu_programme_store_r10",
+    "commit": "11c6223c6",
+    "dependency_readset": "Pstore head/unchangedstripeleaf+real512x256macro",
+    "scope": "Namedinstance only; source-only request, no canonicalmanifest write."
+   },
+   "proof_scope": {
+    "public_sameedge_native_fix": "PASS directcurrentC4 gold\u219211c four-state miter, guards32+64,actual4FULLLEC",
+    "baseline_to_selected_profile": "CURRENT_C4 head/leaf byteidentical proofgold; directPAGE_AW1 old\u2192new nativefault miterPASS",
+    "public_cycle_delta_proved_for_native_fix": 0,
+    "reset_release_cycle_delta_proved_for_native_fix": 0
+   },
+   "canonical_adoption_gate": "HELD; no strictbind/sourcegraph/plan/clock/physicaladoption in this request"
+  },
+  {
+   "canonical_instance": "pgp_NE",
+   "physical_part": "NE_hub",
+   "physical_home": "u_pgp_Q__q1",
+   "qualified_emitted_instance": "NE_hub.u_u_pgp_Q_q1",
+   "current_master": "ot_hbm_su_programme_pslice_c5",
+   "current_parameter_expressions": {
+    "SB": "2470"
+   },
+   "current_port_expressions": {
+    "busy": "w_u_pgp_Q_q1_busy",
+    "cfg_bank": "L62_i_q[48:33]",
+    "cfg_data": "L62_i_q[304:49]",
+    "cfg_row": "L62_i_q[327:321]",
+    "cfg_we": "L62_i_q[329]",
+    "clk": "clk",
+    "command": "w_u_pgp_Q_q1_command",
+    "done": "w_u_pgp_Q_q1_done",
+    "edge_index": "w_u_pgp_Q_q1_edge_index",
+    "fault": "w_u_pgp_Q_q1_fault",
+    "length": "L62_i_q[320:305]",
+    "rst_n": "rst_n_t334",
+    "start": "L62_i_q[328]",
+    "valid": "w_u_pgp_Q_q1_valid"
+   },
+   "clock": "clk",
+   "reset": "rst_n_t334",
+   "raw_current_instance_text": "    ot_hbm_su_programme_pslice_c5 #(.SB(2470)) u_u_pgp_Q_q1 (\n        .busy(w_u_pgp_Q_q1_busy),\n        .cfg_bank(L62_i_q[48:33]),\n        .cfg_data(L62_i_q[304:49]),\n        .cfg_row(L62_i_q[327:321]),\n        .cfg_we(L62_i_q[329]),\n        .clk(clk),\n        .command(w_u_pgp_Q_q1_command),\n        .done(w_u_pgp_Q_q1_done),\n        .edge_index(w_u_pgp_Q_q1_edge_index),\n        .fault(w_u_pgp_Q_q1_fault),\n        .length(L62_i_q[320:305]),\n        .rst_n(rst_n_t334),\n        .start(L62_i_q[328]),\n        .valid(w_u_pgp_Q_q1_valid)\n    );",
+   "bound_wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv",
+   "bound_wrapper_sha256": "c9243b4409d7b20495d6fcf8df3520a41b5948816ed81729fd67850e656d90fa",
+   "requested_parameter_expressions": {
+    "SB": "2470",
+    "NCX": "1",
+    "NATIVE_PINS": "1"
+   },
+   "requested_parameter_delta": {
+    "NCX": "1",
+    "NATIVE_PINS": "1"
+   },
+   "requested_port_expressions": {
+    "busy": "w_u_pgp_Q_q1_busy",
+    "cfg_bank": "L62_i_q[48:33]",
+    "cfg_data": "L62_i_q[304:49]",
+    "cfg_row": "L62_i_q[327:321]",
+    "cfg_we": "L62_i_q[329]",
+    "clk": "clk",
+    "command": "w_u_pgp_Q_q1_command",
+    "done": "w_u_pgp_Q_q1_done",
+    "edge_index": "w_u_pgp_Q_q1_edge_index",
+    "fault": "w_u_pgp_Q_q1_fault",
+    "length": "L62_i_q[320:305]",
+    "rst_n": "rst_n_t334",
+    "start": "L62_i_q[328]",
+    "valid": "w_u_pgp_Q_q1_valid"
+   },
+   "preservation_checks": {
+    "all_existing_parameters_byte_identical": true,
+    "all_existing_port_expressions_byte_identical": true,
+    "public_port_set_unchanged": true,
+    "clock_expression_unchanged": true,
+    "reset_expression_unchanged": true
+   },
+   "public_abi": {
+    "ports": {
+     "clk": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "rst_n": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "cfg_we": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "cfg_bank": {
+      "width_bits": 16,
+      "direction": "input"
+     },
+     "cfg_row": {
+      "width_bits": 7,
+      "direction": "input"
+     },
+     "cfg_data": {
+      "width_bits": 256,
+      "direction": "input"
+     },
+     "start": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "length": {
+      "width_bits": 16,
+      "direction": "input"
+     },
+     "busy": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "valid": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "done": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "fault": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "edge_index": {
+      "width_bits": 16,
+      "direction": "output"
+     },
+     "command": {
+      "width_bits": 2470,
+      "direction": "output"
+     }
+    },
+    "total_pin_bits": 2789,
+    "new_ports": [],
+    "removed_ports": []
+   },
+   "source_selection_request": {
+    "master": "ot_hbm_su_programme_pslice_c5",
+    "commit": "8a0367f73",
+    "dependency_readset": "PSlice programme_pgcol/programme/relay+real128x256macro",
+    "scope": "Namedinstance only; source-only request, no canonicalmanifest write."
+   },
+   "proof_scope": {
+    "public_sameedge_native_fix": "8aactuallegacybridgePASS; freshmappedguards32/64PASS; freshsourceAIGactual4FULLLECPASS108839/108839,KEEP1064/1064,0diff/undecided. Thisiscomponentqualification, notcanonicalgraphadoption.",
+    "baseline_to_selected_profile": "ActualC4d345SB2470-only\u21928aSB2470/NCX1/NATIVE_PINS1 100macro sameedgebridgePASS all4,419,751knownbits inclvalid0/cold/2shortwarm; phase5776caught. Newresetpreservesfirstlegacydefinedcommandedge; no valid/datamasking.",
+    "public_cycle_delta_proved_for_native_fix": 0,
+    "reset_release_cycle_delta_proved_for_native_fix": 0
+   },
+   "canonical_adoption_gate": "HELD; no strictbind/sourcegraph/plan/clock/physicaladoption in this request"
+  },
+  {
+   "canonical_instance": "sfup_NE",
+   "physical_part": "NE_hub",
+   "physical_home": "u_sfup_Q__q1",
+   "qualified_emitted_instance": "NE_hub.u_u_sfup_Q_q1",
+   "current_master": "ot_hgi_sfu_programme_store_r10",
+   "current_parameter_expressions": {
+    "PAGE_AW": "1"
+   },
+   "current_port_expressions": {
+    "cfg_addr": "w_u_col_sfu_Q_pw_addr[10:0]",
+    "cfg_data": "w_u_col_sfu_Q_pw_data[255:0]",
+    "cfg_stripe": "w_u_col_sfu_Q_pw_addr[13:11]",
+    "cfg_we": "w_u_col_sfu_Q_pw_we[0]",
+    "clk": "clk",
+    "compiler_control": "w_u_sfup_Q_q1_compiler_control",
+    "fault": "w_u_sfup_Q_q1_fault",
+    "io_active": "w_u_sfup_Q_q1_io_active",
+    "io_cfg_addr": "w_u_col_sfu_Q_pw_addr[10:0]",
+    "io_cfg_data": "w_u_col_sfu_Q_pw_data[255:0]",
+    "io_cfg_stripe": "w_u_col_sfu_Q_pw_addr[12:11]",
+    "io_cfg_we": "w_u_col_sfu_Q_pw_we[1]",
+    "io_done": "w_u_sfup_Q_q1_io_done",
+    "io_ordinal": "w_u_sfup_Q_q1_io_ordinal",
+    "io_start_base": "w_u_col_sfu_Q_prm[49:39]",
+    "io_start_limit": "w_u_col_sfu_Q_prm[61:50]",
+    "io_start_loops": "w_u_col_sfu_Q_prm[77:62]",
+    "io_start_v": "w_u_col_sfu_Q_start_v[0]",
+    "io_word": "w_u_sfup_Q_q1_io_word",
+    "programme_active": "w_u_sfup_Q_q1_programme_active",
+    "programme_done": "w_u_sfup_Q_q1_programme_done",
+    "programme_ordinal": "w_u_sfup_Q_q1_programme_ordinal",
+    "rst_n": "rst_n_t350",
+    "start_base": "w_u_col_sfu_Q_prm[10:0]",
+    "start_limit": "w_u_col_sfu_Q_prm[22:11]",
+    "start_loops": "w_u_col_sfu_Q_prm[38:23]"
+   },
+   "clock": "clk",
+   "reset": "rst_n_t350",
+   "raw_current_instance_text": "    ot_hgi_sfu_programme_store_r10 #(.PAGE_AW(1)) u_u_sfup_Q_q1 (\n        .cfg_addr(w_u_col_sfu_Q_pw_addr[10:0]),\n        .cfg_data(w_u_col_sfu_Q_pw_data[255:0]),\n        .cfg_stripe(w_u_col_sfu_Q_pw_addr[13:11]),\n        .cfg_we(w_u_col_sfu_Q_pw_we[0]),\n        .clk(clk),\n        .compiler_control(w_u_sfup_Q_q1_compiler_control),\n        .fault(w_u_sfup_Q_q1_fault),\n        .io_active(w_u_sfup_Q_q1_io_active),\n        .io_cfg_addr(w_u_col_sfu_Q_pw_addr[10:0]),\n        .io_cfg_data(w_u_col_sfu_Q_pw_data[255:0]),\n        .io_cfg_stripe(w_u_col_sfu_Q_pw_addr[12:11]),\n        .io_cfg_we(w_u_col_sfu_Q_pw_we[1]),\n        .io_done(w_u_sfup_Q_q1_io_done),\n        .io_ordinal(w_u_sfup_Q_q1_io_ordinal),\n        .io_start_base(w_u_col_sfu_Q_prm[49:39]),\n        .io_start_limit(w_u_col_sfu_Q_prm[61:50]),\n        .io_start_loops(w_u_col_sfu_Q_prm[77:62]),\n        .io_start_v(w_u_col_sfu_Q_start_v[0]),\n        .io_word(w_u_sfup_Q_q1_io_word),\n        .programme_active(w_u_sfup_Q_q1_programme_active),\n        .programme_done(w_u_sfup_Q_q1_programme_done),\n        .programme_ordinal(w_u_sfup_Q_q1_programme_ordinal),\n        .rst_n(rst_n_t350),\n        .start_base(w_u_col_sfu_Q_prm[10:0]),\n        .start_limit(w_u_col_sfu_Q_prm[22:11]),\n        .start_loops(w_u_col_sfu_Q_prm[38:23])\n    );",
+   "bound_wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv",
+   "bound_wrapper_sha256": "c9243b4409d7b20495d6fcf8df3520a41b5948816ed81729fd67850e656d90fa",
+   "requested_parameter_expressions": {
+    "PAGE_AW": "1",
+    "NATIVE_FAULT_PIN": "1"
+   },
+   "requested_parameter_delta": {
+    "NATIVE_FAULT_PIN": "1"
+   },
+   "requested_port_expressions": {
+    "cfg_addr": "w_u_col_sfu_Q_pw_addr[10:0]",
+    "cfg_data": "w_u_col_sfu_Q_pw_data[255:0]",
+    "cfg_stripe": "w_u_col_sfu_Q_pw_addr[13:11]",
+    "cfg_we": "w_u_col_sfu_Q_pw_we[0]",
+    "clk": "clk",
+    "compiler_control": "w_u_sfup_Q_q1_compiler_control",
+    "fault": "w_u_sfup_Q_q1_fault",
+    "io_active": "w_u_sfup_Q_q1_io_active",
+    "io_cfg_addr": "w_u_col_sfu_Q_pw_addr[10:0]",
+    "io_cfg_data": "w_u_col_sfu_Q_pw_data[255:0]",
+    "io_cfg_stripe": "w_u_col_sfu_Q_pw_addr[12:11]",
+    "io_cfg_we": "w_u_col_sfu_Q_pw_we[1]",
+    "io_done": "w_u_sfup_Q_q1_io_done",
+    "io_ordinal": "w_u_sfup_Q_q1_io_ordinal",
+    "io_start_base": "w_u_col_sfu_Q_prm[49:39]",
+    "io_start_limit": "w_u_col_sfu_Q_prm[61:50]",
+    "io_start_loops": "w_u_col_sfu_Q_prm[77:62]",
+    "io_start_v": "w_u_col_sfu_Q_start_v[0]",
+    "io_word": "w_u_sfup_Q_q1_io_word",
+    "programme_active": "w_u_sfup_Q_q1_programme_active",
+    "programme_done": "w_u_sfup_Q_q1_programme_done",
+    "programme_ordinal": "w_u_sfup_Q_q1_programme_ordinal",
+    "rst_n": "rst_n_t350",
+    "start_base": "w_u_col_sfu_Q_prm[10:0]",
+    "start_limit": "w_u_col_sfu_Q_prm[22:11]",
+    "start_loops": "w_u_col_sfu_Q_prm[38:23]"
+   },
+   "preservation_checks": {
+    "all_existing_parameters_byte_identical": true,
+    "all_existing_port_expressions_byte_identical": true,
+    "public_port_set_unchanged": true,
+    "clock_expression_unchanged": true,
+    "reset_expression_unchanged": true
+   },
+   "public_abi": {
+    "ports": {
+     "clk": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "rst_n": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "cfg_we": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "cfg_stripe": {
+      "width_bits": 3,
+      "direction": "input"
+     },
+     "cfg_addr": {
+      "width_bits": 11,
+      "direction": "input"
+     },
+     "cfg_data": {
+      "width_bits": 256,
+      "direction": "input"
+     },
+     "start_base": {
+      "width_bits": 11,
+      "direction": "input"
+     },
+     "start_limit": {
+      "width_bits": 12,
+      "direction": "input"
+     },
+     "start_loops": {
+      "width_bits": 16,
+      "direction": "input"
+     },
+     "programme_active": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "programme_done": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "programme_ordinal": {
+      "width_bits": 32,
+      "direction": "output"
+     },
+     "io_cfg_we": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "io_cfg_stripe": {
+      "width_bits": 2,
+      "direction": "input"
+     },
+     "io_cfg_addr": {
+      "width_bits": 11,
+      "direction": "input"
+     },
+     "io_cfg_data": {
+      "width_bits": 256,
+      "direction": "input"
+     },
+     "io_start_v": {
+      "width_bits": 1,
+      "direction": "input"
+     },
+     "io_start_base": {
+      "width_bits": 11,
+      "direction": "input"
+     },
+     "io_start_limit": {
+      "width_bits": 12,
+      "direction": "input"
+     },
+     "io_start_loops": {
+      "width_bits": 16,
+      "direction": "input"
+     },
+     "io_active": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "io_done": {
+      "width_bits": 1,
+      "direction": "output"
+     },
+     "io_ordinal": {
+      "width_bits": 32,
+      "direction": "output"
+     },
+     "io_word": {
+      "width_bits": 471,
+      "direction": "output"
+     },
+     "compiler_control": {
+      "width_bits": 1742,
+      "direction": "output"
+     },
+     "fault": {
+      "width_bits": 1,
+      "direction": "output"
+     }
+    },
+    "total_pin_bits": 2904,
+    "new_ports": [],
+    "removed_ports": []
+   },
+   "source_selection_request": {
+    "master": "ot_hgi_sfu_programme_store_r10",
+    "commit": "11c6223c6",
+    "dependency_readset": "Pstore head/unchangedstripeleaf+real512x256macro",
+    "scope": "Namedinstance only; source-only request, no canonicalmanifest write."
+   },
+   "proof_scope": {
+    "public_sameedge_native_fix": "PASS directcurrentC4 gold\u219211c four-state miter, guards32+64,actual4FULLLEC",
+    "baseline_to_selected_profile": "CURRENT_C4 head/leaf byteidentical proofgold; directPAGE_AW1 old\u2192new nativefault miterPASS",
+    "public_cycle_delta_proved_for_native_fix": 0,
+    "reset_release_cycle_delta_proved_for_native_fix": 0
+   },
+   "canonical_adoption_gate": "HELD; no strictbind/sourcegraph/plan/clock/physicaladoption in this request"
+  }
+ ],
+ "source_file_preferences_requested": [
+  {
+   "current_preferred": {
+    "path": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+    "sha256": "de834bcd0dc4e267bad87ea0a5283ee873f30e0ae94ae6fa34a8588965eeb255",
+    "modules": [
+     "ot_hbm_su_programme_pgcol",
+     "ot_hbm_su_programme_pgcol_s",
+     "ot_hbm_su_programme_pgcol_l",
+     "ot_hbm_su_programme_pghead",
+     "ot_hbm_su_programme_pslice_c5"
+    ]
+   },
+   "current_baseline_git_commit": "d34578d6f",
+   "candidate_commit": "8a0367f73",
+   "candidate_repo_path": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "candidate_file_sha256": "ffa4f8ee274c573436fcf5f05d0584fac99a4e25ec0eeaaab71d3a6a65d8963d",
+   "file_bytes_changed": true,
+   "module_body_changes": [
+    {
+     "module": "ot_hbm_su_programme_mem_r5",
+     "old_sha256": null,
+     "new_sha256": "8919db37873d65a3910c7ff86d2ec039fe9f5888fd7a07eae4b8df616654e476",
+     "status": "ADDED"
+    },
+    {
+     "module": "ot_hbm_su_programme_nc",
+     "old_sha256": null,
+     "new_sha256": "d6a0b130718af7ec4f15d537039a290005e5ae81356d64a8e4da3d5cfc16e4e1",
+     "status": "ADDED"
+    },
+    {
+     "module": "ot_hbm_su_programme_pgcol",
+     "old_sha256": "878f70242cade126ff277aa4469c11767dc4e633fc63f68c42d3781c0e5b6748",
+     "new_sha256": "f866a09d4a07ce8467ae18d3f73696ba46a90300b851919b09775a4c78ad1266",
+     "status": "CHANGED"
+    },
+    {
+     "module": "ot_hbm_su_programme_pgcol_l",
+     "old_sha256": "ccdfc6ec1a8b2bdd9b1fb4ff5407835b6ffafcbf0f9623da5518acccce1f97d7",
+     "new_sha256": "6c4152386bba2973b0f12d5b466594c6f160a32df9f88e66e284d448f4515a49",
+     "status": "CHANGED"
+    },
+    {
+     "module": "ot_hbm_su_programme_pgcol_s",
+     "old_sha256": "67ad40cc24e8eb5fcb03fc602cba154705088e8d59720c1279c08e681c4a65c7",
+     "new_sha256": "411a43ea530a825675c1e40e39d1816010b2f036dcb019c7fe8ca5ae0ceeb2c4",
+     "status": "CHANGED"
+    },
+    {
+     "module": "ot_hbm_su_programme_pghead",
+     "old_sha256": "8959853388104a75f7e799102e6500e7e643b6c557f6dc61a4ef942abfbd42a7",
+     "new_sha256": "c294778af2ca9e6212c85f934a08a38011ccfeeaa4aef4bf7d5aaac015547f42",
+     "status": "CHANGED"
+    },
+    {
+     "module": "ot_hbm_su_programme_pslice_c5",
+     "old_sha256": "b2a09b3157fff8f8347bd2cbe517feee2dd3e9a88f8eb188e5b728d7f4103829",
+     "new_sha256": "b6254d6fc9ea4bc9749f5a2776f5e60ced583b61b4787b7d2e2e4d64a3f065e8",
+     "status": "CHANGED"
+    }
+   ],
+   "text_line_delta": {
+    "added": 309,
+    "removed": 21
+   },
+   "resolution_scope": "Only listed namedinstances and dependencycones; globalblindfilepreference is NOT authorized. Use instance-scoped resolution or mechanically namespaced sourcevariant if globaldefinition collision exists."
+  },
+  {
+   "current_preferred": {
+    "path": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+    "sha256": "e1a7343e0253f19e646c9c5aa9eaf370a824d8311078d3f75e863ab55ce977d0",
+    "modules": [
+     "ot_hbm_su_programme_mem",
+     "ot_hbm_su_programme_mem_r4",
+     "ot_hbm_su_programme"
+    ]
+   },
+   "current_baseline_git_commit": "d34578d6f",
+   "candidate_commit": "8a0367f73",
+   "candidate_repo_path": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+   "candidate_file_sha256": "97210c90acd49074379b07dee7aaaee2ffad6d81ddb963ed945368530c2b10b1",
+   "file_bytes_changed": true,
+   "module_body_changes": [
+    {
+     "module": "ot_hbm_su_native_pin_reg",
+     "old_sha256": null,
+     "new_sha256": "4cd37910987368c2f852ca8d14dbc753cdf75d30568974659a4e5572c072c5be",
+     "status": "ADDED"
+    },
+    {
+     "module": "ot_hbm_su_programme",
+     "old_sha256": "f053c2444e0d86550355d66f1d7e0ed632c025fa771570158a0c3a73d3bb0fb1",
+     "new_sha256": "392853f40b4dbc89b01e88a21765d64c0374e0288f01237eca87947df4101e44",
+     "status": "CHANGED"
+    },
+    {
+     "module": "ot_hbm_su_programme_mem",
+     "old_sha256": "dade586afd4a7be1a36159131f13f8a8de329cdfb4811ab712f7658f44722294",
+     "new_sha256": "dade586afd4a7be1a36159131f13f8a8de329cdfb4811ab712f7658f44722294",
+     "status": "UNCHANGED"
+    },
+    {
+     "module": "ot_hbm_su_programme_mem_r4",
+     "old_sha256": "ea7245bb0d93edc9943658ec9783e04796be44b4bc99f001af9d0ee8175137f8",
+     "new_sha256": "ea7245bb0d93edc9943658ec9783e04796be44b4bc99f001af9d0ee8175137f8",
+     "status": "UNCHANGED"
+    }
+   ],
+   "text_line_delta": {
+    "added": 27,
+    "removed": 2
+   },
+   "resolution_scope": "Only listed namedinstances and dependencycones; globalblindfilepreference is NOT authorized. Use instance-scoped resolution or mechanically namespaced sourcevariant if globaldefinition collision exists."
+  },
+  {
+   "current_preferred": {
+    "path": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+    "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "modules": [
+     "ot_rst_relay"
+    ]
+   },
+   "current_baseline_git_commit": "d34578d6f",
+   "candidate_commit": "8a0367f73",
+   "candidate_repo_path": "rtl/lib/ot_rst_relay.sv",
+   "candidate_file_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "file_bytes_changed": false,
+   "module_body_changes": [
+    {
+     "module": "ot_rst_relay",
+     "old_sha256": "caff350abbf765dcf7a2105a645b90b67396463266c48550e9f6982d34e1e2eb",
+     "new_sha256": "caff350abbf765dcf7a2105a645b90b67396463266c48550e9f6982d34e1e2eb",
+     "status": "UNCHANGED"
+    }
+   ],
+   "text_line_delta": {
+    "added": 0,
+    "removed": 0
+   },
+   "resolution_scope": "Only listed namedinstances and dependencycones; globalblindfilepreference is NOT authorized. Use instance-scoped resolution or mechanically namespaced sourcevariant if globaldefinition collision exists."
+  },
+  {
+   "current_preferred": {
+    "path": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+    "sha256": "156ac9146b23c5673f048caa581023819c3ab0047aaa902ca3357675145cf894",
+    "modules": [
+     "ot_hgi_sfu_programme_store_r10"
+    ]
+   },
+   "current_baseline_git_commit": "ec3d37560",
+   "candidate_commit": "11c6223c6",
+   "candidate_repo_path": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+   "candidate_file_sha256": "f9ee5065debf3c65386aabcf1e36e7efc93665aae4417dc0b75d7a90de8bf383",
+   "file_bytes_changed": true,
+   "module_body_changes": [
+    {
+     "module": "ot_hgi_sfu_native_fault_reg",
+     "old_sha256": null,
+     "new_sha256": "8c63750d83da47c89d8024c557b64abb68ba908b9320ee298a6539d78660d83b",
+     "status": "ADDED"
+    },
+    {
+     "module": "ot_hgi_sfu_programme_store_r10",
+     "old_sha256": "3279c1028b62b234ffba00d1b6ce7725086d8139502d402be07d8f34f4fb216c",
+     "new_sha256": "3e7098aa507cc96953158a9a01ad617cd51c6b6050df9451a47d0bde346d61ad",
+     "status": "CHANGED"
+    }
+   ],
+   "text_line_delta": {
+    "added": 25,
+    "removed": 4
+   },
+   "resolution_scope": "Only listed namedinstances and dependencycones; globalblindfilepreference is NOT authorized. Use instance-scoped resolution or mechanically namespaced sourcevariant if globaldefinition collision exists."
+  },
+  {
+   "current_preferred": {
+    "path": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_stripe_leaf_r10.sv",
+    "sha256": "f62f1edba405c45dcfe4e6be0fcb5de795f8a444ec7fb2df2d30b6587db5db4b",
+    "modules": [
+     "ot_hgi_sfu_store_stripe_leaf_r10"
+    ]
+   },
+   "current_baseline_git_commit": "ec3d37560",
+   "candidate_commit": "11c6223c6",
+   "candidate_repo_path": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_stripe_leaf_r10.sv",
+   "candidate_file_sha256": "f62f1edba405c45dcfe4e6be0fcb5de795f8a444ec7fb2df2d30b6587db5db4b",
+   "file_bytes_changed": false,
+   "module_body_changes": [
+    {
+     "module": "ot_hgi_sfu_store_stripe_leaf_r10",
+     "old_sha256": "f1233eadff45aa35b92ada04440913f1a9bdd984237af0b1052462af0620e6df",
+     "new_sha256": "f1233eadff45aa35b92ada04440913f1a9bdd984237af0b1052462af0620e6df",
+     "status": "UNCHANGED"
+    }
+   ],
+   "text_line_delta": {
+    "added": 0,
+    "removed": 0
+   },
+   "resolution_scope": "Only listed namedinstances and dependencycones; globalblindfilepreference is NOT authorized. Use instance-scoped resolution or mechanically namespaced sourcevariant if globaldefinition collision exists."
+  }
+ ],
+ "macro_path_impact": {
+  "pslice": {
+   "selected_native_candidate_outline_um": [
+    939.6,
+    760.32
+   ],
+   "face_shell": null,
+   "macro_count": 100,
+   "macro_modules": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ],
+   "native_macro_placement_file_sha256": "e0cf64624480013bc0162fe3a5b446d2ef4b11baa0dec68801e01f3768293eb2",
+   "candidate_macro_paths": [
+    {
+     "instance": "g_c[0].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      712.764
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[0].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[0].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      663.036
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[0].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[0].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      613.308
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[0].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[0].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      563.58
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[0].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[0].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      513.852
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[0].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[0].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      464.124
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[0].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[0].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      414.396
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[0].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      712.764
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[10].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      663.036
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[11].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      613.308
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[12].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      563.58
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[12].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      513.852
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      464.124
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      414.396
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[4].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      362.508
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[4].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[5].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      312.78
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[6].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      362.508
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[6].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[7].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      414.396
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[7].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[8].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      464.124
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[8].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_dt.g[9].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      513.852
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[9].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_ix.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      563.58
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_ix.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      613.308
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_ix.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      663.036
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[1].u_c.g_pn.u_p.u_ix.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      712.764
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[1].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      712.764
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[10].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      663.036
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[11].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      613.308
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[12].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      563.58
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[12].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      513.852
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      464.124
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      414.396
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[4].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      362.508
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[4].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[5].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      312.78
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[6].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      362.508
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[6].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[7].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      414.396
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[7].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[8].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      464.124
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[8].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_dt.g[9].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      513.852
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[9].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_ix.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      563.58
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_ix.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      613.308
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_ix.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      663.036
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[2].u_c.g_pn.u_p.u_ix.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      712.764
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[2].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      712.764
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[10].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      663.036
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[11].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      613.308
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[12].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      563.58
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[12].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      513.852
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      464.124
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      414.396
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[4].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      362.508
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[4].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[5].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      312.78
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[6].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      362.508
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[6].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[7].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      414.396
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[7].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[8].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      464.124
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[8].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_dt.g[9].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      513.852
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[9].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_ix.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      563.58
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_ix.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      613.308
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_ix.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      663.036
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[3].u_c.g_pn.u_p.u_ix.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      712.764
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[3].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": true
+    },
+    {
+     "instance": "g_c[4].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      362.508
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[4].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[4].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      312.78
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[4].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[4].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      263.052
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[4].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[4].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      213.324
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[4].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[4].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      163.596
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[4].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[4].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      113.868
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[4].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[4].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      811.728,
+      64.14
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[4].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[5].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      263.052
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[5].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[5].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      213.324
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[5].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[5].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      163.596
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[5].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[5].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      113.868
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[5].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[5].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      64.14
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[5].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[5].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      32.4,
+      14.412
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[5].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[5].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      263.052
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[5].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[6].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      213.324
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[6].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[6].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      163.596
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[6].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[6].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      113.868
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[6].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[6].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      64.14
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[6].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[6].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      162.288,
+      14.412
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[6].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[6].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      263.052
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[6].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[6].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      213.324
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[6].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[7].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      163.596
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[7].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[7].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      113.868
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[7].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[7].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      64.14
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[7].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[7].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      292.176,
+      14.412
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[7].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[7].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      263.052
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[7].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[7].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      213.324
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[7].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[7].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      163.596
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[7].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[8].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      113.868
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[8].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[8].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      64.14
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[8].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[8].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      422.064,
+      14.412
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[8].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[8].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      263.052
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[8].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[8].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      213.324
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[8].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[8].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      163.596
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[8].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[8].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      113.868
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[8].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      64.14
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      551.952,
+      14.412
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      263.052
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[9].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      213.324
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[9].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[9].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      163.596
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[9].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[9].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      113.868
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[9].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    },
+    {
+     "instance": "g_c[9].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "xy_um": [
+      681.84,
+      64.14
+     ],
+     "orient": "R0",
+     "legacy_C4_source_macro_path": "g_c[9].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+     "source_hierarchy_path_changed_by_NCX": false
+    }
+   ],
+   "path_rule": "No u_fcore generic shell prefix. Boundary-only fix adds no SRAM/moves no macro; NCX profiletransition and parent physical/frame event remain separately gated. These paths are actual candidate GEN, not proofcurrentG adopted them.",
+   "public_pin_bits": 2789,
+   "native_source_flag_ff_delta": 43,
+   "native_source_flag_cycle_delta": 0,
+   "NCX_source_hierarchy_rename_count": 51,
+   "macro_identity_mapping_scope": "51 Lcolumn SRAMS change genericg_p/g_m4.ix/dt toNCXg_pn/u_ix/u_dt; bankIDs/types/countpreserved. This is sourcepath identity, not adoptedpose/timing. Nativecommandreset8a adds0macropathchangesrelative8b.",
+   "native_flag_ff_delta_baseline": "NCX1/c5e,NATIVE_PINS0. 43 isNOT completelegacyNCX0\u2192NCX1 replica/clockload delta; freshactualSYNTHcounts/typednativeview required forwholegraft.",
+   "mapped_clock_load_delta_vs8b": {
+    "DFFASRHQNx1_ASAP7_75t_R": 24
+   },
+   "additional_async_clear_input_loads_vs8b": 24
+  },
+  "pstore": {
+   "selected_native_candidate_outline_um": [
+    673.92,
+    803.52
+   ],
+   "face_shell": null,
+   "macro_count": 44,
+   "macro_modules": [
+    "ot_sram_1r1w_512x256_m1_r2c2"
+   ],
+   "native_macro_placement_file_sha256": "b6d90fbc027f714bdc8b75f9341e2651edaba25c23d15378a3afbdbedb114d69",
+   "candidate_macro_paths": [
+    {
+     "instance": "g_leaf[0].u_leaf.g_page[0].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      17.28,
+      12.972
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[0].u_leaf.g_page[1].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      17.28,
+      99.372
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[0].u_leaf.g_page[2].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      17.28,
+      185.772
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[0].u_leaf.g_page[3].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      17.28,
+      272.172
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[1].u_leaf.g_page[0].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      17.28,
+      358.572
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[1].u_leaf.g_page[1].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      17.28,
+      444.972
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[1].u_leaf.g_page[2].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      17.28,
+      531.372
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[1].u_leaf.g_page[3].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      17.28,
+      617.772
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[2].u_leaf.g_page[0].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      17.28,
+      704.172
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[2].u_leaf.g_page[1].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      152.928,
+      704.172
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[2].u_leaf.g_page[2].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      152.928,
+      617.772
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[2].u_leaf.g_page[3].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      152.928,
+      531.372
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[3].u_leaf.g_page[0].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      152.928,
+      444.972
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[3].u_leaf.g_page[1].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      152.928,
+      358.572
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[3].u_leaf.g_page[2].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      152.928,
+      272.172
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[3].u_leaf.g_page[3].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      152.928,
+      185.772
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[4].u_leaf.g_page[0].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      152.928,
+      99.372
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[4].u_leaf.g_page[1].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      152.928,
+      12.972
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[4].u_leaf.g_page[2].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      288.576,
+      12.972
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[4].u_leaf.g_page[3].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      288.576,
+      99.372
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[5].u_leaf.g_page[0].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      288.576,
+      185.772
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[5].u_leaf.g_page[1].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      288.576,
+      272.172
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[5].u_leaf.g_page[2].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      288.576,
+      358.572
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[5].u_leaf.g_page[3].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      288.576,
+      444.972
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[6].u_leaf.g_page[0].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      288.576,
+      531.372
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[6].u_leaf.g_page[1].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      288.576,
+      617.772
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[6].u_leaf.g_page[2].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      288.576,
+      704.172
+     ],
+     "orient": "MY"
+    },
+    {
+     "instance": "g_leaf[6].u_leaf.g_page[3].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      424.224,
+      704.172
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[7].u_leaf.g_page[0].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      424.224,
+      617.772
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[7].u_leaf.g_page[1].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      424.224,
+      531.372
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[7].u_leaf.g_page[2].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      424.224,
+      444.972
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[7].u_leaf.g_page[3].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      424.224,
+      358.572
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[8].u_leaf.g_page[0].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      424.224,
+      272.172
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[8].u_leaf.g_page[1].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      424.224,
+      185.772
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[8].u_leaf.g_page[2].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      424.224,
+      99.372
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[8].u_leaf.g_page[3].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      424.224,
+      12.972
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[9].u_leaf.g_page[0].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      559.872,
+      12.972
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[9].u_leaf.g_page[1].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      559.872,
+      99.372
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[9].u_leaf.g_page[2].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      559.872,
+      185.772
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[9].u_leaf.g_page[3].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      559.872,
+      272.172
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[10].u_leaf.g_page[0].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      559.872,
+      358.572
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[10].u_leaf.g_page[1].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      559.872,
+      444.972
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[10].u_leaf.g_page[2].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      559.872,
+      531.372
+     ],
+     "orient": "R0"
+    },
+    {
+     "instance": "g_leaf[10].u_leaf.g_page[3].u_program",
+     "master": "ot_sram_1r1w_512x256_m1_r2c2",
+     "xy_um": [
+      559.872,
+      617.772
+     ],
+     "orient": "R0"
+    }
+   ],
+   "path_rule": "No u_fcore generic shell prefix. Boundary-only fix adds no SRAM/moves no macro; NCX profiletransition and parent physical/frame event remain separately gated. These paths are actual candidate GEN, not proofcurrentG adopted them.",
+   "public_pin_bits": 2904,
+   "native_source_flag_ff_delta": 1,
+   "native_source_flag_cycle_delta": 0
+  }
+ },
+ "excluded_plan_only_instances": "No actual C4 pgp/sfup q0 directinstances. Missing producer/source mapping remains explicit; no phantom q0 graft invented.",
+ "qualification": {
+  "pslice_source_chain": [
+   "8b0491c04",
+   "8a0367f73"
+  ],
+  "pslice_predecessor_only_receipts": [
+   "1139b1cff",
+   "29065f866"
+  ],
+  "pstore_intake": [
+   "11c6223c6",
+   "651d42956",
+   "f2b031b2c"
+  ],
+  "pslice_legacy_bridge": "8aPASS actualC4legacy full100macrofixture1776edges/4,419,751known0diff inclvalid0/cold/shortwarm; phase5776caught. Old8b768coldFAIL retained.",
+  "all_existing_expressions_preserved": true,
+  "strict_bind_obligations_unchanged_claim": false,
+  "parent_gates": [
+   "Pstore width/directwire/frameevent",
+   "currentnativeclockpin/typedTTFFcontracts",
+   "currentgraph+66START/reset/storagecomposition",
+   "wholefrontendandstrictbindafterexplicitgraft",
+   "no globalblindmodulepreference or ghostq0construction"
+  ],
+  "pslice_evidence_commits": [
+   "b17511944",
+   "26954c25b",
+   "f530e28a9"
+  ],
+  "pslice_fresh_mapped_proof": "8aGEN/LINT/PREFLIGHT/nativeface2787/2787/port0/0both32+64PASS; freshchanged8a AIGactual4FULLLEC108839/108839 KEEP1064/1064PASS requested4USED4,0debugoverride. 5225oldhintsuntrusted/5219applied/6skipped/8dropped; allfullcompareproved."
+ }
+}
