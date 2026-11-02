@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.caprt.relay_actual1440.v1",
+  "scope": "Two existing DATA relay moves only; current GRT candidate, not SIGNED",
+  "host": "intel2",
+  "kit": "/srv/opentallas-scratch2/claude/codex-caprt-final-1414/Brelay_1440",
+  "prototype": {
+    "unit": "1038417-1793573484",
+    "exit": 0,
+    "elapsed_s": 185,
+    "peak_kb": 2205416,
+    "extra_cells_or_masters_or_clock_or_connectivity_or_ports": 0,
+    "dpl_displacement_um": 0,
+    "capacity_basis": "Native strict end_incremental returned0 without allow_congestion; no separate congestion detail table emitted. Initial full Bclass GRT all-layer overflow0."
+  },
+  "actual_policy": {
+    "unit": "1940044-1793575261",
+    "exit": 0,
+    "verdict": "PASS",
+    "tt_setup_ps": 3.72,
+    "ff_hold_ps": 10.0,
+    "both_corner_slew_and_cap_count": 0,
+    "period_ps": 833,
+    "setup_uncertainty_ps": 0,
+    "hold_uncertainty_ps": 25
+  },
+  "geometry": {
+    "image": "Brelay_1440_actual.png",
+    "sha256": "8af2b78f86a7a74f653513fe54bc93ec9a03c130cffc4220b3de816b01562ca9",
+    "personal_look": "PASS-COND",
+    "parent_second_look": "PASS-COND normal DRT after current full policy and zero DRV",
+    "r2r_um": 232.58,
+    "r2r_over405": 0,
+    "clock_leaf_um": 12.31,
+    "retained_AUTO_flags": [
+      "unsupported checkpoint",
+      "root-distance diagnostic",
+      "projected channel .628",
+      "projected column .627"
+    ]
+  },
+  "next": "Native DRT/fill/RCX/pin audit queued normal admission24GB8CPU; then actual SIGNED and same-view postrouteEQ. No adoption before these finish."
+}

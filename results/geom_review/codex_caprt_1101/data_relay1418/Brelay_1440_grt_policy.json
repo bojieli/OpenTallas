@@ -1,0 +1,202 @@
+{
+ "schema": "opentallas.grt_policy.v1",
+ "parasitics": "global_routing",
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 0.0,
+  "uncertainty_hold_ps": 25.0,
+  "pair_skew_max_ps": 80.0,
+  "ff_vclk": "bound-ff",
+  "ff_vclk_bound_ps": 253.6
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "PASS",
+   "wns_ps": 3.72,
+   "tns_ps": 0.0,
+   "violators": 0.0
+  },
+  "hold_ff": {
+   "verdict": "PASS",
+   "wns_ps": 10.0,
+   "tns_ps": 0.0,
+   "violators": 0.0,
+   "sdc_wns_ps": 10.0,
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "ff_vclk_reference": "applied mode bound_ff clock vclk latency_ps 253.600000",
+   "reason": null
+  },
+  "clock": {
+   "verdict": "PASS",
+   "endpoint_model_coverage": {
+    "tt": {
+     "schema": "opentallas.clock_endpoint_coverage.v1",
+     "raw_pair_basis": "visible_clock_pins",
+     "models": [],
+     "instantiated_masters": [
+      "DFFASRHQNx1_ASAP7_75t_R",
+      "DFFHQNx1_ASAP7_75t_R",
+      "DFFHQNx2_ASAP7_75t_R",
+      "DFFHQNx3_ASAP7_75t_R",
+      "ot_sram_1r1w_512x128_m4_r2c2"
+     ],
+     "status": "NO_UNEXPANDED_CHILD_ETM",
+     "verdict": "PASS",
+     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+     "library_receipt": "/work/postcts_gate_tt.libraries.json"
+    },
+    "ff": {
+     "schema": "opentallas.clock_endpoint_coverage.v1",
+     "raw_pair_basis": "visible_clock_pins",
+     "models": [],
+     "instantiated_masters": [
+      "DFFASRHQNx1_ASAP7_75t_R",
+      "DFFHQNx1_ASAP7_75t_R",
+      "DFFHQNx2_ASAP7_75t_R",
+      "DFFHQNx3_ASAP7_75t_R",
+      "ot_sram_1r1w_512x128_m4_r2c2"
+     ],
+     "status": "NO_UNEXPANDED_CHILD_ETM",
+     "verdict": "PASS",
+     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+     "library_receipt": "/work/postcts_gate_ff.libraries.json"
+    }
+   },
+   "raw_clock_verdict": "PASS",
+   "raw_pair_basis": "visible_clock_pins",
+   "pair_skew_max_ps": 80.0,
+   "spread_info_only": true,
+   "pair_skew_info_only": true,
+   "pair_skew_info": [
+    "TT setup related pair skew 114.1 ps > 80 (cw_d[319]$_DFF_P_ -> cw_n_d[127]$_DFF_P_)",
+    "TT hold related pair skew 114.4 ps > 80 (ca$_DFF_P_ -> g_st[0].u_g/key_g[0][14]$_DFFE_PP_)",
+    "FF setup related pair skew 102.8 ps > 80 (cw_d[319]$_DFF_P_ -> cw_n_d[127]$_DFF_P_)",
+    "FF hold related pair skew 103.2 ps > 80 (d3_v[0]$_DFF_PN0_ -> cw_d[102]$_DFF_P_)"
+   ],
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 746,
+      "min": 298.54,
+      "mean": 326.83,
+      "max": 407.46,
+      "spread": 108.92
+     },
+     "all": {
+      "n": 10723,
+      "min": 288.1,
+      "mean": 323.18,
+      "max": 408.16,
+      "spread": 120.06
+     },
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 425037.0,
+        "worst_abs_ps": 114.06,
+        "bounded": false,
+        "worst_signed_ps": -114.06,
+        "worst_launch": "cw_d[319]$_DFF_P_",
+        "worst_capture": "cw_n_d[127]$_DFF_P_",
+        "worst_crpr_ps": 4.08,
+        "p99_raw_ps": 71.34,
+        "searched": 1.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 425037.0,
+        "worst_abs_ps": 114.37,
+        "bounded": false,
+        "worst_signed_ps": 114.37,
+        "worst_launch": "ca$_DFF_P_",
+        "worst_capture": "g_st[0].u_g/key_g[0][14]$_DFFE_PP_",
+        "worst_crpr_ps": 4.08,
+        "p99_raw_ps": 108.56,
+        "searched": 699.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       }
+      },
+      "counts": {
+       "regs": 10723.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 11030.0,
+       "pairs": 425037.0,
+       "inter_clock": 0.0
+      },
+      "method": "tag",
+      "seconds": 997.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 746,
+      "min": 236.87,
+      "mean": 262.64,
+      "max": 336.12,
+      "spread": 99.25
+     },
+     "all": {
+      "n": 10723,
+      "min": 227.27,
+      "mean": 259.23,
+      "max": 336.82,
+      "spread": 109.55
+     },
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 425037.0,
+        "worst_abs_ps": 102.75,
+        "bounded": false,
+        "worst_signed_ps": -102.75,
+        "worst_launch": "cw_d[319]$_DFF_P_",
+        "worst_capture": "cw_n_d[127]$_DFF_P_",
+        "worst_crpr_ps": 3.37,
+        "p99_raw_ps": 64.02,
+        "searched": 1.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 425037.0,
+        "worst_abs_ps": 103.21,
+        "bounded": false,
+        "worst_signed_ps": 103.21,
+        "worst_launch": "d3_v[0]$_DFF_PN0_",
+        "worst_capture": "cw_d[102]$_DFF_P_",
+        "worst_crpr_ps": 3.37,
+        "p99_raw_ps": 97.72,
+        "searched": 572.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       }
+      },
+      "counts": {
+       "regs": 10723.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 11030.0,
+       "pairs": 425037.0,
+       "inter_clock": 0.0
+      },
+      "method": "tag",
+      "seconds": 884.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
+    }
+   },
+   "problems": [],
+   "insertion_target_ps": null,
+   "insertion_bound": null
+  }
+ },
+ "verdict": "PASS"
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.caprt.actual_drv_diagnostic.v1",
+  "scope": "Exact released per-corner prefix through DRV; not full policy/SIGNED",
+  "corners": {
+    "TT": {
+      "SLEW_VIOL": 0.0,
+      "CAP_VIOL": 0.0,
+      "SDC_WNS_MAX": 3.72,
+      "SDC_WNS_MIN": 25.23,
+      "STD_WNS_MAX": 3.72,
+      "STD_WNS_MIN": 25.23
+    },
+    "FF": {
+      "SLEW_VIOL": 0.0,
+      "CAP_VIOL": 0.0,
+      "SDC_WNS_MAX": 202.78,
+      "SDC_WNS_MIN": 10.0,
+      "STD_WNS_MAX": 202.78,
+      "STD_WNS_MIN": 10.0
+    }
+  },
+  "zero_drv": true
+}
