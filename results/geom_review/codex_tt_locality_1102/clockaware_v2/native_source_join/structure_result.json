@@ -1,0 +1,291 @@
+{
+ "schema": "opentallas.tt_native_regional_source_structure.v1",
+ "status": "PASS_LOCAL_NATIVE_STRUCTURE",
+ "physical_qualified": false,
+ "whole_part_lec_credit": false,
+ "global_g0c_credit": false,
+ "origin_ff": 14,
+ "origin_posedge_ff": 13,
+ "origin_negedge_ff": 1,
+ "old_origin_ff": 5,
+ "extra_raw_leaves": 4,
+ "net_ff_added": 13,
+ "cycles_added": 0,
+ "receivers": [
+  {
+   "instance": "u_cland_fstart_cal_descriptor_obs",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_cal_image_ready",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_cal_program_obs",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_command_stage__to_glue__sys_face__tt_command_stage",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_command_stage__to_native59__command_stage",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_control_stores_ready",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_dc",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_emb_position",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_emb_start__to_glue__embed_prov__core_start",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_emb_start__to_native59__head_prepare_v",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_emb_token__to_glue__embed_prov__core_token",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_emb_token__to_native59__head_prepare_token",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_emb_user",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_flt_o",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_layer_context_v__to_glue__sys_face__tt_layer_context_v",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_layer_context_v__to_native59__layer_context_v",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_native_cmd",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_native_pos__to_glue__sys_face__tt_native_pos",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_native_pos__to_native59__native_position",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_native_tok__to_glue__sys_face__tt_native_tok",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_native_tok__to_native59__native_token",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_program_obs",
+   "type": "ot_dp_landing_relay",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_ctx_x",
+   "type": "ot_dp_clk_landing_cas",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_dh",
+   "type": "ot_dp_clk_landing_cas",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_dh_user",
+   "type": "ot_dp_clk_landing_cas",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fab",
+   "type": "ot_dp_clk_landing_cas",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_kok",
+   "type": "ot_dp_clk_landing_cas",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_mu_flt_i",
+   "type": "ot_dp_clk_landing_cas",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_native_ret",
+   "type": "ot_dp_clk_landing_cas",
+   "region": 0
+  },
+  {
+   "instance": "u_cland_fstart_cmd",
+   "type": "ot_dp_landing_relay",
+   "region": 1
+  },
+  {
+   "instance": "u_cland_fstart_hr",
+   "type": "ot_dp_landing_relay",
+   "region": 1
+  },
+  {
+   "instance": "u_cland_ag5",
+   "type": "ot_dp_clk_landing_cas",
+   "region": 1
+  },
+  {
+   "instance": "u_cland_ss5",
+   "type": "ot_dp_clk_landing_cas",
+   "region": 1
+  },
+  {
+   "instance": "u_cland_kwd",
+   "type": "ot_dp_clk_landing_cas",
+   "region": 2
+  },
+  {
+   "instance": "u_cland_pw",
+   "type": "ot_dp_clk_landing_cas",
+   "region": 2
+  },
+  {
+   "instance": "u_cland_fstart_table_req",
+   "type": "ot_dp_landing_relay",
+   "region": 3
+  },
+  {
+   "instance": "u_cland_fstart_tl",
+   "type": "ot_dp_landing_relay",
+   "region": 3
+  }
+ ],
+ "actual_source_states": [
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.sf",
+   "actual_native_process_ff": "$procdff$94",
+   "edge": "negedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.s0",
+   "actual_native_process_ff": "$procdff$93",
+   "edge": "posedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[0].s1",
+   "actual_native_process_ff": "$procdff$90",
+   "edge": "posedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[0].s2",
+   "actual_native_process_ff": "$procdff$91",
+   "edge": "posedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[0].pd",
+   "actual_native_process_ff": "$procdff$92",
+   "edge": "posedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[1].s1",
+   "actual_native_process_ff": "$procdff$87",
+   "edge": "posedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[1].s2",
+   "actual_native_process_ff": "$procdff$88",
+   "edge": "posedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[1].pd",
+   "actual_native_process_ff": "$procdff$89",
+   "edge": "posedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[2].s1",
+   "actual_native_process_ff": "$procdff$84",
+   "edge": "posedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[2].s2",
+   "actual_native_process_ff": "$procdff$85",
+   "edge": "posedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[2].pd",
+   "actual_native_process_ff": "$procdff$86",
+   "edge": "posedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[3].s1",
+   "actual_native_process_ff": "$procdff$81",
+   "edge": "posedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[3].s2",
+   "actual_native_process_ff": "$procdff$82",
+   "edge": "posedge"
+  },
+  {
+   "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[3].pd",
+   "actual_native_process_ff": "$procdff$83",
+   "edge": "posedge"
+  }
+ ],
+ "checked": [
+  "actual selected core/receiver interface elaboration",
+  "all37receiver clock/START/D/raw joins and exact output consumer sets",
+  "reader external forwardedclock/START/payload unchanged",
+  "four distinct one-bit sameD/sameCLK raw copies from actual85; central87 retained",
+  "all14real origin sourceFF identities/widths/edges"
+ ],
+ "unproved": [
+  "unchanged blackbox core/receiver functions",
+  "whole-part nativeLEC145",
+  "global reset/count/source/landslots verifier integration",
+  "mapped KEEP/ABI and physical clock-name/phase/path assignment",
+  "native placement/row legality and all parent/corner gates"
+ ],
+ "proved_helper_sha256": "1b421a92cf6b8c6541da69142c504d724ed831b3e9c6ca96858175e626485bf2",
+ "actual_native_source_sha256": "0c322c426aca9b4c3db8ebda17dd8afe33e5674ebdfa822a266116778f4c0b49",
+ "graph_sha256": "b877a766006134863220bf19776596afd1481359435953c978b1ee16ddf21cdc",
+ "model_sha256": "6588336eb7e62a9464e4b62910f1fe8959a8bd38ca899e9903a2025cea16174f"
+}
