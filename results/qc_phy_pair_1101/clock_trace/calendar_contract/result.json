@@ -1,0 +1,37 @@
+{
+  "status": "HOLD_NO_QUALIFIED_FDI_PHASE_CALENDAR",
+  "source": "frozen bd55/current82190c1ff+f79c1e228",
+  "selected_native_source_sha256": "c0248ae00f9b425969960a88cdea9dd0423a8b6387901676ef0a6f3d33aad8dd",
+  "job": "intel2:oth-ubuntu-1822435-1793622322",
+  "admission_GB": 1,
+  "threads": 1,
+  "diagnostic_exit": 0,
+  "cases": {
+    "eligible_core_edge100": "PASS: source1, FDI1",
+    "unqualified_core_edge101": "FAIL_RETAINED: source1, FDI0",
+    "private_zero_slot_mutant_edge100": "REJECTED_BY_POSITIVE_ORACLE: source1, FDI0"
+  },
+  "initial_compile_attempt": {
+    "job": "intel2:oth-ubuntu-1799163-1793622245",
+    "exit": 6,
+    "diagnosis": "testbench variable edge is an SV keyword; changed to core_index",
+    "retained_log": "run/compile_attempt1_SVkeyword_FAIL.log"
+  },
+  "typed_proposed_boundary_groups": 15,
+  "typed_proposed_FT_groups": 95,
+  "current_boundary_payload_epoch_FF": 3606,
+  "current_FT_payload_epoch_FF": 22838,
+  "selected_native_PHY": [367, 343, 369],
+  "selected_native_L": 436,
+  "new_FDI_START_epoch": null,
+  "new_executable_calendar": null,
+  "programme_reprice": null,
+  "new_START_reset_FF": null,
+  "RTL_emitted": false,
+  "public_clocks_changed": false,
+  "native_CDC_changed": false,
+  "physical_qualified": false,
+  "whole_QC_build": false,
+  "numeric_mission_qualified": false,
+  "further_Intel2_gate": "NONE; future small gates use eligible fleet/Intel1/EPYC2"
+}

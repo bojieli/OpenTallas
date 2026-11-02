@@ -1,0 +1,56 @@
+[
+  {
+    "source_file": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/rtl/qfd_qc_coll_n_part.sv",
+    "instance": "u_core",
+    "source_line": "qfd_coll_static_face #(.FW(546), .L(436), .PEER_R(23), .PHY(367), .PLAND(0), .PLD(2), .PLK(1), .R(21), .SAFE(0), .TOK_REG(0), .UP_SYNC(0)) u_core (",
+    "parameters": {
+      "FW": 546,
+      "L": 436,
+      "PEER_R": 23,
+      "PHY": 367,
+      "PLAND": 0,
+      "PLD": 2,
+      "PLK": 1,
+      "R": 21,
+      "SAFE": 0,
+      "TOK_REG": 0,
+      "UP_SYNC": 0
+    }
+  },
+  {
+    "source_file": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/rtl/qfd_qc_coll_s_part.sv",
+    "instance": "u_g_face_3_u_face",
+    "source_line": "qfd_coll_static_face #(.FW(546), .L(436), .PEER_R(23), .PHY(343), .PLAND(0), .PLD(2), .PLK(1), .R(23), .SAFE(0), .TOK_REG(0), .UP_SYNC(0)) u_g_face_3_u_face (",
+    "parameters": {
+      "FW": 546,
+      "L": 436,
+      "PEER_R": 23,
+      "PHY": 343,
+      "PLAND": 0,
+      "PLD": 2,
+      "PLK": 1,
+      "R": 23,
+      "SAFE": 0,
+      "TOK_REG": 0,
+      "UP_SYNC": 0
+    }
+  },
+  {
+    "source_file": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/rtl/qfd_qc_coll_s_part.sv",
+    "instance": "u_g_face_4_u_face",
+    "source_line": "qfd_coll_static_face #(.FW(546), .L(436), .PEER_R(21), .PHY(369), .PLAND(0), .PLD(2), .PLK(1), .R(23), .SAFE(0), .TOK_REG(0), .UP_SYNC(0)) u_g_face_4_u_face (",
+    "parameters": {
+      "FW": 546,
+      "L": 436,
+      "PEER_R": 21,
+      "PHY": 369,
+      "PLAND": 0,
+      "PLD": 2,
+      "PLK": 1,
+      "R": 23,
+      "SAFE": 0,
+      "TOK_REG": 0,
+      "UP_SYNC": 0
+    }
+  }
+]
