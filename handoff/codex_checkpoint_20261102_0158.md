@@ -165,3 +165,21 @@ All are plain text in CODEX-LOG; do not wait on them globally:
 - Native PG8322 review and limited canary approvals remain the highest shared-tool pending action. V1 only admits two validated resizer commands; CTS/GPL still require their own scoped native workload qualification. No wrapper may claim broad capability from an environment flag.
 
 
+
+## Latest checkpoint corrections (2026-11-02, appended for user-requested recovery)
+
+These supersede the pending-review status above where applicable. This remains an active checkpoint, not a Claude-reset handback.
+
+- Published main is now **9db068b5458b7a20a548ab165aabc8dc6c077a30**, verified equal to origin/main at publication. Native PG resizer callback source through **5621983f5** and restricted DPI linker **431927330** with independent review/test **0cdd5c51c** are merged. PG production capability is repair_design/repair_timing only; CTS/GPL remain separately scoped canaries, not admitted production support. DPI passed16 controls and exact90/82 top/all86 child identity replay; no new47 runtime credit.
+- QBS LLfu/NNfu strict wholebody GRT driver562, L4 finite DRV checkpoint, LLfd nonstrict diagnostic CTS and Tnode normal hold are prepared but require the precise root scopes recorded in supplements before dispatch. Do not infer launch from preparation or source merge.
+- HEAD **R4** supersedes R3: common-shape OFF restores the exact original58437 matched points and12732 prior points with0 missing; native12 STEP+BASE64 pass.16 other ld STEP/BASE problems remain. Typed70 initial-state proposal is independently reviewed/default OFF, not an accepted full proof.
+- Official counted total remains **50**. VSW has genuine physical signoff and fresh15804 routed EQ, but canonical view/count adoption remains S81 flow-release HOLD. L2 original/M4 hold is separate.
+- BFQG PG-only fresh copy is32782/0 opens; Hroot426814/0; LLfd17802/0. These correct saved inputs, not retrospective PG-before-internalRC evidence. BFQG has standing one raw no-birth full CLOCK+SIGNAL GRT50 scope after actual native classification and LOOK.
+- SC current measured timing is TT-388.81/FF-163.48 after the three-BUF trial. Independent census finds24 collapsed serial chains/49 existing buffers; prefer one reviewed bounded batch or guarded DATA repair over serial isolated trials. RED corrected DFF-family exclusion/PG-native retry is prepared, unlaunched.
+- Hist COMB-PLACE terminated EXIT0:31847FF guards and389921 source relations unchanged; real data reach max404946DBU/0 beyond405000,0 standard/macro overlaps. Native M2-M5 congestion remains FAIL/WARN (column1.510, horizontal channel1.739); even M7 model still local1.200. No CTS/GRT release. Actual all-STD PG census/LOOK and a disabled32-macro clock proposal are next.
+- VN_b old SIGNED HW0 uses -DOT_S81_VN_CONST_ZERO while current residual profile does not. Same primary SV hash does not establish exact profile equivalence. Old165757 synth/185775 final standard-cell counts and old proof/view cannot transfer without current-profile sizing/EQ.
+- KV cached compile preserved225 objects and recovered the final terminated object exactly; normal96GB/j3 continuation is queued, capacity guards remain. CTL corrected DPL closure8363e8914 admitted on Intel1 unit2511770 after two missing native sidecars were fixed. PC fresh-process finalizer passed the former GRT crash boundary and reached DRT; collect actual terminal state from supplement.
+- PV B measured-wire successor codex-pvb-w80-0245 dispatched normally16GB8T, maxwire80/MAX_PASS1/nohold from actual t10. Previous6TT/2FF slew failure retained. q2n one-net route remained nonimproved DRC2; no repeat route authorized.
+- DS original/current native five-operation wrap1,2,3,0,1 is equal. Prior claim of a real tag bug and +4FF retime is withdrawn; no source adoption. Forwarder digital clock aliases refined, physical epoch/R8 contract remains unqualified.
+
+All eight supplements continue to receive live deltas and contain exact host:path, controller/unit, collection instructions, source ancestry, failed attempts and next steps. Owner dependencies remain in CODEX-LOG.md. No lane was parked for this checkpoint.
