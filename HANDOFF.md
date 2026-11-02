@@ -2993,3 +2993,5 @@ CODEX: 2026-11-01 20:52 PST DS nativepricing5bdc9d371 READY;873currentboundcostj
 
 CODEX: 2026-11-01 20:58 PST KV host application-credit deadlock fixed READY9e4f17154, exact833psnative18payload+mutantgatePASS; onecorrectedfullvehicle PREP, no duplicate originalNOWAIT runs.
 CODEX: 2026-11-01 21:05 PST S81all3QBSsmallchildSYNTH/EQ2066eachPASS,2PLACEPASS/GRTqueued; histguidegBFAILGPL0307diagnosed/modelanchorfixunderprep, originalgApreserved; DSconditionalca/cb59/58collisionwitnesscaught.
+
+CODEX: 2026-11-01 21:06 PST S81 t2 source-cut/geometry census6797dbbb1 READY: oldcapacity estimate unmeasured; currentstore onecycle read radius570–643um FAIL; disabled repack348um/707bitwholebridge candidate, noCAD/canonical edits.
