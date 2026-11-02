@@ -12,7 +12,7 @@ import shutil
 import os
 
 
-def transfer(original, copied, *, finished_proof=False):
+def transfer(original, copied, *, finished_proof=False, validate_only=False):
     original, copied = Path(original).resolve(), Path(copied).resolve()
     if original == copied:
         raise ValueError('fresh continuation copy required')
@@ -141,6 +141,8 @@ def transfer(original, copied, *, finished_proof=False):
                           ready_sha256=hashlib.sha256((original/'lec_async.ready').read_bytes()).hexdigest(),
                           report_sha256=hashlib.sha256((original/'lec/lec.json').read_bytes()).hexdigest())
     out=copied/'lec_async.transfer.json'
+    if validate_only:
+        return descriptor
     if out.exists():
         if json.loads(out.read_text()) != descriptor:
             raise ValueError('different completed-proof transfer already recorded')

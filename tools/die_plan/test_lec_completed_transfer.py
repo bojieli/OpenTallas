@@ -63,6 +63,26 @@ def test_finished_proof_can_transfer_when_physical_scope_failed(tmp_path):
     assert transfer(k,c,finished_proof=True)==r
 
 
+def test_native64_receipt_is_preserved_and_wrong_receipt_refused(tmp_path):
+    import hashlib
+    k,c=finished_fixture(tmp_path)
+    receipt='actual native reset proof'
+    staged={'schema':'opentallas.reset_contract.v1','die':'hbm','edges':64,'modules':['top'],
+            'proof':{'verdict':'PASS','mutant':'CAUGHT','assert_edges':66,'receipt':'reset_contract/receipt.txt',
+                     'receipt_sha256':hashlib.sha256(receipt.encode()).hexdigest()}}
+    for root in (k,c):
+        (root/'reset_contract').mkdir();(root/'reset_contract/receipt.txt').write_text(receipt)
+        (root/'reset_contract.json').write_text(json.dumps(staged))
+    report=json.loads((k/'lec/lec.json').read_text());report['top']='top'
+    report['reset_contract'].update(used=64,contract={'file':'/work/reset_contract.json','die':'hbm','edges':64,'assert_edges':66,'receipt':'/work/reset_contract/receipt.txt'})
+    time.sleep(.005);(k/'lec/lec.json').write_text(json.dumps(report))
+    result=transfer(k,c,finished_proof=True,validate_only=True)
+    assert 'reset_contract/receipt.txt' in result['current_files_sha256']
+    assert not (c/'lec_before_finished_import').exists()
+    (k/'reset_contract/receipt.txt').write_text('wrong')
+    with pytest.raises(ValueError,match='receipt proof'):transfer(k,c,finished_proof=True,validate_only=True)
+
+
 @pytest.mark.parametrize('mutant',['pending','unclean','pid','reset_added','input_changed','incomplete'])
 def test_finished_proof_refuses_incomplete_or_changed_context(tmp_path,mutant):
     k,c=finished_fixture(tmp_path)
