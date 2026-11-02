@@ -34,12 +34,18 @@ def source_guard(source):
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--fw-source',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--fw-source',type=Path,required=True);p.add_argument('--rp-source',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
     abi=source_guard(a.fw_source);cases=[]
+    rp=a.rp_source.read_text()
+    if 'wire setid=cmd_q[0] && cmd_q[3:1]==3\'d7;' not in rp or 'wire go=cmd_q[0] && sid_ok &&' not in rp:
+        raise ValueError('actual RP SETID/accept contract changed')
+    abi['rp_sha256']=hashlib.sha256(a.rp_source.read_bytes()).hexdigest()
     for user in range(4):
         pidx=17+128*user;cmd=(pidx << 4)|3
         cases.append(dict(user=user,pidx=pidx,cmd_hex=f'{cmd:029x}',frames={k:f'{v:0135x}' for k,v in encode(cmd).items()}))
     a.out.write_text(json.dumps(dict(schema='native_fw_component_frame_source/1',status='SOURCE_ONLY_TEST_STIMULUS_NOT_CALENDAR',abi=abi,
+        required_boot=dict(command_hex=f'{15:029x}',meaning='actual SETID0 before command acceptance; sid_ok reset starts false',frames={k:f'{v:0135x}' for k,v in encode(15).items()}),
+        idle_frames={k:f'{v:0135x}' for k,v in encode(0).items()},
         cases=cases,programme='genuine per-user HEAD pair8 upper pidx17 must be installed before issue',
         sixpart_boundary='p1 enters real FW→STM→SC→CTL chain; high command fragment p2 and low CHD p0 take unselected neighbors and remain explicit boundaries',
         holds=['all stage/native/forwarded clock source and start/epoch phase','actual programme/table/VM fixture initialization and accepted-command witness','source-frame injection times are TEST_ONLY, no global date inference'],executable=False),indent=2)+'\n')
