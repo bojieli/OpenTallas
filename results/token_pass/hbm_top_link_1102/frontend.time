@@ -1,0 +1,23 @@
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --timing -O0 --threads 1 --output-split 20000 --output-split-cfuncs 2000 --top-module hbm_arch_B2o_bound_top -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTITOP -Wno-MODDUP -Wno-BLKANDNBLK -f /srv/opentallas-scratch2/claude/codex-source13-top-0010/linked_native/source.f --Mdir /srv/opentallas-scratch2/claude/codex-source13-top-0010/linked_native/frontend8/obj"
+	User time (seconds): 4.39
+	System time (seconds): 0.40
+	Percent of CPU this job got: 97%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:04.92
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 166052
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 125
+	Minor (reclaiming a frame) page faults: 43110
+	Voluntary context switches: 488
+	Involuntary context switches: 39
+	Swaps: 0
+	File system inputs: 18744
+	File system outputs: 42696
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
