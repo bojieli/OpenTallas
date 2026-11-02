@@ -1,0 +1,981 @@
+{
+ "classification": "UNTRUSTED_ABSTRACT_NATIVE_STEP_WITNESS",
+ "basis": "explicit original codebook plus proposed rec reachable domain, all other unmatched states free; no original accepted hints",
+ "witnesses": [
+  {
+   "output": "hyp:gate:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[0]",
+   "simulation_lane": 74,
+   "inputs": {
+    "9963": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.c_fdi_rx_v"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.c_fdi_rx_v",
+     "value": 1
+    },
+    "9964": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.c_fdi_tx_up"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.c_fdi_tx_up",
+     "value": 1
+    },
+    "13144": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.fq_c[2]"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.u_core.fq_c[2]",
+     "value": 0
+    },
+    "13145": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.g_eb[0].u_eb.q"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.u_core.g_eb[0].u_eb.q",
+     "value": 1
+    },
+    "13152": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.end_fault"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.end_fault",
+     "value": 0
+    },
+    "14967": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.u_link.u_ctl.ea"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.u_link.u_ctl.ea",
+     "value": 0
+    },
+    "15561": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.u_link.u_ctl.p_tx_v"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.u_link.u_ctl.p_tx_v",
+     "value": 0
+    },
+    "20050": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+     "value": 0
+    },
+    "47622": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.u_link.u_ctl.u_ea_x.q"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.u_link.u_ctl.u_ea_x.q",
+     "value": 0
+    },
+    "48175": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.epoch_begin"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.epoch_begin",
+     "value": 0
+    },
+    "48178": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.fq[2]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.fq[2]",
+     "value": 0
+    },
+    "48180": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[0]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[0]",
+     "value": 0
+    },
+    "48181": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[10]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[10]",
+     "value": 0
+    },
+    "48182": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[11]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[11]",
+     "value": 1
+    },
+    "48183": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[12]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[12]",
+     "value": 1
+    },
+    "48184": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[13]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[13]",
+     "value": 1
+    },
+    "48185": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[14]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[14]",
+     "value": 1
+    },
+    "48186": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[15]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[15]",
+     "value": 1
+    },
+    "48187": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[1]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[1]",
+     "value": 1
+    },
+    "48188": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[2]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[2]",
+     "value": 0
+    },
+    "48189": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[3]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[3]",
+     "value": 1
+    },
+    "48190": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[4]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[4]",
+     "value": 1
+    },
+    "48191": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[5]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[5]",
+     "value": 0
+    },
+    "48192": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[6]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[6]",
+     "value": 0
+    },
+    "48193": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[7]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[7]",
+     "value": 0
+    },
+    "48194": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[8]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[8]",
+     "value": 0
+    },
+    "48195": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[9]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[9]",
+     "value": 1
+    },
+    "48196": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.seen"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.seen",
+     "value": 0
+    },
+    "48197": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[0]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[0]",
+     "value": 1
+    },
+    "48198": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[1]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[1]",
+     "value": 0
+    },
+    "48199": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[2]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[2]",
+     "value": 1
+    },
+    "48203": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[0].u_b.q"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[0].u_b.q",
+     "value": 1
+    },
+    "48211": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[17].u_b.q"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[17].u_b.q",
+     "value": 1
+    },
+    "48215": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[20].u_b.q"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[20].u_b.q",
+     "value": 0
+    },
+    "52793": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[0]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[0]",
+     "value": 0
+    },
+    "52794": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[1]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[1]",
+     "value": 0
+    },
+    "52795": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[2]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[2]",
+     "value": 0
+    },
+    "67004": {
+     "kind": [
+      "gold_x",
+      "x842"
+     ],
+     "name": "gold:x842",
+     "value": 1
+    },
+    "67006": {
+     "kind": [
+      "gold_x",
+      "x844"
+     ],
+     "name": "gold:x844",
+     "value": 1
+    },
+    "67008": {
+     "kind": [
+      "gold_x",
+      "x846"
+     ],
+     "name": "gold:x846",
+     "value": 0
+    },
+    "67009": {
+     "kind": [
+      "gold_x",
+      "x847"
+     ],
+     "name": "gold:x847",
+     "value": 1
+    },
+    "67012": {
+     "kind": [
+      "gold_x",
+      "x850"
+     ],
+     "name": "gold:x850",
+     "value": 0
+    },
+    "67016": {
+     "kind": [
+      "gold_x",
+      "x854"
+     ],
+     "name": "gold:x854",
+     "value": 0
+    },
+    "67019": {
+     "kind": [
+      "gold_x",
+      "x857"
+     ],
+     "name": "gold:x857",
+     "value": 1
+    },
+    "67470": {
+     "kind": [
+      "gold_x",
+      "x1308"
+     ],
+     "name": "gold:x1308",
+     "value": 1
+    },
+    "67471": {
+     "kind": [
+      "gold_x",
+      "x1309"
+     ],
+     "name": "gold:x1309",
+     "value": 0
+    },
+    "67487": {
+     "kind": [
+      "gold_x",
+      "x1325"
+     ],
+     "name": "gold:x1325",
+     "value": 0
+    },
+    "67488": {
+     "kind": [
+      "gold_x",
+      "x1326"
+     ],
+     "name": "gold:x1326",
+     "value": 0
+    },
+    "67504": {
+     "kind": [
+      "gold_x",
+      "x1342"
+     ],
+     "name": "gold:x1342",
+     "value": 0
+    },
+    "67505": {
+     "kind": [
+      "gold_x",
+      "x1343"
+     ],
+     "name": "gold:x1343",
+     "value": 1
+    },
+    "67506": {
+     "kind": [
+      "gold_x",
+      "x1344"
+     ],
+     "name": "gold:x1344",
+     "value": 0
+    },
+    "67507": {
+     "kind": [
+      "gold_x",
+      "x1345"
+     ],
+     "name": "gold:x1345",
+     "value": 0
+    },
+    "67538": {
+     "kind": [
+      "gold_x",
+      "x1376"
+     ],
+     "name": "gold:x1376",
+     "value": 1
+    },
+    "67539": {
+     "kind": [
+      "gold_x",
+      "x1377"
+     ],
+     "name": "gold:x1377",
+     "value": 0
+    },
+    "67555": {
+     "kind": [
+      "gold_x",
+      "x1393"
+     ],
+     "name": "gold:x1393",
+     "value": 0
+    },
+    "67556": {
+     "kind": [
+      "gold_x",
+      "x1394"
+     ],
+     "name": "gold:x1394",
+     "value": 1
+    },
+    "67572": {
+     "kind": [
+      "gold_x",
+      "x1410"
+     ],
+     "name": "gold:x1410",
+     "value": 1
+    },
+    "67573": {
+     "kind": [
+      "gold_x",
+      "x1411"
+     ],
+     "name": "gold:x1411",
+     "value": 1
+    }
+   },
+   "next_states": {
+    "('gold', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[1]')": 0,
+    "('gold', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[0]')": 1,
+    "('gold', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[2]')": 1,
+    "('gold', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[2]')": 0,
+    "('gold', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[1]')": 0,
+    "('gold', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[0]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[1]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[3]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[2]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[0]')": 1,
+    "('gate', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[3]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[4]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[1]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[2]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[0]')": 1
+   }
+  },
+  {
+   "output": "hyp:gate:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[3]",
+   "simulation_lane": 74,
+   "inputs": {
+    "9963": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.c_fdi_rx_v"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.c_fdi_rx_v",
+     "value": 1
+    },
+    "9964": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.c_fdi_tx_up"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.c_fdi_tx_up",
+     "value": 1
+    },
+    "13144": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.fq_c[2]"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.u_core.fq_c[2]",
+     "value": 0
+    },
+    "13145": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.g_eb[0].u_eb.q"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.u_core.g_eb[0].u_eb.q",
+     "value": 1
+    },
+    "13152": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.end_fault"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.end_fault",
+     "value": 0
+    },
+    "14967": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.u_link.u_ctl.ea"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.u_link.u_ctl.ea",
+     "value": 0
+    },
+    "15561": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.u_link.u_ctl.p_tx_v"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.u_link.u_ctl.p_tx_v",
+     "value": 0
+    },
+    "20050": {
+     "kind": [
+      "matched",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q"
+     ],
+     "name": "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+     "value": 0
+    },
+    "47622": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.u_link.u_ctl.u_ea_x.q"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_end.u_link.u_ctl.u_ea_x.q",
+     "value": 0
+    },
+    "48175": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.epoch_begin"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.epoch_begin",
+     "value": 0
+    },
+    "48178": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.fq[2]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.fq[2]",
+     "value": 0
+    },
+    "48180": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[0]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[0]",
+     "value": 0
+    },
+    "48181": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[10]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[10]",
+     "value": 0
+    },
+    "48182": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[11]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[11]",
+     "value": 1
+    },
+    "48183": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[12]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[12]",
+     "value": 1
+    },
+    "48184": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[13]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[13]",
+     "value": 1
+    },
+    "48185": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[14]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[14]",
+     "value": 1
+    },
+    "48186": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[15]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[15]",
+     "value": 1
+    },
+    "48187": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[1]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[1]",
+     "value": 1
+    },
+    "48188": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[2]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[2]",
+     "value": 0
+    },
+    "48189": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[3]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[3]",
+     "value": 1
+    },
+    "48190": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[4]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[4]",
+     "value": 1
+    },
+    "48191": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[5]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[5]",
+     "value": 0
+    },
+    "48192": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[6]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[6]",
+     "value": 0
+    },
+    "48193": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[7]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[7]",
+     "value": 0
+    },
+    "48194": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[8]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[8]",
+     "value": 0
+    },
+    "48195": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[9]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.n[9]",
+     "value": 1
+    },
+    "48196": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.seen"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.seen",
+     "value": 0
+    },
+    "48197": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[0]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[0]",
+     "value": 1
+    },
+    "48198": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[1]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[1]",
+     "value": 0
+    },
+    "48199": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[2]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[2]",
+     "value": 1
+    },
+    "48203": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[0].u_b.q"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[0].u_b.q",
+     "value": 1
+    },
+    "48211": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[17].u_b.q"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[17].u_b.q",
+     "value": 1
+    },
+    "48215": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[20].u_b.q"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[20].u_b.q",
+     "value": 0
+    },
+    "52793": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[0]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[0]",
+     "value": 0
+    },
+    "52794": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[1]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[1]",
+     "value": 0
+    },
+    "52795": {
+     "kind": [
+      "gold_only",
+      "ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[2]"
+     ],
+     "name": "gold:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[2]",
+     "value": 0
+    },
+    "67004": {
+     "kind": [
+      "gold_x",
+      "x842"
+     ],
+     "name": "gold:x842",
+     "value": 1
+    },
+    "67006": {
+     "kind": [
+      "gold_x",
+      "x844"
+     ],
+     "name": "gold:x844",
+     "value": 1
+    },
+    "67008": {
+     "kind": [
+      "gold_x",
+      "x846"
+     ],
+     "name": "gold:x846",
+     "value": 0
+    },
+    "67009": {
+     "kind": [
+      "gold_x",
+      "x847"
+     ],
+     "name": "gold:x847",
+     "value": 1
+    },
+    "67012": {
+     "kind": [
+      "gold_x",
+      "x850"
+     ],
+     "name": "gold:x850",
+     "value": 0
+    },
+    "67016": {
+     "kind": [
+      "gold_x",
+      "x854"
+     ],
+     "name": "gold:x854",
+     "value": 0
+    },
+    "67019": {
+     "kind": [
+      "gold_x",
+      "x857"
+     ],
+     "name": "gold:x857",
+     "value": 1
+    },
+    "67470": {
+     "kind": [
+      "gold_x",
+      "x1308"
+     ],
+     "name": "gold:x1308",
+     "value": 1
+    },
+    "67471": {
+     "kind": [
+      "gold_x",
+      "x1309"
+     ],
+     "name": "gold:x1309",
+     "value": 0
+    },
+    "67487": {
+     "kind": [
+      "gold_x",
+      "x1325"
+     ],
+     "name": "gold:x1325",
+     "value": 0
+    },
+    "67488": {
+     "kind": [
+      "gold_x",
+      "x1326"
+     ],
+     "name": "gold:x1326",
+     "value": 0
+    },
+    "67504": {
+     "kind": [
+      "gold_x",
+      "x1342"
+     ],
+     "name": "gold:x1342",
+     "value": 0
+    },
+    "67505": {
+     "kind": [
+      "gold_x",
+      "x1343"
+     ],
+     "name": "gold:x1343",
+     "value": 1
+    },
+    "67506": {
+     "kind": [
+      "gold_x",
+      "x1344"
+     ],
+     "name": "gold:x1344",
+     "value": 0
+    },
+    "67507": {
+     "kind": [
+      "gold_x",
+      "x1345"
+     ],
+     "name": "gold:x1345",
+     "value": 0
+    },
+    "67538": {
+     "kind": [
+      "gold_x",
+      "x1376"
+     ],
+     "name": "gold:x1376",
+     "value": 1
+    },
+    "67539": {
+     "kind": [
+      "gold_x",
+      "x1377"
+     ],
+     "name": "gold:x1377",
+     "value": 0
+    },
+    "67555": {
+     "kind": [
+      "gold_x",
+      "x1393"
+     ],
+     "name": "gold:x1393",
+     "value": 0
+    },
+    "67556": {
+     "kind": [
+      "gold_x",
+      "x1394"
+     ],
+     "name": "gold:x1394",
+     "value": 1
+    },
+    "67572": {
+     "kind": [
+      "gold_x",
+      "x1410"
+     ],
+     "name": "gold:x1410",
+     "value": 1
+    },
+    "67573": {
+     "kind": [
+      "gold_x",
+      "x1411"
+     ],
+     "name": "gold:x1411",
+     "value": 1
+    }
+   },
+   "next_states": {
+    "('gold', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[1]')": 0,
+    "('gold', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[0]')": 1,
+    "('gold', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[2]')": 1,
+    "('gold', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[2]')": 0,
+    "('gold', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[1]')": 0,
+    "('gold', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[0]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[1]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[3]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[2]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[0]')": 1,
+    "('gate', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[3]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[4]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[1]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[2]')": 0,
+    "('gate', 'ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[0]')": 1
+   }
+  }
+ ],
+ "elapsed_s": 14.611900329589844
+}

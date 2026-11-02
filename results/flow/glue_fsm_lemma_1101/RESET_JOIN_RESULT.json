@@ -1,0 +1,48 @@
+{
+ "classification": "UNTRUSTED_LEMMA_ONLY",
+ "original_verdict_unchanged": true,
+ "reset_cycles": 64,
+ "results": [
+  {
+   "mode": "original_reset_join",
+   "statuses": {
+    "hyp:gate:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[0]": "differs",
+    "hyp:gate:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[1]": "differs",
+    "hyp:gate:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[2]": "differs",
+    "hyp:gate:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[3]": "differs",
+    "hyp:gate:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[0]": "proved",
+    "hyp:gate:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[1]": "proved",
+    "hyp:gate:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[2]": "proved",
+    "hyp:gate:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[3]": "proved",
+    "hyp:gate:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[4]": "proved",
+    "hyp:gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[0].u_b.q": "differs",
+    "hyp:gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[17].u_b.q": "differs",
+    "hyp:gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[20].u_b.q": "differs",
+    "cons:gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[0]": "proved",
+    "cons:gold:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[0]": "proved"
+   },
+   "n_outputs": 14
+  },
+  {
+   "mode": "reachable_reset_join",
+   "statuses": {
+    "hyp:gate:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[0]": "differs",
+    "hyp:gate:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[1]": "proved",
+    "hyp:gate:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[2]": "proved",
+    "hyp:gate:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st#t[3]": "differs",
+    "hyp:gate:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[0]": "proved",
+    "hyp:gate:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[1]": "proved",
+    "hyp:gate:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[2]": "proved",
+    "hyp:gate:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[3]": "proved",
+    "hyp:gate:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st#t[4]": "proved",
+    "hyp:gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[0].u_b.q": "differs",
+    "hyp:gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[17].u_b.q": "differs",
+    "hyp:gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[20].u_b.q": "differs",
+    "cons:gold:ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.st[0]": "proved",
+    "cons:gold:ff:u_dut.u_bound.u_sys_face.u_ot_pr_core.st[0]": "proved"
+   },
+   "n_outputs": 14
+  }
+ ],
+ "elapsed_s": 77.6659460067749
+}
