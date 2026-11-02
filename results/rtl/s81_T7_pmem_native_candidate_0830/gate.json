@@ -1,0 +1,65 @@
+{
+  "status": "PASS_BOUNDED_DEFAULT_OFF_NATIVE_PMEM_ARRAY_PLUS_CAPTURE",
+  "unit": "oth-ubuntu-880859-1793635095",
+  "host": "intel2",
+  "run": "/srv/opentallas-scratch2/claude/codex-ds-t7-pmem-native-0830",
+  "counts": {
+    "checks": 4096,
+    "pushes": 1667,
+    "pops": 1576,
+    "writes": 4092,
+    "collisions": 439,
+    "odd": 896,
+    "tail": 766,
+    "empty": 1168,
+    "warm": 74,
+    "resetpush": 37,
+    "fullpvpop": 244,
+    "FFdelta": -1020,
+    "macros": 4,
+    "clockps": 833
+  },
+  "negative_controls": {
+    "1": {
+      "first_cycle": 517,
+      "mutant": 1,
+      "valid": 1,
+      "rst": 1,
+      "meaning": "evenbank address wrong"
+    },
+    "2": {
+      "first_cycle": 517,
+      "mutant": 2,
+      "valid": 1,
+      "rst": 1,
+      "meaning": "read enable oneedge late"
+    },
+    "3": {
+      "first_cycle": 583,
+      "mutant": 3,
+      "valid": 0,
+      "rst": 0,
+      "meaning": "format incorrectly reset while payloadmustpersist"
+    }
+  },
+  "reference": "unchanged193c native helper and verbatim selectedREPL2 block, extraction receipt pinned",
+  "oracle": "all consumer/status and both raw logical slot words, everycycle includingempty/reset; no candidate-derived gold",
+  "startup": "Verilator x-initial0 and actual stockSRAM modelzeroarray; all512rows then seeded throughactualnativewriteport. This is bounded native evidence, not formal allinitial-state proof",
+  "sources": {
+    "pmem_candidate.sv": "469af00873a8b315d385ffdd515baf3b57a95fc261ece45894b604dce4fcba24",
+    "native_capture.sv": "92ea293cf065199babd46a4a48cb4441919815f313bf1e64d5c021e1fb14b10b",
+    "tb.sv": "73423e7cf3661860fc9fd34b7e986fcabaf782cd0dc7766c59f1cf586d83f88b",
+    "native_memory.sv": "26dec0c55cedfaa8598b1f3fb19939ad72d05f8a3935442c4941763bc8ad6cc6"
+  },
+  "production_RTL_or_parameters_changed": false,
+  "physical_or_recipe_adopted": false,
+  "mission_or_provider_flags_changed": false,
+  "FF_projection": {
+    "normal_mutant_tied_constant0": -1020,
+    "negative_control_only_delay_FF_in_vehicle": 1,
+    "macro_count": 4,
+    "added_macro_clock_pins": 4,
+    "reset_delta": 0,
+    "FF_count_is_structural_projection_not_synthesis_measurement": true
+  }
+}
