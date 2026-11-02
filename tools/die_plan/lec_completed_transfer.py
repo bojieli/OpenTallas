@@ -80,6 +80,8 @@ def transfer(original, copied, *, finished_proof=False, validate_only=False):
             required.append(receipt[6:])
         elif (original / 'reset_contract.json').exists() or (copied / 'reset_contract.json').exists():
             raise ValueError('unexpected die reset receipt')
+        elif reset['used'] != int(os.environ.get('OT_LEC_RESET_CYCLES', reset.get('default', -1))):
+            raise ValueError('current component reset default differs from completed proof')
         for n in ('lec_options.json', 'lec_hints.json', 'reset_contract.json'):
             if (original / n).exists() != (copied / n).exists():
                 raise ValueError('proof policy input presence differs: ' + n)

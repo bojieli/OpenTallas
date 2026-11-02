@@ -54,6 +54,8 @@ def prepare(original, proof, copied, producer_log, producer_unit, checker_sha256
         raise ValueError('die-reset receipt intake needs its own explicit closure; component proof only')
     if os.environ.get('OT_LEC_RESET_CYCLES', str(reset_cycles)) != str(reset_cycles):
         raise ValueError('current reset environment differs')
+    if 'OT_LEC_RESET_CYCLES' not in os.environ and reset.get('default') != reset_cycles:
+        raise ValueError('current component reset default differs from official proof')
     if os.environ.get('OT_LEC_SUPERSET_VEC', '0') != '0':
         raise ValueError('source proof does not supply a postroute superset receipt')
     if any((root / 'reset_contract.json').exists() for root in (original, copied)):

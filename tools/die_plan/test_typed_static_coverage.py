@@ -1,6 +1,6 @@
 import copy
 import pytest
-from typed_static_coverage import classify, trace
+from typed_static_coverage import classify, trace, native_inputs, native_cells
 
 
 def fixture():
@@ -37,3 +37,16 @@ def test_wrong_input_manifest_digest_rejects_before_source_use(tmp_path):
     p = tmp_path/'input.json';p.write_text('{}')
     with pytest.raises(ValueError, match='manifest differs'):
         classify(p, '0'*64, enabled=True)
+
+
+def test_native_wrong_direction_is_not_an_input():
+    source='module top (strap);\n output [1:0] strap;\nendmodule\n'
+    assert not native_inputs(source, 'top')
+    assert native_inputs(source.replace('output', 'input'), 'top') == {'strap[0]', 'strap[1]'}
+
+
+@pytest.mark.parametrize('lhs', ['strap', 'strap[0]', 'strap[1:0]', '{strap[0],other}'])
+def test_behavioral_assign_is_a_driver_even_on_declared_input(lhs):
+    source='module top (strap);\n input [1:0] strap;\n assign '+lhs+' = dynamic;\nendmodule\n'
+    _, drivers=native_cells(source,'top')
+    assert drivers['strap[0]'] == [('@behavioral_assign', 'Y')]

@@ -15,12 +15,30 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def native_cells(text, module):
+def top_body(text, module):
     match = re.search(r'^module\s+' + re.escape(module) + r'\s*\(', text, re.M)
     if not match:
         raise ValueError('actual declared top module missing')
-    text = text[match.start():]
-    text = text[:text.index('endmodule')]
+    body = text[match.start():]
+    return body[:body.index('endmodule')]
+
+
+def native_inputs(text, module):
+    inputs = set()
+    for direction, high, low, raw in re.findall(r'^\s*(input|output|inout)\s+(?:\[(\d+):(\d+)\]\s+)?([^;]+);', top_body(text, module), re.M):
+        if direction != 'input':
+            continue
+        for name in raw.split(','):
+            name = name.strip().lstrip('\\')
+            if high:
+                inputs.update(f'{name}[{i}]' for i in range(min(int(high), int(low)), max(int(high), int(low)) + 1))
+            else:
+                inputs.add(name)
+    return inputs
+
+
+def native_cells(text, module):
+    text = top_body(text, module)
     cells, drivers = {}, {}
     for match in re.finditer(r'^[ \t]+(\S+)[ \t]+(\S+)[ \t]+\((.*?)\);', text, re.M | re.S):
         master, name, body = match.groups()
@@ -32,6 +50,24 @@ def native_cells(text, module):
         for port in ('Y', 'QN', 'Q'):
             if port in ports:
                 drivers.setdefault(ports[port], []).append((name, port))
+    # Assigns are drivers too. Expand ordinary vectors, and retain bit/part
+    # selects and concatenated LHS names conservatively. This class never
+    # traverses an assign as if it were an approved physical BUF.
+    widths = {}
+    for high, low, name in re.findall(r'^\s*(?:input|output|inout|wire|reg)\s+\[(\d+):(\d+)\]\s+(\\?\S+)\s*;', text, re.M):
+        widths[name.lstrip('\\')] = range(min(int(high), int(low)), max(int(high), int(low)) + 1)
+    for lhs in re.findall(r'^\s*assign\s+([^=;]+)=', text, re.M):
+        for raw in re.findall(r'\\[^\s,{}]+|[A-Za-z_$][A-Za-z0-9_$]*(?:\[\d+(?::\d+)?\])?', lhs):
+            name = raw.lstrip('\\')
+            targets = [name]
+            if name in widths:
+                targets += [f'{name}[{i}]' for i in widths[name]]
+            match = re.fullmatch(r'(.+)\[(\d+):(\d+)\]', name)
+            if match:
+                base, high, low = match.groups()
+                targets += [f'{base}[{i}]' for i in range(min(int(high), int(low)), max(int(high), int(low)) + 1)]
+            for target in targets:
+                drivers.setdefault(target, []).append(('@behavioral_assign', 'Y'))
     return cells, drivers
 
 
@@ -51,6 +87,8 @@ def trace(cells, drivers, capture, strap):
         if len(source) != 1:
             raise ValueError('wrong strap, unknown input or multiple driver')
         name, output = source[0]
+        if name not in cells:
+            raise ValueError('behavioral assign or unresolved native driver')
         c = cells[name]
         if (not re.fullmatch(r'BUFx\w+_ASAP7_75t_R', c['master']) or output != 'Y'
                 or set(c['ports']) - {'A', 'Y', 'VDD', 'VSS'} or not c['ports'].get('A')):
@@ -105,7 +143,10 @@ def classify(manifest, expected_sha256, *, enabled=False):
     pins = {p['name'] for p in json.loads(files['plan_pins.json'].read_text())['pins']}
     if not set(mapping.values()) <= pins:
         raise ValueError('declared strap bit absent from actual physical pin inventory')
-    cells, drivers = native_cells(files['6_final.v'].read_text(), 'ot_s81hd_tile_p')
+    actual_source = files['6_final.v'].read_text()
+    if not set(mapping.values()) <= native_inputs(actual_source, 'ot_s81hd_tile_p'):
+        raise ValueError('declared strap is not an actual native top-level INPUT')
+    cells, drivers = native_cells(actual_source, 'ot_s81hd_tile_p')
     traces = [trace(cells, drivers, capture, strap) for capture, strap in mapping.items()]
     return dict(schema='opentallas.typed_static_coverage_diagnostic.v1',
                 status='DECLARED_STRAP_ONLY_NATIVE_CONES', input_manifest_sha256=expected_sha256,

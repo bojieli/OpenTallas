@@ -29,7 +29,7 @@ def fixture(tmp_path):
     time.sleep(.005)
     report = {'schema': 'opentallas.lec.v1', 'verdict': 'EQUIVALENT', 'netlist': '/work/net.v',
               'counts': {'compare_points': 123, 'proved': 123, 'differs': 0, 'undecided': 0},
-              'reset_contract': {'used': 4, 'requested': 4, 'contract': None, 'debug_overrides': {}},
+              'reset_contract': {'default': 4, 'used': 4, 'requested': 4, 'contract': None, 'debug_overrides': {}},
               'kept_registers': {'missing': {'n': 0}},
               'provenance': {'commit': 'a' * 40, 'dirty': False, 'source': 'validated kit PROVENANCE.json'},
               'hints': {'sha256': hashlib.sha256((p / 'hints.json').read_bytes()).hexdigest()}}

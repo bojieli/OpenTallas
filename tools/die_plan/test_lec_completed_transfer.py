@@ -50,7 +50,7 @@ def finished_fixture(tmp_path):
     (k/'lec/lec.json').write_text(json.dumps({'verdict':'EQUIVALENT','netlist':'/work/net.v',
         'counts':{'compare_points':123,'proved':123,'differs':0,'undecided':0},
         'provenance':{'commit':'a'*40,'dirty':False,'source':'validated kit PROVENANCE.json'},
-        'kept_registers':{'missing':{'n':0}},'reset_contract':{'used':4,'requested':None,'contract':None,'debug_overrides':{}}}))
+        'kept_registers':{'missing':{'n':0}},'reset_contract':{'default':4,'used':4,'requested':None,'contract':None,'debug_overrides':{}}}))
     return k,c
 
 
@@ -81,6 +81,18 @@ def test_native64_receipt_is_preserved_and_wrong_receipt_refused(tmp_path):
     assert not (c/'lec_before_finished_import').exists()
     (k/'reset_contract/receipt.txt').write_text('wrong')
     with pytest.raises(ValueError,match='receipt proof'):transfer(k,c,finished_proof=True,validate_only=True)
+
+
+def test_old_component_override_cannot_become_a_new_default(tmp_path, monkeypatch):
+    k,c=finished_fixture(tmp_path)
+    report=json.loads((k/'lec/lec.json').read_text())
+    report['reset_contract'].update(default=64,requested=4,used=4)
+    (k/'lec/lec.json').write_text(json.dumps(report))
+    monkeypatch.delenv('OT_LEC_RESET_CYCLES',raising=False)
+    with pytest.raises(ValueError,match='component reset default'):
+        transfer(k,c,finished_proof=True,validate_only=True)
+    monkeypatch.setenv('OT_LEC_RESET_CYCLES','4')
+    assert transfer(k,c,finished_proof=True,validate_only=True)['source_qualified'] is False
 
 
 @pytest.mark.parametrize('mutant',['pending','unclean','pid','reset_added','input_changed','incomplete'])
