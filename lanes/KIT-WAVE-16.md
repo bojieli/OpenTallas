@@ -47,3 +47,6 @@ FAIL 64 (19:2x: 93), older than 6 h 53 (75). RUNNING: s81 147, qc 46, kv 29, hbm
 
 Infra (FLOW-21): intel2 load1 ~300 vs cap 168 (1.5 x 112, mostly DRT) -> admissions fell 104/h (13:xx) -> 19/h (19:xx); 100 waiters; 2-thread gen_lint jobs have waited 8 h; review renders NOT RUN (load cap 120 s). Ask: let short low-thread kit stages (<= 2 threads) skip the cap, or route hub stages to epyc2/intel1.
 NEAR-COUNT duty (6): claude/kit-wave-16-nearcount-1101@bc6e04cda1c READY (inert until lanes/NEAR-COUNT.tsv exists).
+
+## CODEX notes
+Shared source fix801a now on main98a; PLACE checker staging gap fixedec5e5a89a (new attempts only) pending merge. Seqhost@4 current-source retry appended with mergedb4a. Existing current-block colp2/p3 are attempt1 and already retry-listed; old-block3/2 rows are WAIT-DEP, no duplicate retry. t7 remains HELD: actualselected portfix178 still has unsupported cast; S81 helper fixing source. Applied existingGEOM105 t31tap1609 scopedPASS-COND and rejudge released ONE current t31@1 toENQUEUED; no stale blocks released.
