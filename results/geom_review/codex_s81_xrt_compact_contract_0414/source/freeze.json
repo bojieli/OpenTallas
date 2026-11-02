@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "ot_s81sl_xrt1_ck10",
+ "module": "ot_s81sl_xrt1",
+ "plan_type": "dsdv_slice_lepw_mus_C__t1",
+ "outline_um": [
+  311.04,
+  395.28
+ ],
+ "ref_tile": "physical/ref_tile/s81sl_xrt1",
+ "spec": "physical/ref_tile/s81sl_xrt1/spec.json",
+ "spec_sha256": "afe6eea22785cc5adb432701ee096b21989704bf84c1192472384356ade250d7",
+ "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+ "pins_sha256": "34193c5fda3eb076df2ed03274841ea48d84cb7738c8f68dbac850ec50755d2c",
+ "pins": 7563,
+ "plan_lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+ "pins_canon_sha256": "95220ad2e25892c37ea0d9640438401a15f1eaf8eea26149e8c1d1f60f33aace",
+ "pins_placed_canon_sha256": "95220ad2e25892c37ea0d9640438401a15f1eaf8eea26149e8c1d1f60f33aace",
+ "pins_staged_file": "declared_pin_contract/ot_s81sl_xrt1.json",
+ "pins_staged_sha256": "34193c5fda3eb076df2ed03274841ea48d84cb7738c8f68dbac850ec50755d2c",
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "a5e9e34f49cf8dc0a5dfd95c81fc81984412700d7e07df885f057142128be63e",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 0.0,
+ "unc_hold_ps": 25.0,
+ "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "plan clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "rc": "setRC_rcx_asap7.tcl",
+ "regional_taps": {
+  "nx": 2,
+  "ny": 2
+ },
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "LEC EQUIVALENT (post-synth)",
+  "reg_fanout (post-synth)",
+  "TT/FF insertion (GRT, before route)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "400bc86b1d4",
+ "sdc_lint_sha256": "45af1516bb81dbe7b934a14a81020f58690856af7d0659a5d455c1de169c6c52",
+ "face_guard_sha256": "1a5f2e021da3d7d8ba9c1135bc448ffc1a7c19bde35ad2084211cf22022b7214",
+ "signoff_sha256": "6f8f2c56e02dbdca38357620d40efef89a1be932e6d41bd6530938a910e1a760",
+ "macros": {},
+ "rtl_patches": [],
+ "kit_hash": "147cfe59f876ac1e",
+ "reset_contract": {
+  "edges": 64,
+  "module": "ot_s81sl_xrt1",
+  "contract_sha256": "8eb7a65af236c88c47e0ef7abb66e53c47c2e85f1380fc268a2e58b12a03632c",
+  "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+ }
+}

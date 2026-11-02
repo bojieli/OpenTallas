@@ -1,0 +1,343 @@
+{
+  "schema": "opentallas.disabled_physical_contract_event.v1",
+  "enabled": false,
+  "status": "PREP_REVIEW_ONLY_NO_CAD",
+  "module": "ot_s81sl_xrt1",
+  "top_params": {
+    "FOREG": 0
+  },
+  "source_rtl_changed": false,
+  "frequency_mhz": 1200.4801920768307,
+  "period_ps": 833,
+  "added_cycles": 0,
+  "old_outline_um": [
+    311.04,
+    395.28
+  ],
+  "outline_um": [
+    216.0,
+    172.8
+  ],
+  "core_um": [
+    4.32,
+    4.32,
+    211.68,
+    168.48000000000002
+  ],
+  "all_BTerm_count": 7565,
+  "signal_BTerm_count": 7563,
+  "pg_BTerms": [
+    "VDD",
+    "VSS"
+  ],
+  "port_identity": "All exact old signal names/bits retained; PG names retained by unchanged standard PDN",
+  "same_face_layer_except_clock": true,
+  "bus_and_global_face_pin_order_preserved": true,
+  "clock_entry": {
+    "port": "clk",
+    "layer": "M5",
+    "xy_um": [
+      108.012,
+      86.4
+    ],
+    "shape_um": [
+      0.048,
+      0.48
+    ],
+    "old": {
+      "layer": "M4",
+      "face": "E",
+      "xy_um": [
+        310.998,
+        196.572
+      ]
+    },
+    "driver_bay_um": [
+      106.38,
+      85.32,
+      109.62,
+      87.48
+    ],
+    "driver_bay_status": "planned preGPL reserve; native new ROW/TAP/PG and exact entry-cell legality mandatory after normal FP; not empty-TAP assertion"
+  },
+  "native_timing_cell_count": 98537,
+  "native_bbox_area_um2": 14221.259099993102,
+  "preliminary_core_utilization_pct": 41.77781754250594,
+  "utilization_caveat": "preliminary actual old timing-cell area/new core only; new TAP/clock cells/fill/congestion not priced",
+  "outline_manhattan_upper_bound_um": 388.8,
+  "old_actual_reach": {
+    "captures": 19224,
+    "max_um": 683.29,
+    "captures_gt405": 1152,
+    "comb_loops": 0
+  },
+  "current_timing_references_only": {
+    "TT_pinreg_mean_ps": 370.67,
+    "FF_pinreg_mean_ps": 305.53,
+    "transfer_allowed": false
+  },
+  "pg": {
+    "basis": "Retained actual DEF widths/explicit via RECTs plus unchanged PDN rule and reduced CORE boundary. Analytical projection, not native new-stage PG proof.",
+    "native_source_sha256": "dd9281403909e315daa37c03682f51e22f3e7a1b4cc569403c1c248cbb64a446",
+    "unknown_native_patterns": 0,
+    "native_counts": {
+      "M3": 300930,
+      "M4": 200620,
+      "M5": 100450
+    },
+    "native_shapes_in_new_outline": 183848,
+    "projected_shapes": 175488,
+    "driver_bay_M3_M4_M5_obstructions": [],
+    "edge_signal_stub_PG_obstructions": [],
+    "standard_rule_unchanged": true,
+    "postFP_native_all_master_PG_audit_required": true
+  },
+  "capacity": {
+    "W/M4": {
+      "pins": 2070,
+      "track_pitch_um": 0.048,
+      "min_same_layer_spacing_um": 0.048,
+      "usable_tangent_um": 164.16000000000003
+    },
+    "E/M4": {
+      "pins": 2156,
+      "track_pitch_um": 0.048,
+      "min_same_layer_spacing_um": 0.048,
+      "usable_tangent_um": 164.16000000000003
+    },
+    "N/M3": {
+      "pins": 840,
+      "track_pitch_um": 0.036,
+      "min_same_layer_spacing_um": 0.108,
+      "usable_tangent_um": 207.36
+    },
+    "N/M5": {
+      "pins": 838,
+      "track_pitch_um": 0.048,
+      "min_same_layer_spacing_um": 0.24,
+      "usable_tangent_um": 207.36
+    },
+    "S/M3": {
+      "pins": 834,
+      "track_pitch_um": 0.036,
+      "min_same_layer_spacing_um": 0.108,
+      "usable_tangent_um": 207.36
+    },
+    "S/M5": {
+      "pins": 824,
+      "track_pitch_um": 0.048,
+      "min_same_layer_spacing_um": 0.24,
+      "usable_tangent_um": 207.36
+    }
+  },
+  "parent_type_count": 14,
+  "parent_occurrence_count": 14,
+  "canonical_parent_commit": "9db068b5458b7a20a548ab165aabc8dc6c077a30",
+  "canonical_plan_sha256": "19a70bb3b1beaf2dcdef84bac779e55c01a331e3b796c4d179bf08c58ccc9963",
+  "source_identities": {
+    "config.mk": "5059970ccf909d084de256b5aad706de639458d6eb11e50f2f33268b60f1c0f1",
+    "freeze.json": "384488d60f9e0f1ad9daa4e00f0ff6f2d6a4a24a7caaa2e6770c726df9fbcf63",
+    "pins.json": "0921bf8200a4d374f3fced74a53b1f5b9177ef7960c34f7470a8d32a6eebff08",
+    "constraint.sdc": "46777dd8fc0bcca74756d6d6d04cd4a0f7813555edf13805033e2d377bf0ab95",
+    "pdn.tcl": "c246f6720d363e7d834014361ca95566fe3e6e9fe4e567a5c6c3ddad42f1a3a5",
+    "make_tracks.tcl": "df36a9507153d2d945387ba3dd48e0822e9cb98fbb93f97df1f5b55942294b03"
+  },
+  "release_holds": [
+    "ROOT review and footprint/clock/pin-event scope before normal FP",
+    "no GEN/FP/PLACE/route dispatched or activated",
+    "no new mapped FF count, physical PG/row/tap/clock/route/signoff/proof claim"
+  ],
+  "native_seq_cell_count": 23665,
+  "new_clock_latency_transfer_allowed": false,
+  "row_tap_prep": {
+    "retained_native_row_count": 1432,
+    "retained_native_TAP_count": 11468,
+    "retained_TAP_neighborhood": [
+      {
+        "name": "TAP_TAPCELL_ROW_281_4557",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 80.19,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_283_4569",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 80.73,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_285_4581",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 81.27,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_287_4593",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 81.81,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_289_4605",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 82.35,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_291_4617",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 82.89,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_293_4629",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 83.43,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_295_4641",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 83.97,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_297_4653",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 84.51,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_299_4665",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 85.05,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_301_4677",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 85.59,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_303_4689",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 86.13,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_305_4701",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 86.67,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_307_4713",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 87.21,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_309_4725",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 87.75,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_311_4737",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 88.29,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_313_4749",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 88.83,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_315_4761",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 89.37,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_317_4773",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 89.91,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_319_4785",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 90.45,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_321_4797",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 90.99,
+        "orient": "FS"
+      },
+      {
+        "name": "TAP_TAPCELL_ROW_323_4809",
+        "master": "TAPCELL_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 104.112,
+        "y": 91.53,
+        "orient": "FS"
+      }
+    ],
+    "bay_TAP_overlaps": 0,
+    "basis": "Retained actual DEF TAP sites and same actual TAPCELL_ASAP7_75t_R0.108x0.270 native master; no new-placement claim",
+    "new_core_site_columns": 3840,
+    "new_core_rows": 608,
+    "site_um": [
+      0.054,
+      0.27
+    ],
+    "new_TAP_census_required_after_FP": true
+  }
+}

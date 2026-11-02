@@ -1,0 +1,15 @@
+{
+ "type": "ot_s81sl_xrt1",
+ "insertion_ps": {
+  "tt": 370.67,
+  "ff": 305.53
+ },
+ "insertion_tol_ps": 40.0,
+ "basis": {
+  "tt": "measured TCTS full-tree pinreg mean (n 7578), intel2 s81ck12/gate_xrt1_T/g_{TT,FF}.log 4_cts placement RC",
+  "ff": "measured TCTS full-tree pinreg mean (n 7578), intel2 s81ck12/gate_xrt1_T/g_{TT,FF}.log 4_cts placement RC"
+ },
+ "rc": "calibrated setRC_rcx_asap7.tcl",
+ "rule": "METHODOLOGY 9.7 / BRIEFING 5e; FLOW 2026-10-25; FLOW-FIX core generators | S81-CORES-KITS-12 etap: vclk bound to measured core pin-register insertion (early tap = TT-250, METHODOLOGY v5.0 / OWNER 12.20 one-block clock-entry fix)",
+ "early_tap_ps": 120.7
+}
