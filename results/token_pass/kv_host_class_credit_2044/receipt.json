@@ -1,0 +1,40 @@
+{
+  "status": "PASS_TRANSPORT_COMPONENT_ONLY",
+  "source_commit": "bdeb7c9b2",
+  "run": "intel1:/srv/opentallas-scratch2/claude/codex-kv-hostcredit-2044/gate833",
+  "unit": "oth-ubuntu-3609577-1793594961",
+  "ot_run_exit": 0,
+  "clock": {
+    "period_ps": 833,
+    "precision_fs": 1,
+    "generated_half_delay_fs": 416500
+  },
+  "mechanism": "native qkd_host_tx_class plus qkd_host_rx_class peer class7, deployed board helper verbatim",
+  "physical_only_delivered": {
+    "HOST": 4,
+    "CTRL": 4,
+    "DONE": 4
+  },
+  "with_application_return_delivered": {
+    "HOST": 6,
+    "CTRL": 6,
+    "DONE": 6
+  },
+  "exact_payloads": 18,
+  "control": {
+    "DROP_CTRL_CREDIT": "CAUGHT",
+    "exit": 1,
+    "delivered": {
+      "HOST": 6,
+      "CTRL": 4,
+      "DONE": 6
+    }
+  },
+  "native_bench_sha256": "929516357388575fbcbc95ef328115afbef5b63f14c3316140a9a29d6e1cc5b0",
+  "production_rtl_changes": 0,
+  "added_arithmetic_cycles": 0,
+  "transport_cost": "one W528 physical frame per coalesced application-credit return; no loader command or programme frame is reordered",
+  "boot_cycles": "must be measured on new complete vehicle; current NOWAIT A/B caches unchanged",
+  "whole_die_execution": "NOT_RUN",
+  "historical_scope": "initial834ps component-only result preserved at Intel1 gate/CLOCK_SCOPE.txt; final correct833ps receipt above supersedes its clock scope without changing old result"
+}
