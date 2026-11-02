@@ -185,3 +185,18 @@ def test_relay_sites_only_tcl():
     tcl = KI.relay_sites_only_tcl("t", {"relay_sites": {"u_bin_a/q": [432.0, 1440.0]}})
     assert "proc rs_place_all" in tcl and "rs_place_all [dict create {u_bin_a/q} {432 1440}]" in tcl
     assert tcl.index("set is_fh [open") < tcl.index("rs_place_all [dict") < tcl.index("close $is_fh")
+
+
+def test_relay_sites_ring_keys_post_landing():
+    # CODEX-PICKUP-KV 11-01: ring-flop keys (u_cland_*) leave the pre-landing call and run after the landing hook
+    import kit_istations as KI
+    t = {"relay_sites": {"u_slg.xe0[0]": [509.49, 970.11], "u_cland_i_e/u_ring.dch[0].u_dsel/y[0]": [619.46, 1501.74]}}
+    tcl = KI.relay_sites_only_tcl("t", t)
+    assert "rs_place_all [dict create {u_slg.xe0[0]} {509.49 970.11}]" in tcl and "u_cland_" not in tcl
+    post = KI.relay_sites_post_tcl("t", t)
+    assert post.startswith("uplevel #0 {") and "set is_fh [open" in post and post.rstrip().endswith("}")
+    assert "rs_place_all [dict create {u_cland_i_e/u_ring.dch[0].u_dsel/y[0]} {619.46 1501.74}]" in post
+    assert post.index("set is_fh [open") < post.index("rs_place_all") < post.index("close $is_fh")
+    assert KI.relay_sites_post_tcl("t", {"relay_sites": {"u_slg.xe0[0]": [1, 2]}}) is None
+    only_ring = KI.relay_sites_only_tcl("t", {"relay_sites": {"u_cland_a/y[0]": [1, 2]}})
+    assert "proc rs_place_all" in only_ring and "rs_place_all [dict" not in only_ring
