@@ -1,0 +1,54 @@
+{
+  "bare": {
+    "mapping": [
+      {
+        "file": "Vparent__hierMkArgs.f",
+        "line": "--hierarchical-block parent,parent"
+      },
+      {
+        "file": "Vparent__hierMkArgs.f",
+        "line": "--hierarchical-block ot_s81c_attn_hcore,ot_s81c_attn_hcore_5"
+      },
+      {
+        "file": "Vot_s81c_attn_hcore_5__hierMkArgs.f",
+        "line": "--hierarchical-block ot_s81c_attn_hcore,ot_s81c_attn_hcore_5"
+      },
+      {
+        "file": "Vtb__hierMkArgs.f",
+        "line": "--hierarchical-block parent,parent"
+      },
+      {
+        "file": "Vtb__hierMkArgs.f",
+        "line": "--hierarchical-block ot_s81c_attn_hcore,ot_s81c_attn_hcore_5"
+      }
+    ],
+    "parent_CPP_hcore_references": [],
+    "run": "PASS_HIERARCHY_TOOL_REPRODUCER cycles=         10 q=1818181818181818\n- tb.sv:8: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 8ns; walltime 0.000 s; speed 110.792 us/s\n- Verilator: cpu 0.000 s on 2 threads; allocated 7 MB\n"
+  },
+  "explicit": {
+    "mapping": [
+      {
+        "file": "Vparent__hierMkArgs.f",
+        "line": "--hierarchical-block parent,parent"
+      },
+      {
+        "file": "Vparent__hierMkArgs.f",
+        "line": "--hierarchical-block ot_s81c_attn_hcore,ot_s81c_attn_hcore_5"
+      },
+      {
+        "file": "Vot_s81c_attn_hcore_5__hierMkArgs.f",
+        "line": "--hierarchical-block ot_s81c_attn_hcore,ot_s81c_attn_hcore_5"
+      },
+      {
+        "file": "Vtb__hierMkArgs.f",
+        "line": "--hierarchical-block parent,parent"
+      },
+      {
+        "file": "Vtb__hierMkArgs.f",
+        "line": "--hierarchical-block ot_s81c_attn_hcore,ot_s81c_attn_hcore_5"
+      }
+    ],
+    "parent_CPP_hcore_references": [],
+    "run": "PASS_HIERARCHY_TOOL_REPRODUCER cycles=         10 q=1818181818181818\n- tb.sv:8: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 8ns; walltime 0.000 s; speed 120.528 us/s\n- Verilator: cpu 0.000 s on 2 threads; allocated 7 MB\n"
+  }
+}

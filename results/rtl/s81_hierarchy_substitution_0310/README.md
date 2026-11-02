@@ -1,0 +1,13 @@
+# Parameterized hierarchy replacement diagnostic
+
+Verilator 5.050 (2026-07-01), installed binary SHA256 dc79ac155e00a73862529b68aa28c498355ea063ce5a2282047ebc30bcfde1ed on Intel1/Intel2/Epyc2. This is a tool-only synthetic reproducer; its module name imitates the actual hierarchy boundary but its counter is **not native hcore arithmetic**.
+
+The inherited V1c3 first service frontend generated 2,104.989 MB / 2,451 CPP files from 41,263.097 MB expanded sources, allocated 37,325.668 MB, and consumed 1,093.231 s wall. Its root header contains 11,594 `g_h_0_u_c__DOT__` fields and 185,318 `u_hc` tokens. Despite an existing 33-CPP / 22,018,408-byte hcore library and child mapping, service CPP has no hcore protectlib references. Actual 64 hcore instances explicitly use BZ0=1/WPRE=2/WSEG=0; these equal the active defaults.
+
+Read-only installed tool source identifies the gate: V3Param.cpp:108-112 initializes m_hierSubRun only when hierarchical context **and a nonempty hierParamFile option** exist. visitCell's findByParams replacement is gated by hierSubRun. V3HierBlock.cpp:179 emits the parameter-file option automatically only for nonempty type parameters. Thus integer/default-only parameterized renamed libraries are built but replacement is disabled. No shared tool source or binary was edited.
+
+Baseline Epyc2 retry2 has both bare and explicitly default-overridden instances: both counters PASS but parent_CPP_hcore_references is empty. This disproves explicit-default syntax as the cause. Its common increment of 3 is recorded in baseline_check.json.
+
+The candidate supplies `--hierarchical-params-file empty_types.sv` containing only a comment. Intel2 ot-run unit oth-ubuntu-994290-1793619234 used 2 GB / 1 thread. The global option propagates into generated child arguments. Both variants now call the protectlib wrapper. Eight independent inputs i=0..7 produce independent states with the literal oracle q[i]=8*(3+i), giving 5048403830282018 at cycle10. check.json and both runtime logs are retained; candidate stimulus is intentionally stronger than the earlier common-input baseline. No claim of paired size improvement or native arithmetic qualification follows from this synthetic probe.
+
+No production plan, RTL, clock, cycle, provider flag, cohort or active hierarchy cache changed. The two inherited serial incremental builds continue unchanged. Before using this trigger for a production rebuild, check an actual native hcore wrapper versus the same inline body with independent mutation controls, then measure one selected actual service frontend. Preserve completed archives and original OOM receipts. Do not restart a progressing build merely to change settings.
