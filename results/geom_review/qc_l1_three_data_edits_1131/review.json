@@ -1,0 +1,36 @@
+{
+  "source_5_1_sha256": "f2ea233f4efaf564046b47fd1beb15b16363f52e4a5455e645564a94fce10d66",
+  "actual_cell_census_sha256": "df188475918129b6dbcfcd9bb89c87cbbdce1d159f44958c1ddd26ccb09fa1f8",
+  "cell_count": 272918,
+  "macro_LEF_size_um": [
+    33.72,
+    27.576
+  ],
+  "targets": {
+    "fanout24569": [
+      "fanout24569",
+      "BUFx2_ASAP7_75t_R",
+      "115236",
+      "205740",
+      "R0",
+      "PLACED"
+    ],
+    "fanout35140": [
+      "fanout35140",
+      "BUFx4f_ASAP7_75t_R",
+      "174366",
+      "136350",
+      "MX",
+      "PLACED"
+    ],
+    "u_u_lrly1.c_va\\[29\\]$_DFF_P_": [
+      "u_u_lrly1.c_va\\[29\\]$_DFF_P_",
+      "DFFHQNx1_ASAP7_75t_R",
+      "7938",
+      "125280",
+      "R0",
+      "PLACED"
+    ]
+  },
+  "scope": "Actual retained native5_1 point cloud and macro bodies, one in8 combinational/FF background sample; targets exact. No actual new placement/route/timing or full geometryPASS."
+}
