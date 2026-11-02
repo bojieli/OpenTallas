@@ -19,8 +19,9 @@ toolhash={}
 for x in a.tools.glob('*.py'):
  if x.name.startswith('test_') or x.name in {'lec.py','rtl_lint.py'}:continue
  shutil.copy2(x,o/x.name);toolhash[x.name]=sha(x)
-for n in ['postcts_gate.tcl','pinreg_measure.tcl','geom_dump.tcl']:
+for n in ['postcts_gate.tcl','pinreg_measure.tcl']:
  shutil.copy2(a.tools/n,o/n);toolhash[n]=sha(a.tools/n)
+x=a.tools.parent/'autopilot/geom_dump.tcl';shutil.copy2(x,o/'geom_dump.tcl');toolhash['geom_dump.tcl']=sha(x)
 for n in ['orfs_hold_mm.py','orfs_hold_mm.tcl']:
  x=a.tools.parent/n;shutil.copy2(x,o/n);toolhash[n]=sha(x)
 lib=json.loads((r/'selected_library_receipt.json').read_text())
