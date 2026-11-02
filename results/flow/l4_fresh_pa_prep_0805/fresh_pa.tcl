@@ -23,7 +23,8 @@ proc pa_catalog {b path} {
   set i [$b findInst $name];if {$i eq "NULL"} {error "MISSING_ACTUAL_AFTER_DRV_BUFFER $name"}
   set m [$i getMaster];set idx [$i getPinAccessIdx]
   lassign [$i getLocation] ix iy
-  puts $f [list INST $name [$m getName] $idx $ix $iy [$i getOrient] [$i getPlacementStatus]]
+  set box [$i getBBox]
+  puts $f [list INST $name [$m getName] $idx $ix $iy origin [$i getOrigin] bbox [list [$box xMin] [$box yMin] [$box xMax] [$box yMax]] [$i getOrient] [$i getPlacementStatus]]
   foreach mt [$m getMTerms] {
    if {[$mt getSigType] in {POWER GROUND}} continue
    foreach mp [$mt getMPins] {
@@ -37,6 +38,13 @@ proc pa_catalog {b path} {
    set pitch [$r getSpacing];if {$pitch<=0} {set pitch [$site getWidth]}
    if {$iy == $ry && $ix >= $rx && $ix < $rx+[$r getSiteCount]*$pitch} {
     puts $f [list ROW [$r getName] $rx $ry [$r getOrient] pitch $pitch site_width [$site getWidth] site_height [$site getHeight] x_remainder [expr {($ix-$rx)%$pitch}] master_width [$m getWidth] master_height [$m getHeight]]
+   }
+  }
+  foreach other [$b getInsts] {
+   if {$other eq $i} continue
+   set ob [$other getBBox]
+   if {max([$box xMin],[$ob xMin]) < min([$box xMax],[$ob xMax]) && max([$box yMin],[$ob yMin]) < min([$box yMax],[$ob yMax])} {
+    puts $f [list OVERLAP [$other getName] [[$other getMaster] getName] [[$other getMaster] getType] [list [$ob xMin] [$ob yMin] [$ob xMax] [$ob yMax]]]
    }
   }
  }
