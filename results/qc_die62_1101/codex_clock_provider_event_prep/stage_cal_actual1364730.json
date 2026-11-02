@@ -1,0 +1,34 @@
+{
+ "leg": [
+  13.455228,
+  0.152105,
+  0.000276,
+  4.129775
+ ],
+ "tap": [
+  0.04204,
+  5e-06
+ ],
+ "leg_FF": [
+  11.347113,
+  0.137391,
+  0.000257,
+  2.896018
+ ],
+ "tap_FF": [
+  0.04204,
+  5e-06
+ ],
+ "scope": "ot_clk stage registry entry inv2_1x_qc_gen52b_grt1x (ot_clk refit (qc qc52_last_event_b) of stack inv2/1x on routed legs /srv/opentallas-scratch2/claude/die-qc-52/r52/grt1x_<C>; TT 20998 legs rms 7.49 ps (old model 37.35), FF 20998 legs rms 6.61 ps (old model 25.5))",
+ "source": {
+  "file": "results/qc_die52_1031/inv2_1x_stage_cal_gen52b_grt1x.json",
+  "sha256": "f3e6848295a16882127a6b4d073882d4c0aa4cc8d887a224beec87f735fc5e47",
+  "tree": "/srv/opentallas-scratch2/claude/die-qc-52/gen52b/out/kit/clock/tree.json",
+  "arrivals": "/srv/opentallas-scratch2/claude/die-qc-52/r52/grt1x",
+  "rep_um": 250.0,
+  "even_legs": false,
+  "built_with": "die_trial STAGE_1X_TT (BUFx24 1x ladder, uncalibrated), fanout 0",
+  "tap_from": "--tap",
+  "placed_stages": true
+ }
+}

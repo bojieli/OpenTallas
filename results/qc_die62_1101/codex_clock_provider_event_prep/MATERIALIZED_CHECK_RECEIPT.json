@@ -1,0 +1,14 @@
+{
+  "status": "PASS_SOURCE_INPUT_MATERIALIZATION_AND_STAGE_CHECK_ONLY",
+  "capsule": "/srv/opentallas-scratch/claude/codex-qc62-clock-frozen-source-1102",
+  "materialized_plan_sha256": "913be9b7f5ee612824f323d3d476999a36e2f224f1c3139f163d1b6558cdaab7",
+  "calibration_source_sha256": "f3e6848295a16882127a6b4d073882d4c0aa4cc8d887a224beec87f735fc5e47",
+  "calibration_registry_entry": "inv2_1x_qc_gen52b_grt1x",
+  "calibration_coeff_sha": "84feda27b9fd18f4",
+  "actual1364730_leg_tap_coefficients_equal_frozen_source_and_registry": true,
+  "actual1364730_source_metadata_equal_registry": true,
+  "check_exit_code": 0,
+  "no_source_kit_generation": true,
+  "no_native_import_or_EDA": true,
+  "map_scope": "373functional/313regions;4PHYunmapped preserved"
+}
