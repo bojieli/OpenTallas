@@ -1,0 +1,876 @@
+{
+ "status": "source/model inventory ONLY; noCAD",
+ "actual_HG_readset": "intel1:/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kit_rtl/kv3_hg_v1/kit_rtl.json",
+ "current_parent_source_files": 48,
+ "masters": [
+  {
+   "master": "kv3_head_eighth_e0",
+   "current_native_module_source": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/actual_parent/rtl/2204b735ffa15ab0d2d002b776b7d28a681d6fcfd4bc968753de1a4912dcaa6a.sv",
+   "module_sha256": "d0eea6e3fba474f1f25aebd86193405246f4a8ff5aad3dd5ba2e73f0e30cbd32",
+   "native_ports": {
+    "g_front_0_u_front__c_in": {
+     "direction": "input",
+     "width": 4
+    },
+    "g_front_0_u_front__e_in": {
+     "direction": "input",
+     "width": 16
+    },
+    "g_front_0_u_front__f_t2": {
+     "direction": "output",
+     "width": 233
+    },
+    "g_front_0_u_front__f_t3": {
+     "direction": "output",
+     "width": 233
+    },
+    "g_front_0_u_front__lt_in": {
+     "direction": "input",
+     "width": 12
+    },
+    "g_front_0_u_front__pack_fault": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_front_0_u_front__q_beat_in": {
+     "direction": "input",
+     "width": 6
+    },
+    "g_front_0_u_front__q_data_in": {
+     "direction": "input",
+     "width": 512
+    },
+    "g_front_0_u_front__q_valid_in": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_front_0_u_front__row_in": {
+     "direction": "input",
+     "width": 256
+    },
+    "g_front_0_u_front__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_0_u_stin__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_0_u_stk__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_1_u_stin__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_1_u_stk__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "u_kt__g_f": {
+     "direction": "output",
+     "width": 1
+    },
+    "u_kt__gf_in": {
+     "direction": "input",
+     "width": 14
+    },
+    "u_kt__kp_in": {
+     "direction": "input",
+     "width": 448
+    },
+    "u_kt__kpv_in": {
+     "direction": "input",
+     "width": 14
+    },
+    "u_kt__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "u_kt__sc_d": {
+     "direction": "output",
+     "width": 32
+    },
+    "u_kt__sc_f": {
+     "direction": "output",
+     "width": 1
+    },
+    "strap_hid": {
+     "direction": "input",
+     "width": 2
+    },
+    "strap_bsel": {
+     "direction": "input",
+     "width": 2
+    },
+    "g_front_0_u_front__clk": {
+     "direction": "input",
+     "width": 1
+    }
+   },
+   "native_signal_bits": 1795,
+   "native_port_count": 25,
+   "native_clock_ports": [
+    "g_front_0_u_front__clk"
+   ],
+   "current_HG_instances": 2,
+   "current_HG_physical_instances": [
+    "u_bound.u_head0_e0",
+    "u_bound.u_head1_e0"
+   ],
+   "planned_outlines_um": [
+    [
+     216.0,
+     216.0
+    ]
+   ],
+   "native_parameters": "none onthese extractedtopmodules; referenceleafparamsremainactualcurrentgold",
+   "current_reference_calendar": "HEADunderlyinghelperclosuremustbeelaborated",
+   "no_newcycles": true,
+   "qualification": "current-source reconstruction INPUT ONLY; modelcount/sourceclosure/goldencheck and matchingfreshphysicalrequired, nooldviewEQtransfer"
+  },
+  {
+   "master": "kv3_head_eighth_e1",
+   "current_native_module_source": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/actual_parent/rtl/bd12dd6c99c7c915b197a1d7979a29bf87fd7408538a4e4cbbb71b74937ad046.sv",
+   "module_sha256": "1f68a54fd8dc67d578ce8b2436c651e1924a03462d6f625412a82b9922851534",
+   "native_ports": {
+    "g_t_2_u_stin__cr_i": {
+     "direction": "input",
+     "width": 16
+    },
+    "g_t_2_u_stin__dr_i": {
+     "direction": "input",
+     "width": 217
+    },
+    "g_t_2_u_stin__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_2_u_stk__gf_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_2_u_stk__kp_o": {
+     "direction": "output",
+     "width": 32
+    },
+    "g_t_2_u_stk__kpv_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_2_u_stk__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_3_u_stin__cr_i": {
+     "direction": "input",
+     "width": 16
+    },
+    "g_t_3_u_stin__dr_i": {
+     "direction": "input",
+     "width": 217
+    },
+    "g_t_3_u_stin__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_3_u_stk__gf_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_3_u_stk__kp_o": {
+     "direction": "output",
+     "width": 32
+    },
+    "g_t_3_u_stk__kpv_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_3_u_stk__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_2_u_l8__clk": {
+     "direction": "input",
+     "width": 1
+    },
+    "strap_bsel": {
+     "direction": "input",
+     "width": 2
+    }
+   },
+   "native_signal_bits": 541,
+   "native_port_count": 16,
+   "native_clock_ports": [
+    "g_t_2_u_l8__clk"
+   ],
+   "current_HG_instances": 4,
+   "current_HG_physical_instances": [
+    "u_bound.u_head0_e1",
+    "u_bound.u_head0_e3",
+    "u_bound.u_head1_e1",
+    "u_bound.u_head1_e3"
+   ],
+   "planned_outlines_um": [
+    [
+     216.0,
+     216.0
+    ]
+   ],
+   "native_parameters": "none onthese extractedtopmodules; referenceleafparamsremainactualcurrentgold",
+   "current_reference_calendar": "HEADunderlyinghelperclosuremustbeelaborated",
+   "no_newcycles": true,
+   "qualification": "current-source reconstruction INPUT ONLY; modelcount/sourceclosure/goldencheck and matchingfreshphysicalrequired, nooldviewEQtransfer"
+  },
+  {
+   "master": "kv3_head_eighth_e2",
+   "current_native_module_source": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/actual_parent/rtl/34f66e887d155f5f2008a882b51ad358c8c0e86dce3f710538a42cd069472368.sv",
+   "module_sha256": "ea846070bb895581f665d5e8c911bb0963824c7ea03fd73dab7301942e44cfab",
+   "native_ports": {
+    "g_front_1_u_front__c_in": {
+     "direction": "input",
+     "width": 4
+    },
+    "g_front_1_u_front__e_in": {
+     "direction": "input",
+     "width": 16
+    },
+    "g_front_1_u_front__f_t2": {
+     "direction": "output",
+     "width": 233
+    },
+    "g_front_1_u_front__f_t3": {
+     "direction": "output",
+     "width": 233
+    },
+    "g_front_1_u_front__lt_in": {
+     "direction": "input",
+     "width": 12
+    },
+    "g_front_1_u_front__pack_fault": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_front_1_u_front__q_beat_in": {
+     "direction": "input",
+     "width": 6
+    },
+    "g_front_1_u_front__q_data_in": {
+     "direction": "input",
+     "width": 512
+    },
+    "g_front_1_u_front__q_valid_in": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_front_1_u_front__row_in": {
+     "direction": "input",
+     "width": 256
+    },
+    "g_front_1_u_front__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_4_u_stin__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_4_u_stk__gf_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_4_u_stk__kp_o": {
+     "direction": "output",
+     "width": 32
+    },
+    "g_t_4_u_stk__kpv_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_4_u_stk__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_5_u_stin__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_5_u_stk__gf_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_5_u_stk__kp_o": {
+     "direction": "output",
+     "width": 32
+    },
+    "g_t_5_u_stk__kpv_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_5_u_stk__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "strap_hid": {
+     "direction": "input",
+     "width": 2
+    },
+    "strap_bsel": {
+     "direction": "input",
+     "width": 2
+    },
+    "g_front_1_u_front__clk": {
+     "direction": "input",
+     "width": 1
+    }
+   },
+   "native_signal_bits": 1352,
+   "native_port_count": 24,
+   "native_clock_ports": [
+    "g_front_1_u_front__clk"
+   ],
+   "current_HG_instances": 2,
+   "current_HG_physical_instances": [
+    "u_bound.u_head0_e2",
+    "u_bound.u_head1_e2"
+   ],
+   "planned_outlines_um": [
+    [
+     216.0,
+     216.0
+    ]
+   ],
+   "native_parameters": "none onthese extractedtopmodules; referenceleafparamsremainactualcurrentgold",
+   "current_reference_calendar": "HEADunderlyinghelperclosuremustbeelaborated",
+   "no_newcycles": true,
+   "qualification": "current-source reconstruction INPUT ONLY; modelcount/sourceclosure/goldencheck and matchingfreshphysicalrequired, nooldviewEQtransfer"
+  },
+  {
+   "master": "kv3_head_eighth_e5",
+   "current_native_module_source": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/actual_parent/rtl/9f20da4363565c6740f19c36fb48ea8bc71e7776a34585e29277627bfffad5da.sv",
+   "module_sha256": "73f1e53d3568c8063b1a77b4d3ceb15b4a098f1e97163778b940c154d2f949ae",
+   "native_ports": {
+    "g_t_10_u_stin__cr_i": {
+     "direction": "input",
+     "width": 16
+    },
+    "g_t_10_u_stin__dr_i": {
+     "direction": "input",
+     "width": 217
+    },
+    "g_t_10_u_stin__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_10_u_stk__gf_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_10_u_stk__kp_o": {
+     "direction": "output",
+     "width": 32
+    },
+    "g_t_10_u_stk__kpv_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_10_u_stk__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_11_u_stin__cr_i": {
+     "direction": "input",
+     "width": 16
+    },
+    "g_t_11_u_stin__dr_i": {
+     "direction": "input",
+     "width": 217
+    },
+    "g_t_11_u_stin__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_11_u_stk__gf_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_11_u_stk__kp_o": {
+     "direction": "output",
+     "width": 32
+    },
+    "g_t_11_u_stk__kpv_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_11_u_stk__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_10_u_l8__clk": {
+     "direction": "input",
+     "width": 1
+    },
+    "strap_bsel": {
+     "direction": "input",
+     "width": 2
+    }
+   },
+   "native_signal_bits": 541,
+   "native_port_count": 16,
+   "native_clock_ports": [
+    "g_t_10_u_l8__clk"
+   ],
+   "current_HG_instances": 4,
+   "current_HG_physical_instances": [
+    "u_bound.u_head0_e5",
+    "u_bound.u_head0_e7",
+    "u_bound.u_head1_e5",
+    "u_bound.u_head1_e7"
+   ],
+   "planned_outlines_um": [
+    [
+     216.0,
+     216.0
+    ]
+   ],
+   "native_parameters": "none onthese extractedtopmodules; referenceleafparamsremainactualcurrentgold",
+   "current_reference_calendar": "HEADunderlyinghelperclosuremustbeelaborated",
+   "no_newcycles": true,
+   "qualification": "current-source reconstruction INPUT ONLY; modelcount/sourceclosure/goldencheck and matchingfreshphysicalrequired, nooldviewEQtransfer"
+  },
+  {
+   "master": "kv3_head_eighth_e6",
+   "current_native_module_source": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/actual_parent/rtl/840286727d44c0ecf5db0a776c4c6c2821463cb58c7e3dd4fbc91f45118269fb.sv",
+   "module_sha256": "e4bb2b0c67025ee46eadd7e67baeb78d99db12b0c0bc0e3300639b1b087f6b3a",
+   "native_ports": {
+    "g_front_3_u_front__c_in": {
+     "direction": "input",
+     "width": 4
+    },
+    "g_front_3_u_front__e_in": {
+     "direction": "input",
+     "width": 16
+    },
+    "g_front_3_u_front__f_t2": {
+     "direction": "output",
+     "width": 233
+    },
+    "g_front_3_u_front__f_t3": {
+     "direction": "output",
+     "width": 233
+    },
+    "g_front_3_u_front__lt_in": {
+     "direction": "input",
+     "width": 12
+    },
+    "g_front_3_u_front__pack_fault": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_front_3_u_front__q_beat_in": {
+     "direction": "input",
+     "width": 6
+    },
+    "g_front_3_u_front__q_data_in": {
+     "direction": "input",
+     "width": 512
+    },
+    "g_front_3_u_front__q_valid_in": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_front_3_u_front__row_in": {
+     "direction": "input",
+     "width": 256
+    },
+    "g_front_3_u_front__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_12_u_stin__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_12_u_stk__gf_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_12_u_stk__kp_o": {
+     "direction": "output",
+     "width": 32
+    },
+    "g_t_12_u_stk__kpv_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_12_u_stk__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_13_u_stin__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "g_t_13_u_stk__gf_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_13_u_stk__kp_o": {
+     "direction": "output",
+     "width": 32
+    },
+    "g_t_13_u_stk__kpv_o": {
+     "direction": "output",
+     "width": 1
+    },
+    "g_t_13_u_stk__rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "strap_hid": {
+     "direction": "input",
+     "width": 2
+    },
+    "strap_bsel": {
+     "direction": "input",
+     "width": 2
+    },
+    "g_front_3_u_front__clk": {
+     "direction": "input",
+     "width": 1
+    }
+   },
+   "native_signal_bits": 1352,
+   "native_port_count": 24,
+   "native_clock_ports": [
+    "g_front_3_u_front__clk"
+   ],
+   "current_HG_instances": 4,
+   "current_HG_physical_instances": [
+    "u_bound.u_head0_e4",
+    "u_bound.u_head0_e6",
+    "u_bound.u_head1_e4",
+    "u_bound.u_head1_e6"
+   ],
+   "planned_outlines_um": [
+    [
+     216.0,
+     216.0
+    ]
+   ],
+   "native_parameters": "none onthese extractedtopmodules; referenceleafparamsremainactualcurrentgold",
+   "current_reference_calendar": "HEADunderlyinghelperclosuremustbeelaborated",
+   "no_newcycles": true,
+   "qualification": "current-source reconstruction INPUT ONLY; modelcount/sourceclosure/goldencheck and matchingfreshphysicalrequired, nooldviewEQtransfer"
+  },
+  {
+   "master": "qkd_ectlk_q0",
+   "current_native_module_source": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/actual_parent/rtl/qkd_ectlk_columns.sv",
+   "module_sha256": "d94fa026d3aa29ec0cb33373103a8e6ef78aea1aa9c2d188a0e975d40892c03a",
+   "native_ports": {
+    "ck": {
+     "direction": "input",
+     "width": 1
+    },
+    "rsp_epoch": {
+     "direction": "input",
+     "width": 16
+    },
+    "rsp_layer": {
+     "direction": "input",
+     "width": 6
+    },
+    "rsp_t": {
+     "direction": "input",
+     "width": 14
+    },
+    "rsp_v": {
+     "direction": "input",
+     "width": 1
+    },
+    "rsp_valid": {
+     "direction": "input",
+     "width": 1
+    },
+    "s2": {
+     "direction": "input",
+     "width": 34
+    },
+    "s3": {
+     "direction": "input",
+     "width": 34
+    },
+    "rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "s0": {
+     "direction": "input",
+     "width": 34
+    },
+    "s1": {
+     "direction": "input",
+     "width": 34
+    },
+    "si": {
+     "direction": "input",
+     "width": 25
+    },
+    "cfg": {
+     "direction": "input",
+     "width": 5
+    },
+    "epoch": {
+     "direction": "input",
+     "width": 16
+    },
+    "kgo": {
+     "direction": "input",
+     "width": 1
+    },
+    "layer": {
+     "direction": "input",
+     "width": 6
+    },
+    "rsp_data": {
+     "direction": "input",
+     "width": 512
+    },
+    "so": {
+     "direction": "output",
+     "width": 271
+    },
+    "t0": {
+     "direction": "output",
+     "width": 395
+    },
+    "e2": {
+     "direction": "output",
+     "width": 16
+    },
+    "e3": {
+     "direction": "output",
+     "width": 16
+    },
+    "fault": {
+     "direction": "output",
+     "width": 1
+    },
+    "req_epoch": {
+     "direction": "output",
+     "width": 16
+    },
+    "req_layer": {
+     "direction": "output",
+     "width": 6
+    },
+    "req_t": {
+     "direction": "output",
+     "width": 13
+    },
+    "req_valid": {
+     "direction": "output",
+     "width": 1
+    }
+   },
+   "native_signal_bits": 1476,
+   "native_port_count": 26,
+   "native_clock_ports": [
+    "ck"
+   ],
+   "current_HG_instances": 1,
+   "current_HG_physical_instances": [
+    "u_bound.u_ectl.u_cols.u_columns.u_q0"
+   ],
+   "planned_outlines_um": [
+    [
+     216.0,
+     172.8
+    ]
+   ],
+   "native_parameters": "none onthese extractedtopmodules; referenceleafparamsremainactualcurrentgold",
+   "current_reference_calendar": {
+    "QK_ISSUE_AGE": 34,
+    "RESPONSE_LAT": 18
+   },
+   "no_newcycles": true,
+   "qualification": "current-source reconstruction INPUT ONLY; modelcount/sourceclosure/goldencheck and matchingfreshphysicalrequired, nooldviewEQtransfer"
+  },
+  {
+   "master": "qkd_ectlk_q1",
+   "current_native_module_source": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/actual_parent/rtl/qkd_ectlk_columns.sv",
+   "module_sha256": "55817665cc4f127312518e68bce04ae5c47479d1ababb6d9282f0a548dd336e8",
+   "native_ports": {
+    "ck": {
+     "direction": "input",
+     "width": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "si": {
+     "direction": "input",
+     "width": 283
+    },
+    "cfg": {
+     "direction": "input",
+     "width": 5
+    },
+    "rsp_data": {
+     "direction": "input",
+     "width": 768
+    },
+    "t0": {
+     "direction": "output",
+     "width": 910
+    }
+   },
+   "native_signal_bits": 1968,
+   "native_port_count": 6,
+   "native_clock_ports": [
+    "ck"
+   ],
+   "current_HG_instances": 1,
+   "current_HG_physical_instances": [
+    "u_bound.u_ectl.u_cols.u_columns.u_q1"
+   ],
+   "planned_outlines_um": [
+    [
+     243.648,
+     172.8
+    ]
+   ],
+   "native_parameters": "none onthese extractedtopmodules; referenceleafparamsremainactualcurrentgold",
+   "current_reference_calendar": {
+    "QK_ISSUE_AGE": 34,
+    "RESPONSE_LAT": 18
+   },
+   "no_newcycles": true,
+   "qualification": "current-source reconstruction INPUT ONLY; modelcount/sourceclosure/goldencheck and matchingfreshphysicalrequired, nooldviewEQtransfer"
+  },
+  {
+   "master": "qkd_ectlk_q2",
+   "current_native_module_source": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/actual_parent/rtl/qkd_ectlk_columns.sv",
+   "module_sha256": "9e48ef097a71d242f74c50309aeea211e1ed47b05d12de4639255939086b08ea",
+   "native_ports": {
+    "ck": {
+     "direction": "input",
+     "width": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "si": {
+     "direction": "input",
+     "width": 15
+    },
+    "si_283": {
+     "direction": "input",
+     "width": 254
+    },
+    "cfg": {
+     "direction": "input",
+     "width": 5
+    },
+    "rsp_data": {
+     "direction": "input",
+     "width": 768
+    },
+    "t0": {
+     "direction": "output",
+     "width": 254
+    },
+    "t1": {
+     "direction": "output",
+     "width": 657
+    }
+   },
+   "native_signal_bits": 1955,
+   "native_port_count": 8,
+   "native_clock_ports": [
+    "ck"
+   ],
+   "current_HG_instances": 1,
+   "current_HG_physical_instances": [
+    "u_bound.u_ectl.u_cols.u_columns.u_q2"
+   ],
+   "planned_outlines_um": [
+    [
+     243.648,
+     172.8
+    ]
+   ],
+   "native_parameters": "none onthese extractedtopmodules; referenceleafparamsremainactualcurrentgold",
+   "current_reference_calendar": {
+    "QK_ISSUE_AGE": 34,
+    "RESPONSE_LAT": 18
+   },
+   "no_newcycles": true,
+   "qualification": "current-source reconstruction INPUT ONLY; modelcount/sourceclosure/goldencheck and matchingfreshphysicalrequired, nooldviewEQtransfer"
+  },
+  {
+   "master": "qkd_ectlk_q3",
+   "current_native_module_source": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/actual_parent/rtl/qkd_ectlk_columns.sv",
+   "module_sha256": "e245f617d4fa047723d6f83edfe05b141521b285543a4f4e907505eb56b6865c",
+   "native_ports": {
+    "ck": {
+     "direction": "input",
+     "width": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "si": {
+     "direction": "input",
+     "width": 537
+    },
+    "cfg": {
+     "direction": "input",
+     "width": 5
+    },
+    "rsp_data": {
+     "direction": "input",
+     "width": 512
+    },
+    "t1": {
+     "direction": "output",
+     "width": 902
+    },
+    "e0": {
+     "direction": "output",
+     "width": 16
+    },
+    "e1": {
+     "direction": "output",
+     "width": 16
+    }
+   },
+   "native_signal_bits": 1990,
+   "native_port_count": 8,
+   "native_clock_ports": [
+    "ck"
+   ],
+   "current_HG_instances": 1,
+   "current_HG_physical_instances": [
+    "u_bound.u_ectl.u_cols.u_columns.u_q3"
+   ],
+   "planned_outlines_um": [
+    [
+     216.0,
+     172.8
+    ]
+   ],
+   "native_parameters": "none onthese extractedtopmodules; referenceleafparamsremainactualcurrentgold",
+   "current_reference_calendar": {
+    "QK_ISSUE_AGE": 34,
+    "RESPONSE_LAT": 18
+   },
+   "no_newcycles": true,
+   "qualification": "current-source reconstruction INPUT ONLY; modelcount/sourceclosure/goldencheck and matchingfreshphysicalrequired, nooldviewEQtransfer"
+  }
+ ]
+}

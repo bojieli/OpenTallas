@@ -1,0 +1,56 @@
+{
+ "status": "SOURCE-ONLY finite backendinfra adapter assessment; NO identity/EQ orcanonical activation",
+ "master": "qkd_ectlk_q2",
+ "retained_actual_final_sha256": "513798715dc122c59945272cccab6d34ba83700c4a11fc604456c9cac75d466e",
+ "native_functional_top": "qkd_ectlk_q2",
+ "physical_only_ports": {
+  "ft_ck_i_0": {
+   "direction": "input",
+   "width": 1,
+   "kind": "die-owned clockinfrastructure"
+  },
+  "ft_ck_o_0": {
+   "direction": "output",
+   "width": 1,
+   "kind": "die-owned clockinfrastructure"
+  }
+ },
+ "physical_only_actual_cell": {
+  "master": "BUFx24_ASAP7_75t_R",
+  "instance": "mp_isl0_ck0",
+  "A": "ft_ck_i_0",
+  "Y": "ft_ck_o_0",
+  "attributes": [
+   "keep",
+   "dont_touch"
+  ]
+ },
+ "logical_backend_contract": "Expose BOTH physicalinfra ports explicitly, retain actualBUFFcell; nativefunction+allnativeoutputs unchanged; separateFTtruth Y=A understandardcellfunctional model. No gateport/net stripping orignoredoutput.",
+ "nativegold_policy": "Rawcurrentfunctional goldretained; backendadaptermaywrapit explicitly withphysicalinfra withoutusinga functionalBB. Do notrewrite actualreferenceparams toretained91/80.",
+ "added_cycles": 0,
+ "added_state_FFs": 0,
+ "added_functional_latency": 0,
+ "physical_clock_delay": "actualselectedFTclockmodel/signoffmustremain, notzero-delay timingassumption",
+ "independent_functional_hold": "qkd_ectlk_reference paramsretained91/80\u2192current34/18, propagatesA/B/C/RRL87\u219225; requiresactualfullcompareproof outputobservability. FTadapteralonenoidentity.",
+ "release_holds": [
+  "matchingcurrent-source/fullactualfinal-netlistproof inclonlytypedmemories",
+  "allFTportsandactualcellmatchselectedLEF+Lib+signoff",
+  "sharedbackendstage_contract exactphysicalABI+clockcontract",
+  "ordinarynativepostroutephysicalgates preserved"
+ ],
+ "proof_started": false,
+ "source_only_formal_adapter": "q2_FT_backend_PREP.sv",
+ "raw_current_native_body_sha256": "9e48ef097a71d242f74c50309aeea211e1ed47b05d12de4639255939086b08ea",
+ "native_only_renamed_module": "qkd_ectlk_q2__native_current",
+ "physical_cell_model_note": "FormalY=A is actualstandardbufferfunction; immutablephysical6_final keepsBUFx24instance+allFTports, no gateclockdelay/physicalcellrewrite",
+ "native_port_connections": [
+  "ck",
+  "rst_n",
+  "si",
+  "si_283",
+  "cfg",
+  "rsp_data",
+  "t0",
+  "t1"
+ ]
+}

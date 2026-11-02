@@ -1,0 +1,72 @@
+{
+ "scope": "nine named masters; no qualifiedviewadoption frompartialreceipts",
+ "masters": {
+  "qkd_ectlk_q1": {
+   "status": "OWN current fullsource final-gate proof PREP; knownreachableparamdelta; awaiting ROOTapprovedmergedbase-safeengine",
+   "retained_host": "intel1",
+   "retained_final_sha256": "f6ba1b08b3115466596d9264aac529d85fd430b89eb85cc0b3a5f9588f3ccb83",
+   "own_kit": "intel1:/srv/opentallas-scratch2/claude/codex-hg9-native-1101/q1_current_final",
+   "source_delta": "qkd_ectlk_reference.QK_ISSUE_AGE91\u219234 and RESPONSE_LAT80\u219218, other21reachablemodulebodiesmatch",
+   "actual_final_EQ": "NOTRUN",
+   "reset_edges": 4,
+   "arbitrary_logic_BB": false
+  },
+  "qkd_ectlk_q2": {
+   "status": "retainedfinalV; explicit zero-cycle FT-infra adapter assessment, not identity",
+   "retained_host": "intel1",
+   "retained_final_sha256": "513798715dc122c59945272cccab6d34ba83700c4a11fc604456c9cac75d466e",
+   "source_delta": "2extraFTclockports +actualBUFx24, PLUS sametransitive91/80\u219234/18 referenceparamdelta",
+   "actual_final_EQ": "NOTRUN",
+   "adapter_added_cycles": 0
+  },
+  "kv3_head_eighth_e0": {
+   "status": "retainedfinalV; explicitdead7physicalinputprojection (8oldclockinputs/1live) andbodyjoinPREP",
+   "retained_host": "intel2",
+   "retained_final_sha256": "58a44e2e2ba93e94bfd1472d3f377904b16c8a21876964012f7e6a0dd039e532",
+   "source_delta": "old7unusedclockinputs plusgeneratedbodyandhead_hs/k_issuer/ectl_partshelperdifferences; current1liveclockmatches",
+   "actual_final_EQ": "NOTRUN"
+  },
+  "kv3_head_eighth_e1": {
+   "status": "retainedfinalV MISSING; boundedsearchFINISHED; reconstruct current native source+recipe/modelbeforefreshphysical",
+   "retained_source_manifest": "six_missing_retained_source_manifests.json inprivateHGPREPdir",
+   "generated_sources_retained_in_Git": true,
+   "original_freeze_source": "3e7fccd2164499bced1d58a3dc2d6be23bf3fda1",
+   "native_final_EQ": "NOTRUN",
+   "identity_with_old_signedview": "UNESTABLISHED"
+  },
+  "kv3_head_eighth_e2": {
+   "status": "retainedfinalV MISSING; boundedsearchFINISHED; reconstruct current native source+recipe/modelbeforefreshphysical",
+   "retained_source_manifest": "six_missing_retained_source_manifests.json inprivateHGPREPdir",
+   "generated_sources_retained_in_Git": true,
+   "original_freeze_source": "3e7fccd2164499bced1d58a3dc2d6be23bf3fda1",
+   "native_final_EQ": "NOTRUN",
+   "identity_with_old_signedview": "UNESTABLISHED"
+  },
+  "kv3_head_eighth_e5": {
+   "status": "retainedfinalV MISSING; boundedsearchFINISHED; reconstruct current native source+recipe/modelbeforefreshphysical",
+   "retained_source_manifest": "six_missing_retained_source_manifests.json inprivateHGPREPdir",
+   "generated_sources_retained_in_Git": true,
+   "original_freeze_source": "3e7fccd2164499bced1d58a3dc2d6be23bf3fda1",
+   "native_final_EQ": "NOTRUN",
+   "identity_with_old_signedview": "UNESTABLISHED"
+  },
+  "kv3_head_eighth_e6": {
+   "status": "retainedfinalV MISSING; boundedsearchFINISHED; reconstruct current native source+recipe/modelbeforefreshphysical",
+   "retained_source_manifest": "six_missing_retained_source_manifests.json inprivateHGPREPdir",
+   "generated_sources_retained_in_Git": true,
+   "original_freeze_source": "3e7fccd2164499bced1d58a3dc2d6be23bf3fda1",
+   "native_final_EQ": "NOTRUN",
+   "identity_with_old_signedview": "UNESTABLISHED"
+  },
+  "qkd_ectlk_q0": {
+   "status": "retainedfinalV+referencedprovenancebundle MISSING; rebuildcurrentnativeclosure+recipe/model",
+   "native_final_EQ": "NOTRUN",
+   "identity_with_old_signedview": "UNESTABLISHED"
+  },
+  "qkd_ectlk_q3": {
+   "status": "retainedfinalV MISSING;receiptbundleonly; rebuildcurrentnativeclosure+recipe/model",
+   "native_final_EQ": "NOTRUN",
+   "identity_with_old_signedview": "UNESTABLISHED"
+  }
+ }
+}

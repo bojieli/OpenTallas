@@ -1,0 +1,137 @@
+{
+ "status": "SOURCE-ONLY explicitdead-input physicalABI projection PREP; noEQ/qualification",
+ "master": "kv3_head_eighth_e0",
+ "native_current_clocks": [
+  "g_front_0_u_front__clk"
+ ],
+ "retained_physical_clocks": [
+  "g_front_0_u_front__clk",
+  "g_t_0_u_l8__clk",
+  "g_t_0_u_stin__clk",
+  "g_t_0_u_stk__clk",
+  "g_t_1_u_l8__clk",
+  "g_t_1_u_stin__clk",
+  "g_t_1_u_stk__clk",
+  "u_kt__clk"
+ ],
+ "explicit_map": {
+  "live_core_clock": {
+   "physical": "g_front_0_u_front__clk",
+   "native": "g_front_0_u_front__clk"
+  },
+  "unused_physical_inputs": [
+   "g_t_1_u_l8__clk",
+   "g_t_1_u_stk__clk",
+   "u_kt__clk",
+   "g_t_0_u_l8__clk",
+   "g_t_0_u_stin__clk",
+   "g_t_0_u_stk__clk",
+   "g_t_1_u_stin__clk"
+  ],
+  "unused_input_handling": "expose explicitly asunconstrainedbackendshadowinputs; provenunused inactualgatebody, notliveclockaliases"
+ },
+ "physical_only_ports": {
+  "g_t_1_u_l8__clk": {
+   "direction": "input",
+   "width": 1
+  },
+  "g_t_1_u_stk__clk": {
+   "direction": "input",
+   "width": 1
+  },
+  "u_kt__clk": {
+   "direction": "input",
+   "width": 1
+  },
+  "g_t_0_u_l8__clk": {
+   "direction": "input",
+   "width": 1
+  },
+  "g_t_0_u_stin__clk": {
+   "direction": "input",
+   "width": 1
+  },
+  "g_t_0_u_stk__clk": {
+   "direction": "input",
+   "width": 1
+  },
+  "g_t_1_u_stin__clk": {
+   "direction": "input",
+   "width": 1
+  }
+ },
+ "native_only_ports": {},
+ "common_port_changes": {},
+ "actual_finalV_clock_occurrences": {
+  "g_front_0_u_front__clk": {
+   "total_lexical_references_in_actual_finalV": 3
+  },
+  "g_t_0_u_l8__clk": {
+   "total_lexical_references_in_actual_finalV": 2
+  },
+  "g_t_0_u_stin__clk": {
+   "total_lexical_references_in_actual_finalV": 2
+  },
+  "g_t_0_u_stk__clk": {
+   "total_lexical_references_in_actual_finalV": 2
+  },
+  "g_t_1_u_l8__clk": {
+   "total_lexical_references_in_actual_finalV": 2
+  },
+  "g_t_1_u_stin__clk": {
+   "total_lexical_references_in_actual_finalV": 2
+  },
+  "g_t_1_u_stk__clk": {
+   "total_lexical_references_in_actual_finalV": 2
+  },
+  "u_kt__clk": {
+   "total_lexical_references_in_actual_finalV": 2
+  }
+ },
+ "bridge_added_cycles": 0,
+ "bridge_added_state_FFs": 0,
+ "condition": "Selectedphysicalcore hasone livecoreclockmatchingnative; other7declaredclockinputs areunused. No multiclktie orphaseassumption needed. Body/helper changes requirefullnativeproof underoriginalreset; dead-inputprojectionisnotidentityproof.",
+ "current_source": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/actual_parent/rtl/2204b735ffa15ab0d2d002b776b7d28a681d6fcfd4bc968753de1a4912dcaa6a.sv",
+ "retained_source": "/srv/opentallas-scratch2/claude/codex-kv-signed-consumer-1507/retained_logic/kv3_head_eighth_e0/rtl/kv3_head_eighth_e0.sv",
+ "actual_finalV_sha256": "58a44e2e2ba93e94bfd1472d3f377904b16c8a21876964012f7e6a0dd039e532",
+ "source_only_shim": "e0_dead_input_backend_PREP.sv",
+ "native_body_rename_only": "kv3_head_eighth_e0__native_current",
+ "shim_native_port_connections": [
+  "g_front_0_u_front__c_in",
+  "g_front_0_u_front__e_in",
+  "g_front_0_u_front__f_t2",
+  "g_front_0_u_front__f_t3",
+  "g_front_0_u_front__lt_in",
+  "g_front_0_u_front__pack_fault",
+  "g_front_0_u_front__q_beat_in",
+  "g_front_0_u_front__q_data_in",
+  "g_front_0_u_front__q_valid_in",
+  "g_front_0_u_front__row_in",
+  "g_front_0_u_front__rst_n",
+  "g_t_0_u_stin__rst_n",
+  "g_t_0_u_stk__rst_n",
+  "g_t_1_u_stin__rst_n",
+  "g_t_1_u_stk__rst_n",
+  "u_kt__g_f",
+  "u_kt__gf_in",
+  "u_kt__kp_in",
+  "u_kt__kpv_in",
+  "u_kt__rst_n",
+  "u_kt__sc_d",
+  "u_kt__sc_f",
+  "strap_hid",
+  "strap_bsel",
+  "g_front_0_u_front__clk"
+ ],
+ "shim_extra_unconstrained_inputs": [
+  "g_t_0_u_l8__clk",
+  "g_t_0_u_stin__clk",
+  "g_t_0_u_stk__clk",
+  "g_t_1_u_l8__clk",
+  "g_t_1_u_stin__clk",
+  "g_t_1_u_stk__clk",
+  "u_kt__clk"
+ ],
+ "shim_raw_native_body_sha256": "d0eea6e3fba474f1f25aebd86193405246f4a8ff5aad3dd5ba2e73f0e30cbd32",
+ "shim_qualification": "NOTRUN; wrapper extends ABI only, full body/helper/final-gate comparison stillrequired"
+}
