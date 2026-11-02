@@ -1,0 +1,38 @@
+{
+  "verdict": "PASS_INCREMENTAL_DATA_GRT_DIAGNOSTIC_ONLY",
+  "runtime": "epyc2:/srv/opentallas-scratch2/claude/codex-qc-l1-lvt-grt2-2345",
+  "unit": "oth-ubuntu-3423450-1793605468",
+  "exit_code": 0,
+  "TT_setup_ps": 0.061284,
+  "FF_hold_ps": 5.851819,
+  "baseline_TT_setup_ps": -11.755041,
+  "TT_gain_ps": 11.816325,
+  "setup_hold_uncertainty_ps": [
+    0,
+    25
+  ],
+  "routing_layers": "M2-M5",
+  "congestion_iterations": 50,
+  "CLOCK_guide_geometry_guard": "PASS_IDENTICAL",
+  "reviewed_placement_digest_guard": "PASS",
+  "instance_pose_orientation_status_DNT_and_all_ITerm_net_guards": "PASS_EXCEPT_EXACT_TWO_DATA_MASTERS",
+  "area_cycle_changes": 0,
+  "PG_terms": 545838,
+  "PG_open": 0,
+  "FF_vclk_measured_ps": 329.399109,
+  "FF_vclk_bound_ps": 321.0,
+  "FF_vclk_tolerance_ps": 40.0,
+  "prior_attempt": {
+    "runtime": "codex-qc-l1-lvt-grt-2340",
+    "exit_code": 1,
+    "cause": "Standalone MM RESULTS_DIR missing during ot_mm_sync; native design unchanged; preserved and corrected runner mkdir"
+  },
+  "remaining": [
+    "Raw partial_face2 scope classification before ordinary route",
+    "Actual GRT CLOCK/SIGNAL guide and fixed-wire census + fresh LOOK",
+    "Explicit selected LVT Liberty/LEF in native route/signoff kit",
+    "Full current source/parent/signoff gates"
+  ],
+  "SIGNED": false,
+  "DRT_launched": false
+}

@@ -1,0 +1,53 @@
+{
+ "phase": "TWO_LVT_PLACE_ONLY",
+ "cells": {
+  "OR4 driver": {
+   "name": "_279614_",
+   "master": "OR4x1_ASAP7_75t_L",
+   "box_um": [
+    106.758,
+    200.34,
+    107.136,
+    200.61
+   ],
+   "center_um": [
+    106.947,
+    200.47500000000002
+   ]
+  },
+  "XNOR driver": {
+   "name": "_279616_",
+   "master": "XNOR2x2_ASAP7_75t_L",
+   "box_um": [
+    106.704,
+    199.8,
+    107.298,
+    200.07
+   ],
+   "center_um": [
+    107.001,
+    199.935
+   ]
+  },
+  "Capture FF": {
+   "name": "u_u_exp1.u_exp.nint[6]$_DFF_P_",
+   "master": "DFFHQNx3_ASAP7_75t_R",
+   "box_um": [
+    106.272,
+    100.98,
+    107.46,
+    101.25
+   ],
+   "center_um": [
+    106.866,
+    101.11500000000001
+   ]
+  }
+ },
+ "cell_center_L1_segments_um": [
+  0.5940000000000225,
+  99.44100000000002
+ ],
+ "original_master_pose_clock_guards": "PASS via L1_LVT_PLACE_COMPLETE_EXACT_TWO_MASTERS",
+ "timing": "NOT RUN"
+}
