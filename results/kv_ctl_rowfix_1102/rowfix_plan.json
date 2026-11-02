@@ -1,0 +1,1349 @@
+{
+  "source": "actual r3 failed DPL checkpoint; no P&R executed",
+  "FFs": 18768,
+  "unchanged_FFs": 18698,
+  "moved_FFs": 70,
+  "maximum_move_um": 3.51,
+  "actual_native_rows": 2328,
+  "other_FFs_and_taps_fixed": true,
+  "ordinary_comb_DPL_required": true,
+  "moves": [
+    {
+      "name": "_3854_\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        275130
+      ],
+      "new_ll_dbu": [
+        100440,
+        275130
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "_3854_\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        273240
+      ],
+      "new_ll_dbu": [
+        100440,
+        273510
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.376
+    },
+    {
+      "name": "_3854_\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        274320
+      ],
+      "new_ll_dbu": [
+        100440,
+        274320
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "_3854_\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        101952,
+        272970
+      ],
+      "new_ll_dbu": [
+        100440,
+        272700
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 1.782
+    },
+    {
+      "name": "_3854_\\[14\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        274860
+      ],
+      "new_ll_dbu": [
+        100440,
+        274860
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "_3854_\\[293\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        117288,
+        290520
+      ],
+      "new_ll_dbu": [
+        117288,
+        292680
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.16
+    },
+    {
+      "name": "_3854_\\[294\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        277290
+      ],
+      "new_ll_dbu": [
+        100440,
+        277020
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.376
+    },
+    {
+      "name": "_3854_\\[583\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        272700
+      ],
+      "new_ll_dbu": [
+        100440,
+        272160
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.646
+    },
+    {
+      "name": "_3854_\\[584\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        273510
+      ],
+      "new_ll_dbu": [
+        99360,
+        273510
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 3.186
+    },
+    {
+      "name": "_3854_\\[585\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        273780
+      ],
+      "new_ll_dbu": [
+        99306,
+        274050
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 3.51
+    },
+    {
+      "name": "_3854_\\[586\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        275400
+      ],
+      "new_ll_dbu": [
+        100440,
+        275670
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.376
+    },
+    {
+      "name": "_3854_\\[587\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        274050
+      ],
+      "new_ll_dbu": [
+        99360,
+        274320
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 3.456
+    },
+    {
+      "name": "_3854_\\[588\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        274590
+      ],
+      "new_ll_dbu": [
+        99360,
+        274860
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 3.456
+    },
+    {
+      "name": "_3854_\\[589\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        101682,
+        272430
+      ],
+      "new_ll_dbu": [
+        100440,
+        271890
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 1.782
+    },
+    {
+      "name": "_3854_\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        272160
+      ],
+      "new_ll_dbu": [
+        100440,
+        271620
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.646
+    },
+    {
+      "name": "_3854_\\[869\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        275940
+      ],
+      "new_ll_dbu": [
+        100440,
+        275940
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "_3854_\\[870\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        277560
+      ],
+      "new_ll_dbu": [
+        100440,
+        277560
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "_3854_\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        271890
+      ],
+      "new_ll_dbu": [
+        100440,
+        271350
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.646
+    },
+    {
+      "name": "_3854_\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        102546,
+        271620
+      ],
+      "new_ll_dbu": [
+        100440,
+        271080
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.646
+    },
+    {
+      "name": "_3863_\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        156006,
+        290250
+      ],
+      "new_ll_dbu": [
+        158112,
+        290250
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "_3863_\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        156006,
+        288900
+      ],
+      "new_ll_dbu": [
+        158112,
+        288900
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "_3863_\\[16\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        130194,
+        195480
+      ],
+      "new_ll_dbu": [
+        130194,
+        197640
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.16
+    },
+    {
+      "name": "_3865_\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        241920,
+        249210
+      ],
+      "new_ll_dbu": [
+        241920,
+        248130
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 1.08
+    },
+    {
+      "name": "_3865_\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        239760,
+        250290
+      ],
+      "new_ll_dbu": [
+        239760,
+        248130
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.16
+    },
+    {
+      "name": "_3865_\\[14\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        214002,
+        250290
+      ],
+      "new_ll_dbu": [
+        212760,
+        249750
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 1.782
+    },
+    {
+      "name": "_3865_\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        244080,
+        249750
+      ],
+      "new_ll_dbu": [
+        244080,
+        248130
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 1.62
+    },
+    {
+      "name": "_3865_\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        241974,
+        250020
+      ],
+      "new_ll_dbu": [
+        241974,
+        247860
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.16
+    },
+    {
+      "name": "_3865_\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        244080,
+        249480
+      ],
+      "new_ll_dbu": [
+        244080,
+        247860
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 1.62
+    },
+    {
+      "name": "_3865_\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        241866,
+        250290
+      ],
+      "new_ll_dbu": [
+        241866,
+        247590
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.7
+    },
+    {
+      "name": "_3865_\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        236628,
+        250290
+      ],
+      "new_ll_dbu": [
+        236628,
+        248130
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.16
+    },
+    {
+      "name": "o_hroot_ES\\[100\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268488,
+        90720
+      ],
+      "new_ll_dbu": [
+        270432,
+        90720
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 1.944
+    },
+    {
+      "name": "o_hroot_ES\\[101\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        91260
+      ],
+      "new_ll_dbu": [
+        270432,
+        91260
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[103\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        91800
+      ],
+      "new_ll_dbu": [
+        270432,
+        91800
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[107\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        93690
+      ],
+      "new_ll_dbu": [
+        270432,
+        93690
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[108\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        94500
+      ],
+      "new_ll_dbu": [
+        270432,
+        94500
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[110\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        94770
+      ],
+      "new_ll_dbu": [
+        270432,
+        94770
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[111\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        92610
+      ],
+      "new_ll_dbu": [
+        270432,
+        92610
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[112\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        95040
+      ],
+      "new_ll_dbu": [
+        270432,
+        95040
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[114\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        95310
+      ],
+      "new_ll_dbu": [
+        270432,
+        95310
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[115\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        95580
+      ],
+      "new_ll_dbu": [
+        270432,
+        95580
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[116\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        94230
+      ],
+      "new_ll_dbu": [
+        270432,
+        94230
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[119\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        95850
+      ],
+      "new_ll_dbu": [
+        270432,
+        95850
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[121\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        96390
+      ],
+      "new_ll_dbu": [
+        270432,
+        96390
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[125\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        96930
+      ],
+      "new_ll_dbu": [
+        270432,
+        96930
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[126\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        97740
+      ],
+      "new_ll_dbu": [
+        270432,
+        97740
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[132\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        85050
+      ],
+      "new_ll_dbu": [
+        270432,
+        85050
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[133\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        85590
+      ],
+      "new_ll_dbu": [
+        270432,
+        85590
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[135\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        85320
+      ],
+      "new_ll_dbu": [
+        270432,
+        85320
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[136\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        87210
+      ],
+      "new_ll_dbu": [
+        270432,
+        87210
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[137\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        87480
+      ],
+      "new_ll_dbu": [
+        270432,
+        87480
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[138\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        85860
+      ],
+      "new_ll_dbu": [
+        270432,
+        85860
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[140\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        84240
+      ],
+      "new_ll_dbu": [
+        270432,
+        84240
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[141\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        87750
+      ],
+      "new_ll_dbu": [
+        270432,
+        87750
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[142\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        86400
+      ],
+      "new_ll_dbu": [
+        270432,
+        86400
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[144\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        88020
+      ],
+      "new_ll_dbu": [
+        270432,
+        88020
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[145\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        88290
+      ],
+      "new_ll_dbu": [
+        270432,
+        88290
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[146\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        89910
+      ],
+      "new_ll_dbu": [
+        270432,
+        89910
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[147\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        86670
+      ],
+      "new_ll_dbu": [
+        270432,
+        86670
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[152\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        86940
+      ],
+      "new_ll_dbu": [
+        270432,
+        86940
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[153\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        88830
+      ],
+      "new_ll_dbu": [
+        270432,
+        88830
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[155\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        90450
+      ],
+      "new_ll_dbu": [
+        270432,
+        90450
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[158\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        90990
+      ],
+      "new_ll_dbu": [
+        270432,
+        90990
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.106
+    },
+    {
+      "name": "o_hroot_ES\\[161\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        262926,
+        100440
+      ],
+      "new_ll_dbu": [
+        262926,
+        102600
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.16
+    },
+    {
+      "name": "o_hroot_ES\\[98\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        268326,
+        96120
+      ],
+      "new_ll_dbu": [
+        270432,
+        96120
+      ],
+      "size_dbu": [
+        1404,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    },
+    {
+      "name": "u_leaf.u_boot.u_disp.g_dstg.q_data\\[56\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        151848,
+        290520
+      ],
+      "new_ll_dbu": [
+        151848,
+        292680
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.16
+    },
+    {
+      "name": "u_leaf.u_fanr.tok_p\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        239274,
+        290520
+      ],
+      "new_ll_dbu": [
+        239274,
+        292680
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.16
+    },
+    {
+      "name": "u_leaf.u_fanr.tok_p\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        238680,
+        290790
+      ],
+      "new_ll_dbu": [
+        238680,
+        292950
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "MX",
+      "move_um": 2.16
+    },
+    {
+      "name": "u_leaf.u_fanr.tok_p\\[17\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        215676,
+        250290
+      ],
+      "new_ll_dbu": [
+        215676,
+        247860
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.43
+    },
+    {
+      "name": "u_leaf.u_fanr.tok_p\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        236682,
+        290520
+      ],
+      "new_ll_dbu": [
+        236682,
+        292680
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.16
+    },
+    {
+      "name": "u_leaf.u_fanr.tok_p\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "old_ll_dbu": [
+        238680,
+        291060
+      ],
+      "new_ll_dbu": [
+        238194,
+        292680
+      ],
+      "size_dbu": [
+        1080,
+        270
+      ],
+      "orient": "R0",
+      "move_um": 2.106
+    }
+  ],
+  "R2R": {
+    "r2r_memory_instances": 6,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 391.61,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 16868,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_leaf.u_lprg.pos_ok_q$_DFF_P_ -> o_attn\\[67\\]$_DFF_PN0_"
+  },
+  "pins": {
+    "pins_registered": 6848,
+    "pins_to_macro": 0,
+    "pins_exempt": 1,
+    "pins_unregistered": 0,
+    "pins_land_ring": 0,
+    "unregistered_sample": [],
+    "pin_reg_p50": 7.58,
+    "pin_reg_p90": 15.92,
+    "pin_reg_max": 149.32,
+    "pin_reg_worst": [
+      "149.3 por_n",
+      "147.4 d2d__svc_92[17]",
+      "146.7 o_attn[77]",
+      "146.0 d2d__svc_74[14]",
+      "146.0 o_attn[78]"
+    ]
+  },
+  "all_public_DATA_captures": {
+    "capture_edges": 6846,
+    "maximum_um": 147.38099999999997,
+    "gt150": 0,
+    "worst": [
+      [
+        147.38099999999997,
+        "d2d__svc_92[17]",
+        "u_leaf.u_fanr.tok_p\\[17\\]$_DFF_P_"
+      ],
+      [
+        146.69700000000003,
+        "o_attn[77]",
+        "o_attn\\[77\\]$_DFF_PN0_"
+      ],
+      [
+        146.00699999999998,
+        "d2d__svc_74[14]",
+        "_3865_\\[14\\]$_DFF_P_"
+      ],
+      [
+        145.98299999999998,
+        "o_attn[78]",
+        "o_attn\\[78\\]$_DFF_PN0_"
+      ],
+      [
+        145.80300000000003,
+        "o_attn[96]",
+        "o_attn\\[96\\]$_DFF_PN0_"
+      ]
+    ]
+  },
+  "combinational_overlap_cells_requiring_DPL": 75,
+  "combinational_overlap_examples": [
+    "_3846_\\[605\\]$_DFF_PN0__2025",
+    "_47671_",
+    "_49034_",
+    "_49039_",
+    "_56968_",
+    "_56993_",
+    "_56994_",
+    "_56995_",
+    "_56999_",
+    "_57003_",
+    "_57004_",
+    "_57005_",
+    "_62475_",
+    "_62476_",
+    "_62477_"
+  ]
+}
