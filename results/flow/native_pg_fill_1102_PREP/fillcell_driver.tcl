@@ -1,6 +1,6 @@
 # HELD PREP: filler process qualification pending root-reviewed native vehicle.
 if {![info exists ::env(FILL_CELLS)] || [string trim $::env(FILL_CELLS)] eq ""} {error OT_PG_FILL_REQUIRES_EXPLICIT_MASTERS}
-# Run this driver with the normal GRT make target's loaded environment.
+# Run this driver with the normal fillcell make target's loaded environment.
 # PRE installs after load_design; this outer body also cleans up failed hooks.
 set ot_pg_fill_code [catch {
   source $::env(SCRIPTS_DIR)/fillcell.native_pg_original.tcl
