@@ -33,8 +33,22 @@ def sha(p):
 
 
 def hook(text, key, kit):
-    values = re.findall(rf'^(?:override\s+)?export\s+{key}\s*(?:\?=|:=|=)\s*([^\n]*)$', text, re.M)
-    value = values[-1].strip().split(' #', 1)[0].strip() if values else ''
+    value, defined, overridden, conditional = '', False, False, 0
+    for line in text.splitlines():
+        stripped=line.strip()
+        if re.match(r'^(ifeq|ifneq|ifdef|ifndef)\b', stripped): conditional += 1
+        if re.match(r'^endif\b', stripped): conditional -= 1
+        match=re.match(rf'^(override\s+)?export\s+{key}\s*(\?=|:=|=)\s*(.*)$',line)
+        if not match:
+            if re.match(rf'^(?:override\s+)?(?:export\s+)?{key}\s*[:?+!]?=',line):
+                raise ValueError('unsupported hook assignment: '+line)
+            continue
+        if conditional: raise ValueError('conditional hook assignment: '+key)
+        override, operator, candidate=match.groups()
+        if overridden and not override: continue
+        if operator=='?=' and defined: continue
+        value, defined, overridden=candidate, True, bool(override)
+    value = value.strip().split(' #', 1)[0].strip()
     if not value:
         return None
     if not value.startswith('/work/') or any(c in value for c in '$[]{}\r\n \t'):

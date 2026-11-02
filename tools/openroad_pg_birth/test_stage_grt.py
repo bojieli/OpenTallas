@@ -62,3 +62,21 @@ puts PASS
     harness=tmp_path/'harness.tcl';harness.write_text(script)
     r=subprocess.run(['tclsh',str(harness)],text=True,capture_output=True)
     assert r.returncode==0 and r.stdout.strip()=='PASS',r.stdout+r.stderr
+
+@pytest.mark.parametrize('assignments,selected', [
+    ('override export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl\nexport PRE_GLOBAL_ROUTE_TCL = /work/old_post.tcl\n','eco_grt_pre.tcl'),
+    ('export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl\nexport PRE_GLOBAL_ROUTE_TCL ?= /work/old_post.tcl\n','eco_grt_pre.tcl'),
+    ('export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl\noverride export PRE_GLOBAL_ROUTE_TCL = /work/old_post.tcl\n','old_post.tcl')])
+def test_actual_make_override_and_default_precedence(tmp_path,assignments,selected):
+    k,m,h=fixture(tmp_path);(k/'config.mk').write_text(assignments)
+    r=stage(k,m,h)
+    assert r['original_hooks']['PRE_GLOBAL_ROUTE_TCL']['path']=='/work/'+selected
+
+@pytest.mark.parametrize('assignment',[
+    'ifeq (1,1)\nexport PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl\nendif\n',
+    'export PRE_GLOBAL_ROUTE_TCL += /work/eco_grt_pre.tcl\n'])
+def test_unsupported_hook_resolution_refuses_before_mutation(tmp_path,assignment):
+    k,m,h=fixture(tmp_path);(k/'config.mk').write_text(assignment)
+    before={p.name:p.read_bytes()for p in k.iterdir()}
+    with pytest.raises(ValueError,match='hook assignment'):stage(k,m,h)
+    assert {p.name:p.read_bytes()for p in k.iterdir()}==before
