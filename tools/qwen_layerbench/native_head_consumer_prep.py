@@ -39,8 +39,8 @@ def main():
  result=dict(status='SOURCE_PREP_NOT_EXECUTED',selected_consumer=selected,descriptor_bounds=bounds,groups=3072,tile_groups=4,tile_id=0,source_rank=0,vocabulary_rows=18992,code_words=1600,scale_words=1200,
   genuine_source=ex['source'],genuine_code_sha256=ex['code_sha256'],genuine_scale_sha256=ex['scale_sha256'],
   control_path=['HR cmd380','ot_qwen_tp8_rom_relocate','qfd_dv_hr_pack','actual HR/XPF transports','native NK tap508 {xl128,ib379,go}', 'qfd_tile_nk_rp2_romleaf_rr','qfd_tile_nk_rp2_45','ot_qwen_rom_tile_nk','ot_qwen_rom_tile_logic_w12','ot_qwen_w12_matvec_part PART1'],
-  ammax_path='actual matvec PART2 am_any/am_idx/am_val -> native controller me_amc fold before next GO -> last chunk fold exactly once at END',
-  missing=['frozen821/f79 canonical instance/parameter+clock attachment beyond SHA-matched recovery chain','genuine physical ROMleaf mask extraction for selected tile (logical excerpt is not a macro image)','real Xfill/live-X ownership and perchunk GO/end dates','actual PART2 split-tree/scales attachment and AMAX continuation simulation'],
+  ammax_path='selected collector -> S8 station shared BF16 BTAB post-scale -> peruser AMAX -> scalar root; selected HR AMAX payload tied zero and m_fin outputs unused',
+  missing=['frozen821/f79 canonical instance/parameter+clock attachment beyond SHA-matched recovery chain','genuine physical ROMleaf mask extraction for selected tile (logical excerpt is not a macro image)','real Xfill/live-X ownership and perchunk GO/end dates','selected collector/STN298/sharedBF16BTAB/AMAX attachment and simulation; no generic PART2 substitution'],
   readset={str(x):sha(x)for x in (a.recovery,a.object,a.excerpt)},artifacts={n:sha(a.out/n)for n in ('resident_ib379.hex','tile0_logical_int8.hex','genuine_scale_bf16.hex')})
  (a.out/'consumer_prep.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(dict(status=result['status'],chunks=4,code=1600,scales=1200,source_entries=len(selected))))
 if __name__=='__main__':main()
