@@ -10,7 +10,15 @@ proc ot_prd_repair_targeted {drv_args} {
     set objects [get_pins -quiet $pin]
     if {![llength $objects]} {set objects [get_ports -quiet $pin]}
     if {![llength $objects]} continue
-    foreach net [get_nets -quiet -of_objects $objects] {dict set keep [get_full_name $net] 1}
+    foreach net [get_nets -quiet -of_objects $objects] {
+      # STA display names and OpenDB escaped bus names are not interchangeable.
+      # Join through the native object bridge, then use the same DB name on both sides.
+      set db_net [sta::sta_to_db_net $net]
+      if {$db_net eq "NULL" || $db_net eq ""} {
+        error "OT_PRD_TARGETED unmapped violating STA net [get_full_name $net]"
+      }
+      dict set keep [$db_net getName] 1
+    }
   }
   set guards {}
   foreach net [[ord::get_db_block] getNets] {
