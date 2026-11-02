@@ -1,0 +1,7 @@
+Compact native Tnode actual GEN review — PASS-COND for one PLACE diagnostic
+
+Picture: results/hbm_tnode_compact_kit_1101/actual_review/actual_gen_geometry.png. Both proposer and independent /root/geometry_disk personally viewed the actual GEN pins and SRAM LEF geometry. Actual GEN R3 EPYC2unit1835739-1793596746 exit0; kit codex-hbm-tnode-compact-kit-r3-1101/gen/ot_hnx_fused_tnode_602a107613c5.
+
+125.28×95.04um, all1341 native pins, face_shell=null, exactsourceeb2 current21/source component4730EQ+KEEP358/requestUSED4; no external stage/cycle change. Actualclk M5(64.776,64.8) clearofboth4.32macrohalos. W/Echannels10.848/10.968um and interhalo10.872um remain open; upperright logic/clock bay is available. The two macro bodies do not form a wall across either the edge channels or the central street. Bus groups retain their native faces/order; no parent face/reach qualification is borrowed. EntireoutlineL1span220.32um<405, while actualplaced pin/flop andclock reach remain unmeasured. PG straps are a GEN recipe; no routed continuity claim.
+
+Conditions: one PLACE diagnostic only, preserve all1341 free native pins/pad controls; then inspect actual row legality/pin locality/std/free fill/spatialempty metrics and PG at normal stages. No CTS/GRT/DRT/STA before that actualplacement review. Currentparent30instance tap/data/source binding and actualdie reset timing remain held. Historical64reset metadata copied byGEN grants no native4 proof credit; canonical futureLEC explicitly requests4.
