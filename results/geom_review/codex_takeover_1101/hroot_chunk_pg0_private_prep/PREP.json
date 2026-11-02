@@ -1,0 +1,27 @@
+{
+  "state": "NOT_DISPATCHABLE_NEW_PRIVATE_PG0_PREP",
+  "scope": "ONE candidate normal same-ODB COMB-only GPL/DPL; root authorization pending; no source/pin/FF/clock change",
+  "input_odb_owned_epyc2": "/srv/opentallas-scratch2/claude/codex-hroot-input-pg-0205/hroot_pg_bound.odb",
+  "same_source_config": "original_config.mk",
+  "same_sdc": "input.sdc",
+  "normal_load": "ORFS make environment/load.tcl/load_design relativeinput after RESULTS_DIR switch",
+  "mobile_exact_cells": 4609,
+  "protected": "EVERY other instance pose/orientation, every master/flags/status, every CLOCK/DATA/PG net and BTerm",
+  "native_PG": {
+    "input": "native freshSECONDread426814/open0; exact27094existingopensbound,fullguardPASS",
+    "helper_commit": "5621983f5",
+    "helper_sha256": "e19c5fd9872e37f68d610e2dc46608359c9970b7c9e6de84f546f3b3c3ea3a2d",
+    "module_path_epyc2": "/srv/opentallas-scratch2/claude/codex-pg-birth-0045/v1/build/nativepgbirth.so",
+    "module_sha256": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
+    "modes": "GPL_TIMING_DRIVEN=0,GPL_ROUTABILITY_DRIVEN=0; exact-skip_io; strictGPLrefused",
+    "private_scope": "No-birth continuation only; evalfinallycleanup; creates/swaps/bound mustall0; savedwriteafterreturn"
+  },
+  "held": [
+    "Unconditional Tcl hold remains; ROOT scope decision and actual nativepreGPLLOOK required",
+    "No ODB/module copy or heavyjob launched",
+    "Independent fullallinstance master/status/DNT/incidence/BTerm/PG guard, allowing onlyexact4609combposes, requiredafteractual before completion",
+    "All19reach,clock,pinregistration andcombcolumnFAIL retained; noGRT/CTS/STA",
+    "No general/strict/timingdriven GPL admission or source/clock/pin/FF change"
+  ],
+  "RAM_basis": "Previous same-source normalGPL/DPL actualpeak6.41GB; suggested12GB2T unchanged fleet normal class"
+}
