@@ -1,0 +1,7 @@
+# NW_v2 saved-route recovery — legacy component only
+
+Inherited full-hub NW_v2 detailed route finished DRC0 (final DRT-0199 and empty drc.rpt), then the first arrival query crashed in STA Graph::pinVertices with EXIT139. The valid saved DEF and SPEF were retained. The waiting readout collector then exited11 because the source-host destination parent did not exist. Creating the missing base directories repaired that staging failure; the other three waiting collectors and all native routes were untouched.
+
+One normal8GB/2T ot-run recovered TT and FF against the same saved-route RC, initializing the timing graph with report_checks before arrival queries. Each corner gives2,194 pin records and2,460 both-edge records, all finite,266 load inputs, missing0. Readout unit is oth-ubuntu-1106817-1793613746 on Epyc2. Source/route artifacts remain at /srv/opentallas-scratch2/claude/hbm-clkloc-7/drc/NW_v2, and recovery at codex-hbm-drt-readout-2125/NW_v2 on Epyc2/Intel2. No reroute was performed and failed verdicts remain in the native log and collector journal.
+
+These are conditional legacy clock-component RC/arrival measurements. Current source/provider/native66START joins, built native interfaces, reset and die G4 remain held. This record supplies neither production SIGNED nor die release credit. The inherited geometry was reviewed before route; the recovery only reads that same saved route.

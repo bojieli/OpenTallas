@@ -1,0 +1,30 @@
+{
+  "verdict": "PASS_SAME_ROUTE_READOUT_COMPONENT_ONLY",
+  "native_route_drc": 0,
+  "native_exit": 139,
+  "native_failure": "STA Graph::pinVertices uninitialized on first arrival query; saved DEF/SPEF valid",
+  "collector_exit": 11,
+  "collector_failure": "rsync destination parent absent; fixed base directories only before sole retry",
+  "same_saved_route_rc": true,
+  "corners": {
+    "TT": {
+      "pin_records": 2194,
+      "both_edge_records": 2460,
+      "nonfinite_pin_rows": [],
+      "nonfinite_edge_rows": [],
+      "loads": 266,
+      "max_reported_pin_arrival_ps": 1412.97644,
+      "max_reported_slew_ps": 126.003288
+    },
+    "FF": {
+      "pin_records": 2194,
+      "both_edge_records": 2460,
+      "nonfinite_pin_rows": [],
+      "nonfinite_edge_rows": [],
+      "loads": 266,
+      "max_reported_pin_arrival_ps": 1154.109985,
+      "max_reported_slew_ps": 123.11235
+    }
+  },
+  "scope": "legacy fullhub clock component; current-source/native66START/built native interfaces/dieG4 remain held"
+}
