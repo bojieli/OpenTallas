@@ -158,3 +158,9 @@ See /home/ubuntu/coord/handoff/codex_hbm_stations_d44q_handback_20261101.md. No 
 - su31 P2 (+2 stations, mk_d2): sweep a.15 keeps all 6 slots. nudge_c moved station-8 bits off u_cxdl_Q3_s/u_hc_Q3/u_fl_Q3 contents, giving P215n with cbox 0 hits. P215n 0-it probes are running directly on epyc2. m67 (M6/M7 adj 0.2) 0-it: J215 6.10M vs 9.16M, F 7.09M vs 10.3M (pv1). This helps, but su31 is still far from GRT0.
 - PSLICE tx3/tx4 kits passed gen/lint/preflight; place is queued on intel2 behind 99 waiters.
 - Sent HBM clock tips 1d998 + 119fb to FLOW-21 for intake.
+
+## 11-01 20:28 d44r: lattice class + su00 entry root cause
+- PREP's clock21 moved 161 hard cores +2.16 um, off the 8.64 lattice. That is 161 main-check hard_cores ERRORs, which d44q and S11 do not have. A 2.16 step cannot go into track_offset_um (limit < 2.16). Reverting the cores breaks clock21's explicit taps (q_b000 clk_t1 halo). lat_try: 115 of 161 fit a lattice point with taps legal; 46 do not (b000/b010 bank128 pairs, root tkm tiles). Sub-lane DHBM57-LAT has 2 variants (A: cores on lattice + minimal tap moves; B: lat_try fit + other-side lattice point for the 46) and holds the d44r READY until it lands.
+- su00 L730x1 S0->S1: ROOT CAUSE. The in window (W face, y 648-925) sits in front of hard core u_su_Q0_lanes_plain0_3 (x 8.6-449, y 449-907). The only free area is >=476 um away, so no siting reaches 405: entry-cap and uniform-share variants HE150/250/350 and HU200/300 all failed (hop0 416-570, or no legal site). d44r keeps H75 (755, better than PREP's 863). Follow-up one-block fix: move the L730x1 in window below y=449 on both su00 types and the neighbour out window.
+- c11g MERGED (1923c5d84). The 10-type relaunch has gone to KIT-WAVE-16.
+- FLOW-21: clock tips 1d998/119fb merged clean. Ruling (a) on the Codex PSlice conflict 96b0c0184: keep main.
