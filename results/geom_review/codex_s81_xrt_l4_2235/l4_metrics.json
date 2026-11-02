@@ -1,0 +1,43 @@
+{
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 301.7,
+  "r2r_captures_gt405": 0,
+  "r2r_captures": 10716,
+  "comb_loop_cells": 0,
+  "r2r_worst": "f5_q$_DFF_PN0_ -> fault_k$_DFF_PN0_",
+  "outline": [
+    0.0,
+    0.0,
+    345.6,
+    64.8
+  ],
+  "macros": 0,
+  "clock": {
+    "taps": 1,
+    "grid_taps": 1,
+    "tap_mode": "tree",
+    "clock_sinks": 12098,
+    "unrooted_sinks": 0,
+    "grid_tap_sinks_min": 12098,
+    "grid_tap_sinks_max": 12098,
+    "grid_taps_empty": [],
+    "tap_sinks": {
+      "clk": 12098
+    },
+    "tap_set": [
+      [
+        "clk",
+        "area"
+      ]
+    ],
+    "clock_cells": 433,
+    "clock_depth_max": 8,
+    "clock_depth_spread": 0,
+    "leaf_sinks_p90": 37.0,
+    "leaf_sinks_max": 43,
+    "clock_net_hpwl_max": 71.01,
+    "clock_net_hpwl_p90": 42.7,
+    "stage": "cts"
+  }
+}
