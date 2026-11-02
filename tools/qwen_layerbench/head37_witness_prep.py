@@ -54,6 +54,11 @@ def prepare(calendar,head):
 
 
 def write_stim(path,lines):
+    seen=set()
+    for row in lines:
+        if row[1]==4:
+            assert row[0] not in seen, f"one-port SU collision at {row[0]}"
+            seen.add(row[0])
     lines.sort(key=lambda x:(x[0],x[1]==9))
     path.write_text("".join("%d %d %x %x %x %x %x\n"%tuple(row)for row in lines))
 
@@ -104,7 +109,7 @@ def main():
                     if mut=='missing':continue
                     if mut=='wrong_pc':pc=16
                     if mut=='late':t+=1
-                    if mut=='duplicate':add(t+40,4,u,sl,(u<<7)|pc,37,0x100+u)
+                    if mut=='duplicate':add(t+25,4,u,sl,(u<<7)|pc,37,0x100+u)
                 add(t,4,u,sl,(u<<7)|pc,37,0x100+u)
             add(start+180,5,u,1)
         add(1500,9)

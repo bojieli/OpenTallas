@@ -34,3 +34,7 @@ run_head37_witness_prep.sh PACKET BUILD_SCRATCH from this worktree. It exercises
 actual observer composition, default-off historical edge lockstep, new-profile
 BASE and HEAD37 all4users, SAFE_SELECT and SAFE_PHYS, with missing/late/duplicate,
 wrongPC, old digest and stage controls.
+
+## Actual component receipt
+
+Result: PASS_COMPONENT, all49cases. Initial packet1 FAIL is retained in result/fail1; duplicate stimulus at1301 collided with u2/slice4 on the one-port fixture and was overwritten. Input2 moves it to unused1286 and the generator now rejects collisions. Exact same four completed binaries were replayed under normal2GB/1thread admission on scratch2; no RTL rebuild. See result/receipt.json and pass2/status. Default0 historical BASE lockstep remains exact; canonical opt-in BASE differs only its already-proven RES2 pidx2 source record. This does not bind new HEAD production dates.
