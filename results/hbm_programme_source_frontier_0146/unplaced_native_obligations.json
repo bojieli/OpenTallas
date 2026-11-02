@@ -1,0 +1,165 @@
+{
+  "scope": "Per B113 lane, frozen SOURCE13 native state; current parent absolute row/clock/pin budget unjoined. None is an as-built reservation.",
+  "all_existing_XO_banks": [
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66891_Q",
+      "data_bits": 1,
+      "native_FF_including_epoch": 2,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66896_Q",
+      "data_bits": 8,
+      "native_FF_including_epoch": 9,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66901_Q",
+      "data_bits": 8,
+      "native_FF_including_epoch": 9,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66906_Q",
+      "data_bits": 256,
+      "native_FF_including_epoch": 257,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66911_Q",
+      "data_bits": 256,
+      "native_FF_including_epoch": 257,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__0",
+      "data_bits": 34,
+      "native_FF_including_epoch": 35,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__1",
+      "data_bits": 34,
+      "native_FF_including_epoch": 35,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__0",
+      "data_bits": 562,
+      "native_FF_including_epoch": 563,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__1",
+      "data_bits": 562,
+      "native_FF_including_epoch": 563,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_u_engine_u_arithmetic_procdff_71639_Q__0",
+      "data_bits": 1022,
+      "native_FF_including_epoch": 1023,
+      "related_L730": true
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_u_engine_u_arithmetic_procdff_71639_Q__1",
+      "data_bits": 1022,
+      "native_FF_including_epoch": 1023,
+      "related_L730": true
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane14_lane_kv_waddr",
+      "data_bits": 24,
+      "native_FF_including_epoch": 25,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane14_lane_kv_wdata",
+      "data_bits": 32,
+      "native_FF_including_epoch": 33,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane14_lane_kv_we",
+      "data_bits": 1,
+      "native_FF_including_epoch": 2,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane14_lane_vi_addr",
+      "data_bits": 24,
+      "native_FF_including_epoch": 25,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane14_lane_vi_re",
+      "data_bits": 1,
+      "native_FF_including_epoch": 2,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane15_lane_kv_waddr",
+      "data_bits": 24,
+      "native_FF_including_epoch": 25,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane15_lane_kv_wdata",
+      "data_bits": 32,
+      "native_FF_including_epoch": 33,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane15_lane_kv_we",
+      "data_bits": 1,
+      "native_FF_including_epoch": 2,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane15_lane_vi_addr",
+      "data_bits": 24,
+      "native_FF_including_epoch": 25,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane15_lane_vi_re",
+      "data_bits": 1,
+      "native_FF_including_epoch": 2,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_opstore_a_cmd0_Q__0",
+      "data_bits": 256,
+      "native_FF_including_epoch": 257,
+      "related_L730": true
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_opstore_a_cmd0_Q__1",
+      "data_bits": 320,
+      "native_FF_including_epoch": 321,
+      "related_L730": true
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_opstore_b_cmd0_Q__0",
+      "data_bits": 256,
+      "native_FF_including_epoch": 257,
+      "related_L730": true
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_opstore_b_cmd0_Q__1",
+      "data_bits": 320,
+      "native_FF_including_epoch": 321,
+      "related_L730": true
+    }
+  ],
+  "all_existing_XO_native_FF": 5106,
+  "L730_related_existing_XO_FF": 3202,
+  "new_L730_upstream_FF": 2304,
+  "existing_XO_FF_reused_by_L730_not_new": 1023,
+  "new_programme_transport_FF": "282*ingress_stages +6*status_stages per lane; minimum logical prototype2/2=576, physical stage counts null",
+  "programme_relocated_declared_soft_FF": 22922,
+  "collar_relocated_soft_FF": "Not yet sized/mapped at exact PAGE_W3/NS2/NPR1/NREC0 profile",
+  "programme_native_macro_clock_inputs": 44,
+  "new_clock_obligations": "Actual XO locations, new upstreambanks, programme core clock/native tree, collar row sites, new transport source/destination/station clocks all unplaced/unqualified",
+  "layout_interpretation": "The nominal blank rectangle does not reserve rows or clockload; physical cells and clock contacts must be allocated jointly before adoption."
+}

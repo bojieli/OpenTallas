@@ -133,6 +133,23 @@
       "benefit": "Keepsactualc_busy/io_donefeedbacklocal, B113c_faultisalreadylocalnativeproducer",
       "native_source_event": "NOT_IMPLEMENTED_OR_ADOPTED",
       "new_source_clock_reset_phase": "MUST_PRICE_AND_QUALIFY"
+    },
+    "initial_placement_status": "FAIL_EXISTING_CLOCK_CONTACTS",
+    "initial_placement_failure": "clk_t1 insidebody; clk_t8 distance8.608<8.64. Immutable FAIL_initial_clock_contacts.json",
+    "revised_placement_candidate": {
+      "origin_um": [
+        17.28,
+        34.56
+      ],
+      "bbox_um": [
+        17.28,
+        34.56,
+        591.84,
+        773.28
+      ],
+      "status": "PASS_EXISTING_PLANNING_CONTACTS_ONLY",
+      "receipt": "repair_y34p56_contacts.json",
+      "scope": "All5canonicalbody/probeobstacles,actualFTbankbodies,nominalhomes,25existingclockcontacts pertype checked; no newglobalSTDhalo. Nativeproviderrows/source/newclock/reset/PG remainheld."
     }
   },
   "declared_native_memory_model": {
