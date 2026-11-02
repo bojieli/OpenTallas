@@ -1,0 +1,43 @@
+{
+  "status": "PASS_PASSIVE_IO_TO_PUBLISHED_GEOMETRY",
+  "master": "ot_qkh_recip_leaf",
+  "outline": [
+    216,
+    216
+  ],
+  "signal_bits": 69,
+  "rectangles": 70,
+  "all_signal_rectangles_exact": true,
+  "x31_rectangles": [
+    {
+      "layer": "M5",
+      "rect_um": [
+        13.392,
+        215.916,
+        13.416,
+        216.0
+      ]
+    },
+    {
+      "layer": "M5",
+      "rect_um": [
+        13.392,
+        215.845,
+        13.416,
+        215.952
+      ]
+    }
+  ],
+  "native_original_GRT": "FAIL_DRT0302_multiple_BPINS_x31",
+  "native_io_second_BPin": true,
+  "minimum_candidate": "Preserve exact two rectangles but coalesce into one BPin only in OWN copy, subject to actual checkpoint query and normal gate/review authorization",
+  "actual_4CTS_geometry": "NOT_QUERIED; IO/log correspondence is not actual DB inspection",
+  "reuse_or_GRT_authorized": false,
+  "sha256": {
+    "config.mk": "5c00e7dd2cb31e423aee5e4b8491159934f5881a1b9e23ace3d72758fad0d146",
+    "core.json": "376bd17e593b59f4ec4a01dfba12198c248e7308c8f3d6b043daad80e864ef6c",
+    "original_5_1_grt.log": "bbb70686406c7cf72ce9a79cbda2d559a065508ef5d731a490a52b5843bc674c",
+    "io.tcl": "7b6e4eff0bb3aa1b6dce4e2050a58b6aed2734f27f3681658ffe7348e1da64e2",
+    "pins.json": "df8ed0aa06c708ea5f551c229315b318bc8c88bfd8fc9d5e2d95de4b44ea1ddc"
+  }
+}

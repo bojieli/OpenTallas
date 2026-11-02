@@ -1,0 +1,7 @@
+# Original native216 passive physical-input join
+
+All69 native source IO pins and all70 M4/M5 rectangles exactly match the actual published selected RECIP LEF, including both legitimate x[31] rectangles. Original config is216square with core2.16..213.84. This is exact passive source geometry correspondence; actual retained4CTS DB has NOT been read or queried.
+
+The actual original GRT did run and fail: 5_1_grt.log loads the retained4_cts.odb/SDC and exits at pin_access with DRT-0302 Unsupported multiple pins on bterm x[31]. No routed output exists. Original io.tcl creates the second rectangle in a second dbBPin. The smallest candidate is a separate own-copy physical representation fix: preserve both exact rectangles and their layer/ABI while coalescing to one BPin, as in the independently prepared compact candidate's representation. Do not delete or move either rectangle. This is only a proposed class repair; actual checkpoint grouping, ordinary normal pin-access acceptance and all source/SDC/clock/provenance joins must be checked before any continuation. No query, GRT, physical job or reuse authorization is claimed here.
+
+Current native216 source is the DRST1 context measured in sibling drst_context. It is a potential new old-geometry/current-qualified-source case, not the missing original published view's final physical archive. New native LEF+TT/FF+full clock witness must be exported together after own final proof and gates; no graph/library graft, old-view alias or implicit parent substitution.
