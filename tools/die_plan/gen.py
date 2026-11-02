@@ -156,6 +156,9 @@ def main(argv=None):
     a3.add_argument("--out", required=True)
     a3.add_argument("--rtl-root")
     a3.add_argument("--types")
+    a3.add_argument("--bound-native-reset", default="", metavar="TYPES",
+                    help="opt-in comma list: exact bound native collector_tree reset entry/topology; "
+                         "requires explicit --types/--kit-rtl and verified native symbols (default off)")
     a3.add_argument("--hard-wrappers", default="", metavar="TYPES",
                     help="opt-in hard types containing bound wrapper glue; comma list, requires explicit --types, "
                          "--kit-rtl and a placed macro with timing views (default: skip all hard types)")
@@ -233,6 +236,7 @@ def main(argv=None):
                                            plan_path=Path(a.plan).resolve(), rc_cal=not a.stock_rc,
                                            master_slice=a.master_slice, trial=a.trial,
                                            gpl_plain=[x for x in a.gpl_plain.split(",") if x],
+                                           bound_native_reset=[x for x in a.bound_native_reset.split(",") if x],
                                            landing=load_json(a.clock_landing) if a.clock_landing else None,
                                            hard_wrappers=[x for x in a.hard_wrappers.split(",") if x],
                                            cland_pinslot=[x for x in a.cland_pinslot.split(",") if x])

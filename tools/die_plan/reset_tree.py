@@ -768,8 +768,16 @@ def _plan_taps(P, tn):
     return _taps(P, tn)
 
 
+def bound_native_contract(P, tn):
+    """Validated, opt-in bound-kit contract installed by gen_phys, never inferred from a plan singleton."""
+    return getattr(P, "_bound_native_reset_contracts", {}).get(tn)
+
+
 def reset_pin(P, tn):
     """gen_phys.tap_points(P, tn)[1] (the arst_n tap, type frame) with the memoised tap grid."""
+    native = bound_native_contract(P, tn)
+    if native:
+        return tuple(native["tree"]["root"])
     import gen_phys
     S.tap_grid = _taps
     try:
@@ -821,6 +829,10 @@ def for_type(P, tn, reach=None):
     """the reset tree of a plan type in its own frame (taps = schema.tap_grid, entry = gen_phys reset tap).
     Pipelined plans: entry 'relayed', depth = the plan contract K.  Other plans (kit_rsync interim): entry 'sync', the
     type's own depth."""
+    native = bound_native_contract(P, tn)
+    if native:
+        import copy
+        return copy.deepcopy(native["tree"])
     reach = float(reach or relay_um(P))
     boot_buses, boot_contents = bootstrap_consumers(P, tn)
     if wavefront(P):
@@ -1221,11 +1233,16 @@ def wf_solve(P):
 
 def in_pin(P, tn):
     """the wavefront reset IN pin (arst_n) of a soft type (type frame)."""
+    native = bound_native_contract(P, tn)
+    if native:
+        return tuple(native["tree"]["root"])
     return tuple(wf_solve(P)["choice"][tn])
 
 
 def out_pins(P, tn):
     """[(port, x, y)] the registered reset outputs of a soft type (uniform per type: every site any instance uses)."""
+    if bound_native_contract(P, tn):
+        return []
     if not wavefront(P) or P.types[tn].get("hard"):
         return []
     sites = face_sites(P, tn)
@@ -1333,11 +1350,16 @@ def start_roles(P, tn):
 
 def start_in_pin(P, tn):
     """the START IN pin (start_i) of a soft type of a start-broadcast plan (type frame), beside arst_n."""
+    native = bound_native_contract(P, tn)
+    if native:
+        return tuple(native["tree"]["start_in"])
     return tuple(_start_sites(P, tn)[0])
 
 
 def start_out_pins(P, tn):
     """[(port, x, y)] registered START outs start_o_<k> (beside rst_o_<k>, same neighbour)."""
+    if bound_native_contract(P, tn):
+        return []
     if not start_broadcast(P) or P.types[tn].get("hard"):
         return []
     return list(_start_sites(P, tn)[1])
@@ -1953,7 +1975,7 @@ proc rtr_reset_equiv {net parity seen} {
 """
 
 
-def tcl_text(T):
+def tcl_text(T, native_paths=None):
     ent = "u_rst_root" if T["entry"] == "sync" else "u_rst_in"
     t = [TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um"),
          f"rtr_place rst_root_n {{*{ent}[./]*}} {T['root'][0]:.3f} {T['root'][1]:.3f} rentry"]
@@ -2027,7 +2049,14 @@ def tcl_text(T):
           f"planned max hop {T['max_hop_um']} um): placed $rtr_n flops FIRM, placed max hop "
           "[format %.1f [expr {$rtr_hmax / double($ff_dbu)}]] um, $rtr_hbad hops > "
           f"{T['reach_um']:g} um: $rtr_v (missing: [llength $rtr_miss] $rtr_miss)\""]
-    return "\n".join(t) + "\n"
+    text = "\n".join(t) + "\n"
+    if native_paths is not None:
+        for name, path in native_paths.items():
+            exact = "[./]".join(path.split(".")) + "[./]*"
+            text = text.replace("*" + name + "[./]*", exact)
+        if re.search(r"^rtr_place\s+\S+\s+\{\*", text, re.M):
+            raise ResetError("native reset placement contains an unverified wildcard instance")
+    return text
 
 
 def summary(T):

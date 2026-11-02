@@ -1,0 +1,98 @@
+{
+  "scope": "DEFAULT-OFF generator metadata contract only; no native RTL/profile/source adoption or GEN/CAD rerun",
+  "base_main": "7719c1d5e355cb6b0f596176051942be072f4018",
+  "flag": "gen.py phys --bound-native-reset slw_stm_v3 requires --types and --kit-rtl",
+  "native_source": "d90b109213c6949da87b330ef143d96bbe937934",
+  "actual_native_fixture": "/srv/opentallas-scratch/claude/codex-native-reset-fixture13",
+  "actual_native_files": [
+    {
+      "name": "bind_cells.sv",
+      "sha256": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950"
+    },
+    {
+      "name": "ot_dp_clk_landing.sv",
+      "sha256": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce"
+    },
+    {
+      "name": "ot_dp_clk_landing_ca.sv",
+      "sha256": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793"
+    },
+    {
+      "name": "ot_meso_fifo.sv",
+      "sha256": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2"
+    },
+    {
+      "name": "ot_reset_sync.sv",
+      "sha256": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a"
+    },
+    {
+      "name": "ot_rom_4096x266_m8_bb.v",
+      "sha256": "8b641b7dc2a318f1d08868148c42713fb0889f8e9196bfabca7e30b4e59e021a"
+    },
+    {
+      "name": "qfd_dv_s5_leaves.sv",
+      "sha256": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22"
+    },
+    {
+      "name": "qfd_dv_s6_leaves.sv",
+      "sha256": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a"
+    },
+    {
+      "name": "qfd_dv_slice_tload.sv",
+      "sha256": "bcfb27cf7de8a9f66c7af0159399b91ece2c417b7dc9e890e7889ce0d64b72c2"
+    },
+    {
+      "name": "qfd_dv_stream_tile.sv",
+      "sha256": "1fbc98437462164ac73505ec7ff813f68d5b4e2f587f25b8ac4c8d9c5253a02c"
+    },
+    {
+      "name": "qfd_dv_table_rom_loader.sv",
+      "sha256": "cdf7aa179936b0c67d3f5aea74f606355bd982b7d8fe961d737d1ef49db6aaa2"
+    },
+    {
+      "name": "qfd_qc_slw_stm.sv",
+      "sha256": "e4e597ae3d304821f67431ef13e877a04b873e5c993b0aed61d205b7020e3a13"
+    },
+    {
+      "name": "qfd_qc_slw_stm_bound.sv",
+      "sha256": "862f87e0b1ce5406c5fc2f91868ad092984be6d4ba8c4736c3738286f28537a3"
+    }
+  ],
+  "exact_receiver_result": {
+    "entry": "relayed",
+    "entry_path": "u_bound.u_rst_in",
+    "relays": 167,
+    "verified_hierarchical_symbols": 260,
+    "canonical_used_cell_classes": [
+      "ot_dp_rgate",
+      "ot_dp_rrelay"
+    ],
+    "root_CDC_exception": false,
+    "start_in": [
+      308.896,
+      369.376
+    ]
+  },
+  "focused_command": "OT_NATIVE_RESET_FIXTURE=/srv/opentallas-scratch/claude/codex-native-reset-fixture13 python3 -m pytest -q tools/die_plan/test_bound_native_reset.py tools/die_plan/test_root_reset_exception.py",
+  "focused_cases_reported_pass": 23,
+  "controls": [
+    "positive nested canonical two-stage root exact hierarchy/p[01]/RESETN",
+    "receiver timed, exact native hierarchy placement/pins",
+    "missing relay",
+    "wrong module",
+    "wrong D/Q",
+    "duplicate wrapper hierarchy",
+    "extra relay",
+    "wrong entry role",
+    "outside-outline coordinates",
+    "changed canonical root behavior",
+    "same-name one-stage root",
+    "same-name changed relay behavior",
+    "same-name changed run gate",
+    "declared release-depth mismatch",
+    "legacy unbound root exception tests"
+  ],
+  "unsupported_initial_scope": "external/core reset exports, paired relay drivers, locked root; fail closed under opt-in",
+  "default_behavior": "unchanged when flag absent",
+  "remaining": "Source review required before one new private GEN. Prior physical bundle fails isolated root and epoch metadata, retained. No PLACE."
+}
