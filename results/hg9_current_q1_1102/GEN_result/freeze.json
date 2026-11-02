@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.kv.core_freeze.v1",
+ "type": "qkd_ectlk_q1__243.648x172.8",
+ "module": "qkd_ectlk_q1",
+ "outline_um": [
+  243.648,
+  172.8
+ ],
+ "plan_sha256": "5fe0aa1743b8ce234b57c81455b948f8edd406ec4395d8e9d0a3ce091bfbf3e2",
+ "pins_file": "pins/qkd_ectlk_q1_pins_243.json",
+ "pins_sha256": "40ebdc6c2e70db7b18444f0d6711fe59de02a56b557635726d22a6b913db9a1e",
+ "core_json_sha256": "176db2ddce6a8f19a1511918581f91bde052573452a9967d170baf5ffc070568",
+ "pins": 1968,
+ "plan_pins": 1968,
+ "added_pins": 0,
+ "clocks": [
+  "ck"
+ ],
+ "clock_nets": {
+  "ck": "ck[0]"
+ },
+ "clock_rebind": null,
+ "resets": [
+  "rst_n"
+ ],
+ "recipe": {
+  "util": 0.6,
+  "sigmax": "M5",
+  "face_flops": true
+ },
+ "sdc_lint": "PASS (gen)",
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "macros": [
+  "ot_sram_1r1w_128x256_m1_r2c2"
+ ],
+ "signal_max": "M5",
+ "flow_basis": "FLOW-1025: rcx-rc + leaf-affinity + fanout24/slew-cap-margin20 + mcmm tc/bc",
+ "head_lane_taps": false,
+ "head_strap_master": false,
+ "head_lane_s3copy": false,
+ "plan_inst": "kv3_hg_v1.ectl_q1",
+ "island_ft": [],
+ "kit_hash": "a63e0a9e74b4a66c",
+ "pins_canon_sha256": "043effa91a0b23c6b5f3f4c35bde5c17e6764044d69957efc5e943ae01ea35c3",
+ "source_commit": "568c66c50f895977ce936a6bb201e70681e1995b",
+ "timing_modes": {
+  "mode": "two-mode tc setup / BC hold",
+  "tt": 250.0,
+  "ff": 202.5
+ },
+ "reset_contract": {
+  "edges": 16,
+  "module": "qkd_ectlk_q1",
+  "die": "kv",
+  "contract": "/srv/opentallas-scratch/claude/wt/codex-tnode-drt-prep-0620/physical/die_plan/qwen_kvsys/reset_contract.json",
+  "contract_sha256": "bd85f6760caf51077074c898907926d12273a6c3152a5dfe4a5ee628cb12acc6",
+  "receipt_sha256": "d7e6ead61764cba9357e416dbd370f6681feaae1dfa07ea670c76c0d0e026001"
+ }
+}
