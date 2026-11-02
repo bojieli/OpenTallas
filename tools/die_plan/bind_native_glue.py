@@ -15,6 +15,39 @@ import bind_elab as E
 # re-emit: Yosys write_verilog prints each one with its own documented semantics; nothing is mapped or optimised.
 SUPPORTED = {"$mem_v2", "$shiftx", "$shift", "$demux", "$bwmux", "$bmux", "$pmux", "$div", "$mod"}
 
+# Portable representation of the *same* $shiftx operator. Some SV simulators
+# mishandle a dynamic part-select wider than its input with a negative index.
+# X-pad both ends and use a bounded non-negative index into the wider vector.
+# Explicit signed full-width bounds also preserve large-B/OOB behavior rather
+# than relying on a simulator's integer conversion of a part-select index.
+SHIFTX_PORTABLE_MAP = r"""
+(* techmap_celltype = "$shiftx" *)
+module _ot_portable_shiftx(A, B, Y);
+  parameter A_SIGNED = 0, B_SIGNED = 0;
+  parameter A_WIDTH = 1, B_WIDTH = 1, Y_WIDTH = 1;
+  input [A_WIDTH-1:0] A;
+  input [B_WIDTH-1:0] B;
+  output [Y_WIDTH-1:0] Y;
+  function integer imax;
+    input integer a, b;
+    begin imax = a > b ? a : b; end
+  endfunction
+  localparam IW = imax(B_WIDTH, imax($clog2(A_WIDTH+1), $clog2(Y_WIDTH+1))) + 2;
+  localparam signed [IW-1:0] PAD = Y_WIDTH;
+  localparam signed [IW-1:0] LOW = 1 - PAD;
+  localparam signed [IW-1:0] HIGH = A_WIDTH;
+  wire signed [IW-1:0] base;
+  generate if (B_SIGNED) begin
+    assign base = {{(IW-B_WIDTH){B[B_WIDTH-1]}}, B};
+  end else begin
+    assign base = {{(IW-B_WIDTH){1'b0}}, B};
+  end endgenerate
+  wire [A_WIDTH+2*Y_WIDTH-1:0] padded = {{Y_WIDTH{1'bx}}, A, {Y_WIDTH{1'bx}}};
+  wire signed [IW-1:0] index = base + PAD;
+  assign Y = (base >= LOW && base < HIGH) ? padded[index +: Y_WIDTH] : {Y_WIDTH{1'bx}};
+endmodule
+"""
+
 class NativeGlueError(RuntimeError):
     pass
 
@@ -94,6 +127,12 @@ class NativeGlue:
             # write_verilog has no expression for $bwmux / $demux / $bmux: lower only that one cell with its own
             # Yosys map pass (bit-exact by construction: and/or, shift/compare), nothing else
             lower = {"$bwmux": "bwmuxmap\n", "$demux": "demuxmap\n", "$bmux": "bmuxmap\n"}.get(cell.ytype, "")
+            if cell.ytype == "$shiftx" and all(widths.get(p, 0) > 0 for p in ("A", "B", "Y")):
+                mapper = self.directory / (module + "_shiftx_map.v")
+                mapper.write_text(SHIFTX_PORTABLE_MAP)
+                # Exactly one expansion: keep the safe wider $shiftx in the map
+                # instead of recursively mapping that new cell back into itself.
+                lower = f'techmap -max_iter 1 -map "{mapper}" t:$shiftx\n'
             ys.write_text(f'read_json "{inp}"\n{lower}write_verilog -noattr "{sv}"\n')
             try:
                 E.run_yosys(ys, self.directory / (module + ".log"),

@@ -1,0 +1,91 @@
+{
+ "actual_primitive_json_exact": true,
+ "module": "ot_bind_native_4ee6006e6a5bb9ff1c0dff1c",
+ "cases": [
+  {
+   "case": "actual",
+   "rc": 0,
+   "summary": [
+    "SHIFTX_CASE checks=436 errors=0",
+    "/srv/opentallas-scratch2/claude/codex-s81-shiftx-1620/proof2/sim_actual/tb.sv:16: $finish called at 436 (1s)"
+   ]
+  },
+  {
+   "case": "generic0",
+   "rc": 0,
+   "summary": [
+    "SHIFTX_CASE checks=436 errors=0",
+    "/srv/opentallas-scratch2/claude/codex-s81-shiftx-1620/proof2/sim_generic0/tb.sv:16: $finish called at 436 (1s)"
+   ]
+  },
+  {
+   "case": "generic1",
+   "rc": 0,
+   "summary": [
+    "SHIFTX_CASE checks=436 errors=0",
+    "/srv/opentallas-scratch2/claude/codex-s81-shiftx-1620/proof2/sim_generic1/tb.sv:16: $finish called at 436 (1s)"
+   ]
+  },
+  {
+   "case": "generic2",
+   "rc": 0,
+   "summary": [
+    "SHIFTX_CASE checks=326 errors=0",
+    "/srv/opentallas-scratch2/claude/codex-s81-shiftx-1620/proof2/sim_generic2/tb.sv:16: $finish called at 326 (1s)"
+   ]
+  },
+  {
+   "case": "generic3",
+   "rc": 0,
+   "summary": [
+    "SHIFTX_CASE checks=326 errors=0",
+    "/srv/opentallas-scratch2/claude/codex-s81-shiftx-1620/proof2/sim_generic3/tb.sv:16: $finish called at 326 (1s)"
+   ]
+  },
+  {
+   "case": "generic4",
+   "rc": 0,
+   "summary": [
+    "SHIFTX_CASE checks=278 errors=0",
+    "/srv/opentallas-scratch2/claude/codex-s81-shiftx-1620/proof2/sim_generic4/tb.sv:16: $finish called at 278 (1s)"
+   ]
+  },
+  {
+   "case": "generic5",
+   "rc": 0,
+   "summary": [
+    "SHIFTX_CASE checks=294 errors=0",
+    "/srv/opentallas-scratch2/claude/codex-s81-shiftx-1620/proof2/sim_generic5/tb.sv:16: $finish called at 294 (1s)"
+   ]
+  },
+  {
+   "case": "wrong_shift",
+   "rc": 1,
+   "summary": [
+    "FATAL: /srv/opentallas-scratch2/claude/codex-s81-shiftx-1620/proof2/sim_wrong_shift/tb.sv:16: shiftx mismatch",
+    "       Time: 436  Scope: tb"
+   ]
+  },
+  {
+   "case": "zero_fill",
+   "rc": 1,
+   "summary": [
+    "FATAL: /srv/opentallas-scratch2/claude/codex-s81-shiftx-1620/proof2/sim_zero_fill/tb.sv:16: shiftx mismatch",
+    "       Time: 436  Scope: tb"
+   ]
+  }
+ ],
+ "formal": [
+  {
+   "case": "defined_inputs",
+   "rc": 0
+  },
+  {
+   "case": "arbitrary_undef_inputs",
+   "rc": 0
+  }
+ ],
+ "old_yosys_reachable_cw_domain": "four canonical CW masks PASS; no blanket claim for arbitrary oldSV high-B",
+ "verilator": "5.050 actualfourCWoffsets PASS",
+ "scope": "printer portability fix; primitive JSON/ABI exact, no architectural state/cycle/reset or implicit source-event adoption"
+}
