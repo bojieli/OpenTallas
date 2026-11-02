@@ -1,0 +1,145 @@
+{
+  "schema": "opentallas.child_clock_witness.v1",
+  "qualification": "NOT_ASSERTED",
+  "hierarchical_expansion": "NOT_ASSERTED",
+  "source_equivalence": "NOT_ASSERTED",
+  "source_identity_kind": "routed_native_netlist_sha256",
+  "scope": "Actual native endpoints and same-clock related pairs; no CRPR credit or source/EQ waiver",
+  "native": {
+    "6_final.odb": "7a4a8aeacb7f0ab947b788e1ef23e0e99efe6b34f31eb2d72feb317989899125",
+    "6_final.spef": "e510cc8904fc4e7dbd2cb700a6290af23c8f04b7c2171ee62f49649e499809df",
+    "6_final.v": "3069ad9301189caebc6af364beb34bc28f6cdf44b92e038828f38656d97811c2"
+  },
+  "corners": {
+    "tt": {
+      "counts": {
+        "refs": 15939,
+        "pairs": 319803,
+        "captures": 15939,
+        "inter_clock_pairs_skipped": 0,
+        "missing": 0
+      },
+      "files": {
+        "tt/child_clock_tt_endpoints.tsv": "ff95953c46f72475ae0d51f2441d3becb8aef92a60a51a7c4d32a5fd1e730dc6",
+        "tt/child_clock_tt_pairs.tsv": "7c8b5572617dc8d635b7d9884f20353b7f715eefa31cc4ae871063d9c23a62c9",
+        "tt/child_clock_tt_roots.tsv": "dedeaea817045a8fa0acf32a5886f801b20cf72d635728ae3f8b6de0f38cf3cf",
+        "tt/child_clock_tt_clocks.tsv": "df496c424ae420091deebf716ce69a25ead9245823fa0ce4621515a95e789e0a",
+        "tt/child_clock_tt_masters.tsv": "109dc50ea18a2ccbc178f5de2b2a2572c6ddd1ed6530e1b43846f8cd31a2c29b",
+        "tt/child_clock_tt_counts.tsv": "9e0c0c1ec7190bb001f47af469b1dc40078e0af9e34b58443b13e7c0002516bf",
+        "tt/child_clock_tt_inputs.tsv": "6604ca1ada25718360a27d9b03abe8aacbc40a83869c85e828ea58298165e191",
+        "tt/session.tcl": "2d0fd7fab3b5ba80b82c042711395bd72b25387fc9adb71335955a803689064c",
+        "tt/libraries.json": "ac3e9cbcd3e3b911767eb075c9d84837fe6a57d7443b023c261e5751aa132b43",
+        "tt/sdcdir/golden.sdc": "975c9cd133bd3f980ff6d20703f504758bebbc5bced9d3f2b9b4293d017fcdfd"
+      },
+      "exported_liberty_sha256": null,
+      "extraction_tcl_sha256": "2d0fd7fab3b5ba80b82c042711395bd72b25387fc9adb71335955a803689064c",
+      "constraint_sequence": {
+        "session": "tt/session.tcl",
+        "policy": {
+          "period_ps": 833.0,
+          "margin_policy": "nominal OWNER 12.24b/c (setup uncertainty 0, hold unchanged)",
+          "margin_policy_switch": "OT_MARGIN_POLICY=legacy | signoff.py run --margin-policy legacy",
+          "margin_policy_rule": "OWNER 12.24b/c 2026-10-31: nominal setup (setup clock uncertainty 0, hold 25 kept; legacy setup 60 = A/B only)",
+          "uncertainty_setup_ps": 0.0,
+          "uncertainty_hold_ps": 25.0,
+          "uncertainty_source": {
+            "setup": "in-session override after read_sdc",
+            "hold": "golden SDC as written"
+          },
+          "sdc_uncertainty_ps": {
+            "setup": 0.0,
+            "hold": 25.0
+          },
+          "sdc_uncertainty_overridden": {
+            "setup": {
+              "sdc": 0.0,
+              "signoff": 0.0,
+              "changed": false
+            }
+          },
+          "spread_max_ps": 80.0,
+          "spread_corners": [
+            "tt",
+            "ff"
+          ],
+          "insertion_tol_ps": 40.0,
+          "fanout_max": 64,
+          "ff_vclk": "bound-ff",
+          "ff_vclk_contract": "declared core FF insertion /srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10_w80/sdc_lint.json",
+          "insertion_bound": null,
+          "ff_vclk_bound_ps": 202.5,
+          "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+          "derate": "none in the verdict (OWNER 12.24b/c: setup uncertainty 0, no spice clock factor; hold uncertainty per policy); ocv5_* = flat late 1.05 / early 0.95, information only",
+          "engine": "OpenSTA in OpenROAD (openroad/orfs:asap7lock), one process per corner",
+          "libs": "Exact routed-kit ORFS make TC/BC_LIB_FILES including macro views; hashed receipt",
+          "corner_rule": "setup TT / hold FF / uncertainty 0-25 ps (nominal) / related pair skew CPPR INFO (target 80); spread INFO; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a; OWNER 12.24b)"
+        }
+      }
+    },
+    "ff": {
+      "counts": {
+        "refs": 15939,
+        "pairs": 319803,
+        "captures": 15939,
+        "inter_clock_pairs_skipped": 0,
+        "missing": 0
+      },
+      "files": {
+        "ff/child_clock_ff_endpoints.tsv": "afeae60169a3c6e768809d9a1693019442da2e67b79d240cbc6cc38b3a85651f",
+        "ff/child_clock_ff_pairs.tsv": "e3640798040689e1c77a0157e29ae81ab960a3ea001a7a314f2579cfc9552968",
+        "ff/child_clock_ff_roots.tsv": "dedeaea817045a8fa0acf32a5886f801b20cf72d635728ae3f8b6de0f38cf3cf",
+        "ff/child_clock_ff_clocks.tsv": "df496c424ae420091deebf716ce69a25ead9245823fa0ce4621515a95e789e0a",
+        "ff/child_clock_ff_masters.tsv": "109dc50ea18a2ccbc178f5de2b2a2572c6ddd1ed6530e1b43846f8cd31a2c29b",
+        "ff/child_clock_ff_counts.tsv": "9e0c0c1ec7190bb001f47af469b1dc40078e0af9e34b58443b13e7c0002516bf",
+        "ff/child_clock_ff_inputs.tsv": "4a427b9c62b707b120529ee8371f15a1124eb522e7e523316ce1f002f9cbcb78",
+        "ff/session.tcl": "7b9772829f53e6f088e6246a708d13a01e8341407d6019eeea6d1821b74485c1",
+        "ff/libraries.json": "467e7afbfcfbb5377dbde709688331c7cbfff111b0211c29f8f67ce76e0020f0",
+        "ff/sdcdir/golden.sdc": "975c9cd133bd3f980ff6d20703f504758bebbc5bced9d3f2b9b4293d017fcdfd"
+      },
+      "exported_liberty_sha256": null,
+      "extraction_tcl_sha256": "7b9772829f53e6f088e6246a708d13a01e8341407d6019eeea6d1821b74485c1",
+      "constraint_sequence": {
+        "session": "ff/session.tcl",
+        "policy": {
+          "period_ps": 833.0,
+          "margin_policy": "nominal OWNER 12.24b/c (setup uncertainty 0, hold unchanged)",
+          "margin_policy_switch": "OT_MARGIN_POLICY=legacy | signoff.py run --margin-policy legacy",
+          "margin_policy_rule": "OWNER 12.24b/c 2026-10-31: nominal setup (setup clock uncertainty 0, hold 25 kept; legacy setup 60 = A/B only)",
+          "uncertainty_setup_ps": 0.0,
+          "uncertainty_hold_ps": 25.0,
+          "uncertainty_source": {
+            "setup": "in-session override after read_sdc",
+            "hold": "golden SDC as written"
+          },
+          "sdc_uncertainty_ps": {
+            "setup": 0.0,
+            "hold": 25.0
+          },
+          "sdc_uncertainty_overridden": {
+            "setup": {
+              "sdc": 0.0,
+              "signoff": 0.0,
+              "changed": false
+            }
+          },
+          "spread_max_ps": 80.0,
+          "spread_corners": [
+            "tt",
+            "ff"
+          ],
+          "insertion_tol_ps": 40.0,
+          "fanout_max": 64,
+          "ff_vclk": "bound-ff",
+          "ff_vclk_contract": "declared core FF insertion /srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10_w80/sdc_lint.json",
+          "insertion_bound": null,
+          "ff_vclk_bound_ps": 202.5,
+          "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+          "derate": "none in the verdict (OWNER 12.24b/c: setup uncertainty 0, no spice clock factor; hold uncertainty per policy); ocv5_* = flat late 1.05 / early 0.95, information only",
+          "engine": "OpenSTA in OpenROAD (openroad/orfs:asap7lock), one process per corner",
+          "libs": "Exact routed-kit ORFS make TC/BC_LIB_FILES including macro views; hashed receipt",
+          "corner_rule": "setup TT / hold FF / uncertainty 0-25 ps (nominal) / related pair skew CPPR INFO (target 80); spread INFO; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a; OWNER 12.24b)"
+        }
+      }
+    }
+  }
+}

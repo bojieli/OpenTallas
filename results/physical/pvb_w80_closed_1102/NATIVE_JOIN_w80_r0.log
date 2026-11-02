@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-pvb-tt-0108/join_native_view.py", line 15, in <module>
+    cell=HP.parse_lib(f)[mod];actual={n:(d['dir'],d['width'] or 1) for n,d in cell.items()};assert actual==ports,(c,[(n,actual.get(n),p) for n,p in ports.items() if actual.get(n)!=p][:4],set(actual)^set(ports))
+                                                                                                   ^^^^^^^^^^^^^
+AssertionError: ('tt', [('sf', ('input', 1), ('input', 8)), ('ts0', ('input', 1), ('input', 1024)), ('ts1', ('input', 1), ('input', 1024)), ('ts2', ('input', 1), ('input', 1024))], {'VDD', 'VSS'})
