@@ -19,6 +19,7 @@ for n in ['reload_pre.tcl','reload_post.tcl']:
     shutil.copy2(HERE/n,D/n)
 for n in ['eco_drt_pre.tcl','prd_route_keep.tcl']:
     shutil.copy2(HERE/n,D/n)
+shutil.copy2(HERE/'pin_audit_core.py',D/'pin_audit_core.py')
 with (D/'config.mk').open('a') as f:
     f.write('''\n# PC true repair checkpoint reload: native DPL + fresh GRT only.
 override export PRE_GLOBAL_ROUTE_TCL = /work/reload_pre.tcl
