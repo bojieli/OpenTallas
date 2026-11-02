@@ -1,0 +1,7 @@
+# Complete R1Q prepared input, no physical launch
+
+Recorded 2026-11-01 16:10:20 PST. Derived from full original R1P kit intel1:codex-bksel-cts-i1-1404/.../dsdv_bksel_c_pipe_ab_r1P, not its GRT-only subset. Own epyc2:codex-bksel-r1-fullcts-1604/.../dsdv_bksel_c_pipe_ab_r1Q preserves exact official26source identities and reviewed3_place9e083b125cb3b1ba8029c46f71b0510bf279b99fce05bf1232f539af9e2487da. No4+ outputs copied. Parent personally read inventory PASS.
+
+Prepared input closure PASS:31config /work references,36runtime files,15nested hook edges. In particular hold_budget→face_capture_release;cts_post→tap_balance→clock_family plus leaf_affinity. All input hashes and conditional-inactive paths recorded. The2GB dry-only container (unit2132000-1793578056) applied the canonical MM patch, mode check PASS, make-n synth is no-op and make-n CTS contains only the4stage commands. No actual CTS/STA was run by this dry preflight.
+
+Runtime is intentionally held: current common run_kit.sh always invokes synth/LEC, and existing completed-proof import accepts async history rather than this real standalone official EQ+26hash packet. Flow owner and root are resolving a common consumer. Do not create fake async markers, rerun unchanged long proof, or treat kit_modes check alone as full bootstrap. Future consumer must retain all hooks, exact source proof bind, reviewed3_place, fixed TT250/FF202.5,canonical TC/BC MM session and normal later geometry/timing/DRV gates. This directory is evidence/preparation only.
