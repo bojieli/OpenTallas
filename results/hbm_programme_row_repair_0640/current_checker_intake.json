@@ -1,0 +1,11 @@
+{
+  "status": "SOURCE_PREP_CURRENT_PUBLISHED_CHECKER_PLUS_RUNTIME_IDENTITY",
+  "published_source_commit": "0c84369b0ecbe7c5360a3ca7d9cf5ca071781547",
+  "published_main": "9db068b5458b7a20a548ab165aabc8dc6c077a30",
+  "published_checker_sha256": "1826084c39be03a337c29d54ca703871d88243fc04e58dcd84010e0bfdd18b4b",
+  "new_checker_sha256": "d81840ddd463ed3d4638f0f73bca6d3b13dd31a3af9362da766e38044656d2af",
+  "change": "Only reviewed optional runtime asset input-identity validation inserted into published checker; inverse extension and other functions retained",
+  "validation": "12 focused runtime staging/identity controls PASS",
+  "old_GEN0845": "Preserved; no proof/physical credit transferred",
+  "next": "Join exact logical oldSYNTH readset to freshGEN, retain actual1_synth.v+logs, then ONE fresh official native4 proof with copied old0605hyp facts revalidated by BASE/jointSTEP; no SYNTH rerun"
+}

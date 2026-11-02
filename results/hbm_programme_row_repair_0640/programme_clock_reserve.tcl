@@ -54,7 +54,12 @@ foreach {pc_name pc_x0 pc_y0 pc_x1 pc_y1} {
       error "PROGRAMME_CLOCK_RESERVE actual placed FF/macro halo collision $pc_name [$pc_i getName]"
     }
   }
-  odb::dbBlockage_create $pc_block $pc_a $pc_b $pc_c $pc_d
+  set pc_object [odb::dbBlockage_create $pc_block $pc_a $pc_b $pc_c $pc_d]
+  if {$pc_name eq "root_island"} {
+    odb::dbStringProperty_create $pc_object ot_exact_native_clock_island {dd6387305f8fcd6dc00430766f2bafdac988e2c0d667b3def9e7c47466ab2663:root_island}
+  } else {
+    odb::dbStringProperty_create $pc_object ot_exact_native_clock_reservation "dd6387305f8fcd6dc00430766f2bafdac988e2c0d667b3def9e7c47466ab2663:$pc_name"
+  }
   puts $pc_record [list $pc_name {*}$pc_rect]
 }
 close $pc_record

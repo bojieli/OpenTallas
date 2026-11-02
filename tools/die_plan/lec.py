@@ -1399,6 +1399,61 @@ def _record_cons_base(L, report):
             refused.append(report)
 
 
+def inverse_cube_base_check(L, side, key, source_side, keys, values):
+    """An explicit inverted cube must hold at the native ternary reset base.
+
+    NOT(all group bits are zero) represents reduction-OR. Unknown reset state
+    never establishes this relation; no legal-state constraint is introduced.
+    """
+    report = dict(covered=False, side=side, register=key, source_side=source_side,
+                  source_keys=list(keys), source_values=list(values))
+    try:
+        stamp = _native_reset_stamp(L)
+        if getattr(L, "_rst_stamp", None) != stamp:
+            noreset_classify(L)
+        def value(sd, k):
+            lit = (L.gp if sd == "gold" else L.tp)[k]
+            state = L._rst_state[sd]
+            return None if (lit >> 1) not in state else state[lit >> 1] ^ (lit & 1)
+        actual = [value(source_side, k) for k in keys]
+        cube = (0 if any(v is not None and v != want for v, want in zip(actual, values))
+                else 1 if all(v is not None for v in actual) else None)
+        predicate = None if cube is None else cube ^ 1
+        target = value(side, key)
+        report.update(reset_cycles=stamp[0], actual=actual, target=target,
+                      predicate=predicate, covered=target is not None and target == predicate)
+        if not report['covered']:
+            report['why'] = 'inverted predicate does not match a known native reset-base value'
+    except (KeyError, TypeError, ValueError) as error:
+        report['why'] = 'native reset base unavailable: ' + str(error)
+    return report
+
+
+def filter_inverse_cube_bases(L):
+    """Restored profiles cannot bypass the explicit inverted predicate's BASE."""
+    for (side, key), h in list(L.hyp.items()):
+        if h[0] != 'cube':
+            continue
+        if len(h) not in (4, 5) or (len(h) == 5 and h[4] not in (0, 1)):
+            raise LecError('invalid cube hypothesis arity/inversion')
+        if len(h) != 5 or not h[4]:
+            continue
+        valid = (side == 'gate' and key in L.tonly and h[1] == 'gold' and h[2]
+                 and len(h[2]) == len(h[3])
+                 and all(isinstance(k, str) and k.startswith('ff:') and k in L.gp for k in h[2])
+                 and all(v in (0, 1) for v in h[3]))
+        report = (inverse_cube_base_check(L, side, key, h[1], h[2], h[3]) if valid
+                  else dict(covered=False, side=side, register=key, why='invalid inverted cube relation'))
+        checks = L.__dict__.setdefault('inverse_cube_base_checks', [])
+        if report not in checks:
+            checks.append(report)
+        if not report['covered']:
+            L.hyp.pop((side, key))
+            refused = L.__dict__.setdefault('inverse_cube_base_refused', [])
+            if report not in refused:
+                refused.append(report)
+
+
 def filter_cons_bases(L):
     """No explicit, discovered, or restored constraint may mask a miter before BASE."""
     kept, refused = [], []
@@ -1509,6 +1564,7 @@ class Lec:
         (ternary: an X source is X, an AND is X unless an input is a definite 0); a compare output is
         (gold != gate) & gold-not-X, and a hypothesis on an RTL register whose next state is X holds (the register
         may take the value synthesis chose)."""
+        filter_inverse_cube_bases(self)
         if self.cons:
             filter_cons_bases(self)
         m = Aig()
@@ -1651,13 +1707,13 @@ class Lec:
                 kind[v >> 1] = (side + "_anon", f"anon{lit >> 1}")
                 bind(lmap, lit, v)
         for side, k, h in cubes:                  # gate one-hot state bit == (gold state vector == code)
-            _, oside, oks, ovals = h
+            _, oside, oks, ovals = h[:4]
             olmap, op = (lg, self.gp) if oside == "gold" else (lt, self.tp)
             v = 1
             for ok, ov in zip(oks, ovals):
                 v = m.AND(v, olmap[op[ok] & ~1] ^ (op[ok] & 1) ^ (ov ^ 1))
             lmap, p = (lg, self.gp) if side == "gold" else (lt, self.tp)
-            bind(lmap, p[k], v)
+            bind(lmap, p[k], v ^ (h[4] if len(h) == 5 else 0))
         for k, h, f, v in fillq:                  # Q = filled ? c : X (gold X rail = not filled)
             bind(lg, self.gp[k], m.AND(m.AND(f, h[1]) ^ 1, m.AND(f ^ 1, v) ^ 1) ^ 1)
             lgx[self.gp[k] & ~1] = f ^ 1
@@ -1711,7 +1767,7 @@ class Lec:
                     continue
                 d = self.dlit[(side, k)]
                 if h[0] == "cube":
-                    _, oside, oks, ovals = h
+                    _, oside, oks, ovals = h[:4]
                     c = 1
                     for ok, ov in zip(oks, ovals):
                         c = m.AND(c, self.dlit[(oside, ok)] ^ (ov ^ 1))
@@ -1725,7 +1781,7 @@ class Lec:
                             known = m.AND(known, nx(ok))
                             false_known = m.AND(false_known ^ 1, m.AND(atom ^ 1, nx(ok)) ^ 1) ^ 1
                     known = m.AND(known ^ 1, false_known ^ 1) ^ 1
-                    m.outs.append(m.AND(m.XOR(d, c), known))
+                    m.outs.append(m.AND(m.XOR(d, c ^ (h[4] if len(h) == 5 else 0)), known))
                     m.onames.append(f"hyp:{side}:{k}")
                     continue
                 if h[0] == "loaded":
@@ -2658,7 +2714,7 @@ def sim_refine(L, log, tried, words=8, quiet=3, seed=4242, observe=None):
                     if v is None:
                         return None
                     c &= ivals[v] ^ (0 if ov else mask)
-                return c
+                return c ^ (mask if len(h) == 5 and h[4] else 0)
             return None
 
         tgt = {key: var("gold" if key[0] == "both" else key[0], key[1]) for key, _ in items}
@@ -2728,7 +2784,7 @@ def sim_refine(L, log, tried, words=8, quiet=3, seed=4242, observe=None):
                             atom = D(h[1], ok) ^ (0 if ov else mask)
                             known &= NX(ok)
                             false_known |= (~atom & NX(ok))
-                    v = (D(side, k) ^ c) & (known | false_known)
+                    v = (D(side, k) ^ c ^ (mask if len(h) == 5 and h[4] else 0)) & (known | false_known)
                 else:
                     continue
             except KeyError:
@@ -5533,9 +5589,12 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
                               for cube in guard))
                     hh = ("loaded", h[1], guard)
                 else:
-                    ok = (sd == "gate" and k in L.tonly and h[1] == "gold" and h[2] and
+                    ok = (len(h) in (4, 5) and (len(h) == 4 or h[4] in (0, 1)) and
+                          sd == "gate" and k in L.tonly and h[1] == "gold" and h[2] and
                           all(gk(x) for x in h[2]) and len(h[3]) == len(h[2]) and all(b in (0, 1) for b in h[3]))
                     hh = ("cube", "gold", list(h[2]), list(h[3]))
+                    if len(h) == 5 and h[4] == 1:
+                        hh += (1,)
             except (IndexError, TypeError, ValueError):
                 ok = False
             if not ok:
@@ -5546,6 +5605,12 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
                 if cube is not None:
                     rec["loaded_refused"].append(dict(register=k, cube=[list(x) for x in cube],
                                                       why="guard cube not refuted in the reset state"))
+                    continue
+            elif len(hh) == 5:
+                base = inverse_cube_base_check(L, sd, k, hh[1], hh[2], hh[3])
+                rec.setdefault('inverse_cube_base', []).append(base)
+                if not base['covered']:
+                    rec.setdefault('inverse_cube_refused', []).append(base)
                     continue
             L.hyp[(sd, k)] = hh
             rec["applied"] += 1
