@@ -1,0 +1,618 @@
+{
+ "scope": "OFFLINE_ONLY noclockvariant/rewire/tapmove/FFmove/CTS/P&R/sourceadoption",
+ "actual_source_hashes": {
+  "geom.tsv": "96084da0f59bb836273acfafd4f5466e846d645edb668bb35207b7496aef114d",
+  "config.mk": "98b238c944da9eb384b1f31aeb06a0d731504acf5420adac08753170c0782ebc",
+  "3_place.sdc": "57b543f57b200e2fe60e205f2b36336d7c2f7b45606628e0b2714d0b92bcc098",
+  "clock_taps.tcl": "25225819b4db45e74cb7fe1fe6da66b2aabbc8d7ee48134d192198636a2b35dc",
+  "pre_cts.tcl": "08c070693f1e1125cb869dc1a22f2f812e6ce7fd3284ceff7e01af836fe0f62f"
+ },
+ "source_geometry": "epyc2:/srv/opentallas-scratch2/claude/codex-head-spn-bandfix-1102/geom/geom.tsv",
+ "native_capacity": 1200,
+ "geometry_proxy_limit": 1500,
+ "source_max_extra_um": 50000,
+ "source_max_extra_reason": "OT_TAP_PITCH_UM100000/2, no REASSIGN override",
+ "proxy1500": {
+  "scope": "OFFLINE_ONLY EXISTING_NATIVE_GEOMETRY same-logical-clock service-assignment feasibility; no physical clock build/rewire/qualification",
+  "source": "/srv/opentallas-scratch/claude/head-spn-assignment-1102/geom.tsv",
+  "grid_sinks": 25169,
+  "non_grid_domains_unchanged": {
+   "fclk_in_ad_i": 294,
+   "fclk_in_au_i": 294,
+   "fclk_in_b_i": 2298,
+   "fclk_in_bd_i": 294,
+   "fclk_in_bu_i": 294,
+   "fclk_in_hd_i": 1146,
+   "fclk_in_hu_i": 1142,
+   "fclk_in_x_i": 2298
+  },
+  "before": {
+   "clk": 808,
+   "clk_t1": 824,
+   "clk_t10": 544,
+   "clk_t11": 601,
+   "clk_t12": 517,
+   "clk_t13": 507,
+   "clk_t14": 324,
+   "clk_t15": 332,
+   "clk_t16": 109,
+   "clk_t17": 120,
+   "clk_t18": 366,
+   "clk_t19": 646,
+   "clk_t2": 1019,
+   "clk_t20": 819,
+   "clk_t21": 36,
+   "clk_t22": 33,
+   "clk_t23": 112,
+   "clk_t24": 767,
+   "clk_t25": 499,
+   "clk_t26": 264,
+   "clk_t27": 602,
+   "clk_t28": 31,
+   "clk_t29": 63,
+   "clk_t3": 950,
+   "clk_t30": 67,
+   "clk_t31": 616,
+   "clk_t32": 644,
+   "clk_t33": 974,
+   "clk_t34": 1979,
+   "clk_t35": 1298,
+   "clk_t36": 574,
+   "clk_t37": 1993,
+   "clk_t38": 640,
+   "clk_t39": 793,
+   "clk_t4": 493,
+   "clk_t40": 1129,
+   "clk_t41": 762,
+   "clk_t5": 997,
+   "clk_t6": 497,
+   "clk_t7": 508,
+   "clk_t8": 241,
+   "clk_t9": 71
+  },
+  "after": {
+   "clk": 808,
+   "clk_t1": 824,
+   "clk_t10": 544,
+   "clk_t11": 601,
+   "clk_t12": 517,
+   "clk_t13": 507,
+   "clk_t14": 324,
+   "clk_t15": 332,
+   "clk_t16": 109,
+   "clk_t17": 120,
+   "clk_t18": 366,
+   "clk_t19": 646,
+   "clk_t2": 1019,
+   "clk_t20": 819,
+   "clk_t21": 36,
+   "clk_t22": 33,
+   "clk_t23": 112,
+   "clk_t24": 767,
+   "clk_t25": 499,
+   "clk_t26": 264,
+   "clk_t27": 602,
+   "clk_t28": 31,
+   "clk_t29": 63,
+   "clk_t3": 950,
+   "clk_t30": 67,
+   "clk_t31": 616,
+   "clk_t32": 744,
+   "clk_t33": 974,
+   "clk_t34": 1500,
+   "clk_t35": 1298,
+   "clk_t36": 574,
+   "clk_t37": 1500,
+   "clk_t38": 640,
+   "clk_t39": 1474,
+   "clk_t4": 493,
+   "clk_t40": 1320,
+   "clk_t41": 762,
+   "clk_t5": 997,
+   "clk_t6": 497,
+   "clk_t7": 508,
+   "clk_t8": 241,
+   "clk_t9": 71
+  },
+  "max_new_reach_um": 254.53700000000003,
+  "limit_sinks": 1500,
+  "reach_bound_um": 405,
+  "changes": 972,
+  "move_classes": {
+   "clk_t37 -> clk_t39": 450,
+   "clk_t34 -> clk_t40": 148,
+   "clk_t37 -> clk_t40": 43,
+   "clk_t34 -> clk_t32": 100,
+   "clk_t34 -> clk_t39": 231
+  }
+ },
+ "native1200_exact_flow_cases": {
+  "scope": "OFFLINE grouped exact capacity feasibility ONLY; no newclock variant, rewire, move, CTS, P&R, clock-distance or timing PASS",
+  "source_geom_sha256": "96084da0f59bb836273acfafd4f5466e846d645edb668bb35207b7496aef114d",
+  "taps": [
+   {
+    "name": "clk",
+    "x": 17.76,
+    "y": 939.104
+   },
+   {
+    "name": "clk_t1",
+    "x": 112.8,
+    "y": 17.312
+   },
+   {
+    "name": "clk_t10",
+    "x": 236.64,
+    "y": 548.064
+   },
+   {
+    "name": "clk_t11",
+    "x": 87.136,
+    "y": 548.32
+   },
+   {
+    "name": "clk_t12",
+    "x": 352.288,
+    "y": 691.232
+   },
+   {
+    "name": "clk_t13",
+    "x": 477.088,
+    "y": 691.232
+   },
+   {
+    "name": "clk_t14",
+    "x": 570.72,
+    "y": 789.6
+   },
+   {
+    "name": "clk_t15",
+    "x": 27.616,
+    "y": 815.648
+   },
+   {
+    "name": "clk_t16",
+    "x": 211.168,
+    "y": 821.856
+   },
+   {
+    "name": "clk_t17",
+    "x": 301.92,
+    "y": 830.624
+   },
+   {
+    "name": "clk_t18",
+    "x": 570.72,
+    "y": 951.776
+   },
+   {
+    "name": "clk_t19",
+    "x": 235.68,
+    "y": 992.096
+   },
+   {
+    "name": "clk_t2",
+    "x": 296.16,
+    "y": 17.312
+   },
+   {
+    "name": "clk_t20",
+    "x": 415.328,
+    "y": 1036.832
+   },
+   {
+    "name": "clk_t21",
+    "x": 87.136,
+    "y": 1096.608
+   },
+   {
+    "name": "clk_t22",
+    "x": 235.68,
+    "y": 1101.088
+   },
+   {
+    "name": "clk_t23",
+    "x": 422.176,
+    "y": 1262.816
+   },
+   {
+    "name": "clk_t24",
+    "x": 235.68,
+    "y": 1312.032
+   },
+   {
+    "name": "clk_t25",
+    "x": 102.624,
+    "y": 1375.072
+   },
+   {
+    "name": "clk_t26",
+    "x": 303.648,
+    "y": 1382.432
+   },
+   {
+    "name": "clk_t27",
+    "x": 454.688,
+    "y": 1382.432
+   },
+   {
+    "name": "clk_t28",
+    "x": 235.68,
+    "y": 1462.816
+   },
+   {
+    "name": "clk_t29",
+    "x": 351.968,
+    "y": 1468.768
+   },
+   {
+    "name": "clk_t3",
+    "x": 491.04,
+    "y": 19.936
+   },
+   {
+    "name": "clk_t30",
+    "x": 502.624,
+    "y": 1523.296
+   },
+   {
+    "name": "clk_t31",
+    "x": 235.68,
+    "y": 1628.128
+   },
+   {
+    "name": "clk_t32",
+    "x": 155.04,
+    "y": 1660.512
+   },
+   {
+    "name": "clk_t33",
+    "x": 415.584,
+    "y": 1728.032
+   },
+   {
+    "name": "clk_t34",
+    "x": 85.92,
+    "y": 1795.616
+   },
+   {
+    "name": "clk_t35",
+    "x": 403.424,
+    "y": 1873.248
+   },
+   {
+    "name": "clk_t36",
+    "x": 570.72,
+    "y": 1886.176
+   },
+   {
+    "name": "clk_t37",
+    "x": 17.76,
+    "y": 1912.224
+   },
+   {
+    "name": "clk_t38",
+    "x": 386.08,
+    "y": 2025.568
+   },
+   {
+    "name": "clk_t39",
+    "x": 85.92,
+    "y": 2056.352
+   },
+   {
+    "name": "clk_t4",
+    "x": 87.648,
+    "y": 273.824
+   },
+   {
+    "name": "clk_t40",
+    "x": 219.68,
+    "y": 2056.352
+   },
+   {
+    "name": "clk_t41",
+    "x": 459.168,
+    "y": 2056.352
+   },
+   {
+    "name": "clk_t5",
+    "x": 236.128,
+    "y": 273.824
+   },
+   {
+    "name": "clk_t6",
+    "x": 363.36,
+    "y": 345.632
+   },
+   {
+    "name": "clk_t7",
+    "x": 481.376,
+    "y": 345.632
+   },
+   {
+    "name": "clk_t8",
+    "x": 164.96,
+    "y": 362.72
+   },
+   {
+    "name": "clk_t9",
+    "x": 459.872,
+    "y": 542.688
+   }
+  ],
+  "cases": [
+   {
+    "cap": 1200,
+    "diagnostic_absolute_envelope_um": 405,
+    "source_max_extra_um": 50000,
+    "group_classes": 385,
+    "total_grid_sinks": 25169,
+    "assigned": 25169,
+    "feasible": true,
+    "same_clock_cohort": "clk period833 singlecreate_clock object; original source identities/phase declarations preserved",
+    "non_grid_domains_unchanged": {
+     "fclk_in_ad_i": 294,
+     "fclk_in_au_i": 294,
+     "fclk_in_b_i": 2298,
+     "fclk_in_bd_i": 294,
+     "fclk_in_bu_i": 294,
+     "fclk_in_hd_i": 1146,
+     "fclk_in_hu_i": 1142,
+     "fclk_in_x_i": 2298
+    },
+    "loads": {
+     "clk": 1200,
+     "clk_t1": 1200,
+     "clk_t10": 1200,
+     "clk_t11": 1200,
+     "clk_t12": 1200,
+     "clk_t13": 1200,
+     "clk_t14": 148,
+     "clk_t15": 998,
+     "clk_t16": 108,
+     "clk_t17": 22,
+     "clk_t18": 43,
+     "clk_t19": 942,
+     "clk_t2": 1200,
+     "clk_t20": 425,
+     "clk_t21": 283,
+     "clk_t22": 167,
+     "clk_t23": 408,
+     "clk_t24": 1036,
+     "clk_t25": 313,
+     "clk_t26": 203,
+     "clk_t27": 461,
+     "clk_t28": 79,
+     "clk_t29": 268,
+     "clk_t3": 1162,
+     "clk_t30": 400,
+     "clk_t31": 1200,
+     "clk_t32": 1200,
+     "clk_t33": 1200,
+     "clk_t34": 1200,
+     "clk_t35": 1200,
+     "clk_t36": 1200,
+     "clk_t37": 1200,
+     "clk_t38": 298,
+     "clk_t39": 0,
+     "clk_t4": 604,
+     "clk_t40": 0,
+     "clk_t41": 0,
+     "clk_t5": 0,
+     "clk_t6": 1,
+     "clk_t7": 0,
+     "clk_t8": 0,
+     "clk_t9": 0
+    },
+    "max_assigned_reach_um": 404.997,
+    "changes_nonoptimal_witness": 21882
+   },
+   {
+    "cap": 1200,
+    "diagnostic_absolute_envelope_um": null,
+    "source_max_extra_um": 50000,
+    "group_classes": 1,
+    "total_grid_sinks": 25169,
+    "assigned": 25169,
+    "feasible": true,
+    "same_clock_cohort": "clk period833 singlecreate_clock object; original source identities/phase declarations preserved",
+    "non_grid_domains_unchanged": {
+     "fclk_in_ad_i": 294,
+     "fclk_in_au_i": 294,
+     "fclk_in_b_i": 2298,
+     "fclk_in_bd_i": 294,
+     "fclk_in_bu_i": 294,
+     "fclk_in_hd_i": 1146,
+     "fclk_in_hu_i": 1142,
+     "fclk_in_x_i": 2298
+    },
+    "loads": {
+     "clk": 1200,
+     "clk_t1": 1200,
+     "clk_t10": 1200,
+     "clk_t11": 1200,
+     "clk_t12": 1200,
+     "clk_t13": 1200,
+     "clk_t14": 1200,
+     "clk_t15": 1200,
+     "clk_t16": 1200,
+     "clk_t17": 1200,
+     "clk_t18": 1200,
+     "clk_t19": 1200,
+     "clk_t2": 1200,
+     "clk_t20": 1200,
+     "clk_t21": 1200,
+     "clk_t22": 1200,
+     "clk_t23": 1200,
+     "clk_t24": 1200,
+     "clk_t25": 1200,
+     "clk_t26": 1200,
+     "clk_t27": 1169,
+     "clk_t28": 0,
+     "clk_t29": 0,
+     "clk_t3": 0,
+     "clk_t30": 0,
+     "clk_t31": 0,
+     "clk_t32": 0,
+     "clk_t33": 0,
+     "clk_t34": 0,
+     "clk_t35": 0,
+     "clk_t36": 0,
+     "clk_t37": 0,
+     "clk_t38": 0,
+     "clk_t39": 0,
+     "clk_t4": 0,
+     "clk_t40": 0,
+     "clk_t41": 0,
+     "clk_t5": 0,
+     "clk_t6": 0,
+     "clk_t7": 0,
+     "clk_t8": 0,
+     "clk_t9": 0
+    },
+    "max_assigned_reach_um": 1698.849,
+    "changes_nonoptimal_witness": 15320
+   }
+  ]
+ },
+ "minimum_changes_405": {
+  "scope": "OFFLINE service-assignment minmove witness only; no source/clock/pose/phase/edge/PG change, no CTS/timing pass",
+  "cap": 1200,
+  "diagnostic_absolute_envelope_um": 405,
+  "source_max_extra_um": 50000,
+  "total_grid_sinks": 25169,
+  "minimum_service_changes": 1670,
+  "cohort": "all42 actualSDCclk sources period833; all8fclk cohorts excluded",
+  "loads": {
+   "clk": 808,
+   "clk_t1": 824,
+   "clk_t10": 544,
+   "clk_t11": 601,
+   "clk_t12": 517,
+   "clk_t13": 507,
+   "clk_t14": 324,
+   "clk_t15": 332,
+   "clk_t16": 109,
+   "clk_t17": 120,
+   "clk_t18": 366,
+   "clk_t19": 646,
+   "clk_t2": 1019,
+   "clk_t20": 819,
+   "clk_t21": 36,
+   "clk_t22": 33,
+   "clk_t23": 112,
+   "clk_t24": 767,
+   "clk_t25": 561,
+   "clk_t26": 264,
+   "clk_t27": 602,
+   "clk_t28": 34,
+   "clk_t29": 159,
+   "clk_t3": 950,
+   "clk_t30": 67,
+   "clk_t31": 1200,
+   "clk_t32": 1200,
+   "clk_t33": 1200,
+   "clk_t34": 1200,
+   "clk_t35": 1200,
+   "clk_t36": 658,
+   "clk_t37": 1200,
+   "clk_t38": 699,
+   "clk_t39": 793,
+   "clk_t4": 493,
+   "clk_t40": 1129,
+   "clk_t41": 762,
+   "clk_t5": 997,
+   "clk_t6": 497,
+   "clk_t7": 508,
+   "clk_t8": 241,
+   "clk_t9": 71
+  },
+  "max_new_reach_um": 404.99499999999995,
+  "changes": 1670,
+  "move_classes": {
+   "clk_t37 -> clk_t31": 238,
+   "clk_t34 -> clk_t31": 346,
+   "clk_t37 -> clk_t32": 496,
+   "clk_t34 -> clk_t32": 60,
+   "clk_t37 -> clk_t38": 59,
+   "clk_t34 -> clk_t33": 226,
+   "clk_t35 -> clk_t28": 2,
+   "clk_t34 -> clk_t25": 62,
+   "clk_t34 -> clk_t28": 1,
+   "clk_t34 -> clk_t36": 84,
+   "clk_t35 -> clk_t29": 96
+  }
+ },
+ "minimum_changes_frozen_nearest": {
+  "scope": "OFFLINE service-assignment minmove witness only; no source/clock/pose/phase/edge/PG change, no CTS/timing pass",
+  "cap": 1200,
+  "diagnostic_absolute_envelope_um": 254.537000000001,
+  "source_max_extra_um": 50000,
+  "total_grid_sinks": 25169,
+  "minimum_service_changes": 2453,
+  "cohort": "all42 actualSDCclk sources period833; all8fclk cohorts excluded",
+  "loads": {
+   "clk": 808,
+   "clk_t1": 824,
+   "clk_t10": 544,
+   "clk_t11": 601,
+   "clk_t12": 517,
+   "clk_t13": 507,
+   "clk_t14": 324,
+   "clk_t15": 332,
+   "clk_t16": 109,
+   "clk_t17": 120,
+   "clk_t18": 366,
+   "clk_t19": 646,
+   "clk_t2": 1019,
+   "clk_t20": 819,
+   "clk_t21": 36,
+   "clk_t22": 33,
+   "clk_t23": 112,
+   "clk_t24": 767,
+   "clk_t25": 713,
+   "clk_t26": 264,
+   "clk_t27": 602,
+   "clk_t28": 31,
+   "clk_t29": 63,
+   "clk_t3": 950,
+   "clk_t30": 67,
+   "clk_t31": 730,
+   "clk_t32": 1200,
+   "clk_t33": 1022,
+   "clk_t34": 1200,
+   "clk_t35": 1200,
+   "clk_t36": 574,
+   "clk_t37": 1200,
+   "clk_t38": 900,
+   "clk_t39": 1200,
+   "clk_t4": 493,
+   "clk_t40": 1200,
+   "clk_t41": 762,
+   "clk_t5": 997,
+   "clk_t6": 497,
+   "clk_t7": 508,
+   "clk_t8": 241,
+   "clk_t9": 71
+  },
+  "max_new_reach_um": 254.53700000000006,
+  "changes": 2453,
+  "move_classes": {
+   "clk_t34 -> clk_t32": 757,
+   "clk_t37 -> clk_t32": 13,
+   "clk_t37 -> clk_t40": 97,
+   "clk_t40 -> clk_t38": 243,
+   "clk_t37 -> clk_t39": 642,
+   "clk_t37 -> clk_t34": 41,
+   "clk_t34 -> clk_t31": 14,
+   "clk_t35 -> clk_t31": 99,
+   "clk_t32 -> clk_t25": 214,
+   "clk_t39 -> clk_t40": 218,
+   "clk_t39 -> clk_t38": 17,
+   "clk_t34 -> clk_t35": 49,
+   "clk_t40 -> clk_t31": 1,
+   "clk_t35 -> clk_t33": 48
+  }
+ }
+}
