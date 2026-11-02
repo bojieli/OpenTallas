@@ -1,0 +1,6 @@
+ot-run: intel1         admits    28 GB (avail 162, reserve 0, fresh 0, peak 69.9, headroom 0, waiters 26/1264 GB) load 160/112 running 57 disk 274 GB 
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-head-ptake45-r2-1030
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-270248-1793638655 after 2 s
+P_TAKE45_BOUNDED_DIAGNOSTIC_COMPLETE {'proved': 45}
+ot-run: RAN on intel1 (unit oth-ubuntu-270248-1793638655): exit 0
