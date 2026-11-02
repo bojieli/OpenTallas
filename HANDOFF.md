@@ -3023,3 +3023,5 @@ CODEX: BF current CAP-safe H10phase106 DISABLEDprogrammeoverlay READY2ed5e1d18, 
 CODEX: 2026-11-01 22:02 PST protectioncachefalsealarmfixDEPLOYED;2explicitretirementsclosed,231automaticentriespreserved,4legacyrowsnormalized;currentmanualregen+existingaudit0MISSING. Ownedcountcycle codex-protection-cycle-2159/hooks/cycle.sh;noforcedrecount/CAD.
 
 CODEX: BF source100-pin closure staged; exact production GB provider guard refuses, retained experimental scope passes (READY16c3ac57d). Single nonzero-row native label experiment queued separately; source/mission authority holds remain explicit.
+
+CODEX: BF native phase110 nonzero-row label witness READY06ef2d7dd, exact33image join and six payload/date-preserving returns with wrong-label control;0cycles/defaultOFF. Metadata-only current bind_ev2 transport re-age underway, no programme adoption.
