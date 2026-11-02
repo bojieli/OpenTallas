@@ -1,0 +1,102 @@
+{
+ "kit": {
+  "schema": "opentallas.s81.core_freeze.v1",
+  "kit": "dsdv_gunit_l2_ccA",
+  "module": "dsdv_gunit_l2",
+  "plan_type": "gunit__t1",
+  "outline_um": [
+   345.6,
+   43.2
+  ],
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l2",
+  "spec": "physical/ref_tile/dsdv_gunit_l2/spec.json",
+  "spec_sha256": "9aae9065d6cb15d5c07ae9b639f0a02f371a49bf2db6db66483f910119cbeb07",
+  "pins_file": "inputs/core_pins/dsdv_gunit_l2.json",
+  "pins_sha256": "e555d38c0cf756d893b5f76634f09a27aab782b02c500ecfbfcfec149a0150aa",
+  "pins": 3144,
+  "plan_lef": "physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2.lef",
+  "pins_canon_sha256": "9f9cbf01e926bfb88d9e731736bb608d3c3215b0280d05a045824ae82f79001b",
+  "pins_placed_canon_sha256": "9f9cbf01e926bfb88d9e731736bb608d3c3215b0280d05a045824ae82f79001b",
+  "pins_staged_file": "declared_pin_contract/dsdv_gunit_l2.json",
+  "pins_staged_sha256": "e555d38c0cf756d893b5f76634f09a27aab782b02c500ecfbfcfec149a0150aa",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "47ce4c3663b778a3812ce26ff02a8a2ddeaca9345d55813b23ef6d962dddc944",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_tol_ps": 40.0,
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "rc": "setRC_rcx_asap7.tcl",
+  "regional_taps": {
+   "nx": 2,
+   "ny": 1
+  },
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "face_guard (post-synth)",
+   "LEC EQUIVALENT (post-synth)",
+   "reg_fanout (post-synth)",
+   "TT/FF insertion (GRT, before route)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "beb555b998b",
+  "sdc_lint_sha256": "9f4cb15408b946d7da4440c0c4430a013a311c295e504fa3deb4709349e9a1cb",
+  "face_guard_sha256": "da1b8ce4bb693991e33dcff378abb65121af213cbc8aa4655e94ed3375e5f67e",
+  "signoff_sha256": "e32413a9ca340f9817edcdf5c6f62b9914037200e87ec060e1c0c46c91061b04",
+  "macros": {},
+  "rtl_patches": [],
+  "kit_hash": "010bddc740e20d0c",
+  "reset_contract": {
+   "edges": 64,
+   "module": "dsdv_gunit_l2",
+   "contract_sha256": "8eb7a65af236c88c47e0ef7abb66e53c47c2e85f1380fc268a2e58b12a03632c",
+   "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/kit",
+ "src_commit": null,
+ "flow_tag": null,
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-01T21:42:26-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/kit",
+  "base": "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/kit/run/results/asap7/kl_dsdv_gunit_l2_ccA/base",
+  "signoff": "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-sta2/signoff/signoff.json",
+  "signoff_sha256": "4d32566ec6550c56e0d05d4017e7877ef1530eb64578b5ac06718370ab5ddcea",
+  "signoff_generated": "2026-11-01T21:20:07-08:00",
+  "odb": "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/kit/run/results/asap7/kl_dsdv_gunit_l2_ccA/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/lec/lec.json",
+  "note": "Actual B10 current051 SIGNED+own6110EQ; exactfreshnativeLEF/ETMs. OriginalgenerationcommitUNKNOWN, do not invent or count. ROOTOWNER reconstructed-source publication held. Parent means TT324.51 FF262.56 must update before consumption.",
+  "lib_basis": null,
+  "files_sha256": {
+   "dsdv_gunit_l2.lef": "2cac49497296e6bd3958aa8d57724b2762ae2914965769d8a6f82bf04ac71194",
+   "dsdv_gunit_l2_ff.lib": "e47c63aab14e7dae739a1d5d258e6c3c0de4a04c8175c7aa8b12714e2a847d02",
+   "dsdv_gunit_l2_tt.lib": "384eaf6775d2715ae646c0992b026b7f77b18a896ac27e9696436df702d9714d",
+   "pins.json": "3f73e33523813f66645b66a89c6be1c65fca74ba33ae1db6d7a812754efc3e50"
+  }
+ }
+}

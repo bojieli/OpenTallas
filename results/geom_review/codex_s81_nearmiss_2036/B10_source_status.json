@@ -1,0 +1,42 @@
+{
+  "subject": "L2 B10 actual final route",
+  "original_build_commit": null,
+  "original_build_commit_status": "UNKNOWN, not inferred from same-source equality",
+  "selected_source_identity": {
+    "comparison_commit": "051340895",
+    "status": "four selected RTL sources byte-identical",
+    "files": {
+      "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv": "1347e8825b1b15439f62e52b03c9cb3f094169854709cf8a8208efaf5310ddb1",
+      "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l2.sv": "3a4024a213feeb618df43226c56a77c69227a8789bf6477f21d64e6aad4169a3",
+      "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv": "5ef19b8bf58472be345bce5e2a6edda0f3bb2514acf1c39defbc9cd0d5524e11",
+      "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    }
+  },
+  "historical_m_s81": {
+    "signoff": "SIGNED",
+    "TT_setup_ps": 44.24,
+    "FF_hold_ps": 12.32,
+    "DRV": 0,
+    "DRC": 0,
+    "antenna": 0,
+    "own_EQ": {
+      "proved": 6110,
+      "compare_points": 6110,
+      "differs": 0,
+      "undecided": 0
+    },
+    "publication": "resign refused original build_commit unknown"
+  },
+  "current_051": {
+    "status": "QUEUED, not measured",
+    "host": "epyc2",
+    "directory": "/srv/opentallas-scratch2/claude/codex-s81-nearmiss-2036/l2_B10_051",
+    "client_host": "intel2",
+    "client_pid": 3484410,
+    "mem_gb": 16,
+    "threads": 4
+  },
+  "additional_B4_retry": "own unadmitted client3127932 canceled after collecting B10 success; no EDA started",
+  "current_051_review": "B10_actual_chain.png + baseline image reviewed PASS-COND re-sign only, unchanged final ODB",
+  "published_signed_view": false
+}

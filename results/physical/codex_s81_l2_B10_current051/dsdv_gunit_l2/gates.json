@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "export-view:4d32566ec655",
+ "die": "s81",
+ "type": "dsdv_gunit_l2",
+ "src": "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/kit",
+ "geom": "n/a (view export of a signed run; geometry was reviewed at sign-off)",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "SIGNED",
+ "signoff_record": "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-sta2/signoff/signoff.json",
+ "tt_wns_ps": 44.24,
+ "ff_wns_ps": 12.32,
+ "gates": {},
+ "routed_lec": "EQUIVALENT",
+ "routed_lec_all_shown": null,
+ "routed_lec_record": "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/lec/lec.json",
+ "lec_tool": null,
+ "admission_tools_sha256": null,
+ "view_complete": true,
+ "view_problems": []
+}
