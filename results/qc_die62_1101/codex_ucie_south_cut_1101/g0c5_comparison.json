@@ -1,0 +1,1832 @@
+{
+ "status": "COLLECTED_SOURCE_DIFFERENTIAL",
+ "baseline_errors": 96,
+ "proposal_errors": 96,
+ "baseline_warnings": 595,
+ "proposal_warnings": 591,
+ "new_finding_classes": [],
+ "changed_existing_findings": [
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_st_b_v2__cl14c98df5', 'sle_st_b_v2__clfde1249e', 'slw_st_b_v2'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_st_b_v1', 'slw_st_b_v1__cl6357f1cc', 'slw_st_b_v1__cle6023ec2'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_st_a_v2', 'slw_st_a_v2__cl9f076a5c', 'slw_st_a_v2__clf4365a62'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['phy_serdes', 'phy_serdes_b'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['cbx_q10__cl89936551', 'cbx_q10__cl94a12200'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['cbn_q00__cl622f65d2', 'cbn_q00__cld7bf7197', 'cbn_q00__cldbcda913'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['cbn_q01__clab6e67f2', 'cbn_q01__cld9ff4c40', 'cbn_q01__cldd6ea846'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['cbn_q11__cl49ae4555', 'cbn_q11__cl5cc92dfe'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['cbf_q00__cl1b5a6458', 'cbf_q00__cl870de686'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_hc1__cl22c1ff36', 'sle_hc1__cl7d360508', 'slw_hc1__cl3449ea95', 'slw_hc1__cl68f9248e__cl144ee7b3', 'slw_hc1__cl68f9248e__cle683a076'] (5): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_hc2__cl9c4c4509__cl3edce1b8', 'sle_hc2__cl9c4c4509__clf60c5152', 'sle_hc2__clcc5e3e61', 'slw_hc2__cl6bcaba89', 'slw_hc2__cla3497502__cl16607c7a', 'slw_hc2__cla3497502__cldc737267'] (6): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['slw_hc3__clccfc3e6b', 'slw_hc3__cld86a7ad4'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_ctl__cl372cea1c', 'sle_ctl__cl503337ff', 'sle_ctl__cl67434795', 'sle_ctl__cla4f6f12f'] (4): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['slw_su_l1__cla2a78701', 'slw_su_l1__clcc9d0155'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['slw_su_c__cl19bb38ef', 'slw_su_c__cl92142dac'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['slw_su_l0__cl1a1c1f8f', 'slw_su_l0__cl1e5219ea', 'slw_su_l0__cl76fb247e'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['slw_fw_v1__cl51d45468', 'slw_fw_v1__clf51c11d8__cl592e3d37', 'slw_fw_v1__clf51c11d8__clc7ddab13'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['slw_stm_v1__cl05fc43f7__cl2086fa2c', 'slw_stm_v1__cl05fc43f7__cl389df4e9', 'slw_stm_v1__cle34a73c3'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['slw_sc_v1__cl63e5a7a2', 'slw_sc_v1__cl64543eaf__cl4590432d', 'slw_sc_v1__cl64543eaf__cl5e017c6f'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['slw_fe_v1__cl95cd1d0c', 'slw_fe_v1__clfe325744__cl08d14f0d', 'slw_fe_v1__clfe325744__cldb4efe33'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_hc0__cl05696ed1', 'sle_hc0__cl929603c0__cl38badc56', 'sle_hc0__cl929603c0__cl4baa7c9c', 'slw_hc0__cl1bc59e1c', 'slw_hc0__cl4f54b7a3'] (5): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_st_a_v1__cl67389ecd', 'sle_st_a_v1__cl989804f6__cl18eece69', 'sle_st_a_v1__cl989804f6__cled3c1d7b', 'slw_st_a_v1__clb036e152', 'slw_st_a_v1__clfc5867a6'] (5): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_su_l1__cl5ea486db', 'sle_su_l1__clc6d66f5b'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_su_l0__cl086d85ba', 'sle_su_l0__cl7a55c676'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['slw_fe_v2__cle312294d', 'slw_fe_v2__clf110fab2'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['slw_fw_v2__cl8537f156', 'slw_fw_v2__cl8f84514c'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['slw_stm_v2__cl1ca9c415', 'slw_stm_v2__cl9beb65e6'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_fw_v1__cl9d029624', 'sle_fw_v1__clf58b4dfb'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v1__cl27746664', 'sle_stm_v1__clbe630b9c'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_sc_v1__cl115da35f', 'sle_sc_v1__cl7479a5ec'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_fe_v1__cl1cbb7497', 'sle_fe_v1__cl8210183c'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "types",
+    "msg": "near-duplicate types ['sle_fw_v2__cl6740750e', 'sle_fw_v2__cl69f5e854'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "core_pg",
+    "msg": "type coll_ucie: 1 placed hard-core macro(s) (u_io_ucie ...) without core_pg_connect: true -- the kit PDN lands no via on their PG pins (physical PG open); set core_pg_connect and regenerate",
+    "type": "coll_ucie"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "core_pg",
+    "msg": "type coll_ucie: 1 placed hard-core macro(s) (u_bound.u_io_ucie ...) without core_pg_connect: true -- the kit PDN lands no via on their PG pins (physical PG open); set core_pg_connect and regenerate",
+    "type": "coll_ucie"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geometry",
+    "msg": "type coll_ftm slot fltvc: crossing ~1128 um > 1 station(s) x reach 405 (see hops)",
+    "type": "coll_ftm"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geometry",
+    "msg": "type coll_ftm slot cmd_free_io_cmd_free: crossing ~1128 um > 1 station(s) x reach 405 (see hops)",
+    "type": "coll_ftm"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geometry",
+    "msg": "type coll_ftm slot fltvc: crossing ~1128 um > 1 station(s) x reach 405 (see hops)",
+    "type": "coll_ftm"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geometry",
+    "msg": "type coll_ftm slot fault_io_fault: crossing ~1128 um > 1 station(s) x reach 405 (see hops)",
+    "type": "coll_ftm"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geometry",
+    "msg": "type coll_ftm slot fltvc: crossing ~1128 um > 1 station(s) x reach 405 (see hops)",
+    "type": "coll_ftm"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geometry",
+    "msg": "type coll_ftm slot fltc: crossing ~1128 um > 1 station(s) x reach 405 (see hops)",
+    "type": "coll_ftm"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geometry",
+    "msg": "type coll_ftc slot out_err_re_wi: crossing ~912 um > 2 station(s) x reach 405 (see hops)",
+    "type": "coll_ftc"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geometry",
+    "msg": "type coll_ftc slot out_data_rd_wi: crossing ~912 um > 2 station(s) x reach 405 (see hops)",
+    "type": "coll_ftc"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "serdes window io_io_serdes_u_io_serdes_1: no separate PHY supply / bump rows (OWNER decision 7)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "serdes window io_io_serdes_2_u_io_serdes_2: no separate PHY supply / bump rows (OWNER decision 7)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "serdes window io_io_serdes_u_io_serdes_1: no separate PHY supply / bump rows (OWNER decision 7)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "serdes window io_io_serdes_1_u_io_serdes_1: no separate PHY supply / bump rows (OWNER decision 7)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbf_q01_s2: plan-time AUTO-GEOM pin_reg_max 176.33 (limit <=150.0; layout_review.py 150 backstop) 176.3 bc_i02[516]",
+    "type": "cbf_q01_s2",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbf_q01_s2: plan-time AUTO-GEOM pin_reg_p90 157.81 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 176.3 bc_i02[516], 176.3 bc_i02[515]",
+    "type": "cbf_q01_s2",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbf_q11: plan-time AUTO-GEOM pin_reg_max 220.21 (limit <=150.0; layout_review.py 150 backstop) 220.2 bc_i22[516]",
+    "type": "cbf_q11",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbf_q11: plan-time AUTO-GEOM pin_reg_p90 166.89 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 220.2 bc_i22[516], 220.2 bc_i22[515]",
+    "type": "cbf_q11",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbn_q00__cl622f65d2: plan-time AUTO-GEOM pin_reg_max 301.1 (limit <=150.0; layout_review.py 150 backstop) 301.1 rsf_i[514]",
+    "type": "cbn_q00__cl622f65d2",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbn_q00__cl622f65d2: plan-time AUTO-GEOM pin_reg_p90 221.21 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 301.1 rsf_i[514], 301.0 rsf_i[513]",
+    "type": "cbn_q00__cl622f65d2",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbn_q00__cld7bf7197: plan-time AUTO-GEOM pin_reg_max 301.1 (limit <=150.0; layout_review.py 150 backstop) 301.1 rsf_i[514]",
+    "type": "cbn_q00__cld7bf7197",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbn_q00__cld7bf7197: plan-time AUTO-GEOM pin_reg_p90 221.21 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 301.1 rsf_i[514], 301.0 rsf_i[513]",
+    "type": "cbn_q00__cld7bf7197",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbn_q00__cldbcda913: plan-time AUTO-GEOM pin_reg_max 301.1 (limit <=150.0; layout_review.py 150 backstop) 301.1 rsf_i[514]",
+    "type": "cbn_q00__cldbcda913",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbn_q00__cldbcda913: plan-time AUTO-GEOM pin_reg_p90 221.21 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 301.1 rsf_i[514], 301.0 rsf_i[513]",
+    "type": "cbn_q00__cldbcda913",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbn_q11__cl49ae4555: plan-time AUTO-GEOM pin_reg_max 220.21 (limit <=150.0; layout_review.py 150 backstop) 220.2 bc_i22[516]",
+    "type": "cbn_q11__cl49ae4555",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbn_q11__cl49ae4555: plan-time AUTO-GEOM pin_reg_p90 149.05 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 220.2 bc_i22[516], 220.2 bc_i22[515]",
+    "type": "cbn_q11__cl49ae4555",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbn_q11__cl5cc92dfe: plan-time AUTO-GEOM pin_reg_max 220.21 (limit <=150.0; layout_review.py 150 backstop) 220.2 bc_i22[516]",
+    "type": "cbn_q11__cl5cc92dfe",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type cbn_q11__cl5cc92dfe: plan-time AUTO-GEOM pin_reg_p90 149.05 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 220.2 bc_i22[516], 220.2 bc_i22[515]",
+    "type": "cbn_q11__cl5cc92dfe",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_aspect",
+    "msg": "[G0C-GEOM] type coll_core: plan-time AUTO-GEOM aspect 2.022 (limit <=2.0; METHODOLOGY 1.14 aspect <= ~2:1) ",
+    "type": "coll_core",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_aspect",
+    "msg": "[G0C-GEOM] type coll_core: plan-time AUTO-GEOM aspect 2.091 (limit <=2.0; METHODOLOGY 1.14 aspect <= ~2:1) ",
+    "type": "coll_core",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_clock_reach",
+    "msg": "[G0C-GEOM] type coll_core: plan-time AUTO-GEOM clock_reach 335.91 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far relay:u_rrl_46 (8.2, 1243.5)",
+    "type": "coll_core",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_clock_reach",
+    "msg": "[G0C-GEOM] type coll_core: plan-time AUTO-GEOM clock_reach 329.89 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far relay:u_rrl_43 (8.2, 1243.5)",
+    "type": "coll_core",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_tap_sinks",
+    "msg": "[G0C-GEOM] type coll_core: plan-time AUTO-GEOM clock_tap_sinks 6187.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk",
+    "type": "coll_core",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_tap_sinks",
+    "msg": "[G0C-GEOM] type coll_core: plan-time AUTO-GEOM clock_tap_sinks 6139.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk",
+    "type": "coll_core",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type coll_core: plan-time AUTO-GEOM pin_reg_max 290.83 (limit <=150.0; layout_review.py 150 backstop) 290.8 shr_p_rx_i[598]",
+    "type": "coll_core",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type coll_core: plan-time AUTO-GEOM pin_reg_p90 138.24 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 290.8 shr_p_rx_i[598], 290.7 shr_p_rx_i[597]",
+    "type": "coll_core",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_clock_reach",
+    "msg": "[G0C-GEOM] type coll_ft__cl78c7b300: plan-time AUTO-GEOM clock_reach 361.98 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far plan (393.0, 331.2)",
+    "type": "coll_ft__cl78c7b300",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_clock_reach",
+    "msg": "[G0C-GEOM] type coll_ft__cl78c7b300: plan-time AUTO-GEOM clock_reach 353.38 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far plan (393.0, 653.8)",
+    "type": "coll_ft__cl78c7b300",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_tap_sinks",
+    "msg": "[G0C-GEOM] type coll_ft__cl78c7b300: plan-time AUTO-GEOM clock_tap_sinks 3007.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk",
+    "type": "coll_ft__cl78c7b300",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_tap_sinks",
+    "msg": "[G0C-GEOM] type coll_ft__cl78c7b300: plan-time AUTO-GEOM clock_tap_sinks 3580.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t2",
+    "type": "coll_ft__cl78c7b300",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_clock_reach",
+    "msg": "[G0C-GEOM] type coll_ft__cla4a25d77: plan-time AUTO-GEOM clock_reach 533.44 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far reset_root (778.1, 828.0)",
+    "type": "coll_ft__cla4a25d77",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_clock_reach",
+    "msg": "[G0C-GEOM] type coll_ft__cla4a25d77: plan-time AUTO-GEOM clock_reach 507.52 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far landing:u_cland_collect_rst_root_n (752.2, 828.0)",
+    "type": "coll_ft__cla4a25d77",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type coll_ftc: plan-time AUTO-GEOM pin_reg_max 194.4 (limit <=150.0; layout_review.py 150 backstop) 194.4 arl_wo_in_last_i[1]",
+    "type": "coll_ftc",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type coll_ftc: plan-time AUTO-GEOM pin_reg_p90 185.76 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 194.4 arl_wo_in_last_i[1], 194.4 arl_wo_in_last_i[0]",
+    "type": "coll_ftc",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_clock_reach",
+    "msg": "[G0C-GEOM] type coll_ftm: plan-time AUTO-GEOM clock_reach 515.2 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far reset_root (778.1, 918.5)",
+    "type": "coll_ftm",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_clock_reach",
+    "msg": "type coll_ftm: plan geometry not evaluable (ValueError: coll_ftm: unknown clock pin height overrides ['clk_t20'])",
+    "type": "coll_ftm"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_aspect",
+    "msg": "[G0C-GEOM] type coll_ucie: plan-time AUTO-GEOM aspect 2.111 (limit <=2.0; METHODOLOGY 1.14 aspect <= ~2:1) ",
+    "type": "coll_ucie",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_aspect",
+    "msg": "[G0C-GEOM] type coll_ucie: plan-time AUTO-GEOM aspect 2.043 (limit <=2.0; METHODOLOGY 1.14 aspect <= ~2:1) ",
+    "type": "coll_ucie",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_tap_sinks",
+    "msg": "[G0C-GEOM] type coll_ucie: plan-time AUTO-GEOM clock_tap_sinks 2564.7 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t7",
+    "type": "coll_ucie",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_tap_sinks",
+    "msg": "[G0C-GEOM] type coll_ucie: plan-time AUTO-GEOM clock_tap_sinks 2566.7 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t11",
+    "type": "coll_ucie",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type glue: plan-time AUTO-GEOM pin_reg_max 196.56 (limit <=150.0; layout_review.py 150 backstop) 196.6 sys_face__tt_native_pos[9]",
+    "type": "glue",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type glue: plan-time AUTO-GEOM pin_reg_p90 90.72 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 196.6 sys_face__tt_native_pos[9], 196.6 sys_face__tt_native_pos[8]",
+    "type": "glue",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type native59: plan-time AUTO-GEOM pin_reg_max 205.2 (limit <=150.0; layout_review.py 150 backstop) 205.2 seq_dh_dh_i[9]",
+    "type": "native59",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type native59: plan-time AUTO-GEOM pin_reg_p90 205.2 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 205.2 seq_dh_dh_i[9], 205.2 seq_dh_dh_i[99]",
+    "type": "native59",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_fe_v2: plan-time AUTO-GEOM pin_reg_max 190.08 (limit <=150.0; layout_review.py 150 backstop) 190.1 arl_wi[1]",
+    "type": "sle_fe_v2",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_fe_v2: plan-time AUTO-GEOM pin_reg_p90 92.88 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 190.1 arl_wi[1], 190.1 arl_wi[0]",
+    "type": "sle_fe_v2",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_fw_v1__cl9d029624: plan-time AUTO-GEOM pin_reg_max 190.08 (limit <=150.0; layout_review.py 150 backstop) 190.1 rd_ei[9]",
+    "type": "sle_fw_v1__cl9d029624",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_fw_v1__cl9d029624: plan-time AUTO-GEOM pin_reg_p90 92.88 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 190.1 rd_ei[9], 190.1 rd_ei[99]",
+    "type": "sle_fw_v1__cl9d029624",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_fw_v1__clf58b4dfb: plan-time AUTO-GEOM pin_reg_max 190.08 (limit <=150.0; layout_review.py 150 backstop) 190.1 rd_ei[9]",
+    "type": "sle_fw_v1__clf58b4dfb",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_fw_v1__clf58b4dfb: plan-time AUTO-GEOM pin_reg_p90 92.88 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 190.1 rd_ei[9], 190.1 rd_ei[99]",
+    "type": "sle_fw_v1__clf58b4dfb",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_st_a_v1__cl67389ecd: plan-time AUTO-GEOM pin_reg_max 187.95 (limit <=150.0; layout_review.py 150 backstop) 188.0 b_hw_ctl_hc0_i[1572]",
+    "type": "sle_st_a_v1__cl67389ecd",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_st_a_v1__cl67389ecd: plan-time AUTO-GEOM pin_reg_p90 168.48 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 188.0 b_hw_ctl_hc0_i[1572], 187.8 b_hw_ctl_hc0_i[1573]",
+    "type": "sle_st_a_v1__cl67389ecd",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_st_a_v1__cl989804f6__cl18eece69: plan-time AUTO-GEOM pin_reg_max 187.95 (limit <=150.0; layout_review.py 150 backstop) 188.0 b_hw_ctl_hc0_i[1572]",
+    "type": "sle_st_a_v1__cl989804f6__cl18eece69",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_st_a_v1__cl989804f6__cl18eece69: plan-time AUTO-GEOM pin_reg_p90 168.48 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 188.0 b_hw_ctl_hc0_i[1572], 187.8 b_hw_ctl_hc0_i[1573]",
+    "type": "sle_st_a_v1__cl989804f6__cl18eece69",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_st_a_v1__cl989804f6__cled3c1d7b: plan-time AUTO-GEOM pin_reg_max 187.95 (limit <=150.0; layout_review.py 150 backstop) 188.0 b_hw_ctl_hc0_i[1572]",
+    "type": "sle_st_a_v1__cl989804f6__cled3c1d7b",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_st_a_v1__cl989804f6__cled3c1d7b: plan-time AUTO-GEOM pin_reg_p90 168.48 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 188.0 b_hw_ctl_hc0_i[1572], 187.8 b_hw_ctl_hc0_i[1573]",
+    "type": "sle_st_a_v1__cl989804f6__cled3c1d7b",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_st_a_v2: plan-time AUTO-GEOM pin_reg_max 187.95 (limit <=150.0; layout_review.py 150 backstop) 188.0 b_hw_ctl_hc0_i[1572]",
+    "type": "sle_st_a_v2",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_st_a_v2: plan-time AUTO-GEOM pin_reg_p90 158.38 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 188.0 b_hw_ctl_hc0_i[1572], 187.8 b_hw_ctl_hc0_i[1573]",
+    "type": "sle_st_a_v2",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_su_c: plan-time AUTO-GEOM pin_reg_max 276.22 (limit <=150.0; layout_review.py 150 backstop) 276.2 x_su_l0_i[1]",
+    "type": "sle_su_c",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_su_c: plan-time AUTO-GEOM pin_reg_p90 118.81 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 276.2 x_su_l0_i[1], 276.2 x_su_l0_i[0]",
+    "type": "sle_su_c",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_su_l1__cl5ea486db: plan-time AUTO-GEOM pin_reg_max 320.38 (limit <=150.0; layout_review.py 150 backstop) 320.4 rsn_i[0]",
+    "type": "sle_su_l1__cl5ea486db",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type sle_su_l1__cl5ea486db: plan-time AUTO-GEOM pin_reg_p90 316.57 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 320.4 rsn_i[0], 320.3 rsn_i[1]",
+    "type": "sle_su_l1__cl5ea486db",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_fw_v2__cl8537f156: plan-time AUTO-GEOM pin_reg_max 190.08 (limit <=150.0; layout_review.py 150 backstop) 190.1 rd_wi[9]",
+    "type": "slw_fw_v2__cl8537f156",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_fw_v2__cl8537f156: plan-time AUTO-GEOM pin_reg_p90 92.88 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 190.1 rd_wi[9], 190.1 rd_wi[99]",
+    "type": "slw_fw_v2__cl8537f156",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_fw_v2__cl8f84514c: plan-time AUTO-GEOM pin_reg_max 190.08 (limit <=150.0; layout_review.py 150 backstop) 190.1 rd_wi[9]",
+    "type": "slw_fw_v2__cl8f84514c",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_fw_v2__cl8f84514c: plan-time AUTO-GEOM pin_reg_p90 92.88 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 190.1 rd_wi[9], 190.1 rd_wi[99]",
+    "type": "slw_fw_v2__cl8f84514c",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_st_a_v1__clb036e152: plan-time AUTO-GEOM pin_reg_max 187.95 (limit <=150.0; layout_review.py 150 backstop) 188.0 b_hw_ctl_hc0_i[1572]",
+    "type": "slw_st_a_v1__clb036e152",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_st_a_v1__clb036e152: plan-time AUTO-GEOM pin_reg_p90 168.48 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 188.0 b_hw_ctl_hc0_i[1572], 187.8 b_hw_ctl_hc0_i[1573]",
+    "type": "slw_st_a_v1__clb036e152",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_st_a_v1__clfc5867a6: plan-time AUTO-GEOM pin_reg_max 187.95 (limit <=150.0; layout_review.py 150 backstop) 188.0 b_hw_ctl_hc0_i[1572]",
+    "type": "slw_st_a_v1__clfc5867a6",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_st_a_v1__clfc5867a6: plan-time AUTO-GEOM pin_reg_p90 168.48 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 188.0 b_hw_ctl_hc0_i[1572], 187.8 b_hw_ctl_hc0_i[1573]",
+    "type": "slw_st_a_v1__clfc5867a6",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_st_a_v2__cl9f076a5c: plan-time AUTO-GEOM pin_reg_max 187.95 (limit <=150.0; layout_review.py 150 backstop) 188.0 b_hw_ctl_hc0_i[1572]",
+    "type": "slw_st_a_v2__cl9f076a5c",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_st_a_v2__cl9f076a5c: plan-time AUTO-GEOM pin_reg_p90 158.38 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 188.0 b_hw_ctl_hc0_i[1572], 187.8 b_hw_ctl_hc0_i[1573]",
+    "type": "slw_st_a_v2__cl9f076a5c",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_st_a_v2__clf4365a62: plan-time AUTO-GEOM pin_reg_max 187.95 (limit <=150.0; layout_review.py 150 backstop) 188.0 b_hw_ctl_hc0_i[1572]",
+    "type": "slw_st_a_v2__clf4365a62",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_st_a_v2__clf4365a62: plan-time AUTO-GEOM pin_reg_p90 158.38 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 188.0 b_hw_ctl_hc0_i[1572], 187.8 b_hw_ctl_hc0_i[1573]",
+    "type": "slw_st_a_v2__clf4365a62",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_su_c__cl19bb38ef: plan-time AUTO-GEOM pin_reg_max 237.09 (limit <=150.0; layout_review.py 150 backstop) 237.1 x_su_l1_p1_i[0]",
+    "type": "slw_su_c__cl19bb38ef",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_su_c__cl19bb38ef: plan-time AUTO-GEOM pin_reg_p90 90.72 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 237.1 x_su_l1_p1_i[0], 237.1 x_su_l1_p1_i[1]",
+    "type": "slw_su_c__cl19bb38ef",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_su_c__cl92142dac: plan-time AUTO-GEOM pin_reg_max 237.09 (limit <=150.0; layout_review.py 150 backstop) 237.1 x_su_l1_p1_i[0]",
+    "type": "slw_su_c__cl92142dac",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_su_c__cl92142dac: plan-time AUTO-GEOM pin_reg_p90 90.72 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 237.1 x_su_l1_p1_i[0], 237.1 x_su_l1_p1_i[1]",
+    "type": "slw_su_c__cl92142dac",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_su_l1__cla2a78701: plan-time AUTO-GEOM pin_reg_max 320.38 (limit <=150.0; layout_review.py 150 backstop) 320.4 rsn_i[0]",
+    "type": "slw_su_l1__cla2a78701",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_su_l1__cla2a78701: plan-time AUTO-GEOM pin_reg_p90 316.57 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 320.4 rsn_i[0], 320.3 rsn_i[1]",
+    "type": "slw_su_l1__cla2a78701",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_su_l1__clcc9d0155: plan-time AUTO-GEOM pin_reg_max 320.38 (limit <=150.0; layout_review.py 150 backstop) 320.4 rsn_i[0]",
+    "type": "slw_su_l1__clcc9d0155",
+    "g0c": true
+   },
+   "after": {
+    "level": "WARN",
+    "check": "geom_pin_reg",
+    "msg": "[G0C-GEOM] type slw_su_l1__clcc9d0155: plan-time AUTO-GEOM pin_reg_p90 316.57 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 320.4 rsn_i[0], 320.3 rsn_i[1]",
+    "type": "slw_su_l1__clcc9d0155",
+    "g0c": true
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E0_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E0_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E0_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E0_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E1_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E1_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E1_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E1_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E2_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E2_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E2_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E2_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E3_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E3_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E3_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E3_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E4_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E4_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E4_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E4_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E5_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E5_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E5_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_E5_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W0_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W0_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W0_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W0_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W1_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W1_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W1_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W1_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W2_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W2_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W2_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W2_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W3_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W3_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W3_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W3_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W4_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W4_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W4_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W4_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W5_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W5_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W5_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group cl_W5_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group coll spans 10 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_E0 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_E1 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_E2 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_E3 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_E4 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_E5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W0 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W1 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W2 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W3 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  },
+  {
+   "before": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   },
+   "after": {
+    "level": "WARN",
+    "check": "census",
+    "msg": "census[0] group slice_W4 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   }
+  }
+ ],
+ "scope": "No GEN/P&R/STA or adoption; all old failures preserved; explicit net+4normalclockports/+1localbootcycle remains held"
+}

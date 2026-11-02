@@ -110,6 +110,7 @@ def main():
         sc = side["collector"]["types"][tn]
         for key, value in (("tree", tree), ("local_sources", lc["collector_local_sources"]), ("children", lc["collector_children"])):
             sc[key] = copy.deepcopy(value)
+        BASE.sync_clock_pin_heights(raw, original, tn)
         if tn == "coll_ftm":
             oldtree = original["partition_types"][tn]["clock"]["landing_contract"]["collector_tree"]
             fourth_model = dict(type=tn, normal_clock_ports_before=oldtree["n_clock_taps"],

@@ -1,0 +1,33 @@
+{
+ "status": "PHYSICAL_METADATA_ONLY_LOGICAL_SOURCE_UNCHANGED",
+ "changes": [
+  {
+   "type": "coll_ftm",
+   "field": "tap_pin_heights_um",
+   "remove": "clk_t20",
+   "old_height": 1.248,
+   "reason": "clock port removed by explicitly priced21-to20 ABI"
+  },
+  {
+   "type": "coll_ucie",
+   "field": "tap_pin_heights_um",
+   "add": [
+    "clk_t10",
+    "clk_t11",
+    "clk_t12",
+    "clk_t13",
+    "clk_t14"
+   ],
+   "height": 1.248,
+   "reason": "same physical clock pin height for explicitly priced new clock ports"
+  },
+  {
+   "type": "coll_ucie",
+   "field": "core_pg_connect",
+   "before": null,
+   "after": true,
+   "reason": "matching native LEF actual VDD/VSS PG pins; declaration only, no PDN/IR credit"
+  }
+ ],
+ "other_plan_fields_identical": true
+}

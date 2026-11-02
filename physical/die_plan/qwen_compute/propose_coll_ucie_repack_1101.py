@@ -21,6 +21,26 @@ DELTA = 25.92
 TYPES = ("coll_ucie", "coll_core", "coll_ft__cla4a25d77")
 
 
+def sync_clock_pin_heights(raw, original, tn):
+    """Keep explicit physical heights aligned with the priced clock ABI."""
+    t = raw["partition_types"][tn]
+    heights = t["clock"].get("tap_pin_heights_um")
+    if not heights:
+        return
+    def names(value):
+        n = value["clock"]["landing_contract"]["collector_tree"]["n_clock_taps"]
+        return {"clk"} | {f"clk_t{i}" for i in range(1, n)}
+    old = names(original["partition_types"][tn])
+    new = names(t)
+    template = heights.get("clk")
+    if new - old and template is None:
+        raise ValueError(f"{tn}: new clock pins need an explicit physical height")
+    for name in old - new:
+        heights.pop(name, None)
+    for name in new - old:
+        heights[name] = template
+
+
 def shift_point(p, oldw, delta):
     """Keep interior homes fixed; translate only the existing east perimeter."""
     if isinstance(p, list) and len(p) == 2 and all(isinstance(x, (int, float)) for x in p):
@@ -129,6 +149,7 @@ def main():
             c.update(physical_inst="u_bound.u_io_ucie", physical_master=c["module"], origin_um=[12.996, 4.32])
             prefix = "physical/qwen_missing_phy/nface_tall_g5_lclk_1020/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy"
             c["lef"], c["lib"] = prefix + ".lef", prefix + "_tt.lib"
+            t["core_pg_connect"] = True  # matching native LEF declares VDD/VSS
             shift_rectangles(t["clock"]["landing_contract"]["bands"], DELTA)
             for src in t["clock"]["landing_contract"]["collector_local_sources"]:
                 shift_rectangles(src.get("band", {}), DELTA)
@@ -201,8 +222,14 @@ def main():
                                  old_release_after_pin=RT.release_clocks(oldtree),
                                  new_release_after_pin=RT.release_clocks(tree)))
     P = S.Plan(raw, a.plan)
+    for tn in TYPES:
+        sync_clock_pin_heights(raw, original, tn)
     for region in side["regions"]:
-        if region["tag"] in P.parts:
+        # A region tag can name one member of a merged multi-partition
+        # region. Preserve every unaffected region's complete box.
+        if region["tag"] in P.parts and P.parts[region["tag"]]["type"] in TYPES:
+            if region.get("parts") != 1:
+                raise ValueError(f"changed footprint belongs to merged region {region['tag']}")
             region["box_um"] = list(P.rect(region["tag"]))
     before, after = monitor_hops(P0, side0), monitor_hops(P, side)
     hop_diff = [dict(src=s, dst=d, before_um=before[s, d], after_um=v)
