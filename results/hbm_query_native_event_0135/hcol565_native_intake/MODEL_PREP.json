@@ -104,5 +104,23 @@
   "Clockpoints reference-only; ownleaf/load/actualsourceentry and selectedcurrentclockbudget unqualified",
   "h0cs_outN/right to h1cs_inS/left are component-local reference positions; parentabuttingpinplan/placement NOTJOINED",
   "No guides/placedstdcells/PG or fill generated"
- ]
+ ],
+ "GEN_first_attempt": {
+  "h0unit": "696681-1793634443",
+  "h1unit": "696672-1793634443",
+  "verdict": "FAIL_BEFORE_SYNTH",
+  "cause": "two plannedclockM5sites off .024+N*.048 lattice",
+  "fix": "translate both clockwindows+.024um, preserve commonreference112.32 and .096separation/.048gap",
+  "new_actual_sites": [
+   [
+    112.296,
+    112.32
+   ],
+   [
+    112.392,
+    112.32
+   ]
+  ],
+  "source_ABI_reset_changed": false
+ }
 }
