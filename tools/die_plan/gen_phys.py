@@ -2940,6 +2940,14 @@ foreach cland_line [split [read $cland_fh] "\n"] {
 close $cland_fh
 puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
 """)
+    # CODEX-PICKUP-KV 11-01 (KV HHP joint event): plan relay_sites keys naming EXISTING clock-landing ring flops
+    # (u_cland_*) are placed after the landing placement hook, which would otherwise pack them back into the band
+    if t.get("relay_sites"):
+        import kit_istations
+        post = kit_istations.relay_sites_post_tcl(tn, t)
+        if post:
+            hook = kd / "face_flops.tcl"
+            hook.write_text(hook.read_text() + "\n" + post + "\n")
     if rs_post:
         # after the landing placement hook: the rings are FIRM in their banks before the bank becomes a GPL blockage
         (kd / "reserved_banks.tcl").write_text(rs_post)
