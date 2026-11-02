@@ -1841,5 +1841,18 @@
     0.0,
     11491.2
   ],
-  "parent_constraint": "At current parent origins the six new west banks have no west-facing source counterpart: GLUE west x=0 is the die edge and their native59 sources are south-facing. No new origins, bridges, FT stations or source cycles are inferred."
+  "parent_constraint": "At current parent origins the six new west banks have no west-facing source counterpart: GLUE west x=0 is the die edge and their native59 sources are south-facing. No new origins, bridges, FT stations or source cycles are inferred.",
+  "forwarded_clock_source_summary": {
+    "native59": {
+      "bank_count": 27,
+      "source_clock_port": "clk"
+    },
+    "coll_f3": {
+      "bank_count": 4,
+      "source_clock_port": "clk"
+    },
+    "clock_connection_pattern": "srcpart.fclk_out_<srcbus> -> glue.fclk_in_<dstbus>",
+    "start_connection_pattern": "srcpart.cland_fstart_out_<srcbus> -> glue.cland_fstart_in_<dstbus>",
+    "authority": "clock_landings._exp uses declared source_clock_port or default clk; all31 current contracts select clk. Exact physical source/tap/arrival still requires matching source event; no ideal-timing claim."
+  }
 }
