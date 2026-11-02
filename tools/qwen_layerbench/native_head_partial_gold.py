@@ -19,6 +19,8 @@ def build(codes_path, norm_path, consumer):
     c=json.loads(consumer.read_text()); norm=json.loads(norm_path.read_text())
     if (c['groups'],c['tile_groups'],c['tile_id'],c['code_words']) != (3072,4,0,1600):
         raise ValueError('requires selected genuine tile0 TG4 / HEAD1600 source')
+    if hashlib.sha256(codes_path.read_bytes()).hexdigest()!=c['artifacts']['tile0_logical_int8.hex']:
+        raise ValueError('tile0 input codes differ from genuine recovery excerpt receipt')
     words=[int(x,16) for x in codes_path.read_text().split()]
     if len(words)!=1600 or any(w>>512 for w in words):
         raise ValueError('actual four-group INT8 excerpt shape changed')
