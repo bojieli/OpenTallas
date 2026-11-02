@@ -3079,3 +3079,4 @@ CODEX CHECKPOINT 2026-11-02 02:14 PST: user-requested active recovery handoff sa
 CODEX: TOK-DS-2 all28packetproducerjoins/forwarderclock refinement8d0009768; hierarchy-substitution failure causeaf4250865 and actualnativehcorewrapper20kcycle+mutantPASS724d5332a pushed. OneisolatedIntel2serviceFE1085095 active; bothinheritedserialbuildsunchanged/cachepreserved.
 
 CODEX: TOK-DS-2 READY5ea6e54d9 serviceparameter-librarysubstitutionmeasured−70.5%CPP/−68.7%FEallocation;6430864fb safeFRESHargshelperunapplied. Native20kcycle+mutant724dPASS. Existingfinaltopno-paramsfile395blockriskandautomaticmakeadvanceescalatedroot; nocache/RTL/cohortadoption.
+CODEX: HBM source-only native clock-role receipt f1825848d READY; exact28 roots distinguish11814FF clockpins+11SRAM pins, sevenGEN-only profiles held. RootA/B and final17guard preserved.
