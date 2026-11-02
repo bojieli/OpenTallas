@@ -1,0 +1,830 @@
+[
+  {
+    "module": "ot_s81sl_vn_b",
+    "kit": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_b_rt22p_hxh",
+    "config": {
+      "DESIGN_NAME": "ot_s81sl_vn_b",
+      "VERILOG_FILES": "/work/rtl/ot_sram_1r1w_128x256_m1_r2c2_bb.v /work/rtl/ot_hdc_delay.sv /work/rtl/ot_hdc_sfu.sv /work/rtl/ot_hdc_fpu.sv /work/rtl/ot_hdc_fp32_mul_pipe.sv /work/rtl/ot_fp32_add_rne_pipe.sv /work/rtl/ot_hdc_fastfp_lat_f12.sv /work/rtl/ot_hdc_fsqrt.sv /work/rtl/ot_hdc_fdiv.sv /work/rtl/ot_hdc_softplus.sv /work/rtl/ot_hdc_v41x_sfu.sv /work/rtl/ot_hdc_actquant.sv /work/rtl/ot_dsrom_aq12.sv /work/rtl/ot_dsrom_divc.sv /work/rtl/ot_hdc_fastfp.sv /work/rtl/ot_hdc_fp32_f12.sv /work/rtl/ot_hdc_fp32_mul_lat.sv /work/rtl/ot_hdc_fp32_add_lat.sv /work/rtl/ot_hdc_prefix.sv /work/rtl/ot_dsrom_fp32_add_l6.sv /work/rtl/ot_dsrom_su_norm.sv /work/rtl/ot_hbm_norm_split.sv /work/rtl/ot_hbm_norm_split_p.sv /work/rtl/ot_rst_relay.sv /work/rtl/ot_s81sl_vn.sv",
+      "VERILOG_INCLUDE_DIRS": "/work/rtl",
+      "VERILOG_DEFINES": "-DSYNTHESIS -DOT_S81_VN_CONST_ZERO"
+    },
+    "readset": [
+      {
+        "kit_path": "/work/rtl/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+        "name": "ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+        "sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+        "bytes": 672,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+        "parent_readset_sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_delay.sv",
+        "name": "ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "bytes": 1395,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_delay.sv",
+        "parent_readset_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_sfu.sv",
+        "name": "ot_hdc_sfu.sv",
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "bytes": 7751,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_sfu.sv",
+        "parent_readset_sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fpu.sv",
+        "name": "ot_hdc_fpu.sv",
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "bytes": 5251,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fp32_mul_pipe.sv",
+        "name": "ot_hdc_fp32_mul_pipe.sv",
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "bytes": 10519,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_fp32_add_rne_pipe.sv",
+        "name": "ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "bytes": 11904,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fastfp_lat_f12.sv",
+        "name": "ot_hdc_fastfp_lat_f12.sv",
+        "sha256": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+        "bytes": 7005,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_fastfp_lat_f12.sv",
+        "parent_readset_sha256": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fsqrt.sv",
+        "name": "ot_hdc_fsqrt.sv",
+        "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+        "bytes": 7078,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fdiv.sv",
+        "name": "ot_hdc_fdiv.sv",
+        "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+        "bytes": 6738,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_softplus.sv",
+        "name": "ot_hdc_softplus.sv",
+        "sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+        "bytes": 5238,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_v41x_sfu.sv",
+        "name": "ot_hdc_v41x_sfu.sv",
+        "sha256": "87bf127acbbf7f1f2cc979de493ef8d4a8b77f7747250be624f2098bf7e965d5",
+        "bytes": 43726,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_actquant.sv",
+        "name": "ot_hdc_actquant.sv",
+        "sha256": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+        "bytes": 10817,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_dsrom_aq12.sv",
+        "name": "ot_dsrom_aq12.sv",
+        "sha256": "eb24a7e820ea7afaf1ced280fa5352ec38a6e55b75bfdc40839b456ce49153c8",
+        "bytes": 9498,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_dsrom_aq12.sv",
+        "parent_readset_sha256": "eb24a7e820ea7afaf1ced280fa5352ec38a6e55b75bfdc40839b456ce49153c8",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_dsrom_divc.sv",
+        "name": "ot_dsrom_divc.sv",
+        "sha256": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+        "bytes": 8318,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_dsrom_divc.sv",
+        "parent_readset_sha256": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fastfp.sv",
+        "name": "ot_hdc_fastfp.sv",
+        "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "bytes": 20092,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_fastfp.sv",
+        "parent_readset_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fp32_f12.sv",
+        "name": "ot_hdc_fp32_f12.sv",
+        "sha256": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+        "bytes": 28238,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_fp32_f12.sv",
+        "parent_readset_sha256": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fp32_mul_lat.sv",
+        "name": "ot_hdc_fp32_mul_lat.sv",
+        "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+        "bytes": 16758,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_fp32_mul_lat.sv",
+        "parent_readset_sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fp32_add_lat.sv",
+        "name": "ot_hdc_fp32_add_lat.sv",
+        "sha256": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df",
+        "bytes": 14174,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_fp32_add_lat.sv",
+        "parent_readset_sha256": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_prefix.sv",
+        "name": "ot_hdc_prefix.sv",
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "bytes": 2803,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_prefix.sv",
+        "parent_readset_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_dsrom_fp32_add_l6.sv",
+        "name": "ot_dsrom_fp32_add_l6.sv",
+        "sha256": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+        "bytes": 1165,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_dsrom_fp32_add_l6.sv",
+        "parent_readset_sha256": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_dsrom_su_norm.sv",
+        "name": "ot_dsrom_su_norm.sv",
+        "sha256": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+        "bytes": 33921,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_dsrom_su_norm.sv",
+        "parent_readset_sha256": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hbm_norm_split.sv",
+        "name": "ot_hbm_norm_split.sv",
+        "sha256": "c2e6b66c59eeb47356db911af8c2e1d0f9602e997a170894328af084e8d6f33e",
+        "bytes": 35319,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hbm_norm_split_p.sv",
+        "name": "ot_hbm_norm_split_p.sv",
+        "sha256": "eb23a2a630d368bce0d00cb0072bd7163f2e648a1ced385681749d7512d50b3c",
+        "bytes": 18679,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_rst_relay.sv",
+        "name": "ot_rst_relay.sv",
+        "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+        "bytes": 2883,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_rst_relay.sv",
+        "parent_readset_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_s81sl_vn.sv",
+        "name": "ot_s81sl_vn.sv",
+        "sha256": "05da5709ffa69229f83614901c46ea40972ca06d6ec4a54b9df60582d71bd541",
+        "bytes": 41076,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_s81sl_vn.sv",
+        "parent_readset_sha256": "05da5709ffa69229f83614901c46ea40972ca06d6ec4a54b9df60582d71bd541",
+        "byte_equal": true
+      }
+    ],
+    "freeze": {
+      "repo_rev": "7912008a0a6",
+      "outline_um": [
+        356.4,
+        172.8
+      ],
+      "rtl_patches": [],
+      "period_ps": 833.0,
+      "unc_setup_ps": 60.0,
+      "unc_hold_ps": 25.0
+    },
+    "core": {
+      "module": "ot_s81sl_vn_b",
+      "plan_type": "ot_s81sl_leaf__t1",
+      "boundary_role": {
+        "clk": "clk",
+        "rst_n": "reset"
+      },
+      "clock_contract": {
+        "kind": "hard_core_latency",
+        "ruling": "COORD 10-24",
+        "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+        "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json",
+        "io_reference_ps": {
+          "kind": "plan_declared",
+          "tt": 390.9,
+          "ff": 316.6,
+          "basis": "measured kit CTS tap mean ot_rt_ck_cts_tt.tsv n=29944 (372.7-447.8), FF=0.81xTT",
+          "source": "S81-CORES-KITS-6 owner 12.19 re-budget kit IO to measured tap"
+        }
+      }
+    },
+    "declared_clock_reset_pins": [
+      {
+        "bus": "clk",
+        "bit": null,
+        "layer": "M5",
+        "x": 0.06,
+        "y": 86.316,
+        "face": "W"
+      },
+      {
+        "bus": "rst_n",
+        "bit": null,
+        "layer": "M4",
+        "x": 0.042,
+        "y": 86.508,
+        "face": "W"
+      }
+    ],
+    "typed_DFF_counts": {
+      "1_2_yosys.v": {
+        "typed_DFF_count": 29963,
+        "g_hwif_occurrences": 0
+      },
+      "1_synth.v": {
+        "typed_DFF_count": 29943,
+        "g_hwif_occurrences": 0
+      },
+      "6_final.v": {
+        "typed_DFF_count": 29943,
+        "g_hwif_occurrences": 0
+      }
+    },
+    "metrics": {
+      "1_synth.json": {
+        "synth__design__instance__area": 24574.8,
+        "synth__design__instance__count__stdcell": 165757,
+        "synth__design__instance__area__stdcell": 20681,
+        "synth__design__instance__count__macros": 1,
+        "synth__design__instance__area__macros": 3893.85,
+        "synth__design__instance__area__padcells": 0,
+        "synth__design__instance__area__cover": 0
+      },
+      "6_report.json": {
+        "finish__design__instance__area__class:macro": 3893.85,
+        "finish__design__instance__area__class:fill_cell": 29436.7,
+        "finish__design__instance__area__class:tap_cell": 151.486,
+        "finish__design__instance__area__class:tie_cell": 96.1405,
+        "finish__design__instance__area__class:buffer": 5.6862,
+        "finish__design__instance__area__class:clock_buffer": 688.366,
+        "finish__design__instance__area__class:timing_repair_buffer": 1476.63,
+        "finish__design__instance__area__class:inverter": 1822.53,
+        "finish__design__instance__area__class:clock_inverter": 27.1625,
+        "finish__design__instance__count__class:sequential_cell": 29943,
+        "finish__design__instance__area__class:sequential_cell": 8900.52,
+        "finish__design__instance__area__class:multi_input_combinational_cell": 9315.02,
+        "finish__design__instance__area": 26377.4,
+        "finish__design__instance__count__stdcell": 185775,
+        "finish__design__instance__area__stdcell": 22483.5,
+        "finish__design__instance__count__macros": 1,
+        "finish__design__instance__area__macros": 3893.85,
+        "finish__design__instance__area__padcells": 0,
+        "finish__design__instance__area__cover": 0
+      }
+    },
+    "reset_contract": {
+      "schema": "opentallas.reset_contract.v1",
+      "die": "s81",
+      "edges": 64,
+      "modules": [
+        "dsfd_coll_lane_w_safe8_ntf",
+        "dsfd_coll_lane_e_safe8_ntf",
+        "dsdv_bk_g",
+        "dsdv_bksel_c",
+        "dsdv_bksel_q",
+        "dsdv_eng_rr_e",
+        "dsdv_eng_rr_h0",
+        "dsdv_eng_rr_h1",
+        "dsdv_gunit_l0",
+        "dsdv_gunit_l0r",
+        "dsdv_gunit_l1",
+        "dsdv_gunit_l1c",
+        "dsdv_gunit_l2",
+        "dsdv_gunit_l3",
+        "dsdv_gunit_l4",
+        "dsdv_gunit_l4r",
+        "dsdv_gunit_l5",
+        "dsdv_gunit_l5f",
+        "dsdv_idx_tx_n32",
+        "dsdv_svc_sx_hrow",
+        "dsfd_bf_front_roots",
+        "dsfd_cfifo_crs4",
+        "dsfd_node_LLd",
+        "dsfd_node_LLfd",
+        "dsfd_node_LLfu",
+        "dsfd_node_NNfd",
+        "dsfd_node_NNfu",
+        "dsfd_qbank_N",
+        "dsfd_qbank_S",
+        "dsfd_rstg",
+        "dsfd_su_t_rxsb",
+        "dsfd_su_t_rxsf",
+        "ot_dsrom_su_hcpost_lane_pr",
+        "ot_s81_cfg7_seq",
+        "ot_s81_cfg7_seq_bfp",
+        "ot_s81_sstn_base566",
+        "ot_s81_sstn_payload536",
+        "ot_s81c_attn_hcore",
+        "ot_s81dv_xfin",
+        "ot_s81sl_capc5r",
+        "ot_s81sl_eg",
+        "ot_s81sl_ve_m",
+        "ot_s81sl_ve_s",
+        "ot_s81sl_vn_a",
+        "ot_s81sl_vn_b",
+        "ot_s81sl_vq",
+        "ot_s81sl_vs",
+        "ot_s81sl_vsw",
+        "ot_s81sl_xrt1",
+        "ot_s81sl_xrt3",
+        "ot_v41_bf_col",
+        "ot_v41_rom_elem_q_qxpq_w10",
+        "ot_v41_rom_elem_q_qxpq_w10_gb",
+        "ot_s81_mu72_lnland",
+        "ot_s81_mu72_lnland_nst"
+      ],
+      "proof": {
+        "verdict": "PASS",
+        "assert_edges": 66,
+        "mutant": "CAUGHT",
+        "receipt": "reset_contract/receipt.txt",
+        "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8",
+        "bench": "results/die_s81_23_1029/rst64/tb64.sv + cells.sv (HOLD 64: min 66 known-low sink edges at every relay depth 0..64, cold+warm; HOLD 61 mutant BELOW64 caught)"
+      },
+      "generator": "OWNER decision 10-29 05:3x: boot holds the die rst_n low for >= 64 clocks with the die clock running; die root ot_dp_rsync_s2 (async assert, 2-clock release) as emitted by tools/die_plan/gen_rtl.py",
+      "sinks": "every S81 core reset pin is reached through the standard rsync_s2 root + ot_dp_rrelay synchronous relays (width-preserving: width out = width in + 2 sync edges at any depth); no extra per-core reset stages",
+      "modules_basis": "all 50 S81 hard-core modules of autopilot OWNERS.tsv (kind core, 10-29 06:13) + plan_s13r2 hard_cores (ROM _gb variant); plus the 2 LP lane hard-child masters, reset-width proof results/codex_s81_lp_0825/README.md (same 64-edge die contract); SRAM/ROM macros excluded (no LEC); H2 natural ot_s81_mu72_lnland/_nst: exact-current-source 64-edge cold/independent K/N warm/both warm proof1680checks0errors, 4-edge control560/560 caught; results/s81_h2_interfaces_2258/reset64/result.json and reset_source_manifest.json (8eb946787de).",
+      "kit_use": "copy reset_contract.json + reset_contract/receipt.txt into KIT/ (receipt path is relative), or set OT_LEC_RESET_CONTRACT to this file; a kit LEC may use OT_LEC_RESET_CYCLES <= 64",
+      "scope": "boot reset only (owner contract on the external rst_n); a mid-run rst_n pulse shorter than 64 clocks is outside this contract"
+    },
+    "source_identity_only_no_proof_transfer": true
+  },
+  {
+    "module": "ot_s81sl_vq",
+    "kit": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vq_rt6e_hx3",
+    "config": {
+      "DESIGN_NAME": "ot_s81sl_vq",
+      "VERILOG_FILES": "/work/rtl/ot_sram_1r1w_128x256_m1_r2c2_bb.v /work/rtl/ot_hdc_delay.sv /work/rtl/ot_hdc_sfu.sv /work/rtl/ot_hdc_fpu.sv /work/rtl/ot_hdc_fp32_mul_pipe.sv /work/rtl/ot_fp32_add_rne_pipe.sv /work/rtl/ot_hdc_fastfp_lat_f12.sv /work/rtl/ot_hdc_fsqrt.sv /work/rtl/ot_hdc_fdiv.sv /work/rtl/ot_hdc_softplus.sv /work/rtl/ot_hdc_v41x_sfu.sv /work/rtl/ot_hdc_actquant.sv /work/rtl/ot_dsrom_aq12.sv /work/rtl/ot_s81sl_aq12x.sv /work/rtl/ot_dsrom_divc.sv /work/rtl/ot_hdc_fastfp.sv /work/rtl/ot_hdc_fp32_f12.sv /work/rtl/ot_hdc_fp32_mul_lat.sv /work/rtl/ot_hdc_fp32_add_lat.sv /work/rtl/ot_hdc_prefix.sv /work/rtl/ot_dsrom_fp32_add_l6.sv /work/rtl/ot_dsrom_su_norm.sv /work/rtl/ot_hbm_norm_split.sv /work/rtl/ot_hbm_norm_split_p.sv /work/rtl/ot_rst_relay.sv /work/rtl/ot_s81sl_vq.sv",
+      "VERILOG_INCLUDE_DIRS": "/work/rtl",
+      "VERILOG_DEFINES": "-DSYNTHESIS",
+      "VERILOG_TOP_PARAMS": "AQ_XMEM 2"
+    },
+    "readset": [
+      {
+        "kit_path": "/work/rtl/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+        "name": "ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+        "sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+        "bytes": 672,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+        "parent_readset_sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_delay.sv",
+        "name": "ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "bytes": 1395,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_delay.sv",
+        "parent_readset_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_sfu.sv",
+        "name": "ot_hdc_sfu.sv",
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "bytes": 7751,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_sfu.sv",
+        "parent_readset_sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fpu.sv",
+        "name": "ot_hdc_fpu.sv",
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "bytes": 5251,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fp32_mul_pipe.sv",
+        "name": "ot_hdc_fp32_mul_pipe.sv",
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "bytes": 10519,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_fp32_add_rne_pipe.sv",
+        "name": "ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "bytes": 11904,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fastfp_lat_f12.sv",
+        "name": "ot_hdc_fastfp_lat_f12.sv",
+        "sha256": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+        "bytes": 7005,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_fastfp_lat_f12.sv",
+        "parent_readset_sha256": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fsqrt.sv",
+        "name": "ot_hdc_fsqrt.sv",
+        "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+        "bytes": 7078,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fdiv.sv",
+        "name": "ot_hdc_fdiv.sv",
+        "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+        "bytes": 6738,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_softplus.sv",
+        "name": "ot_hdc_softplus.sv",
+        "sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+        "bytes": 5238,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_v41x_sfu.sv",
+        "name": "ot_hdc_v41x_sfu.sv",
+        "sha256": "87bf127acbbf7f1f2cc979de493ef8d4a8b77f7747250be624f2098bf7e965d5",
+        "bytes": 43726,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_actquant.sv",
+        "name": "ot_hdc_actquant.sv",
+        "sha256": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+        "bytes": 10817,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_dsrom_aq12.sv",
+        "name": "ot_dsrom_aq12.sv",
+        "sha256": "eb24a7e820ea7afaf1ced280fa5352ec38a6e55b75bfdc40839b456ce49153c8",
+        "bytes": 9498,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_dsrom_aq12.sv",
+        "parent_readset_sha256": "eb24a7e820ea7afaf1ced280fa5352ec38a6e55b75bfdc40839b456ce49153c8",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_s81sl_aq12x.sv",
+        "name": "ot_s81sl_aq12x.sv",
+        "sha256": "ff6c5a9f2223fa8741c924d729d5a1838f0fbc8bf794c51b3f9e134a09d557e1",
+        "bytes": 10553,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_s81sl_aq12x.sv",
+        "parent_readset_sha256": "ff6c5a9f2223fa8741c924d729d5a1838f0fbc8bf794c51b3f9e134a09d557e1",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_dsrom_divc.sv",
+        "name": "ot_dsrom_divc.sv",
+        "sha256": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+        "bytes": 8318,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_dsrom_divc.sv",
+        "parent_readset_sha256": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fastfp.sv",
+        "name": "ot_hdc_fastfp.sv",
+        "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "bytes": 20092,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_fastfp.sv",
+        "parent_readset_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fp32_f12.sv",
+        "name": "ot_hdc_fp32_f12.sv",
+        "sha256": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+        "bytes": 28238,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_fp32_f12.sv",
+        "parent_readset_sha256": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fp32_mul_lat.sv",
+        "name": "ot_hdc_fp32_mul_lat.sv",
+        "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+        "bytes": 16758,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_fp32_mul_lat.sv",
+        "parent_readset_sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_fp32_add_lat.sv",
+        "name": "ot_hdc_fp32_add_lat.sv",
+        "sha256": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df",
+        "bytes": 14174,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_fp32_add_lat.sv",
+        "parent_readset_sha256": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hdc_prefix.sv",
+        "name": "ot_hdc_prefix.sv",
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "bytes": 2803,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_hdc_prefix.sv",
+        "parent_readset_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_dsrom_fp32_add_l6.sv",
+        "name": "ot_dsrom_fp32_add_l6.sv",
+        "sha256": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+        "bytes": 1165,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_dsrom_fp32_add_l6.sv",
+        "parent_readset_sha256": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_dsrom_su_norm.sv",
+        "name": "ot_dsrom_su_norm.sv",
+        "sha256": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+        "bytes": 33921,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_dsrom_su_norm.sv",
+        "parent_readset_sha256": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_hbm_norm_split.sv",
+        "name": "ot_hbm_norm_split.sv",
+        "sha256": "c2e6b66c59eeb47356db911af8c2e1d0f9602e997a170894328af084e8d6f33e",
+        "bytes": 35319,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_hbm_norm_split_p.sv",
+        "name": "ot_hbm_norm_split_p.sv",
+        "sha256": "eb23a2a630d368bce0d00cb0072bd7163f2e648a1ced385681749d7512d50b3c",
+        "bytes": 18679,
+        "parent_readset_file": null,
+        "parent_readset_sha256": null,
+        "byte_equal": false
+      },
+      {
+        "kit_path": "/work/rtl/ot_rst_relay.sv",
+        "name": "ot_rst_relay.sv",
+        "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+        "bytes": 2883,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_rst_relay.sv",
+        "parent_readset_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+        "byte_equal": true
+      },
+      {
+        "kit_path": "/work/rtl/ot_s81sl_vq.sv",
+        "name": "ot_s81sl_vq.sv",
+        "sha256": "e10f5dcbf08f914bff340ce7a13652e115c89fd892a4678f49a8d2641599b943",
+        "bytes": 15601,
+        "parent_readset_file": "/srv/opentallas-scratch/claude/codex-s81-parent-residual-PREP-0148/rtl/ot_s81sl_vq.sv",
+        "parent_readset_sha256": "e10f5dcbf08f914bff340ce7a13652e115c89fd892a4678f49a8d2641599b943",
+        "byte_equal": true
+      }
+    ],
+    "freeze": {
+      "repo_rev": "70df95064ec",
+      "outline_um": [
+        172.8,
+        129.6
+      ],
+      "rtl_patches": [],
+      "period_ps": 833.0,
+      "unc_setup_ps": 60.0,
+      "unc_hold_ps": 25.0
+    },
+    "core": {
+      "module": "ot_s81sl_vq",
+      "plan_type": "ot_s81sl_leaf__t1",
+      "boundary_role": {
+        "clk": "clk",
+        "rst_n": "reset"
+      },
+      "clock_contract": {
+        "kind": "hard_core_latency",
+        "ruling": "COORD 10-24",
+        "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+        "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json",
+        "io_reference_ps": {
+          "kind": "plan_declared",
+          "tt": 327.8,
+          "ff": 265.5,
+          "basis": "measured kit CTS tap mean ot_rt_ck_cts_tt.tsv n=10314 (308.8-360.0), FF=0.81xTT",
+          "source": "S81-CORES-KITS-6 owner 12.19 re-budget kit IO to measured tap"
+        }
+      }
+    },
+    "declared_clock_reset_pins": [
+      {
+        "bus": "clk",
+        "bit": null,
+        "layer": "M5",
+        "x": 85.836,
+        "y": 129.558,
+        "face": "N"
+      },
+      {
+        "bus": "rst_n",
+        "bit": null,
+        "layer": "M5",
+        "x": 86.412,
+        "y": 129.558,
+        "face": "N"
+      }
+    ],
+    "typed_DFF_counts": {
+      "1_2_yosys.v": {
+        "typed_DFF_count": 10313,
+        "g_hwif_occurrences": 0
+      },
+      "1_synth.v": {
+        "typed_DFF_count": 10313,
+        "g_hwif_occurrences": 0
+      },
+      "6_final.v": {
+        "typed_DFF_count": 10313,
+        "g_hwif_occurrences": 0
+      }
+    },
+    "metrics": {
+      "1_synth.json": {
+        "synth__design__instance__area": 9969.24,
+        "synth__design__instance__count__stdcell": 44108,
+        "synth__design__instance__area__stdcell": 6075.38,
+        "synth__design__instance__count__macros": 1,
+        "synth__design__instance__area__macros": 3893.85,
+        "synth__design__instance__area__padcells": 0,
+        "synth__design__instance__area__cover": 0
+      },
+      "6_report.json": {
+        "finish__design__instance__area__class:macro": 3893.85,
+        "finish__design__instance__area__class:fill_cell": 9578.52,
+        "finish__design__instance__area__class:tap_cell": 65.3767,
+        "finish__design__instance__area__class:tie_cell": 19.4206,
+        "finish__design__instance__area__class:buffer": 5.9049,
+        "finish__design__instance__area__class:clock_buffer": 228.585,
+        "finish__design__instance__area__class:timing_repair_buffer": 595.024,
+        "finish__design__instance__area__class:inverter": 289.996,
+        "finish__design__instance__area__class:clock_inverter": 6.47352,
+        "finish__design__instance__count__class:sequential_cell": 10313,
+        "finish__design__instance__area__class:sequential_cell": 3020.57,
+        "finish__design__instance__area__class:multi_input_combinational_cell": 2576.24,
+        "finish__design__instance__area": 10701.4,
+        "finish__design__instance__count__stdcell": 52214,
+        "finish__design__instance__area__stdcell": 6807.59,
+        "finish__design__instance__count__macros": 1,
+        "finish__design__instance__area__macros": 3893.85,
+        "finish__design__instance__area__padcells": 0,
+        "finish__design__instance__area__cover": 0
+      }
+    },
+    "reset_contract": {
+      "schema": "opentallas.reset_contract.v1",
+      "die": "s81",
+      "edges": 64,
+      "modules": [
+        "dsfd_coll_lane_w_safe8_ntf",
+        "dsfd_coll_lane_e_safe8_ntf",
+        "dsdv_bk_g",
+        "dsdv_bksel_c",
+        "dsdv_bksel_q",
+        "dsdv_eng_rr_e",
+        "dsdv_eng_rr_h0",
+        "dsdv_eng_rr_h1",
+        "dsdv_gunit_l0",
+        "dsdv_gunit_l0r",
+        "dsdv_gunit_l1",
+        "dsdv_gunit_l1c",
+        "dsdv_gunit_l2",
+        "dsdv_gunit_l3",
+        "dsdv_gunit_l4",
+        "dsdv_gunit_l4r",
+        "dsdv_gunit_l5",
+        "dsdv_gunit_l5f",
+        "dsdv_idx_tx_n32",
+        "dsdv_svc_sx_hrow",
+        "dsfd_bf_front_roots",
+        "dsfd_cfifo_crs4",
+        "dsfd_node_LLd",
+        "dsfd_node_LLfd",
+        "dsfd_node_LLfu",
+        "dsfd_node_NNfd",
+        "dsfd_node_NNfu",
+        "dsfd_qbank_N",
+        "dsfd_qbank_S",
+        "dsfd_rstg",
+        "dsfd_su_t_rxsb",
+        "dsfd_su_t_rxsf",
+        "ot_dsrom_su_hcpost_lane_pr",
+        "ot_s81_cfg7_seq",
+        "ot_s81_cfg7_seq_bfp",
+        "ot_s81_sstn_base566",
+        "ot_s81_sstn_payload536",
+        "ot_s81c_attn_hcore",
+        "ot_s81dv_xfin",
+        "ot_s81sl_capc5r",
+        "ot_s81sl_eg",
+        "ot_s81sl_ve_m",
+        "ot_s81sl_ve_s",
+        "ot_s81sl_vn_a",
+        "ot_s81sl_vn_b",
+        "ot_s81sl_vq",
+        "ot_s81sl_vs",
+        "ot_s81sl_vsw",
+        "ot_s81sl_xrt1",
+        "ot_s81sl_xrt3",
+        "ot_v41_bf_col",
+        "ot_v41_rom_elem_q_qxpq_w10",
+        "ot_v41_rom_elem_q_qxpq_w10_gb",
+        "ot_s81_mu72_lnland",
+        "ot_s81_mu72_lnland_nst"
+      ],
+      "proof": {
+        "verdict": "PASS",
+        "assert_edges": 66,
+        "mutant": "CAUGHT",
+        "receipt": "reset_contract/receipt.txt",
+        "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8",
+        "bench": "results/die_s81_23_1029/rst64/tb64.sv + cells.sv (HOLD 64: min 66 known-low sink edges at every relay depth 0..64, cold+warm; HOLD 61 mutant BELOW64 caught)"
+      },
+      "generator": "OWNER decision 10-29 05:3x: boot holds the die rst_n low for >= 64 clocks with the die clock running; die root ot_dp_rsync_s2 (async assert, 2-clock release) as emitted by tools/die_plan/gen_rtl.py",
+      "sinks": "every S81 core reset pin is reached through the standard rsync_s2 root + ot_dp_rrelay synchronous relays (width-preserving: width out = width in + 2 sync edges at any depth); no extra per-core reset stages",
+      "modules_basis": "all 50 S81 hard-core modules of autopilot OWNERS.tsv (kind core, 10-29 06:13) + plan_s13r2 hard_cores (ROM _gb variant); plus the 2 LP lane hard-child masters, reset-width proof results/codex_s81_lp_0825/README.md (same 64-edge die contract); SRAM/ROM macros excluded (no LEC); H2 natural ot_s81_mu72_lnland/_nst: exact-current-source 64-edge cold/independent K/N warm/both warm proof1680checks0errors, 4-edge control560/560 caught; results/s81_h2_interfaces_2258/reset64/result.json and reset_source_manifest.json (8eb946787de).",
+      "kit_use": "copy reset_contract.json + reset_contract/receipt.txt into KIT/ (receipt path is relative), or set OT_LEC_RESET_CONTRACT to this file; a kit LEC may use OT_LEC_RESET_CYCLES <= 64",
+      "scope": "boot reset only (owner contract on the external rst_n); a mid-run rst_n pulse shorter than 64 clocks is outside this contract"
+    },
+    "source_identity_only_no_proof_transfer": true
+  }
+]
