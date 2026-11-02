@@ -1,0 +1,33 @@
+{
+  "status": "PASS_ACTUAL_NATIVE_TG4_PREFIX_CAPTURE",
+  "host": "intel1/key-cardinal",
+  "unit": "oth-ubuntu-2046540-1793628803",
+  "runtime": "/srv/opentallas-scratch2/claude/codex-native-head-prefix-capture-1102/packet3",
+  "normal_admission": "2GB/1thread/disk2; no critical priority",
+  "packet_sha256": "6c768098ed2d7cebc39e0ea063f8104ea97cb2cdc057ea379ea8b57cd28bcc54",
+  "actual_raw_vectors": 1600,
+  "actual_FP32_values": 25600,
+  "checked_final_vectors": 200,
+  "checked_final_FP32_values": 3200,
+  "firstK0": "c3174c00",
+  "first_finalK7": "c3312600",
+  "dataset_sha256": "c3db0ddac19d2e7d4803ca2300eb3409d16aef47279c44fbf2660b7899e815b3",
+  "dataset_bytes": 229876,
+  "link_rc": 0,
+  "link_seconds": 5.6,
+  "link_maxRSS_KB": 267980,
+  "replay_rc": 0,
+  "replay_seconds": 65.13,
+  "replay_maxRSS_KB": 69104,
+  "native_regeneration": false,
+  "native_archive_modified": false,
+  "method": "precise CRT main wrapper executes unchanged generated timing loop with read-only root output observation after existing SV raw counter advances",
+  "retained": "same qualified archive/runtime/header8inputs, genuineROM/H/gold, actualSVscoreboard/watchdog/833ps fixture",
+  "ordinal_mapping": "round=ordinal//64; K=(ordinal%64)//8; word=ordinal%8; globalvocabularyrow=round*768+word*16+lane",
+  "numerical_scope": "actual rank0 tile0/TG4 raw partials over inputcolumns0..31 only",
+  "timestamp_scope": "component fixture time_fs, not global epoch/calendar/physical phase",
+  "holds": [
+    "not fullL6/512split logit or selectedpost/STN/BF16scale/AMAX/globalphysical proof",
+    "real reference eightL6 componentinput fixtures and exact collector group/port mappings remain separate"
+  ]
+}

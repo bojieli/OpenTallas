@@ -1,0 +1,11 @@
+FIRST_K0_RAW actual=c3174c00 independent_expected=c3174c00
+CHUNK_PASS chunk=0 raw_vectors=512 reads=512 edges=584
+CHUNK_PASS chunk=1 raw_vectors=1024 reads=1024 edges=1148
+CHUNK_PASS chunk=2 raw_vectors=1536 reads=1536 edges=1712
+CHUNK_PASS chunk=3 raw_vectors=1600 reads=1600 edges=1828
+NATIVE_HEAD_LEAF_PASS raw_vectors=1600 selected_vectors=200 values=3200 code_words=1600
+- tb_native_head_leaf.sv:77: Verilog $finish
+CAPTURE_ACTUAL_NATIVE_PREFIXES_PASS raw_vectors=1600 fp32_values=25600 final_K_vectors=200
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 65.114 s; speed 23.385 ns/s
+- Verilator: cpu 64.208 s on 1 threads; allocated 73 MB
