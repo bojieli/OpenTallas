@@ -1,0 +1,35 @@
+{
+ "note": "HBM-CORES-KITS-41/VMW q2n2 variant B: +1 read stage on writer_kq0-3 (u_bmid0, N face x 780-916) held in a mid row; kq banks 0-3 and pay graded W->E",
+ "guides": [
+  {
+   "name": "wpay",
+   "regex": "^u_fcore\\.u_writer\\.core\\.pay_(lo|hi)\\[",
+   "box_um": [
+    120,
+    200,
+    300,
+    505.44
+   ]
+  },
+  {
+   "name": "wkq03",
+   "regex": "^u_fcore\\.u_writer\\.core\\.kq\\[([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|10[0-9][0-9]|11[01][0-9]|112[0-3])\\]",
+   "box_um": [
+    330,
+    300,
+    500,
+    505.44
+   ]
+  },
+  {
+   "name": "kq03_relay",
+   "regex": "^u_bmid0_writer_kq[0-3]",
+   "box_um": [
+    540,
+    420,
+    660,
+    505.44
+   ]
+  }
+ ]
+}

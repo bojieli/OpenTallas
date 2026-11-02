@@ -1,0 +1,55 @@
+{
+ "note": "HBM-CORES-KITS-41/VMW variant A: writer lane 4 (E-face tkw_d/tkw_v source) held beside the E face; vmasm slice chain banded N->W",
+ "guides": [
+  {
+   "name": "wl4_d0",
+   "regex": "^u_fcore\\.u_core\\.u_writer\\.core\\.(d0\\[(204[89]|20[5-9][0-9]|2[1-4][0-9][0-9]|25[0-5][0-9])\\]|m0\\[|v0\\[4\\]|a0\\[1[6-9][0-9]\\])",
+   "box_um": [
+    200,
+    4.32,
+    324,
+    712.8
+   ]
+  },
+  {
+   "name": "wl4_d1",
+   "regex": "^u_fcore\\.u_core\\.u_writer\\.core\\.(d1\\[(204[89]|20[5-9][0-9]|2[1-4][0-9][0-9]|25[0-5][0-9])\\]|m1\\[|v1\\[4\\])",
+   "box_um": [
+    150,
+    230,
+    324,
+    712.8
+   ]
+  },
+  {
+   "name": "wl4_pay",
+   "regex": "^u_fcore\\.u_core\\.u_writer\\.core\\.pay_hi\\[(102[4-9]|10[3-9][0-9]|11[0-9][0-9]|12[0-7][0-9])\\]",
+   "box_um": [
+    100,
+    450,
+    324,
+    712.8
+   ]
+  },
+  {
+   "name": "vmasm_raw",
+   "regex": "^u_fcore\\.u_core\\.u_vmasm\\.SL\\[[0-9]+\\]\\.u\\.raw\\[",
+   "box_um": [
+    4.32,
+    380,
+    200,
+    560
+   ]
+  },
+  {
+   "name": "vmasm_asil",
+   "regex": "^u_fcore\\.u_core\\.u_vmasm\\.SL\\[[0-9]+\\]\\.u\\.as_il\\[",
+   "box_um": [
+    4.32,
+    200,
+    160,
+    380
+   ]
+  }
+ ]
+}

@@ -1,0 +1,35 @@
+{
+ "note": "HBM-CORES-KITS-41/VMW variant B: +1 relay stage on writer_tkw_d/tkw_v (u_bmid0) held in a mid row; writer core free; vmasm slice chain banded N->W",
+ "guides": [
+  {
+   "name": "tkw_relay",
+   "regex": "^u_bmid0_writer_tkw_[dv]",
+   "box_um": [
+    170,
+    250,
+    270,
+    560
+   ]
+  },
+  {
+   "name": "vmasm_raw",
+   "regex": "^u_fcore\\.u_core\\.u_vmasm\\.SL\\[[0-9]+\\]\\.u\\.raw\\[",
+   "box_um": [
+    4.32,
+    380,
+    200,
+    560
+   ]
+  },
+  {
+   "name": "vmasm_asil",
+   "regex": "^u_fcore\\.u_core\\.u_vmasm\\.SL\\[[0-9]+\\]\\.u\\.as_il\\[",
+   "box_um": [
+    4.32,
+    200,
+    160,
+    380
+   ]
+  }
+ ]
+}
