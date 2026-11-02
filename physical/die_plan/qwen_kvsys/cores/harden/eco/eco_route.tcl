@@ -18,27 +18,28 @@ if {![file exists $_ckf]} { error "OT_CLK_FREEZE FAIL: $_ckf not staged (ECO ref
 source $_ckf
 ot_clk_freeze
 global_route -start_incremental
-# Protect clock-connected masters during sizing, then restore the pre-existing
-# dont_touch state before hold insertion. Sink dont_touch during hold prevents
-# legal D-pin buffering (RSZ-3006); leaving sinks resizeable during setup changed
-# AHUB nblk_zmask_q/rt_q/zh_sid masters and failed the clock-geometry gate.
+# Keep ASAP7 flop sizing out of data ECOs without making sink instances
+# dont_touch. Sink dont_touch also blocks legal D-pin buffering (RSZ-3006),
+# including repair_design as measured by the AHUB repair-only diagnostic.
+# Add all flop replacement choices to the session's dont_use policy, retaining
+# every prior exclusion. This policy lasts through setup/DRV/hold and cannot
+# leak into the later signoff session. Existing sink loads remain bufferable.
 proc kvc_preserve_clock_masters {body} {
-  set restore [dict create]
+  set has_flops 0
   foreach net [ot_clk_dbnets] {
     foreach term [$net getITerms] {
-      set inst [$term getInst]
-      if {![$inst isDoNotTouch]} {
-        dict set restore [$inst getName] $inst
-        $inst setDoNotTouch 1
-      }
+      if {[string match DFF* [[[$term getInst] getMaster] getName]]} { set has_flops 1 }
     }
   }
-  puts "KVCORES_ECO preserve clock masters [dict size $restore] during sizing"
-  try {
-    uplevel 1 $body
-  } finally {
-    foreach inst [dict values $restore] { $inst setDoNotTouch 0 }
+  set cells [get_lib_cells -quiet */DFF*]
+  if {$has_flops && ![llength $cells]} {
+    error "KVCORES_ECO no loaded ASAP7 DFF library choices for clock sinks"
   }
+  # OpenROAD set_dont_use is a resizer policy. Liberty dont_use properties do
+  # not report its current value, so never use them to undo prior exclusions.
+  if {[llength $cells]} { set_dont_use $cells }
+  puts "KVCORES_ECO exclude [llength $cells] flop library choices during data repair"
+  uplevel 1 $body
 }
 proc kvc_drv {} {
   if {$::env(OT_MAX_FANOUT) > 0} {
@@ -76,7 +77,7 @@ if {$::env(OT_SETUP_MARGIN) ne ""} {
 set args [list -hold -hold_margin $::env(OT_HOLD_MARGIN) -max_buffer_percent $::env(OT_HOLD_MAXBUF)]
 if {$::env(OT_HOLD_ALLOW_SETUP) == 1} { lappend args -allow_setup_violations }
 puts "KVCORES_ECO repair_timing $args"
-repair_timing {*}$args
+kvc_preserve_clock_masters { repair_timing {*}$args }
 if {$drv_last} {
   estimate_parasitics -placement
   kvc_drv
@@ -87,7 +88,9 @@ if {$drv_last} {
     kvc_preserve_clock_masters {
     repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN) -skip_last_gasp
   }
-    repair_timing -hold -hold_margin $::env(OT_HOLD_MARGIN) -max_buffer_percent $::env(OT_HOLD_MAXBUF)
+    kvc_preserve_clock_masters {
+      repair_timing -hold -hold_margin $::env(OT_HOLD_MARGIN) -max_buffer_percent $::env(OT_HOLD_MAXBUF)
+    }
   }
 }
 # OT_PAD_MASTERS "MASTER:SITES ...": placement padding (left = right = SITES) for masters whose pins lose DRT access when the
