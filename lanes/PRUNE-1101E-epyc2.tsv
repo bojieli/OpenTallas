@@ -21,3 +21,9 @@ epyc2	/srv/opentallas-scratch2/claude/flow-canary/runs/hbm_a71ea7ea8_1029_213641
 epyc2	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_cl_02a91da3c_1031_123734_109363	0.094	2026-10-31 13:16	F-canary: completed canary run idle>24h, not newest for die, sha not a flow tag, run not tag-named, no refs (only dir mtimes changed <24h, by PRUNE-1101B/D deletions)
 epyc2	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_cl_98d422353_1031_045157_573402	0.050	2026-10-31 05:36	F-canary: completed canary run idle>24h, not newest for die, sha not a flow tag, run not tag-named, no refs (only dir mtimes changed <24h, by PRUNE-1101B/D deletions)
 epyc2	/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen46phy_exact	0.152	2026-10-30 04:20	B-parked: Codex QC probe idle since 10-30 04:20, no refs, no CODEX line <60 min (only dir mtimes changed <24h, by PRUNE-1101B/D deletions)
+# pass 2 2026-11-01 18:53 PST: fresh inventory + 4-host ref rescan (111 idle candidates 171 GB; 141 GB REF-blocked, rest tag canaries/partial pieces/dirty wt kept); same checks
+epyc2	/srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_98d422353_1031_043657_547255	0.316	2026-10-31 05:27	F-canary: untagged sha, not newest s81_head, unreferenced
+epyc2	/srv/opentallas-scratch2/claude/hbm-cores-kits-36/opstore/ot_hgi_sfu_core_split3__opstore_a_edaf6c837898-_k36oa1	1.288	2026-10-31 17:50	B-superseded: k36oa2 newer variant, oa1 unreferenced
+epyc2	/srv/opentallas-scratch2/claude/kit-wave/s81/4b5f73abea9	0.500	2026-10-30 22:20	K-superseded event copy, unreferenced
+epyc2	/srv/opentallas-scratch2/claude/s81ck12/gate_bksel_T	0.305	2026-10-31 18:31	B-idle: unreferenced gate scratch
+epyc2	/srv/opentallas-scratch2/claude/s81ck11/kits/dsdv_gunit_l1_ck12B	0.277	2026-10-31 18:10	B-superseded: ck12C/ck13D1M newer, unreferenced
