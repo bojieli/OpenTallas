@@ -1,0 +1,87 @@
+{
+ "scope": "READ_ONLY_ACTUAL_SAVED_5_2_ROW_GAP_RESOURCE_MODEL_NOT_FILL_RUN",
+ "actual_instances": 15612,
+ "row_segments": 568,
+ "row_sites": 330152,
+ "occupied_site_union": 135605,
+ "occupied_overlap_site_excess": 0,
+ "free_sites": 194547,
+ "gaps": 9327,
+ "site_width_DBU": [
+  54
+ ],
+ "site_height_DBU": [
+  270
+ ],
+ "max_new_fillers_one_site": 194547,
+ "predicted_new_fillers_if_normal_two_site_then_one_site": 99772,
+ "max_total_instances_one_site": 210159,
+ "loaded_filler_or_spacer_masters": [
+  {
+   "name": "DECAPx10_ASAP7_75t_R",
+   "type": "CORE_SPACER",
+   "width_DBU": "1188",
+   "height_DBU": "270"
+  },
+  {
+   "name": "DECAPx1_ASAP7_75t_R",
+   "type": "CORE_SPACER",
+   "width_DBU": "216",
+   "height_DBU": "270"
+  },
+  {
+   "name": "DECAPx2_ASAP7_75t_R",
+   "type": "CORE_SPACER",
+   "width_DBU": "324",
+   "height_DBU": "270"
+  },
+  {
+   "name": "DECAPx2b_ASAP7_75t_R",
+   "type": "CORE_SPACER",
+   "width_DBU": "324",
+   "height_DBU": "270"
+  },
+  {
+   "name": "DECAPx4_ASAP7_75t_R",
+   "type": "CORE_SPACER",
+   "width_DBU": "540",
+   "height_DBU": "270"
+  },
+  {
+   "name": "DECAPx6_ASAP7_75t_R",
+   "type": "CORE_SPACER",
+   "width_DBU": "756",
+   "height_DBU": "270"
+  },
+  {
+   "name": "FILLER_ASAP7_75t_R",
+   "type": "CORE_SPACER",
+   "width_DBU": "108",
+   "height_DBU": "270"
+  },
+  {
+   "name": "FILLERxp5_ASAP7_75t_R",
+   "type": "CORE_SPACER",
+   "width_DBU": "54",
+   "height_DBU": "270"
+  },
+  {
+   "name": "TAPCELL_WITH_FILLER_ASAP7_75t_R",
+   "type": "CORE_WELLTAP",
+   "width_DBU": "162",
+   "height_DBU": "270"
+  }
+ ],
+ "unguided_signal_nets": {
+  "total": 120,
+  "degree_counts": {
+   "1": 120
+  },
+  "needed_degree_ge2": []
+ },
+ "limits": [
+  "Reference gap census clips existing actual bboxes against actual native rows; native filler_placement remains final authority",
+  "Actual platform FILL_CELLS/placement library and scope must be reviewed before dispatch",
+  "No filler/PG/route/RC/STA mutation in this read-only model"
+ ]
+}
