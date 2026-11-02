@@ -1,0 +1,125 @@
+{
+  "q_b101": {
+    "actual_normalFT_cells": 12832,
+    "body_collisions": [],
+    "duplicate_sites": 0,
+    "max_actual_hop": 391.22999999999996,
+    "slots": [
+      {
+        "slot": "L12x1",
+        "width": 1980,
+        "stations": 5,
+        "max_actual_hop": 391.22999999999996,
+        "hop_failures": []
+      },
+      {
+        "slot": "L74x1",
+        "width": 279,
+        "stations": 3,
+        "max_actual_hop": 203.58000000000015,
+        "hop_failures": []
+      },
+      {
+        "slot": "L48x11",
+        "width": 634,
+        "stations": 4,
+        "max_actual_hop": 198.99000000000012,
+        "hop_failures": []
+      },
+      {
+        "slot": "L53x1",
+        "width": 612,
+        "stations": 3,
+        "max_actual_hop": 262.1700000000002,
+        "hop_failures": []
+      },
+      {
+        "slot": "L117x8",
+        "width": 11,
+        "stations": 3,
+        "max_actual_hop": 241.63900000000018,
+        "hop_failures": []
+      },
+      {
+        "slot": "L138x8",
+        "width": 2,
+        "stations": 3,
+        "max_actual_hop": 241.40699999999998,
+        "hop_failures": []
+      },
+      {
+        "slot": "L6cr0_1",
+        "width": 828,
+        "stations": 2,
+        "max_actual_hop": 379.495,
+        "hop_failures": []
+      },
+      {
+        "slot": "L203mx1",
+        "width": 178,
+        "stations": 3,
+        "max_actual_hop": 244.34999999999997,
+        "hop_failures": []
+      }
+    ],
+    "scope": "actual normalFT input/stage/output and global normalFT reservations; nonFT internal stations remain nominal, new parent source/G0C/clock required"
+  },
+  "q_b101_nw": {
+    "actual_normalFT_cells": 12276,
+    "body_collisions": [],
+    "duplicate_sites": 0,
+    "max_actual_hop": 396.3600000000001,
+    "slots": [
+      {
+        "slot": "L12x1",
+        "width": 1980,
+        "stations": 5,
+        "max_actual_hop": 396.3600000000001,
+        "hop_failures": []
+      },
+      {
+        "slot": "L48x11",
+        "width": 634,
+        "stations": 4,
+        "max_actual_hop": 198.44999999999993,
+        "hop_failures": []
+      },
+      {
+        "slot": "L53x1",
+        "width": 612,
+        "stations": 3,
+        "max_actual_hop": 262.1700000000002,
+        "hop_failures": []
+      },
+      {
+        "slot": "L117x8",
+        "width": 11,
+        "stations": 3,
+        "max_actual_hop": 241.63900000000018,
+        "hop_failures": []
+      },
+      {
+        "slot": "L138x8",
+        "width": 2,
+        "stations": 3,
+        "max_actual_hop": 241.40699999999998,
+        "hop_failures": []
+      },
+      {
+        "slot": "L6cr0_1",
+        "width": 828,
+        "stations": 2,
+        "max_actual_hop": 283.05100000000016,
+        "hop_failures": []
+      },
+      {
+        "slot": "L203x1",
+        "width": 180,
+        "stations": 3,
+        "max_actual_hop": 244.34999999999997,
+        "hop_failures": []
+      }
+    ],
+    "scope": "actual normalFT input/stage/output and global normalFT reservations; nonFT internal stations remain nominal, new parent source/G0C/clock required"
+  }
+}
