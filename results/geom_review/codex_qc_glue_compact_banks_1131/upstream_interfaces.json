@@ -1,0 +1,1845 @@
+{
+  "status": "ALL31_UPSTREAM_LOGICAL_AND_SCHEMA_EXPANDED_PHYSICAL_PORTS_RESOLVED",
+  "ports": [
+    {
+      "bank": "B01",
+      "bus": "coll_flt_i",
+      "crossing": {
+        "id": "coll_core__fltc__1",
+        "src": {
+          "part": "coll_f3",
+          "bus": "fltc_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "coll_flt_i"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "coll_f3",
+        "type": "coll_ftm",
+        "origin_um": [
+          777.6,
+          10022.4
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        786.24,
+        1468.8
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "fltc",
+        "in_face": "S",
+        "out_face": "W",
+        "width": 1,
+        "stations": 1,
+        "out_window_um": [
+          4.32,
+          4.72
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ]
+      },
+      "source_face": "W",
+      "source_window_um": [
+        4.32,
+        4.72
+      ],
+      "source_layers": [
+        "M6",
+        "M4"
+      ],
+      "existing_ft_stations": 1,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B02",
+      "bus": "coll_fltv_i",
+      "crossing": {
+        "id": "coll_core__fltvc__1",
+        "src": {
+          "part": "coll_f3",
+          "bus": "fltvc_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "coll_fltv_i"
+        },
+        "width": 70,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "coll_f3",
+        "type": "coll_ftm",
+        "origin_um": [
+          777.6,
+          10022.4
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        786.24,
+        1468.8
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "fltvc",
+        "in_face": "S",
+        "out_face": "W",
+        "width": 70,
+        "stations": 1,
+        "out_window_um": [
+          5.68,
+          20.176
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ]
+      },
+      "source_face": "W",
+      "source_window_um": [
+        5.68,
+        20.176
+      ],
+      "source_layers": [
+        "M6",
+        "M4"
+      ],
+      "existing_ft_stations": 1,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B03",
+      "bus": "ctlm_flt_i",
+      "crossing": {
+        "id": "tt_ctlm__fltt__1",
+        "src": {
+          "part": "native59",
+          "bus": "fltt_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "ctlm_flt_i"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "fltt",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 1,
+        "stations": 2,
+        "out_window_um": [
+          4.32,
+          4.896
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        4.32,
+        4.896
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 2,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B04",
+      "bus": "d2d_rom__native_tx_payload",
+      "crossing": {
+        "id": "native59__native_tx_payload_native_tx_payload__0",
+        "src": {
+          "part": "native59",
+          "bus": "native_tx_payload"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "d2d_rom__native_tx_payload"
+        },
+        "width": 548,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "native_tx_payload",
+        "dir": "out",
+        "width": 548,
+        "kind": "data",
+        "leaf": "u_native59.native_tx_payload",
+        "face": "S",
+        "window_um": [
+          14.496,
+          128.768
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        14.496,
+        128.768
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "W",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B05",
+      "bus": "d2d_rom__native_tx_v",
+      "crossing": {
+        "id": "native59__native_tx_v_native_tx_v__0",
+        "src": {
+          "part": "native59",
+          "bus": "native_tx_v"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "d2d_rom__native_tx_v"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "native_tx_v",
+        "dir": "out",
+        "width": 1,
+        "kind": "ctl",
+        "leaf": "u_native59.native_tx_v",
+        "face": "S",
+        "window_um": [
+          135.456,
+          135.856
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        135.456,
+        135.856
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "W",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B06",
+      "bus": "d2d_rom__obs_native",
+      "crossing": {
+        "id": "native59__obs_native_obs_native__0",
+        "src": {
+          "part": "native59",
+          "bus": "obs_native"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "d2d_rom__obs_native"
+        },
+        "width": 60,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "obs_native",
+        "dir": "out",
+        "width": 60,
+        "kind": "data",
+        "leaf": "u_native59.obs_native",
+        "face": "S",
+        "window_um": [
+          136.816,
+          149.024
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        136.816,
+        149.024
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "W",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B07",
+      "bus": "d2d_rom__x3",
+      "crossing": {
+        "id": "native59__x3_x3__0",
+        "src": {
+          "part": "native59",
+          "bus": "x3"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "d2d_rom__x3"
+        },
+        "width": 524,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "x3",
+        "dir": "out",
+        "width": 524,
+        "kind": "data",
+        "leaf": "u_native59.x3",
+        "face": "S",
+        "window_um": [
+          268.464,
+          377.616
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        268.464,
+        377.616
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "W",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B08",
+      "bus": "d2d_rom__x3_generation",
+      "crossing": {
+        "id": "native59__x3_generation_x3_generation__0",
+        "src": {
+          "part": "native59",
+          "bus": "x3_generation"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "d2d_rom__x3_generation"
+        },
+        "width": 2,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "x3_generation",
+        "dir": "out",
+        "width": 2,
+        "kind": "ctl",
+        "leaf": "u_native59.x3_generation",
+        "face": "S",
+        "window_um": [
+          378.576,
+          379.184
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        378.576,
+        379.184
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "W",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B09",
+      "bus": "d2d_rom__x3_identity",
+      "crossing": {
+        "id": "native59__x3_identity_x3_identity__0",
+        "src": {
+          "part": "native59",
+          "bus": "x3_identity"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "d2d_rom__x3_identity"
+        },
+        "width": 59,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "x3_identity",
+        "dir": "out",
+        "width": 59,
+        "kind": "data",
+        "leaf": "u_native59.x3_identity",
+        "face": "S",
+        "window_um": [
+          380.144,
+          392.4
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        380.144,
+        392.4
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "W",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B10",
+      "bus": "embed_prov__core_start",
+      "crossing": {
+        "id": "tt_ctlm__emb_start_core_start__1",
+        "src": {
+          "part": "native59",
+          "bus": "emb_start_core_start_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "embed_prov__core_start"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "emb_start_core_start",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 1,
+        "stations": 3,
+        "out_window_um": [
+          393.36,
+          393.76
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        393.36,
+        393.76
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 3,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B11",
+      "bus": "embed_prov__core_token",
+      "crossing": {
+        "id": "tt_ctlm__emb_token_core_token__1",
+        "src": {
+          "part": "native59",
+          "bus": "emb_token_core_token_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "embed_prov__core_token"
+        },
+        "width": 18,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "emb_token_core_token",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 18,
+        "stations": 3,
+        "out_window_um": [
+          394.72,
+          398.528
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        394.72,
+        398.528
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 3,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B12",
+      "bus": "embed_prov__embed_code_addr",
+      "crossing": {
+        "id": "native59__emb_code_addr_embed_code_addr__0",
+        "src": {
+          "part": "native59",
+          "bus": "emb_code_addr"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "embed_prov__embed_code_addr"
+        },
+        "width": 24,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "emb_code_addr",
+        "dir": "out",
+        "width": 24,
+        "kind": "data",
+        "leaf": "u_native59.emb_code_addr",
+        "face": "S",
+        "window_um": [
+          399.488,
+          404.496
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        399.488,
+        404.496
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B13",
+      "bus": "embed_prov__embed_code_re",
+      "crossing": {
+        "id": "native59__emb_code_re_embed_code_re__0",
+        "src": {
+          "part": "native59",
+          "bus": "emb_code_re"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "embed_prov__embed_code_re"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "emb_code_re",
+        "dir": "out",
+        "width": 1,
+        "kind": "ctl",
+        "leaf": "u_native59.emb_code_re",
+        "face": "S",
+        "window_um": [
+          513.296,
+          513.696
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        513.296,
+        513.696
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B14",
+      "bus": "embed_prov__embed_scale_addr",
+      "crossing": {
+        "id": "native59__emb_scale_addr_embed_scale_addr__0",
+        "src": {
+          "part": "native59",
+          "bus": "emb_scale_addr"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "embed_prov__embed_scale_addr"
+        },
+        "width": 18,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "emb_scale_addr",
+        "dir": "out",
+        "width": 18,
+        "kind": "data",
+        "leaf": "u_native59.emb_scale_addr",
+        "face": "S",
+        "window_um": [
+          514.656,
+          518.464
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        514.656,
+        518.464
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B15",
+      "bus": "embed_prov__embed_scale_re",
+      "crossing": {
+        "id": "native59__emb_scale_re_embed_scale_re__0",
+        "src": {
+          "part": "native59",
+          "bus": "emb_scale_re"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "embed_prov__embed_scale_re"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "emb_scale_re",
+        "dir": "out",
+        "width": 1,
+        "kind": "ctl",
+        "leaf": "u_native59.emb_scale_re",
+        "face": "S",
+        "window_um": [
+          523.792,
+          524.192
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        523.792,
+        524.192
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B16",
+      "bus": "sys_face__head_descriptor_generation",
+      "crossing": {
+        "id": "native59__head_descriptor_generation_head_descriptor_generation__0",
+        "src": {
+          "part": "native59",
+          "bus": "head_descriptor_generation"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__head_descriptor_generation"
+        },
+        "width": 2,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "head_descriptor_generation",
+        "dir": "out",
+        "width": 2,
+        "kind": "ctl",
+        "leaf": "u_native59.head_descriptor_generation",
+        "face": "S",
+        "window_um": [
+          557.68,
+          558.288
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        557.68,
+        558.288
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B17",
+      "bus": "sys_face__head_descriptor_tag",
+      "crossing": {
+        "id": "native59__head_descriptor_tag_head_descriptor_tag__0",
+        "src": {
+          "part": "native59",
+          "bus": "head_descriptor_tag"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__head_descriptor_tag"
+        },
+        "width": 59,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "head_descriptor_tag",
+        "dir": "out",
+        "width": 59,
+        "kind": "data",
+        "leaf": "u_native59.head_descriptor_tag",
+        "face": "S",
+        "window_um": [
+          559.248,
+          571.568
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        559.248,
+        571.568
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B18",
+      "bus": "sys_face__head_descriptor_v",
+      "crossing": {
+        "id": "native59__head_descriptor_v_head_descriptor_v__0",
+        "src": {
+          "part": "native59",
+          "bus": "head_descriptor_v"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__head_descriptor_v"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "head_descriptor_v",
+        "dir": "out",
+        "width": 1,
+        "kind": "ctl",
+        "leaf": "u_native59.head_descriptor_v",
+        "face": "S",
+        "window_um": [
+          572.528,
+          572.928
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        572.528,
+        572.928
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B19",
+      "bus": "sys_face__io_cmd_free",
+      "crossing": {
+        "id": "coll_core__cmd_free_io_cmd_free__1",
+        "src": {
+          "part": "coll_f3",
+          "bus": "cmd_free_io_cmd_free_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__io_cmd_free"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "coll_f3",
+        "type": "coll_ftm",
+        "origin_um": [
+          777.6,
+          10022.4
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        786.24,
+        1468.8
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "cmd_free_io_cmd_free",
+        "in_face": "S",
+        "out_face": "W",
+        "width": 1,
+        "stations": 1,
+        "out_window_um": [
+          21.136,
+          21.536
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ]
+      },
+      "source_face": "W",
+      "source_window_um": [
+        21.136,
+        21.536
+      ],
+      "source_layers": [
+        "M6",
+        "M4"
+      ],
+      "existing_ft_stations": 1,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B20",
+      "bus": "sys_face__io_fault",
+      "crossing": {
+        "id": "coll_core__fault_io_fault__1",
+        "src": {
+          "part": "coll_f3",
+          "bus": "fault_io_fault_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__io_fault"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "coll_f3",
+        "type": "coll_ftm",
+        "origin_um": [
+          777.6,
+          10022.4
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        786.24,
+        1468.8
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "fault_io_fault",
+        "in_face": "S",
+        "out_face": "W",
+        "width": 1,
+        "stations": 1,
+        "out_window_um": [
+          22.496,
+          22.896
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ]
+      },
+      "source_face": "W",
+      "source_window_um": [
+        22.496,
+        22.896
+      ],
+      "source_layers": [
+        "M6",
+        "M4"
+      ],
+      "existing_ft_stations": 1,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B21",
+      "bus": "sys_face__native_fault",
+      "crossing": {
+        "id": "native59__fault_native_fault__0",
+        "src": {
+          "part": "native59",
+          "bus": "fault"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__native_fault"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "explicit_bus",
+      "source_interface": {
+        "name": "fault",
+        "dir": "out",
+        "width": 1,
+        "kind": "ctl",
+        "leaf": "u_native59.fault",
+        "face": "S",
+        "window_um": [
+          598.88,
+          599.28
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ],
+        "order": "lsb_low"
+      },
+      "source_face": "S",
+      "source_window_um": [
+        598.88,
+        599.28
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": null,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B22",
+      "bus": "sys_face__seq_cfg_image_ready",
+      "crossing": {
+        "id": "tt_ctlm__cal_image_ready_seq_cfg_image_ready__1",
+        "src": {
+          "part": "native59",
+          "bus": "cal_image_ready_seq_cfg_image_ready_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__seq_cfg_image_ready"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "cal_image_ready_seq_cfg_image_ready",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 1,
+        "stations": 3,
+        "out_window_um": [
+          604.176,
+          604.576
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        604.176,
+        604.576
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 3,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B23",
+      "bus": "sys_face__seq_dc",
+      "crossing": {
+        "id": "tt_ctlm__dc_seq_dc__1",
+        "src": {
+          "part": "native59",
+          "bus": "dc_seq_dc_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__seq_dc"
+        },
+        "width": 56,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "dc_seq_dc",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 56,
+        "stations": 3,
+        "out_window_um": [
+          605.536,
+          617.184
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        605.536,
+        617.184
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 3,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B24",
+      "bus": "sys_face__seq_descriptor_obs",
+      "crossing": {
+        "id": "tt_ctlm__cal_descriptor_obs_seq_descriptor_obs__1",
+        "src": {
+          "part": "native59",
+          "bus": "cal_descriptor_obs_seq_descriptor_obs_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__seq_descriptor_obs"
+        },
+        "width": 69,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "cal_descriptor_obs_seq_descriptor_obs",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 69,
+        "stations": 3,
+        "out_window_um": [
+          618.144,
+          632.448
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        618.144,
+        632.448
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 3,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B25",
+      "bus": "sys_face__seq_program_obs",
+      "crossing": {
+        "id": "tt_ctlm__cal_program_obs_seq_program_obs__1",
+        "src": {
+          "part": "native59",
+          "bus": "cal_program_obs_seq_program_obs_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__seq_program_obs"
+        },
+        "width": 76,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "cal_program_obs_seq_program_obs",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 76,
+        "stations": 3,
+        "out_window_um": [
+          673.552,
+          689.408
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        673.552,
+        689.408
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 3,
+      "proposed_glue_face": "E",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B26",
+      "bus": "sys_face__tt_command_stage",
+      "crossing": {
+        "id": "tt_ctlm__command_stage_tt_command_stage__1",
+        "src": {
+          "part": "native59",
+          "bus": "command_stage_tt_command_stage_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__tt_command_stage"
+        },
+        "width": 6,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "command_stage_tt_command_stage",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 6,
+        "stations": 3,
+        "out_window_um": [
+          690.368,
+          691.776
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        690.368,
+        691.776
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 3,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B27",
+      "bus": "sys_face__tt_control_stores_ready",
+      "crossing": {
+        "id": "tt_ctlm__control_stores_ready_tt_control_stores_ready__1",
+        "src": {
+          "part": "native59",
+          "bus": "control_stores_ready_tt_control_stores_ready_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__tt_control_stores_ready"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "control_stores_ready_tt_control_stores_ready",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 1,
+        "stations": 3,
+        "out_window_um": [
+          692.736,
+          693.136
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        692.736,
+        693.136
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 3,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B28",
+      "bus": "sys_face__tt_layer_context_v",
+      "crossing": {
+        "id": "tt_ctlm__layer_context_v_tt_layer_context_v__1",
+        "src": {
+          "part": "native59",
+          "bus": "layer_context_v_tt_layer_context_v_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__tt_layer_context_v"
+        },
+        "width": 1,
+        "kind": "ctl"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "layer_context_v_tt_layer_context_v",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 1,
+        "stations": 3,
+        "out_window_um": [
+          698.416,
+          698.816
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        698.416,
+        698.816
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 3,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B29",
+      "bus": "sys_face__tt_native_pos",
+      "crossing": {
+        "id": "tt_ctlm__native_pos_tt_native_pos__1",
+        "src": {
+          "part": "native59",
+          "bus": "native_pos_tt_native_pos_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__tt_native_pos"
+        },
+        "width": 18,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "native_pos_tt_native_pos",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 18,
+        "stations": 3,
+        "out_window_um": [
+          699.776,
+          703.584
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        699.776,
+        703.584
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 3,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B30",
+      "bus": "sys_face__tt_native_tok",
+      "crossing": {
+        "id": "tt_ctlm__native_tok_tt_native_tok__1",
+        "src": {
+          "part": "native59",
+          "bus": "native_tok_tt_native_tok_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__tt_native_tok"
+        },
+        "width": 18,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "native_tok_tt_native_tok",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 18,
+        "stations": 3,
+        "out_window_um": [
+          704.544,
+          708.352
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        704.544,
+        708.352
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 3,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    },
+    {
+      "bank": "B31",
+      "bus": "sys_face__tt_program_obs",
+      "crossing": {
+        "id": "tt_ctlm__program_obs_tt_program_obs__1",
+        "src": {
+          "part": "native59",
+          "bus": "program_obs_tt_program_obs_o"
+        },
+        "dst": {
+          "part": "glue",
+          "bus": "sys_face__tt_program_obs"
+        },
+        "width": 76,
+        "kind": "data"
+      },
+      "source_partition": {
+        "name": "native59",
+        "type": "native59",
+        "origin_um": [
+          0.0,
+          11491.2
+        ],
+        "orient": "R0"
+      },
+      "source_outline_um": [
+        777.6,
+        518.4
+      ],
+      "source_interface_kind": "existing_ft_slot",
+      "source_interface": {
+        "name": "program_obs_tt_program_obs",
+        "in_face": "N",
+        "out_face": "S",
+        "width": 76,
+        "stations": 3,
+        "out_window_um": [
+          709.312,
+          725.168
+        ],
+        "layers": [
+          "M7",
+          "M5"
+        ]
+      },
+      "source_face": "S",
+      "source_window_um": [
+        709.312,
+        725.168
+      ],
+      "source_layers": [
+        "M7",
+        "M5"
+      ],
+      "existing_ft_stations": 3,
+      "proposed_glue_face": "N",
+      "preserve_current_source_cycles": true
+    }
+  ],
+  "source_kind_count": {
+    "existing_ft_slot": 17,
+    "explicit_bus": 14
+  },
+  "same_origin_height_gap_um": 1088.6399999999999,
+  "glue_original_origin_um": [
+    0.0,
+    10022.4
+  ],
+  "native59_original_origin_um": [
+    0.0,
+    11491.2
+  ],
+  "parent_constraint": "At current parent origins the six new west banks have no west-facing source counterpart: GLUE west x=0 is the die edge and their native59 sources are south-facing. No new origins, bridges, FT stations or source cycles are inferred."
+}
