@@ -3114,6 +3114,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
+    for helper in ("lec_completed_transfer.py", "lec_official_import.py"):
+        shutil.copyfile(Path(__file__).with_name(helper), kd / helper)
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
         shutil.copyfile(Path(__file__).with_name(f), kd / f)

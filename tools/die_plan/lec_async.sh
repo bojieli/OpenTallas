@@ -183,6 +183,17 @@ PYPHASE
 }
 cmd=$1; shift
 case $cmd in
+import-official)
+  # Explicit intake of a genuine completed separate-output component proof.
+  # No active lease is transferred and the original failed scope is untouched.
+  ORIGINAL=$1; PROOF=$2; K=$3; LOG=$4; UNIT=$5; CHECKER_SHA=$6; RESET=$7
+  exec 9> "$K/lec_async.lock"; flock 9
+  python3 "$(dirname "$0")/lec_official_import.py" --original "$ORIGINAL" --proof "$PROOF" --copied "$K" --producer-log "$LOG" --producer-unit "$UNIT" --checker-sha256 "$CHECKER_SHA" --reset-cycles "$RESET" || exit $?
+  identity "$K" source > "$K/lec_async.source_identity"
+  identity "$K" > "$K/lec_async.identity"
+  touch "$K/lec_async.on" "$K/lec_async.done"
+  exit 0
+  ;;
 import-completed)
   ORIGINAL=$1; K=$2
   exec 9> "$K/lec_async.lock"; flock 9
