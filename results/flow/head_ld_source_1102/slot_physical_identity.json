@@ -1,0 +1,1573 @@
+{
+ "status": "NO_LOW_TO_MARKER_PHYSICAL_OR_NATIVE_LATCH_MERGE",
+ "records": [
+  {
+   "lane": "la",
+   "slot": "q0",
+   "bit": 0,
+   "gold_map": [
+    "latch 76878 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[0]",
+    "latch 76878 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[0]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89172 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[0]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76878
+    ],
+    "gate": [
+     89172
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q0[0]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_169_",
+     "QN": "_103_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q0",
+   "bit": 1,
+   "gold_map": [
+    "latch 76879 1 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[1]",
+    "latch 76879 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[1]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89098 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[1]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76879
+    ],
+    "gate": [
+     89098
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q0[1]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_168_",
+     "QN": "_023_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q0",
+   "bit": 2,
+   "gold_map": [
+    "latch 76880 2 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[2]",
+    "latch 76880 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[2]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89099 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[2]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76880
+    ],
+    "gate": [
+     89099
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q0[2]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_167_",
+     "QN": "_024_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q0",
+   "bit": 3,
+   "gold_map": [
+    "latch 76881 3 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[3]",
+    "latch 76881 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[3]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89100 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[3]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76881
+    ],
+    "gate": [
+     89100
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q0[3]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_166_",
+     "QN": "_025_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q0",
+   "bit": 4,
+   "gold_map": [
+    "latch 76882 4 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[4]",
+    "latch 76882 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[4]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89101 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[4]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76882
+    ],
+    "gate": [
+     89101
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q0[4]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_165_",
+     "QN": "_026_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q0",
+   "bit": 5,
+   "gold_map": [
+    "latch 76883 5 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[5]",
+    "latch 76883 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[5]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89102 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[5]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76883
+    ],
+    "gate": [
+     89102
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q0[5]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_164_",
+     "QN": "_027_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q0",
+   "bit": 6,
+   "gold_map": [
+    "latch 76884 6 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[6]",
+    "latch 76884 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[6]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89103 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[6]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76884
+    ],
+    "gate": [
+     89103
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q0[6]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_163_",
+     "QN": "_028_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q0",
+   "bit": 7,
+   "gold_map": [
+    "latch 76885 7 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[7]",
+    "latch 76885 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[7]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89104 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[7]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76885
+    ],
+    "gate": [
+     89104
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q0[7]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_162_",
+     "QN": "_029_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q0",
+   "bit": 8,
+   "gold_map": [
+    "latch 76886 8 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[8]",
+    "latch 76886 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[8]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89105 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[8]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76886
+    ],
+    "gate": [
+     89105
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q0[8]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_161_",
+     "QN": "_030_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q1",
+   "bit": 0,
+   "gold_map": [
+    "latch 76869 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[0]",
+    "latch 76869 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[0]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89112 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[0]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76869
+    ],
+    "gate": [
+     89112
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q1[0]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_154_",
+     "QN": "_037_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q1",
+   "bit": 1,
+   "gold_map": [
+    "latch 76870 1 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[1]",
+    "latch 76870 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[1]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89113 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[1]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76870
+    ],
+    "gate": [
+     89113
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q1[1]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_153_",
+     "QN": "_038_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q1",
+   "bit": 2,
+   "gold_map": [
+    "latch 76871 2 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[2]",
+    "latch 76871 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[2]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89114 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[2]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76871
+    ],
+    "gate": [
+     89114
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q1[2]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_152_",
+     "QN": "_039_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q1",
+   "bit": 3,
+   "gold_map": [
+    "latch 76872 3 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[3]",
+    "latch 76872 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[3]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89115 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[3]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76872
+    ],
+    "gate": [
+     89115
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q1[3]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_151_",
+     "QN": "_040_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q1",
+   "bit": 4,
+   "gold_map": [
+    "latch 76873 4 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[4]",
+    "latch 76873 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[4]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89116 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[4]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76873
+    ],
+    "gate": [
+     89116
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q1[4]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_150_",
+     "QN": "_041_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q1",
+   "bit": 5,
+   "gold_map": [
+    "latch 76874 5 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[5]",
+    "latch 76874 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[5]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89117 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[5]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76874
+    ],
+    "gate": [
+     89117
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q1[5]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_149_",
+     "QN": "_042_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q1",
+   "bit": 6,
+   "gold_map": [
+    "latch 76875 6 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[6]",
+    "latch 76875 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[6]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89118 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[6]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76875
+    ],
+    "gate": [
+     89118
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q1[6]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_148_",
+     "QN": "_043_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q1",
+   "bit": 7,
+   "gold_map": [
+    "latch 76876 7 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[7]",
+    "latch 76876 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[7]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89119 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[7]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76876
+    ],
+    "gate": [
+     89119
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q1[7]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_147_",
+     "QN": "_044_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q1",
+   "bit": 8,
+   "gold_map": [
+    "latch 76877 8 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[8]",
+    "latch 76877 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[8]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89120 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[8]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76877
+    ],
+    "gate": [
+     89120
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q1[8]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_146_",
+     "QN": "_045_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q2",
+   "bit": 0,
+   "gold_map": [
+    "latch 76860 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[0]",
+    "latch 76860 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[0]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89127 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[0]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76860
+    ],
+    "gate": [
+     89127
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q2[0]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_137_",
+     "QN": "_054_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q2",
+   "bit": 1,
+   "gold_map": [
+    "latch 76861 1 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[1]",
+    "latch 76861 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[1]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89128 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[1]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76861
+    ],
+    "gate": [
+     89128
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q2[1]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_136_",
+     "QN": "_055_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q2",
+   "bit": 2,
+   "gold_map": [
+    "latch 76862 2 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[2]",
+    "latch 76862 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[2]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89129 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[2]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76862
+    ],
+    "gate": [
+     89129
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q2[2]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_135_",
+     "QN": "_056_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q2",
+   "bit": 3,
+   "gold_map": [
+    "latch 76863 3 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[3]",
+    "latch 76863 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[3]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89130 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[3]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76863
+    ],
+    "gate": [
+     89130
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q2[3]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_134_",
+     "QN": "_057_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q2",
+   "bit": 4,
+   "gold_map": [
+    "latch 76864 4 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[4]",
+    "latch 76864 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[4]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89131 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[4]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76864
+    ],
+    "gate": [
+     89131
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q2[4]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_133_",
+     "QN": "_058_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q2",
+   "bit": 5,
+   "gold_map": [
+    "latch 76865 5 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[5]",
+    "latch 76865 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[5]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89132 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[5]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76865
+    ],
+    "gate": [
+     89132
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q2[5]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_132_",
+     "QN": "_059_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q2",
+   "bit": 6,
+   "gold_map": [
+    "latch 76866 6 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[6]",
+    "latch 76866 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[6]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89133 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[6]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76866
+    ],
+    "gate": [
+     89133
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q2[6]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_131_",
+     "QN": "_060_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q2",
+   "bit": 7,
+   "gold_map": [
+    "latch 76867 7 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[7]",
+    "latch 76867 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[7]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89134 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[7]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76867
+    ],
+    "gate": [
+     89134
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q2[7]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_130_",
+     "QN": "_061_"
+    }
+   }
+  },
+  {
+   "lane": "la",
+   "slot": "q2",
+   "bit": 8,
+   "gold_map": [
+    "latch 76868 8 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[8]",
+    "latch 76868 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[8]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 89135 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[8]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     76868
+    ],
+    "gate": [
+     89135
+    ]
+   },
+   "mapped_instance": "u_core.u_la.u_t3.g_txs[7].u_s.q2[8]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_129_",
+     "QN": "_062_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q0",
+   "bit": 0,
+   "gold_map": [
+    "latch 41220 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[0]",
+    "latch 41220 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[0]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77124 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[0]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41220
+    ],
+    "gate": [
+     77124
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q0[0]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_169_",
+     "QN": "_103_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q0",
+   "bit": 1,
+   "gold_map": [
+    "latch 41221 1 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[1]",
+    "latch 41221 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[1]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77050 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[1]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41221
+    ],
+    "gate": [
+     77050
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q0[1]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_168_",
+     "QN": "_023_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q0",
+   "bit": 2,
+   "gold_map": [
+    "latch 41222 2 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[2]",
+    "latch 41222 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[2]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77051 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[2]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41222
+    ],
+    "gate": [
+     77051
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q0[2]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_167_",
+     "QN": "_024_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q0",
+   "bit": 3,
+   "gold_map": [
+    "latch 41223 3 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[3]",
+    "latch 41223 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[3]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77052 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[3]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41223
+    ],
+    "gate": [
+     77052
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q0[3]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_166_",
+     "QN": "_025_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q0",
+   "bit": 4,
+   "gold_map": [
+    "latch 41224 4 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[4]",
+    "latch 41224 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[4]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77053 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[4]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41224
+    ],
+    "gate": [
+     77053
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q0[4]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_165_",
+     "QN": "_026_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q0",
+   "bit": 5,
+   "gold_map": [
+    "latch 41225 5 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[5]",
+    "latch 41225 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[5]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77054 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[5]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41225
+    ],
+    "gate": [
+     77054
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q0[5]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_164_",
+     "QN": "_027_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q0",
+   "bit": 6,
+   "gold_map": [
+    "latch 41226 6 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[6]",
+    "latch 41226 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[6]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77055 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[6]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41226
+    ],
+    "gate": [
+     77055
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q0[6]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_163_",
+     "QN": "_028_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q0",
+   "bit": 7,
+   "gold_map": [
+    "latch 41227 7 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[7]",
+    "latch 41227 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[7]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77056 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[7]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41227
+    ],
+    "gate": [
+     77056
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q0[7]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_162_",
+     "QN": "_029_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q0",
+   "bit": 8,
+   "gold_map": [
+    "latch 41228 8 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[8]",
+    "latch 41228 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[8]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77057 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[8]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41228
+    ],
+    "gate": [
+     77057
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q0[8]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_161_",
+     "QN": "_030_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q1",
+   "bit": 0,
+   "gold_map": [
+    "latch 41211 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[0]",
+    "latch 41211 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[0]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77064 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[0]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41211
+    ],
+    "gate": [
+     77064
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q1[0]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_154_",
+     "QN": "_037_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q1",
+   "bit": 1,
+   "gold_map": [
+    "latch 41212 1 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[1]",
+    "latch 41212 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[1]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77065 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[1]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41212
+    ],
+    "gate": [
+     77065
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q1[1]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_153_",
+     "QN": "_038_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q1",
+   "bit": 2,
+   "gold_map": [
+    "latch 41213 2 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[2]",
+    "latch 41213 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[2]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77066 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[2]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41213
+    ],
+    "gate": [
+     77066
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q1[2]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_152_",
+     "QN": "_039_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q1",
+   "bit": 3,
+   "gold_map": [
+    "latch 41214 3 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[3]",
+    "latch 41214 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[3]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77067 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[3]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41214
+    ],
+    "gate": [
+     77067
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q1[3]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_151_",
+     "QN": "_040_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q1",
+   "bit": 4,
+   "gold_map": [
+    "latch 41215 4 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[4]",
+    "latch 41215 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[4]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77068 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[4]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41215
+    ],
+    "gate": [
+     77068
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q1[4]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_150_",
+     "QN": "_041_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q1",
+   "bit": 5,
+   "gold_map": [
+    "latch 41216 5 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[5]",
+    "latch 41216 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[5]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77069 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[5]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41216
+    ],
+    "gate": [
+     77069
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q1[5]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_149_",
+     "QN": "_042_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q1",
+   "bit": 6,
+   "gold_map": [
+    "latch 41217 6 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[6]",
+    "latch 41217 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[6]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77070 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[6]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41217
+    ],
+    "gate": [
+     77070
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q1[6]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_148_",
+     "QN": "_043_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q1",
+   "bit": 7,
+   "gold_map": [
+    "latch 41218 7 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[7]",
+    "latch 41218 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[7]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77071 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[7]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41218
+    ],
+    "gate": [
+     77071
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q1[7]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_147_",
+     "QN": "_044_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q1",
+   "bit": 8,
+   "gold_map": [
+    "latch 41219 8 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[8]",
+    "latch 41219 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[8]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77072 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[8]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41219
+    ],
+    "gate": [
+     77072
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q1[8]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_146_",
+     "QN": "_045_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q2",
+   "bit": 0,
+   "gold_map": [
+    "latch 41202 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[0]",
+    "latch 41202 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[0]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77079 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[0]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41202
+    ],
+    "gate": [
+     77079
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q2[0]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_137_",
+     "QN": "_054_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q2",
+   "bit": 1,
+   "gold_map": [
+    "latch 41203 1 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[1]",
+    "latch 41203 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[1]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77080 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[1]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41203
+    ],
+    "gate": [
+     77080
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q2[1]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_136_",
+     "QN": "_055_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q2",
+   "bit": 2,
+   "gold_map": [
+    "latch 41204 2 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[2]",
+    "latch 41204 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[2]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77081 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[2]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41204
+    ],
+    "gate": [
+     77081
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q2[2]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_135_",
+     "QN": "_056_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q2",
+   "bit": 3,
+   "gold_map": [
+    "latch 41205 3 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[3]",
+    "latch 41205 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[3]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77082 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[3]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41205
+    ],
+    "gate": [
+     77082
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q2[3]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_134_",
+     "QN": "_057_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q2",
+   "bit": 4,
+   "gold_map": [
+    "latch 41206 4 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[4]",
+    "latch 41206 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[4]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77083 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[4]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41206
+    ],
+    "gate": [
+     77083
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q2[4]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_133_",
+     "QN": "_058_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q2",
+   "bit": 5,
+   "gold_map": [
+    "latch 41207 5 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[5]",
+    "latch 41207 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[5]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77084 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[5]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41207
+    ],
+    "gate": [
+     77084
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q2[5]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_132_",
+     "QN": "_059_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q2",
+   "bit": 6,
+   "gold_map": [
+    "latch 41208 6 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[6]",
+    "latch 41208 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[6]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77085 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[6]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41208
+    ],
+    "gate": [
+     77085
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q2[6]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_131_",
+     "QN": "_060_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q2",
+   "bit": 7,
+   "gold_map": [
+    "latch 41209 7 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[7]",
+    "latch 41209 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[7]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77086 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[7]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41209
+    ],
+    "gate": [
+     77086
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q2[7]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_130_",
+     "QN": "_061_"
+    }
+   }
+  },
+  {
+   "lane": "lb",
+   "slot": "q2",
+   "bit": 8,
+   "gold_map": [
+    "latch 41210 8 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[8]",
+    "latch 41210 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[8]$_DFF_P_.lecq"
+   ],
+   "gate_map": [
+    "latch 77087 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[8]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "native_latch_indices": {
+    "gold": [
+     41210
+    ],
+    "gate": [
+     77087
+    ]
+   },
+   "mapped_instance": "u_core.u_lb.u_t3.g_txs[7].u_s.q2[8]$_DFFE_PP_",
+   "mapped_cell": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_129_",
+     "QN": "_062_"
+    }
+   }
+  }
+ ],
+ "polarity": "All physical slot outputs are pin QN; map records preserve original IQN labels. No logical inversion is inferred from QN/IQN/#t spelling. Distinct latch indices and physical instances settle non-merging independent of logical polarity; source logical native L.tp polarity remains authoritative.",
+ "scope": "Read-only source/netlist/map identity; no native proof or new hint"
+}
