@@ -1,0 +1,312 @@
+{
+  "status": "PASS_BOUNDED_REAL_PHASE106_SOURCE_TO_NATIVE_TWO_COLUMN_GATE",
+  "cases": {
+    "actual": {
+      "status": "PASS",
+      "source_cut_only": true,
+      "physical_epoch_qualified": false,
+      "native_provider_qualified": false,
+      "fullmission_programme_qualified": false,
+      "core_input_go": [
+        766
+      ],
+      "raw_xs_go": [
+        709
+      ],
+      "partials": [
+        {
+          "date": 941,
+          "side": 0,
+          "row": 0,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 3145734746,
+          "err": 0
+        },
+        {
+          "date": 941,
+          "side": 1,
+          "row": 1,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 3165395540,
+          "err": 0
+        }
+      ],
+      "errors": []
+    },
+    "wrong_operand": {
+      "status": "FAIL",
+      "source_cut_only": true,
+      "physical_epoch_qualified": false,
+      "native_provider_qualified": false,
+      "fullmission_programme_qualified": false,
+      "core_input_go": [
+        766
+      ],
+      "raw_xs_go": [
+        709
+      ],
+      "partials": [
+        {
+          "date": 941,
+          "side": 0,
+          "row": 0,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 3157029095,
+          "err": 0
+        },
+        {
+          "date": 941,
+          "side": 1,
+          "row": 1,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 997550102,
+          "err": 0
+        }
+      ],
+      "errors": [
+        "independent segment0 partial mismatch {'date': 941, 'side': 0, 'row': 0, 'seg': 0, 'n': 4, 'pos': 0, 'val': 3157029095, 'err': 0}",
+        "independent segment0 partial mismatch {'date': 941, 'side': 1, 'row': 1, 'seg': 0, 'n': 4, 'pos': 0, 'val': 997550102, 'err': 0}"
+      ]
+    },
+    "wrong_date": {
+      "status": "FAIL",
+      "source_cut_only": true,
+      "physical_epoch_qualified": false,
+      "native_provider_qualified": false,
+      "fullmission_programme_qualified": false,
+      "core_input_go": [
+        767
+      ],
+      "raw_xs_go": [
+        710
+      ],
+      "partials": [
+        {
+          "date": 942,
+          "side": 0,
+          "row": 0,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 3145734746,
+          "err": 0
+        },
+        {
+          "date": 942,
+          "side": 1,
+          "row": 1,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 3165395540,
+          "err": 0
+        }
+      ],
+      "errors": [
+        "expected independently composed core input GO766, got [767]",
+        "raw XS date differs from retained same-calendar BF history shifted by512: [710]"
+      ]
+    },
+    "wrong_class": {
+      "status": "FAIL",
+      "source_cut_only": true,
+      "physical_epoch_qualified": false,
+      "native_provider_qualified": false,
+      "fullmission_programme_qualified": false,
+      "core_input_go": [
+        766
+      ],
+      "raw_xs_go": [
+        709
+      ],
+      "partials": [
+        {
+          "date": 941,
+          "side": 0,
+          "row": 0,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 0,
+          "err": 0
+        },
+        {
+          "date": 941,
+          "side": 1,
+          "row": 1,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 0,
+          "err": 0
+        }
+      ],
+      "errors": [
+        "independent segment0 partial mismatch {'date': 941, 'side': 0, 'row': 0, 'seg': 0, 'n': 4, 'pos': 0, 'val': 0, 'err': 0}",
+        "independent segment0 partial mismatch {'date': 941, 'side': 1, 'row': 1, 'seg': 0, 'n': 4, 'pos': 0, 'val': 0, 'err': 0}",
+        "terminal guard [2, 1, 261, 261, 0, 1, 0, 0, 0, 0]"
+      ]
+    },
+    "wrong_status": {
+      "status": "FAIL",
+      "source_cut_only": true,
+      "physical_epoch_qualified": false,
+      "native_provider_qualified": false,
+      "fullmission_programme_qualified": false,
+      "core_input_go": [
+        766
+      ],
+      "raw_xs_go": [
+        709
+      ],
+      "partials": [
+        {
+          "date": 941,
+          "side": 0,
+          "row": 0,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 3145734746,
+          "err": 0
+        },
+        {
+          "date": 941,
+          "side": 1,
+          "row": 1,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 3165395540,
+          "err": 0
+        }
+      ],
+      "errors": [
+        "terminal guard [2, 1, 261, 261, 0, 0, 0, 1, 0, 0]"
+      ]
+    },
+    "late_accept": {
+      "status": "PASS",
+      "source_cut_only": true,
+      "physical_epoch_qualified": false,
+      "native_provider_qualified": false,
+      "fullmission_programme_qualified": false,
+      "core_input_go": [
+        766
+      ],
+      "raw_xs_go": [
+        709
+      ],
+      "partials": [
+        {
+          "date": 941,
+          "side": 0,
+          "row": 0,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 3145734746,
+          "err": 0
+        },
+        {
+          "date": 941,
+          "side": 1,
+          "row": 1,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 3165395540,
+          "err": 0
+        }
+      ],
+      "errors": []
+    },
+    "initial_GW_family0": {
+      "status": "PASS",
+      "source_cut_only": true,
+      "physical_epoch_qualified": false,
+      "native_provider_qualified": false,
+      "fullmission_programme_qualified": false,
+      "core_input_go": [
+        766
+      ],
+      "raw_xs_go": [
+        709
+      ],
+      "partials": [
+        {
+          "date": 941,
+          "side": 0,
+          "row": 0,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 3145734746,
+          "err": 0
+        },
+        {
+          "date": 941,
+          "side": 1,
+          "row": 1,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 3165395540,
+          "err": 0
+        }
+      ],
+      "errors": []
+    },
+    "wrong_write_bank": {
+      "status": "FAIL",
+      "source_cut_only": true,
+      "physical_epoch_qualified": false,
+      "native_provider_qualified": false,
+      "fullmission_programme_qualified": false,
+      "core_input_go": [
+        766
+      ],
+      "raw_xs_go": [
+        709
+      ],
+      "partials": [
+        {
+          "date": 941,
+          "side": 0,
+          "row": 0,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 0,
+          "err": 0
+        },
+        {
+          "date": 941,
+          "side": 1,
+          "row": 1,
+          "seg": 0,
+          "n": 4,
+          "pos": 0,
+          "val": 0,
+          "err": 0
+        }
+      ],
+      "errors": [
+        "independent segment0 partial mismatch {'date': 941, 'side': 0, 'row': 0, 'seg': 0, 'n': 4, 'pos': 0, 'val': 0, 'err': 0}",
+        "independent segment0 partial mismatch {'date': 941, 'side': 1, 'row': 1, 'seg': 0, 'n': 4, 'pos': 0, 'val': 0, 'err': 0}",
+        "terminal guard [2, 1, 261, 261, 0, 1, 0, 0, 0, 0]"
+      ]
+    }
+  },
+  "native_provider_qualified": false,
+  "physical_epoch_qualified": false,
+  "fullmission_programme_qualified": false
+}

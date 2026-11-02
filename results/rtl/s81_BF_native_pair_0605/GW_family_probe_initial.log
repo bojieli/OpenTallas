@@ -1,0 +1,12 @@
+XS_CONTROL 646 cfg=1 go=0
+XS_CONTROL 709 cfg=0 go=1
+BF_SEQ_GO 763
+BF_FRONT_GO 764
+BF_CORE_SAMPLE 766
+BF_PARTIAL_SAMPLE 941 side=0 row=0 seg=0 n=4 pos=0 val=bb801a5a err=0
+BF_PARTIAL_SAMPLE 941 side=1 row=1 seg=0 n=4 pos=0 val=bcac1a54 err=0
+BF_END partials=2 goes=1 events=261 consumed=261 xf=0 sf=0 ringfault=0 cf=0 seq=0 front=0 cf_local=0
+- tb.sv:78: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 1.141 s; speed 1.021 us/s
+- Verilator: cpu 1.141 s on 1 threads; allocated 14 MB

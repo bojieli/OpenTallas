@@ -1,0 +1,76 @@
+{
+  "scope": "One real phase106, actual field programme and held-constant preloaded real operand; no mission epoch/provider qualification",
+  "field": "/srv/opentallas-scratch2/claude/codex-ds-native-go-pair-2355/retry2/field",
+  "phases": [
+    {
+      "phase": 106,
+      "tag": 0,
+      "accept": 20,
+      "cfg": 40,
+      "launch": 103,
+      "stream": [
+        103,
+        166
+      ],
+      "retire": 198,
+      "nb": 64,
+      "stall_edges": 0,
+      "D": 321,
+      "shift": 0
+    }
+  ],
+  "cal_rows": 70,
+  "iss": {
+    "24": "0x258000000000000000000000000000000",
+    "280": "0x23000200000000000000000000000",
+    "300": "0x23000400000000000000000000000",
+    "323": "0xd5",
+    "57": "0x3000000000000000000000000000000"
+  },
+  "gold": [
+    {
+      "row": 0,
+      "segment": 0,
+      "nseg": 4,
+      "fp32": "bb801a5a",
+      "full_accumulation": "3bca1294"
+    },
+    {
+      "row": 1,
+      "segment": 0,
+      "nseg": 4,
+      "fp32": "bcac1a54",
+      "full_accumulation": "3c1cbe70"
+    },
+    {
+      "row": 2,
+      "segment": 0,
+      "nseg": 4,
+      "fp32": "3c9fbb8a",
+      "full_accumulation": "3d36c243"
+    },
+    {
+      "row": 3,
+      "segment": 0,
+      "nseg": 4,
+      "fp32": "3c96192a",
+      "full_accumulation": "bc0f2476"
+    },
+    {
+      "row": 4,
+      "segment": 0,
+      "nseg": 4,
+      "fp32": "3d0c8c04",
+      "full_accumulation": "3d44762a"
+    },
+    {
+      "row": 5,
+      "segment": 0,
+      "nseg": 4,
+      "fp32": "bc4ea1c4",
+      "full_accumulation": "3cab0df0"
+    }
+  ],
+  "retained_native_core_to_partial_edges": 174,
+  "all_global_qualification_flags": false
+}

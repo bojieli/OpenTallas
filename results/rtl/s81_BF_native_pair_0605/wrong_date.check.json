@@ -1,0 +1,39 @@
+{
+  "status": "FAIL",
+  "source_cut_only": true,
+  "physical_epoch_qualified": false,
+  "native_provider_qualified": false,
+  "fullmission_programme_qualified": false,
+  "core_input_go": [
+    767
+  ],
+  "raw_xs_go": [
+    710
+  ],
+  "partials": [
+    {
+      "date": 942,
+      "side": 0,
+      "row": 0,
+      "seg": 0,
+      "n": 4,
+      "pos": 0,
+      "val": 3145734746,
+      "err": 0
+    },
+    {
+      "date": 942,
+      "side": 1,
+      "row": 1,
+      "seg": 0,
+      "n": 4,
+      "pos": 0,
+      "val": 3165395540,
+      "err": 0
+    }
+  ],
+  "errors": [
+    "expected independently composed core input GO766, got [767]",
+    "raw XS date differs from retained same-calendar BF history shifted by512: [710]"
+  ]
+}
