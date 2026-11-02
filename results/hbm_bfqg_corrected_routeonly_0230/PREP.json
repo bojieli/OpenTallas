@@ -1,0 +1,12 @@
+{
+  "status": "PREP_R2_FIX_NATIVE_DBNET_NAME_API_NO_ROUTE_R1",
+  "source": "/srv/opentallas-scratch2/claude/codex-bfqg-guide-pgfix-0200/kit",
+  "source_3_place_sha256": "37c3512be28da6cb4290013da36543d09da8fa043099771d595bda5d9f4da78c",
+  "scope": "ROOTconditionalONEcorrectedrawNO-BIRTHCLOCK+SIGNAL50; nativePGbefore/post/freshread, alltopology/geometry frozen; noresize/repair/CTS/STA/DRT",
+  "geometry_concurred": true,
+  "source_reset": "8650EQ/KEEP1064/genuine4 unchanged; raw9registration flags held",
+  "original_3193_overflow_retained": true,
+  "library_selector": "exactsource717postcts_gate embeddedselectorONLY; no missingclockband or timing-gate overlay",
+  "original_notrun_failure": "r1STA2203 get_full_name doesnotacceptodb__dbNet; no pin_access/GRTcalled",
+  "change": "Only native dbNet.getName instead ofSTAget_full_name; allsource/SDC/geometry/policies unchanged"
+}
