@@ -2,7 +2,7 @@ This is source PREP for the actual selected native S8 numerical station. No buil
 or simulation has run. It reuses one real `qfd_dv_s8_station_tail1_nb0` sender,
 one real `qfd_dv_s8_station_tail1` receiver and the real shared BTAB across eight
 sequential two-lane contexts, with reset between contexts. The two tested row
-blocks cover rows0..127 and18944..18991. The fixture covers176 scaled row values;
+blocks cover rows0..127 and18944..18991. The fixture covers176 scaled scalar row values;
 it has no simultaneous sixteen-lane assembly, AMAX or ROOT claim.
 
 The L6 words are explicitly REFERENCE inputs from genuine weights and canonical
@@ -27,7 +27,7 @@ The input boundary origin is the first near valid presentation before capture.
 The bench records first/last neighbor publication, BTAB read/address, and result
 valid/index/last ages relative to that origin. A finite1000cycle per-context
 watchdog covers the64prefix beats,14edge near/far gap and native drain margin.
-Native faults, exact counts, addresses and all176 unchanged scaled values gate.
+Native faults, exact counts, addresses and all176 unchanged scaled scalar values gate.
 
 Potential same-ELF causal controls are `CONTROL=oldKC1`, `wrongBTAB` (first genuine
 BF16 scale LSB flip), and `shiftedFar` (one-edge invalid near/far pairing). Their

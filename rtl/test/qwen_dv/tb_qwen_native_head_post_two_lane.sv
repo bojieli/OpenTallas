@@ -31,7 +31,7 @@ module tb_qwen_native_head_post_two_lane;
     .ck(clk),.rst_n(rst_n),.cfg_v_p(cfg),.cfg_mode_p(2'd2),.cfg_wsrc_p(1'b0),
     .cfg_nwords_p(nw),.cfg_sbase_p(sb),.cfg_kcm1_p(kc),
     .rs_s_lo_p(rd[0]),.rs_s_hi_p(rd[1]),.rs_n_lo_p(rd[2]),.rs_n_hi_p(rd[3]),
-    .rs_s_c_p(cs),.rs_n_c_p(cs),.nb_d_p(nb),.nb_c_p(nc),
+    .rs_s_c_p(cs),.rs_n_c_p(cs),.nb_d_p(nb),.nb_c_p(control=="noNeighbor"?2'b00:nc),
     .nb_od(),.nb_oc(),.bt_q_p(bq[32*region+:32]),.bt_re(bre),.bt_word(bw),
     .r_v(rv),.r_idx(ri),.r_last(rl),.r_d(yd),
     .flt_bank_i(4'd0),.flt_vld_i(4'd0),.flt_bank_o(),.flt_vld_o(),.fault(rfault));
