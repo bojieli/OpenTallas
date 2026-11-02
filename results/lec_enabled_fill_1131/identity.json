@@ -1,0 +1,48 @@
+{
+ "diagnostic_only": true,
+ "no_full_equality_claim": true,
+ "module": "qkd_kvs_pc_h_head_p",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "kv",
+   "edges": 16,
+   "assert_edges": 20,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 16,
+  "debug_overrides": {}
+ },
+ "engine_sha256": "3949d0c5679ce14b79d69c0d83d18b1bebfede0d3e5bbba87519189dea802d26",
+ "frozen_engine_sha256": "36a12f9f7ab5bc30ca1b04436b760d5514133946a91ab691789c378fb4adb7a5",
+ "gold_aig_sha256": "f0f26c1f5bad93679b2cea31e0490d52151d4a904b97eba287d6f654d799044e",
+ "guard_source": "actual public async-reset-masked enables: issue_internalQ && chain.rs_q; retained cs_internalQ && cv_internalQ && rst_n; beat/record unconditional",
+ "OT_LEC_ENABLE_FILL_GUARD": 1,
+ "actual_public_enable_contract": {
+  "cells": [
+   {
+    "public_enable": "ff:u_dut.u_leaf.u_pc.u_chain.emb_issue_v",
+    "cell_type": "$aldff",
+    "async_zero_mask_bit": 5299,
+    "storage_q_bit": 5906
+   },
+   {
+    "public_enable": "ff:u_dut.u_leaf.u_embr.cs_q",
+    "cell_type": "$aldff",
+    "async_zero_mask_bit": 1506,
+    "storage_q_bit": 2104
+   },
+   {
+    "public_enable": "ff:u_dut.u_leaf.u_embr.cv_q",
+    "cell_type": "$aldff",
+    "async_zero_mask_bit": 1506,
+    "storage_q_bit": 2105
+   }
+  ],
+  "rs_q_type": "$dff",
+  "rs_q_D_bit": 1506,
+  "reset_port": "pi:rst_n[0]"
+ }
+}

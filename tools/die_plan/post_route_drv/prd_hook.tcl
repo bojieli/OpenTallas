@@ -147,7 +147,10 @@ if {$::env(OT_HOLD_ALLOW_SETUP) == 1} { lappend args -allow_setup_violations }
 # two-mode kits: the SHARED guarded hold repair of orfs_hold_mm.tcl (R5 chunk buffer cap inside the same total budget,
 # met-first, stall + time limits, FF clock RC calibration) -- R7 KV canary: one raw call sat >30 min in iteration 0 on
 # 9,048 margin endpoints at real ws -10.5 (the E0 plateau class).  Kits without the session keep the raw call.
-if {[llength [info commands ot_repair_hold_guarded]] && [ot_hold_guard_on]} {
+if {[info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) eq "1"} {
+  # KW-ECO-1 variant t<N> (TT-only single-mode pass): setup + DRV only; hold is repaired in the FF-only b<N> pass
+  puts "OT_PRD pass $_pass hold: skipped (OT_PRD_NO_HOLD=1, TT-only pass)"
+} elseif {[llength [info commands ot_repair_hold_guarded]] && [ot_hold_guard_on]} {
   puts "OT_PRD pass $_pass hold: shared guarded repair (orfs_hold_mm.tcl) $args"
   ot_rc_cal_hold { ot_repair_hold_guarded $args }
 } else {

@@ -1,0 +1,170 @@
+{
+ "schema": "opentallas.reset_clock_availability.v1",
+ "die": "s81",
+ "subject": "gunit soft parent s81p_gunit__t1 (instance gunit): reset-time availability of every clock that clocks a gunit reset relay or a gunit hard-child rst_n",
+ "status": "PUBLISHED_CONDITIONAL",
+ "verdict": "gunit reset relays and the 10 hard-child rst_n pins see >= 66 known-low edges of their own clock during the S81 boot reset, under conditions C1-C3. Not a hard-core-list inference: the 64 edges are carried to gunit by an explicit join (a)->(b)->(c).",
+ "conditions": {
+  "C1_root_activity": "the die clock input `clk` (plan clock.source @die.clk = the ctree `root` input) toggles at the 833 ps period from no later than rst_n assertion through rst_n deassertion + 85 clocks (gunit core release cycle). This is the OWNER 10-29 boot premise ('boot holds the die rst_n low for >= 64 clocks with the die clock running', reset_contract.json generator). It is an environment premise, not proven on silicon/board by any repo artifact.",
+  "C2_hop_timing": "the die reset wavefront hops (s_4S_L3 root ... s_3N_x06.rst_o_0 -> gunit.arst_n) and gunit internal relays are timing-clean related pairs, so the multi-region chain behaves as the single-clock chain of the bench. This is the existing die STA / kit IO gate; it is NOT claimed here (T48 real-view hold is BLOCKED(kits)).",
+  "C3_tree_form": "the production die clock emission keeps the T48 form on these three paths: only single-input A->Y cells (CKINVDCx16 / BUFx24), even inversion, no gate/divider/state/enable. Any new ctree must re-run trace_tree.py on its ctree.v; T48 is a DIE-S81-47 trial tree, not a signed production die clock."
+ },
+ "chain": {
+  "a_die_clock_source": {
+   "claim": "the gunit clocks have exactly one physical source: the die clock root; no on-die PLL, lock qualifier or recovered clock is on these paths",
+   "evidence": [
+    {
+     "what": "plan clock.source {part:@die,bus:clk}; reset.source {part:@die,bus:rst_n}, release wavefront, sync_stages 2; no die_root_pad / PLL lock (ot_dp_lockq) in the S81 reset plan",
+     "path": "physical/die_plan/s81/plan_h2_2249.json",
+     "git": "origin/main 6defc3c23069",
+     "sha256": "19a70bb3b1beaf2dcdef84bac779e55c01a331e3b796c4d179bf08c58ccc9963"
+    },
+    {
+     "what": "selected clock/reset projection of gunit/bk_sel/s_2N_x06 (type, origin, type clock, type reset) equal in T48 b3e8508, cohort plan_frozen5489 (sha cfab41e1...) and origin/main 6defc3c (rechecked by this helper)",
+     "path": "physical/die_plan/s81/reset_contract/gunit_1101/selected_clock_identity.json"
+    },
+    {
+     "what": "landed die top: region clocks are explicit die-top inputs supplied by the die clock emission; the die `clk` port is removed (no clock synthesiser in RTL)",
+     "path": "tools/die_plan/clock_landings.py",
+     "lines": "top_rtl docstring + comment (~1621-1650)",
+     "git": "origin/main 6defc3c23069"
+    },
+    {
+     "what": "bound top declares clk_region_std_bg_51_0 / _61_0 / _70_0 as independent inputs (lines 51/62/72); gunit clocks are not lk_*_pma_rck",
+     "host": "intel1",
+     "path": "/srv/opentallas-scratch2/claude/codex-s81-1101/bind_t48_pg/out/rtl/s81_bound_top.sv",
+     "sha256": "7dcc944c1d951d28fba997d4cdd5ee88175b8f2d84c1bbf947eb60a40e63c176"
+    },
+    {
+     "what": "gunit clock roots: clk=bg61; fclk_in_flt_i0 = bk_sel.fclk_out_flt_o0 = bk_sel.clk = bg70; fclk_in_xtier_i0 = s_2N_x06.fclk_out_ft1_o = s_2N_x06.clk_t14 = bg51; no internal gate/divider on these aliases; arst_n = rstw_s_3N_x06_rst_o_0",
+     "host": "intel1",
+     "path": "/srv/opentallas-scratch2/claude/codex-s81-gunit-parent-1101/reset_source_closure.json",
+     "sha256": "f9bcbab38b4d731668b7e9565bfc3d0a697eb0d99e0b77f5fecdc32481450b79",
+     "generator_sha256": "40c9fa61bc093f246e4a40c10022885d427b58196b253c3df46f9434b6b16cc7"
+    }
+   ],
+   "verdict": "PROVEN_FROM_SOURCE (single external root); root ACTIVITY = condition C1"
+  },
+  "b_t48_paths": {
+   "claim": "each gunit clock is a continuously combinational, even-inverting copy of root: every root edge reaches the tap after a fixed latency; no edge is created, dropped or gated",
+   "evidence": [
+    {
+     "what": "T48 die clock tree netlist (ot_clk kit, die_trial b3e8508 sha7ca32f556d7cc385, stage_check PASS, inv2/ndr paired polarity); whole tree uses only CKINVDCx16_ASAP7_75t_R x76188 and BUFx24_ASAP7_75t_R x70; single primary input `root`",
+     "host": "epyc2",
+     "path": "/srv/opentallas-scratch2/claude/die-s81-47/ck/T48/run/kit/clock/ctree.v",
+     "sha256": "3b1763c10cb22965284564823f94ef206eb2735350eee602a4bac6f4ae29d384"
+    },
+    {
+     "what": "ctree.tcl: read ctree.v (l4), link (l5), place root pin (l8), create_clock vclk 833 (l93261), BUFx24 driving cell + 0 input delay on root (l93262-3)",
+     "host": "epyc2",
+     "path": "/srv/opentallas-scratch2/claude/die-s81-47/ck/T48/run/kit/clock/ctree.tcl",
+     "sha256": "bfb1e1f50a4e6e5bbb609fb7478af0d8ee53741a610e542b2b4f5aff3b07dd2d"
+    },
+    {
+     "what": "bounded static driver walk tap->root, every cell and assign with its ctree.v line",
+     "path": "physical/die_plan/s81/reset_contract/gunit_1101/tree_paths.json",
+     "generator": "physical/die_plan/s81/reset_contract/gunit_1101/trace_tree.py"
+    }
+   ],
+   "paths": [
+    {
+     "bound_port": "clk_region_std_bg_61_0",
+     "gunit_pin": "clk",
+     "tap": "t_gunit__clk",
+     "cells": {
+      "CKINVDCx16_ASAP7_75t_R": 192
+     },
+     "inversions": 192,
+     "closed_to_root": true
+    },
+    {
+     "bound_port": "clk_region_std_bg_70_0",
+     "gunit_pin": "fclk_in_flt_i0 (via bk_sel.clk)",
+     "tap": "t_bk_sel__clk",
+     "cells": {
+      "CKINVDCx16_ASAP7_75t_R": 208,
+      "BUFx24_ASAP7_75t_R": 1
+     },
+     "inversions": 208,
+     "closed_to_root": true
+    },
+    {
+     "bound_port": "clk_region_std_bg_51_0",
+     "gunit_pin": "fclk_in_xtier_i0 (via s_2N_x06.clk_t14)",
+     "tap": "t_s_2N_x06__clk_t14",
+     "cells": {
+      "CKINVDCx16_ASAP7_75t_R": 176
+     },
+     "inversions": 176,
+     "closed_to_root": true
+    }
+   ],
+   "join_note": "bound region port <-> ctree tap is joined by exact partition/pin (plan landing), not by name; the bk_sel / s_2N_x06 internal forwards to fclk_out_* are RTL aliases inside those kits (source-proven no gate); their physical kit forwards are covered by those kits' LEC, not by ctree.v.",
+   "verdict": "PROVEN on T48 (condition C3 for any later tree)"
+  },
+  "c_boot_hold": {
+   "claim": "die rst_n low >= 64 root clocks gives >= 66 known-low edges at every relay depth, including gunit's depth",
+   "evidence": [
+    {
+     "what": "S81 die reset contract: edges 64, PASS, assert_edges 66, mutant CAUGHT; generator 'OWNER decision 10-29 05:3x: boot holds the die rst_n low for >= 64 clocks with the die clock running'",
+     "path": "physical/die_plan/s81/reset_contract.json",
+     "receipt": "physical/die_plan/s81/reset_contract/receipt.txt",
+     "git": "origin/main 6defc3c23069"
+    },
+    {
+     "what": "published wavefront offsets of plan_h2_2249 (reset_tree.py offsets): root s_4S_L3 release 8; chain s_4S_L3 -> s_3S_L4 -> s_2N_L2 -> s_3N_L0 -> s_3N_C -> s_3N_L1 -> s_3N_L3 -> s_3N_L4 -> s_3N_x06 -> gunit; gunit release 84 (entry 1 + depth_K 8, 282 planned relays), all 10 hard-child rst_n release 85; die max_release 105",
+     "host": "intel1",
+     "path": "/srv/opentallas-scratch2/claude/die-s81-47/gunitrst/offsets.json",
+     "sha256": "2325e9232ca9541cbb06a3b0c44e848a3fdff581a7fad6d1af0048a283919031"
+    },
+    {
+     "what": "gunit source reset: entry ot_dp_rrelay u_rst_in, 284 relay instances, 0 gated (ot_dp_rgate) relays, declared depth 8 (9 edges incl. entry), 67 taps; plain q<=d relays only",
+     "host": "intel1",
+     "path": "/srv/opentallas-scratch2/claude/codex-s81-gunit-parent-1101/reset_source_closure.json"
+    },
+    {
+     "what": "deep-chain bench: depth 0..128 (>= gunit 85 and die 105) gives min 66 known-low edges cold+warm; HOLD 61 mutant caught; root stopped 62/64 hold periods gives 4 -> caught (C1 is load-bearing)",
+     "path": "physical/die_plan/s81/reset_contract/gunit_1101/receipt_deep.txt"
+    },
+    {
+     "what": "the 10 gunit hard children (dsdv_gunit_l0/l0r/l1/l1c/l2/l3/l4/l4r/l5/l5f) are in the 64-edge module list, so their own internal reset depth is covered by their kit LEC under OT_LEC_RESET_CYCLES <= 64",
+     "path": "physical/die_plan/s81/reset_contract.json"
+    }
+   ],
+   "verdict": "PROVEN (logic) under C1+C2"
+  }
+ },
+ "result": {
+  "gunit_parent_reset_edges_available": 66,
+  "gunit_parent_local_edges_needed": 9,
+  "hard_child_reset_edges_contract": 64,
+  "clock_domains_covered": [
+   "clk (bg61)",
+   "fclk_in_flt_i0 (bg70)",
+   "fclk_in_xtier_i0 (bg51)"
+  ]
+ },
+ "excluded": [
+  "SerDes recovered pma_rck clocks (lk_*_pma_rck) and any RX logic clocked by them: available only after PMA lock (COORD Q1); not on any gunit path",
+  "mid-run rst_n pulses shorter than 64 clocks (outside the boot contract)",
+  "post-release clock-landing SETTLE (ot_dp_clk_landing SETTLE=16 on clk after release) - schedule, not reset hold"
+ ],
+ "unproven": [
+  {
+   "link": "C1 root activity",
+   "why": "no repo artifact models the off-die clock source; S81 has no on-die PLL/lock qualifier. The repo holds only the owner premise text.",
+   "minimal_evidence": "none needed for the release under the OWNER 10-29 rule; for tape-out, a board/package clock-source spec (oscillator running before rst_n release) or a PLL lock-qualified root (ot_dp_lockq, as the KV POR path) "
+  },
+  {
+   "link": "C2 hop timing",
+   "why": "die real-view hold is BLOCKED(kits) on T48",
+   "minimal_evidence": "the die STA gate on the reset wavefront pairs (existing closure work)"
+  },
+  {
+   "link": "native execution",
+   "why": "no executed gunit-parent source bench with three region clocks from one root (Codex qualification: continuous_running_833ps_execution_receipt NOT_RUN)",
+   "minimal_evidence": "optional: iverilog/verilator of the closed 50-file gunit source with hard children black-boxed, bg61/bg70/bg51 = root delayed by the T48 latencies, arst_n driven by the release-84 wavefront of a 64-clock rst_n; assert every gunit relay and the 10 core rst_n pins see >= 64 known-low edges (cheap, minutes)"
+  }
+ ],
+ "author": "DIE-S81-47 helper (Claude), 2026-11-01"
+}

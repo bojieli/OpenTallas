@@ -35,6 +35,8 @@ Kept registers (fail-closed): every register bit the RTL declares kept ((* keep 
 Hints (KIT/lec_hints.json or --hints; PATH-KV-PC4 10-25): untrusted register correspondences ('user match') for twins
         the signature search cannot find (rare-event bits, frontend array layouts); every hint is proved by the same
         induction and dropped if it fails, never a waiver (apply_hints).
+        An opt-in opentallas.lec_hint_plan.v1 object orders preseed/post candidates and discovery_rounds (0 = refine
+        supplied candidates only); all induction, reset-state, KEEP and final compare checks remain enabled.
 Verdict (DIR/lec.json; DIR defaults to KITDIR/lec):
   EQUIVALENT      every compare point proved (unmatched registers, if any, were free inputs: unobservable);
   NOT EQUIVALENT  >= 1 compare point differs and its cone sees only matched / proved key points and RTL registers the
@@ -1568,7 +1570,7 @@ class Lec:
         # unreachable since rk <= 17; RTL-vs-netlist co-simulation 0 mismatches)
         self.unwritten = sorted(k for k in self.gonly if k.startswith("ff:") and self.gc.get(k) == self.gp[k])
         unwritten = set(self.unwritten)
-        self.fill_live = fill_live(self.hyp)      # pipeline-fill hints whose ghost chain reaches its constant root
+        self.fill_live = fill_live(self.hyp)      # fill ghosts with a well-founded predecessor chain
         self.fill_in = {}                         # gold key -> ghost 'filled' input literal
         fillq = []
         for side, keys, p, lmap in (("gold", self.gonly, self.gp, lg), ("gate", self.tonly, self.tp, lt)):
@@ -1581,7 +1583,7 @@ class Lec:
                     lgx[p[k] & ~1] = 1
                 elif h and h[0] == "fill" and side == "gold" and k in self.fill_live:
                     # Q = filled ? c : X.  'filled' is a tool-owned ghost bit (not RTL state): filled' = filled(pred),
-                    # the root's filled' = 1, so every ghost is 1 a chain-length of edges after the reset state and
+                    # the unconditional root's filled' = 1; an opt-in enabled fill holds its ghost when not loaded.
                     # X is never held as a constant: an unfilled register is X (its RTL power-up value) and a compare
                     # point reading it is a don't care only while the register really is X in the RTL.
                     f = m.add_input(f"fill:{k}")
@@ -1747,6 +1749,16 @@ class Lec:
                         m.outs.append(1)
                     else:
                         fn = 1 if h[2] is None else self.fill_in[h[2]]
+                        if len(h) == 4:
+                            # Exact enabled load/hold recurrence. This never assumes a load happened:
+                            # filled' = enable ? predecessor_filled : filled. Both known AND X
+                            # obligations below remain mandatory, including for an incorrect enable.
+                            if os.environ.get("OT_LEC_ENABLE_FILL_GUARD") != "1":
+                                m.outs.append(1)
+                                m.onames.append(f"hyp:{side}:{k}")
+                                continue
+                            en = guard_lit(m, h[3], lambda key: G(self.gp[key]))
+                            fn = m.AND(m.AND(en, fn) ^ 1, m.AND(en ^ 1, self.fill_in[k]) ^ 1) ^ 1
                         dx = self.dxlit.get(k, 0)
                         bad = m.AND((d ^ h[1]) ^ 1, dx ^ 1) ^ 1
                         m.outs.append(m.AND(m.AND(fn, bad) ^ 1, m.AND(fn ^ 1, dx ^ 1) ^ 1) ^ 1)
@@ -1800,9 +1812,14 @@ def guard_lit(m, guard, lit):
 
 
 def fill_live(hyp):
-    """gold keys of 'fill' hypotheses whose predecessor chain ends at a root (pred None) through fill hypotheses only,
-    with no cycle: only those ghosts are guaranteed to become 1 (a broken chain would keep its register X forever)."""
-    fills = {k: h[2] for (sd, k), h in hyp.items() if sd == "gold" and h and h[0] == "fill"}
+    """Gold fill ghosts with an acyclic predecessor chain ending at a root (pred None).
+
+    Enabled fills need not ever load. Their additional not-filled' -> actual D is X
+    proof prevents an unfilled ghost from hiding any defined RTL observation.
+    """
+    enabled = os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1"
+    fills = {k: h[2] for (sd, k), h in hyp.items() if sd == "gold" and h and h[0] == "fill"
+             and (len(h) == 3 or (len(h) == 4 and enabled))}
     live = {}
     for k in fills:
         path, x = [], k
@@ -5257,6 +5274,136 @@ def cascade_drop(L, sup, gone):
     return out
 
 
+HINT_PLAN_SCHEMA = "opentallas.lec_hint_plan.v1"
+
+
+def decode_hint_plan(value):
+    """Order untrusted candidates without changing induction or final comparisons.
+
+    Legacy arrays retain their existing discovery schedule. A structured plan can
+    replay candidates before discovery, then add source aliases afterward. Every
+    candidate still passes ordinary apply_hints/reset/refinement/build checks.
+    """
+    if isinstance(value, list):
+        return None, value, 24
+    if not isinstance(value, dict) or value.get("schema") != HINT_PLAN_SCHEMA:
+        raise LecError("hints must be an array or an opentallas.lec_hint_plan.v1 object")
+    unknown = set(value) - {"schema", "preseed", "post", "discovery_rounds"}
+    if unknown:
+        raise LecError("unknown hint-plan fields: " + ", ".join(sorted(unknown)))
+    preseed, post = value.get("preseed", []), value.get("post", [])
+    rounds = value.get("discovery_rounds", 24)
+    if not isinstance(preseed, list) or not isinstance(post, list):
+        raise LecError("hint-plan preseed and post must be arrays")
+    if type(rounds) is not int or rounds < 0:
+        raise LecError("hint-plan discovery_rounds must be a nonnegative integer")
+    return preseed, post, rounds
+
+
+def _and_leaves(d, lit, cap=64, nodes=False):
+    """AND-tree leaves of an AIG literal of one side (a positive AND node expands; anything else is one leaf).
+    nodes=True: also every expanded AND node (each one is implied by `lit`, like the leaves)."""
+    I, Lc, a = d["I"], d["L"], d["ands"]
+    base = I + Lc + 1
+    out, inner, stack = [], [], [lit]
+    while stack:
+        x = stack.pop()
+        v = x >> 1
+        if not (x & 1) and v >= base and len(out) + len(stack) < cap:
+            q = v - base
+            inner.append(x)
+            stack += (a[2 * q], a[2 * q + 1])
+        else:
+            out.append(x)
+    return out + inner if nodes else out
+
+
+def loaded_proposals(L, log, cands=None, cap=20000):
+    """Automatic loaded-valid hints (KIT-WAVE-16 11-01, LEC NOT EQUIVALENT class x10: HBM g_ld3k p1/p2/q2, kshare,
+    QC coll_n e3, HEAD beat_link hold).  A gold-only RTL register with no reset that holds itself until a load with
+    the constant c (k <= en ? c : k; synthesis folds it to c) is X until that load, so noreset_filter drops its
+    constant hypothesis and the register stays free: every compare point that reads it -- only after the load, by
+    design -- 'differs'.  The approved loaded form (LEC-FPREG-5, apply_hints) states exactly the RTL fact: k ==
+    (guard ? c : its free power-up value), guard a gold register that is DEFINITELY false in the reset state.  This
+    only PROPOSES such hints (the commercial 'user match', untrusted): the hold term of D(k) (the AND term that
+    reads Q(k)) names the load condition en = NOT(another leaf); a guard is a gold register g whose next state
+    implies en, directly (an AND leaf of D(g): a valid delayed from the load, ldp_v <= ld_e) or sticky (a leaf
+    OR(Q(g), en): v <= v | ld), with reset-state value 1 - guard value.  apply_hints then proves every hint by the
+    same induction (guard' -> D(k) == c and not X), refuses a guard true at reset, and drops a wrong one; a read of
+    k outside its guard sees the free value and still differs.  Nothing is assumed: no X == c, no waiver.
+    cands: {gold key: c} (default: the gold-only constants noreset_filter dropped). -> hint list."""
+    d, gp, gc = L.gold, L.gp, L.gc
+    if cands is None:
+        gonly = set(L.gonly)
+        cands = {k: c for (sd, k), c in getattr(L, "noreset_dropped", {}).items()
+                 if sd == "gold" and k in gonly}
+    cands = {k: c for k, c in cands.items() if k.startswith("ff:") and "__" not in k and k in gp and k in gc
+             and c in (0, 1) and gc[k] != gp[k]}
+    if not cands:
+        return []
+    if not hasattr(L, "rst_val"):
+        noreset_classify(L)
+    I, Lc = d["I"], d["L"]
+    base = I + Lc + 1
+    # guard index: implied literal -> [(g, guard value)]
+    imp = collections.defaultdict(list)
+    for g, q in gp.items():
+        if not g.startswith("ff:") or "__" in g or g in cands or g not in gc:
+            continue
+        rv = L.rst_val.get(("gold", g), (None, None))[0]
+        if rv not in (0, 1):
+            continue
+        val = 1 - rv                      # the guard value that is definitely false in the reset state
+        nxt = gc[g] ^ (val ^ 1)           # literal true iff g' == val
+        for leaf in _and_leaves(d, nxt, nodes=True):
+            imp[leaf].append((g, val))    # g' == val -> leaf
+            v = leaf >> 1
+            if (leaf & 1) and v >= base:  # leaf = OR(NOT y_i): sticky form OR(g == val, en)
+                ys = [y ^ 1 for y in _and_leaves(d, leaf ^ 1)]
+                own = q ^ (val ^ 1)
+                rest = [y for y in ys if y != own]
+                if len(rest) == 1 and len(ys) == 2:
+                    imp[rest[0]].append((g, val))
+    hints, nog = [], 0
+    for k, c in sorted(cands.items()):
+        q, dk = gp[k], gc[k]
+        # D(k) as an OR of AND terms; the hold term reads Q(k) positively (c == 0: D = Q & ~en; c == 1: D = en | Q,
+        # or the mux en ? c : Q in either polarity)
+        terms = [_and_leaves(d, dk)] if not (dk & 1) else [_and_leaves(d, y ^ 1) for y in _and_leaves(d, dk ^ 1)]
+        hold = [t for t in terms if q in t]
+        ens = [x ^ 1 for t in hold for x in t if x != q]
+        pick = next((gv for e in ens for gv in imp.get(e, ()) if gv[0] != k), None)
+        if pick is None:
+            nog += 1
+            continue
+        hints.append(["gold", k, ["loaded", c, [[[pick[0], pick[1]]]]]])
+        if len(hints) >= cap:
+            break
+    log.append(f"auto loaded-valid proposals: {len(hints)} of {len(cands)} dropped no-reset constants "
+               f"({nog} without a guard register)")
+    return hints
+
+
+def auto_loaded(L, rec, work, conflicts, log):
+    """Default-on (OT_LEC_AUTO_LOADED=0 disables): loaded_proposals -> apply_hints.  The hypothesis set before is
+    restored when the refinement does not converge (never fewer proved registers than without the proposals).
+    -> rec['auto_loaded'] = dict(proposed, kept, dropped, refused, first)."""
+    auto = loaded_proposals(L, log)
+    if not auto:
+        rec["auto_loaded"] = dict(proposed=0)
+        return
+    keep_hyp, keep_cons = dict(L.hyp), list(L.cons)
+    r = apply_hints(L, auto, work, conflicts, log) or {}
+    kept = sorted(k for (sd, k), h in L.hyp.items() if h[0] == "loaded")
+    if not r.get("kept"):
+        L.hyp.clear(); L.hyp.update(keep_hyp)
+        L.cons[:] = keep_cons
+        kept = []
+        log.append("auto loaded-valid: refinement did not converge; hypotheses restored")
+    rec["auto_loaded"] = dict(proposed=len(auto), kept=len(kept), dropped=len(r.get("dropped") or []),
+                              refused=len(r.get("loaded_refused") or []), first=kept[:20])
+
+
 def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
     """Untrusted correspondence hints (the commercial 'user match' / 'add mapped points'; PATH-KV-PC4 10-25):
     [[side, key, ['eq', oside, okey, inv] | ['const', c]], ...] for registers the signature search cannot pair
@@ -5289,19 +5436,38 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
     # Proved with the other hypotheses (filled' -> D == c and not X).  Base: the register is not the other constant
     # in the reset state (ghost = 1 where it already is c, else 0 = X, which is its RTL value there).  A read while
     # unfilled is an RTL X (don't care, the tool's X rule); a read after filling is compared against c.
+    # Opt-in enabled load/hold form (default OFF): ['fill', c, pred, guard], where
+    # guard is the actual source enable as an OR of cubes over gold FFs/ports. The ghost
+    # recurrence is filled' = guard ? filled(pred) : filled. The same base and BOTH
+    # known/X induction obligations apply; no compare point is removed or masked
+    # while the actual RTL value is known. OT_LEC_ENABLE_FILL_GUARD=1 is required.
     fills = {}
     for e in hints:
         if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
                 and e[2][0] == "fill":
             fills[e[1] if isinstance(e[1], str) else repr(e[1])] = e
     rec["fill"], rec["fill_refused"] = [], []
+    fill_guard_key = lambda key: (isinstance(key, str) and key.startswith(("ff:", "pi:"))
+                                  and "__" not in key and key in L.gp)
+    if any(len(e[2]) == 4 for e in fills.values()):
+        rec["enable_fill_guard_enabled"] = os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1"
     for e in hints:
         if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
                 and e[2][0] == "fill":
             try:
-                sd, k, (_, c, pred) = e
+                sd, k, h = e
+                if len(h) not in (3, 4):
+                    raise ValueError("fill arity")
+                _, c, pred = h[:3]
+                guard = h[3] if len(h) == 4 else None
                 ok = (sd == "gold" and k in L.gonly and gk(k) and c in (0, 1) and k not in getattr(L, "unwritten", ())
                       and (pred is None or (pred in fills and pred != k)))
+                if len(h) == 4:
+                    ok = (ok and os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1"
+                          and isinstance(guard, (list, tuple)) and bool(guard)
+                          and all(isinstance(cube, (list, tuple)) and cube
+                                  and all(fill_guard_key(x) and v in (0, 1) and x not in fills for x, v in cube)
+                                  for cube in guard))
             except (TypeError, ValueError):
                 ok = False
             if not ok:
@@ -5313,7 +5479,7 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
             if rv == 1 - c:
                 rec["fill_refused"].append(dict(register=k, why=f"reset-state value {rv} is the other constant"))
                 continue
-            L.hyp[(sd, k)] = ("fill", c, pred)
+            L.hyp[(sd, k)] = ("fill", c, pred, guard) if guard is not None else ("fill", c, pred)
             rec["applied"] += 1
             continue
     for e in hints:
@@ -5442,7 +5608,8 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
             rec["loaded"] = [dict(register=k, value=h[1], guard=[[list(x) for x in c] for c in h[2]], base="reset")
                              for (sd, k), h in sorted(L.hyp.items()) if h[0] == "loaded"]
             rec["fill"] = [dict(register=k, value=h[1], pred=h[2],
-                                base_filled=L.rst_val.get(("gold", k), (None, None))[0] == h[1])
+                                base_filled=L.rst_val.get(("gold", k), (None, None))[0] == h[1],
+                                **({"enable_guard": h[3]} if len(h) == 4 else {}))
                            for (sd, k), h in sorted(L.hyp.items()) if h[0] == "fill"]
             return rec
         drop_failed(L, [n for n in bad if n.startswith("cons:")])
@@ -5978,25 +6145,32 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         L.kit_reset_ports = kit_reset_ports(kit)
         rec["kit_reset_ports"] = L.kit_reset_ports
         hf = Path(hints) if hints else Path(kit) / "lec_hints.json"
+        discovery_rounds = 24
         if hf.is_file():
-            supplied = json.loads(hf.read_text())
-            if os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
+            preseed, supplied, discovery_rounds = decode_hint_plan(json.loads(hf.read_text()))
+            if preseed is not None:
+                L.preseed_hints = preseed
+                rec["hint_plan"] = dict(schema=HINT_PLAN_SCHEMA, discovery_rounds=discovery_rounds,
+                                        preseed=len(preseed), post=len(supplied))
+            elif os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
                 L.preseed_hints = supplied
                 rec["hints_preseed_enabled"] = True
             L.fsm_hints = [e for e in supplied if isinstance(e, (list, tuple)) and e and
                            (e[0] == "cons" or (len(e) == 3 and isinstance(e[2], (list, tuple)) and
                                                e[2] and e[2][0] == "cube"))]
-        correspond(L, out, conflicts, log)
+        correspond(L, out, conflicts, log, rounds=discovery_rounds)
         if hasattr(L, "early_compare"):
             rec["early_compare"] = L.early_compare
         if hf.is_file():
             import hashlib
             rec["hints"] = dict(file=str(hf), sha256=hashlib.sha256(hf.read_bytes()).hexdigest())
-            rec["hints"].update(apply_hints(L, json.loads(hf.read_text()), out, conflicts, log))
+            rec["hints"].update(apply_hints(L, supplied, out, conflicts, log))
             rec["hints"]["skipped"] = len(rec["hints"]["skipped"])
             rec["hints"]["dropped"] = dict(n=len(rec["hints"]["dropped"]), first=rec["hints"]["dropped"][:40])
         elif hints:
             raise LecError(f"hints file {hints} not found")
+        if os.environ.get("OT_LEC_AUTO_LOADED", "1") != "0":
+            auto_loaded(L, rec, out, conflicts, log)
         noreset_filter(L, log, collections.Counter(), out, conflicts)
         rec["noreset_constants"] = noreset_report(L)
         rec["noreset_constants"]["listing"] = noreset_listing(L, out / "noreset_constants.tsv")
@@ -6243,14 +6417,16 @@ def _provenance(kit=None):
         return dict(commit=None, dirty=None, source=f"kit provenance invalid: {type(e).__name__}: {e}")
 
 
-PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE")
+PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE",
+                 "OT_LEC_ENABLE_FILL_GUARD")
 
 
 def main(argv=None):
     global PROVE_JOBS
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv == ["--capabilities"]:
-        print(json.dumps(dict(schema="opentallas.lec_capabilities.v1", proof_options=list(PROOF_OPTIONS))))
+        print(json.dumps(dict(schema="opentallas.lec_capabilities.v1", proof_options=list(PROOF_OPTIONS),
+                              hint_plan_schema=HINT_PLAN_SCHEMA)))
         return 0
     if argv[:1] == ["--require-options"]:
         missing = sorted(set(argv[1:]) - set(PROOF_OPTIONS))

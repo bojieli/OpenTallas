@@ -1,0 +1,120 @@
+"""Auto loaded-valid proposals (KIT-WAVE-16 11-01, LEC NOT EQUIVALENT class): an RTL register with no reset that only
+holds itself until it is loaded with one constant (sfu lane g_ld3k p1/p2 <= lane-id bits on ld_e; S81 HEAD
+beat_link hold) is X until that load; synthesis folds it, and the no-reset rule (LEC-TOOL-4 10-27) drops its
+constant hypothesis.  loaded_proposals finds the reset register whose next state implies the load enable (a
+delayed valid ldp_v <= ld_e, or a sticky v <= v | ld) and proposes the approved LEC-FPREG-5 form
+['gold', k, ['loaded', c, [[[v, 1]]]]]; apply_hints proves it (guard' -> D == c, guard false in the reset state).
+Never X == c: a read outside the guard still differs.  Mutants: observed outside the guard, no guard register,
+the LEC-TOOL-4 'hold' register, a data (non-constant) load, auto proposals disabled.
+    python3 -m pytest -q tools/die_plan/test_lec_auto_loaded.py"""
+import collections
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import lec  # noqa: E402
+from test_lec_memory_layout import _seq, _sim_prove  # noqa: E402
+
+IN = ["rn", "ld", "a"]
+
+
+def _mux(m, s, a, b):                     # s ? a : b
+    return m.AND(m.AND(s, a) ^ 1, m.AND(s ^ 1, b) ^ 1) ^ 1
+
+
+def _design(tmp_path, valid="delay", gated=True, load="const"):
+    """gold: v resets to 0; valid 'delay': v <= ld (ldp_v <= ld_e), 'sticky': v <= v | ld, 'none' (MUTANT): no v.
+    k has no reset, k <= ld ? 1 : k (load 'data' MUTANT: k <= ld ? a : k); o <= v & a & k (gated) or a & k.
+    gate: synthesis folded k to 1: o <= v & a (gated) or a."""
+    def nv(m, l):
+        if valid == "delay":
+            return m.AND(l["rn"], l["ld"])
+        return m.AND(l["rn"], m.AND(l["v"] ^ 1, l["ld"] ^ 1) ^ 1)
+
+    def gold(m, l):
+        nx = {"k": _mux(m, l["ld"], 1 if load == "const" else l["a"], l["k"])}
+        o = m.AND(l["a"], l["k"])
+        if valid != "none":
+            nx["v"] = nv(m, l)
+            o = m.AND(l["v"], o) if gated else o
+        nx["o"] = o
+        return nx
+
+    def gate(m, l):
+        if valid == "none":
+            return {"o": l["a"]}
+        return {"v": nv(m, l), "o": m.AND(l["v"], l["a"]) if gated else l["a"]}
+    regs = ["k", "o"] if valid == "none" else ["v", "k", "o"]
+    g, gm = _seq(tmp_path, "gold", IN, regs, gold)
+    t, tm = _seq(tmp_path, "gate", IN, [r for r in regs if r != "k"], gate)
+    return lec.Lec(g, gm, t, tm)
+
+
+def _flow(tmp_path, monkeypatch, L, auto=True):
+    """lec.run's order: correspond -> auto_loaded -> noreset_filter -> compare miter."""
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    log, rec = [], {}
+    lec.correspond(L, tmp_path, 100, log)
+    if auto:
+        lec.auto_loaded(L, rec, tmp_path, 100, log)
+    lec.noreset_filter(L, log, collections.Counter(), tmp_path, 100)
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    return rec, _sim_prove(m), log
+
+
+def test_delayed_valid_load_is_proposed_and_proved(tmp_path, monkeypatch):
+    L = _design(tmp_path, "delay")
+    rec, st, _ = _flow(tmp_path, monkeypatch, L)
+    assert L.hyp.get(("gold", "ff:u_dut.k")) == ("loaded", 1, [[("ff:u_dut.v", 1)]])
+    assert rec["auto_loaded"]["proposed"] == 1 and rec["auto_loaded"]["kept"] == 1
+    assert st["ff:u_dut.o"] == "proved"
+
+
+def test_sticky_valid_load_is_proposed_and_proved(tmp_path, monkeypatch):
+    L = _design(tmp_path, "sticky")
+    rec, st, _ = _flow(tmp_path, monkeypatch, L)
+    assert rec["auto_loaded"]["kept"] == 1 and st["ff:u_dut.o"] == "proved"
+
+
+def test_without_auto_the_folded_register_differs(tmp_path, monkeypatch):
+    L = _design(tmp_path, "delay")
+    _, st, _ = _flow(tmp_path, monkeypatch, L, auto=False)
+    assert st["ff:u_dut.o"] == "differs" and ("gold", "ff:u_dut.k") in L.noreset_dropped
+
+
+def test_mutant_observed_outside_guard_differs(tmp_path, monkeypatch):
+    for valid in ("delay", "sticky"):
+        L = _design(tmp_path, valid, gated=False)
+        _, st, _ = _flow(tmp_path, monkeypatch, L)
+        assert st["ff:u_dut.o"] == "differs"      # the free power-up value reaches o where v == 0
+
+
+def test_mutant_no_guard_register_gets_no_proposal(tmp_path, monkeypatch):
+    L = _design(tmp_path, "none")
+    rec, st, _ = _flow(tmp_path, monkeypatch, L)
+    assert rec["auto_loaded"]["proposed"] == 0 and st["ff:u_dut.o"] == "differs"
+
+
+def test_mutant_data_load_is_not_proved(tmp_path, monkeypatch):
+    L = _design(tmp_path, "delay", load="data")
+    _, st, _ = _flow(tmp_path, monkeypatch, L)
+    assert not any(h[0] == "loaded" for h in L.hyp.values()) and st["ff:u_dut.o"] == "differs"
+
+
+def test_mutant_noreset_hold_register_still_differs(tmp_path, monkeypatch):
+    """LEC-TOOL-4 'hold' mutant (k1 <= en ? 0 : k1, observed, no valid flag) stays NOT EQUIVALENT."""
+    def gold(m, l):
+        z = _mux(m, l["rn"], _mux(m, l["ld"], 0, l["z"]), 0)
+        return {"z": z, "k1": _mux(m, l["ld"], 0, l["k1"]), "o": m.AND(l["a"], l["k1"])}
+    g, gm = _seq(tmp_path, "gold", IN, ["z", "k1", "o"], gold)
+    t, tm = _seq(tmp_path, "gate", IN, ["o"], lambda m, l: {"o": 0})
+    L = lec.Lec(g, gm, t, tm)
+    rec, st, _ = _flow(tmp_path, monkeypatch, L)
+    assert st["ff:u_dut.o"] == "differs" and not any(h[0] == "loaded" for h in L.hyp.values())
+
+
+def test_run_calls_auto_loaded_with_opt_out():
+    src = Path(lec.__file__).read_text()
+    i = src.index('if os.environ.get("OT_LEC_AUTO_LOADED", "1") != "0":')
+    assert src.index("auto_loaded(L, rec, out, conflicts, log)", i) < src.index("noreset_filter(L, log", i)

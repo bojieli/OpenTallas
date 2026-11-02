@@ -1,0 +1,38 @@
+{
+ "diagnostic_only": true,
+ "no_full_equality_claim": true,
+ "engine_sha256": "3949d0c5679ce14b79d69c0d83d18b1bebfede0d3e5bbba87519189dea802d26",
+ "controls": {
+  "good": {
+   "kept": 20,
+   "dropped": [],
+   "reset_edges": 16,
+   "original_shared_compares": 41082,
+   "all_compares_retained": true,
+   "feature_enabled": true
+  },
+  "wrong_data": {
+   "kept": 16,
+   "dropped": [
+    "ff:u_dut.u_leaf.u_pc.u_pce.u_esm.u_emb.word_q[0]",
+    "ff:u_dut.u_leaf.u_pc.u_pce.u_esm.u_emb.beat_word[0]",
+    "ff:u_dut.u_leaf.u_embr.record_q[274]",
+    "ff:u_dut.u_leaf.u_embr.retained[274]"
+   ],
+   "reset_edges": 16,
+   "original_shared_compares": 41082,
+   "all_compares_retained": true,
+   "feature_enabled": true
+  },
+  "wrong_enable": {
+   "kept": 19,
+   "dropped": [
+    "ff:u_dut.u_leaf.u_embr.retained[274]"
+   ],
+   "reset_edges": 16,
+   "original_shared_compares": 41082,
+   "all_compares_retained": true,
+   "feature_enabled": true
+  }
+ }
+}
