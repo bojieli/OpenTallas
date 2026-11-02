@@ -1,0 +1,16 @@
+{
+  "status": "RUNNING_HELD",
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-root-batch-0025",
+  "unit": "oth-ubuntu-172434-1793608924",
+  "worker_pid": 192131,
+  "input_sha256": "60abcb656512378519b9228af559d83d7a495fb2cb41baeb6aee659e6a231517",
+  "root_ft_baseline": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-root-minimal-2355/candidate.json",
+  "other16_type_cohort": "codex/hbm-d44r-2039@0abfdcfac + b88f49c82/e0de9c3f3/6689ccd8c/a1a9b4aec",
+  "source_event": "6bcf3336b HELD separately",
+  "source_files": {
+    "batch_clock.py": "5f9c0e3554c0186e944634732e934e2e14662266832a1817e82c5d852ccb4441",
+    "spatial_assign.py": "31c11406075640fd3f69a2c840cd3093d6dc5ef926cb66199ab8efe326d39769"
+  },
+  "original_workers": "untouched",
+  "native_built_PG_CTS_START_provider_views": "HELD"
+}

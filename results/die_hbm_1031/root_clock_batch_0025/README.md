@@ -1,0 +1,7 @@
+# ROOT batch clock-placement variant
+
+RUNNING, not ready or released. Distinct placement candidate on the complete minimal675 ROOT FT repair plus the repaired sixteen-type cohort. The original full L9m and original ROOT rebind jobs remain untouched. This private planner temporarily removes only zero-load endpoints from spacing obstacles, reserves each newly occupied contact, and retains all788 names/count. It never changes FF banks, stages, periods or source behavior. Intermediate checkpoints are HELD and can contain unused endpoints. Only the complete frozen production assignment and contact checks can produce candidate_PASS, and a subsequent isolated seventeen-type current-tool global reset/control/contact census is still required. Native built PG/CTS/START/provider views remain held.
+
+The private NumPy spatial index preserves Manhattan nearest assignment and lower-index ties;100 independent integer/tie reference cases pass. Final production taps.assign is required regardless of planner metrics. It is not a shared gate or optional acceleration activation. The planning source snapshot uses the own HBM worktree tools plus explicit canonical probe-union keepouts. The final census must use current canonical tools.
+
+The original queued ot-run controller cancellation raced admission. The worker continued unmodified; no replacement or duplicate was launched. Collect directly from batch.log/batch.err and candidate_PASS/audit_PASS or candidate_FAIL/audit_FAIL. Parent controller172434 and worker192131 are the owned live processes.
