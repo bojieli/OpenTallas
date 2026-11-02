@@ -259,12 +259,11 @@ module ot_hbm_su_programme_pslice_c5 #(
     $fatal(1,"pslice_c5 trunk: XST>=1, OSTG>=1, 1<=HG<=NC, LFX 0/1, OSRC/EIDX < NC, MUT benches are the TRUNK-less top's");
 `endif
   // ---- ingress: start/length stage 1 shared (g_xs), stages 2..XST one kept copy per column (g_x[c].u_s) ----
-  wire [16:0] xs;
+  wire [16:0] xs; wire [17*NC-1:0] xq;
   ot_hbm_su_programme_pstage #(.W(17),.N(1)) u_xs(.clk(clk),.d({start,length}),.q(xs));
   genvar c;
   for(c=0;c<NC;c=c+1) begin:g_x
-    wire [16:0] q;
-    ot_hbm_su_programme_pstage #(.W(17),.N(XST-1+((TMUT==1 && c==TMUT_COL)?1:0))) u_s(.clk(clk),.d(xs),.q(q));
+    ot_hbm_su_programme_pstage #(.W(17),.N(XST-1+((TMUT==1 && c==TMUT_COL)?1:0))) u_s(.clk(clk),.d(xs),.q(xq[17*c+:17]));
   end
   // ---- trunk head ----
   wire [NC-1:0] we, any, l_busy, l_valid, l_done, l_fault; wire [5*NC-1:0] bank; wire [7*NC-1:0] row;
@@ -280,7 +279,7 @@ module ot_hbm_su_programme_pslice_c5 #(
     ot_hbm_su_programme_pgcol #(.DB((CAP<=3)?3:13),.CFGR((CAP<=3)?1:2),.CPIN(1),.RRLY(1),.FADV(2+LFX),
       .NCX((CAP>3)?NCX:0)) u_c(
       .clk(clk),.rst_n(rst_n),.cfg_we(we[c]),.cfg_any(any[c]),.cfg_bank(bank[5*c+:5]),.cfg_row(row[7*c+:7]),
-      .cfg_data(data[256*c+:256]),.start(g_x[c].q[16]),.length(g_x[c].q[15:0]),.busy(l_busy[c]),.valid(l_valid[c]),
+      .cfg_data(data[256*c+:256]),.start(xq[17*c+16]),.length(xq[17*c+:16]),.busy(l_busy[c]),.valid(l_valid[c]),
       .done(l_done[c]),.fault(l_fault[c]),.edge_index(l_edge[16*c+:16]),.command(cmd[256*c+:256]));
   end
   // ---- egress: OSTG plain stages, one chain per command column (g_oc[c]), edge_index (u_oe), busy/valid/done/fault (u_ob)
@@ -299,15 +298,14 @@ module ot_hbm_su_programme_pstage #(parameter integer W=1, N=1)(input logic clk,
   if(N==0) begin:g_0
     assign q=d;
   end else begin:g_n
+    wire [W*(N+1)-1:0] z_ch;  // flat chain (no cross-scope references: Yosys); z_ sorts after g_ for flop names
+    assign z_ch[W-1:0]=d;
     for(s=0;s<N;s=s+1) begin:g_s
       (* keep *) logic [W-1:0] r;
-      if(s==0) begin:g_f
-        always_ff @(posedge clk) r<=d;
-      end else begin:g_m
-        always_ff @(posedge clk) r<=g_s[s-1].r;
-      end
+      always_ff @(posedge clk) r<=z_ch[W*s+:W];
+      assign z_ch[W*(s+1)+:W]=r;
     end
-    assign q=g_s[N-1].r;
+    assign q=z_ch[W*N+:W];
   end
 endmodule
 
