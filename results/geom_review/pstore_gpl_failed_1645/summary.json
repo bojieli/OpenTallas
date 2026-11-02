@@ -1,0 +1,1366 @@
+{
+ "scope": "READ_ONLY_FAILED_GPL_CHECKPOINT_NO_STA_OR_PLACEMENT",
+ "die": [
+  0.0,
+  0.0,
+  673.92,
+  803.52
+ ],
+ "core": [
+  4.32,
+  4.32,
+  669.6,
+  799.2
+ ],
+ "regions": [
+  {
+   "name": "ot_mrg_pstore_l0_capture",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     120.42,
+     93.39,
+     146.34,
+     261.39
+    ]
+   ],
+   "members": 708,
+   "member_master_area_um2": 206.51111999999765,
+   "statuses": {
+    "PLACED": 708
+   },
+   "actual_row_area_um2": 4354.560000000143,
+   "fixed_nonmacro_area_um2": 9.130320000000332,
+   "available_row_area_estimate_um2": 4345.429680000143,
+   "member_area_fraction_of_available": 0.047523751437163024,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0957,
+   "reported_min_overflow": 0.0957
+  },
+  {
+   "name": "ot_mrg_pstore_l0_calendar",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     96.837,
+     69.042,
+     232.485,
+     197.042
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 6979.27104000016,
+   "fixed_nonmacro_area_um2": 36.25020000000094,
+   "available_row_area_estimate_um2": 6943.020840000158,
+   "member_area_fraction_of_available": 0.009323780165983021,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0966,
+   "reported_min_overflow": 0.0966
+  },
+  {
+   "name": "ot_mrg_pstore_l0_relay",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     128.118,
+     24.695,
+     263.766,
+     152.695
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 5729.123519999899,
+   "fixed_nonmacro_area_um2": 35.40455999999762,
+   "available_row_area_estimate_um2": 5693.718959999902,
+   "member_area_fraction_of_available": 0.01136958119197393,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0902,
+   "reported_min_overflow": 0.0902
+  },
+  {
+   "name": "ot_mrg_pstore_l0_output",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     159.398,
+     4.32,
+     295.046,
+     128.0
+    ]
+   ],
+   "members": 223,
+   "member_master_area_um2": 65.05596000000025,
+   "statuses": {
+    "PLACED": 223
+   },
+   "actual_row_area_um2": 6230.208959999943,
+   "fixed_nonmacro_area_um2": 235.47347999999002,
+   "available_row_area_estimate_um2": 5994.735479999953,
+   "member_area_fraction_of_available": 0.010852181921461656,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.653,
+   "reported_min_overflow": 0.5505
+  },
+  {
+   "name": "ot_mrg_pstore_l1_capture",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     120.42,
+     438.99,
+     146.34,
+     606.99
+    ]
+   ],
+   "members": 708,
+   "member_master_area_um2": 206.51111999999765,
+   "statuses": {
+    "PLACED": 708
+   },
+   "actual_row_area_um2": 4354.5599999996875,
+   "fixed_nonmacro_area_um2": 9.130320000000378,
+   "available_row_area_estimate_um2": 4345.429679999687,
+   "member_area_fraction_of_available": 0.047523751437168006,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.098,
+   "reported_min_overflow": 0.098
+  },
+  {
+   "name": "ot_mrg_pstore_l1_calendar",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     107.735,
+     328.243,
+     243.383,
+     456.243
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 6979.271039999663,
+   "fixed_nonmacro_area_um2": 34.85052000000035,
+   "available_row_area_estimate_um2": 6944.420519999663,
+   "member_area_fraction_of_available": 0.009321900915067769,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0515,
+   "reported_min_overflow": 0.0515
+  },
+  {
+   "name": "ot_mrg_pstore_l1_relay",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     149.913,
+     197.495,
+     285.561,
+     325.495
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 5729.123519999732,
+   "fixed_nonmacro_area_um2": 35.40455999999714,
+   "available_row_area_estimate_um2": 5693.718959999735,
+   "member_area_fraction_of_available": 0.011369581191974263,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.3789,
+   "reported_min_overflow": 0.3789
+  },
+  {
+   "name": "ot_mrg_pstore_l1_output",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     192.092,
+     66.748,
+     327.74,
+     194.748
+    ]
+   ],
+   "members": 223,
+   "member_master_area_um2": 65.05596000000025,
+   "statuses": {
+    "PLACED": 223
+   },
+   "actual_row_area_um2": 6979.271040000152,
+   "fixed_nonmacro_area_um2": 34.85051999999697,
+   "available_row_area_estimate_um2": 6944.420520000155,
+   "member_area_fraction_of_available": 0.00936809051419582,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.5311,
+   "reported_min_overflow": 0.4156
+  },
+  {
+   "name": "ot_mrg_pstore_l2_capture",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     120.42,
+     590.19,
+     146.34,
+     758.19
+    ]
+   ],
+   "members": 751,
+   "member_master_area_um2": 219.4435799999971,
+   "statuses": {
+    "PLACED": 751
+   },
+   "actual_row_area_um2": 4354.559999999689,
+   "fixed_nonmacro_area_um2": 9.130320000000372,
+   "available_row_area_estimate_um2": 4345.429679999689,
+   "member_area_fraction_of_available": 0.050499857588309376,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.1,
+   "reported_min_overflow": 0.1
+  },
+  {
+   "name": "ot_mrg_pstore_l2_calendar",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     118.632,
+     441.642,
+     254.28,
+     569.642
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 5845.683167999693,
+   "fixed_nonmacro_area_um2": 35.55878399999702,
+   "available_row_area_estimate_um2": 5810.124383999696,
+   "member_area_fraction_of_available": 0.011141792450824688,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.178,
+   "reported_min_overflow": 0.178
+  },
+  {
+   "name": "ot_mrg_pstore_l2_relay",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     171.709,
+     273.095,
+     307.357,
+     401.095
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 5729.123519999693,
+   "fixed_nonmacro_area_um2": 35.40455999999659,
+   "available_row_area_estimate_um2": 5693.718959999696,
+   "member_area_fraction_of_available": 0.01136958119197434,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.6099,
+   "reported_min_overflow": 0.1847
+  },
+  {
+   "name": "ot_mrg_pstore_l2_output",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     224.785,
+     104.547,
+     360.433,
+     232.547
+    ]
+   ],
+   "members": 223,
+   "member_master_area_um2": 65.05596000000025,
+   "statuses": {
+    "PLACED": 223
+   },
+   "actual_row_area_um2": 5729.123520000219,
+   "fixed_nonmacro_area_um2": 35.40455999999707,
+   "available_row_area_estimate_um2": 5693.718960000222,
+   "member_area_fraction_of_available": 0.011425916954636222,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0219,
+   "reported_min_overflow": 0.0219
+  },
+  {
+   "name": "ot_mrg_pstore_l3_capture",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     120.42,
+     266.19,
+     146.34,
+     434.19
+    ]
+   ],
+   "members": 708,
+   "member_master_area_um2": 206.51111999999765,
+   "statuses": {
+    "PLACED": 708
+   },
+   "actual_row_area_um2": 4354.559999999687,
+   "fixed_nonmacro_area_um2": 9.130320000000342,
+   "available_row_area_estimate_um2": 4345.429679999686,
+   "member_area_fraction_of_available": 0.04752375143716801,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0989,
+   "reported_min_overflow": 0.0989
+  },
+  {
+   "name": "ot_mrg_pstore_l3_calendar",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     129.53,
+     198.642,
+     265.178,
+     326.642
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 5729.123519999729,
+   "fixed_nonmacro_area_um2": 34.70471999999711,
+   "available_row_area_estimate_um2": 5694.418799999732,
+   "member_area_fraction_of_available": 0.01136818387857305,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.1494,
+   "reported_min_overflow": 0.1494
+  },
+  {
+   "name": "ot_mrg_pstore_l3_relay",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     193.504,
+     111.095,
+     329.152,
+     239.095
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 5729.123520000229,
+   "fixed_nonmacro_area_um2": 35.40455999999701,
+   "available_row_area_estimate_um2": 5693.718960000232,
+   "member_area_fraction_of_available": 0.01136958119197327,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0963,
+   "reported_min_overflow": 0.0963
+  },
+  {
+   "name": "ot_mrg_pstore_l3_output",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     257.478,
+     23.547,
+     393.126,
+     151.548
+    ]
+   ],
+   "members": 223,
+   "member_master_area_um2": 65.05596000000025,
+   "statuses": {
+    "PLACED": 223
+   },
+   "actual_row_area_um2": 5729.1585119999045,
+   "fixed_nonmacro_area_um2": 34.704936000000686,
+   "available_row_area_estimate_um2": 5694.4535759999035,
+   "member_area_fraction_of_available": 0.011424442948167668,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0927,
+   "reported_min_overflow": 0.0927
+  },
+  {
+   "name": "ot_mrg_pstore_l4_capture",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     256.068,
+     6.99,
+     281.988,
+     174.99
+    ]
+   ],
+   "members": 708,
+   "member_master_area_um2": 206.51111999999765,
+   "statuses": {
+    "PLACED": 708
+   },
+   "actual_row_area_um2": 4354.5600000000695,
+   "fixed_nonmacro_area_um2": 13.018320000000422,
+   "available_row_area_estimate_um2": 4341.541680000069,
+   "member_area_fraction_of_available": 0.047566310592230536,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.1168,
+   "reported_min_overflow": 0.1168
+  },
+  {
+   "name": "ot_mrg_pstore_l4_calendar",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     242.164,
+     4.32,
+     377.812,
+     132.243
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 6378.680015999953,
+   "fixed_nonmacro_area_um2": 235.18144799998757,
+   "available_row_area_estimate_um2": 6143.498567999965,
+   "member_area_fraction_of_available": 0.010537188099496048,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0939,
+   "reported_min_overflow": 0.0939
+  },
+  {
+   "name": "ot_mrg_pstore_l4_relay",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     283.124,
+     4.32,
+     418.772,
+     128.0
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 6230.208959999977,
+   "fixed_nonmacro_area_um2": 236.15279999998793,
+   "available_row_area_estimate_um2": 5994.056159999989,
+   "member_area_fraction_of_available": 0.010799898811758942,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.522,
+   "reported_min_overflow": 0.4757
+  },
+  {
+   "name": "ot_mrg_pstore_l4_output",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     324.084,
+     4.32,
+     459.732,
+     128.0
+    ]
+   ],
+   "members": 223,
+   "member_master_area_um2": 65.05596000000025,
+   "statuses": {
+    "PLACED": 223
+   },
+   "actual_row_area_um2": 6230.2089599999435,
+   "fixed_nonmacro_area_um2": 236.59451999998745,
+   "available_row_area_estimate_um2": 5993.614439999956,
+   "member_area_fraction_of_available": 0.010854211703347527,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.7288,
+   "reported_min_overflow": 0.1411
+  },
+  {
+   "name": "ot_mrg_pstore_l5_capture",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     391.716,
+     266.19,
+     417.636,
+     434.19
+    ]
+   ],
+   "members": 751,
+   "member_master_area_um2": 219.26861999999713,
+   "statuses": {
+    "PLACED": 751
+   },
+   "actual_row_area_um2": 4354.559999999687,
+   "fixed_nonmacro_area_um2": 9.130320000000355,
+   "available_row_area_estimate_um2": 4345.429679999686,
+   "member_area_fraction_of_available": 0.05045959459641122,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.099,
+   "reported_min_overflow": 0.099
+  },
+  {
+   "name": "ot_mrg_pstore_l5_calendar",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     354.798,
+     198.642,
+     490.446,
+     326.642
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 5729.1235199998855,
+   "fixed_nonmacro_area_um2": 34.70472000000042,
+   "available_row_area_estimate_um2": 5694.418799999885,
+   "member_area_fraction_of_available": 0.011368183878572745,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.8788,
+   "reported_min_overflow": 0.3765
+  },
+  {
+   "name": "ot_mrg_pstore_l5_relay",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     372.743,
+     111.095,
+     508.391,
+     239.095
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 5729.123520000229,
+   "fixed_nonmacro_area_um2": 35.40456000000078,
+   "available_row_area_estimate_um2": 5693.718960000228,
+   "member_area_fraction_of_available": 0.011369581191973278,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.7901,
+   "reported_min_overflow": 0.6279
+  },
+  {
+   "name": "ot_mrg_pstore_l5_output",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     390.689,
+     23.547,
+     526.337,
+     151.547
+    ]
+   ],
+   "members": 223,
+   "member_master_area_um2": 65.05596000000025,
+   "statuses": {
+    "PLACED": 223
+   },
+   "actual_row_area_um2": 5729.123520000074,
+   "fixed_nonmacro_area_um2": 34.704720000007704,
+   "available_row_area_estimate_um2": 5694.418800000066,
+   "member_area_fraction_of_available": 0.011424512717610356,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.3772,
+   "reported_min_overflow": 0.3194
+  },
+  {
+   "name": "ot_mrg_pstore_l6_capture",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     391.716,
+     590.19,
+     417.636,
+     758.19
+    ]
+   ],
+   "members": 750,
+   "member_master_area_um2": 218.75831999999716,
+   "statuses": {
+    "PLACED": 750
+   },
+   "actual_row_area_um2": 4354.559999999689,
+   "fixed_nonmacro_area_um2": 9.130320000000372,
+   "available_row_area_estimate_um2": 4345.429679999689,
+   "member_area_fraction_of_available": 0.050342160870041466,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0986,
+   "reported_min_overflow": 0.0986
+  },
+  {
+   "name": "ot_mrg_pstore_l6_calendar",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     365.695,
+     441.643,
+     501.343,
+     569.643
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 5845.582511999695,
+   "fixed_nonmacro_area_um2": 34.79220000000042,
+   "available_row_area_estimate_um2": 5810.7903119996945,
+   "member_area_fraction_of_available": 0.011140515579493113,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.7854,
+   "reported_min_overflow": 0.644
+  },
+  {
+   "name": "ot_mrg_pstore_l6_relay",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     394.539,
+     273.095,
+     530.187,
+     401.095
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 5729.123519999694,
+   "fixed_nonmacro_area_um2": 35.40456000000764,
+   "available_row_area_estimate_um2": 5693.718959999686,
+   "member_area_fraction_of_available": 0.01136958119197436,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.8492,
+   "reported_min_overflow": 0.4667
+  },
+  {
+   "name": "ot_mrg_pstore_l6_output",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     423.382,
+     104.548,
+     559.03,
+     232.548
+    ]
+   ],
+   "members": 223,
+   "member_master_area_um2": 65.05596000000025,
+   "statuses": {
+    "PLACED": 223
+   },
+   "actual_row_area_um2": 5729.123520000218,
+   "fixed_nonmacro_area_um2": 35.40456000001788,
+   "available_row_area_estimate_um2": 5693.7189600002,
+   "member_area_fraction_of_available": 0.011425916954636265,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.091,
+   "reported_min_overflow": 0.091
+  },
+  {
+   "name": "ot_mrg_pstore_l7_capture",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     391.716,
+     438.99,
+     417.636,
+     606.99
+    ]
+   ],
+   "members": 750,
+   "member_master_area_um2": 218.75831999999716,
+   "statuses": {
+    "PLACED": 750
+   },
+   "actual_row_area_um2": 4354.5599999996875,
+   "fixed_nonmacro_area_um2": 9.13032000000034,
+   "available_row_area_estimate_um2": 4345.429679999687,
+   "member_area_fraction_of_available": 0.05034216087004149,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0969,
+   "reported_min_overflow": 0.0969
+  },
+  {
+   "name": "ot_mrg_pstore_l7_calendar",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     376.593,
+     328.243,
+     512.241,
+     456.243
+    ]
+   ],
+   "members": 189,
+   "member_master_area_um2": 55.112400000000164,
+   "statuses": {
+    "PLACED": 189
+   },
+   "actual_row_area_um2": 6979.271039999663,
+   "fixed_nonmacro_area_um2": 36.25020000000033,
+   "available_row_area_estimate_um2": 6943.020839999663,
+   "member_area_fraction_of_available": 0.007937812844013131,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.8204,
+   "reported_min_overflow": 0.3168
+  },
+  {
+   "name": "ot_mrg_pstore_l7_relay",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     416.334,
+     197.495,
+     551.982,
+     325.495
+    ]
+   ],
+   "members": 188,
+   "member_master_area_um2": 54.82080000000016,
+   "statuses": {
+    "PLACED": 188
+   },
+   "actual_row_area_um2": 5729.123519999815,
+   "fixed_nonmacro_area_um2": 34.704720000011214,
+   "available_row_area_estimate_um2": 5694.418799999803,
+   "member_area_fraction_of_available": 0.009627110671944617,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.2659,
+   "reported_min_overflow": 0.2372
+  },
+  {
+   "name": "ot_mrg_pstore_l7_output",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     456.075,
+     66.748,
+     591.723,
+     194.748
+    ]
+   ],
+   "members": 189,
+   "member_master_area_um2": 55.14156000000016,
+   "statuses": {
+    "PLACED": 189
+   },
+   "actual_row_area_um2": 6979.271040000152,
+   "fixed_nonmacro_area_um2": 34.850520000015266,
+   "available_row_area_estimate_um2": 6944.420520000137,
+   "member_area_fraction_of_available": 0.007940411995672041,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0864,
+   "reported_min_overflow": 0.0864
+  },
+  {
+   "name": "ot_mrg_pstore_l8_capture",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     391.716,
+     93.39,
+     417.636,
+     261.39
+    ]
+   ],
+   "members": 708,
+   "member_master_area_um2": 206.51111999999765,
+   "statuses": {
+    "PLACED": 708
+   },
+   "actual_row_area_um2": 4354.560000000144,
+   "fixed_nonmacro_area_um2": 9.130320000000335,
+   "available_row_area_estimate_um2": 4345.429680000144,
+   "member_area_fraction_of_available": 0.04752375143716301,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.1008,
+   "reported_min_overflow": 0.1008
+  },
+  {
+   "name": "ot_mrg_pstore_l8_calendar",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     277.186,
+     69.042,
+     412.834,
+     197.042
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 6979.271040000159,
+   "fixed_nonmacro_area_um2": 36.250200000000255,
+   "available_row_area_estimate_um2": 6943.020840000158,
+   "member_area_fraction_of_available": 0.009323780165983021,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.3236,
+   "reported_min_overflow": 0.3236
+  },
+  {
+   "name": "ot_mrg_pstore_l8_relay",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     217.52,
+     24.695,
+     353.168,
+     152.695
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 5729.123520000034,
+   "fixed_nonmacro_area_um2": 34.70471999999729,
+   "available_row_area_estimate_um2": 5694.418800000037,
+   "member_area_fraction_of_available": 0.011368183878572441,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0969,
+   "reported_min_overflow": 0.0969
+  },
+  {
+   "name": "ot_mrg_pstore_l8_output",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     157.853,
+     4.32,
+     293.501,
+     128.0
+    ]
+   ],
+   "members": 223,
+   "member_master_area_um2": 65.05596000000025,
+   "statuses": {
+    "PLACED": 223
+   },
+   "actual_row_area_um2": 6230.208959999942,
+   "fixed_nonmacro_area_um2": 234.46988999999007,
+   "available_row_area_estimate_um2": 5995.739069999951,
+   "member_area_fraction_of_available": 0.010850365441270075,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.8788,
+   "reported_min_overflow": 0.5884
+  },
+  {
+   "name": "ot_mrg_pstore_l9_capture",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     527.364,
+     93.39,
+     553.284,
+     261.39
+    ]
+   ],
+   "members": 708,
+   "member_master_area_um2": 206.51111999999765,
+   "statuses": {
+    "PLACED": 708
+   },
+   "actual_row_area_um2": 4354.560000000133,
+   "fixed_nonmacro_area_um2": 10.2708000000046,
+   "available_row_area_estimate_um2": 4344.289200000128,
+   "member_area_fraction_of_available": 0.047536227560538914,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.098,
+   "reported_min_overflow": 0.098
+  },
+  {
+   "name": "ot_mrg_pstore_l9_calendar",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     389.821,
+     69.042,
+     525.469,
+     197.042
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 6979.27103999997,
+   "fixed_nonmacro_area_um2": 34.85052000000692,
+   "available_row_area_estimate_um2": 6944.420519999962,
+   "member_area_fraction_of_available": 0.009321900915067367,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.8486,
+   "reported_min_overflow": 0.3063
+  },
+  {
+   "name": "ot_mrg_pstore_l9_relay",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     307.143,
+     24.695,
+     442.791,
+     152.695
+    ]
+   ],
+   "members": 222,
+   "member_master_area_um2": 64.73520000000025,
+   "statuses": {
+    "PLACED": 222
+   },
+   "actual_row_area_um2": 5729.123520000034,
+   "fixed_nonmacro_area_um2": 34.70472000000102,
+   "available_row_area_estimate_um2": 5694.418800000033,
+   "member_area_fraction_of_available": 0.01136818387857245,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0772,
+   "reported_min_overflow": 0.0772
+  },
+  {
+   "name": "ot_mrg_pstore_l9_output",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     224.464,
+     4.32,
+     360.112,
+     128.0
+    ]
+   ],
+   "members": 223,
+   "member_master_area_um2": 65.05596000000025,
+   "statuses": {
+    "PLACED": 223
+   },
+   "actual_row_area_um2": 6230.2089599999435,
+   "fixed_nonmacro_area_um2": 234.51119999998866,
+   "available_row_area_estimate_um2": 5995.6977599999545,
+   "member_area_fraction_of_available": 0.010850440199640874,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.8413,
+   "reported_min_overflow": 0.2325
+  },
+  {
+   "name": "ot_mrg_pstore_l10_capture",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     527.364,
+     438.99,
+     553.284,
+     606.99
+    ]
+   ],
+   "members": 750,
+   "member_master_area_um2": 218.96243999999714,
+   "statuses": {
+    "PLACED": 750
+   },
+   "actual_row_area_um2": 4354.559999999686,
+   "fixed_nonmacro_area_um2": 10.270800000004629,
+   "available_row_area_estimate_um2": 4344.289199999681,
+   "member_area_fraction_of_available": 0.050402362715634405,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0992,
+   "reported_min_overflow": 0.0992
+  },
+  {
+   "name": "ot_mrg_pstore_l10_calendar",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     396.597,
+     328.243,
+     532.245,
+     456.243
+    ]
+   ],
+   "members": 28,
+   "member_master_area_um2": 8.164799999999998,
+   "statuses": {
+    "PLACED": 28
+   },
+   "actual_row_area_um2": 6979.271039999664,
+   "fixed_nonmacro_area_um2": 36.250200000007204,
+   "available_row_area_estimate_um2": 6943.020839999657,
+   "member_area_fraction_of_available": 0.0011759722731871276,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.096,
+   "reported_min_overflow": 0.096
+  },
+  {
+   "name": "ot_mrg_pstore_l10_relay",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     320.694,
+     197.495,
+     456.342,
+     325.495
+    ]
+   ],
+   "members": 27,
+   "member_master_area_um2": 7.873199999999998,
+   "statuses": {
+    "PLACED": 27
+   },
+   "actual_row_area_um2": 5729.123519999889,
+   "fixed_nonmacro_area_um2": 35.40456000000045,
+   "available_row_area_estimate_um2": 5693.718959999888,
+   "member_area_fraction_of_available": 0.0013827869017265567,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0806,
+   "reported_min_overflow": 0.0806
+  },
+  {
+   "name": "ot_mrg_pstore_l10_output",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     244.791,
+     66.748,
+     380.439,
+     194.748
+    ]
+   ],
+   "members": 28,
+   "member_master_area_um2": 8.179379999999998,
+   "statuses": {
+    "PLACED": 28
+   },
+   "actual_row_area_um2": 6979.271040000152,
+   "fixed_nonmacro_area_um2": 36.25019999999691,
+   "available_row_area_estimate_um2": 6943.020840000156,
+   "member_area_fraction_of_available": 0.0011780722236748773,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.079,
+   "reported_min_overflow": 0.079
+  },
+  {
+   "name": "ot_mrg_pstore_l0_cfg_forward",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     65.556,
+     286.19,
+     201.204,
+     414.19
+    ]
+   ],
+   "members": 267,
+   "member_master_area_um2": 77.85720000000036,
+   "statuses": {
+    "PLACED": 267
+   },
+   "actual_row_area_um2": 5729.123519999691,
+   "fixed_nonmacro_area_um2": 34.70580000000036,
+   "available_row_area_estimate_um2": 5694.41771999969,
+   "member_area_fraction_of_available": 0.013672548068708348,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0859,
+   "reported_min_overflow": 0.0859
+  },
+  {
+   "name": "ot_mrg_pstore_l1_cfg_forward",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     65.556,
+     534.59,
+     201.204,
+     662.59
+    ]
+   ],
+   "members": 267,
+   "member_master_area_um2": 77.85720000000036,
+   "statuses": {
+    "PLACED": 267
+   },
+   "actual_row_area_um2": 5729.123519999691,
+   "fixed_nonmacro_area_um2": 34.70580000000048,
+   "available_row_area_estimate_um2": 5694.41771999969,
+   "member_area_fraction_of_available": 0.013672548068708348,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.2098,
+   "reported_min_overflow": 0.2098
+  },
+  {
+   "name": "ot_mrg_pstore_l3_cfg_forward",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     133.38,
+     156.59,
+     269.028,
+     284.59
+    ]
+   ],
+   "members": 267,
+   "member_master_area_um2": 77.85720000000036,
+   "statuses": {
+    "PLACED": 267
+   },
+   "actual_row_area_um2": 6979.271040000116,
+   "fixed_nonmacro_area_um2": 34.85159999999736,
+   "available_row_area_estimate_um2": 6944.419440000119,
+   "member_area_fraction_of_available": 0.011211477168493012,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.601,
+   "reported_min_overflow": 0.5876
+  },
+  {
+   "name": "ot_mrg_pstore_l4_cfg_forward",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     269.028,
+     156.59,
+     404.676,
+     284.59
+    ]
+   ],
+   "members": 267,
+   "member_master_area_um2": 77.85720000000036,
+   "statuses": {
+    "PLACED": 267
+   },
+   "actual_row_area_um2": 6979.271040000116,
+   "fixed_nonmacro_area_um2": 36.25128000000003,
+   "available_row_area_estimate_um2": 6943.019760000116,
+   "member_area_fraction_of_available": 0.011213737349351728,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.6812,
+   "reported_min_overflow": 0.6551
+  },
+  {
+   "name": "ot_mrg_pstore_l6_cfg_forward",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     336.852,
+     534.59,
+     472.5,
+     662.59
+    ]
+   ],
+   "members": 267,
+   "member_master_area_um2": 77.85720000000036,
+   "statuses": {
+    "PLACED": 267
+   },
+   "actual_row_area_um2": 5729.123519999691,
+   "fixed_nonmacro_area_um2": 34.705800000000494,
+   "available_row_area_estimate_um2": 5694.41771999969,
+   "member_area_fraction_of_available": 0.013672548068708348,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.0928,
+   "reported_min_overflow": 0.0928
+  },
+  {
+   "name": "ot_mrg_pstore_l8_cfg_forward",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     404.676,
+     113.39,
+     540.324,
+     241.39
+    ]
+   ],
+   "members": 267,
+   "member_master_area_um2": 77.85720000000036,
+   "statuses": {
+    "PLACED": 267
+   },
+   "actual_row_area_um2": 5729.123520000325,
+   "fixed_nonmacro_area_um2": 34.7058000000079,
+   "available_row_area_estimate_um2": 5694.417720000317,
+   "member_area_fraction_of_available": 0.013672548068706844,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.7075,
+   "reported_min_overflow": 0.6107
+  },
+  {
+   "name": "ot_mrg_pstore_l9_cfg_forward",
+   "type": "VOLTAGE_DOMAIN",
+   "region_type": "INCLUSIVE",
+   "rects": [
+    [
+     472.5,
+     286.19,
+     608.148,
+     414.19
+    ]
+   ],
+   "members": 267,
+   "member_master_area_um2": 77.85720000000036,
+   "statuses": {
+    "PLACED": 267
+   },
+   "actual_row_area_um2": 5729.1235199995335,
+   "fixed_nonmacro_area_um2": 35.405640000017144,
+   "available_row_area_estimate_um2": 5693.717879999516,
+   "member_area_fraction_of_available": 0.01367422862195044,
+   "member_centers_outside": 0,
+   "outside_sample": [],
+   "reported_last_overflow": 0.1723,
+   "reported_min_overflow": 0.1676
+  }
+ ],
+ "summary": {
+  "scope": "FAILED_GPL_LAYOUT_AND_REGION_CAPACITY_DIAGNOSTIC_NOT_LEGALITY",
+  "instances": 130394,
+  "groups": 51,
+  "std_area_um2": 11134.950119992149,
+  "macro_area_um2": 295935.7420800001,
+  "max_group_member_area_fraction": 0.050499857588309376,
+  "empty_groups": [],
+  "warning_region_names": "NOT_EMITTED_BY_GPL_WARNING_OR_PERSISTED_IN_ODB; do not guess from last overflow",
+  "warning_overflow_changes": [
+   0.238849,
+   0.108359
+  ],
+  "global_hpwl_increase_percent": 29.2658,
+  "completed_regions": 25,
+  "outline_area_um2": 541508.1984,
+  "core_area_um2": 528817.7664,
+  "outline_macro_fraction": 0.5465027915632756,
+  "outline_free_area_um2": 245572.45631999988,
+  "outline_free_std_fill": 0.04534282992015378,
+  "core_free_std_fill": 0.047813695163916016
+ },
+ "actual_row_segments": 15000
+}
