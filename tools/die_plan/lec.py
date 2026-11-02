@@ -2625,7 +2625,7 @@ def sim_refine(L, log, tried, words=8, quiet=3, seed=4242, observe=None):
                 continue
             side, k = key
             tried[(side, k, "c") if h[0] == "const" else (side, k, h[2], h[3]) if h[0] == "eq" else
-                  (side, k, str(h[2]), str(h[3]))] += 1
+                  (side, k, *(str(v) for v in h[2:]))] += 1
             dropped += 1
         if badc:
             drop_failed(L, badc)
@@ -5092,10 +5092,11 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             gone.add(k)
             # Equality candidates are looked up with an integer polarity. Keep
             # that key unchanged when recording rejection, or they are retried
-            # in every adding round. FSM cube tuples keep their textual key.
+            # in every adding round. FSM cube tuples keep their textual key;
+            # explicit fill/loaded hints have only three entries.
             tried[(side, k, "c") if h[0] == "const" else
                   (side, k, h[2], h[3]) if h[0] == "eq" else
-                  (side, k, str(h[2]), str(h[3]))] += 1
+                  (side, k, *(str(v) for v in h[2:]))] += 1
         if expired and gone:
             n0 = len(L.hyp)
             cascade_drop(L, sup, gone)
