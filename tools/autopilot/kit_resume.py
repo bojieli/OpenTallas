@@ -103,9 +103,19 @@ def sha256_file(p):
 
 
 def runner_norm(text):
-    """the runner without its stage-resume edits (gen_phys RUN_KIT: '# KWRS' lines and ${KWRS_*} tokens), so a runner
+    """the runner without its stage-resume edits (gen_phys RUN_KIT: '# KWRS' lines, the
+    '# KWRS-BEGIN' .. '# KWRS-END' block and ${KWRS_*} tokens), so a runner
     that only gained stage resume compares equal to the one that built the previous attempt"""
-    t = "".join(ln for ln in text.splitlines(True) if not ln.rstrip().endswith("# KWRS"))
+    keep, skip = [], False
+    for ln in text.splitlines(True):
+        r = ln.rstrip()
+        if r.endswith("# KWRS-BEGIN"):
+            skip = True
+        if not skip and not r.endswith("# KWRS"):
+            keep.append(ln)
+        if r.endswith("# KWRS-END"):
+            skip = False
+    t = "".join(keep)
     t = re.sub(r"\$\{KWRS_\w+:-([^}]*)\}", r"\1", t)
     return re.sub(r"\$\{KWRS_\w+\}", "", t)
 

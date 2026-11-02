@@ -300,42 +300,78 @@ class RunKitBlock(unittest.TestCase):
         self.assertNotIn("KWRS", n)
         for s in ("\\$M synth;", "\\$M cts SKIP_CTS_REPAIR_TIMING=1", "\\$M $GOAL;", "\\$M grt;", "\\$MF grt CORNER=BC"):
             self.assertIn(s, n)
+            self.assertIn(s, self.rk)                     # make calls unchanged: kwrs_make.sh filters them
 
-    def block(self, start, goal):
-        lines = [ln for ln in self.rk.splitlines() if ln.rstrip().endswith("# KWRS") and not ln.startswith("#")]
+    def outer(self, d, start, goal):
+        """run the runner's outer resume block (lines up to 'fi  # KWRS') with K=d"""
+        lines = self.rk.splitlines()
+        a = next(i for i, ln in enumerate(lines) if ln.startswith("RS=0; KWRS_M="))
+        b = next(i for i, ln in enumerate(lines) if ln.startswith("fi  # KWRS"))
+        if start:
+            Path(d, "resume.json").write_text(json.dumps({"start": start, "reused_steps": ["synth"],
+                                                           "source": {"host": "h", "kit": "/k"}}))
+        sh = "set -u\nK=%s; GOAL=%s\n%s\necho \"V RS=$RS M=[$KWRS_M]\"\n" % (d, goal, "\n".join(lines[a:b + 1]))
+        p = subprocess.run(["bash", "-c", sh], capture_output=True, text=True)
+        return p.returncode, p.stdout
+
+    def make(self, d, rs, *calls):
+        """kwrs_make.sh with 'echo' as make: -> the make command lines it would run"""
+        out = []
+        for c in calls:
+            p = subprocess.run(["bash", os.path.join(d, "kwrs_make.sh"), str(rs), "echo", "DESIGN_CONFIG=/x"] + c.split(),
+                               capture_output=True, text=True, env=dict(os.environ, KWRS_DONE=os.path.join(d, "done")))
+            out.append((p.returncode, [ln for ln in p.stdout.splitlines() if ln.startswith("DESIGN_CONFIG")]))
+        return out
+
+    def test_no_resume(self):
         d = tempfile.mkdtemp()
         try:
-            if start:
-                Path(d, "resume.json").write_text(json.dumps({"start": start, "reused_steps": ["synth"],
-                                                               "source": {"host": "h", "kit": "/k"}}))
-            sh = "set -u\nK=%s; GOAL=%s\n%s\necho \"V RS=$RS s=[$KWRS_s] C=[$KWRS_C] cx=[$KWRS_cx] tx=[$KWRS_tx] " \
-                 "GR=[$KWRS_GR] gx=[$KWRS_gx] G=[$KWRS_G] Gx=[$KWRS_Gx]\"\n" % (d, goal, "\n".join(lines))
-            p = subprocess.run(["bash", "-c", sh], capture_output=True, text=True)
-            return p.returncode, p.stdout, os.path.exists(os.path.join(d, "FAIL_PREFLOOR"))
+            rc, out = self.outer(d, None, "route")
+            self.assertIn("V RS=0 M=[]", out)
+            self.assertFalse(os.path.exists(os.path.join(d, "kwrs_make.sh")))
         finally:
             shutil.rmtree(d)
 
-    def test_values(self):
-        rc, out, _ = self.block(None, "route")
-        self.assertIn("V RS=0 s=[] C=[] cx=[] tx=[] GR=[] gx=[] G=[] Gx=[]", out)
-        rc, out, _ = self.block("place", "place")
-        self.assertIn("RS=2 s=[: ] C=[do-cts]", out)
-        self.assertIn("G=[do-place] Gx=[]", out)
-        rc, out, _ = self.block("floorplan", "place")
-        self.assertIn("G=[do-floorplan do-place]", out)
-        rc, out, _ = self.block("cts", "place")
-        self.assertIn("Gx=[: ]", out)
-        rc, out, _ = self.block("grt", "route")
-        self.assertIn("C=[] cx=[: ] tx=[: ] GR=[do-grt] gx=[]", out)
-        self.assertIn("G=[do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc]", out)
-        rc, out, _ = self.block("route", "route")
-        self.assertIn("GR=[] gx=[: ]", out)
+    def test_make_filter(self):
+        d = tempfile.mkdtemp()
+        try:
+            rc, out = self.outer(d, "place", "place")
+            self.assertEqual(rc, 0)
+            self.assertIn('M=[M="bash /work/kwrs_make.sh 2 $M"; ]', out)
+            r = self.make(d, 2, "synth", "place", "print-BC_LIB_FILES")
+            self.assertEqual(r[0], (0, []))
+            self.assertEqual(r[1], (0, ["DESIGN_CONFIG=/x do-place"]))
+            self.assertEqual(r[2][1], ["DESIGN_CONFIG=/x print-BC_LIB_FILES"])
+            os.unlink(os.path.join(d, "done"))
+            r = self.make(d, 1, "place")
+            self.assertEqual(r[0][1], ["DESIGN_CONFIG=/x do-floorplan do-place"])
+            os.unlink(os.path.join(d, "done"))
+            # resumed at cts, goal route: cts + tapbal + grt + route + finish as do-* targets
+            r = self.make(d, 3, "cts SKIP_CTS_REPAIR_TIMING=1", "run RUN_SCRIPT=/work/tapbal_grt.tcl", "grt CORNER=BC",
+                          "route", "do-finish", "cts")
+            self.assertEqual([x[1] for x in r], [["DESIGN_CONFIG=/x SKIP_CTS_REPAIR_TIMING=1 do-cts"],
+                                                 ["DESIGN_CONFIG=/x RUN_SCRIPT=/work/tapbal_grt.tcl run"],
+                                                 ["DESIGN_CONFIG=/x CORNER=BC do-grt"],
+                                                 ["DESIGN_CONFIG=/x do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc"],
+                                                 ["DESIGN_CONFIG=/x do-finish"], []])       # cts twice: once
+            os.unlink(os.path.join(d, "done"))
+            # resumed at grt / route: cts and the tapbal pre-pass (writes 4_cts.odb in place) are skipped
+            r = self.make(d, 5, "cts", "run RUN_SCRIPT=/work/tapbal_grt.tcl", "grt", "route")
+            self.assertEqual([x[1] for x in r], [[], [], [], ["DESIGN_CONFIG=/x do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc"]])
+            r = self.make(d, 4, "finish")
+            self.assertEqual(r[0][0], 10)                                                  # unknown target: fail closed
+        finally:
+            shutil.rmtree(d)
 
     def test_fail_closed(self):
-        rc, _, fail = self.block("route", "finish")
-        self.assertEqual((rc, fail), (10, True))
-        rc, _, fail = self.block("bogus", "route")
-        self.assertEqual((rc, fail), (10, True))
+        for start, goal in (("route", "finish"), ("bogus", "route")):
+            d = tempfile.mkdtemp()
+            try:
+                rc, _ = self.outer(d, start, goal)
+                self.assertEqual(rc, 10)
+                self.assertTrue(os.path.exists(os.path.join(d, "FAIL_PREFLOOR")))
+            finally:
+                shutil.rmtree(d)
 
 
 class Prepare(unittest.TestCase):
