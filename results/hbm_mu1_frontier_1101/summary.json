@@ -1,0 +1,168 @@
+{
+  "schema": "opentallas.hbm.mu1.native_producer_frontier.v1",
+  "status": "BLOCKED_REAL_HIGHROW_PRODUCER_NOT_SUPPLIED",
+  "selected_top_sha256": "657a9fb5d7e99badd14354068ea3481e766444aa49a468d0e033a5445eaa62f8",
+  "current_callers": 16,
+  "roles": [
+    "SW",
+    "SE"
+  ],
+  "donor": "hfd_vms_bank_native_q0_faces_r2048@d587cc5af",
+  "field_layouts": {
+    "rq0..4": {
+      "old_width": 17,
+      "new_width": 18,
+      "old": {
+        "valid": 16,
+        "mirror": 15,
+        "sid": [
+          14,
+          13
+        ],
+        "row_low": [
+          12,
+          3
+        ],
+        "bank": [
+          2,
+          0
+        ]
+      },
+      "new": {
+        "valid": 17,
+        "mirror": 16,
+        "regular_row_hi": 15,
+        "sid": [
+          14,
+          13
+        ],
+        "row_low": [
+          12,
+          3
+        ],
+        "bank": [
+          2,
+          0
+        ]
+      }
+    },
+    "wq0,wq1,dq,kq": {
+      "old_width": 281,
+      "new_width": 282,
+      "old": {
+        "valid": 280,
+        "sector": [
+          279,
+          264
+        ],
+        "payload": [
+          263,
+          0
+        ]
+      },
+      "new": {
+        "valid": 281,
+        "mirror": 280,
+        "regular_row_hi": 279,
+        "sid": [
+          278,
+          277
+        ],
+        "row_low": [
+          276,
+          267
+        ],
+        "bank": [
+          266,
+          264
+        ],
+        "payload": [
+          263,
+          0
+        ]
+      }
+    },
+    "xq,xq2,eg": {
+      "old_width": 276,
+      "new_width": 277,
+      "old": {
+        "valid": 275,
+        "mirror": 274,
+        "row_low": [
+          273,
+          264
+        ],
+        "payload": [
+          263,
+          0
+        ]
+      },
+      "new": {
+        "valid": 276,
+        "mirror": 275,
+        "regular_row_hi": 274,
+        "row_low": [
+          273,
+          264
+        ],
+        "payload": [
+          263,
+          0
+        ]
+      }
+    },
+    "pq": {
+      "old_width": 285,
+      "new_width": 286,
+      "old": {
+        "valid": 284,
+        "write": 283,
+        "mirror": 282,
+        "row_low": [
+          281,
+          272
+        ],
+        "payload_tag": [
+          271,
+          0
+        ]
+      },
+      "new": {
+        "valid": 285,
+        "write": 284,
+        "mirror": 283,
+        "regular_row_hi": 282,
+        "row_low": [
+          281,
+          272
+        ],
+        "payload_tag": [
+          271,
+          0
+        ]
+      }
+    }
+  },
+  "request_channels": 80,
+  "legacy_top_input_request_channels": 64,
+  "legacy_selected_request_channels": 16,
+  "selected_rq4_producers": {
+    "SW": "ot_hbm_idx_rootctl_static_am hb_idx__ctl.vm_rq[135:0]",
+    "SE": "ot_hbm_idx_vm_query_static_n12 hb_idx__op_SE.vm_rq[135:0]"
+  },
+  "genuine_highrow_producer_bits_found": 0,
+  "constant_extension_adopted": false,
+  "parent_activated": false,
+  "data_pin_delta_per_bank": 13,
+  "clock_pin_delta_per_bank": 1,
+  "sixteen_bank_pin_delta": 224,
+  "donor_component_gate": "existing PASS2701cycles/404legacylockstep/1282writes1283reads/highalias+mirroraliasmutants caught; oldwrapped16434EQ USED64 is not native4 reset evidence",
+  "reset_proposal": {
+    "default": "DELIVERED_RESET=0 leaves original donor async-assert2sync+1relay byte-equivalent",
+    "optin": "propagate DELIVERED_RESET through faces->core->body; select3stage synchronous delivered-reset relay on1, preserve allotherbody bytes",
+    "qualification": "currentselected implementation reset-join required first; prove4edge native cold/warm contract and price perbank boot offsets, no64edge alias",
+    "baseline_caution": "readable source1131/rtl3SRAMlibrary is legacyasync; bind.f has119paths/36present, so cannot infer which actualfrontendpreferredbody supplied currentC3 reset",
+    "source_edit_made": false
+  },
+  "physical_qualification": "NOT RUN"
+}
