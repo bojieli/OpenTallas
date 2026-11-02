@@ -1,0 +1,78 @@
+{
+  "schema": "opentallas.kw_stage_resume.v1",
+  "decision": "resume",
+  "start": "floorplan",
+  "reuse": [
+    "synth"
+  ],
+  "why": "first changed step floorplan, old attempt complete through synth",
+  "changed": [
+    [
+      "gate",
+      "file",
+      "lec_async.sh"
+    ],
+    [
+      "floorplan",
+      "file",
+      "macro_place.tcl"
+    ],
+    [
+      "place",
+      "file",
+      "pc_guides_pre.tcl"
+    ],
+    [
+      "place",
+      "file",
+      "pc_guides_release.tcl"
+    ],
+    [
+      "place",
+      "file",
+      "zone_fence.tcl"
+    ],
+    [
+      "place",
+      "file",
+      "zone_fence_release.tcl"
+    ],
+    [
+      "place",
+      "file",
+      "zone_members.tcl"
+    ],
+    [
+      "place",
+      "var",
+      "PRE_DETAIL_PLACE_TCL"
+    ],
+    [
+      "place",
+      "var",
+      "PRE_GLOBAL_PLACE_TCL"
+    ]
+  ],
+  "fingerprints": {
+    "new": {
+      "synth": "367fb6961d6f7a56208dc782e9c81e61a3c2bb444fdcb361248796ba1a9e8c9d",
+      "floorplan": "7001e5e750f6b017c551a685a9d3ab530c074e66b33d75a752d4b45f945da902",
+      "place": "4fd7b30efa63013c76f852255608947b10dc7f3519d00bd404ab8c92362af8d6",
+      "cts": "de96bdb2287a8dcc01173191164131c14f8b5e23d2de6b2cb676c5633a1a70c1",
+      "grt": "212c68fcdee00cdcb1f4f8d9d3bc69896079265e3a744853989ed86d6a303680",
+      "route": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "gate": "8836836bd3a961843c238dfd64ef60d3d3f88a11e5d469853d4bd3008c3bd731"
+    },
+    "old": {
+      "synth": "367fb6961d6f7a56208dc782e9c81e61a3c2bb444fdcb361248796ba1a9e8c9d",
+      "floorplan": "6a044c56dd1996a583fd64843d11f717dc21df08018b008c06f072353da30588",
+      "place": "75a35204a7107c99909aa8475107bd80bbbbd004f0016cba1def6f6ef58456d9",
+      "cts": "de96bdb2287a8dcc01173191164131c14f8b5e23d2de6b2cb676c5633a1a70c1",
+      "grt": "212c68fcdee00cdcb1f4f8d9d3bc69896079265e3a744853989ed86d6a303680",
+      "route": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "gate": "0aa8dd17308bef5fb9ae764ea03e5a65a06dfe0a720240fa0e2291a763ac6e46"
+    }
+  },
+  "start_fingerprint": "floorplan",
+  "start_checkpoint": "floorplan"
+}
