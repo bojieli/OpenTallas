@@ -1,0 +1,711 @@
+{
+ "block": "vms",
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-57/plan_s11/G",
+ "base_die_plan_sha256": "e0638225f8b38653671aa3a59d11023c566182278d7256359f8f5b221b34c492",
+ "changed_instances": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q0",
+   "orient": "MX",
+   "old_origin": [
+    2047.68,
+    838.08
+   ],
+   "new_origin": [
+    2073.6,
+    967.68
+   ],
+   "old_outline": [
+    270.0000000000002,
+    403.91999999999996
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MX__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_ed4cba8a8b2a.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    3.984,
+    -23.76,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q1",
+   "orient": "R0",
+   "old_origin": [
+    2047.68,
+    2255.04
+   ],
+   "new_origin": [
+    2073.6,
+    2255.04
+   ],
+   "old_outline": [
+    270.0,
+    403.92
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_114e9076fa98.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    3.984,
+    21.6,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q2",
+   "orient": "MX",
+   "old_origin": [
+    3291.84,
+    838.08
+   ],
+   "new_origin": [
+    3309.12,
+    967.68
+   ],
+   "old_outline": [
+    270.0,
+    403.92
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MX__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_ed4cba8a8b2a.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.656,
+    -23.76,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q3",
+   "orient": "R0",
+   "old_origin": [
+    3291.84,
+    2255.04
+   ],
+   "new_origin": [
+    3309.12,
+    2255.04
+   ],
+   "old_outline": [
+    270.0,
+    403.92
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_114e9076fa98.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.608,
+    21.6,
+    -0.048,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q4",
+   "orient": "MX",
+   "old_origin": [
+    6298.56,
+    838.08
+   ],
+   "new_origin": [
+    6315.84,
+    967.68
+   ],
+   "old_outline": [
+    270.0,
+    403.92
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MX__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_ed4cba8a8b2a.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.656,
+    -23.76,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q5",
+   "orient": "R0",
+   "old_origin": [
+    6298.56,
+    2255.04
+   ],
+   "new_origin": [
+    6315.84,
+    2255.04
+   ],
+   "old_outline": [
+    270.0,
+    403.92
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_114e9076fa98.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.656,
+    21.6,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q6",
+   "orient": "R180",
+   "old_origin": [
+    7542.72,
+    838.08
+   ],
+   "new_origin": [
+    7568.64,
+    967.68
+   ],
+   "old_outline": [
+    270.0,
+    403.91999999999996
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_f9c1bd05a046.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    2.496,
+    -23.76,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q7",
+   "orient": "MY",
+   "old_origin": [
+    7542.72,
+    2255.04
+   ],
+   "new_origin": [
+    7568.64,
+    2255.04
+   ],
+   "old_outline": [
+    270.0,
+    403.92
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MY__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_d6532bde006e.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    2.496,
+    21.6,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q0",
+   "orient": "R0",
+   "old_origin": [
+    2047.68,
+    838.08
+   ],
+   "new_origin": [
+    2073.6,
+    838.08
+   ],
+   "old_outline": [
+    270.0000000000002,
+    403.91999999999996
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_79b1ed8e1d.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_def761e36c82.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    3.984,
+    21.6,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q1",
+   "orient": "R0",
+   "old_origin": [
+    2047.68,
+    2255.04
+   ],
+   "new_origin": [
+    2073.6,
+    2255.04
+   ],
+   "old_outline": [
+    270.0,
+    403.92
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_114e9076fa98.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    3.984,
+    21.6,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q2",
+   "orient": "R0",
+   "old_origin": [
+    3291.84,
+    838.08
+   ],
+   "new_origin": [
+    3309.12,
+    838.08
+   ],
+   "old_outline": [
+    270.0,
+    403.92
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_101f7349aa.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_5a03758c3d07.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.656,
+    21.6,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q3",
+   "orient": "R0",
+   "old_origin": [
+    3291.84,
+    2255.04
+   ],
+   "new_origin": [
+    3309.12,
+    2255.04
+   ],
+   "old_outline": [
+    270.0,
+    403.92
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_8087f86890.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_88b84f19c25b.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.608,
+    21.6,
+    -0.048,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q4",
+   "orient": "R0",
+   "old_origin": [
+    6298.56,
+    838.08
+   ],
+   "new_origin": [
+    6315.84,
+    838.08
+   ],
+   "old_outline": [
+    270.0,
+    403.92
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_9eec3f962d.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_0bb6804dab59.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.656,
+    21.6,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q5",
+   "orient": "R0",
+   "old_origin": [
+    6298.56,
+    2255.04
+   ],
+   "new_origin": [
+    6315.84,
+    2255.04
+   ],
+   "old_outline": [
+    270.0,
+    403.92
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_114e9076fa98.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.656,
+    21.6,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q6",
+   "orient": "R180",
+   "old_origin": [
+    7542.72,
+    838.08
+   ],
+   "new_origin": [
+    7568.64,
+    967.68
+   ],
+   "old_outline": [
+    270.0,
+    403.91999999999996
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_f9c1bd05a046.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    2.496,
+    -23.76,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q7",
+   "orient": "MY",
+   "old_origin": [
+    7542.72,
+    2255.04
+   ],
+   "new_origin": [
+    7568.64,
+    2255.04
+   ],
+   "old_outline": [
+    270.0,
+    403.92
+   ],
+   "new_outline": [
+    224.64,
+    272.16
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MY__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_d6532bde006e.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    2.496,
+    21.6,
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "pins_files": {
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_9eec3f962d.json": [
+   "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_0bb6804dab59.json",
+   "87127b32399078241fd32dc10fb1da8a09523b08c896aea23f2a6124989ad7a6"
+  ],
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_101f7349aa.json": [
+   "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_5a03758c3d07.json",
+   "bf304609d991924b21b7e3a2c7f3520c99a3538b37c3e9749bad6a98bff0d531"
+  ],
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_8087f86890.json": [
+   "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_88b84f19c25b.json",
+   "891356de3289fdc427d9c2dee9843aee1127d4f9d275f1e373b6d25bfc69c052"
+  ],
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MY__codex_g21.json": [
+   "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_d6532bde006e.json",
+   "b63d452c791adad5282997c64a8b1fe8db5fcdacda2dba85feae21c44846a60e"
+  ],
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_79b1ed8e1d.json": [
+   "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_def761e36c82.json",
+   "9e4d187d641ce0818e81e64aa1ee06a9e427842b79687870cdce34a279fc7dcd"
+  ],
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MX__codex_g21.json": [
+   "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_ed4cba8a8b2a.json",
+   "1041eb70fcc1632dc9822763a39f0419b3c89f546f0454ddae2ccf4e6bd60005"
+  ],
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__codex_g21.json": [
+   "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_f9c1bd05a046.json",
+   "1df92a01bd1d5585be81af80092a785eda74620a65a8286c7005650e2c412c1c"
+  ],
+  "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json": [
+   "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_114e9076fa98.json",
+   "b6fc6337236d7763e489f33610c2a14011fbbef80edf7ff5fbb82e9c09accb4d"
+  ]
+ },
+ "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_114e9076fa98.json",
+ "pins_sha256": "b6fc6337236d7763e489f33610c2a14011fbbef80edf7ff5fbb82e9c09accb4d",
+ "pins_n": 3919,
+ "lattice_snaps": [
+  {
+   "want": [
+    2069.28,
+    969.84
+   ],
+   "snapped": [
+    2073.6,
+    967.68
+   ]
+  },
+  {
+   "want": [
+    2069.28,
+    2255.04
+   ],
+   "snapped": [
+    2073.6,
+    2255.04
+   ]
+  },
+  {
+   "want": [
+    3313.44,
+    969.84
+   ],
+   "snapped": [
+    3309.12,
+    967.68
+   ]
+  },
+  {
+   "want": [
+    3313.44,
+    2255.04
+   ],
+   "snapped": [
+    3309.12,
+    2255.04
+   ]
+  },
+  {
+   "want": [
+    6320.16,
+    969.84
+   ],
+   "snapped": [
+    6315.84,
+    967.68
+   ]
+  },
+  {
+   "want": [
+    6320.16,
+    2255.04
+   ],
+   "snapped": [
+    6315.84,
+    2255.04
+   ]
+  },
+  {
+   "want": [
+    7566.48,
+    969.84
+   ],
+   "snapped": [
+    7568.64,
+    967.68
+   ]
+  },
+  {
+   "want": [
+    7566.48,
+    2255.04
+   ],
+   "snapped": [
+    7568.64,
+    2255.04
+   ]
+  },
+  {
+   "want": [
+    2069.28,
+    838.08
+   ],
+   "snapped": [
+    2073.6,
+    838.08
+   ]
+  },
+  {
+   "want": [
+    2069.28,
+    2255.04
+   ],
+   "snapped": [
+    2073.6,
+    2255.04
+   ]
+  },
+  {
+   "want": [
+    3313.44,
+    838.08
+   ],
+   "snapped": [
+    3309.12,
+    838.08
+   ]
+  },
+  {
+   "want": [
+    3313.44,
+    2255.04
+   ],
+   "snapped": [
+    3309.12,
+    2255.04
+   ]
+  },
+  {
+   "want": [
+    6320.16,
+    838.08
+   ],
+   "snapped": [
+    6315.84,
+    838.08
+   ]
+  },
+  {
+   "want": [
+    6320.16,
+    2255.04
+   ],
+   "snapped": [
+    6315.84,
+    2255.04
+   ]
+  },
+  {
+   "want": [
+    7566.48,
+    969.84
+   ],
+   "snapped": [
+    7568.64,
+    967.68
+   ]
+  },
+  {
+   "want": [
+    7566.48,
+    2255.04
+   ],
+   "snapped": [
+    7568.64,
+    2255.04
+   ]
+  }
+ ],
+ "n_instances": 16,
+ "new_die_plan_sha256": "6004ca40966178428fbbfbf39deda5f5c408bb4a29658e85591f2e3e51dc94cc",
+ "fixes": [
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_f9c1bd05a046.json",
+   "pin": "wq_done0",
+   "old": {
+    "name": "wq_done0",
+    "layer": "M4",
+    "x": 0.096,
+    "y": 4.344,
+    "w": 0.192,
+    "h": 0.024
+   },
+   "new": {
+    "name": "wq_done0",
+    "layer": "M5",
+    "x": 72.552,
+    "y": 272.064,
+    "w": 0.024,
+    "h": 0.192
+   },
+   "sha256": "a53815bba6744dbe5cfe433df3ac14f15d415b5c955c4b08ef6334b053397ec8"
+  }
+ ]
+}

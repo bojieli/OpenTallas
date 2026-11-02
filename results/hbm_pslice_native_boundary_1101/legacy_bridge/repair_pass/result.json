@@ -1,0 +1,31 @@
+{
+ "scope": "ActualC4legacySB2470-only\u21928aNCX1commandresetNATIVE_PINS1 full100macro sameedge bridge",
+ "verdict": "PASS",
+ "rows": {
+  "0": {
+   "MUT": 0,
+   "cycles": 1776,
+   "mismatches": 0,
+   "known": 4419751,
+   "unknown": 2489,
+   "valid": 460,
+   "nonzero": 460,
+   "writes": 499,
+   "starts": 43,
+   "warm": 2
+  },
+  "1": {
+   "MUT": 1,
+   "cycles": 1776,
+   "mismatches": 5776,
+   "known": 4419751,
+   "unknown": 2489,
+   "valid": 460,
+   "nonzero": 460,
+   "writes": 499,
+   "starts": 43,
+   "warm": 2
+  }
+ },
+ "adoption": false
+}

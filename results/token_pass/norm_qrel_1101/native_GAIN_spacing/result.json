@@ -1,0 +1,38 @@
+{
+ "status": "PASS_CURRENT_NATIVE_GAIN_TO_NORMR_MINIMUM_SPACING_COMPONENT",
+ "native_part": "s_0S_L0",
+ "clock_ps": 833,
+ "event_base": "registeredleafdn_i0_q CV, no extra externalpacket3 added",
+ "minimum_GAIN_to_NORMR_command_edges": 9,
+ "last_driver_gain_write_edges_after_GAIN": 12,
+ "GAIN_driver_writes": 8,
+ "positive_command_spacings": [
+  9,
+  10,
+  11,
+  13
+ ],
+ "positive_numeric_errors": 0,
+ "positive_all_faults": 0,
+ "boundary_earlier_command_spacings": [
+  8,
+  7
+ ],
+ "boundary_VP_fault": true,
+ "spacing8_gain_writes": 8,
+ "spacing7_gain_writes": 7,
+ "wrong_GAIN_at_spacing9_numeric_errors": 3,
+ "wrong_GAIN_at_spacing9_all_faults": 0,
+ "prior_component_spacing": 81,
+ "local_idle_edges_removed": 72,
+ "POST_command_to_last_driver_HW_edges": 62,
+ "VS13_command_to_last_write_edges": 74,
+ "NORMR_command_to_partial_edges": 116,
+ "all80_native_profiles_qualified": false,
+ "actual_gain_RF_residency_event_measured": false,
+ "absolute_upstream_input_epochs_qualified": false,
+ "actual_final_layer_HEAD_input": false,
+ "physical_phases_qualified": false,
+ "HOST_START_authority": false,
+ "canonical_adopted": false
+}

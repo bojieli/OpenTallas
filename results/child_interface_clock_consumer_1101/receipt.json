@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.child_interface_clock_consumer_receipt.v1",
+  "base_main": "051340895d95ea77b712fcc1fe80a5de9f6449be",
+  "source_scope": "new consumer/test only; no signoff/pair/observer/child_clock_join producer edits",
+  "actual_command": [
+    "python3",
+    "/srv/opentallas-scratch/claude/wt/codex-child-interface-clock-consumer-1101/tools/die_plan/child_interface_clock_join.py",
+    "--attachment",
+    "/srv/opentallas-scratch/claude/codex-child-clock-consumer-fixture/attachment.json",
+    "--qualification",
+    "/srv/opentallas-scratch/claude/codex-child-clock-consumer-fixture/qualification.json",
+    "--boundary-maps",
+    "/srv/opentallas-scratch/claude/codex-child-clock-consumer-fixture/boundary_maps.json",
+    "--native-witness",
+    "/srv/opentallas-scratch/claude/codex-child-clock-consumer-fixture/native/child_clock_witness.json",
+    "--native-view",
+    "/srv/opentallas-scratch/claude/codex-child-clock-consumer-fixture/native",
+    "--instance",
+    "u_q.u_s.u_hc.g_bank[0].u_bank",
+    "--out",
+    "/tmp/hc0_consumer_actual_ready.json"
+  ],
+  "actual_exit": 2,
+  "actual_status": "UNEXPANDED",
+  "actual_parent_coverage": "UNEXPANDED_CHILD_ETM",
+  "actual_qualification": "NOT_ASSERTED",
+  "exact_instance": "u_q.u_s.u_hc.g_bank[0].u_bank",
+  "actual_native_interface_index": {
+    "tt": 433,
+    "ff": 433
+  },
+  "actual_reason": [
+    "actual parent DATA/STD/consumed-Lib/propagated-source witness absent"
+  ],
+  "retained_source_inputs_sha256": {
+    "attachment.json": "b8928c3573ca52bc99a63c3a3e664afae83dd8220162b39a6d4ea42320f56fdb",
+    "qualification.json": "b383e169e711b624311ca49672a3b3f74d2b7f49b54ac81ba3ca37f9ba404ee8",
+    "boundary_maps.json": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd",
+    "native/child_clock_witness.json": "b02251c763963d55e818f2cd0b3e4cc175935b51c4404271cf1331c33be73552"
+  },
+  "parent_observer": "NONE; current attachment is synth73ca PREP, not actual propagated parent STA",
+  "focused_cases_PASS": 16,
+  "independent_review": "producer owner /root/signoff_geom reviewed source against85ada; no unsafe coverage promotion; finite safe scope limits documented",
+  "no_new_STA_CAD_native_proof_or_reextraction": true,
+  "additional_clock_or_cppr_credit": "NONE"
+}

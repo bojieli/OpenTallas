@@ -1,0 +1,13 @@
+MONITOR_CASE stage1 user0 writes88/90 VMfirst5 last94 busyLast93/91 done94/92
+MONITOR_CASE stage1 user1 writes88/90 VMfirst5 last94 busyLast93/91 done94/92
+MONITOR_CASE stage1 user2 writes88/90 VMfirst5 last94 busyLast93/91 done94/92
+MONITOR_CASE stage1 user3 writes88/90 VMfirst5 last94 busyLast93/91 done94/92
+MONITOR_CASE stage36 user0 writes88/90 VMfirst5 last94 busyLast93/91 done94/92
+MONITOR_CASE stage36 user1 writes88/90 VMfirst5 last94 busyLast93/91 done94/92
+MONITOR_CASE stage36 user2 writes88/90 VMfirst5 last94 busyLast93/91 done94/92
+MONITOR_CASE stage36 user3 writes88/90 VMfirst5 last94 busyLast93/91 done94/92
+MONITOR_TAIL_PASS checks1424 stage1and36 users4 nativeC0J0WE34 period833ps collision
+- tb.sv:34: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 870ns; walltime 11.416 s; speed 76.180 ns/s
+- Verilator: cpu 11.374 s on 1 threads; allocated 11 MB

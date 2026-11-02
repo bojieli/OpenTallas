@@ -453,7 +453,7 @@ def frame_slot(die, frame):
     raise KeyError(frame)
 
 
-def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=None, kslot=1, nsr=None, stretch=None):
+def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=None, kslot=1, nsr=None, stretch=None, ret_score=None):
     """legalise one phase on pairs (a contiguous run qa[off:off + n]); assign_slots in field-slot indexing"""
     import frame_return_plan as P
     import v41_rom_ksplit_bankmap as S
@@ -463,7 +463,7 @@ def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=Non
         kx = None      # a slot count without a measurement: unmeasured
     plan = P.plan_phase(LX.base_master(die_frame_master), pairs, mat, x, nseg, iters=iters, land_e=LX.land_e(lk),
                         frame_schedule=LX.source_frame_schedule(die_frame_master),
-                        seg_extra=sx, assign=assign, kslot=kslot, nsr=nsr, stretch=stretch,
+                        seg_extra=sx, assign=assign, kslot=kslot, nsr=nsr, stretch=stretch, ret_score=ret_score,
                         slot_extra=_prov_slot(kslot) if kx is None else {int(n): v for n, v in kx['slot_extra'].items()})
     plan['assign_slots'] = [(i + off, R, sg) for i, R, sg in plan['assign_slots']]
     units = {S.unit_range(mat.fmt, a0, el)[1] - S.unit_range(mat.fmt, a0, el)[0] for a0, el in S.segments(mat.K, nseg)}
@@ -471,6 +471,35 @@ def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=Non
     plan['calendar'] = 'measured_class' if sx is not None and (kslot == 1 or kx is not None) else 'calendar_unmeasured'
     plan['emission'] = dict(plan['emission'], elem_extra=sx)
     return plan
+
+
+def down_cap_scorer(rank_rows, cfg):
+    """Logical single-frame FIN only; no current parent timing/other-frame admission.
+
+    Frame plans contain phase-local rows and element format flags. Actual rank
+    image tags replace those fields with the producer's global row identity.
+    """
+    sys.path.insert(0, str(ROOT / 'tools/s81_slice'))
+    import cap_model as CM
+    rows = tuple(rank_rows)
+    assert len(rows) == len(set(rows))
+    cache = {}
+    def score(ret):
+        key = tuple(tuple(w) for w in ret)
+        if key not in cache:
+            lanes = [{} for _ in range(8)]
+            for i, (edge, tag, data, err) in enumerate(ret):
+                local = (tag >> 13) & 0x3fff
+                assert local < len(rows) and tag >> 29 == 0
+                if edge in lanes[0]:
+                    cache[key] = 1000 + len(ret)
+                    return cache[key]
+                lanes[0][edge] = ((rows[local] << 13) | (tag & 0x1fff), data, err, [i])
+            finish = CM.model(lanes, [(0, cfg)])
+            got = [word[5] for word in finish['writes']]
+            cache[key] = len(finish['faults']) + len(set(rows) ^ set(got)) + abs(len(got)-len(rows))
+        return cache[key]
+    return score
 
 
 def add_planned(field, plan, mat, nseg):
@@ -587,8 +616,19 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
         pairs = [qa[i] for i in slot_ids]
         measured = only is None or k in only
         st_k = KSLOT_STRETCH.get(op) if ks > 1 else None
+        cap_score = None
+        if op == 'ffn.down' and os.environ.get('OT_XS_DOWN_CAP_PLAN', '0') == '1':
+            assert measured and os.environ.get('OT_XS_FINAL_FFN_PAIR_ROWS', '0') == '1', 'down CAP search requires explicit aligned source ownership'
+            from layer_prog import final_ffn as FF
+            spans = FF.source_spans([sorted(r for fr in sl_ for r in fr) for sl_ in grp['groups']])
+            capture = FF.capture(fx.meta['rank'], g, FF.expert_slot(grp['mat'][:-3], fx.meta['experts']), spans=spans)
+            cap_score = down_cap_scorer([grp['rows'][i] for i in sel], capture)
         plan = phase_plan(master, lk, pairs, 0, mat, grp['x'], nseg, iters if measured else 0, kslot=ks, nsr=nsr_k,
-                          stretch=st_k)
+                          stretch=st_k, ret_score=cap_score)
+        if cap_score is not None:
+            plan['single_frame_cap_score'] = cap_score(plan['ret'])
+            plan['single_frame_cap_scope'] = 'logical FIN only; physical input ages and simultaneous frames unadmitted'
+            assert plan['single_frame_cap_score'] == 0, ('no single-frame down CAP-safe assignment found', frame, k, plan['single_frame_cap_score'])
         plan['assign_slots'] = [(slot_ids[i], r, seg) for i, r, seg in plan['assign_slots']]
         if not measured:
             plan['calendar'] = 'not_legalised'

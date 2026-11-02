@@ -1,0 +1,71 @@
+{
+ "scope": "Exact current C BFQG source/ordinary SYNTH/boundary preparation only; no physical or token closure",
+ "source_commit": "286756143f83bea6f3be41bad2a346ea8b00da6c",
+ "kit": "/srv/opentallas-scratch2/claude/codex-bfqg-native-1520/gen/ot_hgi_sm_xload_cl2_bfqg_a188c76ca5a0",
+ "top": "ot_hgi_sm_xload_cl2_bfqg",
+ "params": {},
+ "face_shell": null,
+ "clocks": [
+  "clk",
+  "clk_n",
+  "clk_s",
+  "clk_ctrl",
+  "clk_m0",
+  "clk_m1",
+  "clk_m2",
+  "clk_m3",
+  "clk_m4",
+  "clk_m5",
+  "clk_m6",
+  "clk_m7",
+  "clk_l0",
+  "clk_l1",
+  "clk_l2",
+  "clk_l3",
+  "clk_l4",
+  "clk_l5",
+  "clk_l6",
+  "clk_l7"
+ ],
+ "pins": 1340,
+ "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+ "pins_sha256": "a188c76ca5a08579833441a987e111ce3fa38c654e9aca929e09cda2c4ba4d13",
+ "pins_canon_sha256": "c058633c3c3495b863e6fbd16591fffd27fdd4574d6880588f00dd3b1287b6d6",
+ "source_pin_policy": "DECLARED_CLOCK_RESET_POINTS",
+ "clock_stage": "HOLD_CTS: common-domain multi-port stage required",
+ "gen": 0,
+ "lint": 0,
+ "preflight": 0,
+ "synth": 0,
+ "face_guard": "FACE_GUARD PASS top ot_hgi_sm_xload_cl2_bfqg checked 1319 ok 1319 fails {}",
+ "port_bind": "port_bind PASS {'missing': 0, 'extra': 0}",
+ "lec_verdict": "EQUIVALENT",
+ "lec_counts": {
+  "compare_points": 8650,
+  "proved": 8650,
+  "differs": 0,
+  "undecided": 0
+ },
+ "lec_reset": {
+  "default": 4,
+  "requested": 4,
+  "used": 4
+ },
+ "native_audit_current_shared": true,
+ "synth_resources": {
+  "DFFHQN": 3887,
+  "DFFASRHQN": 3,
+  "sequential_cells": 3890,
+  "SRAMs": 8,
+  "cell_area_um2": 32672.08422,
+  "sequential_area_um2": 1134.58644
+ },
+ "not_run": [
+  "native floorplan/place",
+  "native CTS",
+  "native GRT50",
+  "native DRT",
+  "native timing closure",
+  "whole-token qualification"
+ ]
+}

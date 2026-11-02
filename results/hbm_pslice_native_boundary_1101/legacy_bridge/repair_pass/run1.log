@@ -1,0 +1,11 @@
+MISMATCH cycle=435 bit=256 ref=1 cand=0 rst=1 cfg=0 start=0
+MISMATCH cycle=435 bit=262 ref=1 cand=0 rst=1 cfg=0 start=0
+MISMATCH cycle=435 bit=266 ref=1 cand=0 rst=1 cfg=0 start=0
+MISMATCH cycle=435 bit=268 ref=1 cand=0 rst=1 cfg=0 start=0
+MISMATCH cycle=435 bit=269 ref=1 cand=0 rst=1 cfg=0 start=0
+MISMATCH cycle=435 bit=272 ref=1 cand=0 rst=1 cfg=0 start=0
+MISMATCH cycle=435 bit=277 ref=1 cand=0 rst=1 cfg=0 start=0
+MISMATCH cycle=435 bit=284 ref=1 cand=0 rst=1 cfg=0 start=0
+RESULT MUT=1 cycles=1776 mismatches=5776 known=4419751 unknown=2489 valid=460 nonzero=460 writes=499 starts=43 warm=2
+FAIL
+tb.sv:62: $finish called at 1481184 (1ps)

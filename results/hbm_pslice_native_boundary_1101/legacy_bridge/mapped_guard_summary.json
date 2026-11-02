@@ -1,0 +1,603 @@
+{
+ "source": "8a0367f73",
+ "scope": "FreshGEN/LINT/PREFLIGHT+ordinarymappedguards, noLEC/physicaladoption",
+ "verdict": "PASS",
+ "rows": [
+  {
+   "fanout": 32,
+   "kit": "/srv/opentallas-scratch2/claude/codex-hbm-pslice-coldreset-1400/gen32c/ot_hbm_su_programme_pslice_c5_551f0b096c91-creset32c",
+   "kit_hash": "56e794838875f54d",
+   "source_commit": "8a0367f7382fd91de8f45dd9ca4efe19b5aae1d3",
+   "face_shell": null,
+   "pins": 2789,
+   "preflight": {
+    "schema": "opentallas.kit_preflight.v2",
+    "kit": "/srv/opentallas-scratch2/claude/codex-hbm-pslice-coldreset-1400/gen32c/ot_hbm_su_programme_pslice_c5_551f0b096c91-creset32c",
+    "contract": [
+     "corner_modes",
+     "ff_binding",
+     "clock_pin_geometry",
+     "rc_calibration",
+     "duplicate_modules",
+     "keep_hook",
+     "pins_canonical",
+     "mesh_vias",
+     "macro_channels",
+     "clock_entry_clear",
+     "island_macro_clear",
+     "macro_pin_grid",
+     "macro_instances"
+    ],
+    "contract_binding": true,
+    "contract_advisory": {},
+    "verdict": "PASS",
+    "checks": {
+     "staged_tools": {
+      "verdict": "PASS",
+      "errors": []
+     },
+     "staged_inputs": {
+      "verdict": "PASS",
+      "errors": []
+     },
+     "sdc_and_ff_binding": {
+      "verdict": "PASS",
+      "errors": []
+     },
+     "yosys_cast_forms": {
+      "verdict": "PASS",
+      "errors": []
+     },
+     "module_closure": {
+      "verdict": "PASS",
+      "errors": []
+     },
+     "corner_modes": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "corners": [
+        "tc",
+        "BC"
+       ],
+       "per_mode": true,
+       "hooks": [
+        "clock_family.tcl",
+        "constraint.sdc",
+        "core_density_taps.tcl",
+        "core_grt_post.tcl",
+        "core_grt_pre.tcl",
+        "core_tap_align.tcl",
+        "f4_chain_leaf.tcl",
+        "face_flops.tcl",
+        "face_flops_release.tcl",
+        "face_keep.tcl",
+        "face_keep_release.tcl",
+        "hold_cap.tcl",
+        "hold_pad_hb4.tcl",
+        "macro_placement.tcl",
+        "max_fanout.tcl",
+        "ot_keep_regs.tcl",
+        "pdn.tcl",
+        "pg_connect.tcl",
+        "post_cts_setup.tcl",
+        "post_synth_actual.tcl",
+        "setRC_rcx.tcl",
+        "vclk_corner.tcl",
+        "vclk_ff.sdc"
+       ]
+      }
+     },
+     "ff_binding": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "values": {
+        "OT_VCLK_TT": 250.0,
+        "OT_VCLK_FF": 202.5,
+        "sdc_lint_insertion_ps": 250.0,
+        "sdc_lint_insertion_ff_ps": 202.5
+       }
+      }
+     },
+     "clock_pin_geometry": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "clock_ports": [
+        "clk"
+       ],
+       "placements": {
+        "clk": 2
+       },
+       "entries": [
+        [
+         "io.tcl",
+         "clk",
+         535.656,
+         380.16
+        ]
+       ],
+       "pins_json_warnings": []
+      }
+     },
+     "rc_calibration": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "files": [
+        "setRC_rcx.tcl"
+       ],
+       "records": {
+        "setRC_rcx.tcl": {
+         "signal": "set_wire_rc -signal = RCX unit R/C fit on SIGNAL nets >= 5 um, 4 designs (FLOW-RC-1 2026-10-27); GRT basis shares the per-layer table",
+         "clock": "set_layer_rc per layer = clock-sink arrival fit (FLOW 2026-10-25, rc_calib.json); set_wire_rc -clock unchanged"
+        }
+       }
+      }
+     },
+     "duplicate_modules": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "modules": 12,
+       "files": 3
+      }
+     },
+     "keep_hook": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "keep_attrs": 26,
+       "named_keep_modules": [],
+       "paramod_renamed": []
+      }
+     },
+     "pins_canonical": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "kit_canon": "dcd67164f7fc3946e1f6f5f900f9b1ab79a48dc65c243d8d94220586903323be",
+       "recorded": "dcd67164f7fc3946e1f6f5f900f9b1ab79a48dc65c243d8d94220586903323be",
+       "plan_file": "/srv/opentallas-scratch2/claude/codex-hbm-pslice-coldreset-1400/gen32c/ot_hbm_su_programme_pslice_c5_551f0b096c91-creset32c/plan_pins.json",
+       "plan_canon": "dcd67164f7fc3946e1f6f5f900f9b1ab79a48dc65c243d8d94220586903323be",
+       "slice": false,
+       "plan_place_canon": "dcd67164f7fc3946e1f6f5f900f9b1ab79a48dc65c243d8d94220586903323be"
+      }
+     },
+     "mesh_vias": {
+      "verdict": "NA",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": false,
+       "reason": "no clock-mesh inputs in the kit"
+      }
+     },
+     "macro_channels": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "macros": 100,
+       "columns": 7,
+       "min_channel_um": 10.8,
+       "min_channel_note": "10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling"
+      }
+     },
+     "clock_entry_clear": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "entries": 1,
+       "macros": 100
+      }
+     },
+     "island_macro_clear": {
+      "verdict": "NA",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": false,
+       "reason": "no island reservations"
+      }
+     },
+     "macro_pin_grid": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "macros": 100,
+       "pins": 81900,
+       "tracks": "make_tracks.tcl",
+       "worst_off_nm": 0.0
+      }
+     },
+     "macro_instances": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "placed": 100,
+       "resolved": 100
+      }
+     }
+    },
+    "issues": [],
+    "deferred": [
+     "RTL elaboration/SELRANGE",
+     "synthesis face/fanout/port binding/LEC",
+     "placed and routed PG",
+     "TT setup / FF hold",
+     "routed LEC"
+    ]
+   },
+   "face_guard": {
+    "top": "ot_hbm_su_programme_pslice_c5",
+    "checked": 2787,
+    "ok": 2787,
+    "fails": {},
+    "flops": {
+     "cfg_we": "u_h.c_we_raw$_DFF_P_",
+     "cfg_bank[15]": "u_h.c_bank[15]$_DFF_P_",
+     "cfg_bank[14]": "u_h.c_bank[14]$_DFF_P_",
+     "cfg_bank[13]": "u_h.c_bank[13]$_DFF_P_",
+     "cfg_bank[12]": "u_h.c_bank[12]$_DFF_P_",
+     "cfg_bank[11]": "u_h.c_bank[11]$_DFF_P_",
+     "cfg_bank[10]": "u_h.c_bank[10]$_DFF_P_",
+     "cfg_bank[9]": "u_h.c_bank[9]$_DFF_P_",
+     "cfg_bank[8]": "u_h.c_bank[8]$_DFF_P_",
+     "cfg_bank[7]": "u_h.c_bank[7]$_DFF_P_",
+     "cfg_bank[6]": "u_h.c_bank[6]$_DFF_P_",
+     "cfg_bank[5]": "u_h.c_bank[5]$_DFF_P_",
+     "cfg_bank[4]": "u_h.c_bank[4]$_DFF_P_",
+     "cfg_bank[3]": "u_h.c_bank[3]$_DFF_P_",
+     "cfg_bank[2]": "u_h.c_bank[2]$_DFF_P_",
+     "cfg_bank[1]": "u_h.c_bank[1]$_DFF_P_",
+     "cfg_bank[0]": "u_h.c_bank[0]$_DFF_P_",
+     "cfg_row[6]": "u_h.c_row[6]$_DFF_P_",
+     "cfg_row[5]": "u_h.c_row[5]$_DFF_P_",
+     "cfg_row[4]": "u_h.c_row[4]$_DFF_P_"
+    },
+    "straps_exempt": [],
+    "dead_declared": [],
+    "bumps_exempt": [],
+    "clock_exports": {},
+    "pairs_declared": [],
+    "planned_bits": 2781,
+    "missing_ports": 0,
+    "fail_counts": {},
+    "verdict": "PASS",
+    "skip_re": "^(clk|rst_n)$"
+   },
+   "port_bind": "port_bind PASS {'missing': 0, 'extra': 0}",
+   "mapped_netlist_sha256": "41864578c91d7dae375fd072a414a519c530370726140eaca02adfc7f8e7d1cc",
+   "mapped_DFF_master_occurrences": {
+    "DFFHQNx1_ASAP7_75t_R": 22890,
+    "DFFASRHQNx1_ASAP7_75t_R": 68
+   }
+  },
+  {
+   "fanout": 64,
+   "kit": "/srv/opentallas-scratch2/claude/codex-hbm-pslice-coldreset-1400/gen64c/ot_hbm_su_programme_pslice_c5_551f0b096c91-creset64c",
+   "kit_hash": "97e10d83be642ba0",
+   "source_commit": "8a0367f7382fd91de8f45dd9ca4efe19b5aae1d3",
+   "face_shell": null,
+   "pins": 2789,
+   "preflight": {
+    "schema": "opentallas.kit_preflight.v2",
+    "kit": "/srv/opentallas-scratch2/claude/codex-hbm-pslice-coldreset-1400/gen64c/ot_hbm_su_programme_pslice_c5_551f0b096c91-creset64c",
+    "contract": [
+     "corner_modes",
+     "ff_binding",
+     "clock_pin_geometry",
+     "rc_calibration",
+     "duplicate_modules",
+     "keep_hook",
+     "pins_canonical",
+     "mesh_vias",
+     "macro_channels",
+     "clock_entry_clear",
+     "island_macro_clear",
+     "macro_pin_grid",
+     "macro_instances"
+    ],
+    "contract_binding": true,
+    "contract_advisory": {},
+    "verdict": "PASS",
+    "checks": {
+     "staged_tools": {
+      "verdict": "PASS",
+      "errors": []
+     },
+     "staged_inputs": {
+      "verdict": "PASS",
+      "errors": []
+     },
+     "sdc_and_ff_binding": {
+      "verdict": "PASS",
+      "errors": []
+     },
+     "yosys_cast_forms": {
+      "verdict": "PASS",
+      "errors": []
+     },
+     "module_closure": {
+      "verdict": "PASS",
+      "errors": []
+     },
+     "corner_modes": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "corners": [
+        "tc",
+        "BC"
+       ],
+       "per_mode": true,
+       "hooks": [
+        "clock_family.tcl",
+        "constraint.sdc",
+        "core_density_taps.tcl",
+        "core_grt_post.tcl",
+        "core_grt_pre.tcl",
+        "core_tap_align.tcl",
+        "f4_chain_leaf.tcl",
+        "face_flops.tcl",
+        "face_flops_release.tcl",
+        "face_keep.tcl",
+        "face_keep_release.tcl",
+        "hold_cap.tcl",
+        "hold_pad_hb4.tcl",
+        "macro_placement.tcl",
+        "max_fanout.tcl",
+        "ot_keep_regs.tcl",
+        "pdn.tcl",
+        "pg_connect.tcl",
+        "post_cts_setup.tcl",
+        "post_synth_actual.tcl",
+        "setRC_rcx.tcl",
+        "vclk_corner.tcl",
+        "vclk_ff.sdc"
+       ]
+      }
+     },
+     "ff_binding": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "values": {
+        "OT_VCLK_TT": 250.0,
+        "OT_VCLK_FF": 202.5,
+        "sdc_lint_insertion_ps": 250.0,
+        "sdc_lint_insertion_ff_ps": 202.5
+       }
+      }
+     },
+     "clock_pin_geometry": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "clock_ports": [
+        "clk"
+       ],
+       "placements": {
+        "clk": 2
+       },
+       "entries": [
+        [
+         "io.tcl",
+         "clk",
+         535.656,
+         380.16
+        ]
+       ],
+       "pins_json_warnings": []
+      }
+     },
+     "rc_calibration": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "files": [
+        "setRC_rcx.tcl"
+       ],
+       "records": {
+        "setRC_rcx.tcl": {
+         "signal": "set_wire_rc -signal = RCX unit R/C fit on SIGNAL nets >= 5 um, 4 designs (FLOW-RC-1 2026-10-27); GRT basis shares the per-layer table",
+         "clock": "set_layer_rc per layer = clock-sink arrival fit (FLOW 2026-10-25, rc_calib.json); set_wire_rc -clock unchanged"
+        }
+       }
+      }
+     },
+     "duplicate_modules": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "modules": 12,
+       "files": 3
+      }
+     },
+     "keep_hook": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "keep_attrs": 26,
+       "named_keep_modules": [],
+       "paramod_renamed": []
+      }
+     },
+     "pins_canonical": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "kit_canon": "dcd67164f7fc3946e1f6f5f900f9b1ab79a48dc65c243d8d94220586903323be",
+       "recorded": "dcd67164f7fc3946e1f6f5f900f9b1ab79a48dc65c243d8d94220586903323be",
+       "plan_file": "/srv/opentallas-scratch2/claude/codex-hbm-pslice-coldreset-1400/gen64c/ot_hbm_su_programme_pslice_c5_551f0b096c91-creset64c/plan_pins.json",
+       "plan_canon": "dcd67164f7fc3946e1f6f5f900f9b1ab79a48dc65c243d8d94220586903323be",
+       "slice": false,
+       "plan_place_canon": "dcd67164f7fc3946e1f6f5f900f9b1ab79a48dc65c243d8d94220586903323be"
+      }
+     },
+     "mesh_vias": {
+      "verdict": "NA",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": false,
+       "reason": "no clock-mesh inputs in the kit"
+      }
+     },
+     "macro_channels": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "macros": 100,
+       "columns": 7,
+       "min_channel_um": 10.8,
+       "min_channel_note": "10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling"
+      }
+     },
+     "clock_entry_clear": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "entries": 1,
+       "macros": 100
+      }
+     },
+     "island_macro_clear": {
+      "verdict": "NA",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": false,
+       "reason": "no island reservations"
+      }
+     },
+     "macro_pin_grid": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "macros": 100,
+       "pins": 81900,
+       "tracks": "make_tracks.tcl",
+       "worst_off_nm": 0.0
+      }
+     },
+     "macro_instances": {
+      "verdict": "PASS",
+      "errors": [],
+      "n_errors": 0,
+      "info": {
+       "applies": true,
+       "placed": 100,
+       "resolved": 100
+      }
+     }
+    },
+    "issues": [],
+    "deferred": [
+     "RTL elaboration/SELRANGE",
+     "synthesis face/fanout/port binding/LEC",
+     "placed and routed PG",
+     "TT setup / FF hold",
+     "routed LEC"
+    ]
+   },
+   "face_guard": {
+    "top": "ot_hbm_su_programme_pslice_c5",
+    "checked": 2787,
+    "ok": 2787,
+    "fails": {},
+    "flops": {
+     "cfg_we": "u_h.c_we_raw$_DFF_P_",
+     "cfg_bank[15]": "u_h.c_bank[15]$_DFF_P_",
+     "cfg_bank[14]": "u_h.c_bank[14]$_DFF_P_",
+     "cfg_bank[13]": "u_h.c_bank[13]$_DFF_P_",
+     "cfg_bank[12]": "u_h.c_bank[12]$_DFF_P_",
+     "cfg_bank[11]": "u_h.c_bank[11]$_DFF_P_",
+     "cfg_bank[10]": "u_h.c_bank[10]$_DFF_P_",
+     "cfg_bank[9]": "u_h.c_bank[9]$_DFF_P_",
+     "cfg_bank[8]": "u_h.c_bank[8]$_DFF_P_",
+     "cfg_bank[7]": "u_h.c_bank[7]$_DFF_P_",
+     "cfg_bank[6]": "u_h.c_bank[6]$_DFF_P_",
+     "cfg_bank[5]": "u_h.c_bank[5]$_DFF_P_",
+     "cfg_bank[4]": "u_h.c_bank[4]$_DFF_P_",
+     "cfg_bank[3]": "u_h.c_bank[3]$_DFF_P_",
+     "cfg_bank[2]": "u_h.c_bank[2]$_DFF_P_",
+     "cfg_bank[1]": "u_h.c_bank[1]$_DFF_P_",
+     "cfg_bank[0]": "u_h.c_bank[0]$_DFF_P_",
+     "cfg_row[6]": "u_h.c_row[6]$_DFF_P_",
+     "cfg_row[5]": "u_h.c_row[5]$_DFF_P_",
+     "cfg_row[4]": "u_h.c_row[4]$_DFF_P_"
+    },
+    "straps_exempt": [],
+    "dead_declared": [],
+    "bumps_exempt": [],
+    "clock_exports": {},
+    "pairs_declared": [],
+    "planned_bits": 2781,
+    "missing_ports": 0,
+    "fail_counts": {},
+    "verdict": "PASS",
+    "skip_re": "^(clk|rst_n)$"
+   },
+   "port_bind": "port_bind PASS {'missing': 0, 'extra': 0}",
+   "mapped_netlist_sha256": "41864578c91d7dae375fd072a414a519c530370726140eaca02adfc7f8e7d1cc",
+   "mapped_DFF_master_occurrences": {
+    "DFFHQNx1_ASAP7_75t_R": 22890,
+    "DFFASRHQNx1_ASAP7_75t_R": 68
+   }
+  }
+ ],
+ "predecessor8b_mapped_DFF_master_occurrences": {
+  "DFFHQNx1_ASAP7_75t_R": 22890,
+  "DFFASRHQNx1_ASAP7_75t_R": 44
+ },
+ "mapped_DFF_delta_vs8b": {
+  "DFFASRHQNx1_ASAP7_75t_R": 24
+ },
+ "mapped_DFF_delta_total_vs8b": 24,
+ "DFF_count_scope": "MappedDFFmasteroccurrences; privatehelperinstance multiplicity unchanged. Exactrelativecoldresetdelta, not externalclockpincap/timing.",
+ "mapped_netlists32_64_byte_identical": true
+}

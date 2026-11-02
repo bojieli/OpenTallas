@@ -1,0 +1,1713 @@
+{
+ "base_plan": "/srv/opentallas-scratch2/claude/die-hbm-57/plan_s11/G",
+ "base_die_plan_sha256": "e0638225f8b38653671aa3a59d11023c566182278d7256359f8f5b221b34c492",
+ "new_die_plan_sha256": "692b9f45078d35a6e9506111bb17750b0a6b09875ccafbeb85d84243318ca069",
+ "module": "ot_hnx_fused_tnode",
+ "hard_cores": {
+  "q_hub_nw": [
+   {
+    "inst": "u_mu_fused_n1_q0_0",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     1805.76,
+     1382.4
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q0_1",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     1805.76,
+     2799.36
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q0_2",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     3680.64,
+     1382.4
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q0_3",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     3680.64,
+     2799.36
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n2L_q0",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     1805.76,
+     2090.88
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n2R_q0",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     3680.64,
+     2090.88
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n3_q0",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     2738.88,
+     3464.64
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | DIE-HBM C20: C17g outline growth re-pack (REPACK sub-lane) | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q1_0",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     6048.0,
+     1382.4
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q1_1",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     6048.0,
+     2799.36
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q1_2",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     7922.88,
+     1382.4
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q1_3",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     7922.88,
+     2799.36
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n2L_q1",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     6048.0,
+     2090.88
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n2R_q1",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     7922.88,
+     2090.88
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n3_q1",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     6989.76,
+     3326.4
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n4",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     4872.96,
+     3542.4
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "HBM-MU-QUAD n4: q0/q1 pair node in the hub (GEOM-REVIEW-15 (b)) | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%) | k41 G0C fix: orient MX so the dn S-face bus faces station n4x_dn_i",
+    "obs_max": "M5",
+    "orient": "MX"
+   }
+  ],
+  "q_hub_ne": [
+   {
+    "inst": "u_mu_fused_n1_q0_0",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     1805.76,
+     1382.4
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q0_1",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     1805.76,
+     2799.36
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q0_2",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     3680.64,
+     1382.4
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q0_3",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     3680.64,
+     2799.36
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n2L_q0",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     1805.76,
+     2090.88
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n2R_q0",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     3680.64,
+     2090.88
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n3_q0",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     2738.88,
+     3464.64
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | DIE-HBM C20: C17g outline growth re-pack (REPACK sub-lane) | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q1_0",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     6048.0,
+     1382.4
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q1_1",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     6048.0,
+     2799.36
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q1_2",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     7922.88,
+     1382.4
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n1_q1_3",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     7922.88,
+     2799.36
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n2L_q1",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     6048.0,
+     2090.88
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n2R_q1",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     7922.88,
+     2090.88
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n3_q1",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     6989.76,
+     3326.4
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "MU FUSED native binary tree model | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_mu_fused_n4",
+    "module": "ot_hnx_fused_tnode",
+    "origin_um": [
+     4872.96,
+     3542.4
+    ],
+    "outline_um": [
+     125.28,
+     95.04
+    ],
+    "track_offset_um": [
+     0,
+     0
+    ],
+    "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+    "note": "HBM-MU-QUAD n4: q0/q1 pair node in the hub (GEOM-REVIEW-15 (b)) | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%) | k41 G0C fix: orient MX so the dn S-face bus faces station n4x_dn_i",
+    "obs_max": "M5",
+    "orient": "MX"
+   }
+  ]
+ },
+ "taps": {
+  "q_hub_nw": [
+   {
+    "name": "u_mu_fused_n1_q0_0",
+    "kind": "core",
+    "xy": [
+     1870.536,
+     1447.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q0_1",
+    "kind": "core",
+    "xy": [
+     1870.536,
+     2864.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q0_2",
+    "kind": "core",
+    "xy": [
+     3745.416,
+     1447.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q0_3",
+    "kind": "core",
+    "xy": [
+     3745.416,
+     2864.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n2L_q0",
+    "kind": "core",
+    "xy": [
+     1870.536,
+     2155.68
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n2R_q0",
+    "kind": "core",
+    "xy": [
+     3745.416,
+     2155.68
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n3_q0",
+    "kind": "core",
+    "xy": [
+     2803.656,
+     3529.44
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q1_0",
+    "kind": "core",
+    "xy": [
+     6112.776,
+     1447.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q1_1",
+    "kind": "core",
+    "xy": [
+     6112.776,
+     2864.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q1_2",
+    "kind": "core",
+    "xy": [
+     7987.656,
+     1447.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q1_3",
+    "kind": "core",
+    "xy": [
+     7987.656,
+     2864.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n2L_q1",
+    "kind": "core",
+    "xy": [
+     6112.776,
+     2155.68
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n2R_q1",
+    "kind": "core",
+    "xy": [
+     7987.656,
+     2155.68
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n3_q1",
+    "kind": "core",
+    "xy": [
+     7054.536,
+     3391.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n4",
+    "kind": "core",
+    "xy": [
+     4937.736,
+     3572.64
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   }
+  ],
+  "q_hub_ne": [
+   {
+    "name": "u_mu_fused_n1_q0_0",
+    "kind": "core",
+    "xy": [
+     1870.536,
+     1447.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q0_1",
+    "kind": "core",
+    "xy": [
+     1870.536,
+     2864.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q0_2",
+    "kind": "core",
+    "xy": [
+     3745.416,
+     1447.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q0_3",
+    "kind": "core",
+    "xy": [
+     3745.416,
+     2864.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n2L_q0",
+    "kind": "core",
+    "xy": [
+     1870.536,
+     2155.68
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n2R_q0",
+    "kind": "core",
+    "xy": [
+     3745.416,
+     2155.68
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n3_q0",
+    "kind": "core",
+    "xy": [
+     2803.656,
+     3529.44
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q1_0",
+    "kind": "core",
+    "xy": [
+     6112.776,
+     1447.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q1_1",
+    "kind": "core",
+    "xy": [
+     6112.776,
+     2864.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q1_2",
+    "kind": "core",
+    "xy": [
+     7987.656,
+     1447.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n1_q1_3",
+    "kind": "core",
+    "xy": [
+     7987.656,
+     2864.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n2L_q1",
+    "kind": "core",
+    "xy": [
+     6112.776,
+     2155.68
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n2R_q1",
+    "kind": "core",
+    "xy": [
+     7987.656,
+     2155.68
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n3_q1",
+    "kind": "core",
+    "xy": [
+     7054.536,
+     3391.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   },
+   {
+    "name": "u_mu_fused_n4",
+    "kind": "core",
+    "xy": [
+     4937.736,
+     3572.64
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "ot_hnx_fused_tnode",
+    "note": "HBM-MU-QUAD-6/CLK 12.8a: plan centre clock entry (clock_entries.json), common latency, zero early offset; core had no plan clock tap | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)"
+   }
+  ]
+ },
+ "clock_entries": {
+  "q_hub_nw": {
+   "u_mu_fused_n1_q0_0": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q0_0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): 12.8a outline centre on the 4.32 lattice | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q0_1": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q0_1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q0_2": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q0_2.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q0_3": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q0_3.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n2L_q0": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n2L_q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n2R_q0": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n2R_q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n3_q0": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n3_q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q1_0": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q1_0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q1_1": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q1_1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q1_2": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q1_2.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q1_3": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q1_3.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n2L_q1": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n2L_q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n2R_q1": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n2R_q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n3_q1": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n3_q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n4": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n4.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   }
+  },
+  "q_hub_ne": {
+   "u_mu_fused_n1_q0_0": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q0_0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q0_1": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q0_1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q0_2": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q0_2.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q0_3": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q0_3.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n2L_q0": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n2L_q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n2R_q0": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n2R_q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n3_q0": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n3_q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q1_0": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q1_0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q1_1": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q1_1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q1_2": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q1_2.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n1_q1_3": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n1_q1_3.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n2L_q1": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n2L_q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n2R_q1": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n2R_q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n3_q1": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n3_q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   },
+   "u_mu_fused_n4": {
+    "xy_um": [
+     64.776,
+     64.8
+    ],
+    "island_um": [
+     60.48,
+     60.48,
+     69.12,
+     69.12
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_fused_n4.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module | HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_fused_tnode"
+   }
+  }
+ },
+ "core_macros": {
+  "status": "KNOWN",
+  "outline_um": [
+   125.28,
+   95.04
+  ],
+  "basis": "HBM-CORES-KITS-41 compact event k41c-tnode: 172.8x172.8 -> 125.28x95.04 (Codex PREP tnode_compact_1548 / hbm-tnode-native-look-1131 parent_event: child R0 origin +21.6,+21.6 keeps world clk+PG; native fill FAIL 6.57% -> est 22.4%)",
+  "macros": [
+   {
+    "name": "u_fcore.u_pad.u_d",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     15.168,
+     8.796,
+     109.992,
+     49.86
+    ]
+   },
+   {
+    "name": "u_fcore.u_pad.u_c",
+    "master": "ot_sram_1r1w2c_32x64_m1",
+    "orient": "R0",
+    "rect_um": [
+     15.168,
+     69.372,
+     47.16,
+     86.676
+    ]
+   }
+  ],
+  "channel_rule_um": 10.8,
+  "previous": {
+   "status": "UNKNOWN",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  "previous_k41": {
+   "outline_um": [
+    172.8,
+    172.8
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u_pad.u_d",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      38.976,
+      15.132,
+      133.8,
+      56.196
+     ]
+    },
+    {
+     "name": "u_fcore.u_pad.u_c",
+     "master": "ot_sram_1r1w2c_32x64_m1",
+     "orient": "R0",
+     "rect_um": [
+      38.976,
+      67.068,
+      70.968,
+      84.372
+     ]
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,9 @@
+MU_USER_PASS user=0 writes=128
+MU_USER_PASS user=1 writes=128
+MU_USER_PASS user=2 writes=128
+MU_USER_PASS user=3 writes=128
+MU_CALENDAR_MONITOR_XA_PASS users4 literalwords512 checks=512 precision1fs period833ps MEMALIGN3 MIF0
+- /srv/opentallas-scratch2/claude/codex-monitor-native-1101/replay1/portable/51_tb_mu_native.sv:93: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 109.935 s; speed 22.853 ns/s
+- Verilator: cpu 95.263 s on 1 threads; allocated 193 MB

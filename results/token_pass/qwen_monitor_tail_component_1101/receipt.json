@@ -1,0 +1,68 @@
+{
+  "status": "PASS COMPONENT ONLY",
+  "host": "intel2",
+  "root": "/srv/opentallas-scratch2/claude/codex-monitor-tail-1101/gate3",
+  "unit": "oth-ubuntu-3925741-1793578508",
+  "binary_sha256": "66a7368a9051169a9e8412a545a8231ef64c6f079f6663f952842a340da3076a",
+  "profile": {
+    "MONITOR_TAIL": 1,
+    "CAPTURE_STAGE": 0,
+    "LOCAL_JOIN": 0,
+    "WE_COPIES": 34,
+    "BTAB_COMPACT": 1
+  },
+  "period_ps": 833,
+  "tick_fs": 1,
+  "positive": {
+    "stages": [
+      1,
+      36
+    ],
+    "users": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "slices": [
+      0,
+      1
+    ],
+    "exact_writes": 1424,
+    "writes_per_window": [
+      88,
+      90
+    ],
+    "VM_first": 5,
+    "VM_last": 94,
+    "busy_last": 93,
+    "done": 94,
+    "default_busy_last": 91,
+    "default_done": 92,
+    "collision": "both writes suppressed, sticky fault raised"
+  },
+  "controls": [
+    "MUT_OFF",
+    "MUT_TAIL",
+    "MUT_PIDX",
+    "MUT_PAYLOAD",
+    "MUT_USER"
+  ],
+  "source_sha256": {
+    "rtl/qwen_dv/qfd_dv_table_rom_loader.sv": "bdc0549688d4ef05f1dc7a61791f9bdcbead8719a9090e87de6857b1cee01c53",
+    "rtl/qwen_dv/qfd_dv_slice_tload.sv": "9c55e4fe85160ed704be9f509cf9166f2d77b654c25331b3f550a61e5dca114e",
+    "tools/qwen_layerbench/monitor_tail.py": "8073cfcfd76a1ae473490e84b120be1a38aefc8286a7ad5fe8f57f07d3903f16",
+    "tools/qwen_layerbench/monitor_tail_gate.py": "bbcc86c092c0a3bbc7c85509bf9a9711759c02676627acf33be1c3091b20fc2d"
+  },
+  "scope": "Actual ROM macros and current C0/J0 native table loader/join, unchanged originalOFF lockstep; fixture requests only",
+  "held": [
+    "production TREQ/table_req source and global load window",
+    "earliest actual ANY PROG, including pidx0",
+    "native SU execution of dedicated monitor copies",
+    "RP1 commit measurement (ledger +1 is conditional on selected downstream body)",
+    "production caller/calendar activation",
+    "MEMALIGN3/MIF0 consumer execution",
+    "actual normalized HEAD producer/HEAD installation",
+    "mapped physical area/timing and re-sign"
+  ]
+}

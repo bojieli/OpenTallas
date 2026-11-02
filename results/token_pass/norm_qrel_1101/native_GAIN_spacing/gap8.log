@@ -1,0 +1,39 @@
+POST_COMMAND op3 cycle480
+POST_COMMAND op13 cycle601
+POST_VS_WRITE age67 row448
+POST_VS_WRITE age68 row450
+POST_VS_WRITE age69 row452
+POST_VS_WRITE age70 row454
+POST_VS_WRITE age71 row456
+POST_VS_WRITE age72 row458
+POST_VS_WRITE age73 row460
+POST_VS_WRITE age74 row462
+POST_COMMAND op6 cycle842
+POST_COMMAND op2 cycle963
+POST_COMMAND op4 cycle1204
+POST_COMMAND op6 cycle1325
+POST_COMMAND op6 cycle1486
+POST_COMMAND op1 cycle1567
+GAIN_WRITE age5 row0
+GAIN_WRITE age6 row1
+GAIN_WRITE age7 row2
+GAIN_WRITE age8 row3
+POST_COMMAND op7 cycle1576
+GAIN_WRITE age9 row4
+GAIN_WRITE age10 row5
+GAIN_WRITE age11 row6
+GAIN_WRITE age12 row7
+POSTNORM_PARTIAL mode0 age116 data3f102d76
+POSTNORM_CASE mode0 Q0 BF1 partial1
+POST_COMMAND op7 cycle1898
+POSTNORM_PARTIAL mode1 age116 data3f102d76
+POSTNORM_CASE mode1 Q1 BF1 partial1
+GAIN_COMPLETION wait8 writes8 last12
+POST_FAULT vp0 vna0 vnb0 vs0 vq0 cland0 ready1
+POST_TIMING VS13writes8 last74 public_pairs25
+NATIVE_POSTNORM_RESULT checked_pairs25 hwcount16 post_to_last_hw62 errors0 clock833
+NATIVE_POSTNORM_PASS
+- tb_current_native_leaf.sv:482: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 22.393 s; speed 82.417 ns/s
+- Verilator: cpu 22.253 s on 1 threads; allocated 41 MB

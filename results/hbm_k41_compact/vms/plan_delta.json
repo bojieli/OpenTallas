@@ -1,0 +1,1148 @@
+{
+ "base_plan": "/srv/opentallas-scratch2/claude/die-hbm-57/plan_s11/G",
+ "base_die_plan_sha256": "e0638225f8b38653671aa3a59d11023c566182278d7256359f8f5b221b34c492",
+ "new_die_plan_sha256": "6004ca40966178428fbbfbf39deda5f5c408bb4a29658e85591f2e3e51dc94cc",
+ "module": "hnx_vms_bank_q0_faces__vecd4ae",
+ "hard_cores": {
+  "q_hub_nw": [
+   {
+    "inst": "u_vmb_Q0",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     2073.6,
+     967.68
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_ed4cba8a8b2a.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | DIE-HBM C20: C17g outline growth re-pack (REPACK sub-lane) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5",
+    "orient": "MX"
+   },
+   {
+    "inst": "u_vmb_Q1",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     2073.6,
+     2255.04
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_114e9076fa98.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5",
+    "orient": "R0"
+   },
+   {
+    "inst": "u_vmb_Q2",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     3309.12,
+     967.68
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_ed4cba8a8b2a.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5",
+    "orient": "MX"
+   },
+   {
+    "inst": "u_vmb_Q3",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     3309.12,
+     2255.04
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     -0.048,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_114e9076fa98.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "orient": "R0",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_vmb_Q4",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     6315.84,
+     967.68
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_ed4cba8a8b2a.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5",
+    "orient": "MX"
+   },
+   {
+    "inst": "u_vmb_Q5",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     6315.84,
+     2255.04
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_114e9076fa98.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     7568.64,
+     967.68
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_f9c1bd05a046.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | DIE-HBM C20: C17g outline growth re-pack (REPACK sub-lane) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5",
+    "orient": "R180"
+   },
+   {
+    "inst": "u_vmb_Q7",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     7568.64,
+     2255.04
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_d6532bde006e.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5",
+    "orient": "MY"
+   }
+  ],
+  "q_hub_ne": [
+   {
+    "inst": "u_vmb_Q0",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     2073.6,
+     838.08
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_def761e36c82.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | DIE-HBM C20: C17g outline growth re-pack (REPACK sub-lane) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_vmb_Q1",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     2073.6,
+     2255.04
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_114e9076fa98.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5",
+    "orient": "R0"
+   },
+   {
+    "inst": "u_vmb_Q2",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     3309.12,
+     838.08
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_5a03758c3d07.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_vmb_Q3",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     3309.12,
+     2255.04
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     -0.048,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_88b84f19c25b.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "orient": "R0",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_vmb_Q4",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     6315.84,
+     838.08
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_0bb6804dab59.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_vmb_Q5",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     6315.84,
+     2255.04
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_114e9076fa98.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5"
+   },
+   {
+    "inst": "u_vmb_Q6",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     7568.64,
+     967.68
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_f9c1bd05a046.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | DIE-HBM C20: C17g outline growth re-pack (REPACK sub-lane) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5",
+    "orient": "R180"
+   },
+   {
+    "inst": "u_vmb_Q7",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "origin_um": [
+     7568.64,
+     2255.04
+    ],
+    "outline_um": [
+     224.64,
+     272.16
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__224.64x272.16__k41c_d6532bde006e.json",
+    "note": "d4g hard core; 64722 cells | HBM-MU-QUAD-4: canonical view of hnx_vms_bank_q0_faces | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "obs_max": "M5",
+    "orient": "MY"
+   }
+  ]
+ },
+ "taps": {
+  "q_hub_nw": [
+   {
+    "name": "u_vmb_Q0",
+    "kind": "core",
+    "xy": [
+     2185.56,
+     1062.72
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_vmb_Q0.clk', 'u_vmb_Q0.clk_n', 'u_vmb_Q0.clk_s', 'u_vmb_Q0.clk_e', 'u_vmb_Q0.clk_macro0', 'u_vmb_Q0.clk_macro1', 'u_vmb_Q0.clk_macro2', 'u_vmb_Q0.clk_w']; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q1",
+    "kind": "core",
+    "xy": [
+     2185.56,
+     2432.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q2",
+    "kind": "core",
+    "xy": [
+     3421.08,
+     1062.72
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_vmb_Q2.clk_s', 'u_vmb_Q2.clk_e', 'u_vmb_Q2.clk', 'u_vmb_Q2.clk_macro0', 'u_vmb_Q2.clk_macro1', 'u_vmb_Q2.clk_macro2', 'u_vmb_Q2.clk_n', 'u_vmb_Q2.clk_w']; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q3",
+    "kind": "core",
+    "xy": [
+     3421.08,
+     2432.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_vmb_Q3.clk', 'u_vmb_Q3.clk_n', 'u_vmb_Q3.clk_s', 'u_vmb_Q3.clk_e', 'u_vmb_Q3.clk_macro0', 'u_vmb_Q3.clk_macro1', 'u_vmb_Q3.clk_macro2', 'u_vmb_Q3.clk_w']; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q4",
+    "kind": "core",
+    "xy": [
+     6427.8,
+     1062.72
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_vmb_Q4.clk', 'u_vmb_Q4.clk_n', 'u_vmb_Q4.clk_s', 'u_vmb_Q4.clk_e', 'u_vmb_Q4.clk_macro0', 'u_vmb_Q4.clk_macro1', 'u_vmb_Q4.clk_macro2', 'u_vmb_Q4.clk_w']; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q5",
+    "kind": "core",
+    "xy": [
+     6427.8,
+     2432.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q6",
+    "kind": "core",
+    "xy": [
+     7681.32,
+     1062.72
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_vmb_Q6.clk', 'u_vmb_Q6.clk_n', 'u_vmb_Q6.clk_e', 'u_vmb_Q6.clk_s', 'u_vmb_Q6.clk_macro0', 'u_vmb_Q6.clk_macro1', 'u_vmb_Q6.clk_macro2', 'u_vmb_Q6.clk_w']; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q7",
+    "kind": "core",
+    "xy": [
+     7681.32,
+     2432.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   }
+  ],
+  "q_hub_ne": [
+   {
+    "name": "u_vmb_Q0",
+    "kind": "core",
+    "xy": [
+     2185.56,
+     1015.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_vmb_Q0.clk', 'u_vmb_Q0.clk_n', 'u_vmb_Q0.clk_s', 'u_vmb_Q0.clk_e', 'u_vmb_Q0.clk_macro0', 'u_vmb_Q0.clk_macro1', 'u_vmb_Q0.clk_macro2', 'u_vmb_Q0.clk_w']; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q1",
+    "kind": "core",
+    "xy": [
+     2185.56,
+     2432.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q2",
+    "kind": "core",
+    "xy": [
+     3421.08,
+     1015.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_vmb_Q2.clk_s', 'u_vmb_Q2.clk_e', 'u_vmb_Q2.clk', 'u_vmb_Q2.clk_macro0', 'u_vmb_Q2.clk_macro1', 'u_vmb_Q2.clk_macro2', 'u_vmb_Q2.clk_n', 'u_vmb_Q2.clk_w']; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q3",
+    "kind": "core",
+    "xy": [
+     3421.08,
+     2432.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_vmb_Q3.clk', 'u_vmb_Q3.clk_n', 'u_vmb_Q3.clk_s', 'u_vmb_Q3.clk_e', 'u_vmb_Q3.clk_macro0', 'u_vmb_Q3.clk_macro1', 'u_vmb_Q3.clk_macro2', 'u_vmb_Q3.clk_w']; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q4",
+    "kind": "core",
+    "xy": [
+     6427.8,
+     1015.2
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_vmb_Q4.clk', 'u_vmb_Q4.clk_n', 'u_vmb_Q4.clk_s', 'u_vmb_Q4.clk_e', 'u_vmb_Q4.clk_macro0', 'u_vmb_Q4.clk_macro1', 'u_vmb_Q4.clk_macro2', 'u_vmb_Q4.clk_w']; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q5",
+    "kind": "core",
+    "xy": [
+     6427.8,
+     2432.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q6",
+    "kind": "core",
+    "xy": [
+     7681.32,
+     1062.72
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_vmb_Q6.clk', 'u_vmb_Q6.clk_n', 'u_vmb_Q6.clk_e', 'u_vmb_Q6.clk_s', 'u_vmb_Q6.clk_macro0', 'u_vmb_Q6.clk_macro1', 'u_vmb_Q6.clk_macro2', 'u_vmb_Q6.clk_w']; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   },
+   {
+    "name": "u_vmb_Q7",
+    "kind": "core",
+    "xy": [
+     7681.32,
+     2432.16
+    ],
+    "insertion_ps": 250.0,
+    "insertion_ff_ps": 202.5,
+    "budget_owner": "hfd_vms_bank_native_q0_faces",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk', 'clk_e', 'clk_macro0', 'clk_macro1', 'clk_macro2', 'clk_n', 'clk_s', 'clk_w'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)"
+   }
+  ]
+ },
+ "clock_entries": {
+  "q_hub_nw": {
+   "u_vmb_Q0": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q0",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q1": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q1",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q2": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q2",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q3": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q3",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q4": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q4",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q5": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q5",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q6": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q6",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q7": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q7",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   }
+  },
+  "q_hub_ne": {
+   "u_vmb_Q0": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q0",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q1": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q1",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q2": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q2",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q3": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q3",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q4": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q4",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q5": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q5",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q6": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q6",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   },
+   "u_vmb_Q7": {
+    "xy_um": [
+     111.96,
+     177.12
+    ],
+    "island_um": [
+     103.68,
+     168.48,
+     120.96,
+     185.76
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_e",
+     "clk_macro0",
+     "clk_macro1",
+     "clk_macro2",
+     "clk_n",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_vmb_Q7",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "native_module": "hfd_vms_bank_native_q0_faces"
+   }
+  }
+ },
+ "core_macros": {
+  "status": "KNOWN",
+  "outline_um": [
+   224.64,
+   272.16
+  ],
+  "basis": "HBM-CORES-KITS-41 compact event k41c-vms: base 3-SRAM vecd4ae 270x403.92 -> 224.64x272.16 (Codex PREP vms-native-compact-1630@4e21d56ad; per-pose origins from parent_pose_proofs; main clk entry 111.96,177.12; _mu1 vec6293 4-SRAM unchanged per COORD Q8)",
+  "macros": [
+   {
+    "name": "u_fcore.u_core.u_ot_pr_core.bank.u_a",
+    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     34.56,
+     14.316,
+     209.304,
+     84.804
+    ]
+   },
+   {
+    "name": "u_fcore.u_core.u_ot_pr_core.bank.u_b",
+    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     34.56,
+     93.468,
+     209.304,
+     163.956
+    ]
+   },
+   {
+    "name": "u_fcore.u_core.u_ot_pr_core.bank.u_c",
+    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     34.56,
+     190.284,
+     209.304,
+     260.772
+    ]
+   }
+  ],
+  "channel_rule_um": 10.8,
+  "previous": {
+   "status": "UNKNOWN",
+   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  "previous_k41": {
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u_core.u_ot_pr_core.bank.u_a",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      47.616,
+      76.38,
+      222.36,
+      146.868
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_ot_pr_core.bank.u_b",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      47.616,
+      164.172,
+      222.36,
+      234.66
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_ot_pr_core.bank.u_c",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      47.616,
+      234.732,
+      222.36,
+      305.22
+     ]
+    }
+   ]
+  }
+ }
+}

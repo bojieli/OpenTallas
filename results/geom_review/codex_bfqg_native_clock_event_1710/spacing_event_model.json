@@ -1,0 +1,305 @@
+{
+ "scope": "Unadopted actual-source BFQG typed pin spacing event PREP; ORIGINAL302.4x298.08frame/macros/datafaces, noCAD/GEN/sourcechange",
+ "old_pin_sha256": "a188c76ca5a08579833441a987e111ce3fa38c654e9aca929e09cda2c4ba4d13",
+ "proposed_pin_sha256": "3e01b43b00bf03891f43b66ed68a81224c44494fbddd6bb6e5e8cce9c5863e7f",
+ "original_io_tcl_sha256": "740e485272c6096dbc51cd2c496ab621853f68467636b97da694a2891145bcb1",
+ "clock_inputs": 20,
+ "clock_pin_names": [
+  "clk",
+  "clk_n",
+  "clk_s",
+  "clk_ctrl",
+  "clk_m0",
+  "clk_m1",
+  "clk_m2",
+  "clk_m3",
+  "clk_m4",
+  "clk_m5",
+  "clk_m6",
+  "clk_m7",
+  "clk_l0",
+  "clk_l1",
+  "clk_l2",
+  "clk_l3",
+  "clk_l4",
+  "clk_l5",
+  "clk_l6",
+  "clk_l7"
+ ],
+ "clock_shapes_layers_preserved": true,
+ "source_and_cycles_unchanged": true,
+ "port_count": 1340,
+ "clock_moves": [
+  "clk_m6",
+  "clk_m5",
+  "clk_m3",
+  "clk_l3"
+ ],
+ "clock_total_L1_um": 0.192,
+ "clock_optimality": "Four disjoint clock-pair gaps each need at least one.048-grid move; four+.048 moves attain that clock-only lower bound. Data repair conditional on thoseclockchoices is minimum L1 monotone free-track assignment.",
+ "data_moves": 14,
+ "data_total_L1_um": 7.296,
+ "data_max_move_um": 1.152,
+ "changes": [
+  {
+   "pin": "clk_m3",
+   "kind": "clock",
+   "old_x": 151.512,
+   "new_x": 151.56,
+   "delta_x_um": 0.048
+  },
+  {
+   "pin": "clk_m5",
+   "kind": "clock",
+   "old_x": 150.456,
+   "new_x": 150.504,
+   "delta_x_um": 0.048
+  },
+  {
+   "pin": "clk_m6",
+   "kind": "clock",
+   "old_x": 150.168,
+   "new_x": 150.216,
+   "delta_x_um": 0.048
+  },
+  {
+   "pin": "clk_l3",
+   "kind": "clock",
+   "old_x": 152.856,
+   "new_x": 152.904,
+   "delta_x_um": 0.048
+  },
+  {
+   "pin": "c_d[507]",
+   "kind": "data",
+   "old_x": 149.736,
+   "new_x": 149.688,
+   "delta_x_um": -0.048
+  },
+  {
+   "pin": "c_d[508]",
+   "kind": "data",
+   "old_x": 149.976,
+   "new_x": 149.736,
+   "delta_x_um": -0.24
+  },
+  {
+   "pin": "c_d[509]",
+   "kind": "data",
+   "old_x": 150.264,
+   "new_x": 149.784,
+   "delta_x_um": -0.48
+  },
+  {
+   "pin": "c_d[510]",
+   "kind": "data",
+   "old_x": 150.552,
+   "new_x": 149.832,
+   "delta_x_um": -0.72
+  },
+  {
+   "pin": "c_d[511]",
+   "kind": "data",
+   "old_x": 150.792,
+   "new_x": 149.88,
+   "delta_x_um": -0.912
+  },
+  {
+   "pin": "c_d[512]",
+   "kind": "data",
+   "old_x": 151.08,
+   "new_x": 149.928,
+   "delta_x_um": -1.152
+  },
+  {
+   "pin": "c_d[513]",
+   "kind": "data",
+   "old_x": 151.32,
+   "new_x": 150.792,
+   "delta_x_um": -0.528
+  },
+  {
+   "pin": "c_d[514]",
+   "kind": "data",
+   "old_x": 151.608,
+   "new_x": 151.08,
+   "delta_x_um": -0.528
+  },
+  {
+   "pin": "c_d[518]",
+   "kind": "data",
+   "old_x": 152.664,
+   "new_x": 153.192,
+   "delta_x_um": 0.528
+  },
+  {
+   "pin": "c_d[519]",
+   "kind": "data",
+   "old_x": 152.952,
+   "new_x": 153.48,
+   "delta_x_um": 0.528
+  },
+  {
+   "pin": "c_d[520]",
+   "kind": "data",
+   "old_x": 153.192,
+   "new_x": 153.768,
+   "delta_x_um": 0.576
+  },
+  {
+   "pin": "c_d[521]",
+   "kind": "data",
+   "old_x": 153.48,
+   "new_x": 154.056,
+   "delta_x_um": 0.576
+  },
+  {
+   "pin": "c_d[522]",
+   "kind": "data",
+   "old_x": 153.768,
+   "new_x": 154.104,
+   "delta_x_um": 0.336
+  },
+  {
+   "pin": "c_d[523]",
+   "kind": "data",
+   "old_x": 154.008,
+   "new_x": 154.152,
+   "delta_x_um": 0.144
+  }
+ ],
+ "original_adjacent_M5_spacing_flags": [
+  {
+   "a": "c_d[508]",
+   "b": "clk_m7",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "clk_m7",
+   "b": "clk_m6",
+   "edgegap_um": 0.048,
+   "required_um": 0.072
+  },
+  {
+   "a": "clk_m6",
+   "b": "c_d[509]",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "c_d[509]",
+   "b": "clk_ctrl",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "clk_ctrl",
+   "b": "clk_m5",
+   "edgegap_um": 0.048,
+   "required_um": 0.072
+  },
+  {
+   "a": "clk_m5",
+   "b": "c_d[510]",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "c_d[510]",
+   "b": "clk_m4",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "clk_m0",
+   "b": "c_d[513]",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "c_d[513]",
+   "b": "clk_m2",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "clk_m2",
+   "b": "clk_m3",
+   "edgegap_um": 0.048,
+   "required_um": 0.072
+  },
+  {
+   "a": "clk_m3",
+   "b": "c_d[514]",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "c_d[514]",
+   "b": "clk_s",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "clk_l1",
+   "b": "c_d[518]",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "c_d[518]",
+   "b": "clk_l2",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "clk_l2",
+   "b": "clk_l3",
+   "edgegap_um": 0.048,
+   "required_um": 0.072
+  },
+  {
+   "a": "clk_l3",
+   "b": "c_d[519]",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "c_d[519]",
+   "b": "clk_l4",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  },
+  {
+   "a": "clk_l7",
+   "b": "c_d[523]",
+   "edgegap_um": 0.06,
+   "required_um": 0.072
+  }
+ ],
+ "repaired_adjacent_M5_spacing_flags": [],
+ "spacing_basis": {
+  "tech_lef_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+  "table": "M5PARALLELRUNLENGTH0;WIDTH0:.024;WIDTH.025:.072",
+  "clock_width_um": 0.048,
+  "clock_height_um": 0.48,
+  "data_width_um": 0.024,
+  "same_layer_parallel_overlap": "Positive for all south boxes; this is pinned-tech geometry calculation, not measuredDRC/BTerm semantics"
+ },
+ "holds": [
+  "New explicit typed pin contract and full transformed parent event required.",
+  "No native GEN/LEF/TTFF/physicalnet/source adoption/PNR or measuredDRC.",
+  "Original sparse native envelope and old macrochannels still MODEL_HOLD.",
+  "Separate compactBFQGproposal inherits direct-boundaryFF obligation: c_d1024 andother39inputs areS-pin1319nativeboundaryFFs withWoutput256, so old wrappedbank-local cdq placement cannot be reused.",
+  "Actualexisting source-gates8650/8650 reset4 are body-only evidence, not qualification of this newpinview."
+ ],
+ "actual_parent_world_proof": "actual_parent_world_deltas.json",
+ "source_readset": "results/hbm_bfqg_native_source_1520/readset.json",
+ "actual_source_top": "ot_hgi_sm_xload_cl2_bfqg",
+ "actual_source_params": {},
+ "release_qualified": false,
+ "unchanged_clock_world_rectangles": 256,
+ "moved_clock_world_rectangles": 64,
+ "outer_parent_mirror": "NW+.048X, NE\u2212.048X; actualG parent MY included, child14R0/2MX"
+}

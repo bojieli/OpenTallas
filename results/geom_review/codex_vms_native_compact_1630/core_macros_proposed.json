@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.core_macros.v1",
+ "scope": "UNADOPTED currentnativeproposal; existingG0Csidecarhalo0unchanged;actualkit4.32guardalsoPASS",
+ "halo_um": 0.0,
+ "cores": {
+  "hnx_vms_bank_q0_faces__vecd4ae": {
+   "status": "KNOWN",
+   "outline_um": [
+    224.64,
+    272.16
+   ],
+   "macros": [
+    {
+     "name": "u_core.u_ot_pr_core.bank.u_a",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      34.56,
+      14.316,
+      209.304,
+      84.804
+     ]
+    },
+    {
+     "name": "u_core.u_ot_pr_core.bank.u_b",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      34.56,
+      93.468,
+      209.304,
+      163.956
+     ]
+    },
+    {
+     "name": "u_core.u_ot_pr_core.bank.u_c",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      34.56,
+      190.284,
+      209.304,
+      260.772
+     ]
+    }
+   ]
+  }
+ }
+}

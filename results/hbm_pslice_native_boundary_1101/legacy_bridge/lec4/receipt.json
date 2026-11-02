@@ -1,0 +1,77 @@
+{
+ "scope": "Freshchanged8a source\u2192mapped native32 vehicle full4-edge proof, no canonicalgraph/physicaladoption.",
+ "source_commit": "8a0367f7382fd91de8f45dd9ca4efe19b5aae1d3",
+ "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-pslice-coldreset-lec4-1400",
+ "unit": "oth-ubuntu-2868056-1793579393",
+ "exit": 0,
+ "verdict": "EQUIVALENT",
+ "counts": {
+  "compare_points": 108839,
+  "proved": 108839,
+  "differs": 0,
+  "undecided": 0
+ },
+ "reset_contract": {
+  "default": 4,
+  "requested": 4,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "hbm",
+   "edges": 64,
+   "assert_edges": 66,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "kept_registers": {
+  "declared": 1064,
+  "in_netlist": 1064,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "fresh_AIG_build_s": 133.2,
+ "t_total_s": 917.9,
+ "reuse_scope": "NONE of oldAIG/maps/miter/proof. OutputstartedONLYwith5225untrustedpredecessor8b hypotheses; officialdriver buildsnewgold/gateAIG/maps fromchanged8a closedkit.",
+ "hints": {
+  "file": "/lecout/hints.json",
+  "sha256": "a4e8d8c79f385a8df6d346b6c7248ebe949b0555462adf6cd83472f4dfc1a129",
+  "given": 5225,
+  "applied": 5219,
+  "skipped": 6,
+  "anon": 19058,
+  "dropped": {
+   "n": 8,
+   "first": [
+    "ff:u_dut.g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.h2[0][1]",
+    "ff:u_dut.g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.h2[0][2]",
+    "ff:u_dut.g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.h2[1][1]",
+    "ff:u_dut.g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.h2[1][2]",
+    "ff:u_dut.g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.h1[0][1]",
+    "ff:u_dut.g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.h1[0][2]",
+    "ff:u_dut.g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.h1[1][1]",
+    "ff:u_dut.g_c[9].u_c.g_p.u_p.g_m4.dt[0].mem.h1[1][2]"
+   ]
+  },
+  "kept": 24293,
+  "loaded": [],
+  "loaded_refused": [],
+  "fill": [],
+  "fill_refused": []
+ },
+ "proposal_failure_diagnosis": "Six predecessor proposals unavailable/skipped and eight partial-final-column h1/h2 replica proposals rejected by unchanged native induction; no proposal forced. All108839 comparepoints proved withoutrejectedproposals.",
+ "native_definedness_policy": "108839 compare points proved; 48083 key points matched by name, 24293 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 3906 gate registers unmatched and unobservable (proved as free inputs); 664 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "lec_sha256": "fc7dec349c62de824eceac482c1b9dde0c316b90bda33071527ae7d18cd37b04",
+ "physical_gate": "HELD nativeview/clock/parentgraft/Pstorewidth-directwireevents; no old8bphysical/timingalias."
+}

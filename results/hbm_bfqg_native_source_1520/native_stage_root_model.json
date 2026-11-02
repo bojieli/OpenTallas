@@ -1,0 +1,324 @@
+{
+ "scope": "Actual source root/stage ownership PREP; no placed/timed root geometry or PNR authorization",
+ "mapped_netlist_sha256": "1cf747cf5b40f323ffad51b9b3b5c47d9c5a90a5309d29ea2ddb683ced75550e",
+ "mapped_netlist_path": "intel1:/srv/opentallas-scratch2/claude/codex-bfqg-native-1520/gen/ot_hgi_sm_xload_cl2_bfqg_a188c76ca5a0/run/results/asap7/hbc_ot_hgi_sm_xload_cl2_bfqg/base/1_synth.v",
+ "ff_total": 3890,
+ "root_ownership": [
+  {
+   "root": "clk",
+   "FF_sinks": 2568,
+   "SRAM_sinks": 0,
+   "declared_pin": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 150.264,
+    "y": 146.88
+   }
+  },
+  {
+   "root": "clk_n",
+   "FF_sinks": 1024,
+   "SRAM_sinks": 0,
+   "declared_pin": {
+    "name": "clk_n",
+    "layer": "M5",
+    "x": 151.992,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_s",
+   "FF_sinks": 256,
+   "SRAM_sinks": 0,
+   "declared_pin": {
+    "name": "clk_s",
+    "layer": "M5",
+    "x": 151.704,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_ctrl",
+   "FF_sinks": 26,
+   "SRAM_sinks": 0,
+   "declared_pin": {
+    "name": "clk_ctrl",
+    "layer": "M5",
+    "x": 150.36,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_l0",
+   "FF_sinks": 2,
+   "SRAM_sinks": 0,
+   "declared_pin": {
+    "name": "clk_l0",
+    "layer": "M5",
+    "x": 152.28,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_l1",
+   "FF_sinks": 2,
+   "SRAM_sinks": 0,
+   "declared_pin": {
+    "name": "clk_l1",
+    "layer": "M5",
+    "x": 152.568,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_l2",
+   "FF_sinks": 2,
+   "SRAM_sinks": 0,
+   "declared_pin": {
+    "name": "clk_l2",
+    "layer": "M5",
+    "x": 152.76,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_l3",
+   "FF_sinks": 2,
+   "SRAM_sinks": 0,
+   "declared_pin": {
+    "name": "clk_l3",
+    "layer": "M5",
+    "x": 152.856,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_l4",
+   "FF_sinks": 2,
+   "SRAM_sinks": 0,
+   "declared_pin": {
+    "name": "clk_l4",
+    "layer": "M5",
+    "x": 153.048,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_l5",
+   "FF_sinks": 2,
+   "SRAM_sinks": 0,
+   "declared_pin": {
+    "name": "clk_l5",
+    "layer": "M5",
+    "x": 153.336,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_l6",
+   "FF_sinks": 2,
+   "SRAM_sinks": 0,
+   "declared_pin": {
+    "name": "clk_l6",
+    "layer": "M5",
+    "x": 153.624,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_l7",
+   "FF_sinks": 2,
+   "SRAM_sinks": 0,
+   "declared_pin": {
+    "name": "clk_l7",
+    "layer": "M5",
+    "x": 153.912,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_m0",
+   "FF_sinks": 0,
+   "SRAM_sinks": 1,
+   "declared_pin": {
+    "name": "clk_m0",
+    "layer": "M5",
+    "x": 151.224,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_m1",
+   "FF_sinks": 0,
+   "SRAM_sinks": 1,
+   "declared_pin": {
+    "name": "clk_m1",
+    "layer": "M5",
+    "x": 150.936,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_m2",
+   "FF_sinks": 0,
+   "SRAM_sinks": 1,
+   "declared_pin": {
+    "name": "clk_m2",
+    "layer": "M5",
+    "x": 151.416,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_m3",
+   "FF_sinks": 0,
+   "SRAM_sinks": 1,
+   "declared_pin": {
+    "name": "clk_m3",
+    "layer": "M5",
+    "x": 151.512,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_m4",
+   "FF_sinks": 0,
+   "SRAM_sinks": 1,
+   "declared_pin": {
+    "name": "clk_m4",
+    "layer": "M5",
+    "x": 150.648,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_m5",
+   "FF_sinks": 0,
+   "SRAM_sinks": 1,
+   "declared_pin": {
+    "name": "clk_m5",
+    "layer": "M5",
+    "x": 150.456,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_m6",
+   "FF_sinks": 0,
+   "SRAM_sinks": 1,
+   "declared_pin": {
+    "name": "clk_m6",
+    "layer": "M5",
+    "x": 150.168,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  },
+  {
+   "root": "clk_m7",
+   "FF_sinks": 0,
+   "SRAM_sinks": 1,
+   "declared_pin": {
+    "name": "clk_m7",
+    "layer": "M5",
+    "x": 150.072,
+    "y": 0.24,
+    "w": 0.048,
+    "h": 0.48
+   }
+  }
+ ],
+ "bank_local_existing_stages": {
+  "banks": 8,
+  "FFs_per_bank": 388,
+  "total_FFs": 3104,
+  "stages": [
+   {
+    "mapped_prefix": "cdq[128*b +:128]",
+    "count": 128,
+    "native_root": "clk_n"
+   },
+   {
+    "mapped_prefix": "cap[b]",
+    "count": 256,
+    "native_root": "clk"
+   },
+   {
+    "mapped_prefix": "g_t[b].rp_sel",
+    "count": 1,
+    "native_root": "clk"
+   },
+   {
+    "mapped_prefix": "g_t[b].rp_ce",
+    "count": 1,
+    "native_root": "clk_ctrl"
+   },
+   {
+    "mapped_prefix": "g_t[b].mask_hi/mask_lo",
+    "count": 2,
+    "native_root": "clk_lb"
+   }
+  ]
+ },
+ "remaining_shared_stages": {
+  "or4a/or4b": {
+   "count": 512,
+   "root": "clk"
+  },
+  "rwq": {
+   "count": 256,
+   "root": "clk_s"
+  },
+  "wa_q/ra_q/wce_q": {
+   "count": 15,
+   "root": "clk_ctrl"
+  },
+  "u_rst.rst_n/sync_q": {
+   "count": 3,
+   "root": "clk_ctrl"
+  }
+ },
+ "model_obligations": [
+  "Bank-local affinity must preserve actual native root of every individual FF, not merely twenty input names.",
+  "Common-domain alignment must include all twelve FF roots and eight SRAM roots with actual downstream capacitance.",
+  "Actual source has no external u_fcore prefix; historical wrapped anchors must not be copied literally.",
+  "No added registers, no declared-pin relocation, no clock target waiver, no source or cycle changes.",
+  "Concrete legal existing-register placement and tree model, then image review, before native PNR."
+ ],
+ "physical_metrics": "UNMEASURED_CURRENT_NATIVE"
+}

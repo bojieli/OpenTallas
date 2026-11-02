@@ -1,0 +1,470 @@
+{
+  "24": {
+    "minimum_registered_CV": 180,
+    "tested_registered_CV": 180,
+    "violations": [],
+    "safe": true
+  },
+  "23": {
+    "minimum_registered_CV": 180,
+    "tested_registered_CV": 179,
+    "violations": [
+      {
+        "bank": 0,
+        "row": 119,
+        "word": 3,
+        "commit_edge": 189,
+        "read_edge": 189
+      },
+      {
+        "bank": 1,
+        "row": 119,
+        "word": 3,
+        "commit_edge": 189,
+        "read_edge": 189
+      }
+    ],
+    "safe": false
+  },
+  "0": {
+    "minimum_registered_CV": 180,
+    "tested_registered_CV": 156,
+    "violations": [
+      {
+        "bank": 0,
+        "row": 112,
+        "word": 1,
+        "commit_edge": 159,
+        "read_edge": 159
+      },
+      {
+        "bank": 1,
+        "row": 112,
+        "word": 1,
+        "commit_edge": 159,
+        "read_edge": 159
+      },
+      {
+        "bank": 0,
+        "row": 112,
+        "word": 2,
+        "commit_edge": 160,
+        "read_edge": 159
+      },
+      {
+        "bank": 1,
+        "row": 112,
+        "word": 2,
+        "commit_edge": 160,
+        "read_edge": 159
+      },
+      {
+        "bank": 0,
+        "row": 112,
+        "word": 3,
+        "commit_edge": 161,
+        "read_edge": 159
+      },
+      {
+        "bank": 1,
+        "row": 112,
+        "word": 3,
+        "commit_edge": 161,
+        "read_edge": 159
+      },
+      {
+        "bank": 0,
+        "row": 113,
+        "word": 0,
+        "commit_edge": 162,
+        "read_edge": 160
+      },
+      {
+        "bank": 1,
+        "row": 113,
+        "word": 0,
+        "commit_edge": 162,
+        "read_edge": 160
+      },
+      {
+        "bank": 0,
+        "row": 113,
+        "word": 1,
+        "commit_edge": 163,
+        "read_edge": 160
+      },
+      {
+        "bank": 1,
+        "row": 113,
+        "word": 1,
+        "commit_edge": 163,
+        "read_edge": 160
+      },
+      {
+        "bank": 0,
+        "row": 113,
+        "word": 2,
+        "commit_edge": 164,
+        "read_edge": 160
+      },
+      {
+        "bank": 1,
+        "row": 113,
+        "word": 2,
+        "commit_edge": 164,
+        "read_edge": 160
+      },
+      {
+        "bank": 0,
+        "row": 113,
+        "word": 3,
+        "commit_edge": 165,
+        "read_edge": 160
+      },
+      {
+        "bank": 1,
+        "row": 113,
+        "word": 3,
+        "commit_edge": 165,
+        "read_edge": 160
+      },
+      {
+        "bank": 0,
+        "row": 114,
+        "word": 0,
+        "commit_edge": 166,
+        "read_edge": 161
+      },
+      {
+        "bank": 1,
+        "row": 114,
+        "word": 0,
+        "commit_edge": 166,
+        "read_edge": 161
+      },
+      {
+        "bank": 0,
+        "row": 114,
+        "word": 1,
+        "commit_edge": 167,
+        "read_edge": 161
+      },
+      {
+        "bank": 1,
+        "row": 114,
+        "word": 1,
+        "commit_edge": 167,
+        "read_edge": 161
+      },
+      {
+        "bank": 0,
+        "row": 114,
+        "word": 2,
+        "commit_edge": 168,
+        "read_edge": 161
+      },
+      {
+        "bank": 1,
+        "row": 114,
+        "word": 2,
+        "commit_edge": 168,
+        "read_edge": 161
+      },
+      {
+        "bank": 0,
+        "row": 114,
+        "word": 3,
+        "commit_edge": 169,
+        "read_edge": 161
+      },
+      {
+        "bank": 1,
+        "row": 114,
+        "word": 3,
+        "commit_edge": 169,
+        "read_edge": 161
+      },
+      {
+        "bank": 0,
+        "row": 115,
+        "word": 0,
+        "commit_edge": 170,
+        "read_edge": 162
+      },
+      {
+        "bank": 1,
+        "row": 115,
+        "word": 0,
+        "commit_edge": 170,
+        "read_edge": 162
+      },
+      {
+        "bank": 0,
+        "row": 115,
+        "word": 1,
+        "commit_edge": 171,
+        "read_edge": 162
+      },
+      {
+        "bank": 1,
+        "row": 115,
+        "word": 1,
+        "commit_edge": 171,
+        "read_edge": 162
+      },
+      {
+        "bank": 0,
+        "row": 115,
+        "word": 2,
+        "commit_edge": 172,
+        "read_edge": 162
+      },
+      {
+        "bank": 1,
+        "row": 115,
+        "word": 2,
+        "commit_edge": 172,
+        "read_edge": 162
+      },
+      {
+        "bank": 0,
+        "row": 115,
+        "word": 3,
+        "commit_edge": 173,
+        "read_edge": 162
+      },
+      {
+        "bank": 1,
+        "row": 115,
+        "word": 3,
+        "commit_edge": 173,
+        "read_edge": 162
+      },
+      {
+        "bank": 0,
+        "row": 116,
+        "word": 0,
+        "commit_edge": 174,
+        "read_edge": 163
+      },
+      {
+        "bank": 1,
+        "row": 116,
+        "word": 0,
+        "commit_edge": 174,
+        "read_edge": 163
+      },
+      {
+        "bank": 0,
+        "row": 116,
+        "word": 1,
+        "commit_edge": 175,
+        "read_edge": 163
+      },
+      {
+        "bank": 1,
+        "row": 116,
+        "word": 1,
+        "commit_edge": 175,
+        "read_edge": 163
+      },
+      {
+        "bank": 0,
+        "row": 116,
+        "word": 2,
+        "commit_edge": 176,
+        "read_edge": 163
+      },
+      {
+        "bank": 1,
+        "row": 116,
+        "word": 2,
+        "commit_edge": 176,
+        "read_edge": 163
+      },
+      {
+        "bank": 0,
+        "row": 116,
+        "word": 3,
+        "commit_edge": 177,
+        "read_edge": 163
+      },
+      {
+        "bank": 1,
+        "row": 116,
+        "word": 3,
+        "commit_edge": 177,
+        "read_edge": 163
+      },
+      {
+        "bank": 0,
+        "row": 117,
+        "word": 0,
+        "commit_edge": 178,
+        "read_edge": 164
+      },
+      {
+        "bank": 1,
+        "row": 117,
+        "word": 0,
+        "commit_edge": 178,
+        "read_edge": 164
+      },
+      {
+        "bank": 0,
+        "row": 117,
+        "word": 1,
+        "commit_edge": 179,
+        "read_edge": 164
+      },
+      {
+        "bank": 1,
+        "row": 117,
+        "word": 1,
+        "commit_edge": 179,
+        "read_edge": 164
+      },
+      {
+        "bank": 0,
+        "row": 117,
+        "word": 2,
+        "commit_edge": 180,
+        "read_edge": 164
+      },
+      {
+        "bank": 1,
+        "row": 117,
+        "word": 2,
+        "commit_edge": 180,
+        "read_edge": 164
+      },
+      {
+        "bank": 0,
+        "row": 117,
+        "word": 3,
+        "commit_edge": 181,
+        "read_edge": 164
+      },
+      {
+        "bank": 1,
+        "row": 117,
+        "word": 3,
+        "commit_edge": 181,
+        "read_edge": 164
+      },
+      {
+        "bank": 0,
+        "row": 118,
+        "word": 0,
+        "commit_edge": 182,
+        "read_edge": 165
+      },
+      {
+        "bank": 1,
+        "row": 118,
+        "word": 0,
+        "commit_edge": 182,
+        "read_edge": 165
+      },
+      {
+        "bank": 0,
+        "row": 118,
+        "word": 1,
+        "commit_edge": 183,
+        "read_edge": 165
+      },
+      {
+        "bank": 1,
+        "row": 118,
+        "word": 1,
+        "commit_edge": 183,
+        "read_edge": 165
+      },
+      {
+        "bank": 0,
+        "row": 118,
+        "word": 2,
+        "commit_edge": 184,
+        "read_edge": 165
+      },
+      {
+        "bank": 1,
+        "row": 118,
+        "word": 2,
+        "commit_edge": 184,
+        "read_edge": 165
+      },
+      {
+        "bank": 0,
+        "row": 118,
+        "word": 3,
+        "commit_edge": 185,
+        "read_edge": 165
+      },
+      {
+        "bank": 1,
+        "row": 118,
+        "word": 3,
+        "commit_edge": 185,
+        "read_edge": 165
+      },
+      {
+        "bank": 0,
+        "row": 119,
+        "word": 0,
+        "commit_edge": 186,
+        "read_edge": 166
+      },
+      {
+        "bank": 1,
+        "row": 119,
+        "word": 0,
+        "commit_edge": 186,
+        "read_edge": 166
+      },
+      {
+        "bank": 0,
+        "row": 119,
+        "word": 1,
+        "commit_edge": 187,
+        "read_edge": 166
+      },
+      {
+        "bank": 1,
+        "row": 119,
+        "word": 1,
+        "commit_edge": 187,
+        "read_edge": 166
+      },
+      {
+        "bank": 0,
+        "row": 119,
+        "word": 2,
+        "commit_edge": 188,
+        "read_edge": 166
+      },
+      {
+        "bank": 1,
+        "row": 119,
+        "word": 2,
+        "commit_edge": 188,
+        "read_edge": 166
+      },
+      {
+        "bank": 0,
+        "row": 119,
+        "word": 3,
+        "commit_edge": 189,
+        "read_edge": 166
+      },
+      {
+        "bank": 1,
+        "row": 119,
+        "word": 3,
+        "commit_edge": 189,
+        "read_edge": 166
+      }
+    ],
+    "safe": false
+  }
+}

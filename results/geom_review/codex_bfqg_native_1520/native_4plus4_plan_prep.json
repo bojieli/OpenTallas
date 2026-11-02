@@ -1,0 +1,495 @@
+{
+ "scope": "Unadopted native BFQG PLAN PREP; no legal placed cells, timing, CTS or route receipt",
+ "outline_um": [
+  302.4,
+  298.08
+ ],
+ "source": "286756143; mapped FF/root ownership model2b3287743",
+ "added_cycles": 0,
+ "source_and_pins_unchanged": true,
+ "macros": [
+  {
+   "bank": 0,
+   "instance": "g_t[0].u_m",
+   "xy_um": [
+    21.6,
+    17.34
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    8.64,
+    17.34,
+    17.28,
+    58.404
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l0": 2
+   }
+  },
+  {
+   "bank": 1,
+   "instance": "g_t[1].u_m",
+   "xy_um": [
+    21.6,
+    88.284
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    8.64,
+    88.284,
+    17.28,
+    129.348
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l1": 2
+   }
+  },
+  {
+   "bank": 2,
+   "instance": "g_t[2].u_m",
+   "xy_um": [
+    21.6,
+    159.228
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    8.64,
+    159.228,
+    17.28,
+    200.292
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l2": 2
+   }
+  },
+  {
+   "bank": 3,
+   "instance": "g_t[3].u_m",
+   "xy_um": [
+    21.6,
+    230.172
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    8.64,
+    230.172,
+    17.28,
+    271.236
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l3": 2
+   }
+  },
+  {
+   "bank": 4,
+   "instance": "g_t[4].u_m",
+   "xy_um": [
+    156.408,
+    17.34
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    143.448,
+    17.34,
+    152.088,
+    58.404
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l4": 2
+   }
+  },
+  {
+   "bank": 5,
+   "instance": "g_t[5].u_m",
+   "xy_um": [
+    156.408,
+    88.284
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    143.448,
+    88.284,
+    152.088,
+    129.348
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l5": 2
+   }
+  },
+  {
+   "bank": 6,
+   "instance": "g_t[6].u_m",
+   "xy_um": [
+    156.408,
+    159.228
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    143.448,
+    159.228,
+    152.088,
+    200.292
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l6": 2
+   }
+  },
+  {
+   "bank": 7,
+   "instance": "g_t[7].u_m",
+   "xy_um": [
+    156.408,
+    230.172
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    143.448,
+    230.172,
+    152.088,
+    271.236
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l7": 2
+   }
+  }
+ ],
+ "shared_existing_FFs": 786,
+ "guide_semantics": "Inclusive region proposal, not fixed sites; real placement legality/occupancy to be checked. Macro west halo4.32um respected by right edge; each guide8.64x41.064um. No command consumes this proposal.",
+ "clock_model_hold": "All20inputs kept literal. clk2568 FF spread over bank-local cap/rp_sel plus shared OR4; clk_n1024 split bank-wise; separate clk_ctrl/clk_s/local-mask/SRAM roots must retain exact same-source root ownership and common-domain alignment. Actual tree insertion delay/cap and postCTS measured leaf reach are unmeasured.",
+ "review_hold": "Owner/root model acceptance and native kit image review required before PNR. Old wrapped4+4 route result is a topology clue only, never current native gate credit.",
+ "unrouted_entry_distance_model": {
+  "scope": "Declared root to proposed bank-region geometry only; not routed length, sink placement, delay or clock reach gate; shared786FFs and SRAM pin offsets excluded",
+  "roots": {
+   "clk": {
+    "region_center_weighted_mean_L1_um": 140.844,
+    "worst_region_corner_L1_um": 271.164,
+    "banks": [
+     {
+      "bank": 0,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 246.312,
+      "pin_to_region_farthest_corner_L1_um": 271.164
+     },
+     {
+      "bank": 1,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 175.368,
+      "pin_to_region_farthest_corner_L1_um": 200.22
+     },
+     {
+      "bank": 2,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 170.184,
+      "pin_to_region_farthest_corner_L1_um": 195.036
+     },
+     {
+      "bank": 3,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 241.128,
+      "pin_to_region_farthest_corner_L1_um": 265.98
+     },
+     {
+      "bank": 4,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 111.504,
+      "pin_to_region_farthest_corner_L1_um": 136.356
+     },
+     {
+      "bank": 5,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 40.56,
+      "pin_to_region_farthest_corner_L1_um": 65.412
+     },
+     {
+      "bank": 6,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 35.376,
+      "pin_to_region_farthest_corner_L1_um": 60.228
+     },
+     {
+      "bank": 7,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 106.32,
+      "pin_to_region_farthest_corner_L1_um": 131.172
+     }
+    ]
+   },
+   "clk_n": {
+    "region_center_weighted_mean_L1_um": 215.676,
+    "worst_region_corner_L1_um": 414.348,
+    "banks": [
+     {
+      "bank": 0,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 176.664,
+      "pin_to_region_farthest_corner_L1_um": 201.516
+     },
+     {
+      "bank": 1,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 247.608,
+      "pin_to_region_farthest_corner_L1_um": 272.46
+     },
+     {
+      "bank": 2,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 318.552,
+      "pin_to_region_farthest_corner_L1_um": 343.404
+     },
+     {
+      "bank": 3,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 389.496,
+      "pin_to_region_farthest_corner_L1_um": 414.348
+     },
+     {
+      "bank": 4,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 41.856,
+      "pin_to_region_farthest_corner_L1_um": 66.708
+     },
+     {
+      "bank": 5,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 112.8,
+      "pin_to_region_farthest_corner_L1_um": 137.652
+     },
+     {
+      "bank": 6,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 183.744,
+      "pin_to_region_farthest_corner_L1_um": 208.596
+     },
+     {
+      "bank": 7,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 254.688,
+      "pin_to_region_farthest_corner_L1_um": 279.54
+     }
+    ]
+   },
+   "clk_ctrl": {
+    "region_center_weighted_mean_L1_um": 214.044,
+    "worst_region_corner_L1_um": 412.716,
+    "banks": [
+     {
+      "bank": 0,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 175.032,
+      "pin_to_region_farthest_corner_L1_um": 199.884
+     },
+     {
+      "bank": 1,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 245.976,
+      "pin_to_region_farthest_corner_L1_um": 270.828
+     },
+     {
+      "bank": 2,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 316.92,
+      "pin_to_region_farthest_corner_L1_um": 341.772
+     },
+     {
+      "bank": 3,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 387.864,
+      "pin_to_region_farthest_corner_L1_um": 412.716
+     },
+     {
+      "bank": 4,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 40.224,
+      "pin_to_region_farthest_corner_L1_um": 65.076
+     },
+     {
+      "bank": 5,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 111.168,
+      "pin_to_region_farthest_corner_L1_um": 136.02
+     },
+     {
+      "bank": 6,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 182.112,
+      "pin_to_region_farthest_corner_L1_um": 206.964
+     },
+     {
+      "bank": 7,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 253.056,
+      "pin_to_region_farthest_corner_L1_um": 277.908
+     }
+    ]
+   },
+   "clk_l0": {
+    "region_center_weighted_mean_L1_um": 176.952,
+    "worst_region_corner_L1_um": 201.804,
+    "banks": [
+     {
+      "bank": 0,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 176.952,
+      "pin_to_region_farthest_corner_L1_um": 201.804
+     }
+    ]
+   },
+   "clk_l1": {
+    "region_center_weighted_mean_L1_um": 248.184,
+    "worst_region_corner_L1_um": 273.036,
+    "banks": [
+     {
+      "bank": 1,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 248.184,
+      "pin_to_region_farthest_corner_L1_um": 273.036
+     }
+    ]
+   },
+   "clk_l2": {
+    "region_center_weighted_mean_L1_um": 319.32,
+    "worst_region_corner_L1_um": 344.172,
+    "banks": [
+     {
+      "bank": 2,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 319.32,
+      "pin_to_region_farthest_corner_L1_um": 344.172
+     }
+    ]
+   },
+   "clk_l3": {
+    "region_center_weighted_mean_L1_um": 390.36,
+    "worst_region_corner_L1_um": 415.212,
+    "banks": [
+     {
+      "bank": 3,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 390.36,
+      "pin_to_region_farthest_corner_L1_um": 415.212
+     }
+    ]
+   },
+   "clk_l4": {
+    "region_center_weighted_mean_L1_um": 42.912,
+    "worst_region_corner_L1_um": 67.764,
+    "banks": [
+     {
+      "bank": 4,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 42.912,
+      "pin_to_region_farthest_corner_L1_um": 67.764
+     }
+    ]
+   },
+   "clk_l5": {
+    "region_center_weighted_mean_L1_um": 114.144,
+    "worst_region_corner_L1_um": 138.996,
+    "banks": [
+     {
+      "bank": 5,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 114.144,
+      "pin_to_region_farthest_corner_L1_um": 138.996
+     }
+    ]
+   },
+   "clk_l6": {
+    "region_center_weighted_mean_L1_um": 185.376,
+    "worst_region_corner_L1_um": 210.228,
+    "banks": [
+     {
+      "bank": 6,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 185.376,
+      "pin_to_region_farthest_corner_L1_um": 210.228
+     }
+    ]
+   },
+   "clk_l7": {
+    "region_center_weighted_mean_L1_um": 256.608,
+    "worst_region_corner_L1_um": 281.46,
+    "banks": [
+     {
+      "bank": 7,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 256.608,
+      "pin_to_region_farthest_corner_L1_um": 281.46
+     }
+    ]
+   }
+  }
+ },
+ "actual_native_halo_um": 4.32,
+ "source_envelope_hold": {
+  "std_free_fill": 0.0258,
+  "macro_area_fraction": 0.3456,
+  "projected_unoccupied_outline_fraction": 0.6375,
+  "actual_empty_bin_metric": "NOT_MEASURED",
+  "conclusion": "Current same-outline source envelope fails low-fill band (15%) and target20%, below50% macro-dominated exception; needs explicit compact-envelope/parent-pin event before physical proposal."
+ }
+}

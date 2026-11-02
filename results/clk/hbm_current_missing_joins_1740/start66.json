@@ -1,0 +1,3032 @@
+{
+  "schema": "opentallas.hbm.current_start_missing_contracts.v1",
+  "scope": "Finite66 START source/physical-target/reset join matrix, not a new clock coupon or gate PASS",
+  "current_plan_sha256": "e0638225f8b38653671aa3a59d11023c566182278d7256359f8f5b221b34c492",
+  "source_prototype": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/ca_B_stages4",
+  "source_integration_status": "Bind confirms prototype never integrated into current C4 canonical source",
+  "counts": {
+    "prototype_stages": 66,
+    "prototype_logical_ff": 232,
+    "old_B_selected_net_references_consistent": 66,
+    "old_selected_A_pin_refs": 15,
+    "old_selected_Y_pin_refs": 51,
+    "current_production_clock_source_joins": 0,
+    "current_mapped_production_ff_clock_targets": 0,
+    "old_diagnostic_actual_mapped_ff_clock_pins": 3
+  },
+  "reset_and_boot": {
+    "prototype_reset_wave": false,
+    "prototype_sync_reset_input": "ot_die_start_stages.rst_raw_n",
+    "prototype_root_settle_cycles": 64,
+    "current_production_reset_binding": "UNSUPPLIED",
+    "per_stage_current_release_offsets": "UNSUPPLIED",
+    "root_settle_vs_die_max_release": "NOT_COMPARABLE until common reset reference and current source binding are established; do not infer64<94 failure",
+    "no_parameter_or_reset_mode_change": true
+  },
+  "changed_P3_fanout_geometry": {
+    "old_B_origin_um": [
+      19730.466,
+      6761.61
+    ],
+    "current_unrouted_union_global_origin_um": [
+      19864.602,
+      6697.08
+    ],
+    "L1_delta_um": 198.666,
+    "phase_status": "UNMEASURED_CURRENT; old P2/P3 names cannot carry old B timing"
+  },
+  "legacy_feed_gap": {
+    "basis": "Historical d44g/C12e actual DEF root pins; not current union coordinates",
+    "artifact_commit": "f4fb1c648",
+    "NW": {
+      "composite_node": "T028",
+      "node_xy_um": [
+        6022.08,
+        8895.96
+      ],
+      "actual_mesh_root_pin_um": [
+        9437.08,
+        7534.08
+      ],
+      "unrouted_same_endpoint_gap_um": 4776.88,
+      "local_alternatives": [
+        "b2654 direct100.94um",
+        "r2645_0 plus restoring CKINV246.28um"
+      ]
+    },
+    "NE": {
+      "composite_node": "T029",
+      "node_xy_um": [
+        18498.24,
+        7874.82
+      ],
+      "actual_MY_mesh_root_pin_um": [
+        18807.16,
+        6696.0
+      ],
+      "unrouted_same_endpoint_gap_um": 1487.74,
+      "local_alternatives": [
+        "r833_1 direct189.04um",
+        "r833_2 plus restoring CKINV98.86um"
+      ]
+    },
+    "superseded": "Earlier NE2172.42um used wrong coordinate mapping; preserve only as historical failed artifact"
+  },
+  "other_missing_event_inputs": [
+    "One accepted current graph consuming exact G10/502 local clock ports and proposed ROOT788 with their actual source bindings",
+    "All native scalar clock pins and exact typed per-profile LEF/TTFF, source identity, physical mesh/early-tree net contact assignments",
+    "Actual current reset/START producer graph and cold/warm lead contract",
+    "Current CA storage4097902FF and4722scalarpin implementation and fresh phase/calendar gate",
+    "Four stale C12e PGPclk_c2/clk_c3 targets differ currentG64.768um; no endpoint identity carry"
+  ],
+  "measured_component_refs": {
+    "feed_and_prefix": "Actual local alternatives measured; component scope only, not same T028/T029 bridge or adopted current graph",
+    "native3": "b5668a5d9 old north/east real3FFclock routes",
+    "complete_fork_to_buffer": "426aa28ef actual N1\u2192both driverA\u2192fixed mesh\u2192real bufferA; no native K or wholeG4 claim"
+  },
+  "rows": [
+    {
+      "stage_id": "b0",
+      "prototype_sv_local_instance": "u_st_b0",
+      "logical_ff_count": 8,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": true,
+      "old_B_reference": {
+        "node_cell": "b0",
+        "selected_pin": "Y",
+        "net": "n0",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          19150.56,
+          8225.28
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b0",
+        "stage_input_clock_expression": "t_st_b0__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          19141.38,
+          8225.28
+        ],
+        "stage_rectangle_um": [
+          19141.38,
+          8225.28,
+          19150.02,
+          8225.55
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r24_4",
+      "prototype_sv_local_instance": "u_st_r24_4",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r24_4",
+        "selected_pin": "A",
+        "net": "rn24_3",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          18532.8,
+          11040.3
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r24_3",
+        "stage_input_clock_expression": "t_st_r24_4__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          18534.96,
+          11040.3
+        ],
+        "stage_rectangle_um": [
+          18534.96,
+          11040.3,
+          18539.28,
+          11040.57
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b24",
+      "prototype_sv_local_instance": "u_st_b24",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b24",
+        "selected_pin": "Y",
+        "net": "n24",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          18532.8,
+          11171.52
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b24",
+        "stage_input_clock_expression": "t_st_b24__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          18534.96,
+          11171.52
+        ],
+        "stage_rectangle_um": [
+          18534.96,
+          11171.52,
+          18539.28,
+          11171.79
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r16_6",
+      "prototype_sv_local_instance": "u_st_r16_6",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r16_6",
+        "selected_pin": "A",
+        "net": "rn16_5",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          17923.086,
+          5373.0
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r16_5",
+        "stage_input_clock_expression": "t_st_r16_6__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          17919.306,
+          5373.0
+        ],
+        "stage_rectangle_um": [
+          17919.306,
+          5373.0,
+          17922.546,
+          5373.27
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b1501",
+      "prototype_sv_local_instance": "u_st_b1501",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b1501",
+        "selected_pin": "Y",
+        "net": "n1501",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          18152.64,
+          5301.72
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b1501",
+        "stage_input_clock_expression": "t_st_b1501__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          18147.78,
+          5301.72
+        ],
+        "stage_rectangle_um": [
+          18147.78,
+          5301.72,
+          18152.1,
+          5301.99
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b12",
+      "prototype_sv_local_instance": "u_st_b12",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b12",
+        "selected_pin": "Y",
+        "net": "n12",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          16895.52,
+          5289.84
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b12",
+        "stage_input_clock_expression": "t_st_b12__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          16897.68,
+          5289.84
+        ],
+        "stage_rectangle_um": [
+          16897.68,
+          5289.84,
+          16900.92,
+          5290.11
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r19_0",
+      "prototype_sv_local_instance": "u_st_r19_0",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r19_0",
+        "selected_pin": "A",
+        "net": "n18",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          23373.63,
+          8225.28
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b18",
+        "stage_input_clock_expression": "t_st_r19_0__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          23375.79,
+          8225.28
+        ],
+        "stage_rectangle_um": [
+          23375.79,
+          8225.28,
+          23379.03,
+          8225.55
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r7_0",
+      "prototype_sv_local_instance": "u_st_r7_0",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r7_0",
+        "selected_pin": "A",
+        "net": "n6",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          14900.004,
+          8225.28
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b6",
+        "stage_input_clock_expression": "t_st_r7_0__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          14902.164,
+          8225.28
+        ],
+        "stage_rectangle_um": [
+          14902.164,
+          8225.28,
+          14905.404,
+          8225.55
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b20",
+      "prototype_sv_local_instance": "u_st_b20",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b20",
+        "selected_pin": "Y",
+        "net": "n20",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          23487.84,
+          8225.82
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b20",
+        "stage_input_clock_expression": "t_st_b20__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          23490.0,
+          8225.82
+        ],
+        "stage_rectangle_um": [
+          23490.0,
+          8225.82,
+          23494.32,
+          8226.09
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b1404",
+      "prototype_sv_local_instance": "u_st_b1404",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b1404",
+        "selected_pin": "Y",
+        "net": "n1404",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          16822.08,
+          6042.06
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b1404",
+        "stage_input_clock_expression": "t_st_b1404__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          16824.24,
+          6042.06
+        ],
+        "stage_rectangle_um": [
+          16824.24,
+          6042.06,
+          16828.56,
+          6042.33
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b8",
+      "prototype_sv_local_instance": "u_st_b8",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b8",
+        "selected_pin": "Y",
+        "net": "n8",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          14199.84,
+          8233.92
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b8",
+        "stage_input_clock_expression": "t_st_b8__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          14202.0,
+          8233.92
+        ],
+        "stage_rectangle_um": [
+          14202.0,
+          8233.92,
+          14206.32,
+          8234.19
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r28_4",
+      "prototype_sv_local_instance": "u_st_r28_4",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r28_4",
+        "selected_pin": "A",
+        "net": "rn28_3",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          22623.84,
+          11154.24
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r28_3",
+        "stage_input_clock_expression": "t_st_r28_4__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          22626.0,
+          11154.24
+        ],
+        "stage_rectangle_um": [
+          22626.0,
+          11154.24,
+          22629.24,
+          11154.51
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r4_5",
+      "prototype_sv_local_instance": "u_st_r4_5",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r4_5",
+        "selected_pin": "Y",
+        "net": "rn4_5",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          22494.24,
+          5147.28
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r4_5",
+        "stage_input_clock_expression": "t_st_r4_5__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          22496.4,
+          5147.28
+        ],
+        "stage_rectangle_um": [
+          22496.4,
+          5147.28,
+          22500.72,
+          5147.55
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r682_9",
+      "prototype_sv_local_instance": "u_st_r682_9",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r682_9",
+        "selected_pin": "Y",
+        "net": "rn682_9",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          21999.168,
+          7467.66
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r682_9",
+        "stage_input_clock_expression": "t_st_r682_9__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          22001.328,
+          7467.66
+        ],
+        "stage_rectangle_um": [
+          22001.328,
+          7467.66,
+          22004.568,
+          7467.93
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b4",
+      "prototype_sv_local_instance": "u_st_b4",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b4",
+        "selected_pin": "Y",
+        "net": "n4",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          22494.24,
+          4536.0
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b4",
+        "stage_input_clock_expression": "t_st_b4__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          22496.4,
+          4536.0
+        ],
+        "stage_rectangle_um": [
+          22496.4,
+          4536.0,
+          22500.72,
+          4536.27
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b28",
+      "prototype_sv_local_instance": "u_st_b28",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b28",
+        "selected_pin": "Y",
+        "net": "n28",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          22623.84,
+          11923.2
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b28",
+        "stage_input_clock_expression": "t_st_b28__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          22626.0,
+          11923.2
+        ],
+        "stage_rectangle_um": [
+          22626.0,
+          11923.2,
+          22629.24,
+          11923.47
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b986",
+      "prototype_sv_local_instance": "u_st_b986",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b986",
+        "selected_pin": "Y",
+        "net": "n986",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          22455.36,
+          6042.06
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b986",
+        "stage_input_clock_expression": "t_st_b986__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          22457.52,
+          6042.06
+        ],
+        "stage_rectangle_um": [
+          22457.52,
+          6042.06,
+          22460.76,
+          6042.33
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b1604",
+      "prototype_sv_local_instance": "u_st_b1604",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b1604",
+        "selected_pin": "Y",
+        "net": "n1604",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          20796.48,
+          4898.88
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b1604",
+        "stage_input_clock_expression": "t_st_b1604__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          20798.64,
+          4898.88
+        ],
+        "stage_rectangle_um": [
+          20798.64,
+          4898.88,
+          20802.96,
+          4899.15
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r44_1",
+      "prototype_sv_local_instance": "u_st_r44_1",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r44_1",
+        "selected_pin": "Y",
+        "net": "rn44_1",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          14199.84,
+          4003.02
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r44_1",
+        "stage_input_clock_expression": "t_st_r44_1__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          14202.0,
+          4003.02
+        ],
+        "stage_rectangle_um": [
+          14202.0,
+          4003.02,
+          14206.32,
+          4003.29
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b58",
+      "prototype_sv_local_instance": "u_st_b58",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b58",
+        "selected_pin": "Y",
+        "net": "n58",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          14199.84,
+          13547.52
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b58",
+        "stage_input_clock_expression": "t_st_b58__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          14202.0,
+          13547.52
+        ],
+        "stage_rectangle_um": [
+          14202.0,
+          13547.52,
+          14205.24,
+          13547.79
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b40",
+      "prototype_sv_local_instance": "u_st_b40",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b40",
+        "selected_pin": "Y",
+        "net": "n40",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          25176.96,
+          5288.22
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b40",
+        "stage_input_clock_expression": "t_st_b40__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          25179.12,
+          5288.22
+        ],
+        "stage_rectangle_um": [
+          25179.12,
+          5288.22,
+          25183.44,
+          5288.49
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b44",
+      "prototype_sv_local_instance": "u_st_b44",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b44",
+        "selected_pin": "Y",
+        "net": "n44",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          14199.84,
+          3672.0
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b44",
+        "stage_input_clock_expression": "t_st_b44__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          14202.0,
+          3672.0
+        ],
+        "stage_rectangle_um": [
+          14202.0,
+          3672.0,
+          14206.32,
+          3672.27
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r73_6",
+      "prototype_sv_local_instance": "u_st_r73_6",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r73_6",
+        "selected_pin": "A",
+        "net": "rn73_5",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          25448.85,
+          11295.18
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r73_5",
+        "stage_input_clock_expression": "t_st_r73_6__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          25451.01,
+          11295.18
+        ],
+        "stage_rectangle_um": [
+          25451.01,
+          11295.18,
+          25455.33,
+          11295.45
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r1137_2",
+      "prototype_sv_local_instance": "u_st_r1137_2",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r1137_2",
+        "selected_pin": "A",
+        "net": "rn1137_1",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          13383.36,
+          5206.68
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r1137_1",
+        "stage_input_clock_expression": "t_st_r1137_2__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          13385.52,
+          5206.68
+        ],
+        "stage_rectangle_um": [
+          13385.52,
+          5206.68,
+          13388.76,
+          5206.95
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b987",
+      "prototype_sv_local_instance": "u_st_b987",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b987",
+        "selected_pin": "Y",
+        "net": "n987",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          21539.52,
+          4430.16
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b987",
+        "stage_input_clock_expression": "t_st_b987__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          21541.68,
+          4430.16
+        ],
+        "stage_rectangle_um": [
+          21541.68,
+          4430.16,
+          21544.92,
+          4430.43
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r3297_1",
+      "prototype_sv_local_instance": "u_st_r3297_1",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r3297_1",
+        "selected_pin": "Y",
+        "net": "rn3297_1",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          17893.44,
+          13812.66
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r3297_1",
+        "stage_input_clock_expression": "t_st_r3297_1__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          17895.6,
+          13812.66
+        ],
+        "stage_rectangle_um": [
+          17895.6,
+          13812.66,
+          17899.92,
+          13812.93
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b74",
+      "prototype_sv_local_instance": "u_st_b74",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b74",
+        "selected_pin": "Y",
+        "net": "n74",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          25488.0,
+          11172.06
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b74",
+        "stage_input_clock_expression": "t_st_b74__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          25490.16,
+          11172.06
+        ],
+        "stage_rectangle_um": [
+          25490.16,
+          11172.06,
+          25494.48,
+          11172.33
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b82",
+      "prototype_sv_local_instance": "u_st_b82",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b82",
+        "selected_pin": "Y",
+        "net": "n82",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          21703.68,
+          14963.4
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b82",
+        "stage_input_clock_expression": "t_st_b82__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          21705.84,
+          14963.4
+        ],
+        "stage_rectangle_um": [
+          21705.84,
+          14963.4,
+          21709.08,
+          14963.67
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r47_29",
+      "prototype_sv_local_instance": "u_st_r47_29",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r47_29",
+        "selected_pin": "Y",
+        "net": "rn47_29",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          9588.888,
+          8224.74
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r47_29",
+        "stage_input_clock_expression": "t_st_r47_29__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          9591.048,
+          8224.74
+        ],
+        "stage_rectangle_um": [
+          9591.048,
+          8224.74,
+          9594.288,
+          8225.01
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b48",
+      "prototype_sv_local_instance": "u_st_b48",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b48",
+        "selected_pin": "Y",
+        "net": "n48",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          9249.12,
+          8225.82
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b48",
+        "stage_input_clock_expression": "t_st_b48__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          9251.28,
+          8225.82
+        ],
+        "stage_rectangle_um": [
+          9251.28,
+          8225.82,
+          9255.6,
+          8226.09
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r3015_3",
+      "prototype_sv_local_instance": "u_st_r3015_3",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r3015_3",
+        "selected_pin": "Y",
+        "net": "rn3015_3",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          16348.392,
+          10616.94
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r3015_3",
+        "stage_input_clock_expression": "t_st_r3015_3__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          16350.552,
+          10616.94
+        ],
+        "stage_rectangle_um": [
+          16350.552,
+          10616.94,
+          16353.792,
+          10617.21
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b212",
+      "prototype_sv_local_instance": "u_st_b212",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b212",
+        "selected_pin": "Y",
+        "net": "n212",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          26369.28,
+          8225.82
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b212",
+        "stage_input_clock_expression": "t_st_b212__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          26371.44,
+          8225.82
+        ],
+        "stage_rectangle_um": [
+          26371.44,
+          8225.82,
+          26375.76,
+          8226.09
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "hm_NE_P2",
+      "prototype_sv_local_instance": "u_st_hm_NE_P2",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "hm_NE_P2",
+        "selected_pin": "Y",
+        "net": "hm_NE_n_P2",
+        "actual_primitive": "BUFx24_ASAP7_75t_R",
+        "primitive_origin_um": [
+          19445.184,
+          6722.73
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "hm_NE_P2",
+        "stage_input_clock_expression": "t_st_hm_NE_P2__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          19447.344,
+          6722.73
+        ],
+        "stage_rectangle_um": [
+          19447.344,
+          6722.73,
+          19450.584,
+          6723.0
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false,
+      "current_unrouted_union_geometry_candidate": {
+        "master": "BUFx24_ASAP7_75t_R",
+        "postorientation_hub_local_origin_um": [
+          4470.282,
+          631.8
+        ],
+        "global_origin_um": [
+          19512.522,
+          6697.08
+        ],
+        "L1_delta_vs_old_B_node_origin_um": 92.988,
+        "qualification": "MODEL_ONLY_NOT_CURRENT_ROUTED_SOURCE_IDENTITY"
+      },
+      "old_measured_native_component": {
+        "scope": "Old north B diagnostic only; no current source/phase adoption",
+        "source_commit": "b5668a5d9",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "actual_named_clock_pins": [
+          "start__12_/CLK",
+          "start__13_/CLK",
+          "start__14_/CLK"
+        ],
+        "actual_cell_origins_um": {
+          "start__12_/CLK": [
+            19447.344,
+            6722.73
+          ],
+          "start__13_/CLK": [
+            19448.424,
+            6722.73
+          ],
+          "start__14_/CLK": [
+            19449.504,
+            6722.73
+          ]
+        },
+        "clock_pin_metal_rects": "Not substituted by stage marker; current mapped production pins UNSUPPLIED"
+      }
+    },
+    {
+      "stage_id": "r3171_2",
+      "prototype_sv_local_instance": "u_st_r3171_2",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r3171_2",
+        "selected_pin": "A",
+        "net": "rn3171_1",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          19396.8,
+          1755.54
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r3171_1",
+        "stage_input_clock_expression": "t_st_r3171_2__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          19398.96,
+          1755.54
+        ],
+        "stage_rectangle_um": [
+          19398.96,
+          1755.54,
+          19402.2,
+          1755.81
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b136",
+      "prototype_sv_local_instance": "u_st_b136",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b136",
+        "selected_pin": "Y",
+        "net": "n136",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          21051.36,
+          17504.64
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b136",
+        "stage_input_clock_expression": "t_st_b136__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          21046.5,
+          17504.64
+        ],
+        "stage_rectangle_um": [
+          21046.5,
+          17504.64,
+          21050.82,
+          17504.91
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b228",
+      "prototype_sv_local_instance": "u_st_b228",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b228",
+        "selected_pin": "Y",
+        "net": "n228",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          27475.2,
+          8225.82
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b228",
+        "stage_input_clock_expression": "t_st_b228__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          27477.36,
+          8225.82
+        ],
+        "stage_rectangle_um": [
+          27477.36,
+          8225.82,
+          27480.6,
+          8226.09
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r2006_1",
+      "prototype_sv_local_instance": "u_st_r2006_1",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r2006_1",
+        "selected_pin": "Y",
+        "net": "rn2006_1",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          22222.08,
+          1690.74
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r2006_1",
+        "stage_input_clock_expression": "t_st_r2006_1__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          22224.24,
+          1690.74
+        ],
+        "stage_rectangle_um": [
+          22224.24,
+          1690.74,
+          22228.56,
+          1691.01
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b3717",
+      "prototype_sv_local_instance": "u_st_b3717",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b3717",
+        "selected_pin": "Y",
+        "net": "n3717",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          13919.04,
+          1690.74
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b3717",
+        "stage_input_clock_expression": "t_st_b3717__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          13921.2,
+          1690.74
+        ],
+        "stage_rectangle_um": [
+          13921.2,
+          1690.74,
+          13925.52,
+          1691.01
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r2095_2",
+      "prototype_sv_local_instance": "u_st_r2095_2",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r2095_2",
+        "selected_pin": "A",
+        "net": "rn2095_1",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          26899.074,
+          2184.84
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r2095_1",
+        "stage_input_clock_expression": "t_st_r2095_2__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          26901.234,
+          2184.84
+        ],
+        "stage_rectangle_um": [
+          26901.234,
+          2184.84,
+          26904.474,
+          2185.11
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r2215_24",
+      "prototype_sv_local_instance": "u_st_r2215_24",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r2215_24",
+        "selected_pin": "A",
+        "net": "rn2215_23",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          6168.744,
+          8865.72
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r2215_23",
+        "stage_input_clock_expression": "t_st_r2215_24__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          6170.904,
+          8865.72
+        ],
+        "stage_rectangle_um": [
+          6170.904,
+          8865.72,
+          6174.144,
+          8865.99
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b3449",
+      "prototype_sv_local_instance": "u_st_b3449",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b3449",
+        "selected_pin": "Y",
+        "net": "n3449",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          26913.6,
+          13193.28
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b3449",
+        "stage_input_clock_expression": "t_st_b3449__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          26915.76,
+          13193.28
+        ],
+        "stage_rectangle_um": [
+          26915.76,
+          13193.28,
+          26919.0,
+          13193.55
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b118",
+      "prototype_sv_local_instance": "u_st_b118",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b118",
+        "selected_pin": "Y",
+        "net": "n118",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          10968.48,
+          10831.86
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b118",
+        "stage_input_clock_expression": "t_st_b118__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          10970.64,
+          10831.86
+        ],
+        "stage_rectangle_um": [
+          10970.64,
+          10831.86,
+          10974.96,
+          10832.13
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r104_0",
+      "prototype_sv_local_instance": "u_st_r104_0",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r104_0",
+        "selected_pin": "A",
+        "net": "n103",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          5138.154,
+          8225.28
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b103",
+        "stage_input_clock_expression": "t_st_r104_0__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          5134.374,
+          8225.28
+        ],
+        "stage_rectangle_um": [
+          5134.374,
+          8225.28,
+          5137.614,
+          8225.55
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b114",
+      "prototype_sv_local_instance": "u_st_b114",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b114",
+        "selected_pin": "Y",
+        "net": "n114",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          7797.6,
+          11923.2
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b114",
+        "stage_input_clock_expression": "t_st_b114__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          7799.76,
+          11923.2
+        ],
+        "stage_rectangle_um": [
+          7799.76,
+          11923.2,
+          7803.0,
+          11923.47
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b3888",
+      "prototype_sv_local_instance": "u_st_b3888",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b3888",
+        "selected_pin": "Y",
+        "net": "n3888",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          9519.39,
+          5258.52
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b3888",
+        "stage_input_clock_expression": "t_st_b3888__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          9521.55,
+          5258.52
+        ],
+        "stage_rectangle_um": [
+          9521.55,
+          5258.52,
+          9524.79,
+          5258.79
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b102",
+      "prototype_sv_local_instance": "u_st_b102",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b102",
+        "selected_pin": "Y",
+        "net": "n102",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          11504.16,
+          5289.84
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b102",
+        "stage_input_clock_expression": "t_st_b102__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          11506.32,
+          5289.84
+        ],
+        "stage_rectangle_um": [
+          11506.32,
+          5289.84,
+          11509.56,
+          5290.11
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b106",
+      "prototype_sv_local_instance": "u_st_b106",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b106",
+        "selected_pin": "Y",
+        "net": "n106",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          4911.84,
+          8225.82
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b106",
+        "stage_input_clock_expression": "t_st_b106__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          4914.0,
+          8225.82
+        ],
+        "stage_rectangle_um": [
+          4914.0,
+          8225.82,
+          4918.32,
+          8226.09
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r94_3",
+      "prototype_sv_local_instance": "u_st_r94_3",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r94_3",
+        "selected_pin": "Y",
+        "net": "rn94_3",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          5905.44,
+          5452.92
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r94_3",
+        "stage_input_clock_expression": "t_st_r94_3__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          5907.6,
+          5452.92
+        ],
+        "stage_rectangle_um": [
+          5907.6,
+          5452.92,
+          5911.92,
+          5453.19
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b110",
+      "prototype_sv_local_instance": "u_st_b110",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b110",
+        "selected_pin": "Y",
+        "net": "n110",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          4933.44,
+          10831.86
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b110",
+        "stage_input_clock_expression": "t_st_b110__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          4935.6,
+          10831.86
+        ],
+        "stage_rectangle_um": [
+          4935.6,
+          10831.86,
+          4939.92,
+          10832.13
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b3946",
+      "prototype_sv_local_instance": "u_st_b3946",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b3946",
+        "selected_pin": "Y",
+        "net": "n3946",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          11907.216,
+          5142.42
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b3946",
+        "stage_input_clock_expression": "t_st_b3946__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          11903.436,
+          5142.42
+        ],
+        "stage_rectangle_um": [
+          11903.436,
+          5142.42,
+          11906.676,
+          5142.69
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b94",
+      "prototype_sv_local_instance": "u_st_b94",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b94",
+        "selected_pin": "Y",
+        "net": "n94",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          5905.44,
+          4536.0
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b94",
+        "stage_input_clock_expression": "t_st_b94__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          5907.6,
+          4536.0
+        ],
+        "stage_rectangle_um": [
+          5907.6,
+          4536.0,
+          5911.92,
+          4536.27
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b188",
+      "prototype_sv_local_instance": "u_st_b188",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b188",
+        "selected_pin": "Y",
+        "net": "n188",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          3460.32,
+          8225.82
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b188",
+        "stage_input_clock_expression": "t_st_b188__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          3462.48,
+          8225.82
+        ],
+        "stage_rectangle_um": [
+          3462.48,
+          8225.82,
+          3465.72,
+          8226.09
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r3908_5",
+      "prototype_sv_local_instance": "u_st_r3908_5",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r3908_5",
+        "selected_pin": "Y",
+        "net": "rn3908_5",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          7669.566,
+          5247.18
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r3908_5",
+        "stage_input_clock_expression": "t_st_r3908_5__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          7671.726,
+          5247.18
+        ],
+        "stage_rectangle_um": [
+          7671.726,
+          5247.18,
+          7676.046,
+          5247.45
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b168",
+      "prototype_sv_local_instance": "u_st_b168",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b168",
+        "selected_pin": "Y",
+        "net": "n168",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          6696.0,
+          14963.4
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b168",
+        "stage_input_clock_expression": "t_st_b168__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          6698.16,
+          14963.4
+        ],
+        "stage_rectangle_um": [
+          6698.16,
+          14963.4,
+          6702.48,
+          14963.67
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b5581",
+      "prototype_sv_local_instance": "u_st_b5581",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b5581",
+        "selected_pin": "Y",
+        "net": "n5581",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          14195.52,
+          16472.16
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b5581",
+        "stage_input_clock_expression": "t_st_b5581__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          14197.68,
+          16472.16
+        ],
+        "stage_rectangle_um": [
+          14197.68,
+          16472.16,
+          14202.0,
+          16472.43
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b160",
+      "prototype_sv_local_instance": "u_st_b160",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b160",
+        "selected_pin": "Y",
+        "net": "n160",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          2911.68,
+          11172.06
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b160",
+        "stage_input_clock_expression": "t_st_b160__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          2913.84,
+          11172.06
+        ],
+        "stage_rectangle_um": [
+          2913.84,
+          11172.06,
+          2917.08,
+          11172.33
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r5504_1",
+      "prototype_sv_local_instance": "u_st_r5504_1",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r5504_1",
+        "selected_pin": "Y",
+        "net": "rn5504_1",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          10266.21,
+          14206.86
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r5504_1",
+        "stage_input_clock_expression": "t_st_r5504_1__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          10268.37,
+          14206.86
+        ],
+        "stage_rectangle_um": [
+          10268.37,
+          14206.86,
+          10271.61,
+          14207.13
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r4180_2",
+      "prototype_sv_local_instance": "u_st_r4180_2",
+      "logical_ff_count": 4,
+      "prototype_edge_fall": true,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r4180_2",
+        "selected_pin": "A",
+        "net": "rn4180_1",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          4208.004,
+          10701.18
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r4180_1",
+        "stage_input_clock_expression": "t_st_r4180_2__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          4210.164,
+          10701.18
+        ],
+        "stage_rectangle_um": [
+          4210.164,
+          10701.18,
+          4214.484,
+          10701.45
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b2643",
+      "prototype_sv_local_instance": "u_st_b2643",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b2643",
+        "selected_pin": "Y",
+        "net": "n2643",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          9167.04,
+          6886.62
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b2643",
+        "stage_input_clock_expression": "t_st_b2643__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          9169.2,
+          6886.62
+        ],
+        "stage_rectangle_um": [
+          9169.2,
+          6886.62,
+          9172.44,
+          6886.89
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b224",
+      "prototype_sv_local_instance": "u_st_b224",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b224",
+        "selected_pin": "Y",
+        "net": "n224",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          2030.4,
+          8225.82
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b224",
+        "stage_input_clock_expression": "t_st_b224__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          2032.56,
+          8225.82
+        ],
+        "stage_rectangle_um": [
+          2032.56,
+          8225.82,
+          2035.8,
+          8226.09
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r4990_2",
+      "prototype_sv_local_instance": "u_st_r4990_2",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r4990_2",
+        "selected_pin": "A",
+        "net": "rn4990_1",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          6160.32,
+          1866.24
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r4990_1",
+        "stage_input_clock_expression": "t_st_r4990_2__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          6162.48,
+          1866.24
+        ],
+        "stage_rectangle_um": [
+          6162.48,
+          1866.24,
+          6165.72,
+          1866.51
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "b5586",
+      "prototype_sv_local_instance": "u_st_b5586",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "b5586",
+        "selected_pin": "Y",
+        "net": "n5586",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          1270.08,
+          5306.58
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b5586",
+        "stage_input_clock_expression": "t_st_b5586__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          1272.24,
+          5306.58
+        ],
+        "stage_rectangle_um": [
+          1272.24,
+          5306.58,
+          1275.48,
+          5306.85
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r5131_3",
+      "prototype_sv_local_instance": "u_st_r5131_3",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r5131_3",
+        "selected_pin": "Y",
+        "net": "rn5131_3",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          8977.014,
+          1940.76
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r5131_3",
+        "stage_input_clock_expression": "t_st_r5131_3__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          8979.174,
+          1940.76
+        ],
+        "stage_rectangle_um": [
+          8979.174,
+          1940.76,
+          8982.414,
+          1941.03
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r5344_2",
+      "prototype_sv_local_instance": "u_st_r5344_2",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r5344_2",
+        "selected_pin": "A",
+        "net": "rn5344_1",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          1408.32,
+          13663.08
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r5344_1",
+        "stage_input_clock_expression": "t_st_r5344_2__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          1410.48,
+          13663.08
+        ],
+        "stage_rectangle_um": [
+          1410.48,
+          13663.08,
+          1413.72,
+          13663.35
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r5992_0",
+      "prototype_sv_local_instance": "u_st_r5992_0",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r5992_0",
+        "selected_pin": "A",
+        "net": "n5991",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          5184.0,
+          16813.44
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "b5991",
+        "stage_input_clock_expression": "t_st_r5992_0__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          5186.16,
+          16813.44
+        ],
+        "stage_rectangle_um": [
+          5186.16,
+          16813.44,
+          5189.4,
+          16813.71
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    },
+    {
+      "stage_id": "r4920_1",
+      "prototype_sv_local_instance": "u_st_r4920_1",
+      "logical_ff_count": 3,
+      "prototype_edge_fall": false,
+      "prototype_pad": 0,
+      "prototype_is_root": false,
+      "old_B_reference": {
+        "node_cell": "r4920_1",
+        "selected_pin": "Y",
+        "net": "rn4920_1",
+        "actual_primitive": "CKINVDCx16_ASAP7_75t_R",
+        "primitive_origin_um": [
+          1408.32,
+          1858.68
+        ],
+        "net_matches_exported_primitive": true,
+        "upstream_driver_cell": "r4920_1",
+        "stage_input_clock_expression": "t_st_r4920_1__clk",
+        "stage_input_reset_expression": "rst_raw_n",
+        "stage_marker_xy_um": [
+          1410.48,
+          1858.68
+        ],
+        "stage_rectangle_um": [
+          1410.48,
+          1858.68,
+          1413.72,
+          1858.95
+        ],
+        "marker_is_not_actual_ff_clock_pin": true,
+        "phase_status": "STALE_OLD_B_NOT_CURRENT_EVENT"
+      },
+      "current_production_join": {
+        "accepted_source_graph": "UNSUPPLIED",
+        "exact_node_cell_pin_and_net": "UNSUPPLIED",
+        "top_qualified_start_instance": "UNSUPPLIED",
+        "mapped_ff_instances_and_CLK_metal_rectangles": "UNSUPPLIED",
+        "reset_producer_and_release_reference": "UNSUPPLIED",
+        "actual_TT_FF_ff_clock_phase": "UNSUPPLIED"
+      },
+      "status": "CURRENT_SOURCE_PHYSICAL_TARGET_AND_BOOT_JOIN_MISSING",
+      "release_qualified": false
+    }
+  ],
+  "release_qualified": false
+}

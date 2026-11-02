@@ -1,0 +1,55 @@
+{
+  "scope": "single real source phase CAP-aware placement search only; no full field/mission",
+  "production_enabled": false,
+  "cases": [
+    {
+      "frame": "u_f_0L01",
+      "phase": 71,
+      "old_single_cap_score": 4,
+      "new_single_cap_score": 0,
+      "source_rows": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "cfg": {
+        "obase": 896,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 0,
+        "rcnt": 104,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      },
+      "elapsed": 7.408422470092773
+    },
+    {
+      "frame": "u_f_1L03",
+      "phase": 71,
+      "old_single_cap_score": 0,
+      "new_single_cap_score": 0,
+      "source_rows": [
+        246,
+        247,
+        248,
+        249
+      ],
+      "cfg": {
+        "obase": 896,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 208,
+        "rcnt": 56,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      },
+      "elapsed": 7.142808437347412
+    }
+  ],
+  "status": "PASS_SINGLE_FRAME_LOGICAL_CAP_SEARCH"
+}
