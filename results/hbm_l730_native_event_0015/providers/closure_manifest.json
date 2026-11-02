@@ -1,0 +1,50 @@
+[
+  {
+    "top": "ot_hgi_sfu_core_split3__ctl",
+    "logic_file": "logic_ot_hgi_sfu_core_split3__ctl.sv",
+    "logic_policy": "Exact native memory master definitions excluded only for true same-name native LEF/Liberty binding; no replacement alias",
+    "file": "closure_ot_hgi_sfu_core_split3__ctl.sv",
+    "sha256": "ff736f49006105d4f4cfd092302867f0615d045aafc19277b804e5dd47f52482",
+    "selected_modules": [
+      "ot_hgi_sfu_core_split3__ctl",
+      "ot_hgi_sfu_vm_static_bridge",
+      "ot_rst_relay"
+    ],
+    "module_count": 3,
+    "dependency_policy": "Conservative selected-definition lexical closure, including all parameter branches; no substitute or body alias"
+  },
+  {
+    "top": "ot_hnx_sfu_store_a__da81d76763c9",
+    "logic_file": "logic_ot_hnx_sfu_store_a__da81d76763c9.sv",
+    "logic_policy": "Exact native memory master definitions excluded only for true same-name native LEF/Liberty binding; no replacement alias",
+    "file": "closure_ot_hnx_sfu_store_a__da81d76763c9.sv",
+    "sha256": "e2593d542c55c36bbf0e478f652f7bf7ebaf776d2eb982e5ae7cdaa9e8423379",
+    "selected_modules": [
+      "ot_hgi_su_lbank",
+      "ot_hgi_su_lgroup2",
+      "ot_hnx_sfu_store_a__da81d76763c9",
+      "ot_sram_1r1w_1024x256_m2_r2c2",
+      "ot_sram_1r1w_128x256_m1_r2c2",
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "module_count": 6,
+    "dependency_policy": "Conservative selected-definition lexical closure, including all parameter branches; no substitute or body alias"
+  },
+  {
+    "top": "ot_hnx_sfu_store_b__1300886e9f18",
+    "logic_file": "logic_ot_hnx_sfu_store_b__1300886e9f18.sv",
+    "logic_policy": "Exact native memory master definitions excluded only for true same-name native LEF/Liberty binding; no replacement alias",
+    "file": "closure_ot_hnx_sfu_store_b__1300886e9f18.sv",
+    "sha256": "0c39663997343817e7d073a27387817177299db72f61e0776e7dc6689617e37c",
+    "selected_modules": [
+      "ot_hgi_su_lbank",
+      "ot_hgi_su_lgroup2",
+      "ot_hnx_sfu_store_b__1300886e9f18",
+      "ot_sram_1r1w_1024x256_m2_r2c2",
+      "ot_sram_1r1w_128x256_m1_r2c2",
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "module_count": 6,
+    "dependency_policy": "Conservative selected-definition lexical closure, including all parameter branches; no substitute or body alias"
+  }
+]

@@ -1,0 +1,17 @@
+DISABLED; this is a GEN-only proposal, not a routed-provider dispatch.
+
+Resolve exact selected-source native SOURCE_EQ/reset/clock/START preflight first. No older split3 provider or generic4-reset receipt qualifies this source.
+
+1. Copy GEN_recipe_template.json to a new runtime file, expanding each relative source filename against THIS capsule directory. Do not change top/ports/params or map to old providers.
+2. Run the current reviewed physical/die_plan/hbm/cores/harden/gen_core_kit.py under ordinary ot-run with:
+   --plan GEN_plan.json
+   --type ot_hnx_sfu_store_a__da81d76763c9__760.32x483.84
+   --recipes GEN_recipes.runtime.json
+   --out NEW_PRIVATE_GEN_OUTPUT
+   --repo EXACT_REVIEWED_REPO
+   --tool EXACT_REVIEWED_REPO/tools/die_plan
+   --plan-commit SOURCE13_L730_DISABLED_EVENT
+   --trial
+3. Stop after GEN. Preserve true native hard-macro ABI and exact selected-source reset metadata; audit actual emitted hierarchy before any macro placement or SYN/P&R. No late source mutation or cache graft.
+
+The conservative full6-module selected closure is retained; the logic closure omits only exact native SRAM master module bodies for genuine same-name native LEF/Liberty binding. RB11 selects32 real256x256 masters. The native library ABI must match the frozen hard-macro ABI manifest before consuming it. Unselected RB branches are not alternative providers.
