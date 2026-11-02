@@ -1,0 +1,103 @@
+{
+  "scope": "DISABLED exact onecell source planning contact/membership repair. Prior173/174FAIL preserved; no native DB/full placement/cut/CTS/GRT/STA.",
+  "verdict": "PASS onepoint geometric witness; overall sourceclock/physical HOLD",
+  "name": "u_bound.u_ft_ft6_o_2/q\\[496\\]$_DFF_P_",
+  "old_model_xy_um": [
+    1024.542,
+    481.005
+  ],
+  "new_model_xy_um": [
+    1014.012,
+    491.265
+  ],
+  "new_native_location_um": [
+    1013.472,
+    491.13
+  ],
+  "target": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "bbox_dbu": [
+      1013472,
+      491130,
+      1014552,
+      491400
+    ],
+    "xy_um": [
+      1014.012,
+      491.265
+    ],
+    "orient": "MX",
+    "row": "ROW_1803",
+    "family": "ft6_stage2",
+    "original_xy_um": [
+      1036.476,
+      481.005
+    ],
+    "desired_xy_um": [
+      1024.542,
+      481.005
+    ],
+    "jog_from_clamped_desired_um": 1.1641532182693482e-13,
+    "old_status": "PLACED",
+    "proposed_status": "FIRM",
+    "DPL_pair_margin_um": 2.5,
+    "explicit_proposed_tap": "clk_t32",
+    "old_proposed_tap": "clk_t17",
+    "source_native_root_unchanged": "clk",
+    "jog_um": 20.789999999999882
+  },
+  "explicit_membership_delta": {
+    "old": "clk_t17",
+    "new": "clk_t32",
+    "native_actual_root_before_after": "clk",
+    "clock_ports_added": 0,
+    "clock_control_FFs_added": 0,
+    "reset_FFs_added": 0,
+    "cycles_added": 0
+  },
+  "centre_radius_um": 149.9709999999999,
+  "native_location_radius_um": 149.56599999999992,
+  "fixed405_incident_edges": [
+    {
+      "endpoint": "u_bound.u_ft_ft6_o_3/q\\[496\\]$_DFF_P_",
+      "xy_um": [
+        1137.888,
+        239.355
+      ],
+      "distance_um": 375.78599999999994
+    },
+    {
+      "endpoint": "u_bound.u_ft_ft6_o_1/q\\[496\\]$_DFF_P_",
+      "xy_um": [
+        880.956,
+        724.815
+      ],
+      "distance_um": 366.606
+    }
+  ],
+  "all_other_model_cells_and173contacts_exactly_fixed": 323282,
+  "original_master_orientation_and_supplyphase_preserved": true,
+  "full_prior_body_audit_zero_inherited_only_for_unchanged_cells": true,
+  "onecell_body_collision_count": 0,
+  "onecell_otherband_hit_count": 0,
+  "current_tap_load_delta": {
+    "t17_before": 572,
+    "t17_after": 571,
+    "t32_before": 1029,
+    "t32_after": 1030,
+    "maximum_load": 1318,
+    "cap": 1500
+  },
+  "combined515stage2_contacts_over150": 0,
+  "combined_graph_max_um": 403.97,
+  "combined_graph_captures": 47511,
+  "combined_graph_over405": 0,
+  "combined_pin_max_um": 149.81,
+  "projected_cut_scope": "No global demand rerun; originalNWft3cut remains HOLD, onepoint data-net change is not a new whole-cut result.",
+  "remaining_other_source_clock_radius_union": 915,
+  "holds": [
+    "one changed membership is explicit proposal; current native actualroot remainsclk, no installedclock/source-export/window/phase qualification",
+    "909+other clockradius/originalNWft3/4843/PG95696/2partialfaces/sparsefill holds remain",
+    "no GEN/helper/RTL/plan/ODB edits or physicalrelease"
+  ]
+}

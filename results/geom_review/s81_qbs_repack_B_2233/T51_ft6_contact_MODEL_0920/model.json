@@ -1,0 +1,164 @@
+{
+  "scope": "DISABLED one bounded FT6stage2 contact correction. Preserve all FT2/DATA149342075poses and all already-proposed clocktap memberships; no new node/port/cycle or actual DB/CAD.",
+  "requested_contacts": 174,
+  "allocated_contacts": 173,
+  "failed": [
+    {
+      "name": "u_bound.u_ft_ft6_o_2/q\\[496\\]$_DFF_P_",
+      "tap": "clk_t17",
+      "original_distances_um": [
+        167.435,
+        167.84
+      ],
+      "UV": [
+        1200771,
+        1782243,
+        493533,
+        561141
+      ]
+    }
+  ],
+  "max_jog_um": 17.496,
+  "all515_stage2_same_proposed_tap_membership": true,
+  "complete323283body_audit": {
+    "new_target_overlaps": [],
+    "row_site_failures": [],
+    "master_orient_dimension_failures": [],
+    "other_band_hits": []
+  },
+  "same_existing_assignment": {
+    "cap": 1500,
+    "max_load": 1318,
+    "all_mission_FFs": 39655,
+    "changed_memberships": 0,
+    "stage2_over150": 1,
+    "stage2_bad": [
+      {
+        "name": "u_bound.u_ft_ft6_o_2/q\\[496\\]$_DFF_P_",
+        "tap": "clk_t17",
+        "centre_um": 167.435,
+        "location_um": 167.84
+      }
+    ],
+    "all_mission_either_centre_or_location_over150": 916,
+    "max_centre_um": 200.264,
+    "max_location_um": 200.849,
+    "remaining_other_clock_witnesses": [
+      {
+        "name": "u_bound.u_ft_ft6_o_1/q\\[207\\]$_DFF_P_",
+        "tap": "clk_t48",
+        "centre_um": 200.174,
+        "location_um": 200.849
+      },
+      {
+        "name": "u_bound.u_ft_ft6_o_1/q\\[144\\]$_DFF_P_",
+        "tap": "clk_t48",
+        "centre_um": 200.12,
+        "location_um": 200.795
+      },
+      {
+        "name": "u_bound.u_ft_ft6_o_1/q\\[285\\]$_DFF_P_",
+        "tap": "clk_t48",
+        "centre_um": 200.12,
+        "location_um": 200.795
+      },
+      {
+        "name": "u_bound.u_ft_ft6_o_1/q\\[195\\]$_DFF_P_",
+        "tap": "clk_t48",
+        "centre_um": 199.958,
+        "location_um": 200.633
+      },
+      {
+        "name": "u_bound.u_ft_ft6_o_1/q\\[231\\]$_DFF_P_",
+        "tap": "clk_t48",
+        "centre_um": 199.904,
+        "location_um": 200.579
+      },
+      {
+        "name": "u_bound.u_ft_ft6_o_1/q\\[497\\]$_DFF_P_",
+        "tap": "clk_t48",
+        "centre_um": 199.742,
+        "location_um": 200.417
+      },
+      {
+        "name": "u_bound.u_ft_ft6_o_1/q\\[331\\]$_DFF_P_",
+        "tap": "clk_t48",
+        "centre_um": 199.634,
+        "location_um": 200.309
+      },
+      {
+        "name": "u_bound.u_ft_ft6_o_1/q\\[296\\]$_DFF_P_",
+        "tap": "clk_t31",
+        "centre_um": 200.264,
+        "location_um": 199.589
+      },
+      {
+        "name": "u_bound.u_ft_ft6_o_1/q\\[310\\]$_DFF_P_",
+        "tap": "clk_t31",
+        "centre_um": 200.264,
+        "location_um": 199.589
+      },
+      {
+        "name": "u_bound.u_ft_ft6_o_1/q\\[214\\]$_DFF_P_",
+        "tap": "clk_t48",
+        "centre_um": 199.58,
+        "location_um": 200.255
+      }
+    ]
+  },
+  "r2r": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 403.97,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 47511,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_bound.u_cland_ft2_i/u_ring.dch\\[1\\].u_dsel/y\\[20\\]$_DFF_P_ -> u_bound.u_ft_ft2_o_0/q\\[84\\]$_DFF_P_"
+  },
+  "remaining_r2r": [],
+  "pins": {
+    "pins_registered": 15164,
+    "pins_to_macro": 0,
+    "pins_exempt": 93,
+    "pins_unregistered": 0,
+    "pins_land_ring": 3042,
+    "unregistered_sample": [],
+    "pin_reg_p50": 7.1,
+    "pin_reg_p90": 24.07,
+    "pin_reg_max": 149.81,
+    "pin_reg_worst": [
+      "149.8 ft3_i[490]",
+      "149.2 ft3_i[491]",
+      "148.1 ft3_i[492]",
+      "147.4 ft3_i[493]",
+      "146.4 ft3_i[494]"
+    ]
+  },
+  "projected_M2M7_demand": {
+    "channel_v_max": null,
+    "channel_v_at": null,
+    "blocked_v": 0,
+    "detour_v": 0,
+    "detour_v_extension_max_um": 0.0,
+    "detour_v_extent_at": null,
+    "col_v_max": 1.054,
+    "col_v_at": [
+      240.0,
+      1207.5
+    ],
+    "tracks_v_per_um": 48.18,
+    "channel_h_max": null,
+    "channel_h_at": null,
+    "blocked_h": 0,
+    "detour_h": 0,
+    "detour_h_extension_max_um": 0.0,
+    "detour_h_extent_at": null,
+    "tracks_h_per_um": 48.18,
+    "demand_layers": "M2-M7"
+  },
+  "holds": [
+    "source planning membership is not installed nativeTcl/sourceclockphase qualification",
+    "other sourceclock150radius violations/NWft3physical4843/95696PGopens/2partialfaces/sparsefill remain",
+    "all SOURCE/FF/master/orient/domain/reset/stages/cycles/pins unchanged; no GEN/physicalrelease"
+  ]
+}
