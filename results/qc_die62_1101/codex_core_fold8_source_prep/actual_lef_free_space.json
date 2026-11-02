@@ -1,0 +1,386 @@
+{
+  "status": "SOURCE_AREA_ACCOUNTING_NOT_PLACED_FILL",
+  "scope": "Frozen candidate9/D762. Actual selected LEF body plus clipped halo rectangles; mapped Liberty area only used for standard-cell accounting. No new placements or density credit.",
+  "types": {
+    "coll_ucie": {
+      "actual_core_area_box_um": [
+        0.0,
+        0.0,
+        803.52,
+        1637.28
+      ],
+      "core_area_um2": 1315587.2256,
+      "actual_macros": [
+        {
+          "inst": "u_bound.u_io_ucie",
+          "lef": "physical/qwen_missing_phy/nface_tall_g5_lclk_1020/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef",
+          "actual_lef_size_um": [
+            777.6,
+            777.6
+          ],
+          "origin_um": [
+            12.996,
+            4.32
+          ],
+          "explicit_halo_um": null,
+          "lib_area_um2": 604661.76
+        }
+      ],
+      "native_macro_lib_area_sum_um2": 604661.76,
+      "native_standard_lib_area_um2": 14847.265980000026,
+      "uniform_halo_sensitivity_um": {
+        "0": {
+          "reserved_union_um2": 604661.76,
+          "core_minus_reserved_um2": 710925.4656,
+          "mapped_std_lib_area_over_free_space": 0.02088441995458606
+        },
+        "2": {
+          "reserved_union_um2": 610898.56,
+          "core_minus_reserved_um2": 704688.6656,
+          "mapped_std_lib_area_over_free_space": 0.021069256119450243
+        },
+        "4.32": {
+          "reserved_union_um2": 618173.3376000001,
+          "core_minus_reserved_um2": 697413.8879999999,
+          "mapped_std_lib_area_over_free_space": 0.021289031141289844
+        },
+        "10": {
+          "reserved_union_um2": 631635.3920000001,
+          "core_minus_reserved_um2": 683951.8335999999,
+          "mapped_std_lib_area_over_free_space": 0.021708057864032647
+        }
+      },
+      "interpretation": "0 is LEF body;2 is platform row halo;4.32 is CORE planned explicit halo (UCIE has none);10 is automatic macro-placement halo sensitivity. Ratios are source accounting, never placed fill."
+    },
+    "coll_core": {
+      "actual_core_area_box_um": [
+        4.32,
+        4.32,
+        756.0,
+        1585.44
+      ],
+      "core_area_um2": 1188496.2816,
+      "actual_macros": [
+        {
+          "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.u_rx.u_mem",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "actual_lef_size_um": [
+            178.632,
+            81.0
+          ],
+          "origin_um": [
+            103.68,
+            86.4
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 14469.192
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.u_tx.u_mem",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "actual_lef_size_um": [
+            178.632,
+            81.0
+          ],
+          "origin_um": [
+            293.76,
+            120.96
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 14469.192
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.u_rx.u_mem",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "actual_lef_size_um": [
+            178.632,
+            81.0
+          ],
+          "origin_um": [
+            60.48,
+            423.36
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 14469.192
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.u_tx.u_mem",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "actual_lef_size_um": [
+            178.632,
+            81.0
+          ],
+          "origin_um": [
+            259.2,
+            449.28
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 14469.192
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+          "actual_lef_size_um": [
+            177.768,
+            81.0
+          ],
+          "origin_um": [
+            43.2,
+            907.2
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 14399.208
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+          "actual_lef_size_um": [
+            177.768,
+            81.0
+          ],
+          "origin_um": [
+            241.92,
+            907.2
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 14399.208
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+          "actual_lef_size_um": [
+            177.768,
+            81.0
+          ],
+          "origin_um": [
+            43.2,
+            1019.52
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 14399.208
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+          "actual_lef_size_um": [
+            177.768,
+            81.0
+          ],
+          "origin_um": [
+            241.92,
+            1019.52
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 14399.208
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "actual_lef_size_um": [
+            171.288,
+            77.784
+          ],
+          "origin_um": [
+            60.48,
+            207.36
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 13323.4658
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "actual_lef_size_um": [
+            171.288,
+            77.784
+          ],
+          "origin_um": [
+            259.2,
+            216.0
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 13323.4658
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "actual_lef_size_um": [
+            171.288,
+            77.784
+          ],
+          "origin_um": [
+            60.48,
+            311.04
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 13323.4658
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "actual_lef_size_um": [
+            171.288,
+            77.784
+          ],
+          "origin_um": [
+            259.2,
+            311.04
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 13323.4658
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "actual_lef_size_um": [
+            171.288,
+            77.784
+          ],
+          "origin_um": [
+            17.28,
+            544.32
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 13323.4658
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "actual_lef_size_um": [
+            171.288,
+            77.784
+          ],
+          "origin_um": [
+            276.48,
+            544.32
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 13323.4658
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "actual_lef_size_um": [
+            171.288,
+            77.784
+          ],
+          "origin_um": [
+            60.48,
+            639.36
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 13323.4658
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "actual_lef_size_um": [
+            171.288,
+            77.784
+          ],
+          "origin_um": [
+            259.2,
+            639.36
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 13323.4658
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+          "actual_lef_size_um": [
+            174.12,
+            29.736
+          ],
+          "origin_um": [
+            449.28,
+            898.56
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 5177.6323
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+          "actual_lef_size_um": [
+            174.12,
+            29.736
+          ],
+          "origin_um": [
+            449.28,
+            941.76
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 5177.6323
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+          "actual_lef_size_um": [
+            174.12,
+            29.736
+          ],
+          "origin_um": [
+            449.28,
+            1002.24
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 5177.6323
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+          "actual_lef_size_um": [
+            174.12,
+            29.736
+          ],
+          "origin_um": [
+            449.28,
+            1045.44
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 5177.6323
+        },
+        {
+          "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[4].u_m",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+          "actual_lef_size_um": [
+            174.12,
+            29.736
+          ],
+          "origin_um": [
+            449.28,
+            1088.64
+          ],
+          "explicit_halo_um": 4.32,
+          "lib_area_um2": 5177.6323
+        }
+      ],
+      "native_macro_lib_area_sum_um2": 247949.4879,
+      "native_standard_lib_area_um2": 90227.20733999996,
+      "uniform_halo_sensitivity_um": {
+        "0": {
+          "reserved_union_um2": 247949.48793600005,
+          "core_minus_reserved_um2": 940546.793664,
+          "mapped_std_lib_area_over_free_space": 0.09593058840646332
+        },
+        "2": {
+          "reserved_union_um2": 268627.311936,
+          "core_minus_reserved_um2": 919868.9696640001,
+          "mapped_std_lib_area_over_free_space": 0.09808702142975559
+        },
+        "4.32": {
+          "reserved_union_um2": 293455.4693760001,
+          "core_minus_reserved_um2": 895040.812224,
+          "mapped_std_lib_area_over_free_space": 0.10080792530097386
+        },
+        "10": {
+          "reserved_union_um2": 350260.4256000001,
+          "core_minus_reserved_um2": 838235.856,
+          "mapped_std_lib_area_over_free_space": 0.10763940327076627
+        }
+      },
+      "interpretation": "0 is LEF body;2 is platform row halo;4.32 is CORE planned explicit halo (UCIE has none);10 is automatic macro-placement halo sensitivity. Ratios are source accounting, never placed fill."
+    }
+  }
+}

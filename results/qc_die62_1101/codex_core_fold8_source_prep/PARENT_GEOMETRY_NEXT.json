@@ -1,0 +1,37 @@
+{
+  "status": "BOUNDED_SOURCE_GEOMETRY_PREP_NOT_RELEASED",
+  "actual_fold_std_lib_area_each_um2": 7320.00564,
+  "remaining_parent_std_lib_area_um2": 31667.162219999962,
+  "existing_21_macro_halo_union_um2": 293455.4693760001,
+  "eight_disjoint_180square_4p32halo_reference_um2": 284680.3968,
+  "additive_reserved_area_reference_um2": 578135.8661760001,
+  "target_area_reference_um2": {
+    "0.4": 657303.771726,
+    "0.6": 630914.4698760001
+  },
+  "target_height_reference_at_760p32_width_um": {
+    "0.4": 864.5093799005681,
+    "0.6": 829.8012282670455
+  },
+  "limits": "Only area accounting, assumes disjoint current/reference halos. No actual macro placements, pin-density, reset/clock, station reach, or fit claim. Current180square view is unqualified footprint reference.",
+  "source_groups": {
+    "PF0..3": {
+      "feed": "lo_q[128*j+:128],hi_q[128*j+:128],256constantzero bits",
+      "sink": "ps_sum[128*j+:128] -> pf_q -> w_d -> S ring and all3 SerDes face registers",
+      "locality": "Keep lo/hi slice capture and pf_q/w_d slice beside each PF; do not add registers or alter enables."
+    },
+    "XF0..3": {
+      "feed": "four rank-selected128bit lanes from td_d/S-ring plus3 srr_q SerDes capture banks",
+      "sink": "xs_sum slice -> R-ring/local result path",
+      "locality": "Keep corresponding rank mux and input capture beside each XF; preserve existing source rank order and output cycle."
+    }
+  },
+  "next_source_action": "Coupled parent footprint/source event must repack PF/XF lane capture,21SRAM,8fold macros, S-ring/three faces, and existing LC/reset/stations together. A width-only event or eight unchecked origin inserts cannot close current failures. Price any additional seam cycles explicitly if zero-cycle reach is impossible.",
+  "preserve": [
+    "all23 fold red-to-valid edges",
+    "all external calendars and ports",
+    "both sharedFT replicas",
+    "die edge"
+  ],
+  "new_runs_authorized_by_packet": false
+}
