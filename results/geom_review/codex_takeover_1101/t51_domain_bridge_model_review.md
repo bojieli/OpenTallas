@@ -1,0 +1,7 @@
+T51 single domain-aware bridge model second LOOK
+
+Personally VIEWED codex-t51-domain-bridge-0840/T51_domain_bridge_MODEL_LOOK.png and parsed existing model/collection/clock_price. Independent integer audit covers323283bodies:3707FF+9288DATA targets,310288others including137673TAP fixed;0overlap/site/master/orient/52otherband hits.47511capturepairs max403.97/0,pin149.81,p9024.07. Prior compressed-ring2.703 gone;ft2localcut.0910. Remainingglobalcol1.054at240/1207.5 is originalNWcut,436.605weightedft3cland+46.5ft8stage4/no movedft2DATA drivers. DATA/row geometry advances, no physical release.
+
+Actual native mission39655/forwarded12389 remain distinct; source-plan estimate35382 is not actualFF count. Literal73tap assign cap1500/radius150: maxload1318/maxradius200.2645 unchanged;1151→1079radiusviolations,60new/132resolved alloldft6stage2correction,170moved remain. ActualTcl lower-left sensitivity1073violations is separately retained. Netcount improvement is not a waiver for60new; contact/assignment correction must precedeclockqualification. Forwardedft2directroot337.109→93.407 is preCTSINFO, not measuredarrival.
+
+CONCUR model-only DATA/row result. PG95696opens/original4843nativeoverflow/2partialfaces/source-reset-phase/currentclock holds remain; no extra model/allocation/CAD by reviewer. Next work stays owned originalNWcorner and literalclockcontact/assignment repair, not newcycles inferred from a localbbox proxy.
