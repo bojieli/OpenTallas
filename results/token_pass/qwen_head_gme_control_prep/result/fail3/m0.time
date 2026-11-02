@@ -1,0 +1,23 @@
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O0 -finline --output-groups 16 -CFLAGS -O0 -w -fno-var-tracking -Wno-fatal -j 1 --top-module tb_qwen_head_gme_control --Mdir build/m0 -GMODE=0 src/native32_helpers.sv src/ot_hdc_cg.sv src/ot_hdc_delay.sv src/ot_hdc_dyn_ttiles.sv src/ot_hdc_fastfp.sv src/ot_hdc_prefix.sv src/ot_hdc_qwen_int8_embed_decode.sv src/ot_qfd_native_cmd_route.sv src/ot_qfd_spine_masters.sv src/ot_qfd_split_exact.sv src/ot_qfd_tt_ctlm_head_static_rk_g5prep.sv src/ot_qfd_tt_ctlm_split.sv src/ot_qfd_tt_ctlm_static_hr_g5prep.sv src/ot_qfd_xpf_static_schedule.sv src/ot_qwen_fixed_issue.sv src/ot_qwen_fixed_issue_dense_pw.sv src/ot_qwen_fixed_issue_pw.sv src/ot_qwen_rom_core_ctrl_g5prep.sv src/ot_qwen_tp8_rom_relocate.sv src/qfd_dv_typed_su_observer.sv src/qfd_dv_xpf_seg_loader.sv src/qkd_program_commit.sv src/tb_qwen_head_gme_control.sv src/native32_1r_param.v src/ot_sram_1r1w_32x128_m1.v src/ot_sram_1r1w_64x512_m1_r2c2.v"
+	User time (seconds): 110.48
+	System time (seconds): 21.75
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:12.65
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 584156
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1067
+	Minor (reclaiming a frame) page faults: 3978286
+	Voluntary context switches: 2646
+	Involuntary context switches: 669
+	Swaps: 0
+	File system inputs: 357296
+	File system outputs: 907832
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

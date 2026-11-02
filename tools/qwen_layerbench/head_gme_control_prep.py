@@ -20,8 +20,8 @@ for r in obj['programme']['instructions']:
 # BASE END fixture calendar is sealed but never started. HEAD cycles TEST_ONLY.
 pw[976]=(1<<46)|50
 for i,r in enumerate(g['programme_words']):pw[984+i]=((i==4)<<46)|(r['unit']<<44)|((28+i)<<32)|(1024*(i+1))
-pw[992]=(0x43414c47<<32)|5200;pw[993]=(0x43414c42<<32)|(5<<24)|28
-pw[1016]=(0x43414c31<<32)|60;pw[1017]=(0x43414c53<<32)|(33<<18)|(37<<12)|1;pw[1018]=(0x43414c32<<32)|60
+pw[992]=(0x43414c47<<32)|5120;pw[993]=(0x43414c42<<32)|(5<<24)|28
+pw[1016]=(0x43414c31<<32)|50;pw[1017]=(0x43414c53<<32)|(33<<18)|(37<<12)|1;pw[1018]=(0x43414c32<<32)|60
 pw[1022]=(0x58504654<<32)|5200;pw[1023]=(0x58504631<<32)|(37<<6)|6
 (P/'input/program.memh').write_text(''.join(f'{x:016x}\n'for x in pw))
 nochase=list(pw)
@@ -46,4 +46,4 @@ for rr in g['programme_words'][:4]:
  assert off==380
  expected.append(v)
 (P/'input/cmd.memh').write_text(''.join(f'{v:095x}\n'for v in expected))
-(P/'fixture.json').write_text(json.dumps(dict(status='TEST_ONLY_CONTROL_FIXTURE',rank=a.rank,clock_ps=833,GME_cycles=[1024,2048,3072,4096,5120],stop=5200,real_matrix_execution=False,numerical_results=False,head_production_dates=False,programme_sha256=hashlib.sha256(a.programme.read_bytes()).hexdigest(),GME_sha256=hashlib.sha256(a.gme.read_bytes()).hexdigest()),indent=2)+'\n')
+(P/'fixture.json').write_text(json.dumps(dict(status='TEST_ONLY_CONTROL_FIXTURE',rank=a.rank,clock_ps=833,GME_cycles=[1024,2048,3072,4096,5120],stop=5120,real_matrix_execution=False,numerical_results=False,head_production_dates=False,programme_sha256=hashlib.sha256(a.programme.read_bytes()).hexdigest(),GME_sha256=hashlib.sha256(a.gme.read_bytes()).hexdigest()),indent=2)+'\n')

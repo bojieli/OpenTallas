@@ -14,7 +14,7 @@ for mode in 0 1 2; do
  if ! "build/m${mode}/Vtb_qwen_head_gme_control" +NATIVE=$native +FAULT=$fault >"build/m${mode}_n${native}.log" 2>&1;then echo "FAIL MODE=$mode NATIVE=$native";failed=1;else echo "PASS MODE=$mode NATIVE=$native";fi
  done
  # Removing chase alone must still expose the real nonzero native count at barrier2.
- nf=1;expected=1
+ nf=1;expected=4
  if [[ $mode == 2 ]];then nf=0;expected=4;fi
  if ! "build/m${mode}/Vtb_qwen_head_gme_control" +NATIVE=1 +NOCHASE=1 +FAULT=$nf +REQUIRE_SEEN=$expected >"build/m${mode}_nochase.log" 2>&1;then echo "FAIL NONZERO_OBSERVER_BARRIER MODE=$mode";failed=1;else echo "PASS NONZERO_OBSERVER_BARRIER MODE=$mode";fi
  if [[ $mode == 2 ]];then

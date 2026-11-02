@@ -1,0 +1,17 @@
+ot-run: intel1         admits    63 GB (avail 217, reserve 0, fresh 0, peak 89.2, headroom 0, waiters 56/2580 GB) load 179/112 running 68 disk 388 GB 
+ot-run: epyc2          admits    86 GB (avail 240, reserve 0, fresh 14.9, peak 74.2, headroom 0, waiters 0/0 GB) load 104/128 running 45 disk 67 GB 
+ot-run: -> epyc2
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-724910-1793611310 after 0 s
+FAIL MODE=0 NATIVE=0
+PASS MODE=0 NATIVE=1
+FAIL NONZERO_OBSERVER_BARRIER MODE=0
+FAIL MODE=1 NATIVE=0
+PASS MODE=1 NATIVE=1
+FAIL NONZERO_OBSERVER_BARRIER MODE=1
+FAIL MODE=2 NATIVE=0
+FAIL MODE=2 NATIVE=1
+FAIL NONZERO_OBSERVER_BARRIER MODE=2
+PASS OLD6_CONTROL
+PASS OWN_BUSY
+TERMINAL failed=1
+ot-run: RAN on epyc2 (unit oth-ubuntu-724910-1793611310): exit 1
