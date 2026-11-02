@@ -1,0 +1,20 @@
+{
+  "scope": "Observed sourceAPI metadata comparison only, no waveform or qualification claim",
+  "old_relays": 185,
+  "new_relays": 186,
+  "old_release": 7,
+  "new_release": 7,
+  "same_named_outputs": true,
+  "old_entry": "relayed",
+  "new_entry": "relayed",
+  "old_depth": 6,
+  "new_depth": 6,
+  "control_keys_equal": [
+    "start",
+    "tap_roles",
+    "bootstrap_taps",
+    "start_role",
+    "core_start_roles",
+    "outs"
+  ]
+}
