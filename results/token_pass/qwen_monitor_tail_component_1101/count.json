@@ -1,0 +1,15 @@
+{
+  "scope": "Generic synthesis count, four hard ROM cells unresolved; not mapped area/timing/signoff",
+  "tool": "Yosys0.68 normal SystemVerilog frontend, proc/flatten/opt/techmap/opt; kept submodule instances counted recursively",
+  "off_FF": 1134,
+  "on_FF": 1134,
+  "added_FF": 0,
+  "ROM_cells_each": 4,
+  "parameters": {
+    "BTAB_COMPACT": 1,
+    "CAPTURE_STAGE": 0,
+    "LOCAL_CTRL": 0,
+    "WE_COPIES": 34
+  },
+  "source_sha256": "bdc0549688d4ef05f1dc7a61791f9bdcbead8719a9090e87de6857b1cee01c53"
+}
