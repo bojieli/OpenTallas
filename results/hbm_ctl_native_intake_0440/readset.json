@@ -11,12 +11,13 @@
     "clk"
   ],
   "reset_ports": [
-    "rst_n"
+    "rst_n",
+    "u_core_u_rst__rst_n"
   ],
   "native_capacity": {},
   "conditional_formal_reset_edges": 4,
   "release_eligible": false,
-  "pins_sha256": "29cc1014dee1720ead721a075b21d5da10e982990bad9a5b821aca33527a2142",
+  "pins_sha256": "d70f260edf34bb56462e5d3dc09ab8a8b9a6dcc75bf5865b119a40f6781a84a0",
   "plan_sha256": "b5d7a72c3101971617cbfd3731e8b4fe01d587e20ecc8e0573698a2df9082832",
   "planned_core_macros_sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
 }
