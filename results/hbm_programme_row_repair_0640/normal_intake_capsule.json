@@ -19,6 +19,17 @@
   "added_FF": 0,
   "added_cycles": 0,
   "source_default_changed": false,
+  "area_model_um2": {
+    "old_context": 424438.9632,
+    "new_candidate": 485968.89599999995,
+    "delta": 61529.93279999995
+  },
+  "proposed_PLACE_resource": {
+    "memory_GB": 8,
+    "threads": 2,
+    "stage": "ONE_PLACE_ONLY_AFTER_REVIEW",
+    "basis": "Context only: prior44-master pstore placement2.69GB; current actual66230std/20842FF/44SRAM; normal admission required"
+  },
   "normal_GEN": [
     "python3",
     "tools/hbm_b2/programme_current_native_kit.py",
@@ -31,6 +42,32 @@
   ],
   "recipe_overlay": "recipe_overlay.json",
   "runtime_staging_api": "910a8eb70+bb7ce574b; default empty; FLOW peer concur",
+  "clock_space_reservations": {
+    "asset": "clock_placement_reservations.json",
+    "asset_sha256": "f902b783036925709e93be1470d35891cdc003d9e194b5fdda02697a24eb3e02",
+    "native_buffer_bodies": 32,
+    "root_islands": 1,
+    "creates_clock_cells": false,
+    "transfers_CTS_sink_ownership": false,
+    "rounding_permitted": false,
+    "preserved_through": "GPL/DPL via exact native OpenDB blockages; fresh actual output audit required"
+  },
+  "internal_clock_model": {
+    "status": "CORRECTED_NATIVE_SOURCE_Y_GEOMETRY_PREP",
+    "source_peer": "9636952c7",
+    "model_sha256": "dd6387305f8fcd6dc00430766f2bafdac988e2c0d667b3def9e7c47466ab2663",
+    "geometry_summary": "clock_geometry_summary.json",
+    "regional_landing_reserves": 32,
+    "max_actual_sinks_per_root": 653,
+    "max_actual_Y_to_CLK_corners_um": 219.8990000000009,
+    "previous_centre_only_model": "FAIL: eight roots exceed220um, max220.899, corrected before physical dispatch",
+    "creates_clock_cells": false,
+    "transfers_CTS_sink_ownership": false,
+    "held": [
+      "Normal CTS exact site integration and electrical sizing/arrivals",
+      "No4.32-anchor rounding or physical reset/START credit"
+    ]
+  },
   "source_proof_capsule": {
     "original_readonly_kit": "intel2:/srv/opentallas-scratch2/claude/codex-programme-native-0525/kits/ot_hgi_sfu_programme_store_r10_6a471c27f403-native_boundary",
     "source_snapshot": "542757d902e",
@@ -49,32 +86,5 @@
     "New GEN must regenerate all DIE/CORE/PDN extents and normal preflight",
     "Normal actual row orientation/site/master checks; FIRM during GPL, normal DPL/guards unchanged",
     "Actual I/O timing/reset/START/provider/collar/parent source event still unqualified"
-  ],
-  "area_model_um2": {
-    "old_context": 424438.9632,
-    "new_candidate": 485968.89599999995,
-    "delta": 61529.93279999995
-  },
-  "proposed_PLACE_resource": {
-    "memory_GB": 8,
-    "threads": 2,
-    "basis": "Context only: earlier44-master pstore placement measured2.69GB; actual current graph66230std/20842FF/44SRAM. Normal admission required; no physical receipt transferred.",
-    "stage": "PLACE_ONLY_AFTER_REVIEW"
-  },
-  "internal_clock_model": {
-    "status": "FINAL_CANDIDATE8_GEOMETRY_REVIEW_ONLY",
-    "owner": "hbm_clock",
-    "path": "intel2:/srv/opentallas-scratch2/claude/codex-programme-clock-final-0800",
-    "typed_sinks": 20886,
-    "regional_landing_reserves": 32,
-    "max_actual_sinks_per_root": 653,
-    "max_full_native_clock_pin_radius_um": 219.999,
-    "prospective_buffer_count_before_wire_repeaters": 709,
-    "prospective_all_BUFx24_area_um2": 310.117,
-    "held": [
-      "Normal CTS exact site integration and electrical sizing/arrivals",
-      "No clock-sites rounding at0.001um radius slack",
-      "No CTS authorization or physical reset/START qualification"
-    ]
-  }
+  ]
 }

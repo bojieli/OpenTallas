@@ -53,4 +53,5 @@ dict for {pr_name pr_spec} $pr_plan {
   puts $pr_out [list [$pr_inst getName] $pr_x $pr_y $pr_o]
 }
 close $pr_out
+source /work/runtime/programme_clock_reserve.tcl
 puts "PROGRAMME_ROWS exact20842 source-native FF on reviewed rows; normal DPL/guards retained"

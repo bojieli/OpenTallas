@@ -400,13 +400,23 @@
   "runtime_files": [
     {
       "source": "tools/hbm_b2/programme_native_rows.tcl",
-      "sha256": "0053d730fa9158adfc6ed8f40b978cc895658bfb317b1a7cc79d9fb4c7c78fbe",
+      "sha256": "6e252e93b323b5a7d3e2189342cdccbe573327bf5a84795da827e635dd56c77f",
       "destination": "runtime/programme_native_rows.tcl"
     },
     {
       "source": "results/hbm_programme_row_repair_0640/actual_FF_rows.csv",
       "sha256": "1e347ed819e9d35fd8d24e54ac5c011825280035b39c39eb8c63fe72cdd9072f",
       "destination": "runtime/actual_FF_rows.csv"
+    },
+    {
+      "source": "results/hbm_programme_row_repair_0640/programme_clock_reserve.tcl",
+      "sha256": "f9754de4729735ab30a71bc41d2355dea7d7cc5afb2fc99925205f84b14d48e2",
+      "destination": "runtime/programme_clock_reserve.tcl"
+    },
+    {
+      "source": "results/hbm_programme_row_repair_0640/clock_placement_reservations.json",
+      "sha256": "f902b783036925709e93be1470d35891cdc003d9e194b5fdda02697a24eb3e02",
+      "destination": "runtime/clock_placement_reservations.json"
     }
   ],
   "orfs_vars": {
