@@ -26,6 +26,6 @@ Before (19:2x, plan_current=yes): 93 FAIL rows, 75 of them older than 6 h. Each 
 | QC CB sdc_lint/strap x5 (held) | relaunch when DIE-QC-61 tools a945684312d merges | ROOT-MERGE-AL -> KIT-WAVE-16 |
 | QC coll_ucie preflight, sle_sc_v1 DPL x2, tt_ctlm (held, class c897f9b902c) | die fixes | DIE-QC-62: ETA asked |
 | S81 seqhost__t1 face_guard, kv_leaf__t2 memory bits, slice_station__t31 geom | die plan fixes | DIE-S81-47: ETA asked |
-| LEC NOT EQUIVALENT x10 (HBM 7, QC 2, HEAD 1) | KIT-WAVE-16 takes it: every failing point has a gold-only register in its cone (no name-matched gate flop, e.g. split3 g_ld3k p1/p2/q2 missing from 1_2_yosys.v while p0/q01 are kept). Root cause and class fix in progress (helper) | KIT-WAVE-16 |
+| LEC NOT EQUIVALENT x10 (HBM 7, QC 2, HEAD 1) | ROOT CAUSE (6 of 10): no-reset register loaded only with a constant is folded by yosys, LEC drops the constant hypothesis (10-27 power-up X), its readers differ. FIX claude/kit-wave-16-lec-1101@801a1c2a09f (auto 'loaded' valid-flag hypothesis, induction-proved) READY 19:4x. After merge + deploy: batch relaunch all 10 (all ran an old lec.py). Residual classes: kshare x2 gray-FIFO/CDC, q2n2 reference netlist, slw_st_b SRAM write-data | KIT-WAVE-16; merge ETA = next ROOT-MERGE-AL train |
 
 SUPERSEDED rows were written under kit_wave.lock (22 records, status CANCELLED class SUPERSEDED, reason names the newer kit).
