@@ -49,7 +49,7 @@ def test_reapplication_refuses_without_overwriting_adapter(tmp_path):
     ('set body_pass 1', True, 'CLEANUP_FAILURE'),
     ('set body_pass 1', False, '')])
 def test_driver_cleans_up_original_hook_body_failures(tmp_path, body, cleanup_error, expected):
-    (tmp_path/'global_route.tcl').write_text(body+'\n')
+    (tmp_path/'global_route.native_pg_original.tcl').write_text(body+'\n')
     driver=tmp_path/'driver.tcl';driver.write_text(DRIVER)
     script = """set ::env(SCRIPTS_DIR) {@DIR@}
 set ::ended 0
@@ -62,3 +62,44 @@ puts PASS
     harness=tmp_path/'harness.tcl';harness.write_text(script)
     r=subprocess.run(['tclsh',str(harness)],text=True,capture_output=True)
     assert r.returncode==0 and r.stdout.strip()=='PASS',r.stdout+r.stderr
+
+@pytest.mark.parametrize('assignments,selected', [
+    ('override export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl\nexport PRE_GLOBAL_ROUTE_TCL = /work/old_post.tcl\n','eco_grt_pre.tcl'),
+    ('export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl\nexport PRE_GLOBAL_ROUTE_TCL ?= /work/old_post.tcl\n','eco_grt_pre.tcl'),
+    ('export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl\noverride export PRE_GLOBAL_ROUTE_TCL = /work/old_post.tcl\n','old_post.tcl')])
+def test_actual_make_override_and_default_precedence(tmp_path,assignments,selected):
+    k,m,h=fixture(tmp_path);(k/'config.mk').write_text(assignments)
+    r=stage(k,m,h)
+    assert r['original_hooks']['PRE_GLOBAL_ROUTE_TCL']['path']=='/work/'+selected
+
+@pytest.mark.parametrize('assignment',[
+    'ifeq (1,1)\nexport PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl\nendif\n',
+    'export PRE_GLOBAL_ROUTE_TCL += /work/eco_grt_pre.tcl\n'])
+def test_unsupported_hook_resolution_refuses_before_mutation(tmp_path,assignment):
+    k,m,h=fixture(tmp_path);(k/'config.mk').write_text(assignment)
+    before={p.name:p.read_bytes()for p in k.iterdir()}
+    with pytest.raises(ValueError,match='hook assignment'):stage(k,m,h)
+    assert {p.name:p.read_bytes()for p in k.iterdir()}==before
+
+
+def test_indented_global_hook_assignment_retains_override(tmp_path):
+    k,m,h=fixture(tmp_path)
+    (k/'config.mk').write_text('  override export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl\n export PRE_GLOBAL_ROUTE_TCL = /work/old_post.tcl\n')
+    assert stage(k,m,h)['original_hooks']['PRE_GLOBAL_ROUTE_TCL']['path']=='/work/eco_grt_pre.tcl'
+
+
+def test_owned_runtime_wrapper_preserves_original_body_and_refuses_rewrap(tmp_path):
+    from wrap_runtime import wrap
+    stock=tmp_path/'global_route.tcl';before=b'load_design 4_cts.odb 4_cts.sdc\noriginal_stage_body\n';stock.write_bytes(before)
+    driver=tmp_path/'driver.tcl';driver.write_text(DRIVER)
+    original=wrap(tmp_path,driver)
+    assert original.read_bytes()==before and stock.read_text()==DRIVER
+    with pytest.raises(ValueError,match='existing'):wrap(tmp_path,driver)
+
+
+def test_runtime_wrapper_wrong_anchor_refuses_without_mutation(tmp_path):
+    from wrap_runtime import wrap
+    stock=tmp_path/'global_route.tcl';stock.write_text('unknown_stage_body\n')
+    driver=tmp_path/'driver.tcl';driver.write_text(DRIVER)
+    with pytest.raises(ValueError,match='anchor'):wrap(tmp_path,driver)
+    assert stock.read_text()=='unknown_stage_body\n' and not (tmp_path/'global_route.native_pg_original.tcl').exists()
