@@ -1,0 +1,19 @@
+{
+  "status": "HELD_EXPLICIT_FF_IMPLEMENTATION_INTENT_NOT_CAP_BYPASS",
+  "storage_FF": 16960,
+  "existing_output_capture_FF": 513,
+  "total_data_and_capture_FF": 17473,
+  "storage_write_hold_mux_bits": 16960,
+  "asynchronous_read_8to1_mux_bits": 2120,
+  "read_mux_2to1_equivalent_count": 14840,
+  "read_mux_depth": 3,
+  "other_existing_packedword_and_capture_hold_muxes_retained": true,
+  "source_arrays_and_capture_reset_free": true,
+  "new_whitelist_or_threshold_change": false,
+  "logical_bits_dropped": 0,
+  "source_capacity": 8,
+  "actualdata2120": true,
+  "physical_FF_cell_area_and_clock_load_not_selected": true,
+  "comparison": "16960 exceeds current16384 ROM-derived allowance by576. Do not split/relabel declarations or raise the gate. This is a separately priced actual16960FF+readmux implementation intent requiring root/owner scope and placement/timing review if chosen.",
+  "native_or_physical_gate": false
+}
