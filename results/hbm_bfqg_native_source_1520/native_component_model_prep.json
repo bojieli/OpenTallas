@@ -1,0 +1,137 @@
+{
+ "scope": "Current native source and resource model PREP; no physical/timing/token qualification",
+ "source_readset": "results/hbm_bfqg_native_source_1520/readset.json",
+ "top": "ot_hgi_sm_xload_cl2_bfqg",
+ "params": {},
+ "native_clock_inputs": 20,
+ "signal_inputs": 1063,
+ "signal_outputs": 256,
+ "signal_total": 1319,
+ "added_face_cycles": 0,
+ "source_pipeline": {
+  "stages": [
+   "captured write/read control and cdq/masks",
+   "synchronous SRAM read edge",
+   "per-bank cq capture",
+   "OR4 registers",
+   "rwq register"
+  ],
+  "read_response_edges": 4,
+  "write_macro_edge_after_capture": 1,
+  "basis": "Existing source RTL and synchronous SRAM clock-to-output interface; no source retiming"
+ },
+ "calendar_interface": {
+  "write_payload_input_bytes_per_edge": 128,
+  "read_output_bytes_per_edge": 32,
+  "read_bank_mask_bits": 8,
+  "operation": "Selected bank captures are bitwise OR-combined; no new one-hot assumption",
+  "runtime_arbitration": false,
+  "production_backpressure": false,
+  "qualification": "Source interface budget; sustained production schedule/throughput remains separate"
+ },
+ "storage": {
+  "macros": 8,
+  "master": "ot_sram_1r1w_128x256_m1_r2c2",
+  "physical_bytes": 32768,
+  "lef_size_um": [
+   94.824,
+   41.064
+  ],
+  "macro_area_um2": 31150.821888
+ },
+ "outline_um": [
+  302.4,
+  298.08
+ ],
+ "synth_actual": {
+  "FFs": 3890,
+  "plain_FFs": 3887,
+  "reset_FFs": 3,
+  "total_cell_area_um2": 32672.08422,
+  "std_cell_area_um2": 1521.262332000002,
+  "slot_fraction": 0.3624617771994735
+ },
+ "planned_macros": [
+  {
+   "instance": "g_t\\[0\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "xy_um": [
+    21.6,
+    170.46
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "g_t\\[1\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "xy_um": [
+    21.6,
+    211.596
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "g_t\\[2\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "xy_um": [
+    21.6,
+    129.372
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "g_t\\[3\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "xy_um": [
+    21.6,
+    252.684
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "g_t\\[4\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "xy_um": [
+    127.272,
+    17.34
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "g_t\\[5\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "xy_um": [
+    21.6,
+    17.34
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "g_t\\[6\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "xy_um": [
+    21.6,
+    58.428
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "g_t\\[7\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "xy_um": [
+    127.272,
+    69.228
+   ],
+   "orient": "R0"
+  }
+ ],
+ "review": "Current E is the original6left+2right arrangement. Native existing-stage placement and clock ownership require model/LOOK before PNR; historical wrapped4+4 coupons are diagnostic only, never native geometry/timing credit.",
+ "reset": "Existing REGIONS1/SYNC_STAGES2/TREE_STAGES1 unchanged; actual source equivalence requested/used4",
+ "not_run": [
+  "native placement",
+  "native CTS",
+  "native clock-inclusive50GRT",
+  "native DRT",
+  "native timing/throughput closure"
+ ]
+}
