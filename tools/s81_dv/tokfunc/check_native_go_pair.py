@@ -44,7 +44,7 @@ def main():
   original_status=original['status'],current_status=current['status'],original_errors=original['errors'],current_errors=current['errors'],
   exact_original_current=eq,controls_caught=caught,control_differences=control_differences,wrong_date_arithmetic_changed=control_differences['wrong_date']['partial_words'],wrong_date_GO_capture_changed=control_differences['wrong_date']['core'],arithmetic_core_exercised=True,real_walking_bank_shadow_feedback=True,
   constant_checkpoint_activation=True,fresh_version_or_production_epoch_qualified=False,
-  source_period=512,clock_ps=833,native_provider_qualified=False,production_enabled=False,
+  source_period=(programme['programmes']['old']['phases'][1]['launch']-programme['programmes']['old']['phases'][0]['launch'])if operations>1 else None,clock_ps=833,native_provider_qualified=False,production_enabled=False,
   added_RTL_FF=0,source_tag_retime_needed=False,
   scope='One actual0L01/e0 NB2 source pair with actual images and controlled common-phase/L3 startup; no fullframe/token/capturefold/production clock qualification')
  (a.out/'check.json').write_text(json.dumps(report,indent=2)+'\n');(a.out/'cases.json').write_text(json.dumps(cases,indent=2)+'\n');print(json.dumps(report,indent=2));return 0 if passed else 1
