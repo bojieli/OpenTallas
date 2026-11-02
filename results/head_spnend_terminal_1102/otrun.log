@@ -1,0 +1,6 @@
+ot-run: intel1         admits     0 GB (avail 138, reserve 0, fresh 3.3, peak 70.1, headroom 0, waiters 28/1270 GB) load 157/112 running 61 disk 282 GB 
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-head-spnend-clock-audit-1102
+ot-run: -> intel1 (will queue: admits 0 GB < 8 GB)
+ot-heavy: waiting for memory on key-cardinal: need 0.7 x 8 = 6 GB, admissible 1 GB: available 138 GB, growth charged 3 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 3 GB at x1), young 3 GB, floor 50 GB; invariant: committed 943 GB (in use 870, other 48, units max(now, peak) 892, + reserve 0 + fresh 3) vs physical - 64 = 943 GB -> headroom 1 GB
+ot-heavy: admitted on key-cardinal as oth-ubuntu-2913523-1793632359 after 765 s
+ot-run: RAN on intel1 (unit oth-ubuntu-2913523-1793632359): exit 0

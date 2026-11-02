@@ -1,0 +1,1464 @@
+{
+ "pins": [
+  {
+   "name": "fclk_in_ad_i",
+   "dir": "in",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    501.6,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_fstart_in_ad_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    510.24,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_ready_ad_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    505.952,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_fault_ad_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    507.808,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_in_au_i",
+   "dir": "in",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    477.152,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_fstart_in_au_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    485.792,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_ready_au_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    481.44,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_fault_au_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    483.36,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_in_bd_i",
+   "dir": "in",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    549.728,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_fstart_in_bd_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    558.368,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_ready_bd_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    554.016,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_fault_bd_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    556.192,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_in_bu_i",
+   "dir": "in",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    525.536,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_fstart_in_bu_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    534.176,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_ready_bu_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    529.824,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_fault_bu_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    532.0,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_in_hd_i",
+   "dir": "in",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    426.144,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_fstart_in_hd_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    434.784,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_ready_hd_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    430.496,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_fault_hd_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    432.672,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_in_hu_i",
+   "dir": "in",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    348.832,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_fstart_in_hu_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    357.472,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_ready_hu_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    353.184,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_fault_hu_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    355.296,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_in_x_i",
+   "dir": "in",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    85.92,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_fstart_in_x_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    94.56,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_ready_x_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    90.208,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_fault_x_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    92.64,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_out_ad_o",
+   "dir": "out",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    501.6,
+    2.656
+   ],
+   "epoch": false,
+   "source_clock_port": "clk_t2"
+  },
+  {
+   "name": "cland_fstart_out_ad_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    510.24,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_ready_ad_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    505.952,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_fault_ad_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    507.808,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_out_au_o",
+   "dir": "out",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    477.152,
+    2070.944
+   ],
+   "epoch": false,
+   "source_clock_port": "clk_t32"
+  },
+  {
+   "name": "cland_fstart_out_au_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    485.792,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_ready_au_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    481.44,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_fault_au_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    483.36,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_out_b_o",
+   "dir": "out",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    235.68,
+    2070.944
+   ],
+   "epoch": false,
+   "source_clock_port": "clk_t31"
+  },
+  {
+   "name": "cland_fstart_out_b_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    244.32,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_ready_b_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    239.968,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_fault_b_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    242.4,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_out_bd_o",
+   "dir": "out",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    549.728,
+    2.656
+   ],
+   "epoch": false,
+   "source_clock_port": "clk_t2"
+  },
+  {
+   "name": "cland_fstart_out_bd_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    558.368,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_ready_bd_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    554.016,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_fault_bd_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    556.192,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_out_bu_o",
+   "dir": "out",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    525.536,
+    2070.944
+   ],
+   "epoch": false,
+   "source_clock_port": "clk_t32"
+  },
+  {
+   "name": "cland_fstart_out_bu_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    534.176,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_ready_bu_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    529.824,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_fault_bu_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    532.0,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_out_hd_o",
+   "dir": "out",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    426.144,
+    2.656
+   ],
+   "epoch": false,
+   "source_clock_port": "clk_t2"
+  },
+  {
+   "name": "cland_fstart_out_hd_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    434.784,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_ready_hd_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    430.496,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_fault_hd_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    432.672,
+    2.656
+   ],
+   "epoch": false
+  },
+  {
+   "name": "fclk_out_hu_o",
+   "dir": "out",
+   "kind": "clock",
+   "layer": "M7",
+   "xy_um": [
+    348.832,
+    2070.944
+   ],
+   "epoch": false,
+   "source_clock_port": "clk_t32"
+  },
+  {
+   "name": "cland_fstart_out_hu_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    357.472,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_ready_hu_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    353.184,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_up_fault_hu_o",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    355.296,
+    2070.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_ready_be_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    585.376,
+    862.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_fault_be_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    585.376,
+    865.056
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_ready_bw_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    2.144,
+    862.944
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_dn_fault_bw_i",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    2.144,
+    865.056
+   ],
+   "epoch": false
+  },
+  {
+   "name": "cland_tstart_in",
+   "dir": "in",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    26.4,
+    932.704
+   ],
+   "epoch": false
+  },
+  {
+   "name": "rst_start_raw_2",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    130.08,
+    1416.96
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_66",
+   "source_net": "rst_start_raw_2",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_66"
+  },
+  {
+   "name": "rst_start_raw_4",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    147.36,
+    529.7941
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_144",
+   "source_net": "rst_start_raw_4",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_144"
+  },
+  {
+   "name": "rst_start_raw_5",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    318.688,
+    887.784
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_90",
+   "source_net": "rst_start_raw_5",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_90"
+  },
+  {
+   "name": "rst_start_raw_6",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    235.68,
+    992.4876
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_92",
+   "source_net": "rst_start_raw_6",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_92"
+  },
+  {
+   "name": "rst_start_raw_7",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    292.384,
+    573.582
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_9",
+   "source_net": "rst_start_raw_7",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_9"
+  },
+  {
+   "name": "rst_start_raw_8",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    354.784,
+    396.941
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_24",
+   "source_net": "rst_start_raw_8",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_24"
+  },
+  {
+   "name": "rst_start_raw_9",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    293.152,
+    1209.632
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_119",
+   "source_net": "rst_start_raw_9",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_119"
+  },
+  {
+   "name": "rst_start_raw_10",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    235.68,
+    1298.4808
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_45",
+   "source_net": "rst_start_raw_10",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_45"
+  },
+  {
+   "name": "rst_start_raw_12",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    235.68,
+    1458.3593
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_53",
+   "source_net": "rst_start_raw_12",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_53"
+  },
+  {
+   "name": "rst_start_raw_13",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    417.312,
+    1729.728
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_56",
+   "source_net": "rst_start_raw_13",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_56"
+  },
+  {
+   "name": "rst_start_raw_14",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    337.44,
+    1831.68
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_83",
+   "source_net": "rst_start_raw_14",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_83"
+  },
+  {
+   "name": "rst_start_raw_16",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    400.224,
+    1885.344
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_59",
+   "source_net": "rst_start_raw_16",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_59"
+  },
+  {
+   "name": "rst_start_raw_17",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    293.28,
+    1209.632
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_120",
+   "source_net": "rst_start_raw_17",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_120"
+  },
+  {
+   "name": "rst_start_raw_18",
+   "dir": "out",
+   "kind": "ctl",
+   "layer": "M7",
+   "xy_um": [
+    235.68,
+    1100.6707
+   ],
+   "epoch": false,
+   "source_instance": "u_rrl_104",
+   "source_net": "rst_start_raw_18",
+   "source_registered": true,
+   "source_output_pin": "export_q",
+   "source_copy_from_net": "rst_rl_104"
+  }
+ ],
+ "bands": {
+  "ad_i": {
+   "rect_um": [
+    493.222,
+    1909.44,
+    509.472,
+    2056.32
+   ],
+   "width": 66,
+   "ring_width": 128,
+   "live_data_storage_flops": 335,
+   "padded_data_storage_flops": 640,
+   "clock_roles": {
+    "forwarded_write_flops": 512,
+    "local_read_flops": 128
+   },
+   "max_pin_to_band_hop_um": 172.285,
+   "area_reserve_um2": 1189.9,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "spread": 2.0059,
+   "band_spread_target": 2.0,
+   "ring_place": "ff",
+   "instance": "u_cland_ad_i",
+   "monitor_bits": {
+    "ready": 65,
+    "fault": 66,
+    "note": "status rides the data ring under the same forwarded write clock"
+   }
+  },
+  "au_i": {
+   "rect_um": [
+    468.924,
+    17.28,
+    485.222,
+    164.16
+   ],
+   "width": 66,
+   "ring_width": 128,
+   "live_data_storage_flops": 335,
+   "padded_data_storage_flops": 640,
+   "clock_roles": {
+    "forwarded_write_flops": 512,
+    "local_read_flops": 128
+   },
+   "max_pin_to_band_hop_um": 172.309,
+   "area_reserve_um2": 1189.9,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "spread": 2.0118,
+   "band_spread_target": 2.0,
+   "ring_place": "ff",
+   "instance": "u_cland_au_i",
+   "monitor_bits": {
+    "ready": 65,
+    "fault": 66,
+    "note": "status rides the data ring under the same forwarded write clock"
+   }
+  },
+  "bd_i": {
+   "rect_um": [
+    541.722,
+    1909.44,
+    557.988,
+    2056.32
+   ],
+   "width": 66,
+   "ring_width": 128,
+   "live_data_storage_flops": 335,
+   "padded_data_storage_flops": 640,
+   "clock_roles": {
+    "forwarded_write_flops": 512,
+    "local_read_flops": 128
+   },
+   "max_pin_to_band_hop_um": 172.293,
+   "area_reserve_um2": 1189.9,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "spread": 2.0079,
+   "band_spread_target": 2.0,
+   "ring_place": "ff",
+   "instance": "u_cland_bd_i",
+   "monitor_bits": {
+    "ready": 65,
+    "fault": 66,
+    "note": "status rides the data ring under the same forwarded write clock"
+   }
+  },
+  "bu_i": {
+   "rect_um": [
+    517.472,
+    17.28,
+    533.722,
+    164.16
+   ],
+   "width": 66,
+   "ring_width": 128,
+   "live_data_storage_flops": 335,
+   "padded_data_storage_flops": 640,
+   "clock_roles": {
+    "forwarded_write_flops": 512,
+    "local_read_flops": 128
+   },
+   "max_pin_to_band_hop_um": 172.285,
+   "area_reserve_um2": 1189.9,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "spread": 2.0059,
+   "band_spread_target": 2.0,
+   "ring_place": "ff",
+   "instance": "u_cland_bu_i",
+   "monitor_bits": {
+    "ready": 65,
+    "fault": 66,
+    "note": "status rides the data ring under the same forwarded write clock"
+   }
+  },
+  "hd_i": {
+   "rect_um": [
+    391.658,
+    1980.72,
+    460.924,
+    2056.32
+   ],
+   "width": 279,
+   "ring_width": 320,
+   "live_data_storage_flops": 1400,
+   "padded_data_storage_flops": 1600,
+   "clock_roles": {
+    "forwarded_write_flops": 1280,
+    "local_read_flops": 320
+   },
+   "max_pin_to_band_hop_um": 127.513,
+   "area_reserve_um2": 2617.781,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "spread": 2.0004,
+   "band_spread_target": 2.0,
+   "ring_place": "ff",
+   "instance": "u_cland_hd_i",
+   "monitor_bits": {
+    "ready": 278,
+    "fault": 279,
+    "note": "status rides the data ring under the same forwarded write clock"
+   }
+  },
+  "hu_i": {
+   "rect_um": [
+    314.408,
+    17.28,
+    383.658,
+    95.04
+   ],
+   "width": 278,
+   "ring_width": 320,
+   "live_data_storage_flops": 1395,
+   "padded_data_storage_flops": 1600,
+   "clock_roles": {
+    "forwarded_write_flops": 1280,
+    "local_read_flops": 320
+   },
+   "max_pin_to_band_hop_um": 129.665,
+   "area_reserve_um2": 2617.781,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "spread": 2.057,
+   "band_spread_target": 2.0,
+   "ring_place": "ff",
+   "instance": "u_cland_hu_i",
+   "monitor_bits": {
+    "ready": 277,
+    "fault": 278,
+    "note": "status rides the data ring under the same forwarded write clock"
+   }
+  },
+  "x_i": {
+   "rect_um": [
+    17.28,
+    1991.52,
+    158.812,
+    2056.32
+   ],
+   "width": 567,
+   "ring_width": 576,
+   "live_data_storage_flops": 2840,
+   "padded_data_storage_flops": 2880,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "max_pin_to_band_hop_um": 154.766,
+   "area_reserve_um2": 4521.621,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "spread": 2.0283,
+   "band_spread_target": 2.0,
+   "ring_place": "ff",
+   "instance": "u_cland_x_i",
+   "monitor_bits": {
+    "ready": 566,
+    "fault": 567,
+    "note": "status rides the data ring under the same forwarded write clock"
+   }
+  }
+ },
+ "base_type": "hd_spn_end",
+ "registered_monitor": true,
+ "physical_qualified": false,
+ "collector_tree": null,
+ "collector_root_node": "cland_up_ready_au_o",
+ "collector_local_sources": [
+  {
+   "name": "ad_i",
+   "ready": "landing_ready_ad_i",
+   "fault": "landing_fault_ad_i",
+   "xy_um": [
+    501.347,
+    2073.6
+   ],
+   "band": {
+    "rect_um": [
+     493.222,
+     1909.44,
+     509.472,
+     2056.32
+    ],
+    "width": 66,
+    "ring_width": 128,
+    "live_data_storage_flops": 335,
+    "padded_data_storage_flops": 640,
+    "clock_roles": {
+     "forwarded_write_flops": 512,
+     "local_read_flops": 128
+    },
+    "max_pin_to_band_hop_um": 172.285,
+    "area_reserve_um2": 1189.9,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "spread": 2.0059,
+    "band_spread_target": 2.0,
+    "ring_place": "ff",
+    "instance": "u_cland_ad_i",
+    "monitor_bits": {
+     "ready": 65,
+     "fault": 66,
+     "note": "status rides the data ring under the same forwarded write clock"
+    }
+   }
+  },
+  {
+   "name": "au_i",
+   "ready": "landing_ready_au_i",
+   "fault": "landing_fault_au_i",
+   "xy_um": [
+    477.073,
+    0
+   ],
+   "band": {
+    "rect_um": [
+     468.924,
+     17.28,
+     485.222,
+     164.16
+    ],
+    "width": 66,
+    "ring_width": 128,
+    "live_data_storage_flops": 335,
+    "padded_data_storage_flops": 640,
+    "clock_roles": {
+     "forwarded_write_flops": 512,
+     "local_read_flops": 128
+    },
+    "max_pin_to_band_hop_um": 172.309,
+    "area_reserve_um2": 1189.9,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "spread": 2.0118,
+    "band_spread_target": 2.0,
+    "ring_place": "ff",
+    "instance": "u_cland_au_i",
+    "monitor_bits": {
+     "ready": 65,
+     "fault": 66,
+     "note": "status rides the data ring under the same forwarded write clock"
+    }
+   }
+  },
+  {
+   "name": "bd_i",
+   "ready": "landing_ready_bd_i",
+   "fault": "landing_fault_bd_i",
+   "xy_um": [
+    549.855,
+    2073.6
+   ],
+   "band": {
+    "rect_um": [
+     541.722,
+     1909.44,
+     557.988,
+     2056.32
+    ],
+    "width": 66,
+    "ring_width": 128,
+    "live_data_storage_flops": 335,
+    "padded_data_storage_flops": 640,
+    "clock_roles": {
+     "forwarded_write_flops": 512,
+     "local_read_flops": 128
+    },
+    "max_pin_to_band_hop_um": 172.293,
+    "area_reserve_um2": 1189.9,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "spread": 2.0079,
+    "band_spread_target": 2.0,
+    "ring_place": "ff",
+    "instance": "u_cland_bd_i",
+    "monitor_bits": {
+     "ready": 65,
+     "fault": 66,
+     "note": "status rides the data ring under the same forwarded write clock"
+    }
+   }
+  },
+  {
+   "name": "bu_i",
+   "ready": "landing_ready_bu_i",
+   "fault": "landing_fault_bu_i",
+   "xy_um": [
+    525.597,
+    0
+   ],
+   "band": {
+    "rect_um": [
+     517.472,
+     17.28,
+     533.722,
+     164.16
+    ],
+    "width": 66,
+    "ring_width": 128,
+    "live_data_storage_flops": 335,
+    "padded_data_storage_flops": 640,
+    "clock_roles": {
+     "forwarded_write_flops": 512,
+     "local_read_flops": 128
+    },
+    "max_pin_to_band_hop_um": 172.285,
+    "area_reserve_um2": 1189.9,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "spread": 2.0059,
+    "band_spread_target": 2.0,
+    "ring_place": "ff",
+    "instance": "u_cland_bu_i",
+    "monitor_bits": {
+     "ready": 65,
+     "fault": 66,
+     "note": "status rides the data ring under the same forwarded write clock"
+    }
+   }
+  },
+  {
+   "name": "hd_i",
+   "ready": "landing_ready_hd_i",
+   "fault": "landing_fault_hd_i",
+   "xy_um": [
+    426.291,
+    2073.6
+   ],
+   "band": {
+    "rect_um": [
+     391.658,
+     1980.72,
+     460.924,
+     2056.32
+    ],
+    "width": 279,
+    "ring_width": 320,
+    "live_data_storage_flops": 1400,
+    "padded_data_storage_flops": 1600,
+    "clock_roles": {
+     "forwarded_write_flops": 1280,
+     "local_read_flops": 320
+    },
+    "max_pin_to_band_hop_um": 127.513,
+    "area_reserve_um2": 2617.781,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "spread": 2.0004,
+    "band_spread_target": 2.0,
+    "ring_place": "ff",
+    "instance": "u_cland_hd_i",
+    "monitor_bits": {
+     "ready": 278,
+     "fault": 279,
+     "note": "status rides the data ring under the same forwarded write clock"
+    }
+   }
+  },
+  {
+   "name": "hu_i",
+   "ready": "landing_ready_hu_i",
+   "fault": "landing_fault_hu_i",
+   "xy_um": [
+    349.033,
+    0
+   ],
+   "band": {
+    "rect_um": [
+     314.408,
+     17.28,
+     383.658,
+     95.04
+    ],
+    "width": 278,
+    "ring_width": 320,
+    "live_data_storage_flops": 1395,
+    "padded_data_storage_flops": 1600,
+    "clock_roles": {
+     "forwarded_write_flops": 1280,
+     "local_read_flops": 320
+    },
+    "max_pin_to_band_hop_um": 129.665,
+    "area_reserve_um2": 2617.781,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "spread": 2.057,
+    "band_spread_target": 2.0,
+    "ring_place": "ff",
+    "instance": "u_cland_hu_i",
+    "monitor_bits": {
+     "ready": 277,
+     "fault": 278,
+     "note": "status rides the data ring under the same forwarded write clock"
+    }
+   }
+  },
+  {
+   "name": "x_i",
+   "ready": "landing_ready_x_i",
+   "fault": "landing_fault_x_i",
+   "xy_um": [
+    86.126,
+    2073.6
+   ],
+   "band": {
+    "rect_um": [
+     17.28,
+     1991.52,
+     158.812,
+     2056.32
+    ],
+    "width": 567,
+    "ring_width": 576,
+    "live_data_storage_flops": 2840,
+    "padded_data_storage_flops": 2880,
+    "clock_roles": {
+     "forwarded_write_flops": 2304,
+     "local_read_flops": 576
+    },
+    "max_pin_to_band_hop_um": 154.766,
+    "area_reserve_um2": 4521.621,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "spread": 2.0283,
+    "band_spread_target": 2.0,
+    "ring_place": "ff",
+    "instance": "u_cland_x_i",
+    "monitor_bits": {
+     "ready": 566,
+     "fault": 567,
+     "note": "status rides the data ring under the same forwarded write clock"
+    }
+   }
+  }
+ ],
+ "collector_children": [
+  {
+   "bus": "ad_i",
+   "ready": "cland_dn_ready_ad_i",
+   "fault": "cland_dn_fault_ad_i",
+   "xy_um": [
+    501.347,
+    2073.6
+   ],
+   "seam": true
+  },
+  {
+   "bus": "au_i",
+   "ready": "cland_dn_ready_au_i",
+   "fault": "cland_dn_fault_au_i",
+   "xy_um": [
+    477.073,
+    0
+   ],
+   "seam": true
+  },
+  {
+   "bus": "bd_i",
+   "ready": "cland_dn_ready_bd_i",
+   "fault": "cland_dn_fault_bd_i",
+   "xy_um": [
+    549.855,
+    2073.6
+   ],
+   "seam": true
+  },
+  {
+   "bus": "bu_i",
+   "ready": "cland_dn_ready_bu_i",
+   "fault": "cland_dn_fault_bu_i",
+   "xy_um": [
+    525.597,
+    0
+   ],
+   "seam": true
+  },
+  {
+   "bus": "hd_i",
+   "ready": "cland_dn_ready_hd_i",
+   "fault": "cland_dn_fault_hd_i",
+   "xy_um": [
+    426.291,
+    2073.6
+   ],
+   "seam": true
+  },
+  {
+   "bus": "hu_i",
+   "ready": "cland_dn_ready_hu_i",
+   "fault": "cland_dn_fault_hu_i",
+   "xy_um": [
+    349.033,
+    0
+   ],
+   "seam": true
+  },
+  {
+   "bus": "x_i",
+   "ready": "cland_dn_ready_x_i",
+   "fault": "cland_dn_fault_x_i",
+   "xy_um": [
+    86.126,
+    2073.6
+   ],
+   "seam": true
+  },
+  {
+   "bus": "be_i",
+   "ready": "cland_dn_ready_be_i",
+   "fault": "cland_dn_fault_be_i",
+   "xy_um": [
+    587.52,
+    858.496
+   ],
+   "seam": false
+  },
+  {
+   "bus": "bw_i",
+   "ready": "cland_dn_ready_bw_i",
+   "fault": "cland_dn_fault_bw_i",
+   "xy_um": [
+    0,
+    858.496
+   ],
+   "seam": false
+  }
+ ],
+ "monitor": "region",
+ "forwarded_clock_only_inputs": true
+}

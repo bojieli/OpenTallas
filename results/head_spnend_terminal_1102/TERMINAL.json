@@ -1,0 +1,117 @@
+{
+ "producer": "intel2:/srv/opentallas-scratch2/claude/die-head-48/prd53/hd_spn_end_B_p2",
+ "signoff_unit": "oth-ubuntu-3772366-1793630024",
+ "signoff_exit": 1,
+ "lec_unit": "oth-ubuntu-3772527-1793630024",
+ "lec_exit": 2,
+ "audit_unit": "oth-ubuntu-2913523-1793632359",
+ "audit_host": "intel1",
+ "audit_exit": 0,
+ "audit_resources": "8GB2T normal admission;765s queue",
+ "raw_verdict": "NOT SIGNED",
+ "raw_signoff_reasons": [
+  "hold_ff: FAIL WNS -3.54 ps, 5 endpoints",
+  "drv: FAIL TT slew 108.0 cap 0.0, FF slew 37.0 cap 0.0",
+  "drc: FAIL 3 (5_2_route.json)",
+  "io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing"
+ ],
+ "corners": {
+  "tt": {
+   "std_wns_max": 62.58,
+   "std_wns_min": 4.24,
+   "std_nviol_min": 0.0,
+   "slew_viol": 108.0,
+   "cap_viol": 0.0,
+   "pg_open": 0.0
+  },
+  "ff": {
+   "std_wns_max": 96.7,
+   "std_wns_min": -3.54,
+   "std_nviol_min": 5.0,
+   "slew_viol": 37.0,
+   "cap_viol": 0.0,
+   "pg_open": 0.0
+  }
+ },
+ "lec": {
+  "verdict": "UNPROVEN",
+  "counts": {
+   "compare_points": 30774,
+   "proved": 30770,
+   "differs": 4,
+   "undecided": 0
+  },
+  "unproven_points": [
+   {
+    "point": "po:fclk_out_bd_o",
+    "status": "differs",
+    "cone_unmatched": [
+     "gate_x"
+    ],
+    "cone_unmatched_keys": [
+     "x297"
+    ],
+    "cone_support_count": 2,
+    "cone_state_keys": [
+     "gate_x:x297",
+     "matched:pi:clk_t2[0]"
+    ]
+   },
+   {
+    "point": "po:fclk_out_bu_o",
+    "status": "differs",
+    "cone_unmatched": [
+     "gate_x"
+    ],
+    "cone_unmatched_keys": [
+     "x298"
+    ],
+    "cone_support_count": 2,
+    "cone_state_keys": [
+     "gate_x:x298",
+     "matched:pi:clk_t32[0]"
+    ]
+   },
+   {
+    "point": "po:fclk_out_hd_o",
+    "status": "differs",
+    "cone_unmatched": [
+     "gate_x"
+    ],
+    "cone_unmatched_keys": [
+     "x299"
+    ],
+    "cone_support_count": 2,
+    "cone_state_keys": [
+     "gate_x:x299",
+     "matched:pi:clk_t2[0]"
+    ]
+   },
+   {
+    "point": "po:fclk_out_hu_o",
+    "status": "differs",
+    "cone_unmatched": [
+     "gate_x"
+    ],
+    "cone_unmatched_keys": [
+     "x300"
+    ],
+    "cone_support_count": 2,
+    "cone_state_keys": [
+     "gate_x:x300",
+     "matched:pi:clk_t32[0]"
+    ]
+   }
+  ],
+  "reason": "4 compare points not proved; each depends on X (don't-care) sources, synthesis-only registers or hit the solver limit (first: po:fclk_out_bd_o, po:fclk_out_bu_o, po:fclk_out_hd_o, po:fclk_out_hu_o)"
+ },
+ "actual_open_A": [
+  "fclk_out_bd_o",
+  "fclk_out_bu_o",
+  "fclk_out_hd_o",
+  "fclk_out_hu_o"
+ ],
+ "all_seven_dont_touch_true": true,
+ "all_seven_locked": true,
+ "no_new_STA_or_repair": true
+}
