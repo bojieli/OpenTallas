@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-_CODEX 2026-11-01 18:00 PST: whole-die signal+clock GRT and complete real-view TT/FF timing are NOT closed on any of the four non-HBM dies. S81/HEAD/KV clock-related or partial-view receipts are explicitly partial; child SIGNED/EQ results do not qualify parent release. Cached counts remain generated below, not manually incremented. Active work continues across all five dies._
+_COORD 2026-11-01 18:28 PST: count 49 (KV adp plan event; HEAD kp4 e13a signed, LEC running -> HEAD 4/4). ccband merged 18:14: post-CTS crash class fixed, batch relaunch. DISK CRITICAL intel1 31 GB / epyc2 37 GB (ot-run refuses) -> PRUNE-1101F/E + snapshot/worktree dedupe class (KIT-WAVE-15). Train: diersv, stnbank, col2, qc-61 tools, pslice. Types 0/485._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -85,7 +85,7 @@ _CODEX 2026-11-01 18:00 PST: whole-die signal+clock GRT and complete real-view T
 ## INFRA · Merge, hosts, disks
 - [ ] INFRA.MERGE Publish clean gated source/tool trains · ROOT · RUNNING · confirmedmain051340895; pending compoundKVdb76, tokene197, SHIFT4034, PSlice96b and scoped helper followups; SCdefault-mode sinkchangeHELD → OWNER.SOURCE
 - [ ] INFRA.REVIEW Release concrete reviewed next steps · ROOT · RUNNING · retainedCTSfix/retry, QCnativeclockprefix, T41witness, NLcorrectedprobe, ZHPLACE and compactTnodeGEN; actualLOOK/source/reset/count scope before physical dispatch
-- [ ] INFRA.DISK Preserve usable scratch capacity · ROOT / KITS_FLOW · RUNNING · Intel1 dedicatedscratch reserve5→1% restored~143GiB usable, old19→160GiB at intervention; current free space drifts, keep50GiB floor/no foreign deletion
+- [ ] INFRA.DISK CRITICAL intel1 31 GB / epyc2 37 GB free (ot-run REFUSED) -> PRUNE-1101F intel1 + PRUNE-1101E epyc2; class fix: hardlinked source-follow snapshots + one worktree per die → KIT-WAVE-15 · COORD · RUNNING
 - [ ] INFRA.LOAD Queue/build turnaround · KITS_FLOW / TOK · RUNNING · onlyepyc2/intel1/intel2 active; conserve progressing jobs, no duplicate proof/build; whole-hierarchy OOM and serial simulation are real schedule risks
 
 ## OWNER · Explicit contract decisions
