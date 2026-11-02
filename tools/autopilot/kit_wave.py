@@ -856,7 +856,18 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
             "lint_mem_gb": int((d.get("lint_mem_gb_by_item") or {}).get(item, opt(cfg, die, "lint_mem_gb"))),
-            "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": OT_RUN}
+            "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": OT_RUN,
+            "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item))}
+
+
+def near_count_hit(near, die, *names):
+    """(die or '*', name) listed in lanes/NEAR-COUNT.tsv for the item, its parent type or its core module"""
+    return any((d, n) in near for n in names if n for d in (die, "*"))
+
+
+def crit_args(sp):
+    """ot-run admission flags of a NEAR-COUNT item (empty otherwise)"""
+    return ["--priority", "die", "--crit"] if sp.get("crit") else []
 
 
 def _ssh(host, hub):
@@ -944,8 +955,8 @@ def run_item(spec_path):
 
     def otrun(mem, thr, d, cmd, hosts):                  # ot-run names the hub itself 'localhost'
         hosts = ["localhost" if h == hub else h for h in hosts]
-        return [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts),
-                "--", "bash", "-c", cmd]
+        return [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)] \
+            + crit_args(sp) + ["--", "bash", "-c", cmd]
 
     def fail(stage, txt, evidence=""):
         res.update(stage=stage, verdict="FAIL", tail=txt[-3000:], errors=error_lines(txt), evidence=evidence or f"{G}:{W}")
@@ -1938,6 +1949,8 @@ def step(AP, ap_dir=None):
 
 def _step(AP, ap_dir):
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
+    # NEAR-COUNT (COORD 11-01 KIT-WAVE-16 (6)): items in lanes/NEAR-COUNT.tsv launch with --priority die --crit
+    cfg["_near_count"] = AP.parse_near_count(AP.read_coord(AP.NEAR_COUNT_FILE)) if hasattr(AP, "parse_near_count") else set()
     st = load_state(ap_dir)
     import source_follow
     source_follow.step(AP, cfg, st)
