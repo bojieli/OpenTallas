@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 08:22 PST)
 
-_COORD 2026-11-01 15:19 PST: count 49 (S81 23/54, HEAD 3/4, QC 5/15, KV 14/35, HBM 4/84; HBM coll_q2 ring returns at re-LEC after an ot-reaper loss). main has leafmean (78 S81 kits relaunching), kv-residuals, HEAD tileio + l48z. Sign-offs in flight: HEAD k5_D_p2/turn_B_p2 (--crit), hd_serdes e11c/d, S81 bf_front_roots, HBM HCOL kA, KV q2t2. Types 0/485. Codex active on QC/KV/xfin/cap_rt (split rule)._
+_COORD 2026-11-01 16:20 PST: count 50 (S81 23/54, HEAD 3/4, QC 5/15, KV 14/35, HBM 5/84; HBM ring back after re-LEC). Merge train: canreg, kcc, pwromit, KV adp, HBM d44q, samplegap, leafmean upd, S81 col (26 types). QC token builds starved in ot-run -> die-job memory reservation (FLOW-21). Types 0/485. Codex on QC/KV/xfin/cap_rt (split rule)._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -62,8 +62,8 @@ _COORD 2026-11-01 15:19 PST: count 49 (S81 23/54, HEAD 3/4, QC 5/15, KV 14/35, H
 
 ## INFRA · Merge, hosts, disks
 - [ ] INFRA.MERGE Approved READY merged in order · ROOT-MERGE-AL · RUNNING · see header queue
-- [ ] INFRA.DISK scratch 87-91% -> PRUNE-1101B · COORD · RUNNING
-- [ ] INFRA.LOAD intel1 290/112, intel2 303/112, epyc2 110/128; waiters 26/30/37 (queue full) · COORD
+- [ ] INFRA.DISK scratch intel1 93% (251 GB) / intel2 91% (320 GB) / epyc2 86% (124 GB) -> PRUNE-1101E epyc2 · COORD · RUNNING
+- [ ] INFRA.LOAD load intel1 186/112, intel2 370/112, epyc2 99/128; waiters 129/91/21 (queue full); die-job memory reservation → FLOW-21 · COORD
 
 ## WAITS · who
 ### Waiting on the owner
