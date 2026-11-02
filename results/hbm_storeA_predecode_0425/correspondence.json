@@ -1,0 +1,820 @@
+{
+  "status": "EXTRACTED_NOT_SOURCE_EQ",
+  "mapped_sha256": "9ef979b4dbd0e28c7b1c9a8d01da720a9c61f6ceacee3e9b053b69e828089bd5",
+  "native_sha256": "f1eed9e84c43aed147d0e2a4a6ae58f10cdf13c09a3c3303c5a8c2c26b8e8461",
+  "records": [
+    {
+      "gate_key": "ff:u_dut._287018_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003319_",
+      "QN_net": "_000101_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "extracted_D_expression": "((~d[746])&d[747]&(~(d[745]|d[744])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287019_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003318_",
+      "QN_net": "_000102_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "extracted_D_expression": "(((~d[745])&d[744])&((~d[746])&d[747]))"
+    },
+    {
+      "gate_key": "ff:u_dut._287020_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003317_",
+      "QN_net": "_000103_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        0,
+        1,
+        0,
+        1
+      ],
+      "extracted_D_expression": "((d[745]&(~d[744]))&((~d[746])&d[747]))"
+    },
+    {
+      "gate_key": "ff:u_dut._287021_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003378_",
+      "QN_net": "_000042_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        1,
+        1,
+        0,
+        1
+      ],
+      "extracted_D_expression": "(d[745]&d[744]&((~d[746])&d[747]))"
+    },
+    {
+      "gate_key": "ff:u_dut._287022_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003316_",
+      "QN_net": "_000104_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "extracted_D_expression": "(d[746]&(~d[747])&(~(d[745]|d[744])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287023_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003315_",
+      "QN_net": "_000105_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        1,
+        0,
+        1,
+        0
+      ],
+      "extracted_D_expression": "(((~d[745])&d[744])&(d[746]&(~d[747])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287024_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003314_",
+      "QN_net": "_000106_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "extracted_D_expression": "((d[745]&(~d[744]))&(d[746]&(~d[747])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287025_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003395_",
+      "QN_net": "_002932_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        1,
+        1,
+        1,
+        0
+      ],
+      "extracted_D_expression": "(d[745]&d[744]&(d[746]&(~d[747])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287026_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003313_",
+      "QN_net": "_000107_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "extracted_D_expression": "(d[746]&d[747]&(~(d[745]|d[744])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287027_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003312_",
+      "QN_net": "_000108_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "extracted_D_expression": "(d[746]&d[747]&((~d[745])&d[744]))"
+    },
+    {
+      "gate_key": "ff:u_dut._287028_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003311_",
+      "QN_net": "_000109_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "extracted_D_expression": "(d[746]&d[747]&(d[745]&(~d[744])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287029_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003376_",
+      "QN_net": "_000044_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "extracted_D_expression": "(d[745]&d[744]&d[746]&d[747])"
+    },
+    {
+      "gate_key": "ff:u_dut._287030_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003310_",
+      "QN_net": "_000110_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "extracted_D_expression": "((~d[745])&d[744]&(~(d[746]|d[747])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287031_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003377_",
+      "QN_net": "_000043_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "extracted_D_expression": "((~(d[746]|d[747]))&(~(d[745]|d[744])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287032_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003309_",
+      "QN_net": "_000111_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "extracted_D_expression": "(d[745]&(~d[744])&(~(d[746]|d[747])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287033_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003320_",
+      "QN_net": "_000100_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        744,
+        745,
+        746,
+        747
+      ],
+      "cube": [
+        1,
+        1,
+        0,
+        0
+      ],
+      "extracted_D_expression": "(d[745]&d[744]&(~(d[746]|d[747])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287034_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003308_",
+      "QN_net": "_000112_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "extracted_D_expression": "((~d[722])&d[723]&(~(d[721]|d[720])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287035_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003307_",
+      "QN_net": "_000113_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "extracted_D_expression": "(((~d[721])&d[720])&((~d[722])&d[723]))"
+    },
+    {
+      "gate_key": "ff:u_dut._287036_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003306_",
+      "QN_net": "_000114_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        0,
+        1,
+        0,
+        1
+      ],
+      "extracted_D_expression": "((d[721]&(~d[720]))&((~d[722])&d[723]))"
+    },
+    {
+      "gate_key": "ff:u_dut._287037_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003379_",
+      "QN_net": "_002905_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        1,
+        1,
+        0,
+        1
+      ],
+      "extracted_D_expression": "(d[721]&d[720]&((~d[722])&d[723]))"
+    },
+    {
+      "gate_key": "ff:u_dut._287038_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003305_",
+      "QN_net": "_000115_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "extracted_D_expression": "(d[722]&(~d[723])&(~(d[721]|d[720])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287039_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003304_",
+      "QN_net": "_000116_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        1,
+        0,
+        1,
+        0
+      ],
+      "extracted_D_expression": "(((~d[721])&d[720])&(d[722]&(~d[723])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287040_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003303_",
+      "QN_net": "_000117_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "extracted_D_expression": "((d[721]&(~d[720]))&(d[722]&(~d[723])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287041_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003321_",
+      "QN_net": "_000099_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        1,
+        1,
+        1,
+        0
+      ],
+      "extracted_D_expression": "(d[721]&d[720]&(d[722]&(~d[723])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287042_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003302_",
+      "QN_net": "_000118_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "extracted_D_expression": "(d[722]&d[723]&(~(d[721]|d[720])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287043_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003301_",
+      "QN_net": "_000119_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "extracted_D_expression": "(d[722]&d[723]&((~d[721])&d[720]))"
+    },
+    {
+      "gate_key": "ff:u_dut._287044_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003300_",
+      "QN_net": "_000120_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "extracted_D_expression": "(d[722]&d[723]&(d[721]&(~d[720])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287045_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003322_",
+      "QN_net": "_000098_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "extracted_D_expression": "(d[721]&d[720]&d[722]&d[723])"
+    },
+    {
+      "gate_key": "ff:u_dut._287046_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003299_",
+      "QN_net": "_000121_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "extracted_D_expression": "((~d[721])&d[720]&(~(d[722]|d[723])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287047_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003323_",
+      "QN_net": "_000097_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "extracted_D_expression": "((~(d[722]|d[723]))&(~(d[721]|d[720])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287048_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003298_",
+      "QN_net": "_000122_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "extracted_D_expression": "(d[721]&(~d[720])&(~(d[722]|d[723])))"
+    },
+    {
+      "gate_key": "ff:u_dut._287049_",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "clock": "store0_clk",
+      "async_reset": null,
+      "enable": null,
+      "D_net": "_003324_",
+      "QN_net": "_000096_",
+      "canonical_polarity": "positive D (lec.py IQN inversion)",
+      "native_capture_bits": [
+        720,
+        721,
+        722,
+        723
+      ],
+      "cube": [
+        1,
+        1,
+        0,
+        0
+      ],
+      "extracted_D_expression": "(d[721]&d[720]&(~(d[722]|d[723])))"
+    }
+  ],
+  "native_captures": [
+    {
+      "bit": 720,
+      "native_output_net": "n361",
+      "register": "g_compose_m3_q",
+      "clock": "store0_clk[0]",
+      "D": "cmd1_D[720]",
+      "enable": null,
+      "reset": null
+    },
+    {
+      "bit": 721,
+      "native_output_net": "n362",
+      "register": "g_compose_m3_q",
+      "clock": "store0_clk[0]",
+      "D": "cmd1_D[721]",
+      "enable": null,
+      "reset": null
+    },
+    {
+      "bit": 722,
+      "native_output_net": "n363",
+      "register": "g_compose_m3_q",
+      "clock": "store0_clk[0]",
+      "D": "cmd1_D[722]",
+      "enable": null,
+      "reset": null
+    },
+    {
+      "bit": 723,
+      "native_output_net": "n364",
+      "register": "g_compose_m3_q",
+      "clock": "store0_clk[0]",
+      "D": "cmd1_D[723]",
+      "enable": null,
+      "reset": null
+    },
+    {
+      "bit": 744,
+      "native_output_net": "n1282",
+      "register": "g_compose_m3_q",
+      "clock": "store0_clk[0]",
+      "D": "cmd1_D[744]",
+      "enable": null,
+      "reset": null
+    },
+    {
+      "bit": 745,
+      "native_output_net": "n1283",
+      "register": "g_compose_m3_q",
+      "clock": "store0_clk[0]",
+      "D": "cmd1_D[745]",
+      "enable": null,
+      "reset": null
+    },
+    {
+      "bit": 746,
+      "native_output_net": "n1284",
+      "register": "g_compose_m3_q",
+      "clock": "store0_clk[0]",
+      "D": "cmd1_D[746]",
+      "enable": null,
+      "reset": null
+    },
+    {
+      "bit": 747,
+      "native_output_net": "n1285",
+      "register": "g_compose_m3_q",
+      "clock": "store0_clk[0]",
+      "D": "cmd1_D[747]",
+      "enable": null,
+      "reset": null
+    }
+  ],
+  "base": "after first actual capture; arbitrary initial states and input D",
+  "original_official_verdict": "UNPROVEN",
+  "whole_proof_rerun": false
+}
