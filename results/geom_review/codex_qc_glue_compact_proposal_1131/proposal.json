@@ -361,5 +361,14 @@
     "maximum_coordinate_only_pin_span_um": 1110,
     "same_raw_reset_obstruction": "All32actualFSTARTq andorigin s0 takecommonBOOTRAWrst_n_t0 fromexistingdepth5u_rrl16; withfixedboundaryregistrationrequirements acommonleafcannotreachboth inletcapture andfarFSTART at405.",
     "no_borrowed_stages": "sf isnegative-edge/unusedbyselectedEFALLfalse mode; s2/pd areotherselected-tap states, not additionalPAD0forwardpath stages. Noabsentstage/newcycle counted."
+  },
+  "independent_look": {
+    "verdict": "PASS_COND_CONCEPT_ONLY",
+    "reviewer": "signoff_geom",
+    "code_to_sysrom_body_gap_um": 10.152,
+    "gap_after_two_4p32_halos_um": 1.512,
+    "d2d_body_gap_um": 11.208,
+    "d2d_gap_after_two_4p32_halos_um": 2.568,
+    "unproven": "Actual signal face, layer/cut access, per-bit CA packing and routed/complete pin reach. Point bounds are unobstructed; no CAD or adoption approval."
   }
 }
