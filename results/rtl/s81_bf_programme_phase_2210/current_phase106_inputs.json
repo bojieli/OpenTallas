@@ -1,0 +1,205 @@
+{
+  "root": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/down_cap_safe_fields_1131/u_f_0L01",
+  "frame": "u_f_0L01",
+  "master": "col_h10_l4_lp_asb_x",
+  "phase": {
+    "phase": 106,
+    "op": "attn.wo_a",
+    "mat": "wo_a",
+    "fmt": "bf16",
+    "K": 4096,
+    "k_pad": 0,
+    "kseg": [
+      0,
+      1024
+    ],
+    "xbase": 0,
+    "chunk": 0,
+    "seg": 0,
+    "nseg": 4,
+    "rows": 6,
+    "row_index": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "tie": [
+      [
+        "attn.wo_a",
+        0
+      ],
+      [
+        "attn.wo_a",
+        1
+      ],
+      [
+        "attn.wo_a",
+        2
+      ],
+      [
+        "attn.wo_a",
+        3
+      ],
+      [
+        "attn.wo_a",
+        4
+      ],
+      [
+        "attn.wo_a",
+        5
+      ]
+    ],
+    "tie_kind": "bf16",
+    "rows_per_phase": 6,
+    "nbeat": 64,
+    "sbase": 7472,
+    "faults": 0,
+    "ret_words": 0,
+    "calendar": "calendar_unmeasured",
+    "elem_class": [
+      "bf16",
+      1024
+    ],
+    "ret": [],
+    "shape": "col_h10_asb_x|E2|bseg1024",
+    "bf_pairs": [
+      1,
+      5,
+      10
+    ],
+    "assign": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    "desc": {},
+    "plan": {
+      "assign": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "pairs": [
+        1,
+        5,
+        10
+      ],
+      "seg": 0,
+      "nseg": 4,
+      "desc": {},
+      "ret": [],
+      "faults": 0,
+      "ret_words": 0,
+      "calendar": "calendar_unmeasured",
+      "rows_vals": {
+        "0": [
+          3145734746,
+          1023141110,
+          3168442310,
+          1002764332
+        ],
+        "1": [
+          3165395540,
+          984835680,
+          1022658936,
+          3123235384
+        ],
+        "2": [
+          1017101194,
+          1015780413,
+          3155307943,
+          1015761810
+        ],
+        "3": [
+          1016469802,
+          3164781179,
+          3147015156,
+          3140501352
+        ],
+        "4": [
+          1024232452,
+          3138994468,
+          1013051264,
+          990913915
+        ],
+        "5": [
+          3159269828,
+          1007683627,
+          1020330864,
+          3126138464
+        ]
+      },
+      "acc": [
+        1003098772,
+        1008516720,
+        1026998851,
+        3155108982,
+        1027896874,
+        1017843184
+      ],
+      "bf16": [
+        15306,
+        15389,
+        15671,
+        48143,
+        15684,
+        15531
+      ]
+    },
+    "sel": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "gi": 0
+  },
+  "slots": {
+    "1": 12,
+    "5": 13,
+    "10": 14
+  },
+  "actual_ROM_base": {
+    "1": 0,
+    "5": 0,
+    "10": 0
+  },
+  "source_root": "/srv/opentallas-scratch2/claude/wt/die-s81-47b",
+  "profile_source_checks": {
+    "total": 100,
+    "matches": 98,
+    "mismatches": [
+      {
+        "path": "asbuilt_kva3_g3tag2_sel.json",
+        "reason": "MISSING"
+      },
+      {
+        "path": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h10_schedule.json",
+        "reason": "MISSING"
+      }
+    ]
+  }
+}

@@ -1,0 +1,819 @@
+{
+  "frame": "u_f_0L01",
+  "master": "col_h10_l4_lp_asb_x",
+  "phase": {
+    "phase": 106,
+    "op": "attn.wo_a",
+    "mat": "wo_a",
+    "fmt": "bf16",
+    "K": 4096,
+    "k_pad": 0,
+    "kseg": [
+      0,
+      1024
+    ],
+    "xbase": 0,
+    "chunk": 0,
+    "seg": 0,
+    "nseg": 4,
+    "rows": 6,
+    "row_index": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "tie": [
+      [
+        "attn.wo_a",
+        0
+      ],
+      [
+        "attn.wo_a",
+        1
+      ],
+      [
+        "attn.wo_a",
+        2
+      ],
+      [
+        "attn.wo_a",
+        3
+      ],
+      [
+        "attn.wo_a",
+        4
+      ],
+      [
+        "attn.wo_a",
+        5
+      ]
+    ],
+    "tie_kind": "bf16",
+    "rows_per_phase": 6,
+    "nbeat": 64,
+    "sbase": 7472,
+    "faults": 0,
+    "ret_words": 6,
+    "calendar": "measured_bf_active_idle_q",
+    "elem_class": [
+      "bf16",
+      1024
+    ],
+    "ret": [
+      [
+        412,
+        134225924,
+        3165395540,
+        0
+      ],
+      [
+        415,
+        134217732,
+        3145734746,
+        0
+      ],
+      [
+        424,
+        134242308,
+        1016469802,
+        0
+      ],
+      [
+        427,
+        134234116,
+        1017101194,
+        0
+      ],
+      [
+        428,
+        134258692,
+        3159269828,
+        0
+      ],
+      [
+        436,
+        134250500,
+        1024232452,
+        0
+      ]
+    ],
+    "shape": "col_h10_asb_x|E2|bseg1024",
+    "bf_pairs": [
+      1,
+      5,
+      10
+    ],
+    "assign": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    "desc": {
+      "1": {
+        "am": 63,
+        "base": 0,
+        "cm": 7,
+        "fam": 1,
+        "lb": 0,
+        "lu": 0,
+        "n": 64,
+        "off": 4,
+        "per": 1,
+        "sm": 0,
+        "ssh": 0
+      },
+      "5": {
+        "am": 63,
+        "base": 0,
+        "cm": 7,
+        "fam": 1,
+        "lb": 0,
+        "lu": 0,
+        "n": 64,
+        "off": 4,
+        "per": 1,
+        "sm": 0,
+        "ssh": 0
+      },
+      "10": {
+        "am": 63,
+        "base": 0,
+        "cm": 7,
+        "fam": 1,
+        "lb": 0,
+        "lu": 0,
+        "n": 64,
+        "off": 4,
+        "per": 1,
+        "sm": 0,
+        "ssh": 0
+      }
+    },
+    "plan": {
+      "assign": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "pairs": [
+        1,
+        5,
+        10
+      ],
+      "seg": 0,
+      "nseg": 4,
+      "desc": {
+        "1": {
+          "am": 63,
+          "base": 0,
+          "cm": 7,
+          "fam": 1,
+          "lb": 0,
+          "lu": 0,
+          "n": 64,
+          "off": 4,
+          "per": 1,
+          "sm": 0,
+          "ssh": 0
+        },
+        "5": {
+          "am": 63,
+          "base": 0,
+          "cm": 7,
+          "fam": 1,
+          "lb": 0,
+          "lu": 0,
+          "n": 64,
+          "off": 4,
+          "per": 1,
+          "sm": 0,
+          "ssh": 0
+        },
+        "10": {
+          "am": 63,
+          "base": 0,
+          "cm": 7,
+          "fam": 1,
+          "lb": 0,
+          "lu": 0,
+          "n": 64,
+          "off": 4,
+          "per": 1,
+          "sm": 0,
+          "ssh": 0
+        }
+      },
+      "ret": [
+        [
+          412,
+          134225924,
+          3165395540,
+          0
+        ],
+        [
+          415,
+          134217732,
+          3145734746,
+          0
+        ],
+        [
+          424,
+          134242308,
+          1016469802,
+          0
+        ],
+        [
+          427,
+          134234116,
+          1017101194,
+          0
+        ],
+        [
+          428,
+          134258692,
+          3159269828,
+          0
+        ],
+        [
+          436,
+          134250500,
+          1024232452,
+          0
+        ]
+      ],
+      "faults": 0,
+      "ret_words": 6,
+      "calendar": "measured_bf_active_idle_q",
+      "nodes": {
+        "n0": {
+          "a": "e0.r0",
+          "b": "e0.r1",
+          "link_a": 7,
+          "link_b": 8,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n10": {
+          "a": "e5w.r",
+          "b": "e5e.r",
+          "link_a": 8,
+          "link_b": 5,
+          "arrive_a": [
+            338
+          ],
+          "arrive_b": [
+            335
+          ],
+          "merges": 0,
+          "forwards": 2,
+          "exits": [
+            348,
+            351
+          ],
+          "faults": []
+        },
+        "n12": {
+          "a": "e6.r0",
+          "b": "e6.r1",
+          "link_a": 8,
+          "link_b": 9,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n14": {
+          "a": "e7.r0",
+          "b": "e7.r1",
+          "link_a": 5,
+          "link_b": 6,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n13": {
+          "a": "n12",
+          "b": "n14",
+          "link_a": 0,
+          "link_b": 0,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n16": {
+          "a": "e8.r0",
+          "b": "e8.r1",
+          "link_a": 8,
+          "link_b": 9,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n18": {
+          "a": "e9.r0",
+          "b": "e9.r1",
+          "link_a": 5,
+          "link_b": 6,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n17": {
+          "a": "n16",
+          "b": "n18",
+          "link_a": 0,
+          "link_b": 0,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n2": {
+          "a": "e1w.r",
+          "b": "e1e.r",
+          "link_a": 5,
+          "link_b": 2,
+          "arrive_a": [
+            326
+          ],
+          "arrive_b": [
+            323
+          ],
+          "merges": 0,
+          "forwards": 2,
+          "exits": [
+            336,
+            339
+          ],
+          "faults": []
+        },
+        "n1": {
+          "a": "n0",
+          "b": "n2",
+          "link_a": 0,
+          "link_b": 0,
+          "arrive_a": [],
+          "arrive_b": [
+            336,
+            339
+          ],
+          "merges": 0,
+          "forwards": 2,
+          "exits": [
+            349,
+            352
+          ],
+          "faults": []
+        },
+        "n20": {
+          "a": "e10w.r",
+          "b": "e10e.r",
+          "link_a": 11,
+          "link_b": 3,
+          "arrive_a": [
+            350
+          ],
+          "arrive_b": [
+            342
+          ],
+          "merges": 0,
+          "forwards": 2,
+          "exits": [
+            355,
+            363
+          ],
+          "faults": []
+        },
+        "n22": {
+          "a": "e11.r0",
+          "b": "e11.r1",
+          "link_a": 12,
+          "link_b": 13,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n21": {
+          "a": "n20",
+          "b": "n22",
+          "link_a": 0,
+          "link_b": 0,
+          "arrive_a": [
+            355,
+            363
+          ],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 2,
+          "exits": [
+            368,
+            376
+          ],
+          "faults": []
+        },
+        "n19": {
+          "a": "n17",
+          "b": "n21",
+          "link_a": 0,
+          "link_b": 0,
+          "arrive_a": [],
+          "arrive_b": [
+            368,
+            376
+          ],
+          "merges": 0,
+          "forwards": 2,
+          "exits": [
+            381,
+            389
+          ],
+          "faults": []
+        },
+        "n24": {
+          "a": "e12.r0",
+          "b": "e12.r1",
+          "link_a": 9,
+          "link_b": 10,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n26": {
+          "a": "e13.r0",
+          "b": "e13.r1",
+          "link_a": 9,
+          "link_b": 10,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n25": {
+          "a": "n24",
+          "b": "n26",
+          "link_a": 4,
+          "link_b": 0,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n28": {
+          "a": "e14.r0",
+          "b": "e14.r1",
+          "link_a": 6,
+          "link_b": 7,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n30": {
+          "a": "e15w.r",
+          "b": "e15e.r",
+          "link_a": 6,
+          "link_b": 3,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n29": {
+          "a": "n28",
+          "b": "n30",
+          "link_a": 0,
+          "link_b": 0,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n27": {
+          "a": "n25",
+          "b": "n29",
+          "link_a": 0,
+          "link_b": 0,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n23": {
+          "a": "n19",
+          "b": "n27",
+          "link_a": 1,
+          "link_b": 5,
+          "arrive_a": [
+            382,
+            390
+          ],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 2,
+          "exits": [
+            395,
+            403
+          ],
+          "faults": []
+        },
+        "n4": {
+          "a": "e2.r0",
+          "b": "e2.r1",
+          "link_a": 4,
+          "link_b": 5,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n6": {
+          "a": "e3.r0",
+          "b": "e3.r1",
+          "link_a": 8,
+          "link_b": 9,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n5": {
+          "a": "n4",
+          "b": "n6",
+          "link_a": 0,
+          "link_b": 0,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n3": {
+          "a": "n1",
+          "b": "n5",
+          "link_a": 0,
+          "link_b": 0,
+          "arrive_a": [
+            349,
+            352
+          ],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 2,
+          "exits": [
+            362,
+            365
+          ],
+          "faults": []
+        },
+        "n8": {
+          "a": "e4.r0",
+          "b": "e4.r1",
+          "link_a": 4,
+          "link_b": 5,
+          "arrive_a": [],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 0,
+          "exits": [],
+          "faults": []
+        },
+        "n9": {
+          "a": "n8",
+          "b": "n10",
+          "link_a": 0,
+          "link_b": 0,
+          "arrive_a": [],
+          "arrive_b": [
+            348,
+            351
+          ],
+          "merges": 0,
+          "forwards": 2,
+          "exits": [
+            361,
+            364
+          ],
+          "faults": []
+        },
+        "n11": {
+          "a": "n9",
+          "b": "n13",
+          "link_a": 0,
+          "link_b": 3,
+          "arrive_a": [
+            361,
+            364
+          ],
+          "arrive_b": [],
+          "merges": 0,
+          "forwards": 2,
+          "exits": [
+            374,
+            377
+          ],
+          "faults": []
+        },
+        "n7": {
+          "a": "n3",
+          "b": "n11",
+          "link_a": 1,
+          "link_b": 1,
+          "arrive_a": [
+            363,
+            366
+          ],
+          "arrive_b": [
+            375,
+            378
+          ],
+          "merges": 0,
+          "forwards": 4,
+          "exits": [
+            376,
+            379,
+            388,
+            391
+          ],
+          "faults": []
+        },
+        "n15": {
+          "a": "n7",
+          "b": "n23",
+          "link_a": 5,
+          "link_b": 2,
+          "arrive_a": [
+            381,
+            384,
+            393,
+            396
+          ],
+          "arrive_b": [
+            397,
+            405
+          ],
+          "merges": 0,
+          "forwards": 6,
+          "exits": [
+            394,
+            397,
+            406,
+            409,
+            410,
+            418
+          ],
+          "faults": []
+        }
+      },
+      "emission": {
+        "rule": "E(pair column) = measured partial edge of the shape (BF_LEGACY trace); every BF phase of a master / lane latency has the same BSEG stream",
+        "leaves": {
+          "e1w.r": [
+            321
+          ],
+          "e1e.r": [
+            321
+          ],
+          "e5w.r": [
+            330
+          ],
+          "e5e.r": [
+            330
+          ],
+          "e10w.r": [
+            339
+          ],
+          "e10e.r": [
+            339
+          ]
+        }
+      },
+      "rows_vals": {
+        "0": [
+          3145734746,
+          1023141110,
+          3168442310,
+          1002764332
+        ],
+        "1": [
+          3165395540,
+          984835680,
+          1022658936,
+          3123235384
+        ],
+        "2": [
+          1017101194,
+          1015780413,
+          3155307943,
+          1015761810
+        ],
+        "3": [
+          1016469802,
+          3164781179,
+          3147015156,
+          3140501352
+        ],
+        "4": [
+          1024232452,
+          3138994468,
+          1013051264,
+          990913915
+        ],
+        "5": [
+          3159269828,
+          1007683627,
+          1020330864,
+          3126138464
+        ]
+      },
+      "acc": [
+        1003098772,
+        1008516720,
+        1026998851,
+        3155108982,
+        1027896874,
+        1017843184
+      ],
+      "bf16": [
+        15306,
+        15389,
+        15671,
+        48143,
+        15684,
+        15531
+      ]
+    },
+    "sel": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "gi": 0
+  }
+}
