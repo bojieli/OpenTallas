@@ -1,0 +1,9 @@
+# SOURCE39 event preparation — inactive
+
+Final native strict BIND passed with 398 partitions, 204 types, 873 crossings and zero errors/unbound/tied/undriven/multiply-bound endpoints. This preparation makes the exact approved plan delta reproducible from frozen SOURCE39. It changes only four clock coordinates and the 36 refreshed dead-input declarations. The accepted immutable proof is already on main at `results/token_pass/s81_dead_inputs_2148/proof_closing_source39_1101.json`; the native private bind used equivalent proof content under its private path.
+
+`prepare_plan.py` requires the exact measured base-plan hash and a fresh output. It writes an inactive candidate, never a recipe or selected canonical plan. Proof-path normalization means its bytes differ from the private measured plan. No new bind pass is claimed for normalized bytes.
+
+Reset pricing is per occurrence: cl574 has five instantiated partitions and cl911 one. The two changed type implementations therefore add **six die control FFs/clock loads/reset-data loads**, not two die FFs. Prior “+2” wording described implementation types. Corrected evidence `6604994a6` supersedes cached reset comparisons; all outputs retain their measured release cycles. The separately disabled canonical cl574186 replan is excluded and would add five more die FFs if later coherently adopted.
+
+The source manifest, exact actual 873-crossing latency table, source-tool freeze and export recipe must join this candidate before activation. Current canonical reset tools include a physical-planner parity fix and must not silently regenerate the frozen source185/179 wrappers as a different graph. Physical halo holds, col physical-instance mapping/clock overlap, T7 canary, selected-view clock contracts and source-clock epoch/programme holds remain separate. This packet makes no physical release, selected-cohort or full-token claim.

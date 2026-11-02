@@ -1,0 +1,18 @@
+{
+ "scope": "SOURCE39 source-only implementation and instantiated-die pricing",
+ "types": {
+  "col_h10_r0_p1__t1__cl574cc59d": {"instances":5,"old_control_ff":184,"new_control_ff":185,"delta_per_instance":1,"die_delta":5},
+  "col_h10_r0_p1__t1__cl911743eb": {"instances":1,"old_control_ff":178,"new_control_ff":179,"delta_per_instance":1,"die_delta":1},
+  "slice_station__t18": {"instances":1,"old_control_ff":153,"new_control_ff":153,"delta_per_instance":0,"die_delta":0},
+  "slice_station__t49": {"instances":1,"old_control_ff":228,"new_control_ff":228,"delta_per_instance":0,"die_delta":0}
+ },
+ "changed_type_implementation_ff_delta":2,
+ "instantiated_die_control_ff_delta":6,
+ "instantiated_clock_load_delta":6,
+ "instantiated_reset_data_load_delta":6,
+ "new_async_reset_loads":0,
+ "boot_cycle_delta":0,
+ "mission_cycle_delta":0,
+ "disabled_canonical_cl574_186": {"adopted":false,"additional_ff_per_instance":1,"additional_die_ff_if_adopted":5},
+ "multiplicity_source": "actual final BIND bind_report.json types.instances"
+}

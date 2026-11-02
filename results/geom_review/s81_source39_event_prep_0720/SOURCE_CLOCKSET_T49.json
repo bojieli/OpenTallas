@@ -1,0 +1,48 @@
+{
+ "scope": "ONE coherent source-only BIND after ALL168 budget census; genuine saved ELAB",
+ "plan": "/srv/opentallas-scratch2/claude/codex-flow-s81-source-2055/src/physical/die_plan/s81/plan_source39_clockset_t49.json",
+ "plan_sha256": "7f98fc4455b8fa7e41c13eeae9c7ba623c98055a92088eaa4344e6932369269e",
+ "output": "/srv/opentallas-scratch2/claude/codex-flow-s81-source-2055/bind_final_clockset_t49",
+ "source": "39f754dda07e9746c4850ea0814d48d134a6cf2a",
+ "t49": {
+  "source": "39f754dda07e9746c4850ea0814d48d134a6cf2a",
+  "input_plan_sha256": "5b293f01a882e6fc2d28f78f8bf5cb5a004d192efb5a53c6e16fdcbf5a6ba3ce",
+  "type": "slice_station__t49",
+  "tap": "clk_t25",
+  "old_xy": [
+   400.1757,
+   307.2182
+  ],
+  "new_xy": [
+   400.656,
+   307.712
+  ],
+  "old_load": 936.0,
+  "new_load": 934.0,
+  "old_radius": 150.96309999999994,
+  "new_radius": 149.98899999999998,
+  "radius_limit": 150,
+  "all69_taps_pass": true,
+  "membership_changes": 2,
+  "sink_count": 22133,
+  "reset_graph_coords_byte_identical": false,
+  "emitted_reset_rtl_byte_identical": false,
+  "old_relays": 228,
+  "new_relays": 228,
+  "old_outputs": 2,
+  "new_outputs": 2,
+  "old_depth": 7,
+  "new_depth": 7,
+  "source_only": true,
+  "physical_hold": true,
+  "executable_reset_rtl_byte_identical": true,
+  "executable_rtl_sha256": "41f6b2f32376446d614488b00742cd5f54de71311a128da09f4406c320325cf3",
+  "raw_rtl_difference": "Only two relay-instance coordinate comments; executable RTL byte-identical",
+  "resetFF_delta": 0,
+  "reset_cycle_delta": 0,
+  "reset_clock_taps": 69,
+  "reset_total_outputs": 71,
+  "reset_release_edges": 8
+ },
+ "physical_hold": true
+}
