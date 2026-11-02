@@ -1,0 +1,118 @@
+{
+  "scope": "Bounded existing geom.tsv worst DATA launch fanout diagnosis; no EDA/readDB/route/layout variant",
+  "launch": {
+    "name": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.wdat_r\\[1\\]\\[35\\]$_DFF_P_",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "centre": [
+      308.71799999999996,
+      378.945
+    ]
+  },
+  "first_sequential_FFs": 0,
+  "first_sequential_macros": 8,
+  "comb_visited": 6,
+  "macro_endpoints": [
+    {
+      "name": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[11\\].mem",
+      "box": [
+        480.384,
+        632.652,
+        575.208,
+        673.716
+      ],
+      "nearest_body_lower_bound_um": 425.3730000000001,
+      "farthest_body_corner_um": 561.261
+    },
+    {
+      "name": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[12\\].mem",
+      "box": [
+        480.384,
+        591.324,
+        575.208,
+        632.388
+      ],
+      "nearest_body_lower_bound_um": 384.045,
+      "farthest_body_corner_um": 519.933
+    },
+    {
+      "name": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[10\\].mem",
+      "box": [
+        364.08,
+        12.972,
+        458.904,
+        54.036
+      ],
+      "nearest_body_lower_bound_um": 380.271,
+      "farthest_body_corner_um": 516.1590000000001
+    },
+    {
+      "name": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[9\\].mem",
+      "box": [
+        364.08,
+        54.252,
+        458.904,
+        95.316
+      ],
+      "nearest_body_lower_bound_um": 338.99100000000004,
+      "farthest_body_corner_um": 474.879
+    },
+    {
+      "name": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[8\\].mem",
+      "box": [
+        364.08,
+        95.58,
+        458.904,
+        136.644
+      ],
+      "nearest_body_lower_bound_um": 297.663,
+      "farthest_body_corner_um": 433.55100000000004
+    },
+    {
+      "name": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[7\\].mem",
+      "box": [
+        364.08,
+        136.908,
+        458.904,
+        177.972
+      ],
+      "nearest_body_lower_bound_um": 256.33500000000004,
+      "farthest_body_corner_um": 392.22300000000007
+    },
+    {
+      "name": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[6\\].mem",
+      "box": [
+        364.08,
+        178.188,
+        458.904,
+        219.252
+      ],
+      "nearest_body_lower_bound_um": 215.055,
+      "farthest_body_corner_um": 350.94300000000004
+    },
+    {
+      "name": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[5\\].mem",
+      "box": [
+        364.08,
+        219.516,
+        458.904,
+        260.58
+      ],
+      "nearest_body_lower_bound_um": 173.72700000000003,
+      "farthest_body_corner_um": 309.615
+    }
+  ],
+  "conservative_common_launch_radius_body_envelope_um": 435.93600000000004,
+  "macro_groups": {
+    "0": 7,
+    "1": 17,
+    "2": 17,
+    "3": 17,
+    "4": 7,
+    "5": 7,
+    "6": 7,
+    "7": 7,
+    "8": 7,
+    "9": 7
+  },
+  "interpretation": "Current worst reach is conservative macroBODY corner metric, not actual inputpin metal. Nearestbody >405 proves failure even without exact transformed data pin; fullbody common radius is a conservative source-layout bound only."
+}
