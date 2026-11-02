@@ -544,6 +544,32 @@ def relay_reg_guide_spec(relays, pins, mguides, core_box, step_um=5.0):
     return out
 
 
+def reg_guide_boxes_spec(boxes, core_box):
+    """DIE-HBM-57/PSLICE (opt-in --reg-guide-boxes): explicit plan guide boxes -> macro_reg_guide.tcl spec rows.
+    Fail closed: a box outside core_box, two boxes that overlap, a duplicate name, or a prefix that nests with another
+    box's prefix (one instance would join two regions)."""
+    out = []
+    for b in boxes:
+        x0, y0, x1, y1 = (float(v) for v in b["box_um"])
+        if not (core_box[0] - 1e-6 <= x0 < x1 <= core_box[2] + 1e-6 and core_box[1] - 1e-6 <= y0 < y1 <= core_box[3] + 1e-6):
+            raise SystemExit(f"reg guide box {b['name']}: {b['box_um']} outside the core {core_box}")
+        if not b.get("prefixes") or not re.fullmatch(r"[A-Za-z0-9_]+", b["name"]):
+            raise SystemExit(f"reg guide box {b.get('name')}: needs a plain name and prefixes")
+        out.append(dict(name=b["name"], prefixes=list(b["prefixes"]), box_um=[round(v, 3) for v in (x0, y0, x1, y1)]))
+    if len({g["name"] for g in out}) != len(out):
+        raise SystemExit("reg guide boxes: duplicate names")
+    for i, A in enumerate(out):
+        for B in out[i + 1:]:
+            a_, b_ = A["box_um"], B["box_um"]
+            if a_[0] < b_[2] and b_[0] < a_[2] and a_[1] < b_[3] and b_[1] < a_[3]:
+                raise SystemExit(f"reg guide boxes {A['name']} / {B['name']} overlap")
+            for p in A["prefixes"]:
+                for q in B["prefixes"]:
+                    if p.startswith(q) or q.startswith(p):
+                        raise SystemExit(f"reg guide boxes {A['name']} / {B['name']}: prefixes {p} / {q} nest")
+    return out
+
+
 def sdc(per, ins, tol, clks, rsts, tag, common=None, straps=(), in_min_ports=None):
     io = IO_BUDGET * per
     hdr = (f"# the partition logic around the core runs on the plan common latency ({ins:g} ps): virtual IO clock\n"
@@ -1120,6 +1146,28 @@ def _ms():
     return m
 
 
+SINGLE_ROOT_TAPS = {"A": HERE / "single_root_taps_A.json", "B": HERE / "single_root_taps_B.json"}
+
+
+def single_root_sites(mode, v, outline):
+    """DIE-HBM-57/TAPS 11-01 (COORD 10:2x, class fix default-on 12.27): a single-root core view whose far pin-register
+    columns are > 220 um from its one clock root gets explicit planned clock anchors from the reviewed sidecar
+    (single_root_taps.py; A = reach 180 um, B = denser reach 120 um).  The row applies only to the exact pin table
+    (pins_sha256) and outline it was planned on; any other view (or mode off) keeps its form unchanged."""
+    if mode == "off":
+        return None
+    f = SINGLE_ROOT_TAPS[mode] if mode in SINGLE_ROOT_TAPS else Path(mode)
+    if not f.is_file():
+        return None
+    doc = json.load(open(f))
+    r = (doc.get("views") or {}).get(v["view"])
+    if not r or r.get("pins_sha256") != v["pins_sha256"] or \
+            [round(x, 3) for x in r["outline_um"]] != [round(x, 3) for x in outline]:
+        return None
+    return dict(clock_sites_um=r["clock_sites_um"], file=str(f.relative_to(REPO) if f.is_relative_to(REPO) else f),
+                sha256=sha(f), variant=doc.get("variant"))
+
+
 def planned_clock_sites_text(sites, outline):
     """Recipe-owned whitespace anchors consumed by the existing density CTS hook."""
     if not sites:
@@ -1193,6 +1241,12 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--relay-reg-guide", default=None, metavar="JSON",
                     help="opt-in with --macro-reg-guide (HBM-CORES-REBAL-10): relay register guides at the plan point "
                          "that minimises the longer of the pin->relay / relay->macro hops (relay_reg_guide_spec)")
+    ap.add_argument("--reg-guide-boxes", default=None, metavar="JSON",
+                    help="opt-in (DIE-HBM-57/PSLICE 11-01): explicit plan GPL guide boxes {boxes: [{name, prefixes: "
+                         "[literal flat-name prefixes], box_um: [x0, y0, x1, y1]}]} in the macro_reg_guide.tcl form "
+                         "(INCLUSIVE regions, released before DPL, fail-closed on an empty box / fill >= 0.80); boxes "
+                         "must be inside the core and pairwise disjoint and no prefix may nest with another box's; "
+                         "default off = kit unchanged")
     ap.add_argument("--macro-reg-guide-um", type=float, default=15.0,
                     help="guide box = macro bbox grown by this many um on every side (clipped to the core area)")
     ap.add_argument("--macro-grid-snap", default="on", choices=["on", "off"],
@@ -1230,6 +1284,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "(port -> CTS trunk -> density taps of <= --clock-tap-sinks sinks within --clock-tap-dmax um -> "
                          "local CTS trees; macro clock pin on its interface-register tap; POST_CTS tap alignment). "
                          "off = single-root TritonCTS (unchanged)")
+    ap.add_argument("--single-root-taps", default="B",
+                    help="DIE-HBM-57/TAPS: explicit far-column clock anchors for single-root views listed in the sidecar: "
+                         "A (single_root_taps_A.json), B (default: denser, _B.json; hfd CTS 340 vs A 384 ps TT), a sidecar path, or off")
     ap.add_argument("--clock-density-contract", help="reviewed exact native multi-port density plan JSON; requires --clock-taps density")
     ap.add_argument("--prects-estimate", action="store_true",
                     help="stage-only planned local clock NETWORK insertion before placement; explicitly cleared before CTS; SDC unchanged")
@@ -1315,6 +1372,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             raise SystemExit(f"WRAPPER_CONTRACT {a.view}: pinned wrapper absent or outside source")
         if candidate.is_file():
             a.wrapper = str(candidate)
+    srt = single_root_sites(a.single_root_taps, v, (w, h)) if not rec.get("clock_sites_um") else None
+    if srt:
+        rec["clock_sites_um"] = srt["clock_sites_um"]   # DIE-HBM-57/TAPS: explicit far-column taps (recipe sites win)
     if rec.get("clock_sites_um"):
         a.clock_taps = "density"  # planned anchors use the existing CTS/align flow
     # The exp-lane descriptor table is 256 x 61 bits; its exp datapath
@@ -1655,7 +1715,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     for f in ("face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
-              "lec.py", "lec_async.sh", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl", "pinreg_measure.tcl"):
+              "lec.py", "lec_async.sh", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py",
+              "pinreg_measure.tcl"):
         shutil.copyfile(TOOL / f, kd / f)
     # HBM-CORES-KITS-20 10-29 DRV basis (= KV gen_core_kit_kv.py FLOW 10-25 / S81 / QC: SLEW/CAP margin 20, fanout cap 64 =
     # shared signoff FANOUT_MAX at every repair_design).  HBM kits had none: bdring _k18 routed RCX slew 7496 vs 0 on the
@@ -1906,6 +1967,26 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                                             indent=1) + "\n")
         rec["macro_reg_guide"] = dict(scope=a.macro_reg_guide, grow_um=a.macro_reg_guide_um, guides=len(mrg),
                                       relays=len(rly))
+    if a.reg_guide_boxes:
+        # DIE-HBM-57/PSLICE: explicit plan guide boxes (the core plan places each register group: trunk stages, leaf
+        # clusters, egress relays); same GPL guide mechanism as --macro-reg-guide.
+        if a.macro_reg_guide:
+            raise SystemExit("--reg-guide-boxes and --macro-reg-guide are separate plans; pass one")
+        rgb = reg_guide_boxes_spec(json.load(open(a.reg_guide_boxes))["boxes"], (m, m, w - m, h - m))
+        spec = " ".join(f"{{{g['name']} {{{' '.join('{' + q + '}' for q in g['prefixes'])}}} "
+                        f"{' '.join(_um(v) for v in g['box_um'])}}}" for g in rgb)
+        (kd / "macro_reg_guide.tcl").write_text(
+            "# GENERATED by gen_core_kit_hbm.py --reg-guide-boxes (DIE-HBM-57/PSLICE). Do not edit.\n"
+            f"set ::ot_mrg_spec [concat {spec}]\n" + (HERE / "macro_reg_guide.tcl").read_text())
+        shutil.copyfile(HERE / "macro_reg_guide_release.tcl", kd / "macro_reg_guide_release.tcl")
+        for f_, s_ in (("face_flops.tcl", "macro_reg_guide.tcl"), ("face_flops_release.tcl", "macro_reg_guide_release.tcl")):
+            with open(kd / f_, "a") as fh:
+                fh.write(f"# DIE-HBM-57/PSLICE --reg-guide-boxes\nsource /work/{s_}\n")
+        (kd / "macro_reg_guide.json").write_text(json.dumps(dict(source="gen_core_kit_hbm.reg_guide_boxes_spec",
+                                                                 boxes=rgb, src=dict(file=a.reg_guide_boxes,
+                                                                                     sha256=sha(a.reg_guide_boxes))),
+                                                            indent=1) + "\n")
+        rec["reg_guide_boxes"] = dict(boxes=len(rgb), sha256=sha(a.reg_guide_boxes))
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     # HBM-CORES3 10-25: --orfs-var overrides go LAST (a later make export wins; they used to precede the macro block,
@@ -2034,6 +2115,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
         if rec.get("clock_sites_um"):
             fz["clock_taps"].update(sites_file="clock_sites.tcl", sites_um=rec["clock_sites_um"])
+        if srt:
+            fz["clock_taps"]["single_root_taps"] = {k: srt[k] for k in ("file", "sha256", "variant")}
         if a.clock_taps_shallow:
             fz["clock_taps"]["shallow"] = True
     if ms is not None:

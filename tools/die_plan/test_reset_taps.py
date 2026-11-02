@@ -258,3 +258,59 @@ def test_missing_terminal_without_port_reset_still_errors(tmp_path):
     p = port_hook(tmp_path, port=False)
     assert p.returncode != 0
     assert 'OT_RESET_LEAF no reset terminal net' in p.stderr
+
+
+@pytest.mark.parametrize('pol', ['q', 'qn'])
+def test_unnamed_tap_bound_by_relay_identity(tmp_path, pol):
+    """DIE-QC-61 11-01 (GEOM-107 tt_ctlm): Yosys kept a load port's name for tap 0 (u_bound.u_core.rst_n[0]); the
+    tap had no named net and no FIRM flop was re-pointed (0 re-pointed, r2r 955.8 um).  reset_tree.tcl's relay
+    identity (::rtr_qnets rst_n_t0) names it; a QN relay output resolves through its inverter."""
+    if not shutil.which('tclsh'):
+        pytest.skip('tclsh unavailable')
+    mock_extra = {'q': 'set ::rtr_qnets {rst_n_t0 n0}; set ::rtr_qpol {rst_n_t0 q}',
+                  'qn': ('set ::rtr_qnets {rst_n_t0 qn0}; set ::rtr_qpol {rst_n_t0 qn}\n'
+                         'proc qn0 {m} {switch $m {getName {return u_rrl_6_qn} getITerms {return {qo0 ii0}}}}\n'
+                         'proc qo0 {m} {switch $m {getMTerm {return out} getInst {return launch0} getNet {return qn0}}}\n'
+                         'proc ii0 {m} {switch $m {getMTerm {return inp} getInst {return inv0} getNet {return qn0}}}\n'
+                         'proc io0 {m} {switch $m {getMTerm {return out} getInst {return inv0} getNet {return n0}}}\n'
+                         'proc invm {m} {return INVx1}\n'
+                         'proc inv0 {m} {switch $m {getMaster {return invm} getITerms {return {ii0 io0}}}}')}[pol]
+    for with_identity, final in ((False, 'n0'), (True, 'n1')):
+        mock = r'''
+namespace eval ord {}
+proc ord::get_db_block {} {return blk}
+proc ord::get_db_tech {} {return tech}
+proc tech {m} {return 1}
+proc blk {m args} {switch $m {getNets {return {n0 n1}} getBTerms {return {b0 b1}} getInsts {return sink}}}
+proc b0 {m} {switch $m {getName {return clk} getBBox {return box0}}}
+proc b1 {m} {switch $m {getName {return clk_t1} getBBox {return box1}}}
+proc box0 {m} {if {$m in {xMin xMax}} {return 400}; return 0}
+proc box1 {m} {if {$m in {xMin xMax}} {return 600}; return 0}
+proc n0 {m} {switch $m {getName {return {u_bound.u_core.rst_n[0]}} getITerms {return {q0 si}}}}
+proc n1 {m} {switch $m {getName {return u_bound.rst_n_t1} getITerms {return q1}}}
+proc q0 {m} {switch $m {getMTerm {return out} getInst {return launch0}}}
+proc q1 {m} {switch $m {getMTerm {return out} getInst {return launch1}}}
+proc out {m} {if {$m eq "getIoType"} {return OUTPUT}; return Q}
+proc inp {m} {if {$m eq "getIoType"} {return INPUT}; return RESETN}
+proc dff {m} {return DFFHQNx1}
+proc launch0 {m} {switch $m {getMaster {return dff} getLocation {return {1000 0}}}}
+proc launch1 {m} {switch $m {getMaster {return dff} getLocation {return {0 0}}}}
+proc sink {m} {switch $m {getMaster {return dff} getLocation {return {100 0}} getName {return u_bout_tl/eq} getPlacementStatus {return FIRM} getITerms {return si}}}
+set current n0
+proc si {m args} {global current; switch $m {getMTerm {return inp} getNet {return $current} getInst {return sink} disconnect {} connect {set current [lindex $args 0]}}}
+'''
+        if pol == 'qn':
+            # the QN relay drives an inverter whose output is the terminal net n0 (launch walks back through it)
+            mock = mock.replace('getITerms {return {q0 si}}', 'getITerms {return {io0 si}}')
+        if with_identity:
+            mock += '\n' + mock_extra + '\n'
+        elif pol == 'qn':
+            mock += '\n' + mock_extra.split('\n', 1)[1] + '\n'
+        script = (mock + f'\nset ::env(RESULTS_DIR) {{{tmp_path}}}\n'
+                  + f'if {{[catch {{source {{{HOOK}}}}} msg]}} {{puts stderr $msg; exit 1}}\n' + 'puts "FINAL $current"\n')
+        p = subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
+        assert p.returncode == 0, p.stderr
+        assert f'FINAL {final}' in p.stdout, (with_identity, p.stdout)
+        if with_identity:
+            assert 'relay identity rst_n_t0 -> u_bound.u_core.rst_n[0] (tap 0)' in p.stdout
+            assert '1 re-pointed' in p.stdout
