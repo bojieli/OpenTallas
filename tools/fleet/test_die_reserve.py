@@ -136,6 +136,7 @@ def test_retired_exact_dispatcher_not_generic_pinned_jobs(monkeypatch):
     reason = R.reservation_ineligible(['bash', '-lc', command], '/tmp', {'OT_HEAVY_DISK_GB':'0'})
     assert 'retired nightly dispatcher' in reason
     assert R.reservation_ineligible(['bash', '-lc', command + ' --plan hbm=current.json'], '/tmp', {'OT_HEAVY_DISK_GB':'0'}) is None
+    assert R.reservation_ineligible(['bash', '-lc', command + ' --plan=hbm=current.json'], '/tmp', {'OT_HEAVY_DISK_GB':'0'}) is None
     assert R.reservation_ineligible(['bash', '-lc', command.replace('/claude/die-ci/wt','/claude/valid-pinned/wt')], '/tmp', {'OT_HEAVY_DISK_GB':'0'}) is None
     monkeypatch.setattr(R, 'rd', lambda p: 'DIES = [ current_source_adapter ]')
     assert R.reservation_ineligible(['bash', '-lc', command], '/tmp', {'OT_HEAVY_DISK_GB':'0'}) is None

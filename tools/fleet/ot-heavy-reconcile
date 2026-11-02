@@ -1237,7 +1237,7 @@ def reservation_ineligible(cmd, cwd, env):
                     and words[i + 2] == "&&" and os.path.basename(words[i + 3]) in ("python3", "python")
                     and words[i + 4:i + 6] == ["tools/die_plan/die_ci.py", "run"]):
                 args = words[i + 6:]
-                if ("--plan" not in args and "--mode" in args and args[args.index("--mode") + 1:] [:1] == ["nightly"]
+                if (not any(a == "--plan" or a.startswith("--plan=") for a in args) and "--mode" in args and args[args.index("--mode") + 1:] [:1] == ["nightly"]
                         and "--g2" in args and args[args.index("--g2") + 1:] [:1] == ["all"]):
                     body = rd(os.path.join(words[i + 1], "tools/die_plan/die_ci.py"))
                     if ("physical/die_plan/hbm_arch/B2l/die_plan.json" in body
