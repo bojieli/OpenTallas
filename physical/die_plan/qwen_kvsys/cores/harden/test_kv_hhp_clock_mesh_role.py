@@ -66,6 +66,7 @@ def test_actual_source_mutant_rejected(tmp_path):
     for part, info in prep["parts"].items():
         dst = tmp_path / part / "rtl"
         dst.mkdir(parents=True)
+        (tmp_path / part / "historical_HEAD_ft.tcl").write_bytes((CAPSULE / part / "historical_HEAD_ft.tcl").read_bytes())
         for name in info["source_files_sha256"]:
             (dst / name).symlink_to(CAPSULE / part / "rtl" / name)
     p = tmp_path / "pc_EN_0/rtl/qkd_kvs_pc_h_head_p.sv"

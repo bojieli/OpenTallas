@@ -52,9 +52,12 @@ def _kind(src, dst, given=None, cell=""):
     raise FtError(f"ft arc {src}->{dst}: kind not derivable from the port name; declare clock or reset")
 
 
-def declaration(arcs, source):
+def declaration(arcs, source, *, private_clock_mesh_kit=None):
     """arcs: [{cell, source, sink, kind?}] -> the kit declaration (ports derived from the arcs, one pair per arc
     direction-checked).  Several parallel cells on one port pair (island driver parallel > 1) are one arc."""
+    if private_clock_mesh_kit is not None:
+        import hhp_clock_mesh_role
+        return hhp_clock_mesh_role.private_declaration(Path(private_clock_mesh_kit), arcs, source)
     pairs, ports, cells = {}, {}, {}
     for a in arcs:
         s, d = a["source"], a["sink"]
@@ -85,8 +88,8 @@ def declaration(arcs, source):
     return dict(schema=SCHEMA, source=source, ports=P, arcs=A, sha256=digest(P, A))
 
 
-def from_core_infra_plan(plan, source="core_infra_plan.json"):
-    return declaration(plan.get("arcs", []), source)
+def from_core_infra_plan(plan, source="core_infra_plan.json", *, private_clock_mesh_kit=None):
+    return declaration(plan.get("arcs", []), source, private_clock_mesh_kit=private_clock_mesh_kit)
 
 
 def model_skeleton(decl):
@@ -132,7 +135,13 @@ def install(kd, decl=None):
         plan = json.loads(p.read_text())
         if not plan.get("arcs"):
             return False
-        decl = from_core_infra_plan(plan)
+        # Explicit private source request only. Ordinary kits do not depend on the optional helper.
+        cfg = (kd / "config.mk").read_text() if (kd / "config.mk").is_file() else ""
+        enabled = re.findall(r"^\s*(?:override\s+)?export\s+OT_PRIVATE_HHP_CLOCK_MESH\s*[:?]?=\s*(.*?)\s*$", cfg, re.M) == ["1"]
+        decl = from_core_infra_plan(plan, private_clock_mesh_kit=kd if enabled else None)
+    if decl.get("private_clock_mesh_role") is not None:
+        import hhp_clock_mesh_role
+        hhp_clock_mesh_role.verify_private_install(kd, decl)
     e = verify(decl)
     if e:
         raise FtError("; ".join(e))

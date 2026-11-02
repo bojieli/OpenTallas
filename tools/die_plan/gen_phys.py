@@ -287,7 +287,7 @@ def port_bind_pin_records(P, tn, pins, bump_ports=None):
     return list({(p["bus"], p["bit"]): p for p in port_pins}.values())
 
 
-def write_partition_freeze(P, tn, kd, recs):
+def write_partition_freeze(P, tn, kd, recs, *, private_clock_mesh=None):
     """plan_pins.json (die-plan pin centres) + freeze.json (schema partition_freeze: outline, pins_file, pins_sha256,
     pins_canon_sha256 of the die-plan pins) for kit_contract.pins_canonical; refuses the kit when io.tcl is not that
     pin set with the consumed master-plan slice applied (kit_contract.slice_expected)."""
@@ -296,7 +296,8 @@ def write_partition_freeze(P, tn, kd, recs):
     kd = Path(kd)
     w, h = P.types[tn]["outline_um"]
     body = json.dumps(dict(schema="opentallas.die_plan.partition_plan_pins.v1", die=P.name, type=tn,
-                           source="gen_phys.plan_pin_records (die plan)", pins=recs), indent=1) + "\n"
+                           source=("gen_phys.plan_pin_records (die plan)" if private_clock_mesh is None else
+                                   "gen_phys plan pins + exact PRIVATE native clock role certificate"), pins=recs), indent=1) + "\n"
     (kd / "plan_pins.json").write_text(body)
     canon = KC._canon(recs, [w, h])
     # 12.7c: a kit that consumed its master-plan slice places the slice-fixed pins where the slice says
@@ -308,6 +309,8 @@ def write_partition_freeze(P, tn, kd, recs):
     fz = dict(schema="opentallas.partition_freeze.v1", die=P.name, type=tn, outline_um=[w, h],
               pins_file="plan_pins.json", pins_sha256=hashlib.sha256(body.encode()).hexdigest(),
               pins_canon_sha256=canon, pins=len(recs))
+    if private_clock_mesh is not None:
+        fz["private_clock_mesh"] = private_clock_mesh
     # DIE-QC-59 11-01: a partition kit has the same proven boot reset as its die.
     # Core kits already staged this contract; type kits silently used LEC's four-edge
     # default, leaving reset-less pipeline/SRAM write constants unresolved.
@@ -2551,7 +2554,7 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
-                   cland_pinslot=(), spare_out=()):
+                   cland_pinslot=(), spare_out=(), private_clock_mesh=None):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -3156,9 +3159,20 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         # Logical declaration is required by synthesis/LEC gates even before physical strap sites are planned.
         # Missing sites remain absent from pins.json and keep their ordinary physical qualification obligations.
         (kd / "straps.json").write_text(json.dumps(dict(straps=declared_straps), indent=1) + "\n")
+    private_clock_pins, private_clock_info = [], None
+    if private_clock_mesh is not None:
+        if not trial:
+            raise ValueError("private historical clock source requires explicit --trial")
+        import hhp_clock_mesh_role as HMR
+        private_clock_pins, private_clock_info = HMR.install_generated_partition(kd, private_clock_mesh, tn, macros)
+        bud["native_infrastructure"] = dict(pins=len(private_clock_pins), arcs=4, data_cycles_added=0,
+            role="exact private intentional clock mesh", qualification="HOLD: actual HEAD joins and timing not run")
+        (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     import infra_rtl as IR
     infra = IR.type_ports(t)
     if infra:
+        if private_clock_mesh is not None:
+            raise ValueError("private native clock cut cannot mix with generic infrastructure ports")
         import ft_ports as FT
         decl = FT.declaration(t.get("infra_arcs", []), f"die plan {P.name} type {tn}: explicit native hard-core interfaces")
         if {p["name"] for p in infra} != {p["name"] for p in decl["ports"]}:
@@ -3172,13 +3186,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # HEAD-TILE-C9: reviewed canonical placement, scoped to s81_head hd_tile and guarded by recipe/netlist identity.
     import head_tile_c9
     head_tile_c9.install(P, tn, kd)
-    planned_pins = plan_pin_records(P, tn, pins, bump_sites)
+    planned_pins = plan_pin_records(P, tn, pins, bump_sites) + private_clock_pins
     # pins.json remains the boundary-flop contract consumed by face_guard.
     # The physical audit also checks all other non-exempt declared ABI pins.
     audit_pins = audit_pin_records(json.loads((kd / "pins.json").read_text()), planned_pins)
     (kd / "audit_pins.json").write_text(json.dumps(audit_pins, indent=1) + "\n")
     prepare_signed_parent_source(P, tn, kd, macros, root)
-    write_partition_freeze(P, tn, kd, planned_pins)
+    write_partition_freeze(P, tn, kd, planned_pins, private_clock_mesh=private_clock_info)
     return kd
 
 
@@ -3639,7 +3653,7 @@ def bound_parent_id_plan(raw, kit_rtl):
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=()):
+               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=(), private_clock_mesh=None):
     """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain)."""
     """landing (opt-in, DIE-HEAD-4b, gen phys --clock-landing): the clock_landing_plan sidecar of a composed landed plan.
     The kit wrapper is the SAME landed wrapper gen rtl --clock-landing emits (clock_landings.type_rtl: rings, ring
@@ -3650,6 +3664,11 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
     import gen_rtl
     import master_slice as MS
+    if private_clock_mesh:
+        if not trial or set(private_clock_mesh) != {"kv3_pc__cl5a95b461"} or not types or set(types) != set(private_clock_mesh):
+            raise ValueError("private clock request requires exact single TYPE and explicit --trial/--types")
+        if not kit_rtl or set(private_clock_mesh) - set(kit_rtl):
+            raise ValueError("private clock request requires the actual bound --kit-rtl readset")
     if not master_slice and not trial and MS.required(raw):     # 12.7c: refuse before writing anything
         raise SystemExit(MS.REFUSE)
     # plan-relative declarations (hard-core pins_file for the reset wavefront) resolve against the plan file
@@ -3750,7 +3769,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                    plain_rings=bool(kit_rtl and tn in kit_rtl),
                                    kit_defines=kit_rtl_defines(kit_rtl[tn], mine) if kit_rtl and tn in kit_rtl else None,
                                    cland_pinslot=tuple(cland_pinslot or ()),
-                                   spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else ()))
+                                   spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else (),
+                                   private_clock_mesh=(private_clock_mesh or {}).get(tn)))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
