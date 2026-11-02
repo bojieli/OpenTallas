@@ -76,6 +76,38 @@ def test_delta_snapshot_links_unchanged_and_isolates_changed():
         assert sh("git", "-C", str(new), "rev-parse", "HEAD").strip() == b
 
 
+def test_linked_files_read_only_and_replacement_keeps_sibling():
+    with tempfile.TemporaryDirectory() as td:
+        t = Path(td)
+        repo, a, b = make_repo(t)
+        die_root = t / "sf" / "qwen_kvsys"
+        old, _, _ = snapshot(repo, die_root, a)
+        new, _, n = snapshot(repo, die_root, b)
+        assert n == 2
+        for snap in (old, new):                               # shared inode: read-only in both snapshots
+            assert not os.stat(snap / "rtl/a.sv").st_mode & 0o222
+        assert os.stat(new / "rtl/b.sv").st_mode & 0o200        # a file git wrote fresh stays writable
+        if os.geteuid() != 0:                                   # root ignores mode bits
+            try:
+                open(new / "rtl/a.sv", "w").write("corrupt\n")
+                raise AssertionError("in-place write through a linked file succeeded")
+            except PermissionError:
+                pass
+        # The source-follow steps after linking only create new files: they do not touch linked paths.
+        (old / "rtl/untracked_input.json").write_text("{}")
+        assert S.copy_untracked_inputs(old, new) == ["rtl/untracked_input.json"]
+        assert os.stat(new / "rtl/a.sv").st_ino == os.stat(old / "rtl/a.sv").st_ino
+        # A git step in the new snapshot that replaces a linked path writes a fresh inode; the sibling keeps its bytes.
+        (repo / "rtl/a.sv").write_text("a changed later\n")
+        sh(*GIT, "-C", str(repo), "commit", "-qam", "C")
+        c = sh("git", "-C", str(repo), "rev-parse", "HEAD").strip()
+        sh("git", "-C", str(new), "checkout", "-q", "--detach", c)
+        assert (new / "rtl/a.sv").read_text() == "a changed later\n"
+        assert (old / "rtl/a.sv").read_text() == "a\n"
+        assert os.stat(new / "rtl/a.sv").st_ino != os.stat(old / "rtl/a.sv").st_ino
+        assert sh("git", "-C", str(old), "status", "--porcelain", "--untracked-files=no") == ""
+
+
 def test_link_base_is_newest_complete_snapshot():
     with tempfile.TemporaryDirectory() as td:
         t = Path(td)

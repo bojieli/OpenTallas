@@ -82,8 +82,9 @@ def link_previous_snapshot(repo, src, tip, dirs, die_root):
     since the newest complete sibling snapshot, before the checkout; returns (previous src, linked count).
 
     KIT-WAVE-15 11-01: one full ~32 GB checkout per main sha (15 KV snapshots, 377 GB) filled intel1.  Linked
-    files are immutable source inputs; git writes every changed or new file as a fresh inode (finish_linked_checkout
-    never rewrites a linked path), so the previous snapshot's bytes are never changed through a link."""
+    files are immutable source inputs and made read-only (a-w) on the shared inode; git writes every changed or
+    new file as a fresh inode (finish_linked_checkout never rewrites a linked path), so the previous snapshot's
+    bytes are never changed through a link."""
     import os
     import subprocess
     from pathlib import Path
@@ -110,6 +111,10 @@ def link_previous_snapshot(repo, src, tip, dirs, die_root):
             continue
         b.parent.mkdir(parents=True, exist_ok=True)
         os.link(a, b)
+        # Shared inode: read-only in BOTH snapshots, so an in-place write (shell '>', open('w'), a patch tool)
+        # fails instead of corrupting every sibling.  git, copy_untracked_inputs and materialize_clock_mesh
+        # never write an existing path: git unlinks and writes a fresh inode, the helpers only create new files.
+        os.chmod(b, os.stat(b).st_mode & ~0o222)
         n += 1
     return prev_src, n
 
