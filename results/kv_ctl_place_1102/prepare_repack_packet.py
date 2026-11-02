@@ -56,7 +56,15 @@ lines.append(r'''} {
  set bb [$i getBBox]
  if {[$bb xMin] != $xx || [$bb yMin] != $yy} {error "CTL_FF_PLAN location mismatch $name"}
  $i setPlacementStatus FIRM
- $i setDoNotTouch 1
+ # Preserve unobservable state; live DATA cells stay touchable for ordinary
+ # combinational buffering. Process-local family exclusions preserve masters.
+ set live 0
+ foreach it [$i getITerms] {
+  set mt [$it getMTerm];set n [$it getNet]
+  if {$n ne "NULL" && ([$mt getSigType] eq "CLOCK" || [$mt getName] in {CLK CK clk ck})} {$n setDoNotTouch 1}
+  if {[$mt getIoType] eq "OUTPUT" && $n ne "NULL" && ([llength [$n getBTerms]] || [llength [$n getITerms]]>1)} {set live 1}
+ }
+ $i setDoNotTouch [expr {!$live}]
 }
 if {[lsort [dict keys $expected]] ne [lsort [dict keys $actual]]} {error "CTL_FF_PLAN complete source FF inventory mismatch"}
 puts "CTL_FF_PLAN PASS [dict size $expected] exact source FF sites, $resized ordinary x1->x2 resizes, clock/reset connectivity untouched"
