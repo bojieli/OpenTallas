@@ -1,0 +1,264 @@
+{
+  "schema": "opentallas.caprt_balanced_west_prep.v1",
+  "verdict": "PREP_ONLY_NO_CANDIDATE_CAD",
+  "options": [
+    {
+      "id": "WEST2_MOVE_ONLY",
+      "changes": {
+        "_27646_": {
+          "master": "OA211x2_ASAP7_75t_R",
+          "origin_um": [
+            37.044,
+            54.54
+          ],
+          "orient": "N",
+          "bbox_um": [
+            37.044,
+            54.54,
+            37.476,
+            54.81
+          ],
+          "old": {
+            "name": "_27646_",
+            "master": "OA211x2_ASAP7_75t_R",
+            "status": "FIXED",
+            "x": 99.09,
+            "y": 37.8,
+            "orient": "N"
+          }
+        },
+        "wire17963": {
+          "master": "BUFx12_ASAP7_75t_R",
+          "origin_um": [
+            37.8,
+            78.84
+          ],
+          "orient": "N",
+          "bbox_um": [
+            37.8,
+            78.84,
+            38.663999999999994,
+            79.11
+          ],
+          "old": {
+            "name": "wire17963",
+            "master": "BUFx12_ASAP7_75t_R",
+            "status": "FIXED",
+            "x": 32.184,
+            "y": 36.18,
+            "orient": "N"
+          }
+        }
+      },
+      "input_prices": [
+        {
+          "pin": "A1",
+          "driver": "wire19289",
+          "old_corridor_um": 122.18,
+          "new_corridor_um": 45.306,
+          "actual_TT_input_arrival_ps": 622.225586,
+          "actual_TT_receiver_setup_ps": 62.617577,
+          "actual_FF_receiver_hold_ps": 459.410919
+        },
+        {
+          "pin": "A2",
+          "driver": "_27644_",
+          "old_corridor_um": 0.594,
+          "new_corridor_um": 79.272,
+          "actual_TT_input_arrival_ps": 684.252258,
+          "actual_TT_receiver_setup_ps": 36.70808,
+          "actual_FF_receiver_hold_ps": 353.955841
+        },
+        {
+          "pin": "B",
+          "driver": "_27645_",
+          "old_corridor_um": 0.324,
+          "new_corridor_um": 78.462,
+          "actual_TT_input_arrival_ps": 673.668152,
+          "actual_TT_receiver_setup_ps": 36.948666,
+          "actual_FF_receiver_hold_ps": 350.790649
+        },
+        {
+          "pin": "C",
+          "driver": "wire19399",
+          "old_corridor_um": 155.066,
+          "new_corridor_um": 78.192,
+          "actual_TT_input_arrival_ps": 741.962524,
+          "actual_TT_receiver_setup_ps": -108.976715,
+          "actual_FF_receiver_hold_ps": 546.896667
+        }
+      ],
+      "output_chain_old_um": 193.104,
+      "output_chain_new_um": 101.358,
+      "signal_dirty_netset": [
+        "net19290",
+        "_14198_",
+        "_14199_",
+        "net19400",
+        "_14200_",
+        "net17964"
+      ],
+      "extra_area_um2": 0.0,
+      "postmove_slack": "NOT_PREDICTED; native exactTT/FF required afterROOT approved event",
+      "actual_cell_count_unchanged": true
+    },
+    {
+      "id": "WEST4_SIZE2",
+      "changes": {
+        "_27646_": {
+          "master": "OA211x2_ASAP7_75t_R",
+          "origin_um": [
+            37.044,
+            54.54
+          ],
+          "orient": "N",
+          "bbox_um": [
+            37.044,
+            54.54,
+            37.476,
+            54.81
+          ],
+          "old": {
+            "name": "_27646_",
+            "master": "OA211x2_ASAP7_75t_R",
+            "status": "FIXED",
+            "x": 99.09,
+            "y": 37.8,
+            "orient": "N"
+          }
+        },
+        "wire17963": {
+          "master": "BUFx12_ASAP7_75t_R",
+          "origin_um": [
+            37.8,
+            78.84
+          ],
+          "orient": "N",
+          "bbox_um": [
+            37.8,
+            78.84,
+            38.663999999999994,
+            79.11
+          ],
+          "old": {
+            "name": "wire17963",
+            "master": "BUFx12_ASAP7_75t_R",
+            "status": "FIXED",
+            "x": 32.184,
+            "y": 36.18,
+            "orient": "N"
+          }
+        },
+        "_27644_": {
+          "master": "INVx2_ASAP7_75t_R",
+          "origin_um": [
+            99.036,
+            37.26
+          ],
+          "orient": "N",
+          "bbox_um": [
+            99.036,
+            37.26,
+            99.252,
+            37.53
+          ],
+          "old": {
+            "name": "_27644_",
+            "master": "INVx1_ASAP7_75t_R",
+            "status": "FIXED",
+            "x": 99.036,
+            "y": 37.26,
+            "orient": "N"
+          }
+        },
+        "_27645_": {
+          "master": "NAND2x2_ASAP7_75t_R",
+          "origin_um": [
+            98.766,
+            37.8
+          ],
+          "orient": "N",
+          "bbox_um": [
+            98.766,
+            37.8,
+            99.30600000000001,
+            38.07
+          ],
+          "old": {
+            "name": "_27645_",
+            "master": "NAND2x1_ASAP7_75t_R",
+            "status": "FIXED",
+            "x": 98.766,
+            "y": 37.8,
+            "orient": "N"
+          }
+        }
+      },
+      "input_prices": [
+        {
+          "pin": "A1",
+          "driver": "wire19289",
+          "old_corridor_um": 122.18,
+          "new_corridor_um": 45.306,
+          "actual_TT_input_arrival_ps": 622.225586,
+          "actual_TT_receiver_setup_ps": 62.617577,
+          "actual_FF_receiver_hold_ps": 459.410919
+        },
+        {
+          "pin": "A2",
+          "driver": "_27644_",
+          "old_corridor_um": 0.594,
+          "new_corridor_um": 79.272,
+          "actual_TT_input_arrival_ps": 684.252258,
+          "actual_TT_receiver_setup_ps": 36.70808,
+          "actual_FF_receiver_hold_ps": 353.955841
+        },
+        {
+          "pin": "B",
+          "driver": "_27645_",
+          "old_corridor_um": 0.324,
+          "new_corridor_um": 78.462,
+          "actual_TT_input_arrival_ps": 673.668152,
+          "actual_TT_receiver_setup_ps": 36.948666,
+          "actual_FF_receiver_hold_ps": 350.790649
+        },
+        {
+          "pin": "C",
+          "driver": "wire19399",
+          "old_corridor_um": 155.066,
+          "new_corridor_um": 78.192,
+          "actual_TT_input_arrival_ps": 741.962524,
+          "actual_TT_receiver_setup_ps": -108.976715,
+          "actual_FF_receiver_hold_ps": 546.896667
+        }
+      ],
+      "output_chain_old_um": 193.104,
+      "output_chain_new_um": 101.358,
+      "signal_dirty_netset": [
+        "net19290",
+        "_14198_",
+        "_14199_",
+        "net19400",
+        "_14200_",
+        "net17964",
+        "ga_key[7][19]",
+        "ga_key[3][19]"
+      ],
+      "extra_area_um2": 0.0729,
+      "postmove_slack": "NOT_PREDICTED; native exactTT/FF required afterROOT approved event",
+      "actual_cell_count_unchanged": true
+    }
+  ],
+  "source_DEF_sha256": "42cb378084a3a210c1a8de02af951c001a2148a05880c8f2daa5f4865a972de1",
+  "native_input_pricing_units": {
+    "tt": "oth-ubuntu-3237246-1793614854",
+    "ff": "oth-ubuntu-3313423-1793615054"
+  },
+  "actual_rows": 591,
+  "region_cells": 9179,
+  "PG_shapes": 4089,
+  "PG_envelope": "actual DEF paths/widths+explicitVIAS RECT; stripe endpoints conservative, extra0.096umkeepout",
+  "standard_spacer_removal": "only actual LEF CLASS CORE SPACER DECAP; allTAP/functional/clock/FF untouched",
+  "scope": "2existingmoves orsame2moves+2existingINV/NANDstrengthx2; no extra cells/RTL/reset/clock/cycles; all non-owned poses/masters/connectivity preserved",
+  "risk": "West reduces C/output excursion while still lengthening A2/B; measured37ps TT headroom does not prove either option passes. Sized option changes input capacitance/upstream load and needs full timing, PG-swap/nativeaccess safeguards and routeLEC. No blanket buffers."
+}

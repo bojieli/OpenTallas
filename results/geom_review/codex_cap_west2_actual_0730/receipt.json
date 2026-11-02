@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.caprt_west2_geometry_copy.v1",
+  "verdict": "GEOMETRY_ONLY_NO_RC_ROUTE_STA",
+  "input_sha256": "b317b6613ccf8d6d72cadd2937bf1fd84d4c42f5f255405d6c3586e5969c4e86",
+  "output_sha256": "e6b6b31ab2101c2dbd010ef60b2e8c98ceeacae75d9c52727e50b2f16aa0e845",
+  "full_DEF_masked_before": "06175d96e7a11a1927d796b4850e381b396d58b4642b054a59af5f9d20465e72",
+  "full_DEF_masked_after": "06175d96e7a11a1927d796b4850e381b396d58b4642b054a59af5f9d20465e72",
+  "changes": {
+    "_27646_": {
+      "master": "OA211x2_ASAP7_75t_R",
+      "origin_um": [
+        37.044,
+        54.54
+      ],
+      "orient": "N",
+      "bbox_um": [
+        37.044,
+        54.54,
+        37.476,
+        54.81
+      ],
+      "old": {
+        "name": "_27646_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 99.09,
+        "y": 37.8,
+        "orient": "N"
+      }
+    },
+    "wire17963": {
+      "master": "BUFx12_ASAP7_75t_R",
+      "origin_um": [
+        37.8,
+        78.84
+      ],
+      "orient": "N",
+      "bbox_um": [
+        37.8,
+        78.84,
+        38.663999999999994,
+        79.11
+      ],
+      "old": {
+        "name": "wire17963",
+        "master": "BUFx12_ASAP7_75t_R",
+        "status": "FIXED",
+        "x": 32.184,
+        "y": 36.18,
+        "orient": "N"
+      }
+    }
+  },
+  "deleted_spacers": [
+    "FILLER_186_604",
+    "FILLER_276_605",
+    "FILLER_276_627"
+  ],
+  "guard_before": "d69071e9baf4a83eef3212f2b0596e69293dcbe2723dd97d49a82897c3b0d92e",
+  "guard_after": "d69071e9baf4a83eef3212f2b0596e69293dcbe2723dd97d49a82897c3b0d92e",
+  "instance_count_before": 188867,
+  "instance_count_after": 188864,
+  "retained_routes": "OLD WIRES UNCHANGED; STALE FOR MOVED DATA ENDPOINTS; NO TIMING OR ROUTING CREDIT",
+  "scope": "two DATA poses only, exact same N orient/masters; minimal overlapping PG-only CORE_SPACER deletion; all other state unchanged"
+}
