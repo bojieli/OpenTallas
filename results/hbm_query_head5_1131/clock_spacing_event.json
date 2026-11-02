@@ -1,0 +1,72 @@
+{
+  "status": "EXPLICIT_PHYSICAL_PIN_EVENT_PREP_ONLY_NOT_APPLIED",
+  "source": "Head5 RTL/params/7clockports unchanged; activeclk+bank0 anchors fixed; actualb58SYNTH/LEC coupon NOTedited",
+  "old_view": "ot_hbm_idx_query_static@b58b69114710",
+  "new_pins_sha256": "91fbf01f7aa9e6ca5458aeb502435b2baba32f04b1e7e7dac3934349db749784",
+  "physical_pin_count": 1630,
+  "clock_shapes": {
+    "width": 0.048,
+    "height": 0.48
+  },
+  "old_center_pitch": 0.096,
+  "old_edge_gap": 0.048,
+  "required_spacing": 0.072,
+  "proposed_center_pitch": 0.144,
+  "proposed_edge_gap": 0.096,
+  "spacing_margin": 0.024,
+  "actual_technology": "openroad/orfs:asap7lock image16470cea /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef M5 SPACINGTABLE PRL0/WIDTH.025\u2192SPACE.072",
+  "moved_unused_clock_ports": {
+    "clk_quant": {
+      "old_x": 1.08,
+      "new_x": 1.128,
+      "dx": 0.048,
+      "y": 0.24
+    },
+    "clk_quant_delay": {
+      "old_x": 1.176,
+      "new_x": 1.272,
+      "dx": 0.096,
+      "y": 0.24
+    },
+    "clk_bank[1]": {
+      "old_x": 1.08,
+      "new_x": 1.128,
+      "dx": 0.048,
+      "y": 163.92
+    },
+    "clk_bank[2]": {
+      "old_x": 1.176,
+      "new_x": 1.272,
+      "dx": 0.096,
+      "y": 163.92
+    },
+    "clk_bank[3]": {
+      "old_x": 1.272,
+      "new_x": 1.416,
+      "dx": 0.144,
+      "y": 163.92
+    }
+  },
+  "unmoved_anchors": [
+    "clk",
+    "clk_bank[0]"
+  ],
+  "groups": [
+    [
+      "clk",
+      "clk_quant",
+      "clk_quant_delay"
+    ],
+    [
+      "clk_bank[0]",
+      "clk_bank[1]",
+      "clk_bank[2]",
+      "clk_bank[3]"
+    ]
+  ],
+  "added_ff": 0,
+  "added_cycles": 0,
+  "clock_budget_change": false,
+  "source_clock_port_pruning": false,
+  "holds": "Actualclock/PG/G0C/pinshape/parent target review and ordinaryphysicalchecks required beforePNR; this is analytic spacing repair, not measured DRC PASS."
+}

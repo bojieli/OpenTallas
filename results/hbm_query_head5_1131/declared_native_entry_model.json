@@ -1,0 +1,91 @@
+{
+  "status": "DECLARED_PIN_CLOCK_EVENT_PROPOSAL_ONLY_NOT_APPLIED",
+  "source": "intel1 immutable295a8ce4985 currentC7-filebasis + explicitH32head5 projection",
+  "view": "ot_hbm_idx_query_static@b58b69114710",
+  "outline_um": [
+    170.64,
+    164.16
+  ],
+  "physical_pins": 1630,
+  "input_data_bits": 1055,
+  "output_data_bits": 567,
+  "clocks": 7,
+  "resets": 1,
+  "source_active_clock_roots": [
+    "clk"
+  ],
+  "source_unused_compat_clock_inputs": [
+    "clk_quant",
+    "clk_quant_delay",
+    "clk_bank[0]",
+    "clk_bank[1]",
+    "clk_bank[2]",
+    "clk_bank[3]"
+  ],
+  "macros": [
+    {
+      "instance": "core.gcode\\[0\\].mem",
+      "x": 15.12,
+      "y": 15.132,
+      "w": 51.408,
+      "h": 20.79
+    },
+    {
+      "instance": "core.gcode\\[1\\].mem",
+      "x": 15.12,
+      "y": 48.876,
+      "w": 51.408,
+      "h": 20.79
+    },
+    {
+      "instance": "core.gcode\\[2\\].mem",
+      "x": 15.12,
+      "y": 82.62,
+      "w": 51.408,
+      "h": 20.79
+    },
+    {
+      "instance": "core.scmem",
+      "x": 79.488,
+      "y": 15.132,
+      "w": 51.408,
+      "h": 20.79
+    },
+    {
+      "instance": "core.gcode\\[3\\].mem",
+      "x": 79.488,
+      "y": 48.876,
+      "w": 51.408,
+      "h": 20.79
+    }
+  ],
+  "macro_area_um2": 5343.8616,
+  "native_head_capture_stages": 3,
+  "stage_sequence": [
+    "eh_r nativeinput",
+    "core ql_head",
+    "native ql_head"
+  ],
+  "added_ff": 0,
+  "added_cycles": 0,
+  "max_payload_input_bytes_per_cycle": 130,
+  "quantizer": "Actualsource fixedII1/13cycles,32FP32values per1024bitblock; sourcecalendar\u226514edges fromlastheadblock toemit unchanged",
+  "scope": "CurrentH32/currentoldN12RT171/173 source cohort only; no future192/new3319ABI or parentmission alias",
+  "proof": "Current5 native4 original117 failures; exact arithmetic relation replay reduced to49; full32-bit relation canonical pending. Old8 EQ not aliased.",
+  "layout_holds": [
+    "Actual native clock event/budget not adopted: currentG311.5/262.6 versus GEN250/202.5 UNSELECTED",
+    "Two q1 contacts need real .504um bridge; two q0 contacts inside proposedBPin",
+    "Eight observed parent carriers require explicit3-bit prune and typedG0C event",
+    "No ordinary physical spacing/PG/fill/reach/route/clock gates measured on proposed entry"
+  ],
+  "parent": "Eightobservedcarrierpruningshift higherindices-3/keepdataidentitysites; restorelogical8 onlyafterphysicalcuts, no beforepackzeroexemption",
+  "active_clock_entry_um": [
+    86.376,
+    82.08
+  ],
+  "pg_anchor_um": [
+    86.4,
+    82.08
+  ],
+  "unused_clock_pitch_um": 0.144
+}

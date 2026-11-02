@@ -108,7 +108,22 @@
      "old_epoch_index": 4986,
      "new_epoch_index": 4983,
      "stage_count_delta": 0,
-     "gate": "Canonicaltypedplan/clockFFbudget/actualsource-bind event required; no planeditmade"
+     "gate": "Canonicaltypedplan/clockFFbudget/actualsource-bind event required; no planeditmade",
+     "surviving_data_bit_identity_runs": [
+      {
+       "new_lsb": 0,
+       "old_lsb": 0,
+       "width": 517
+      },
+      {
+       "new_lsb": 517,
+       "old_lsb": 520,
+       "width": 4466
+      }
+     ],
+     "physical_coordinate_rule": "Retain eachsurvivingasbuiltbit/cell/site identity using runs; removeexactheadhigh3sites, rekeyhigherindices. Do NOT truncatehighest3bits or assignoldindexcoordinatesblindly.",
+     "data_register_count_delta_per_existing_stage": -3,
+     "epoch_identity": "Sameexistingepoch bit/site/value; index changesoldW\u2192newW only."
     },
     {
      "source_parts": [
@@ -135,7 +150,22 @@
      "stage_count_delta": 0,
      "exact_source_file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000__physical_v1.sv",
      "exact_source_line": 1103,
-     "gate": "Observedadditionalphysicalcarrier; mustpruneorkeep5bituntilactualconsumer, notearlyzeroextension"
+     "gate": "Observedadditionalphysicalcarrier; mustpruneorkeep5bituntilactualconsumer, notearlyzeroextension",
+     "surviving_data_bit_identity_runs": [
+      {
+       "new_lsb": 0,
+       "old_lsb": 0,
+       "width": 35
+      },
+      {
+       "new_lsb": 35,
+       "old_lsb": 38,
+       "width": 4089
+      }
+     ],
+     "physical_coordinate_rule": "Retain eachsurvivingasbuiltbit/cell/site identity using runs; removeexactheadhigh3sites, rekeyhigherindices. Do NOT truncatehighest3bits or assignoldindexcoordinatesblindly.",
+     "data_register_count_delta_per_existing_stage": -3,
+     "epoch_identity": "Sameexistingepoch bit/site/value; index changesoldW\u2192newW only."
     }
    ]
   },
@@ -245,7 +275,22 @@
      "old_epoch_index": 828,
      "new_epoch_index": 825,
      "stage_count_delta": 0,
-     "gate": "Canonicaltypedplan/clockFFbudget/actualsource-bind event required; no planeditmade"
+     "gate": "Canonicaltypedplan/clockFFbudget/actualsource-bind event required; no planeditmade",
+     "surviving_data_bit_identity_runs": [
+      {
+       "new_lsb": 0,
+       "old_lsb": 0,
+       "width": 517
+      },
+      {
+       "new_lsb": 517,
+       "old_lsb": 520,
+       "width": 308
+      }
+     ],
+     "physical_coordinate_rule": "Retain eachsurvivingasbuiltbit/cell/site identity using runs; removeexactheadhigh3sites, rekeyhigherindices. Do NOT truncatehighest3bits or assignoldindexcoordinatesblindly.",
+     "data_register_count_delta_per_existing_stage": -3,
+     "epoch_identity": "Sameexistingepoch bit/site/value; index changesoldW\u2192newW only."
     },
     {
      "source_parts": [
@@ -272,7 +317,17 @@
      "stage_count_delta": 0,
      "exact_source_file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100.sv",
      "exact_source_line": 528,
-     "gate": "Observedadditionalphysicalcarrier; mustpruneorkeep5bituntilactualconsumer, notearlyzeroextension"
+     "gate": "Observedadditionalphysicalcarrier; mustpruneorkeep5bituntilactualconsumer, notearlyzeroextension",
+     "surviving_data_bit_identity_runs": [
+      {
+       "new_lsb": 0,
+       "old_lsb": 0,
+       "width": 5
+      }
+     ],
+     "physical_coordinate_rule": "Retain eachsurvivingasbuiltbit/cell/site identity using runs; removeexactheadhigh3sites, rekeyhigherindices. Do NOT truncatehighest3bits or assignoldindexcoordinatesblindly.",
+     "data_register_count_delta_per_existing_stage": -3,
+     "epoch_identity": "Sameexistingepoch bit/site/value; index changesoldW\u2192newW only."
     }
    ]
   },
@@ -382,7 +437,22 @@
      "old_epoch_index": 4986,
      "new_epoch_index": 4983,
      "stage_count_delta": 0,
-     "gate": "Canonicaltypedplan/clockFFbudget/actualsource-bind event required; no planeditmade"
+     "gate": "Canonicaltypedplan/clockFFbudget/actualsource-bind event required; no planeditmade",
+     "surviving_data_bit_identity_runs": [
+      {
+       "new_lsb": 0,
+       "old_lsb": 0,
+       "width": 517
+      },
+      {
+       "new_lsb": 517,
+       "old_lsb": 520,
+       "width": 4466
+      }
+     ],
+     "physical_coordinate_rule": "Retain eachsurvivingasbuiltbit/cell/site identity using runs; removeexactheadhigh3sites, rekeyhigherindices. Do NOT truncatehighest3bits or assignoldindexcoordinatesblindly.",
+     "data_register_count_delta_per_existing_stage": -3,
+     "epoch_identity": "Sameexistingepoch bit/site/value; index changesoldW\u2192newW only."
     },
     {
      "source_parts": [
@@ -409,7 +479,22 @@
      "stage_count_delta": 0,
      "exact_source_file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000.sv",
      "exact_source_line": 1103,
-     "gate": "Observedadditionalphysicalcarrier; mustpruneorkeep5bituntilactualconsumer, notearlyzeroextension"
+     "gate": "Observedadditionalphysicalcarrier; mustpruneorkeep5bituntilactualconsumer, notearlyzeroextension",
+     "surviving_data_bit_identity_runs": [
+      {
+       "new_lsb": 0,
+       "old_lsb": 0,
+       "width": 35
+      },
+      {
+       "new_lsb": 35,
+       "old_lsb": 38,
+       "width": 4089
+      }
+     ],
+     "physical_coordinate_rule": "Retain eachsurvivingasbuiltbit/cell/site identity using runs; removeexactheadhigh3sites, rekeyhigherindices. Do NOT truncatehighest3bits or assignoldindexcoordinatesblindly.",
+     "data_register_count_delta_per_existing_stage": -3,
+     "epoch_identity": "Sameexistingepoch bit/site/value; index changesoldW\u2192newW only."
     }
    ]
   },
@@ -519,7 +604,22 @@
      "old_epoch_index": 828,
      "new_epoch_index": 825,
      "stage_count_delta": 0,
-     "gate": "Canonicaltypedplan/clockFFbudget/actualsource-bind event required; no planeditmade"
+     "gate": "Canonicaltypedplan/clockFFbudget/actualsource-bind event required; no planeditmade",
+     "surviving_data_bit_identity_runs": [
+      {
+       "new_lsb": 0,
+       "old_lsb": 0,
+       "width": 517
+      },
+      {
+       "new_lsb": 517,
+       "old_lsb": 520,
+       "width": 308
+      }
+     ],
+     "physical_coordinate_rule": "Retain eachsurvivingasbuiltbit/cell/site identity using runs; removeexactheadhigh3sites, rekeyhigherindices. Do NOT truncatehighest3bits or assignoldindexcoordinatesblindly.",
+     "data_register_count_delta_per_existing_stage": -3,
+     "epoch_identity": "Sameexistingepoch bit/site/value; index changesoldW\u2192newW only."
     },
     {
      "source_parts": [
@@ -546,7 +646,17 @@
      "stage_count_delta": 0,
      "exact_source_file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100__physical_v1.sv",
      "exact_source_line": 524,
-     "gate": "Observedadditionalphysicalcarrier; mustpruneorkeep5bituntilactualconsumer, notearlyzeroextension"
+     "gate": "Observedadditionalphysicalcarrier; mustpruneorkeep5bituntilactualconsumer, notearlyzeroextension",
+     "surviving_data_bit_identity_runs": [
+      {
+       "new_lsb": 0,
+       "old_lsb": 0,
+       "width": 5
+      }
+     ],
+     "physical_coordinate_rule": "Retain eachsurvivingasbuiltbit/cell/site identity using runs; removeexactheadhigh3sites, rekeyhigherindices. Do NOT truncatehighest3bits or assignoldindexcoordinatesblindly.",
+     "data_register_count_delta_per_existing_stage": -3,
+     "epoch_identity": "Sameexistingepoch bit/site/value; index changesoldW\u2192newW only."
     }
    ]
   }

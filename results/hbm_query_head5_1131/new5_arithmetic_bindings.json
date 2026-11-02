@@ -1,0 +1,1320 @@
+{
+  "scope": "Current5 AIG only; all32 pp1 bits source-identity vs pp2, plus current5 named137 and s1b2. Reprove all171 hypotheses, allcompare, KEEP, reset4. Original117/intermediate49 retained. Full binding roster includes all pp1 target/pp2 references, both raw maps. Missing gate target aliases explicitly show removed state; named ref aliases preserved.",
+  "basis": "FP4literal1 gives normalizedINV6mantissa0xAAAAAB. Bupperbytes[15:8]==[23:16]==0xAA so pp1=pp2; pp1bit0=0,pp1bit1=pp0bit0 because0xABodd. B13=B0,B14=0. FPUdataregistersreset0, allcapture stages/current4base mustreprove.",
+  "new17_untrusted": [
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s1_b[13]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s1_b[0]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s1_b[14]",
+      [
+        "const",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[0]",
+      [
+        "const",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[1]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp0[0]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[2]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[2]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[3]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[3]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[4]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[4]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[5]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[5]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[6]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[6]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[7]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[7]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[10]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[10]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[11]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[11]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[12]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[12]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[13]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[13]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[14]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[14]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[15]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[15]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[16]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[16]",
+        0
+      ]
+    ]
+  ],
+  "actual_bindings": {
+    "gold": [
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[0]",
+        "raw_map_aliases": [
+          "latch 15265 0 u_dut.core.quant.u_scale.u.s1_b[0]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[10]",
+        "raw_map_aliases": [
+          "latch 15275 0 u_dut.core.quant.u_scale.u.s1_b[10]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[11]",
+        "raw_map_aliases": [
+          "latch 15276 0 u_dut.core.quant.u_scale.u.s1_b[11]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[12]",
+        "raw_map_aliases": [
+          "latch 15277 0 u_dut.core.quant.u_scale.u.s1_b[12]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[13]",
+        "raw_map_aliases": [
+          "latch 15278 0 u_dut.core.quant.u_scale.u.s1_b[13]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[14]",
+        "raw_map_aliases": [
+          "latch 15279 0 u_dut.core.quant.u_scale.u.s1_b[14]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[15]",
+        "raw_map_aliases": [
+          "latch 15280 0 u_dut.core.quant.u_scale.u.s1_b[15]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[16]",
+        "raw_map_aliases": [
+          "latch 15281 0 u_dut.core.quant.u_scale.u.s1_b[16]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[17]",
+        "raw_map_aliases": [
+          "latch 15282 0 u_dut.core.quant.u_scale.u.s1_b[17]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[18]",
+        "raw_map_aliases": [
+          "latch 15283 0 u_dut.core.quant.u_scale.u.s1_b[18]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[19]",
+        "raw_map_aliases": [
+          "latch 15284 0 u_dut.core.quant.u_scale.u.s1_b[19]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[1]",
+        "raw_map_aliases": [
+          "latch 15266 0 u_dut.core.quant.u_scale.u.s1_b[1]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[20]",
+        "raw_map_aliases": [
+          "latch 15285 0 u_dut.core.quant.u_scale.u.s1_b[20]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[21]",
+        "raw_map_aliases": [
+          "latch 15286 0 u_dut.core.quant.u_scale.u.s1_b[21]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[22]",
+        "raw_map_aliases": [
+          "latch 15287 0 u_dut.core.quant.u_scale.u.s1_b[22]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[23]",
+        "raw_map_aliases": [
+          "latch 2357 0 u_dut.core.quant.u_scale.u.s1_b[23]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[2]",
+        "raw_map_aliases": [
+          "latch 15267 0 u_dut.core.quant.u_scale.u.s1_b[2]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[3]",
+        "raw_map_aliases": [
+          "latch 15268 0 u_dut.core.quant.u_scale.u.s1_b[3]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[4]",
+        "raw_map_aliases": [
+          "latch 15269 0 u_dut.core.quant.u_scale.u.s1_b[4]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[5]",
+        "raw_map_aliases": [
+          "latch 15270 0 u_dut.core.quant.u_scale.u.s1_b[5]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[6]",
+        "raw_map_aliases": [
+          "latch 15271 0 u_dut.core.quant.u_scale.u.s1_b[6]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[7]",
+        "raw_map_aliases": [
+          "latch 15272 0 u_dut.core.quant.u_scale.u.s1_b[7]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[8]",
+        "raw_map_aliases": [
+          "latch 15273 0 u_dut.core.quant.u_scale.u.s1_b[8]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[9]",
+        "raw_map_aliases": [
+          "latch 15274 0 u_dut.core.quant.u_scale.u.s1_b[9]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp0[0]",
+        "raw_map_aliases": [
+          "latch 15222 0 u_dut.core.quant.u_scale.u.s2_pp0[0]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[0]",
+        "raw_map_aliases": [
+          "latch 15191 0 u_dut.core.quant.u_scale.u.s2_pp1[0]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[10]",
+        "raw_map_aliases": [
+          "latch 15201 0 u_dut.core.quant.u_scale.u.s2_pp1[10]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[11]",
+        "raw_map_aliases": [
+          "latch 15202 0 u_dut.core.quant.u_scale.u.s2_pp1[11]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[12]",
+        "raw_map_aliases": [
+          "latch 15203 0 u_dut.core.quant.u_scale.u.s2_pp1[12]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[13]",
+        "raw_map_aliases": [
+          "latch 15204 0 u_dut.core.quant.u_scale.u.s2_pp1[13]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[14]",
+        "raw_map_aliases": [
+          "latch 15205 0 u_dut.core.quant.u_scale.u.s2_pp1[14]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[15]",
+        "raw_map_aliases": [
+          "latch 15206 0 u_dut.core.quant.u_scale.u.s2_pp1[15]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[16]",
+        "raw_map_aliases": [
+          "latch 15207 0 u_dut.core.quant.u_scale.u.s2_pp1[16]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[17]",
+        "raw_map_aliases": [
+          "latch 15208 0 u_dut.core.quant.u_scale.u.s2_pp1[17]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[18]",
+        "raw_map_aliases": [
+          "latch 15209 0 u_dut.core.quant.u_scale.u.s2_pp1[18]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[19]",
+        "raw_map_aliases": [
+          "latch 15210 0 u_dut.core.quant.u_scale.u.s2_pp1[19]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[1]",
+        "raw_map_aliases": [
+          "latch 15192 0 u_dut.core.quant.u_scale.u.s2_pp1[1]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[20]",
+        "raw_map_aliases": [
+          "latch 15211 0 u_dut.core.quant.u_scale.u.s2_pp1[20]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[21]",
+        "raw_map_aliases": [
+          "latch 15212 0 u_dut.core.quant.u_scale.u.s2_pp1[21]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[22]",
+        "raw_map_aliases": [
+          "latch 15213 0 u_dut.core.quant.u_scale.u.s2_pp1[22]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[23]",
+        "raw_map_aliases": [
+          "latch 15214 0 u_dut.core.quant.u_scale.u.s2_pp1[23]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[24]",
+        "raw_map_aliases": [
+          "latch 15215 0 u_dut.core.quant.u_scale.u.s2_pp1[24]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[25]",
+        "raw_map_aliases": [
+          "latch 15216 0 u_dut.core.quant.u_scale.u.s2_pp1[25]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[26]",
+        "raw_map_aliases": [
+          "latch 15217 0 u_dut.core.quant.u_scale.u.s2_pp1[26]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[27]",
+        "raw_map_aliases": [
+          "latch 15218 0 u_dut.core.quant.u_scale.u.s2_pp1[27]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[28]",
+        "raw_map_aliases": [
+          "latch 15219 0 u_dut.core.quant.u_scale.u.s2_pp1[28]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[29]",
+        "raw_map_aliases": [
+          "latch 15220 0 u_dut.core.quant.u_scale.u.s2_pp1[29]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[2]",
+        "raw_map_aliases": [
+          "latch 15193 0 u_dut.core.quant.u_scale.u.s2_pp1[2]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[30]",
+        "raw_map_aliases": [
+          "latch 15221 0 u_dut.core.quant.u_scale.u.s2_pp1[30]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[31]",
+        "raw_map_aliases": [
+          "latch 2369 0 u_dut.core.quant.u_scale.u.s2_pp1[31]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[3]",
+        "raw_map_aliases": [
+          "latch 15194 0 u_dut.core.quant.u_scale.u.s2_pp1[3]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[4]",
+        "raw_map_aliases": [
+          "latch 15195 0 u_dut.core.quant.u_scale.u.s2_pp1[4]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[5]",
+        "raw_map_aliases": [
+          "latch 15196 0 u_dut.core.quant.u_scale.u.s2_pp1[5]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[6]",
+        "raw_map_aliases": [
+          "latch 15197 0 u_dut.core.quant.u_scale.u.s2_pp1[6]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[7]",
+        "raw_map_aliases": [
+          "latch 15198 0 u_dut.core.quant.u_scale.u.s2_pp1[7]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[8]",
+        "raw_map_aliases": [
+          "latch 15199 0 u_dut.core.quant.u_scale.u.s2_pp1[8]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[9]",
+        "raw_map_aliases": [
+          "latch 15200 0 u_dut.core.quant.u_scale.u.s2_pp1[9]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[10]",
+        "raw_map_aliases": [
+          "latch 15170 0 u_dut.core.quant.u_scale.u.s2_pp2[10]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[11]",
+        "raw_map_aliases": [
+          "latch 15171 0 u_dut.core.quant.u_scale.u.s2_pp2[11]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[12]",
+        "raw_map_aliases": [
+          "latch 15172 0 u_dut.core.quant.u_scale.u.s2_pp2[12]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[13]",
+        "raw_map_aliases": [
+          "latch 15173 0 u_dut.core.quant.u_scale.u.s2_pp2[13]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[14]",
+        "raw_map_aliases": [
+          "latch 15174 0 u_dut.core.quant.u_scale.u.s2_pp2[14]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[15]",
+        "raw_map_aliases": [
+          "latch 15175 0 u_dut.core.quant.u_scale.u.s2_pp2[15]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[16]",
+        "raw_map_aliases": [
+          "latch 15176 0 u_dut.core.quant.u_scale.u.s2_pp2[16]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[17]",
+        "raw_map_aliases": [
+          "latch 15177 0 u_dut.core.quant.u_scale.u.s2_pp2[17]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[18]",
+        "raw_map_aliases": [
+          "latch 15178 0 u_dut.core.quant.u_scale.u.s2_pp2[18]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[19]",
+        "raw_map_aliases": [
+          "latch 15179 0 u_dut.core.quant.u_scale.u.s2_pp2[19]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[20]",
+        "raw_map_aliases": [
+          "latch 15180 0 u_dut.core.quant.u_scale.u.s2_pp2[20]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[21]",
+        "raw_map_aliases": [
+          "latch 15181 0 u_dut.core.quant.u_scale.u.s2_pp2[21]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[22]",
+        "raw_map_aliases": [
+          "latch 15182 0 u_dut.core.quant.u_scale.u.s2_pp2[22]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[23]",
+        "raw_map_aliases": [
+          "latch 15183 0 u_dut.core.quant.u_scale.u.s2_pp2[23]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[24]",
+        "raw_map_aliases": [
+          "latch 15184 0 u_dut.core.quant.u_scale.u.s2_pp2[24]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[25]",
+        "raw_map_aliases": [
+          "latch 15185 0 u_dut.core.quant.u_scale.u.s2_pp2[25]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[26]",
+        "raw_map_aliases": [
+          "latch 15186 0 u_dut.core.quant.u_scale.u.s2_pp2[26]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[27]",
+        "raw_map_aliases": [
+          "latch 15187 0 u_dut.core.quant.u_scale.u.s2_pp2[27]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[28]",
+        "raw_map_aliases": [
+          "latch 15188 0 u_dut.core.quant.u_scale.u.s2_pp2[28]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[29]",
+        "raw_map_aliases": [
+          "latch 15189 0 u_dut.core.quant.u_scale.u.s2_pp2[29]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[2]",
+        "raw_map_aliases": [
+          "latch 15162 0 u_dut.core.quant.u_scale.u.s2_pp2[2]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[30]",
+        "raw_map_aliases": [
+          "latch 15190 0 u_dut.core.quant.u_scale.u.s2_pp2[30]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[31]",
+        "raw_map_aliases": [
+          "latch 2370 0 u_dut.core.quant.u_scale.u.s2_pp2[31]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[3]",
+        "raw_map_aliases": [
+          "latch 15163 0 u_dut.core.quant.u_scale.u.s2_pp2[3]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[4]",
+        "raw_map_aliases": [
+          "latch 15164 0 u_dut.core.quant.u_scale.u.s2_pp2[4]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[5]",
+        "raw_map_aliases": [
+          "latch 15165 0 u_dut.core.quant.u_scale.u.s2_pp2[5]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[6]",
+        "raw_map_aliases": [
+          "latch 15166 0 u_dut.core.quant.u_scale.u.s2_pp2[6]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[7]",
+        "raw_map_aliases": [
+          "latch 15167 0 u_dut.core.quant.u_scale.u.s2_pp2[7]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[8]",
+        "raw_map_aliases": [
+          "latch 15168 0 u_dut.core.quant.u_scale.u.s2_pp2[8]$_ALDFF_PN_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[9]",
+        "raw_map_aliases": [
+          "latch 15169 0 u_dut.core.quant.u_scale.u.s2_pp2[9]$_ALDFF_PN_.lecq"
+        ]
+      }
+    ],
+    "gate": [
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[0]",
+        "raw_map_aliases": [
+          "latch 23540 0 u_dut.core.quant.u_scale.u.s1_b[0]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[10]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[11]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[12]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[13]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[14]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[15]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[16]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[17]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[18]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[19]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[1]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[20]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[21]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[22]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[23]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[2]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[3]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[4]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[5]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[6]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[7]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[8]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s1_b[9]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp0[0]",
+        "raw_map_aliases": [
+          "latch 23607 0 u_dut.core.quant.u_scale.u.s2_pp0[0]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[0]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[10]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[11]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[12]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[13]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[14]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[15]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[16]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[17]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[18]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[19]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[1]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[20]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[21]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[22]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[23]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[24]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[25]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[26]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[27]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[28]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[29]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[2]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[30]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[31]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[3]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[4]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[5]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[6]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[7]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[8]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp1[9]",
+        "raw_map_aliases": []
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[10]",
+        "raw_map_aliases": [
+          "latch 23639 0 u_dut.core.quant.u_scale.u.s2_pp2[10]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[11]",
+        "raw_map_aliases": [
+          "latch 23640 0 u_dut.core.quant.u_scale.u.s2_pp2[11]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[12]",
+        "raw_map_aliases": [
+          "latch 23641 0 u_dut.core.quant.u_scale.u.s2_pp2[12]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[13]",
+        "raw_map_aliases": [
+          "latch 23642 0 u_dut.core.quant.u_scale.u.s2_pp2[13]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[14]",
+        "raw_map_aliases": [
+          "latch 23643 0 u_dut.core.quant.u_scale.u.s2_pp2[14]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[15]",
+        "raw_map_aliases": [
+          "latch 23644 0 u_dut.core.quant.u_scale.u.s2_pp2[15]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[16]",
+        "raw_map_aliases": [
+          "latch 23645 0 u_dut.core.quant.u_scale.u.s2_pp2[16]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[17]",
+        "raw_map_aliases": [
+          "latch 23646 0 u_dut.core.quant.u_scale.u.s2_pp2[17]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[18]",
+        "raw_map_aliases": [
+          "latch 23647 0 u_dut.core.quant.u_scale.u.s2_pp2[18]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[19]",
+        "raw_map_aliases": [
+          "latch 23648 0 u_dut.core.quant.u_scale.u.s2_pp2[19]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[20]",
+        "raw_map_aliases": [
+          "latch 23649 0 u_dut.core.quant.u_scale.u.s2_pp2[20]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[21]",
+        "raw_map_aliases": [
+          "latch 23650 0 u_dut.core.quant.u_scale.u.s2_pp2[21]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[22]",
+        "raw_map_aliases": [
+          "latch 23651 0 u_dut.core.quant.u_scale.u.s2_pp2[22]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[23]",
+        "raw_map_aliases": [
+          "latch 23652 0 u_dut.core.quant.u_scale.u.s2_pp2[23]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[24]",
+        "raw_map_aliases": [
+          "latch 23653 0 u_dut.core.quant.u_scale.u.s2_pp2[24]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[25]",
+        "raw_map_aliases": [
+          "latch 23654 0 u_dut.core.quant.u_scale.u.s2_pp2[25]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[26]",
+        "raw_map_aliases": [
+          "latch 23655 0 u_dut.core.quant.u_scale.u.s2_pp2[26]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[27]",
+        "raw_map_aliases": [
+          "latch 23656 0 u_dut.core.quant.u_scale.u.s2_pp2[27]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[28]",
+        "raw_map_aliases": [
+          "latch 23657 0 u_dut.core.quant.u_scale.u.s2_pp2[28]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[29]",
+        "raw_map_aliases": [
+          "latch 23658 0 u_dut.core.quant.u_scale.u.s2_pp2[29]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[2]",
+        "raw_map_aliases": [
+          "latch 23659 0 u_dut.core.quant.u_scale.u.s2_pp2[2]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[30]",
+        "raw_map_aliases": [
+          "latch 23660 0 u_dut.core.quant.u_scale.u.s2_pp2[30]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[31]",
+        "raw_map_aliases": [
+          "latch 23661 0 u_dut.core.quant.u_scale.u.s2_pp2[31]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[3]",
+        "raw_map_aliases": [
+          "latch 23662 0 u_dut.core.quant.u_scale.u.s2_pp2[3]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[4]",
+        "raw_map_aliases": [
+          "latch 23663 0 u_dut.core.quant.u_scale.u.s2_pp2[4]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[5]",
+        "raw_map_aliases": [
+          "latch 23664 0 u_dut.core.quant.u_scale.u.s2_pp2[5]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[6]",
+        "raw_map_aliases": [
+          "latch 23665 0 u_dut.core.quant.u_scale.u.s2_pp2[6]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[7]",
+        "raw_map_aliases": [
+          "latch 23666 0 u_dut.core.quant.u_scale.u.s2_pp2[7]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[8]",
+        "raw_map_aliases": [
+          "latch 23667 0 u_dut.core.quant.u_scale.u.s2_pp2[8]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      },
+      {
+        "key": "ff:u_dut.core.quant.u_scale.u.s2_pp2[9]",
+        "raw_map_aliases": [
+          "latch 23668 0 u_dut.core.quant.u_scale.u.s2_pp2[9]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq"
+        ]
+      }
+    ]
+  },
+  "protected_KEEP": {
+    "declared": 1056,
+    "in_netlist": 1056,
+    "constant_proved": {
+      "n": 0,
+      "first": []
+    },
+    "missing": {
+      "n": 0,
+      "first": []
+    },
+    "unobservable_removed": {
+      "n": 0,
+      "first": []
+    },
+    "unobservable_reason": null
+  },
+  "loss_groups": {
+    "s1_b_nonprotected": 2,
+    "s2_pp1_nonprotected": 15
+  },
+  "original117_counts": {
+    "compare_points": 31231,
+    "proved": 31114,
+    "differs": 117,
+    "undecided": 0
+  },
+  "source_commit": "295a8ce49857a13a10846ea355329fd3452594bd",
+  "raw_hashes": {
+    "gold.aig": "f1b2704d913bba6f984f78d364087f14b3ae703f8ef8c0edbe673e72a9f6b91a",
+    "gold.map": "47d5193e6a2aded548237a119844718f30b62270cdc6dd50d19f4cde1fc8664b",
+    "gate.aig": "764e2b620a5a2e4618fc8e4b7c88c8cec09fe952a66ea6dadc3bb29cbf39e442",
+    "gate.map": "cd03e967d4488949d63476652e1d6b552da5c0d1b3fe854a98be4c6e7fb7c8a4",
+    "gold.aliases.json": "23d60aa6fcff05775983cce3b623425be9e74dec721e0c835c247082eab4e24c",
+    "gold.keep": "3e2091027c2ef63b01b597acc83e9d31290bb044f899f35916f8772a545d4c3e"
+  },
+  "extended17_untrusted": [
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[8]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[8]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[9]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[9]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[17]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[17]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[18]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[18]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[19]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[19]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[20]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[20]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[21]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[21]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[22]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[22]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[23]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[23]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[24]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[24]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[25]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[25]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[26]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[26]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[27]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[27]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[28]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[28]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[29]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[29]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[30]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[30]",
+        0
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_scale.u.s2_pp1[31]",
+      [
+        "eq",
+        "gold",
+        "ff:u_dut.core.quant.u_scale.u.s2_pp2[31]",
+        0
+      ]
+    ]
+  ]
+}

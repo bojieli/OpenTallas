@@ -1,0 +1,264 @@
+{
+  "status": "NEW_NATIVE_PIN_CLOCK_EVENT_DRAFT_NO_CURRENT_CONTACT_OR_BUDGET_ADOPTION",
+  "source": "Samehead5RTL295a8/sourcefunction/period833/reset4; no FF/cycles/clockportpruning",
+  "new_pins_sha256": "64ff6fb493df34e8be949dcadbf686631cfd668055ad05ab1a4fd92badff3da6",
+  "physical_pin_count": 1630,
+  "active_clk_old_actual": [
+    0.984,
+    0.24
+  ],
+  "active_clk_proposed": [
+    86.376,
+    82.08
+  ],
+  "G_planned_PG_island": [
+    86.4,
+    82.08
+  ],
+  "root_rect": [
+    86.352,
+    81.84,
+    86.4,
+    82.32
+  ],
+  "root_island_size_um": 8.64,
+  "island_halo_um": 4.32,
+  "source_active_clock_roots": [
+    "clk"
+  ],
+  "unused_compat_clocks_retained": 6,
+  "unused_cluster_spacing_event": {
+    "status": "EXPLICIT_PHYSICAL_PIN_EVENT_PREP_ONLY_NOT_APPLIED",
+    "source": "Head5 RTL/params/7clockports unchanged; activeclk+bank0 anchors fixed; actualb58SYNTH/LEC coupon NOTedited",
+    "old_view": "ot_hbm_idx_query_static@b58b69114710",
+    "new_pins_sha256": "91fbf01f7aa9e6ca5458aeb502435b2baba32f04b1e7e7dac3934349db749784",
+    "physical_pin_count": 1630,
+    "clock_shapes": {
+      "width": 0.048,
+      "height": 0.48
+    },
+    "old_center_pitch": 0.096,
+    "old_edge_gap": 0.048,
+    "required_spacing": 0.072,
+    "proposed_center_pitch": 0.144,
+    "proposed_edge_gap": 0.096,
+    "spacing_margin": 0.024,
+    "actual_technology": "openroad/orfs:asap7lock image16470cea /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef M5 SPACINGTABLE PRL0/WIDTH.025\u2192SPACE.072",
+    "moved_unused_clock_ports": {
+      "clk_quant": {
+        "old_x": 1.08,
+        "new_x": 1.128,
+        "dx": 0.048,
+        "y": 0.24
+      },
+      "clk_quant_delay": {
+        "old_x": 1.176,
+        "new_x": 1.272,
+        "dx": 0.096,
+        "y": 0.24
+      },
+      "clk_bank[1]": {
+        "old_x": 1.08,
+        "new_x": 1.128,
+        "dx": 0.048,
+        "y": 163.92
+      },
+      "clk_bank[2]": {
+        "old_x": 1.176,
+        "new_x": 1.272,
+        "dx": 0.096,
+        "y": 163.92
+      },
+      "clk_bank[3]": {
+        "old_x": 1.272,
+        "new_x": 1.416,
+        "dx": 0.144,
+        "y": 163.92
+      }
+    },
+    "unmoved_anchors": [
+      "clk",
+      "clk_bank[0]"
+    ],
+    "groups": [
+      [
+        "clk",
+        "clk_quant",
+        "clk_quant_delay"
+      ],
+      [
+        "clk_bank[0]",
+        "clk_bank[1]",
+        "clk_bank[2]",
+        "clk_bank[3]"
+      ]
+    ],
+    "added_ff": 0,
+    "added_cycles": 0,
+    "clock_budget_change": false,
+    "source_clock_port_pruning": false,
+    "holds": "Actualclock/PG/G0C/pinshape/parent target review and ordinaryphysicalchecks required beforePNR; this is analytic spacing repair, not measured DRC PASS."
+  },
+  "rows": [
+    {
+      "part": "NW_hub",
+      "instance": "u_hb_idx__q_Q__q0",
+      "child_orientation": "MY",
+      "parent_orientation": "R0",
+      "parent_clock_port": "clk_c56",
+      "old_actual_native_corner_in_parent_um": [
+        3833.016,
+        242.16
+      ],
+      "planned_G_island_in_parent_um": [
+        3747.6,
+        324.0
+      ],
+      "proposed_actual_native_clock_in_parent_um": [
+        3747.6240000000003,
+        324.0
+      ],
+      "existing_consumed_target_in_parent_um": [
+        3747.616,
+        324.0
+      ],
+      "consumed_target_inside_proposed_native_rect": true,
+      "consumed_target_minus_proposed_center_um": [
+        -0.008,
+        0.0
+      ],
+      "required_real_contact_bridge_l1_um": 0.008,
+      "old_native_corner_to_proposed_l1_um": 167.232,
+      "current_G_internal_budget_ps": {
+        "TT": 311.5,
+        "FF": 262.6
+      },
+      "source_driver": "XP444",
+      "current_G_says_not_existing_native_view": true
+    },
+    {
+      "part": "NW_hub",
+      "instance": "u_hb_idx__q_Q__q1",
+      "child_orientation": "MX",
+      "parent_orientation": "R0",
+      "parent_clock_port": "clk_c57",
+      "old_actual_native_corner_in_parent_um": [
+        5357.784000000001,
+        898.3199999999999
+      ],
+      "planned_G_island_in_parent_um": [
+        5443.2,
+        816.48
+      ],
+      "proposed_actual_native_clock_in_parent_um": [
+        5443.176,
+        816.48
+      ],
+      "existing_consumed_target_in_parent_um": [
+        5443.68,
+        816.48
+      ],
+      "consumed_target_inside_proposed_native_rect": false,
+      "consumed_target_minus_proposed_center_um": [
+        0.504,
+        0.0
+      ],
+      "required_real_contact_bridge_l1_um": 0.504,
+      "old_native_corner_to_proposed_l1_um": 167.232,
+      "current_G_internal_budget_ps": {
+        "TT": 311.5,
+        "FF": 262.6
+      },
+      "source_driver": "XP458",
+      "current_G_says_not_existing_native_view": true
+    },
+    {
+      "part": "NE_hub",
+      "instance": "u_hb_idx__q_Q__q0",
+      "child_orientation": "R180",
+      "parent_orientation": "MY",
+      "parent_clock_port": "clk_c53",
+      "old_actual_native_corner_in_parent_um": [
+        3928.056,
+        405.84
+      ],
+      "planned_G_island_in_parent_um": [
+        3842.64,
+        324.0
+      ],
+      "proposed_actual_native_clock_in_parent_um": [
+        3842.664,
+        324.0
+      ],
+      "existing_consumed_target_in_parent_um": [
+        3842.656,
+        324.0
+      ],
+      "consumed_target_inside_proposed_native_rect": true,
+      "consumed_target_minus_proposed_center_um": [
+        -0.008,
+        0.0
+      ],
+      "required_real_contact_bridge_l1_um": 0.008,
+      "old_native_corner_to_proposed_l1_um": 167.232,
+      "current_G_internal_budget_ps": {
+        "TT": 311.5,
+        "FF": 262.6
+      },
+      "source_driver": "XP482",
+      "current_G_says_not_existing_native_view": true
+    },
+    {
+      "part": "NE_hub",
+      "instance": "u_hb_idx__q_Q__q1",
+      "child_orientation": "MX",
+      "parent_orientation": "MY",
+      "parent_clock_port": "clk_c54",
+      "old_actual_native_corner_in_parent_um": [
+        5634.264,
+        898.3199999999999
+      ],
+      "planned_G_island_in_parent_um": [
+        5719.679999999999,
+        816.48
+      ],
+      "proposed_actual_native_clock_in_parent_um": [
+        5719.656,
+        816.48
+      ],
+      "existing_consumed_target_in_parent_um": [
+        5720.16,
+        816.48
+      ],
+      "consumed_target_inside_proposed_native_rect": false,
+      "consumed_target_minus_proposed_center_um": [
+        0.504,
+        0.0
+      ],
+      "required_real_contact_bridge_l1_um": 0.504,
+      "old_native_corner_to_proposed_l1_um": 167.232,
+      "current_G_internal_budget_ps": {
+        "TT": 311.5,
+        "FF": 262.6
+      },
+      "source_driver": "XP469",
+      "current_G_says_not_existing_native_view": true
+    }
+  ],
+  "current_G_clock_budget_ps": {
+    "TT": 311.5,
+    "FF": 262.6
+  },
+  "prototype_GEN_default_ps": {
+    "TT": 250,
+    "FF": 202.5
+  },
+  "budget_status": "UNSELECTED: root/clock must explicitly align intended native clock contract beforePNR; neither currentG oldproxy norprototype default silentlybecomesnative signoffcontract.",
+  "holds": [
+    "CurrentG entries are virtual/nativeview UNSUPPLIED, noexistingnativecontactoroldislandcredit.",
+    "q0consumedtargetinsideproposedrectangle; q1needsactual.504umcontactbridge. No centeraliasorreusedzero-distanceclaim.",
+    "NewtypedLEF/TTFF andnormalPG/reach/pin/clockguardsnotbuilt. Analyticrectanglecontainment isnotrealITermmeasurement.",
+    "Currentb58SYNTH/LECuntouched; sourcefunctionlegjoinonlyexactsource/params, nooldphysicalviewalias.",
+    "Head5parent8carrierpruning/fullsourceG0CbeforePNRheld"
+  ]
+}
