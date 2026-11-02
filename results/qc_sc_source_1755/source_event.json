@@ -24,5 +24,17 @@
     "clock/reset/FT/CA/R8 andlayout",
     "unsignedchildphysicalqualification",
     "ROOTsourceadoption"
-  ]
+  ],
+  "physical_source_delta": {
+    "applies_in_modes": [
+      0,
+      1
+    ],
+    "removed_redundant_capture_FFs": 391,
+    "added_shared_reset_data_FFs": 4,
+    "declared_FF_before": 43058,
+    "declared_FF_after": 42671,
+    "delta": -387,
+    "warning": "source-onlycandidate is NOT dormant: capture sharing affectsdefault0physicalstatecount too. Requires explicitSCsource+clockcountmodel event; never silentlyconsumeimmutable1364730."
+  }
 }
