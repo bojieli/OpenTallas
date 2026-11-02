@@ -1,0 +1,5 @@
+HF FC9 actual native GEN geometry review
+
+Personally VIEWED /home/ubuntu/coord/tmp/codex-hfdep-fc9-actualgen-0720/actual_fc9_gen.png and parsed actual generated model. Source6997d0a07d8338f8425b635007273f502c76d0ab, kit ee774f13c14fbd54, native4 proof14054/face2284 PASS reported by owner. Actual2286pins/no shell;427.68×246.24 outline/four64×512 SRAMs, each171.288×77.784. Opposing MY/R0 orientations preserve coherent central/outer streets. Central body gap50.544um gives41.904um after two4.32 halos; interrow21.576 gives12.936um; outer side17.28 gives12.96um. Declaredclock220.344,25.92 is below bodies and clear. No macro arrangement failure is apparent.
+
+CONCUR actual GEN outline geometry only. No placedSTD/guide/reach/fill/PG/contact/clock-source closure or P&R authorization follows. This is direct generated freeze/macrotcl/LEF/pins evidence, not transfer of the earlier reference sketch as placed evidence. Historical exit126 remains pre-CAD failure evidence, no current native4/parent view adoption inferred.
