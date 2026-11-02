@@ -1465,6 +1465,27 @@ class TestSharedShaRows(Base):
         self.assertEqual(self.geom(rows), {"qfd_dv_s8x_btab__s7": "FAIL", "qfd_dv_s8x_prog__s7": "REQ"})
 
 
+class LateEcoProvenance(Base):
+    # KW-ECO-1: an ECO'd sign-off names the loop in PROVENANCE (kind eco); FAIL reasons carry the ECO evidence
+    def test_eco_provenance_only_on_pass(self):
+        eco = {"verdict": "PASS", "base_routed_db": "/k/run/b/6_final.odb", "best": {"base": "/k/eco_1/i1/b"},
+               "iterations": [{"n": 1, "commands": ["bash prd_mk.sh"]}], "flow": {"tools_sha256": "ab"}, "wall_s": 9}
+        p = self.ap.eco_provenance({"chain": {"eco": eco}})
+        self.assertEqual(p["kind"], "eco")
+        self.assertEqual(p["eco"]["base_routed_db"], "/k/run/b/6_final.odb")
+        self.assertEqual(p["eco"]["routed_db"], "/k/eco_1/i1/b")
+        self.assertEqual(p["eco"]["iterations"][0]["commands"], ["bash prd_mk.sh"])
+        self.assertEqual(self.ap.eco_provenance({"chain": {"eco": dict(eco, verdict="EXHAUSTED")}}), {})
+        self.assertEqual(self.ap.eco_provenance({}), {})
+
+    def test_late_eco_cfg_opt_out(self):
+        self.assertTrue(self.ap.late_eco_on())
+        (Path(self.tmp.name) / "kit_wave.json").write_text(json.dumps({"late_eco": False}))
+        self.assertFalse(self.ap.late_eco_on())
+        (Path(self.tmp.name) / "kit_wave.json").write_text(json.dumps({"late_eco": True, "enabled": True}))
+        self.assertTrue(self.ap.late_eco_on())
+
+
 if __name__ == "__main__":
     unittest.main()
 
