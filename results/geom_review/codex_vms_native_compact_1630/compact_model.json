@@ -525,5 +525,21 @@
   "profiles_checked": 8,
   "same_layer_clock_reset_data_rect_overlaps": 0,
   "status": "Geometric draft check only; native GEN/pinLINT/DRC remain NOTRUN"
+ },
+ "existing_register_region_capacity_prep": {
+  "basis": "Actual mapped FF-master counts; same source synthesis sequential area2319.036480um2 and finalORFSstd3430.24um2. Region capacity only, not actual placement/clock qualification.",
+  "boundary_FFs": 3910,
+  "boundary_DFFHQN": 3879,
+  "boundary_DFFASRHQN": 31,
+  "boundary_sequential_area_um2": 1142.86788,
+  "body_FFs": 4014,
+  "body_DFFHQN": 3949,
+  "body_DFFASRHQN": 65,
+  "body_sequential_area_um2": 1176.1686000000002,
+  "all_combinational_area_upper_bound_um2": 1111.2035199999996,
+  "body_guide_area_um2": 4281.984,
+  "body_FFs_plus_ALL_comb_fill_in_body_guide": 0.5341851160583505,
+  "actual_row_site_legalization": "NOT RUN",
+  "guide_consumed_by_GPL": "NO"
  }
 }
