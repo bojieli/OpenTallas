@@ -13,12 +13,16 @@ for mode in 0 1 2; do
  if [[ $mode != 2 && $native == 1 ]];then fault=1;fi
  if ! "build/m${mode}/Vtb_qwen_head_gme_control" +NATIVE=$native +FAULT=$fault >"build/m${mode}_n${native}.log" 2>&1;then echo "FAIL MODE=$mode NATIVE=$native";failed=1;else echo "PASS MODE=$mode NATIVE=$native";fi
  done
+ # Removing chase alone must still expose the real nonzero native count at barrier2.
+ nf=1;expected=1
+ if [[ $mode == 2 ]];then nf=0;expected=4;fi
+ if ! "build/m${mode}/Vtb_qwen_head_gme_control" +NATIVE=1 +NOCHASE=1 +FAULT=$nf +REQUIRE_SEEN=$expected >"build/m${mode}_nochase.log" 2>&1;then echo "FAIL NONZERO_OBSERVER_BARRIER MODE=$mode";failed=1;else echo "PASS NONZERO_OBSERVER_BARRIER MODE=$mode";fi
  if [[ $mode == 2 ]];then
  set +e
  build/m2/Vtb_qwen_head_gme_control +NATIVE=1 +OLD6=1 >build/m2_old6.log 2>&1
  oldrc=$?
  set -e
- if [[ $oldrc == 0 ]] || ! rg -q GME_FIELD_ORDER_OR_BOUNDS build/m2_old6.log;then echo 'FAIL OLD6_CONTROL';failed=1;else echo 'PASS OLD6_CONTROL';fi
+ if [[ $oldrc == 0 ]] || ! grep -q GME_FIELD_ORDER_OR_BOUNDS build/m2_old6.log;then echo 'FAIL OLD6_CONTROL';failed=1;else echo 'PASS OLD6_CONTROL';fi
  if ! build/m2/Vtb_qwen_head_gme_control +NATIVE=1 +BUSY=1 +FAULT=1 >build/m2_busy.log 2>&1;then echo 'FAIL OWN_BUSY';failed=1;else echo 'PASS OWN_BUSY';fi
  fi
  done
