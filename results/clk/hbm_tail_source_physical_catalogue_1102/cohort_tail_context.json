@@ -1,0 +1,266 @@
+{
+  "source_path": "/home/ubuntu/coord/tmp/codex-hbm-su00-upper-clock-2335/composite_root_PENDING.json",
+  "source_sha256": "6ecfacf5f23f700fedbbf38c9377dc08b229c882d39744fe36c1e52a4884dfc0",
+  "plan_subset": {
+    "partitions": [
+      {
+        "name": "NW_b002",
+        "type": "q_b002__physical_v1",
+        "origin_um": [
+          2306.88,
+          6065.28
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "NW_b101",
+        "type": "q_b101_nw",
+        "origin_um": [
+          12631.68,
+          4510.08
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "NW_b103",
+        "type": "q_b103",
+        "origin_um": [
+          708.48,
+          4510.08
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "NE_b002",
+        "type": "q_b002",
+        "origin_um": [
+          25712.64,
+          6065.28
+        ],
+        "orient": "MY"
+      },
+      {
+        "name": "NE_b101",
+        "type": "q_b101",
+        "origin_um": [
+          15042.24,
+          4510.08
+        ],
+        "orient": "MY"
+      },
+      {
+        "name": "NE_b103",
+        "type": "q_b103__physical_v1",
+        "origin_um": [
+          26982.72,
+          4510.08
+        ],
+        "orient": "MY"
+      }
+    ],
+    "partition_types": {
+      "q_b002__physical_v1": {
+        "outline_um": [
+          380.16,
+          4320.0
+        ],
+        "hard_cores": [
+          {
+            "inst": "u_hb_idx__s_Q2_tail0",
+            "module": "ot_hbm_idx_tail_native",
+            "origin_um": [
+              17.28,
+              3101.76
+            ],
+            "outline_um": [
+              218.592,
+              187.488
+            ],
+            "track_offset_um": [
+              0.0,
+              0.0
+            ],
+            "pins_file": "cores/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488__q_b103_u_hb_idx__s_Q_tail0__c25c_native.json",
+            "note": "C21 (a) 2nd native idx quarter home (SW/SE, COORD 08:51): replica of u_hb_idx__s_Q_tail0 (same canon view) | C22 (a): corridor-free home in q_b002 (C21 site hit ft lane stations) | C25c exact native source boundary; source recipe DELIVERED_RESET=1/MUT=0, no timing qualification",
+            "obs_max": "M5"
+          },
+          {
+            "inst": "u_hb_idx__s_Q2_tail1",
+            "module": "ot_hbm_idx_tail_native",
+            "origin_um": [
+              17.28,
+              3300.48
+            ],
+            "outline_um": [
+              218.592,
+              187.488
+            ],
+            "track_offset_um": [
+              0.0,
+              0.0
+            ],
+            "pins_file": "cores/ot_hbm_idx_score_quarter_static__tail1__218.592x187.488__q_b103_u_hb_idx__s_Q_tail1__c25c_native.json",
+            "note": "C21 (a) 2nd native idx quarter home (SW/SE, COORD 08:51): replica of u_hb_idx__s_Q_tail1 (same canon view) | C22 (a): corridor-free home in q_b002 (C21 site hit ft lane stations) | C25c exact native source boundary; source recipe DELIVERED_RESET=1/MUT=0, no timing qualification",
+            "obs_max": "M5"
+          }
+        ]
+      },
+      "q_b101_nw": {
+        "outline_um": [
+          725.76,
+          1555.2
+        ],
+        "hard_cores": [
+          {
+            "inst": "u_hb_idx__s_Q_tail0",
+            "module": "ot_hbm_idx_tail_native",
+            "origin_um": [
+              250.56,
+              1045.44
+            ],
+            "outline_um": [
+              218.592,
+              187.488
+            ],
+            "track_offset_um": [
+              0.0,
+              0.0
+            ],
+            "pins_file": "cores/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488__q_b103_u_hb_idx__s_Q_tail0__c25c_native.json",
+            "note": "split piece tail0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 52348 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__tail0__181.44x155.52__q_b103_u_hb_idx__s_Q_tail0.json | HBM-MU-QUAD-4: canonical view of ot_hbm_idx_score_quarter_static__tail0 | C25c exact native source boundary; source recipe DELIVERED_RESET=1/MUT=0, no timing qualification | DIE-HBM-29 HBM-055: moved into q_b101_nw slot of u_hb_idx__s_Q_r1c0_k0h0 (slot geometry kept)",
+            "obs_max": "M5",
+            "orient": "MX"
+          }
+        ]
+      },
+      "q_b103": {
+        "outline_um": [
+          708.48,
+          1555.2
+        ],
+        "hard_cores": [
+          {
+            "inst": "u_hb_idx__s_Q_tail1",
+            "module": "ot_hbm_idx_tail_native",
+            "origin_um": [
+              241.92,
+              1002.24
+            ],
+            "outline_um": [
+              218.592,
+              187.488
+            ],
+            "track_offset_um": [
+              0.0,
+              0.0
+            ],
+            "pins_file": "cores/ot_hbm_idx_score_quarter_static__tail1__218.592x187.488__q_b103_u_hb_idx__s_Q_tail1__c25c_native.json",
+            "note": "split piece tail1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 52348 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__tail1__181.44x155.52__q_b103_u_hb_idx__s_Q_tail1.json | HBM-MU-QUAD-4: canonical view of ot_hbm_idx_score_quarter_static__tail1 | C25c exact native source boundary; source recipe DELIVERED_RESET=1/MUT=0, no timing qualification",
+            "obs_max": "M5"
+          }
+        ]
+      },
+      "q_b002": {
+        "outline_um": [
+          380.16,
+          4320.0
+        ],
+        "hard_cores": [
+          {
+            "inst": "u_hb_idx__s_Q2_tail0",
+            "module": "ot_hbm_idx_tail_native",
+            "origin_um": [
+              17.28,
+              3101.76
+            ],
+            "outline_um": [
+              218.592,
+              187.488
+            ],
+            "track_offset_um": [
+              0.0,
+              0.0
+            ],
+            "pins_file": "cores/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488__q_b103_u_hb_idx__s_Q_tail0__c25c_native.json",
+            "note": "C21 (a) 2nd native idx quarter home (SW/SE, COORD 08:51): replica of u_hb_idx__s_Q_tail0 (same canon view) | C22 (a): corridor-free home in q_b002 (C21 site hit ft lane stations) | C25c exact native source boundary; source recipe DELIVERED_RESET=1/MUT=0, no timing qualification",
+            "obs_max": "M5"
+          },
+          {
+            "inst": "u_hb_idx__s_Q2_tail1",
+            "module": "ot_hbm_idx_tail_native",
+            "origin_um": [
+              17.28,
+              3300.48
+            ],
+            "outline_um": [
+              218.592,
+              187.488
+            ],
+            "track_offset_um": [
+              0.0,
+              0.0
+            ],
+            "pins_file": "cores/ot_hbm_idx_score_quarter_static__tail1__218.592x187.488__q_b103_u_hb_idx__s_Q_tail1__c25c_native.json",
+            "note": "C21 (a) 2nd native idx quarter home (SW/SE, COORD 08:51): replica of u_hb_idx__s_Q_tail1 (same canon view) | C22 (a): corridor-free home in q_b002 (C21 site hit ft lane stations) | C25c exact native source boundary; source recipe DELIVERED_RESET=1/MUT=0, no timing qualification",
+            "obs_max": "M5"
+          }
+        ]
+      },
+      "q_b101": {
+        "outline_um": [
+          725.76,
+          1555.2
+        ],
+        "hard_cores": [
+          {
+            "inst": "u_hb_idx__s_Q_tail0",
+            "module": "ot_hbm_idx_tail_native",
+            "origin_um": [
+              250.56,
+              1045.44
+            ],
+            "outline_um": [
+              218.592,
+              187.488
+            ],
+            "track_offset_um": [
+              0.0,
+              0.0
+            ],
+            "pins_file": "cores/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488__q_b103_u_hb_idx__s_Q_tail0__c25c_native.json",
+            "note": "split piece tail0 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 52348 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__tail0__181.44x155.52__q_b103_u_hb_idx__s_Q_tail0.json | HBM-MU-QUAD-4: canonical view of ot_hbm_idx_score_quarter_static__tail0 | C25c exact native source boundary; source recipe DELIVERED_RESET=1/MUT=0, no timing qualification | DIE-HBM-29 HBM-055: moved into q_b101 slot of u_hb_idx__s_Q_r1c0_k0h0 (slot geometry kept)",
+            "obs_max": "M5",
+            "orient": "MX"
+          }
+        ]
+      },
+      "q_b103__physical_v1": {
+        "outline_um": [
+          708.48,
+          1555.2
+        ],
+        "hard_cores": [
+          {
+            "inst": "u_hb_idx__s_Q_tail1",
+            "module": "ot_hbm_idx_tail_native",
+            "origin_um": [
+              241.92,
+              1002.24
+            ],
+            "outline_um": [
+              218.592,
+              187.488
+            ],
+            "track_offset_um": [
+              0.0,
+              0.0
+            ],
+            "pins_file": "cores/ot_hbm_idx_score_quarter_static__tail1__218.592x187.488__q_b103_u_hb_idx__s_Q_tail1__c25c_native.json",
+            "note": "split piece tail1 of ot_hbm_idx_score_quarter_static (ot_hbm_idx_score_quarter_static.split.json); 52348 cells | B2n grow (HBM-CORES): 181.44x155.52 -> 218.592x187.488, was ot_hbm_idx_score_quarter_static__tail1__181.44x155.52__q_b103_u_hb_idx__s_Q_tail1.json | HBM-MU-QUAD-4: canonical view of ot_hbm_idx_score_quarter_static__tail1 | C25c exact native source boundary; source recipe DELIVERED_RESET=1/MUT=0, no timing qualification",
+            "obs_max": "M5"
+          }
+        ]
+      }
+    }
+  }
+}

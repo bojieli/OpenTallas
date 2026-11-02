@@ -1,0 +1,674 @@
+{
+  "schema": "opentallas.hbm.tail_source_physical_candidates.v1",
+  "scope": "eight exact source calls and two protected typed native profiles; no production alias or source/view adoption",
+  "source_snapshot": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4",
+  "cohort_path": "/home/ubuntu/coord/tmp/codex-hbm-su00-upper-clock-2335/composite_root_PENDING.json",
+  "cohort_sha256": "6ecfacf5f23f700fedbbf38c9377dc08b229c882d39744fe36c1e52a4884dfc0",
+  "cohort_note": "ROOT pending clock is irrelevant to these eight retained tail body/pin/source identities; no whole-plan qualification",
+  "rows": [
+    {
+      "part": "NW_b002",
+      "partition_type": "q_b002__physical_v1",
+      "planned_instance": "u_hb_idx__s_Q2_tail0",
+      "actual_source_instance": "u_u_hb_idx_s_Q2_tail0",
+      "source_clock": "clk",
+      "source_delivered_reset": "L204_i_q[0]",
+      "source_parameter": ".DELIVERED_RESET(1)",
+      "planned_pins_file": "cores/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488__q_b103_u_hb_idx__s_Q_tail0__c25c_native.json",
+      "exact_pin_profile_sha256": "9496b22d4b49cf8a2370ea257603a930b15d3a733dff333153d32e01ed2fb001",
+      "candidate_view": "ot_hbm_idx_tail_native@9496b22d4b49",
+      "candidate_protected_status": "SIGNED",
+      "native_clock_pin": {
+        "name": "clk",
+        "layer": "M5",
+        "master_local_rect_um": [
+          107.952,
+          94.8,
+          108.0,
+          95.28
+        ],
+        "TT": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2/gen/ot_hbm_idx_tail_native_9496b22d4b49/views/ot_hbm_idx_tail_native_tt.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5502,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 212.42772,
+              "fall_ps": 232.06554
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 270.84305,
+              "fall_ps": 291.65164
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        },
+        "FF": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2/gen/ot_hbm_idx_tail_native_9496b22d4b49/views/ot_hbm_idx_tail_native_ff.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5934,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 166.06491,
+              "fall_ps": 174.40176
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 219.68721,
+              "fall_ps": 230.57245
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        }
+      },
+      "child_origin_um": [
+        17.28,
+        3101.76
+      ],
+      "child_orient": "R0",
+      "partition_origin_um": [
+        2306.88,
+        6065.28
+      ],
+      "partition_orient": "R0",
+      "physical_profile_match": "EXACT_PIN_FILE_SHA_AND_OUTLINE_ONLY",
+      "source_compatibility": "FAIL_DIRECT_ALIAS",
+      "failures": [
+        "Current actual source leaf call requires DELIVERED_RESET1; protected outer module has no DELIVERED_RESET parameter and defaults its inner fcore to0",
+        "Protected wrapper adds610 face state bits and +1input/+1output cycle; source cycle/adoption proof missing",
+        "Legacy asynchronous assertion versus synchronous three-regional-edge delivered reset is a protocol difference despite equal nominal release depth"
+      ],
+      "production_assignment": null
+    },
+    {
+      "part": "NW_b002",
+      "partition_type": "q_b002__physical_v1",
+      "planned_instance": "u_hb_idx__s_Q2_tail1",
+      "actual_source_instance": "u_u_hb_idx_s_Q2_tail1",
+      "source_clock": "clk",
+      "source_delivered_reset": "L204_i_q[0]",
+      "source_parameter": ".DELIVERED_RESET(1)",
+      "planned_pins_file": "cores/ot_hbm_idx_score_quarter_static__tail1__218.592x187.488__q_b103_u_hb_idx__s_Q_tail1__c25c_native.json",
+      "exact_pin_profile_sha256": "f56d1f72f3f3e628595afd19bf20fd44273a142c3e20c1482fc1fcf9146af84f",
+      "candidate_view": "ot_hbm_idx_tail_native@f56d1f72f3f3",
+      "candidate_protected_status": "SIGNED",
+      "native_clock_pin": {
+        "name": "clk",
+        "layer": "M5",
+        "master_local_rect_um": [
+          107.952,
+          94.8,
+          108.0,
+          95.28
+        ],
+        "TT": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/views/ot_hbm_idx_tail_native_tt.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5502,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 215.89745,
+              "fall_ps": 235.56946
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 269.06479,
+              "fall_ps": 290.66495
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        },
+        "FF": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/views/ot_hbm_idx_tail_native_ff.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5934,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 169.45934,
+              "fall_ps": 177.9491
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 218.21901,
+              "fall_ps": 229.63609
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        }
+      },
+      "child_origin_um": [
+        17.28,
+        3300.48
+      ],
+      "child_orient": "R0",
+      "partition_origin_um": [
+        2306.88,
+        6065.28
+      ],
+      "partition_orient": "R0",
+      "physical_profile_match": "EXACT_PIN_FILE_SHA_AND_OUTLINE_ONLY",
+      "source_compatibility": "FAIL_DIRECT_ALIAS",
+      "failures": [
+        "Current actual source leaf call requires DELIVERED_RESET1; protected outer module has no DELIVERED_RESET parameter and defaults its inner fcore to0",
+        "Protected wrapper adds610 face state bits and +1input/+1output cycle; source cycle/adoption proof missing",
+        "Legacy asynchronous assertion versus synchronous three-regional-edge delivered reset is a protocol difference despite equal nominal release depth"
+      ],
+      "production_assignment": null
+    },
+    {
+      "part": "NW_b101",
+      "partition_type": "q_b101_nw",
+      "planned_instance": "u_hb_idx__s_Q_tail0",
+      "actual_source_instance": "u_u_hb_idx_s_Q_tail0",
+      "source_clock": "clk",
+      "source_delivered_reset": "rst_n_t9",
+      "source_parameter": ".DELIVERED_RESET(1)",
+      "planned_pins_file": "cores/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488__q_b103_u_hb_idx__s_Q_tail0__c25c_native.json",
+      "exact_pin_profile_sha256": "9496b22d4b49cf8a2370ea257603a930b15d3a733dff333153d32e01ed2fb001",
+      "candidate_view": "ot_hbm_idx_tail_native@9496b22d4b49",
+      "candidate_protected_status": "SIGNED",
+      "native_clock_pin": {
+        "name": "clk",
+        "layer": "M5",
+        "master_local_rect_um": [
+          107.952,
+          94.8,
+          108.0,
+          95.28
+        ],
+        "TT": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2/gen/ot_hbm_idx_tail_native_9496b22d4b49/views/ot_hbm_idx_tail_native_tt.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5502,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 212.42772,
+              "fall_ps": 232.06554
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 270.84305,
+              "fall_ps": 291.65164
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        },
+        "FF": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2/gen/ot_hbm_idx_tail_native_9496b22d4b49/views/ot_hbm_idx_tail_native_ff.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5934,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 166.06491,
+              "fall_ps": 174.40176
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 219.68721,
+              "fall_ps": 230.57245
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        }
+      },
+      "child_origin_um": [
+        250.56,
+        1045.44
+      ],
+      "child_orient": "MX",
+      "partition_origin_um": [
+        12631.68,
+        4510.08
+      ],
+      "partition_orient": "R0",
+      "physical_profile_match": "EXACT_PIN_FILE_SHA_AND_OUTLINE_ONLY",
+      "source_compatibility": "FAIL_DIRECT_ALIAS",
+      "failures": [
+        "Current actual source leaf call requires DELIVERED_RESET1; protected outer module has no DELIVERED_RESET parameter and defaults its inner fcore to0",
+        "Protected wrapper adds610 face state bits and +1input/+1output cycle; source cycle/adoption proof missing",
+        "Legacy asynchronous assertion versus synchronous three-regional-edge delivered reset is a protocol difference despite equal nominal release depth"
+      ],
+      "production_assignment": null
+    },
+    {
+      "part": "NW_b103",
+      "partition_type": "q_b103",
+      "planned_instance": "u_hb_idx__s_Q_tail1",
+      "actual_source_instance": "u_u_hb_idx_s_Q_tail1",
+      "source_clock": "clk",
+      "source_delivered_reset": "rst_n_t9",
+      "source_parameter": ".DELIVERED_RESET(1)",
+      "planned_pins_file": "cores/ot_hbm_idx_score_quarter_static__tail1__218.592x187.488__q_b103_u_hb_idx__s_Q_tail1__c25c_native.json",
+      "exact_pin_profile_sha256": "f56d1f72f3f3e628595afd19bf20fd44273a142c3e20c1482fc1fcf9146af84f",
+      "candidate_view": "ot_hbm_idx_tail_native@f56d1f72f3f3",
+      "candidate_protected_status": "SIGNED",
+      "native_clock_pin": {
+        "name": "clk",
+        "layer": "M5",
+        "master_local_rect_um": [
+          107.952,
+          94.8,
+          108.0,
+          95.28
+        ],
+        "TT": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/views/ot_hbm_idx_tail_native_tt.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5502,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 215.89745,
+              "fall_ps": 235.56946
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 269.06479,
+              "fall_ps": 290.66495
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        },
+        "FF": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/views/ot_hbm_idx_tail_native_ff.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5934,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 169.45934,
+              "fall_ps": 177.9491
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 218.21901,
+              "fall_ps": 229.63609
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        }
+      },
+      "child_origin_um": [
+        241.92,
+        1002.24
+      ],
+      "child_orient": "R0",
+      "partition_origin_um": [
+        708.48,
+        4510.08
+      ],
+      "partition_orient": "R0",
+      "physical_profile_match": "EXACT_PIN_FILE_SHA_AND_OUTLINE_ONLY",
+      "source_compatibility": "FAIL_DIRECT_ALIAS",
+      "failures": [
+        "Current actual source leaf call requires DELIVERED_RESET1; protected outer module has no DELIVERED_RESET parameter and defaults its inner fcore to0",
+        "Protected wrapper adds610 face state bits and +1input/+1output cycle; source cycle/adoption proof missing",
+        "Legacy asynchronous assertion versus synchronous three-regional-edge delivered reset is a protocol difference despite equal nominal release depth"
+      ],
+      "production_assignment": null
+    },
+    {
+      "part": "NE_b002",
+      "partition_type": "q_b002",
+      "planned_instance": "u_hb_idx__s_Q2_tail0",
+      "actual_source_instance": "u_u_hb_idx_s_Q2_tail0",
+      "source_clock": "clk",
+      "source_delivered_reset": "L204m_i_q[0]",
+      "source_parameter": ".DELIVERED_RESET(1)",
+      "planned_pins_file": "cores/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488__q_b103_u_hb_idx__s_Q_tail0__c25c_native.json",
+      "exact_pin_profile_sha256": "9496b22d4b49cf8a2370ea257603a930b15d3a733dff333153d32e01ed2fb001",
+      "candidate_view": "ot_hbm_idx_tail_native@9496b22d4b49",
+      "candidate_protected_status": "SIGNED",
+      "native_clock_pin": {
+        "name": "clk",
+        "layer": "M5",
+        "master_local_rect_um": [
+          107.952,
+          94.8,
+          108.0,
+          95.28
+        ],
+        "TT": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2/gen/ot_hbm_idx_tail_native_9496b22d4b49/views/ot_hbm_idx_tail_native_tt.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5502,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 212.42772,
+              "fall_ps": 232.06554
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 270.84305,
+              "fall_ps": 291.65164
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        },
+        "FF": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2/gen/ot_hbm_idx_tail_native_9496b22d4b49/views/ot_hbm_idx_tail_native_ff.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5934,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 166.06491,
+              "fall_ps": 174.40176
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 219.68721,
+              "fall_ps": 230.57245
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        }
+      },
+      "child_origin_um": [
+        17.28,
+        3101.76
+      ],
+      "child_orient": "R0",
+      "partition_origin_um": [
+        25712.64,
+        6065.28
+      ],
+      "partition_orient": "MY",
+      "physical_profile_match": "EXACT_PIN_FILE_SHA_AND_OUTLINE_ONLY",
+      "source_compatibility": "FAIL_DIRECT_ALIAS",
+      "failures": [
+        "Current actual source leaf call requires DELIVERED_RESET1; protected outer module has no DELIVERED_RESET parameter and defaults its inner fcore to0",
+        "Protected wrapper adds610 face state bits and +1input/+1output cycle; source cycle/adoption proof missing",
+        "Legacy asynchronous assertion versus synchronous three-regional-edge delivered reset is a protocol difference despite equal nominal release depth"
+      ],
+      "production_assignment": null
+    },
+    {
+      "part": "NE_b002",
+      "partition_type": "q_b002",
+      "planned_instance": "u_hb_idx__s_Q2_tail1",
+      "actual_source_instance": "u_u_hb_idx_s_Q2_tail1",
+      "source_clock": "clk",
+      "source_delivered_reset": "L204m_i_q[0]",
+      "source_parameter": ".DELIVERED_RESET(1)",
+      "planned_pins_file": "cores/ot_hbm_idx_score_quarter_static__tail1__218.592x187.488__q_b103_u_hb_idx__s_Q_tail1__c25c_native.json",
+      "exact_pin_profile_sha256": "f56d1f72f3f3e628595afd19bf20fd44273a142c3e20c1482fc1fcf9146af84f",
+      "candidate_view": "ot_hbm_idx_tail_native@f56d1f72f3f3",
+      "candidate_protected_status": "SIGNED",
+      "native_clock_pin": {
+        "name": "clk",
+        "layer": "M5",
+        "master_local_rect_um": [
+          107.952,
+          94.8,
+          108.0,
+          95.28
+        ],
+        "TT": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/views/ot_hbm_idx_tail_native_tt.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5502,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 215.89745,
+              "fall_ps": 235.56946
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 269.06479,
+              "fall_ps": 290.66495
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        },
+        "FF": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/views/ot_hbm_idx_tail_native_ff.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5934,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 169.45934,
+              "fall_ps": 177.9491
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 218.21901,
+              "fall_ps": 229.63609
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        }
+      },
+      "child_origin_um": [
+        17.28,
+        3300.48
+      ],
+      "child_orient": "R0",
+      "partition_origin_um": [
+        25712.64,
+        6065.28
+      ],
+      "partition_orient": "MY",
+      "physical_profile_match": "EXACT_PIN_FILE_SHA_AND_OUTLINE_ONLY",
+      "source_compatibility": "FAIL_DIRECT_ALIAS",
+      "failures": [
+        "Current actual source leaf call requires DELIVERED_RESET1; protected outer module has no DELIVERED_RESET parameter and defaults its inner fcore to0",
+        "Protected wrapper adds610 face state bits and +1input/+1output cycle; source cycle/adoption proof missing",
+        "Legacy asynchronous assertion versus synchronous three-regional-edge delivered reset is a protocol difference despite equal nominal release depth"
+      ],
+      "production_assignment": null
+    },
+    {
+      "part": "NE_b101",
+      "partition_type": "q_b101",
+      "planned_instance": "u_hb_idx__s_Q_tail0",
+      "actual_source_instance": "u_u_hb_idx_s_Q_tail0",
+      "source_clock": "clk",
+      "source_delivered_reset": "rst_n_t9",
+      "source_parameter": ".DELIVERED_RESET(1)",
+      "planned_pins_file": "cores/ot_hbm_idx_score_quarter_static__tail0__218.592x187.488__q_b103_u_hb_idx__s_Q_tail0__c25c_native.json",
+      "exact_pin_profile_sha256": "9496b22d4b49cf8a2370ea257603a930b15d3a733dff333153d32e01ed2fb001",
+      "candidate_view": "ot_hbm_idx_tail_native@9496b22d4b49",
+      "candidate_protected_status": "SIGNED",
+      "native_clock_pin": {
+        "name": "clk",
+        "layer": "M5",
+        "master_local_rect_um": [
+          107.952,
+          94.8,
+          108.0,
+          95.28
+        ],
+        "TT": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2/gen/ot_hbm_idx_tail_native_9496b22d4b49/views/ot_hbm_idx_tail_native_tt.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5502,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 212.42772,
+              "fall_ps": 232.06554
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 270.84305,
+              "fall_ps": 291.65164
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        },
+        "FF": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2/gen/ot_hbm_idx_tail_native_9496b22d4b49/views/ot_hbm_idx_tail_native_ff.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5934,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 166.06491,
+              "fall_ps": 174.40176
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 219.68721,
+              "fall_ps": 230.57245
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        }
+      },
+      "child_origin_um": [
+        250.56,
+        1045.44
+      ],
+      "child_orient": "MX",
+      "partition_origin_um": [
+        15042.24,
+        4510.08
+      ],
+      "partition_orient": "MY",
+      "physical_profile_match": "EXACT_PIN_FILE_SHA_AND_OUTLINE_ONLY",
+      "source_compatibility": "FAIL_DIRECT_ALIAS",
+      "failures": [
+        "Current actual source leaf call requires DELIVERED_RESET1; protected outer module has no DELIVERED_RESET parameter and defaults its inner fcore to0",
+        "Protected wrapper adds610 face state bits and +1input/+1output cycle; source cycle/adoption proof missing",
+        "Legacy asynchronous assertion versus synchronous three-regional-edge delivered reset is a protocol difference despite equal nominal release depth"
+      ],
+      "production_assignment": null
+    },
+    {
+      "part": "NE_b103",
+      "partition_type": "q_b103__physical_v1",
+      "planned_instance": "u_hb_idx__s_Q_tail1",
+      "actual_source_instance": "u_u_hb_idx_s_Q_tail1",
+      "source_clock": "clk",
+      "source_delivered_reset": "rst_n_t9",
+      "source_parameter": ".DELIVERED_RESET(1)",
+      "planned_pins_file": "cores/ot_hbm_idx_score_quarter_static__tail1__218.592x187.488__q_b103_u_hb_idx__s_Q_tail1__c25c_native.json",
+      "exact_pin_profile_sha256": "f56d1f72f3f3e628595afd19bf20fd44273a142c3e20c1482fc1fcf9146af84f",
+      "candidate_view": "ot_hbm_idx_tail_native@f56d1f72f3f3",
+      "candidate_protected_status": "SIGNED",
+      "native_clock_pin": {
+        "name": "clk",
+        "layer": "M5",
+        "master_local_rect_um": [
+          107.952,
+          94.8,
+          108.0,
+          95.28
+        ],
+        "TT": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/views/ot_hbm_idx_tail_native_tt.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5502,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 215.89745,
+              "fall_ps": 235.56946
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 269.06479,
+              "fall_ps": 290.66495
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        },
+        "FF": {
+          "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/views/ot_hbm_idx_tail_native_ff.lib",
+          "clock_true": true,
+          "direction": "input",
+          "capacitance_ff": 0.5934,
+          "clock_path_envelope": {
+            "min_clock_tree_path": {
+              "rise_ps": 169.45934,
+              "fall_ps": 177.9491
+            },
+            "max_clock_tree_path": {
+              "rise_ps": 218.21901,
+              "fall_ps": 229.63609
+            }
+          },
+          "units": "time1ps/capacitance1fF",
+          "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+        }
+      },
+      "child_origin_um": [
+        241.92,
+        1002.24
+      ],
+      "child_orient": "R0",
+      "partition_origin_um": [
+        26982.72,
+        4510.08
+      ],
+      "partition_orient": "MY",
+      "physical_profile_match": "EXACT_PIN_FILE_SHA_AND_OUTLINE_ONLY",
+      "source_compatibility": "FAIL_DIRECT_ALIAS",
+      "failures": [
+        "Current actual source leaf call requires DELIVERED_RESET1; protected outer module has no DELIVERED_RESET parameter and defaults its inner fcore to0",
+        "Protected wrapper adds610 face state bits and +1input/+1output cycle; source cycle/adoption proof missing",
+        "Legacy asynchronous assertion versus synchronous three-regional-edge delivered reset is a protocol difference despite equal nominal release depth"
+      ],
+      "production_assignment": null
+    }
+  ],
+  "counts": {
+    "source_rows": 8,
+    "tail0_profiles": 4,
+    "tail1_profiles": 4,
+    "physical_pin_profile_matches": 8,
+    "direct_source_native_alias_compatible": 0
+  },
+  "source_native_event": {
+    "selected_source_DELIVERED_RESET": 1,
+    "protected_inner_DELIVERED_RESET": 0,
+    "protected_outer_accepts_DELIVERED_RESET_parameter": false,
+    "body_branch_state_model": {
+      "NKT": 4,
+      "RR": 5,
+      "legacy_reset_FF": 7,
+      "delivered_reset_FF": 15,
+      "delivered_vs_protected_reset_FF_delta": 8
+    },
+    "outer_face_state_bits_per_instance": 610,
+    "outer_face_state_bits_eight_instances": 4880,
+    "outer_input_cycles": 1,
+    "outer_output_cycles": 1,
+    "pricing": "Current selected source already requests DELIVERED1. Matching fresh native body retains its15 resetFF; adding face shell is +610FF/source-instance. Versus existing protectedDELIVERED0 physical candidate, a matchingDELIVERED1+sameface recipe has +8declared resetFF. Do not double-add8 to selected source or assume mapped count.",
+    "required": [
+      "Fresh source-matched native recipe/profile with DELIVERED_RESET1 semantics and explicit outer-face cycle/state price",
+      "Official mapped component equivalence plus actual native reset/clock/data pin and TT/FF qualification",
+      "Actual parent/native clock net/pin/phase and delivered reset source/arrival/recovery/START joins",
+      "Parent exact input/output FT bank endpoints requalified for any adopted shell cycles; no protected view alias"
+    ]
+  },
+  "protected_receipts": [
+    {
+      "view": "ot_hbm_idx_tail_native@9496b22d4b49",
+      "path": "/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49/PROVENANCE.json",
+      "sha256": "a7d491ae2c5ac4acba365ec24be34513826e67a3b8481b33eeeeeacea128d5ea",
+      "verdict": "SIGNED",
+      "lec_verdict": "EQUIVALENT"
+    },
+    {
+      "view": "ot_hbm_idx_tail_native@f56d1f72f3f3",
+      "path": "/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_f56d1f72f3f3/PROVENANCE.json",
+      "sha256": "41566920d011edfc7ac3f79e8a049de4193e2e5f8e899f140b9f251398649bbd",
+      "verdict": "SIGNED",
+      "lec_verdict": "EQUIVALENT"
+    }
+  ],
+  "production_assignment": "NONE",
+  "release_qualified": false
+}

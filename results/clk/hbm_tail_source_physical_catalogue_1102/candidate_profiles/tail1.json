@@ -1,0 +1,88 @@
+{
+  "candidate_view": "ot_hbm_idx_tail_native@f56d1f72f3f3",
+  "host": "intel2",
+  "kit": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3",
+  "protected_receipt": "/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_f56d1f72f3f3/PROVENANCE.json",
+  "protected_signoff": "SIGNED",
+  "protected_equivalence": "EQUIVALENT",
+  "master": "ot_hbm_idx_tail_native",
+  "outline_um": [
+    218.592,
+    187.488
+  ],
+  "original_declared_pin_file": "cores/ot_hbm_idx_score_quarter_static__tail1__218.592x187.488__q_b103_u_hb_idx__s_Q_tail1__c25c_native.json",
+  "original_declared_pin_file_sha256": "f56d1f72f3f3e628595afd19bf20fd44273a142c3e20c1482fc1fcf9146af84f",
+  "pins": 612,
+  "nonPG_pin_match_authority": "Signoff geometry owner: all612 declared centers/layers exact currentC11E; use actual fullprofile SHA for currentG mapping",
+  "LEF": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/views/ot_hbm_idx_tail_native.lef",
+  "clk_master_local_rect_um": [
+    107.952,
+    94.8,
+    108.0,
+    95.28
+  ],
+  "clk_layer": "M5",
+  "lef_clock_USE": "SIGNAL; typedclock role from actualLibrary",
+  "clock_libraries": {
+    "TT": {
+      "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/views/ot_hbm_idx_tail_native_tt.lib",
+      "clock_true": true,
+      "direction": "input",
+      "capacitance_ff": 0.5502,
+      "clock_path_envelope": {
+        "min_clock_tree_path": {
+          "rise_ps": 215.89745,
+          "fall_ps": 235.56946
+        },
+        "max_clock_tree_path": {
+          "rise_ps": 269.06479,
+          "fall_ps": 290.66495
+        }
+      },
+      "units": "time1ps/capacitance1fF",
+      "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+    },
+    "FF": {
+      "library": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/views/ot_hbm_idx_tail_native_ff.lib",
+      "clock_true": true,
+      "direction": "input",
+      "capacitance_ff": 0.5934,
+      "clock_path_envelope": {
+        "min_clock_tree_path": {
+          "rise_ps": 169.45934,
+          "fall_ps": 177.9491
+        },
+        "max_clock_tree_path": {
+          "rise_ps": 218.21901,
+          "fall_ps": 229.63609
+        }
+      },
+      "units": "time1ps/capacitance1fF",
+      "corner_values": "ACTUAL_EXPORTED_TYPED_LIBRARY_NOT_ESTIMATED"
+    }
+  },
+  "face_shell": {
+    "core": "ot_hbm_idx_tail_native__fcore",
+    "in_cycles": 1,
+    "out_cycles": 1,
+    "face_flops": 610,
+    "dropped": 0,
+    "unread_kept": 0,
+    "const_out_bits": 0,
+    "dup_out_bits": 0,
+    "plan_pins": 612
+  },
+  "historical_recipe_key": "ot_hbm_idx_score_quarter_static__tail0__181.44x155.52",
+  "candidate_raw_body": [
+    {
+      "path": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/rtl/ot_hbm_idx_owned_native.sv",
+      "module": "ot_hbm_idx_tail_native__fcore",
+      "module_text_sha256": "2e0223cab5a3ce21a42e913069bd6dd28deefffda67da0affd79196a52be5a80",
+      "header": "module ot_hbm_idx_tail_native__fcore #(parameter integer DELIVERED_RESET=0) (\n    input  wire                  clk,\n    input  wire                  rst_n,\n    input  wire                  i_v,\n    input  wire [NKT-1:0]        i_kv,\n    input  wire [NKT-1:0]        i_keep,\n    input  wire [NKT*NCH*32-1:0] i_sum,     // key g, chunk c at [(g*NCH+c)*32 +: 32]\n    input  wire [NKT*NCH-1:0]    i_fault,\n    output reg                   o_v,\n    output reg  [NKT-1:0]        o_kv,\n    output reg  [NKT*16-1:0]     o_score,\n    output reg  [NKT-1:0]        o_fault\n\n"
+    }
+  ],
+  "functional_assignment": "UNRESOLVED: outer u_fcore wrapper/native tail_rest relation to actualcurrentsource has not been qualified",
+  "production_assignment": "NONE",
+  "planning_status": "AVAILABLE_PROTECTED_TYPED_PHYSICAL_CANDIDATE",
+  "release_qualified": false
+}
