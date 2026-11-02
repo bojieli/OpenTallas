@@ -1,0 +1,51 @@
+{
+ "scope": "Native compact GEN preparation only; no physical qualification",
+ "approved_event": "693e528b8",
+ "views": {
+  "schema": "opentallas.hbm_arch.core_views.v1",
+  "plan": "/srv/opentallas-scratch2/claude/codex-hbm-bfqg-compact-kit-1101/plan/die_plan.json",
+  "plan_sha256": "efe8899ab040235a37533e028af5ec1c7972e5673fb9aa78c59ca59531094eef",
+  "views": 1,
+  "view_list": [
+   {
+    "view": "ot_hgi_sm_xload_cl2_bfqg@69d23342c0e5",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "pins_sha256": "69d23342c0e51fa59d6e0062f13c12160dbdad680fd500378281dbf6fc92424e",
+    "pins": 1340,
+    "family": "SM",
+    "instances": [
+     "q_hub_nw.u_xq_Q_p0_bfq0",
+     "q_hub_nw.u_xq_Q_p0_bfq1",
+     "q_hub_nw.u_xq_Q_p0_bfq2",
+     "q_hub_nw.u_xq_Q_p0_bfq3",
+     "q_hub_nw.u_xq_Q_p1_bfq0",
+     "q_hub_nw.u_xq_Q_p1_bfq1",
+     "q_hub_nw.u_xq_Q_p1_bfq2",
+     "q_hub_nw.u_xq_Q_p1_bfq3",
+     "q_hub_ne.u_xq_Q_p0_bfq0",
+     "q_hub_ne.u_xq_Q_p0_bfq1",
+     "q_hub_ne.u_xq_Q_p0_bfq2",
+     "q_hub_ne.u_xq_Q_p0_bfq3",
+     "q_hub_ne.u_xq_Q_p1_bfq0",
+     "q_hub_ne.u_xq_Q_p1_bfq1",
+     "q_hub_ne.u_xq_Q_p1_bfq2",
+     "q_hub_ne.u_xq_Q_p1_bfq3"
+    ],
+    "placed": 16,
+    "tables_for_module": 1,
+    "recipe_keys": [
+     "ot_hgi_sm_xload_cl2_bfqg"
+    ],
+    "blockers": []
+   }
+  ]
+ },
+ "source_component_EQ": 8650,
+ "reset_requested": 4,
+ "added_source_cycles": 0
+}
