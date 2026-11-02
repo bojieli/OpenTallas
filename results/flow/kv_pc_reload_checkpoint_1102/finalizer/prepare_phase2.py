@@ -12,6 +12,9 @@ B=Path('run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base')
 (D/B).mkdir(parents=True)
 for n in ['1_2_yosys.v','4_cts.sdc','6_final.spef']:
     shutil.copy2(S/B/n,D/B/n)
+# Keep the genuine original CTS stage identity; never synthesize it from repair/GRT.
+ORIG=Path('/srv/opentallas-scratch2/claude/kv60-pcx/r27c/qkd_kvs_pc__397.44x362.88')
+shutil.copy2(ORIG/B/'4_1_cts.odb',D/B/'4_1_cts.odb')
 shutil.copy2(S/'repair_checkpoint.odb',D/B/'4_cts.odb')
 shutil.copy2(S/B/'4_cts.odb',D/'original_route.odb')
 shutil.copy2(S/B/'clk_freeze_pre.tsv',D/'ORIGINAL.clock.tsv')
