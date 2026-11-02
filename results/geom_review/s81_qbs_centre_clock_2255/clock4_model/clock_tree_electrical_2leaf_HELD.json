@@ -1,0 +1,485 @@
+{
+ "LLfu": {
+  "basis": "Geometry/ASAP7 NLDM + historical Manhattan-MST branch C/direct branch R; no clock measurements/pad selection; ICG = liberty CLK->GCLK arc, CTS-open subtrees = plan stage count + region model (PLAN-ICG-MODEL 10-26 fit on 1,043 single-level gated domains of 2 routed signed-off S81 cores (qxpq_w10 cpr ffacf68cd 1,025 ICG domains / 37,431 sinks; bf_col compact199 05a8d46ee 18 ICG domains / 52,679 sinks), 6_final ODB+SPEF OpenSTA, each core equal weight; results/plan_icg_model_1026)",
+  "wire_r_kohm_um": 0.14278,
+  "wire_c_ff_um": 0.14783759999999999,
+  "input_slew_ps": 40.0,
+  "routing_model": null,
+  "corners": {
+   "TT": {
+    "sinks": 1972,
+    "min_ps": 153.4894721315435,
+    "mean_ps": 159.45301613154348,
+    "max_ps": 173.6920061315435,
+    "window_ps": 20.202534000000014,
+    "leaf_means": [
+     {
+      "node": "qb_S",
+      "kind": "cts_open",
+      "sinks": 986,
+      "min_ps": 158.6302721315435,
+      "mean_ps": 162.45811613154348,
+      "max_ps": 173.6920061315435,
+      "driver_out_ps": 61.206,
+      "cts_levels": 3,
+      "region_d_um": 41.607,
+      "modelled_subtree": true,
+      "calibration": "OUT",
+      "out_of_calibration": [
+       "region 0.390 of the outline > 0.35 (whole-core gate)"
+      ]
+     },
+     {
+      "node": "qb_N",
+      "kind": "cts_open",
+      "sinks": 986,
+      "min_ps": 153.4894721315435,
+      "mean_ps": 156.44791613154348,
+      "max_ps": 165.13030613154348,
+      "driver_out_ps": 61.206,
+      "cts_levels": 3,
+      "region_d_um": 32.157,
+      "modelled_subtree": true,
+      "calibration": "IN",
+      "out_of_calibration": []
+     }
+    ],
+    "nets": [
+     {
+      "driver": "qb_root",
+      "kind": "buffer",
+      "fanout": 2,
+      "wire_um": 38.88,
+      "load_ff": 2.408,
+      "cell_delay_ps": 28.948,
+      "input_arrival_ps": 0.0,
+      "wire_geometry": {}
+     },
+     {
+      "driver": "qb_S",
+      "kind": "buffer",
+      "fanout": 1,
+      "wire_um": 0.0,
+      "load_ff": 2.35,
+      "cell_delay_ps": 24.928,
+      "input_arrival_ps": 36.278,
+      "wire_geometry": {}
+     },
+     {
+      "driver": "qb_N",
+      "kind": "buffer",
+      "fanout": 1,
+      "wire_um": 0.0,
+      "load_ff": 2.35,
+      "cell_delay_ps": 24.928,
+      "input_arrival_ps": 36.278,
+      "wire_geometry": {}
+     }
+    ],
+    "prediction": "INVALID",
+    "valid_for_build_gating": false,
+    "out_of_calibration_leaves": [
+     "qb_S"
+    ]
+   },
+   "FF": {
+    "sinks": 1972,
+    "min_ps": 120.98823864851674,
+    "mean_ps": 126.20129064851675,
+    "max_ps": 138.59291364851674,
+    "window_ps": 17.604675,
+    "leaf_means": [
+     {
+      "node": "qb_S",
+      "kind": "cts_open",
+      "sinks": 986,
+      "min_ps": 125.07063864851673,
+      "mean_ps": 128.64884064851674,
+      "max_ps": 138.59291364851674,
+      "driver_out_ps": 49.916,
+      "cts_levels": 3,
+      "region_d_um": 41.607,
+      "modelled_subtree": true,
+      "calibration": "OUT",
+      "out_of_calibration": [
+       "region 0.390 of the outline > 0.35 (whole-core gate)"
+      ]
+     },
+     {
+      "node": "qb_N",
+      "kind": "cts_open",
+      "sinks": 986,
+      "min_ps": 120.98823864851674,
+      "mean_ps": 123.75374064851674,
+      "max_ps": 131.43926364851674,
+      "driver_out_ps": 49.916,
+      "cts_levels": 3,
+      "region_d_um": 32.157,
+      "modelled_subtree": true,
+      "calibration": "IN",
+      "out_of_calibration": []
+     }
+    ],
+    "nets": [
+     {
+      "driver": "qb_root",
+      "kind": "buffer",
+      "fanout": 2,
+      "wire_um": 38.88,
+      "load_ff": 2.666,
+      "cell_delay_ps": 22.551,
+      "input_arrival_ps": 0.0,
+      "wire_geometry": {}
+     },
+     {
+      "driver": "qb_S",
+      "kind": "buffer",
+      "fanout": 1,
+      "wire_um": 0.0,
+      "load_ff": 2.607,
+      "cell_delay_ps": 19.676,
+      "input_arrival_ps": 30.24,
+      "wire_geometry": {}
+     },
+     {
+      "driver": "qb_N",
+      "kind": "buffer",
+      "fanout": 1,
+      "wire_um": 0.0,
+      "load_ff": 2.607,
+      "cell_delay_ps": 19.676,
+      "input_arrival_ps": 30.24,
+      "wire_geometry": {}
+     }
+    ],
+    "prediction": "INVALID",
+    "valid_for_build_gating": false,
+    "out_of_calibration_leaves": [
+     "qb_S"
+    ]
+   }
+  }
+ },
+ "LLfd": {
+  "basis": "Geometry/ASAP7 NLDM + historical Manhattan-MST branch C/direct branch R; no clock measurements/pad selection; ICG = liberty CLK->GCLK arc, CTS-open subtrees = plan stage count + region model (PLAN-ICG-MODEL 10-26 fit on 1,043 single-level gated domains of 2 routed signed-off S81 cores (qxpq_w10 cpr ffacf68cd 1,025 ICG domains / 37,431 sinks; bf_col compact199 05a8d46ee 18 ICG domains / 52,679 sinks), 6_final ODB+SPEF OpenSTA, each core equal weight; results/plan_icg_model_1026)",
+  "wire_r_kohm_um": 0.14278,
+  "wire_c_ff_um": 0.14783759999999999,
+  "input_slew_ps": 40.0,
+  "routing_model": null,
+  "corners": {
+   "TT": {
+    "sinks": 1972,
+    "min_ps": 153.4894721315435,
+    "mean_ps": 159.28129613154348,
+    "max_ps": 173.2027661315435,
+    "window_ps": 19.71329400000002,
+    "leaf_means": [
+     {
+      "node": "qb_S",
+      "kind": "cts_open",
+      "sinks": 986,
+      "min_ps": 153.4894721315435,
+      "mean_ps": 156.44791613154348,
+      "max_ps": 165.13030613154348,
+      "driver_out_ps": 61.206,
+      "cts_levels": 3,
+      "region_d_um": 32.157,
+      "modelled_subtree": true,
+      "calibration": "IN",
+      "out_of_calibration": []
+     },
+     {
+      "node": "qb_N",
+      "kind": "cts_open",
+      "sinks": 986,
+      "min_ps": 158.3365121315435,
+      "mean_ps": 162.1146761315435,
+      "max_ps": 173.2027661315435,
+      "driver_out_ps": 61.206,
+      "cts_levels": 3,
+      "region_d_um": 41.067,
+      "modelled_subtree": true,
+      "calibration": "OUT",
+      "out_of_calibration": [
+       "region 0.385 of the outline > 0.35 (whole-core gate)"
+      ]
+     }
+    ],
+    "nets": [
+     {
+      "driver": "qb_root",
+      "kind": "buffer",
+      "fanout": 2,
+      "wire_um": 38.88,
+      "load_ff": 2.408,
+      "cell_delay_ps": 28.948,
+      "input_arrival_ps": 0.0,
+      "wire_geometry": {}
+     },
+     {
+      "driver": "qb_S",
+      "kind": "buffer",
+      "fanout": 1,
+      "wire_um": 0.0,
+      "load_ff": 2.35,
+      "cell_delay_ps": 24.928,
+      "input_arrival_ps": 36.278,
+      "wire_geometry": {}
+     },
+     {
+      "driver": "qb_N",
+      "kind": "buffer",
+      "fanout": 1,
+      "wire_um": 0.0,
+      "load_ff": 2.35,
+      "cell_delay_ps": 24.928,
+      "input_arrival_ps": 36.278,
+      "wire_geometry": {}
+     }
+    ],
+    "prediction": "INVALID",
+    "valid_for_build_gating": false,
+    "out_of_calibration_leaves": [
+     "qb_N"
+    ]
+   },
+   "FF": {
+    "sinks": 1972,
+    "min_ps": 120.98823864851676,
+    "mean_ps": 126.06143064851675,
+    "max_ps": 138.18413364851676,
+    "window_ps": 17.195895000000007,
+    "leaf_means": [
+     {
+      "node": "qb_S",
+      "kind": "cts_open",
+      "sinks": 986,
+      "min_ps": 120.98823864851676,
+      "mean_ps": 123.75374064851675,
+      "max_ps": 131.43926364851674,
+      "driver_out_ps": 49.916,
+      "cts_levels": 3,
+      "region_d_um": 32.157,
+      "modelled_subtree": true,
+      "calibration": "IN",
+      "out_of_calibration": []
+     },
+     {
+      "node": "qb_N",
+      "kind": "cts_open",
+      "sinks": 986,
+      "min_ps": 124.83735864851674,
+      "mean_ps": 128.36912064851674,
+      "max_ps": 138.18413364851676,
+      "driver_out_ps": 49.916,
+      "cts_levels": 3,
+      "region_d_um": 41.067,
+      "modelled_subtree": true,
+      "calibration": "OUT",
+      "out_of_calibration": [
+       "region 0.385 of the outline > 0.35 (whole-core gate)"
+      ]
+     }
+    ],
+    "nets": [
+     {
+      "driver": "qb_root",
+      "kind": "buffer",
+      "fanout": 2,
+      "wire_um": 38.88,
+      "load_ff": 2.666,
+      "cell_delay_ps": 22.551,
+      "input_arrival_ps": 0.0,
+      "wire_geometry": {}
+     },
+     {
+      "driver": "qb_S",
+      "kind": "buffer",
+      "fanout": 1,
+      "wire_um": 0.0,
+      "load_ff": 2.607,
+      "cell_delay_ps": 19.676,
+      "input_arrival_ps": 30.24,
+      "wire_geometry": {}
+     },
+     {
+      "driver": "qb_N",
+      "kind": "buffer",
+      "fanout": 1,
+      "wire_um": 0.0,
+      "load_ff": 2.607,
+      "cell_delay_ps": 19.676,
+      "input_arrival_ps": 30.24,
+      "wire_geometry": {}
+     }
+    ],
+    "prediction": "INVALID",
+    "valid_for_build_gating": false,
+    "out_of_calibration_leaves": [
+     "qb_N"
+    ]
+   }
+  }
+ },
+ "NNfu": {
+  "basis": "Geometry/ASAP7 NLDM + historical Manhattan-MST branch C/direct branch R; no clock measurements/pad selection; ICG = liberty CLK->GCLK arc, CTS-open subtrees = plan stage count + region model (PLAN-ICG-MODEL 10-26 fit on 1,043 single-level gated domains of 2 routed signed-off S81 cores (qxpq_w10 cpr ffacf68cd 1,025 ICG domains / 37,431 sinks; bf_col compact199 05a8d46ee 18 ICG domains / 52,679 sinks), 6_final ODB+SPEF OpenSTA, each core equal weight; results/plan_icg_model_1026)",
+  "wire_r_kohm_um": 0.14278,
+  "wire_c_ff_um": 0.14783759999999999,
+  "input_slew_ps": 40.0,
+  "routing_model": null,
+  "corners": {
+   "TT": {
+    "sinks": 1978,
+    "min_ps": 153.4894721315435,
+    "mean_ps": 159.62473613154347,
+    "max_ps": 174.1812461315435,
+    "window_ps": 20.69177400000001,
+    "leaf_means": [
+     {
+      "node": "qb_S",
+      "kind": "cts_open",
+      "sinks": 989,
+      "min_ps": 158.9240321315435,
+      "mean_ps": 162.8015561315435,
+      "max_ps": 174.1812461315435,
+      "driver_out_ps": 61.206,
+      "cts_levels": 3,
+      "region_d_um": 42.147,
+      "modelled_subtree": true,
+      "calibration": "OUT",
+      "out_of_calibration": [
+       "region 0.396 of the outline > 0.35 (whole-core gate)"
+      ]
+     },
+     {
+      "node": "qb_N",
+      "kind": "cts_open",
+      "sinks": 989,
+      "min_ps": 153.4894721315435,
+      "mean_ps": 156.44791613154348,
+      "max_ps": 165.13030613154348,
+      "driver_out_ps": 61.206,
+      "cts_levels": 3,
+      "region_d_um": 32.157,
+      "modelled_subtree": true,
+      "calibration": "IN",
+      "out_of_calibration": []
+     }
+    ],
+    "nets": [
+     {
+      "driver": "qb_root",
+      "kind": "buffer",
+      "fanout": 2,
+      "wire_um": 38.88,
+      "load_ff": 2.408,
+      "cell_delay_ps": 28.948,
+      "input_arrival_ps": 0.0,
+      "wire_geometry": {}
+     },
+     {
+      "driver": "qb_S",
+      "kind": "buffer",
+      "fanout": 1,
+      "wire_um": 0.0,
+      "load_ff": 2.35,
+      "cell_delay_ps": 24.928,
+      "input_arrival_ps": 36.278,
+      "wire_geometry": {}
+     },
+     {
+      "driver": "qb_N",
+      "kind": "buffer",
+      "fanout": 1,
+      "wire_um": 0.0,
+      "load_ff": 2.35,
+      "cell_delay_ps": 24.928,
+      "input_arrival_ps": 36.278,
+      "wire_geometry": {}
+     }
+    ],
+    "prediction": "INVALID",
+    "valid_for_build_gating": false,
+    "out_of_calibration_leaves": [
+     "qb_S"
+    ]
+   },
+   "FF": {
+    "sinks": 1978,
+    "min_ps": 120.98823864851674,
+    "mean_ps": 126.34115064851676,
+    "max_ps": 139.00169364851675,
+    "window_ps": 18.013455000000008,
+    "leaf_means": [
+     {
+      "node": "qb_S",
+      "kind": "cts_open",
+      "sinks": 989,
+      "min_ps": 125.30391864851677,
+      "mean_ps": 128.92856064851676,
+      "max_ps": 139.00169364851675,
+      "driver_out_ps": 49.916,
+      "cts_levels": 3,
+      "region_d_um": 42.147,
+      "modelled_subtree": true,
+      "calibration": "OUT",
+      "out_of_calibration": [
+       "region 0.396 of the outline > 0.35 (whole-core gate)"
+      ]
+     },
+     {
+      "node": "qb_N",
+      "kind": "cts_open",
+      "sinks": 989,
+      "min_ps": 120.98823864851674,
+      "mean_ps": 123.75374064851674,
+      "max_ps": 131.43926364851674,
+      "driver_out_ps": 49.916,
+      "cts_levels": 3,
+      "region_d_um": 32.157,
+      "modelled_subtree": true,
+      "calibration": "IN",
+      "out_of_calibration": []
+     }
+    ],
+    "nets": [
+     {
+      "driver": "qb_root",
+      "kind": "buffer",
+      "fanout": 2,
+      "wire_um": 38.88,
+      "load_ff": 2.666,
+      "cell_delay_ps": 22.551,
+      "input_arrival_ps": 0.0,
+      "wire_geometry": {}
+     },
+     {
+      "driver": "qb_S",
+      "kind": "buffer",
+      "fanout": 1,
+      "wire_um": 0.0,
+      "load_ff": 2.607,
+      "cell_delay_ps": 19.676,
+      "input_arrival_ps": 30.24,
+      "wire_geometry": {}
+     },
+     {
+      "driver": "qb_N",
+      "kind": "buffer",
+      "fanout": 1,
+      "wire_um": 0.0,
+      "load_ff": 2.607,
+      "cell_delay_ps": 19.676,
+      "input_arrival_ps": 30.24,
+      "wire_geometry": {}
+     }
+    ],
+    "prediction": "INVALID",
+    "valid_for_build_gating": false,
+    "out_of_calibration_leaves": [
+     "qb_S"
+    ]
+   }
+  }
+ }
+}

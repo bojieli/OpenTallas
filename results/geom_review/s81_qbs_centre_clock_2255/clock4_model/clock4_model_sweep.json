@@ -1,0 +1,1457 @@
+{
+ "LLfu": [
+  {
+   "entry_trunk_cells": 0,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 148.47324926256232,
+     "mean_ps": 152.84347030167584,
+     "max_ps": 165.08996933911698,
+     "window_ps": 16.616720076554657,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 117.01892908641818,
+     "mean_ps": 120.86625413988159,
+     "max_ps": 131.4882301607979,
+     "window_ps": 14.469301074379729,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 1,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 172.32746671701042,
+     "mean_ps": 176.69782130191513,
+     "max_ps": 188.94445388509033,
+     "window_ps": 16.616987168079902,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 134.53894006451677,
+     "mean_ps": 138.38638522143145,
+     "max_ps": 149.0084813447899,
+     "window_ps": 14.469541280273148,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 2,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 187.95882110136233,
+     "mean_ps": 192.3291772885706,
+     "max_ps": 204.57581147404866,
+     "window_ps": 16.61699037268633,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 145.90844293518714,
+     "mean_ps": 149.75589189826806,
+     "max_ps": 160.3779918277608,
+     "window_ps": 14.46954889257367,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 3,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 203.73877506467545,
+     "mean_ps": 208.1091315290357,
+     "max_ps": 220.3557659916656,
+     "window_ps": 16.616990926990155,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 157.3800835517955,
+     "mean_ps": 161.22753301390622,
+     "max_ps": 171.8496334424246,
+     "window_ps": 14.469549890629082,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 4,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 220.17015487679294,
+     "mean_ps": 224.54051093328204,
+     "max_ps": 236.78714498804098,
+     "window_ps": 16.616990111248043,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 169.41352441963286,
+     "mean_ps": 173.26097316246333,
+     "max_ps": 183.88307287170738,
+     "window_ps": 14.46954845207452,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 5,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": true,
+   "corners": {
+    "TT": {
+     "min_ps": 236.96538597115511,
+     "mean_ps": 241.33574200421768,
+     "max_ps": 253.5823760355501,
+     "window_ps": 16.616990064394997,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 181.66523537320663,
+     "mean_ps": 185.5126840691322,
+     "max_ps": 196.13478373147188,
+     "window_ps": 14.469548358265257,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 6,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": true,
+   "corners": {
+    "TT": {
+     "min_ps": 252.6074779950692,
+     "mean_ps": 256.9778344370485,
+     "max_ps": 269.2244688772977,
+     "window_ps": 16.616990882228492,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 193.0270026909101,
+     "mean_ps": 196.8744521141521,
+     "max_ps": 207.49655250380198,
+     "window_ps": 14.46954981289187,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 7,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 268.36834353003934,
+     "mean_ps": 272.7387002439472,
+     "max_ps": 284.98533495612463,
+     "window_ps": 16.616991426085292,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 204.49958137767607,
+     "mean_ps": 208.34703126891617,
+     "max_ps": 218.96913212656034,
+     "window_ps": 14.469550748884274,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 8,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 284.79569083900327,
+     "mean_ps": 289.16604715166005,
+     "max_ps": 301.41268146258665,
+     "window_ps": 16.616990623583376,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 216.5283806941346,
+     "mean_ps": 220.37582989130587,
+     "max_ps": 230.99793005488704,
+     "window_ps": 14.469549360752438,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 9,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 301.5909634069171,
+     "mean_ps": 305.9613196965472,
+     "max_ps": 318.2079539844471,
+     "window_ps": 16.616990577529975,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 228.77985046433955,
+     "mean_ps": 232.62729961600508,
+     "max_ps": 243.24939973408078,
+     "window_ps": 14.469549269741236,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 10,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 317.236841983086,
+     "mean_ps": 321.6071986749775,
+     "max_ps": 333.85383336513854,
+     "window_ps": 16.61699138205256,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 240.14623594055314,
+     "mean_ps": 243.99368579426456,
+     "max_ps": 254.61578661438034,
+     "window_ps": 14.4695506738272,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 11,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 333.00044642590194,
+     "mean_ps": 337.37080338529705,
+     "max_ps": 349.6174383429617,
+     "window_ps": 16.61699191705975,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 251.62194838886245,
+     "mean_ps": 255.4693986936115,
+     "max_ps": 266.0914999647611,
+     "window_ps": 14.469551575898663,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 12,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 349.4237637577947,
+     "mean_ps": 353.79412032246466,
+     "max_ps": 366.04075488540434,
+     "window_ps": 16.61699112760965,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 263.6461368863971,
+     "mean_ps": 267.49358652207076,
+     "max_ps": 278.11568712415055,
+     "window_ps": 14.46955023775348,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 13,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 367.2458273433896,
+     "mean_ps": 371.61618339910234,
+     "max_ps": 383.86281745308486,
+     "window_ps": 16.61699010969528,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 276.6997650231307,
+     "mean_ps": 280.5472137559995,
+     "max_ps": 291.16931345528207,
+     "window_ps": 14.469548432151385,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 14,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 382.8977426030695,
+     "mean_ps": 387.2680990674297,
+     "max_ps": 399.51473353005974,
+     "window_ps": 16.61699092699024,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 288.0626196695315,
+     "mean_ps": 291.9100691316571,
+     "max_ps": 302.5321695601905,
+     "window_ps": 14.469549890658982,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 15,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 398.6588436379255,
+     "mean_ps": 403.02920037381807,
+     "max_ps": 415.27583510798013,
+     "window_ps": 16.616991470054643,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 299.5354800343258,
+     "mean_ps": 303.3829299629499,
+     "max_ps": 314.00503085797783,
+     "window_ps": 14.469550823652014,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 16,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 415.0858318123113,
+     "mean_ps": 419.45618814753664,
+     "max_ps": 431.7028224810317,
+     "window_ps": 16.616990668720405,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 311.56386855991906,
+     "mean_ps": 315.41131779670735,
+     "max_ps": 326.0334179999052,
+     "window_ps": 14.469549439986167,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 17,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 432.3859566186775,
+     "mean_ps": 436.7563124143101,
+     "max_ps": 449.00294620821285,
+     "window_ps": 16.616989589535365,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 324.240045960771,
+     "mean_ps": 328.0874942275435,
+     "max_ps": 338.70959346073374,
+     "window_ps": 14.469547499962744,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 18,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 448.0245797483251,
+     "mean_ps": 452.3949359590169,
+     "max_ps": 464.64157016797844,
+     "window_ps": 16.616990419653348,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 335.597588184096,
+     "mean_ps": 339.4450372014187,
+     "max_ps": 350.0671371851527,
+     "window_ps": 14.469549001056691,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 19,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 463.7829363721028,
+     "mean_ps": 468.1532928588105,
+     "max_ps": 480.3999273437879,
+     "window_ps": 16.616990971685084,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 347.0672978824054,
+     "mean_ps": 350.91474738334375,
+     "max_ps": 361.53684785068936,
+     "window_ps": 14.469549968283957,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 20,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 480.2139750611353,
+     "mean_ps": 484.5843311405645,
+     "max_ps": 496.8309652182636,
+     "window_ps": 16.616990157128328,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 359.1003179117695,
+     "mean_ps": 362.9477666956312,
+     "max_ps": 373.56986644590626,
+     "window_ps": 14.469548534136777,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  }
+ ],
+ "LLfd": [
+  {
+   "entry_trunk_cells": 0,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 148.20019705540503,
+     "mean_ps": 152.7576103016758,
+     "max_ps": 162.47628954961897,
+     "window_ps": 14.276092494213941,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 116.80684325046047,
+     "mean_ps": 120.79632413988158,
+     "max_ps": 129.30050206184973,
+     "window_ps": 12.493658811389253,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 1,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 172.0546815109721,
+     "mean_ps": 176.6119613019151,
+     "max_ps": 186.33050709458766,
+     "window_ps": 14.275825583615557,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 134.32709312548218,
+     "mean_ps": 138.31645522143143,
+     "max_ps": 146.82051435093686,
+     "window_ps": 12.493421225454682,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 2,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 187.68603909888188,
+     "mean_ps": 192.24331728857058,
+     "max_ps": 201.96186147998947,
+     "window_ps": 14.275822381107588,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 145.69660356821151,
+     "mean_ps": 149.68596189826803,
+     "max_ps": 158.1900172619128,
+     "window_ps": 12.493413693701285,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 3,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 203.46599361631755,
+     "mean_ps": 208.02327152903567,
+     "max_ps": 217.74181544348414,
+     "window_ps": 14.275821827166595,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 157.16824517760466,
+     "mean_ps": 161.15760301390623,
+     "max_ps": 169.6616578838002,
+     "window_ps": 12.493412706195528,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 4,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 219.89737261295969,
+     "mean_ps": 224.45465093328204,
+     "max_ps": 234.17319525533452,
+     "window_ps": 14.275822642374834,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 169.20168461448472,
+     "mean_ps": 173.19104316246327,
+     "max_ps": 181.69509874402817,
+     "window_ps": 12.493414129543453,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 5,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": true,
+   "corners": {
+    "TT": {
+     "min_ps": 236.69260366048414,
+     "mean_ps": 241.24988200421768,
+     "max_ps": 250.96842634968135,
+     "window_ps": 14.275822689197213,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 181.45339547474472,
+     "mean_ps": 185.44275406913223,
+     "max_ps": 193.94680969710564,
+     "window_ps": 12.493414222360911,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 6,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": true,
+   "corners": {
+    "TT": {
+     "min_ps": 252.3346965019642,
+     "mean_ps": 256.8919744370486,
+     "max_ps": 266.6105183738632,
+     "window_ps": 14.275821871899012,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 192.81516423939254,
+     "mean_ps": 196.80452211415206,
+     "max_ps": 205.30857702250364,
+     "window_ps": 12.493412783111097,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 7,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 268.0955625806134,
+     "mean_ps": 272.6528402439472,
+     "max_ps": 282.37138390901146,
+     "window_ps": 14.27582132839808,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 204.28774385720914,
+     "mean_ps": 208.27710126891617,
+     "max_ps": 216.78115571421924,
+     "window_ps": 12.493411857010102,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 8,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 284.5229090873378,
+     "mean_ps": 289.08018715166014,
+     "max_ps": 298.79873121771266,
+     "window_ps": 14.275822130374877,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 216.31654179286517,
+     "mean_ps": 220.30589989130587,
+     "max_ps": 228.8099550233367,
+     "window_ps": 12.493413230471532,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 9,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 301.3181816092133,
+     "mean_ps": 305.87545969654724,
+     "max_ps": 315.59400378561145,
+     "window_ps": 14.275822176398151,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 228.56801147253958,
+     "mean_ps": 232.55736961600505,
+     "max_ps": 241.06142479306027,
+     "window_ps": 12.493413320520688,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 10,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 316.96406098964167,
+     "mean_ps": 321.52133867497747,
+     "max_ps": 331.23988236204366,
+     "window_ps": 14.275821372401992,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 239.93439834542534,
+     "mean_ps": 243.92375579426454,
+     "max_ps": 252.42781027669943,
+     "window_ps": 12.493411931274096,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 11,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 332.72766596728985,
+     "mean_ps": 337.284943385297,
+     "max_ps": 347.0034868050348,
+     "window_ps": 14.27582083774496,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 251.4101116910444,
+     "mean_ps": 255.3994686936115,
+     "max_ps": 263.9035227297781,
+     "window_ps": 12.493411038733711,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 12,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 349.15098250999074,
+     "mean_ps": 353.7082603224647,
+     "max_ps": 363.42680413666903,
+     "window_ps": 14.275821626678294,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 263.4342988574978,
+     "mean_ps": 267.42365652207076,
+     "max_ps": 275.9277112202375,
+     "window_ps": 12.493412362739662,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 13,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 366.9730450780042,
+     "mean_ps": 371.5303233991023,
+     "max_ps": 381.2488677219306,
+     "window_ps": 14.275822643926404,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 276.48792519816465,
+     "mean_ps": 280.47728375599945,
+     "max_ps": 288.9813393474206,
+     "window_ps": 12.493414149255955,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 14,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 382.6249611547117,
+     "mean_ps": 387.18223906742975,
+     "max_ps": 396.90078298187814,
+     "window_ps": 14.275821827166453,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 287.85078129537044,
+     "mean_ps": 291.8401391316572,
+     "max_ps": 300.3441940015363,
+     "window_ps": 12.493412706165884,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 15,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 398.38606273245455,
+     "mean_ps": 402.9433403738181,
+     "max_ps": 412.661884016912,
+     "window_ps": 14.275821284457436,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 299.3236425882319,
+     "mean_ps": 303.31299996294996,
+     "max_ps": 311.81705437126436,
+     "window_ps": 12.493411783032457,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 16,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 414.8130501057682,
+     "mean_ps": 419.37032814753667,
+     "max_ps": 429.08887219103536,
+     "window_ps": 14.27582208526718,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 311.35202973746493,
+     "mean_ps": 315.3413877967074,
+     "max_ps": 323.84544288954027,
+     "window_ps": 12.493413152075334,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 17,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 432.11317383330226,
+     "mean_ps": 436.67045241431015,
+     "max_ps": 446.38899699704814,
+     "window_ps": 14.275823163745883,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 324.0282052085408,
+     "mean_ps": 328.0175642275436,
+     "max_ps": 336.5216202801286,
+     "window_ps": 12.493415071587833,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 18,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 447.75179779279637,
+     "mean_ps": 452.3090759590168,
+     "max_ps": 462.0276201269676,
+     "window_ps": 14.27582233417121,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 335.38574892503044,
+     "mean_ps": 339.3751072014187,
+     "max_ps": 347.8791625113956,
+     "window_ps": 12.493413586365136,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 19,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 463.51015496842524,
+     "mean_ps": 468.0674328588106,
+     "max_ps": 477.7859767509261,
+     "window_ps": 14.275821782500884,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 346.85545958545936,
+     "mean_ps": 350.84481738334375,
+     "max_ps": 359.3488722148208,
+     "window_ps": 12.493412629361444,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 20,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 479.94119284316736,
+     "mean_ps": 484.4984711405645,
+     "max_ps": 494.2170154396918,
+     "window_ps": 14.27582259652445,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 358.88847818825013,
+     "mean_ps": 362.8778366956313,
+     "max_ps": 371.38189223659896,
+     "window_ps": 12.493414048348825,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  }
+ ],
+ "NNfu": [
+  {
+   "entry_trunk_cells": 0,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 148.484511549619,
+     "mean_ps": 153.05010158666806,
+     "max_ps": 165.567947055405,
+     "window_ps": 17.083435505786014,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 117.03118906184972,
+     "mean_ps": 121.0345466131157,
+     "max_ps": 131.88475025046046,
+     "window_ps": 14.85356118861074,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 1,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 172.33872909458768,
+     "mean_ps": 176.9044525868616,
+     "max_ps": 189.42243151097207,
+     "window_ps": 17.083702416384398,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 134.55120135093688,
+     "mean_ps": 138.55467769400326,
+     "max_ps": 149.40500012548216,
+     "window_ps": 14.853798774545282,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 2,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 187.97008347998946,
+     "mean_ps": 192.53580857351653,
+     "max_ps": 205.05378909888185,
+     "window_ps": 17.083705618892395,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 145.9207042619128,
+     "mean_ps": 149.92418437081955,
+     "max_ps": 160.7745105682115,
+     "window_ps": 14.853806306298708,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 3,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 203.75003744348413,
+     "mean_ps": 208.31576281398156,
+     "max_ps": 220.83374361631752,
+     "window_ps": 17.083706172833388,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 157.39234488380018,
+     "mean_ps": 161.39582548645504,
+     "max_ps": 172.24615217760464,
+     "window_ps": 14.853807293804465,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 4,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 220.1814172553345,
+     "mean_ps": 224.74714221822802,
+     "max_ps": 237.26512261295966,
+     "window_ps": 17.08370535762515,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 169.4257857440282,
+     "mean_ps": 173.42926563501592,
+     "max_ps": 184.27959161448473,
+     "window_ps": 14.85380587045654,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 5,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": true,
+   "corners": {
+    "TT": {
+     "min_ps": 236.97664834968134,
+     "mean_ps": 241.5423732891637,
+     "max_ps": 254.0603536604841,
+     "window_ps": 17.08370531080277,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 181.67749669710565,
+     "mean_ps": 185.68097654168514,
+     "max_ps": 196.5313024747447,
+     "window_ps": 14.853805777639053,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 6,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": true,
+   "corners": {
+    "TT": {
+     "min_ps": 252.6187403738632,
+     "mean_ps": 257.1844657219944,
+     "max_ps": 269.7024465019642,
+     "window_ps": 17.08370612810097,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 193.03926402250366,
+     "mean_ps": 197.0427445867011,
+     "max_ps": 207.89307123939253,
+     "window_ps": 14.853807216888868,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 7,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 268.37960590901145,
+     "mean_ps": 272.94533152889295,
+     "max_ps": 285.4633125806133,
+     "window_ps": 17.083706671601874,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 204.51184271421926,
+     "mean_ps": 208.51532374146274,
+     "max_ps": 219.36565085720912,
+     "window_ps": 14.853808142989863,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 8,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 284.80695321771265,
+     "mean_ps": 289.372678436606,
+     "max_ps": 301.8906590873377,
+     "window_ps": 17.083705869625078,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 216.54064202333672,
+     "mean_ps": 220.54412236385613,
+     "max_ps": 231.39444879286515,
+     "window_ps": 14.853806769528433,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 9,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 301.60222578561144,
+     "mean_ps": 306.16795098149316,
+     "max_ps": 318.68593160921324,
+     "window_ps": 17.083705823601804,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 228.7921117930603,
+     "mean_ps": 232.79559208855557,
+     "max_ps": 243.64591847253956,
+     "window_ps": 14.853806679479277,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 10,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 317.24810436204365,
+     "mean_ps": 321.8138299599232,
+     "max_ps": 334.3318109896416,
+     "window_ps": 17.083706627597962,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 240.15849727669945,
+     "mean_ps": 244.1619782668113,
+     "max_ps": 255.01230534542532,
+     "window_ps": 14.853808068725868,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 11,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 333.0117088050348,
+     "mean_ps": 337.5774346702428,
+     "max_ps": 350.0954159672898,
+     "window_ps": 17.083707162254996,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 251.6342097297781,
+     "mean_ps": 255.63769116615583,
+     "max_ps": 266.4880186910444,
+     "window_ps": 14.853808961266282,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 12,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 349.435026136669,
+     "mean_ps": 354.00075160741056,
+     "max_ps": 366.5187325099907,
+     "window_ps": 17.08370637332166,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 263.6583982202375,
+     "mean_ps": 267.6618789946186,
+     "max_ps": 278.5122058574978,
+     "window_ps": 14.853807637260331,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 13,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 367.2570897219306,
+     "mean_ps": 371.82281468404835,
+     "max_ps": 384.34079507800413,
+     "window_ps": 17.08370535607355,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 276.7120263474206,
+     "mean_ps": 280.71550622855216,
+     "max_ps": 291.5658321981646,
+     "window_ps": 14.853805850744038,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 14,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 382.9090049818781,
+     "mean_ps": 387.4747303523756,
+     "max_ps": 399.9927111547116,
+     "window_ps": 17.0837061728335,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 288.0748810015363,
+     "mean_ps": 292.078361604206,
+     "max_ps": 302.9286882953704,
+     "window_ps": 14.853807293834109,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 15,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 398.670106016912,
+     "mean_ps": 403.2358316587638,
+     "max_ps": 415.7538127324545,
+     "window_ps": 17.08370671554252,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 299.54774137126435,
+     "mean_ps": 303.5512224354963,
+     "max_ps": 314.4015495882319,
+     "window_ps": 14.853808216967536,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 16,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 415.09709419103535,
+     "mean_ps": 419.66281943248254,
+     "max_ps": 432.1808001057681,
+     "window_ps": 17.083705914732775,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 311.57612988954025,
+     "mean_ps": 315.5796102692574,
+     "max_ps": 326.4299367374649,
+     "window_ps": 14.853806847924659,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 17,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 432.3972189970481,
+     "mean_ps": 436.9629436992562,
+     "max_ps": 449.4809238333022,
+     "window_ps": 17.08370483625407,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 324.2523072801286,
+     "mean_ps": 328.2557867000988,
+     "max_ps": 339.1061122085408,
+     "window_ps": 14.853804928412217,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 18,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 448.03584212696757,
+     "mean_ps": 452.60156724396285,
+     "max_ps": 465.1195477927963,
+     "window_ps": 17.083705665828745,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 335.60984951139557,
+     "mean_ps": 339.6133296739699,
+     "max_ps": 350.4636559250305,
+     "window_ps": 14.853806413634913,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 19,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 463.7941987509261,
+     "mean_ps": 468.3599241437563,
+     "max_ps": 480.8779049684252,
+     "window_ps": 17.08370621749907,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 347.0795592148208,
+     "mean_ps": 351.08303985589237,
+     "max_ps": 361.93336658545934,
+     "window_ps": 14.853807370638549,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  {
+   "entry_trunk_cells": 20,
+   "model_calibration_valid": true,
+   "nominal_target_20ps_pass": false,
+   "corners": {
+    "TT": {
+     "min_ps": 480.2252374396918,
+     "mean_ps": 484.79096242551054,
+     "max_ps": 497.3089428431673,
+     "window_ps": 17.083705403475506,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "min_ps": 359.11257923659895,
+     "mean_ps": 363.11605916818365,
+     "max_ps": 373.9663851882501,
+     "window_ps": 14.853805951651168,
+     "prediction": "VALID",
+     "out_of_calibration_leaves": []
+    }
+   }
+  }
+ ]
+}
