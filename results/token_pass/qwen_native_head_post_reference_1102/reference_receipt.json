@@ -1,0 +1,114 @@
+{
+  "status": "REFERENCE_POST_BOUNDARY_INPUTS_READY_NOT_EXECUTED_L6",
+  "blocks": [
+    {
+      "block": 0,
+      "rows": [
+        0,
+        128
+      ],
+      "row_count": 128,
+      "slots": 8,
+      "source_words": 64,
+      "code_bytes": 524288,
+      "reference_L6_streams": 8,
+      "per_stream_Kprefix_vectors": 64,
+      "expected_final_vectors": 8,
+      "scale_words": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "block": 148,
+      "rows": [
+        18944,
+        18992
+      ],
+      "row_count": 48,
+      "slots": 3,
+      "source_words": 24,
+      "code_bytes": 196608,
+      "reference_L6_streams": 8,
+      "per_stream_Kprefix_vectors": 24,
+      "expected_final_vectors": 3,
+      "scale_words": [
+        1184,
+        1185,
+        1186
+      ]
+    }
+  ],
+  "code_bytes": 720896,
+  "selected_code_words": 88,
+  "total_rows": 176,
+  "total_REFERENCE_L6_prefix_vectors": 704,
+  "total_REFERENCE_L6_FP32_values": 11264,
+  "canonical_RSTD": "3cffffff",
+  "H": "canonical32*rsqrt1024*actual4096normgains then BF16RNE expandedFP32",
+  "logical_stream_groups": [
+    [
+      0,
+      64
+    ],
+    [
+      64,
+      128
+    ],
+    [
+      128,
+      192
+    ],
+    [
+      192,
+      256
+    ],
+    [
+      256,
+      320
+    ],
+    [
+      320,
+      384
+    ],
+    [
+      384,
+      448
+    ],
+    [
+      448,
+      512
+    ]
+  ],
+  "arithmetic": "eachgroup8sequentialRNEprefixes from+0; pairwise64group tree per logical L6 stream; final512tree then genuineBF16rowmul",
+  "actual_crosscheck": {
+    "vectors": 64,
+    "values": 1024,
+    "scope": "TG4 first4logicalgroups block0 only",
+    "capture_sha256": "c3db0ddac19d2e7d4803ca2300eb3409d16aef47279c44fbf2660b7899e815b3"
+  },
+  "physical_port_mapping": "UNRESOLVED: logical streams0..7 are reference group intervals, not guessed fs/ns/fn/nn legs or clock aliases",
+  "scope": "NoexecutedL6/fullME/global512post/STN/AMAXclaim; referenceinputs+goldenonly; no costly EDA/simulation dispatch",
+  "readset": {
+    "/home/ubuntu/coord/tmp/codex-native-head-post-reference-prep/genuine_row_block_slices.json": "bb86834f8ba4d5bd4696fa7f0adeea140051462ac02dfc0fa9565f6cb18bc71a",
+    "/home/ubuntu/coord/tmp/codex-qwen-headlease-2125/head37_monitor_slice0_candidate.json": "fee738366af2e6a076974e629a1118d407382c2ff317668877fbfdf3a050021b",
+    "/srv/opentallas-scratch/claude/wt/codex-qwen-headlease-2130/results/token_pass/qwen_native_head_partial_gold_1102/H32_me_fp32.hex": "0c16c27d40935069908cb4297deabe2ea320fe8b8befe2c204b8877265b9402e",
+    "/srv/opentallas-scratch/claude/wt/codex-native-head-consumer-prep/results/token_pass/qwen_native_head_consumer_prep_1102/genuine_scale_bf16.hex": "df41b740b4cbbe3cdf67fae428cfbf081513269412baca49f5fcf15ccc9d3674",
+    "/home/ubuntu/coord/tmp/codex-native-head-post-reference-prep/actual_raw_prefixes.tsv": "c3db0ddac19d2e7d4803ca2300eb3409d16aef47279c44fbf2660b7899e815b3",
+    "/home/ubuntu/OpenTallas/tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "/home/ubuntu/OpenTallas/tools/hdc_qwen_int8_image_w12.py": "33d5e4a7359c793d605c6864c156d21f7edd3286187721c9e949d155ffbe8db3"
+  },
+  "outputs": {
+    "full512_raw_REFERENCE.tsv": "a00bab41ce2adaf74a6be208d78be75d7a32c805ef95d0b87fc1dc8dbcd7b21c",
+    "actual_TG4_block0_crosscheck.json": "fbd81272c0ab103335e0a95fee8b6a6878db56213195bffdee92b945ec16cf4e",
+    "H4096_me_fp32_REFERENCE.hex": "8bdbbf6401e2a591466c3b9d8cd28e976fb91e5538a756763c1e4ba1fd7965ca",
+    "L6_prefix_streams_REFERENCE.tsv": "7fcefd6cf683021bd9ff62fa39ba94dda2e1e42e0194852e865a188e8ccb1b85",
+    "full512_scaled_REFERENCE.tsv": "b028a09270f4914ec15efcf1477ea78eb76bdb50c5c8d007afc1241bf0f95883"
+  }
+}
