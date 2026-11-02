@@ -77,12 +77,16 @@ def join(proposal, inventory):
                 raise ValueError('Incomplete path member: ' + a['name'])
             if cell['kind'] not in ('buffer', 'inverter', 'clock_gate'):
                 raise ValueError('Unclassified clock logic: ' + a['name'])
+            if cell.get('polarity') not in (-1,1):
+                raise ValueError('Missing actual clock-path pin polarity: ' + a['name'])
+            if cell['kind'] in ('buffer','inverter') and cell['polarity'] != (1 if cell['kind']=='buffer' else -1):
+                raise ValueError('Clock-path kind/polarity mismatch: ' + a['name'])
         expected=source_expectation(a['name'])
         if expected:
             signal,rtl_edge,kind=expected
             if r.get('rtl_signal')!=signal or r.get('rtl_edge')!=rtl_edge:
                 raise ValueError('Exact regional source signal/edge join failed: '+a['name'])
-            inversions=sum(c['kind']=='inverter' for c in r['path'])
+            inversions=sum(c['polarity']==-1 for c in r['path'])
             native_negative=r['edge']=='negedge'
             if (native_negative ^ bool(inversions%2)) != (rtl_edge=='negedge'):
                 raise ValueError('Regional clock inversion/edge path mismatch: '+a['name'])

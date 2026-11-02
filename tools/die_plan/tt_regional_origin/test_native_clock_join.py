@@ -7,7 +7,7 @@ from native_clock_join import join
 class JoinContract(unittest.TestCase):
     def fixture(self):
         ports = ['clk'] + ['clk_t'+str(i) for i in range(1,63)]
-        path = [dict(instance='gate',master='ICG',input_pin='CLK',output_pin='GCLK',kind='clock_gate')]
+        path = [dict(instance='gate',master='ICG',input_pin='CLK',output_pin='GCLK',kind='clock_gate',polarity=1)]
         proposal = dict(clock_ports=ports,assignments=[dict(name='q'+str(i),parent_tap='clk_t1',nearest_parent_tap='clk') for i in range(51)],retained_other_cohorts=[])
         inv = dict(source_event='tt_regional_origin_13ff',stage='mapped_preCTS',source_sha256='source',netlist_sha256='mapped',
                    ports={p:dict(cohort='clk',period_ps=833,phase_ps=0,polarity=1) for p in ports},
@@ -25,7 +25,7 @@ class JoinContract(unittest.TestCase):
         name='u_bound.u_cland_origin/sf$_DFF_N_'
         p['assignments'][0]['name']=name
         i['sinks'][0].update(model_name=name,rtl_signal='u_bound.u_cland_origin.g_on.sf',rtl_edge='negedge',edge='posedge')
-        i['sinks'][0]['path'].append(dict(instance='clock_inv',master='INV',input_pin='A',output_pin='Y',kind='inverter'))
+        i['sinks'][0]['path'].append(dict(instance='clock_inv',master='INV',input_pin='A',output_pin='Y',kind='inverter',polarity=-1))
         return p,i
 
     def test_retained_sf_namespace_and_inversion(self):
