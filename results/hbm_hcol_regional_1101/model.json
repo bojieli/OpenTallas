@@ -17,7 +17,7 @@
   "parent_required": "each region slice connected to original bus; new physical pin/window/lane capacity plan event",
   "parent_activated": false,
   "physical_qualification": "NOT RUN",
-  "proof": "QUEUED corrected immutable native10file capsule r2; initial main-donor waiter cancelled NOTRUN before any compile",
+  "proof": "Full selected-half RTL skew-clock simulation PASS; not canonical formal LEC or physical qualification",
   "donor_body_sha256": "4486a8aa432582ea885e3662fce842796a9644d2ce2b139fd26ad79f2f58e067",
   "source_files": {
     "ot_rst_delivered3.sv": "ed2e4b9579d497e6264f60669aeba9a2d9003e46a413d6b56126387533cd34df",
@@ -71,5 +71,23 @@
     "total_FFs": 27018,
     "macros": 0,
     "scope": "exactcurrentC nativeSYNTH prior1113sharedinputguardFAIL,notnewphysicalview"
+  },
+  "full_rtl_sim": {
+    "host": "intel1",
+    "unit": "oth-ubuntu-3588378-1793594907",
+    "ot_run_exit": 0,
+    "scope": "actual selected10file HALF1/DELIVERED_RESET1 full datapath vs regional input variant; independently phased clocks",
+    "positive": {
+      "checks": 1404,
+      "errors": 0,
+      "nonzero_outputs": 1385
+    },
+    "wrong_region_query_bit_mutant": {
+      "checks": 1404,
+      "errors": 1116,
+      "expected_nonzero_exit": true
+    },
+    "canonical_native_LEC": "NOT_RUN",
+    "parent_activation": false
   }
 }
