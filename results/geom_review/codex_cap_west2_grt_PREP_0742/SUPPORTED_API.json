@@ -1,0 +1,19 @@
+{
+  "status": "DISABLED_PREP_NO_NATIVE_DISPATCH",
+  "capsule": "Intel2 /srv/opentallas-scratch2/claude/codex-cap-grt-prep-0742",
+  "manifest_sha256": "9bc0c0d10bb56605359d838a99c2dcd6b5fdeb9e658678d3045f628dd9f9fc97",
+  "normal_API": "global_route -start_incremental BEFORE approved DATA pose moves; standard prd_route_keep oldreference detects/rips exact6; global_route -end_incremental; standard restore",
+  "source_commit": "OpenROAD6cb3f2b704604a8961573218e1c8adaae9fe9937",
+  "source_findings": [
+    "GRouteDbCbk::inDbPostMoveInst marks actual instance incident netsdirty",
+    "No inDbWireDestroy callback; pre-movednewDB then wire destruction alone is insufficient to prove routing journal",
+    "dbInst::setOrigin identical placed coordinates returns without callback; no-opsetLocation cannot replace realjournaledmove"
+  ],
+  "sources": [
+    "https://raw.githubusercontent.com/The-OpenROAD-Project/OpenROAD/6cb3f2b704604a8961573218e1c8adaae9fe9937/src/grt/src/GlobalRouter.cpp",
+    "https://raw.githubusercontent.com/The-OpenROAD-Project/OpenROAD/6cb3f2b704604a8961573218e1c8adaae9fe9937/src/odb/src/db/dbInst.cpp"
+  ],
+  "timing": "actualoriginal6_final.sdc, no4CTSfabrication; initialpre-moveRCunused, freshpostmoveGRTestimateonly; no staleSPEFread",
+  "native_run": false,
+  "review_pending": true
+}
