@@ -1,0 +1,79 @@
+{
+  "scope": "DISABLED source-only historical-context PREP; rederive against fresh coherent S39 and actual selected child view",
+  "type": "col_h9_r0_p2__t1__cl9f71e63d",
+  "tap": "clk_c2",
+  "logical_core": "u_r0.u_e2",
+  "actual_instance": "u_bound.u_u_r0_u_e2",
+  "actual_pin": "clk",
+  "old_consumed_xy": [
+    298.592,
+    596.128
+  ],
+  "new_consumed_xy": [
+    298.592,
+    561.568
+  ],
+  "L1move_um": 34.56000000000006,
+  "canonical_halo_um": 8.64,
+  "all_canonical_obstacles": 76,
+  "new_halo_hits": [],
+  "old_halo_hits": [
+    "u_r0.u_bs2"
+  ],
+  "outline": [
+    1442.88,
+    1226.88
+  ],
+  "PG_clear": [
+    {
+      "layer": "M7",
+      "phase_um": 0.0,
+      "blocked": false
+    },
+    {
+      "layer": "M7",
+      "phase_um": 4.32,
+      "blocked": false
+    },
+    {
+      "layer": "M6",
+      "phase_um": 0.0,
+      "blocked": false
+    },
+    {
+      "layer": "M6",
+      "phase_um": 4.32,
+      "blocked": false
+    }
+  ],
+  "native_staged_clock_rect": {
+    "layer": "M5",
+    "rect_um": [
+      231.36,
+      0,
+      231.384,
+      0.084
+    ],
+    "macro_origin_um": [
+      43.308,
+      604.812
+    ],
+    "absolute_center_um": [
+      274.68,
+      604.854
+    ],
+    "warning": "historical child view clock shape24x84nm is not current M5 clock-entry qualification"
+  },
+  "direct_core_clock_hop_um": 67.19800000000004,
+  "grid_source_clock_changes": 0,
+  "reset_graph_changes": 0,
+  "RTL_changes": 0,
+  "FF_changes": 0,
+  "cycles_changes": 0,
+  "reason": "CP2 early core-only physical entry. clk_c2 top port is not passed into bound RTL; core adapter installs delivered clock after synth. No source-grid tap or native reset dependency changes.",
+  "remaining": [
+    "regenerate all76 physical identities and resolve exact actualclk pin; historical core_taps.txt uses nonexistent ck",
+    "rederive same candidate against exact new S39 macro views/obstacles/pins before adoption",
+    "no actual placement/CTS/TTFF/source qualification from this static PREP"
+  ]
+}
