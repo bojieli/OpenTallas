@@ -1,0 +1,720 @@
+{
+ "verdict": "FAIL_STRUCTURAL_FIXED_ENDPOINTS",
+ "rule": "Any FF point must lie within405um of each endpoint; endpoints >810um apart make this impossible by triangle inequality. Exact native port-net index matches full source N/ND graph.",
+ "records": [
+  {
+   "ff": "u_q.cq_cg\\[3\\]$_DFF_P_",
+   "cid": 78155,
+   "endpoint_L1_um": 866.343,
+   "minimum_max_hop_um": 433.1715,
+   "over_405_um": 28.1715,
+   "witness": [
+    {
+     "x": 60.444,
+     "y": 43.242,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[0\\].u_bank.gsel[3]",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 326.484,
+     "y": 643.545,
+     "endpoint": "FF:u_q.cq0\\[28\\]$_DFF_P_",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.cq_cg\\[2\\]$_DFF_P_",
+   "cid": 78152,
+   "endpoint_L1_um": 866.007,
+   "minimum_max_hop_um": 433.0035,
+   "over_405_um": 28.0035,
+   "witness": [
+    {
+     "x": 60.348,
+     "y": 43.242,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[0\\].u_bank.gsel[2]",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 326.322,
+     "y": 643.275,
+     "endpoint": "FF:u_q.cq0\\[27\\]$_DFF_P_",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.cq_cg\\[0\\]$_DFF_P_",
+   "cid": 78130,
+   "endpoint_L1_um": 863.175,
+   "minimum_max_hop_um": 431.5875,
+   "over_405_um": 26.5875,
+   "witness": [
+    {
+     "x": 60.156,
+     "y": 43.242,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[0\\].u_bank.gsel[0]",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 323.568,
+     "y": 643.005,
+     "endpoint": "FF:u_q.cq0\\[25\\]$_DFF_P_",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.cq_cg\\[1\\]$_DFF_P_",
+   "cid": 78141,
+   "endpoint_L1_um": 861.351,
+   "minimum_max_hop_um": 430.6755,
+   "over_405_um": 25.6755,
+   "witness": [
+    {
+     "x": 60.252,
+     "y": 43.242,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[0\\].u_bank.gsel[1]",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 322.11,
+     "y": 642.735,
+     "endpoint": "FF:u_q.cq0\\[26\\]$_DFF_P_",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[93\\]$_DFF_P_",
+   "cid": 79413,
+   "endpoint_L1_um": 837.003,
+   "minimum_max_hop_um": 418.5015,
+   "over_405_um": 13.5015,
+   "witness": [
+    {
+     "x": 68.418,
+     "y": 641.655,
+     "endpoint": "FF:u_q.t_s\\[93\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 360.924,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[3]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[105\\]$_DFF_P_",
+   "cid": 78562,
+   "endpoint_L1_um": 836.643,
+   "minimum_max_hop_um": 418.3215,
+   "over_405_um": 13.3215,
+   "witness": [
+    {
+     "x": 71.82,
+     "y": 643.545,
+     "endpoint": "FF:u_q.t_s\\[105\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 362.076,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[15]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[100\\]$_DFF_P_",
+   "cid": 78557,
+   "endpoint_L1_um": 835.893,
+   "minimum_max_hop_um": 417.9465,
+   "over_405_um": 12.9465,
+   "witness": [
+    {
+     "x": 71.82,
+     "y": 643.275,
+     "endpoint": "FF:u_q.t_s\\[100\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 361.596,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[10]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[91\\]$_DFF_P_",
+   "cid": 79411,
+   "endpoint_L1_um": 834.381,
+   "minimum_max_hop_um": 417.1905,
+   "over_405_um": 12.1905,
+   "witness": [
+    {
+     "x": 70.578,
+     "y": 641.385,
+     "endpoint": "FF:u_q.t_s\\[91\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 360.732,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[1]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[101\\]$_DFF_P_",
+   "cid": 78558,
+   "endpoint_L1_um": 834.099,
+   "minimum_max_hop_um": 417.0495,
+   "over_405_um": 12.0495,
+   "witness": [
+    {
+     "x": 73.97999999999999,
+     "y": 643.545,
+     "endpoint": "FF:u_q.t_s\\[101\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 361.692,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[11]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[92\\]$_DFF_P_",
+   "cid": 79412,
+   "endpoint_L1_um": 833.235,
+   "minimum_max_hop_um": 416.6175,
+   "over_405_um": 11.6175,
+   "witness": [
+    {
+     "x": 71.82,
+     "y": 641.385,
+     "endpoint": "FF:u_q.t_s\\[92\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 360.828,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[2]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[104\\]$_DFF_P_",
+   "cid": 78561,
+   "endpoint_L1_um": 833.037,
+   "minimum_max_hop_um": 416.5185,
+   "over_405_um": 11.5185,
+   "witness": [
+    {
+     "x": 75.06,
+     "y": 643.275,
+     "endpoint": "FF:u_q.t_s\\[104\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 361.98,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[14]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[113\\]$_DFF_P_",
+   "cid": 78571,
+   "endpoint_L1_um": 832.875,
+   "minimum_max_hop_um": 416.4375,
+   "over_405_um": 11.4375,
+   "witness": [
+    {
+     "x": 75.27600000000001,
+     "y": 642.465,
+     "endpoint": "FF:u_q.t_s\\[113\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 362.844,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[23]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[90\\]$_DFF_P_",
+   "cid": 79410,
+   "endpoint_L1_um": 832.827,
+   "minimum_max_hop_um": 416.4135,
+   "over_405_um": 11.4135,
+   "witness": [
+    {
+     "x": 72.30600000000001,
+     "y": 641.655,
+     "endpoint": "FF:u_q.t_s\\[90\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 360.636,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[0]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[98\\]$_DFF_P_",
+   "cid": 79418,
+   "endpoint_L1_um": 832.731,
+   "minimum_max_hop_um": 416.3655,
+   "over_405_um": 11.3655,
+   "witness": [
+    {
+     "x": 72.9,
+     "y": 641.385,
+     "endpoint": "FF:u_q.t_s\\[98\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 361.404,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[8]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[106\\]$_DFF_P_",
+   "cid": 78563,
+   "endpoint_L1_um": 832.473,
+   "minimum_max_hop_um": 416.2365,
+   "over_405_um": 11.2365,
+   "witness": [
+    {
+     "x": 75.27600000000001,
+     "y": 642.735,
+     "endpoint": "FF:u_q.t_s\\[106\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 362.172,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[16]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[94\\]$_DFF_P_",
+   "cid": 79414,
+   "endpoint_L1_um": 832.347,
+   "minimum_max_hop_um": 416.1735,
+   "over_405_um": 11.1735,
+   "witness": [
+    {
+     "x": 73.97999999999999,
+     "y": 642.465,
+     "endpoint": "FF:u_q.t_s\\[94\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 361.02,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[4]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[97\\]$_DFF_P_",
+   "cid": 79417,
+   "endpoint_L1_um": 831.771,
+   "minimum_max_hop_um": 415.8855,
+   "over_405_um": 10.8855,
+   "witness": [
+    {
+     "x": 74.03399999999999,
+     "y": 641.655,
+     "endpoint": "FF:u_q.t_s\\[97\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 361.308,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[7]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[102\\]$_DFF_P_",
+   "cid": 78559,
+   "endpoint_L1_um": 831.765,
+   "minimum_max_hop_um": 415.8825,
+   "over_405_um": 10.8825,
+   "witness": [
+    {
+     "x": 76.14,
+     "y": 643.275,
+     "endpoint": "FF:u_q.t_s\\[102\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 361.788,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[12]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[111\\]$_DFF_P_",
+   "cid": 78569,
+   "endpoint_L1_um": 831.603,
+   "minimum_max_hop_um": 415.8015,
+   "over_405_um": 10.8015,
+   "witness": [
+    {
+     "x": 76.356,
+     "y": 642.465,
+     "endpoint": "FF:u_q.t_s\\[111\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 362.652,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[21]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[95\\]$_DFF_P_",
+   "cid": 79415,
+   "endpoint_L1_um": 830.877,
+   "minimum_max_hop_um": 415.4385,
+   "over_405_um": 10.4385,
+   "witness": [
+    {
+     "x": 75.27600000000001,
+     "y": 642.1949999999999,
+     "endpoint": "FF:u_q.t_s\\[95\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 361.116,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[5]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[114\\]$_DFF_P_",
+   "cid": 78572,
+   "endpoint_L1_um": 830.811,
+   "minimum_max_hop_um": 415.4055,
+   "over_405_um": 10.4055,
+   "witness": [
+    {
+     "x": 77.436,
+     "y": 642.465,
+     "endpoint": "FF:u_q.t_s\\[114\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 362.94,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[24]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[96\\]$_DFF_P_",
+   "cid": 79416,
+   "endpoint_L1_um": 830.433,
+   "minimum_max_hop_um": 415.2165,
+   "over_405_um": 10.2165,
+   "witness": [
+    {
+     "x": 75.27600000000001,
+     "y": 641.655,
+     "endpoint": "FF:u_q.t_s\\[96\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 361.212,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[6]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[99\\]$_DFF_P_",
+   "cid": 79419,
+   "endpoint_L1_um": 830.397,
+   "minimum_max_hop_um": 415.1985,
+   "over_405_um": 10.1985,
+   "witness": [
+    {
+     "x": 75.06,
+     "y": 641.115,
+     "endpoint": "FF:u_q.t_s\\[99\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 361.5,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[9]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[108\\]$_DFF_P_",
+   "cid": 78565,
+   "endpoint_L1_um": 830.397,
+   "minimum_max_hop_um": 415.1985,
+   "over_405_um": 10.1985,
+   "witness": [
+    {
+     "x": 78.354,
+     "y": 643.545,
+     "endpoint": "FF:u_q.t_s\\[108\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 362.364,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[18]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[110\\]$_DFF_P_",
+   "cid": 78568,
+   "endpoint_L1_um": 830.319,
+   "minimum_max_hop_um": 415.1595,
+   "over_405_um": 10.1595,
+   "witness": [
+    {
+     "x": 78.354,
+     "y": 643.275,
+     "endpoint": "FF:u_q.t_s\\[110\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 362.556,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[20]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[103\\]$_DFF_P_",
+   "cid": 78560,
+   "endpoint_L1_um": 830.295,
+   "minimum_max_hop_um": 415.1475,
+   "over_405_um": 10.1475,
+   "witness": [
+    {
+     "x": 75.27600000000001,
+     "y": 640.845,
+     "endpoint": "FF:u_q.t_s\\[103\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 361.884,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[13]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[107\\]$_DFF_P_",
+   "cid": 78564,
+   "endpoint_L1_um": 830.247,
+   "minimum_max_hop_um": 415.1235,
+   "over_405_um": 10.1235,
+   "witness": [
+    {
+     "x": 77.05799999999999,
+     "y": 642.1949999999999,
+     "endpoint": "FF:u_q.t_s\\[107\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 362.268,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[17]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[119\\]$_DFF_P_",
+   "cid": 78577,
+   "endpoint_L1_um": 830.103,
+   "minimum_max_hop_um": 415.0515,
+   "over_405_um": 10.0515,
+   "witness": [
+    {
+     "x": 78.624,
+     "y": 642.465,
+     "endpoint": "FF:u_q.t_s\\[119\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 363.42,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[29]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[109\\]$_DFF_P_",
+   "cid": 78566,
+   "endpoint_L1_um": 830.007,
+   "minimum_max_hop_um": 415.0035,
+   "over_405_um": 10.0035,
+   "witness": [
+    {
+     "x": 78.30000000000001,
+     "y": 643.005,
+     "endpoint": "FF:u_q.t_s\\[109\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 362.46,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[19]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[112\\]$_DFF_P_",
+   "cid": 78570,
+   "endpoint_L1_um": 829.863,
+   "minimum_max_hop_um": 414.9315,
+   "over_405_um": 9.9315,
+   "witness": [
+    {
+     "x": 78.46199999999999,
+     "y": 642.735,
+     "endpoint": "FF:u_q.t_s\\[112\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 362.748,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[22]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[116\\]$_DFF_P_",
+   "cid": 78574,
+   "endpoint_L1_um": 829.437,
+   "minimum_max_hop_um": 414.7185,
+   "over_405_um": 9.7185,
+   "witness": [
+    {
+     "x": 79.81200000000001,
+     "y": 643.275,
+     "endpoint": "FF:u_q.t_s\\[116\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 363.132,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[26]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[115\\]$_DFF_P_",
+   "cid": 78573,
+   "endpoint_L1_um": 828.693,
+   "minimum_max_hop_um": 414.3465,
+   "over_405_um": 9.3465,
+   "witness": [
+    {
+     "x": 80.72999999999999,
+     "y": 643.545,
+     "endpoint": "FF:u_q.t_s\\[115\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 363.036,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[25]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[117\\]$_DFF_P_",
+   "cid": 78575,
+   "endpoint_L1_um": 828.507,
+   "minimum_max_hop_um": 414.2535,
+   "over_405_um": 9.2535,
+   "witness": [
+    {
+     "x": 80.56800000000001,
+     "y": 643.005,
+     "endpoint": "FF:u_q.t_s\\[117\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 363.228,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[27]",
+     "direction": "DRIVER"
+    }
+   ]
+  },
+  {
+   "ff": "u_q.sq\\[118\\]$_DFF_P_",
+   "cid": 78576,
+   "endpoint_L1_um": 828.117,
+   "minimum_max_hop_um": 414.0585,
+   "over_405_um": 9.0585,
+   "witness": [
+    {
+     "x": 80.78399999999999,
+     "y": 642.735,
+     "endpoint": "FF:u_q.t_s\\[118\\]$_DFF_P_",
+     "direction": "CAPTURE"
+    },
+    {
+     "x": 363.324,
+     "y": 97.158,
+     "endpoint": "M:u_q.u_s.u_hc.g_bank\\[3\\].u_bank.gsum[28]",
+     "direction": "DRIVER"
+    }
+   ]
+  }
+ ]
+}
