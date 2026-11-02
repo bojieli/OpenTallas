@@ -1,0 +1,10 @@
+{
+  "verdict": "LOOKED_GEOMETRY_PREP_PASS_RESUME_HOLD",
+  "image": "results/q6_resume_capsules_1102/owned_capsule_geometry.png",
+  "actual_subjects": [
+    "intel2:/srv/opentallas-scratch2/claude/codex-q6-resume-prep-0230/candidate/recip",
+    "intel2:/srv/opentallas-scratch2/claude/codex-q6-resume-prep-0230/candidate/zh"
+  ],
+  "shape_join": "407 actual emitted primary pins plus native secondary shapes",
+  "findings": "RECIP compact secondary coherent/contained; ZH S full spread; clocks/reset/otherfaces retained. No CAD; normal stage resume rejects as SYNTH."
+}
