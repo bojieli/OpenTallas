@@ -6,5 +6,7 @@ dict for {name st} $::sc_expected_cells {
 sc_check final_place original
 source /work/pg_connect.tcl
 ot_pg_require_bound sc_final_place
+# Preserve the actual successful DPL state before the read-only observer.
+write_db /work/sc_final_place_retained.odb
 set ::env(OT_GEOM_OUT) /work/sc_final_place_geom.tsv
-source /work/geom_dump.tcl
+uplevel #0 [list source /work/geom_dump.tcl]
