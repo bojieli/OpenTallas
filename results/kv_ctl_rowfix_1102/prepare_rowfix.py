@@ -1,4 +1,4 @@
-"""PREP: move only the70 actual DPL-invalid FFs to vacant native row sites."""
+"""PREP: move70 invalid FFs to native row sites clear of FFs/taps; comb DPL follows."""
 import csv,json,collections,bisect,math,sys,re
 from pathlib import Path
 O=Path(__file__).resolve().parent;R=O.parents[1];C=Path('/srv/opentallas-scratch/claude/codex-kv-ctl-repack-r3-0130/failed_collector')
