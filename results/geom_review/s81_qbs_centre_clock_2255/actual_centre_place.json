@@ -1,0 +1,77 @@
+{
+ "LLfu": {
+  "groups": {
+   "buf": 2084,
+   "std": 4187,
+   "tap": 641,
+   "ff": 1972,
+   "pin": 196
+  },
+  "actual_clock": {
+   "kind": "pin",
+   "name": "clk[0]",
+   "master": "u_n.wb_v\\[1\\]$_DFF_PN0_",
+   "x": "21.612",
+   "y": "38.892",
+   "w": "0",
+   "h": "0"
+  },
+  "bay_overlapping_cells": [],
+  "fresh_normal_yosys": "native make reran; not claimed reuse",
+  "old_mapped_sha256": "c95b73b82eab97660c80519b875ba8e8658885251beb61d4f8214d0319134969",
+  "new_mapped_sha256": "c95b73b82eab97660c80519b875ba8e8658885251beb61d4f8214d0319134969",
+  "mapped_bytes_identical": true,
+  "max_possible_L1_span_um": 120.96,
+  "CTS": "NOTRUN"
+ },
+ "LLfd": {
+  "groups": {
+   "buf": 2092,
+   "std": 4187,
+   "tap": 641,
+   "ff": 1972,
+   "pin": 196
+  },
+  "actual_clock": {
+   "kind": "pin",
+   "name": "clk[0]",
+   "master": "u_n.wb_v\\[1\\]$_DFF_PN0_",
+   "x": "21.612",
+   "y": "38.892",
+   "w": "0",
+   "h": "0"
+  },
+  "bay_overlapping_cells": [],
+  "fresh_normal_yosys": "native make reran; not claimed reuse",
+  "old_mapped_sha256": "534d11434a4b52bf4579a4b89073b5f73d35e750e4c3e87709224a8ab699a56a",
+  "new_mapped_sha256": "534d11434a4b52bf4579a4b89073b5f73d35e750e4c3e87709224a8ab699a56a",
+  "mapped_bytes_identical": true,
+  "max_possible_L1_span_um": 120.96,
+  "CTS": "NOTRUN"
+ },
+ "NNfu": {
+  "groups": {
+   "buf": 2070,
+   "std": 4202,
+   "tap": 641,
+   "ff": 1978,
+   "pin": 202
+  },
+  "actual_clock": {
+   "kind": "pin",
+   "name": "clk[0]",
+   "master": "u_n.wb_v\\[1\\]$_DFF_PN0_",
+   "x": "21.612",
+   "y": "38.892",
+   "w": "0",
+   "h": "0"
+  },
+  "bay_overlapping_cells": [],
+  "fresh_normal_yosys": "native make reran; not claimed reuse",
+  "old_mapped_sha256": "91d77c558b2ab430a6ccf7f4de1d59293f7e0efe7b4b7dbaa45c8b0cce68fb07",
+  "new_mapped_sha256": "91d77c558b2ab430a6ccf7f4de1d59293f7e0efe7b4b7dbaa45c8b0cce68fb07",
+  "mapped_bytes_identical": true,
+  "max_possible_L1_span_um": 120.96,
+  "CTS": "NOTRUN"
+ }
+}

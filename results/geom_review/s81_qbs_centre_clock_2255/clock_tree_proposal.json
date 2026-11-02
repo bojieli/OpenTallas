@@ -1,0 +1,71 @@
+[
+ {
+  "module": "dsfd_node_LLfu",
+  "exact_sinks": 1972,
+  "other_clock_sinks": 0,
+  "groups": [
+   {
+    "leaf": "qb_S",
+    "sinks": 986,
+    "max_actual_placed_sink_L1_um": 40.797
+   },
+   {
+    "leaf": "qb_N",
+    "sinks": 986,
+    "max_actual_placed_sink_L1_um": 31.617
+   }
+  ],
+  "compiled_depth": 5,
+  "compiled_CTS_levels": null,
+  "source_added_cycles": 0,
+  "new_clock_cells": 3,
+  "electrical_TT_FF_latency": "NOTRUN",
+  "actual_tree": "NOTRUN"
+ },
+ {
+  "module": "dsfd_node_LLfd",
+  "exact_sinks": 1972,
+  "other_clock_sinks": 0,
+  "groups": [
+   {
+    "leaf": "qb_S",
+    "sinks": 986,
+    "max_actual_placed_sink_L1_um": 31.616999999999997
+   },
+   {
+    "leaf": "qb_N",
+    "sinks": 986,
+    "max_actual_placed_sink_L1_um": 40.74300000000001
+   }
+  ],
+  "compiled_depth": 5,
+  "compiled_CTS_levels": null,
+  "source_added_cycles": 0,
+  "new_clock_cells": 3,
+  "electrical_TT_FF_latency": "NOTRUN",
+  "actual_tree": "NOTRUN"
+ },
+ {
+  "module": "dsfd_node_NNfu",
+  "exact_sinks": 1978,
+  "other_clock_sinks": 0,
+  "groups": [
+   {
+    "leaf": "qb_S",
+    "sinks": 989,
+    "max_actual_placed_sink_L1_um": 40.797
+   },
+   {
+    "leaf": "qb_N",
+    "sinks": 989,
+    "max_actual_placed_sink_L1_um": 31.185000000000006
+   }
+  ],
+  "compiled_depth": 5,
+  "compiled_CTS_levels": null,
+  "source_added_cycles": 0,
+  "new_clock_cells": 3,
+  "electrical_TT_FF_latency": "NOTRUN",
+  "actual_tree": "NOTRUN"
+ }
+]
