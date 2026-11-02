@@ -1,0 +1,237 @@
+{
+  "scope": "Explicit root-approved H32 physicalhead8\u21925/currentcallerzero-extension event. All4990/4986/L160/L6 field offsets preserved; no192head/sourceglobaladoption.",
+  "rows": [
+    {
+      "part": "NW_hub",
+      "instance": "u_u_hb_idx_q_Q_q0",
+      "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv",
+      "old_expression": "w_u_hb_idx_q_Q_q0_ql_head",
+      "new_expression": "w_u_hb_idx_q_Q_q0_ql_head__head5",
+      "source_fragment": "wire [4:0] w_u_hb_idx_q_Q_q0_ql_head__head5;\nassign w_u_hb_idx_q_Q_q0_ql_head = {3'b000, w_u_hb_idx_q_Q_q0_ql_head__head5};\n// Exact current instance u_u_hb_idx_q_Q_q0: replace ONLY\n// .ql_head(w_u_hb_idx_q_Q_q0_ql_head) with .ql_head(w_u_hb_idx_q_Q_q0_ql_head__head5)\n",
+      "packed_fields": [
+        {
+          "lane": "L160",
+          "source_bus_field_bits": [
+            519,
+            512
+          ],
+          "old_head_high3_bus_bits": [
+            519,
+            517
+          ],
+          "old_head_low5_bus_bits": [
+            516,
+            512
+          ],
+          "source_pack_line": 9690,
+          "source_pack_expression": "ot_dp_st #(.W(4986)) u_bout_L160_o (.clk(clk), .rst_n(rst_n), .d({w_u_mu_keybuf_0_s3_q0_key_out[1098:0], w_u_mu_keybuf_0_s2_q0_key_out[1098:0], w_u_mu_keybuf_0_s1_q0_key_out[1098:0], w_u_mu_keybuf_0_s0_q0_key_out[1098:0], w_u_hb_idx_qctl_Q_q0_nq[11:0], w_u_hb_idx_qctl_Q_q0_key_slot[0], w_u_hb_idx_qctl_Q_q0_key_index[7:0], w_u_hb_idx_q_Q_q0_ql_w[15:0], w_u_hb_idx_q_Q_q0_ql_v[0], w_u_hb_idx_q_Q_q0_ql_sc[31:0], w_u_hb_idx_q_Q_q0_ql_head[7:0], w_u_hb_idx_q_Q_q0_ql_codes[511:0]}), .ea(rst_n), .q(L160_o[4985:0]), .eq(L160_o[4986]));",
+          "destination_wrappers": [
+            {
+              "module": "hbm_arch_q_b000__physical_v1",
+              "parts": [
+                "NW_b000"
+              ],
+              "file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000__physical_v1.sv",
+              "captures": [
+                {
+                  "capture_register": "g_hb_idx_s_SW_scorer_procdff_71764_q",
+                  "line": 1281,
+                  "assignment": "always @(posedge clk) g_hb_idx_s_SW_scorer_procdff_71764_q <= L160_i_q[519:512];  // /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:65.2-69.5",
+                  "direct_uses": [
+                    {
+                      "line": 1279,
+                      "text": "reg [7:0] g_hb_idx_s_SW_scorer_procdff_71764_q;"
+                    },
+                    {
+                      "line": 1280,
+                      "text": "assign w_hb_idx_s_SW_scorer_procdff_71764_Q = g_hb_idx_s_SW_scorer_procdff_71764_q;"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "logical_head_width": 8,
+      "physical_head_width": 5,
+      "zero_extension_at_actual_caller": true,
+      "added_flops": 0,
+      "added_cycles": 0
+    },
+    {
+      "part": "NW_hub",
+      "instance": "u_u_hb_idx_q_Q_q1",
+      "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv",
+      "old_expression": "w_u_hb_idx_q_Q_q1_ql_head",
+      "new_expression": "w_u_hb_idx_q_Q_q1_ql_head__head5",
+      "source_fragment": "wire [4:0] w_u_hb_idx_q_Q_q1_ql_head__head5;\nassign w_u_hb_idx_q_Q_q1_ql_head = {3'b000, w_u_hb_idx_q_Q_q1_ql_head__head5};\n// Exact current instance u_u_hb_idx_q_Q_q1: replace ONLY\n// .ql_head(w_u_hb_idx_q_Q_q1_ql_head) with .ql_head(w_u_hb_idx_q_Q_q1_ql_head__head5)\n",
+      "packed_fields": [
+        {
+          "lane": "L6",
+          "source_bus_field_bits": [
+            519,
+            512
+          ],
+          "old_head_high3_bus_bits": [
+            519,
+            517
+          ],
+          "old_head_low5_bus_bits": [
+            516,
+            512
+          ],
+          "source_pack_line": 9720,
+          "source_pack_expression": "ot_dp_st #(.W(828)) u_bout_L6_o (.clk(clk), .rst_n(rst_n), .d({w_u_mu_keybuf_0_s0_q1_key_out[237:0], w_u_hb_idx_qctl_Q_q1_nq[11:0], w_u_hb_idx_qctl_Q_q1_key_slot[0], w_u_hb_idx_qctl_Q_q1_key_index[7:0], w_u_hb_idx_q_Q_q1_ql_w[15:0], w_u_hb_idx_q_Q_q1_ql_v[0], w_u_hb_idx_q_Q_q1_ql_sc[31:0], w_u_hb_idx_q_Q_q1_ql_head[7:0], w_u_hb_idx_q_Q_q1_ql_codes[511:0]}), .ea(rst_n), .q(L6_o[827:0]), .eq(L6_o[828]));",
+          "destination_wrappers": [
+            {
+              "module": "hbm_arch_q_b100",
+              "parts": [
+                "NW_b100"
+              ],
+              "file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100.sv",
+              "captures": [
+                {
+                  "capture_register": "g_procdff_71764_q",
+                  "line": 703,
+                  "assignment": "always @(posedge clk) g_procdff_71764_q <= L6_i_q[519:512];  // /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:65.2-69.5",
+                  "direct_uses": [
+                    {
+                      "line": 701,
+                      "text": "reg [7:0] g_procdff_71764_q;"
+                    },
+                    {
+                      "line": 702,
+                      "text": "assign w_procdff_71764_Q = g_procdff_71764_q;"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "logical_head_width": 8,
+      "physical_head_width": 5,
+      "zero_extension_at_actual_caller": true,
+      "added_flops": 0,
+      "added_cycles": 0
+    },
+    {
+      "part": "NE_hub",
+      "instance": "u_u_hb_idx_q_Q_q0",
+      "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv",
+      "old_expression": "w_u_hb_idx_q_Q_q0_ql_head",
+      "new_expression": "w_u_hb_idx_q_Q_q0_ql_head__head5",
+      "source_fragment": "wire [4:0] w_u_hb_idx_q_Q_q0_ql_head__head5;\nassign w_u_hb_idx_q_Q_q0_ql_head = {3'b000, w_u_hb_idx_q_Q_q0_ql_head__head5};\n// Exact current instance u_u_hb_idx_q_Q_q0: replace ONLY\n// .ql_head(w_u_hb_idx_q_Q_q0_ql_head) with .ql_head(w_u_hb_idx_q_Q_q0_ql_head__head5)\n",
+      "packed_fields": [
+        {
+          "lane": "L160m",
+          "source_bus_field_bits": [
+            519,
+            512
+          ],
+          "old_head_high3_bus_bits": [
+            519,
+            517
+          ],
+          "old_head_low5_bus_bits": [
+            516,
+            512
+          ],
+          "source_pack_line": 9150,
+          "source_pack_expression": "ot_dp_st #(.W(4986)) u_bout_L160m_o (.clk(clk), .rst_n(rst_n), .d({w_u_mu_keybuf_0_s3_q0_key_out[1098:0], w_u_mu_keybuf_0_s2_q0_key_out[1098:0], w_u_mu_keybuf_0_s1_q0_key_out[1098:0], w_u_mu_keybuf_0_s0_q0_key_out[1098:0], w_u_hb_idx_qctl_Q_q0_nq[11:0], w_u_hb_idx_qctl_Q_q0_key_slot[0], w_u_hb_idx_qctl_Q_q0_key_index[7:0], w_u_hb_idx_q_Q_q0_ql_w[15:0], w_u_hb_idx_q_Q_q0_ql_v[0], w_u_hb_idx_q_Q_q0_ql_sc[31:0], w_u_hb_idx_q_Q_q0_ql_head[7:0], w_u_hb_idx_q_Q_q0_ql_codes[511:0]}), .ea(rst_n), .q(L160m_o[4985:0]), .eq(L160m_o[4986]));",
+          "destination_wrappers": [
+            {
+              "module": "hbm_arch_q_b000",
+              "parts": [
+                "NE_b000"
+              ],
+              "file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000.sv",
+              "captures": [
+                {
+                  "capture_register": "g_hb_idx_s_SE_scorer_procdff_71764_q",
+                  "line": 1281,
+                  "assignment": "always @(posedge clk) g_hb_idx_s_SE_scorer_procdff_71764_q <= L160m_i_q[519:512];  // /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:65.2-69.5",
+                  "direct_uses": [
+                    {
+                      "line": 1279,
+                      "text": "reg [7:0] g_hb_idx_s_SE_scorer_procdff_71764_q;"
+                    },
+                    {
+                      "line": 1280,
+                      "text": "assign w_hb_idx_s_SE_scorer_procdff_71764_Q = g_hb_idx_s_SE_scorer_procdff_71764_q;"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "logical_head_width": 8,
+      "physical_head_width": 5,
+      "zero_extension_at_actual_caller": true,
+      "added_flops": 0,
+      "added_cycles": 0
+    },
+    {
+      "part": "NE_hub",
+      "instance": "u_u_hb_idx_q_Q_q1",
+      "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv",
+      "old_expression": "w_u_hb_idx_q_Q_q1_ql_head",
+      "new_expression": "w_u_hb_idx_q_Q_q1_ql_head__head5",
+      "source_fragment": "wire [4:0] w_u_hb_idx_q_Q_q1_ql_head__head5;\nassign w_u_hb_idx_q_Q_q1_ql_head = {3'b000, w_u_hb_idx_q_Q_q1_ql_head__head5};\n// Exact current instance u_u_hb_idx_q_Q_q1: replace ONLY\n// .ql_head(w_u_hb_idx_q_Q_q1_ql_head) with .ql_head(w_u_hb_idx_q_Q_q1_ql_head__head5)\n",
+      "packed_fields": [
+        {
+          "lane": "L6b",
+          "source_bus_field_bits": [
+            519,
+            512
+          ],
+          "old_head_high3_bus_bits": [
+            519,
+            517
+          ],
+          "old_head_low5_bus_bits": [
+            516,
+            512
+          ],
+          "source_pack_line": 9182,
+          "source_pack_expression": "ot_dp_st #(.W(828)) u_bout_L6b_o (.clk(clk), .rst_n(rst_n), .d({w_u_mu_keybuf_0_s0_q1_key_out[237:0], w_u_hb_idx_qctl_Q_q1_nq[11:0], w_u_hb_idx_qctl_Q_q1_key_slot[0], w_u_hb_idx_qctl_Q_q1_key_index[7:0], w_u_hb_idx_q_Q_q1_ql_w[15:0], w_u_hb_idx_q_Q_q1_ql_v[0], w_u_hb_idx_q_Q_q1_ql_sc[31:0], w_u_hb_idx_q_Q_q1_ql_head[7:0], w_u_hb_idx_q_Q_q1_ql_codes[511:0]}), .ea(rst_n), .q(L6b_o[827:0]), .eq(L6b_o[828]));",
+          "destination_wrappers": [
+            {
+              "module": "hbm_arch_q_b100__physical_v1",
+              "parts": [
+                "NE_b100"
+              ],
+              "file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100__physical_v1.sv",
+              "captures": [
+                {
+                  "capture_register": "g_procdff_71764_q",
+                  "line": 696,
+                  "assignment": "always @(posedge clk) g_procdff_71764_q <= L6b_i_q[519:512];  // /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:65.2-69.5",
+                  "direct_uses": [
+                    {
+                      "line": 694,
+                      "text": "reg [7:0] g_procdff_71764_q;"
+                    },
+                    {
+                      "line": 695,
+                      "text": "assign w_procdff_71764_Q = g_procdff_71764_q;"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "logical_head_width": 8,
+      "physical_head_width": 5,
+      "zero_extension_at_actual_caller": true,
+      "added_flops": 0,
+      "added_cycles": 0
+    }
+  ]
+}

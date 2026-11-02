@@ -1,0 +1,25 @@
+{
+  "old_sha256": "9572322a2a57381db8a74eaebaf9b96924890bc33e49a9f10baafaed39357bae",
+  "proposed_sha256": "5d4f1a01df34076d95fe8078aae80d90c4a7e2c6cb0e434deffd36da76b26a97",
+  "non_head_source_bytes_identical_after_exact_reverse": true,
+  "changes": [
+    {
+      "old": "reg [7:0] ql_head",
+      "new": "reg [4:0] ql_head",
+      "count": 2
+    },
+    {
+      "old": "wire[7:0]c_head",
+      "new": "wire[4:0]c_head",
+      "count": 1
+    },
+    {
+      "old": "ql_head<={3'b0,emit_head}",
+      "new": "ql_head<=emit_head",
+      "count": 1
+    }
+  ],
+  "added_flops": 0,
+  "added_cycles": 0,
+  "scope": "CurrentH32 nativehead5 source/plan/caller event only; no192head or wholemission adoption"
+}

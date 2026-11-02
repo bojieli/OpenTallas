@@ -1,0 +1,31 @@
+{
+  "status": "SOURCE_PLAN_CALLER_PROPOSAL_ONLY_NO_ADOPTION_OR_PNR",
+  "rule": "METHODOLOGY1.10: constant outputs removed from plan and RTL, never exempted",
+  "source_body": "9572322a2a57381db8a74eaebaf9b96924890bc33e49a9f10baafaed39357bae",
+  "source_scope": "Current C11E H32 QUERY, caller params{}, upstream actualN12 RT171/173 old3286 ABI; prospective3319/WFP32 not adopted",
+  "physical_master": "ot_hbm_idx_query_static",
+  "old_pins_sha256": "8685b722456c15e46c1f9c770d11c09af5833b403ad3d07787781858ed98cf4c",
+  "removed_outputs": [
+    "ql_head[5]",
+    "ql_head[6]",
+    "ql_head[7]"
+  ],
+  "old_pin_count": 1633,
+  "new_pin_count": 1630,
+  "unchanged": "All retained pin records/coordinates/outline/clocks/reset/data paths retained exactly",
+  "model": {
+    "added_cycles": 0,
+    "old_head_bits": 8,
+    "new_head_bits": 5,
+    "representable_heads": 32,
+    "removed_constant_values": {
+      "ql_head[5]": 0,
+      "ql_head[6]": 0,
+      "ql_head[7]": 0
+    }
+  },
+  "source_changes_required": "Native core ql_head[7:0] ->[4:0], assignment to emit_head without padding; native shell output and c_head same width5. No outside shell or new flop.",
+  "caller_changes_required": "Exact four actual wrappers/instances in caller_overlay.json: physical wire5 + explicit{3b000,new_head5} assignment to old logical8 wire. Packed fields519:512 and source/destination capture cycles unchanged.",
+  "source_and_plan_current_graph_changed": false,
+  "source_miter": "Actualchanged2-stageheadpath exhausts1024 inputheadpairs; wrong-upperbit andwrong-selector controls refuted. Allother sourcebytes exactreverseidentical. Full new5ABIcanonicalLEC still required; old8ABIreset4 proof separate."
+}

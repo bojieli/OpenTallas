@@ -1,0 +1,14 @@
+{
+  "0": {
+    "rc": 0,
+    "output": "PASS H32 native2stage path pairs=1024 captures=2054 caller_zeroextension8to5 MUT=0\n"
+  },
+  "1": {
+    "rc": 1,
+    "output": "DIFF cycle=5 old=00 restored=20 MUT=1\nFATAL: /home/ubuntu/coord/tmp/codex-hbm-query-head5-1131/head_path_miter.sv:22: \n       Time: 11100 Scope: miter.tick\n"
+  },
+  "2": {
+    "rc": 1,
+    "output": "DIFF cycle=23 old=08 restored=18 MUT=2\nFATAL: /home/ubuntu/coord/tmp/codex-hbm-query-head5-1131/head_path_miter.sv:22: \n       Time: 47100 Scope: miter.tick\n"
+  }
+}
