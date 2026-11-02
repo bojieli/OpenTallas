@@ -1,0 +1,9 @@
+# T7 selected staging-memory specialization — disabled
+
+The real canary failed nine inferred-memory limits. Existing native context identifies four staging lanes of 160×265 bits, hence D32/NL4/TROWS640/SRAM_MACRO0. The already-existing SRAM_MACRO1 implementation requires **eight real 256×256 1R1W SRAM instances** (two slices per lane), not a black-box declaration or a limit waiver. No source/default/parameter/recipe or macro-layout adoption is made here.
+
+Normal Intel2 unit10967-1793631711, 2GB/1thread, terminal0. The actual unchanged staging RTL and actual v2 SRAM model were compiled with Icarus. After writing every legal row, both behavioral and macro implementations matched an independent old-row oracle over all1060 output bits for2400cycles (2,544,000 checks), including800 same-row simultaneous read/write cycles and lane-selective writes. Wrong read-address control mismatched in all2400 tested cycles. Full logs and input hashes are retained. This is a digital initialized/legal-address witness, not exhaustive proof, uninitialized/out-of-range semantics, physical timing or full-attention qualification.
+
+Before any selected specialization: join exact caller parameters and source proof, reserve/place all eight actual macros with complete pins/PG/clock/cell costs, and update the physical ABI coherently. The four other native multiport memories and fixed exp ROM are separate obligations. No six-hour T7 frontend was repeated.
+
+The approved original exp_ln2_nk entry lacks the accurate pre-opt width already recorded for its content-identical nearhbm/f12 aliases. A separate metadata-only change adds elab_width64 to that existing approved entry, preserving its words/logic width/INIT hash and all RTL. Six existing ROM-size tests pass. The correctly derived256×64 cap is16384; this does not convert any remaining behavioral RAM to a macro or release T7.
