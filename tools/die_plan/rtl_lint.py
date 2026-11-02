@@ -18,7 +18,7 @@ def config(kit):
     return values
 
 
-def script(kit, mount='/work'):
+def script(kit, mount='/work', flatten=None):
     cfg = config(kit)
     top = cfg.get('DESIGN_NAME', [])
     sources = cfg.get('VERILOG_FILES', [])
@@ -71,7 +71,7 @@ def script(kit, mount='/work'):
                      # retain undriven cones whose consumers disappear only across module boundaries. Flatten
                      # before pruning preserves every LIVE undriven top connection for check -assert.
                      parameter_commands + [f'hierarchy -check -top {top[0]}', 'proc'] +
-                     (['flatten', 'opt_expr -keepdc'] if cfg.get('OT_RTL_LINT_FLATTEN') == ['1'] else []) + [
+                     (['flatten', 'opt_expr -keepdc'] if (cfg.get('OT_RTL_LINT_FLATTEN') == ['1'] if flatten is None else flatten) else []) + [
                                            # Check the elaborated live design. Dead parameter-disabled cones can
                                            # retain unassigned legacy wires after proc (safe4 PIPE=2); live
                                            # undriven nets still survive opt_clean and fail check -assert.
@@ -343,6 +343,24 @@ def mapped_cell_errors(kit, pattern=None):
             for c, n in sorted(used.items()) if c not in known]
 
 
+CHECK_PROB_RE = re.compile(r'Warning: .*(?:no driver|conflicting drivers|logic loop|conflict(?:s|ing)? with|undriven)')
+UNDRIVEN_RE = re.compile(r'^\s*Warning: Wire .* is used but has no driver\.\s*$')
+
+
+def undriven_lines(log):
+    return [ln for ln in log.splitlines() if UNDRIVEN_RE.match(ln)]
+
+
+def dead_undriven_only(log):
+    """True when the hierarchical `check -assert` failed and every check problem it reported is an undriven wire (no
+    conflicting drivers, logic loops, hierarchy or frontend errors): only then is the flattened live-design re-check
+    meaningful."""
+    probs = [ln for ln in log.splitlines() if CHECK_PROB_RE.search(ln)]
+    und = undriven_lines(log)
+    errs = [ln for ln in log.splitlines() if re.search(r'\bERROR:', ln)]
+    return bool(und) and len(und) == len(probs) and bool(errs) and all(re.search(r'Found (?:and reported )?\d+ problems', e) for e in errs)
+
+
 def run(kit, yosys='yosys'):
     out = kit / 'rtl_lint.json'
     try:
@@ -351,6 +369,19 @@ def run(kit, yosys='yosys'):
         result = subprocess.run([yosys, '-q', '-s', str(ys)], text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         log = result.stdout
         (kit / 'rtl_lint.log').write_text(log)
+        dead_undriven = 0
+        if result.returncode and dead_undriven_only(log) and config(kit).get('OT_RTL_LINT_FLATTEN') != ['1']:
+            # DIE-QC-61 11-01 (default-on): every check problem is an undriven net -> re-check the FLATTENED live design
+            # (what ORFS synth sees).  An undriven output of a pruned/parameter-disabled group that the parent leaves
+            # open (QC CB ot_qwen_w12_matvec_part x_addr[G*AW-1:NPX*AW], .x_addr() open) disappears; a live undriven
+            # net survives opt_clean and still fails check -assert.
+            dead_undriven = len(undriven_lines(log))
+            ysf = kit / 'rtl_lint_flat.ys'
+            ysf.write_text(script(kit, flatten=True))
+            result = subprocess.run([yosys, '-q', '-s', str(ysf)], text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            log = result.stdout
+            (kit / 'rtl_lint_flat.log').write_text(log)
+            ys = ysf
         cast = yosys_cast_scan(_kit_sources(kit))
         cast_errors = [f'{p}:{ln}: ERROR: {rule} yosys read_verilog -sv mis-elaborates this cast form '
                        f'(put the cast in its own named sized wire): {sn}' for p, hs in sorted(cast.items()) for ln, rule, sn in hs]
@@ -360,6 +391,7 @@ def run(kit, yosys='yosys'):
                       mapped_cell_types=len(mapped_cells(_kit_sources(kit))),
                       top_params=config(kit).get('VERILOG_TOP_PARAMS', []),
                       errors=re.findall(r'^.*\bERROR:.*$', log, re.M) + cast_errors, yosys_cast=len(cast_errors),
+                      **({'flat_recheck_dead_undriven': dead_undriven} if dead_undriven else {}),
                       command=[yosys, '-q', '-s', str(ys)])
     except (OSError, ValueError) as error:
         record = dict(verdict='NOT RUN', rc=2, errors=[str(error)])

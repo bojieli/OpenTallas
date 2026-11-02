@@ -144,3 +144,34 @@ def test_platform_liberty_tcl_reads_libs_inside_image(tmp_path):
     (tmp_path / "demo.sv").write_text("module demo(input a, output y); assign y = a; endmodule\n")
     pre = GL.platform_liberty_tcl(tmp_path, "")
     assert "SEQ_RVT_TT" in pre and "INVBUF_RVT_TT" in pre and pre.count("lrange $L 0 0") == 2
+
+
+def test_gen_lint_rechecks_flattened_only_on_undriven(tmp_path, monkeypatch=None):
+    """DIE-QC-61 11-01: undriven-only check problems -> one flattened re-check at >= FLAT_MEM_GB; other problems or a
+    kit that already lints flattened -> no re-check."""
+    (tmp_path / "config.mk").write_text("export DESIGN_NAME = demo\nexport VERILOG_FILES = /work/demo.sv\n")
+    und = ["Warning: Wire $paramod$x\\part.\\x_addr [95] is used but has no driver."]
+    calls = []
+
+    def fake(answers):
+        def run(kd, image, mem_gb, flatten):
+            calls.append((mem_gb, flatten))
+            return answers[len(calls) - 1]
+        return run
+
+    orig = GL._run_yosys
+    try:
+        GL._run_yosys = fake([(und, [], 0), ([], [], 0)])
+        assert GL.run_yosys(tmp_path, mem_gb=8) == ([], [], 0)
+        assert calls == [(8, None), (GL.FLAT_MEM_GB, True)]
+        calls.clear()
+        loop = ["Warning: found logic loop in module demo:"]
+        GL._run_yosys = fake([(und + loop, [], 0)])
+        assert GL.run_yosys(tmp_path, mem_gb=8)[0] == und + loop and calls == [(8, None)]
+        calls.clear()
+        (tmp_path / "config.mk").write_text("export DESIGN_NAME = demo\nexport VERILOG_FILES = /work/demo.sv\n"
+                                            "export OT_RTL_LINT_FLATTEN = 1\n")
+        GL._run_yosys = fake([(und, [], 0)])
+        assert GL.run_yosys(tmp_path, mem_gb=8)[0] == und and calls == [(8, None)]
+    finally:
+        GL._run_yosys = orig

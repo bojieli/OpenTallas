@@ -248,24 +248,70 @@ def emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant=N
         "endmodule", "`default_nettype wire", ""])
 
 
-def rename_module(files, module, new):
-    """rename the (single) definition of `module` in the kit RTL copies to `new`."""
+def _active_lines(text, defines):
+    """per line: True when the line is compiled with `defines` (`ifdef / `ifndef / `elsif / `else / `endif, nested)."""
+    dset, stack, out = set(defines), [], []
+    for ln in text.split("\n"):
+        s = ln.strip()
+        m = re.match(r"`(ifdef|ifndef|elsif)\s+(\w+)", s)
+        if m and m[1] in ("ifdef", "ifndef"):
+            on = (m[2] in dset) == (m[1] == "ifdef")
+            stack.append([on, on])           # [this branch active, some branch taken]
+            out.append(False)
+            continue
+        if m and m[1] == "elsif" and stack:
+            on = (not stack[-1][1]) and m[2] in dset
+            stack[-1] = [on, stack[-1][1] or on]
+            out.append(False)
+            continue
+        if s.startswith("`else") and stack:
+            stack[-1] = [not stack[-1][1], True]
+            out.append(False)
+            continue
+        if s.startswith("`endif") and stack:
+            stack.pop()
+            out.append(False)
+            continue
+        out.append(all(b[0] for b in stack))
+    return out
+
+
+def rename_module(files, module, new, defines=None):
+    """rename the (single) definition of `module` in the kit RTL copies to `new`.
+    DIE-HBM-57/PSLICE 11-01: when the plain text holds more than one definition and `defines` is given, only the
+    definitions in compiled `ifdef regions (SYNTHESIS + defines) count (a recipe define selecting one of two forms of
+    the top in one file); a file set with exactly one textual definition is renamed exactly as before."""
     # HBM-CORES-KITS-32 10-31: a definition may carry a leading attribute (ot_hbm_idx_owned_native.sv
     # "(* keep_hierarchy=\"yes\" *) module ot_hbm_idx_tail_native": was 'found []' -> FACE_SHELL failure)
     rx = re.compile(r"(?m)^(\s*(?:\(\*[^\n]*?\*\)\s*)?module\s+)" + re.escape(module) + r"(?=[\s#(;])")
-    hits = []
+    texts = {}
     for f in files:
         p = Path(f)
-        if p.suffix not in (".sv", ".v"):
-            continue
-        t = p.read_text()
-        t2, n = rx.subn(lambda m: m[1] + new, t)
-        if n:
-            p.write_text(t2)
-            hits.append((str(p), n))
-    if sum(n for _, n in hits) != 1:
-        raise RuntimeError(f"face_shell: expected one definition of {module}, found {hits}")
-    return hits[0][0]
+        if p.suffix in (".sv", ".v"):
+            texts[str(p)] = p.read_text()
+    plain = [(f, len(rx.findall(t))) for f, t in texts.items() if rx.search(t)]
+    if sum(n for _, n in plain) != 1 and defines is not None:
+        hits = []
+        for f, t in texts.items():
+            lines, act, n = t.split("\n"), _active_lines(t, ["SYNTHESIS"] + list(defines)), 0
+            for i, ln in enumerate(lines):
+                if rx.match(ln):
+                    # inactive copies -> <module>__off so a textual duplicate-module scan (kit_preflight) stays clean
+                    lines[i] = rx.sub(lambda m: m[1] + (new if act[i] else module + "__off"), ln, count=1)
+                    n += act[i]
+            hits.append((f, n, "\n".join(lines)))
+        if sum(n for _, n, _ in hits) != 1:
+            raise RuntimeError(f"face_shell: expected one compiled definition of {module}, found "
+                               f"{[(f, n) for f, n, _ in hits if n]} (textual {plain})")
+        for f, n, t in hits:
+            if t != texts[f]:
+                Path(f).write_text(t)
+        return next(f for f, n, _ in hits if n)
+    if sum(n for _, n in plain) != 1:
+        raise RuntimeError(f"face_shell: expected one definition of {module}, found {plain}")
+    f = plain[0][0]
+    Path(f).write_text(rx.sub(lambda m: m[1] + new, texts[f]))
+    return f
 
 
 def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, drop=True, mutant=None, scalars=None,
@@ -276,7 +322,7 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
     pin table and adds report['files'] to the sources."""
     kd = Path(kd)
     core = module + "__fcore"
-    deffile = rename_module(local, module, core)
+    deffile = rename_module(local, module, core, defines)
     rep = analyze(local, core, params, defines, kd / "rtl", macro_libs, kd / "face_shell_work",
                   log=kd / "face_shell_work" / "yosys.log")
     widths, dirs = rep.pop("port_width"), rep.pop("port_dirs")

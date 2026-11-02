@@ -175,10 +175,10 @@ def lint_tcl(cfg):
     return LINT_TCL.replace("@LANDING_FF@", LANDING_FF_TCL.replace("@TOP@", cfg["DESIGN_NAME"][-1]) if on else "")
 
 
-def elab_script(kd):
+def elab_script(kd, flatten=None):
     """rtl_lint's elaboration (same frontend options, liberties, top params) without its final 'check -assert':
     the tcl driver (LINT_TCL) logs `check`, then memory_collect and one row per $mem_v2 (path, WIDTH, SIZE)."""
-    return "\n".join(ln for ln in rtl_lint.script(kd).splitlines() if ln.strip() != "check -assert") + "\n"
+    return "\n".join(ln for ln in rtl_lint.script(kd, flatten=flatten).splitlines() if ln.strip() != "check -assert") + "\n"
 
 
 def parse_check(log):
@@ -225,8 +225,25 @@ def platform_liberty_tcl(kd, elab_text):
     return "\n".join(lines) + "\n"
 
 
-def run_yosys(kd, image=IMAGE, mem_gb=8):
-    elab = elab_script(kd)
+# DIE-QC-61 11-01: memory for the flattened live-design re-check (QC CB kits: the flattened elaboration needs ~14 GB;
+# 8 GB OOM-killed it, rc 137)
+FLAT_MEM_GB = 16
+
+
+def run_yosys(kd, image=IMAGE, mem_gb=8, flatten=None):
+    """yosys elaboration + check (+ memory census).  Default-on (DIE-QC-61 11-01, same rule as rtl_lint.run): when every
+    check problem is an undriven wire, re-check the FLATTENED live design, as ORFS synth sees it -- an undriven output of
+    a pruned group that the parent leaves open (QC CB ot_qwen_w12_matvec_part x_addr) disappears, a live undriven net
+    still fails."""
+    errs, rows, rc = _run_yosys(kd, image, mem_gb, flatten)
+    if (flatten is None and not rc and errs and (_cfg(kd).get("OT_RTL_LINT_FLATTEN") or ["0"])[-1] != "1"
+            and all(rtl_lint.UNDRIVEN_RE.match(e) for e in errs)):
+        errs, rows, rc = _run_yosys(kd, image, max(mem_gb, FLAT_MEM_GB), True)
+    return errs, rows, rc
+
+
+def _run_yosys(kd, image, mem_gb, flatten):
+    elab = elab_script(kd, flatten)
     (kd / "gen_lint_elab.ys").write_text(elab)
     tcl = lint_tcl(_cfg(kd))
     pre = platform_liberty_tcl(kd, elab)
