@@ -119,8 +119,8 @@ def logical_images(manifest, *, head_stage37=False):
             pu = sl['prog_users']
             if len(pu) != USERS:
                 raise ValueError('four already-relocated PROG images required')
-            if any(len(records) != PROG for records in pu):
-                raise ValueError('six PROG records per production user required')
+            if any(not (1 <= len(records) <= PROG) if head else len(records) != PROG for records in pu):
+                raise ValueError('one to six explicit HEAD PROG records required' if head else 'six PROG records per production user required')
             bc = HEAD_BTAB_COUNTS if head else BTAB_COUNTS
             cc = HEAD_CROM_COUNTS if head else CROM_COUNTS
             if len(sl['btab']) != bc[sl['slice']] or len(sl['crom']) != cc[sl['slice']]:

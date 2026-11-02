@@ -52,9 +52,13 @@ def relocate_instruction(word, user):
     return D.su_word(**f)
 
 
-def prog_users(records):
+def prog_users(records, *, head=False):
     """Keep all six source pairs and generate four distinct private VM images."""
-    if len(records) != P.PROG or sorted(r['eaddr'] for r in records) != list(range(P.PROG)):
+    addresses=[r['eaddr'] for r in records]
+    if head:
+        if not 1 <= len(records) <= P.PROG or len(set(addresses)) != len(addresses):
+            raise ValueError('one to six distinct explicit HEAD PROG pairs required')
+    elif len(records) != P.PROG or sorted(addresses) != list(range(P.PROG)):
         raise ValueError('six distinct native PROG pairs required')
     out = []
     for user in range(P.USERS):
@@ -88,7 +92,7 @@ def stage_tables(stage, lowering, btab, crom, *, head_stage37=False):
                     raise ValueError(f'duplicate table write slice {sid} addr {a}')
                 out[a] = dict(addr=a, payload_hex=value)
             return [out[a] for a in sorted(out)]
-        slices.append(dict(slice=sid, prog_users=prog_users(program),
+        slices.append(dict(slice=sid, prog_users=prog_users(program, head=head_stage37 and stage==37),
                            btab=unique(bt, 'eaddr'), crom=unique(cr, 'eaddr')))
     return dict(stage=stage, slices=slices)
 
