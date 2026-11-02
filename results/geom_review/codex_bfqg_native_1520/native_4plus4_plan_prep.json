@@ -1,0 +1,224 @@
+{
+ "scope": "Unadopted native BFQG PLAN PREP; no legal placed cells, timing, CTS or route receipt",
+ "outline_um": [
+  302.4,
+  298.08
+ ],
+ "source": "286756143; mapped FF/root ownership model2b3287743",
+ "added_cycles": 0,
+ "source_and_pins_unchanged": true,
+ "macros": [
+  {
+   "bank": 0,
+   "instance": "g_t[0].u_m",
+   "xy_um": [
+    21.6,
+    17.34
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    10.8,
+    17.34,
+    19.44,
+    58.404
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l0": 2
+   }
+  },
+  {
+   "bank": 1,
+   "instance": "g_t[1].u_m",
+   "xy_um": [
+    21.6,
+    88.284
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    10.8,
+    88.284,
+    19.44,
+    129.348
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l1": 2
+   }
+  },
+  {
+   "bank": 2,
+   "instance": "g_t[2].u_m",
+   "xy_um": [
+    21.6,
+    159.228
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    10.8,
+    159.228,
+    19.44,
+    200.292
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l2": 2
+   }
+  },
+  {
+   "bank": 3,
+   "instance": "g_t[3].u_m",
+   "xy_um": [
+    21.6,
+    230.172
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    10.8,
+    230.172,
+    19.44,
+    271.236
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l3": 2
+   }
+  },
+  {
+   "bank": 4,
+   "instance": "g_t[4].u_m",
+   "xy_um": [
+    156.408,
+    17.34
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    145.608,
+    17.34,
+    154.248,
+    58.404
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l4": 2
+   }
+  },
+  {
+   "bank": 5,
+   "instance": "g_t[5].u_m",
+   "xy_um": [
+    156.408,
+    88.284
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    145.608,
+    88.284,
+    154.248,
+    129.348
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l5": 2
+   }
+  },
+  {
+   "bank": 6,
+   "instance": "g_t[6].u_m",
+   "xy_um": [
+    156.408,
+    159.228
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    145.608,
+    159.228,
+    154.248,
+    200.292
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l6": 2
+   }
+  },
+  {
+   "bank": 7,
+   "instance": "g_t[7].u_m",
+   "xy_um": [
+    156.408,
+    230.172
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    145.608,
+    230.172,
+    154.248,
+    271.236
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l7": 2
+   }
+  }
+ ],
+ "shared_existing_FFs": 786,
+ "guide_semantics": "Inclusive region proposal, not fixed sites; real placement legality/occupancy to be checked. Macro west halo2.16um respected by right edge; each guide8.64x41.064um. No command consumes this proposal.",
+ "clock_model_hold": "All20inputs kept literal. clk2568 FF spread over bank-local cap/rp_sel plus shared OR4; clk_n1024 split bank-wise; separate clk_ctrl/clk_s/local-mask/SRAM roots must retain exact same-source root ownership and common-domain alignment. Actual tree insertion delay/cap and postCTS measured leaf reach are unmeasured.",
+ "review_hold": "Owner/root model acceptance and native kit image review required before PNR. Old wrapped4+4 route result is a topology clue only, never current native gate credit."
+}
