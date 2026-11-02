@@ -1,0 +1,220 @@
+{
+ "schema": "opentallas.ex.actual_parent_readset.v1",
+ "kit": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1",
+ "source": "protected native efa; 8 raw EX source files match F70",
+ "generation": "RAN0; no synthesis or route",
+ "readsets": {
+  "ADDITIONAL_LEFS": [
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e0.lef",
+    "sha256": "12c7da2f8ba31365f8b3a234523690a8a6c66acc7c8fe7803b825a78c4c07e51"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e1.lef",
+    "sha256": "0a98243f985d00109b3c81889f186a58320897adca8e29ce52872468f8e6ddb1"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e2.lef",
+    "sha256": "53fd80f7c069bb48116e78ab807682cf8827ac90473a863eb4452bba5a7fd1f2"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e6.lef",
+    "sha256": "38e83fb894160ffbe7662519688fcc064071ff4da3806f66d8bf0eea00b0a55b"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e5.lef",
+    "sha256": "7ad48d9a07fda39a1ddd5867709762facdb00bd7c071972a68f2af89801a5a22"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q0.lef",
+    "sha256": "9ab7a65fbadd5d049b56fb2b0c9391a408d49843b19d6828ae2cb1671afc4cea"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q1.lef",
+    "sha256": "4f3eb96c644fca6b916f606dd161e96afa816f65036bf3bd931dd40473c6a359"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q2.lef",
+    "sha256": "e1719b2034c63a9e8be3f32f3fe5916a1c45237dd1db14fe8434c2b5defca2a1"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q3.lef",
+    "sha256": "4590f59fc3bde3590fbbce7a561978184656027fbd1ac8a32390965c5cff2174"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_astk_ex_s.lef",
+    "sha256": "d967f9d5abfb39c66cfb43ebf3e4a14b4a467a4f554b1d9d7335d66d0271785f"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/ot_sram_1r1w_64x128_m1_r2c2.lef",
+    "sha256": "cfec1580782c34d38a55e8c4d7158e3eca6c1e28c57619fbf84b0671937a9791"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/ot_sram_1r1w_256x128_m1_r2c2.lef",
+    "sha256": "ad6fadd2835795777c1641f7d5963dc671fe268e08925b8cb9b90910438355ee"
+   }
+  ],
+  "ADDITIONAL_LIBS": [
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e0_tt.lib",
+    "sha256": "37255f5c41178d1d8ca3047f03119538d3ed0722a200451eda7e99bbdb0ed18c"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e1_tt.lib",
+    "sha256": "e794ed0b61f741683c7dfc40e70f2c543ab2baf8aba82590630dbcb60e30e677"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e2_tt.lib",
+    "sha256": "b065a09fd9dee4fc496eaf27916e7445d6369774ee6286fffbb13e92c8249fd1"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e6_tt.lib",
+    "sha256": "15dd82b19ed2fea8df672319573adbef554419056641687ee2ec6423a4de4e83"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e5_tt.lib",
+    "sha256": "afbc48b3f870305d21640191ba5f95a92506e9e83018461e052c23f13a8e3e63"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q0_tt.lib",
+    "sha256": "58f77ca1f125b599989853c37d448581e6c2f7c9651ba655d4fb44490dae8001"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q1_tt.lib",
+    "sha256": "a8dc4887115512932150793cc0c8e4a47c8be9ade0bfa785cdf14fa9dd71b1f8"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q2_tt.lib",
+    "sha256": "8407c38b2009a2802c958ec978a3d4e58dcdf7da564ded9bdbd36abf2696fad0"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q3_tt.lib",
+    "sha256": "9a5638328240bbb6a9495278a04286445336f7e5b6fd48605372fdac8db7be98"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_astk_ex_s_tt.lib",
+    "sha256": "440e0d4cd4098c1eaca5b0332e9d32ef85cb45491f6767ee3c15ceb9bfbca956"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/ot_sram_1r1w_64x128_m1_r2c2_tt.lib",
+    "sha256": "992a58c4ce3d65df6afca669b54d3fadc97dcab73d031c6b4608efa937c90794"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/ot_sram_1r1w_256x128_m1_r2c2_tt.lib",
+    "sha256": "606b68d687a21cf0effb0b395e0e3f88823d8e4933bf018f48db81587b0e7e54"
+   }
+  ],
+  "TC_LIB_FILES": [
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e0_tt.lib",
+    "sha256": "37255f5c41178d1d8ca3047f03119538d3ed0722a200451eda7e99bbdb0ed18c"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e1_tt.lib",
+    "sha256": "e794ed0b61f741683c7dfc40e70f2c543ab2baf8aba82590630dbcb60e30e677"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e2_tt.lib",
+    "sha256": "b065a09fd9dee4fc496eaf27916e7445d6369774ee6286fffbb13e92c8249fd1"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e6_tt.lib",
+    "sha256": "15dd82b19ed2fea8df672319573adbef554419056641687ee2ec6423a4de4e83"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e5_tt.lib",
+    "sha256": "afbc48b3f870305d21640191ba5f95a92506e9e83018461e052c23f13a8e3e63"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q0_tt.lib",
+    "sha256": "58f77ca1f125b599989853c37d448581e6c2f7c9651ba655d4fb44490dae8001"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q1_tt.lib",
+    "sha256": "a8dc4887115512932150793cc0c8e4a47c8be9ade0bfa785cdf14fa9dd71b1f8"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q2_tt.lib",
+    "sha256": "8407c38b2009a2802c958ec978a3d4e58dcdf7da564ded9bdbd36abf2696fad0"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q3_tt.lib",
+    "sha256": "9a5638328240bbb6a9495278a04286445336f7e5b6fd48605372fdac8db7be98"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_astk_ex_s_tt.lib",
+    "sha256": "440e0d4cd4098c1eaca5b0332e9d32ef85cb45491f6767ee3c15ceb9bfbca956"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/ot_sram_1r1w_64x128_m1_r2c2_tt.lib",
+    "sha256": "992a58c4ce3d65df6afca669b54d3fadc97dcab73d031c6b4608efa937c90794"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/ot_sram_1r1w_256x128_m1_r2c2_tt.lib",
+    "sha256": "606b68d687a21cf0effb0b395e0e3f88823d8e4933bf018f48db81587b0e7e54"
+   }
+  ],
+  "BC_LIB_FILES": [
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e0_ff.lib",
+    "sha256": "7227f5fb0f9e6e2aebf99ca21fd63ee583b44941b4aa1fd60b5ef0f8aec4c04a"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e1_ff.lib",
+    "sha256": "0de06a4d53d2c8639392871c29dcf58a248dfe3e5c12db381c13e7187d7a64a1"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e2_ff.lib",
+    "sha256": "f14add931e7418feddfe5636b19cee3e6b5325fd4388b116acd3368c2d702b85"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e6_ff.lib",
+    "sha256": "3523154e1535a08872f4775c03c9c5789398cacd51f37f622d0733863692f2d1"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/kv3_head_eighth_e5_ff.lib",
+    "sha256": "a89f7ab5d364e5e4dcc7beb25a37c4f519b5e2158d4f489a51ad1e9c5fd72f2d"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q0_ff.lib",
+    "sha256": "3f1867208d54d68695ec6de52d5a22c68c1caaa633ddfeb8adbc5b3826dadf96"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q1_ff.lib",
+    "sha256": "133e052cd2d8113f3114f3b334254a08654d81ff125653e2df89a46e393efda3"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q2_ff.lib",
+    "sha256": "60e8dcef776b9592293e4a1512d5a2eef13ffff203d53a426ff94790221eeedd"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_ectlk_q3_ff.lib",
+    "sha256": "30a8339b4e312add3b0f43c2ba40d8d22935a4b31caabadb5b0dbe6884dcb7bb"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_astk_ex_s_ff.lib",
+    "sha256": "6be78baadbe0e70a836209e965f0502c39922e219f1fb5cc4f28d7c28feb83c9"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/ot_sram_1r1w_64x128_m1_r2c2_ff.lib",
+    "sha256": "e3580ba509a004c8451a8817be702a40c7e89484c4c69e9795c0208dbd28d977"
+   },
+   {
+    "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/ot_sram_1r1w_256x128_m1_r2c2_ff.lib",
+    "sha256": "5c878649892181b46b8b29ffd759804db20247ba5f17066ae45d73e1b14f1906"
+   }
+  ]
+ },
+ "EX_LEF_definitions": [
+  {
+   "path": "/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kits2/kv3_hg_v1/macros/qkd_astk_ex_s.lef",
+   "master": "qkd_astk_ex_s",
+   "size": [
+    190.08,
+    112.32
+   ]
+  }
+ ],
+ "duplicate_EX_geometry": false,
+ "flattened_die": "NOT RUN; fresh complete die consumer not materialized"
+}

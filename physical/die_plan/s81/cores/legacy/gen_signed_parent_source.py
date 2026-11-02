@@ -288,6 +288,7 @@ def stage_contract(kd, original, ledger, root_pin, clock_only=False):
     kd=Path(kd);rows={'tt':[],'ff':[]};contracts=[]
     for child in original['children']:
         v=ledger['children'][child['view']];d=Path(v['view'])
+        tap=child.get('tap',root_pin)
         lib=(d/f"{v['master']}_tt.lib").read_text()
         clocks=re.findall(r'\bpin\s*\(\s*"?([^"\)]+)"?\s*\)\s*\{[^{}]*\bclock\s*:\s*true\s*;',lib)
         clock=json.loads((d/'insertion.json').read_text())
@@ -298,8 +299,8 @@ def stage_contract(kd, original, ledger, root_pin, clock_only=False):
                 cm=(clock.get('clock_measurements') or {}).get(pin,{}).get(corner,{}).get('boundary',{})
                 mean=float(cm.get('mean',v[f'{corner}_insertion_ps']))
                 means[corner]=dict(mean_ps=mean,basis='actual SIGNED child boundary mean')
-                rows[corner].append(f"{{{child['inst']}}} {{{pin}}} {mean:.6f} {{{root_pin}}}")
-            contracts.append(dict(inst=child['inst'],pin=pin,rise_ps=means['tt']['mean_ps'],tap=root_pin,
+                rows[corner].append(f"{{{child['inst']}}} {{{pin}}} {mean:.6f} {{{tap}}}")
+            contracts.append(dict(inst=child['inst'],pin=pin,rise_ps=means['tt']['mean_ps'],tap=tap,
                                   corners=means,source=v['view'],signed=True))
         if not clocks:raise ValueError(f"{v['master']}: native timing model has no clock input")
     for corner,name in [('tt','core_latency.txt'),('ff','core_latency_ff.txt')]:
