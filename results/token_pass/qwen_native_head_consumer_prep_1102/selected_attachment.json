@@ -1,0 +1,64 @@
+{
+  "status": "SELECTED_PART1_AND_POST_SOURCE_PREP_NOT_EXECUTED",
+  "authority": "epyc2:/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/results/qc_die57_1031/bind/final_asbuilt.json",
+  "authority_sha256": "d1732741a668c2fadccdd42f64b1ef80db4475a371a11b493a2b92c86d3e4f7c",
+  "bound": "epyc2:/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/rtl/qwen_compute_bound_top.sv",
+  "bound_sha256": "b7db6bb8157f4e55f274b2e1d11482428d25d40803ff5bf5cb4bd7758c112295",
+  "factory": "f79",
+  "provenance_commit": "bd55b15b452761be8ceefeae7b97abdf4a915bd4",
+  "tile0": {
+    "bound_instance": "c_W5_bf_00.u_u_t_0_0",
+    "parent_master": "qfd_qc_cb_f_q00",
+    "tile_id": "S_u_t_0_0_tile_id16'd0 with low4physical tie_lo bits",
+    "leaf": "qfd_tile_nk_rp2_romleaf_rr",
+    "leaf_parameters": {
+      "G4_ROOTS": 1,
+      "REGROOT_MODE": 3
+    },
+    "real_engine": "ot_qwen_w12_matvec_part PART1 TG4",
+    "native_roots": 39,
+    "consumer_harness": "rtl/test/qwen_dv/qwen_native_head_tile0_consumer_prep.sv",
+    "harness_clock_policy": "39 individually named input clocks, no waveform generator or aliases; production phase attachment unqualified"
+  },
+  "selected_hr": {
+    "source": "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv",
+    "instance": "u_hr",
+    "rom_ret_contract": "{fault,16'd0,1'b0,32'd0,18'd0,24'd0,1'b0,idle,1'b1}",
+    "final_outputs": "m_fin_o/m_fidx_o/m_fval_o unconnected",
+    "consequence": "Legacy PART2/AMAX continuation is NOT the selected numerical sink"
+  },
+  "selected_numerical_path": [
+    "actual PART1 tile output/tile-node FP32 tree",
+    "selected column fabric/collector outputs",
+    "S8 station sender mode3 and receiver mode2",
+    "shared qfd_dv_s6_btab BF16 row scales",
+    "qfd_dv_s8_station_tail1 / tail1_nb0 selected by per-part type",
+    "qfd_dv_s5_ctl_repair4_leaf LM-head qfd_dv_amax_mu",
+    "scalar up-chain qfd_dv_s5_sc2_k79 / root token"
+  ],
+  "head_station_contract": {
+    "source_commit": "68f56e2ee",
+    "commands": 298,
+    "receivers": [
+      1,
+      3,
+      5,
+      6,
+      8,
+      10
+    ],
+    "KC": 8,
+    "clear_policy": "six receiver-only AMAX clears",
+    "rows": 18992,
+    "global_dates": "unqualified"
+  },
+  "remaining_inputs": [
+    "parent-owned canonical causal BF16 H32 and independent tile0 raw golden values",
+    "actual chosen native root waveforms and reset release (no aliases/assumed phase)",
+    "matching X tap/xl publication and four GO/retirement dates for all4chunks",
+    "selected physical macro simulation models plus initialization namespaces; remaining8tile0bank0..3 masks needed if unchangedleafguard requires all10files",
+    "complete source dependency closure of selected hard LSL/node/operand children, preserving current0/0/macro contract",
+    "bounded raw PART1 result compare before global collector; global collector/STN/AMAX integration separate"
+  ],
+  "scope": "No generic PART2 replacement; two existing bank4 masks exhaustively decoded against genuine1600-word tile0 excerpt; next raw leaf numerical proof remains uncompiled/unexecuted"
+}

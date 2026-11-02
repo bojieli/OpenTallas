@@ -34,3 +34,32 @@ lease and GO/end dates, and real PART2 tree/scales/AMAX attachment. PART1 alone
 cannot qualify global argmax. Existing native controller code folds the previous
 chunk's am_any/am_idx/am_val on the next me_go with me_amc, while END includes the
 final chunk once; that logic still needs a real consumer simulation.
+
+Selected-path correction after frozen factory review
+
+The numerical sink is the selected collector / S8 station path, not a generic
+PART2 engine. The actual selected HR u_hr has AMAX return payload tied zero and
+its m_fin/m_fidx/m_fval outputs unconnected. Four programme chunk AMAX fields are
+preserved source fields; they do not establish a selected HR argmax result.
+The native HEAD source joins 298 station commands to BF16 BTAB and receivers
+1,3,5,6,8,10 with KC8 and six receiver-only clears. Its global issue dates and
+collector-to-station arrival lease remain separate work.
+
+Frozen821/f79 bound source pins tile0 at c_W5_bf_00.u_u_t_0_0, parent master
+qfd_qc_cb_f_q00 with S_u_t_0_0_tile_id=0 and the actual NK ROMleaf body. The
+new consumer harness instantiates that body with its unchanged defaults and
+ROM_TILE0 initialization identity, exposing39 named native clock inputs. It
+introduces no clock aliases, waveforms, X phase, results or completion stimulus.
+Parent-owned canonical H/golden data will drive the next bounded PART1 proof.
+
+The two existing tile0/bank4 physical masks were copied from the recovered
+cohort and their manifest hashes checked. An independent decoder verified every
+HEAD logical word2048..3647 (resident18432..20031) in each macro against the
+bounded genuine code excerpt:1600words/column,102400 INT8 bytes total. Column0
+holds groups0,1; column1 groups2,3. This is PASS_DATA_ONLY, not RTL execution.
+No masks were regenerated and no checkpoint or full matrix was copied.
+
+The passive monitor now requires independent domain-local head_active_tap and
+head_active_code observations. It ignores BASE traffic, accepts START only
+before GO/END, and checks END after four already accepted GOs. No CDC relationship
+is inferred between those observations.
