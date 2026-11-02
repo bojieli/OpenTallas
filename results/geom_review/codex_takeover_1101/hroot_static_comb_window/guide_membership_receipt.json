@@ -1,0 +1,97 @@
+{
+ "scope": "STATIC exact literal-prefix expansion against actual213407-cell dump; no CAD",
+ "groups": [
+  {
+   "chunk": 0,
+   "role": "read",
+   "expected_members": 158,
+   "prefix_expanded": 158,
+   "actual_statuses": {
+    "?": 158
+   }
+  },
+  {
+   "chunk": 0,
+   "role": "write",
+   "expected_members": 571,
+   "prefix_expanded": 571,
+   "actual_statuses": {
+    "?": 571
+   }
+  },
+  {
+   "chunk": 1,
+   "role": "read",
+   "expected_members": 158,
+   "prefix_expanded": 158,
+   "actual_statuses": {
+    "?": 158
+   }
+  },
+  {
+   "chunk": 1,
+   "role": "write",
+   "expected_members": 566,
+   "prefix_expanded": 566,
+   "actual_statuses": {
+    "?": 566
+   }
+  },
+  {
+   "chunk": 2,
+   "role": "read",
+   "expected_members": 158,
+   "prefix_expanded": 158,
+   "actual_statuses": {
+    "?": 158
+   }
+  },
+  {
+   "chunk": 2,
+   "role": "write",
+   "expected_members": 564,
+   "prefix_expanded": 564,
+   "actual_statuses": {
+    "?": 564
+   }
+  },
+  {
+   "chunk": 3,
+   "role": "read",
+   "expected_members": 158,
+   "prefix_expanded": 158,
+   "actual_statuses": {
+    "?": 158
+   }
+  },
+  {
+   "chunk": 3,
+   "role": "write",
+   "expected_members": 571,
+   "prefix_expanded": 571,
+   "actual_statuses": {
+    "?": 571
+   }
+  },
+  {
+   "chunk": 4,
+   "role": "read",
+   "expected_members": 113,
+   "prefix_expanded": 113,
+   "actual_statuses": {
+    "?": 113
+   }
+  },
+  {
+   "chunk": 4,
+   "role": "write",
+   "expected_members": 392,
+   "prefix_expanded": 392,
+   "actual_statuses": {
+    "?": 392
+   }
+  }
+ ],
+ "total": 3409,
+ "crossgroup_overlap": 0
+}
