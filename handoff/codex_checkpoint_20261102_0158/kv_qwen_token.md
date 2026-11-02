@@ -103,3 +103,12 @@ Next HEAD action: finish exact bound write/stream/headtap lease and S8 per-chunk
 7. Resolve AHUB real child clock model archive/current-Q6 path and TT three-net DRV pass independently. No endpoint fabrication or clock coverage waiver.
 
 This checkpoint has no stop instruction. Continue until explicitly told Claude's usage limit reset; only then perform the real handback protocol.
+
+## Continuing updates after initial checkpoint write
+
+- Corrected KV make remains the same active32GB/j1 unit; pickup's02:05 report is209 completed objects, no96GB eligibility or successor. CTL repack r3 is now ACTIVE Intel1 `oth-ubuntu-1572905-1793613300`, GPL700/overflow.3336, exact18768site/master and26source/FP guards passed. No CTS/GRT; terminal geometry collector is prepared.
+- PC original r27c source composite receipt is now pushed `1caa9398d`; its separate fresh route finalizer is advancing GRT after original-clock guard. Mixed-access catalog was already consistent, so that cleanup is not claimed a proven crash cause.
+- NF2 decisive actual-source reset negative is `79af8397d`: exact47-file selected ck7 subject, native reset16/reference0 versus gold-only mutant1, zero assumptions/hints. Earlier soft/invalid/OOM controls remain. PV B post is TT+51.18/FF+10.39/DRC0/ANT0/clockPASS, residual slew6/2; finite long-wire repair PREP follows.
+- Q6 actual old clients are terminal, not queued: RECIP63046dbaa/kit92df5f1ae3e53c71 and ZH46e4c49f8/kit8e01e8e03b6d52ac. Only source/SYNTH/PLACE survive. Later retry logs reference absent4/5/6 ODBs and cannot qualify current models. RECIP compact216x138.24 has a stale secondary x[31] box still at old216-height, causing exact out-of-die GRT-0209; primary box was already correct. ZH151.2 has268southpins on38%face. Evidence `362dd8ed9`; physical/nf2_preview now owns geometry-only corrected render PREP, no duplicate/edit or automatic AHUB view substitution.
+- HEAD new bounded concern: frozen821 west STREAM tuple write lanes0..3 land17edges versus18 for4..7. Equal-phase native producer evidence is being checked before claiming selected failure. Prepared STREAM phase projection is held; it only establishes sink phase requirements, not current producer compensation. No H rebuild or physical edit.
+- SOURCE13 hardening remains `8c64782b4` pending final independent review; no additional frontend or runtime was launched for this checkpoint.
