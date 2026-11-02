@@ -32,6 +32,20 @@ class MacroParamBB(unittest.TestCase):
         self.assertNotIn("always", txt)
         self.assertTrue(txt.rstrip().endswith("endmodule"))
 
+    def test_exact_staged_multimodule_header_precedes_filename_fallback(self):
+        packaged = self.t / "src" / "engines.sv"
+        (self.t / "src" / "m_pair.sv").rename(packaged)
+        packaged.write_text("module other(input wire x); endmodule\n" + packaged.read_text())
+        # An unstaged sibling with the conventional basename is not the selected
+        # physical module's header when its actual definition is already staged.
+        (self.t / "src" / "m_pair.sv").write_text(
+            "module m_pair #(parameter CHB=1)(input clk, output [0:0] q); endmodule\n")
+        out = G.macro_param_blackboxes(self.macros, [self.top, packaged], self.t / "kit")
+        self.assertEqual(len(out), 1)
+        self.assertEqual(G._module_header(out[0].read_text(), "m_pair"),
+                         G._module_header(packaged.read_text(), "m_pair"))
+        self.assertNotIn("module other", out[0].read_text())
+
     def test_existing_bb_and_unparameterised_untouched(self):
         bb = self.t / "src" / "m_pair_bb.v"
         bb.write_text("(* blackbox *) module m_pair #(parameter CHB=1)(input clk, output [3:0] q); endmodule\n")

@@ -2363,7 +2363,7 @@ def _module_header(text, mod):
 
 def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
     """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
-    and that has no _bb view yet; header copied from the module's own RTL (dirs of rtl_files first, then
+    and that has no _bb view yet; header copied from the module's own RTL (exact staged files, their dirs, then
     <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits)."""
     rtl_dir = Path(rtl_dir)
     staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files
@@ -2376,7 +2376,12 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
         if not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
             continue
         dirs = list(dict.fromkeys(Path(f).parent for f in rtl_files))
-        cands = [d / n for d in dirs for n in (f"{mod}.sv", f"{mod}.v")]
+        # Multi-module HDL sources need not be named after this physical master
+        # (S81 ot_s81sl_ve.sv declares both ot_s81sl_ve_m and ot_s81sl_ve_s).
+        # Prefer the exact ordered readset before the established basename fallback.
+        cands = list(dict.fromkeys(Path(f) for f in rtl_files
+                                   if Path(f).suffix in (".sv", ".v") and Path(f).is_file()))
+        cands += [d / n for d in dirs for n in (f"{mod}.sv", f"{mod}.v")]
         if root:
             cands += sorted((Path(root) / "rtl").rglob(f"{mod}.sv")) + sorted((Path(root) / "rtl").rglob(f"{mod}.v"))
         hdr = next((h for h in (_module_header(c.read_text(errors="replace"), mod) for c in cands if c.is_file())
