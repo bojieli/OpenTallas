@@ -1,22 +1,18 @@
 # Owned Cap WEST2 pure-routing candidate; first PRE after original routed DB/libs/SDC load.
 source /work/native_pg_binding.tcl
 if {![ot_pg_strict_enabled]} {error CAP_STRICT_PG_REQUIRED}
-ot_pg_native_birth_begin /work/nativepgbirth.so
 set cb [ord::get_db_block]
-# Preserve resolved normal antenna policy; this private no-birth diagnostic refuses
-# any eligible diode master across EVERY actually loaded dbLib before analysis.
-set antenna_masters {};set library_inventory {}
-foreach lib [[ord::get_db] getLibs] {
- set count 0
- foreach master [$lib getMasters] {
-  incr count
-  if {[$master getType] eq "CORE_ANTENNACELL"} {lappend antenna_masters [list [$lib getName] [$master getName]]}
- }
- lappend library_inventory [list [$lib getName] $count]
-}
-if {![llength $library_inventory]} {error CAP_EMPTY_ACTUAL_LIBRARY_INVENTORY}
-if {[llength $antenna_masters]} {error "CAP_NO_BIRTH_DIAGNOSTIC_HAS_ELIGIBLE_DIODE $antenna_masters"}
-puts "CAP_ACTUAL_ALL_LIB_ANTENNA_INVENTORY zero eligible CORE_ANTENNACELL; libraries $library_inventory; normalpolicy SKIP_ANTENNA_REPAIR=$::env(SKIP_ANTENNA_REPAIR)"
+# Reuse the reviewed PG-owner finite39 normalizer/census (space/underscore safe).
+if {![info exists ::env(SKIP_ANTENNA_REPAIR)] || ![string is boolean -strict $::env(SKIP_ANTENNA_REPAIR)] || $::env(SKIP_ANTENNA_REPAIR)} {error CAP_NORMAL_ANTENNA_POLICY_MUST_BE_ENABLED}
+if {![info exists ::env(MAX_REPAIR_ANTENNAS_ITER_GRT)] || ![string is integer -strict $::env(MAX_REPAIR_ANTENNAS_ITER_GRT)] || $::env(MAX_REPAIR_ANTENNAS_ITER_GRT) <= 0} {error CAP_NORMAL_ANTENNA_ITERATIONS_REQUIRED}
+source /work/pg_drt_diag_library_guard.tcl
+set ::cap_frozen_library_inventory [ot_pg_drt_diag_library_inventory]
+if {![llength $::cap_frozen_library_inventory]} {error CAP_EMPTY_ACTUAL_LIBRARY_INVENTORY}
+set inv [open $::env(RESULTS_DIR)/actual_loaded_master_inventory.tsv {WRONLY CREAT EXCL}]
+foreach row $::cap_frozen_library_inventory {puts $inv $row}
+close $inv
+puts "CAP_NORMAL_ANTENNA_POLICY skip=$::env(SKIP_ANTENNA_REPAIR) iterations=$::env(MAX_REPAIR_ANTENNAS_ITER_GRT)"
+ot_pg_native_birth_begin /work/nativepgbirth.so
 set ::cap_targets {_27646_ wire17963}
 set ::cap_expected_nets [lsort {net19290 _14198_ _14199_ net19400 _14200_ net17964}]
 # All three source spacers overlap only the reviewed destination bboxes.
@@ -24,7 +20,7 @@ set ::cap_spacers {FILLER_186_604 FILLER_276_605 FILLER_276_627}
 set ::cap_inst_before [dict create]
 foreach i [$cb getInsts] {dict set ::cap_inst_before [$i getName] [list [[$i getMaster] getName] [$i getLocation] [$i getOrient] [$i getPlacementStatus] [$i isDoNotTouch]]}
 foreach name $::cap_spacers {
- set i [$cb findInst $name];if {$i eq "NULL" || [[$i getMaster] getType] ne "CORE_SPACER"} {error CAP_EXACT_SPACER_REQUIRED}
+ set i [$cb findInst $name];if {$i eq "NULL" || [[$i getMaster] getType] ni {CORE_SPACER {CORE SPACER}}} {error CAP_EXACT_SPACER_REQUIRED}
  if {![llength [[$i getMaster] getMTerms]]} {error CAP_EMPTY_PG_SPACER}
  foreach mt [[$i getMaster] getMTerms] {if {[$mt getSigType] ni {POWER GROUND}} {error CAP_SIGNAL_SPACER_REFUSED}}
  odb::dbInst_destroy $i

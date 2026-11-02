@@ -47,6 +47,7 @@ set current_sig [dict get [ot_prd_route_snapshot $cb] sig]
 if {[dict size $current_sig] != [dict size [dict get $ref sig]]} {error CAP_BEFORE_SAVE_NONPG_NET_SET_CHANGED}
 dict for {name sig} [dict get $ref sig] {if {![dict exists $current_sig $name] || [dict get $current_sig $name] ne $sig} {error "CAP_BEFORE_SAVE_CONNECTION_CHANGED $name"}}
 set pa [ot_native_pg_audit];if {[dict get $pa creates] || [dict get $pa swaps]} {error CAP_UNEXPECTED_NATIVE_BIRTH_OR_SWAP}
+if {[ot_pg_drt_diag_library_inventory] ne $::cap_frozen_library_inventory} {error CAP_BEFORE_SAVE_ALL_LOADED_LIBRARY_INVENTORY_CHANGED}
 # Use only NEW GRT parasitics after the six-net routing; never rearm stale routed baseline SPEF.
 estimate_parasitics -global_routing
 write_guides $::env(RESULTS_DIR)/route.guide
