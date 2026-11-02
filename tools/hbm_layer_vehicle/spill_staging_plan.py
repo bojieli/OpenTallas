@@ -50,9 +50,12 @@ def plan(repo, image, manifest):
                 assert end < 703125000
                 assert (((end >> 6) ^ (end >> 11) ^ (end >> 16)) & 1) == quad
                 assert (((end >> 7) << 6) | (end & 63)) == ordinal + n // 8 - 1
-                staged = src % 64 != 0
+                # The real DBK request embeds stk_q as its VM SID. An
+                # aligned address in another SID is still unreachable by this
+                # writer; it needs a real bank-changing producer as well.
+                staged = src % 64 != 0 or src // 65536 != 3
                 native_source = 64512 if staged else (src & 65535)
-                native_SID = 3 if staged else src // 65536
+                native_SID = 3
                 assert native_source % 64 == 0 and native_source + n <= 65536
                 native_destination = (3 << 35) | (ordinal << 5)
                 move227 = (1 | (5 << 2) | (native_source << 5) | (1 << 77) |
@@ -63,6 +66,8 @@ def plan(repo, image, manifest):
                     source_word=src, source_SID=src // 65536, words=n,
                     stack=3, target_byte=byte, real_sector=sector, quad=quad,
                     quadrant_ordinal=ordinal, requires_staging=staged,
+                    staging_reasons=(["alignment"] if src % 64 else []) +
+                        (["writer_source_SID"] if src // 65536 != 3 else []),
                     proposed_scratch_word=261120 if staged else None,
                     candidate_native_source_local_word=native_source,
                     candidate_native_source_SID=native_SID,
@@ -94,7 +99,7 @@ def plan(repo, image, manifest):
             'The proposed [261120,262144) scratch lease is NOT reserved. A slot is owned before staging until true WB ACK/fence; serialize if reusing slot0.',
             'No selected VM0/1 bank-changing staging path identified. Generic COPY and pure local BYPASS are not substitutes.',
             'No live scratch data, extra VM ports, cross-quarter source route or host configuration bandwidth assumed.',
-            'Candidate227 is literal U32/VM-local to STK3 quadrant-ordinal fields, UNEXECUTED. Native sourceSID is external binding, never an encoded address alias. Actual producer/VM partition binding and issue/drain/HOST dates remain pending.',
+            'Candidate227 is literal U32/VM-local to STK3 quadrant-ordinal fields, UNEXECUTED. Native source SID is fixed to the writer STK3 strap. Every SID0/1/2 source therefore needs real staging into SID3, even when already 64-word aligned; no external binding or address alias supplies it.',
             'CP page counts are capacity lower bounds for this explicit512word/boundary fragmentation only; original-order barriers/page handoff can add work. They are not an optimal fragment-count claim.',
             'SID2/3 local SU presence does not prove bank-changing COPY, cross-half write ownership or a STK3 writer route.',
             'No source staging overlap, global calendar, TPS or physical credit.'],
