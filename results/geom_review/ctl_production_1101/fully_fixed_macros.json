@@ -1,0 +1,89 @@
+{
+ "schema": "opentallas.fully_fixed_macros.v1",
+ "core_area_um": [
+  4.32,
+  4.32,
+  367.2,
+  367.2
+ ],
+ "macros": [
+  {
+   "instance": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b0",
+   "master": "ctl_sram_1r1w_64x128_p192",
+   "origin_um": [
+    103.68,
+    60.48
+   ],
+   "outline_um": [
+    52.296,
+    39.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b1",
+   "master": "ctl_sram_1r1w_64x128_p192",
+   "origin_um": [
+    216.0,
+    60.48
+   ],
+   "outline_um": [
+    52.296,
+    39.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b0",
+   "master": "ctl_sram_1r1w_64x128_p192",
+   "origin_um": [
+    103.68,
+    155.52
+   ],
+   "outline_um": [
+    52.296,
+    39.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b1",
+   "master": "ctl_sram_1r1w_64x128_p192",
+   "origin_um": [
+    216.0,
+    155.52
+   ],
+   "outline_um": [
+    52.296,
+    39.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b0",
+   "master": "ctl_sram_1r1w_64x128_p192",
+   "origin_um": [
+    103.68,
+    250.56
+   ],
+   "outline_um": [
+    52.296,
+    39.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b1",
+   "master": "ctl_sram_1r1w_64x128_p192",
+   "origin_um": [
+    216.0,
+    250.56
+   ],
+   "outline_um": [
+    52.296,
+    39.96
+   ],
+   "orient": "R0"
+  }
+ ]
+}
