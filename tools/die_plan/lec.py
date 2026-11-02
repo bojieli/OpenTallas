@@ -962,6 +962,10 @@ def bb_script(env, kit, frontend, lib_bbs, out):
     """pre-pass: elaborate the gold RTL and write every black-box module (ports only) as JSON."""
     s = read_rtl_cmds(env, kit, frontend, lib_bbs)
     s += [f"hierarchy -check -top {env['DESIGN_NAME']}"]
+    if (Path(kit) / "lec_native_stub_metadata.json").is_file():
+        # Observe the actual elaborated hierarchy, then restore it unchanged.
+        s += ["design -save lec_native_before", "proc", f"write_json {out}.native.json",
+              "design -load lec_native_before"]
     s += [f"blackbox {m}" for m in env.get("SYNTH_BLACKBOXES", "").split()]
     s += ["select =A:blackbox", f"write_verilog -blackboxes -noattr -selected {out}.v", "select -clear",
           f"blackbox {env['DESIGN_NAME']}", f"select ={env['DESIGN_NAME']}",
@@ -987,7 +991,7 @@ def parse_bb_verilog(path):
     return mods
 
 
-def stub_verilog(bbports):
+def stub_verilog(bbports, native_parameters=None):
     """{module: [(port, dir, width, lsb)]} -> stubs identical for gold and gate: input bits land on keep flops
     '<inst>.lec_bbi_<pin>[i]' (compare points), output bits come from free self-loop flops '<inst>.lec_bbo_<pin>[i]'
     (shared inputs)."""
@@ -996,7 +1000,12 @@ def stub_verilog(bbports):
         out.append(f"module \\{mod} ({', '.join(esc(p) for p, *_ in ports)});")
         # Generated ROM metadata must remain legal when the pin-model stub
         # replaces the native BB. Unknown parameter names still fail hierarchy.
-        if re.fullmatch(r"ot_rom_[0-9]+x[0-9]+_m[0-9]+", mod):
+        if native_parameters and mod in native_parameters:
+            for param, (kind, value) in sorted(native_parameters[mod].items()):
+                literal = str(value) if kind == "int" else json.dumps(value)
+                integer = "integer " if kind == "int" else ""
+                out.append(f"  parameter {integer}{param} = {literal};")
+        elif re.fullmatch(r"ot_rom_[0-9]+x[0-9]+_m[0-9]+", mod):
             out.append('  parameter VIAMAP = "", INSTANCE = "";')
         out.append("  wire lec_clk;")
         for p, d, w, lo in ports:
@@ -5815,7 +5824,21 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         bbports = parse_bb_verilog(out / "bb.v")
         bbports = {k: v for k, v in bbports.items() if not k.startswith("$abstract") and not ICG_CELLS.match(k)}
         rec["black_boxes"] = {k: len(v) for k, v in sorted(bbports.items())}
-        (out / "stubs.v").write_text(stub_verilog(bbports))
+        native_parameters = None
+        if (Path(kit) / "lec_native_stub_metadata.json").is_file():
+            import importlib.util
+            helper = Path(__file__).with_name("native_stub_metadata.py")
+            spec = importlib.util.spec_from_file_location("lec_native_stub_metadata", helper)
+            native = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(native)
+            try:
+                native_parameters = native.check(kit, out / "bb.native.json", out / "native_stub_metadata.json")
+            except ValueError as e:
+                raise Unproven(str(e)) from e
+            if not set(native_parameters).issubset(bbports):
+                raise Unproven("selected native metadata master missing from elaborated blackboxes")
+            rec["native_stub_metadata"] = json.loads((out / "native_stub_metadata.json").read_text())
+        (out / "stubs.v").write_text(stub_verilog(bbports, native_parameters))
         tops = parse_bb_verilog(out / "bb_top.v")
         if top not in tops:
             raise LecError(f"pre-pass did not write the ports of {top}")
@@ -6001,6 +6024,12 @@ def via_docker(args, image, mem):
     me = str(Path(__file__).resolve())
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
            "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}"]
+    if (Path(kit) / "lec_native_stub_metadata.json").is_file():
+        for name in ("native_stub_metadata.py", "native_bb.py"):
+            path = Path(me).with_name(name)
+            if not path.is_file():
+                raise SystemExit("typed native stub metadata helper missing: " + str(path))
+            cmd += ["-v", f"{path}:/{name}:ro"]
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
     if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
         cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
