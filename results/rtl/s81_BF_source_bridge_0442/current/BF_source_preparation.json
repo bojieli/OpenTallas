@@ -93,6 +93,44 @@
   "native_BF_partial_gold": [
     {
       "row": 0,
+      "segment": 0,
+      "fp32_bits": "bb801a5a"
+    },
+    {
+      "row": 1,
+      "segment": 0,
+      "fp32_bits": "bcac1a54"
+    },
+    {
+      "row": 2,
+      "segment": 0,
+      "fp32_bits": "3c9fbb8a"
+    },
+    {
+      "row": 3,
+      "segment": 0,
+      "fp32_bits": "3c96192a"
+    },
+    {
+      "row": 4,
+      "segment": 0,
+      "fp32_bits": "3d0c8c04"
+    },
+    {
+      "row": 5,
+      "segment": 0,
+      "fp32_bits": "bc4ea1c4"
+    }
+  ],
+  "arithmetic_consumer_executed": false,
+  "same_binary_executed": false,
+  "full_mission_programme_qualified": false,
+  "fresh_source_epoch_qualified": false,
+  "native_provider_qualified": false,
+  "physical_clock_sampling_qualified": false,
+  "superseded_full_accumulated_gold": [
+    {
+      "row": 0,
       "source_row": 0,
       "fp32_bits": "3bca1294",
       "bf16_bits": "3bca"
@@ -128,10 +166,5 @@
       "bf16_bits": "3cab"
     }
   ],
-  "arithmetic_consumer_executed": false,
-  "same_binary_executed": false,
-  "full_mission_programme_qualified": false,
-  "fresh_source_epoch_qualified": false,
-  "native_provider_qualified": false,
-  "physical_clock_sampling_qualified": false
+  "oracle_correction": "Original acc fields are full four-segment accumulation; vals[0] supplies segment0 partial. Corrected before new BF execution."
 }

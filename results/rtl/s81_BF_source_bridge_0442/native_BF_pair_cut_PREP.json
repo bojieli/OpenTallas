@@ -46,7 +46,16 @@
     "PER": 1,
     "N": 64
   },
-  "independent_selected_gold": [
+  "before_any_execution": [
+    "Select root coherent source/ROM/profile event",
+    "Derive actual x2/f_prog station+relay paths and delivered reset from selected source; do not borrow Q566 delays",
+    "Use actual CFG7_bfp and direct one-edge BF GO path; do not copy Qbank two-edge GO/tag recipe",
+    "Consume literal checkpoint BF source group0 and unchanged source dates; preserve wrongnorm-source and wrongdate/tag/class controls",
+    "No global native_provider/epoch/profile qualification follows from one controlled source cut"
+  ],
+  "backend_launched": false,
+  "physical_sampling_qualified": false,
+  "superseded_full_accumulated_values": [
     {
       "row": 0,
       "fp32": "3bca1294",
@@ -58,13 +67,21 @@
       "bf16": "3c1d"
     }
   ],
-  "before_any_execution": [
-    "Select root coherent source/ROM/profile event",
-    "Derive actual x2/f_prog station+relay paths and delivered reset from selected source; do not borrow Q566 delays",
-    "Use actual CFG7_bfp and direct one-edge BF GO path; do not copy Qbank two-edge GO/tag recipe",
-    "Consume literal checkpoint BF source group0 and unchanged source dates; preserve wrongnorm-source and wrongdate/tag/class controls",
-    "No global native_provider/epoch/profile qualification follows from one controlled source cut"
+  "independent_selected_segment0_partial_gold": [
+    {
+      "row": 0,
+      "fp32": "bb801a5a"
+    },
+    {
+      "row": 1,
+      "fp32": "bcac1a54"
+    }
   ],
-  "backend_launched": false,
-  "physical_sampling_qualified": false
+  "oracle_correction": "Prior acc values are full four-segment accumulations, not segment0 partials. Corrected before any new BF execution. vals[0] is independent native/VM segment0 oracle.",
+  "retained_native_relative_date": {
+    "front_core_GO_sample": 147,
+    "BF_column_partial_sample": 321,
+    "edges": 174,
+    "scope": "Retained phase106 native column/core observations, not physical epoch qualification"
+  }
 }
