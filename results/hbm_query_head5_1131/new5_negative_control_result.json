@@ -1,0 +1,39 @@
+{
+  "status": "NEGATIVE_CONTROL_PASS_NATIVE_CANONICAL_REJECTS_WRONG_RELATION",
+  "target": "ff:u_dut.core.quant.u_scale.u.s2_pp1[10]",
+  "positive_relation": "pp1[10] == pp2[10]",
+  "mutant_relation": "pp1[10] == ~pp2[10]",
+  "positive_counts": {
+    "compare_points": 31379,
+    "proved": 31379,
+    "differs": 0,
+    "undecided": 0
+  },
+  "negative_counts": {
+    "compare_points": 31334,
+    "proved": 31287,
+    "differs": 47,
+    "undecided": 0
+  },
+  "mutant_absent_from_final_native_hypothesis_profile": true,
+  "negative_reason": "47 compare points differ (first: ff:u_dut.core.quant.u_scale.u.s3_floor_q[0], ff:u_dut.core.quant.u_scale.u.s3_floor_q[10], ff:u_dut.core.quant.u_scale.u.s3_floor_q[11], ff:u_dut.core.quant.u_scale.u.s3_floor_q[1], ff:u_dut.core.quant.u_scale.u.s3_floor_q[2], ff:u_dut.core.quant.u_scale.u.s3_floor_q[3], ff:u_dut.core.quant.u_scale.u.s3_floor_q[4], ff:u_dut.core.quant.u_scale.u.s3_floor_q[5]); RTL registers removed by synthesis although not constant: ff:u_dut.core.quant.u_scale.u.s2_pp1[10]",
+  "reset_requested_used": 4,
+  "KEEP": {
+    "declared": 1056,
+    "in_netlist": 1056,
+    "constant_proved": {
+      "n": 0,
+      "first": []
+    },
+    "missing": {
+      "n": 0,
+      "first": []
+    },
+    "unobservable_removed": {
+      "n": 0,
+      "first": []
+    },
+    "unobservable_reason": null
+  },
+  "orchestration_note": "Canonical checker completed NEQ; postcheck originally searched only hyp*_failed.txt but target rejected in discovery/profile bookkeeping, absent hyp.json. Closed receipts independently assert mutated input, omitted final hint and47 actual differences; no rerun/engine edit."
+}
