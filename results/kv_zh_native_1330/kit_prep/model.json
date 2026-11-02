@@ -20,12 +20,13 @@
   "period_ps": 833,
   "setup_corner": "TT",
   "hold_corner": "FF",
-  "setup_uncertainty_ps": 60,
+  "setup_uncertainty_ps": 0,
   "hold_uncertainty_ps": 25,
   "io_tt_ps": 250,
   "io_ff_ps": 202.5,
   "hold_repair_margin_ps": 10,
-  "place_density": 0.5
+  "place_density": 0.5,
+  "basis": "Actual generated constraint.sdc set_clock_uncertainty0setup/25hold, matching latest METH6.1; prior prose60 was stale metadata only, no constraints changed."
  },
  "witness": "original normal signoff sessions --retain-child-clock-witness, completeTT/FFpayload export; qualificationNOTASSERTED until rootacceptance",
  "kit_hash": "8e01e8e03b6d52ac",
