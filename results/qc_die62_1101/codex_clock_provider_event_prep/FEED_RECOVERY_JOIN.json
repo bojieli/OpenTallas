@@ -1,0 +1,11 @@
+{
+  "status": "SOURCE_FEED_RECOVERY_GEOMETRY_JOIN_ONLY",
+  "expected_parent_edges": 312,
+  "actual_feed_edges": 312,
+  "edges_equal": true,
+  "missing_edges": [],
+  "extra_edges": [],
+  "taps": 312,
+  "tap_req_xy_mismatches": [],
+  "caveat": "Tracked feed logical edges and requested XY match kit. Does not recover original part_region bytes or qualify actual provider phases."
+}

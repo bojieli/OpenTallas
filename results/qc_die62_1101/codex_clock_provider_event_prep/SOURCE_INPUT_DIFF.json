@@ -1,0 +1,901 @@
+{
+  "same_partition_instances": true,
+  "same_die": true,
+  "same_provider_graph": true,
+  "changed_type_clocks": 92,
+  "type_changes": [
+    {
+      "type": "slw_fw_v3",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_stm_v3",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "slw_sc_v3",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree",
+        "bands"
+      ]
+    },
+    {
+      "type": "slw_st_b_v2",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_sc_v2",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree",
+        "bands"
+      ]
+    },
+    {
+      "type": "sle_st_b_v1",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_su_c",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "sle_st_a_v2",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_sc_v2",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree",
+        "bands"
+      ]
+    },
+    {
+      "type": "sle_fe_v2",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_fw_v3",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_stm_v3",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_sc_v3",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree",
+        "bands"
+      ]
+    },
+    {
+      "type": "sle_fe_v3",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "coll_core",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "coll_n",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "tt_ctlm",
+      "changed_clock_keys": [
+        "sink_bins_file",
+        "tap_max_sinks",
+        "tap_mode",
+        "landing_contract",
+        "tap_radius_um",
+        "tap_target_sinks"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "cbx_q10__cl89936551",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_children",
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_hc1__cl3449ea95",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_hc2__cl6bcaba89",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_hc3__clccfc3e6b",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_ctl__cl67434795",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_ctl__cl372cea1c",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_ctl__cla4f6f12f",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_ctl__cl503337ff",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_st_a_v2__clf4365a62",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_st_a_v2__cl9f076a5c",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_su_l1__clcc9d0155",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_children",
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "slw_su_l1__cla2a78701",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_children",
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "slw_su_c__cl92142dac",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_children",
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "slw_su_c__cl19bb38ef",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "slw_su_l0__cl76fb247e",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_su_l0__cl1e5219ea",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_su_l0__cl1a1c1f8f",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_st_b_v1__cl6357f1cc",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_st_b_v1__cle6023ec2",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_fw_v1__cl51d45468",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_stm_v1__cle34a73c3",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "slw_sc_v1__cl63e5a7a2",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree",
+        "bands"
+      ]
+    },
+    {
+      "type": "slw_fe_v1__cl95cd1d0c",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_hc0__cl05696ed1",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_hc2__clcc5e3e61",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_st_a_v1__cl67389ecd",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_su_l1__cl5ea486db",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_children",
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "sle_su_l1__clc6d66f5b",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_children",
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "sle_su_l0__cl7a55c676",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_children",
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "sle_su_l0__cl086d85ba",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "sle_st_b_v2__cl14c98df5",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_st_b_v2__clfde1249e",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_hc0__cl4f54b7a3",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_hc0__cl1bc59e1c",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_hc1__cl68f9248e__cle683a076",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_hc1__cl68f9248e__cl144ee7b3",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_hc2__cla3497502__cl16607c7a",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_hc2__cla3497502__cldc737267",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_fe_v2__clf110fab2",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_fe_v2__cle312294d",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_st_a_v1__clfc5867a6",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_st_a_v1__clb036e152",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_fw_v1__clf51c11d8__clc7ddab13",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_fw_v1__clf51c11d8__cl592e3d37",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "slw_stm_v1__cl05fc43f7__cl389df4e9",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree",
+        "bands"
+      ]
+    },
+    {
+      "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree",
+        "bands"
+      ]
+    },
+    {
+      "type": "slw_fe_v1__clfe325744__cldb4efe33",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_fe_v1__clfe325744__cl08d14f0d",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_fw_v2__cl8537f156",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_fw_v2__cl8f84514c",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "slw_stm_v2__cl1ca9c415",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "slw_stm_v2__cl9beb65e6",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "sle_hc1__cl7d360508",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_hc1__cl22c1ff36",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_hc2__cl9c4c4509__cl3edce1b8",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_hc2__cl9c4c4509__clf60c5152",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_fw_v1__clf58b4dfb",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_fw_v1__cl9d029624",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_stm_v1__cl27746664",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "sle_stm_v1__clbe630b9c",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "sle_sc_v1__cl115da35f",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree",
+        "bands"
+      ]
+    },
+    {
+      "type": "sle_sc_v1__cl7479a5ec",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree",
+        "bands"
+      ]
+    },
+    {
+      "type": "sle_fe_v1__cl8210183c",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_fe_v1__cl1cbb7497",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_hc0__cl929603c0__cl4baa7c9c",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_hc0__cl929603c0__cl38badc56",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_fw_v2__cl69f5e854",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_fw_v2__cl6740750e",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_stm_v2__cl7b3062fa",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "sle_stm_v2__cl55be2264",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "collector_tree",
+        "collector_local_sources"
+      ]
+    },
+    {
+      "type": "sle_st_a_v1__cl989804f6__cl18eece69",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree"
+      ]
+    },
+    {
+      "type": "sle_st_a_v1__cl989804f6__cled3c1d7b",
+      "changed_clock_keys": [
+        "landing_contract"
+      ],
+      "changed_landing_keys": [
+        "pins",
+        "collector_tree"
+      ]
+    }
+  ]
+}

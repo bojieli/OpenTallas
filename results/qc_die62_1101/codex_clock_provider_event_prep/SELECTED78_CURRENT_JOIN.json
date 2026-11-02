@@ -1,0 +1,3079 @@
+{
+  "status": "UNMATCHED_CURRENT_SOURCE_DIAGNOSTIC_NOT_PHASE_QUALIFICATION",
+  "selected_provider_nodes": 78,
+  "selected_present": 77,
+  "selected_missing": [
+    "r6747_1"
+  ],
+  "selected_driver_differences": [
+    "r6439_0",
+    "r6377_0",
+    "r6748_0"
+  ],
+  "rows": [
+    {
+      "provider_id": "b0",
+      "clock_port": "t_st_b0__clk",
+      "region": "st:h",
+      "actual_current_source": {
+        "id": "b0",
+        "region": "st:h",
+        "selected_W5": true,
+        "clock_port": "t_st_b0__clk",
+        "placement_node": "b0",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n0",
+        "actual_clock_driver": "b0",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          17007.84,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          17007.84,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n0",
+        "old_actual_clock_driver": "b0",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r3_1",
+      "clock_port": "t_st_r3_1__clk",
+      "region": "st:h20",
+      "actual_current_source": {
+        "id": "r3_1",
+        "region": "st:h20",
+        "selected_W5": true,
+        "clock_port": "t_st_r3_1__clk",
+        "placement_node": "r3_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn3_1",
+        "actual_clock_driver": "r3_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          16698.69,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          16699.23,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn3_1",
+        "old_actual_clock_driver": "r3_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b3",
+      "clock_port": "t_st_b3__clk",
+      "region": "st:h2000",
+      "actual_current_source": {
+        "id": "b3",
+        "region": "st:h2000",
+        "selected_W5": true,
+        "clock_port": "t_st_b3__clk",
+        "placement_node": "b3",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n3",
+        "actual_clock_driver": "b3",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          16387.866,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          16390.62,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n3",
+        "old_actual_clock_driver": "b3",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r4_1",
+      "clock_port": "t_st_r4_1__clk",
+      "region": "st:h200000",
+      "actual_current_source": {
+        "id": "r4_1",
+        "region": "st:h200000",
+        "selected_W5": true,
+        "clock_port": "t_st_r4_1__clk",
+        "placement_node": "r4_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn4_1",
+        "actual_clock_driver": "r4_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          16080.93,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          16081.47,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn4_1",
+        "old_actual_clock_driver": "r4_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b4",
+      "clock_port": "t_st_b4__clk",
+      "region": "st:h20000000",
+      "actual_current_source": {
+        "id": "b4",
+        "region": "st:h20000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b4__clk",
+        "placement_node": "b4",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n4",
+        "actual_clock_driver": "b4",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          15772.32,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          15772.32,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n4",
+        "old_actual_clock_driver": "b4",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r19_1",
+      "clock_port": "t_st_r19_1__clk",
+      "region": "st:h2000000020",
+      "actual_current_source": {
+        "id": "r19_1",
+        "region": "st:h2000000020",
+        "selected_W5": true,
+        "clock_port": "t_st_r19_1__clk",
+        "placement_node": "r19_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn19_1",
+        "actual_clock_driver": "r19_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          15463.71,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          15463.764,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn19_1",
+        "old_actual_clock_driver": "r19_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b19",
+      "clock_port": "t_st_b19__clk",
+      "region": "st:h200000002000",
+      "actual_current_source": {
+        "id": "b19",
+        "region": "st:h200000002000",
+        "selected_W5": true,
+        "clock_port": "t_st_b19__clk",
+        "placement_node": "b19",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n19",
+        "actual_clock_driver": "b19",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          15155.154,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          15155.154,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n19",
+        "old_actual_clock_driver": "b19",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r20_1",
+      "clock_port": "t_st_r20_1__clk",
+      "region": "st:h20000000200000",
+      "actual_current_source": {
+        "id": "r20_1",
+        "region": "st:h20000000200000",
+        "selected_W5": true,
+        "clock_port": "t_st_r20_1__clk",
+        "placement_node": "r20_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn20_1",
+        "actual_clock_driver": "r20_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          14845.95,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          14846.004,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn20_1",
+        "old_actual_clock_driver": "r20_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b20",
+      "clock_port": "t_st_b20__clk",
+      "region": "st:h2000000020000000",
+      "actual_current_source": {
+        "id": "b20",
+        "region": "st:h2000000020000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b20__clk",
+        "placement_node": "b20",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n20",
+        "actual_clock_driver": "b20",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          14536.8,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          14536.8,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n20",
+        "old_actual_clock_driver": "b20",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r53_1",
+      "clock_port": "t_st_r53_1__clk",
+      "region": "st:h200000002000000010",
+      "actual_current_source": {
+        "id": "r53_1",
+        "region": "st:h200000002000000010",
+        "selected_W5": true,
+        "clock_port": "t_st_r53_1__clk",
+        "placement_node": "r53_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn53_1",
+        "actual_clock_driver": "r53_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          14228.19,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          14228.46,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn53_1",
+        "old_actual_clock_driver": "r53_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b53",
+      "clock_port": "t_st_b53__clk",
+      "region": "st:h20000000200000001000",
+      "actual_current_source": {
+        "id": "b53",
+        "region": "st:h20000000200000001000",
+        "selected_W5": true,
+        "clock_port": "t_st_b53__clk",
+        "placement_node": "b53",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n53",
+        "actual_clock_driver": "b53",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          13921.2,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          13920.066,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n53",
+        "old_actual_clock_driver": "b53",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r54_1",
+      "clock_port": "t_st_r54_1__clk",
+      "region": "st:h2000000020000000100000",
+      "actual_current_source": {
+        "id": "r54_1",
+        "region": "st:h2000000020000000100000",
+        "selected_W5": true,
+        "clock_port": "t_st_r54_1__clk",
+        "placement_node": "r54_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn54_1",
+        "actual_clock_driver": "r54_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          13610.43,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          13610.7,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn54_1",
+        "old_actual_clock_driver": "r54_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b54",
+      "clock_port": "t_st_b54__clk",
+      "region": "st:h200000002000000010000000",
+      "actual_current_source": {
+        "id": "b54",
+        "region": "st:h200000002000000010000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b54__clk",
+        "placement_node": "b54",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n54",
+        "actual_clock_driver": "b54",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          13301.28,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          13301.28,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n54",
+        "old_actual_clock_driver": "b54",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r87_1",
+      "clock_port": "t_st_r87_1__clk",
+      "region": "st:h20000000200000001000000020",
+      "actual_current_source": {
+        "id": "r87_1",
+        "region": "st:h20000000200000001000000020",
+        "selected_W5": true,
+        "clock_port": "t_st_r87_1__clk",
+        "placement_node": "r87_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn87_1",
+        "actual_clock_driver": "r87_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          12992.67,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          12992.67,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn87_1",
+        "old_actual_clock_driver": "r87_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b87",
+      "clock_port": "t_st_b87__clk",
+      "region": "st:h2000000020000000100000002000",
+      "actual_current_source": {
+        "id": "b87",
+        "region": "st:h2000000020000000100000002000",
+        "selected_W5": true,
+        "clock_port": "t_st_b87__clk",
+        "placement_node": "b87",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n87",
+        "actual_clock_driver": "b87",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          12684.06,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          12684.06,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n87",
+        "old_actual_clock_driver": "b87",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r88_1",
+      "clock_port": "t_st_r88_1__clk",
+      "region": "st:h200000002000000010000000200000",
+      "actual_current_source": {
+        "id": "r88_1",
+        "region": "st:h200000002000000010000000200000",
+        "selected_W5": true,
+        "clock_port": "t_st_r88_1__clk",
+        "placement_node": "r88_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn88_1",
+        "actual_clock_driver": "r88_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          12374.91,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          12374.91,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn88_1",
+        "old_actual_clock_driver": "r88_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b88",
+      "clock_port": "t_st_b88__clk",
+      "region": "st:h20000000200000001000000020000000",
+      "actual_current_source": {
+        "id": "b88",
+        "region": "st:h20000000200000001000000020000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b88__clk",
+        "placement_node": "b88",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n88",
+        "actual_clock_driver": "b88",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          12065.76,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          12065.76,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n88",
+        "old_actual_clock_driver": "b88",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r147_1",
+      "clock_port": "t_st_r147_1__clk",
+      "region": "st:h2000000020000000100000002000000010",
+      "actual_current_source": {
+        "id": "r147_1",
+        "region": "st:h2000000020000000100000002000000010",
+        "selected_W5": true,
+        "clock_port": "t_st_r147_1__clk",
+        "placement_node": "r147_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn147_1",
+        "actual_clock_driver": "r147_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          11757.15,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          11757.15,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn147_1",
+        "old_actual_clock_driver": "r147_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b147",
+      "clock_port": "t_st_b147__clk",
+      "region": "st:h200000002000000010000000200000001000",
+      "actual_current_source": {
+        "id": "b147",
+        "region": "st:h200000002000000010000000200000001000",
+        "selected_W5": true,
+        "clock_port": "t_st_b147__clk",
+        "placement_node": "b147",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n147",
+        "actual_clock_driver": "b147",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          11448.54,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          11448.54,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n147",
+        "old_actual_clock_driver": "b147",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r148_1",
+      "clock_port": "t_st_r148_1__clk",
+      "region": "st:h20000000200000001000000020000000100000",
+      "actual_current_source": {
+        "id": "r148_1",
+        "region": "st:h20000000200000001000000020000000100000",
+        "selected_W5": true,
+        "clock_port": "t_st_r148_1__clk",
+        "placement_node": "r148_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn148_1",
+        "actual_clock_driver": "r148_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          11139.39,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          11139.39,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn148_1",
+        "old_actual_clock_driver": "r148_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b148",
+      "clock_port": "t_st_b148__clk",
+      "region": "st:h2000000020000000100000002000000010000000",
+      "actual_current_source": {
+        "id": "b148",
+        "region": "st:h2000000020000000100000002000000010000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b148__clk",
+        "placement_node": "b148",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n148",
+        "actual_clock_driver": "b148",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          10830.24,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          10830.24,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n148",
+        "old_actual_clock_driver": "b148",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r209_1",
+      "clock_port": "t_st_r209_1__clk",
+      "region": "st:h200000002000000010000000200000001000000020",
+      "actual_current_source": {
+        "id": "r209_1",
+        "region": "st:h200000002000000010000000200000001000000020",
+        "selected_W5": true,
+        "clock_port": "t_st_r209_1__clk",
+        "placement_node": "r209_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn209_1",
+        "actual_clock_driver": "r209_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          10521.63,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          10521.63,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn209_1",
+        "old_actual_clock_driver": "r209_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b209",
+      "clock_port": "t_st_b209__clk",
+      "region": "st:h20000000200000001000000020000000100000002000",
+      "actual_current_source": {
+        "id": "b209",
+        "region": "st:h20000000200000001000000020000000100000002000",
+        "selected_W5": true,
+        "clock_port": "t_st_b209__clk",
+        "placement_node": "b209",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n209",
+        "actual_clock_driver": "b209",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          10213.02,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          10213.02,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n209",
+        "old_actual_clock_driver": "b209",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r210_1",
+      "clock_port": "t_st_r210_1__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000",
+      "actual_current_source": {
+        "id": "r210_1",
+        "region": "st:h2000000020000000100000002000000010000000200000",
+        "selected_W5": true,
+        "clock_port": "t_st_r210_1__clk",
+        "placement_node": "r210_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn210_1",
+        "actual_clock_driver": "r210_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          9903.87,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          9903.87,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn210_1",
+        "old_actual_clock_driver": "r210_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b210",
+      "clock_port": "t_st_b210__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000",
+      "actual_current_source": {
+        "id": "b210",
+        "region": "st:h200000002000000010000000200000001000000020000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b210__clk",
+        "placement_node": "b210",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n210",
+        "actual_clock_driver": "b210",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          9594.72,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          9594.72,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n210",
+        "old_actual_clock_driver": "b210",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r299_1",
+      "clock_port": "t_st_r299_1__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010",
+      "actual_current_source": {
+        "id": "r299_1",
+        "region": "st:h20000000200000001000000020000000100000002000000010",
+        "selected_W5": true,
+        "clock_port": "t_st_r299_1__clk",
+        "placement_node": "r299_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn299_1",
+        "actual_clock_driver": "r299_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          9286.11,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          9286.11,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn299_1",
+        "old_actual_clock_driver": "r299_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b299",
+      "clock_port": "t_st_b299__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000",
+      "actual_current_source": {
+        "id": "b299",
+        "region": "st:h2000000020000000100000002000000010000000200000001000",
+        "selected_W5": true,
+        "clock_port": "t_st_b299__clk",
+        "placement_node": "b299",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n299",
+        "actual_clock_driver": "b299",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          8977.554,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          8977.554,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n299",
+        "old_actual_clock_driver": "b299",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r300_1",
+      "clock_port": "t_st_r300_1__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000",
+      "actual_current_source": {
+        "id": "r300_1",
+        "region": "st:h200000002000000010000000200000001000000020000000100000",
+        "selected_W5": true,
+        "clock_port": "t_st_r300_1__clk",
+        "placement_node": "r300_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn300_1",
+        "actual_clock_driver": "r300_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          8668.35,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          8668.404,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn300_1",
+        "old_actual_clock_driver": "r300_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b300",
+      "clock_port": "t_st_b300__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000",
+      "actual_current_source": {
+        "id": "b300",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b300__clk",
+        "placement_node": "b300",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n300",
+        "actual_clock_driver": "b300",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          8359.2,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          8359.2,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n300",
+        "old_actual_clock_driver": "b300",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r380_1",
+      "clock_port": "t_st_r380_1__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020",
+      "actual_current_source": {
+        "id": "r380_1",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020",
+        "selected_W5": true,
+        "clock_port": "t_st_r380_1__clk",
+        "placement_node": "r380_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn380_1",
+        "actual_clock_driver": "r380_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          8050.59,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          8050.86,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn380_1",
+        "old_actual_clock_driver": "r380_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b380",
+      "clock_port": "t_st_b380__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000",
+      "actual_current_source": {
+        "id": "b380",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000",
+        "selected_W5": true,
+        "clock_port": "t_st_b380__clk",
+        "placement_node": "b380",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n380",
+        "actual_clock_driver": "b380",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          7743.6,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          7742.466,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n380",
+        "old_actual_clock_driver": "b380",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r381_1",
+      "clock_port": "t_st_r381_1__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000",
+      "actual_current_source": {
+        "id": "r381_1",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000",
+        "selected_W5": true,
+        "clock_port": "t_st_r381_1__clk",
+        "placement_node": "r381_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn381_1",
+        "actual_clock_driver": "r381_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          7432.83,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          7433.1,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn381_1",
+        "old_actual_clock_driver": "r381_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b381",
+      "clock_port": "t_st_b381__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000",
+      "actual_current_source": {
+        "id": "b381",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b381__clk",
+        "placement_node": "b381",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n381",
+        "actual_clock_driver": "b381",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          7123.68,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          7123.68,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n381",
+        "old_actual_clock_driver": "b381",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r477_1",
+      "clock_port": "t_st_r477_1__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010",
+      "actual_current_source": {
+        "id": "r477_1",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010",
+        "selected_W5": true,
+        "clock_port": "t_st_r477_1__clk",
+        "placement_node": "r477_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn477_1",
+        "actual_clock_driver": "r477_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          6815.07,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          6815.07,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn477_1",
+        "old_actual_clock_driver": "r477_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b477",
+      "clock_port": "t_st_b477__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000",
+      "actual_current_source": {
+        "id": "b477",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000",
+        "selected_W5": true,
+        "clock_port": "t_st_b477__clk",
+        "placement_node": "b477",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n477",
+        "actual_clock_driver": "b477",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          6506.46,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          6506.46,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n477",
+        "old_actual_clock_driver": "b477",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r478_1",
+      "clock_port": "t_st_r478_1__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000",
+      "actual_current_source": {
+        "id": "r478_1",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000",
+        "selected_W5": true,
+        "clock_port": "t_st_r478_1__clk",
+        "placement_node": "r478_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn478_1",
+        "actual_clock_driver": "r478_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          6197.31,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          6197.31,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn478_1",
+        "old_actual_clock_driver": "r478_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b478",
+      "clock_port": "t_st_b478__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000",
+      "actual_current_source": {
+        "id": "b478",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b478__clk",
+        "placement_node": "b478",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n478",
+        "actual_clock_driver": "b478",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          5888.16,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          5888.16,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n478",
+        "old_actual_clock_driver": "b478",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r563_1",
+      "clock_port": "t_st_r563_1__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020",
+      "actual_current_source": {
+        "id": "r563_1",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020",
+        "selected_W5": true,
+        "clock_port": "t_st_r563_1__clk",
+        "placement_node": "r563_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn563_1",
+        "actual_clock_driver": "r563_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          5579.55,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          5579.55,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn563_1",
+        "old_actual_clock_driver": "r563_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b563",
+      "clock_port": "t_st_b563__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000",
+      "actual_current_source": {
+        "id": "b563",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000",
+        "selected_W5": true,
+        "clock_port": "t_st_b563__clk",
+        "placement_node": "b563",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n563",
+        "actual_clock_driver": "b563",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          5270.94,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          5270.94,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n563",
+        "old_actual_clock_driver": "b563",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r564_1",
+      "clock_port": "t_st_r564_1__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000",
+      "actual_current_source": {
+        "id": "r564_1",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000",
+        "selected_W5": true,
+        "clock_port": "t_st_r564_1__clk",
+        "placement_node": "r564_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn564_1",
+        "actual_clock_driver": "r564_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          4961.79,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          4961.79,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn564_1",
+        "old_actual_clock_driver": "r564_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b564",
+      "clock_port": "t_st_b564__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000",
+      "actual_current_source": {
+        "id": "b564",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b564__clk",
+        "placement_node": "b564",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n564",
+        "actual_clock_driver": "b564",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          4652.64,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          4652.64,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n564",
+        "old_actual_clock_driver": "b564",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r661_1",
+      "clock_port": "t_st_r661_1__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010",
+      "actual_current_source": {
+        "id": "r661_1",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010",
+        "selected_W5": true,
+        "clock_port": "t_st_r661_1__clk",
+        "placement_node": "r661_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn661_1",
+        "actual_clock_driver": "r661_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          4344.03,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          4344.03,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn661_1",
+        "old_actual_clock_driver": "r661_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b661",
+      "clock_port": "t_st_b661__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000",
+      "actual_current_source": {
+        "id": "b661",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000",
+        "selected_W5": true,
+        "clock_port": "t_st_b661__clk",
+        "placement_node": "b661",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n661",
+        "actual_clock_driver": "b661",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          4035.42,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          4035.42,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n661",
+        "old_actual_clock_driver": "b661",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r662_1",
+      "clock_port": "t_st_r662_1__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000",
+      "actual_current_source": {
+        "id": "r662_1",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000",
+        "selected_W5": true,
+        "clock_port": "t_st_r662_1__clk",
+        "placement_node": "r662_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn662_1",
+        "actual_clock_driver": "r662_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3726.27,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          3726.27,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn662_1",
+        "old_actual_clock_driver": "r662_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b662",
+      "clock_port": "t_st_b662__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000",
+      "actual_current_source": {
+        "id": "b662",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b662__clk",
+        "placement_node": "b662",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n662",
+        "actual_clock_driver": "b662",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3417.12,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          3417.12,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n662",
+        "old_actual_clock_driver": "b662",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl",
+        "sl_W5_sc",
+        "sl_W5_stm",
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b741",
+      "clock_port": "t_st_b741__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010",
+      "actual_current_source": {
+        "id": "b741",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010",
+        "selected_W5": true,
+        "clock_port": "t_st_b741__clk",
+        "placement_node": "b741",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n741",
+        "actual_clock_driver": "b741",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3106.08,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          3106.08,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n741",
+        "old_actual_clock_driver": "b741",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r745_1",
+      "clock_port": "t_st_r745_1__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020",
+      "actual_current_source": {
+        "id": "r745_1",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020",
+        "selected_W5": true,
+        "clock_port": "t_st_r745_1__clk",
+        "placement_node": "r745_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn745_1",
+        "actual_clock_driver": "r745_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3108.51,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          3108.564,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn745_1",
+        "old_actual_clock_driver": "r745_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_stm"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b747",
+      "clock_port": "t_st_b747__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030",
+      "actual_current_source": {
+        "id": "b747",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030",
+        "selected_W5": true,
+        "clock_port": "t_st_b747__clk",
+        "placement_node": "b747",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n747",
+        "actual_clock_driver": "b747",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3106.08,
+          12462.66
+        ],
+        "candidate_clock_node_xy_um": [
+          3106.08,
+          12462.66
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n747",
+        "old_actual_clock_driver": "b747",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b6437",
+      "clock_port": "t_st_b6437__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000",
+      "actual_current_source": {
+        "id": "b6437",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000",
+        "selected_W5": false,
+        "clock_port": "t_st_b6437__clk",
+        "placement_node": "b6437",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n6437",
+        "actual_clock_driver": "b6437",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3417.12,
+          12128.4
+        ],
+        "candidate_clock_node_xy_um": [
+          10957.41,
+          13886.1
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n6437",
+        "old_actual_clock_driver": "b6437",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "WRONG_CURRENT_CLOCK_PATH_FOR_SELECTED_NATIVE_DESCENDANTS",
+      "selected_native_descendants": [
+        "sl_W5_sc"
+      ],
+      "current_driver_dominates_selected_roots": false
+    },
+    {
+      "provider_id": "r742_1",
+      "clock_port": "t_st_r742_1__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000",
+      "actual_current_source": {
+        "id": "r742_1",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000",
+        "selected_W5": true,
+        "clock_port": "t_st_r742_1__clk",
+        "placement_node": "r742_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn742_1",
+        "actual_clock_driver": "r742_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3106.08,
+          12797.46
+        ],
+        "candidate_clock_node_xy_um": [
+          3106.08,
+          12797.46
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn742_1",
+        "old_actual_clock_driver": "r742_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b745",
+      "clock_port": "t_st_b745__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000002000",
+      "actual_current_source": {
+        "id": "b745",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000002000",
+        "selected_W5": true,
+        "clock_port": "t_st_b745__clk",
+        "placement_node": "b745",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n745",
+        "actual_clock_driver": "b745",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2799.954,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          2799.954,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n745",
+        "old_actual_clock_driver": "b745",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_stm"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r748_1",
+      "clock_port": "t_st_r748_1__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000",
+      "actual_current_source": {
+        "id": "r748_1",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000",
+        "selected_W5": true,
+        "clock_port": "t_st_r748_1__clk",
+        "placement_node": "r748_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn748_1",
+        "actual_clock_driver": "r748_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3106.08,
+          12128.4
+        ],
+        "candidate_clock_node_xy_um": [
+          3106.08,
+          12128.4
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn748_1",
+        "old_actual_clock_driver": "r748_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b742",
+      "clock_port": "t_st_b742__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000",
+      "actual_current_source": {
+        "id": "b742",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000",
+        "selected_W5": true,
+        "clock_port": "t_st_b742__clk",
+        "placement_node": "b742",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n742",
+        "actual_clock_driver": "b742",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3106.08,
+          13131.72
+        ],
+        "candidate_clock_node_xy_um": [
+          3106.08,
+          13131.72
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n742",
+        "old_actual_clock_driver": "b742",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r746_1",
+      "clock_port": "t_st_r746_1__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000",
+      "actual_current_source": {
+        "id": "r746_1",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000",
+        "selected_W5": true,
+        "clock_port": "t_st_r746_1__clk",
+        "placement_node": "r746_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn746_1",
+        "actual_clock_driver": "r746_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2490.75,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          2490.804,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn746_1",
+        "old_actual_clock_driver": "r746_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_stm"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b748",
+      "clock_port": "t_st_b748__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000",
+      "actual_current_source": {
+        "id": "b748",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000",
+        "selected_W5": true,
+        "clock_port": "t_st_b748__clk",
+        "placement_node": "b748",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n748",
+        "actual_clock_driver": "b748",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3106.08,
+          11794.14
+        ],
+        "candidate_clock_node_xy_um": [
+          3106.08,
+          11794.14
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n748",
+        "old_actual_clock_driver": "b748",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r6439_0",
+      "clock_port": "t_st_r6439_0__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000000",
+      "actual_current_source": {
+        "id": "r6439_0",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000000",
+        "selected_W5": false,
+        "clock_port": "t_st_r6439_0__clk",
+        "placement_node": "r6439_0",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "A",
+        "clock_net": "n6437",
+        "actual_clock_driver": "b6437",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3107.7,
+          12044.7
+        ],
+        "candidate_clock_node_xy_um": [
+          11008.332,
+          13886.1
+        ],
+        "old_clock_from": "A",
+        "old_clock_net": "n6438",
+        "old_actual_clock_driver": "b6438",
+        "xy_match": false,
+        "driver_match": false
+      },
+      "status": "WRONG_CURRENT_CLOCK_PATH_FOR_SELECTED_NATIVE_DESCENDANTS",
+      "selected_native_descendants": [
+        "sl_W5_sc"
+      ],
+      "current_driver_dominates_selected_roots": false
+    },
+    {
+      "provider_id": "b743",
+      "clock_port": "t_st_b743__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000",
+      "actual_current_source": {
+        "id": "b743",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b743__clk",
+        "placement_node": "b743",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n743",
+        "actual_clock_driver": "b743",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2799.36,
+          13133.34
+        ],
+        "candidate_clock_node_xy_um": [
+          2799.36,
+          13133.34
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n743",
+        "old_actual_clock_driver": "b743",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b746",
+      "clock_port": "t_st_b746__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020000000",
+      "actual_current_source": {
+        "id": "b746",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b746__clk",
+        "placement_node": "b746",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n746",
+        "actual_clock_driver": "b746",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2181.6,
+          12463.2
+        ],
+        "candidate_clock_node_xy_um": [
+          2181.6,
+          12463.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n746",
+        "old_actual_clock_driver": "b746",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_stm"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b749",
+      "clock_port": "t_st_b749__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000",
+      "actual_current_source": {
+        "id": "b749",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b749__clk",
+        "placement_node": "b749",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n749",
+        "actual_clock_driver": "b749",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2796.714,
+          11792.52
+        ],
+        "candidate_clock_node_xy_um": [
+          2707.344,
+          11792.52
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n749",
+        "old_actual_clock_driver": "b749",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r744_1",
+      "clock_port": "t_st_r744_1__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000",
+      "actual_current_source": {
+        "id": "r744_1",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000",
+        "selected_W5": true,
+        "clock_port": "t_st_r744_1__clk",
+        "placement_node": "r744_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn744_1",
+        "actual_clock_driver": "r744_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2799.36,
+          13467.6
+        ],
+        "candidate_clock_node_xy_um": [
+          2799.36,
+          13467.6
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn744_1",
+        "old_actual_clock_driver": "r744_1",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r750_1",
+      "clock_port": "t_st_r750_1__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000",
+      "actual_current_source": {
+        "id": "r750_1",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000",
+        "selected_W5": true,
+        "clock_port": "t_st_r750_1__clk",
+        "placement_node": "r750_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn750_1",
+        "actual_clock_driver": "r750_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2796.714,
+          11423.16
+        ],
+        "candidate_clock_node_xy_um": [
+          2707.344,
+          11452.86
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn750_1",
+        "old_actual_clock_driver": "r750_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b744",
+      "clock_port": "t_st_b744__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000000000",
+      "actual_current_source": {
+        "id": "b744",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b744__clk",
+        "placement_node": "b744",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n744",
+        "actual_clock_driver": "b744",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2799.36,
+          13802.4
+        ],
+        "candidate_clock_node_xy_um": [
+          2799.36,
+          13802.4
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n744",
+        "old_actual_clock_driver": "b744",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_ctl"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b6499",
+      "clock_port": "t_st_b6499__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000000000",
+      "actual_current_source": {
+        "id": "b6499",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b6499__clk",
+        "placement_node": "b6499",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n6499",
+        "actual_clock_driver": "b6499",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2181.6,
+          12128.4
+        ],
+        "candidate_clock_node_xy_um": [
+          11292.48,
+          11497.14
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n6499",
+        "old_actual_clock_driver": "b6499",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "WRONG_CURRENT_CLOCK_PATH_FOR_SELECTED_NATIVE_DESCENDANTS",
+      "selected_native_descendants": [
+        "sl_W5_stm"
+      ],
+      "current_driver_dominates_selected_roots": false
+    },
+    {
+      "provider_id": "b750",
+      "clock_port": "t_st_b750__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000",
+      "actual_current_source": {
+        "id": "b750",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b750__clk",
+        "placement_node": "b750",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n750",
+        "actual_clock_driver": "b750",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2796.714,
+          11052.72
+        ],
+        "candidate_clock_node_xy_um": [
+          2707.344,
+          11113.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n750",
+        "old_actual_clock_driver": "b750",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_su_c",
+        "sl_W5_su_l0",
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r841_0",
+      "clock_port": "t_st_r841_0__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001",
+      "actual_current_source": {
+        "id": "r841_0",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001",
+        "selected_W5": true,
+        "clock_port": "t_st_r841_0__clk",
+        "placement_node": "r841_0",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "A",
+        "clock_net": "n750",
+        "actual_clock_driver": "b750",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2846.772,
+          11040.84
+        ],
+        "candidate_clock_node_xy_um": [
+          2883.168,
+          11113.2
+        ],
+        "old_clock_from": "A",
+        "old_clock_net": "n750",
+        "old_actual_clock_driver": "b750",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_su_l0"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r841_1",
+      "clock_port": "t_st_r841_1__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000010",
+      "actual_current_source": {
+        "id": "r841_1",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000010",
+        "selected_W5": true,
+        "clock_port": "t_st_r841_1__clk",
+        "placement_node": "r841_1",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "rn841_1",
+        "actual_clock_driver": "r841_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3208.194,
+          11028.42
+        ],
+        "candidate_clock_node_xy_um": [
+          3058.992,
+          11113.2
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "rn841_1",
+        "old_actual_clock_driver": "r841_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_su_l0"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r844_2",
+      "clock_port": "t_st_r844_2__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200",
+      "actual_current_source": {
+        "id": "r844_2",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200",
+        "selected_W5": true,
+        "clock_port": "t_st_r844_2__clk",
+        "placement_node": "r844_2",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "A",
+        "clock_net": "rn844_1",
+        "actual_clock_driver": "r844_1",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2465.154,
+          11016.54
+        ],
+        "candidate_clock_node_xy_um": [
+          2198.826,
+          11113.2
+        ],
+        "old_clock_from": "A",
+        "old_clock_net": "rn844_1",
+        "old_actual_clock_driver": "r844_1",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b6375",
+      "clock_port": "t_st_b6375__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000",
+      "actual_current_source": {
+        "id": "b6375",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b6375__clk",
+        "placement_node": "b6375",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n6375",
+        "actual_clock_driver": "b6375",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2799.36,
+          13467.06
+        ],
+        "candidate_clock_node_xy_um": [
+          9132.48,
+          15727.5
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n6375",
+        "old_actual_clock_driver": "b6375",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "WRONG_CURRENT_CLOCK_PATH_FOR_SELECTED_NATIVE_DESCENDANTS",
+      "selected_native_descendants": [
+        "sl_W5_ctl"
+      ],
+      "current_driver_dominates_selected_roots": false
+    },
+    {
+      "provider_id": "b17286",
+      "clock_port": "t_st_b17286__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010",
+      "actual_current_source": {
+        "id": "b17286",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010",
+        "selected_W5": true,
+        "clock_port": "t_st_b17286__clk",
+        "placement_node": "b17286",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n17286",
+        "actual_clock_driver": "b17286",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2790.234,
+          10683.9
+        ],
+        "candidate_clock_node_xy_um": [
+          9903.6,
+          6536.16
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n17286",
+        "old_actual_clock_driver": "b17286",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "WRONG_CURRENT_CLOCK_PATH_FOR_SELECTED_NATIVE_DESCENDANTS",
+      "selected_native_descendants": [
+        "sl_W5_su_c"
+      ],
+      "current_driver_dominates_selected_roots": false
+    },
+    {
+      "provider_id": "b842",
+      "clock_port": "t_st_b842__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000100000",
+      "actual_current_source": {
+        "id": "b842",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000100000",
+        "selected_W5": true,
+        "clock_port": "t_st_b842__clk",
+        "placement_node": "b842",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n842",
+        "actual_clock_driver": "b842",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3413.34,
+          11124.0
+        ],
+        "candidate_clock_node_xy_um": [
+          3413.34,
+          11124.0
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n842",
+        "old_actual_clock_driver": "b842",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_su_l0"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "b845",
+      "clock_port": "t_st_b845__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200000",
+      "actual_current_source": {
+        "id": "b845",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200000",
+        "selected_W5": true,
+        "clock_port": "t_st_b845__clk",
+        "placement_node": "b845",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n845",
+        "actual_clock_driver": "b845",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2183.706,
+          11124.0
+        ],
+        "candidate_clock_node_xy_um": [
+          2183.76,
+          11124.0
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n845",
+        "old_actual_clock_driver": "b845",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r6377_0",
+      "clock_port": "t_st_r6377_0__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000000",
+      "actual_current_source": {
+        "id": "r6377_0",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000000",
+        "selected_W5": true,
+        "clock_port": "t_st_r6377_0__clk",
+        "placement_node": "r6377_0",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "A",
+        "clock_net": "n6373",
+        "actual_clock_driver": "b6373",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2492.64,
+          13383.9
+        ],
+        "candidate_clock_node_xy_um": [
+          9371.862,
+          15643.8
+        ],
+        "old_clock_from": "A",
+        "old_clock_net": "n6376",
+        "old_actual_clock_driver": "b6376",
+        "xy_match": false,
+        "driver_match": false
+      },
+      "status": "WRONG_CURRENT_CLOCK_PATH_FOR_SELECTED_NATIVE_DESCENDANTS",
+      "selected_native_descendants": [
+        "sl_W5_ctl"
+      ],
+      "current_driver_dominates_selected_roots": false
+    },
+    {
+      "provider_id": "b846",
+      "clock_port": "t_st_b846__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000",
+      "actual_current_source": {
+        "id": "b846",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b846__clk",
+        "placement_node": "b846",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n846",
+        "actual_clock_driver": "b846",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          1874.88,
+          11124.0
+        ],
+        "candidate_clock_node_xy_um": [
+          1874.88,
+          11124.0
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n846",
+        "old_actual_clock_driver": "b846",
+        "xy_match": true,
+        "driver_match": true
+      },
+      "status": "NODE_DRIVER_MATCH_ONLY_NOT_PHASE",
+      "selected_native_descendants": [
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": true
+    },
+    {
+      "provider_id": "r6747_1",
+      "clock_port": "t_st_r6747_1__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000",
+      "actual_current_source": null,
+      "status": "MISSING_CURRENT_NODE",
+      "selected_native_descendants": [
+        "sl_W5_su_l0"
+      ],
+      "current_driver_dominates_selected_roots": false
+    },
+    {
+      "provider_id": "b17296",
+      "clock_port": "t_st_b17296__clk",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010001000",
+      "actual_current_source": {
+        "id": "b17296",
+        "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010001000",
+        "selected_W5": true,
+        "clock_port": "t_st_b17296__clk",
+        "placement_node": "b17296",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n17296",
+        "actual_clock_driver": "b17296",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          2475.846,
+          10654.2
+        ],
+        "candidate_clock_node_xy_um": [
+          10135.8,
+          7284.06
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n17296",
+        "old_actual_clock_driver": "b17296",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "WRONG_CURRENT_CLOCK_PATH_FOR_SELECTED_NATIVE_DESCENDANTS",
+      "selected_native_descendants": [
+        "sl_W5_su_c"
+      ],
+      "current_driver_dominates_selected_roots": false
+    },
+    {
+      "provider_id": "r6748_0",
+      "clock_port": "t_st_r6748_0__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000000",
+      "actual_current_source": {
+        "id": "r6748_0",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000000",
+        "selected_W5": true,
+        "clock_port": "t_st_r6748_0__clk",
+        "placement_node": "r6748_0",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "A",
+        "clock_net": "n6745",
+        "actual_clock_driver": "b6745",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          3740.58,
+          10770.84
+        ],
+        "candidate_clock_node_xy_um": [
+          6660.36,
+          12349.26
+        ],
+        "old_clock_from": "A",
+        "old_clock_net": "n6747",
+        "old_actual_clock_driver": "b6747",
+        "xy_match": false,
+        "driver_match": false
+      },
+      "status": "WRONG_CURRENT_CLOCK_PATH_FOR_SELECTED_NATIVE_DESCENDANTS",
+      "selected_native_descendants": [
+        "sl_W5_su_l0"
+      ],
+      "current_driver_dominates_selected_roots": false
+    },
+    {
+      "provider_id": "b6778",
+      "clock_port": "t_st_b6778__clk",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000002000000000000000",
+      "actual_current_source": {
+        "id": "b6778",
+        "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000002000000000000000",
+        "selected_W5": true,
+        "clock_port": "t_st_b6778__clk",
+        "placement_node": "b6778",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "Y",
+        "clock_net": "n6778",
+        "actual_clock_driver": "b6778",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          1887.3,
+          10758.96
+        ],
+        "candidate_clock_node_xy_um": [
+          7587.0,
+          12315.24
+        ],
+        "old_clock_from": "Y",
+        "old_clock_net": "n6778",
+        "old_actual_clock_driver": "b6778",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "WRONG_CURRENT_CLOCK_PATH_FOR_SELECTED_NATIVE_DESCENDANTS",
+      "selected_native_descendants": [
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": false
+    },
+    {
+      "provider_id": "r6779_0",
+      "clock_port": "t_st_r6779_0__clk",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000000000000",
+      "actual_current_source": {
+        "id": "r6779_0",
+        "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000000000000",
+        "selected_W5": true,
+        "clock_port": "t_st_r6779_0__clk",
+        "placement_node": "r6779_0",
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "clock_from": "A",
+        "clock_net": "n6778",
+        "actual_clock_driver": "b6778",
+        "source_is_root": false,
+        "current_clock_node_xy_um": [
+          1803.33,
+          10486.26
+        ],
+        "candidate_clock_node_xy_um": [
+          7574.85,
+          12263.4
+        ],
+        "old_clock_from": "A",
+        "old_clock_net": "n6778",
+        "old_actual_clock_driver": "b6778",
+        "xy_match": false,
+        "driver_match": true
+      },
+      "status": "WRONG_CURRENT_CLOCK_PATH_FOR_SELECTED_NATIVE_DESCENDANTS",
+      "selected_native_descendants": [
+        "sl_W5_su_l1"
+      ],
+      "current_driver_dominates_selected_roots": false
+    }
+  ],
+  "root_clocks": [
+    {
+      "part": "sl_W5_sc",
+      "tap_port": "t_sl_W5_sc__clk",
+      "raw_net": "n7773",
+      "actual_driver": "b7773",
+      "actual_master": "CKINVDCx16_ASAP7_75t_R",
+      "output_inversion_parity": 0,
+      "actual_tap": {
+        "port": "t_sl_W5_sc__clk",
+        "part": "sl_W5_sc",
+        "tap": "clk",
+        "xy": [
+          3105.056,
+          12463.2
+        ],
+        "node": 7773
+      },
+      "status": "ACTUAL_SOURCE_TAP_ONLY_NOT_FROZEN_PHASE"
+    },
+    {
+      "part": "sl_W5_ctl",
+      "tap_port": "t_sl_W5_ctl__clk",
+      "raw_net": "n7671",
+      "actual_driver": "b7671",
+      "actual_master": "CKINVDCx16_ASAP7_75t_R",
+      "output_inversion_parity": 0,
+      "actual_tap": {
+        "port": "t_sl_W5_ctl__clk",
+        "part": "sl_W5_ctl",
+        "tap": "clk",
+        "xy": [
+          2848.288,
+          13777.696
+        ],
+        "node": 7671
+      },
+      "status": "ACTUAL_SOURCE_TAP_ONLY_NOT_FROZEN_PHASE"
+    },
+    {
+      "part": "sl_W5_stm",
+      "tap_port": "t_sl_W5_stm__clk",
+      "raw_net": "n7873",
+      "actual_driver": "b7873",
+      "actual_master": "CKINVDCx16_ASAP7_75t_R",
+      "output_inversion_parity": 0,
+      "actual_tap": {
+        "port": "t_sl_W5_stm__clk",
+        "part": "sl_W5_stm",
+        "tap": "clk",
+        "xy": [
+          2493.728,
+          12457.824
+        ],
+        "node": 7873
+      },
+      "status": "ACTUAL_SOURCE_TAP_ONLY_NOT_FROZEN_PHASE"
+    },
+    {
+      "part": "sl_W5_su_c",
+      "tap_port": "t_sl_W5_su_c__clk",
+      "raw_net": "n19028",
+      "actual_driver": "b19028",
+      "actual_master": "CKINVDCx16_ASAP7_75t_R",
+      "output_inversion_parity": 0,
+      "actual_tap": {
+        "port": "t_sl_W5_su_c__clk",
+        "part": "sl_W5_su_c",
+        "tap": "clk",
+        "xy": [
+          2894.88,
+          11197.408
+        ],
+        "node": 19028
+      },
+      "status": "ACTUAL_SOURCE_TAP_ONLY_NOT_FROZEN_PHASE"
+    },
+    {
+      "part": "sl_W5_su_l0",
+      "tap_port": "t_sl_W5_su_l0__clk",
+      "raw_net": "n8120",
+      "actual_driver": "b8120",
+      "actual_master": "CKINVDCx16_ASAP7_75t_R",
+      "output_inversion_parity": 0,
+      "actual_tap": {
+        "port": "t_sl_W5_su_l0__clk",
+        "part": "sl_W5_su_l0",
+        "tap": "clk",
+        "xy": [
+          3527.392,
+          11124.0
+        ],
+        "node": 8120
+      },
+      "status": "ACTUAL_SOURCE_TAP_ONLY_NOT_FROZEN_PHASE"
+    },
+    {
+      "part": "sl_W5_su_l1",
+      "tap_port": "t_sl_W5_su_l1__clk",
+      "raw_net": "n8164",
+      "actual_driver": "b8164",
+      "actual_master": "CKINVDCx16_ASAP7_75t_R",
+      "output_inversion_parity": 0,
+      "actual_tap": {
+        "port": "t_sl_W5_su_l1__clk",
+        "part": "sl_W5_su_l1",
+        "tap": "clk",
+        "xy": [
+          2038.56,
+          11162.912
+        ],
+        "node": 8164
+      },
+      "status": "ACTUAL_SOURCE_TAP_ONLY_NOT_FROZEN_PHASE"
+    }
+  ],
+  "source": "/srv/opentallas-scratch2/claude/codex-qc-bind/current_clock/out/kit/clock",
+  "ctree_sha256": "861a606d9cc29fa659c264490e9b9680876d9e724d7deaf745b71b6a2c248346",
+  "tree_sha256": "c729b2312e21613067fe55d7aea63bf62a472deb4bef410c8598f778a267f59f",
+  "failed_current_clock_path_dominance": 10,
+  "ancestry_diagnostic_caveat": "Physical driver dominance changes are descriptive only; START retiming source need not universally dominate each native descendant. No failure theorem or phase relation follows from dominance alone."
+}

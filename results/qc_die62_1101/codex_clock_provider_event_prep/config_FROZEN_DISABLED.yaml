@@ -1,0 +1,58 @@
+schema: ot_clk_config/1
+die: qc
+event:
+  name: DISABLED_frozen821_clock_provider_source_event
+  source: 913be9 frozen fullfleet source; reconstructed sidecar map; tracked feed.
+    No source/phase credit until exact join.
+inputs:
+  plan: FROZEN_PLAN.json
+  region_map: part_region_FROZEN.json
+  feed: feed_rt2_FROZEN.json
+  landing_infra: true
+  reset_infra: true
+stack:
+  cell: inv2
+  clock_rc: 1x
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 250
+  site_legal: true
+  site_slide: true
+  rep_on_leg: true
+  rep_off_leg_max: 50
+  opts:
+    dme_feed_centroid: 1
+    region_stub: 1
+  body_sites: true
+  type_keepouts: true
+  chain_hop_max: 400
+  rep_reach_max: 400
+  rep_actual_max: 405
+  detour: adaptive
+region:
+  form: dme
+  dme_mode: delay
+  only:
+  - c_{E,W}{0..5}_{bf,bn,tf,tn}_{00,01,10,11}
+  - sl_{E,W}{0..5}_su_c
+  - coll_n
+  - coll_s
+  early:
+    tt: 1.0
+    ff: 0.87
+    merge_only:
+    - c_{E,W}{0..5}_{bf,bn,tf,tn}_{00,01,10,11}
+    - sl_W{1..5}_su_c
+  workers: 2
+  actual_max: 405
+stage_model:
+  entry: inv2_1x_qc_gen52b_grt1x
+  corners:
+  - TT
+  - FF
+  edge: rise
+residual:
+  snake:
+  - sl_{E,W}{0..5}_su_c
+  - c_{E,W}{0..5}_{bf,bn,tf,tn}_{00,01,10,11}

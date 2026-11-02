@@ -1,0 +1,38 @@
+{
+  "status": "PROPOSAL_NOT_RELEASED_NO_GENERATION_OR_EDA",
+  "preferred_first_source_vehicle": "regenerate clock kit only against frozen913 plan and recovered313region feed/map, preserving original clock options; render+LOOK then exact3266/78 driver/polarity/XY join before any native import",
+  "frozen_plan_sha256": "913be9b7f5ee612824f323d3d476999a36e2f224f1c3139f163d1b6558cdaab7",
+  "tool_identity": {
+    "ot_clk.py_sha256": "84e4d3c680f7a1410e2a6df9605e76c812805d932c71a2e1a3cd88b7962305dd",
+    "die_trial.py_sha256": "4706a921414952540f9a0d31ce2c58c4fa172f971bdb1239bc7bddce10906cfe"
+  },
+  "current_kit": {
+    "unit": "oth-ubuntu-1364730-1793567323",
+    "terminal": "PASS rc0",
+    "source_plan_sha256": "9695f75fa95c64b297d99e8b1c1953d71bc161fa964998112e8b8c45be29e14d",
+    "clock_netlist_sha256": "861a606d9cc29fa659c264490e9b9680876d9e724d7deaf745b71b6a2c248346",
+    "tree_sha256": "c729b2312e21613067fe55d7aea63bf62a472deb4bef410c8598f778a267f59f"
+  },
+  "source_costs": {
+    "mission_data_edges": "UNCHANGED for frozen-plan clock-source regeneration only; not a composed source result",
+    "provider_parent_pad_edgefall_root_settle": "must remain exact3266 frozen graph; regenerate refusal if join changes",
+    "boot_release_edges": "UNPRICED until reset/provider paired projection; no zero-cycle credit",
+    "clock_phase": "UNQUALIFIED; no aliases permitted"
+  },
+  "alternative": "reuse current repaired native prefix only with coherent new provider/START/CA projection from its exact native clock arrivals. Recompute parent,pad,EDGE_FALL,settle/calendar and programme/boot costs; token selected bodies remain frozen. Requires native phase producer not yet present. Do not replace frozen clocks by similarly named current nodes.",
+  "source_kit_command_not_executed": [
+    "python3",
+    "tools/clk/ot_clk.py",
+    "check",
+    "config_FROZEN_DISABLED.yaml",
+    "python3",
+    "tools/clk/ot_clk.py",
+    "kit",
+    "config_FROZEN_DISABLED.yaml",
+    "--out",
+    "NEW_OWNED_OUTPUT",
+    "--workers",
+    "2"
+  ],
+  "physical_graft_followup": "tools/clk/fixed_tree_provider.py with explicit matching baseadapter + real provider_clock_loads/bindings/viafacts and native pinlandings/PHYstubs; sourcegraph identity first. No newbuffer or fabricated M7 pin."
+}

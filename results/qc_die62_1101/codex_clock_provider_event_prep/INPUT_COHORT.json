@@ -1,0 +1,18 @@
+{
+  "status": "SOURCE_INPUT_RECOVERY_ONLY_NOT_GENERATED",
+  "frozen_plan_sha256": "913be9b7f5ee612824f323d3d476999a36e2f224f1c3139f163d1b6558cdaab7",
+  "sidecar_sha256": "961cee1d2fd94403c02afd5f71ca41754d382f96a424d18c557149f38c6ae230",
+  "part_region_count": 373,
+  "regions": 313,
+  "unmapped_no_sidecar_functional_port_partitions": [
+    "io_serdes_2",
+    "io_serdes_1",
+    "io_serdes",
+    "ucie_kv"
+  ],
+  "feed_source": "82190c1ff:results/die_qc10_1028/feed_rt2.json",
+  "feed_parent_count": 313,
+  "feed_tap_count": 312,
+  "feed_region_set_equal": true,
+  "mapping_status": "RECONSTRUCTED_FROM_EXACT_SIDECAR_NOT_ORIGINAL_MAP_BYTES"
+}
