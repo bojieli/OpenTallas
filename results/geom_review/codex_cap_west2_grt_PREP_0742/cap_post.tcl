@@ -33,13 +33,19 @@ dict for {name record} $::cap_net_flags {
  if {[$n getSigType] ne [lindex $record 0]} {error "CAP_SIGTYPE_CHANGED $name"}
  $n setDoNotTouch [lindex $record 1]
 }
+set final_names {}
 foreach i [$cb getInsts] {
- set n [$i getName];set expected [dict get $::cap_inst_before $n]
+ set n [$i getName];lappend final_names $n;set expected [dict get $::cap_inst_before $n]
  if {$n eq "_27646_"} {lset expected 1 {37044 54540}}
  if {$n eq "wire17963"} {lset expected 1 {37800 78840}}
  set actual [list [[$i getMaster] getName] [$i getLocation] [$i getOrient] [$i getPlacementStatus] [$i isDoNotTouch]]
  if {$actual ne $expected} {error "CAP_UNEXPECTED_INSTANCE_STATE $n"}
 }
+set expected_names {};dict for {n record} $::cap_inst_before {if {$n ni $::cap_spacers} {lappend expected_names $n}}
+if {[lsort $final_names] ne [lsort $expected_names]} {error CAP_BEFORE_SAVE_INSTANCE_SET_CHANGED}
+set current_sig [dict get [ot_prd_route_snapshot $cb] sig]
+if {[dict size $current_sig] != [dict size [dict get $ref sig]]} {error CAP_BEFORE_SAVE_NONPG_NET_SET_CHANGED}
+dict for {name sig} [dict get $ref sig] {if {![dict exists $current_sig $name] || [dict get $current_sig $name] ne $sig} {error "CAP_BEFORE_SAVE_CONNECTION_CHANGED $name"}}
 set pa [ot_native_pg_audit];if {[dict get $pa creates] || [dict get $pa swaps]} {error CAP_UNEXPECTED_NATIVE_BIRTH_OR_SWAP}
 # Use only NEW GRT parasitics after the six-net routing; never rearm stale routed baseline SPEF.
 estimate_parasitics -global_routing

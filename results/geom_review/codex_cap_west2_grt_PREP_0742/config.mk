@@ -72,4 +72,3 @@ override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buf
 override export PRE_GLOBAL_ROUTE_TCL = /work/cap_pre.tcl
 override export POST_GLOBAL_ROUTE_TCL = /work/cap_post.tcl
 override export SKIP_INCREMENTAL_REPAIR = 1
-override export SKIP_ANTENNA_REPAIR = 1
