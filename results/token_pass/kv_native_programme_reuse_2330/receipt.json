@@ -1,0 +1,48 @@
+{
+  "status": "PASS_BINDING_INPUT_REUSE_ONLY",
+  "host": "intel1",
+  "candidate_table_commit": "7191a31ce",
+  "frozen_vehicle": "/srv/opentallas-scratch2/claude/kv-fn-7/veh60",
+  "selected_current_binding": "/srv/opentallas-scratch2/claude/die-kv-60/geom2/bind_merged",
+  "bus_groups_sha256_both": "39fa2b9439c59e35b5f501608bc623197147cf86253a95a26e1a70519f0fc92e",
+  "landing_rows": 12740,
+  "landing_semantic_sha256_both": "2cde3b3978d33d88fa8b9f6dd0d31af1cbb9ba122223fe5d90d71b44182bfa5b",
+  "selected_recipe_commit": "0499590af4",
+  "current_kst": [
+    90,
+    90,
+    88,
+    88,
+    88,
+    77,
+    77
+  ],
+  "recipe_kst": [
+    90,
+    90,
+    88,
+    88,
+    88,
+    77,
+    77
+  ],
+  "current_host_rt": 153,
+  "recipe_host_rt": 153,
+  "current_emb_rt": 145,
+  "recipe_emb_rt": 145,
+  "programme_sha256": "3142bc2d19197116854e120585356d9c8d80a1414ac235464efd11f24078de7b",
+  "relay_stages_bound_sha256": "bb0261d382c6992489e7e4f24c0cdca5d0b6ebaf46c9dbd66e49faa3a1e6341e",
+  "die_ages_bound_padded_sha256": "290555654fdee684b934fd0e35a48076dd785af64c326f0aae5208ebe628aafb",
+  "table_publication_added_cycles": 0,
+  "programme_status": "COMPILED_NOT_QUALIFIED",
+  "root_head_global_leases": "OPEN",
+  "token_rate_qualified": false,
+  "redundant_prep_job": {
+    "status": "NOTRUN_CANCELLED_EXACT_OWN_WAITER",
+    "remote_waiter_pid": 3013458,
+    "hub_controller": "codex-kv-current-pricing-2325",
+    "terminal": 143,
+    "main_pid": 0,
+    "reason": "Entire compiler bus_groups input byte-identical; no recompile needed"
+  }
+}
