@@ -1,0 +1,44 @@
+{
+  "scope": "SOURCE_PRESERVING_INFEASIBILITY_CUT_NO_GATE_RELAXATION",
+  "source_pins": {
+    "o_host_hbm_rst_n[1]": [
+      431.968,
+      0.096
+    ],
+    "o_kvs_hroot_Q_o_ctl[144]": [
+      1900.704,
+      723.48
+    ]
+  },
+  "fixed_pin_manhattan_um": 2192.12,
+  "existing_path_seq_edges": 4,
+  "seq_edge_gate_um": 405,
+  "pin_edges": 2,
+  "pin_gate_um": 150,
+  "path_total_capacity_um": 1920,
+  "deficit_um": 272.1199999999999,
+  "shared_existing_terminal": "u_rrl_101.q",
+  "native_points": {
+    "u_bound.u_bout_o_host_hbm_rst_n/eq$_DFF_PN0_": [
+      432.702,
+      6.075
+    ],
+    "u_bound.u_bout_o_kvs_hroot_Q_o_ctl/eq$_DFF_PN0_": [
+      1893.996,
+      705.105
+    ],
+    "u_bound.u_ist_o_host_hbm_rst_n_3/eq$_DFF_PN0_": [
+      826.686,
+      6.075
+    ],
+    "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/eq$_DFF_PN0_": [
+      1500.012,
+      705.105
+    ],
+    "u_bound.u_rrl_101/q$_DFF_P_": [
+      983.3399999999999,
+      492.345
+    ]
+  },
+  "meaning": "Even freely movable zero-area FF points cannot satisfy this unchanged source graph and both existing pins. Real footprint/clock restrictions cannot repair infeasibility. All original reset connections/count/depth/root/cycles preserved."
+}
