@@ -1,0 +1,13 @@
+{
+  "verdict": "OOM_KILL_PRESERVED",
+  "scope": "oth-ubuntu-172434-1793608924.scope",
+  "killed_at": "2026-11-02 00:58:23 PST",
+  "memory_peak_bytes": 2147483648,
+  "memory_max_bytes": 2147483648,
+  "cpu": "12m52s",
+  "accepted_moves": 27,
+  "remaining_empty": 147,
+  "over_radius": 0,
+  "overload": 0,
+  "cause": "Recursive nearest closures retain large NumPy buffers until cyclic GC; confirmed by weakref diagnosis; original output retained"
+}

@@ -1,0 +1,15 @@
+{
+  "status": "HELD_RESUME",
+  "prior_terminal": "OOM_KILL_2GiB",
+  "saved_moves": 16,
+  "replayed_later_moves": 11,
+  "total_accepted": 27,
+  "expected_metric": [
+    0,
+    0.0,
+    147
+  ],
+  "input_sha256": "d3a1f43f085c0916dcb7997f9dd0493075db08b7bcb22737fe066cd740b67ba9",
+  "geometry_delta": "NONE except exact accepted log replay",
+  "memory_fix": "clear recursive closure cells; exact output and GC-disabled lifetime tests PASS"
+}
