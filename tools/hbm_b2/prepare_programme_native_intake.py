@@ -62,7 +62,7 @@ def main():
             pins.append(dict(name=name,direction=direction,face=side,layer='M4',
                              x=.024 if side=='W' else 574.536,y=round(y,6)))
     for name,y in [('clk',clock_y),('rst_n',reset_y)]:
-        pins.append(dict(name=name,direction='input',face='W',layer='M4',x=.024,y=round(y,6)))
+        pins.append(dict(name=name,direction='input',face='W',layer='M5',x=.024,y=round(y,6),w=.048,h=.48))
     assert len({(p['layer'],p['x'],p['y']) for p in pins}) == 2904
     (OUT/'r10_pins.json').write_text(json.dumps(pins, indent=2)+'\n')
     rects = [dict(name=m['inst'], master=MASTER, rect_um=m['origin_um']+

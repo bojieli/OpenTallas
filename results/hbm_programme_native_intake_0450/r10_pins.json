@@ -23219,16 +23219,20 @@
     "name": "clk",
     "direction": "input",
     "face": "W",
-    "layer": "M4",
+    "layer": "M5",
     "x": 0.024,
-    "y": 369.336
+    "y": 369.336,
+    "w": 0.048,
+    "h": 0.48
   },
   {
     "name": "rst_n",
     "direction": "input",
     "face": "W",
-    "layer": "M4",
+    "layer": "M5",
     "x": 0.024,
-    "y": 377.976
+    "y": 377.976,
+    "w": 0.048,
+    "h": 0.48
   }
 ]
