@@ -28,8 +28,19 @@ json.dump(r, open(p, 'w'), indent=1)
 PY
 }
 count() {  # D TAG CORNER(TC|BC) SPEF CHKPL
-  local D=$1 B; B=$(ls -d $D/run/results/asap7/*/base)
-  $DK run --rm --name prd-count-$2-$$ --cpus=4 --memory=24g --memory-swap=24g -v "$D":/work -w /OpenROAD-flow-scripts/flow \
+  local D=$1 B count_mem count_cpus limits; B=$(ls -d $D/run/results/asap7/*/base)
+  # The count subprocess stays inside the caller's admitted resource envelope.
+  # Preserve the historical 24 GB / 4-thread ceiling for larger route requests.
+  limits=$(python3 -I - "$MEM" "$CPUS" <<'PY_COUNT_LIMITS'
+import math, sys
+mem, cpus = float(sys.argv[1]), int(sys.argv[2])
+if not math.isfinite(mem) or mem <= 0 or cpus <= 0:
+    raise SystemExit("PRD count resources must be finite and positive")
+print(f"{min(mem,24):g} {min(cpus,4)}")
+PY_COUNT_LIMITS
+  ) || return 2
+  read -r count_mem count_cpus <<< "$limits"
+  $DK run --rm --name prd-count-$2-$$ --cpus="$count_cpus" --memory="${count_mem}g" --memory-swap="${count_mem}g" -v "$D":/work -w /OpenROAD-flow-scripts/flow \
     -e ODB=/work/${B#$D/}/$(test -s $B/5_route.odb && echo 5_route.odb || echo 5_2_route.odb) -e SDC=/work/${B#$D/}/4_cts.sdc -e SPEF=/work/${B#$D/}/$4 -e TAG=$2 -e CHKPL=$5 "$IMAGE" bash -lc '
     source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
     M="make -s DESIGN_CONFIG=/work/config.mk WORK_HOME=/tmp/w FLOW_VARIANT=base"
