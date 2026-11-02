@@ -1,0 +1,22 @@
+{
+  "status": "READY_SOURCE_REVIEWED_RUN_SCOPE_HELD",
+  "native_CTS_run": false,
+  "production_strict_CTS_admission": false,
+  "sole_capsule": "intel2:/srv/opentallas-scratch2/claude/codex-pg-birth-cts-0219/cts_pg0_0253",
+  "input_sha256": "9a3294019241dbf4d52c284a6682f9a11978241f15c6451bb8e5751fecd480e1",
+  "input_saved_PG_checked": 17802,
+  "input_saved_PG_failures": 0,
+  "module_sha256": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
+  "helper_sha256": "e19c5fd9872e37f68d610e2dc46608359c9970b7c9e6de84f546f3b3c3ea3a2d",
+  "source_only_control_flow_cases": 6,
+  "source_review": "S81 reread corrected actual remote runner8ac21/driver0f611/POST5d07; CONCUR source-only, distinct root run-scope hold retained",
+  "files": {
+    "run_cts.sh": "8ac21a9fcb42fec4374bc6827630740a6aef867efbc3c88fce960ce55a6f7978",
+    "run_saved_census.sh": "aa44a242508d8bc5a6633f1e5d4371ee74d9787b12c9b5344989074e1b5a8ded",
+    "pg_birth_pre_cts.tcl": "288119d594ea1999b1e53b0c664b2a890894428adb4f100eab12e226ddc57620",
+    "pg_birth_post_cts.tcl": "5d07c8c48f4b38bdba5a5b823ab0954d68f0225203baba227c44cee076e6dde7",
+    "native_pg_birth_cts_driver.tcl": "0f61161300941b4d0c33542cf38d1ac2e1cf687c6ded76b667e8935a4fd92261",
+    "native_pg_birth_wrap_runtime.py": "ae005c4468cfdc429aaa8824ad1bfc221816f09e2694256c2689aba4a8b83781",
+    "test_driver.py": "0214a1c915d6446b3cf76a601d7dd09be8c1ac5de732f1d74c83e3aa5ad18acb"
+  }
+}
