@@ -11,7 +11,10 @@ the composer rules of compose_qc51.py (self-tested first: re-derivation on the i
 collector_tree = reset_tree.for_type; collector_local_sources[].tap = nearest tap relay to the ring pin (band centre
 if > 405 um); collector_children[].node renumbered; forwarded-out clock pins source_clock_tap = nearest clock tap.
 Outline, buses, ft slots, bands, hard cores, ports and every other type are unchanged.
-usage: delta_ttctlm_1101.py PLAN_IN PLAN_OUT [REPORT.json]"""
+The paired clock-landing sidecar (gen --clock-landing; its collector.types[tt_ctlm] tree / local_sources drive the
+collector reduction in clock_landings.py) is updated the same way when SIDECAR_IN SIDECAR_OUT are given: only
+tree, local_sources and collector_root_node of tt_ctlm change (children are empty on tt_ctlm, asserted).
+usage: delta_ttctlm_1101.py PLAN_IN PLAN_OUT [REPORT.json [SIDECAR_IN SIDECAR_OUT]]"""
 import copy
 import hashlib
 import json
@@ -114,6 +117,21 @@ def main():
                             for a, b in zip(lc0["pins"], lc["pins"]) if a.get("source_clock_tap") != b.get("source_clock_tap")],
                src_sha256=hashlib.sha256(text.encode()).hexdigest(), dst_sha256=hashlib.sha256(out.encode()).hexdigest())
     print(T, "taps", rep["taps_old"], "->", rep["taps_new"], "reset tree", rep["collector_tree"])
+    if len(sys.argv) > 5:
+        side_in, side_out = sys.argv[4:6]
+        stext = open(side_in).read()
+        side = json.loads(stext)
+        sst = next((k for k in (1, None) if json.dumps(side, indent=k) + "\n" == stext), 1)
+        ent = side["collector"]["types"][T]
+        assert not ent.get("children") and not lc.get("collector_children"), "tt_ctlm collector children not empty"
+        assert ent["tree"] == t0 and ent["local_sources"] == lc0["collector_local_sources"], "sidecar not paired with input plan"
+        ent["tree"] = copy.deepcopy(lc["collector_tree"])
+        ent["local_sources"] = copy.deepcopy(lc["collector_local_sources"])
+        ent["collector_root_node"] = lc.get("collector_root_node", ent.get("collector_root_node"))
+        sout = json.dumps(side, indent=sst) + "\n"
+        open(side_out, "w").write(sout)
+        rep["sidecar"] = dict(src_sha256=hashlib.sha256(stext.encode()).hexdigest(),
+                              dst_sha256=hashlib.sha256(sout.encode()).hexdigest(), changed=["tree", "local_sources"])
     if rep_p:
         open(rep_p, "w").write(json.dumps(rep, indent=1) + "\n")
 
