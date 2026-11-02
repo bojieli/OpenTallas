@@ -39,3 +39,11 @@ def test_declared_flop_fifo_sets_exact_size(tmp_path):
 def test_flop_fifo_instance_only_does_not_count(tmp_path):
     (tmp_path / "b.sv").write_text("module top; ot_qkvd_seq_m_sfifo #(.W(128), .D(40)) u (); endmodule\n")
     assert gen_phys.declared_flop_mem_bits(tmp_path) == 0
+
+
+def test_s81_exp_alias_and_short_table_preopt_width(tmp_path):
+    """S81 kv_leaf__t2 contains the same fixed table through its f12 module alias."""
+    (tmp_path / "a.sv").write_text("module ot_dsrom_exp_f12; endmodule\n")
+    assert gen_phys.declared_rom_bits(tmp_path) == 256 * 64
+    (tmp_path / "a.sv").write_text("module ot_hdc_v41x_exp_s; endmodule\n")
+    assert gen_phys.declared_rom_bits(tmp_path) == 128 * 50
