@@ -1,0 +1,33 @@
+{
+  "status": "PREP_ONLY_NOT_A_RUNNABLE_KIT",
+  "leaf": "recip",
+  "outline_um": [
+    216.0,
+    138.24
+  ],
+  "macros": [],
+  "signals": 69,
+  "moved_south": [],
+  "source_files": {
+    "io.tcl": "7d19adbcb1f143576be87ded9a7657714ff4f65f18d36e76b8e3498974fb2e58",
+    "pins.json": "8eedd99edae76394ec6005bbf020a42c7ac2f08ba1563846b357ab8558fa592e",
+    "core.json": "376bd17e593b59f4ec4a01dfba12198c248e7308c8f3d6b043daad80e864ef6c",
+    "config.mk": "c2a26e66fa16031b6a777fd1e84137a66b6cf6941f69627f10312c2477968b43"
+  },
+  "native_lef_sha256": "33685dfe99a6e5ce29e301d5968e0ee9735d87a20703a10c234cd4903879ed94",
+  "normal_generator_sha256": "f16a279ea38f453e4d95eda2269a45f73d2721415d4ecf91b38b3a1de658f045",
+  "rtl_change": false,
+  "cycles_added": 0,
+  "clock_reset_roles": {
+    "clk": "clk",
+    "rst_n": "reset",
+    "v": "in",
+    "x": "in",
+    "y": "out",
+    "vo": "out",
+    "fault": "out"
+  },
+  "all_shapes_contained": true,
+  "all_secondary_shapes_preserved": true,
+  "all_secondary_shapes_overlap": true
+}
