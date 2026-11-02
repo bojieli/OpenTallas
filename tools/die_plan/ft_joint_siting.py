@@ -10,11 +10,14 @@ def slot(s,k,pins,gate,grow,free,budget,smax,al,tn,name,k0):
   ib={'E':(B[0]-1,B[1]),'W':(B[0]+1,B[1]),'N':(B[0],B[1]-1),'S':(B[0],B[1]+1)}[B[2]]
   route=F.C.zroute(ia,ib,A[2],B[2]);length=F.C.plen(route);ps=[F.C.point_at(route,length*j/k)for j in range(1,k)]
   pts[b]=(ia,ib,route,length,ps);bad+=sum(F.inside(p,gate)for p in ps)
+ seed_failure=None
  try:moved=F._move(pts,bits,k,grow,free,budget,tn,name)
- except SystemExit as e:return dict(type=tn,slot=name,stations=k,infeasible=str(e),phase='geometry')
+ except SystemExit as e:
+  # Seed budget is conservative; only occupied actual-row reach proves failure.
+  moved=None;seed_failure=str(e)
  slot_saved=set(al.used);sites=[[None]*len(bits)for _ in range(k-1)];fallbacks=[];worst=0.
  for b in bits:
-  ia,ib,route,length,ps=pts[b];bit_saved=set(al.used);allocated=[]
+  ia,ib,route,length,ps=pts[b];ib=getattr(al,'terminal_goals',{}).get((name,b),ib);bit_saved=set(al.used);allocated=[]
   try:
    previous=ia
    for j,p in enumerate(ps):
@@ -36,4 +39,4 @@ def slot(s,k,pins,gate,grow,free,budget,smax,al,tn,name,k0):
   al.used=slot_saved
   return dict(type=tn,slot=name,stations=k,infeasible=f'actual row hop{worst}>{smax}',slot_reservations_rolled_back=True)
  s['stations']=k;s['bit_site_cell_um']=list(cell);s['bit_sites_um']=sites
- return dict(type=tn,slot=name,width=s['width'],stations=k,stations_added=k-k0,in_macro_points=bad,moved=moved,max_bit_hop_um=worst,joint_fallbacks=fallbacks)
+ return dict(type=tn,slot=name,width=s['width'],stations=k,stations_added=k-k0,in_macro_points=bad,moved=moved,max_bit_hop_um=worst,joint_fallbacks=fallbacks,geometry_seed_failure=seed_failure)
