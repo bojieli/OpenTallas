@@ -1,0 +1,5 @@
+L4 finite after-DRV checkpoint
+
+Intel2 oth-ubuntu-1564122-1793621365 exit0, runtime /srv/opentallas-scratch2/claude/codex-l4-drv-checkpoint-0138. Exact existing approved source/image/current051 recipe, strict native PG callback and whole-body cleanup. Stops after repair_design: no setup/hold/DPL/DRT/STA. Original eight-thread and one-thread setup/FlexPA SIG11 receipts remain unchanged.
+
+Genuine REPAIR_DESIGN_CHECKPOINT.odb saved. Independent saved-PG audit 184252 terminals / 0 failures. Input/after/saved clock guard passes. Callback creates3/swaps3/bound6. Before/after catalog block-access-point count15078 unchanged; every preexisting instance master, pin-access index, pose and status unchanged. Three new buffers: wire19103 BUFx24 index0 at212922,41850; wire19104 BUFx16f index2 at146772,56160; wire19105 BUFx16f index3 at47574,20790. Numeric indices are context-dependent catalog keys, not orientation enums; unchanged global count does not prove per-pin validity. No corruption cause established. A future approved fresh-process pin-access discriminator can consume this actual checkpoint without repeating DRV. No physical/signoff credit.

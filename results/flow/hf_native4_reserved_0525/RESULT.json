@@ -1,0 +1,62 @@
+{
+ "scope": "EXISTING_OFFICIAL_RTL_X_VALIDITY_STEP_ONLY",
+ "raw_BASE_receipt": "/prefix/RESULT.json",
+ "native4": true,
+ "no_added_masks": true,
+ "no_added_constraints": true,
+ "no_reset_override": true,
+ "source_credit": false,
+ "abi_prune_required": true,
+ "raw_universal_STEP_still_failed": true,
+ "cases": [
+  {
+   "tag": "official_validity_STEP",
+   "statuses": {
+    "hyp:gold:ff:u_dut.fault_cause[3]": "proved",
+    "hyp:gold:ff:u_dut.fault_cause[4]": "proved"
+   },
+   "passed": true,
+   "anonymous_RTL_X_variables": [
+    18,
+    19,
+    47,
+    48
+   ],
+   "native_ternary_BASE": {
+    "ff:u_dut.fault_cause[3]": [
+     0,
+     1
+    ],
+    "ff:u_dut.fault_cause[4]": [
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "tag": "wrong_constant_STEP_negative",
+   "statuses": {
+    "hyp:gold:ff:u_dut.fault_cause[3]": "differs",
+    "hyp:gold:ff:u_dut.fault_cause[4]": "differs"
+   },
+   "passed": false,
+   "anonymous_RTL_X_variables": [
+    18,
+    19,
+    47,
+    48
+   ],
+   "native_ternary_BASE": {
+    "ff:u_dut.fault_cause[3]": [
+     0,
+     1
+    ],
+    "ff:u_dut.fault_cause[4]": [
+     0,
+     1
+    ]
+   }
+  }
+ ],
+ "status": "NATIVE4_BASE_AND_OFFICIAL_VALIDITY_STEP_PROVED_NO_ABI_CREDIT"
+}

@@ -1,0 +1,17 @@
+{
+ "enabled": false,
+ "event": "s39-review-bbec1f44f3672842",
+ "src": "/srv/opentallas-scratch2/claude/codex-flow-s81-source-2055/src",
+ "src_sha": "39f754dda07e9746c4850ea0814d48d134a6cf2a",
+ "plan": "/srv/opentallas-scratch2/claude/codex-flow-s81-source-2055/plan_source39_reviewable_0720.json",
+ "kit_rtl": {
+  "mode": "script",
+  "script": "/srv/opentallas-scratch2/claude/codex-flow-s81-source-2055/source_event_candidate_0740/kit_rtl.sh"
+ },
+ "src_follow": {
+  "snapshot_kind": "script",
+  "snapshot_bind": "/srv/opentallas-scratch2/claude/codex-flow-s81-source-2055/bind_final_clockset_t49",
+  "snapshot_asbuilt": "/srv/opentallas-scratch2/claude/codex-flow-s81-source-2055/asbuilt.deadrefreshed.json"
+ },
+ "physical_hold": true
+}
