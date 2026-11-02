@@ -12,3 +12,5 @@ Branch codex/qc-sc-red-1101@343baa122 (inherits experimental98bbb; doNOTmergewho
 Collect actual admissions/results. SC3_place→actualLOOK/count/source-correlated sinkgeometry beforeCTS. REDactualrebind→compare nativecensus/rootframe, no STAcredit. Both jobs normalmemoryreservations; no timing/physical PASS claimed whilequeued. OWNER? none.
 
 ROOT classification correction: RED296.37/231.92 versus250/202.5 is design-target deviation only, not a hardFAIL or mandatoryredesign. ActualrelatedpairTT/FF+countalignedcontract decide. No extraabsolute-latencygate added; importscope remainsunchanged, parent/currentviewqualification stillopen.
+
+ADMITTED: SC1787571-1793596546 epyc2 activefreshSYNTH. RED1765031-1793596386 epyc2 terminalexit1 atfirstCLKdisconnect ofdont_touchmp_ck_T000120_out; nooutputODB. DiagnosedAPIprotection/sourceeventnotphysicaltimingfailure. Newownr2dirtemporarilyunlocks onlyexactDFF+old/newleafnets withtry/finallyrestoreandDNTflagsguard; sameinput8GB1T, dispatcher110288, noSTA/CTS/GRT. Originalfailurepreserved.
