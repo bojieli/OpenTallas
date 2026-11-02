@@ -1,0 +1,22 @@
+{
+  "scope": "existing immutable inputs only; no new CAD",
+  "source": "d90b109213c6949da87b330ef143d96bbe937934",
+  "native_io_source_event": "5346b95c915; per-type source-normalized match retained in capacity packet",
+  "schema_tool_source": "58964d6ef default unchanged canonical pin_positions",
+  "inputs": {
+    "source_types.json": {
+      "sha256": "5b1d5487a44bf7e4cac5d43b6eed9d2148b4fa64f974652e730edb1bace82868",
+      "bytes": 200802
+    },
+    "sle_stm_v2__cl55be2264_native_io.tcl.gz": {
+      "sha256": "838e963050259066631afd5672719dab3d4c6df3a8e08fad04ef0c498a6725d4",
+      "bytes": 131360
+    },
+    "sle_stm_v1__cl27746664_native_io.tcl.gz": {
+      "sha256": "6ec6ccefe7f986c8a5d79e77535bde471b53a16e13edca8cfe09c6adc80e5561",
+      "bytes": 134888
+    }
+  },
+  "image_personally_viewed": true,
+  "no_clock_model_or_source_qualification": true
+}

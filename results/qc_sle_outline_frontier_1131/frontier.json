@@ -1,0 +1,2572 @@
+{
+  "scope": "PRIVATE source-only pin/area tradeoffs; no GEN/CAD/clock qualification/source adoption",
+  "source": "d90b109213c6949da87b330ef143d96bbe937934",
+  "types": {
+    "sle_stm_v1__cl27746664": {
+      "census": {
+        "all_native_contacts": 19011,
+        "data_contacts": 18799,
+        "data_per_face": {
+          "N": 3384,
+          "S": 1069,
+          "E": 6852,
+          "W": 7494
+        },
+        "aux_contacts": 212,
+        "aux_edge_per_face_layer": {
+          "INTERIOR-M7": 76,
+          "N-M7": 12,
+          "E-M7": 33,
+          "S-M7": 8,
+          "INTERIOR-M5": 80,
+          "W-M7": 3
+        },
+        "native_clock_ports": 71,
+        "native_clock_names": [
+          "clk",
+          "clk_t1",
+          "clk_t2",
+          "clk_t3",
+          "clk_t4",
+          "clk_t5",
+          "clk_t6",
+          "clk_t7",
+          "clk_t8",
+          "clk_t9",
+          "clk_t10",
+          "clk_t11",
+          "clk_t12",
+          "clk_t13",
+          "clk_t14",
+          "clk_t15",
+          "clk_t16",
+          "clk_t17",
+          "clk_t18",
+          "clk_t19",
+          "clk_t20",
+          "clk_t21",
+          "clk_t22",
+          "clk_t23",
+          "clk_t24",
+          "clk_t25",
+          "clk_t26",
+          "clk_t27",
+          "clk_t28",
+          "clk_t29",
+          "clk_t30",
+          "clk_t31",
+          "clk_t32",
+          "clk_t33",
+          "clk_t34",
+          "clk_t35",
+          "clk_t36",
+          "clk_t37",
+          "clk_t38",
+          "clk_t39",
+          "clk_t40",
+          "clk_t41",
+          "clk_t42",
+          "clk_t43",
+          "clk_t44",
+          "clk_t45",
+          "clk_t46",
+          "clk_t47",
+          "clk_t48",
+          "clk_t49",
+          "clk_t50",
+          "clk_t51",
+          "clk_t52",
+          "clk_t53",
+          "clk_t54",
+          "clk_t55",
+          "clk_t56",
+          "clk_t57",
+          "clk_t58",
+          "clk_t59",
+          "clk_t60",
+          "clk_t61",
+          "clk_t62",
+          "clk_t63",
+          "clk_t64",
+          "clk_t65",
+          "clk_t66",
+          "clk_t67",
+          "clk_t68",
+          "clk_t69",
+          "clk_t70"
+        ],
+        "frozen_clock_metadata_records": 2,
+        "edge_clocks": 14,
+        "native_interior_aux_names": [
+          "arst_n",
+          "start_i",
+          "rst_o_0",
+          "start_o_0",
+          "strap_ca_efall",
+          "strap_ca_k_cws1_i[0]",
+          "strap_ca_k_cws1_i[1]",
+          "strap_ca_k_cws1_i[2]",
+          "strap_ca_k_cws1_i[3]",
+          "strap_ca_k_cws1_i[4]",
+          "strap_ca_k_cws1_i[5]",
+          "strap_ca_k_flt_ctl_i[0]",
+          "strap_ca_k_flt_ctl_i[1]",
+          "strap_ca_k_flt_ctl_i[2]",
+          "strap_ca_k_flt_ctl_i[3]",
+          "strap_ca_k_flt_ctl_i[4]",
+          "strap_ca_k_flt_ctl_i[5]",
+          "strap_ca_k_l9_eo_l9_wi_i[0]",
+          "strap_ca_k_l9_eo_l9_wi_i[1]",
+          "strap_ca_k_l9_eo_l9_wi_i[2]",
+          "strap_ca_k_l9_eo_l9_wi_i[3]",
+          "strap_ca_k_l9_eo_l9_wi_i[4]",
+          "strap_ca_k_l9_eo_l9_wi_i[5]",
+          "strap_ca_k_x_ctl_fw_p1_i[0]",
+          "strap_ca_k_x_ctl_fw_p1_i[1]",
+          "strap_ca_k_x_ctl_fw_p1_i[2]",
+          "strap_ca_k_x_ctl_fw_p1_i[3]",
+          "strap_ca_k_x_ctl_fw_p1_i[4]",
+          "strap_ca_k_x_ctl_fw_p1_i[5]",
+          "strap_ca_k_x_ctl_i[0]",
+          "strap_ca_k_x_ctl_i[1]",
+          "strap_ca_k_x_ctl_i[2]",
+          "strap_ca_k_x_ctl_i[3]",
+          "strap_ca_k_x_ctl_i[4]",
+          "strap_ca_k_x_ctl_i[5]",
+          "strap_ca_k_x_fe_fw_i[0]",
+          "strap_ca_k_x_fe_fw_i[1]",
+          "strap_ca_k_x_fe_fw_i[2]",
+          "strap_ca_k_x_fe_fw_i[3]",
+          "strap_ca_k_x_fe_fw_i[4]",
+          "strap_ca_k_x_fe_fw_i[5]",
+          "strap_ca_k_x_fe_fw_p1_i[0]",
+          "strap_ca_k_x_fe_fw_p1_i[1]",
+          "strap_ca_k_x_fe_fw_p1_i[2]",
+          "strap_ca_k_x_fe_fw_p1_i[3]",
+          "strap_ca_k_x_fe_fw_p1_i[4]",
+          "strap_ca_k_x_fe_fw_p1_i[5]",
+          "strap_ca_k_x_fe_i[0]",
+          "strap_ca_k_x_fe_i[1]",
+          "strap_ca_k_x_fe_i[2]",
+          "strap_ca_k_x_fe_i[3]",
+          "strap_ca_k_x_fe_i[4]",
+          "strap_ca_k_x_fe_i[5]",
+          "strap_ca_k_x_fe_p1_i[0]",
+          "strap_ca_k_x_fe_p1_i[1]",
+          "strap_ca_k_x_fe_p1_i[2]",
+          "strap_ca_k_x_fe_p1_i[3]",
+          "strap_ca_k_x_fe_p1_i[4]",
+          "strap_ca_k_x_fe_p1_i[5]",
+          "strap_ca_k_x_sc_fw_i[0]",
+          "strap_ca_k_x_sc_fw_i[1]",
+          "strap_ca_k_x_sc_fw_i[2]",
+          "strap_ca_k_x_sc_fw_i[3]",
+          "strap_ca_k_x_sc_fw_i[4]",
+          "strap_ca_k_x_sc_fw_i[5]",
+          "strap_ca_k_x_su_c_ctl_i[0]",
+          "strap_ca_k_x_su_c_ctl_i[1]",
+          "strap_ca_k_x_su_c_ctl_i[2]",
+          "strap_ca_k_x_su_c_ctl_i[3]",
+          "strap_ca_k_x_su_c_ctl_i[4]",
+          "strap_ca_k_x_su_c_ctl_i[5]",
+          "strap_ca_k_x_su_l0_i[0]",
+          "strap_ca_k_x_su_l0_i[1]",
+          "strap_ca_k_x_su_l0_i[2]",
+          "strap_ca_k_x_su_l0_i[3]",
+          "strap_ca_k_x_su_l0_i[4]",
+          "strap_ca_k_x_su_l0_i[5]",
+          "strap_ca_k_x_su_l1_i[0]",
+          "strap_ca_k_x_su_l1_i[1]",
+          "strap_ca_k_x_su_l1_i[2]",
+          "strap_ca_k_x_su_l1_i[3]",
+          "strap_ca_k_x_su_l1_i[4]",
+          "strap_ca_k_x_su_l1_i[5]",
+          "strap_ca_pad[0]",
+          "cland_tstart_in"
+        ],
+        "source": "exact old5346 native io.tcl; closure source-normalized-match to d90, geometry NOT adopted"
+      },
+      "frontier": [
+        {
+          "target_pins_per_um_per_layer": 5.95,
+          "outline_um": [
+            336.96,
+            665.28
+          ],
+          "aspect": 1.974359,
+          "core_inset_um": 4.32,
+          "core_area_um2": 215588.0448,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32911.8714,
+          "std_fill_free": 0.17799269377131519,
+          "data_ends_um": {
+            "N": 296.777815,
+            "S": 99.956034,
+            "E": 598.646723,
+            "W": 654.844235
+          },
+          "last_legal_um": {
+            "N": 330.47999999999996,
+            "S": 330.47999999999996,
+            "W": 658.8,
+            "E": 658.8
+          },
+          "scalar_edge_allocated": 56,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 60,
+              "window_um": [
+                230.456,
+                240.456
+              ],
+              "over6_budget": false
+            },
+            "N-M5": {
+              "pins_per_10um": 62,
+              "window_um": [
+                11.048,
+                21.048
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 63,
+              "window_um": [
+                231.632,
+                241.632
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 65,
+              "window_um": [
+                13.392,
+                23.392
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 61,
+              "window_um": [
+                6.68,
+                16.68
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 65,
+              "window_um": [
+                13.392,
+                23.392
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 60,
+              "window_um": [
+                6.536,
+                16.536
+              ],
+              "over6_budget": false
+            },
+            "E-M6": {
+              "pins_per_10um": 65,
+              "window_um": [
+                54.48,
+                64.48
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                443.088,
+                453.088
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 60,
+              "window_um": [
+                8.024,
+                18.024
+              ],
+              "over6_budget": false
+            },
+            "W-M6": {
+              "pins_per_10um": 65,
+              "window_um": [
+                11.216,
+                21.216
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                408.528,
+                418.528
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 65,
+          "meets_fill20_aspect2": false,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 6.0,
+          "outline_um": [
+            328.32,
+            656.64
+          ],
+          "aspect": 2.0,
+          "core_inset_um": 4.32,
+          "core_area_um2": 207152.64,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32911.8714,
+          "std_fill_free": 0.1865008681958511,
+          "data_ends_um": {
+            "N": 294.214667,
+            "S": 99.205333,
+            "E": 593.84,
+            "W": 649.589333
+          },
+          "last_legal_um": {
+            "N": 321.84,
+            "S": 321.84,
+            "W": 650.16,
+            "E": 650.16
+          },
+          "scalar_edge_allocated": 56,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 61,
+              "window_um": [
+                229.832,
+                239.832
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 63,
+              "window_um": [
+                41.24,
+                51.24
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 66,
+              "window_um": [
+                244.56,
+                254.56
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 66,
+              "window_um": [
+                22.096,
+                32.096
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 62,
+              "window_um": [
+                67.16,
+                77.16
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 66,
+              "window_um": [
+                62.928,
+                72.928
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 61,
+              "window_um": [
+                190.424,
+                200.424
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 66,
+              "window_um": [
+                82.384,
+                92.384
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                437.712,
+                447.712
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 61,
+              "window_um": [
+                54.152,
+                64.152
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 66,
+              "window_um": [
+                24.272,
+                34.272
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                403.6,
+                413.6
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 66,
+          "meets_fill20_aspect2": false,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 6.1,
+          "outline_um": [
+            328.32,
+            648.0
+          ],
+          "aspect": 1.973684,
+          "core_inset_um": 4.32,
+          "core_area_um2": 204390.6048,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32911.8714,
+          "std_fill_free": 0.18946631056138266,
+          "data_ends_um": {
+            "N": 289.588984,
+            "S": 97.740852,
+            "E": 584.462951,
+            "W": 639.337967
+          },
+          "last_legal_um": {
+            "N": 321.84,
+            "S": 321.84,
+            "W": 641.52,
+            "E": 641.52
+          },
+          "scalar_edge_allocated": 56,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 62,
+              "window_um": [
+                225.08,
+                235.08
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 63,
+              "window_um": [
+                6.728,
+                16.728
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 67,
+              "window_um": [
+                235.92,
+                245.92
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 67,
+              "window_um": [
+                13.456,
+                23.456
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 63,
+              "window_um": [
+                10.904,
+                20.904
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 67,
+              "window_um": [
+                19.728,
+                29.728
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 62,
+              "window_um": [
+                186.824,
+                196.824
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 67,
+              "window_um": [
+                58.832,
+                68.832
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                431.824,
+                441.824
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 62,
+              "window_um": [
+                51.608,
+                61.608
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 67,
+              "window_um": [
+                15.632,
+                25.632
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                398.16,
+                408.16
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 67,
+          "meets_fill20_aspect2": false,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 6.25,
+          "outline_um": [
+            319.68,
+            639.36
+          ],
+          "aspect": 2.0,
+          "core_inset_um": 4.32,
+          "core_area_um2": 196179.14880000002,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32911.8714,
+          "std_fill_free": 0.19886705924674136,
+          "data_ends_um": {
+            "N": 282.928,
+            "S": 95.632,
+            "E": 570.96,
+            "W": 624.576
+          },
+          "last_legal_um": {
+            "N": 313.2,
+            "S": 313.2,
+            "W": 632.88,
+            "E": 632.88
+          },
+          "scalar_edge_allocated": 56,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 63,
+              "window_um": [
+                219.704,
+                229.704
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 65,
+              "window_um": [
+                10.952,
+                20.952
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 69,
+              "window_um": [
+                246.544,
+                256.544
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 68,
+              "window_um": [
+                177.552,
+                187.552
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 65,
+              "window_um": [
+                11.048,
+                21.048
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 69,
+              "window_um": [
+                62.864,
+                72.864
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 63,
+              "window_um": [
+                6.536,
+                16.536
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 68,
+              "window_um": [
+                140.816,
+                150.816
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                425.808,
+                435.808
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 63,
+              "window_um": [
+                8.024,
+                18.024
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 68,
+              "window_um": [
+                149.52,
+                159.52
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                392.72,
+                402.72
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 69,
+          "meets_fill20_aspect2": false,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 6.3,
+          "outline_um": [
+            319.68,
+            630.72
+          ],
+          "aspect": 1.972973,
+          "core_inset_um": 4.32,
+          "core_area_um2": 193491.76320000002,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32911.8714,
+          "std_fill_free": 0.20214962320043542,
+          "data_ends_um": {
+            "N": 280.778159,
+            "S": 94.951365,
+            "E": 566.601905,
+            "W": 619.827556
+          },
+          "last_legal_um": {
+            "N": 313.2,
+            "S": 313.2,
+            "W": 624.24,
+            "E": 624.24
+          },
+          "scalar_edge_allocated": 56,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 64,
+              "window_um": [
+                219.512,
+                229.512
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 66,
+              "window_um": [
+                11.0,
+                21.0
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 69,
+              "window_um": [
+                231.632,
+                241.632
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 66,
+              "window_um": [
+                56.976,
+                66.976
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 65,
+              "window_um": [
+                10.952,
+                20.952
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 69,
+              "window_um": [
+                13.456,
+                23.456
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 64,
+              "window_um": [
+                180.92,
+                190.92
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 69,
+              "window_um": [
+                17.552,
+                27.552
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                420.048,
+                430.048
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 64,
+              "window_um": [
+                50.264,
+                60.264
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 69,
+              "window_um": [
+                197.072,
+                207.072
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                387.28,
+                397.28
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 69,
+          "meets_fill20_aspect2": true,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 6.5,
+          "outline_um": [
+            311.04,
+            613.44
+          ],
+          "aspect": 1.972222,
+          "core_inset_um": 4.32,
+          "core_area_um2": 182891.52000000005,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32911.8714,
+          "std_fill_free": 0.2162278451726759,
+          "data_ends_um": {
+            "N": 272.509538,
+            "S": 92.333538,
+            "E": 549.84,
+            "W": 601.502769
+          },
+          "last_legal_um": {
+            "N": 304.56,
+            "S": 304.56,
+            "W": 606.96,
+            "E": 606.96
+          },
+          "scalar_edge_allocated": 56,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 66,
+              "window_um": [
+                212.6,
+                222.6
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 68,
+              "window_um": [
+                11.048,
+                21.048
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 68,
+              "window_um": [
+                211.6,
+                221.6
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 71,
+              "window_um": [
+                22.096,
+                32.096
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 67,
+              "window_um": [
+                10.952,
+                20.952
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 71,
+              "window_um": [
+                13.392,
+                23.392
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 66,
+              "window_um": [
+                182.168,
+                192.168
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 71,
+              "window_um": [
+                11.216,
+                21.216
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                408.208,
+                418.208
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 66,
+              "window_um": [
+                49.304,
+                59.304
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 71,
+              "window_um": [
+                54.416,
+                64.416
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                376.4,
+                386.4
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 71,
+          "meets_fill20_aspect2": true,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 6.75,
+          "outline_um": [
+            302.4,
+            587.52
+          ],
+          "aspect": 1.942857,
+          "core_inset_um": 4.32,
+          "core_area_um2": 170051.78879999998,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32911.8714,
+          "std_fill_free": 0.23614832746376285,
+          "data_ends_um": {
+            "N": 263.262815,
+            "S": 89.279407,
+            "E": 530.284444,
+            "W": 580.123852
+          },
+          "last_legal_um": {
+            "N": 295.91999999999996,
+            "S": 295.91999999999996,
+            "W": 581.04,
+            "E": 581.04
+          },
+          "scalar_edge_allocated": 56,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 68,
+              "window_um": [
+                204.536,
+                214.536
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 70,
+              "window_um": [
+                170.792,
+                180.792
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 74,
+              "window_um": [
+                205.712,
+                215.712
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 74,
+              "window_um": [
+                13.456,
+                23.456
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 70,
+              "window_um": [
+                11.048,
+                21.048
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 74,
+              "window_um": [
+                19.728,
+                29.728
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 68,
+              "window_um": [
+                6.536,
+                16.536
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 74,
+              "window_um": [
+                11.28,
+                21.28
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                390.544,
+                400.544
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 68,
+              "window_um": [
+                8.024,
+                18.024
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 74,
+              "window_um": [
+                145.232,
+                155.232
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                360.016,
+                370.016
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 74,
+          "meets_fill20_aspect2": true,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 7.0,
+          "outline_um": [
+            302.4,
+            570.24
+          ],
+          "aspect": 1.885714,
+          "core_inset_um": 4.32,
+          "core_area_um2": 164975.616,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32911.8714,
+          "std_fill_free": 0.2450745328990778,
+          "data_ends_um": {
+            "N": 253.905143,
+            "S": 86.443429,
+            "E": 512.125714,
+            "W": 560.288
+          },
+          "last_legal_um": {
+            "N": 295.91999999999996,
+            "S": 295.91999999999996,
+            "W": 563.76,
+            "E": 563.76
+          },
+          "scalar_edge_allocated": 56,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 71,
+              "window_um": [
+                198.968,
+                208.968
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 73,
+              "window_um": [
+                11.0,
+                21.0
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 77,
+              "window_um": [
+                205.712,
+                215.712
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 73,
+              "window_um": [
+                157.776,
+                167.776
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 72,
+              "window_um": [
+                10.952,
+                20.952
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 77,
+              "window_um": [
+                13.456,
+                23.456
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 70,
+              "window_um": [
+                6.488,
+                16.488
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 77,
+              "window_um": [
+                19.92,
+                29.92
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                378.768,
+                388.768
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 71,
+              "window_um": [
+                48.44,
+                58.44
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 77,
+              "window_um": [
+                24.272,
+                34.272
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                349.136,
+                359.136
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 77,
+          "meets_fill20_aspect2": true,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        }
+      ]
+    },
+    "sle_stm_v2__cl55be2264": {
+      "census": {
+        "all_native_contacts": 18489,
+        "data_contacts": 18281,
+        "data_per_face": {
+          "N": 3384,
+          "S": 1069,
+          "E": 6593,
+          "W": 7235
+        },
+        "aux_contacts": 208,
+        "aux_edge_per_face_layer": {
+          "INTERIOR-M7": 76,
+          "N-M7": 12,
+          "E-M7": 31,
+          "S-M7": 8,
+          "INTERIOR-M5": 78,
+          "W-M7": 3
+        },
+        "native_clock_ports": 72,
+        "native_clock_names": [
+          "clk",
+          "clk_t1",
+          "clk_t2",
+          "clk_t3",
+          "clk_t4",
+          "clk_t5",
+          "clk_t6",
+          "clk_t7",
+          "clk_t8",
+          "clk_t9",
+          "clk_t10",
+          "clk_t11",
+          "clk_t12",
+          "clk_t13",
+          "clk_t14",
+          "clk_t15",
+          "clk_t16",
+          "clk_t17",
+          "clk_t18",
+          "clk_t19",
+          "clk_t20",
+          "clk_t21",
+          "clk_t22",
+          "clk_t23",
+          "clk_t24",
+          "clk_t25",
+          "clk_t26",
+          "clk_t27",
+          "clk_t28",
+          "clk_t29",
+          "clk_t30",
+          "clk_t31",
+          "clk_t32",
+          "clk_t33",
+          "clk_t34",
+          "clk_t35",
+          "clk_t36",
+          "clk_t37",
+          "clk_t38",
+          "clk_t39",
+          "clk_t40",
+          "clk_t41",
+          "clk_t42",
+          "clk_t43",
+          "clk_t44",
+          "clk_t45",
+          "clk_t46",
+          "clk_t47",
+          "clk_t48",
+          "clk_t49",
+          "clk_t50",
+          "clk_t51",
+          "clk_t52",
+          "clk_t53",
+          "clk_t54",
+          "clk_t55",
+          "clk_t56",
+          "clk_t57",
+          "clk_t58",
+          "clk_t59",
+          "clk_t60",
+          "clk_t61",
+          "clk_t62",
+          "clk_t63",
+          "clk_t64",
+          "clk_t65",
+          "clk_t66",
+          "clk_t67",
+          "clk_t68",
+          "clk_t69",
+          "clk_t70",
+          "clk_t71"
+        ],
+        "frozen_clock_metadata_records": 2,
+        "edge_clocks": 14,
+        "native_interior_aux_names": [
+          "arst_n",
+          "start_i",
+          "rst_o_0",
+          "start_o_0",
+          "strap_ca_k_cws1_i[0]",
+          "strap_ca_k_cws1_i[1]",
+          "strap_ca_k_cws1_i[2]",
+          "strap_ca_k_cws1_i[3]",
+          "strap_ca_k_cws1_i[4]",
+          "strap_ca_k_cws1_i[5]",
+          "strap_ca_k_flt_ctl_i[0]",
+          "strap_ca_k_flt_ctl_i[1]",
+          "strap_ca_k_flt_ctl_i[2]",
+          "strap_ca_k_flt_ctl_i[3]",
+          "strap_ca_k_flt_ctl_i[4]",
+          "strap_ca_k_flt_ctl_i[5]",
+          "strap_ca_k_l9_eo_l9_wi_i[0]",
+          "strap_ca_k_l9_eo_l9_wi_i[1]",
+          "strap_ca_k_l9_eo_l9_wi_i[2]",
+          "strap_ca_k_l9_eo_l9_wi_i[3]",
+          "strap_ca_k_l9_eo_l9_wi_i[4]",
+          "strap_ca_k_l9_eo_l9_wi_i[5]",
+          "strap_ca_k_x_ctl_fw_p1_i[0]",
+          "strap_ca_k_x_ctl_fw_p1_i[1]",
+          "strap_ca_k_x_ctl_fw_p1_i[2]",
+          "strap_ca_k_x_ctl_fw_p1_i[3]",
+          "strap_ca_k_x_ctl_fw_p1_i[4]",
+          "strap_ca_k_x_ctl_fw_p1_i[5]",
+          "strap_ca_k_x_ctl_i[0]",
+          "strap_ca_k_x_ctl_i[1]",
+          "strap_ca_k_x_ctl_i[2]",
+          "strap_ca_k_x_ctl_i[3]",
+          "strap_ca_k_x_ctl_i[4]",
+          "strap_ca_k_x_ctl_i[5]",
+          "strap_ca_k_x_fe_fw_i[0]",
+          "strap_ca_k_x_fe_fw_i[1]",
+          "strap_ca_k_x_fe_fw_i[2]",
+          "strap_ca_k_x_fe_fw_i[3]",
+          "strap_ca_k_x_fe_fw_i[4]",
+          "strap_ca_k_x_fe_fw_i[5]",
+          "strap_ca_k_x_fe_fw_p1_i[0]",
+          "strap_ca_k_x_fe_fw_p1_i[1]",
+          "strap_ca_k_x_fe_fw_p1_i[2]",
+          "strap_ca_k_x_fe_fw_p1_i[3]",
+          "strap_ca_k_x_fe_fw_p1_i[4]",
+          "strap_ca_k_x_fe_fw_p1_i[5]",
+          "strap_ca_k_x_fe_i[0]",
+          "strap_ca_k_x_fe_i[1]",
+          "strap_ca_k_x_fe_i[2]",
+          "strap_ca_k_x_fe_i[3]",
+          "strap_ca_k_x_fe_i[4]",
+          "strap_ca_k_x_fe_i[5]",
+          "strap_ca_k_x_fe_p1_i[0]",
+          "strap_ca_k_x_fe_p1_i[1]",
+          "strap_ca_k_x_fe_p1_i[2]",
+          "strap_ca_k_x_fe_p1_i[3]",
+          "strap_ca_k_x_fe_p1_i[4]",
+          "strap_ca_k_x_fe_p1_i[5]",
+          "strap_ca_k_x_sc_fw_i[0]",
+          "strap_ca_k_x_sc_fw_i[1]",
+          "strap_ca_k_x_sc_fw_i[2]",
+          "strap_ca_k_x_sc_fw_i[3]",
+          "strap_ca_k_x_sc_fw_i[4]",
+          "strap_ca_k_x_sc_fw_i[5]",
+          "strap_ca_k_x_su_c_ctl_i[0]",
+          "strap_ca_k_x_su_c_ctl_i[1]",
+          "strap_ca_k_x_su_c_ctl_i[2]",
+          "strap_ca_k_x_su_c_ctl_i[3]",
+          "strap_ca_k_x_su_c_ctl_i[4]",
+          "strap_ca_k_x_su_c_ctl_i[5]",
+          "strap_ca_k_x_su_l0_i[0]",
+          "strap_ca_k_x_su_l0_i[1]",
+          "strap_ca_k_x_su_l0_i[2]",
+          "strap_ca_k_x_su_l0_i[3]",
+          "strap_ca_k_x_su_l0_i[4]",
+          "strap_ca_k_x_su_l0_i[5]",
+          "strap_ca_k_x_su_l1_i[0]",
+          "strap_ca_k_x_su_l1_i[1]",
+          "strap_ca_k_x_su_l1_i[2]",
+          "strap_ca_k_x_su_l1_i[3]",
+          "strap_ca_k_x_su_l1_i[4]",
+          "strap_ca_k_x_su_l1_i[5]"
+        ],
+        "source": "exact old5346 native io.tcl; closure source-normalized-match to d90, geometry NOT adopted"
+      },
+      "frontier": [
+        {
+          "target_pins_per_um_per_layer": 5.95,
+          "outline_um": [
+            319.68,
+            639.36
+          ],
+          "aspect": 2.0,
+          "core_inset_um": 4.32,
+          "core_area_um2": 196179.14880000002,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32632.2999,
+          "std_fill_free": 0.19717777329339992,
+          "data_ends_um": {
+            "N": 296.777815,
+            "S": 99.956034,
+            "E": 575.709983,
+            "W": 631.907496
+          },
+          "last_legal_um": {
+            "N": 313.2,
+            "S": 313.2,
+            "W": 632.88,
+            "E": 632.88
+          },
+          "scalar_edge_allocated": 54,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 60,
+              "window_um": [
+                230.456,
+                240.456
+              ],
+              "over6_budget": false
+            },
+            "N-M5": {
+              "pins_per_10um": 62,
+              "window_um": [
+                11.048,
+                21.048
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 63,
+              "window_um": [
+                231.632,
+                241.632
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 65,
+              "window_um": [
+                13.392,
+                23.392
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 61,
+              "window_um": [
+                6.68,
+                16.68
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 65,
+              "window_um": [
+                13.392,
+                23.392
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 60,
+              "window_um": [
+                6.536,
+                16.536
+              ],
+              "over6_budget": false
+            },
+            "E-M6": {
+              "pins_per_10um": 65,
+              "window_um": [
+                54.48,
+                64.48
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                425.808,
+                435.808
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 60,
+              "window_um": [
+                8.024,
+                18.024
+              ],
+              "over6_budget": false
+            },
+            "W-M6": {
+              "pins_per_10um": 65,
+              "window_um": [
+                11.216,
+                21.216
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                392.72,
+                402.72
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 65,
+          "meets_fill20_aspect2": false,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 6.0,
+          "outline_um": [
+            319.68,
+            639.36
+          ],
+          "aspect": 2.0,
+          "core_inset_um": 4.32,
+          "core_area_um2": 196179.14880000002,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32632.2999,
+          "std_fill_free": 0.19717777329339992,
+          "data_ends_um": {
+            "N": 294.214667,
+            "S": 99.205333,
+            "E": 571.085333,
+            "W": 626.834667
+          },
+          "last_legal_um": {
+            "N": 313.2,
+            "S": 313.2,
+            "W": 632.88,
+            "E": 632.88
+          },
+          "scalar_edge_allocated": 54,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 61,
+              "window_um": [
+                229.832,
+                239.832
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 63,
+              "window_um": [
+                41.24,
+                51.24
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 66,
+              "window_um": [
+                244.56,
+                254.56
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 66,
+              "window_um": [
+                22.096,
+                32.096
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 62,
+              "window_um": [
+                67.16,
+                77.16
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 66,
+              "window_um": [
+                62.928,
+                72.928
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 61,
+              "window_um": [
+                190.424,
+                200.424
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 66,
+              "window_um": [
+                82.384,
+                92.384
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                425.808,
+                435.808
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 61,
+              "window_um": [
+                54.152,
+                64.152
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 66,
+              "window_um": [
+                24.272,
+                34.272
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                392.72,
+                402.72
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 66,
+          "meets_fill20_aspect2": false,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 6.1,
+          "outline_um": [
+            319.68,
+            630.72
+          ],
+          "aspect": 1.972973,
+          "core_inset_um": 4.32,
+          "core_area_um2": 193491.76320000002,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32632.2999,
+          "std_fill_free": 0.20043245334717144,
+          "data_ends_um": {
+            "N": 289.588984,
+            "S": 97.740852,
+            "E": 562.063475,
+            "W": 616.938492
+          },
+          "last_legal_um": {
+            "N": 313.2,
+            "S": 313.2,
+            "W": 624.24,
+            "E": 624.24
+          },
+          "scalar_edge_allocated": 54,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 62,
+              "window_um": [
+                225.08,
+                235.08
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 63,
+              "window_um": [
+                6.728,
+                16.728
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 67,
+              "window_um": [
+                235.92,
+                245.92
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 67,
+              "window_um": [
+                13.456,
+                23.456
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 63,
+              "window_um": [
+                10.904,
+                20.904
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 67,
+              "window_um": [
+                19.728,
+                29.728
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 62,
+              "window_um": [
+                186.824,
+                196.824
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 67,
+              "window_um": [
+                58.832,
+                68.832
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                420.048,
+                430.048
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 62,
+              "window_um": [
+                51.608,
+                61.608
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 67,
+              "window_um": [
+                15.632,
+                25.632
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                387.28,
+                397.28
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 67,
+          "meets_fill20_aspect2": true,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 6.25,
+          "outline_um": [
+            311.04,
+            613.44
+          ],
+          "aspect": 1.972222,
+          "core_inset_um": 4.32,
+          "core_area_um2": 182891.52000000005,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32632.2999,
+          "std_fill_free": 0.2143910871748705,
+          "data_ends_um": {
+            "N": 282.928,
+            "S": 95.632,
+            "E": 549.072,
+            "W": 602.688
+          },
+          "last_legal_um": {
+            "N": 304.56,
+            "S": 304.56,
+            "W": 606.96,
+            "E": 606.96
+          },
+          "scalar_edge_allocated": 54,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 63,
+              "window_um": [
+                219.704,
+                229.704
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 65,
+              "window_um": [
+                10.952,
+                20.952
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 69,
+              "window_um": [
+                246.544,
+                256.544
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 69,
+              "window_um": [
+                201.168,
+                211.168
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 65,
+              "window_um": [
+                11.048,
+                21.048
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 69,
+              "window_um": [
+                62.864,
+                72.864
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 63,
+              "window_um": [
+                6.536,
+                16.536
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 68,
+              "window_um": [
+                140.816,
+                150.816
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                408.208,
+                418.208
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 63,
+              "window_um": [
+                8.024,
+                18.024
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 68,
+              "window_um": [
+                149.52,
+                159.52
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                376.4,
+                386.4
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 69,
+          "meets_fill20_aspect2": true,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 6.3,
+          "outline_um": [
+            302.4,
+            604.8
+          ],
+          "aspect": 2.0,
+          "core_inset_um": 4.32,
+          "core_area_um2": 175127.96159999998,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32632.2999,
+          "std_fill_free": 0.22591402058060986,
+          "data_ends_um": {
+            "N": 280.778159,
+            "S": 94.951365,
+            "E": 544.878984,
+            "W": 598.104635
+          },
+          "last_legal_um": {
+            "N": 295.91999999999996,
+            "S": 295.91999999999996,
+            "W": 598.3199999999999,
+            "E": 598.3199999999999
+          },
+          "scalar_edge_allocated": 54,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 64,
+              "window_um": [
+                219.512,
+                229.512
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 66,
+              "window_um": [
+                11.0,
+                21.0
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 69,
+              "window_um": [
+                231.632,
+                241.632
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 66,
+              "window_um": [
+                56.976,
+                66.976
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 65,
+              "window_um": [
+                10.952,
+                20.952
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 69,
+              "window_um": [
+                13.456,
+                23.456
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 64,
+              "window_um": [
+                180.92,
+                190.92
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 69,
+              "window_um": [
+                17.552,
+                27.552
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                402.32,
+                412.32
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 64,
+              "window_um": [
+                50.264,
+                60.264
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 69,
+              "window_um": [
+                197.072,
+                207.072
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                370.96,
+                380.96
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 69,
+          "meets_fill20_aspect2": true,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 6.5,
+          "outline_um": [
+            302.4,
+            587.52
+          ],
+          "aspect": 1.942857,
+          "core_inset_um": 4.32,
+          "core_area_um2": 170051.78879999998,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32632.2999,
+          "std_fill_free": 0.23414235395562816,
+          "data_ends_um": {
+            "N": 272.509538,
+            "S": 92.333538,
+            "E": 528.752,
+            "W": 580.414769
+          },
+          "last_legal_um": {
+            "N": 295.91999999999996,
+            "S": 295.91999999999996,
+            "W": 581.04,
+            "E": 581.04
+          },
+          "scalar_edge_allocated": 54,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 66,
+              "window_um": [
+                212.6,
+                222.6
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 68,
+              "window_um": [
+                11.048,
+                21.048
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 68,
+              "window_um": [
+                211.6,
+                221.6
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 71,
+              "window_um": [
+                22.096,
+                32.096
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 67,
+              "window_um": [
+                10.952,
+                20.952
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 71,
+              "window_um": [
+                13.392,
+                23.392
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 66,
+              "window_um": [
+                182.168,
+                192.168
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 71,
+              "window_um": [
+                11.216,
+                21.216
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                390.544,
+                400.544
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 66,
+              "window_um": [
+                49.304,
+                59.304
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 71,
+              "window_um": [
+                54.416,
+                64.416
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                360.016,
+                370.016
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 71,
+          "meets_fill20_aspect2": true,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 6.75,
+          "outline_um": [
+            302.4,
+            570.24
+          ],
+          "aspect": 1.885714,
+          "core_inset_um": 4.32,
+          "core_area_um2": 164975.616,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32632.2999,
+          "std_fill_free": 0.242992735302652,
+          "data_ends_um": {
+            "N": 263.262815,
+            "S": 89.279407,
+            "E": 509.937185,
+            "W": 559.776593
+          },
+          "last_legal_um": {
+            "N": 295.91999999999996,
+            "S": 295.91999999999996,
+            "W": 563.76,
+            "E": 563.76
+          },
+          "scalar_edge_allocated": 54,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 68,
+              "window_um": [
+                204.536,
+                214.536
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 70,
+              "window_um": [
+                170.792,
+                180.792
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 74,
+              "window_um": [
+                205.712,
+                215.712
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 74,
+              "window_um": [
+                13.456,
+                23.456
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 70,
+              "window_um": [
+                11.048,
+                21.048
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 74,
+              "window_um": [
+                19.728,
+                29.728
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 68,
+              "window_um": [
+                6.536,
+                16.536
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 74,
+              "window_um": [
+                11.28,
+                21.28
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                378.768,
+                388.768
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 68,
+              "window_um": [
+                8.024,
+                18.024
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 74,
+              "window_um": [
+                145.232,
+                155.232
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                349.136,
+                359.136
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 74,
+          "meets_fill20_aspect2": true,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        },
+        {
+          "target_pins_per_um_per_layer": 7.0,
+          "outline_um": [
+            302.4,
+            552.96
+          ],
+          "aspect": 1.828571,
+          "core_inset_um": 4.32,
+          "core_area_um2": 159899.4432,
+          "macro_area_um2": 30682.301184,
+          "native_regular_std_area_um2": 32632.2999,
+          "std_fill_free": 0.25253847431449444,
+          "data_ends_um": {
+            "N": 253.905143,
+            "S": 86.443429,
+            "E": 492.466286,
+            "W": 540.628571
+          },
+          "last_legal_um": {
+            "N": 295.91999999999996,
+            "S": 295.91999999999996,
+            "W": 546.48,
+            "E": 546.48
+          },
+          "scalar_edge_allocated": 54,
+          "scalar_edge_failures": [],
+          "density": {
+            "N-M4": {
+              "pins_per_10um": 71,
+              "window_um": [
+                198.968,
+                208.968
+              ],
+              "over6_budget": true
+            },
+            "N-M5": {
+              "pins_per_10um": 73,
+              "window_um": [
+                11.0,
+                21.0
+              ],
+              "over6_budget": true
+            },
+            "N-M6": {
+              "pins_per_10um": 77,
+              "window_um": [
+                205.712,
+                215.712
+              ],
+              "over6_budget": true
+            },
+            "N-M7": {
+              "pins_per_10um": 73,
+              "window_um": [
+                157.776,
+                167.776
+              ],
+              "over6_budget": true
+            },
+            "S-M5": {
+              "pins_per_10um": 72,
+              "window_um": [
+                10.952,
+                20.952
+              ],
+              "over6_budget": true
+            },
+            "S-M7": {
+              "pins_per_10um": 77,
+              "window_um": [
+                13.456,
+                23.456
+              ],
+              "over6_budget": true
+            },
+            "E-M4": {
+              "pins_per_10um": 70,
+              "window_um": [
+                6.488,
+                16.488
+              ],
+              "over6_budget": true
+            },
+            "E-M6": {
+              "pins_per_10um": 77,
+              "window_um": [
+                19.92,
+                29.92
+              ],
+              "over6_budget": true
+            },
+            "E-M7": {
+              "pins_per_10um": 4,
+              "window_um": [
+                366.992,
+                376.992
+              ],
+              "over6_budget": false
+            },
+            "W-M4": {
+              "pins_per_10um": 71,
+              "window_um": [
+                48.44,
+                58.44
+              ],
+              "over6_budget": true
+            },
+            "W-M6": {
+              "pins_per_10um": 77,
+              "window_um": [
+                24.272,
+                34.272
+              ],
+              "over6_budget": true
+            },
+            "W-M7": {
+              "pins_per_10um": 2,
+              "window_um": [
+                338.256,
+                348.256
+              ],
+              "over6_budget": false
+            }
+          },
+          "max_10um_count": 77,
+          "meets_fill20_aspect2": true,
+          "PG_clear": true,
+          "not_qualified": [
+            "native scalar face/inset preserved only as planning contact allocation",
+            "interior auxiliary placement pending",
+            "clock homes/source/timing unchanged and not geometrically qualified",
+            "macro escape/consumer windows/nonFF regional allocation and parent peer context pending",
+            "actual placement/pin access/PG/DRC/GRT/timing not run"
+          ]
+        }
+      ]
+    }
+  },
+  "standard_PG_bands": {
+    "M5": [
+      4.32,
+      2.16,
+      0.264
+    ],
+    "M6": [
+      4.32,
+      2.16,
+      0.48
+    ],
+    "M7": [
+      8.64,
+      4.32,
+      0.48
+    ],
+    "M8": [
+      4.32,
+      0.0,
+      0.66
+    ],
+    "M9": [
+      4.32,
+      0.0,
+      0.66
+    ]
+  },
+  "edge_guards_um": {
+    "core_rim": 4.32,
+    "both_end_extra": 2.16,
+    "inter_bundle_gap": 0.96
+  },
+  "density_policy": "6/um/layer is WARN budget; exact sliding10um values disclosed, not a hard P&R prohibition",
+  "macro_layout": "2x2 relative spacing155.52x95.04 retained; candidate footprint277.368x157.992 plus4.32halo; schematic origin snapped4.32 and y+.012; consumer/escape still held"
+}
