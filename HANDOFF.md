@@ -2986,3 +2986,7 @@ CODEX 2026-11-01 20:48 PST: Eo/Wo receiver PORT_BIND FAIL diagnosed stale genera
 
 CODEX: 2026-11-01 20:49 PST currentmain39f754dda07: future-kitLECsnapshot staging+exactXSROMprefix+KVheadkitrecipe+reviews published; Intel2reclaimed136.6GBgeneratedcanaryDBs/free224GB. FourplausibleLECretriesactive; distinctresidualsdiagnosedheld. FuturelegacyCItimerdisabled, liveforeignCIpreserved. L2B10olderflowSIGNED+6110EQ; current051sameDBgatequeued beforepublication/count.
 CODEX: 2026-11-01 20:52 PST L2B10 mSIGNED+EQ6110 collected; required051gates queued, originalbuildcommitUNKNOWN retained. HeldL4/XRTbundles85db, sourcepacketfcbc; no extraB4route.
+
+CODEX: QC source child-remap/R8pin fixes c700cd088 pushed; strictbindqueued, coll_ucie3staticfailures corrected in held803.52width proposal, parent2peerrepack required; L1 TT−11.76/FF+5.85 actualFAIL passed sharedECO owner.
+
+CODEX: 2026-11-01 20:52 PST DS nativepricing5bdc9d371 READY;873currentboundcostjoinPASS,4tests,consumerstalecheck/defaultcurrentplan;rootmustpaircanonicaltable. No newRTLcycles/rate/G5.
