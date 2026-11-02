@@ -3069,3 +3069,5 @@ CODEX DS mixed provider: ecaa0a8a3 actual0/106/0 classhistory yields Qtags1/3 at
 CODEX: 11-02 01:53 S81 cores: VSW current051 SIGNED+fresh15804routedEQ, genuine TTFF/exactparent-legalLEF/301.90TT240.64FF contract packet fbc0b5c45 queued with S81_RELEASE_HOLD and NON-count common-tool measurement (no PROVENANCE); QBS LLfu/NNfu freshPG copies360/352pinsPASS, parentownsGRT; LLfd441membership rebound prepared for soleCTS pending nativebirthhook. VEs original admittedIntel1/no duplicate; BF actualcomputing; L4 twoFlexPAfails FLOW checkpointdiag; capresetdiagnosis superseded by actual data/SRAMwall corridor b83a6f2db.
 
 CODEX: 2026-11-02 01:54 PST PG-BIRTH READY8322bb073: ABI-pinned native callback closes5786design/1719FFholdbirthPGopens beforeconstructorreturn, allguardpairs/nativecontrolsPASS, defaultOFF2resizerstrictadmission. ROOTreview/ordinarycanarypending; CTS/GPLstillHOLD, no liveownjobs.
+
+CODEX: 2026-11-02 02:10 PST HBM NW_v2 DRC0 plus same-route TT/FF recovery2194pins/2460edges eachPASS, originalGraph139 andcollectorrsync11 diagnosed; READY287b4bcfd. Other3nativejobs/collectors preserved; current-source/native66START/G4 held.
