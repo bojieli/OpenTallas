@@ -1,0 +1,13 @@
+{
+  "image": "/srv/opentallas-scratch/claude/codex-kv-ahub-1131/place_review/Ggrt/place.png",
+  "viewed": true,
+  "verdict": "PASS-COND",
+  "scope": "one source-identical AHUB G do-grt repair-only diagnostic; no DRT or signoff release",
+  "findings": [
+    "Five retained hard macros leave crossing streets and south logic area; master outlines and all clock entry locations unchanged.",
+    "South control lookahead FF group remains adjacent to original age FFs, wide data buses stay local to existing macros.",
+    "Four ZH blocks and RECIP constrain eastern and central paths; retained failures remain timing/child-clock coverage issues, not cleared by this review.",
+    "Only ECO sizing protection changes: retain clock-connected cell masters while sizing, restore prior protection before data hold insertion; clock geometry comparison remains blocking."
+  ],
+  "next": "collect actual repair and clock geometry diff; no further route unless repair and existing functional/geometry gates pass"
+}
