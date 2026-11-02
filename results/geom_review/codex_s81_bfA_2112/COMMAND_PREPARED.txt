@@ -1,0 +1,1 @@
+ot-run --mem 32 --threads 8 --disk 20 --hosts intel2 --dir /srv/opentallas-scratch2/claude/codex-s81-bfA-2112 -- bash /srv/opentallas-scratch2/claude/codex-s81-bfA-2112/run_bf_eco.sh /srv/opentallas-scratch2/claude/codex-s81-bfA-2112/kit finish 32 8
