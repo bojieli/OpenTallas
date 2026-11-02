@@ -1,0 +1,144 @@
+{
+ "head": {
+  "plan": "source_plan_l48x",
+  "old_tools": "5f93b236e0",
+  "current_tools": "a0f8f0ad6",
+  "declared_typed_exports": 154,
+  "old_matched": 154,
+  "current_matched": 43,
+  "mismatched_typed_producers": 111,
+  "replicated_mismatched_uses": 1955,
+  "clock_landing_errors": 3910,
+  "old_native_reset_errors": 1,
+  "types": [
+   {
+    "type": "hd_tile",
+    "exports": 7,
+    "matched": 1
+   },
+   {
+    "type": "hd_turn_a",
+    "exports": 3,
+    "matched": 0
+   },
+   {
+    "type": "hd_spn",
+    "exports": 43,
+    "matched": 0
+   },
+   {
+    "type": "hd_spn_end",
+    "exports": 14,
+    "matched": 2
+   },
+   {
+    "type": "hd_serdes",
+    "exports": 6,
+    "matched": 6
+   },
+   {
+    "type": "hd_st_turn",
+    "exports": 8,
+    "matched": 8
+   },
+   {
+    "type": "hd_st_str",
+    "exports": 4,
+    "matched": 0
+   },
+   {
+    "type": "hd_st_n4",
+    "exports": 7,
+    "matched": 7
+   },
+   {
+    "type": "hd_st_m",
+    "exports": 4,
+    "matched": 0
+   },
+   {
+    "type": "hd_st_k5",
+    "exports": 7,
+    "matched": 7
+   },
+   {
+    "type": "hd_mesh",
+    "exports": 6,
+    "matched": 1
+   },
+   {
+    "type": "hd_lep0N",
+    "exports": 7,
+    "matched": 7
+   },
+   {
+    "type": "hd_ctl",
+    "exports": 5,
+    "matched": 0
+   },
+   {
+    "type": "hd_host",
+    "exports": 4,
+    "matched": 2
+   },
+   {
+    "type": "hd_st_n3_transit",
+    "exports": 5,
+    "matched": 0
+   },
+   {
+    "type": "hd_st_n3_turn",
+    "exports": 4,
+    "matched": 2
+   },
+   {
+    "type": "hd_spn_wshim_rx",
+    "exports": 1,
+    "matched": 0
+   },
+   {
+    "type": "hd_spn_wshim_tx",
+    "exports": 2,
+    "matched": 0
+   },
+   {
+    "type": "hd_spn_eshim_tx",
+    "exports": 2,
+    "matched": 0
+   },
+   {
+    "type": "hd_ctl_n",
+    "exports": 6,
+    "matched": 0
+   },
+   {
+    "type": "hd_ctl_e",
+    "exports": 2,
+    "matched": 0
+   },
+   {
+    "type": "hd_host_n",
+    "exports": 4,
+    "matched": 0
+   },
+   {
+    "type": "hd_mesh_e",
+    "exports": 3,
+    "matched": 0
+   }
+  ]
+ },
+ "hbm": {
+  "plan": "d44c",
+  "errors": 250,
+  "old_errors": 14,
+  "new_errors": 236,
+  "new_checks": {
+   "hops": 63,
+   "stations": 117,
+   "reach": 56
+  },
+  "merged_clock_pending_views": 128,
+  "cause_commit": "54687a1eed151f28f1d0550807f74636e1dc80ca"
+ }
+}
