@@ -1,0 +1,9 @@
+# Selected CTL source intake
+
+The exported selected SOURCE13 CTL is a real missing provider for the proposed L730 event. This additive intake uses its exact logic and the two actual dependencies in one frozen closure: `ot_hgi_sfu_vm_static_bridge` and `ot_rst_relay`. It has 34 ports / 11,810 signal bits, zero SRAMs, and 36,240 declared state bits (8,933 direct, 27,301 VM bridge, six reset relay). No arithmetic, port, queue, source state or pipeline edge changes.
+
+The existing 669.6 × 626.4 declared allocation is context for a GEN inventory only. The explicit 11,810 names are unique and inside the outline at a nominal 0.192 µm pitch; clock/reset are retained as separate actual native inputs. This does not qualify physical data flow, mapped fill, native core pins, balanced clock, PG or parent L730 reach. Synthesis must supply the missing actual mapped area and clock load before a physical proposal can be made.
+
+Scope: ordinary GEN and SYNTH, followed by official component equivalence on the actual mapped netlist. Four conditional formal reset edges are a nonrelease component profile, with no historical die64 receipt. Actual wrapper t22 delivery, the two native relays, both epoch/capture families and 66START remain separate phase obligations. The adapter refuses GEN if the reviewed explicit nonrelease component-reset selector is absent. No PLACE, CTS, GRT, STA, canonical source event or parent/default activation is authorized by this packet.
+
+Resource plan: first normal GEN→SYNTH at 12 GiB / two threads / 8 GiB scratch, based on the measured StoreA synthesis (147,354 cells / 2,914 FF / 20m57) and this finite 0.9 MB / three-module closure. Collect actual mapped cell/FF and synthesis peak before choosing equivalence memory. Do not blindly reuse StoreA's concurrent proof budget for the CTL's larger state inventory. There is no CTL producer currently running; token owner confirmed exclusive ownership before preparation.
