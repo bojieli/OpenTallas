@@ -1,0 +1,7 @@
+# AHUB genuine corrected CG: remaining data-DRV case
+
+Actual prior corrected9b CG route has DRC0/ANT0, original650-clock/4387-instance geometry PASS, TT+12.49/FF+5.42, and only3TT/2FF slew violations. The native post pin-audit KeyError on interior pins was corrected by46534a9a8 and the fresh post-only gate passes631/631 exact pins. Source, clocks and original selected child models remain unchanged; expanded child-flop ETM coverage is still NOT RUN and is never waived.
+
+The one proposed continuation uses existing public d0418b5a0 tools, m10 MM targeted repair_design only, explicitly empty setup margin and runtime NO_HOLD=1, MAX_PASS1. This retains the actual MM frame. No setup or hold repair, RTL, source latency, outline, pin or macro change. Genuine original G4_1CTS is retained. Actual source layout and worst path were personally viewed in results/geom_review/codex_ahub_drv_only_1102 before dispatch. Normal route/clock/PG/RCX/TT/FF/DRV/DRC and original-config post remain required.
+
+Own finite Intel1 /srv/opentallas-scratch2/claude/codex-ahub-drv-0158/{seed,source,driver_only};16GB/8T from same actual9.1GB DRT peak. Epyc2 new work is avoided because its real scratch is near the50GB floor. The initial prepare log returned1 solely because a grep expected empty assignment instead of valid shell-quoted empty; prepared variant was already correct, sourced-value checks pass, no CAD ran. Failed log retained; no kit reconstruction/repeated preparation.
