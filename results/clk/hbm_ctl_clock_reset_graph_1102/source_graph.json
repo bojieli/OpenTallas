@@ -228,5 +228,19 @@
     "Parent wrapper t22 delivery is separate from the internal m55 three-edge release",
     "Native mapped area/FF/load/clock decomposition/PG/pins unmeasured",
     "No source/default/provider/START activation or P&R authorization"
-  ]
+  ],
+  "downstream_reset_timing": {
+    "port": "u_core_u_rst__rst_n[0]",
+    "source_register": "m55.relay_q[0][1]",
+    "release_launch_event": "posedge clk[0] at relay edge3",
+    "release_output_arc": "mapped FF CLK-to-Q (or QN plus actual output inverter); measure TT+FF, no zero-delay alias",
+    "assertion_path": "delivered rst_n[0] -> actual relay asynchronous-clear pin -> output; native source is asynchronously asserting, parent synchronous delivery/reference must be demonstrated",
+    "receivers": "complete actual downstream reset ITerm inventory plus each receiver clock root/edge",
+    "checks": [
+      "Propagated source-output and downstream reset-arrival TT+FF",
+      "Recovery/removal on all native asynchronous-reset endpoints without waiver",
+      "Common edge/cycle reference for parent t22 delivery, generated reset and compiler command/epoch captures",
+      "Earliest functional source opportunity edge4 is not a physical safe-capture proof"
+    ]
+  }
 }
