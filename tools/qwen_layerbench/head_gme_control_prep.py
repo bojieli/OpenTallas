@@ -24,6 +24,10 @@ pw[992]=(0x43414c47<<32)|5200;pw[993]=(0x43414c42<<32)|(5<<24)|28
 pw[1016]=(0x43414c31<<32)|60;pw[1017]=(0x43414c53<<32)|(33<<18)|(37<<12)|1;pw[1018]=(0x43414c32<<32)|60
 pw[1022]=(0x58504654<<32)|5200;pw[1023]=(0x58504631<<32)|(37<<6)|6
 (P/'input/program.memh').write_text(''.join(f'{x:016x}\n'for x in pw))
+oldpw=list(pw);oldword=sum(oldpw[28*16+j]<<(64*j)for j in range(16));oldfields=ISA.decode(oldword);oldfields['me_tiles']=6;oldword=ISA.encode(**oldfields)
+for j in range(16):oldpw[28*16+j]=(oldword>>(64*j))&((1<<64)-1)
+(P/'input/program_old6.memh').write_text(''.join(f'{x:016x}\n'for x in oldpw))
+
 
 fields=[('nout',18),('tiles',18),('k',18),('wsrc',1),('wbase',24),('ts',24),('ks',24),('js',24),('xbase',24),('xks',24),('xjs',24),('xcs',24),('jsh',3),('split',4),('wcs',24),('round',1),('obase',24),('ots',24),('ojs',24),('mmode',1),('oen',1),('amax',1),('rmax',1),('mbase',24)]
 expected=[]

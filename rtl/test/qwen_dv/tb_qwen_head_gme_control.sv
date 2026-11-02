@@ -11,6 +11,7 @@ reg[63:0]image[0:1023];reg[379:0]expected[0:3];
 reg su_issue=0;reg[3:0]su_slice=0;reg[8:0]su_pc=0;wire[15:0]su_ob;wire su_fault;
 qfd_dv_typed_su_observer #(.ENABLE(1)) su_obs(.ck(ck),.rst_n(rst_n),.su_issue(su_issue),.cmd_user(2'd0),.su_pidx(su_pc),.cmd_slice(su_slice),.observation(su_ob),.fault(su_fault));
 always @(posedge ck)if(rst_n&&su_ob[15])x_oacc<=x_oacc+1;
+integer old6=0;
 integer native_fixture=1,busy=0,want_fault=0,seen=0,obs=0,edge_i=0,first=-1;
 wire[379:0]cmd=rom_cmd|native_cmd;
 generate if(MODE==0)begin:h
@@ -35,7 +36,8 @@ initial begin
  if(!$value$plusargs("NATIVE=%d",native_fixture))native_fixture=1;
  if(!$value$plusargs("BUSY=%d",busy))busy=0;
  if(!$value$plusargs("FAULT=%d",want_fault))want_fault=0;
- $readmemh("input/program.memh",image);$readmemh("input/cmd.memh",expected);
+ if(!$value$plusargs("OLD6=%d",old6))old6=0;
+ if(old6)$readmemh("input/program_old6.memh",image);else $readmemh("input/program.memh",image);$readmemh("input/cmd.memh",expected);
  repeat(8)@(negedge ck);rst_n=1;
  repeat(16)@(negedge ck);
  for(integer i=0;i<1024;i++)begin pw_v=1;pw_addr=i;pw_data=image[i];@(negedge ck);end
