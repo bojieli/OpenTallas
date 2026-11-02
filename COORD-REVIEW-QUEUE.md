@@ -55,3 +55,4 @@
   - b002, 0-it: 358,824 -> 19,816 (50-it at it26);
   - b010pv1, 0-it: 1,256,813 -> 672,330.
 Open: su31pv1 ~10M (separate).
+- 2026-11-01 18:14 PST PROGRESS [DIE-KV-60] per COORD 18:1x: KV source-follow is already on the main tip: autopilot activated 09ef23029c0d 17:21 and ad0610dd32cd 17:47 (both contain phytap2 6ae0a95d885 + adp 68872736346 [CHECKED git merge-base]); 051340895d95 preparing. AHUB G base LEC EQUIVALENT 6371/6371 (signoff NOT SIGNED, see above); ECO Gm10/Gm10g/Hm10/Hm10g in DRT --crit on intel2. q2ib_n/m waiting on intel1 load cap. ahpc r27/fmx GRT live on epyc2.
