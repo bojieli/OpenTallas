@@ -1,0 +1,349 @@
+{
+ "scope": "Read-only decomposition of saved R3; no new topology, placement or model variant",
+ "corners": {
+  "TT": {
+   "leaves": {
+    "ff_leaf23": {
+     "stages": [
+      {
+       "node": "hist_root",
+       "master": "BUFx24_ASAP7_75t_R",
+       "load_ff": 36.11480600000001,
+       "input_slew_ps": 0.0,
+       "cell_delay_ps": 26.887351074644098,
+       "fanout_net_total_wire_um": 269.89200000000005
+      },
+      {
+       "node": "hist_root_b1_rep1",
+       "master": "BUFx12_ASAP7_75t_R",
+       "load_ff": 10.963023000000003,
+       "input_slew_ps": 66.3600043696784,
+       "cell_delay_ps": 42.16122798914635,
+       "fanout_net_total_wire_um": 77.16600000000003
+      },
+      {
+       "node": "hist_root_b1",
+       "master": "BUFx24_ASAP7_75t_R",
+       "load_ff": 32.476605,
+       "input_slew_ps": 22.005632376369693,
+       "cell_delay_ps": 33.72006014630839,
+       "fanout_net_total_wire_um": 205.09200000000004
+      },
+      {
+       "node": "hist_root_b1_b1_rep1",
+       "master": "BUFx2_ASAP7_75t_R",
+       "load_ff": 2.6376675000000036,
+       "input_slew_ps": 24.705428224266882,
+       "cell_delay_ps": 26.25419890928074,
+       "fanout_net_total_wire_um": 2.8350000000000364
+      },
+      {
+       "node": "hist_root_b1_b1",
+       "master": "BUFx24_ASAP7_75t_R",
+       "load_ff": 28.57327400000001,
+       "input_slew_ps": 15.9806574578351,
+       "cell_delay_ps": 30.717084121201516,
+       "fanout_net_total_wire_um": 191.2680000000001
+      },
+      {
+       "node": "hist_root_b1_b1_b1",
+       "master": "BUFx12_ASAP7_75t_R",
+       "load_ff": 8.0828395,
+       "input_slew_ps": 22.713642333092405,
+       "cell_delay_ps": 28.686544181628445,
+       "fanout_net_total_wire_um": 43.983000000000004
+      },
+      {
+       "node": "ff_leaf23",
+       "master": "BUFx2_ASAP7_75t_R",
+       "load_ff": 2.34978,
+       "input_slew_ps": 13.957962513782137,
+       "cell_delay_ps": 22.31330599721541,
+       "fanout_net_total_wire_um": 0.0
+      }
+     ],
+     "cell_sum_ps": 210.73977241942492,
+     "regional_subtree_mean_ps": 62.16532800000001,
+     "feed_wire_plus_open_net_elmore_ps": 35.53092673229205,
+     "total_mean_ps": 308.436027151717,
+     "FF_sinks": 249,
+     "region": [
+      198.925,
+      264.735,
+      213.613,
+      287.145
+     ],
+     "regional_root": [
+      206.14499999999998,
+      276.615
+     ],
+     "wanted_root": [
+      206.269,
+      275.94
+     ],
+     "root_allocation_jog_um": 1.226,
+     "regional_radius_um": 19.348000000000013
+    },
+    "ff_leaf8": {
+     "stages": [
+      {
+       "node": "hist_root",
+       "master": "BUFx24_ASAP7_75t_R",
+       "load_ff": 36.11480600000001,
+       "input_slew_ps": 0.0,
+       "cell_delay_ps": 26.887351074644098,
+       "fanout_net_total_wire_um": 269.89200000000005
+      },
+      {
+       "node": "hist_root_b0_rep1",
+       "master": "BUFx16f_ASAP7_75t_R",
+       "load_ff": 12.423831000000003,
+       "input_slew_ps": 75.06848290039149,
+       "cell_delay_ps": 37.260716227375546,
+       "fanout_net_total_wire_um": 107.62200000000001
+      },
+      {
+       "node": "hist_root_b0",
+       "master": "BUFx24_ASAP7_75t_R",
+       "load_ff": 38.18556400000001,
+       "input_slew_ps": 27.14593903718474,
+       "cell_delay_ps": 36.797186242108175,
+       "fanout_net_total_wire_um": 261.846
+      },
+      {
+       "node": "hist_root_b0_b0_rep1",
+       "master": "BUFx16f_ASAP7_75t_R",
+       "load_ff": 17.485764,
+       "input_slew_ps": 44.07727712798713,
+       "cell_delay_ps": 32.84384736330542,
+       "fanout_net_total_wire_um": 123.76800000000001
+      },
+      {
+       "node": "hist_root_b0_b0",
+       "master": "BUFx24_ASAP7_75t_R",
+       "load_ff": 33.1976485,
+       "input_slew_ps": 35.67822108824911,
+       "cell_delay_ps": 38.35307792210443,
+       "fanout_net_total_wire_um": 250.695
+      },
+      {
+       "node": "hist_root_b0_b0_b2",
+       "master": "BUFx4_ASAP7_75t_R",
+       "load_ff": 5.545214999999998,
+       "input_slew_ps": 56.65822656452601,
+       "cell_delay_ps": 43.39810202326828,
+       "fanout_net_total_wire_um": 30.99599999999998
+      },
+      {
+       "node": "ff_leaf8",
+       "master": "BUFx2_ASAP7_75t_R",
+       "load_ff": 2.34978,
+       "input_slew_ps": 20.54612875356199,
+       "cell_delay_ps": 24.44705100549903,
+       "fanout_net_total_wire_um": 0.0
+      }
+     ],
+     "cell_sum_ps": 239.98733185830497,
+     "regional_subtree_mean_ps": 99.600288,
+     "feed_wire_plus_open_net_elmore_ps": 94.95525537549892,
+     "total_mean_ps": 434.5428752338039,
+     "FF_sinks": 31,
+     "region": [
+      35.089,
+      216.945,
+      121.057,
+      226.395
+     ],
+     "regional_root": [
+      77.409,
+      191.835
+     ],
+     "wanted_root": [
+      78.07300000000001,
+      221.67000000000002
+     ],
+     "root_allocation_jog_um": 29.846,
+     "regional_radius_um": 78.208
+    }
+   },
+   "slow_minus_fast_ps": {
+    "cell_sum_ps": 29.247559438880046,
+    "regional_subtree_mean_ps": 37.43496,
+    "feed_wire_plus_open_net_elmore_ps": 59.42432864320687,
+    "total_mean_ps": 126.10684808208691
+   }
+  },
+  "FF": {
+   "leaves": {
+    "ff_leaf23": {
+     "stages": [
+      {
+       "node": "hist_root",
+       "master": "BUFx24_ASAP7_75t_R",
+       "load_ff": 36.884546,
+       "input_slew_ps": 0.0,
+       "cell_delay_ps": 20.829225508498265,
+       "fanout_net_total_wire_um": 269.89200000000005
+      },
+      {
+       "node": "hist_root_b1_rep1",
+       "master": "BUFx12_ASAP7_75t_R",
+       "load_ff": 11.220593000000003,
+       "input_slew_ps": 65.87546851564372,
+       "cell_delay_ps": 32.41801086706468,
+       "fanout_net_total_wire_um": 77.16600000000003
+      },
+      {
+       "node": "hist_root_b1",
+       "master": "BUFx24_ASAP7_75t_R",
+       "load_ff": 33.286138,
+       "input_slew_ps": 19.29075774056727,
+       "cell_delay_ps": 26.03493933103543,
+       "fanout_net_total_wire_um": 205.09200000000004
+      },
+      {
+       "node": "hist_root_b1_b1_rep1",
+       "master": "BUFx2_ASAP7_75t_R",
+       "load_ff": 2.8952375000000035,
+       "input_slew_ps": 19.87144827566685,
+       "cell_delay_ps": 19.38691278899646,
+       "fanout_net_total_wire_um": 2.8350000000000364
+      },
+      {
+       "node": "hist_root_b1_b1",
+       "master": "BUFx24_ASAP7_75t_R",
+       "load_ff": 29.343014000000004,
+       "input_slew_ps": 12.001313300699152,
+       "cell_delay_ps": 23.14547693998385,
+       "fanout_net_total_wire_um": 191.2680000000001
+      },
+      {
+       "node": "hist_root_b1_b1_b1",
+       "master": "BUFx12_ASAP7_75t_R",
+       "load_ff": 8.423955500000002,
+       "input_slew_ps": 18.29483394617217,
+       "cell_delay_ps": 21.433715385622957,
+       "fanout_net_total_wire_um": 43.983000000000004
+      },
+      {
+       "node": "ff_leaf23",
+       "master": "BUFx2_ASAP7_75t_R",
+       "load_ff": 2.60735,
+       "input_slew_ps": 10.57602184840012,
+       "cell_delay_ps": 16.401847984602018,
+       "fanout_net_total_wire_um": 0.0
+      }
+     ],
+     "cell_sum_ps": 159.6501288058037,
+     "regional_subtree_mean_ps": 48.142264000000004,
+     "feed_wire_plus_open_net_elmore_ps": 36.574338219061396,
+     "total_mean_ps": 244.3667310248651,
+     "FF_sinks": 249,
+     "region": [
+      198.925,
+      264.735,
+      213.613,
+      287.145
+     ],
+     "regional_root": [
+      206.14499999999998,
+      276.615
+     ],
+     "wanted_root": [
+      206.269,
+      275.94
+     ],
+     "root_allocation_jog_um": 1.226,
+     "regional_radius_um": 19.348000000000013
+    },
+    "ff_leaf8": {
+     "stages": [
+      {
+       "node": "hist_root",
+       "master": "BUFx24_ASAP7_75t_R",
+       "load_ff": 36.884546,
+       "input_slew_ps": 0.0,
+       "cell_delay_ps": 20.829225508498265,
+       "fanout_net_total_wire_um": 269.89200000000005
+      },
+      {
+       "node": "hist_root_b0_rep1",
+       "master": "BUFx16f_ASAP7_75t_R",
+       "load_ff": 12.681401000000003,
+       "input_slew_ps": 75.24393726249251,
+       "cell_delay_ps": 28.329821646906982,
+       "fanout_net_total_wire_um": 107.62200000000001
+      },
+      {
+       "node": "hist_root_b0",
+       "master": "BUFx24_ASAP7_75t_R",
+       "load_ff": 38.86923900000001,
+       "input_slew_ps": 26.003347192782773,
+       "cell_delay_ps": 28.776077743482016,
+       "fanout_net_total_wire_um": 261.846
+      },
+      {
+       "node": "hist_root_b0_b0_rep1",
+       "master": "BUFx16f_ASAP7_75t_R",
+       "load_ff": 17.743334,
+       "input_slew_ps": 41.60081685327118,
+       "cell_delay_ps": 25.052672420360043,
+       "fanout_net_total_wire_um": 123.76800000000001
+      },
+      {
+       "node": "hist_root_b0_b0",
+       "master": "BUFx24_ASAP7_75t_R",
+       "load_ff": 34.0096135,
+       "input_slew_ps": 34.657051862258925,
+       "cell_delay_ps": 30.007952680097393,
+       "fanout_net_total_wire_um": 250.695
+      },
+      {
+       "node": "hist_root_b0_b0_b2",
+       "master": "BUFx4_ASAP7_75t_R",
+       "load_ff": 5.673503999999998,
+       "input_slew_ps": 55.40828338653478,
+       "cell_delay_ps": 33.142804379129245,
+       "fanout_net_total_wire_um": 30.99599999999998
+      },
+      {
+       "node": "ff_leaf8",
+       "master": "BUFx2_ASAP7_75t_R",
+       "load_ff": 2.60735,
+       "input_slew_ps": 15.343487515257769,
+       "cell_delay_ps": 17.699088026338,
+       "fanout_net_total_wire_um": 0.0
+      }
+     ],
+     "cell_sum_ps": 183.83764240481193,
+     "regional_subtree_mean_ps": 78.631744,
+     "feed_wire_plus_open_net_elmore_ps": 97.32482484234237,
+     "total_mean_ps": 359.7942112471543,
+     "FF_sinks": 31,
+     "region": [
+      35.089,
+      216.945,
+      121.057,
+      226.395
+     ],
+     "regional_root": [
+      77.409,
+      191.835
+     ],
+     "wanted_root": [
+      78.07300000000001,
+      221.67000000000002
+     ],
+     "root_allocation_jog_um": 29.846,
+     "regional_radius_um": 78.208
+    }
+   },
+   "slow_minus_fast_ps": {
+    "cell_sum_ps": 24.18751359900824,
+    "regional_subtree_mean_ps": 30.489479999999993,
+    "feed_wire_plus_open_net_elmore_ps": 60.75048662328097,
+    "total_mean_ps": 115.4274802222892
+   }
+  }
+ }
+}
