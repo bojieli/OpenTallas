@@ -1,0 +1,556 @@
+{
+  "status": "SOURCE_ONLY_SELECTED_NEIGHBOR_WORD_AGE_CONTRACT",
+  "readset": {
+    "selected_bound_top": {
+      "path": "/home/ubuntu/coord/tmp/codex-native-head-consumer-prep/qwen_compute_bound_top.sv",
+      "sha256": "b7db6bb8157f4e55f274b2e1d11482428d25d40803ff5bf5cb4bd7758c112295"
+    },
+    "wrappers": {
+      "slw_st_a_v2__clf4365a62.sv": "e971c9f31f2d9a97900d46edfd8a4309bb7f1381b811f5faabbd1c396cc314ec",
+      "qfd_qc_slw_fw.sv": "d0eff55853dc5d338d7ba1f55e3421ac7ba73d0d501d6a4b009818e6f3fe852e",
+      "qfd_qc_slw_stm.sv": "37b7543900b8a3e22cc35eb0a581ce4918559934ad3e77d64f9781f5984d6598",
+      "qfd_qc_slw_sc__slw_sc_v3.sv": "9e9c904887039aa30c8672844fe599b14f655f1e6fe51838db1a552cf957810e",
+      "slw_fe_v2__clf110fab2.sv": "138a28158c46c204a0b0f3085875b4f4d110357cf55d1b2bb7c979ad7ea521da",
+      "slw_fw_v1__clf51c11d8__clc7ddab13.sv": "6a734bf299d4b6d6ab10f6675be8eadd2042f49852aa5db447816f215895c879",
+      "slw_st_a_v1__clfc5867a6.sv": "40ac782d876123adf24e1031d0ea06af2d06fc71c5bc241804aa0419dbe24602"
+    },
+    "sidecar": {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/results/qc_die57_1031/bind/sidecar.json",
+      "sha256": "961cee1d2fd94403c02afd5f71ca41754d382f96a424d18c557149f38c6ae230"
+    },
+    "bus_groups": {
+      "path": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/bus_groups.json",
+      "sha256": "fcd15f03c54fd5c3dc0002fafa8b8433e01d7d90a4f0f23da3710aa889163576"
+    },
+    "native_sources": {
+      "rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+      "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv": "bad64d67691f2bca53804b884d5da41b4900e4801db53da3c6e352b1796395a9",
+      "rtl/common/ot_dp_clk_landing_ca.sv": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+      "rtl/common/ot_meso_fifo.sv": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2"
+    }
+  },
+  "correction": "Native L9 numerical word uses rd/re/rl/rr/rv split bundles. l9_eo/l9_wi carries cmd/hr and must not stand in for the numerical neighbor word.",
+  "ordinary_register_events_to_receiver_pin": [
+    {
+      "wrapper": "slw_st_a_v2__clf4365a62.sv",
+      "event": "native_nb_publication_to_wrapper_output",
+      "ordinary_registered_stages": 1,
+      "actual_source": [
+        {
+          "line": 1109,
+          "source": "    ot_dp_st #(.W(258)) u_bout_x_fe_o (.clk(clk), .rst_n(rst_n), .d({w_u_r3_nb_od[63:0], w_u_r2_nb_od[63:0], w_u_r1_nb_od[63:0], w_u_r0_nb_od[63:0], w_u_r0_nb_oc[1:0]}), .ea(rst_n), .q(x_fe_o[257:0]), .eq(x_fe_o[258]));"
+        }
+      ]
+    },
+    {
+      "wrapper": "qfd_qc_slw_fw.sv",
+      "event": "W5_fw_FT",
+      "ordinary_registered_stages": 2,
+      "actual_source": [
+        {
+          "line": 2161,
+          "source": "    ot_dp_st #(.W(258)) u_ft_x_st_a_fe_o_0 (.clk(clk), .rst_n(rst_n), .d(cland_x_st_a_fe_i[257:0]), .ea(cland_x_st_a_fe_i[258]), .q(x_st_a_fe_o_s0[257:0]), .eq(x_st_a_fe_o_s0[258]));"
+        },
+        {
+          "line": 2162,
+          "source": "    ot_dp_st #(.W(258)) u_ft_x_st_a_fe_o_1 (.clk(clk), .rst_n(rst_n), .d(x_st_a_fe_o_s0[257:0]), .ea(x_st_a_fe_o_s0[258]), .q(x_st_a_fe_o[257:0]), .eq(x_st_a_fe_o[258]));"
+        }
+      ]
+    },
+    {
+      "wrapper": "qfd_qc_slw_stm.sv",
+      "event": "W5_stm_FT",
+      "ordinary_registered_stages": 3,
+      "actual_source": [
+        {
+          "line": 1434,
+          "source": "    ot_dp_st #(.W(258)) u_ft_x_st_a_fe_o_0 (.clk(clk), .rst_n(rst_n), .d(x_st_a_fe_i[257:0]), .ea(x_st_a_fe_i[258]), .q(x_st_a_fe_o_s0[257:0]), .eq(x_st_a_fe_o_s0[258]));"
+        },
+        {
+          "line": 1435,
+          "source": "    ot_dp_st #(.W(258)) u_ft_x_st_a_fe_o_1 (.clk(clk), .rst_n(rst_n), .d(x_st_a_fe_o_s0[257:0]), .ea(x_st_a_fe_o_s0[258]), .q(x_st_a_fe_o_s1[257:0]), .eq(x_st_a_fe_o_s1[258]));"
+        },
+        {
+          "line": 1436,
+          "source": "    ot_dp_st #(.W(258)) u_ft_x_st_a_fe_o_2 (.clk(clk), .rst_n(rst_n), .d(x_st_a_fe_o_s1[257:0]), .ea(x_st_a_fe_o_s1[258]), .q(x_st_a_fe_o[257:0]), .eq(x_st_a_fe_o[258]));"
+        }
+      ]
+    },
+    {
+      "wrapper": "qfd_qc_slw_sc__slw_sc_v3.sv",
+      "event": "W5_sc_FT",
+      "ordinary_registered_stages": 3,
+      "actual_source": [
+        {
+          "line": 1132,
+          "source": "    ot_dp_st #(.W(258)) u_ft_x_st_a_fe_o_0 (.clk(clk), .rst_n(rst_n), .d(cland_x_st_a_fe_i[257:0]), .ea(cland_x_st_a_fe_i[258]), .q(x_st_a_fe_o_s0[257:0]), .eq(x_st_a_fe_o_s0[258]));"
+        },
+        {
+          "line": 1133,
+          "source": "    ot_dp_st #(.W(258)) u_ft_x_st_a_fe_o_1 (.clk(clk), .rst_n(rst_n), .d(x_st_a_fe_o_s0[257:0]), .ea(x_st_a_fe_o_s0[258]), .q(x_st_a_fe_o_s1[257:0]), .eq(x_st_a_fe_o_s1[258]));"
+        },
+        {
+          "line": 1134,
+          "source": "    ot_dp_st #(.W(258)) u_ft_x_st_a_fe_o_2 (.clk(clk), .rst_n(rst_n), .d(x_st_a_fe_o_s1[257:0]), .ea(x_st_a_fe_o_s1[258]), .q(x_st_a_fe_o[257:0]), .eq(x_st_a_fe_o[258]));"
+        }
+      ]
+    },
+    {
+      "wrapper": "slw_fe_v2__clf110fab2.sv",
+      "event": "W5_fe_input_boundary",
+      "ordinary_registered_stages": 1,
+      "actual_source": [
+        {
+          "line": 2408,
+          "source": "    ot_dp_st #(.W(258)) u_bin_x_st_a_i (.clk(clk), .rst_n(rst_n), .d(x_st_a_i[257:0]), .ea(x_st_a_i[258]), .q(x_st_a_i_q), .eq(x_st_a_i_eq));"
+        }
+      ]
+    },
+    {
+      "wrapper": "slw_fe_v2__clf110fab2.sv",
+      "event": "W5_fe_split_output_boundary",
+      "ordinary_registered_stages": 1,
+      "actual_source": [
+        {
+          "line": 2417,
+          "source": "    ot_dp_st #(.W(512)) u_bout_rd_eo (.clk(clk), .rst_n(rst_n), .d({w_core_l9_o[507:0], w_core_hr_o[452:449]}), .ea(rst_n), .q(rd_eo[511:0]), .eq(rd_eo[512]));"
+        },
+        {
+          "line": 2420,
+          "source": "    ot_dp_st #(.W(3)) u_bout_rr_eo (.clk(clk), .rst_n(rst_n), .d(w_core_l9_o[512:510]), .ea(rst_n), .q(rr_eo[2:0]), .eq(rr_eo[3]));"
+        },
+        {
+          "line": 2421,
+          "source": "    ot_dp_st #(.W(1)) u_bout_rv_eo (.clk(clk), .rst_n(rst_n), .d(w_core_l9_o[513]), .ea(rst_n), .q(rv_eo[0:0]), .eq(rv_eo[1]));"
+        }
+      ]
+    },
+    {
+      "wrapper": "slw_fw_v1__clf51c11d8__clc7ddab13.sv",
+      "event": "W4_fw_split_input_boundary",
+      "ordinary_registered_stages": 1,
+      "actual_source": [
+        {
+          "line": 1018,
+          "source": "    ot_dp_st #(.W(512)) u_bin_rd_wi (.clk(clk), .rst_n(rst_n), .d(cland_rd_wi[511:0]), .ea(cland_rd_wi[512]), .q(rd_wi_q), .eq(rd_wi_eq));"
+        },
+        {
+          "line": 1021,
+          "source": "    ot_dp_st #(.W(3)) u_bin_rr_wi (.clk(clk), .rst_n(rst_n), .d(cland_rr_wi[2:0]), .ea(cland_rr_wi[3]), .q(rr_wi_q), .eq(rr_wi_eq));"
+        },
+        {
+          "line": 1022,
+          "source": "    ot_dp_st #(.W(1)) u_bin_rv_wi (.clk(clk), .rst_n(rst_n), .d(cland_rv_wi[0:0]), .ea(cland_rv_wi[1]), .q(rv_wi_q), .eq(rv_wi_eq));"
+        }
+      ]
+    },
+    {
+      "wrapper": "slw_fw_v1__clf51c11d8__clc7ddab13.sv",
+      "event": "W4_fw_station_output_boundary",
+      "ordinary_registered_stages": 1,
+      "actual_source": [
+        {
+          "line": 1050,
+          "source": "    ot_dp_st #(.W(258)) u_bout_x_st_a_o (.clk(clk), .rst_n(rst_n), .d({w_core_l9_r3[63:0], w_core_l9_r2[63:0], w_core_l9_r1[63:0], w_core_l9_r0[63:0], w_core_l9_c[1:0]}), .ea(rst_n), .q(x_st_a_o[257:0]), .eq(x_st_a_o[258]));"
+        }
+      ]
+    },
+    {
+      "wrapper": "slw_st_a_v1__clfc5867a6.sv",
+      "event": "W4_st_a_input_boundary",
+      "ordinary_registered_stages": 1,
+      "actual_source": [
+        {
+          "line": 1407,
+          "source": "    ot_dp_st #(.W(258)) u_bin_x_fw_i (.clk(clk), .rst_n(rst_n), .d(cland_x_fw_i[257:0]), .ea(cland_x_fw_i[258]), .q(x_fw_i_q), .eq(x_fw_i_eq));"
+        }
+      ]
+    },
+    {
+      "wrapper": "slw_st_a_v1__clfc5867a6.sv",
+      "event": "W4_st_a_nb_pad",
+      "ordinary_registered_stages": 10,
+      "actual_source": [
+        {
+          "line": 1429,
+          "source": "    ot_dp_dly #(.W(1), .D(10)) u_pd10_x_fw_i_0 (.clk(clk), .d(x_fw_i_q[0]), .q(pd10_x_fw_i_0));  // landing pad: as-built relative timing"
+        },
+        {
+          "line": 1430,
+          "source": "    ot_dp_dly #(.W(1), .D(10)) u_pd10_x_fw_i_1 (.clk(clk), .d(x_fw_i_q[1]), .q(pd10_x_fw_i_1));  // landing pad: as-built relative timing"
+        },
+        {
+          "line": 1431,
+          "source": "    ot_dp_dly #(.W(1), .D(10)) u_pd10_x_fw_i_2 (.clk(clk), .d(x_fw_i_q[2]), .q(pd10_x_fw_i_2));  // landing pad: as-built relative timing"
+        }
+      ]
+    }
+  ],
+  "ordinary_register_stage_count_to_receiver_pin": 24,
+  "count_aligned_boundaries": [
+    {
+      "parent_instance": "sl_W5_fw",
+      "wrapper": "qfd_qc_slw_fw.sv",
+      "input_pin": "x_st_a_fe_i",
+      "literal_parent_clock": "clk_region_sl_W5_stm",
+      "strap_bits": "010100",
+      "K_signed_sidecar": 20,
+      "K_mod64": 20,
+      "sidecar": {
+        "K": 20,
+        "depth": 4,
+        "sched_lat": 3,
+        "tree": false
+      },
+      "actual_landing_source": "    ot_dp_clk_landing_cas #(.W(259), .DEPTH(4)) u_cland_x_st_a_fe_i (\n        .fclk(fclk_in_x_st_a_fe_i), .t_rst_n(cland_fstart_in_x_st_a_fe_i), .clk(clk), .rst_n(cland_start), .strap_k(strap_ca_k_x_st_a_fe_i), .d(x_st_a_fe_i), .q(cland_x_st_a_fe_i),\n        .ready(landing_ready_x_st_a_fe_i), .fault(landing_fault_x_st_a_fe_i));",
+      "nominal_added_cycles": 3
+    },
+    {
+      "parent_instance": "sl_W5_sc",
+      "wrapper": "qfd_qc_slw_sc__slw_sc_v3.sv",
+      "input_pin": "x_st_a_fe_i",
+      "literal_parent_clock": "clk_region_sl_W5_sc",
+      "strap_bits": "001010",
+      "K_signed_sidecar": 10,
+      "K_mod64": 10,
+      "sidecar": {
+        "K": 10,
+        "depth": 4,
+        "sched_lat": 3,
+        "tree": false
+      },
+      "actual_landing_source": "    ot_dp_clk_landing_cas #(.W(259), .DEPTH(4)) u_cland_x_st_a_fe_i (\n        .fclk(fclk_in_x_st_a_fe_i), .t_rst_n(cland_fstart_in_x_st_a_fe_i), .clk(clk), .rst_n(cland_start), .strap_k(strap_ca_k_x_st_a_fe_i), .d(x_st_a_fe_i), .q(cland_x_st_a_fe_i),\n        .ready(landing_ready_x_st_a_fe_i), .fault(landing_fault_x_st_a_fe_i));",
+      "nominal_added_cycles": 3
+    },
+    {
+      "parent_instance": "sl_W4_fw",
+      "wrapper": "slw_fw_v1__clf51c11d8__clc7ddab13.sv",
+      "input_pin": "rd_wi",
+      "literal_parent_clock": "clk_region_sl_W4_stm",
+      "strap_bits": "010010",
+      "K_signed_sidecar": 18,
+      "K_mod64": 18,
+      "sidecar": {
+        "K": 18,
+        "depth": 4,
+        "sched_lat": 3,
+        "tree": false
+      },
+      "actual_landing_source": "    ot_dp_clk_landing_cas #(.W(513), .DEPTH(4)) u_cland_rd_wi (\n        .fclk(fclk_in_rd_wi), .t_rst_n(cland_fstart_in_rd_wi), .clk(clk), .rst_n(cland_start), .strap_k(strap_ca_k_rd_wi), .d(rd_wi), .q(cland_rd_wi),\n        .ready(landing_ready_rd_wi), .fault(landing_fault_rd_wi));",
+      "nominal_added_cycles": 3
+    },
+    {
+      "parent_instance": "sl_W4_st_a",
+      "wrapper": "slw_st_a_v1__clfc5867a6.sv",
+      "input_pin": "x_fw_i",
+      "literal_parent_clock": "clk_region_sl_W4_st_a",
+      "strap_bits": "101111",
+      "K_signed_sidecar": -17,
+      "K_mod64": 47,
+      "sidecar": {
+        "K": -17,
+        "depth": 4,
+        "sched_lat": 2,
+        "tree": false
+      },
+      "actual_landing_source": "    ot_dp_clk_landing_cas #(.W(259), .DEPTH(4)) u_cland_x_fw_i (\n        .fclk(fclk_in_x_fw_i), .t_rst_n(cland_fstart_in_x_fw_i), .clk(clk), .rst_n(cland_start), .strap_k(strap_ca_k_x_fw_i), .d(x_fw_i), .q(cland_x_fw_i),\n        .ready(landing_ready_x_fw_i), .fault(landing_fault_x_fw_i));",
+      "nominal_added_cycles": 2
+    }
+  ],
+  "count_aligned_nominal_added_cycles": 11,
+  "nominal_schedule_contract": {
+    "native_sender_nb_pin_publication_to_fup_l9_c": {
+      "ordinary": 10,
+      "sidecar_CA_added": 6,
+      "total": 16
+    },
+    "fup_l9_o_to_fdn_l9_i": {
+      "ordinary": 2,
+      "sidecar_CA_added": 3,
+      "total": 5
+    },
+    "fdn_l9_r0_c_to_receiver_nb_p": {
+      "ordinary": 12,
+      "sidecar_CA_added": 2,
+      "total": 14
+    },
+    "to_receiver_nb_p": 35,
+    "receiver_native_PIN_IN": 1,
+    "to_receiver_internal_nb_d_c": 36,
+    "qualification": "Nominal frozen sidecar schedule only, conditional on actual region count-origin/provider contract. Not measured source age or physical phase/CTS qualification."
+  },
+  "bit_preserving_path_evidence": {
+    "W5_fe_input_fup": [
+      {
+        "line": 4076,
+        "source": "        .l9_c({x_st_a_i_q[1:0], x_st_b_i_q[255:0], x_st_a_i_q[257:2]}),"
+      }
+    ],
+    "split_outputs": [
+      {
+        "line": 2417,
+        "source": "    ot_dp_st #(.W(512)) u_bout_rd_eo (.clk(clk), .rst_n(rst_n), .d({w_core_l9_o[507:0], w_core_hr_o[452:449]}), .ea(rst_n), .q(rd_eo[511:0]), .eq(rd_eo[512]));"
+      },
+      {
+        "line": 2418,
+        "source": "    ot_dp_st #(.W(1)) u_bout_re_eo (.clk(clk), .rst_n(rst_n), .d(w_core_l9_o[508]), .ea(rst_n), .q(re_eo[0:0]), .eq(re_eo[1]));"
+      },
+      {
+        "line": 2419,
+        "source": "    ot_dp_st #(.W(1)) u_bout_rl_eo (.clk(clk), .rst_n(rst_n), .d(w_core_l9_o[509]), .ea(rst_n), .q(rl_eo[0:0]), .eq(rl_eo[1]));"
+      },
+      {
+        "line": 2420,
+        "source": "    ot_dp_st #(.W(3)) u_bout_rr_eo (.clk(clk), .rst_n(rst_n), .d(w_core_l9_o[512:510]), .ea(rst_n), .q(rr_eo[2:0]), .eq(rr_eo[3]));"
+      },
+      {
+        "line": 2421,
+        "source": "    ot_dp_st #(.W(1)) u_bout_rv_eo (.clk(clk), .rst_n(rst_n), .d(w_core_l9_o[513]), .ea(rst_n), .q(rv_eo[0:0]), .eq(rv_eo[1]));"
+      }
+    ],
+    "W4_fdn_reassembly": [
+      {
+        "line": 1087,
+        "source": "        .l9_i({rv_wi_q[0], rr_wi_q[2:0], rl_wi_q[0], re_wi_q[0], rd_wi_q[511:4]}),"
+      }
+    ],
+    "zero_stage_native_bodies": {
+      "rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv": {
+        "sha256": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+        "combinational_no_extra_stage": [
+          {
+            "line": 168,
+            "source": "    assign l9_o = l9_c;"
+          },
+          {
+            "line": 212,
+            "source": "    assign l9_o = l9_c;"
+          }
+        ]
+      },
+      "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv": {
+        "sha256": "bad64d67691f2bca53804b884d5da41b4900e4801db53da3c6e352b1796395a9",
+        "combinational_no_extra_stage": [
+          {
+            "line": 40,
+            "source": "    assign l9_c = l9_i[513:512];"
+          },
+          {
+            "line": 41,
+            "source": "    assign l9_r0 = {l9_i[63:0]};"
+          }
+        ]
+      }
+    },
+    "r0_word_route": "sender nb_od[63:0] -> x_fe_o[65:2] -> fup l9_c/o[63:0] -> rd_eo[67:4] -> rd_wi_q[67:4] -> fdn l9_i/r0[63:0] -> x_st_a_o[65:2] -> receiver nb_d_p[63:0]",
+    "control_route": "sender nb_oc[0] -> fup l9_o[512] -> rr_eo[2] -> rr_wi_q[2] -> fdn l9_c[0]; nb_oc[1] -> l9_o513 -> rv_eo0 -> rv_wi_q0 -> fdn l9_c1"
+  },
+  "bus_group_selected_members": [
+    {
+      "sink": "dvs_W4.u_core.u_sub.u_fdn",
+      "src_part": "sl_W5_fe",
+      "members": [
+        {
+          "sink_port": "l9_i",
+          "sink_bits": [
+            [
+              0,
+              507
+            ]
+          ],
+          "source": "dvs_W5.u_core.u_sub.u_fup.l9_o",
+          "source_bits": [
+            [
+              0,
+              507
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 5,
+          "landed_stages": 5,
+          "lane": "sl_W5_fe__rd_eo_rd_wi"
+        },
+        {
+          "sink_port": "l9_i",
+          "sink_bits": [
+            [
+              508,
+              508
+            ]
+          ],
+          "source": "dvs_W5.u_core.u_sub.u_fup.l9_o",
+          "source_bits": [
+            [
+              508,
+              508
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 5,
+          "landed_stages": 5,
+          "lane": "sl_W5_fe__re_eo_re_wi"
+        },
+        {
+          "sink_port": "l9_i",
+          "sink_bits": [
+            [
+              509,
+              509
+            ]
+          ],
+          "source": "dvs_W5.u_core.u_sub.u_fup.l9_o",
+          "source_bits": [
+            [
+              509,
+              509
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 5,
+          "landed_stages": 5,
+          "lane": "sl_W5_fe__rl_eo_rl_wi"
+        },
+        {
+          "sink_port": "l9_i",
+          "sink_bits": [
+            [
+              510,
+              512
+            ]
+          ],
+          "source": "dvs_W5.u_core.u_sub.u_fup.l9_o",
+          "source_bits": [
+            [
+              510,
+              512
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 5,
+          "landed_stages": 5,
+          "lane": "sl_W5_fe__rr_eo_rr_wi"
+        },
+        {
+          "sink_port": "l9_i",
+          "sink_bits": [
+            [
+              513,
+              513
+            ]
+          ],
+          "source": "dvs_W5.u_core.u_sub.u_fup.l9_o",
+          "source_bits": [
+            [
+              513,
+              513
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 5,
+          "landed_stages": 5,
+          "lane": "sl_W5_fe__rv_eo_rv_wi"
+        }
+      ]
+    },
+    {
+      "sink": "dvs_W4.u_core.u_sub.u_r0",
+      "src_part": "sl_W4_fw",
+      "members": [
+        {
+          "sink_port": "nb_c_p",
+          "sink_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "source": "dvs_W4.u_core.u_sub.u_fdn.l9_c",
+          "source_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 4,
+          "landed_stages": 14,
+          "lane": "sl_W4_fw__x_fw_st_a"
+        },
+        {
+          "sink_port": "nb_d_p",
+          "sink_bits": [
+            [
+              0,
+              63
+            ]
+          ],
+          "source": "dvs_W4.u_core.u_sub.u_fdn.l9_r0",
+          "source_bits": [
+            [
+              0,
+              63
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 4,
+          "landed_stages": 14,
+          "lane": "sl_W4_fw__x_fw_st_a"
+        }
+      ]
+    },
+    {
+      "sink": "dvs_W5.u_core.u_sub.u_fup",
+      "src_part": "sl_W5_st_a",
+      "members": [
+        {
+          "sink_port": "l9_c",
+          "sink_bits": [
+            [
+              512,
+              513
+            ]
+          ],
+          "source": "dvs_W5.u_core.u_sub.u_r0.nb_oc",
+          "source_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 16,
+          "landed_stages": 16,
+          "lane": "sl_W5_st_a__x_st_a_fe"
+        },
+        {
+          "sink_port": "l9_c",
+          "sink_bits": [
+            [
+              0,
+              63
+            ]
+          ],
+          "source": "dvs_W5.u_core.u_sub.u_r0.nb_od",
+          "source_bits": [
+            [
+              0,
+              63
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 16,
+          "landed_stages": 16,
+          "lane": "sl_W5_st_a__x_st_a_fe"
+        }
+      ]
+    }
+  ],
+  "count_origin_contract": {
+    "epoch": "Sender writer count n starts from t_rst_n forwarded with fclk; receiver m starts from local cland_start. All relevant CA macros DEPTH4, count width6, WFALL default0.",
+    "per_word_event_rule": "Let W(n) sample input d immediately before sender fclk rising edge n; let R(m) denote landing q immediately after receiver edge m. In the valid guarded epoch, q at R(m) is W(n) with n=(m-K) mod64. This is a count-label rule, not K elapsed cycles. Receiver following ot_dp_st captures prior q on its next local edge; that boundary register is already counted in ordinary stages.",
+    "no_double_count": "Do not add generic3 or K or a separate RDREG to the sidecar nominal ledger. CA q publication belongs to the count-aligned rule; the explicit succeeding boundary is listed once.",
+    "guards": "Lap/written/guard checks and ready/fault remain active. Source phase/count-origin qualification is required before converting this nominal ledger to production event times."
+  },
+  "scope": "No RTL execution, no packet mutation, no aliasing regional clocks, no global source phase proof.",
+  "generator_sha256": "aa295e10055dfe285a45b528e55e4a0a34579421cc09d33b9d3e4d09629f5e65"
+}
