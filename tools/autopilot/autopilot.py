@@ -1251,12 +1251,49 @@ def stage_admission_tools(source_chain=None, source_tools=None, root=None):
                 preflight=str(dest / "die_plan/kit_preflight.py"), sha256=version)
 
 
+NEAR_COUNT_FILE = "lanes/NEAR-COUNT.tsv"
+
+
+def parse_near_count(text):
+    """lanes/NEAR-COUNT.tsv (SIGNOFF-SPRINT-19; COORD 11-01 KIT-WAVE-16 (6)) -> {(die, name)} of cores/types one
+    step from the count: their builds get ot-run --priority die --crit on admission.  A header row names the columns
+    (die + item | type | core | module); without a header the first two columns are die, item.  '#' lines and blank
+    lines are skipped; die '*' matches every die."""
+    out = set()
+    cols = None
+    for ln in (text or "").splitlines():
+        if not ln.strip() or ln.lstrip().startswith("#"):
+            continue
+        f = [x.strip() for x in ln.split("\t")]
+        low = [x.lower() for x in f]
+        if cols is None and "die" in low and any(k in low for k in ("item", "type", "core", "module")):
+            name = next(k for k in ("item", "type", "core", "module") if k in low)
+            cols = (low.index("die"), low.index(name))
+            continue
+        di, ni = cols or (0, 1)
+        if len(f) > max(di, ni) and f[di] and f[ni]:
+            out.add((f[di], f[ni]))
+    return out
+
+
+def near_count_match(near, die, *names):
+    """True when (die or '*', name) is listed for any of the names (item, parent type, core module)"""
+    return any((d, n) in near for n in names if n for d in (die, "*"))
+
+
+def near_count_args(near, die, *names):
+    return ["--priority", "die", "--crit"] if near and near_count_match(near, die, *names) else []
+
+
 def submit(st, j, attempt_note=""):
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
     logf = AP_DIR / "jobs" / j["id"] / f"a{n}.log"
     kit, runner, mem, thr = j["path"], j["runner"], j["mem_gb"], j["threads"]
     argv = [OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit]
+    # NEAR-COUNT (COORD 11-01): a core/type listed in lanes/NEAR-COUNT.tsv is admitted as a die-priority crit job
+    argv += near_count_args(parse_near_count(read_coord(NEAR_COUNT_FILE)), j.get("die"), j.get("type"),
+                            j.get("module"), j.get("item"))
     if not runner.startswith(kit + "/"):
         argv += ["--stage", runner]
     if j["goal"] not in ("cts", "grt"):
