@@ -1,0 +1,3455 @@
+[
+  {
+    "type": "q_su31__physical_v1",
+    "slot": "L34r0_1",
+    "width": 1615,
+    "stations": 6,
+    "stations_added": 0,
+    "in_macro_points": 6464,
+    "moved": null,
+    "max_bit_hop_um": 405.0000000000001,
+    "joint_fallbacks": [
+      {
+        "bit": 940,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(614.176, 1236.5173333333335) within80.0um; prev=(614.176, 1554.2) next=(614.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 941,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(614.184, 1236.4853333333333) within80.0um; prev=(614.184, 1554.2) next=(614.184, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 942,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(614.432, 1236.528) within80.0um; prev=(614.432, 1554.2) next=(614.432, 918.856) reach=405.0"
+      },
+      {
+        "bit": 943,
+        "max_hop_um": 404.4930000000003,
+        "local_failure": "no legal reachable cell at(614.52, 1236.5173333333335) within80.0um; prev=(614.52, 1554.2) next=(614.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 944,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(614.752, 1236.5386666666668) within80.0um; prev=(614.752, 1554.2) next=(614.752, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 945,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(614.856, 1236.5173333333335) within80.0um; prev=(614.856, 1554.2) next=(614.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 946,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(615.072, 1236.5386666666668) within80.0um; prev=(615.072, 1554.2) next=(615.072, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 947,
+        "max_hop_um": 404.4830000000002,
+        "local_failure": "no legal reachable cell at(615.144, 1236.5253333333335) within80.0um; prev=(615.144, 1554.2) next=(615.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 948,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(615.328, 1236.5493333333334) within80.0um; prev=(615.328, 1554.2) next=(615.328, 918.8986666666667) reach=405.0"
+      },
+      {
+        "bit": 949,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(615.336, 1236.5493333333334) within80.0um; prev=(615.336, 1554.2) next=(615.336, 918.8986666666667) reach=405.0"
+      },
+      {
+        "bit": 950,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(615.648, 1236.5386666666668) within80.0um; prev=(615.648, 1554.2) next=(615.648, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 951,
+        "max_hop_um": 404.4989999999993,
+        "local_failure": "no legal reachable cell at(615.864, 1236.5173333333335) within80.0um; prev=(615.864, 1554.2) next=(615.864, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 952,
+        "max_hop_um": 404.46900000000016,
+        "local_failure": "no legal reachable cell at(615.968, 1236.496) within80.0um; prev=(615.968, 1554.2) next=(615.968, 918.792) reach=405.0"
+      },
+      {
+        "bit": 953,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(616.152, 1236.5253333333333) within80.0um; prev=(616.152, 1554.2) next=(616.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 954,
+        "max_hop_um": 404.48300000000006,
+        "local_failure": "no legal reachable cell at(616.224, 1236.464) within80.0um; prev=(616.224, 1554.2) next=(616.224, 918.728) reach=405.0"
+      },
+      {
+        "bit": 955,
+        "max_hop_um": 404.48900000000003,
+        "local_failure": "no legal reachable cell at(616.488, 1236.5253333333333) within80.0um; prev=(616.488, 1554.2) next=(616.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 956,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(616.544, 1236.5813333333333) within80.0um; prev=(616.544, 1554.2) next=(616.544, 918.9626666666667) reach=405.0"
+      },
+      {
+        "bit": 957,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(616.824, 1236.5253333333335) within80.0um; prev=(616.824, 1554.2) next=(616.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 958,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(616.864, 1236.5706666666667) within80.0um; prev=(616.864, 1554.2) next=(616.864, 918.9413333333333) reach=405.0"
+      },
+      {
+        "bit": 959,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(617.16, 1236.5253333333335) within80.0um; prev=(617.16, 1554.2) next=(617.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 960,
+        "max_hop_um": 404.4789999999999,
+        "local_failure": "no legal reachable cell at(617.12, 1236.5813333333333) within80.0um; prev=(617.12, 1554.2) next=(617.12, 918.9626666666667) reach=405.0"
+      },
+      {
+        "bit": 961,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(617.496, 1236.5253333333335) within80.0um; prev=(617.496, 1554.2) next=(617.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 962,
+        "max_hop_um": 404.4670000000002,
+        "local_failure": "no legal reachable cell at(618.4, 1236.432) within80.0um; prev=(618.4, 1554.2) next=(618.4, 918.6640000000001) reach=405.0"
+      },
+      {
+        "bit": 963,
+        "max_hop_um": 404.49500000000023,
+        "local_failure": "no legal reachable cell at(617.832, 1236.5253333333335) within80.0um; prev=(617.832, 1554.2) next=(617.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 964,
+        "max_hop_um": 404.4810000000002,
+        "local_failure": "no legal reachable cell at(618.656, 1236.4426666666668) within80.0um; prev=(618.656, 1554.2) next=(618.656, 918.6853333333335) reach=405.0"
+      },
+      {
+        "bit": 965,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(618.168, 1236.5253333333335) within80.0um; prev=(618.168, 1554.2) next=(618.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 966,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(618.976, 1236.4426666666668) within80.0um; prev=(618.976, 1554.2) next=(618.976, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 967,
+        "max_hop_um": 404.480999999999,
+        "local_failure": "no legal reachable cell at(618.504, 1236.4853333333333) within80.0um; prev=(618.504, 1554.2) next=(618.504, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 968,
+        "max_hop_um": 404.484999999999,
+        "local_failure": "no legal reachable cell at(619.296, 1236.4426666666668) within80.0um; prev=(619.296, 1554.2) next=(619.296, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 969,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(618.84, 1236.5173333333335) within80.0um; prev=(618.84, 1554.2) next=(618.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 970,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(619.552, 1236.4533333333334) within80.0um; prev=(619.552, 1554.2) next=(619.552, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 971,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(619.176, 1236.5173333333335) within80.0um; prev=(619.176, 1554.2) next=(619.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 972,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(619.872, 1236.464) within80.0um; prev=(619.872, 1554.2) next=(619.872, 918.7280000000001) reach=405.0"
+      },
+      {
+        "bit": 973,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(619.512, 1236.5173333333335) within80.0um; prev=(619.512, 1554.2) next=(619.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 974,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(620.192, 1236.464) within80.0um; prev=(620.192, 1554.2) next=(620.192, 918.728) reach=405.0"
+      },
+      {
+        "bit": 975,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(619.656, 1236.5493333333334) within80.0um; prev=(619.656, 1554.2) next=(619.656, 918.8986666666667) reach=405.0"
+      },
+      {
+        "bit": 976,
+        "max_hop_um": 404.4909999999998,
+        "local_failure": "no legal reachable cell at(620.448, 1236.4746666666667) within80.0um; prev=(620.448, 1554.2) next=(620.448, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 977,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(620.184, 1236.5173333333335) within80.0um; prev=(620.184, 1554.2) next=(620.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 978,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(620.768, 1236.4746666666667) within80.0um; prev=(620.768, 1554.2) next=(620.768, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 979,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(620.52, 1236.5173333333335) within80.0um; prev=(620.52, 1554.2) next=(620.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 980,
+        "max_hop_um": 404.47900000000027,
+        "local_failure": "no legal reachable cell at(621.088, 1236.4746666666667) within80.0um; prev=(621.088, 1554.2) next=(621.088, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 981,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(620.856, 1236.5173333333335) within80.0um; prev=(620.856, 1554.2) next=(620.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 982,
+        "max_hop_um": 404.49300000000017,
+        "local_failure": "no legal reachable cell at(621.344, 1236.496) within80.0um; prev=(621.344, 1554.2) next=(621.344, 918.792) reach=405.0"
+      },
+      {
+        "bit": 983,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(621.144, 1236.5253333333335) within80.0um; prev=(621.144, 1554.2) next=(621.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 984,
+        "max_hop_um": 404.4969999999988,
+        "local_failure": "no legal reachable cell at(621.664, 1236.496) within80.0um; prev=(621.664, 1554.2) next=(621.664, 918.792) reach=405.0"
+      },
+      {
+        "bit": 985,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(621.48, 1236.5253333333335) within80.0um; prev=(621.48, 1554.2) next=(621.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 986,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(621.984, 1236.496) within80.0um; prev=(621.984, 1554.2) next=(621.984, 918.792) reach=405.0"
+      },
+      {
+        "bit": 987,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(621.816, 1236.5253333333335) within80.0um; prev=(621.816, 1554.2) next=(621.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 988,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(622.24, 1236.5066666666667) within80.0um; prev=(622.24, 1554.2) next=(622.24, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 989,
+        "max_hop_um": 404.495,
+        "local_failure": "no legal reachable cell at(622.152, 1236.5253333333333) within80.0um; prev=(622.152, 1554.2) next=(622.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 990,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(622.56, 1236.5066666666667) within80.0um; prev=(622.56, 1554.2) next=(622.56, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 991,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(622.488, 1236.5253333333333) within80.0um; prev=(622.488, 1554.2) next=(622.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 992,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(622.816, 1236.528) within80.0um; prev=(622.816, 1554.2) next=(622.816, 918.856) reach=405.0"
+      },
+      {
+        "bit": 993,
+        "max_hop_um": 404.48099999999937,
+        "local_failure": "no legal reachable cell at(622.824, 1236.4853333333333) within80.0um; prev=(622.824, 1554.2) next=(622.824, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 994,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(623.136, 1236.528) within80.0um; prev=(623.136, 1554.2) next=(623.136, 918.856) reach=405.0"
+      },
+      {
+        "bit": 995,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(623.16, 1236.5253333333335) within80.0um; prev=(623.16, 1554.2) next=(623.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 996,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(623.456, 1236.528) within80.0um; prev=(623.456, 1554.2) next=(623.456, 918.856) reach=405.0"
+      },
+      {
+        "bit": 997,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(623.496, 1236.5253333333335) within80.0um; prev=(623.496, 1554.2) next=(623.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 998,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(623.712, 1236.5386666666668) within80.0um; prev=(623.712, 1554.2) next=(623.712, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 999,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(623.832, 1236.5253333333335) within80.0um; prev=(623.832, 1554.2) next=(623.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1000,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(624.032, 1236.5493333333334) within80.0um; prev=(624.032, 1554.2) next=(624.032, 918.8986666666667) reach=405.0"
+      },
+      {
+        "bit": 1001,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(623.976, 1236.5573333333334) within80.0um; prev=(623.976, 1554.2) next=(623.976, 918.9146666666667) reach=405.0"
+      },
+      {
+        "bit": 1002,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(624.352, 1236.528) within80.0um; prev=(624.352, 1554.2) next=(624.352, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1003,
+        "max_hop_um": 404.49899999999997,
+        "local_failure": "no legal reachable cell at(624.504, 1236.5173333333335) within80.0um; prev=(624.504, 1554.2) next=(624.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1004,
+        "max_hop_um": 404.4690000000003,
+        "local_failure": "no legal reachable cell at(624.608, 1236.496) within80.0um; prev=(624.608, 1554.2) next=(624.608, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1005,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(624.84, 1236.5173333333335) within80.0um; prev=(624.84, 1554.2) next=(624.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1006,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(624.928, 1236.4533333333334) within80.0um; prev=(624.928, 1554.2) next=(624.928, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1007,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(625.176, 1236.5173333333335) within80.0um; prev=(625.176, 1554.2) next=(625.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1008,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(625.248, 1236.5706666666667) within80.0um; prev=(625.248, 1554.2) next=(625.248, 918.9413333333333) reach=405.0"
+      },
+      {
+        "bit": 1009,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(625.512, 1236.5173333333335) within80.0um; prev=(625.512, 1554.2) next=(625.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1010,
+        "max_hop_um": 404.4649999999999,
+        "local_failure": "no legal reachable cell at(625.504, 1236.5813333333333) within80.0um; prev=(625.504, 1554.2) next=(625.504, 918.9626666666667) reach=405.0"
+      },
+      {
+        "bit": 1011,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(625.848, 1236.5173333333335) within80.0um; prev=(625.848, 1554.2) next=(625.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1012,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(625.824, 1236.5813333333333) within80.0um; prev=(625.824, 1554.2) next=(625.824, 918.9626666666667) reach=405.0"
+      },
+      {
+        "bit": 1013,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(626.184, 1236.5173333333335) within80.0um; prev=(626.184, 1554.2) next=(626.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1014,
+        "max_hop_um": 404.4670000000001,
+        "local_failure": "no legal reachable cell at(627.04, 1236.432) within80.0um; prev=(627.04, 1554.2) next=(627.04, 918.6640000000001) reach=405.0"
+      },
+      {
+        "bit": 1015,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(626.52, 1236.5173333333335) within80.0um; prev=(626.52, 1554.2) next=(626.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1016,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(627.36, 1236.432) within80.0um; prev=(627.36, 1554.2) next=(627.36, 918.664) reach=405.0"
+      },
+      {
+        "bit": 1017,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(626.856, 1236.5173333333335) within80.0um; prev=(626.856, 1554.2) next=(626.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1018,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(627.68, 1236.432) within80.0um; prev=(627.68, 1554.2) next=(627.68, 918.6640000000001) reach=405.0"
+      },
+      {
+        "bit": 1019,
+        "max_hop_um": 404.4809999999996,
+        "local_failure": "no legal reachable cell at(627.144, 1236.4853333333333) within80.0um; prev=(627.144, 1554.2) next=(627.144, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1020,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(627.936, 1236.4533333333334) within80.0um; prev=(627.936, 1554.2) next=(627.936, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1021,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(627.48, 1236.5253333333335) within80.0um; prev=(627.48, 1554.2) next=(627.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1022,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(628.256, 1236.4533333333334) within80.0um; prev=(628.256, 1554.2) next=(628.256, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1023,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(627.816, 1236.5253333333335) within80.0um; prev=(627.816, 1554.2) next=(627.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1024,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(628.576, 1236.4533333333334) within80.0um; prev=(628.576, 1554.2) next=(628.576, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1025,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(628.152, 1236.5253333333333) within80.0um; prev=(628.152, 1554.2) next=(628.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1026,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(628.832, 1236.464) within80.0um; prev=(628.832, 1554.2) next=(628.832, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1027,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(628.296, 1236.5573333333334) within80.0um; prev=(628.296, 1554.2) next=(628.296, 918.9146666666667) reach=405.0"
+      },
+      {
+        "bit": 1028,
+        "max_hop_um": 404.4910000000004,
+        "local_failure": "no legal reachable cell at(629.152, 1236.464) within80.0um; prev=(629.152, 1554.2) next=(629.152, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1029,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(628.824, 1236.5253333333335) within80.0um; prev=(628.824, 1554.2) next=(628.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1030,
+        "max_hop_um": 404.46500000000015,
+        "local_failure": "no legal reachable cell at(629.472, 1236.4746666666667) within80.0um; prev=(629.472, 1554.2) next=(629.472, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1031,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(629.16, 1236.5253333333335) within80.0um; prev=(629.16, 1554.2) next=(629.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1032,
+        "max_hop_um": 404.47900000000016,
+        "local_failure": "no legal reachable cell at(629.728, 1236.4853333333333) within80.0um; prev=(629.728, 1554.2) next=(629.728, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1033,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(629.496, 1236.5253333333335) within80.0um; prev=(629.496, 1554.2) next=(629.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1034,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(630.048, 1236.4853333333333) within80.0um; prev=(630.048, 1554.2) next=(630.048, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1035,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(629.832, 1236.5253333333335) within80.0um; prev=(629.832, 1554.2) next=(629.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1036,
+        "max_hop_um": 404.4969999999994,
+        "local_failure": "no legal reachable cell at(630.304, 1236.496) within80.0um; prev=(630.304, 1554.2) next=(630.304, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1037,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(630.168, 1236.5253333333335) within80.0um; prev=(630.168, 1554.2) next=(630.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1038,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(630.624, 1236.496) within80.0um; prev=(630.624, 1554.2) next=(630.624, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1039,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(630.504, 1236.5173333333335) within80.0um; prev=(630.504, 1554.2) next=(630.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1040,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(630.944, 1236.5066666666667) within80.0um; prev=(630.944, 1554.2) next=(630.944, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1041,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(630.84, 1236.5173333333335) within80.0um; prev=(630.84, 1554.2) next=(630.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1042,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(631.2, 1236.5173333333335) within80.0um; prev=(631.2, 1554.2) next=(631.2, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1043,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(631.176, 1236.5173333333335) within80.0um; prev=(631.176, 1554.2) next=(631.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1044,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(631.52, 1236.5173333333335) within80.0um; prev=(631.52, 1554.2) next=(631.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1045,
+        "max_hop_um": 404.48099999999994,
+        "local_failure": "no legal reachable cell at(631.512, 1236.4773333333333) within80.0um; prev=(631.512, 1554.2) next=(631.512, 918.7546666666667) reach=405.0"
+      },
+      {
+        "bit": 1046,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(631.84, 1236.5173333333335) within80.0um; prev=(631.84, 1554.2) next=(631.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1047,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(631.848, 1236.5173333333335) within80.0um; prev=(631.848, 1554.2) next=(631.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1048,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(632.096, 1236.5386666666668) within80.0um; prev=(632.096, 1554.2) next=(632.096, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 1049,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(632.184, 1236.5173333333335) within80.0um; prev=(632.184, 1554.2) next=(632.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1050,
+        "max_hop_um": 404.4910000000001,
+        "local_failure": "no legal reachable cell at(632.416, 1236.5386666666668) within80.0um; prev=(632.416, 1554.2) next=(632.416, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 1051,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(632.52, 1236.5173333333335) within80.0um; prev=(632.52, 1554.2) next=(632.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1052,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(632.736, 1236.5386666666668) within80.0um; prev=(632.736, 1554.2) next=(632.736, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 1053,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(632.616, 1236.5573333333334) within80.0um; prev=(632.616, 1554.2) next=(632.616, 918.9146666666667) reach=405.0"
+      },
+      {
+        "bit": 1054,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(632.992, 1236.528) within80.0um; prev=(632.992, 1554.2) next=(632.992, 918.8560000000001) reach=405.0"
+      },
+      {
+        "bit": 1055,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(633.144, 1236.5253333333335) within80.0um; prev=(633.144, 1554.2) next=(633.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1056,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(633.312, 1236.4853333333333) within80.0um; prev=(633.312, 1554.2) next=(633.312, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1057,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(633.48, 1236.5253333333335) within80.0um; prev=(633.48, 1554.2) next=(633.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1058,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(633.568, 1236.4533333333334) within80.0um; prev=(633.568, 1554.2) next=(633.568, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1059,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(633.816, 1236.5253333333335) within80.0um; prev=(633.816, 1554.2) next=(633.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1060,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(633.888, 1236.5706666666667) within80.0um; prev=(633.888, 1554.2) next=(633.888, 918.9413333333333) reach=405.0"
+      },
+      {
+        "bit": 1061,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(634.152, 1236.5253333333333) within80.0um; prev=(634.152, 1554.2) next=(634.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1062,
+        "max_hop_um": 404.4650000000005,
+        "local_failure": "no legal reachable cell at(634.208, 1236.5706666666667) within80.0um; prev=(634.208, 1554.2) next=(634.208, 918.9413333333333) reach=405.0"
+      },
+      {
+        "bit": 1063,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(634.488, 1236.5253333333333) within80.0um; prev=(634.488, 1554.2) next=(634.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1064,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(634.464, 1236.5813333333333) within80.0um; prev=(634.464, 1554.2) next=(634.464, 918.9626666666667) reach=405.0"
+      },
+      {
+        "bit": 1065,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(634.824, 1236.5253333333335) within80.0um; prev=(634.824, 1554.2) next=(634.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1066,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(635.744, 1236.4213333333335) within80.0um; prev=(635.744, 1554.2) next=(635.744, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1067,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(635.16, 1236.5253333333335) within80.0um; prev=(635.16, 1554.2) next=(635.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1068,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(636.064, 1236.432) within80.0um; prev=(636.064, 1554.2) next=(636.064, 918.6640000000001) reach=405.0"
+      },
+      {
+        "bit": 1069,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(635.496, 1236.5253333333335) within80.0um; prev=(635.496, 1554.2) next=(635.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1070,
+        "max_hop_um": 404.47099999999955,
+        "local_failure": "no legal reachable cell at(636.32, 1236.4426666666668) within80.0um; prev=(636.32, 1554.2) next=(636.32, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1071,
+        "max_hop_um": 404.49299999999994,
+        "local_failure": "no legal reachable cell at(635.832, 1236.5653333333335) within80.0um; prev=(635.832, 1554.2) next=(635.832, 918.9306666666668) reach=405.0"
+      },
+      {
+        "bit": 1072,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(636.64, 1236.4426666666668) within80.0um; prev=(636.64, 1554.2) next=(636.64, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1073,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(636.168, 1236.5253333333335) within80.0um; prev=(636.168, 1554.2) next=(636.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1074,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(636.96, 1236.4426666666668) within80.0um; prev=(636.96, 1554.2) next=(636.96, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1075,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(636.504, 1236.5173333333335) within80.0um; prev=(636.504, 1554.2) next=(636.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1076,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(637.216, 1236.4533333333334) within80.0um; prev=(637.216, 1554.2) next=(637.216, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1077,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(636.84, 1236.5173333333335) within80.0um; prev=(636.84, 1554.2) next=(636.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1078,
+        "max_hop_um": 404.47699999999855,
+        "local_failure": "no legal reachable cell at(637.536, 1236.464) within80.0um; prev=(637.536, 1554.2) next=(637.536, 918.7280000000001) reach=405.0"
+      },
+      {
+        "bit": 1079,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(636.936, 1236.5573333333334) within80.0um; prev=(636.936, 1554.2) next=(636.936, 918.9146666666667) reach=405.0"
+      },
+      {
+        "bit": 1080,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(637.792, 1236.4746666666667) within80.0um; prev=(637.792, 1554.2) next=(637.792, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1081,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(637.512, 1236.5173333333335) within80.0um; prev=(637.512, 1554.2) next=(637.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1082,
+        "max_hop_um": 404.46500000000015,
+        "local_failure": "no legal reachable cell at(638.112, 1236.4746666666667) within80.0um; prev=(638.112, 1554.2) next=(638.112, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1083,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(637.848, 1236.5173333333335) within80.0um; prev=(637.848, 1554.2) next=(637.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1084,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(638.432, 1236.4746666666667) within80.0um; prev=(638.432, 1554.2) next=(638.432, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1085,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(638.184, 1236.5173333333335) within80.0um; prev=(638.184, 1554.2) next=(638.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1086,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(638.688, 1236.4853333333333) within80.0um; prev=(638.688, 1554.2) next=(638.688, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1087,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(638.52, 1236.5173333333335) within80.0um; prev=(638.52, 1554.2) next=(638.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1088,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(639.008, 1236.496) within80.0um; prev=(639.008, 1554.2) next=(639.008, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1089,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(638.856, 1236.5173333333335) within80.0um; prev=(638.856, 1554.2) next=(638.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1090,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(639.328, 1236.496) within80.0um; prev=(639.328, 1554.2) next=(639.328, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1091,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(639.144, 1236.5253333333335) within80.0um; prev=(639.144, 1554.2) next=(639.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1092,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(639.584, 1236.5066666666667) within80.0um; prev=(639.584, 1554.2) next=(639.584, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1093,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(639.48, 1236.5253333333335) within80.0um; prev=(639.48, 1554.2) next=(639.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1094,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(639.904, 1236.5066666666667) within80.0um; prev=(639.904, 1554.2) next=(639.904, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1095,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(639.816, 1236.5253333333335) within80.0um; prev=(639.816, 1554.2) next=(639.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1096,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(640.224, 1236.5173333333335) within80.0um; prev=(640.224, 1554.2) next=(640.224, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1097,
+        "max_hop_um": 404.4930000000003,
+        "local_failure": "no legal reachable cell at(640.152, 1236.5653333333335) within80.0um; prev=(640.152, 1554.2) next=(640.152, 918.9306666666668) reach=405.0"
+      },
+      {
+        "bit": 1098,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(640.48, 1236.528) within80.0um; prev=(640.48, 1554.2) next=(640.48, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1099,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(640.488, 1236.5253333333333) within80.0um; prev=(640.488, 1554.2) next=(640.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1100,
+        "max_hop_um": 404.4770000000001,
+        "local_failure": "no legal reachable cell at(640.8, 1236.528) within80.0um; prev=(640.8, 1554.2) next=(640.8, 918.8560000000001) reach=405.0"
+      },
+      {
+        "bit": 1101,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(640.824, 1236.5253333333335) within80.0um; prev=(640.824, 1554.2) next=(640.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1102,
+        "max_hop_um": 404.491,
+        "local_failure": "no legal reachable cell at(641.056, 1236.5386666666668) within80.0um; prev=(641.056, 1554.2) next=(641.056, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 1103,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(641.16, 1236.5253333333335) within80.0um; prev=(641.16, 1554.2) next=(641.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1104,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(641.376, 1236.5386666666668) within80.0um; prev=(641.376, 1554.2) next=(641.376, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 1105,
+        "max_hop_um": 404.4689999999991,
+        "local_failure": "no legal reachable cell at(641.256, 1236.5653333333335) within80.0um; prev=(641.256, 1554.2) next=(641.256, 918.9306666666668) reach=405.0"
+      },
+      {
+        "bit": 1106,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(641.696, 1236.5173333333335) within80.0um; prev=(641.696, 1554.2) next=(641.696, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1107,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(641.832, 1236.5253333333335) within80.0um; prev=(641.832, 1554.2) next=(641.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1108,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(641.952, 1236.4853333333333) within80.0um; prev=(641.952, 1554.2) next=(641.952, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1109,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(642.168, 1236.5253333333335) within80.0um; prev=(642.168, 1554.2) next=(642.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1110,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(642.272, 1236.4426666666668) within80.0um; prev=(642.272, 1554.2) next=(642.272, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1111,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(642.504, 1236.5173333333335) within80.0um; prev=(642.504, 1554.2) next=(642.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1112,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(642.592, 1236.56) within80.0um; prev=(642.592, 1554.2) next=(642.592, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1113,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(642.84, 1236.5173333333335) within80.0um; prev=(642.84, 1554.2) next=(642.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1114,
+        "max_hop_um": 404.46499999999924,
+        "local_failure": "no legal reachable cell at(642.848, 1236.5706666666667) within80.0um; prev=(642.848, 1554.2) next=(642.848, 918.9413333333333) reach=405.0"
+      },
+      {
+        "bit": 1115,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(643.176, 1236.5173333333335) within80.0um; prev=(643.176, 1554.2) next=(643.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1116,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(643.168, 1236.5813333333333) within80.0um; prev=(643.168, 1554.2) next=(643.168, 918.9626666666667) reach=405.0"
+      },
+      {
+        "bit": 1117,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(643.512, 1236.5173333333335) within80.0um; prev=(643.512, 1554.2) next=(643.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1118,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(644.448, 1236.4213333333335) within80.0um; prev=(644.448, 1554.2) next=(644.448, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1119,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(643.848, 1236.5173333333335) within80.0um; prev=(643.848, 1554.2) next=(643.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1120,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(644.704, 1236.432) within80.0um; prev=(644.704, 1554.2) next=(644.704, 918.6640000000001) reach=405.0"
+      },
+      {
+        "bit": 1121,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(644.184, 1236.5173333333335) within80.0um; prev=(644.184, 1554.2) next=(644.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1122,
+        "max_hop_um": 404.4710000000001,
+        "local_failure": "no legal reachable cell at(645.024, 1236.432) within80.0um; prev=(645.024, 1554.2) next=(645.024, 918.664) reach=405.0"
+      },
+      {
+        "bit": 1123,
+        "max_hop_um": 404.4930000000005,
+        "local_failure": "no legal reachable cell at(644.52, 1236.5573333333334) within80.0um; prev=(644.52, 1554.2) next=(644.52, 918.9146666666667) reach=405.0"
+      },
+      {
+        "bit": 1124,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(645.28, 1236.4426666666668) within80.0um; prev=(645.28, 1554.2) next=(645.28, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1125,
+        "max_hop_um": 404.47100000000023,
+        "local_failure": "no legal reachable cell at(644.856, 1236.5173333333335) within80.0um; prev=(644.856, 1554.2) next=(644.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1126,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(645.6, 1236.4533333333334) within80.0um; prev=(645.6, 1554.2) next=(645.6, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1127,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(645.144, 1236.5253333333335) within80.0um; prev=(645.144, 1554.2) next=(645.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1128,
+        "max_hop_um": 404.4870000000002,
+        "local_failure": "no legal reachable cell at(645.92, 1236.4533333333334) within80.0um; prev=(645.92, 1554.2) next=(645.92, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1129,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(645.48, 1236.5253333333335) within80.0um; prev=(645.48, 1554.2) next=(645.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1130,
+        "max_hop_um": 404.4769999999991,
+        "local_failure": "no legal reachable cell at(646.176, 1236.464) within80.0um; prev=(646.176, 1554.2) next=(646.176, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1131,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(645.576, 1236.5653333333335) within80.0um; prev=(645.576, 1554.2) next=(645.576, 918.9306666666668) reach=405.0"
+      },
+      {
+        "bit": 1132,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(646.496, 1236.464) within80.0um; prev=(646.496, 1554.2) next=(646.496, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1133,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(646.152, 1236.5253333333333) within80.0um; prev=(646.152, 1554.2) next=(646.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1134,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(646.816, 1236.464) within80.0um; prev=(646.816, 1554.2) next=(646.816, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1135,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(646.488, 1236.5253333333333) within80.0um; prev=(646.488, 1554.2) next=(646.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1136,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(647.072, 1236.4853333333333) within80.0um; prev=(647.072, 1554.2) next=(647.072, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1137,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(646.824, 1236.5253333333335) within80.0um; prev=(646.824, 1554.2) next=(646.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1138,
+        "max_hop_um": 404.48300000000006,
+        "local_failure": "no legal reachable cell at(647.392, 1236.4853333333333) within80.0um; prev=(647.392, 1554.2) next=(647.392, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1139,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(647.16, 1236.5253333333335) within80.0um; prev=(647.16, 1554.2) next=(647.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1140,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(647.712, 1236.4853333333333) within80.0um; prev=(647.712, 1554.2) next=(647.712, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1141,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(647.496, 1236.5253333333335) within80.0um; prev=(647.496, 1554.2) next=(647.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1142,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(647.968, 1236.496) within80.0um; prev=(647.968, 1554.2) next=(647.968, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1143,
+        "max_hop_um": 404.46500000000015,
+        "local_failure": "no legal reachable cell at(647.832, 1236.5253333333335) within80.0um; prev=(647.832, 1554.2) next=(647.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1144,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(648.288, 1236.5066666666667) within80.0um; prev=(648.288, 1554.2) next=(648.288, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1145,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(648.168, 1236.5253333333335) within80.0um; prev=(648.168, 1554.2) next=(648.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1146,
+        "max_hop_um": 404.48899999999907,
+        "local_failure": "no legal reachable cell at(648.544, 1236.5173333333335) within80.0um; prev=(648.544, 1554.2) next=(648.544, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1147,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(648.504, 1236.5173333333335) within80.0um; prev=(648.504, 1554.2) next=(648.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1148,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(648.864, 1236.5173333333335) within80.0um; prev=(648.864, 1554.2) next=(648.864, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1149,
+        "max_hop_um": 404.49299999999903,
+        "local_failure": "no legal reachable cell at(648.84, 1236.5573333333334) within80.0um; prev=(648.84, 1554.2) next=(648.84, 918.9146666666667) reach=405.0"
+      },
+      {
+        "bit": 1150,
+        "max_hop_um": 404.4630000000001,
+        "local_failure": "no legal reachable cell at(649.184, 1236.5173333333335) within80.0um; prev=(649.184, 1554.2) next=(649.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1151,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(649.176, 1236.5173333333335) within80.0um; prev=(649.176, 1554.2) next=(649.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1152,
+        "max_hop_um": 404.477,
+        "local_failure": "no legal reachable cell at(649.44, 1236.528) within80.0um; prev=(649.44, 1554.2) next=(649.44, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1153,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(649.512, 1236.5173333333335) within80.0um; prev=(649.512, 1554.2) next=(649.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1154,
+        "max_hop_um": 404.4949999999999,
+        "local_failure": "no legal reachable cell at(649.76, 1236.5386666666668) within80.0um; prev=(649.76, 1554.2) next=(649.76, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 1155,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(649.848, 1236.5173333333335) within80.0um; prev=(649.848, 1554.2) next=(649.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1156,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(650.08, 1236.5386666666668) within80.0um; prev=(650.08, 1554.2) next=(650.08, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 1157,
+        "max_hop_um": 404.4689999999996,
+        "local_failure": "no legal reachable cell at(650.424, 1236.4773333333333) within80.0um; prev=(650.424, 1554.2) next=(650.424, 918.7546666666667) reach=405.0"
+      },
+      {
+        "bit": 1158,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(650.336, 1236.528) within80.0um; prev=(650.336, 1554.2) next=(650.336, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1159,
+        "max_hop_um": 404.4770000000001,
+        "local_failure": "no legal reachable cell at(650.52, 1236.5173333333335) within80.0um; prev=(650.52, 1554.2) next=(650.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1160,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(650.656, 1236.4853333333333) within80.0um; prev=(650.656, 1554.2) next=(650.656, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1161,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(650.856, 1236.5173333333335) within80.0um; prev=(650.856, 1554.2) next=(650.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1162,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(650.976, 1236.6026666666667) within80.0um; prev=(650.976, 1554.2) next=(650.976, 919.0053333333334) reach=405.0"
+      },
+      {
+        "bit": 1163,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(651.144, 1236.5253333333335) within80.0um; prev=(651.144, 1554.2) next=(651.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1164,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(651.232, 1236.5706666666667) within80.0um; prev=(651.232, 1554.2) next=(651.232, 918.9413333333333) reach=405.0"
+      },
+      {
+        "bit": 1165,
+        "max_hop_um": 404.4750000000004,
+        "local_failure": "no legal reachable cell at(651.48, 1236.5253333333335) within80.0um; prev=(651.48, 1554.2) next=(651.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1166,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(651.552, 1236.5706666666667) within80.0um; prev=(651.552, 1554.2) next=(651.552, 918.9413333333333) reach=405.0"
+      },
+      {
+        "bit": 1167,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(651.816, 1236.5253333333335) within80.0um; prev=(651.816, 1554.2) next=(651.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1168,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(651.808, 1236.5813333333333) within80.0um; prev=(651.808, 1554.2) next=(651.808, 918.9626666666667) reach=405.0"
+      },
+      {
+        "bit": 1169,
+        "max_hop_um": 404.46500000000015,
+        "local_failure": "no legal reachable cell at(652.152, 1236.5253333333333) within80.0um; prev=(652.152, 1554.2) next=(652.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1170,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(653.088, 1236.4213333333335) within80.0um; prev=(653.088, 1554.2) next=(653.088, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1171,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(652.488, 1236.5253333333333) within80.0um; prev=(652.488, 1554.2) next=(652.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1172,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(653.408, 1236.4213333333335) within80.0um; prev=(653.408, 1554.2) next=(653.408, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1173,
+        "max_hop_um": 404.4809999999995,
+        "local_failure": "no legal reachable cell at(652.824, 1236.5253333333335) within80.0um; prev=(652.824, 1554.2) next=(652.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1174,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(653.664, 1236.4426666666668) within80.0um; prev=(653.664, 1554.2) next=(653.664, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1175,
+        "max_hop_um": 404.49299999999926,
+        "local_failure": "no legal reachable cell at(653.16, 1236.5573333333334) within80.0um; prev=(653.16, 1554.2) next=(653.16, 918.9146666666667) reach=405.0"
+      },
+      {
+        "bit": 1176,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(653.984, 1236.4426666666668) within80.0um; prev=(653.984, 1554.2) next=(653.984, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1177,
+        "max_hop_um": 404.4710000000001,
+        "local_failure": "no legal reachable cell at(653.496, 1236.5253333333335) within80.0um; prev=(653.496, 1554.2) next=(653.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1178,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(654.304, 1236.4426666666668) within80.0um; prev=(654.304, 1554.2) next=(654.304, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1179,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(653.832, 1236.5253333333335) within80.0um; prev=(653.832, 1554.2) next=(653.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1180,
+        "max_hop_um": 404.4870000000003,
+        "local_failure": "no legal reachable cell at(654.56, 1236.4533333333334) within80.0um; prev=(654.56, 1554.2) next=(654.56, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1181,
+        "max_hop_um": 404.4869999999985,
+        "local_failure": "no legal reachable cell at(654.168, 1236.5253333333335) within80.0um; prev=(654.168, 1554.2) next=(654.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1182,
+        "max_hop_um": 404.4769999999997,
+        "local_failure": "no legal reachable cell at(654.88, 1236.4533333333334) within80.0um; prev=(654.88, 1554.2) next=(654.88, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1183,
+        "max_hop_um": 404.46899999999994,
+        "local_failure": "no legal reachable cell at(654.744, 1236.4773333333333) within80.0um; prev=(654.744, 1554.2) next=(654.744, 918.7546666666667) reach=405.0"
+      },
+      {
+        "bit": 1184,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(655.2, 1236.464) within80.0um; prev=(655.2, 1554.2) next=(655.2, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1185,
+        "max_hop_um": 404.4770000000002,
+        "local_failure": "no legal reachable cell at(654.84, 1236.5173333333335) within80.0um; prev=(654.84, 1554.2) next=(654.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1186,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(655.456, 1236.4746666666667) within80.0um; prev=(655.456, 1554.2) next=(655.456, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1187,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(655.176, 1236.5173333333335) within80.0um; prev=(655.176, 1554.2) next=(655.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1188,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(655.776, 1236.4746666666667) within80.0um; prev=(655.776, 1554.2) next=(655.776, 918.7493333333334) reach=405.0"
+      },
+      {
+        "bit": 1189,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(655.512, 1236.5173333333335) within80.0um; prev=(655.512, 1554.2) next=(655.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1190,
+        "max_hop_um": 404.4829999999988,
+        "local_failure": "no legal reachable cell at(656.032, 1236.4853333333333) within80.0um; prev=(656.032, 1554.2) next=(656.032, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1191,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(655.848, 1236.5173333333335) within80.0um; prev=(655.848, 1554.2) next=(655.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1192,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(656.352, 1236.496) within80.0um; prev=(656.352, 1554.2) next=(656.352, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1193,
+        "max_hop_um": 404.4830000000002,
+        "local_failure": "no legal reachable cell at(656.184, 1236.5173333333335) within80.0um; prev=(656.184, 1554.2) next=(656.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1194,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(656.672, 1236.496) within80.0um; prev=(656.672, 1554.2) next=(656.672, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1195,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(656.52, 1236.5173333333335) within80.0um; prev=(656.52, 1554.2) next=(656.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1196,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(656.928, 1236.5066666666667) within80.0um; prev=(656.928, 1554.2) next=(656.928, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1197,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(656.856, 1236.5173333333335) within80.0um; prev=(656.856, 1554.2) next=(656.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1198,
+        "max_hop_um": 404.499,
+        "local_failure": "no legal reachable cell at(657.248, 1236.5066666666667) within80.0um; prev=(657.248, 1554.2) next=(657.248, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1199,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(657.144, 1236.5253333333335) within80.0um; prev=(657.144, 1554.2) next=(657.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1200,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(657.568, 1236.5066666666667) within80.0um; prev=(657.568, 1554.2) next=(657.568, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1201,
+        "max_hop_um": 404.4929999999996,
+        "local_failure": "no legal reachable cell at(657.48, 1236.5573333333334) within80.0um; prev=(657.48, 1554.2) next=(657.48, 918.9146666666667) reach=405.0"
+      },
+      {
+        "bit": 1202,
+        "max_hop_um": 404.4630000000001,
+        "local_failure": "no legal reachable cell at(657.824, 1236.528) within80.0um; prev=(657.824, 1554.2) next=(657.824, 918.8560000000001) reach=405.0"
+      },
+      {
+        "bit": 1203,
+        "max_hop_um": 404.4710000000001,
+        "local_failure": "no legal reachable cell at(657.816, 1236.5253333333335) within80.0um; prev=(657.816, 1554.2) next=(657.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1204,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(658.144, 1236.528) within80.0um; prev=(658.144, 1554.2) next=(658.144, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1205,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(658.152, 1236.5253333333333) within80.0um; prev=(658.152, 1554.2) next=(658.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1206,
+        "max_hop_um": 404.49500000000046,
+        "local_failure": "no legal reachable cell at(658.464, 1236.528) within80.0um; prev=(658.464, 1554.2) next=(658.464, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1207,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(658.488, 1236.5253333333333) within80.0um; prev=(658.488, 1554.2) next=(658.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1208,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(658.72, 1236.5386666666668) within80.0um; prev=(658.72, 1554.2) next=(658.72, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 1209,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(659.064, 1236.4853333333333) within80.0um; prev=(659.064, 1554.2) next=(659.064, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1210,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(659.04, 1236.5173333333335) within80.0um; prev=(659.04, 1554.2) next=(659.04, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1211,
+        "max_hop_um": 404.4770000000001,
+        "local_failure": "no legal reachable cell at(659.16, 1236.5253333333335) within80.0um; prev=(659.16, 1554.2) next=(659.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1212,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(659.296, 1236.4853333333333) within80.0um; prev=(659.296, 1554.2) next=(659.296, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1213,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(659.496, 1236.5253333333335) within80.0um; prev=(659.496, 1554.2) next=(659.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1214,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(659.616, 1236.6026666666667) within80.0um; prev=(659.616, 1554.2) next=(659.616, 919.0053333333334) reach=405.0"
+      },
+      {
+        "bit": 1215,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(659.832, 1236.5253333333335) within80.0um; prev=(659.832, 1554.2) next=(659.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1216,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(659.936, 1236.56) within80.0um; prev=(659.936, 1554.2) next=(659.936, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1217,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(660.168, 1236.5253333333335) within80.0um; prev=(660.168, 1554.2) next=(660.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1218,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(660.192, 1236.5706666666667) within80.0um; prev=(660.192, 1554.2) next=(660.192, 918.9413333333333) reach=405.0"
+      },
+      {
+        "bit": 1219,
+        "max_hop_um": 404.4830000000002,
+        "local_failure": "no legal reachable cell at(660.504, 1236.5173333333335) within80.0um; prev=(660.504, 1554.2) next=(660.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1220,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(661.472, 1236.4106666666667) within80.0um; prev=(661.472, 1554.2) next=(661.472, 918.6213333333334) reach=405.0"
+      },
+      {
+        "bit": 1221,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(660.84, 1236.5173333333335) within80.0um; prev=(660.84, 1554.2) next=(660.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1222,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(661.792, 1236.4213333333335) within80.0um; prev=(661.792, 1554.2) next=(661.792, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1223,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(661.176, 1236.5173333333335) within80.0um; prev=(661.176, 1554.2) next=(661.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1224,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(662.048, 1236.432) within80.0um; prev=(662.048, 1554.2) next=(662.048, 918.664) reach=405.0"
+      },
+      {
+        "bit": 1225,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(661.512, 1236.5173333333335) within80.0um; prev=(661.512, 1554.2) next=(661.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1226,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(662.368, 1236.432) within80.0um; prev=(662.368, 1554.2) next=(662.368, 918.664) reach=405.0"
+      },
+      {
+        "bit": 1227,
+        "max_hop_um": 404.49299999999994,
+        "local_failure": "no legal reachable cell at(661.848, 1236.5493333333334) within80.0um; prev=(661.848, 1554.2) next=(661.848, 918.8986666666667) reach=405.0"
+      },
+      {
+        "bit": 1228,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(662.688, 1236.432) within80.0um; prev=(662.688, 1554.2) next=(662.688, 918.664) reach=405.0"
+      },
+      {
+        "bit": 1229,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(662.184, 1236.5173333333335) within80.0um; prev=(662.184, 1554.2) next=(662.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1230,
+        "max_hop_um": 404.4730000000002,
+        "local_failure": "no legal reachable cell at(662.944, 1236.4426666666668) within80.0um; prev=(662.944, 1554.2) next=(662.944, 918.6853333333335) reach=405.0"
+      },
+      {
+        "bit": 1231,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(662.52, 1236.5173333333335) within80.0um; prev=(662.52, 1554.2) next=(662.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1232,
+        "max_hop_um": 404.46299999999974,
+        "local_failure": "no legal reachable cell at(663.264, 1236.4533333333334) within80.0um; prev=(663.264, 1554.2) next=(663.264, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1233,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(662.856, 1236.5173333333335) within80.0um; prev=(662.856, 1554.2) next=(662.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1234,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(663.52, 1236.464) within80.0um; prev=(663.52, 1554.2) next=(663.52, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1235,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(663.384, 1236.4853333333333) within80.0um; prev=(663.384, 1554.2) next=(663.384, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1236,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(663.84, 1236.464) within80.0um; prev=(663.84, 1554.2) next=(663.84, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1237,
+        "max_hop_um": 404.4770000000001,
+        "local_failure": "no legal reachable cell at(663.48, 1236.5253333333335) within80.0um; prev=(663.48, 1554.2) next=(663.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1238,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(664.16, 1236.464) within80.0um; prev=(664.16, 1554.2) next=(664.16, 918.7280000000001) reach=405.0"
+      },
+      {
+        "bit": 1239,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(663.816, 1236.5253333333335) within80.0um; prev=(663.816, 1554.2) next=(663.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1240,
+        "max_hop_um": 404.4690000000006,
+        "local_failure": "no legal reachable cell at(664.416, 1236.4853333333333) within80.0um; prev=(664.416, 1554.2) next=(664.416, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1241,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(664.152, 1236.5253333333333) within80.0um; prev=(664.152, 1554.2) next=(664.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1242,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(664.736, 1236.4853333333333) within80.0um; prev=(664.736, 1554.2) next=(664.736, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1243,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(664.488, 1236.5253333333333) within80.0um; prev=(664.488, 1554.2) next=(664.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1244,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(665.056, 1236.4853333333333) within80.0um; prev=(665.056, 1554.2) next=(665.056, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1245,
+        "max_hop_um": 404.4830000000003,
+        "local_failure": "no legal reachable cell at(664.824, 1236.5253333333335) within80.0um; prev=(664.824, 1554.2) next=(664.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1246,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(665.312, 1236.496) within80.0um; prev=(665.312, 1554.2) next=(665.312, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1247,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(665.16, 1236.5253333333335) within80.0um; prev=(665.16, 1554.2) next=(665.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1248,
+        "max_hop_um": 404.48500000000024,
+        "local_failure": "no legal reachable cell at(665.632, 1236.496) within80.0um; prev=(665.632, 1554.2) next=(665.632, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1249,
+        "max_hop_um": 404.49899999999906,
+        "local_failure": "no legal reachable cell at(665.496, 1236.5253333333335) within80.0um; prev=(665.496, 1554.2) next=(665.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1250,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(665.952, 1236.5066666666667) within80.0um; prev=(665.952, 1554.2) next=(665.952, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1251,
+        "max_hop_um": 404.4810000000004,
+        "local_failure": "no legal reachable cell at(665.832, 1236.5173333333335) within80.0um; prev=(665.832, 1554.2) next=(665.832, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1252,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(666.208, 1236.5173333333335) within80.0um; prev=(666.208, 1554.2) next=(666.208, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1253,
+        "max_hop_um": 404.49300000000017,
+        "local_failure": "no legal reachable cell at(666.168, 1236.5493333333334) within80.0um; prev=(666.168, 1554.2) next=(666.168, 918.8986666666667) reach=405.0"
+      },
+      {
+        "bit": 1254,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(666.528, 1236.5173333333335) within80.0um; prev=(666.528, 1554.2) next=(666.528, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1255,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(666.504, 1236.5173333333335) within80.0um; prev=(666.504, 1554.2) next=(666.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1256,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(666.784, 1236.528) within80.0um; prev=(666.784, 1554.2) next=(666.784, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1257,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(666.84, 1236.5173333333335) within80.0um; prev=(666.84, 1554.2) next=(666.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1258,
+        "max_hop_um": 404.4949999999992,
+        "local_failure": "no legal reachable cell at(667.104, 1236.528) within80.0um; prev=(667.104, 1554.2) next=(667.104, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1259,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(667.176, 1236.5173333333335) within80.0um; prev=(667.176, 1554.2) next=(667.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1260,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(667.424, 1236.5386666666668) within80.0um; prev=(667.424, 1554.2) next=(667.424, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 1261,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(667.704, 1236.4853333333333) within80.0um; prev=(667.704, 1554.2) next=(667.704, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1262,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(667.68, 1236.5173333333335) within80.0um; prev=(667.68, 1554.2) next=(667.68, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1263,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(667.848, 1236.5173333333335) within80.0um; prev=(667.848, 1554.2) next=(667.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1264,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(668.0, 1236.4746666666667) within80.0um; prev=(668.0, 1554.2) next=(668.0, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1265,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(668.184, 1236.5173333333335) within80.0um; prev=(668.184, 1554.2) next=(668.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1266,
+        "max_hop_um": 404.4970000000002,
+        "local_failure": "no legal reachable cell at(668.32, 1236.592) within80.0um; prev=(668.32, 1554.2) next=(668.32, 918.984) reach=405.0"
+      },
+      {
+        "bit": 1267,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(668.52, 1236.5173333333335) within80.0um; prev=(668.52, 1554.2) next=(668.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1268,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(668.576, 1236.56) within80.0um; prev=(668.576, 1554.2) next=(668.576, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1269,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(668.856, 1236.5173333333335) within80.0um; prev=(668.856, 1554.2) next=(668.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1270,
+        "max_hop_um": 404.46100000000024,
+        "local_failure": "no legal reachable cell at(668.896, 1236.5706666666667) within80.0um; prev=(668.896, 1554.2) next=(668.896, 918.9413333333333) reach=405.0"
+      },
+      {
+        "bit": 1271,
+        "max_hop_um": 404.4830000000002,
+        "local_failure": "no legal reachable cell at(669.144, 1236.5253333333335) within80.0um; prev=(669.144, 1554.2) next=(669.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1272,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(670.176, 1236.4106666666667) within80.0um; prev=(670.176, 1554.2) next=(670.176, 918.6213333333334) reach=405.0"
+      },
+      {
+        "bit": 1273,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(669.48, 1236.5253333333335) within80.0um; prev=(669.48, 1554.2) next=(669.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1274,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(670.432, 1236.4213333333335) within80.0um; prev=(670.432, 1554.2) next=(670.432, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1275,
+        "max_hop_um": 404.4989999999993,
+        "local_failure": "no legal reachable cell at(669.816, 1236.5253333333335) within80.0um; prev=(669.816, 1554.2) next=(669.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1276,
+        "max_hop_um": 404.49500000000023,
+        "local_failure": "no legal reachable cell at(670.752, 1236.4213333333335) within80.0um; prev=(670.752, 1554.2) next=(670.752, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1277,
+        "max_hop_um": 404.48100000000073,
+        "local_failure": "no legal reachable cell at(670.152, 1236.5173333333335) within80.0um; prev=(670.152, 1554.2) next=(670.152, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1278,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(671.008, 1236.432) within80.0um; prev=(671.008, 1554.2) next=(671.008, 918.664) reach=405.0"
+      },
+      {
+        "bit": 1279,
+        "max_hop_um": 404.4929999999987,
+        "local_failure": "no legal reachable cell at(670.488, 1236.5493333333334) within80.0um; prev=(670.488, 1554.2) next=(670.488, 918.8986666666667) reach=405.0"
+      },
+      {
+        "bit": 1280,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(671.328, 1236.4426666666668) within80.0um; prev=(671.328, 1554.2) next=(671.328, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1281,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(670.824, 1236.5253333333335) within80.0um; prev=(670.824, 1554.2) next=(670.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1282,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(671.648, 1236.4426666666668) within80.0um; prev=(671.648, 1554.2) next=(671.648, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1283,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(671.16, 1236.5253333333335) within80.0um; prev=(671.16, 1554.2) next=(671.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1284,
+        "max_hop_um": 404.4630000000003,
+        "local_failure": "no legal reachable cell at(671.904, 1236.4533333333334) within80.0um; prev=(671.904, 1554.2) next=(671.904, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1285,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(671.496, 1236.5253333333335) within80.0um; prev=(671.496, 1554.2) next=(671.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1286,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(672.224, 1236.4533333333334) within80.0um; prev=(672.224, 1554.2) next=(672.224, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1287,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(672.024, 1236.4933333333333) within80.0um; prev=(672.024, 1554.2) next=(672.024, 918.7866666666667) reach=405.0"
+      },
+      {
+        "bit": 1288,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(672.544, 1236.464) within80.0um; prev=(672.544, 1554.2) next=(672.544, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1289,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(672.168, 1236.5253333333335) within80.0um; prev=(672.168, 1554.2) next=(672.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1290,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(672.8, 1236.4746666666667) within80.0um; prev=(672.8, 1554.2) next=(672.8, 918.7493333333334) reach=405.0"
+      },
+      {
+        "bit": 1291,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(672.504, 1236.5173333333335) within80.0um; prev=(672.504, 1554.2) next=(672.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1292,
+        "max_hop_um": 404.46899999999937,
+        "local_failure": "no legal reachable cell at(673.12, 1236.4746666666667) within80.0um; prev=(673.12, 1554.2) next=(673.12, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1293,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(672.84, 1236.5173333333335) within80.0um; prev=(672.84, 1554.2) next=(672.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1294,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(673.44, 1236.4746666666667) within80.0um; prev=(673.44, 1554.2) next=(673.44, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1295,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(673.176, 1236.5173333333335) within80.0um; prev=(673.176, 1554.2) next=(673.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1296,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(673.696, 1236.4853333333333) within80.0um; prev=(673.696, 1554.2) next=(673.696, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1297,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(673.512, 1236.5173333333335) within80.0um; prev=(673.512, 1554.2) next=(673.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1298,
+        "max_hop_um": 404.4710000000001,
+        "local_failure": "no legal reachable cell at(674.016, 1236.496) within80.0um; prev=(674.016, 1554.2) next=(674.016, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1299,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(673.848, 1236.5173333333335) within80.0um; prev=(673.848, 1554.2) next=(673.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1300,
+        "max_hop_um": 404.4750000000002,
+        "local_failure": "no legal reachable cell at(674.336, 1236.496) within80.0um; prev=(674.336, 1554.2) next=(674.336, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1301,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(674.184, 1236.5173333333335) within80.0um; prev=(674.184, 1554.2) next=(674.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1302,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(674.592, 1236.5066666666667) within80.0um; prev=(674.592, 1554.2) next=(674.592, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1303,
+        "max_hop_um": 404.48099999999914,
+        "local_failure": "no legal reachable cell at(674.52, 1236.5093333333334) within80.0um; prev=(674.52, 1554.2) next=(674.52, 918.8186666666667) reach=405.0"
+      },
+      {
+        "bit": 1304,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(674.912, 1236.5066666666667) within80.0um; prev=(674.912, 1554.2) next=(674.912, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1305,
+        "max_hop_um": 404.4929999999989,
+        "local_failure": "no legal reachable cell at(674.856, 1236.5413333333333) within80.0um; prev=(674.856, 1554.2) next=(674.856, 918.8826666666668) reach=405.0"
+      },
+      {
+        "bit": 1306,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(675.168, 1236.5173333333335) within80.0um; prev=(675.168, 1554.2) next=(675.168, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1307,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(675.144, 1236.5253333333335) within80.0um; prev=(675.144, 1554.2) next=(675.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1308,
+        "max_hop_um": 404.4809999999992,
+        "local_failure": "no legal reachable cell at(675.488, 1236.528) within80.0um; prev=(675.488, 1554.2) next=(675.488, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1309,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(675.48, 1236.5253333333335) within80.0um; prev=(675.48, 1554.2) next=(675.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1310,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(675.808, 1236.528) within80.0um; prev=(675.808, 1554.2) next=(675.808, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1311,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(675.816, 1236.5253333333335) within80.0um; prev=(675.816, 1554.2) next=(675.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1312,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(676.064, 1236.5386666666668) within80.0um; prev=(676.064, 1554.2) next=(676.064, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 1313,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(676.344, 1236.4933333333333) within80.0um; prev=(676.344, 1554.2) next=(676.344, 918.7866666666666) reach=405.0"
+      },
+      {
+        "bit": 1314,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(676.384, 1236.5066666666667) within80.0um; prev=(676.384, 1554.2) next=(676.384, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1315,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(676.488, 1236.5253333333333) within80.0um; prev=(676.488, 1554.2) next=(676.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1316,
+        "max_hop_um": 404.4830000000002,
+        "local_failure": "no legal reachable cell at(676.704, 1236.464) within80.0um; prev=(676.704, 1554.2) next=(676.704, 918.7280000000001) reach=405.0"
+      },
+      {
+        "bit": 1317,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(676.824, 1236.5253333333335) within80.0um; prev=(676.824, 1554.2) next=(676.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1318,
+        "max_hop_um": 404.49700000000007,
+        "local_failure": "no legal reachable cell at(676.96, 1236.592) within80.0um; prev=(676.96, 1554.2) next=(676.96, 918.984) reach=405.0"
+      },
+      {
+        "bit": 1319,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(677.16, 1236.5253333333335) within80.0um; prev=(677.16, 1554.2) next=(677.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1320,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(677.28, 1236.56) within80.0um; prev=(677.28, 1554.2) next=(677.28, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1321,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(677.496, 1236.5253333333335) within80.0um; prev=(677.496, 1554.2) next=(677.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1322,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(677.6, 1236.56) within80.0um; prev=(677.6, 1554.2) next=(677.6, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1323,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(677.832, 1236.5253333333335) within80.0um; prev=(677.832, 1554.2) next=(677.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1324,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(678.816, 1236.4106666666667) within80.0um; prev=(678.816, 1554.2) next=(678.816, 918.6213333333334) reach=405.0"
+      },
+      {
+        "bit": 1325,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(678.168, 1236.5253333333335) within80.0um; prev=(678.168, 1554.2) next=(678.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1326,
+        "max_hop_um": 404.4810000000001,
+        "local_failure": "no legal reachable cell at(679.136, 1236.4106666666667) within80.0um; prev=(679.136, 1554.2) next=(679.136, 918.6213333333334) reach=405.0"
+      },
+      {
+        "bit": 1327,
+        "max_hop_um": 404.49899999999997,
+        "local_failure": "no legal reachable cell at(678.504, 1236.5173333333335) within80.0um; prev=(678.504, 1554.2) next=(678.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1328,
+        "max_hop_um": 404.495,
+        "local_failure": "no legal reachable cell at(679.392, 1236.432) within80.0um; prev=(679.392, 1554.2) next=(679.392, 918.664) reach=405.0"
+      },
+      {
+        "bit": 1329,
+        "max_hop_um": 404.4809999999995,
+        "local_failure": "no legal reachable cell at(678.84, 1236.5093333333334) within80.0um; prev=(678.84, 1554.2) next=(678.84, 918.8186666666667) reach=405.0"
+      },
+      {
+        "bit": 1330,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(679.712, 1236.432) within80.0um; prev=(679.712, 1554.2) next=(679.712, 918.664) reach=405.0"
+      },
+      {
+        "bit": 1331,
+        "max_hop_um": 404.49299999999926,
+        "local_failure": "no legal reachable cell at(679.176, 1236.5413333333333) within80.0um; prev=(679.176, 1554.2) next=(679.176, 918.8826666666666) reach=405.0"
+      },
+      {
+        "bit": 1332,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(680.032, 1236.432) within80.0um; prev=(680.032, 1554.2) next=(680.032, 918.664) reach=405.0"
+      },
+      {
+        "bit": 1333,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(679.512, 1236.5173333333335) within80.0um; prev=(679.512, 1554.2) next=(679.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1334,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(680.288, 1236.4426666666668) within80.0um; prev=(680.288, 1554.2) next=(680.288, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1335,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(679.848, 1236.5173333333335) within80.0um; prev=(679.848, 1554.2) next=(679.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1336,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(680.608, 1236.4533333333334) within80.0um; prev=(680.608, 1554.2) next=(680.608, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1337,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(680.136, 1236.5253333333335) within80.0um; prev=(680.136, 1554.2) next=(680.136, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1338,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(680.928, 1236.4533333333334) within80.0um; prev=(680.928, 1554.2) next=(680.928, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1339,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(680.664, 1236.4933333333333) within80.0um; prev=(680.664, 1554.2) next=(680.664, 918.7866666666667) reach=405.0"
+      },
+      {
+        "bit": 1340,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(681.184, 1236.464) within80.0um; prev=(681.184, 1554.2) next=(681.184, 918.7280000000001) reach=405.0"
+      },
+      {
+        "bit": 1341,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(680.856, 1236.5173333333335) within80.0um; prev=(680.856, 1554.2) next=(680.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1342,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(681.504, 1236.464) within80.0um; prev=(681.504, 1554.2) next=(681.504, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1343,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(681.144, 1236.5253333333335) within80.0um; prev=(681.144, 1554.2) next=(681.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1344,
+        "max_hop_um": 404.49300000000005,
+        "local_failure": "no legal reachable cell at(681.824, 1236.464) within80.0um; prev=(681.824, 1554.2) next=(681.824, 918.7280000000001) reach=405.0"
+      },
+      {
+        "bit": 1345,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(681.48, 1236.5253333333335) within80.0um; prev=(681.48, 1554.2) next=(681.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1346,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(682.08, 1236.4853333333333) within80.0um; prev=(682.08, 1554.2) next=(682.08, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1347,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(681.816, 1236.5253333333335) within80.0um; prev=(681.816, 1554.2) next=(681.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1348,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(682.4, 1236.4853333333333) within80.0um; prev=(682.4, 1554.2) next=(682.4, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1349,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(682.152, 1236.5253333333333) within80.0um; prev=(682.152, 1554.2) next=(682.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1350,
+        "max_hop_um": 404.47100000000023,
+        "local_failure": "no legal reachable cell at(682.656, 1236.496) within80.0um; prev=(682.656, 1554.2) next=(682.656, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1351,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(682.488, 1236.5253333333333) within80.0um; prev=(682.488, 1554.2) next=(682.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1352,
+        "max_hop_um": 404.47499999999894,
+        "local_failure": "no legal reachable cell at(682.976, 1236.496) within80.0um; prev=(682.976, 1554.2) next=(682.976, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1353,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(682.824, 1236.5253333333335) within80.0um; prev=(682.824, 1554.2) next=(682.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1354,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(683.296, 1236.496) within80.0um; prev=(683.296, 1554.2) next=(683.296, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1355,
+        "max_hop_um": 404.4809999999997,
+        "local_failure": "no legal reachable cell at(683.16, 1236.5093333333334) within80.0um; prev=(683.16, 1554.2) next=(683.16, 918.8186666666667) reach=405.0"
+      },
+      {
+        "bit": 1356,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(683.552, 1236.5173333333335) within80.0um; prev=(683.552, 1554.2) next=(683.552, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1357,
+        "max_hop_um": 404.4929999999995,
+        "local_failure": "no legal reachable cell at(683.496, 1236.5413333333333) within80.0um; prev=(683.496, 1554.2) next=(683.496, 918.8826666666668) reach=405.0"
+      },
+      {
+        "bit": 1358,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(683.872, 1236.5173333333335) within80.0um; prev=(683.872, 1554.2) next=(683.872, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1359,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(683.832, 1236.5253333333335) within80.0um; prev=(683.832, 1554.2) next=(683.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1360,
+        "max_hop_um": 404.48099999999977,
+        "local_failure": "no legal reachable cell at(684.192, 1236.5173333333335) within80.0um; prev=(684.192, 1554.2) next=(684.192, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1361,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(684.168, 1236.5253333333335) within80.0um; prev=(684.168, 1554.2) next=(684.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1362,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(684.448, 1236.528) within80.0um; prev=(684.448, 1554.2) next=(684.448, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1363,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(684.456, 1236.5253333333335) within80.0um; prev=(684.456, 1554.2) next=(684.456, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1364,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(684.768, 1236.528) within80.0um; prev=(684.768, 1554.2) next=(684.768, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1365,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(684.984, 1236.4933333333333) within80.0um; prev=(684.984, 1554.2) next=(684.984, 918.7866666666667) reach=405.0"
+      },
+      {
+        "bit": 1366,
+        "max_hop_um": 404.4690000000003,
+        "local_failure": "no legal reachable cell at(685.088, 1236.496) within80.0um; prev=(685.088, 1554.2) next=(685.088, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1367,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(685.176, 1236.5173333333335) within80.0um; prev=(685.176, 1554.2) next=(685.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1368,
+        "max_hop_um": 404.4830000000002,
+        "local_failure": "no legal reachable cell at(685.344, 1236.464) within80.0um; prev=(685.344, 1554.2) next=(685.344, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1369,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(685.512, 1236.5173333333335) within80.0um; prev=(685.512, 1554.2) next=(685.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1370,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(685.664, 1236.5813333333333) within80.0um; prev=(685.664, 1554.2) next=(685.664, 918.9626666666667) reach=405.0"
+      },
+      {
+        "bit": 1371,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(685.848, 1236.5173333333335) within80.0um; prev=(685.848, 1554.2) next=(685.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1372,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(685.92, 1236.56) within80.0um; prev=(685.92, 1554.2) next=(685.92, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1373,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(686.184, 1236.5173333333335) within80.0um; prev=(686.184, 1554.2) next=(686.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1374,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(686.24, 1236.56) within80.0um; prev=(686.24, 1554.2) next=(686.24, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1375,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(686.52, 1236.5173333333335) within80.0um; prev=(686.52, 1554.2) next=(686.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1376,
+        "max_hop_um": 404.49299999999977,
+        "local_failure": "no legal reachable cell at(687.52, 1236.4106666666667) within80.0um; prev=(687.52, 1554.2) next=(687.52, 918.6213333333334) reach=405.0"
+      },
+      {
+        "bit": 1377,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(686.856, 1236.5173333333335) within80.0um; prev=(686.856, 1554.2) next=(686.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1378,
+        "max_hop_um": 404.4810000000001,
+        "local_failure": "no legal reachable cell at(687.776, 1236.4213333333335) within80.0um; prev=(687.776, 1554.2) next=(687.776, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1379,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(687.144, 1236.5253333333335) within80.0um; prev=(687.144, 1554.2) next=(687.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1380,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(688.096, 1236.4213333333335) within80.0um; prev=(688.096, 1554.2) next=(688.096, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1381,
+        "max_hop_um": 404.48100000000005,
+        "local_failure": "no legal reachable cell at(687.48, 1236.5093333333334) within80.0um; prev=(687.48, 1554.2) next=(687.48, 918.8186666666667) reach=405.0"
+      },
+      {
+        "bit": 1382,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(688.416, 1236.4213333333335) within80.0um; prev=(688.416, 1554.2) next=(688.416, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1383,
+        "max_hop_um": 404.4929999999998,
+        "local_failure": "no legal reachable cell at(687.816, 1236.5413333333333) within80.0um; prev=(687.816, 1554.2) next=(687.816, 918.8826666666668) reach=405.0"
+      },
+      {
+        "bit": 1384,
+        "max_hop_um": 404.4990000000006,
+        "local_failure": "no legal reachable cell at(688.672, 1236.4426666666668) within80.0um; prev=(688.672, 1554.2) next=(688.672, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1385,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(688.152, 1236.5253333333333) within80.0um; prev=(688.152, 1554.2) next=(688.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1386,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(688.992, 1236.4426666666668) within80.0um; prev=(688.992, 1554.2) next=(688.992, 918.6853333333335) reach=405.0"
+      },
+      {
+        "bit": 1387,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(688.488, 1236.5253333333333) within80.0um; prev=(688.488, 1554.2) next=(688.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1388,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(689.312, 1236.4426666666668) within80.0um; prev=(689.312, 1554.2) next=(689.312, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1389,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(688.776, 1236.5333333333333) within80.0um; prev=(688.776, 1554.2) next=(688.776, 918.8666666666667) reach=405.0"
+      },
+      {
+        "bit": 1390,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(689.568, 1236.4533333333334) within80.0um; prev=(689.568, 1554.2) next=(689.568, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1391,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(689.304, 1236.5013333333334) within80.0um; prev=(689.304, 1554.2) next=(689.304, 918.8026666666667) reach=405.0"
+      },
+      {
+        "bit": 1392,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(689.888, 1236.4533333333334) within80.0um; prev=(689.888, 1554.2) next=(689.888, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1393,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(689.496, 1236.5253333333335) within80.0um; prev=(689.496, 1554.2) next=(689.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1394,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(690.144, 1236.4746666666667) within80.0um; prev=(690.144, 1554.2) next=(690.144, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1395,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(689.832, 1236.5253333333335) within80.0um; prev=(689.832, 1554.2) next=(689.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1396,
+        "max_hop_um": 404.49300000000017,
+        "local_failure": "no legal reachable cell at(690.464, 1236.4746666666667) within80.0um; prev=(690.464, 1554.2) next=(690.464, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1397,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(690.168, 1236.5253333333335) within80.0um; prev=(690.168, 1554.2) next=(690.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1398,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(690.784, 1236.4746666666667) within80.0um; prev=(690.784, 1554.2) next=(690.784, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1399,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(690.504, 1236.5173333333335) within80.0um; prev=(690.504, 1554.2) next=(690.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1400,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(691.04, 1236.4853333333333) within80.0um; prev=(691.04, 1554.2) next=(691.04, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1401,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(690.84, 1236.5173333333335) within80.0um; prev=(690.84, 1554.2) next=(690.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1402,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(691.36, 1236.4853333333333) within80.0um; prev=(691.36, 1554.2) next=(691.36, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1403,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(691.176, 1236.5173333333335) within80.0um; prev=(691.176, 1554.2) next=(691.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1404,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(691.68, 1236.496) within80.0um; prev=(691.68, 1554.2) next=(691.68, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1405,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(691.512, 1236.5173333333335) within80.0um; prev=(691.512, 1554.2) next=(691.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1406,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(691.936, 1236.5066666666667) within80.0um; prev=(691.936, 1554.2) next=(691.936, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1407,
+        "max_hop_um": 404.4809999999986,
+        "local_failure": "no legal reachable cell at(691.848, 1236.5013333333334) within80.0um; prev=(691.848, 1554.2) next=(691.848, 918.8026666666667) reach=405.0"
+      },
+      {
+        "bit": 1408,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(692.256, 1236.5066666666667) within80.0um; prev=(692.256, 1554.2) next=(692.256, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1409,
+        "max_hop_um": 404.49300000000017,
+        "local_failure": "no legal reachable cell at(692.184, 1236.5333333333333) within80.0um; prev=(692.184, 1554.2) next=(692.184, 918.8666666666667) reach=405.0"
+      },
+      {
+        "bit": 1410,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(692.576, 1236.5066666666667) within80.0um; prev=(692.576, 1554.2) next=(692.576, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1411,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(692.52, 1236.5173333333335) within80.0um; prev=(692.52, 1554.2) next=(692.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1412,
+        "max_hop_um": 404.48100000000045,
+        "local_failure": "no legal reachable cell at(692.832, 1236.5173333333335) within80.0um; prev=(692.832, 1554.2) next=(692.832, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1413,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(692.856, 1236.5173333333335) within80.0um; prev=(692.856, 1554.2) next=(692.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1414,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(693.152, 1236.528) within80.0um; prev=(693.152, 1554.2) next=(693.152, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1415,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(693.096, 1236.5333333333333) within80.0um; prev=(693.096, 1554.2) next=(693.096, 918.8666666666667) reach=405.0"
+      },
+      {
+        "bit": 1416,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(693.408, 1236.5386666666668) within80.0um; prev=(693.408, 1554.2) next=(693.408, 918.8773333333334) reach=405.0"
+      },
+      {
+        "bit": 1417,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(693.624, 1236.5013333333334) within80.0um; prev=(693.624, 1554.2) next=(693.624, 918.8026666666667) reach=405.0"
+      },
+      {
+        "bit": 1418,
+        "max_hop_um": 404.46900000000016,
+        "local_failure": "no legal reachable cell at(693.728, 1236.496) within80.0um; prev=(693.728, 1554.2) next=(693.728, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1419,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(693.816, 1236.5253333333335) within80.0um; prev=(693.816, 1554.2) next=(693.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1420,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(694.048, 1236.4533333333334) within80.0um; prev=(694.048, 1554.2) next=(694.048, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1421,
+        "max_hop_um": 404.4630000000001,
+        "local_failure": "no legal reachable cell at(694.152, 1236.5253333333333) within80.0um; prev=(694.152, 1554.2) next=(694.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1422,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(694.304, 1236.5813333333333) within80.0um; prev=(694.304, 1554.2) next=(694.304, 918.9626666666667) reach=405.0"
+      },
+      {
+        "bit": 1423,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(694.488, 1236.5253333333333) within80.0um; prev=(694.488, 1554.2) next=(694.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1424,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(694.624, 1236.56) within80.0um; prev=(694.624, 1554.2) next=(694.624, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1425,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(694.824, 1236.5253333333335) within80.0um; prev=(694.824, 1554.2) next=(694.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1426,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(694.944, 1236.56) within80.0um; prev=(694.944, 1554.2) next=(694.944, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1427,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(695.16, 1236.5253333333335) within80.0um; prev=(695.16, 1554.2) next=(695.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1428,
+        "max_hop_um": 404.49300000000034,
+        "local_failure": "no legal reachable cell at(696.16, 1236.4106666666667) within80.0um; prev=(696.16, 1554.2) next=(696.16, 918.6213333333334) reach=405.0"
+      },
+      {
+        "bit": 1429,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(695.496, 1236.5253333333335) within80.0um; prev=(695.496, 1554.2) next=(695.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1430,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(696.48, 1236.4106666666667) within80.0um; prev=(696.48, 1554.2) next=(696.48, 918.6213333333334) reach=405.0"
+      },
+      {
+        "bit": 1431,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(695.832, 1236.5253333333335) within80.0um; prev=(695.832, 1554.2) next=(695.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1432,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(696.8, 1236.4213333333335) within80.0um; prev=(696.8, 1554.2) next=(696.8, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1433,
+        "max_hop_um": 404.4809999999988,
+        "local_failure": "no legal reachable cell at(696.168, 1236.5013333333334) within80.0um; prev=(696.168, 1554.2) next=(696.168, 918.8026666666667) reach=405.0"
+      },
+      {
+        "bit": 1434,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(697.056, 1236.432) within80.0um; prev=(697.056, 1554.2) next=(697.056, 918.664) reach=405.0"
+      },
+      {
+        "bit": 1435,
+        "max_hop_um": 404.4930000000004,
+        "local_failure": "no legal reachable cell at(696.504, 1236.5333333333333) within80.0um; prev=(696.504, 1554.2) next=(696.504, 918.8666666666667) reach=405.0"
+      },
+      {
+        "bit": 1436,
+        "max_hop_um": 404.49899999999934,
+        "local_failure": "no legal reachable cell at(697.376, 1236.432) within80.0um; prev=(697.376, 1554.2) next=(697.376, 918.6640000000001) reach=405.0"
+      },
+      {
+        "bit": 1437,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(696.84, 1236.5173333333335) within80.0um; prev=(696.84, 1554.2) next=(696.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1438,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(697.632, 1236.4426666666668) within80.0um; prev=(697.632, 1554.2) next=(697.632, 918.6853333333335) reach=405.0"
+      },
+      {
+        "bit": 1439,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(697.176, 1236.5173333333335) within80.0um; prev=(697.176, 1554.2) next=(697.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1440,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(697.952, 1236.4426666666668) within80.0um; prev=(697.952, 1554.2) next=(697.952, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1441,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(697.416, 1236.5333333333333) within80.0um; prev=(697.416, 1554.2) next=(697.416, 918.8666666666667) reach=405.0"
+      },
+      {
+        "bit": 1442,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(698.272, 1236.4533333333334) within80.0um; prev=(698.272, 1554.2) next=(698.272, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1443,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(697.944, 1236.5013333333334) within80.0um; prev=(697.944, 1554.2) next=(697.944, 918.8026666666667) reach=405.0"
+      },
+      {
+        "bit": 1444,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(698.528, 1236.464) within80.0um; prev=(698.528, 1554.2) next=(698.528, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1445,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(698.184, 1236.5173333333335) within80.0um; prev=(698.184, 1554.2) next=(698.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1446,
+        "max_hop_um": 404.47900000000027,
+        "local_failure": "no legal reachable cell at(698.848, 1236.464) within80.0um; prev=(698.848, 1554.2) next=(698.848, 918.7280000000001) reach=405.0"
+      },
+      {
+        "bit": 1447,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(698.52, 1236.5173333333335) within80.0um; prev=(698.52, 1554.2) next=(698.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1448,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(699.168, 1236.464) within80.0um; prev=(699.168, 1554.2) next=(699.168, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1449,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(698.856, 1236.5173333333335) within80.0um; prev=(698.856, 1554.2) next=(698.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1450,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(699.424, 1236.4746666666667) within80.0um; prev=(699.424, 1554.2) next=(699.424, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1451,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(699.144, 1236.5253333333335) within80.0um; prev=(699.144, 1554.2) next=(699.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1452,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(699.744, 1236.4853333333333) within80.0um; prev=(699.744, 1554.2) next=(699.744, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1453,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(699.48, 1236.5253333333335) within80.0um; prev=(699.48, 1554.2) next=(699.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1454,
+        "max_hop_um": 404.4609999999995,
+        "local_failure": "no legal reachable cell at(700.064, 1236.4853333333333) within80.0um; prev=(700.064, 1554.2) next=(700.064, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1455,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(699.816, 1236.5253333333335) within80.0um; prev=(699.816, 1554.2) next=(699.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1456,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(700.32, 1236.496) within80.0um; prev=(700.32, 1554.2) next=(700.32, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1457,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(700.152, 1236.5253333333333) within80.0um; prev=(700.152, 1554.2) next=(700.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1458,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(700.64, 1236.496) within80.0um; prev=(700.64, 1554.2) next=(700.64, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1459,
+        "max_hop_um": 404.48099999999914,
+        "local_failure": "no legal reachable cell at(700.488, 1236.5013333333334) within80.0um; prev=(700.488, 1554.2) next=(700.488, 918.8026666666667) reach=405.0"
+      },
+      {
+        "bit": 1460,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(700.896, 1236.5066666666667) within80.0um; prev=(700.896, 1554.2) next=(700.896, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1461,
+        "max_hop_um": 404.49300000000073,
+        "local_failure": "no legal reachable cell at(700.824, 1236.5333333333333) within80.0um; prev=(700.824, 1554.2) next=(700.824, 918.8666666666667) reach=405.0"
+      },
+      {
+        "bit": 1462,
+        "max_hop_um": 404.4669999999986,
+        "local_failure": "no legal reachable cell at(701.216, 1236.5173333333335) within80.0um; prev=(701.216, 1554.2) next=(701.216, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1463,
+        "max_hop_um": 404.4750000000002,
+        "local_failure": "no legal reachable cell at(701.16, 1236.5253333333335) within80.0um; prev=(701.16, 1554.2) next=(701.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1464,
+        "max_hop_um": 404.4910000000002,
+        "local_failure": "no legal reachable cell at(701.536, 1236.5173333333335) within80.0um; prev=(701.536, 1554.2) next=(701.536, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1465,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(701.496, 1236.5253333333335) within80.0um; prev=(701.496, 1554.2) next=(701.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1466,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(701.792, 1236.528) within80.0um; prev=(701.792, 1554.2) next=(701.792, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1467,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(701.736, 1236.5413333333333) within80.0um; prev=(701.736, 1554.2) next=(701.736, 918.8826666666668) reach=405.0"
+      },
+      {
+        "bit": 1468,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(702.112, 1236.528) within80.0um; prev=(702.112, 1554.2) next=(702.112, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1469,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(702.264, 1236.5093333333334) within80.0um; prev=(702.264, 1554.2) next=(702.264, 918.8186666666667) reach=405.0"
+      },
+      {
+        "bit": 1470,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(702.432, 1236.4853333333333) within80.0um; prev=(702.432, 1554.2) next=(702.432, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1471,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(702.504, 1236.5173333333335) within80.0um; prev=(702.504, 1554.2) next=(702.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1472,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(702.688, 1236.4533333333334) within80.0um; prev=(702.688, 1554.2) next=(702.688, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1473,
+        "max_hop_um": 404.46299999999883,
+        "local_failure": "no legal reachable cell at(702.84, 1236.5173333333335) within80.0um; prev=(702.84, 1554.2) next=(702.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1474,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(703.008, 1236.5706666666667) within80.0um; prev=(703.008, 1554.2) next=(703.008, 918.9413333333333) reach=405.0"
+      },
+      {
+        "bit": 1475,
+        "max_hop_um": 404.4710000000001,
+        "local_failure": "no legal reachable cell at(703.176, 1236.5173333333335) within80.0um; prev=(703.176, 1554.2) next=(703.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1476,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(703.328, 1236.5493333333334) within80.0um; prev=(703.328, 1554.2) next=(703.328, 918.8986666666667) reach=405.0"
+      },
+      {
+        "bit": 1477,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(703.512, 1236.5173333333335) within80.0um; prev=(703.512, 1554.2) next=(703.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1478,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(703.584, 1236.56) within80.0um; prev=(703.584, 1554.2) next=(703.584, 918.9200000000001) reach=405.0"
+      },
+      {
+        "bit": 1479,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(703.848, 1236.5173333333335) within80.0um; prev=(703.848, 1554.2) next=(703.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1480,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(704.864, 1236.4106666666667) within80.0um; prev=(704.864, 1554.2) next=(704.864, 918.6213333333334) reach=405.0"
+      },
+      {
+        "bit": 1481,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(704.184, 1236.5173333333335) within80.0um; prev=(704.184, 1554.2) next=(704.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1482,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(705.12, 1236.4213333333335) within80.0um; prev=(705.12, 1554.2) next=(705.12, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1483,
+        "max_hop_um": 404.4770000000001,
+        "local_failure": "no legal reachable cell at(704.52, 1236.5173333333335) within80.0um; prev=(704.52, 1554.2) next=(704.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1484,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(705.44, 1236.4213333333335) within80.0um; prev=(705.44, 1554.2) next=(705.44, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1485,
+        "max_hop_um": 404.48099999999937,
+        "local_failure": "no legal reachable cell at(704.856, 1236.4933333333333) within80.0um; prev=(704.856, 1554.2) next=(704.856, 918.7866666666667) reach=405.0"
+      },
+      {
+        "bit": 1486,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(705.76, 1236.4213333333335) within80.0um; prev=(705.76, 1554.2) next=(705.76, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1487,
+        "max_hop_um": 404.49299999999914,
+        "local_failure": "no legal reachable cell at(705.144, 1236.5333333333333) within80.0um; prev=(705.144, 1554.2) next=(705.144, 918.8666666666667) reach=405.0"
+      },
+      {
+        "bit": 1488,
+        "max_hop_um": 404.4989999999999,
+        "local_failure": "no legal reachable cell at(706.016, 1236.432) within80.0um; prev=(706.016, 1554.2) next=(706.016, 918.6640000000001) reach=405.0"
+      },
+      {
+        "bit": 1489,
+        "max_hop_um": 404.4750000000004,
+        "local_failure": "no legal reachable cell at(705.48, 1236.5253333333335) within80.0um; prev=(705.48, 1554.2) next=(705.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1490,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(706.336, 1236.4426666666668) within80.0um; prev=(706.336, 1554.2) next=(706.336, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1491,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(705.816, 1236.5253333333335) within80.0um; prev=(705.816, 1554.2) next=(705.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1492,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(706.656, 1236.4426666666668) within80.0um; prev=(706.656, 1554.2) next=(706.656, 918.6853333333335) reach=405.0"
+      },
+      {
+        "bit": 1493,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(706.056, 1236.5413333333333) within80.0um; prev=(706.056, 1554.2) next=(706.056, 918.8826666666666) reach=405.0"
+      },
+      {
+        "bit": 1494,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(706.912, 1236.4533333333334) within80.0um; prev=(706.912, 1554.2) next=(706.912, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1495,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(706.584, 1236.5093333333334) within80.0um; prev=(706.584, 1554.2) next=(706.584, 918.8186666666667) reach=405.0"
+      },
+      {
+        "bit": 1496,
+        "max_hop_um": 404.46500000000015,
+        "local_failure": "no legal reachable cell at(707.232, 1236.4533333333334) within80.0um; prev=(707.232, 1554.2) next=(707.232, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1497,
+        "max_hop_um": 404.4809999999995,
+        "local_failure": "no legal reachable cell at(706.824, 1236.5253333333335) within80.0um; prev=(706.824, 1554.2) next=(706.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1498,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(707.552, 1236.4533333333334) within80.0um; prev=(707.552, 1554.2) next=(707.552, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1499,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(707.16, 1236.5253333333335) within80.0um; prev=(707.16, 1554.2) next=(707.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1500,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(707.808, 1236.4746666666667) within80.0um; prev=(707.808, 1554.2) next=(707.808, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1501,
+        "max_hop_um": 404.4710000000001,
+        "local_failure": "no legal reachable cell at(707.496, 1236.5253333333335) within80.0um; prev=(707.496, 1554.2) next=(707.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1502,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(708.128, 1236.4746666666667) within80.0um; prev=(708.128, 1554.2) next=(708.128, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1503,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(707.832, 1236.5253333333335) within80.0um; prev=(707.832, 1554.2) next=(707.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1504,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(708.384, 1236.4853333333333) within80.0um; prev=(708.384, 1554.2) next=(708.384, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1505,
+        "max_hop_um": 404.4869999999985,
+        "local_failure": "no legal reachable cell at(708.168, 1236.5253333333335) within80.0um; prev=(708.168, 1554.2) next=(708.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1506,
+        "max_hop_um": 404.46100000000007,
+        "local_failure": "no legal reachable cell at(708.704, 1236.4853333333333) within80.0um; prev=(708.704, 1554.2) next=(708.704, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1507,
+        "max_hop_um": 404.46899999999994,
+        "local_failure": "no legal reachable cell at(708.504, 1236.5173333333335) within80.0um; prev=(708.504, 1554.2) next=(708.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1508,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(709.024, 1236.4853333333333) within80.0um; prev=(709.024, 1554.2) next=(709.024, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1509,
+        "max_hop_um": 404.4770000000002,
+        "local_failure": "no legal reachable cell at(708.84, 1236.5173333333335) within80.0um; prev=(708.84, 1554.2) next=(708.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1510,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(709.28, 1236.5066666666667) within80.0um; prev=(709.28, 1554.2) next=(709.28, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1511,
+        "max_hop_um": 404.4809999999997,
+        "local_failure": "no legal reachable cell at(709.176, 1236.4933333333333) within80.0um; prev=(709.176, 1554.2) next=(709.176, 918.7866666666667) reach=405.0"
+      },
+      {
+        "bit": 1512,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(709.6, 1236.5066666666667) within80.0um; prev=(709.6, 1554.2) next=(709.6, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1513,
+        "max_hop_um": 404.4929999999995,
+        "local_failure": "no legal reachable cell at(709.512, 1236.5253333333335) within80.0um; prev=(709.512, 1554.2) next=(709.512, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1514,
+        "max_hop_um": 404.4770000000002,
+        "local_failure": "no legal reachable cell at(709.92, 1236.5066666666667) within80.0um; prev=(709.92, 1554.2) next=(709.92, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1515,
+        "max_hop_um": 404.47499999999894,
+        "local_failure": "no legal reachable cell at(709.848, 1236.5173333333335) within80.0um; prev=(709.848, 1554.2) next=(709.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1516,
+        "max_hop_um": 404.4910000000001,
+        "local_failure": "no legal reachable cell at(710.176, 1236.5173333333335) within80.0um; prev=(710.176, 1554.2) next=(710.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1517,
+        "max_hop_um": 404.48300000000006,
+        "local_failure": "no legal reachable cell at(710.184, 1236.5173333333335) within80.0um; prev=(710.184, 1554.2) next=(710.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1518,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(710.496, 1236.5173333333335) within80.0um; prev=(710.496, 1554.2) next=(710.496, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1519,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(710.376, 1236.5413333333333) within80.0um; prev=(710.376, 1554.2) next=(710.376, 918.8826666666668) reach=405.0"
+      },
+      {
+        "bit": 1520,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(710.816, 1236.5173333333335) within80.0um; prev=(710.816, 1554.2) next=(710.816, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1521,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(710.904, 1236.5093333333334) within80.0um; prev=(710.904, 1554.2) next=(710.904, 918.8186666666667) reach=405.0"
+      },
+      {
+        "bit": 1522,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(711.072, 1236.4853333333333) within80.0um; prev=(711.072, 1554.2) next=(711.072, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1523,
+        "max_hop_um": 404.4809999999998,
+        "local_failure": "no legal reachable cell at(711.144, 1236.5253333333335) within80.0um; prev=(711.144, 1554.2) next=(711.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1524,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(711.392, 1236.4426666666668) within80.0um; prev=(711.392, 1554.2) next=(711.392, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1525,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(711.48, 1236.5253333333335) within80.0um; prev=(711.48, 1554.2) next=(711.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1526,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(711.648, 1236.5706666666667) within80.0um; prev=(711.648, 1554.2) next=(711.648, 918.9413333333333) reach=405.0"
+      },
+      {
+        "bit": 1527,
+        "max_hop_um": 404.4710000000001,
+        "local_failure": "no legal reachable cell at(711.816, 1236.5253333333335) within80.0um; prev=(711.816, 1554.2) next=(711.816, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1528,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(711.968, 1236.56) within80.0um; prev=(711.968, 1554.2) next=(711.968, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1529,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(712.152, 1236.5253333333333) within80.0um; prev=(712.152, 1554.2) next=(712.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1530,
+        "max_hop_um": 404.478999999999,
+        "local_failure": "no legal reachable cell at(712.288, 1236.56) within80.0um; prev=(712.288, 1554.2) next=(712.288, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1531,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(712.488, 1236.5253333333333) within80.0um; prev=(712.488, 1554.2) next=(712.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1532,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(713.504, 1236.4106666666667) within80.0um; prev=(713.504, 1554.2) next=(713.504, 918.6213333333334) reach=405.0"
+      },
+      {
+        "bit": 1533,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(712.824, 1236.5253333333335) within80.0um; prev=(712.824, 1554.2) next=(712.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1534,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(713.824, 1236.4106666666667) within80.0um; prev=(713.824, 1554.2) next=(713.824, 918.6213333333334) reach=405.0"
+      },
+      {
+        "bit": 1535,
+        "max_hop_um": 404.4770000000002,
+        "local_failure": "no legal reachable cell at(713.16, 1236.5253333333335) within80.0um; prev=(713.16, 1554.2) next=(713.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1536,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(714.144, 1236.4106666666667) within80.0um; prev=(714.144, 1554.2) next=(714.144, 918.6213333333334) reach=405.0"
+      },
+      {
+        "bit": 1537,
+        "max_hop_um": 404.48099999999994,
+        "local_failure": "no legal reachable cell at(713.496, 1236.4933333333333) within80.0um; prev=(713.496, 1554.2) next=(713.496, 918.7866666666667) reach=405.0"
+      },
+      {
+        "bit": 1538,
+        "max_hop_um": 404.4849999999999,
+        "local_failure": "no legal reachable cell at(714.4, 1236.432) within80.0um; prev=(714.4, 1554.2) next=(714.4, 918.6640000000001) reach=405.0"
+      },
+      {
+        "bit": 1539,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(713.832, 1236.5253333333335) within80.0um; prev=(713.832, 1554.2) next=(713.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1540,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(714.72, 1236.432) within80.0um; prev=(714.72, 1554.2) next=(714.72, 918.664) reach=405.0"
+      },
+      {
+        "bit": 1541,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(714.168, 1236.5253333333335) within80.0um; prev=(714.168, 1554.2) next=(714.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1542,
+        "max_hop_um": 404.4870000000001,
+        "local_failure": "no legal reachable cell at(715.04, 1236.432) within80.0um; prev=(715.04, 1554.2) next=(715.04, 918.6640000000001) reach=405.0"
+      },
+      {
+        "bit": 1543,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(714.504, 1236.5173333333335) within80.0um; prev=(714.504, 1554.2) next=(714.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1544,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(715.296, 1236.4426666666668) within80.0um; prev=(715.296, 1554.2) next=(715.296, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1545,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(714.696, 1236.5413333333333) within80.0um; prev=(714.696, 1554.2) next=(714.696, 918.8826666666668) reach=405.0"
+      },
+      {
+        "bit": 1546,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(715.616, 1236.4426666666668) within80.0um; prev=(715.616, 1554.2) next=(715.616, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1547,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(715.224, 1236.5093333333334) within80.0um; prev=(715.224, 1554.2) next=(715.224, 918.8186666666667) reach=405.0"
+      },
+      {
+        "bit": 1548,
+        "max_hop_um": 404.46500000000003,
+        "local_failure": "no legal reachable cell at(715.872, 1236.464) within80.0um; prev=(715.872, 1554.2) next=(715.872, 918.7280000000001) reach=405.0"
+      },
+      {
+        "bit": 1549,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(715.512, 1236.5173333333335) within80.0um; prev=(715.512, 1554.2) next=(715.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1550,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(716.192, 1236.464) within80.0um; prev=(716.192, 1554.2) next=(716.192, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1551,
+        "max_hop_um": 404.48900000000026,
+        "local_failure": "no legal reachable cell at(715.848, 1236.5173333333335) within80.0um; prev=(715.848, 1554.2) next=(715.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1552,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(716.512, 1236.464) within80.0um; prev=(716.512, 1554.2) next=(716.512, 918.7280000000001) reach=405.0"
+      },
+      {
+        "bit": 1553,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(716.184, 1236.5173333333335) within80.0um; prev=(716.184, 1554.2) next=(716.184, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1554,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(716.768, 1236.4746666666667) within80.0um; prev=(716.768, 1554.2) next=(716.768, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1555,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(716.52, 1236.5173333333335) within80.0um; prev=(716.52, 1554.2) next=(716.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1556,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(717.088, 1236.4746666666667) within80.0um; prev=(717.088, 1554.2) next=(717.088, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1557,
+        "max_hop_um": 404.48699999999917,
+        "local_failure": "no legal reachable cell at(716.856, 1236.5173333333335) within80.0um; prev=(716.856, 1554.2) next=(716.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1558,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(717.408, 1236.4853333333333) within80.0um; prev=(717.408, 1554.2) next=(717.408, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1559,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(717.144, 1236.5253333333335) within80.0um; prev=(717.144, 1554.2) next=(717.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1560,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(717.664, 1236.496) within80.0um; prev=(717.664, 1554.2) next=(717.664, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1561,
+        "max_hop_um": 404.4770000000001,
+        "local_failure": "no legal reachable cell at(717.48, 1236.5253333333335) within80.0um; prev=(717.48, 1554.2) next=(717.48, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1562,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(717.984, 1236.496) within80.0um; prev=(717.984, 1554.2) next=(717.984, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1563,
+        "max_hop_um": 404.4810000000003,
+        "local_failure": "no legal reachable cell at(717.816, 1236.4933333333333) within80.0um; prev=(717.816, 1554.2) next=(717.816, 918.7866666666667) reach=405.0"
+      },
+      {
+        "bit": 1564,
+        "max_hop_um": 404.4630000000001,
+        "local_failure": "no legal reachable cell at(718.304, 1236.496) within80.0um; prev=(718.304, 1554.2) next=(718.304, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1565,
+        "max_hop_um": 404.49300000000005,
+        "local_failure": "no legal reachable cell at(718.152, 1236.5253333333333) within80.0um; prev=(718.152, 1554.2) next=(718.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1566,
+        "max_hop_um": 404.4770000000003,
+        "local_failure": "no legal reachable cell at(718.56, 1236.5066666666667) within80.0um; prev=(718.56, 1554.2) next=(718.56, 918.8133333333334) reach=405.0"
+      },
+      {
+        "bit": 1567,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(718.488, 1236.5253333333333) within80.0um; prev=(718.488, 1554.2) next=(718.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1568,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(718.88, 1236.5173333333335) within80.0um; prev=(718.88, 1554.2) next=(718.88, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1569,
+        "max_hop_um": 404.4830000000003,
+        "local_failure": "no legal reachable cell at(718.824, 1236.5253333333335) within80.0um; prev=(718.824, 1554.2) next=(718.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1570,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(719.136, 1236.528) within80.0um; prev=(719.136, 1554.2) next=(719.136, 918.856) reach=405.0"
+      },
+      {
+        "bit": 1571,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(719.016, 1236.5493333333334) within80.0um; prev=(719.016, 1554.2) next=(719.016, 918.8986666666667) reach=405.0"
+      },
+      {
+        "bit": 1572,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(719.456, 1236.5173333333335) within80.0um; prev=(719.456, 1554.2) next=(719.456, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1573,
+        "max_hop_um": 404.49899999999906,
+        "local_failure": "no legal reachable cell at(719.544, 1236.5173333333335) within80.0um; prev=(719.544, 1554.2) next=(719.544, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1574,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(719.776, 1236.4746666666667) within80.0um; prev=(719.776, 1554.2) next=(719.776, 918.7493333333334) reach=405.0"
+      },
+      {
+        "bit": 1575,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(719.832, 1236.5253333333335) within80.0um; prev=(719.832, 1554.2) next=(719.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1576,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(720.032, 1236.4426666666668) within80.0um; prev=(720.032, 1554.2) next=(720.032, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1577,
+        "max_hop_um": 404.48900000000015,
+        "local_failure": "no legal reachable cell at(720.168, 1236.5253333333335) within80.0um; prev=(720.168, 1554.2) next=(720.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1578,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(720.352, 1236.56) within80.0um; prev=(720.352, 1554.2) next=(720.352, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1579,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(720.504, 1236.5173333333335) within80.0um; prev=(720.504, 1554.2) next=(720.504, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1580,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(720.672, 1236.5493333333334) within80.0um; prev=(720.672, 1554.2) next=(720.672, 918.8986666666667) reach=405.0"
+      },
+      {
+        "bit": 1581,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(720.84, 1236.5173333333335) within80.0um; prev=(720.84, 1554.2) next=(720.84, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1582,
+        "max_hop_um": 404.4789999999996,
+        "local_failure": "no legal reachable cell at(720.928, 1236.56) within80.0um; prev=(720.928, 1554.2) next=(720.928, 918.92) reach=405.0"
+      },
+      {
+        "bit": 1583,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(721.176, 1236.5173333333335) within80.0um; prev=(721.176, 1554.2) next=(721.176, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1584,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(722.208, 1236.4) within80.0um; prev=(722.208, 1554.2) next=(722.208, 918.6) reach=405.0"
+      },
+      {
+        "bit": 1585,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(721.512, 1236.5173333333335) within80.0um; prev=(721.512, 1554.2) next=(721.512, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1586,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(722.528, 1236.4106666666667) within80.0um; prev=(722.528, 1554.2) next=(722.528, 918.6213333333334) reach=405.0"
+      },
+      {
+        "bit": 1587,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(721.848, 1236.5173333333335) within80.0um; prev=(721.848, 1554.2) next=(721.848, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1588,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(722.784, 1236.4213333333335) within80.0um; prev=(722.784, 1554.2) next=(722.784, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1589,
+        "max_hop_um": 404.4810000000005,
+        "local_failure": "no legal reachable cell at(722.184, 1236.4853333333333) within80.0um; prev=(722.184, 1554.2) next=(722.184, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1590,
+        "max_hop_um": 404.48500000000047,
+        "local_failure": "no legal reachable cell at(723.104, 1236.4213333333335) within80.0um; prev=(723.104, 1554.2) next=(723.104, 918.6426666666667) reach=405.0"
+      },
+      {
+        "bit": 1591,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(722.52, 1236.5173333333335) within80.0um; prev=(722.52, 1554.2) next=(722.52, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1592,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(723.36, 1236.432) within80.0um; prev=(723.36, 1554.2) next=(723.36, 918.664) reach=405.0"
+      },
+      {
+        "bit": 1593,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(722.856, 1236.5173333333335) within80.0um; prev=(722.856, 1554.2) next=(722.856, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1594,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(723.68, 1236.432) within80.0um; prev=(723.68, 1554.2) next=(723.68, 918.6640000000001) reach=405.0"
+      },
+      {
+        "bit": 1595,
+        "max_hop_um": 404.4830000000002,
+        "local_failure": "no legal reachable cell at(723.144, 1236.5253333333335) within80.0um; prev=(723.144, 1554.2) next=(723.144, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1596,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(724.0, 1236.4426666666668) within80.0um; prev=(724.0, 1554.2) next=(724.0, 918.6853333333333) reach=405.0"
+      },
+      {
+        "bit": 1597,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(723.336, 1236.5493333333334) within80.0um; prev=(723.336, 1554.2) next=(723.336, 918.8986666666667) reach=405.0"
+      },
+      {
+        "bit": 1598,
+        "max_hop_um": 404.4909999999995,
+        "local_failure": "no legal reachable cell at(724.256, 1236.4533333333334) within80.0um; prev=(724.256, 1554.2) next=(724.256, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1599,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(723.864, 1236.5173333333335) within80.0um; prev=(723.864, 1554.2) next=(723.864, 918.8346666666667) reach=405.0"
+      },
+      {
+        "bit": 1600,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(724.576, 1236.4533333333334) within80.0um; prev=(724.576, 1554.2) next=(724.576, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1601,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(724.152, 1236.5253333333333) within80.0um; prev=(724.152, 1554.2) next=(724.152, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1602,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(724.896, 1236.4533333333334) within80.0um; prev=(724.896, 1554.2) next=(724.896, 918.7066666666667) reach=405.0"
+      },
+      {
+        "bit": 1603,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(724.488, 1236.5253333333333) within80.0um; prev=(724.488, 1554.2) next=(724.488, 918.8506666666666) reach=405.0"
+      },
+      {
+        "bit": 1604,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(725.152, 1236.464) within80.0um; prev=(725.152, 1554.2) next=(725.152, 918.728) reach=405.0"
+      },
+      {
+        "bit": 1605,
+        "max_hop_um": 404.46000000000015,
+        "local_failure": "no legal reachable cell at(724.824, 1236.5253333333335) within80.0um; prev=(724.824, 1554.2) next=(724.824, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1606,
+        "max_hop_um": 404.4969999999986,
+        "local_failure": "no legal reachable cell at(725.472, 1236.4746666666667) within80.0um; prev=(725.472, 1554.2) next=(725.472, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1607,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(725.16, 1236.5253333333335) within80.0um; prev=(725.16, 1554.2) next=(725.16, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1608,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(725.792, 1236.4746666666667) within80.0um; prev=(725.792, 1554.2) next=(725.792, 918.7493333333333) reach=405.0"
+      },
+      {
+        "bit": 1609,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(725.496, 1236.5253333333335) within80.0um; prev=(725.496, 1554.2) next=(725.496, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1610,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(726.048, 1236.4853333333333) within80.0um; prev=(726.048, 1554.2) next=(726.048, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1611,
+        "max_hop_um": 404.49500000000023,
+        "local_failure": "no legal reachable cell at(725.832, 1236.5253333333335) within80.0um; prev=(725.832, 1554.2) next=(725.832, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1612,
+        "max_hop_um": 404.49900000000014,
+        "local_failure": "no legal reachable cell at(726.368, 1236.4853333333333) within80.0um; prev=(726.368, 1554.2) next=(726.368, 918.7706666666667) reach=405.0"
+      },
+      {
+        "bit": 1613,
+        "max_hop_um": 404.46000000000004,
+        "local_failure": "no legal reachable cell at(726.168, 1236.5253333333335) within80.0um; prev=(726.168, 1554.2) next=(726.168, 918.8506666666667) reach=405.0"
+      },
+      {
+        "bit": 1614,
+        "max_hop_um": 404.4600000000001,
+        "local_failure": "no legal reachable cell at(726.624, 1236.496) within80.0um; prev=(726.624, 1554.2) next=(726.624, 918.792) reach=405.0"
+      },
+      {
+        "bit": 1615,
+        "max_hop_um": 404.480999999999,
+        "local_failure": "no legal reachable cell at(726.504, 1236.4853333333333) within80.0um; prev=(726.504, 1554.2) next=(726.504, 918.7706666666667) reach=405.0"
+      }
+    ],
+    "geometry_seed_failure": "q_su31__physical_v1/L34r0_1 bit940: fixed6 exact-goal geometry failed: no conservative fixed-6-hop chain at stage 1",
+    "cache_hits": 926,
+    "cache_misses": 15,
+    "exact_goal_fallback_bits": [
+      920,
+      922,
+      923,
+      924,
+      925,
+      926,
+      927,
+      928,
+      929,
+      930,
+      931,
+      932,
+      933,
+      934,
+      935,
+      936,
+      937,
+      938,
+      939,
+      940
+    ],
+    "scope": "FIXED_COUNT_PREP_ONLY_NO_PNR_CLOCK_OR_CAPTURE_ENDPOINT_CREDIT",
+    "extra_stations_allowed": 0
+  },
+  {
+    "type": "q_su31__physical_v1",
+    "slot": "L35r0_1",
+    "width": 1615,
+    "stations": 6,
+    "stations_added": 0,
+    "in_macro_points": 5320,
+    "moved": 8866,
+    "max_bit_hop_um": 404.46500000000015,
+    "joint_fallbacks": [],
+    "geometry_seed_failure": null,
+    "cache_hits": 1311,
+    "cache_misses": 23,
+    "exact_goal_fallback_bits": [],
+    "scope": "FIXED_COUNT_PREP_ONLY_NO_PNR_CLOCK_OR_CAPTURE_ENDPOINT_CREDIT",
+    "extra_stations_allowed": 0
+  },
+  {
+    "type": "q_su31__physical_v1",
+    "slot": "L6br0_1",
+    "width": 828,
+    "stations": 4,
+    "stations_added": 0,
+    "in_macro_points": 2487,
+    "moved": 2487,
+    "max_bit_hop_um": 405.0000000000002,
+    "joint_fallbacks": [],
+    "geometry_seed_failure": null,
+    "cache_hits": 0,
+    "cache_misses": 0,
+    "exact_goal_fallback_bits": [],
+    "scope": "FIXED_COUNT_PREP_ONLY_NO_PNR_CLOCK_OR_CAPTURE_ENDPOINT_CREDIT",
+    "extra_stations_allowed": 0
+  }
+]
