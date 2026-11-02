@@ -1,0 +1,126 @@
+{
+  "scope": "FROZEN_SOURCE_TRANSPORT_CUT; raw equal-phase producer is a premise, not qualified selected producer or full clock/start tree",
+  "clock_manifest_sha256": "7aa7911a5a45f8c230cdb9fe2e6d640b0fdc5aae646f31b79bbe3bb3f120ee76",
+  "bus_groups_sha256": "fcd15f03c54fd5c3dc0002fafa8b8433e01d7d90a4f0f23da3710aa889163576",
+  "param_regen_sha256": "dbf9c79328bd1e846628e54233c797fb1e6c88fe4837c9b6309e3038c71d2248",
+  "ring_ports": [
+    {
+      "port": "sl_W5_su_l0__x_su_l0_stm__0",
+      "lane": "sl_W5_su_l0__x_su_l0_stm",
+      "src": "sl_W5_su_l0",
+      "dst": "sl_W5_su_c",
+      "src_region": "sl_W5_su_l0",
+      "dst_region": "sl_W5_su_c",
+      "width": 228,
+      "kind": "data",
+      "added_cycles": 3,
+      "src_bus": "x_stm_o",
+      "dst_bus": "x_su_l0_stm_i",
+      "module": "ot_dp_clk_landing_cas",
+      "ring_params": {},
+      "ring_ports": {},
+      "ring_depth": 4,
+      "ring_offset": null,
+      "ring_read_registered": true,
+      "ring_k": 11,
+      "start_tree_port": false
+    },
+    {
+      "port": "sl_W5_su_l0__x_su_l0_stm__1",
+      "lane": "sl_W5_su_l0__x_su_l0_stm",
+      "src": "sl_W5_su_c",
+      "dst": "sl_W5_stm",
+      "src_region": "sl_W5_su_c",
+      "dst_region": "sl_W5_stm",
+      "width": 228,
+      "kind": "data",
+      "added_cycles": 3,
+      "src_bus": "x_su_l0_stm_o",
+      "dst_bus": "x_su_l0_i",
+      "module": "ot_dp_clk_landing_cas",
+      "ring_params": {},
+      "ring_ports": {},
+      "ring_depth": 4,
+      "ring_offset": null,
+      "ring_read_registered": true,
+      "ring_k": 12,
+      "start_tree_port": false
+    },
+    {
+      "port": "sl_W5_su_l1__x_su_l1_stm__0",
+      "lane": "sl_W5_su_l1__x_su_l1_stm",
+      "src": "sl_W5_su_l1",
+      "dst": "sl_W5_su_c",
+      "src_region": "sl_W5_su_l1",
+      "dst_region": "sl_W5_su_c",
+      "width": 228,
+      "kind": "data",
+      "added_cycles": 3,
+      "src_bus": "x_stm_o",
+      "dst_bus": "x_su_l1_stm_i",
+      "module": "ot_dp_clk_landing_cas",
+      "ring_params": {},
+      "ring_ports": {},
+      "ring_depth": 4,
+      "ring_offset": null,
+      "ring_read_registered": true,
+      "ring_k": 10,
+      "start_tree_port": false
+    },
+    {
+      "port": "sl_W5_su_l1__x_su_l1_stm__1",
+      "lane": "sl_W5_su_l1__x_su_l1_stm",
+      "src": "sl_W5_su_c",
+      "dst": "sl_W5_stm",
+      "src_region": "sl_W5_su_c",
+      "dst_region": "sl_W5_stm",
+      "width": 228,
+      "kind": "data",
+      "added_cycles": 3,
+      "src_bus": "x_su_l1_stm_o",
+      "dst_bus": "x_su_l1_i",
+      "module": "ot_dp_clk_landing_cas",
+      "ring_params": {},
+      "ring_ports": {},
+      "ring_depth": 4,
+      "ring_offset": null,
+      "ring_read_registered": true,
+      "ring_k": 12,
+      "start_tree_port": false
+    }
+  ],
+  "raw_group_contract": {
+    "source_boundary": 1,
+    "FT": [
+      4,
+      2
+    ],
+    "sink_boundary": 1,
+    "R8_postpad": [
+      5,
+      8
+    ],
+    "metadata_landed": [
+      17,
+      18
+    ],
+    "ring_cycles_already_priced": 6
+  },
+  "nominal_count_frames": {
+    "SU_C": 64,
+    "SU_L0": 73,
+    "SU_L1": 72,
+    "STM": 54,
+    "rule": "solve sched_lat=K+1+Ndst-Nsrc with exact4 ring metadata; common64 is TEST_ONLY gauge to keep boot origins nonnegative"
+  },
+  "clock_ps": 833,
+  "physical_qualification": false,
+  "whole_selected_producer_qualification": false,
+  "canonical_no_ring_packets": "held, not dispatched",
+  "cases": [
+    "equal raw phase/original pads",
+    "group1 early1 compensation/original pads",
+    "equal raw phase/candidate low-pad+1",
+    "group1 late1/original pads"
+  ]
+}
