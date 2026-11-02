@@ -1,0 +1,95 @@
+--- original/s81p_svc_lo_dsdv_svc_rs__t7_bound.sv
++++ DISABLED/s81p_svc_lo_dsdv_svc_rs__t7_bound.sv
+@@ -2321,9 +2321,6 @@
+     wire [0:0] w_u_rsv_14_u_u_att_724_Y;
+     wire [0:0] w_u_rsv_14_u_u_att_src_f3d8544a725953903764_Y;
+     wire [8:0] w_u_rsv_14_u_u_att_src_29b80db2284db6415584_Y;
+-    wire [511:0] w_u_rsv_14_u_u_att_src_c42275b8d43e8375c6e7_Y;
+-    wire [1023:0] w_u_rsv_14_u_u_att_src_037d97b1cd2a5ab22e14_Y;
+-    wire [1023:0] w_u_rsv_14_u_u_att_733_Y;
+     wire [0:0] w_u_rsv_14_u_u_att_734_Y;
+     wire [2131:0] w_u_rsv_14_u_u_att_735_Y;
+     wire [2119:0] w_u_rsv_14_u_u_att_src_8c9e9eb60b3aae42c23f_Y;
+@@ -3465,7 +3462,6 @@
+     wire [831:0] w_u_rsv_14_u_u_att_fq_RD_DATA;
+     wire [511:0] w_u_rsv_14_u_u_att_hold_RD_DATA;
+     wire [1023:0] w_u_rsv_14_u_u_att_land_RD_DATA;
+-    wire [1023:0] w_u_rsv_14_u_u_att_pmem_RD_DATA;
+     wire [2119:0] w_u_rsv_14_u_u_att_pvq_RD_DATA;
+     wire [511:0] w_u_rsv_14_u_u_att_qmem_RD_DATA;
+     wire [511:0] w_u_rsv_14_u_u_att_sw_RD_DATA;
+@@ -5257,8 +5253,6 @@
+     wire [4:0] w_u_rsv_14_u_u_att_u_eng_procmux_4543_Y;
+     wire [0:0] w_u_rsv_14_u_u_att_u_eng_src_a3e51edd66d9c34bdb5d_Y;
+     wire [0:0] w_u_rsv_14_u_u_att_u_eng_src_29eca015dbfcf65f40d5_Y;
+-    wire [1023:0] w_u_rsv_14_u_u_att_u_eng_src_75b927658e070e2d323b_Y;
+-    wire [1023:0] w_u_rsv_14_u_u_att_u_eng_src_7a2f9d574e2d0b99b375_Y;
+     wire [0:0] w_u_rsv_14_u_u_att_u_eng_src_46c58c98a4d5cf925811_Y;
+     wire [0:0] w_u_rsv_14_u_u_att_u_eng_src_51d70214df534e82e420_Y;
+     wire [0:0] w_u_rsv_14_u_u_att_u_eng_procmux_4560_Y;
+@@ -8696,7 +8690,6 @@
+     assign w_u_rsv_14_u_u_att_716_Y = w_u_rsv_14_u_u_att_src_4b6742567c97bcdaefa8_Y[1:0];
+     assign w_u_rsv_14_u_u_att_719_Y = w_u_rsv_14_u_u_att_src_68ceabd69fbbb74d8b98_Y[0];
+     assign w_u_rsv_14_u_u_att_724_Y = w_u_rsv_14_u_u_att_src_74aff3a3f41005d4a885_Y[0];
+-    assign w_u_rsv_14_u_u_att_733_Y = w_u_rsv_14_u_u_att_src_037d97b1cd2a5ab22e14_Y[1023:0];
+     assign w_u_rsv_14_u_u_att_734_Y = w_u_rsv_14_u_u_att_u_eng_src_1e5ef042487c562bd7fd_Q[0];
+     assign w_u_rsv_14_u_u_att_735_Y = {w_u_rsv_14_u_u_att_u_eng_src_c0c6834222932dbf7a2e_Q[15:0], w_u_rsv_14_u_u_att_u_eng_src_114cf4e98e45d01d95e2_Q[3:0], w_u_rsv_14_u_u_att_u_eng_src_1d6c0d2fd652e05b0087_Q[2047:0], w_u_rsv_14_u_u_att_u_eng_src_bccd2c6def505c3008bd_Q[63:0]};
+     assign w_u_rsv_14_u_u_att_742_Y = w_u_rsv_14_u_u_att_pvq_RD_DATA[2119:0];
+@@ -9963,7 +9956,6 @@
+     assign w_u_rsv_14_u_u_att_src_00ce49fe454aa260149b_Y = $signed({1'b0, w_u_rsv_14_u_u_att_198_Y[9:0]}) >= $signed(1'b0);  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:654.21-654.59
+     assign w_u_rsv_14_u_u_att_src_00f89ab4f95ee0818293_Y = !w_u_rsv_14_u_u_att_driver_dr_arm_Q[0];  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:246.65-246.72
+     assign w_u_rsv_14_u_u_att_src_01f2ae1cc53fe310a51e_Y = w_u_rsv_14_u_u_att_driver_rc_Q[9:0] - 10'b0000000001;  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:582.25-582.35
+-    assign w_u_rsv_14_u_u_att_src_037d97b1cd2a5ab22e14_Y = w_u_rsv_14_u_u_att_719_Y[0] ? {w_u_rsv_14_u_u_att_src_c42275b8d43e8375c6e7_Y[511:0], w_u_rsv_14_u_u_att_pmem_RD_DATA[1023:512]} : {1024{1'b0}};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:501.31-501.123
+     assign w_u_rsv_14_u_u_att_src_03acc1ee4ce649adb87f_Y = w_u_rsv_14_u_u_att_src_2f012d346509cc70d421_Y[0] ? w_u_rsv_14_u_src_b4e411b517a9f984ed73_Q[0] : 1'b0;  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:774.45-776.16|structural_full/a264cd3c5e19_dsdv_svc_att.sv:774.13-776.16
+     assign w_u_rsv_14_u_u_att_src_043b92e64458915068b9_Y = w_u_rsv_14_u_u_att_src_b2cefb87b6f3103e1096_Y[0] && w_u_rsv_14_u_u_att_src_54b98568c5a7eb7e1a11_Y[0];  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:787.17-787.82
+     assign w_u_rsv_14_u_u_att_src_04e643b360c540209931_Y = w_u_rsv_14_u_u_att_driver_jc_Q[15:0] == {16{1'b1}};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:744.33-744.47
+@@ -10368,7 +10360,6 @@
+     assign w_u_rsv_14_u_u_att_src_c35d3d14e97ffef88d90_Y = 1'b0 && w_u_rsv_14_u_driver_cs_513_513_Q[0];  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:634.17-634.29
+     ot_bind_native_394b18b76348cdec349b86c8 g_u_rsv_14_u_u_att_src_c3debe53c81d769cb22b (.A(w_u_rsv_14_u_u_att_507_Y[511:0]), .S({w_u_rsv_14_u_u_att_504_Y[8:1], 1'b0}), .Y(w_u_rsv_14_u_u_att_src_c3debe53c81d769cb22b_Y));
+     assign w_u_rsv_14_u_u_att_src_c40431297a780812cc16_Y = w_u_rsv_14_u_u_att_src_c70ae6c5307192b26567_Y[0] ? {256{1'b1}} : {256{1'b0}};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:574.19-574.53
+-    assign w_u_rsv_14_u_u_att_src_c42275b8d43e8375c6e7_Y = w_u_rsv_14_u_u_att_src_f3d8544a725953903764_Y[0] ? w_u_rsv_14_u_u_att_pmem_RD_DATA[511:0] : {512{1'b1}};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:501.40-501.98
+     assign w_u_rsv_14_u_u_att_src_c445d3564d257b70bbd0_Y = w_u_rsv_14_u_u_att_src_474e4743e2da05ebe05d_Y[0] ? 1'b1 : w_u_rsv_14_u_u_att_src_84e88233ece699143109_Q[11];  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:738.36-738.51|structural_full/a264cd3c5e19_dsdv_svc_att.sv:738.13-738.51
+     assign w_u_rsv_14_u_u_att_src_c4c0a36f84454ec59491_Y = w_u_rsv_14_u_u_att_src_1b9e7f4d616c5a7e4258_Y[0] || w_u_rsv_14_u_u_att_src_ba4e764255a308497f84_Y[0];  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:778.26-778.56
+     assign w_u_rsv_14_u_u_att_src_c4db13c967e85a907a64_Y = w_u_rsv_14_u_u_att_117_Y[0] ? w_u_rsv_14_u_u_att_src_dc5811c3e762c33b5a3c_Y[29:0] : w_u_rsv_14_u_u_att_src_ca96e3b4825d763657ed_Q[29:0];  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:298.39-301.8|structural_full/a264cd3c5e19_dsdv_svc_att.sv:298.27-301.8
+@@ -10504,7 +10495,15 @@
+     ot_bind_native_0345256bc94e41a6442d128f g_u_rsv_14_u_u_att_fq (.RD_DATA(w_u_rsv_14_u_u_att_fq_RD_DATA), .WR_ADDR({{31{1'b0}}, w_u_rsv_14_u_u_att_194_Y[8]}), .WR_CLK(clk), .WR_DATA({w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9], w_u_rsv_14_u_u_att_194_Y[3:0], w_u_rsv_14_u_u_att_198_Y[9:0], w_u_rsv_14_u_u_att_194_Y[20:9]}), .WR_EN(w_u_rsv_14_u_u_att_src_da3ef61e328348581da9_Y[415:0]));
+     ot_bind_native_095307ffbea013551f0b4c42 g_u_rsv_14_u_u_att_hold (.RD_DATA(w_u_rsv_14_u_u_att_hold_RD_DATA), .WR_CLK({clk, clk}), .WR_DATA({w_u_rsv_14_u_g_pc_1_u_pc_qr_data[255:0], w_u_rsv_14_u_g_pc_0_u_pc_qr_data[255:0]}), .WR_EN({w_u_rsv_14_u_u_att_899_Y[255:0], w_u_rsv_14_u_u_att_860_Y[255:0]}));
+     ot_bind_native_4c805a5536bda0930879099e g_u_rsv_14_u_u_att_land (.RD_ADDR({w_u_rsv_14_u_u_att_552_Y[31:0], w_u_rsv_14_u_u_att_547_Y[31:0], w_u_rsv_14_u_u_att_542_Y[31:0], w_u_rsv_14_u_u_att_537_Y[31:0]}), .RD_DATA(w_u_rsv_14_u_u_att_land_RD_DATA), .WR_ADDR({{22{1'b0}}, w_u_rsv_14_u_u_att_486_Y[9:0], {22{1'b0}}, w_u_rsv_14_u_u_att_882_Y[9:0], {22{1'b0}}, w_u_rsv_14_u_u_att_882_Y[9:0], {24{1'b0}}, w_u_rsv_14_u_g_pc_1_u_pc_qr_tag[7:0], {22{1'b0}}, w_u_rsv_14_u_u_att_843_Y[9:0], {22{1'b0}}, w_u_rsv_14_u_u_att_843_Y[9:0], {24{1'b0}}, w_u_rsv_14_u_g_pc_0_u_pc_qr_tag[7:0]}), .WR_CLK({clk, clk, clk, clk, clk, clk, clk}), .WR_DATA({{112{1'b0}}, w_u_rsv_14_u_u_att_488_Y[143:0], {112{1'b0}}, w_u_rsv_14_u_u_att_892_Y[143:0], {112{1'b0}}, w_u_rsv_14_u_u_att_887_Y[143:0], w_u_rsv_14_u_g_pc_1_u_pc_qr_data[255:0], {112{1'b0}}, w_u_rsv_14_u_u_att_853_Y[143:0], {112{1'b0}}, w_u_rsv_14_u_u_att_848_Y[143:0], w_u_rsv_14_u_g_pc_0_u_pc_qr_data[255:0]}), .WR_EN({w_u_rsv_14_u_u_att_src_c40431297a780812cc16_Y[255:0], w_u_rsv_14_u_u_att_895_Y[255:0], w_u_rsv_14_u_u_att_890_Y[255:0], w_u_rsv_14_u_u_att_872_Y[255:0], w_u_rsv_14_u_u_att_856_Y[255:0], w_u_rsv_14_u_u_att_851_Y[255:0], w_u_rsv_14_u_u_att_833_Y[255:0]}));
+-    ot_bind_native_193c9bdc13b0c4251a5bbbc4 g_u_rsv_14_u_u_att_pmem (.RD_ADDR({w_u_rsv_14_u_u_att_driver_pr_Q[8:0], w_u_rsv_14_u_u_att_src_29b80db2284db6415584_Y[8:0]}), .RD_DATA(w_u_rsv_14_u_u_att_pmem_RD_DATA), .WR_ADDR(w_u_rsv_14_u_u_att_driver_pw_Q[8:0]), .WR_CLK(clk), .WR_DATA(w_u_rsv_14_u_src_b4e411b517a9f984ed73_Q[511:0]), .WR_EN(w_u_rsv_14_u_u_att_src_edb47cb20fbd82577b0b_Y[511:0]));
++    // DISABLED isolated PMEM data-cut; preserve every original control/reset cell.
++    ot_t7_pmem_capture_candidate g_u_rsv_14_u_u_att_pmem_capture (
++        .clk(clk), .pr(w_u_rsv_14_u_u_att_driver_pr_Q[8:0]), .wa(w_u_rsv_14_u_u_att_driver_pw_Q[8:0]),
++        .pstep(w_u_rsv_14_u_u_att_716_Y[1:0]), .owner(w_u_rsv_14_u_u_att_719_Y[0]),
++        .push(w_u_rsv_14_u_u_att_u_eng_111_Y[0]), .wp(w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_wp_Q[0]),
++        .wd(w_u_rsv_14_u_src_b4e411b517a9f984ed73_Q[511:0]),
++        .wm(w_u_rsv_14_u_u_att_src_edb47cb20fbd82577b0b_Y[511:0]),
++        .slot0(w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk0_Q[1023:0]),
++        .slot1(w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk1_Q[1023:0]));
+     ot_bind_native_9c28130c03bbd6a26f6fd9a5 g_u_rsv_14_u_u_att_pvq (.RD_ADDR(w_u_rsv_14_u_u_att_driver_pvr_Q[2:0]), .RD_DATA(w_u_rsv_14_u_u_att_pvq_RD_DATA), .WR_ADDR(w_u_rsv_14_u_u_att_driver_pvw_Q[2:0]), .WR_CLK(clk), .WR_DATA({w_u_rsv_14_u_u_att_u_eng_src_26cc0285b4c5b801b801_Q[7:0], w_u_rsv_14_u_u_att_u_eng_src_378b62d9249ca62f488b_Q[2047:0], w_u_rsv_14_u_u_att_u_eng_src_6870e5b5454840c8a2c3_Q[63:0]}), .WR_EN(w_u_rsv_14_u_u_att_src_8c9e9eb60b3aae42c23f_Y[2119:0]));
+     ot_bind_native_ca056ec368b56f7d8e12952d g_u_rsv_14_u_u_att_qmem (.RD_ADDR(w_u_rsv_14_u_u_att_src_01f2ae1cc53fe310a51e_Y[3:0]), .RD_DATA(w_u_rsv_14_u_u_att_qmem_RD_DATA), .WR_ADDR({w_u_rsv_14_u_u_att_src_f351e93dde449dbc830a_Q[448], w_u_rsv_14_u_u_att_driver_f_idx_Q[6:4]}), .WR_CLK(clk), .WR_DATA(w_u_rsv_14_u_src_b4e411b517a9f984ed73_Q[511:0]), .WR_EN(w_u_rsv_14_u_u_att_src_2557464c3f15cdacb56d_Y[511:0]));
+     ot_bind_native_bfac540d36e9ad5c410d0d97 g_u_rsv_14_u_u_att_sw (.RD_ADDR(w_u_rsv_14_u_u_att_driver_sw_r_Q[4:0]), .RD_DATA(w_u_rsv_14_u_u_att_sw_RD_DATA), .WR_ADDR(w_u_rsv_14_u_u_att_driver_sw_w_Q[4:0]), .WR_CLK(clk), .WR_DATA(w_u_rsv_14_u_src_b4e411b517a9f984ed73_Q[511:0]), .WR_EN(w_u_rsv_14_u_u_att_src_98054b97b24ef8a8a8e5_Y[511:0]));
+@@ -11715,12 +11714,6 @@
+     assign w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_rp_Q = g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_rp_q;
+     always @(posedge clk or negedge w_u_rsv_14_u_3_Y[0])
+         if (!w_u_rsv_14_u_3_Y[0]) g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_rp_q <= 1'b0; else g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_rp_q <= w_u_rsv_14_u_u_att_u_eng_src_46c58c98a4d5cf925811_Y[0];  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:329.9
+-    reg [1023:0] g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk0_q;
+-    assign w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk0_Q = g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk0_q;
+-    always @(posedge clk) g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk0_q <= w_u_rsv_14_u_u_att_u_eng_src_7a2f9d574e2d0b99b375_Y[1023:0];  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:337.9
+-    reg [1023:0] g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk1_q;
+-    assign w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk1_Q = g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk1_q;
+-    always @(posedge clk) g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk1_q <= w_u_rsv_14_u_u_att_u_eng_src_75b927658e070e2d323b_Y[1023:0];  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:337.9
+     reg [0:0] g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_wp_q;
+     assign w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_wp_Q = g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_wp_q;
+     always @(posedge clk or negedge w_u_rsv_14_u_3_Y[0])
+@@ -12372,11 +12365,9 @@
+     assign w_u_rsv_14_u_u_att_u_eng_src_7310bd44a646c1876b52_Y = {{24{1'b0}}, w_u_rsv_14_u_u_att_u_eng_driver_iss_c_Q[7:0]} + 32'b00000000000000000000000000000001;  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:364.93-364.102
+     assign w_u_rsv_14_u_u_att_u_eng_src_7515857c3af58422479b_Y = $signed({1'b1, w_u_rsv_14_u_u_att_u_eng_src_a67801a451a1cfe6c99e_Y[2:0]}) >= $signed(4'b1000);  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:308.70-308.85
+     assign w_u_rsv_14_u_u_att_u_eng_src_757d53d6cb2b71be9b1b_Y = {{26{1'b0}}, w_u_rsv_14_u_u_att_u_eng_driver_fl_blk_Q[5:0]} * 32'b00000000000000000000000000100000;  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:521.47-521.58
+-    assign w_u_rsv_14_u_u_att_u_eng_src_75b927658e070e2d323b_Y = w_u_rsv_14_u_u_att_u_eng_src_c378f76dfef5197d822c_Y[0] ? w_u_rsv_14_u_u_att_733_Y[1023:0] : w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk1_Q[1023:0];  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:339.29-339.40|structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:339.13-339.40
+     assign w_u_rsv_14_u_u_att_u_eng_src_770bac92e0241d7bb5cd_Y = w_u_rsv_14_u_u_att_u_eng_src_7310bd44a646c1876b52_Y[31:0] == 32'b00000000000000000000000000001000;  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:364.93-364.109
+     assign w_u_rsv_14_u_u_att_u_eng_src_777003b02be146fc46da_Y = w_u_rsv_14_u_u_att_u_eng_218_Y[0] ? {w_u_rsv_14_u_u_att_u_eng_auto_opt_expr_cc_769_replace_const_cells_113511_Y[14:12], w_u_rsv_14_u_u_att_u_eng_auto_opt_expr_cc_768_replace_const_cells_113509_Y[9:8], w_u_rsv_14_u_u_att_u_eng_auto_opt_expr_cc_769_replace_const_cells_113511_Y[11:9], w_u_rsv_14_u_u_att_u_eng_auto_opt_expr_cc_768_replace_const_cells_113509_Y[7:6], w_u_rsv_14_u_u_att_u_eng_auto_opt_expr_cc_769_replace_const_cells_113511_Y[8:6], w_u_rsv_14_u_u_att_u_eng_auto_opt_expr_cc_768_replace_const_cells_113509_Y[5:4], w_u_rsv_14_u_u_att_u_eng_auto_opt_expr_cc_769_replace_const_cells_113511_Y[5:3], w_u_rsv_14_u_u_att_u_eng_auto_opt_expr_cc_768_replace_const_cells_113509_Y[3:2], w_u_rsv_14_u_u_att_u_eng_auto_opt_expr_cc_769_replace_const_cells_113511_Y[2:0], w_u_rsv_14_u_u_att_u_eng_auto_opt_expr_cc_768_replace_const_cells_113509_Y[1:0]} : {w_u_rsv_14_u_u_att_u_eng_procmux_4543_Y[4:0], w_u_rsv_14_u_u_att_u_eng_procmux_4541_Y[4:0], w_u_rsv_14_u_u_att_u_eng_procmux_4538_Y[4:0], w_u_rsv_14_u_u_att_u_eng_procmux_4535_Y[4:0], w_u_rsv_14_u_u_att_u_eng_procmux_4532_Y[4:0]};  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:419.24-426.16|structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:419.13-426.16
+     assign w_u_rsv_14_u_u_att_u_eng_src_787383c2dc97e3c005af_Y = !w_u_rsv_14_u_u_att_u_eng_driver_q_cnt_Q[7:0];  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:411.21-411.31
+-    assign w_u_rsv_14_u_u_att_u_eng_src_7a2f9d574e2d0b99b375_Y = w_u_rsv_14_u_u_att_u_eng_src_d694d9c9afb64dd6bd84_Y[0] ? w_u_rsv_14_u_u_att_733_Y[1023:0] : w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk0_Q[1023:0];  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:338.30-338.41|structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:338.13-338.41
+     assign w_u_rsv_14_u_u_att_u_eng_src_7b65b8c8b784cb299d1d_Y = w_u_rsv_14_u_u_att_u_eng_src_d2adea65c5cb143773cb_Y[31:0] == 32'b00000000000000000000000000001000;  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:448.21-448.40
+     assign w_u_rsv_14_u_u_att_u_eng_src_7bc17ecc175f1c11298e_Y = w_u_rsv_14_u_u_att_u_eng_src_f317523ac1a4f1a36686_Y[0] ? {3{1'b0}} : w_u_rsv_14_u_u_att_u_eng_src_da87d176fe108c3d7e40_Y[2:0];  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:414.34-414.90
+     assign w_u_rsv_14_u_u_att_u_eng_src_7e368708d04914238113_Y = w_u_rsv_14_u_u_att_u_eng_165_Y[0] ? w_u_rsv_14_u_u_att_u_eng_src_354f2a786eb390ad328c_Y[15:0] : w_u_rsv_14_u_u_att_u_eng_procmux_4514_Y[15:0];  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:418.24-418.86|structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:418.13-418.86
