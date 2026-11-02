@@ -1,0 +1,22 @@
+{
+  "status": "FAIL_NATIVE_CW_MASKED_WORD_VALUES",
+  "scope": "selected current native s_0S_L0 packet/CW/SRAM/RDOUT component",
+  "clock_ps": 833,
+  "actual_CW_word_writes": 16,
+  "native_RDOUT_pairs": 2,
+  "public_RDOUT_pairs": 2,
+  "value_errors": 4,
+  "faults": 0,
+  "ready": 1,
+  "external_CW_first": 129,
+  "registered_CW_first": 132,
+  "SRAM_write_enable_first": 134,
+  "SRAM_write_enable_last": 141,
+  "CW_registered_to_write_enable_edges": 2,
+  "stored_value_qualified": false,
+  "leases_qualified": false,
+  "cell_mask_defined_bit_failures": 3,
+  "diagnosis": "negative-base variable part-select helper retains low32 ones, zeroing effective masks for CW word1/2/3; emitter owner G0C",
+  "selected_helper_changed": false,
+  "full_token": false
+}
