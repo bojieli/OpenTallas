@@ -806,6 +806,21 @@ class PreRouteHoldReason(unittest.TestCase):
         self.assertIn("TT 3.0 FF -4.5 ps", KW.queue_class(j)[3])
 
 
+class LateEcoClass(unittest.TestCase):
+    # KW-ECO-1: a route/sign-off FAIL that went through the late-stage ECO loop names it in the class table
+    def test_exhausted_named(self):
+        j = {"status": "DONE-NEAR-MISS", "kind": "routed", "reasons": "hold_ff: FAIL",
+             "signoff": {"fails": ["hold_ff"], "tt_wns": 3.0, "ff_wns": -4.5},
+             "chain": {"eco": {"verdict": "EXHAUSTED", "summary": "late-ECO exhausted (2 it, 900 s): FF -6->-4.5"}}}
+        stage, st, cls, why = KW.queue_class(j)
+        self.assertEqual((st, cls), ("FAIL", "TIMING"))
+        self.assertIn("late-ECO exhausted (2 it", why)
+
+    def test_no_eco_unchanged(self):
+        j = {"status": "DONE-NEAR-MISS", "kind": "routed", "reasons": "hold_ff", "signoff": {"fails": ["hold_ff"]}}
+        self.assertNotIn("late-ECO", KW.queue_class(j)[3])
+
+
 class AdoptedPlanAllowlist(unittest.TestCase):
     def test_missing_owned_type_only_when_explicit_and_in_plan(self):
         c = cfg(only_items=["kv3_new", "kv3_missing"], plan_items_from_allowlist=True, pilot_first=False)

@@ -186,5 +186,93 @@ class ChainTest(unittest.TestCase):
         self.assertFalse(any("--netlist" in c for c in calls))
 
 
+class LateEcoTest(unittest.TestCase):
+    """KW-ECO-1: a NOT SIGNED TIMING/DRV route goes through the late-stage ECO loop before any FAIL"""
+
+    def setUp(self):
+        t = tempfile.TemporaryDirectory()
+        self.addCleanup(t.cleanup)
+        self.k = k = Path(t.name)
+        self.b = k / "run/results/asap7/core/base"
+        self.eb = k / "eco_1/i1/run/results/asap7/core/base"
+        for b in (self.b, self.eb):
+            b.mkdir(parents=True)
+            for n in ("6_final.odb", "6_final.spef", "6_final.v"):
+                (b / n).touch()
+                os.utime(b / n, (1e9, 1e9))
+        (k / "lec.py").touch()
+        self.calls = []
+
+    def fake(self, cmd, **kw):
+        self.calls.append(cmd)
+        if cmd[0] == "bash":
+            p = self.k / "signoff/signoff.json"
+            p.parent.mkdir()
+            p.write_text(json.dumps({"verdict": "NOT SIGNED", "inputs": {"base": str(self.b)},
+                                     "checks": {"hold_ff": {"verdict": "FAIL", "wns_ps": -3.0}}}))
+            return 1
+        if "--netlist" in cmd:
+            p = Path(cmd[cmd.index("--out") + 1]) / "lec.json"
+            p.parent.mkdir()
+            p.write_text(json.dumps({"verdict": "EQUIVALENT", "superset_vec": {"all_shown": True}}))
+            (p.parent / "lec.log").write_text("log")
+        return 0
+
+    def eco(self, verdict):
+        def loop(kit, record, runner, mem, threads, run=None):
+            self.eco_called = (kit, record, runner)
+            res = {"verdict": verdict, "reason": "r", "kind": "eco", "root": str(self.k / "eco_1"),
+                   "base_routed_db": str(self.b / "6_final.odb"), "iterations": [{"n": 1, "metrics": {}}],
+                   "summary": ("late-ECO PASS" if verdict == "PASS" else "late-ECO exhausted (1 it)")}
+            if verdict == "PASS":
+                so = self.k / "eco_1/i1/signoff/signoff.json"
+                so.parent.mkdir(parents=True)
+                checks = {g: {"verdict": "PASS"} for g in ("setup_tt", "hold_ff", "drv", "clock", "drc", "antenna", "pg")}
+                so.write_text(json.dumps({"verdict": "SIGNED", "inputs": {"base": str(self.eb)}, "checks": checks}))
+                res["best"] = {"n": 1, "signoff": str(so), "base": str(self.eb)}
+            return res
+        return loop
+
+    def receipt(self):
+        return json.loads(max(self.k.glob("autopilot_chain*.json")).read_text())
+
+    def test_eco_pass_goes_to_routed_lec_on_eco_netlist(self):
+        self.assertEqual(continue_kit(self.k, "runner.sh", "route", 48, 8, self.fake, eco_loop=self.eco("PASS")), 0)
+        r = self.receipt()
+        self.assertEqual(r["verdict"], "PASS")
+        self.assertEqual(r["eco"]["verdict"], "PASS")
+        self.assertEqual(self.calls[-1][self.calls[-1].index("--netlist") + 1], str(self.eb / "6_final.v"))
+        link = Path(r["eco"]["signoff_link"])
+        self.assertTrue(link.is_symlink() and link.name.startswith("signoff_eco_"))
+        self.assertEqual(r["signoff"], str(link / "signoff.json"))   # the autopilot probe reads the ECO record
+        self.assertEqual(self.eco_called[2], "runner.sh")
+
+    def test_eco_exhausted_keeps_fail_path_with_evidence(self):
+        self.assertEqual(continue_kit(self.k, "runner.sh", "route", 48, 8, self.fake, eco_loop=self.eco("EXHAUSTED")), 1)
+        r = self.receipt()
+        self.assertEqual(r["verdict"], "RUNNER_FAIL")
+        self.assertIn("late-ECO exhausted", r["reason"])
+        self.assertFalse(any("--netlist" in c for c in self.calls))
+        self.assertFalse(list(self.k.glob("signoff_eco_*")))
+
+    def test_opt_outs(self):
+        def boom(*a, **kw):
+            raise AssertionError("ECO must not run")
+        self.assertEqual(continue_kit(self.k, "runner.sh", "route", 48, 8, self.fake, late=False, eco_loop=boom), 1)
+        self.assertNotIn("eco", self.receipt())
+        (self.k / "signoff/signoff.json").unlink()
+        (self.k / "signoff").rmdir()
+        (self.k / "late_eco.off").touch()
+        self.assertEqual(continue_kit(self.k, "runner.sh", "route", 48, 8, self.fake, eco_loop=boom), 1)
+
+    def test_runner_crash_is_not_an_eco_case(self):
+        def crash(cmd, **kw):
+            r = self.fake(cmd, **kw)
+            return 7 if cmd[0] == "bash" else r
+        def boom(*a, **kw):
+            raise AssertionError("ECO must not run")
+        self.assertEqual(continue_kit(self.k, "runner.sh", "route", 48, 8, crash, eco_loop=boom), 7)
+
+
 if __name__ == "__main__":
     unittest.main()

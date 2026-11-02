@@ -1251,6 +1251,15 @@ def stage_admission_tools(source_chain=None, source_tools=None, root=None):
                 preflight=str(dest / "die_plan/kit_preflight.py"), sha256=version)
 
 
+def late_eco_on():
+    """KW-ECO-1 late-stage ECO loop in signoff_chain.py: default ON; COORD opt-out = "late_eco": false in
+    autopilot/kit_wave.json (one coord commit); per kit: a KIT/late_eco.off marker"""
+    try:
+        return json.loads((AP_DIR / "kit_wave.json").read_text()).get("late_eco", True) is not False
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
 def submit(st, j, attempt_note=""):
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
@@ -1266,7 +1275,7 @@ def submit(st, j, attempt_note=""):
         encoded = base64.b64encode(json.dumps(bundle).encode()).decode()
         # --stage is spill-only. Fetch the immutable tool bundle on the
         # actual selected worker before executing any frozen kit runner.
-        argv += ["--", "python3", "-c", ADMISSION_BOOTSTRAP, encoded,
+        argv += ["--", "python3", "-c", ADMISSION_BOOTSTRAP, encoded] + ([] if late_eco_on() else ["--no-late-eco"]) + [
                  runner, kit, j["goal"], str(mem), str(thr)]
         # chain v2 (AUTOPILOT-SIGNOFF-2): main lec.py + all_shown + mtime proof, FAILED notice + data delete.
         # Jobs launched by an earlier chain keep the earlier rules (no retroactive demotion or deletion).
@@ -1606,10 +1615,23 @@ done()
 '''
 
 
+def eco_provenance(j):
+    """KW-ECO-1: a sign-off reached through the late-stage ECO loop names it (kind eco, base routed DB, iterations with
+    their commands, flow sha); sign-off + routed LEC are the usual ones on the ECO'd routed DB.  {} otherwise."""
+    eco = (j.get("chain") or {}).get("eco") or {}
+    if eco.get("verdict") != "PASS":
+        return {}
+    return dict(kind="eco", eco=dict(tool="tools/die_plan/eco_loop.py", base_routed_db=eco.get("base_routed_db"),
+                                     base_signoff=eco.get("base_signoff"), base_metrics=eco.get("base_metrics"),
+                                     routed_db=(eco.get("best") or {}).get("base"), record=eco.get("record"),
+                                     iterations=eco.get("iterations"), flow=eco.get("flow"), wall_s=eco.get("wall_s")))
+
+
 def write_provenance(host, dest, j):
     prov = {k: j.get(k) for k in ("id", "die", "type", "src", "src_commit", "flow_tag", "lane")}
     prov.update(schema="opentallas.provenance.v1", verdict="SIGNED" if j.get("flow_tag") and j.get("src_commit")
                 else "SIGNED-UNVERSIONED", why=j.get("prov_error", ""), written=now_s())
+    prov.update(eco_provenance(j))
     return rpy(host, PROBE_PROVENANCE, {"dest": dest, "prov": prov}, timeout=120)
 
 
@@ -1922,11 +1944,15 @@ def finish(st, j, c, client):
             cls, kind, reasons = "STRUCTURAL", "routed-lec", "autopilot chain incomplete: " + str(chain.get("reason") or "missing current routed LEC")
     if client.get("orphan") and cls == "CRASH" and kind not in ("tool-segfault",):
         kind, reasons = "infra-orphan", client["msg"]
+    eco = ((c.get("chain") or {}).get("eco") or {}) if (c.get("chain") or {}).get("started", 0) >= j.get("started", 0) - 120 else {}
+    if eco.get("summary") and cls not in ("SIGNED", "WAIT-PARENT"):
+        # KW-ECO-1: the FAIL evidence carries the late-stage ECO result (kit_wave class table "late-ECO exhausted")
+        reasons = f"{eco['summary'][:240]} | {reasons}"
     j.update(cls=cls, kind=kind, reasons=reasons[:600], probe=c.get("probe_host"),
              signoff=c.get("signoff"), finished=time.time())
     if c.get("chain"):
         j["chain"] = {k: c["chain"].get(k) for k in ("verdict", "reason", "gates", "lec", "lec_verdict",
-                                                   "lec_all_shown", "lec_tool", "signoff", "netlist")}
+                                                   "lec_all_shown", "lec_tool", "signoff", "netlist", "eco")}
     log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> {cls} ({kind}): {reasons[:240]}")
     if cls == "CRASH" and kind in INFRA_KINDS and not j.get("adopted"):
         notrun = kind == "infra-notrun"
