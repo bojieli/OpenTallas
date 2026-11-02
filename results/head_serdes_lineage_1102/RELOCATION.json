@@ -1,0 +1,50 @@
+{
+ "only_changes": "clock.sink_bins_file filesystem locations, identical copied assets",
+ "changes": [
+  [
+   "hd_tile",
+   "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/prepared/assets/sink_bins_0.json",
+   "/srv/opentallas-scratch/claude/head-serdes-lineage-1102/assets/sink_bins_0.json"
+  ],
+  [
+   "hd_turn_a",
+   "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/prepared/assets/sink_bins_1.json",
+   "/srv/opentallas-scratch/claude/head-serdes-lineage-1102/assets/sink_bins_1.json"
+  ],
+  [
+   "hd_turn_b",
+   "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/prepared/assets/sink_bins_2.json",
+   "/srv/opentallas-scratch/claude/head-serdes-lineage-1102/assets/sink_bins_2.json"
+  ],
+  [
+   "hd_st_str",
+   "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/prepared/assets/sink_bins_3.json",
+   "/srv/opentallas-scratch/claude/head-serdes-lineage-1102/assets/sink_bins_3.json"
+  ],
+  [
+   "hd_ctl",
+   "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/prepared/assets/sink_bins_4.json",
+   "/srv/opentallas-scratch/claude/head-serdes-lineage-1102/assets/sink_bins_4.json"
+  ],
+  [
+   "hd_spn_wshim_rx",
+   "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/prepared/assets/sink_bins_5.json",
+   "/srv/opentallas-scratch/claude/head-serdes-lineage-1102/assets/sink_bins_5.json"
+  ],
+  [
+   "hd_spn_wshim_tx",
+   "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/prepared/assets/sink_bins_6.json",
+   "/srv/opentallas-scratch/claude/head-serdes-lineage-1102/assets/sink_bins_6.json"
+  ],
+  [
+   "hd_spn_eshim_rx",
+   "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/prepared/assets/sink_bins_7.json",
+   "/srv/opentallas-scratch/claude/head-serdes-lineage-1102/assets/sink_bins_7.json"
+  ],
+  [
+   "hd_spn_eshim_tx",
+   "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/prepared/assets/sink_bins_8.json",
+   "/srv/opentallas-scratch/claude/head-serdes-lineage-1102/assets/sink_bins_8.json"
+  ]
+ ]
+}
