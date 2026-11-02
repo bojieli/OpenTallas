@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS-COND for one corrected genuine CGm10 data ECO",
+  "pictures": [
+    "/home/ubuntu/coord/tmp/codex-ahub-cg-2310/final_placement.webp",
+    "/home/ubuntu/coord/tmp/codex-ahub-cg-2310/final_routing.webp",
+    "/home/ubuntu/coord/tmp/codex-ahub-cg-2310/final_worst_path.webp"
+  ],
+  "personally_viewed": true,
+  "findings": [
+    "Exact previous CGm10 native layout has four left SRAM tiles with center cross channels, right child macro, and open south data-control band. Wide buses use center/south passages; no new macro or pin changes.",
+    "Original routed candidate DRC0/ANT0, TT+8.81/FF+5.42 but failed clock freeze on two zh_sid master changes. All original failing artifacts preserved.",
+    "Fresh candidate starts originalG routed input SHA90b670dedc2ac77e4b2489c7fdc514b76cd4fbffa74afb8c84747314d5547a71; immutable CG4_cts alias matches originalG5_2route exactly.",
+    "Only9b ECO repair guard changes: exclude existing DFF library masters from data sizing, preserving all clock wires/masters/placement; combinational resizing/buffer insertion remains legal. Native repair-only hygiene previously PASS.",
+    "No duplicate corrected CG candidate active. Complete exact m-kv9file bundle replaces incomplete manual export class. Final native clock freeze and ordinary TT/FF signoff/own-final LEC required; missing child clock expansion cannot be waived."
+  ],
+  "resource": {
+    "requested_mem_gb": 16,
+    "threads": 8,
+    "observed_prior_same_CG_DRT_peak_KB": 9339316,
+    "disk_gb": 12
+  }
+}
