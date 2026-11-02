@@ -374,5 +374,19 @@
   }
  ],
  "raw_root": "intel2:/srv/opentallas-scratch2/claude/codex-s81-native-pg-1528",
- "whole_grid_topology": "RESOURCE exit137 at2GB; topology-only4GB retry pending; no topology/IR/signoff claim"
+ "whole_grid_topology": {
+  "odb": "intel2:/srv/opentallas-scratch2/claude/codex-s81-native-pg-1528/kit/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/2_4_floorplan_pdn.odb",
+  "VDD": {
+   "unit": "oth-ubuntu-2975279-1793576920",
+   "verdict": "PSM-0040 all shapes on net VDD connected",
+   "later_process_result": "RESOURCE OOM137 while checking second net"
+  },
+  "VSS": {
+   "unit": "oth-ubuntu-3553491-1793577917",
+   "verdict": "PSM-0040 all shapes on net VSS connected; PG_TOPOLOGY_VSS_PASS",
+   "process_exit": 0,
+   "oom_killed": false
+  },
+  "scope": "independent per-net global continuity on same immutable DB, not IR/timing/SIGNED"
+ }
 }
