@@ -1,0 +1,23 @@
+{
+ "scope": "REVIEW_ONLY_DEFAULT_OFF_SOURCE_PREVIEW_NOT_APPLIED_OR_TESTED",
+ "source_sha256": {
+  "ot_s81hd_beat_link.sv": "7be572071055a7c0c316c0c86b35e98953a705fa7e208d20be30d0d1c14af2b0",
+  "ot_s81hd_mesh_ep_core.sv": "3b7414dc853ba1ddf273cad3f4b97dada177cfa8bc9506c3a5e82c9b265ad237"
+ },
+ "parameter_default": {
+  "N2_TAIL_PAD_ZERO": 0
+ },
+ "preview_enable": "Only exactmesh u_wtx W110/N2/P62 callsite sets1; no production source edited.",
+ "source_change": "For N2/MUT0/!start, TXoq_p[61:48] is explicitly0 aftertheclock, preserving real firstbeat bits48..61. Otherpayloadbits/valid/index/fault/cyclelogic unchanged.",
+ "clock": "posedgeck existing data output flop; no new clock/reset",
+ "added_cycles": 0,
+ "counts_or_mapping_reuse_credit": false,
+ "behavior_difference": "Rawidle upper14payload bits beforefirstword change from unreset unknown/arbitrary storage to0 afterfirstedge. This is an explicit source/ABI choice, not a proof mask.",
+ "current_approval": "HOLD_OWNER_SEMANTICS_CHOICE",
+ "negative_controls_to_prepare_after_scope": [
+  "Wrong blanketzero ofoq_p61:48 onstart mustfail realbeat0 data48..61.",
+  "Inject nonzero tailpad in validbeat1 mustraise existingRXpadfault.",
+  "Existingbeat-swap/drop/rate mutants mustremainactive; no changes tovalid/index/fault masks."
+ ],
+ "validation": "No solver, simulation, elaboration, synthesis, route or source adoption performed. Existing raw41 verdicts preserved."
+}

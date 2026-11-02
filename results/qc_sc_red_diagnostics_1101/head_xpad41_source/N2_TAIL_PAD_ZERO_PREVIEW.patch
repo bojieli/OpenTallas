@@ -1,0 +1,37 @@
+--- a/rtl/dsrom_sys/s81_head/ot_s81hd_beat_link.sv
++++ b/rtl/dsrom_sys/s81_head/ot_s81hd_beat_link.sv
+@@ -35,7 +35,9 @@
+     // DIE-HEAD-31 (COORD 14:10 hd_ctl u_tx (B)): opt-in, default 0 = unchanged.  1: the payload pin bits are 0 in an
+     // idle cycle (vb = 0) instead of repeating the no-reset hold register, so oq_p never carries power-up X; the RX
+     // ignores pay when vb = 0, so words, beats, latency (0 added cycles) and faults are identical.
+-    parameter integer IDLE_ZERO = 0
++    parameter integer IDLE_ZERO = 0,
++    // PREVIEW ONLY, default OFF: define N=2 tail-pad payload during idle.
++    parameter integer N2_TAIL_PAD_ZERO = 0
+ ) (
+     input  wire                 ck,
+     input  wire                 rn,          // control-only reset, active low
+@@ -65,6 +67,12 @@
+             if (start) oq_p <= (MUT == 1) ? b1 : b0;
+             else if (IDLE_ZERO != 0 && owe == 0) oq_p <= {P{1'b0}};
+             else oq_p <= hold[P-1:0];
++            // Source behavior change only for the opt-in N=2 production profile.
++            // Beat0 is real data here; clear only a non-start tail/idle payload.
++            if (N2_TAIL_PAD_ZERO != 0 && N == 2 && MUT == 0 && W < NP && !start) begin
++                for (integer pad_i = (W > P ? W - P : 0); pad_i < P; pad_i = pad_i + 1)
++                    oq_p[pad_i] <= 1'b0;
++            end
+         end
+         always @(posedge ck or negedge rn)
+             if (!rn) begin owe <= 0; nxt <= 0; fault <= 1'b0; oq_v <= 1'b0; oq_b <= 0; end
+--- a/rtl/dsrom_sys/s81_head/ot_s81hd_mesh_ep_core.sv
++++ b/rtl/dsrom_sys/s81_head/ot_s81hd_mesh_ep_core.sv
+@@ -175,7 +175,7 @@
+     wire copy = (MUT == 1) ? 1'b0 : selb[0];
+     wire wf;
+     wire [11:0] fv_word = (MUT == 4) ? 12'd0 : fv;
+-    ot_s81hd_beat_tx #(.W(WW), .N(2), .P(62)) u_wtx (.ck(ck), .rn(r_rx), .v(iss_q), .d({fv_word, copy, body}),
++    ot_s81hd_beat_tx #(.W(WW), .N(2), .P(62), .N2_TAIL_PAD_ZERO(1)) u_wtx (.ck(ck), .rn(r_rx), .v(iss_q), .d({fv_word, copy, body}),
+         .o(m_rx_o), .fault(wf));
+     always @(posedge ck or negedge r_rx)
+         if (!r_rx) fv <= 12'd0;
