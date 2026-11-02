@@ -51,7 +51,7 @@ sha256sum -c packet.sha256 >input_guard.log 2>&1 || exit 3
 sha256sum -c model.sha256 >model_guard.log 2>&1 || exit 4
 obj_dir=MODEL_OBJECT_DIRECTORY
 vroot=/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator
-/usr/bin/time -v -o link.time /usr/bin/g++ -std=c++20 -fcoroutines -O0 -w -fno-var-tracking -DVM_TIMING=1 -DVM_SC=0 -I"$obj_dir" -I"$vroot/include" -I"$vroot/include/vltstd" capture_native_head_prefixes.cpp "$obj_dir/verilated.o" "$obj_dir/verilated_timing.o" "$obj_dir/verilated_threads.o" "$obj_dir/Vtb_native_head_leaf__ALL.a" -pthread -latomic -o capture_native_head_prefixes >link.log 2>&1
+/usr/bin/time -v -o link.time /usr/bin/g++ -fcoroutines -O0 -w -fno-var-tracking -DVERILATOR=1 -DVM_TIMING=1 -DVM_SC=0 -DVM_COVERAGE=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -DVL_TIME_CONTEXT -I"$obj_dir" -I"$vroot/include" -I"$vroot/include/vltstd" capture_native_head_prefixes.cpp "$obj_dir/verilated.o" "$obj_dir/verilated_timing.o" "$obj_dir/verilated_threads.o" "$obj_dir/Vtb_native_head_leaf__ALL.a" -pthread -latomic -o capture_native_head_prefixes >link.log 2>&1
 link_rc=$?;printf 'LINK_RC=%s\\n' "$link_rc" >status
 [ "$link_rc" = 0 ] || exit "$link_rc"
 /usr/bin/time -v -o replay.time ./capture_native_head_prefixes +OT_ROM_DIR=rom >replay.log 2>&1
