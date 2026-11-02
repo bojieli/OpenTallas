@@ -1,0 +1,32 @@
+{
+ "source": "39f754dda07e9746c4850ea0814d48d134a6cf2a",
+ "input_plan_sha256": "5b293f01a882e6fc2d28f78f8bf5cb5a004d192efb5a53c6e16fdcbf5a6ba3ce",
+ "type": "slice_station__t49",
+ "tap": "clk_t25",
+ "old_xy": [
+  400.1757,
+  307.2182
+ ],
+ "new_xy": [
+  400.656,
+  307.712
+ ],
+ "old_load": 936.0,
+ "new_load": 934.0,
+ "old_radius": 150.96309999999994,
+ "new_radius": 149.98899999999998,
+ "radius_limit": 150,
+ "all69_taps_pass": true,
+ "membership_changes": 2,
+ "sink_count": 22133,
+ "reset_graph_coords_byte_identical": false,
+ "emitted_reset_rtl_byte_identical": false,
+ "old_relays": 228,
+ "new_relays": 228,
+ "old_outputs": 2,
+ "new_outputs": 2,
+ "old_depth": 7,
+ "new_depth": 7,
+ "source_only": true,
+ "physical_hold": true
+}
