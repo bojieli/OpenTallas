@@ -114,3 +114,30 @@ def test_passive_capture_reuses_only_the_existing_native_graph():
     assert 'set P $::ot_ps_retained_pairs' in retained
     assert retained.index('OT_CHILD_CLOCK_WITNESS tt COMPLETE') < retained.index('set so_regs {}')
     assert 'CHILD_CLOCK_WITNESS_FAILED' in retained
+
+
+def test_explicit_engine_bundle_closes_dynamic_native_dependencies(tmp_path):
+    target=tmp_path/'engine'
+    signoff.copy_signoff_bundle(target,extra=('lec.py',))
+    for name in ('lec.py','native_stub_metadata.py','native_bb.py','manifest_paths.py'):
+        assert (target/name).read_bytes()==(Path(signoff.__file__).parent/name).read_bytes()
+    code='''import sys
+sys.path.insert(0,sys.argv[1])
+import lec,native_stub_metadata,manifest_paths
+assert lec.cons_base_coverage([None],[[0],[1]])['covered']
+assert native_stub_metadata._native_bb().__file__.endswith('native_bb.py')
+print('COMPLETE_ENGINE_BUNDLE_PASS')
+'''
+    result=subprocess.run([sys.executable,'-I','-c',code,str(target)],text=True,capture_output=True)
+    assert result.returncode==0,result.stderr
+    assert 'COMPLETE_ENGINE_BUNDLE_PASS' in result.stdout
+
+
+def test_missing_dynamic_engine_dependency_refuses_before_partial_output(tmp_path):
+    source=tmp_path/'source'
+    signoff.copy_signoff_bundle(source,extra=('lec.py',))
+    (source/'native_bb.py').unlink()
+    target=tmp_path/'target'
+    with pytest.raises(ValueError,match='native_bb'):
+        signoff.copy_signoff_bundle(target,source,extra=('lec.py',))
+    assert not target.exists()
