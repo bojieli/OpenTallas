@@ -1,0 +1,621 @@
+{
+  "scope": "Declared preoptimization source reg bits, not mappedFF or clockload; native SRAM state excluded",
+  "top": {
+    "module": "ot_hgi_sfu_programme_store_r10",
+    "internal_declared_reg_bits": 3856,
+    "output_reg_bits": 69,
+    "total_declared_reg_bits": 3925,
+    "registers": [
+      {
+        "name": "p_cfg_we",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "p_io_cfg_we",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "p_io_start_v",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "p_cfg_stripe",
+        "width": 3,
+        "elements": 1,
+        "declared_bits": 3
+      },
+      {
+        "name": "p_io_cfg_stripe",
+        "width": 2,
+        "elements": 1,
+        "declared_bits": 2
+      },
+      {
+        "name": "p_cfg_addr",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "p_io_cfg_addr",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "p_start_base",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "p_io_start_base",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "p_cfg_data",
+        "width": 256,
+        "elements": 1,
+        "declared_bits": 256
+      },
+      {
+        "name": "p_io_cfg_data",
+        "width": 256,
+        "elements": 1,
+        "declared_bits": 256
+      },
+      {
+        "name": "p_start_limit",
+        "width": 12,
+        "elements": 1,
+        "declared_bits": 12
+      },
+      {
+        "name": "p_io_start_limit",
+        "width": 12,
+        "elements": 1,
+        "declared_bits": 12
+      },
+      {
+        "name": "p_start_loops",
+        "width": 16,
+        "elements": 1,
+        "declared_bits": 16
+      },
+      {
+        "name": "p_io_start_loops",
+        "width": 16,
+        "elements": 1,
+        "declared_bits": 16
+      },
+      {
+        "name": "rs1",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "rs2",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "ra_leaf",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "ra_top",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "rb",
+        "width": 4,
+        "elements": 1,
+        "declared_bits": 4
+      },
+      {
+        "name": "rbd1",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "we_d1",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "we_d2",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "we_d3",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "we_d4",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "we_d5",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "pr_sv",
+        "width": 4,
+        "elements": 1,
+        "declared_bits": 4
+      },
+      {
+        "name": "pr_legal",
+        "width": 4,
+        "elements": 1,
+        "declared_bits": 4
+      },
+      {
+        "name": "pr_lone",
+        "width": 4,
+        "elements": 1,
+        "declared_bits": 4
+      },
+      {
+        "name": "pr_base",
+        "width": 11,
+        "elements": 4,
+        "declared_bits": 44
+      },
+      {
+        "name": "pr_span",
+        "width": 12,
+        "elements": 4,
+        "declared_bits": 48
+      },
+      {
+        "name": "pr_loops",
+        "width": 16,
+        "elements": 4,
+        "declared_bits": 64
+      },
+      {
+        "name": "cr_addr0",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "cr_addr3",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "cr_data0",
+        "width": 256,
+        "elements": 1,
+        "declared_bits": 256
+      },
+      {
+        "name": "cr_data3",
+        "width": 256,
+        "elements": 1,
+        "declared_bits": 256
+      },
+      {
+        "name": "p_sv_q",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "nb7_s",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "nbio_s",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "sp_vall",
+        "width": 4,
+        "elements": 1,
+        "declared_bits": 4
+      },
+      {
+        "name": "sp_vany",
+        "width": 4,
+        "elements": 1,
+        "declared_bits": 4
+      },
+      {
+        "name": "sp_aall",
+        "width": 4,
+        "elements": 1,
+        "declared_bits": 4
+      },
+      {
+        "name": "sp_aany",
+        "width": 4,
+        "elements": 1,
+        "declared_bits": 4
+      },
+      {
+        "name": "sp_dall",
+        "width": 4,
+        "elements": 1,
+        "declared_bits": 4
+      },
+      {
+        "name": "sp_dany",
+        "width": 4,
+        "elements": 1,
+        "declared_bits": 4
+      },
+      {
+        "name": "sp_f",
+        "width": 4,
+        "elements": 1,
+        "declared_bits": 4
+      },
+      {
+        "name": "sp_mm",
+        "width": 4,
+        "elements": 1,
+        "declared_bits": 4
+      },
+      {
+        "name": "sp_ord",
+        "width": 32,
+        "elements": 4,
+        "declared_bits": 128
+      },
+      {
+        "name": "si_vall",
+        "width": 2,
+        "elements": 1,
+        "declared_bits": 2
+      },
+      {
+        "name": "si_vany",
+        "width": 2,
+        "elements": 1,
+        "declared_bits": 2
+      },
+      {
+        "name": "si_aall",
+        "width": 2,
+        "elements": 1,
+        "declared_bits": 2
+      },
+      {
+        "name": "si_aany",
+        "width": 2,
+        "elements": 1,
+        "declared_bits": 2
+      },
+      {
+        "name": "si_dall",
+        "width": 2,
+        "elements": 1,
+        "declared_bits": 2
+      },
+      {
+        "name": "si_dany",
+        "width": 2,
+        "elements": 1,
+        "declared_bits": 2
+      },
+      {
+        "name": "si_f",
+        "width": 2,
+        "elements": 1,
+        "declared_bits": 2
+      },
+      {
+        "name": "si_mm",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "si_ord",
+        "width": 32,
+        "elements": 2,
+        "declared_bits": 64
+      },
+      {
+        "name": "rb_d",
+        "width": 3,
+        "elements": 1,
+        "declared_bits": 3
+      },
+      {
+        "name": "p_fault",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "io_fault",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "o_io",
+        "width": 471,
+        "elements": 1,
+        "declared_bits": 471
+      },
+      {
+        "name": "o_ctl",
+        "width": 1742,
+        "elements": 1,
+        "declared_bits": 1742
+      }
+    ]
+  },
+  "per_leaf": {
+    "module": "ot_hgi_sfu_store_stripe_leaf_r10",
+    "internal_declared_reg_bits": 1503,
+    "output_reg_bits": 224,
+    "total_declared_reg_bits": 1727,
+    "registers": [
+      {
+        "name": "rb",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "we_q",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "start_v_q",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "legal_q",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "loops_one_q",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "cv_q",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "addr_q",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "data_q",
+        "width": 256,
+        "elements": 1,
+        "declared_bits": 256
+      },
+      {
+        "name": "start_base_q",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "span_q",
+        "width": 12,
+        "elements": 1,
+        "declared_bits": 12
+      },
+      {
+        "name": "loops_q",
+        "width": 16,
+        "elements": 1,
+        "declared_bits": 16
+      },
+      {
+        "name": "fwd_addr_q",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "fwd_data_q",
+        "width": 256,
+        "elements": 1,
+        "declared_bits": 256
+      },
+      {
+        "name": "running",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "loops_one",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "pc",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "base",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "rem",
+        "width": 12,
+        "elements": 1,
+        "declared_bits": 12
+      },
+      {
+        "name": "span",
+        "width": 12,
+        "elements": 1,
+        "declared_bits": 12
+      },
+      {
+        "name": "loops_left",
+        "width": 16,
+        "elements": 1,
+        "declared_bits": 16
+      },
+      {
+        "name": "issued",
+        "width": 32,
+        "elements": 1,
+        "declared_bits": 32
+      },
+      {
+        "name": "valid0",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "valid1",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "last0",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "last1",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "pc0",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "pc1",
+        "width": 11,
+        "elements": 1,
+        "declared_bits": 11
+      },
+      {
+        "name": "ord0",
+        "width": 32,
+        "elements": 1,
+        "declared_bits": 32
+      },
+      {
+        "name": "ord1",
+        "width": 32,
+        "elements": 1,
+        "declared_bits": 32
+      },
+      {
+        "name": "ordinal",
+        "width": 32,
+        "elements": 1,
+        "declared_bits": 32
+      },
+      {
+        "name": "captured",
+        "width": 256,
+        "elements": 1,
+        "declared_bits": 256
+      },
+      {
+        "name": "calendar",
+        "width": 222,
+        "elements": 1,
+        "declared_bits": 222
+      },
+      {
+        "name": "calendar_v",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "active",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "done",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "fault",
+        "width": 1,
+        "elements": 1,
+        "declared_bits": 1
+      },
+      {
+        "name": "read_page",
+        "width": 2,
+        "elements": 1,
+        "declared_bits": 2
+      },
+      {
+        "name": "relay",
+        "width": 222,
+        "elements": 1,
+        "declared_bits": 222
+      }
+    ]
+  },
+  "leaves": 11,
+  "total_declared_soft_reg_bits": 22922
+}

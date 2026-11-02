@@ -134,5 +134,23 @@
       "native_source_event": "NOT_IMPLEMENTED_OR_ADOPTED",
       "new_source_clock_reset_phase": "MUST_PRICE_AND_QUALIFY"
     }
+  },
+  "declared_native_memory_model": {
+    "leaves": 11,
+    "leaf_module": "ot_hgi_sfu_store_stripe_leaf_r10",
+    "leaf_AW": 11,
+    "pages_per_leaf": 4,
+    "master": "ot_sram_1r1w_512x256_m1_r2c2",
+    "declared_macro_count": 44,
+    "raw_native_memory_bits": 5767168,
+    "native_LEF_size_um": [
+      96.552,
+      69.66
+    ],
+    "macro_body_area_um2": 295935.74208,
+    "planning_outline_area_um2": 424438.9632,
+    "macro_body_fraction": 0.6972398100514444,
+    "mapped_count_area_clock": "NOT_MEASURED_FOR_THIS_SELECTED_BODY",
+    "same_name_native_memory_contract": "Exactselectedprimitive/sourceABIandtrueLEF/Libertyrequired; noStoreA256-masterorproofsubstitution"
   }
 }
