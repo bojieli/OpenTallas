@@ -14,7 +14,9 @@ except FileNotFoundError:cmd=''
 worker='eco_loop.py run --kit /srv/opentallas-scratch2/claude/kw-eco-1/pilot/hd_st_n4 ' in cmd
 try:d=json.loads((root/'eco_loop.json').read_text())
 except (OSError,ValueError):d=None
-print(json.dumps(dict(scope=state,systemctl_rc=x.returncode,exact_worker_present=worker,record=d)))
+try:completion=pathlib.Path('/var/tmp/ot-heavy/completions/oth-ubuntu-3838594-1793595776').read_text().rstrip('\n').split('\t')
+except OSError:completion=[]
+print(json.dumps(dict(scope=state,systemctl_rc=x.returncode,exact_worker_present=worker,record=d,completion=completion)))
 '''
 while True:
  try:
@@ -25,12 +27,17 @@ while True:
   state=q['scope'];finished=state.get('ActiveState') in ('inactive','failed') or state.get('LoadState')=='not-found'
   if finished and not q['exact_worker_present']:
    d=q['record'];raw=d.get('verdict') if d else None;verdict=raw or 'ERROR_MISSING_RECORD'
+   comp=q.get('completion') or [];value=comp[3] if len(comp)==4 else None
+   native_exit=int(value) if value is not None and value.lstrip('-').isdigit() else None
    if raw=='PASS':
     lec=d.get('lec') or {}
     if not lec:verdict='PHYSICAL_PASS_LEC_MISSING'
     elif lec.get('exit')!=0 or lec.get('verdict')!='EQUIVALENT':verdict='LEC_FAIL_RECORDED'
+    elif lec.get('all_shown') is not True:verdict='LEC_SCOPE_UNQUALIFIED'
+    elif native_exit!=0:verdict='NATIVE_EXIT_NOT_PASS'
+   if native_exit is None:verdict='ERROR_COMPLETION_MISSING'
    if d:(r/'N4_TERMINAL.json').write_text(json.dumps(d,indent=1)+'\n')
-   notice=dict(verdict=verdict,raw_verdict=raw,source='intel2:'+root+'/eco_loop.json',exact_scope=unit,scope_state=state,exact_worker_present=False,collected_at=time.time(),scope='existing producer finished; raw record preserved, paired LEC joined; no source/parent credit inferred')
+   notice=dict(verdict=verdict,raw_verdict=raw,source='intel2:'+root+'/eco_loop.json',exact_scope=unit,scope_state=state,native_exit=native_exit,completion=comp,exact_worker_present=False,collected_at=time.time(),scope='existing producer finished; raw record preserved, paired LEC joined; no source/parent credit inferred')
    (r/'N4_NOTICE.json').write_text(json.dumps(notice,indent=1)+'\n');break
  except (OSError,ValueError,RuntimeError,subprocess.TimeoutExpired) as e:
   (r/'N4_WATCH_ERROR.json').write_text(json.dumps(dict(checked_at=time.time(),error=str(e)))+'\n')
