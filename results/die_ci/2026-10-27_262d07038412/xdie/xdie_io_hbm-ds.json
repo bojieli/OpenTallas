@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.die_plan.xdie_io.v1",
+ "conn": "/srv/opentallas-scratch2/claude/die-ci/wt/results/arch/release_rack_1021/connections_hbm-ds.csv",
+ "roles": {
+  "D": "/srv/opentallas-scratch2/claude/die-ci/wt/physical/die_plan/hbm_arch/B2l/die_io.json"
+ },
+ "verdict": "FAIL",
+ "errors": 1,
+ "error_groups": [
+  {
+   "rule": "host",
+   "role": "D",
+   "macro": null,
+   "cls": null,
+   "n": 1,
+   "example": "role D: die_io marks ['NW_io'] host: true but the rack gives this role no host circuit (host traffic is in-band)"
+  }
+ ],
+ "warnings": [
+  "role D: window NW_io used by no circuit"
+ ],
+ "summary": {
+  "circuits_checked": 480,
+  "by_class": {
+   "quad_mesh D-D": 288,
+   "quad_ring D-D": 192
+  },
+  "roles": {
+   "D": {
+    "windows": 7,
+    "used": [
+     "lk_NE0",
+     "lk_NW0",
+     "lk_SE0",
+     "lk_SW0",
+     "lk_SW1"
+    ],
+    "host_windows": [
+     "NW_io"
+    ],
+    "unused": [
+     "NW_io"
+    ],
+    "host_circuit": false,
+    "in_band_host_windows": []
+   }
+  }
+ }
+}

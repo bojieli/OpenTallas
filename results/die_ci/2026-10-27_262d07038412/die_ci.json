@@ -1,0 +1,1602 @@
+{
+ "schema": "opentallas.die_ci.v1",
+ "date": "2026-10-27",
+ "sha": "262d07038412ff7193d73264d55b88380b244f25",
+ "mode": "nightly",
+ "host": "dear-crayfish",
+ "started": "2026-10-27T04:31:26",
+ "seconds": 604438.6,
+ "prev_sha": "9f6cbf0662335aa1380e17234c3e500f2d323bdd",
+ "g2_mode": "all",
+ "sta_tool": {
+  "path": "/srv/opentallas-scratch2/claude/die-ci/wt/tools/die_plan/die_sta.py",
+  "ref": null,
+  "blob": "a7d0df0927aa78ad"
+ },
+ "margins": {
+  "schema": "opentallas.die_ci.margins.v1",
+  "policy_note": "Margins add ON TOP of AGENTS.md (833.333 ps at TT setup / FF hold, SS info only, 60 ps setup / 25 ps hold uncertainty); die_ci.check_margins rejects any value that would relax the policy.",
+  "ocv": {
+   "cell_late": 1.05,
+   "cell_early": 0.95,
+   "net_late": 1.03,
+   "net_early": 0.97,
+   "why": "Flat OCV (OpenSTA set_timing_derate) because ASAP7 ships no LVF / POCV sigma tables. +/-5 % cell is the flat derate an AOCV table gives a ~10-stage path (the partition clock trees from the tap to the face flops are 8-14 stages; flat derates of 5-10 % are the usual range without LVF, cf. Bhasker & Chadha, Static Timing Analysis for Nanometer Designs, 2009, ch. 10 on OCV derating). +/-3 % on nets. CRPR only removes the common clock path; seams share only the die clk port (ideal spine), so the whole tree of each partition is derated -- the dominant term on a seam."
+  },
+  "ir": {
+   "mode": "stated",
+   "vdd_v": 0.7,
+   "vdd_drop_frac": 0.05,
+   "vt_v": 0.25,
+   "alpha": 1.3,
+   "why": "No die-level PDN database exists yet (die_plan pg.grid is a plan; no placed die ODB with power for OpenROAD PDNSim / analyze_power_grid), so PDNSim is NOT RUN and a stated budget is used: 5 % of the TT supply of the setup sign-off corner (35 mV at 0.70 V, the total static + dynamic drop a sign-off PDN is designed to). Delay sensitivity from the alpha-power law (Sakurai & Newton, IEEE JSSC 25(2), 1990), t ~ V / (V - Vt)^a: d ln t / d ln V = 1 - a V / (V - Vt) = -1.022 at a = 1.3, V = 0.70, Vt = 0.25 V (conservative ASAP7 RVT), so a 5 % drop is +5.1 % cell delay, applied as an extra LATE cell derate on data and clock (setup: late launch + data; hold: late capture clock). When a PDNSim result exists (pdnsim: {worst_drop_mv}) it replaces vdd_drop_frac.",
+   "pdnsim": null
+  },
+  "xtalk": {
+   "c_per_um_ff": 0.178475,
+   "cc_frac": 0.7,
+   "mcf_setup": 2.0,
+   "mcf_hold": 0.0,
+   "seam_len_um_default": 60.0,
+   "why": "OpenSTA has no SI delay. Per-seam margin = |MCF - 1| x R_eff x Cc, Cc = cc_frac x c_per_um x L_seam: c_per_um = ASAP7 M4 0.178 fF/um (ORFS platforms/asap7/setRC.tcl, the seam pin layers M4-M7 are 0.163-0.187); cc_frac 0.7 = sidewall coupling share of a min-pitch 7 nm line with both neighbours (aspect ratio ~2); Miller coupling factor 2 (opposite switching, setup) / 0 (same direction, hold) is the worst-case switch-factor bound of Kahng, Muddu & Sarto (DAC 2000); L_seam = 2 x budgets.pin_reg_p90_um (R2 face flops at both pins, G3 pin-to-reg p90 budget, 30 um per side default); R_eff = the clk->QN delay slope of DFFHQNx1 at the corner (lib below). This is a bound for an x1 face flop driving the seam unbuffered; a kit that upsizes the seam driver lowers the real push. Clock-net coupling is not added (clock trees are inside the derated OCV term)."
+  },
+  "lib": {
+   "SS": {
+    "cell": "DFFHQNx1_ASAP7_75t_R",
+    "slew_ps": 20.0,
+    "load_ff": 11.31,
+    "clk_q_max_ps": 152.25,
+    "clk_q_min_ps": 144.82,
+    "r_eff_ps_per_ff": 6.596,
+    "setup_ps": 16.21,
+    "hold_ps": 18.28,
+    "d_cap_ff": 0.524726,
+    "liberty": "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib"
+   },
+   "FF": {
+    "cell": "DFFHQNx1_ASAP7_75t_R",
+    "slew_ps": 20.0,
+    "load_ff": 11.31,
+    "clk_q_max_ps": 71.16,
+    "clk_q_min_ps": 68.92,
+    "r_eff_ps_per_ff": 2.77,
+    "setup_ps": 9.92,
+    "hold_ps": 12.28,
+    "d_cap_ff": 0.62135,
+    "liberty": "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib"
+   },
+   "TT": {
+    "cell": "DFFHQNx1_ASAP7_75t_R",
+    "slew_ps": 20.0,
+    "load_ff": 11.31,
+    "clk_q_max_ps": 100.77,
+    "clk_q_min_ps": 96.27,
+    "r_eff_ps_per_ff": 4.103,
+    "setup_ps": 9.99,
+    "hold_ps": 12.47,
+    "d_cap_ff": 0.558822,
+    "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib"
+   }
+  },
+  "derived_on": "2026-10-24",
+  "derived": {
+   "derates": {
+    "cell_late": 1.1037,
+    "cell_early": 0.95,
+    "net_late": 1.03,
+    "net_early": 0.97,
+    "ir_factor": 1.0511
+   },
+   "xtalk_default": {
+    "setup_ps": 30.76,
+    "hold_ps": 20.76,
+    "seam_len_um": 60.0,
+    "cc_ff": 7.496
+   },
+   "ir": {
+    "factor": 1.0511,
+    "sensitivity": 1.022,
+    "drop_frac": 0.05
+   }
+  }
+ },
+ "systems": {
+  "s81": {
+   "status": "PASS",
+   "errors": 0,
+   "circuits": 2932,
+   "warnings": 4,
+   "groups": [],
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/xdie_s81_head/xdie_io_s81.json",
+   "seconds": 0.1
+  },
+  "hbm-ds": {
+   "status": "FAIL",
+   "errors": 1,
+   "circuits": 480,
+   "warnings": 1,
+   "groups": [
+    {
+     "rule": "host",
+     "role": "D",
+     "n": 1,
+     "example": "role D: die_io marks ['NW_io'] host: true but the rack gives this role no host circuit (host traffic is in-band)"
+    }
+   ],
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/xdie_hbm/xdie_io_hbm-ds.json",
+   "seconds": 0.1
+  }
+ },
+ "absent": [],
+ "dies": {
+  "s81": {
+   "schema": "opentallas.die_ci.v1",
+   "die": "s81",
+   "plan": "physical/die_plan/s81/die_plan.json",
+   "sha": "262d07038412ff7193d73264d55b88380b244f25",
+   "plan_digest": "864a84dd0e5b469e",
+   "g2_tools_digest": "d3007673a71158e6",
+   "gates": {
+    "g0": {
+     "status": "FAIL",
+     "errors": 13,
+     "by_check": {
+      "cuts": 12,
+      "reset": 1
+     },
+     "warnings": 1273,
+     "seconds": 141.7,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/s81/g0c/g0_report.json",
+     "worst_cut": {
+      "ratio": 0.3043,
+      "at": "horizontal@18750"
+     },
+     "worst_segment": {
+      "ratio": 1.023,
+      "at": "horizontal@5000:svc_1"
+     },
+     "types": 171,
+     "partitions": 398
+    },
+    "g0c": {
+     "status": "FAIL",
+     "errors": 13,
+     "by_check": {
+      "cuts": 12,
+      "reset": 1
+     },
+     "clean_types": 171,
+     "types": 171,
+     "g3_eligible": 171,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/s81/g0c/g0_report.json"
+    },
+    "xdie": {
+     "status": "PASS",
+     "errors": 0,
+     "in_die": {
+      "status": "PASS",
+      "errors": 0,
+      "by_rule": {
+       "die_io_plan": 0,
+       "cut_lines": 0,
+       "reach": 0,
+       "face_tracks": 0,
+       "ft_budget": 0
+      }
+     },
+     "systems": {
+      "s81": {
+       "status": "PASS",
+       "errors": 0,
+       "circuits": 2932,
+       "warnings": 4,
+       "groups": [],
+       "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/xdie_s81/xdie_io_s81.json",
+       "seconds": 0.1
+      }
+     }
+    },
+    "census": {
+     "status": "PASS",
+     "errors": 0,
+     "dropped_bits": 0,
+     "unmapped_instances": 0,
+     "inter_bits": 218995,
+     "exempt": 259,
+     "sources": 1
+    },
+    "latency": {
+     "status": "FAIL",
+     "reason": "no latency table carries the current plan digest (stale table)",
+     "plan_digest": "864a84dd0e5b469e",
+     "lanes": 873,
+     "g0_latency_errors": 0,
+     "record": null,
+     "files": [
+      {
+       "file": "physical/die_plan/s81/lat/s81_latency.json",
+       "plan_digest": "bd2b875cbfbb7e24",
+       "digest_match": false,
+       "lanes": 869,
+       "mismatched_lanes": 107,
+       "extra_lanes": 0,
+       "example": [
+        "rt_W0_in_1",
+        "rt_W0_in_2",
+        "x_W0_out"
+       ]
+      },
+      {
+       "file": "physical/die_plan/s81/r8/s81_latency.json",
+       "plan_digest": "b8e46d3348066b83",
+       "digest_match": false,
+       "lanes": 820,
+       "mismatched_lanes": 632,
+       "extra_lanes": 8,
+       "example": [
+        "fi_W0_p1_r0r1",
+        "fi_W0_p1_r1r0",
+        "fi_W0_p1_r1r2"
+       ]
+      }
+     ],
+     "max_cycles": 82
+    },
+    "g2": {
+     "status": "FAIL",
+     "probes": 6,
+     "overflow": 7062724,
+     "no_access": 0,
+     "mem_gb": {
+      "die": 64,
+      "part_first": 32,
+      "part_max": 64
+     },
+     "oom_retries": [],
+     "oom_at_ceiling": [],
+     "not_done": [],
+     "detail": {
+      "part_svc_hi_dsdv_svc_rs__t1": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 8985861.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_ot_s81sl_leaf__t8": {
+       "done": true,
+       "overflow": 4359149,
+       "wirelength_um": 21791791.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_ot_s81sl_leaf__t47": {
+       "done": true,
+       "overflow": 1622830,
+       "wirelength_um": 12294339.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_ot_s81sl_leaf__t17": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 4886634.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_ot_s81sl_leaf__t2": {
+       "done": true,
+       "overflow": 1080745,
+       "wirelength_um": 9990843.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "die": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": null,
+       "no_access": 0,
+       "errors": [],
+       "reach": {
+        "clk": {
+         "max_um": 27807.2,
+         "p90_um": 22035.7,
+         "taps": 8127
+        },
+        "rst": {
+         "max_um": 26894.7,
+         "p90_um": 21951.0,
+         "taps": 398
+        }
+       }
+      }
+     },
+     "seconds": 104432.5,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/s81/g2/g2_report.json"
+    },
+    "sta": {
+     "seams": 2306,
+     "measured_ports": 0,
+     "standin_ports": 2306,
+     "standin": {
+      "bus": {
+       "cls": "bus",
+       "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+       "setup_policy_ps": 576.4,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 496.8,
+       "hold_ps": -22.6,
+       "ports": 588
+      },
+      "ft": {
+       "cls": "ft",
+       "basis": "contract (kit I_max + O_max >= T)",
+       "setup_policy_ps": 0.0,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": -79.6,
+       "hold_ps": -22.6,
+       "ports": 1148
+      },
+      "ft_in": {
+       "cls": "ft_in",
+       "basis": "contract (kit I_max + O_max >= T)",
+       "setup_policy_ps": 33.3,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": -46.3,
+       "hold_ps": -22.6,
+       "ports": 285
+      },
+      "ft_out": {
+       "cls": "ft_out",
+       "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+       "setup_policy_ps": 576.4,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 496.8,
+       "hold_ps": -22.6,
+       "ports": 285
+      }
+     },
+     "standin_worst_setup_ps": 0.0,
+     "standin_worst_hold_ps": 40.0,
+     "standin_worst_margined_info_setup_ps": -79.6,
+     "standin_worst_margined_info_hold_ps": -22.6,
+     "views": {},
+     "views_unavailable": {},
+     "xtalk": {
+      "setup_ps": 30.76,
+      "hold_ps": 20.76,
+      "seam_len_um": 60.0,
+      "cc_ff": 7.496
+     },
+     "derates": {
+      "cell_late": 1.1037,
+      "cell_early": 0.95,
+      "net_late": 1.03,
+      "net_early": 0.97,
+      "ir_factor": 1.0511
+     },
+     "ir": {
+      "factor": 1.0511,
+      "sensitivity": 1.022,
+      "drop_frac": 0.05,
+      "mode": "stated",
+      "pdnsim": "NOT RUN: no die-level PDN database (plan pg.grid only)"
+     },
+     "status": "NOT RUN (no seam between two partitions with routed views; stand-in budgets only)"
+    }
+   },
+   "seconds": 104576.3,
+   "verdict": "FAIL",
+   "delta": {
+    "prev_sha": "9f6cbf0662335aa1380e17234c3e500f2d323bdd",
+    "metrics": {
+     "g0.errors": 13,
+     "g0c.errors": -78,
+     "g0c.clean_types": 88,
+     "xdie.errors": -130,
+     "g2.overflow": 7062724
+    },
+    "status_changes": {
+     "g0": "PASS -> FAIL",
+     "xdie": "FAIL -> PASS",
+     "latency": "PASS -> FAIL",
+     "g2": "PASS -> FAIL"
+    },
+    "new": []
+   }
+  },
+  "s81_head": {
+   "schema": "opentallas.die_ci.v1",
+   "die": "s81_head",
+   "plan": "physical/die_plan/s81_head/die_plan.json",
+   "sha": "262d07038412ff7193d73264d55b88380b244f25",
+   "plan_digest": "a2eb7166e0b1fbc9",
+   "g2_tools_digest": "d3007673a71158e6",
+   "gates": {
+    "g0": {
+     "status": "PASS",
+     "errors": 0,
+     "by_check": {},
+     "warnings": 6,
+     "seconds": 99.7,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/s81_head/g0c/g0_report.json",
+     "worst_cut": {
+      "ratio": 0.0637,
+      "at": "horizontal@3250"
+     },
+     "worst_segment": {
+      "ratio": 0.3587,
+      "at": "horizontal@3250:turnE5b"
+     },
+     "types": 16,
+     "partitions": 326
+    },
+    "g0c": {
+     "status": "PASS",
+     "errors": 0,
+     "by_check": {},
+     "clean_types": 16,
+     "types": 16,
+     "g3_eligible": 16,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/s81_head/g0c/g0_report.json"
+    },
+    "xdie": {
+     "status": "PASS",
+     "errors": 0,
+     "in_die": {
+      "status": "PASS",
+      "errors": 0,
+      "by_rule": {
+       "die_io_plan": 0,
+       "cut_lines": 0,
+       "reach": 0,
+       "face_tracks": 0,
+       "ft_budget": 0
+      }
+     },
+     "systems": {
+      "s81": {
+       "status": "PASS",
+       "errors": 0,
+       "circuits": 2932,
+       "warnings": 4,
+       "groups": [],
+       "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/xdie_s81_head/xdie_io_s81.json",
+       "seconds": 0.1
+      }
+     }
+    },
+    "census": {
+     "status": "N/A (census none: top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the bottom-up H10 die chain used a )",
+     "errors": 0
+    },
+    "latency": {
+     "status": "PASS",
+     "reason": null,
+     "plan_digest": "a2eb7166e0b1fbc9",
+     "lanes": 328,
+     "g0_latency_errors": 0,
+     "record": "physical/die_plan/s81_head/lat/s81_head_latency.json",
+     "files": [
+      {
+       "file": "physical/die_plan/s81_head/lat/s81_head_latency.json",
+       "plan_digest": "a2eb7166e0b1fbc9",
+       "digest_match": true,
+       "lanes": 328,
+       "mismatched_lanes": 0,
+       "extra_lanes": 0,
+       "example": []
+      }
+     ],
+     "max_cycles": 51
+    },
+    "g2": {
+     "status": "PASS",
+     "probes": 6,
+     "overflow": 0,
+     "no_access": 0,
+     "mem_gb": {
+      "die": 64,
+      "part_first": 32,
+      "part_max": 64
+     },
+     "oom_retries": [],
+     "oom_at_ceiling": [],
+     "not_done": [],
+     "detail": {
+      "part_hd_turn_a": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 338101.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_hd_turn_b": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 352961.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_hd_st_n3": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 2980588.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_hd_st_n4": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 2978683.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_hd_st_k5": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 1635286.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "die": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 1165219.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {
+        "clk": {
+         "max_um": 16998.6,
+         "p90_um": 12633.3,
+         "taps": 3941
+        },
+        "rst": {
+         "max_um": 16086.1,
+         "p90_um": 12766.1,
+         "taps": 326
+        }
+       }
+      }
+     },
+     "seconds": 431.5,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/s81_head/g2/g2_report.json"
+    },
+    "sta": {
+     "seams": 428,
+     "measured_ports": 0,
+     "standin_ports": 428,
+     "standin": {
+      "bus": {
+       "cls": "bus",
+       "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+       "setup_policy_ps": 576.4,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 496.8,
+       "hold_ps": -22.6,
+       "ports": 294
+      },
+      "ft": {
+       "cls": "ft",
+       "basis": "contract (kit I_max + O_max >= T)",
+       "setup_policy_ps": 0.0,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": -79.6,
+       "hold_ps": -22.6,
+       "ports": 66
+      },
+      "ft_in": {
+       "cls": "ft_in",
+       "basis": "contract (kit I_max + O_max >= T)",
+       "setup_policy_ps": 33.3,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": -46.3,
+       "hold_ps": -22.6,
+       "ports": 34
+      },
+      "ft_out": {
+       "cls": "ft_out",
+       "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+       "setup_policy_ps": 576.4,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 496.8,
+       "hold_ps": -22.6,
+       "ports": 34
+      }
+     },
+     "standin_worst_setup_ps": 0.0,
+     "standin_worst_hold_ps": 40.0,
+     "standin_worst_margined_info_setup_ps": -79.6,
+     "standin_worst_margined_info_hold_ps": -22.6,
+     "views": {},
+     "views_unavailable": {},
+     "xtalk": {
+      "setup_ps": 30.76,
+      "hold_ps": 20.76,
+      "seam_len_um": 60.0,
+      "cc_ff": 7.496
+     },
+     "derates": {
+      "cell_late": 1.1037,
+      "cell_early": 0.95,
+      "net_late": 1.03,
+      "net_early": 0.97,
+      "ir_factor": 1.0511
+     },
+     "ir": {
+      "factor": 1.0511,
+      "sensitivity": 1.022,
+      "drop_frac": 0.05,
+      "mode": "stated",
+      "pdnsim": "NOT RUN: no die-level PDN database (plan pg.grid only)"
+     },
+     "status": "NOT RUN (no seam between two partitions with routed views; stand-in budgets only)"
+    }
+   },
+   "seconds": 531.3,
+   "verdict": "INCOMPLETE",
+   "delta": {
+    "prev_sha": "9f6cbf0662335aa1380e17234c3e500f2d323bdd",
+    "metrics": {
+     "xdie.errors": -130
+    },
+    "status_changes": {
+     "xdie": "FAIL -> PASS"
+    },
+    "new": []
+   }
+  },
+  "qwen_compute": {
+   "schema": "opentallas.die_ci.v1",
+   "die": "qwen_compute",
+   "plan": "physical/die_plan/qwen_compute/die_plan.json",
+   "sha": "262d07038412ff7193d73264d55b88380b244f25",
+   "plan_digest": "cf288214fc628d76",
+   "g2_tools_digest": "d3007673a71158e6",
+   "gates": {
+    "g0": {
+     "status": "PASS",
+     "errors": 0,
+     "by_check": {},
+     "warnings": 111,
+     "seconds": 51.5,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/qwen_compute/g0c/g0_report.json",
+     "worst_cut": {
+      "ratio": 0.2159,
+      "at": "horizontal@10750"
+     },
+     "worst_segment": {
+      "ratio": 0.5134,
+      "at": "horizontal@11750:sl_E5_su_l1"
+     },
+     "types": 68,
+     "partitions": 377
+    },
+    "g0c": {
+     "status": "PASS",
+     "errors": 0,
+     "by_check": {},
+     "clean_types": 68,
+     "types": 68,
+     "g3_eligible": 68,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/qwen_compute/g0c/g0_report.json"
+    },
+    "xdie": {
+     "status": "PASS",
+     "errors": 0,
+     "in_die": {
+      "status": "PASS",
+      "errors": 0,
+      "by_rule": {
+       "die_io_plan": 0,
+       "cut_lines": 0,
+       "reach": 0,
+       "face_tracks": 0,
+       "ft_budget": 0
+      }
+     },
+     "systems": {}
+    },
+    "census": {
+     "status": "PASS",
+     "errors": 0,
+     "dropped_bits": 0,
+     "unmapped_instances": 0,
+     "inter_bits": 697959,
+     "exempt": 1530,
+     "sources": 4
+    },
+    "latency": {
+     "status": "PASS",
+     "reason": null,
+     "plan_digest": "cf288214fc628d76",
+     "lanes": 1933,
+     "g0_latency_errors": 0,
+     "record": "physical/die_plan/qwen_compute/qwen_compute_latency.json",
+     "files": [
+      {
+       "file": "physical/die_plan/qwen_compute/qwen_compute_latency.json",
+       "plan_digest": "cf288214fc628d76",
+       "digest_match": true,
+       "lanes": 1933,
+       "mismatched_lanes": 0,
+       "extra_lanes": 0,
+       "example": []
+      },
+      {
+       "file": "physical/die_plan/qwen_compute/r8/qwen_compute_latency.json",
+       "plan_digest": "b15c65200d2394c8",
+       "digest_match": false,
+       "lanes": 2207,
+       "mismatched_lanes": 468,
+       "extra_lanes": 274,
+       "example": [
+        "c_W5_bf_11__a00",
+        "c_W5_bn_11__a00",
+        "c_W5_tn_11__a00"
+       ]
+      }
+     ],
+     "max_cycles": 34
+    },
+    "g2": {
+     "status": "FAIL",
+     "probes": 6,
+     "overflow": 9,
+     "no_access": 0,
+     "mem_gb": {
+      "die": 64,
+      "part_first": 32,
+      "part_max": 64
+     },
+     "oom_retries": [],
+     "oom_at_ceiling": [],
+     "not_done": [],
+     "detail": {
+      "part_sle_su_l1": {
+       "done": true,
+       "overflow": 9,
+       "wirelength_um": 2856727.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_sle_stm_v1": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 5142921.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_slw_stm_v1": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 5129369.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_sle_stm_v2": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 4977806.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_slw_stm_v2": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 4944246.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "die": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 483759.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {
+        "clk": {
+         "max_um": 28485.9,
+         "p90_um": 22323.7,
+         "taps": 40766
+        },
+        "rst": {
+         "max_um": 26823.4,
+         "p90_um": 20498.9,
+         "taps": 377
+        }
+       }
+      }
+     },
+     "seconds": 6589.299999999999,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/qwen_compute/g2/g2_report.json"
+    },
+    "sta": {
+     "seams": 3005,
+     "measured_ports": 0,
+     "standin_ports": 3005,
+     "standin": {
+      "bus": {
+       "cls": "bus",
+       "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+       "setup_policy_ps": 576.4,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 496.8,
+       "hold_ps": -22.6,
+       "ports": 1255
+      },
+      "ft": {
+       "cls": "ft",
+       "basis": "contract (kit I_max + O_max >= T)",
+       "setup_policy_ps": 0.0,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": -79.6,
+       "hold_ps": -22.6,
+       "ports": 394
+      },
+      "ft_in": {
+       "cls": "ft_in",
+       "basis": "contract (kit I_max + O_max >= T)",
+       "setup_policy_ps": 100.0,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 20.3,
+       "hold_ps": -22.6,
+       "ports": 678
+      },
+      "ft_out": {
+       "cls": "ft_out",
+       "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+       "setup_policy_ps": 576.4,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 496.8,
+       "hold_ps": -22.6,
+       "ports": 678
+      }
+     },
+     "standin_worst_setup_ps": 0.0,
+     "standin_worst_hold_ps": 40.0,
+     "standin_worst_margined_info_setup_ps": -79.6,
+     "standin_worst_margined_info_hold_ps": -22.6,
+     "views": {},
+     "views_unavailable": {},
+     "xtalk": {
+      "setup_ps": 30.76,
+      "hold_ps": 20.76,
+      "seam_len_um": 60.0,
+      "cc_ff": 7.496
+     },
+     "derates": {
+      "cell_late": 1.1037,
+      "cell_early": 0.95,
+      "net_late": 1.03,
+      "net_early": 0.97,
+      "ir_factor": 1.0511
+     },
+     "ir": {
+      "factor": 1.0511,
+      "sensitivity": 1.022,
+      "drop_frac": 0.05,
+      "mode": "stated",
+      "pdnsim": "NOT RUN: no die-level PDN database (plan pg.grid only)"
+     },
+     "status": "NOT RUN (no seam between two partitions with routed views; stand-in budgets only)"
+    }
+   },
+   "seconds": 6641.2,
+   "verdict": "FAIL",
+   "delta": {
+    "prev_sha": "9f6cbf0662335aa1380e17234c3e500f2d323bdd",
+    "metrics": {
+     "g0c.errors": -4,
+     "g0c.clean_types": 16,
+     "xdie.errors": -4,
+     "g2.overflow": 9
+    },
+    "status_changes": {
+     "g0c": "FAIL -> PASS",
+     "xdie": "FAIL -> PASS",
+     "g2": "PASS -> FAIL"
+    },
+    "new": []
+   }
+  },
+  "qwen_kvsys": {
+   "schema": "opentallas.die_ci.v1",
+   "die": "qwen_kvsys",
+   "plan": "physical/die_plan/qwen_kvsys/die_plan.json",
+   "sha": "262d07038412ff7193d73264d55b88380b244f25",
+   "plan_digest": "6997c898d04061a0",
+   "g2_tools_digest": "d3007673a71158e6",
+   "gates": {
+    "g0": {
+     "status": "FAIL",
+     "errors": 13,
+     "by_check": {
+      "cuts": 13
+     },
+     "warnings": 1368,
+     "seconds": 39.9,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/qwen_kvsys/g0c/g0_report.json",
+     "worst_cut": {
+      "ratio": 0.184,
+      "at": "vertical@6750"
+     },
+     "worst_segment": {
+      "ratio": 0.9047,
+      "at": "horizontal@25250:hgi_WN_0"
+     },
+     "types": 40,
+     "partitions": 160
+    },
+    "g0c": {
+     "status": "FAIL",
+     "errors": 13,
+     "by_check": {
+      "cuts": 13
+     },
+     "clean_types": 40,
+     "types": 40,
+     "g3_eligible": 40,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/qwen_kvsys/g0c/g0_report.json"
+    },
+    "xdie": {
+     "status": "PASS",
+     "errors": 0,
+     "in_die": {
+      "status": "PASS",
+      "errors": 0,
+      "by_rule": {
+       "die_io_plan": 0,
+       "cut_lines": 0,
+       "reach": 0,
+       "face_tracks": 0,
+       "ft_budget": 0
+      }
+     },
+     "systems": {}
+    },
+    "census": {
+     "status": "PASS",
+     "errors": 0,
+     "dropped_bits": 0,
+     "unmapped_instances": 0,
+     "inter_bits": 396969,
+     "exempt": 310,
+     "sources": 1
+    },
+    "latency": {
+     "status": "FAIL",
+     "reason": "no latency table carries the current plan digest (stale table)",
+     "plan_digest": "6997c898d04061a0",
+     "lanes": 2416,
+     "g0_latency_errors": 0,
+     "record": null,
+     "files": [
+      {
+       "file": "physical/die_plan/qwen_kvsys/cores/core_latency.json",
+       "plan_digest": null,
+       "digest_match": false,
+       "lanes": 0,
+       "mismatched_lanes": 2416,
+       "extra_lanes": 0,
+       "example": [
+        "L0",
+        "L1",
+        "L2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/gen/qwen_kvsys_latency.json",
+       "plan_digest": "641e48961d73dea9",
+       "digest_match": false,
+       "lanes": 2416,
+       "mismatched_lanes": 0,
+       "extra_lanes": 0,
+       "example": []
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/lat_v32/qwen_kvsys_latency.json",
+       "plan_digest": "0c6eb60a13592943",
+       "digest_match": false,
+       "lanes": 2416,
+       "mismatched_lanes": 882,
+       "extra_lanes": 0,
+       "example": [
+        "L0",
+        "L1",
+        "L2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/lat_v33/qwen_kvsys_latency.json",
+       "plan_digest": "b5f2451f1ff094a7",
+       "digest_match": false,
+       "lanes": 2416,
+       "mismatched_lanes": 882,
+       "extra_lanes": 0,
+       "example": [
+        "L0",
+        "L1",
+        "L2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/lat_v34/qwen_kvsys_latency.json",
+       "plan_digest": "4ca26a7662fe75db",
+       "digest_match": false,
+       "lanes": 2416,
+       "mismatched_lanes": 882,
+       "extra_lanes": 0,
+       "example": [
+        "L0",
+        "L1",
+        "L2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/lat_v35/qwen_kvsys_latency.json",
+       "plan_digest": "81976379585afea2",
+       "digest_match": false,
+       "lanes": 2416,
+       "mismatched_lanes": 882,
+       "extra_lanes": 0,
+       "example": [
+        "L0",
+        "L1",
+        "L2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/lat_v36/qwen_kvsys_latency.json",
+       "plan_digest": "29bb6a1236196ea7",
+       "digest_match": false,
+       "lanes": 2416,
+       "mismatched_lanes": 882,
+       "extra_lanes": 0,
+       "example": [
+        "L0",
+        "L1",
+        "L2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/lat_v38s/qwen_kvsys_latency.json",
+       "plan_digest": "40304c28dd8e1d6b",
+       "digest_match": false,
+       "lanes": 2416,
+       "mismatched_lanes": 882,
+       "extra_lanes": 0,
+       "example": [
+        "L0",
+        "L1",
+        "L2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/lat_v39/qwen_kvsys_latency.json",
+       "plan_digest": "9f977ec5e856f6b8",
+       "digest_match": false,
+       "lanes": 2416,
+       "mismatched_lanes": 821,
+       "extra_lanes": 0,
+       "example": [
+        "L0",
+        "L1",
+        "L2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/lat_v39f/row_latency.json",
+       "plan_digest": null,
+       "digest_match": false,
+       "lanes": 0,
+       "mismatched_lanes": 2416,
+       "extra_lanes": 0,
+       "example": [
+        "L0",
+        "L1",
+        "L2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/lat_v39g/row_latency.json",
+       "plan_digest": null,
+       "digest_match": false,
+       "lanes": 0,
+       "mismatched_lanes": 2416,
+       "extra_lanes": 0,
+       "example": [
+        "L0",
+        "L1",
+        "L2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/lat_v39pd/qwen_kvsys_latency.json",
+       "plan_digest": "52292db02b4984a2",
+       "digest_match": false,
+       "lanes": 2416,
+       "mismatched_lanes": 821,
+       "extra_lanes": 0,
+       "example": [
+        "L0",
+        "L1",
+        "L2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/lat_v39pd/row_latency.json",
+       "plan_digest": null,
+       "digest_match": false,
+       "lanes": 0,
+       "mismatched_lanes": 2416,
+       "extra_lanes": 0,
+       "example": [
+        "L0",
+        "L1",
+        "L2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/qwen_kvsys/lat_v39r/qwen_kvsys_latency.json",
+       "plan_digest": "56016300e9649fd5",
+       "digest_match": false,
+       "lanes": 2416,
+       "mismatched_lanes": 1,
+       "extra_lanes": 0,
+       "example": [
+        "L664"
+       ]
+      }
+     ],
+     "max_cycles": 68
+    },
+    "g2": {
+     "status": "FAIL",
+     "probes": 6,
+     "overflow": 0,
+     "no_access": 0,
+     "mem_gb": {
+      "die": 64,
+      "part_first": 32,
+      "part_max": 64
+     },
+     "oom_retries": [],
+     "oom_at_ceiling": [],
+     "not_done": [],
+     "detail": {
+      "part_kv3_hgi_v6": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 11977155.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_kv3_hgi_v8": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 9825245.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_kv3_hgi_v7": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 7903175.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_kv3_hub_Ei": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 13489227.0,
+       "no_access": 0,
+       "errors": [
+        "G2-ACTUAL-STATION-GEOMETRY"
+       ],
+       "reach": {}
+      },
+      "part_kv3_hgi": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 6584897.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "die": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 925708.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {
+        "clk": {
+         "max_um": 19215.9,
+         "p90_um": 14767.2,
+         "taps": 2090
+        },
+        "rst": {
+         "max_um": 18533.2,
+         "p90_um": 15240.5,
+         "taps": 160
+        }
+       }
+      }
+     },
+     "seconds": 5145.599999999999,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/qwen_kvsys/g2/g2_report.json"
+    },
+    "sta": {
+     "seams": 3939,
+     "measured_ports": 4,
+     "standin_ports": 3935,
+     "standin": {
+      "bus": {
+       "cls": "bus",
+       "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+       "setup_policy_ps": 576.4,
+       "hold_policy_ps": 80.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 496.8,
+       "hold_ps": 17.4,
+       "ports": 1970
+      },
+      "ft": {
+       "cls": "ft",
+       "basis": "contract (kit I_max + O_max >= T)",
+       "setup_policy_ps": 0.0,
+       "hold_policy_ps": 80.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": -79.6,
+       "hold_ps": 17.4,
+       "ports": 1073
+      },
+      "ft_in": {
+       "cls": "ft_in",
+       "basis": "contract (kit I_max + O_max >= T)",
+       "setup_policy_ps": 100.0,
+       "hold_policy_ps": 80.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 20.3,
+       "hold_ps": 17.4,
+       "ports": 446
+      },
+      "ft_out": {
+       "cls": "ft_out",
+       "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+       "setup_policy_ps": 576.4,
+       "hold_policy_ps": 80.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 496.8,
+       "hold_ps": 17.4,
+       "ports": 446
+      }
+     },
+     "standin_worst_setup_ps": 0.0,
+     "standin_worst_hold_ps": 80.0,
+     "standin_worst_margined_info_setup_ps": -79.6,
+     "standin_worst_margined_info_hold_ps": 17.4,
+     "views": {
+      "kv3_io_cor_v1": "/srv/opentallas-scratch2/claude/die-ci/views/qwen_kvsys/kv3_io_cor_v1",
+      "kv3_io_ft_v1": "/srv/opentallas-scratch2/claude/die-ci/views/qwen_kvsys/kv3_io_ft_v1"
+     },
+     "views_unavailable": {},
+     "xtalk": {
+      "setup_ps": 30.76,
+      "hold_ps": 20.76,
+      "seam_len_um": 60.0,
+      "cc_ff": 7.496
+     },
+     "derates": {
+      "cell_late": 1.1037,
+      "cell_early": 0.95,
+      "net_late": 1.03,
+      "net_early": 0.97,
+      "ir_factor": 1.0511
+     },
+     "ir": {
+      "factor": 1.0511,
+      "sensitivity": 1.022,
+      "drop_frac": 0.05,
+      "mode": "stated",
+      "pdnsim": "NOT RUN: no die-level PDN database (plan pg.grid only)"
+     },
+     "status": "NOT RUN (die STA exit 1; /srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/qwen_kvsys/sta/die_ci_sta.log)"
+    }
+   },
+   "seconds": 5188.2,
+   "verdict": "FAIL",
+   "delta": {
+    "prev_sha": "9f6cbf0662335aa1380e17234c3e500f2d323bdd",
+    "metrics": {
+     "g0.errors": 13,
+     "g0c.errors": 13,
+     "g0c.clean_types": -9
+    },
+    "status_changes": {
+     "g0": "PASS -> FAIL",
+     "g0c": "PASS -> FAIL",
+     "g2": "PASS -> FAIL"
+    },
+    "new": []
+   }
+  },
+  "hbm": {
+   "schema": "opentallas.die_ci.v1",
+   "die": "hbm",
+   "plan": "physical/die_plan/hbm_arch/B2l/die_plan.json",
+   "sha": "262d07038412ff7193d73264d55b88380b244f25",
+   "plan_digest": "b1782481b0eb2139",
+   "g2_tools_digest": "d3007673a71158e6",
+   "gates": {
+    "g0": {
+     "status": "FAIL",
+     "errors": 586,
+     "by_check": {
+      "m89_signals": 41,
+      "hops": 204,
+      "stations": 312,
+      "cuts": 29
+     },
+     "warnings": 7713,
+     "seconds": 33.2,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/hbm/g0c/g0_report.json",
+     "worst_cut": {
+      "ratio": 0.3239,
+      "at": "vertical@9500"
+     },
+     "worst_segment": {
+      "ratio": 1.0788,
+      "at": "vertical@8250:NW_su30"
+     },
+     "types": 49,
+     "partitions": 88
+    },
+    "g0c": {
+     "status": "FAIL",
+     "errors": 7712,
+     "by_check": {
+      "complete": 6925,
+      "m89_signals": 41,
+      "hops": 204,
+      "stations": 312,
+      "cuts": 29,
+      "reach": 201
+     },
+     "clean_types": 12,
+     "types": 49,
+     "g3_eligible": 0,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/hbm/g0c/g0_report.json"
+    },
+    "xdie": {
+     "status": "FAIL",
+     "errors": 202,
+     "in_die": {
+      "status": "FAIL",
+      "errors": 201,
+      "by_rule": {
+       "die_io_plan": 0,
+       "cut_lines": 0,
+       "reach": 201,
+       "face_tracks": 0,
+       "ft_budget": 0
+      }
+     },
+     "systems": {
+      "hbm-ds": {
+       "status": "FAIL",
+       "errors": 1,
+       "circuits": 480,
+       "warnings": 1,
+       "groups": [
+        {
+         "rule": "host",
+         "role": "D",
+         "n": 1,
+         "example": "role D: die_io marks ['NW_io'] host: true but the rack gives this role no host circuit (host traffic is in-band)"
+        }
+       ],
+       "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/xdie_hbm/xdie_io_hbm-ds.json",
+       "seconds": 0.1
+      }
+     }
+    },
+    "census": {
+     "status": "N/A (census none: B is a 2-quadrant die: lanes = the 16-SM r18h5 census folded (SW->NW, SE->NE; per-pair width = max over the folded quadr)",
+     "errors": 0
+    },
+    "latency": {
+     "status": "FAIL",
+     "reason": "no <die>_latency.json in the plan dir (gen.py latency never written for this plan)",
+     "plan_digest": "b1782481b0eb2139",
+     "lanes": 298,
+     "g0_latency_errors": 0,
+     "record": null,
+     "files": [],
+     "max_cycles": 35
+    },
+    "g2": {
+     "status": "PASS",
+     "probes": 1,
+     "overflow": 0,
+     "no_access": 0,
+     "mem_gb": {
+      "die": 64,
+      "part_first": 64,
+      "part_max": 128
+     },
+     "oom_retries": [],
+     "oom_at_ceiling": [],
+     "not_done": [],
+     "detail": {
+      "die": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 965059.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {
+        "clk": {
+         "max_um": 22863.1,
+         "p90_um": 16550.6,
+         "taps": 2205
+        },
+        "rst": {
+         "max_um": 19738.6,
+         "p90_um": 16018.5,
+         "taps": 88
+        }
+       }
+      }
+     },
+     "seconds": 487468.2,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/hbm/g2/g2_report.json"
+    },
+    "sta": {
+     "seams": 918,
+     "measured_ports": 0,
+     "standin_ports": 918,
+     "standin": {
+      "bus": {
+       "cls": "bus",
+       "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+       "setup_policy_ps": 576.4,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 496.8,
+       "hold_ps": -22.6,
+       "ports": 94
+      },
+      "ft": {
+       "cls": "ft",
+       "basis": "contract (kit I_max + O_max >= T)",
+       "setup_policy_ps": 0.0,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": -79.6,
+       "hold_ps": -22.6,
+       "ports": 416
+      },
+      "ft_in": {
+       "cls": "ft_in",
+       "basis": "contract (kit I_max + O_max >= T)",
+       "setup_policy_ps": 100.0,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 20.3,
+       "hold_ps": -22.6,
+       "ports": 204
+      },
+      "ft_out": {
+       "cls": "ft_out",
+       "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+       "setup_policy_ps": 576.4,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 79.6,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 496.8,
+       "hold_ps": -22.6,
+       "ports": 204
+      }
+     },
+     "standin_worst_setup_ps": 0.0,
+     "standin_worst_hold_ps": 40.0,
+     "standin_worst_margined_info_setup_ps": -79.6,
+     "standin_worst_margined_info_hold_ps": -22.6,
+     "views": {},
+     "views_unavailable": {},
+     "xtalk": {
+      "setup_ps": 30.76,
+      "hold_ps": 20.76,
+      "seam_len_um": 60.0,
+      "cc_ff": 7.496
+     },
+     "derates": {
+      "cell_late": 1.1037,
+      "cell_early": 0.95,
+      "net_late": 1.03,
+      "net_early": 0.97,
+      "ir_factor": 1.0511
+     },
+     "ir": {
+      "factor": 1.0511,
+      "sensitivity": 1.022,
+      "drop_frac": 0.05,
+      "mode": "stated",
+      "pdnsim": "NOT RUN: no die-level PDN database (plan pg.grid only)"
+     },
+     "status": "NOT RUN (no seam between two partitions with routed views; stand-in budgets only)"
+    }
+   },
+   "seconds": 487501.6,
+   "verdict": "FAIL",
+   "delta": {
+    "prev_sha": "9f6cbf0662335aa1380e17234c3e500f2d323bdd",
+    "metrics": {
+     "g0.errors": 586,
+     "g0c.errors": 7591,
+     "g0c.clean_types": -22,
+     "xdie.errors": -770
+    },
+    "status_changes": {
+     "g0": "PASS -> FAIL",
+     "census": "PASS -> N/A",
+     "g2": "FAIL -> PASS"
+    },
+    "new": []
+   }
+  }
+ },
+ "verdict": "FAIL",
+ "split": true
+}

@@ -1,0 +1,289 @@
+{
+ "schema": "opentallas.die_ci.v1",
+ "die": "s81",
+ "plan": "physical/die_plan/s81/die_plan.json",
+ "sha": "262d07038412ff7193d73264d55b88380b244f25",
+ "plan_digest": "864a84dd0e5b469e",
+ "g2_tools_digest": "d3007673a71158e6",
+ "gates": {
+  "g0": {
+   "status": "FAIL",
+   "errors": 13,
+   "by_check": {
+    "cuts": 12,
+    "reset": 1
+   },
+   "warnings": 1273,
+   "seconds": 141.7,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/s81/g0c/g0_report.json",
+   "worst_cut": {
+    "ratio": 0.3043,
+    "at": "horizontal@18750"
+   },
+   "worst_segment": {
+    "ratio": 1.023,
+    "at": "horizontal@5000:svc_1"
+   },
+   "types": 171,
+   "partitions": 398
+  },
+  "g0c": {
+   "status": "FAIL",
+   "errors": 13,
+   "by_check": {
+    "cuts": 12,
+    "reset": 1
+   },
+   "clean_types": 171,
+   "types": 171,
+   "g3_eligible": 171,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/s81/g0c/g0_report.json"
+  },
+  "xdie": {
+   "status": "PASS",
+   "errors": 0,
+   "in_die": {
+    "status": "PASS",
+    "errors": 0,
+    "by_rule": {
+     "die_io_plan": 0,
+     "cut_lines": 0,
+     "reach": 0,
+     "face_tracks": 0,
+     "ft_budget": 0
+    }
+   },
+   "systems": {
+    "s81": {
+     "status": "PASS",
+     "errors": 0,
+     "circuits": 2932,
+     "warnings": 4,
+     "groups": [],
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/xdie_s81/xdie_io_s81.json",
+     "seconds": 0.1
+    }
+   }
+  },
+  "census": {
+   "status": "PASS",
+   "errors": 0,
+   "dropped_bits": 0,
+   "unmapped_instances": 0,
+   "inter_bits": 218995,
+   "exempt": 259,
+   "sources": 1
+  },
+  "latency": {
+   "status": "FAIL",
+   "reason": "no latency table carries the current plan digest (stale table)",
+   "plan_digest": "864a84dd0e5b469e",
+   "lanes": 873,
+   "g0_latency_errors": 0,
+   "record": null,
+   "files": [
+    {
+     "file": "physical/die_plan/s81/lat/s81_latency.json",
+     "plan_digest": "bd2b875cbfbb7e24",
+     "digest_match": false,
+     "lanes": 869,
+     "mismatched_lanes": 107,
+     "extra_lanes": 0,
+     "example": [
+      "rt_W0_in_1",
+      "rt_W0_in_2",
+      "x_W0_out"
+     ]
+    },
+    {
+     "file": "physical/die_plan/s81/r8/s81_latency.json",
+     "plan_digest": "b8e46d3348066b83",
+     "digest_match": false,
+     "lanes": 820,
+     "mismatched_lanes": 632,
+     "extra_lanes": 8,
+     "example": [
+      "fi_W0_p1_r0r1",
+      "fi_W0_p1_r1r0",
+      "fi_W0_p1_r1r2"
+     ]
+    }
+   ],
+   "max_cycles": 82
+  },
+  "g2": {
+   "status": "FAIL",
+   "probes": 6,
+   "overflow": 7062724,
+   "no_access": 0,
+   "mem_gb": {
+    "die": 64,
+    "part_first": 32,
+    "part_max": 64
+   },
+   "oom_retries": [],
+   "oom_at_ceiling": [],
+   "not_done": [],
+   "detail": {
+    "part_svc_hi_dsdv_svc_rs__t1": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 8985861.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_ot_s81sl_leaf__t8": {
+     "done": true,
+     "overflow": 4359149,
+     "wirelength_um": 21791791.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_ot_s81sl_leaf__t47": {
+     "done": true,
+     "overflow": 1622830,
+     "wirelength_um": 12294339.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_ot_s81sl_leaf__t17": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 4886634.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_ot_s81sl_leaf__t2": {
+     "done": true,
+     "overflow": 1080745,
+     "wirelength_um": 9990843.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "die": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": null,
+     "no_access": 0,
+     "errors": [],
+     "reach": {
+      "clk": {
+       "max_um": 27807.2,
+       "p90_um": 22035.7,
+       "taps": 8127
+      },
+      "rst": {
+       "max_um": 26894.7,
+       "p90_um": 21951.0,
+       "taps": 398
+      }
+     }
+    }
+   },
+   "seconds": 104432.5,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/s81/g2/g2_report.json"
+  },
+  "sta": {
+   "seams": 2306,
+   "measured_ports": 0,
+   "standin_ports": 2306,
+   "standin": {
+    "bus": {
+     "cls": "bus",
+     "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+     "setup_policy_ps": 576.4,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 496.8,
+     "hold_ps": -22.6,
+     "ports": 588
+    },
+    "ft": {
+     "cls": "ft",
+     "basis": "contract (kit I_max + O_max >= T)",
+     "setup_policy_ps": 0.0,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": -79.6,
+     "hold_ps": -22.6,
+     "ports": 1148
+    },
+    "ft_in": {
+     "cls": "ft_in",
+     "basis": "contract (kit I_max + O_max >= T)",
+     "setup_policy_ps": 33.3,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": -46.3,
+     "hold_ps": -22.6,
+     "ports": 285
+    },
+    "ft_out": {
+     "cls": "ft_out",
+     "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+     "setup_policy_ps": 576.4,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 496.8,
+     "hold_ps": -22.6,
+     "ports": 285
+    }
+   },
+   "standin_worst_setup_ps": 0.0,
+   "standin_worst_hold_ps": 40.0,
+   "standin_worst_margined_info_setup_ps": -79.6,
+   "standin_worst_margined_info_hold_ps": -22.6,
+   "views": {},
+   "views_unavailable": {},
+   "xtalk": {
+    "setup_ps": 30.76,
+    "hold_ps": 20.76,
+    "seam_len_um": 60.0,
+    "cc_ff": 7.496
+   },
+   "derates": {
+    "cell_late": 1.1037,
+    "cell_early": 0.95,
+    "net_late": 1.03,
+    "net_early": 0.97,
+    "ir_factor": 1.0511
+   },
+   "ir": {
+    "factor": 1.0511,
+    "sensitivity": 1.022,
+    "drop_frac": 0.05,
+    "mode": "stated",
+    "pdnsim": "NOT RUN: no die-level PDN database (plan pg.grid only)"
+   },
+   "status": "NOT RUN (no seam between two partitions with routed views; stand-in budgets only)"
+  }
+ },
+ "seconds": 104576.3,
+ "verdict": "FAIL",
+ "delta": {
+  "prev_sha": "9f6cbf0662335aa1380e17234c3e500f2d323bdd",
+  "metrics": {
+   "g0.errors": 13,
+   "g0c.errors": -78,
+   "g0c.clean_types": 88,
+   "xdie.errors": -130,
+   "g2.overflow": 7062724
+  },
+  "status_changes": {
+   "g0": "PASS -> FAIL",
+   "xdie": "FAIL -> PASS",
+   "latency": "PASS -> FAIL",
+   "g2": "PASS -> FAIL"
+  },
+  "new": []
+ }
+}

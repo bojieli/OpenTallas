@@ -1,0 +1,254 @@
+{
+ "schema": "opentallas.die_ci.v1",
+ "die": "s81_head",
+ "plan": "physical/die_plan/s81_head/die_plan.json",
+ "sha": "262d07038412ff7193d73264d55b88380b244f25",
+ "plan_digest": "a2eb7166e0b1fbc9",
+ "g2_tools_digest": "d3007673a71158e6",
+ "gates": {
+  "g0": {
+   "status": "PASS",
+   "errors": 0,
+   "by_check": {},
+   "warnings": 6,
+   "seconds": 99.7,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/s81_head/g0c/g0_report.json",
+   "worst_cut": {
+    "ratio": 0.0637,
+    "at": "horizontal@3250"
+   },
+   "worst_segment": {
+    "ratio": 0.3587,
+    "at": "horizontal@3250:turnE5b"
+   },
+   "types": 16,
+   "partitions": 326
+  },
+  "g0c": {
+   "status": "PASS",
+   "errors": 0,
+   "by_check": {},
+   "clean_types": 16,
+   "types": 16,
+   "g3_eligible": 16,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/s81_head/g0c/g0_report.json"
+  },
+  "xdie": {
+   "status": "PASS",
+   "errors": 0,
+   "in_die": {
+    "status": "PASS",
+    "errors": 0,
+    "by_rule": {
+     "die_io_plan": 0,
+     "cut_lines": 0,
+     "reach": 0,
+     "face_tracks": 0,
+     "ft_budget": 0
+    }
+   },
+   "systems": {
+    "s81": {
+     "status": "PASS",
+     "errors": 0,
+     "circuits": 2932,
+     "warnings": 4,
+     "groups": [],
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/xdie_s81_head/xdie_io_s81.json",
+     "seconds": 0.1
+    }
+   }
+  },
+  "census": {
+   "status": "N/A (census none: top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the bottom-up H10 die chain used a )",
+   "errors": 0
+  },
+  "latency": {
+   "status": "PASS",
+   "reason": null,
+   "plan_digest": "a2eb7166e0b1fbc9",
+   "lanes": 328,
+   "g0_latency_errors": 0,
+   "record": "physical/die_plan/s81_head/lat/s81_head_latency.json",
+   "files": [
+    {
+     "file": "physical/die_plan/s81_head/lat/s81_head_latency.json",
+     "plan_digest": "a2eb7166e0b1fbc9",
+     "digest_match": true,
+     "lanes": 328,
+     "mismatched_lanes": 0,
+     "extra_lanes": 0,
+     "example": []
+    }
+   ],
+   "max_cycles": 51
+  },
+  "g2": {
+   "status": "PASS",
+   "probes": 6,
+   "overflow": 0,
+   "no_access": 0,
+   "mem_gb": {
+    "die": 64,
+    "part_first": 32,
+    "part_max": 64
+   },
+   "oom_retries": [],
+   "oom_at_ceiling": [],
+   "not_done": [],
+   "detail": {
+    "part_hd_turn_a": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 338101.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_hd_turn_b": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 352961.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_hd_st_n3": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 2980588.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_hd_st_n4": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 2978683.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_hd_st_k5": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 1635286.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "die": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 1165219.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {
+      "clk": {
+       "max_um": 16998.6,
+       "p90_um": 12633.3,
+       "taps": 3941
+      },
+      "rst": {
+       "max_um": 16086.1,
+       "p90_um": 12766.1,
+       "taps": 326
+      }
+     }
+    }
+   },
+   "seconds": 431.5,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/s81_head/g2/g2_report.json"
+  },
+  "sta": {
+   "seams": 428,
+   "measured_ports": 0,
+   "standin_ports": 428,
+   "standin": {
+    "bus": {
+     "cls": "bus",
+     "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+     "setup_policy_ps": 576.4,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 496.8,
+     "hold_ps": -22.6,
+     "ports": 294
+    },
+    "ft": {
+     "cls": "ft",
+     "basis": "contract (kit I_max + O_max >= T)",
+     "setup_policy_ps": 0.0,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": -79.6,
+     "hold_ps": -22.6,
+     "ports": 66
+    },
+    "ft_in": {
+     "cls": "ft_in",
+     "basis": "contract (kit I_max + O_max >= T)",
+     "setup_policy_ps": 33.3,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": -46.3,
+     "hold_ps": -22.6,
+     "ports": 34
+    },
+    "ft_out": {
+     "cls": "ft_out",
+     "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+     "setup_policy_ps": 576.4,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 496.8,
+     "hold_ps": -22.6,
+     "ports": 34
+    }
+   },
+   "standin_worst_setup_ps": 0.0,
+   "standin_worst_hold_ps": 40.0,
+   "standin_worst_margined_info_setup_ps": -79.6,
+   "standin_worst_margined_info_hold_ps": -22.6,
+   "views": {},
+   "views_unavailable": {},
+   "xtalk": {
+    "setup_ps": 30.76,
+    "hold_ps": 20.76,
+    "seam_len_um": 60.0,
+    "cc_ff": 7.496
+   },
+   "derates": {
+    "cell_late": 1.1037,
+    "cell_early": 0.95,
+    "net_late": 1.03,
+    "net_early": 0.97,
+    "ir_factor": 1.0511
+   },
+   "ir": {
+    "factor": 1.0511,
+    "sensitivity": 1.022,
+    "drop_frac": 0.05,
+    "mode": "stated",
+    "pdnsim": "NOT RUN: no die-level PDN database (plan pg.grid only)"
+   },
+   "status": "NOT RUN (no seam between two partitions with routed views; stand-in budgets only)"
+  }
+ },
+ "seconds": 531.3,
+ "verdict": "INCOMPLETE",
+ "delta": {
+  "prev_sha": "9f6cbf0662335aa1380e17234c3e500f2d323bdd",
+  "metrics": {
+   "xdie.errors": -130
+  },
+  "status_changes": {
+   "xdie": "FAIL -> PASS"
+  },
+  "new": []
+ }
+}

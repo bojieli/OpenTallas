@@ -1,0 +1,228 @@
+{
+ "schema": "opentallas.die_ci.v1",
+ "die": "hbm",
+ "plan": "physical/die_plan/hbm_arch/B2l/die_plan.json",
+ "sha": "262d07038412ff7193d73264d55b88380b244f25",
+ "plan_digest": "b1782481b0eb2139",
+ "g2_tools_digest": "d3007673a71158e6",
+ "gates": {
+  "g0": {
+   "status": "FAIL",
+   "errors": 586,
+   "by_check": {
+    "m89_signals": 41,
+    "hops": 204,
+    "stations": 312,
+    "cuts": 29
+   },
+   "warnings": 7713,
+   "seconds": 33.2,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/hbm/g0c/g0_report.json",
+   "worst_cut": {
+    "ratio": 0.3239,
+    "at": "vertical@9500"
+   },
+   "worst_segment": {
+    "ratio": 1.0788,
+    "at": "vertical@8250:NW_su30"
+   },
+   "types": 49,
+   "partitions": 88
+  },
+  "g0c": {
+   "status": "FAIL",
+   "errors": 7712,
+   "by_check": {
+    "complete": 6925,
+    "m89_signals": 41,
+    "hops": 204,
+    "stations": 312,
+    "cuts": 29,
+    "reach": 201
+   },
+   "clean_types": 12,
+   "types": 49,
+   "g3_eligible": 0,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/hbm/g0c/g0_report.json"
+  },
+  "xdie": {
+   "status": "FAIL",
+   "errors": 202,
+   "in_die": {
+    "status": "FAIL",
+    "errors": 201,
+    "by_rule": {
+     "die_io_plan": 0,
+     "cut_lines": 0,
+     "reach": 201,
+     "face_tracks": 0,
+     "ft_budget": 0
+    }
+   },
+   "systems": {
+    "hbm-ds": {
+     "status": "FAIL",
+     "errors": 1,
+     "circuits": 480,
+     "warnings": 1,
+     "groups": [
+      {
+       "rule": "host",
+       "role": "D",
+       "n": 1,
+       "example": "role D: die_io marks ['NW_io'] host: true but the rack gives this role no host circuit (host traffic is in-band)"
+      }
+     ],
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/xdie_hbm/xdie_io_hbm-ds.json",
+     "seconds": 0.1
+    }
+   }
+  },
+  "census": {
+   "status": "N/A (census none: B is a 2-quadrant die: lanes = the 16-SM r18h5 census folded (SW->NW, SE->NE; per-pair width = max over the folded quadr)",
+   "errors": 0
+  },
+  "latency": {
+   "status": "FAIL",
+   "reason": "no <die>_latency.json in the plan dir (gen.py latency never written for this plan)",
+   "plan_digest": "b1782481b0eb2139",
+   "lanes": 298,
+   "g0_latency_errors": 0,
+   "record": null,
+   "files": [],
+   "max_cycles": 35
+  },
+  "g2": {
+   "status": "PASS",
+   "probes": 1,
+   "overflow": 0,
+   "no_access": 0,
+   "mem_gb": {
+    "die": 64,
+    "part_first": 64,
+    "part_max": 128
+   },
+   "oom_retries": [],
+   "oom_at_ceiling": [],
+   "not_done": [],
+   "detail": {
+    "die": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 965059.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {
+      "clk": {
+       "max_um": 22863.1,
+       "p90_um": 16550.6,
+       "taps": 2205
+      },
+      "rst": {
+       "max_um": 19738.6,
+       "p90_um": 16018.5,
+       "taps": 88
+      }
+     }
+    }
+   },
+   "seconds": 487468.2,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-27_262d07038412/work/hbm/g2/g2_report.json"
+  },
+  "sta": {
+   "seams": 918,
+   "measured_ports": 0,
+   "standin_ports": 918,
+   "standin": {
+    "bus": {
+     "cls": "bus",
+     "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+     "setup_policy_ps": 576.4,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 496.8,
+     "hold_ps": -22.6,
+     "ports": 94
+    },
+    "ft": {
+     "cls": "ft",
+     "basis": "contract (kit I_max + O_max >= T)",
+     "setup_policy_ps": 0.0,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": -79.6,
+     "hold_ps": -22.6,
+     "ports": 416
+    },
+    "ft_in": {
+     "cls": "ft_in",
+     "basis": "contract (kit I_max + O_max >= T)",
+     "setup_policy_ps": 100.0,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 20.3,
+     "hold_ps": -22.6,
+     "ports": 204
+    },
+    "ft_out": {
+     "cls": "ft_out",
+     "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+     "setup_policy_ps": 576.4,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 496.8,
+     "hold_ps": -22.6,
+     "ports": 204
+    }
+   },
+   "standin_worst_setup_ps": 0.0,
+   "standin_worst_hold_ps": 40.0,
+   "standin_worst_margined_info_setup_ps": -79.6,
+   "standin_worst_margined_info_hold_ps": -22.6,
+   "views": {},
+   "views_unavailable": {},
+   "xtalk": {
+    "setup_ps": 30.76,
+    "hold_ps": 20.76,
+    "seam_len_um": 60.0,
+    "cc_ff": 7.496
+   },
+   "derates": {
+    "cell_late": 1.1037,
+    "cell_early": 0.95,
+    "net_late": 1.03,
+    "net_early": 0.97,
+    "ir_factor": 1.0511
+   },
+   "ir": {
+    "factor": 1.0511,
+    "sensitivity": 1.022,
+    "drop_frac": 0.05,
+    "mode": "stated",
+    "pdnsim": "NOT RUN: no die-level PDN database (plan pg.grid only)"
+   },
+   "status": "NOT RUN (no seam between two partitions with routed views; stand-in budgets only)"
+  }
+ },
+ "seconds": 487501.6,
+ "verdict": "FAIL",
+ "delta": {
+  "prev_sha": "9f6cbf0662335aa1380e17234c3e500f2d323bdd",
+  "metrics": {
+   "g0.errors": 586,
+   "g0c.errors": 7591,
+   "g0c.clean_types": -22,
+   "xdie.errors": -770
+  },
+  "status_changes": {
+   "g0": "PASS -> FAIL",
+   "census": "PASS -> N/A",
+   "g2": "FAIL -> PASS"
+  },
+  "new": []
+ }
+}
