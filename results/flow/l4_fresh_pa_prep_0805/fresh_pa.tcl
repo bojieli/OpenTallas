@@ -1,6 +1,7 @@
 # Strictly shorter failure discriminator: no repair, route, legalize or STA.
 source /work/pg_birth/native_pg_binding.tcl
 source /work/clk_freeze.tcl
+load /work/apreader.so Apreader
 set b [ord::get_db_block]
 ot_pg_assert_all_native $b [ot_pg_prepare $b]
 ot_pg_audit_snapshot $b /work/FRESH_PA_INPUT_PG.json
@@ -25,14 +26,10 @@ proc pa_catalog {b path} {
   lassign [$i getLocation] ix iy
   set box [$i getBBox]
   puts $f [list INST $name [$m getName] $idx $ix $iy origin [$i getOrigin] bbox [list [$box xMin] [$box yMin] [$box xMax] [$box yMax]] [$i getOrient] [$i getPlacementStatus]]
-  foreach mt [$m getMTerms] {
-   if {[$mt getSigType] in {POWER GROUND}} continue
-   foreach mp [$mt getMPins] {
-    set buckets [$mp getPinAccess]
-    puts $f [list MPIN [$mt getName] [$mp getId] bucket_count [llength $buckets] selected_idx $idx selected_slot_count [llength [lindex $buckets $idx]]]
-    foreach ap [lindex $buckets $idx] {puts $f [list ACCESS_POINT [$ap getId] owner_mpin [[$ap getMPin] getId]]}
-   }
-  }
+  set db [$b getDataBase]
+  # Nested public vectors are opaque in this image's SWIG Tcl/Python layer.
+  # Exact-ABI read-only C++ adapter returns ordinary Tcl dictionaries instead.
+  puts $f [list NATIVE_AP_BUCKETS [ot_ap_read_instance [$db getId] [$b getId] $name]]
   foreach r [$b getRows] {
    lassign [$r getOrigin] rx ry;set site [$r getSite]
    set pitch [$r getSpacing];if {$pitch<=0} {set pitch [$site getWidth]}

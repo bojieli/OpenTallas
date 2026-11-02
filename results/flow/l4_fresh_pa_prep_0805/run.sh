@@ -3,6 +3,7 @@ set -euo pipefail
 R=$(realpath "$(dirname "$0")")
 K=$R/kit
 [[ ${L4_FRESH_PA_REVIEWED:-0} == 1 ]] || { echo PREP_ONLY_NO_DISPATCH; exit 70; }
+[[ $(sha256sum "$K/apreader.so" | cut -d ' ' -f 1) == 425d9c256dddb0f1bae66bf2d8aa0fb81e2940d7b242eb1eaecf4171c6e66d66 ]] || { echo AP_READER_MODULE_REFUSED; exit 71; }
 docker run --rm --memory=32g --memory-swap=32g --cpus=1 -v "$K":/work -w /OpenROAD-flow-scripts/flow -e OT_PG_STRICT=1 \
  sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 bash -lc '
 set -euo pipefail
