@@ -7,7 +7,7 @@
       "results/hbm_programme_source_frontier_0146/ot_hgi_sfu_store_stripe_leaf_r10.sv",
       "results/hbm_programme_source_frontier_0146/ot_sram_1r1w_512x256_m1_r2c2.sv"
     ],
-    "source_commit": "cfee74ae8dab19c87301e33a6de991b718a0d8c5",
+    "source_commit": "b467f9af6f4017defae6b9cb4c79251eaeb8786e",
     "read_at_commit": false,
     "defines": [],
     "macros": [
@@ -414,7 +414,7 @@
     "source": "Exact selected SOURCE13 r10+leaf+real512nativeSRAM; no historical pstore body/proof alias"
   },
   "profile": {
-    "source_commit": "cfee74ae8dab19c87301e33a6de991b718a0d8c5",
+    "source_commit": "b467f9af6f4017defae6b9cb4c79251eaeb8786e",
     "family": "SOURCE13_SELECTED_PROGRAMME_R10_PAGE_AW1",
     "release_eligible": false,
     "qualification": "SOURCE_PROOF_ONLY_NATIVE_UNROUTED",
@@ -585,6 +585,13 @@
       "master": "ot_sram_1r1w_512x256_m1_r2c2",
       "memory_bits": 5767168,
       "external_face_shell": false
+    },
+    "native_primitive_boundary": {
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "signal_ABI_bits": 827,
+      "evidence": "results/hbm_programme_native_intake_0450/native_master_ABI_preflight.json",
+      "selector": "SYNTH_BLACKBOXES=ot_sram_1r1w_512x256_m1_r2c2",
+      "scope": "Exact same-name native SRAM only; functional standard cells unchanged"
     },
     "physical_reset_phase": "HELD: actual provider rst_n_t352/t350 versus B113 parent reset; no64/4phase credit",
     "START": "Exact collar.io_start_v\u2192IOvalid stripe2bit26\u2192p_sv_q; component phase PASS only;66route held"

@@ -44,6 +44,10 @@ def prepare(repo):
                    port_inventory=dict(top=TOP,source_file=top['file'],source_sha256=top['sha256'],
                                        ports=[[p['name'],p['direction'],p['width']]for p in model['ports']]),
                    native_capacity=dict(macros=44,master=MASTER,memory_bits=5767168,external_face_shell=False),
+                   native_primitive_boundary=dict(master=MASTER,signal_ABI_bits=827,
+                     evidence=PACKET+'/native_master_ABI_preflight.json',
+                     selector='SYNTH_BLACKBOXES='+MASTER,
+                     scope='Exact same-name native SRAM only; functional standard cells unchanged'),
                    physical_reset_phase='HELD: actual provider rst_n_t352/t350 versus B113 parent reset; no64/4phase credit',
                    START='Exact collar.io_start_v→IOvalid stripe2bit26→p_sv_q; component phase PASS only;66route held')
     return recipe,profile,json.loads((r/'views.json').read_text())
@@ -66,6 +70,9 @@ def main():
     if '--wrapper'in args:raise ValueError('source/provider wrappers not allowed')
     if '--views'not in args:args.extend(['--views',str(a.repo/PACKET/'views.json')])
     if '--view'not in args:args.extend(['--view',views['view_list'][0]['view']])
+    native_selector='SYNTH_BLACKBOXES='+MASTER
+    if native_selector not in args:
+        args.extend(['--orfs-var',native_selector])
     path=a.repo/'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py'
     sys.path.insert(0,str(path.parent));spec=importlib.util.spec_from_file_location('programme_native_backend',path)
     backend=importlib.util.module_from_spec(spec);spec.loader.exec_module(backend)
