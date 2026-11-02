@@ -1678,6 +1678,59 @@ def cancel_class_volume(AP, cfg, st, notices):
     return n
 
 
+def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
+    """COORD 11-01 18:3x (KV kv3_io_ft pre-fix kits ran GRT 22.5 h after a newer fix superseded them): an attempt
+    whose plan block is no longer in the die's current plan of record (plan_current=no) can never count, so it is
+    stopped at the next tick -- a RUNNING/LAUNCHING wave unit (and its detached place client) and the autopilot
+    route job of an ENQUEUED kit -- and marked CANCELLED class SUPERSEDED.  The current block is a different key
+    and launches on its own.  Only dies with a cached current-plan probe are judged; die option cancel_superseded
+    false opts out; at most supersede_max_per_tick stops per tick (a mass stop is logged, not hidden)."""
+    cur = current_keys(cfg, st)
+    jobs = {}
+    if ap_dir:
+        try:
+            jobs = json.loads((Path(ap_dir) / "state.json").read_text()).get("jobs") or {}
+        except (OSError, ValueError):
+            jobs = {}
+    cap = int(cfg.get("supersede_max_per_tick", DEFAULTS.get("supersede_max_per_tick", 20)))
+    n = 0
+    for key, r in (st.get("items") or {}).items():
+        die = r.get("die")
+        d = (cfg.get("dies") or {}).get(die)
+        if die not in cur or key in cur[die] or not isinstance(d, dict) or d.get("cancel_superseded") is False:
+            continue
+        units = []
+        if r.get("status") in ("RUNNING", "LAUNCHING"):
+            units.append(r.get("unit"))
+            try:
+                units.append(json.loads((Path(r["dir"]) / "place_service.json").read_text())["unit"])
+            except (OSError, ValueError, KeyError, TypeError):
+                pass
+            what = f"wave {r.get('stage') or r.get('status')}"
+        elif r.get("status") == "ENQUEUED" and r.get("q_id"):
+            j = jobs.get(r["q_id"]) or {}
+            if j.get("status") != "RUNNING" or not j.get("unit"):
+                continue
+            units.append(j["unit"])
+            what = f"queue job {r['q_id']}"
+        else:
+            continue
+        if n >= cap:
+            AP.log(f"KIT-WAVE SUPERSEDED cap {cap} reached; {die}/{r.get('item')} waits for the next tick")
+            break
+        if not AP.DRY:
+            for u in units:
+                if u:
+                    AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+        r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, updated=time.time(),
+                 reason=f"{what} on a superseded plan block (plan_current=no) stopped; the current block "
+                        f"relaunches on its own key (COORD 11-01 18:3x)")
+        notices.setdefault(die, []).append(f"{r.get('item')}@{r.get('attempt')} SUPERSEDED: {what} stopped")
+        AP.log(f"KIT-WAVE CANCEL-SUPERSEDED {die}/{r.get('item')}@{r.get('attempt')} {what} units {units}")
+        n += 1
+    return n
+
+
 def step(AP, ap_dir=None):
     """one wave pass; a non-blocking lock keeps two passes (tick + CLI step) from double-launching"""
     import fcntl
@@ -1710,6 +1763,7 @@ def _step(AP, ap_dir):
     except Exception as e:                               # a missing/unreadable pending file never blocks the wave
         AP.log(f"KIT-WAVE pending retries skipped: {type(e).__name__}: {e}")
     cancel_class_volume(AP, cfg, st, notices)
+    cancel_superseded(AP, cfg, st, notices, ap_dir)
     stagger = float(cfg.get("launch_stagger_s", DEFAULTS["launch_stagger_s"]))
     nl = 0                                               # items launched this tick: start delay nl * stagger
     for key, rec in list(st["items"].items()):           # INFRA relaunch (up to infra_attempts)
