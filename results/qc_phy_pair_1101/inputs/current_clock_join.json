@@ -1,0 +1,49 @@
+{
+  "top_path": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/rtl/qwen_compute_bound_top.sv",
+  "top_sha256": "b7db6bb8157f4e55f274b2e1d11482428d25d40803ff5bf5cb4bd7758c112295",
+  "top_port_count": 639,
+  "partitions": 377,
+  "types": 119,
+  "crossing_bits": 790393,
+  "serdes_instances": {
+    "io_serdes": {
+      "module": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes",
+      "connections": {
+        "clk": "clk_region_coll_n",
+        "arst_n": "rstw_sl_W5_hc0_rst_o_1",
+        "rx_flit": "x_io_serdes_rx_flit_coll_n",
+        "rx_v": "x_io_serdes_rx_v_coll_n",
+        "tx_flit": "x_coll_n_io_collective_serdes_tx_io_serdes",
+        "tx_up": "x_io_serdes_tx_up_coll_n",
+        "tx_v": "x_coll_n_io_collective_serdes_tx_valid_io_serdes"
+      },
+      "source": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes io_serdes (\n        .clk(clk_region_coll_n),\n        .arst_n(rstw_sl_W5_hc0_rst_o_1),\n        .rx_flit(x_io_serdes_rx_flit_coll_n),\n        .rx_v(x_io_serdes_rx_v_coll_n),\n        .tx_flit(x_coll_n_io_collective_serdes_tx_io_serdes),\n        .tx_up(x_io_serdes_tx_up_coll_n),\n        .tx_v(x_coll_n_io_collective_serdes_tx_valid_io_serdes)\n    );"
+    },
+    "io_serdes_1": {
+      "module": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes",
+      "connections": {
+        "clk": "clk_region_coll_s",
+        "arst_n": "rstw_c_W5_bf_00_rst_o_3",
+        "rx_flit": "x_io_serdes_1_rx_flit_coll_s",
+        "rx_v": "x_io_serdes_1_rx_v_coll_s",
+        "tx_flit": "x_coll_s_io_collective_serdes_tx_to_io_serdes_1_tx_flit_io_serdes_1",
+        "tx_up": "x_io_serdes_1_tx_up_coll_s",
+        "tx_v": "x_coll_s_io_collective_serdes_tx_valid_to_io_serdes_1_tx_v_io_serdes_1"
+      },
+      "source": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes io_serdes_1 (\n        .clk(clk_region_coll_s),\n        .arst_n(rstw_c_W5_bf_00_rst_o_3),\n        .rx_flit(x_io_serdes_1_rx_flit_coll_s),\n        .rx_v(x_io_serdes_1_rx_v_coll_s),\n        .tx_flit(x_coll_s_io_collective_serdes_tx_to_io_serdes_1_tx_flit_io_serdes_1),\n        .tx_up(x_io_serdes_1_tx_up_coll_s),\n        .tx_v(x_coll_s_io_collective_serdes_tx_valid_to_io_serdes_1_tx_v_io_serdes_1)\n    );"
+    },
+    "io_serdes_2": {
+      "module": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b",
+      "connections": {
+        "clk": "clk_region_c_W5_bf_01",
+        "arst_n": "rstw_c_W5_bf_01_rst_o_0",
+        "rx_flit": "x_io_serdes_2_rx_flit_c_W5_bf_01",
+        "rx_v": "x_io_serdes_2_rx_v_c_W5_bf_01",
+        "tx_flit": "x_c_W5_bf_01_serdes_tx_tx_flit_o_io_serdes_2",
+        "tx_up": "x_io_serdes_2_tx_up_c_W5_bf_01",
+        "tx_v": "x_c_W5_bf_01_serdes_tx_valid_tx_v_o_io_serdes_2"
+      },
+      "source": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b io_serdes_2 (\n        .clk(clk_region_c_W5_bf_01),\n        .arst_n(rstw_c_W5_bf_01_rst_o_0),\n        .rx_flit(x_io_serdes_2_rx_flit_c_W5_bf_01),\n        .rx_v(x_io_serdes_2_rx_v_c_W5_bf_01),\n        .tx_flit(x_c_W5_bf_01_serdes_tx_tx_flit_o_io_serdes_2),\n        .tx_up(x_io_serdes_2_tx_up_c_W5_bf_01),\n        .tx_v(x_c_W5_bf_01_serdes_tx_valid_tx_v_o_io_serdes_2)\n    );"
+    }
+  }
+}
