@@ -10,7 +10,14 @@
     246.24
    ],
    "pins_file": "pins.json",
-   "pins_sha256": "285e192a8a962dfa6304af144e1c2d374be67dafeb100367b22b4872ca67a154"
+   "pins_sha256": "285e192a8a962dfa6304af144e1c2d374be67dafeb100367b22b4872ca67a154",
+   "instances": [
+    "NE_io.u_u_ep_N2",
+    "NW_spb0.u_u_ep_S0",
+    "NE_spb0.u_u_ep_S0",
+    "vsN0.u_u_ep_S1"
+   ],
+   "placed": 0
   }
  ]
 }
