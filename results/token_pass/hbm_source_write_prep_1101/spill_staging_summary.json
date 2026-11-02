@@ -32,7 +32,7 @@
     "The proposed [261120,262144) scratch lease is NOT reserved. A slot is owned before staging until true WB ACK/fence; serialize if reusing slot0.",
     "No selected VM0/1 bank-changing staging path identified. Generic COPY and pure local BYPASS are not substitutes.",
     "No live scratch data, extra VM ports, cross-quarter source route or host configuration bandwidth assumed.",
-    "Native fragment fields are not executed227 payloads; exact producer/VM partition lowering and fixed issue/drain/HOST dates remain pending.",
+    "Candidate227 is literal U32/VM-local to STK3 quadrant-ordinal fields, UNEXECUTED. Native sourceSID is external binding, never an encoded address alias. Actual producer/VM partition binding and issue/drain/HOST dates remain pending.",
     "CP page counts are capacity lower bounds for this explicit512word/boundary fragmentation only; original-order barriers/page handoff can add work. They are not an optimal fragment-count claim.",
     "SID2/3 local SU presence does not prove bank-changing COPY, cross-half write ownership or a STK3 writer route.",
     "No source staging overlap, global calendar, TPS or physical credit."
@@ -55,6 +55,9 @@
       "quadrant_ordinal": 340008480,
       "requires_staging": false,
       "proposed_scratch_word": null,
+      "candidate_native_source_local_word": 0,
+      "candidate_native_source_SID": 0,
+      "candidate_move227_hex": "000400000040004000000006a220f1002800020000000000000000015",
       "selected_local_SU_source_SID_present": false
     },
     {
@@ -70,6 +73,9 @@
       "quadrant_ordinal": 340008448,
       "requires_staging": false,
       "proposed_scratch_word": null,
+      "candidate_native_source_local_word": 256,
+      "candidate_native_source_SID": 0,
+      "candidate_move227_hex": "000800000040004000000006a220f0002800020000000000000002015",
       "selected_local_SU_source_SID_present": false
     },
     {
@@ -85,6 +91,9 @@
       "quadrant_ordinal": 340008512,
       "requires_staging": false,
       "proposed_scratch_word": null,
+      "candidate_native_source_local_word": 768,
+      "candidate_native_source_SID": 0,
+      "candidate_move227_hex": "000800000040004000000006a220f2002800020000000000000006015",
       "selected_local_SU_source_SID_present": false
     },
     {
@@ -100,6 +109,9 @@
       "quadrant_ordinal": 340008512,
       "requires_staging": false,
       "proposed_scratch_word": null,
+      "candidate_native_source_local_word": 1280,
+      "candidate_native_source_SID": 0,
+      "candidate_move227_hex": "000800000040004000000006a220f200280002000000000000000a015",
       "selected_local_SU_source_SID_present": false
     },
     {
@@ -115,6 +127,9 @@
       "quadrant_ordinal": 340008576,
       "requires_staging": false,
       "proposed_scratch_word": null,
+      "candidate_native_source_local_word": 1792,
+      "candidate_native_source_SID": 0,
+      "candidate_move227_hex": "000800000040004000000006a220f400280002000000000000000e015",
       "selected_local_SU_source_SID_present": false
     },
     {
@@ -130,6 +145,9 @@
       "quadrant_ordinal": 340008576,
       "requires_staging": false,
       "proposed_scratch_word": null,
+      "candidate_native_source_local_word": 2304,
+      "candidate_native_source_SID": 0,
+      "candidate_move227_hex": "000800000040004000000006a220f4002800020000000000000012015",
       "selected_local_SU_source_SID_present": false
     },
     {
@@ -145,6 +163,9 @@
       "quadrant_ordinal": 340008640,
       "requires_staging": false,
       "proposed_scratch_word": null,
+      "candidate_native_source_local_word": 2816,
+      "candidate_native_source_SID": 0,
+      "candidate_move227_hex": "000800000040004000000006a220f6002800020000000000000016015",
       "selected_local_SU_source_SID_present": false
     },
     {
@@ -160,6 +181,9 @@
       "quadrant_ordinal": 340008640,
       "requires_staging": false,
       "proposed_scratch_word": null,
+      "candidate_native_source_local_word": 3328,
+      "candidate_native_source_SID": 0,
+      "candidate_move227_hex": "000800000040004000000006a220f600280002000000000000001a015",
       "selected_local_SU_source_SID_present": false
     }
   ]
