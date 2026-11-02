@@ -1,0 +1,102 @@
+{
+  "status": "EXACT_SELECTED_SOURCE_JOIN_PHYSICAL_ROUTE_OPEN",
+  "source13_mutated": false,
+  "PNR_dispatched": false,
+  "source_selected_PP": "intel1:/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/selected_preprocessed.sv",
+  "actual_producer": {
+    "module": "ot_hgi_sfu_programme_store_r10",
+    "params": {
+      "PAGE_AW": 1
+    },
+    "instance": "NW_hub.u_u_sfup_Q_q1",
+    "reset": "rst_n_t352",
+    "clock": "clk",
+    "compiler_control": "o_ctl[1741:0] registered from{cal[7][187:0],cal[6:0] each222}",
+    "io_word": "o_io[470:0] registered from{cal[10][26:0],cal[9],cal[8]}",
+    "START": "actualio_start_v collarlaunch\u2192p_io_start_v\u2192io_sv gatedrb/rbd1\u2192validIOstripe2bit26\u2192p_sv_q\u2192controlrowcontrollers; no independentdummySTART"
+  },
+  "actual_collar": {
+    "module": "ot_hbm_static_cfg_collar",
+    "instance": "NW_hub.u_u_col_sfu_Q",
+    "params": {
+      "PAGE_W": 3,
+      "NS": 2,
+      "NPR": 1,
+      "NREC": 0,
+      "NGO": 1,
+      "NB": 2,
+      "NF": 1,
+      "XSER": 0
+    },
+    "target": 118,
+    "source_target_note": "actualselectedhubparameter S_u_col_sfu_Q_tgt=118, old sfu_images.pySFU_TGT116 is a SWslice fixture and must be overridden/rejected for thisNWmission"
+  },
+  "actual_transport": [
+    {
+      "output": "xo_u_sfup_Q_q1_compiler_control",
+      "data_bits": 1742,
+      "destination": "NW_b113.xi_u_sfucore_Q_ctl_u_core_procdff_66941_D",
+      "native_input_capture": "ot_dp_st W1742",
+      "status": "UNPLANNED no physical lane"
+    },
+    {
+      "output": "xo_u_sfup_Q_q1_io_word",
+      "data_bits": 471,
+      "destination": "NW_b113.xi_u_sfucore_Q_ctl_u_core_procdff_66936_D",
+      "native_input_capture": "ot_dp_st W471",
+      "status": "UNPLANNED no physical lane"
+    }
+  ],
+  "codec": {
+    "existing": "tools/hbm_layer_vehicle/sfu_images.py + tools/hbm_static/sfu_program_pages.py",
+    "shape_match": "8controlstripes\u00d7222bits(last188),3IOstripes\u00d7222bits(last27),2048rows matchesexactselectedr10outputconcat",
+    "r10_codec_target_needs_nativeNW118": true,
+    "pslice_codec": "su_prog_codec.py isdifferent u_u_pgp_Q_q1.command, notcompiler_control1742 producer",
+    "no_new_codec": true
+  },
+  "planning_context_only": {
+    "current_parent": "coord/tmp/codex-hbm-su00-upper-clock-2335/composite_root_PENDING.json",
+    "source_r10_bbox_global": [
+      9348.48,
+      9616.32,
+      9923.04,
+      10355.04
+    ],
+    "B113_bbox_global": [
+      0,
+      10385.28,
+      1857.6,
+      11957.76
+    ],
+    "bbox_Manhattan_lowerbound_um": 7521.12,
+    "minimum_405_links": 19,
+    "provider_native_source_view_join": "OPEN; cataloguemodule/name match is not actualsource/asbuilt compatibility"
+  },
+  "finite_disabled_alternative": {
+    "relocate_actual_r10_near_ctl": true,
+    "proposed_B113_local_bbox": [
+      17.28,
+      17.28,
+      591.84,
+      756.0
+    ],
+    "parent_hardcore_body_overlaps": 0,
+    "current_FT_bit_site_body_overlaps": 0,
+    "nominal_internal_station_center_overlaps": 0,
+    "actual_internal_FF_row_clock_reset_cleanness": "NOT_PROVED",
+    "old_long_payload_bits": 2213,
+    "distinct_forward_cfg_payload_bits": 351,
+    "conservative_reverse_all_status_bits": 69,
+    "forward_fields": {
+      "shared_cfg_address": 14,
+      "shared_cfg_data": 256,
+      "cfg_we": 2,
+      "prm": 78,
+      "io_start_v": 1
+    },
+    "narrow_transport_cost": "420payloadplusnativeepoch/facestages/newrelaycount+reset/clockpriceMUSTbecomputed; preserveall69statusports untilactualobservabilityknown",
+    "collar_feedback_constraint": "Anynewreturnlatencyrequiresgenuinecollarstart/busy/completionphasecontract; movingr10alonecannotassumeoldremotehandshake",
+    "exact_added_cycles": null,
+    "adopted": false
+  }
+}
