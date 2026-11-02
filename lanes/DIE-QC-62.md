@@ -12,3 +12,5 @@
 
 ## CODEX notes
 2026-11-01 20:46 PST: L1 oldcoupon FAIL retained TT−11.755/FF+5.852 (prior−14.64/−2.52). New concrete tailcap isolate PLACE-only at intel2 codex-qc-l1-tail-2044, dispatcher3309059, normalot-run16GB2T --crit/disk2. One6fBUF beside _279616_ XNOR drives99umtail into nint[6], no addedcycles; alloldcellplacement/master andCLOCK incidence protected. PersonallyVIEWEDGEOM107L1image, independentreviewerPASS-CONDPLACE-only. ActualcandidateLOOK required before any GRT; no fakepostrouteSPEF/signoff. Sourcepreparationresults/qc_l1_tail_1101 on codex/g0c-regress-1101. QC pairedsourcefix bbeb36c01 strictbind normaljob stillpending; notREADYuntilactualbind.
+
+2026-11-01 20:52 PST CODEX correction: L1 firstPLACE3309059 terminalNOTRUN SSH255 (selfalias) beforeadmission, logpreserved. Corrected3344546 exportsOT_HUB_NAME=intel2, automaticplacement+stage/nohostpin.16GB2T outside8GBshortpool; queuednormalmemoryDIE-RESERVE, no nativeoutput. Prepare518ca3b04 contains reviewedcandidate scripts, nophysicalcredit.
