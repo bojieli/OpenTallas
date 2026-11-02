@@ -1,0 +1,6 @@
+XPF37_SUMMARY mut=0 arms=1 seen=12 fault=0 loader=0 observer=0
+PASS_HEAD_XPF37_CONTROL_COMPONENT
+- src/tb_qwen_head_xpf37_control.sv:34: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.011 s; speed 112.539 us/s
+- Verilator: cpu 0.011 s on 1 threads; allocated 7 MB
