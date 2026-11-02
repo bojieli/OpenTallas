@@ -1,0 +1,365 @@
+{
+  "status": "ONE_SOURCE_GEOMETRY_OPTION_ONLY_NOT_ADOPTED",
+  "option": "Joint compactGLUE frame/macro/interface repack, preservingexistinglogicaldatapaths",
+  "outline_um": [
+    432.0,
+    380.16
+  ],
+  "core_inset_um": 4.32,
+  "core_rect_um": [
+    4.32,
+    4.32,
+    427.68,
+    375.84000000000003
+  ],
+  "core_area_um2": 157286.70720000003,
+  "actual_std_area_um2": 28564.94645998691,
+  "actual_6macro_area_um2": 26297.98732799999,
+  "core_free_fill": 0.21807180410572827,
+  "required_min_core_free_fill": 0.2,
+  "outline_aspect": 1.1363636363636362,
+  "current_fixed_frame_impossibility": {
+    "std_area_um2": 28564.94645998691,
+    "macro_area_um2": 26297.98732799999,
+    "macro_bbox_um": [
+      60.48,
+      51.852,
+      473.688,
+      1183.716
+    ],
+    "fixed_macro_span_um": [
+      413.20799999999997,
+      1131.8639999999998
+    ],
+    "fixed_macro_bbox_area_um2": 467695.2597119999,
+    "fixed_macro_span_min_outline_area_at_aspect2_um2": 640558.0572479998,
+    "core_inset_um": 4.32,
+    "max_core_area_at20pct_free_fill_um2": 169122.71962793454,
+    "denominator": "CORE area less actual macrobody; outline and border are separate",
+    "old_auto_geom_fill": 0.0256,
+    "current_core_area_um2": 1122804.6335999998,
+    "current_meth_core_free_fill": 0.026050864859875254,
+    "proposed_outline_um": [
+      432,
+      380.16
+    ],
+    "proposed_core_area_um2": 157286.70720000003,
+    "proposed_core_free_fill": 0.21807180410572827
+  },
+  "macros": [
+    {
+      "instance": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank\\[0\\].u_store.u_sram",
+      "actual_body_um": [
+        57.912,
+        45.672000000000004
+      ],
+      "old_bbox_um": [
+        60.48,
+        51.852,
+        118.392,
+        97.524
+      ],
+      "proposed_bbox_um": [
+        60.48,
+        51.852,
+        118.392,
+        97.524
+      ],
+      "placement_origin_um": [
+        60.48,
+        51.839999999999996
+      ],
+      "logical_master_ports_state": "unchanged; physicalclock/PG/routecontext must be requalified"
+    },
+    {
+      "instance": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank\\[1\\].u_store.u_sram",
+      "actual_body_um": [
+        57.912000000000006,
+        45.672000000000004
+      ],
+      "old_bbox_um": [
+        129.6,
+        51.852,
+        187.512,
+        97.524
+      ],
+      "proposed_bbox_um": [
+        129.6,
+        51.852,
+        187.512,
+        97.524
+      ],
+      "placement_origin_um": [
+        129.6,
+        51.839999999999996
+      ],
+      "logical_master_ports_state": "unchanged; physicalclock/PG/routecontext must be requalified"
+    },
+    {
+      "instance": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank\\[2\\].u_store.u_sram",
+      "actual_body_um": [
+        57.912000000000006,
+        45.672000000000004
+      ],
+      "old_bbox_um": [
+        198.72,
+        51.852,
+        256.632,
+        97.524
+      ],
+      "proposed_bbox_um": [
+        198.72,
+        51.852,
+        256.632,
+        97.524
+      ],
+      "placement_origin_um": [
+        198.72,
+        51.839999999999996
+      ],
+      "logical_master_ports_state": "unchanged; physicalclock/PG/routecontext must be requalified"
+    },
+    {
+      "instance": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram",
+      "actual_body_um": [
+        57.912000000000035,
+        45.672000000000004
+      ],
+      "old_bbox_um": [
+        267.84,
+        51.852,
+        325.752,
+        97.524
+      ],
+      "proposed_bbox_um": [
+        267.84,
+        51.852,
+        325.752,
+        97.524
+      ],
+      "placement_origin_um": [
+        267.84,
+        51.839999999999996
+      ],
+      "logical_master_ports_state": "unchanged; physicalclock/PG/routecontext must be requalified"
+    },
+    {
+      "instance": "u_bound.u_embed_prov.store.codes",
+      "actual_body_um": [
+        171.288,
+        77.78399999999988
+      ],
+      "old_bbox_um": [
+        302.4,
+        1105.932,
+        473.688,
+        1183.716
+      ],
+      "proposed_bbox_um": [
+        181.44,
+        250.572,
+        352.728,
+        328.3559999999999
+      ],
+      "placement_origin_um": [
+        181.44,
+        250.56
+      ],
+      "logical_master_ports_state": "unchanged; physicalclock/PG/routecontext must be requalified"
+    },
+    {
+      "instance": "u_bound.u_sys_face.u_ot_pr_core.u_rom",
+      "actual_body_um": [
+        38.04000000000002,
+        62.952
+      ],
+      "old_bbox_um": [
+        406.08,
+        414.732,
+        444.12,
+        477.684
+      ],
+      "proposed_bbox_um": [
+        362.88,
+        259.212,
+        400.92,
+        322.164
+      ],
+      "placement_origin_um": [
+        362.88,
+        259.2
+      ],
+      "logical_master_ports_state": "unchanged; physicalclock/PG/routecontext must be requalified"
+    }
+  ],
+  "interface_reserve_bays": [
+    {
+      "name": "north CA / registered interface reserve",
+      "rect_um": [
+        4.32,
+        332.64,
+        427.68,
+        375.84
+      ],
+      "area_um2": 18289.151999999995
+    },
+    {
+      "name": "west CA / registered interface reserve",
+      "rect_um": [
+        4.32,
+        108,
+        56.16,
+        328.32
+      ],
+      "area_um2": 11421.388799999999
+    },
+    {
+      "name": "east CA / registered interface reserve",
+      "rect_um": [
+        358.56,
+        108,
+        427.68,
+        250.56
+      ],
+      "area_um2": 9853.747200000002
+    }
+  ],
+  "reserve_area_um2": 39564.288,
+  "existing_CA_reserve_requirement_um2": 32047.918,
+  "reserve_caveat": "Area allowance only, not aper-buspacking/access/routing proof. Bankassignments may require movingcorrespondingparent physicalfaces; no CAdepth/width/source identity change implied.",
+  "preserved_relative_pad_capture_homes": [
+    {
+      "pad": "epoch",
+      "pad_xy_um": [
+        250.528,
+        207.36
+      ],
+      "capture_pin_xy_um": [
+        249.732,
+        207.495
+      ],
+      "measured_reach_um": 0.931
+    },
+    {
+      "pad": "lrst",
+      "pad_xy_um": [
+        302.368,
+        207.36
+      ],
+      "capture_pin_xy_um": [
+        301.607,
+        207.225
+      ],
+      "measured_reach_um": 0.896
+    }
+  ],
+  "pad_requirement": "RetaintheseactualrelativeM7pad/firstDFFhomesand<1umreach. Ifparentorigin/packagefieldmoves,theabsolute bump/parentcoordinatesneedexplicitnewcontract; no globalfixedpadassumption.",
+  "control_candidate_centers_um": {
+    "existing_raw_boot_leaf_u_rrl16": [
+      216,
+      190.08
+    ],
+    "existing_origin_s0": [
+      196.722,
+      184.545
+    ],
+    "existing_origin_s1": [
+      216,
+      194.4
+    ],
+    "existing_origin_s2": [
+      220.32,
+      190.08
+    ],
+    "existing_origin_pd": [
+      216,
+      185.76
+    ],
+    "existing_origin_sf_preserved": [
+      196.182,
+      184.275
+    ]
+  },
+  "compact_control_budget": {
+    "raw_leaf_to_any_core_point_max_um": 397.44,
+    "s1_or_s2_to_any_core_point_max_um": 401.76,
+    "maximum_actual_critical_center_allocation_error_um": 1,
+    "bound_with_allocation_error_um": 402.76,
+    "scope": "ExistingcommonBOOTRAWandstartD drivers cangeometricallycovercompactcore at405 withsame clock/source/cycles; this is a point/bounding proof, not nativeplacement/routedtiming."
+  },
+  "preserve_cycles_and_roles": [
+    "NoRTL/default/source/modeladoption now; alllogicalmoduleparameters, portnames/widths, clocks, memorycontracts,32FSTARTcopies andallnativepipelinecycles unchanged.",
+    "Retain exactexistingRAW/run resetDAG, entrycapture+depth5 andbootstrap/mission roles; doNOTletageometrysolver silentlyreduce depth.",
+    "Retain currentorigin EFALLfalse/PAD0 and3captureforwardpath, includingnegativeedgeSFandothermode state; no mode change or new stage."
+  ],
+  "required_parent_events": [
+    "Repackphysicalparentwest-stripallocation/neighbors rather thanleavingan unpricedlong externalgap. A smallactiveisland insideoldoutline doesnotearnwholeframefillPASS.",
+    "Re-place/rebind all affectedclock/reset/START/CA/D2Dphysicalendpoints andseams withactualregisteredbridgehop/access/channelmodel. Preserve true pin identities/widths/protocol; noalias.",
+    "Re-derive globalclock sources/taparrival/CPPR andallaffectedlocalclocktrees. Current51596-homeclockis frozenoldframe evidence andcannotbe relabeled.",
+    "Re-derive matchingglobalSTARTprovider/capturecoordinates/countschedule onactualclock/sourcegeometry; oldA2/currentfixed-frameproofs remainimmutable.",
+    "Clockcapacitystillopen:47745actualclock sinks imply at least32<=1500sink leafgroups overall;21782D2Ddomain alone at least15. These are lowerbounds, NOTproof32newglobalportsare needed/sufficient. Retainlogicalclockidentities andpriceactualqualifiedlocaldistribution/parentinputcaps.",
+    "Re-emit actualCAregisteredbanks/read/write/ready/fault placement andunchangedDEPTH4contracts, pinbaysandphysicalparentclock/reset routes. All20%fill/aspect/M7access/PG/layer/channel andactualTT/FFrequirements remain."
+  ],
+  "unresolved_holds": [
+    "No per-bus bankpacking ornative row/blockage allocation",
+    "No realparent/interface placement solve",
+    "No channel/PG/clock capacity ornominal timingqualification",
+    "31opaque paths+212current-endpoint interiorstage margin cases remain",
+    "No source/default/modeladoption or CAD approval"
+  ],
+  "protected_reset_coordinate_candidate_separate": {
+    "status": "SOURCE_ONLY_EXISTING_CELL_CANDIDATE_NO_CAD",
+    "name": "u_bound.u_sys_face.rst_n__ot_rl0$_DFF_P_",
+    "source": "u_rrl15 rst_n_t2 BOOT RAW, not start_t2 gated",
+    "clock": "clk_d2d unchanged; upstreamu_rrl15 clockclk unchanged",
+    "logical_captures": "entry1 + canonicalRAW5 + existingnative2 =8, unchanged; no idealcross-clockphysicaltiming claim",
+    "upstream_center_um": [
+      192.78,
+      550.935
+    ],
+    "unchanged_capture_rl1_center_um": [
+      420.282,
+      1059.075
+    ],
+    "old_center_um": [
+      419.364,
+      1059.615
+    ],
+    "midpoint_target_um": [
+      306.531,
+      805.005
+    ],
+    "nominal_hops_um": [
+      367.821,
+      367.821
+    ],
+    "legal_site_allowance_um": 25,
+    "bounded_hop_um": 392.821,
+    "future_requirements": [
+      "ExactsameCDFclock/data/reset/STARTsource/stage identities andallothercells/census/BTerms unchanged",
+      "ActualOpenDBrow/blockage allocation andDPL afterseparateapproval; noCAD now",
+      "Fullselected+protectedfanoutreach andrelatedclockcontexts; do notborrowthisforFSTARTstar"
+    ]
+  },
+  "current_control_failure_separate": {
+    "status": "CURRENT_FIXED_INTERFACE_COORDINATE_ONLY_INFEASIBLE",
+    "inlet_name": "cland_tstart_in[0]",
+    "inlet_xy_um": [
+      196.064,
+      184.096
+    ],
+    "farthest_output_name": "cland_fstart_out_sys_face__visibility_slot[0]",
+    "output_xy_um": [
+      752.16,
+      1466.144
+    ],
+    "pin_separation_um": 1838.144,
+    "actual_mode": "CAglue region edge_fall=false,pad=0; origin PADW1,FWD_COPY0",
+    "actual_data_path": "p_start -> existingpositive s0 -> existing s1 -> existingFSTARTq",
+    "existing_reg_to_reg_hops": 2,
+    "conservative_pin_register_allowance_each_um": 150,
+    "maximum_coordinate_only_pin_span_um": 1110,
+    "same_raw_reset_obstruction": "All32actualFSTARTq andorigin s0 takecommonBOOTRAWrst_n_t0 fromexistingdepth5u_rrl16; withfixedboundaryregistrationrequirements acommonleafcannotreachboth inletcapture andfarFSTART at405.",
+    "no_borrowed_stages": "sf isnegative-edge/unusedbyselectedEFALLfalse mode; s2/pd areotherselected-tap states, not additionalPAD0forwardpath stages. Noabsentstage/newcycle counted."
+  }
+}
