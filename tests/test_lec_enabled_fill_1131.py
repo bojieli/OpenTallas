@@ -63,6 +63,15 @@ def proposals(wrong_data=False, wrong_enable=False, masks=False, wrong_mask=Fals
             ["gold", "ff:retained", ["fill", c, "ff:record", [capture]]]]
 
 
+def _have_abc():
+    try:
+        E.abc_bin()
+        return True
+    except E.LecError:
+        return False
+
+
+@unittest.skipUnless(_have_abc(), "yosys-abc not found (native ABC tests run in the ORFS image)")
 class EnabledFill(unittest.TestCase):
     def test_capability_advertises_explicit_opt_in(self):
         self.assertEqual(E.main(["--require-options", "OT_LEC_ENABLE_FILL_GUARD"]), 0)
