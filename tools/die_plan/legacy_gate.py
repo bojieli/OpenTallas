@@ -110,7 +110,11 @@ def policy_session(kit, corner, base, disc, ctx, policy):
         tail = tail.replace('/sdc/pair_targets.txt', str(target))
     return (f'source {{{kit / "postcts_gate.tcl"}}}\n'
             'if {$ot_pg_mode ne "global_routing"} {error "G2 policy requires global-route RC"}\n'
-            + definitions + f'so CORNER {corner}\nso PARASITICS global_routing\n' + tail)
+            # session_tcl's uncertainty block precedes so DESIGN, so slicing
+            # the tail above omits it. Apply the same canonical in-session
+            # policy after the existing loader, without another SDC/RC load.
+            + definitions + so.unc_policy_tcl()
+            + f'so CORNER {corner}\nso PARASITICS global_routing\n' + tail)
 
 
 def policy_record(corners, policy):

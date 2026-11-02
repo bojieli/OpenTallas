@@ -209,6 +209,9 @@ def test_grt_uses_existing_signoff_overlay_and_same_loaded_corner(tmp_path):
     assert 'set_input_delay -min [expr {-40}]' in text
     assert 'set_output_delay -min 0' in text
     assert 'extract_parasitics' not in text
+    assert 'so_unc_apply setup 0' in text
+    assert text.index('source {') < text.index('so_unc_apply setup 0') < text.index('so DESIGN [current_design]')
+    assert 'so UNC_POLICY nominal setup 0 hold 25' in text
 
 
 def test_grt_rejects_std_reference_context_mismatch_before_sta(tmp_path):
