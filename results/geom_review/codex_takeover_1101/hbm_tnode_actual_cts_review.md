@@ -1,0 +1,5 @@
+# Native compact Tnode saved CTS review
+
+Personally VIEWED /home/ubuntu/coord/tmp/codex-hbm-tnode-compact-kit-1101/cts_review/auto_geom.png and parsed actualJSON. ROOT-approved ordinaryCTS-only completed EPYC2unit2746067/exit0, proofcache reused. Actual2987sinks/160clockcells/rooted0, ownleaf17.33/treeleg91.26, nearestentry117.56, pinp90/max7.75/18.21,r2r186.52/0, fill23.28%/empty40.81%, no onmacro/clock-onmacro. SamecoherentW/Erails/upperrightlogicbank/horizontalstreet. Raw channel_h.797 andGRTNA FAIL retained; priorPLACEGRT0 does notqualify postCTS routing.
+
+Geometry PASS-COND ONE ordinary postCTS GRT+TT/FF timing stage on exact savedCTS through ROOT-approved same-source capsule, no period/margin/source/reset overrides or repeatedproof. ActualCTS TTscreen+148.09, FFregscreen−9.49/46 under existing screen, portFFscreen−80.79/726 not gated at this stage; screens not routedclosure. RealpostCTS nativeGRT/timing mustdecide, noDRTrelease. clock_taps INFO(<2gridtaps) allows nativecore root2986; do notinvent1500parentportrequirement from rootload. Owner/root informed.
