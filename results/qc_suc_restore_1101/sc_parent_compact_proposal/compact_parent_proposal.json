@@ -1,0 +1,788 @@
+{
+  "scope": "DATA GEOMETRY/NECESSARY PIN-CAPACITY PROPOSAL ONLY. No current plan/source/ABI/nativeprofile/dieallocation adoption, no CAD. Actual parent postcut synthesis/clock/reset/CA/R8/FT packing and per-bit pin realization remain HELD.",
+  "old_parent_frame_um": [
+    613.44,
+    1339.2
+  ],
+  "old_parent_core_area_um2": 804722.6880000001,
+  "old_macro_bay_um": [
+    345.6,
+    648,
+    590.16,
+    1162.08
+  ],
+  "actual_retained_wrapper_area_um2": 34108.291619993135,
+  "wrapper_area_basis": "Retained measured native SC-v2 parentcontext b45d24fc63ff results/sc_cap_0336/native_area.tsv; this is NOT new postcut parent synthesis.",
+  "projected_oldframe_freefill_after_cut": 0.05023317765410144,
+  "new_parent_frame_um": [
+    483.84,
+    622.08
+  ],
+  "new_parent_core_area_um2": 291506.688,
+  "new_macro_bay_um": [
+    120.96,
+    51.84,
+    365.52,
+    565.92
+  ],
+  "new_child_shape_um": [
+    244.56,
+    514.08
+  ],
+  "child_shape_changed": false,
+  "projected_newframe_freefill": 0.20574023485133347,
+  "W_E_min_clear_band_before_halo_um": 118.32,
+  "N_S_min_clear_band_before_halo_um": 51.84,
+  "child_clock_pin_global_um": [
+    243.228,
+    308.88
+  ],
+  "parent_geometric_center_um": [
+    241.92,
+    311.04
+  ],
+  "clock_ownership": "The near-center clock pin/island is owned by the new SC CHILD. No parent ordinary/regional clock root is invented here; derive actual native clock domains/load/phase and clock landing positions before P&R. Common250/202.5reference is not qualified.",
+  "native_stages": "No added data/control/FT/reset stages. All existing native CAwrite/read/forward/R8/bin/bout/reset stages must be source-correlated and retargeted at same count; no interpolation is actual evidence.",
+  "pin_screen": "Necessary per-face/per-layer average <=6/um only; does not prove inclusive10um windows, cornerguards, routeescape, actual firstFF sites or clock/PG occupancy. Current bus logical order/payload/epoch unchanged; new physical pin packing+die-neighbor interfaces require parentallocation review.",
+  "rows": [
+    {
+      "type": "slw_sc_v3",
+      "old_outline": [
+        613.44,
+        1339.2
+      ],
+      "face_bits": {
+        "N": 3450,
+        "S": 2695,
+        "E": 5840,
+        "W": 6288
+      },
+      "per_layer": {
+        "N:M7": 1728,
+        "N:M5": 1722,
+        "S:M7": 1350,
+        "S:M5": 1345,
+        "E:M6": 2925,
+        "E:M4": 2915,
+        "W:M6": 3149,
+        "W:M4": 3139
+      },
+      "necessary_newframe_screen": {
+        "N:M7": {
+          "bits": 1728,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6363636363636362,
+          "required_at6_per_um": 288.0,
+          "necessary_budget_pass": true
+        },
+        "N:M5": {
+          "bits": 1722,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6237373737373737,
+          "required_at6_per_um": 287.0,
+          "necessary_budget_pass": true
+        },
+        "S:M7": {
+          "bits": 1350,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.840909090909091,
+          "required_at6_per_um": 225.0,
+          "necessary_budget_pass": true
+        },
+        "S:M5": {
+          "bits": 1345,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.8303872053872055,
+          "required_at6_per_um": 224.16666666666666,
+          "necessary_budget_pass": true
+        },
+        "E:M6": {
+          "bits": 2925,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 4.76819248826291,
+          "required_at6_per_um": 487.5,
+          "necessary_budget_pass": true
+        },
+        "E:M4": {
+          "bits": 2915,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 4.7518909754825245,
+          "required_at6_per_um": 485.8333333333333,
+          "necessary_budget_pass": true
+        },
+        "W:M6": {
+          "bits": 3149,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.1333463745435575,
+          "required_at6_per_um": 524.8333333333334,
+          "necessary_budget_pass": true
+        },
+        "W:M4": {
+          "bits": 3139,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.117044861763171,
+          "required_at6_per_um": 523.1666666666666,
+          "necessary_budget_pass": true
+        }
+      },
+      "all_necessary_avg_pass": true
+    },
+    {
+      "type": "slw_sc_v2",
+      "old_outline": [
+        613.44,
+        1339.2
+      ],
+      "face_bits": {
+        "N": 3450,
+        "S": 2695,
+        "E": 5840,
+        "W": 6337
+      },
+      "per_layer": {
+        "N:M7": 1728,
+        "N:M5": 1722,
+        "S:M7": 1350,
+        "S:M5": 1345,
+        "E:M6": 2925,
+        "E:M4": 2915,
+        "W:M6": 3174,
+        "W:M4": 3163
+      },
+      "necessary_newframe_screen": {
+        "N:M7": {
+          "bits": 1728,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6363636363636362,
+          "required_at6_per_um": 288.0,
+          "necessary_budget_pass": true
+        },
+        "N:M5": {
+          "bits": 1722,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6237373737373737,
+          "required_at6_per_um": 287.0,
+          "necessary_budget_pass": true
+        },
+        "S:M7": {
+          "bits": 1350,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.840909090909091,
+          "required_at6_per_um": 225.0,
+          "necessary_budget_pass": true
+        },
+        "S:M5": {
+          "bits": 1345,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.8303872053872055,
+          "required_at6_per_um": 224.16666666666666,
+          "necessary_budget_pass": true
+        },
+        "E:M6": {
+          "bits": 2925,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 4.76819248826291,
+          "required_at6_per_um": 487.5,
+          "necessary_budget_pass": true
+        },
+        "E:M4": {
+          "bits": 2915,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 4.7518909754825245,
+          "required_at6_per_um": 485.8333333333333,
+          "necessary_budget_pass": true
+        },
+        "W:M6": {
+          "bits": 3174,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.174100156494522,
+          "required_at6_per_um": 529.0,
+          "necessary_budget_pass": true
+        },
+        "W:M4": {
+          "bits": 3163,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.156168492436097,
+          "required_at6_per_um": 527.1666666666666,
+          "necessary_budget_pass": true
+        }
+      },
+      "all_necessary_avg_pass": true
+    },
+    {
+      "type": "sle_sc_v2",
+      "old_outline": [
+        613.44,
+        1339.2
+      ],
+      "face_bits": {
+        "N": 3450,
+        "S": 2695,
+        "E": 6096,
+        "W": 6593
+      },
+      "per_layer": {
+        "N:M7": 1728,
+        "N:M5": 1722,
+        "S:M7": 1350,
+        "S:M5": 1345,
+        "E:M6": 3053,
+        "E:M4": 3043,
+        "W:M6": 3302,
+        "W:M4": 3291
+      },
+      "necessary_newframe_screen": {
+        "N:M7": {
+          "bits": 1728,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6363636363636362,
+          "required_at6_per_um": 288.0,
+          "necessary_budget_pass": true
+        },
+        "N:M5": {
+          "bits": 1722,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6237373737373737,
+          "required_at6_per_um": 287.0,
+          "necessary_budget_pass": true
+        },
+        "S:M7": {
+          "bits": 1350,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.840909090909091,
+          "required_at6_per_um": 225.0,
+          "necessary_budget_pass": true
+        },
+        "S:M5": {
+          "bits": 1345,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.8303872053872055,
+          "required_at6_per_um": 224.16666666666666,
+          "necessary_budget_pass": true
+        },
+        "E:M6": {
+          "bits": 3053,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 4.976851851851851,
+          "required_at6_per_um": 508.8333333333333,
+          "necessary_budget_pass": true
+        },
+        "E:M4": {
+          "bits": 3043,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 4.960550339071466,
+          "required_at6_per_um": 507.1666666666667,
+          "necessary_budget_pass": true
+        },
+        "W:M6": {
+          "bits": 3302,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.3827595200834635,
+          "required_at6_per_um": 550.3333333333334,
+          "necessary_budget_pass": true
+        },
+        "W:M4": {
+          "bits": 3291,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.364827856025038,
+          "required_at6_per_um": 548.5,
+          "necessary_budget_pass": true
+        }
+      },
+      "all_necessary_avg_pass": true
+    },
+    {
+      "type": "sle_sc_v3",
+      "old_outline": [
+        613.44,
+        1339.2
+      ],
+      "face_bits": {
+        "N": 3450,
+        "S": 2695,
+        "W": 4396,
+        "E": 3849
+      },
+      "per_layer": {
+        "N:M7": 1728,
+        "N:M5": 1722,
+        "S:M7": 1350,
+        "S:M5": 1345,
+        "W:M6": 2202,
+        "W:M4": 2194,
+        "E:M6": 1928,
+        "E:M4": 1921
+      },
+      "necessary_newframe_screen": {
+        "N:M7": {
+          "bits": 1728,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6363636363636362,
+          "required_at6_per_um": 288.0,
+          "necessary_budget_pass": true
+        },
+        "N:M5": {
+          "bits": 1722,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6237373737373737,
+          "required_at6_per_um": 287.0,
+          "necessary_budget_pass": true
+        },
+        "S:M7": {
+          "bits": 1350,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.840909090909091,
+          "required_at6_per_um": 225.0,
+          "necessary_budget_pass": true
+        },
+        "S:M5": {
+          "bits": 1345,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.8303872053872055,
+          "required_at6_per_um": 224.16666666666666,
+          "necessary_budget_pass": true
+        },
+        "W:M6": {
+          "bits": 2202,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 3.5895931142410014,
+          "required_at6_per_um": 367.0,
+          "necessary_budget_pass": true
+        },
+        "W:M4": {
+          "bits": 2194,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 3.5765519040166924,
+          "required_at6_per_um": 365.6666666666667,
+          "necessary_budget_pass": true
+        },
+        "E:M6": {
+          "bits": 1928,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 3.142931664058424,
+          "required_at6_per_um": 321.3333333333333,
+          "necessary_budget_pass": true
+        },
+        "E:M4": {
+          "bits": 1921,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 3.1315206051121542,
+          "required_at6_per_um": 320.1666666666667,
+          "necessary_budget_pass": true
+        }
+      },
+      "all_necessary_avg_pass": true
+    },
+    {
+      "type": "slw_sc_v1__cl63e5a7a2",
+      "old_outline": [
+        613.44,
+        1339.2
+      ],
+      "face_bits": {
+        "N": 3450,
+        "S": 2695,
+        "E": 6099,
+        "W": 6596
+      },
+      "per_layer": {
+        "N:M7": 1728,
+        "N:M5": 1722,
+        "S:M7": 1350,
+        "S:M5": 1345,
+        "E:M6": 3055,
+        "E:M4": 3044,
+        "W:M6": 3304,
+        "W:M4": 3292
+      },
+      "necessary_newframe_screen": {
+        "N:M7": {
+          "bits": 1728,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6363636363636362,
+          "required_at6_per_um": 288.0,
+          "necessary_budget_pass": true
+        },
+        "N:M5": {
+          "bits": 1722,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6237373737373737,
+          "required_at6_per_um": 287.0,
+          "necessary_budget_pass": true
+        },
+        "S:M7": {
+          "bits": 1350,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.840909090909091,
+          "required_at6_per_um": 225.0,
+          "necessary_budget_pass": true
+        },
+        "S:M5": {
+          "bits": 1345,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.8303872053872055,
+          "required_at6_per_um": 224.16666666666666,
+          "necessary_budget_pass": true
+        },
+        "E:M6": {
+          "bits": 3055,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 4.980112154407928,
+          "required_at6_per_um": 509.1666666666667,
+          "necessary_budget_pass": true
+        },
+        "E:M4": {
+          "bits": 3044,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 4.962180490349504,
+          "required_at6_per_um": 507.3333333333333,
+          "necessary_budget_pass": true
+        },
+        "W:M6": {
+          "bits": 3304,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.386019822639541,
+          "required_at6_per_um": 550.6666666666666,
+          "necessary_budget_pass": true
+        },
+        "W:M4": {
+          "bits": 3292,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.366458007303077,
+          "required_at6_per_um": 548.6666666666666,
+          "necessary_budget_pass": true
+        }
+      },
+      "all_necessary_avg_pass": true
+    },
+    {
+      "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+      "old_outline": [
+        613.44,
+        1339.2
+      ],
+      "face_bits": {
+        "N": 3450,
+        "S": 2695,
+        "E": 6099,
+        "W": 6596
+      },
+      "per_layer": {
+        "N:M7": 1728,
+        "N:M5": 1722,
+        "S:M7": 1350,
+        "S:M5": 1345,
+        "E:M6": 3055,
+        "E:M4": 3044,
+        "W:M6": 3304,
+        "W:M4": 3292
+      },
+      "necessary_newframe_screen": {
+        "N:M7": {
+          "bits": 1728,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6363636363636362,
+          "required_at6_per_um": 288.0,
+          "necessary_budget_pass": true
+        },
+        "N:M5": {
+          "bits": 1722,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6237373737373737,
+          "required_at6_per_um": 287.0,
+          "necessary_budget_pass": true
+        },
+        "S:M7": {
+          "bits": 1350,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.840909090909091,
+          "required_at6_per_um": 225.0,
+          "necessary_budget_pass": true
+        },
+        "S:M5": {
+          "bits": 1345,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.8303872053872055,
+          "required_at6_per_um": 224.16666666666666,
+          "necessary_budget_pass": true
+        },
+        "E:M6": {
+          "bits": 3055,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 4.980112154407928,
+          "required_at6_per_um": 509.1666666666667,
+          "necessary_budget_pass": true
+        },
+        "E:M4": {
+          "bits": 3044,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 4.962180490349504,
+          "required_at6_per_um": 507.3333333333333,
+          "necessary_budget_pass": true
+        },
+        "W:M6": {
+          "bits": 3304,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.386019822639541,
+          "required_at6_per_um": 550.6666666666666,
+          "necessary_budget_pass": true
+        },
+        "W:M4": {
+          "bits": 3292,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.366458007303077,
+          "required_at6_per_um": 548.6666666666666,
+          "necessary_budget_pass": true
+        }
+      },
+      "all_necessary_avg_pass": true
+    },
+    {
+      "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+      "old_outline": [
+        613.44,
+        1339.2
+      ],
+      "face_bits": {
+        "N": 3450,
+        "S": 2695,
+        "E": 6099,
+        "W": 6596
+      },
+      "per_layer": {
+        "N:M7": 1728,
+        "N:M5": 1722,
+        "S:M7": 1350,
+        "S:M5": 1345,
+        "E:M6": 3055,
+        "E:M4": 3044,
+        "W:M6": 3304,
+        "W:M4": 3292
+      },
+      "necessary_newframe_screen": {
+        "N:M7": {
+          "bits": 1728,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6363636363636362,
+          "required_at6_per_um": 288.0,
+          "necessary_budget_pass": true
+        },
+        "N:M5": {
+          "bits": 1722,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6237373737373737,
+          "required_at6_per_um": 287.0,
+          "necessary_budget_pass": true
+        },
+        "S:M7": {
+          "bits": 1350,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.840909090909091,
+          "required_at6_per_um": 225.0,
+          "necessary_budget_pass": true
+        },
+        "S:M5": {
+          "bits": 1345,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.8303872053872055,
+          "required_at6_per_um": 224.16666666666666,
+          "necessary_budget_pass": true
+        },
+        "E:M6": {
+          "bits": 3055,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 4.980112154407928,
+          "required_at6_per_um": 509.1666666666667,
+          "necessary_budget_pass": true
+        },
+        "E:M4": {
+          "bits": 3044,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 4.962180490349504,
+          "required_at6_per_um": 507.3333333333333,
+          "necessary_budget_pass": true
+        },
+        "W:M6": {
+          "bits": 3304,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.386019822639541,
+          "required_at6_per_um": 550.6666666666666,
+          "necessary_budget_pass": true
+        },
+        "W:M4": {
+          "bits": 3292,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.366458007303077,
+          "required_at6_per_um": 548.6666666666666,
+          "necessary_budget_pass": true
+        }
+      },
+      "all_necessary_avg_pass": true
+    },
+    {
+      "type": "sle_sc_v1__cl115da35f",
+      "old_outline": [
+        613.44,
+        1339.2
+      ],
+      "face_bits": {
+        "N": 3450,
+        "S": 2695,
+        "E": 6355,
+        "W": 6852
+      },
+      "per_layer": {
+        "N:M7": 1728,
+        "N:M5": 1722,
+        "S:M7": 1350,
+        "S:M5": 1345,
+        "E:M6": 3183,
+        "E:M4": 3172,
+        "W:M6": 3432,
+        "W:M4": 3420
+      },
+      "necessary_newframe_screen": {
+        "N:M7": {
+          "bits": 1728,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6363636363636362,
+          "required_at6_per_um": 288.0,
+          "necessary_budget_pass": true
+        },
+        "N:M5": {
+          "bits": 1722,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6237373737373737,
+          "required_at6_per_um": 287.0,
+          "necessary_budget_pass": true
+        },
+        "S:M7": {
+          "bits": 1350,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.840909090909091,
+          "required_at6_per_um": 225.0,
+          "necessary_budget_pass": true
+        },
+        "S:M5": {
+          "bits": 1345,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.8303872053872055,
+          "required_at6_per_um": 224.16666666666666,
+          "necessary_budget_pass": true
+        },
+        "E:M6": {
+          "bits": 3183,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.188771517996869,
+          "required_at6_per_um": 530.5,
+          "necessary_budget_pass": true
+        },
+        "E:M4": {
+          "bits": 3172,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.170839853938445,
+          "required_at6_per_um": 528.6666666666666,
+          "necessary_budget_pass": true
+        },
+        "W:M6": {
+          "bits": 3432,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.594679186228482,
+          "required_at6_per_um": 572.0,
+          "necessary_budget_pass": true
+        },
+        "W:M4": {
+          "bits": 3420,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.575117370892018,
+          "required_at6_per_um": 570.0,
+          "necessary_budget_pass": true
+        }
+      },
+      "all_necessary_avg_pass": true
+    },
+    {
+      "type": "sle_sc_v1__cl7479a5ec",
+      "old_outline": [
+        613.44,
+        1339.2
+      ],
+      "face_bits": {
+        "N": 3450,
+        "S": 2695,
+        "E": 6355,
+        "W": 6852
+      },
+      "per_layer": {
+        "N:M7": 1728,
+        "N:M5": 1722,
+        "S:M7": 1350,
+        "S:M5": 1345,
+        "E:M6": 3183,
+        "E:M4": 3172,
+        "W:M6": 3432,
+        "W:M4": 3420
+      },
+      "necessary_newframe_screen": {
+        "N:M7": {
+          "bits": 1728,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6363636363636362,
+          "required_at6_per_um": 288.0,
+          "necessary_budget_pass": true
+        },
+        "N:M5": {
+          "bits": 1722,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 3.6237373737373737,
+          "required_at6_per_um": 287.0,
+          "necessary_budget_pass": true
+        },
+        "S:M7": {
+          "bits": 1350,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.840909090909091,
+          "required_at6_per_um": 225.0,
+          "necessary_budget_pass": true
+        },
+        "S:M5": {
+          "bits": 1345,
+          "available_face_um": 475.2,
+          "necessary_avg_pins_per_um": 2.8303872053872055,
+          "required_at6_per_um": 224.16666666666666,
+          "necessary_budget_pass": true
+        },
+        "E:M6": {
+          "bits": 3183,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.188771517996869,
+          "required_at6_per_um": 530.5,
+          "necessary_budget_pass": true
+        },
+        "E:M4": {
+          "bits": 3172,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.170839853938445,
+          "required_at6_per_um": 528.6666666666666,
+          "necessary_budget_pass": true
+        },
+        "W:M6": {
+          "bits": 3432,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.594679186228482,
+          "required_at6_per_um": 572.0,
+          "necessary_budget_pass": true
+        },
+        "W:M4": {
+          "bits": 3420,
+          "available_face_um": 613.44,
+          "necessary_avg_pins_per_um": 5.575117370892018,
+          "required_at6_per_um": 570.0,
+          "necessary_budget_pass": true
+        }
+      },
+      "all_necessary_avg_pass": true
+    }
+  ],
+  "old_failed_v1_same_leaf": "Actual old5346 SC-v1cl115 boundRTL qfd_dv_s5_sc2_leaf u_core; one shared leaf class candidate, not a new different SC1 leaf. Current-source identity must still be checked for each activated type."
+}
