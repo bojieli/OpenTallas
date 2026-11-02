@@ -1,0 +1,57 @@
+{
+ "scope": "Frozen source launch-state inventory, not mapped/native FF count or phase credit",
+ "data_epoch_monitor_fstart_bits_per_instance": 518,
+ "source_instances": 12,
+ "source_output_bits_total": 6216,
+ "cohorts": [
+  {
+   "ports": "coll_o0[513:0]",
+   "bits": 514,
+   "rtl_state": "u_bout_coll_o0.q[513:0]",
+   "module": "ot_dp_ste W514",
+   "edge": "posedge clk",
+   "D": "coll_o0_d[513:0] from u_phy",
+   "reset": "none on data q; preserve raw unreset/invalid-cycle policy",
+   "native_ff_clock_leaves": null
+  },
+  {
+   "ports": "coll_o0[514]",
+   "bits": 1,
+   "rtl_state": "u_bout_coll_o0.u_ep.eq",
+   "module": "ot_dp_ep",
+   "edge": "posedge clk",
+   "D": "rst_n_t0",
+   "reset": "asynchronous active-low rst_n_t0; do not change reset or borrowing",
+   "native_ff_clock_leaves": null
+  },
+  {
+   "ports": "cland_up_ready_coll_o0, cland_up_fault_coll_o0",
+   "bits": 2,
+   "rtl_state": "u_cland_up_coll_o0.ready_o/fault_o",
+   "module": "ot_dp_landing_collect N1",
+   "edge": "posedge clk",
+   "D": "registered ready/fault aggregation",
+   "reset": "synchronous active-low cland_reset_coll_i0",
+   "native_ff_clock_leaves": null
+  },
+  {
+   "ports": "cland_fstart_out_coll_o0",
+   "bits": 1,
+   "rtl_state": "u_cland_fstart_coll_o0.q",
+   "module": "ot_dp_landing_relay",
+   "edge": "posedge clk",
+   "D": "cland_start_d=s1 for selected pad0",
+   "reset": "synchronous active-low cland_reset_coll_i0",
+   "native_ff_clock_leaves": null
+  }
+ ],
+ "same_logical_clk_does_not_prove_same_native_leaf": true,
+ "B_additional_requirement": "qualify each of the517 DATA/epoch/monitor launch-clock and output paths relative to selected FSTART-leaf FCLK, not only FSTART path",
+ "all_raw_comparepoints_and_invalid_cycle_policy_unchanged": true,
+ "source_sha256": {
+  "rtl_export/ot_dp_cells.sv": "7926db02ce52e74f2fe54bd5480c9c92db3f62a3252842cd62e6d1a26e193fa9",
+  "source703/rtl/common/ot_dp_clk_landing.sv": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+  "source703/rtl/common/ot_dp_clk_landing_ca.sv": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+  "rtl_export/ot_s81hd_serdes.sv": "017967990864c5942eb6ba5ab7d5dad2710c70f8a57a00464f7b798c8fad1009"
+ }
+}
