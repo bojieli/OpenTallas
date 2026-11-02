@@ -2,6 +2,8 @@ import copy
 import unittest
 import programme_store as P
 import monitor_tail as M
+import programme_lower as L
+import dv_lower as D
 from test_monitor_tail import fixture
 
 
@@ -58,6 +60,23 @@ class Stage37StoreTest(unittest.TestCase):
             occupied=physical[:];occupied[491]|=1<<2
             with self.assertRaisesRegex(ValueError,'not empty'):
                 M.repack(('\n'.join(f'{w:0532x}' for w in occupied)+'\n').encode(),tails[1],lane,tail_base=3922)
+
+    def test_source_frontend_extends_only_on_explicit_complete_streams(self):
+        source=head_manifest();native=[]
+        word=D.su_word(nout=1,nin=1,a=0,dst=1,d=D.W_X)
+        for st in source['stages']:
+            prog={str(sl['slice']):[dict(eaddr=i,payload=f'{word|(word<<512):0256x}') for i in range(6)] for sl in st['slices']}
+            bt={str(sl['slice']):[dict(eaddr=r['addr'],payload=r['payload_hex']) for r in sl['btab']] for sl in st['slices']}
+            cr=[dict(dst=sl['slice'],eaddr=r['addr'],payload=r['payload_hex']) for sl in st['slices'] for r in sl['crom']]
+            native.append(dict(stage=st['stage'],prog_stream=prog,btab_stream=bt,crom_table=cr,image_sha256='7'*64,checkpoint_revision='8'*40))
+        streams=dict(schema='opentallas.qwen.native-table-streams.v1',btab_compact=1,source=source['source'],stages=native)
+        manifest,cert=L.compile_inputs(streams,head_stage37=True)
+        self.assertEqual(len(manifest['stages']),37);self.assertIn('head_stage37',cert)
+        self.assertEqual(len(P.logical_images(manifest,head_stage37=True)),12)
+        with self.assertRaisesRegex(ValueError,'36'):L.compile_inputs(streams)
+        missing=copy.deepcopy(streams);missing['stages'][-1]['prog_stream'].pop('11')
+        with self.assertRaisesRegex(ValueError,'missing native slice'):L.compile_inputs(missing,head_stage37=True)
+        with self.assertRaisesRegex(ValueError,'compact'):L.compile_inputs(streams,0,head_stage37=True)
 
     def test_shared_window_and_shape_fail_closed(self):
         m=head_manifest();m['stages'][-1]['slices'][1]['btab'][0]['addr']=68

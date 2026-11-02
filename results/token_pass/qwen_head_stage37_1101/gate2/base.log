@@ -1,0 +1,17 @@
+HEAD37_CASE stage1 user0 writes90 sharedBTAB50 first4 last93 defaultLOCKSTEP
+HEAD37_CASE stage1 user1 writes90 sharedBTAB50 first4 last93 defaultLOCKSTEP
+HEAD37_CASE stage1 user2 writes90 sharedBTAB50 first4 last93 defaultLOCKSTEP
+HEAD37_CASE stage1 user3 writes90 sharedBTAB50 first4 last93 defaultLOCKSTEP
+HEAD37_CASE stage36 user0 writes90 sharedBTAB50 first4 last93 defaultLOCKSTEP
+HEAD37_CASE stage36 user1 writes90 sharedBTAB50 first4 last93 defaultLOCKSTEP
+HEAD37_CASE stage36 user2 writes90 sharedBTAB50 first4 last93 defaultLOCKSTEP
+HEAD37_CASE stage36 user3 writes90 sharedBTAB50 first4 last93 defaultLOCKSTEP
+HEAD37_CASE stage37 user0 writes82 sharedBTAB50 first4 last93 defaultLOCKSTEP
+HEAD37_CASE stage37 user1 writes82 sharedBTAB50 first4 last93 defaultLOCKSTEP
+HEAD37_CASE stage37 user2 writes82 sharedBTAB50 first4 last93 defaultLOCKSTEP
+HEAD37_CASE stage37 user3 writes82 sharedBTAB50 first4 last93 defaultLOCKSTEP
+HEAD37_LOADER_PASS windows12 writes1048 nativeROM_readpath period833ps defaultLOCKSTEP
+- tb.sv:31: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 1.710 s; speed 742.448 ns/s
+- Verilator: cpu 1.670 s on 1 threads; allocated 9 MB
