@@ -1,0 +1,357 @@
+{
+  "schema": "opentallas.s81.XS_programme_input_obligations.v1",
+  "status": "NO_CURRENT_MISSION_XS_ROM_EMITTER_INPUT",
+  "current_interface": {
+    "entry": "tools/s81_dv/dv_layer_compile.py --bound-control-only",
+    "callee": "layer_prog.bound_control.compile_control",
+    "emits": [
+      "bound_control.json",
+      "optional boot_norm/boot_entry words"
+    ],
+    "XS_ROM_images_emitted": 0,
+    "reason": "native current control branch exits before legacy lower_xs/xs_place; it has no typed XS data-programme input option"
+  },
+  "existing_writers": [
+    {
+      "function": "lower_xs.xs_roms",
+      "inputs": [
+        "spine_phase.hex",
+        "spine_stream.hex"
+      ],
+      "outputs": 5,
+      "missing": "calendar action/time; no operation sequence or source lifetime inferred"
+    },
+    {
+      "function": "xs_calendar.compile_phase/compile_pipeline",
+      "inputs": [
+        "actual P/S",
+        "phase or phase sequence",
+        "selected SID",
+        "period/config lead/accept/retire guards"
+      ],
+      "outputs": "calendar action/time and issuer model",
+      "missing": "real producer epochs/readiness and actual source/clock/provider admission"
+    },
+    {
+      "function": "xs_wqb_die.layer_field + wqb_calendar + write_images",
+      "scope": "WQB or WQB+idx.q operator subset; legacy placement/frame timing entry, not full current mission",
+      "outputs": 7,
+      "not_a_16slice_mission": "die CLI uses representative master/lk and slc0; per-instance source/arrival/reset contracts still required"
+    }
+  ],
+  "available": {
+    "selector_paths_capture_split": {
+      "scope": "Exact existing bound path input contract, not fresh emitted parameter receipt",
+      "bind_names_sha256": "8437a725f7078e68ebeb117f5511ff355cf63972e41f0e5904a7a0a22ff0928e",
+      "selectors": [
+        {
+          "path": "u_s_0N.u_sl.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_0N.u_sl.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_0N.u_sl.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_0N.u_sl.u_xg.pq_phase0.viamap.hex",
+            "u_s_0N.u_sl.u_xg.pq_stream0.viamap.hex",
+            "u_s_0N.u_sl.u_xg.pq_stream1.viamap.hex",
+            "u_s_0N.u_sl.u_xg.pq_stream2.viamap.hex",
+            "u_s_0N.u_sl.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_0S.u_sl.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_0S.u_sl.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_0S.u_sl.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_0S.u_sl.u_xg.pq_phase0.viamap.hex",
+            "u_s_0S.u_sl.u_xg.pq_stream0.viamap.hex",
+            "u_s_0S.u_sl.u_xg.pq_stream1.viamap.hex",
+            "u_s_0S.u_sl.u_xg.pq_stream2.viamap.hex",
+            "u_s_0S.u_sl.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_1N.u_lp.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_1N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_1N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_1N.u_lp.u_xg.pq_phase0.viamap.hex",
+            "u_s_1N.u_lp.u_xg.pq_stream0.viamap.hex",
+            "u_s_1N.u_lp.u_xg.pq_stream1.viamap.hex",
+            "u_s_1N.u_lp.u_xg.pq_stream2.viamap.hex",
+            "u_s_1N.u_lp.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_1S.u_lp.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_1S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_1S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_1S.u_lp.u_xg.pq_phase0.viamap.hex",
+            "u_s_1S.u_lp.u_xg.pq_stream0.viamap.hex",
+            "u_s_1S.u_lp.u_xg.pq_stream1.viamap.hex",
+            "u_s_1S.u_lp.u_xg.pq_stream2.viamap.hex",
+            "u_s_1S.u_lp.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_2N.u_lp.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_2N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_2N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_2N.u_lp.u_xg.pq_phase0.viamap.hex",
+            "u_s_2N.u_lp.u_xg.pq_stream0.viamap.hex",
+            "u_s_2N.u_lp.u_xg.pq_stream1.viamap.hex",
+            "u_s_2N.u_lp.u_xg.pq_stream2.viamap.hex",
+            "u_s_2N.u_lp.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_2S.u_lp.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_2S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_2S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_2S.u_lp.u_xg.pq_phase0.viamap.hex",
+            "u_s_2S.u_lp.u_xg.pq_stream0.viamap.hex",
+            "u_s_2S.u_lp.u_xg.pq_stream1.viamap.hex",
+            "u_s_2S.u_lp.u_xg.pq_stream2.viamap.hex",
+            "u_s_2S.u_lp.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_3N.u_slice.u_xg",
+          "module": "ot_s81sl_xg",
+          "capture_added_edges": 0,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_3N.u_slice.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_3N.u_slice.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_3N.u_slice.u_xg.pq_phase0.viamap.hex",
+            "u_s_3N.u_slice.u_xg.pq_stream0.viamap.hex",
+            "u_s_3N.u_slice.u_xg.pq_stream1.viamap.hex",
+            "u_s_3N.u_slice.u_xg.pq_stream2.viamap.hex",
+            "u_s_3N.u_slice.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_3S.u_sl.u_xg",
+          "module": "ot_s81sl_xg",
+          "capture_added_edges": 0,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_3S.u_sl.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_3S.u_sl.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_3S.u_sl.u_xg.pq_phase0.viamap.hex",
+            "u_s_3S.u_sl.u_xg.pq_stream0.viamap.hex",
+            "u_s_3S.u_sl.u_xg.pq_stream1.viamap.hex",
+            "u_s_3S.u_sl.u_xg.pq_stream2.viamap.hex",
+            "u_s_3S.u_sl.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_4N.u_lp.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_4N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_4N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_4N.u_lp.u_xg.pq_phase0.viamap.hex",
+            "u_s_4N.u_lp.u_xg.pq_stream0.viamap.hex",
+            "u_s_4N.u_lp.u_xg.pq_stream1.viamap.hex",
+            "u_s_4N.u_lp.u_xg.pq_stream2.viamap.hex",
+            "u_s_4N.u_lp.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_4S.u_lp.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_4S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_4S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_4S.u_lp.u_xg.pq_phase0.viamap.hex",
+            "u_s_4S.u_lp.u_xg.pq_stream0.viamap.hex",
+            "u_s_4S.u_lp.u_xg.pq_stream1.viamap.hex",
+            "u_s_4S.u_lp.u_xg.pq_stream2.viamap.hex",
+            "u_s_4S.u_lp.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_5N.u_lp.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_5N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_5N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_5N.u_lp.u_xg.pq_phase0.viamap.hex",
+            "u_s_5N.u_lp.u_xg.pq_stream0.viamap.hex",
+            "u_s_5N.u_lp.u_xg.pq_stream1.viamap.hex",
+            "u_s_5N.u_lp.u_xg.pq_stream2.viamap.hex",
+            "u_s_5N.u_lp.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_5S.u_lp.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_5S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_5S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_5S.u_lp.u_xg.pq_phase0.viamap.hex",
+            "u_s_5S.u_lp.u_xg.pq_stream0.viamap.hex",
+            "u_s_5S.u_lp.u_xg.pq_stream1.viamap.hex",
+            "u_s_5S.u_lp.u_xg.pq_stream2.viamap.hex",
+            "u_s_5S.u_lp.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_6N.u_lp.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_6N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_6N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_6N.u_lp.u_xg.pq_phase0.viamap.hex",
+            "u_s_6N.u_lp.u_xg.pq_stream0.viamap.hex",
+            "u_s_6N.u_lp.u_xg.pq_stream1.viamap.hex",
+            "u_s_6N.u_lp.u_xg.pq_stream2.viamap.hex",
+            "u_s_6N.u_lp.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_6S.u_lp.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_6S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_6S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_6S.u_lp.u_xg.pq_phase0.viamap.hex",
+            "u_s_6S.u_lp.u_xg.pq_stream0.viamap.hex",
+            "u_s_6S.u_lp.u_xg.pq_stream1.viamap.hex",
+            "u_s_6S.u_lp.u_xg.pq_stream2.viamap.hex",
+            "u_s_6S.u_lp.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_7N.u_sl.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_7N.u_sl.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_7N.u_sl.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_7N.u_sl.u_xg.pq_phase0.viamap.hex",
+            "u_s_7N.u_sl.u_xg.pq_stream0.viamap.hex",
+            "u_s_7N.u_sl.u_xg.pq_stream1.viamap.hex",
+            "u_s_7N.u_sl.u_xg.pq_stream2.viamap.hex",
+            "u_s_7N.u_sl.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        },
+        {
+          "path": "u_s_7S.u_sl.u_xg",
+          "module": "ot_s81sl_xgt_xo",
+          "capture_added_edges": 1,
+          "INSTANCE_rule_candidate_enabled": true,
+          "desired_image_files": [
+            "u_s_7S.u_sl.u_xg.pq_calendar_action.viamap.hex",
+            "u_s_7S.u_sl.u_xg.pq_calendar_time.viamap.hex",
+            "u_s_7S.u_sl.u_xg.pq_phase0.viamap.hex",
+            "u_s_7S.u_sl.u_xg.pq_stream0.viamap.hex",
+            "u_s_7S.u_sl.u_xg.pq_stream1.viamap.hex",
+            "u_s_7S.u_sl.u_xg.pq_stream2.viamap.hex",
+            "u_s_7S.u_sl.u_xg.pq_stream3.viamap.hex"
+          ],
+          "fullmission_images_qualified": false
+        }
+      ]
+    },
+    "actual_CAPsafe_field_PS_and_ROMs": "retained72 native field images/P-S assets; original exact source/plan/placement hashes remain required",
+    "collective_assets": "actual source epoch equations, 122 physical CAP ports and 11/13/15 epoch classes from HEAD source_epoch_contract; equations with NULL actual sample/epoch dates",
+    "native_component_receipts": [
+      "b70e77239 phase106 SID0 real BF operand\u2192two native columns at833ps",
+      "native retained SID6 source read component3731309, private600-edge family0/parity0 at834ps"
+    ],
+    "new_inactive_genuine_SID6_namespace_candidate": "sid6_component/component_images.json",
+    "genuine_SID6_component_image_count": 7,
+    "qualified_mission_image_count": 0
+  },
+  "per_instance_minimum_required": [
+    {
+      "fact": "selected source/plan/clock identity",
+      "values": "exact current manifest+native module/params/defines, actual SID, legacy0 vs XS4+1, explicit plan7bf or SOURCE39bbec; no physical186 substitution"
+    },
+    {
+      "fact": "operation/field-phase mapping",
+      "values": "for every operator/epoch: actual field P/S indices, K/family/nseg/rows, full selected frame config/ROM joins, shared stream consistency across actual owned frames, actual ordered phase sequence"
+    },
+    {
+      "fact": "typed producer and gather lease",
+      "values": "actual upstream module/port/provider, FP8 codes+scale or BF16 RNE data version, own/W/E ownership from ring_order(nbeat,SID), each four-fragment train/commit/read deadline, no write/bank reuse before last dependent use"
+    },
+    {
+      "fact": "actual command/bookings",
+      "values": "prime/start/base/length and target2/3 GO/CAP commands, routing and source stage age, actual common epoch/launch/read/capture clock sample relation, global broadcast GO/tag history before class filtering"
+    },
+    {
+      "fact": "native consumer/provider admission",
+      "values": "exact qualified frame schedule manifest/source hashes; all12 Q provider flags remainfalse; BF qualified static replay requires exact833ps source pin set/native_family_hold/payload+one-edge controls and return schedule SHA; no under_TEST lease"
+    },
+    {
+      "fact": "retirement/resource release",
+      "values": "actual all-frame CAP FIN/write commit/VP/RDOUT/QR/collective deps, source epoch end and next conflicting CFG/tag/slot/bank reuse, reset and reinstall, deadline unchanged"
+    }
+  ],
+  "ROM_capacities": {
+    "calendar_rows_max": 4096,
+    "phase_words_max": 4096,
+    "stream_words_max": 16384,
+    "stream_banks": 4,
+    "ROM_word_bits": 72,
+    "physical_masks": 512
+  },
+  "unsatisfied_for_all16_mission": [
+    "whole ordered typed programme and exact per-instance epoch/readiness/lifetime inputs",
+    "current coherent source/plan/clock selection and fresh emitted instance/source receipt",
+    "all qualified native provider/profile closures and all-frame retirement/source resource leases"
+  ],
+  "no_blanket_flags": true,
+  "no_sid0_clone": true,
+  "no_new_simulation_or_fullbuild": true
+}
