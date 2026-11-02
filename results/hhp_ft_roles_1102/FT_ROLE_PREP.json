@@ -1,0 +1,909 @@
+{
+  "status": "PREP_NOT_ADOPTED",
+  "qualified": false,
+  "canonical_adoption": false,
+  "models_mutated": false,
+  "new_CAD": false,
+  "new_aliases": false,
+  "new_FF": 0,
+  "added_functional_cycles": 0,
+  "source_authority": "12.2a1/CLOCK-KV-R25 exact recovered canonical graph; prior root diagnostic extrusion approval only",
+  "scope": "exact current selected sites; BASE only; before-full source graph boundary fixture",
+  "interface_additions": [
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc1",
+      "role": "die_owned_mesh_driver",
+      "arc": 0,
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_28_126_1",
+          "die_bbox_ll_um": [
+            9534.894,
+            25721.01
+          ],
+          "parent_bbox_center_um": [
+            676.7760000000005,
+            285.2550000000017
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_28_126_0",
+          "die_bbox_ll_um": [
+            9533.274,
+            25721.01
+          ],
+          "parent_bbox_center_um": [
+            678.3960000000013,
+            285.2550000000017
+          ]
+        }
+      ],
+      "actual_input_driver": "ckm_n10_h1111111101",
+      "actual_input_net": "ckm_w_ckm_n10_h1111111101",
+      "actual_output_net": "ck_mesh",
+      "proposed_metadata_additions": [
+        {
+          "key": [
+            "ft_ck_i_0",
+            null
+          ],
+          "pdecl": {
+            "dir": "input",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ckm_w_ckm_n10_h1111111101",
+            0
+          ],
+          "pin_class": "in"
+        },
+        {
+          "key": [
+            "ft_ck_o_0",
+            null
+          ],
+          "pdecl": {
+            "dir": "output",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ck_mesh",
+            0
+          ],
+          "pin_class": "out"
+        }
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc1",
+      "role": "die_owned_mesh_driver",
+      "arc": 1,
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_28_125_1",
+          "die_bbox_ll_um": [
+            9534.894,
+            25531.2
+          ],
+          "parent_bbox_center_um": [
+            676.7760000000005,
+            475.0649999999994
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_28_125_0",
+          "die_bbox_ll_um": [
+            9533.274,
+            25531.2
+          ],
+          "parent_bbox_center_um": [
+            678.3960000000013,
+            475.0649999999994
+          ]
+        }
+      ],
+      "actual_input_driver": "ckm_n10_h1111111100",
+      "actual_input_net": "ckm_w_ckm_n10_h1111111100",
+      "actual_output_net": "ck_mesh",
+      "proposed_metadata_additions": [
+        {
+          "key": [
+            "ft_ck_i_1",
+            null
+          ],
+          "pdecl": {
+            "dir": "input",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ckm_w_ckm_n10_h1111111100",
+            0
+          ],
+          "pin_class": "in"
+        },
+        {
+          "key": [
+            "ft_ck_o_1",
+            null
+          ],
+          "pdecl": {
+            "dir": "output",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ck_mesh",
+            0
+          ],
+          "pin_class": "out"
+        }
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc2",
+      "role": "die_owned_mesh_driver",
+      "arc": 0,
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_28_122_1",
+          "die_bbox_ll_um": [
+            9534.894,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            676.7760000000005,
+            1045.5750000000014
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_28_122_0",
+          "die_bbox_ll_um": [
+            9533.274,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            678.3960000000013,
+            1045.5750000000014
+          ]
+        }
+      ],
+      "actual_input_driver": "ckm_n10_h1111111001",
+      "actual_input_net": "ckm_w_ckm_n10_h1111111001",
+      "actual_output_net": "ck_mesh",
+      "proposed_metadata_additions": [
+        {
+          "key": [
+            "ft_ck_i_0",
+            null
+          ],
+          "pdecl": {
+            "dir": "input",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ckm_w_ckm_n10_h1111111001",
+            0
+          ],
+          "pin_class": "in"
+        },
+        {
+          "key": [
+            "ft_ck_o_0",
+            null
+          ],
+          "pdecl": {
+            "dir": "output",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ck_mesh",
+            0
+          ],
+          "pin_class": "out"
+        }
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc2",
+      "role": "die_owned_mesh_driver",
+      "arc": 1,
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_28_121_1",
+          "die_bbox_ll_um": [
+            9534.894,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            676.7760000000005,
+            1235.384999999999
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_28_121_0",
+          "die_bbox_ll_um": [
+            9533.274,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            678.3960000000013,
+            1235.384999999999
+          ]
+        }
+      ],
+      "actual_input_driver": "ckm_n10_h1111111000",
+      "actual_input_net": "ckm_w_ckm_n10_h1111111000",
+      "actual_output_net": "ck_mesh",
+      "proposed_metadata_additions": [
+        {
+          "key": [
+            "ft_ck_i_1",
+            null
+          ],
+          "pdecl": {
+            "dir": "input",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ckm_w_ckm_n10_h1111111000",
+            0
+          ],
+          "pin_class": "in"
+        },
+        {
+          "key": [
+            "ft_ck_o_1",
+            null
+          ],
+          "pdecl": {
+            "dir": "output",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ck_mesh",
+            0
+          ],
+          "pin_class": "out"
+        }
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc3",
+      "role": "die_owned_mesh_driver",
+      "arc": 0,
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_29_122_0",
+          "die_bbox_ll_um": [
+            9852.99,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            358.680000000001,
+            1045.5750000000014
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_29_122_1",
+          "die_bbox_ll_um": [
+            9854.61,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            357.0600000000002,
+            1045.5750000000014
+          ]
+        }
+      ],
+      "actual_input_driver": "ckm_n10_h1111111001",
+      "actual_input_net": "ckm_w_ckm_n10_h1111111001",
+      "actual_output_net": "ck_mesh",
+      "proposed_metadata_additions": [
+        {
+          "key": [
+            "ft_ck_i_0",
+            null
+          ],
+          "pdecl": {
+            "dir": "input",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ckm_w_ckm_n10_h1111111001",
+            0
+          ],
+          "pin_class": "in"
+        },
+        {
+          "key": [
+            "ft_ck_o_0",
+            null
+          ],
+          "pdecl": {
+            "dir": "output",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ck_mesh",
+            0
+          ],
+          "pin_class": "out"
+        }
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc3",
+      "role": "die_owned_mesh_driver",
+      "arc": 1,
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_29_121_0",
+          "die_bbox_ll_um": [
+            9852.99,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            358.680000000001,
+            1235.384999999999
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_29_121_1",
+          "die_bbox_ll_um": [
+            9854.61,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            357.0600000000002,
+            1235.384999999999
+          ]
+        }
+      ],
+      "actual_input_driver": "ckm_n10_h1111111000",
+      "actual_input_net": "ckm_w_ckm_n10_h1111111000",
+      "actual_output_net": "ck_mesh",
+      "proposed_metadata_additions": [
+        {
+          "key": [
+            "ft_ck_i_1",
+            null
+          ],
+          "pdecl": {
+            "dir": "input",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ckm_w_ckm_n10_h1111111000",
+            0
+          ],
+          "pin_class": "in"
+        },
+        {
+          "key": [
+            "ft_ck_o_1",
+            null
+          ],
+          "pdecl": {
+            "dir": "output",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ck_mesh",
+            0
+          ],
+          "pin_class": "out"
+        }
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc1",
+      "role": "die_owned_mesh_driver",
+      "arc": 0,
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_3_126_0",
+          "die_bbox_ll_um": [
+            1539.966,
+            25721.01
+          ],
+          "parent_bbox_center_um": [
+            676.7759999999998,
+            285.2550000000017
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_3_126_1",
+          "die_bbox_ll_um": [
+            1541.586,
+            25721.01
+          ],
+          "parent_bbox_center_um": [
+            678.396,
+            285.2550000000017
+          ]
+        }
+      ],
+      "actual_input_driver": "ckm_n10_h1101010111",
+      "actual_input_net": "ckm_w_ckm_n10_h1101010111",
+      "actual_output_net": "ck_mesh",
+      "proposed_metadata_additions": [
+        {
+          "key": [
+            "ft_ck_i_0",
+            null
+          ],
+          "pdecl": {
+            "dir": "input",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ckm_w_ckm_n10_h1101010111",
+            0
+          ],
+          "pin_class": "in"
+        },
+        {
+          "key": [
+            "ft_ck_o_0",
+            null
+          ],
+          "pdecl": {
+            "dir": "output",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ck_mesh",
+            0
+          ],
+          "pin_class": "out"
+        }
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc1",
+      "role": "die_owned_mesh_driver",
+      "arc": 1,
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_3_125_0",
+          "die_bbox_ll_um": [
+            1539.966,
+            25531.2
+          ],
+          "parent_bbox_center_um": [
+            676.7759999999998,
+            475.0649999999994
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_3_125_1",
+          "die_bbox_ll_um": [
+            1541.586,
+            25531.2
+          ],
+          "parent_bbox_center_um": [
+            678.396,
+            475.0649999999994
+          ]
+        }
+      ],
+      "actual_input_driver": "ckm_n10_h1101010110",
+      "actual_input_net": "ckm_w_ckm_n10_h1101010110",
+      "actual_output_net": "ck_mesh",
+      "proposed_metadata_additions": [
+        {
+          "key": [
+            "ft_ck_i_1",
+            null
+          ],
+          "pdecl": {
+            "dir": "input",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ckm_w_ckm_n10_h1101010110",
+            0
+          ],
+          "pin_class": "in"
+        },
+        {
+          "key": [
+            "ft_ck_o_1",
+            null
+          ],
+          "pdecl": {
+            "dir": "output",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ck_mesh",
+            0
+          ],
+          "pin_class": "out"
+        }
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc2",
+      "role": "die_owned_mesh_driver",
+      "arc": 0,
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_3_122_0",
+          "die_bbox_ll_um": [
+            1539.966,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            676.7759999999998,
+            1045.5750000000014
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_3_122_1",
+          "die_bbox_ll_um": [
+            1541.586,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            678.396,
+            1045.5750000000014
+          ]
+        }
+      ],
+      "actual_input_driver": "ckm_n10_h1101010011",
+      "actual_input_net": "ckm_w_ckm_n10_h1101010011",
+      "actual_output_net": "ck_mesh",
+      "proposed_metadata_additions": [
+        {
+          "key": [
+            "ft_ck_i_0",
+            null
+          ],
+          "pdecl": {
+            "dir": "input",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ckm_w_ckm_n10_h1101010011",
+            0
+          ],
+          "pin_class": "in"
+        },
+        {
+          "key": [
+            "ft_ck_o_0",
+            null
+          ],
+          "pdecl": {
+            "dir": "output",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ck_mesh",
+            0
+          ],
+          "pin_class": "out"
+        }
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc2",
+      "role": "die_owned_mesh_driver",
+      "arc": 1,
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_3_121_0",
+          "die_bbox_ll_um": [
+            1539.966,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            676.7759999999998,
+            1235.384999999999
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_3_121_1",
+          "die_bbox_ll_um": [
+            1541.586,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            678.396,
+            1235.384999999999
+          ]
+        }
+      ],
+      "actual_input_driver": "ckm_n10_h1101010010",
+      "actual_input_net": "ckm_w_ckm_n10_h1101010010",
+      "actual_output_net": "ck_mesh",
+      "proposed_metadata_additions": [
+        {
+          "key": [
+            "ft_ck_i_1",
+            null
+          ],
+          "pdecl": {
+            "dir": "input",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ckm_w_ckm_n10_h1101010010",
+            0
+          ],
+          "pin_class": "in"
+        },
+        {
+          "key": [
+            "ft_ck_o_1",
+            null
+          ],
+          "pdecl": {
+            "dir": "output",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ck_mesh",
+            0
+          ],
+          "pin_class": "out"
+        }
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc3",
+      "role": "die_owned_mesh_driver",
+      "arc": 0,
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_2_122_1",
+          "die_bbox_ll_um": [
+            1221.87,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            358.67999999999984,
+            1045.5750000000014
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_2_122_0",
+          "die_bbox_ll_um": [
+            1220.25,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            357.05999999999995,
+            1045.5750000000014
+          ]
+        }
+      ],
+      "actual_input_driver": "ckm_n10_h1101010011",
+      "actual_input_net": "ckm_w_ckm_n10_h1101010011",
+      "actual_output_net": "ck_mesh",
+      "proposed_metadata_additions": [
+        {
+          "key": [
+            "ft_ck_i_0",
+            null
+          ],
+          "pdecl": {
+            "dir": "input",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ckm_w_ckm_n10_h1101010011",
+            0
+          ],
+          "pin_class": "in"
+        },
+        {
+          "key": [
+            "ft_ck_o_0",
+            null
+          ],
+          "pdecl": {
+            "dir": "output",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ck_mesh",
+            0
+          ],
+          "pin_class": "out"
+        }
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc3",
+      "role": "die_owned_mesh_driver",
+      "arc": 1,
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_2_121_1",
+          "die_bbox_ll_um": [
+            1221.87,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            358.67999999999984,
+            1235.384999999999
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_2_121_0",
+          "die_bbox_ll_um": [
+            1220.25,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            357.05999999999995,
+            1235.384999999999
+          ]
+        }
+      ],
+      "actual_input_driver": "ckm_n10_h1101010010",
+      "actual_input_net": "ckm_w_ckm_n10_h1101010010",
+      "actual_output_net": "ck_mesh",
+      "proposed_metadata_additions": [
+        {
+          "key": [
+            "ft_ck_i_1",
+            null
+          ],
+          "pdecl": {
+            "dir": "input",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ckm_w_ckm_n10_h1101010010",
+            0
+          ],
+          "pin_class": "in"
+        },
+        {
+          "key": [
+            "ft_ck_o_1",
+            null
+          ],
+          "pdecl": {
+            "dir": "output",
+            "hi": null,
+            "lo": null,
+            "gaps": []
+          },
+          "part_conn": [
+            "ck_mesh",
+            0
+          ],
+          "pin_class": "out"
+        }
+      ]
+    }
+  ],
+  "parent_boundary_requirements": [
+    {
+      "part": "pc_EN_0",
+      "required_actual_input_nets": [
+        "ckm_w_ckm_n10_h1111111000",
+        "ckm_w_ckm_n10_h1111111001",
+        "ckm_w_ckm_n10_h1111111100",
+        "ckm_w_ckm_n10_h1111111101"
+      ],
+      "required_actual_output_net": "ck_mesh",
+      "already_in_raw_parent": false,
+      "head_arcs_required_but_not_projected": 2,
+      "soft_head_does_not_supply_hardened_FT_cells": true
+    },
+    {
+      "part": "pc_WN_0",
+      "required_actual_input_nets": [
+        "ckm_w_ckm_n10_h1101010010",
+        "ckm_w_ckm_n10_h1101010011",
+        "ckm_w_ckm_n10_h1101010110",
+        "ckm_w_ckm_n10_h1101010111"
+      ],
+      "required_actual_output_net": "ck_mesh",
+      "already_in_raw_parent": false,
+      "head_arcs_required_but_not_projected": 2,
+      "soft_head_does_not_supply_hardened_FT_cells": true
+    }
+  ],
+  "hold": [
+    "Raw parent lacks all four real pre-mesh input nets and ck_mesh output; M changes alone produce undeclared/dangling nets.",
+    "Normal copied parent/wrapper input closure must expose the exact approved die-network cut, preserving multidriver ck_mesh semantics and all other mesh drivers.",
+    "Genuine soft HEAD has no physical FT cells or qualified hard view; its two mesh-driver arcs are not supplied by three BASE projections.",
+    "No core ck/clk_tN fallback, fclk ring substitution, source adoption, programme join, STA/PG/routing or parent qualification."
+  ],
+  "input_sha256": {
+    "canonical_mesh.json.gz": "87b3d940852c37c3c765cbec9b953117ed7c197c4404f4f6d681279f6d0f69b3",
+    "canonical_place.json.gz": "e47c2147449553d7d4ed5017d3aea0938fdfc1dbd31ec90ebf6c2cd1b234bdb2",
+    "canonical_sites.json.gz": "8ddb1dad86d4790fff6c5d79586fd1bb88cf3f02fac9d59b8e16fee40203ba59",
+    "current_bound.sv": "83bbefa03ce63fafad378006ec80c7051f55c8134cd8cfdf216aca084a4dfad4",
+    "current_r27_pins.json": "4128d4b721bf6c0cf29be8b05bab6e5995de6b4318cac1ef1e832b4e253171fa",
+    "current_selected_plan.json": "7e0c26f5ca69990206118fb508836e3e492223ff8e08b54fee5c1debc25fdf1e",
+    "historical_ft_manifest.json": "6204f0d885ba697ceb261a6d9cfb9e99b757ff56d4b16d90d3c2ab4ff966307b"
+  }
+}
