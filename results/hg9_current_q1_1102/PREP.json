@@ -1,0 +1,84 @@
+{
+  "status": "PREP_ONLY_NO_GEN_OR_JOB",
+  "plan_sha256": "5fe0aa1743b8ce234b57c81455b948f8edd406ec4395d8e9d0a3ce091bfbf3e2",
+  "slot": {
+    "inst": "ectl_q1",
+    "module": "qkd_ectlk_q1",
+    "origin_um": [
+      336.96,
+      1321.92
+    ],
+    "outline_um": [
+      243.648,
+      172.8
+    ],
+    "orient": "R0",
+    "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
+    "track_offset_um": [
+      0.0,
+      0.0
+    ],
+    "pins_file": "pins/qkd_ectlk_q1_pins_243.json",
+    "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q1/qkd_ectlk_q1.lef",
+    "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q1/qkd_ectlk_q1_tt.lib",
+    "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q1",
+    "physical_master": "qkd_ectlk_q1"
+  },
+  "source_hashes": {
+    "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "ot_qkd_ectl_parts.sv": "8e8380f42cdf385990147c51ce1ad4e9fdeebb186a8feee600e870a97c610bc4",
+    "ot_qwen_nearhbm_attn_stack_h.sv": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b",
+    "ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "qkd_ectl_c_st.sv": "673d15ba39f68c557ba6fde08c9624470fa6a3d46a0b53d65739b9358aadad1f",
+    "qkd_ectl_native_direct_tp8.sv": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+    "qkd_ectlk_columns.sv": "e3970fd0fc8bca7b28d3f9c0c2091a6939bb2730f31d2c256a81a00a49da605e",
+    "qkd_static_ectl_st.sv": "18cea9e75d01c34e5039d60ac6589f9aacc4ab3192318217c42bdbbb2309044f",
+    "qkd_static_ectla_kiss.sv": "59db194022ebbfc6f6e77664f470008a45f2ff068468c655bf3c73ee21734ec9",
+    "qkd_static_k_issuer.sv": "68e5fd0caf20056829d4303f23047d138606f523507fdf847fe8b3b7d2c01f28"
+  },
+  "macro_asset_hashes": {
+    "ot_sram_1r1w_128x256_m1_r2c2.lef": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf",
+    "ot_sram_1r1w_128x256_m1_r2c2_ff.lib": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49",
+    "ot_sram_1r1w_128x256_m1_r2c2_tt.lib": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48"
+  },
+  "actual_current_ABI": {
+    "ports": 6,
+    "bits": 1968,
+    "inputs": 1058,
+    "outputs": 910,
+    "current_plan_pin_identity": true
+  },
+  "old_proof": {
+    "counts": {
+      "compare_points": 10531,
+      "proved": 10449,
+      "differs": 82,
+      "undecided": 0
+    },
+    "verdict": "NOT EQUIVALENT",
+    "reset_edges": 4,
+    "hard_differs": 64,
+    "soft_differs": 18,
+    "physical_final": "f6ba1b08b3115466596d9264aac529d85fd430b89eb85cc0b3a5f9588f3ccb83",
+    "groups": {
+      "bb:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[].u_s.lec_bbi_r_addr_in[]": 14,
+      "bb:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[].u_s.lec_bbi_r_ce_in": 2,
+      "bb:u_dut.u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[].u_s.lec_bbi_r_addr_in[]": 14,
+      "bb:u_dut.u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[].u_s.lec_bbi_r_ce_in": 2,
+      "ff:u_dut.u_ref.u_leaf.u_a.u.u.c_idx[]": 9,
+      "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.rp[]": 7,
+      "ff:u_dut.u_ref.u_leaf.u_b.u.c_idx[]": 9,
+      "ff:u_dut.u_ref.u_leaf.u_b.u.g_static_rows.u_rows.rp[]": 7,
+      "bb:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[].u_s.lec_bbi_w_ce_in": 2,
+      "bb:u_dut.u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[].u_s.lec_bbi_w_ce_in": 2,
+      "ff:u_dut.u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.wp[]": 7,
+      "ff:u_dut.u_ref.u_leaf.u_b.u.g_static_rows.u_rows.wp[]": 7
+    }
+  },
+  "boundary": {
+    "old_final_view_reusable": false,
+    "source_qualified": false,
+    "SIGNED": false,
+    "added_schedule_cycles": "Current source34/18 retained; historical91/80 comparison is not a zero-cycle physical conversion."
+  }
+}
