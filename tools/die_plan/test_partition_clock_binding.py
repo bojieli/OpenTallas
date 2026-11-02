@@ -29,9 +29,12 @@ class BindingTests(unittest.TestCase):
         for name, d in (("freeze.json", self.freeze), ("budget.json", self.budget), ("clock_binding.json", self.binding)):
             (self.k / name).write_text(json.dumps(d))
         self.sha = hashlib.sha256((self.k / "freeze.json").read_bytes()).hexdigest()
+        self.budget_sha = hashlib.sha256((self.k / "budget.json").read_bytes()).hexdigest()
+        self.binding_sha = hashlib.sha256((self.k / "clock_binding.json").read_bytes()).hexdigest()
 
     def call(self, **kw):
-        a = dict(kit=self.k, corner="TT", expected_type="hd_test", expected_freeze_sha256=self.sha, observed_bound=450)
+        a = dict(kit=self.k, corner="TT", expected_type="hd_test", expected_freeze_sha256=self.sha, observed_bound=450,
+                 expected_budget_sha256=self.budget_sha, expected_binding_sha256=self.binding_sha)
         a.update(kw)
         return resolve(**a)
 
@@ -80,6 +83,16 @@ class BindingTests(unittest.TestCase):
             section[key] = old;self.write()
         (self.k / "config.mk").write_text("export DESIGN_NICKNAME = dp_other\nexport DESIGN_NAME = ot_hd_test\n")
         with self.assertRaises(ValueError): self.call()
+
+    def test_consistent_wider_budget_and_binding_cannot_replace_pinned_context(self):
+        old_budget, old_binding = self.budget_sha, self.binding_sha
+        self.budget["clock"]["insertion_tol_ps"] = 100
+        self.binding["insertion_tol_ps"] = 100
+        self.write()  # freeze/pins/type still identical and both metadata files agree
+        with self.assertRaises(ValueError):
+            self.call(expected_budget_sha256=old_budget, expected_binding_sha256=old_binding)
+        with self.assertRaises(ValueError): self.call(expected_budget_sha256=old_budget)
+        with self.assertRaises(ValueError): self.call(expected_binding_sha256=old_binding)
 
     def test_consumer_default_off_preserves_legacy_tolerance(self):
         import tkinter

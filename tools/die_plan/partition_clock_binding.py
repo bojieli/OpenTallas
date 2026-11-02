@@ -39,7 +39,7 @@ def _export(config, key):
     return values[0]
 
 
-def resolve(kit, corner, expected_type, expected_freeze_sha256, observed_bound, tolerance_env=None):
+def resolve(kit, corner, expected_type, expected_freeze_sha256, observed_bound, tolerance_env=None, *, expected_budget_sha256, expected_binding_sha256):
     kit = Path(kit).resolve()
     if corner not in ("TT", "FF"):
         raise ValueError("partition binding only supports TT/FF")
@@ -52,6 +52,9 @@ def resolve(kit, corner, expected_type, expected_freeze_sha256, observed_bound, 
     freeze_path = kit / "freeze.json"
     if _sha(freeze_path) != expected_freeze_sha256:
         raise ValueError("partition freeze differs from caller-pinned context")
+    for filename, expected in (("budget.json", expected_budget_sha256), ("clock_binding.json", expected_binding_sha256)):
+        if not re.fullmatch(r"[0-9a-f]{64}", expected or "") or _sha(kit / filename) != expected:
+            raise ValueError(f"{filename}: differs from caller-pinned source context")
     freeze, budget, binding = (_read(kit / f) for f in ("freeze.json", "budget.json", "clock_binding.json"))
     if freeze.get("schema") != "opentallas.partition_freeze.v1" or budget.get("schema") != "opentallas.die_plan.partition_budget.v1":
         raise ValueError("not an ordinary partition freeze/budget")
@@ -110,12 +113,15 @@ def main():
     p.add_argument("--corner", required=True)
     p.add_argument("--expected-type", required=True)
     p.add_argument("--expected-freeze-sha256", required=True)
+    p.add_argument("--expected-budget-sha256", required=True)
+    p.add_argument("--expected-binding-sha256", required=True)
     p.add_argument("--bound", type=float, required=True)
     p.add_argument("--tolerance-env", type=float)
     p.add_argument("--record")
     a = p.parse_args()
     try:
-        d = resolve(a.kit, a.corner, a.expected_type, a.expected_freeze_sha256, a.bound, a.tolerance_env)
+        d = resolve(a.kit, a.corner, a.expected_type, a.expected_freeze_sha256, a.bound, a.tolerance_env,
+                    expected_budget_sha256=a.expected_budget_sha256, expected_binding_sha256=a.expected_binding_sha256)
     except (OSError, ValueError, TypeError, KeyError) as e:
         p.exit(2, f"PARTITION_CLOCK_BINDING_REFUSE: {e}\n")
     if a.record:
