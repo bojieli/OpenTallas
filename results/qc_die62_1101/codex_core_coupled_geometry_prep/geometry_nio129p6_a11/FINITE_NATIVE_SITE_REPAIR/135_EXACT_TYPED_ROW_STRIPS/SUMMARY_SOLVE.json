@@ -1,0 +1,84 @@
+{
+  "status": "UNRESOLVED_BOUNDED_LOCAL_MODEL",
+  "movable_count": 135,
+  "immutable_count": 63837,
+  "incident_data_edges": 754,
+  "native_site_um": [
+    0.054,
+    0.27
+  ],
+  "elapsed_s": 101.07785272598267,
+  "iterations": [
+    {
+      "iteration": 0,
+      "cut_count": 235,
+      "collisions": 45,
+      "new_cuts": 41,
+      "result": {
+        "status": 1,
+        "message": "Time limit reached. (HiGHS Status 13: Time limit reached)",
+        "has_incumbent": true
+      }
+    },
+    {
+      "iteration": 1,
+      "cut_count": 276,
+      "collisions": 42,
+      "new_cuts": 36,
+      "result": {
+        "status": 1,
+        "message": "Time limit reached. (HiGHS Status 13: Time limit reached)",
+        "has_incumbent": true
+      }
+    },
+    {
+      "iteration": 2,
+      "cut_count": 312,
+      "collisions": 58,
+      "new_cuts": 49,
+      "result": {
+        "status": 1,
+        "message": "Time limit reached. (HiGHS Status 13: Time limit reached)",
+        "has_incumbent": true
+      }
+    },
+    {
+      "iteration": 3,
+      "cut_count": 361,
+      "collisions": 29,
+      "new_cuts": 24,
+      "result": {
+        "status": 1,
+        "message": "Time limit reached. (HiGHS Status 13: Time limit reached)",
+        "has_incumbent": true
+      }
+    },
+    {
+      "iteration": 4,
+      "cut_count": 385,
+      "collisions": 40,
+      "new_cuts": 40,
+      "result": {
+        "status": 1,
+        "message": "Time limit reached. (HiGHS Status 13: Time limit reached)",
+        "has_incumbent": true
+      }
+    }
+  ],
+  "last_result": {
+    "status": 1,
+    "message": "Time limit reached. (HiGHS Status 13: Time limit reached)",
+    "has_incumbent": true
+  },
+  "holds": [
+    "same-edge +1 qv copy is model only; no source/nativecount/function credit",
+    "48 reset-source FFs/126edges held for ordinary reset rederivation",
+    "A11 pairedN/F3S window remap69.12um; LC/CA/provider/clock/boot/view/pinPG/parent ABI held"
+  ],
+  "limits": [
+    "Source-only local finite proposal; no native ODB or physical placement",
+    "All402/399/149reach budgets retained; no count/function/clock/reset/phase/route credit",
+    "ExactintegerDBU coefficientscaling and135variable conflict-only expansion; no slacks accepted",
+    "Optimality not required or claimed; finite5x20second solve cap"
+  ]
+}

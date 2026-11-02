@@ -1,0 +1,23 @@
+{
+  "status": "DISABLED_PAIRED8P64_SOURCE_PIN_WINDOW_AUDIT",
+  "unchanged_partition_origins_and_all_type_outlines": true,
+  "unchanged_port_names_widths_directions_layers_and_station_ages": true,
+  "pin_rows": [
+    {
+      "type": "coll_core",
+      "ordinary_type_pin_count": 6882,
+      "outside_outline": [],
+      "duplicate_layer_xy": []
+    },
+    {
+      "type": "coll_ftm",
+      "ordinary_type_pin_count": 4636,
+      "outside_outline": [],
+      "duplicate_layer_xy": []
+    }
+  ],
+  "limits": [
+    "Ordinary selected type pins only; physical clock/reset/START pins/ABI and source/LC/CA remain unpaired",
+    "No native view/PG/placement/route credit"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "name": "qc_fold_nio129p6_PREP",
+  "top": "ot_coll_fold_slice",
+  "kind": "tile",
+  "sources": [
+    "results/qc_die62_1101/codex_core_fold8_source_prep/NIO_VIEW_RECIPE_DISABLED/MATERIALIZE_SELECTED_SOURCE/ot_coll_fold_slice.v"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 129.6,
+    "h": 129.6
+  },
+  "pins": {
+    "N": [
+      "src",
+      "red_in",
+      "sum",
+      "e_out",
+      "v_out"
+    ],
+    "S": [
+      "clk",
+      "rst_n"
+    ]
+  },
+  "io_tcl": "results/qc_die62_1101/codex_core_fold8_source_prep/NIO_VIEW_RECIPE_DISABLED/nio_exact_pins_PREP.tcl",
+  "route": {
+    "pd": 0.45,
+    "period_ps": 833,
+    "signoff_period_ps": 833,
+    "threads": 2,
+    "peak_ram_gb": 40,
+    "hold_margin_ns": 0.01
+  },
+  "job": {
+    "owner": "Codex:QC-CORE-source-PREP",
+    "branch": "codex/qc62-ucie-held-1101",
+    "tag": "UNRELEASED",
+    "purpose": "DISABLED one-view NIO target for all8 exact N4/A7/S1 fixed source callsites; no physical build authority.",
+    "hold_merge": true,
+    "views_to": "physical/ref_tile/qc_fold_nio129p6_PREP/views",
+    "record_to": "results/qc_die62_1101/fold_nio129p6_PREP",
+    "no_bench_reason": "HOLD: current-view function/registered ABI/reset/clock qualification required; no historical proof substitution."
+  }
+}

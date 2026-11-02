@@ -1,0 +1,3760 @@
+[
+  {
+    "kind": "macro",
+    "ff": "200133",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        17.28,
+        794.88
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "200851",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        397.44,
+        855.36
+      ],
+      "track_offset_um": [
+        -0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "205947",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[2].u_fs",
+      "module": "ot_coll_fold_slice",
+      "origin_um": [
+        414.72,
+        207.36
+      ],
+      "outline_um": [
+        129.6,
+        129.6
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "view_status": "NEW_NIO129P6_TARGET_NOT_QUALIFIED",
+      "track_offset_um": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "207566",
+    "constraint": {
+      "cols_rows": [
+        7517,
+        8995,
+        1386,
+        1387
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "207575",
+    "constraint": {
+      "cols_rows": [
+        7517,
+        8995,
+        1386,
+        1387
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "215314",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        578.88,
+        889.92
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "215315",
+    "constraint": {
+      "cols_rows": [
+        3581,
+        10627,
+        3147,
+        3147
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "215320",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        578.88,
+        889.92
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "215321",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.u_rx.u_mem",
+      "module": "ot_sram_1r1w2c_64x546_m1",
+      "origin_um": [
+        207.36,
+        855.36
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
+      "outline_um": [
+        178.632,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "215359",
+    "constraint": {
+      "cols_rows": [
+        13981,
+        14083,
+        3147,
+        3248
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "215360",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.u_rx.u_mem",
+      "module": "ot_sram_1r1w2c_64x546_m1",
+      "origin_um": [
+        207.36,
+        855.36
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
+      "outline_um": [
+        178.632,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "73772",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        155.52,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "73779",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        155.52,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "73782",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        155.52,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "73790",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        155.52,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "80765",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.u_tx.u_mem",
+      "module": "ot_sram_1r1w2c_64x546_m1",
+      "origin_um": [
+        17.28,
+        984.96
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
+      "outline_um": [
+        178.632,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81310",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81380",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81408",
+    "constraint": {
+      "cols_rows": [
+        7581,
+        7619,
+        3841,
+        3841
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81414",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81433",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81442",
+    "constraint": {
+      "cols_rows": [
+        7741,
+        7779,
+        3835,
+        3835
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81447",
+    "constraint": "81448"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81479",
+    "constraint": {
+      "cols_rows": [
+        7901,
+        7939,
+        3825,
+        3832
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81479",
+    "constraint": "81480"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81480",
+    "constraint": {
+      "cols_rows": [
+        7901,
+        7939,
+        3825,
+        3832
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81488",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3826,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81518",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81534",
+    "constraint": "81538"
+  },
+  {
+    "kind": "macro",
+    "ff": "81534",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81535",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81538",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81542",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81566",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81581",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81595",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81600",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81604",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81608",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81612",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81624",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81634",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81658",
+    "constraint": "81659"
+  },
+  {
+    "kind": "macro",
+    "ff": "81658",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81659",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81668",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81713",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81714",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "83919",
+    "constraint": {
+      "cols_rows": [
+        -3,
+        7011,
+        0,
+        18
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "91536",
+    "constraint": {
+      "cols_rows": [
+        7165,
+        7651,
+        253,
+        254
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "91562",
+    "constraint": "91614"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "200133",
+    "constraint": {
+      "cols_rows": [
+        282,
+        3750,
+        3249,
+        3254
+      ],
+      "width_DBU": 1404,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "200851",
+    "constraint": {
+      "cols_rows": [
+        3578,
+        10630,
+        3147,
+        3151
+      ],
+      "width_DBU": 1404,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "205947",
+    "constraint": {
+      "cols_rows": [
+        6589,
+        9411,
+        1386,
+        1386
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209472",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209696",
+    "constraint": {
+      "cols_rows": [
+        6269,
+        6307,
+        2720,
+        2733
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209821",
+    "constraint": {
+      "cols_rows": [
+        8061,
+        9923,
+        2446,
+        2446
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "215314",
+    "constraint": {
+      "cols_rows": [
+        13981,
+        14083,
+        3147,
+        3248
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "215315",
+    "constraint": {
+      "cols_rows": [
+        3581,
+        10627,
+        3147,
+        3149
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "215321",
+    "constraint": {
+      "cols_rows": [
+        7229,
+        7267,
+        3146,
+        3484
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "215359",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        578.88,
+        889.92
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "215360",
+    "constraint": {
+      "cols_rows": [
+        7229,
+        7267,
+        3146,
+        3484
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "73772",
+    "constraint": {
+      "cols_rows": [
+        2941,
+        9603,
+        2781,
+        2782
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "73779",
+    "constraint": "73782"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "80765",
+    "constraint": {
+      "cols_rows": [
+        2269,
+        2403,
+        3630,
+        3631
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81310",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81385",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81413",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81414",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81433",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81442",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81455",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81479",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81480",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81488",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81518",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81534",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81534",
+    "constraint": "81542"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81535",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81535",
+    "constraint": "81538"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81538",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81538",
+    "constraint": "81542"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81542",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81566",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81581",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81595",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81595",
+    "constraint": "81600"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81600",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81600",
+    "constraint": "81604"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81604",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81604",
+    "constraint": "81608"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81608",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81608",
+    "constraint": "81612"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81612",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81624",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81634",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81658",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81659",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81659",
+    "constraint": "81668"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81668",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81713",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81713",
+    "constraint": "81714"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81714",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "83919",
+    "constraint": {
+      "cols_rows": [
+        -3,
+        6403,
+        0,
+        19
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "91562",
+    "constraint": "91588"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "200851",
+    "constraint": {
+      "cols_rows": [
+        8538,
+        8806,
+        3146,
+        3151
+      ],
+      "width_DBU": 1404,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209641",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209642",
+    "constraint": {
+      "cols_rows": [
+        6269,
+        6307,
+        2677,
+        2682
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209680",
+    "constraint": {
+      "cols_rows": [
+        6269,
+        6307,
+        2703,
+        2712
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "209696",
+    "constraint": "209728"
+  },
+  {
+    "kind": "ff",
+    "ff": "209700",
+    "constraint": "209704"
+  },
+  {
+    "kind": "macro",
+    "ff": "209757",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209762",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209766",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209770",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209821",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209875",
+    "constraint": {
+      "cols_rows": [
+        8253,
+        9923,
+        2444,
+        2447
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209876",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "215313",
+    "constraint": "215358"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "215315",
+    "constraint": {
+      "cols_rows": [
+        3581,
+        10627,
+        3147,
+        3151
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "215319",
+    "constraint": "215358"
+  },
+  {
+    "kind": "macro",
+    "ff": "73772",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m",
+      "module": "ot_sram_1r1w_512x128_m4_r2c2",
+      "origin_um": [
+        0.0,
+        622.08
+      ],
+      "track_offset_um": [
+        4.32,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_512x128_m4_r2c2.json",
+      "outline_um": [
+        174.12,
+        29.736
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "73790",
+    "constraint": {
+      "cols_rows": [
+        2941,
+        9603,
+        2781,
+        2782
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81310",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        7107,
+        3785,
+        3831
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81380",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81401",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81408",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81413",
+    "constraint": "81414"
+  },
+  {
+    "kind": "macro",
+    "ff": "81417",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81433",
+    "constraint": {
+      "cols_rows": [
+        7677,
+        7715,
+        3837,
+        3837
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81442",
+    "constraint": "81447"
+  },
+  {
+    "kind": "macro",
+    "ff": "81461",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81467",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81479",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81480",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81488",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81542",
+    "constraint": {
+      "cols_rows": [
+        8125,
+        8195,
+        3829,
+        3829
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81581",
+    "constraint": {
+      "cols_rows": [
+        8221,
+        8291,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81595",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81595",
+    "constraint": "81634"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81600",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81600",
+    "constraint": "81624"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81604",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3827,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81604",
+    "constraint": "81624"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81608",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3827,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81612",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81624",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3827,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81634",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81658",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81659",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81668",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81713",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9251,
+        3825,
+        3826
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81714",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9251,
+        3825,
+        3826
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "91447",
+    "constraint": "91450"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "91588",
+    "constraint": {
+      "cols_rows": [
+        7165,
+        7651,
+        253,
+        254
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "200133",
+    "constraint": {
+      "cols_rows": [
+        1274,
+        1382,
+        3249,
+        3264
+      ],
+      "width_DBU": 1404,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209641",
+    "constraint": {
+      "cols_rows": [
+        6269,
+        6307,
+        2677,
+        2682
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "209642",
+    "constraint": "209650"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209696",
+    "constraint": {
+      "cols_rows": [
+        6269,
+        6307,
+        2735,
+        2746
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209704",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209757",
+    "constraint": {
+      "cols_rows": [
+        2941,
+        9603,
+        2781,
+        2782
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209762",
+    "constraint": {
+      "cols_rows": [
+        2941,
+        9603,
+        2781,
+        2782
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209774",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209786",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209796",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209820",
+    "constraint": {
+      "cols_rows": [
+        8253,
+        9923,
+        2444,
+        2447
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209821",
+    "constraint": {
+      "cols_rows": [
+        8253,
+        9923,
+        2444,
+        2447
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209830",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209875",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209876",
+    "constraint": {
+      "cols_rows": [
+        8253,
+        9923,
+        2444,
+        2447
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "215314",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        578.88,
+        794.88
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "215315",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.u_rx.u_mem",
+      "module": "ot_sram_1r1w2c_64x546_m1",
+      "origin_um": [
+        207.36,
+        855.36
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
+      "outline_um": [
+        178.632,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "73772",
+    "constraint": {
+      "cols_rows": [
+        5245,
+        8931,
+        2781,
+        2783
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "80765",
+    "constraint": {
+      "cols_rows": [
+        2333,
+        2403,
+        3629,
+        3631
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81380",
+    "constraint": {
+      "cols_rows": [
+        7453,
+        7875,
+        3825,
+        3829
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81401",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81413",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3826,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81414",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        8067,
+        3827,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81417",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81442",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81448",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81455",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81488",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        8067,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81518",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        8067,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81534",
+    "constraint": "81566"
+  },
+  {
+    "kind": "ff",
+    "ff": "81542",
+    "constraint": "81566"
+  },
+  {
+    "kind": "ff",
+    "ff": "81595",
+    "constraint": "81612"
+  },
+  {
+    "kind": "ff",
+    "ff": "81595",
+    "constraint": "81658"
+  },
+  {
+    "kind": "ff",
+    "ff": "81595",
+    "constraint": "81668"
+  },
+  {
+    "kind": "ff",
+    "ff": "81600",
+    "constraint": "81608"
+  },
+  {
+    "kind": "ff",
+    "ff": "81600",
+    "constraint": "81634"
+  },
+  {
+    "kind": "ff",
+    "ff": "81600",
+    "constraint": "81659"
+  },
+  {
+    "kind": "ff",
+    "ff": "81600",
+    "constraint": "81668"
+  },
+  {
+    "kind": "ff",
+    "ff": "81608",
+    "constraint": "81634"
+  },
+  {
+    "kind": "ff",
+    "ff": "81608",
+    "constraint": "81659"
+  },
+  {
+    "kind": "ff",
+    "ff": "81612",
+    "constraint": "81658"
+  },
+  {
+    "kind": "ff",
+    "ff": "81612",
+    "constraint": "81668"
+  },
+  {
+    "kind": "ff",
+    "ff": "81634",
+    "constraint": "81659"
+  },
+  {
+    "kind": "ff",
+    "ff": "81634",
+    "constraint": "81668"
+  },
+  {
+    "kind": "ff",
+    "ff": "81658",
+    "constraint": "81668"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81714",
+    "constraint": {
+      "cols_rows": [
+        7037,
+        9315,
+        3825,
+        3825
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "200133",
+    "constraint": {
+      "cols_rows": [
+        1242,
+        1414,
+        3249,
+        3255
+      ],
+      "width_DBU": 1404,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209576",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209641",
+    "constraint": {
+      "cols_rows": [
+        -3,
+        10627,
+        2781,
+        2781
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "209641",
+    "constraint": "209786"
+  },
+  {
+    "kind": "macro",
+    "ff": "209650",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209680",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209696",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209728",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209757",
+    "constraint": {
+      "cols_rows": [
+        6269,
+        6307,
+        2757,
+        2758
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209786",
+    "constraint": {
+      "cols_rows": [
+        -3,
+        10627,
+        2781,
+        2781
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209796",
+    "constraint": {
+      "cols_rows": [
+        8253,
+        8707,
+        2443,
+        2447
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "209820",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "origin_um": [
+        345.6,
+        665.28
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "outline_um": [
+        177.768,
+        81.0
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "209830",
+    "constraint": {
+      "cols_rows": [
+        8253,
+        9923,
+        2444,
+        2447
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "215315",
+    "constraint": {
+      "cols_rows": [
+        7005,
+        7043,
+        3146,
+        3151
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "macro",
+    "ff": "81374",
+    "constraint": {
+      "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        388.8,
+        950.4
+      ],
+      "track_offset_um": [
+        0.0,
+        0.012
+      ],
+      "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0",
+      "halo_um": 4.32,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "obs_max": "M4",
+      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81408",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81408",
+    "constraint": "81413"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81413",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        9187,
+        3825,
+        3827
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81414",
+    "constraint": {
+      "cols_rows": [
+        7453,
+        7875,
+        3825,
+        3829
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81447",
+    "constraint": {
+      "cols_rows": [
+        7453,
+        7875,
+        3825,
+        3829
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81479",
+    "constraint": "81624"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81480",
+    "constraint": {
+      "cols_rows": [
+        7069,
+        8067,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81518",
+    "constraint": "81535"
+  },
+  {
+    "kind": "ff",
+    "ff": "81518",
+    "constraint": "81538"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81534",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81534",
+    "constraint": "81713"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81566",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81595",
+    "constraint": {
+      "cols_rows": [
+        8285,
+        8355,
+        3829,
+        3829
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "81600",
+    "constraint": "81612"
+  },
+  {
+    "kind": "ff",
+    "ff": "81600",
+    "constraint": "81658"
+  },
+  {
+    "kind": "ff",
+    "ff": "81612",
+    "constraint": "81634"
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81713",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "fixed_strip",
+    "ff": "81714",
+    "constraint": {
+      "cols_rows": [
+        8317,
+        8931,
+        3825,
+        3828
+      ],
+      "width_DBU": 1080,
+      "basis": "Every included nativecenter is blocked by actual immutable typed FF metal bbox; intersection across contiguous rows. No synthetic keepout or reach change."
+    }
+  },
+  {
+    "kind": "ff",
+    "ff": "91536",
+    "constraint": "91588"
+  }
+]

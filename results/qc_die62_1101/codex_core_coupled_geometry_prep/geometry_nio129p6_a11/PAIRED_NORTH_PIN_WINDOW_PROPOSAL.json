@@ -1,0 +1,428 @@
+{
+  "status": "DISABLED_PAIRED_PIN_WINDOW_SOURCE_EVENT_UNRELEASED",
+  "source": "/srv/opentallas-scratch/claude/wt/codex-qc62-collect-1101/results/qc_die62_1101/codex_core_coupled_geometry_prep/geometry_nio129p6_a10",
+  "delta_um": 8.64,
+  "total_delta_um": 69.12,
+  "changes": [
+    {
+      "type": "coll_core",
+      "bus": "io_collective__in_data",
+      "before": [
+        346.768,
+        453.664
+      ],
+      "proposed": [
+        355.408,
+        462.304
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__in_last",
+      "before": [
+        345.408,
+        345.808
+      ],
+      "proposed": [
+        354.048,
+        354.448
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__in_mode",
+      "before": [
+        344.048,
+        344.448
+      ],
+      "proposed": [
+        352.688,
+        353.088
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__in_tag",
+      "before": [
+        336.48,
+        343.088
+      ],
+      "proposed": [
+        345.12,
+        351.728
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__in_valid",
+      "before": [
+        335.12,
+        335.52
+      ],
+      "proposed": [
+        343.76,
+        344.16
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__cmd_mode",
+      "before": [
+        333.76,
+        334.16
+      ],
+      "proposed": [
+        342.4,
+        342.8
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__cmd_tag",
+      "before": [
+        326.192,
+        332.8
+      ],
+      "proposed": [
+        334.832,
+        341.44
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__cmd_v",
+      "before": [
+        324.832,
+        325.232
+      ],
+      "proposed": [
+        333.472,
+        333.872
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__cmd_words",
+      "before": [
+        320.464,
+        323.872
+      ],
+      "proposed": [
+        329.104,
+        332.512
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__cmd_free",
+      "before": [
+        66.336,
+        66.736
+      ],
+      "proposed": [
+        74.976,
+        75.376
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__fault",
+      "before": [
+        64.8,
+        65.376
+      ],
+      "proposed": [
+        73.44,
+        74.016
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__out_data",
+      "before": [
+        460.464,
+        566.624
+      ],
+      "proposed": [
+        469.104,
+        575.264
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__out_err",
+      "before": [
+        459.104,
+        459.504
+      ],
+      "proposed": [
+        467.744,
+        468.144
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__out_last",
+      "before": [
+        457.744,
+        458.144
+      ],
+      "proposed": [
+        466.384,
+        466.784
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__out_rank",
+      "before": [
+        455.984,
+        456.784
+      ],
+      "proposed": [
+        464.624,
+        465.424
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__out_valid",
+      "before": [
+        454.624,
+        455.024
+      ],
+      "proposed": [
+        463.264,
+        463.664
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "rec_tx_s0",
+      "before": [
+        199.904,
+        314.272
+      ],
+      "proposed": [
+        208.544,
+        322.912
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "rec_rx_s0_i",
+      "before": [
+        84.608,
+        198.944
+      ],
+      "proposed": [
+        93.248,
+        207.584
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "flt_n_i",
+      "before": [
+        315.232,
+        315.936
+      ],
+      "proposed": [
+        323.872,
+        324.576
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "flt_o",
+      "before": [
+        83.248,
+        83.648
+      ],
+      "proposed": [
+        91.888,
+        92.288
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "fltv_n_i",
+      "before": [
+        316.896,
+        319.504
+      ],
+      "proposed": [
+        325.536,
+        328.144
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "fltv_o",
+      "before": [
+        67.696,
+        82.288
+      ],
+      "proposed": [
+        76.336,
+        90.928
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "ard_wo_in_data",
+      "side": "out",
+      "before": [
+        372.688,
+        479.584
+      ],
+      "proposed": [
+        381.328,
+        488.224
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "arl_wo_in_last",
+      "side": "out",
+      "before": [
+        371.328,
+        371.728
+      ],
+      "proposed": [
+        379.968,
+        380.368
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "arm_wo_in_mode",
+      "side": "out",
+      "before": [
+        369.968,
+        370.368
+      ],
+      "proposed": [
+        378.608,
+        379.008
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "art_wo_in_tag",
+      "side": "out",
+      "before": [
+        362.4,
+        369.008
+      ],
+      "proposed": [
+        371.04,
+        377.648
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "arv_wo_in_valid",
+      "side": "out",
+      "before": [
+        361.04,
+        361.44
+      ],
+      "proposed": [
+        369.68,
+        370.08
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "ccm_wo_cmd_mode",
+      "side": "out",
+      "before": [
+        359.68,
+        360.08
+      ],
+      "proposed": [
+        368.32,
+        368.72
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "cct_wo_cmd_tag",
+      "side": "out",
+      "before": [
+        352.112,
+        358.72
+      ],
+      "proposed": [
+        360.752,
+        367.36
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "ccv_wo_cmd_v",
+      "side": "out",
+      "before": [
+        350.752,
+        351.152
+      ],
+      "proposed": [
+        359.392,
+        359.792
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "ccw_wo_cmd_words",
+      "side": "out",
+      "before": [
+        346.384,
+        349.792
+      ],
+      "proposed": [
+        355.024,
+        358.432
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "crec_rx_s0",
+      "side": "out",
+      "before": [
+        110.528,
+        224.864
+      ],
+      "proposed": [
+        119.168,
+        233.504
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "fltk",
+      "side": "out",
+      "before": [
+        341.152,
+        341.856
+      ],
+      "proposed": [
+        349.792,
+        350.496
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "fltv",
+      "side": "out",
+      "before": [
+        342.816,
+        345.424
+      ],
+      "proposed": [
+        351.456,
+        354.064
+      ]
+    }
+  ]
+}

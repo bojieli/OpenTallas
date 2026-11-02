@@ -1,0 +1,427 @@
+{
+  "status": "ACTUAL_EIGHT_CALLSITE_RESOLUTION_SOURCE_ONLY_NOT_EQUIVALENCE",
+  "native_json_sha256": "7bb594dbb266c3ea6f0c113ccf81e7ebad318b881dd68bfa8cc004762c9e4fb8",
+  "rows": [
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[0].u_fs",
+      "module": "ot_coll_fold_slice",
+      "cell_parameters": {},
+      "resolved_parameters": {
+        "ADD_LAT": "00000000000000000000000000000111",
+        "N": "00000000000000000000000000000100",
+        "SEAM": "00000000000000000000000000000001"
+      },
+      "cell_source": null,
+      "module_source": null,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "red_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src": {
+          "direction": "input",
+          "bits": 512
+        },
+        "sum": {
+          "direction": "output",
+          "bits": 128
+        },
+        "v_out": {
+          "direction": "output",
+          "bits": 1
+        },
+        "e_out": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "actual_module_sha256": "fe6930449ef45de3bc7012655616198a7b013acd499433813c073d34263fd520",
+      "caller_connection_bits": {
+        "clk": 1,
+        "e_out": 1,
+        "red_in": 1,
+        "rst_n": 1,
+        "src": 512,
+        "sum": 128,
+        "v_out": 1
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[1].u_fs",
+      "module": "ot_coll_fold_slice",
+      "cell_parameters": {},
+      "resolved_parameters": {
+        "ADD_LAT": "00000000000000000000000000000111",
+        "N": "00000000000000000000000000000100",
+        "SEAM": "00000000000000000000000000000001"
+      },
+      "cell_source": null,
+      "module_source": null,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "red_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src": {
+          "direction": "input",
+          "bits": 512
+        },
+        "sum": {
+          "direction": "output",
+          "bits": 128
+        },
+        "v_out": {
+          "direction": "output",
+          "bits": 1
+        },
+        "e_out": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "actual_module_sha256": "fe6930449ef45de3bc7012655616198a7b013acd499433813c073d34263fd520",
+      "caller_connection_bits": {
+        "clk": 1,
+        "e_out": 1,
+        "red_in": 1,
+        "rst_n": 1,
+        "src": 512,
+        "sum": 128,
+        "v_out": 1
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[2].u_fs",
+      "module": "ot_coll_fold_slice",
+      "cell_parameters": {},
+      "resolved_parameters": {
+        "ADD_LAT": "00000000000000000000000000000111",
+        "N": "00000000000000000000000000000100",
+        "SEAM": "00000000000000000000000000000001"
+      },
+      "cell_source": null,
+      "module_source": null,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "red_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src": {
+          "direction": "input",
+          "bits": 512
+        },
+        "sum": {
+          "direction": "output",
+          "bits": 128
+        },
+        "v_out": {
+          "direction": "output",
+          "bits": 1
+        },
+        "e_out": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "actual_module_sha256": "fe6930449ef45de3bc7012655616198a7b013acd499433813c073d34263fd520",
+      "caller_connection_bits": {
+        "clk": 1,
+        "e_out": 1,
+        "red_in": 1,
+        "rst_n": 1,
+        "src": 512,
+        "sum": 128,
+        "v_out": 1
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[3].u_fs",
+      "module": "ot_coll_fold_slice",
+      "cell_parameters": {},
+      "resolved_parameters": {
+        "ADD_LAT": "00000000000000000000000000000111",
+        "N": "00000000000000000000000000000100",
+        "SEAM": "00000000000000000000000000000001"
+      },
+      "cell_source": null,
+      "module_source": null,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "red_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src": {
+          "direction": "input",
+          "bits": 512
+        },
+        "sum": {
+          "direction": "output",
+          "bits": 128
+        },
+        "v_out": {
+          "direction": "output",
+          "bits": 1
+        },
+        "e_out": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "actual_module_sha256": "fe6930449ef45de3bc7012655616198a7b013acd499433813c073d34263fd520",
+      "caller_connection_bits": {
+        "clk": 1,
+        "e_out": 1,
+        "red_in": 1,
+        "rst_n": 1,
+        "src": 512,
+        "sum": 128,
+        "v_out": 1
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[0].u_fs",
+      "module": "ot_coll_fold_slice",
+      "cell_parameters": {},
+      "resolved_parameters": {
+        "ADD_LAT": "00000000000000000000000000000111",
+        "N": "00000000000000000000000000000100",
+        "SEAM": "00000000000000000000000000000001"
+      },
+      "cell_source": null,
+      "module_source": null,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "red_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src": {
+          "direction": "input",
+          "bits": 512
+        },
+        "sum": {
+          "direction": "output",
+          "bits": 128
+        },
+        "v_out": {
+          "direction": "output",
+          "bits": 1
+        },
+        "e_out": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "actual_module_sha256": "fe6930449ef45de3bc7012655616198a7b013acd499433813c073d34263fd520",
+      "caller_connection_bits": {
+        "clk": 1,
+        "e_out": 1,
+        "red_in": 1,
+        "rst_n": 1,
+        "src": 512,
+        "sum": 128,
+        "v_out": 1
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[1].u_fs",
+      "module": "ot_coll_fold_slice",
+      "cell_parameters": {},
+      "resolved_parameters": {
+        "ADD_LAT": "00000000000000000000000000000111",
+        "N": "00000000000000000000000000000100",
+        "SEAM": "00000000000000000000000000000001"
+      },
+      "cell_source": null,
+      "module_source": null,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "red_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src": {
+          "direction": "input",
+          "bits": 512
+        },
+        "sum": {
+          "direction": "output",
+          "bits": 128
+        },
+        "v_out": {
+          "direction": "output",
+          "bits": 1
+        },
+        "e_out": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "actual_module_sha256": "fe6930449ef45de3bc7012655616198a7b013acd499433813c073d34263fd520",
+      "caller_connection_bits": {
+        "clk": 1,
+        "e_out": 1,
+        "red_in": 1,
+        "rst_n": 1,
+        "src": 512,
+        "sum": 128,
+        "v_out": 1
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[2].u_fs",
+      "module": "ot_coll_fold_slice",
+      "cell_parameters": {},
+      "resolved_parameters": {
+        "ADD_LAT": "00000000000000000000000000000111",
+        "N": "00000000000000000000000000000100",
+        "SEAM": "00000000000000000000000000000001"
+      },
+      "cell_source": null,
+      "module_source": null,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "red_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src": {
+          "direction": "input",
+          "bits": 512
+        },
+        "sum": {
+          "direction": "output",
+          "bits": 128
+        },
+        "v_out": {
+          "direction": "output",
+          "bits": 1
+        },
+        "e_out": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "actual_module_sha256": "fe6930449ef45de3bc7012655616198a7b013acd499433813c073d34263fd520",
+      "caller_connection_bits": {
+        "clk": 1,
+        "e_out": 1,
+        "red_in": 1,
+        "rst_n": 1,
+        "src": 512,
+        "sum": 128,
+        "v_out": 1
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[3].u_fs",
+      "module": "ot_coll_fold_slice",
+      "cell_parameters": {},
+      "resolved_parameters": {
+        "ADD_LAT": "00000000000000000000000000000111",
+        "N": "00000000000000000000000000000100",
+        "SEAM": "00000000000000000000000000000001"
+      },
+      "cell_source": null,
+      "module_source": null,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "red_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src": {
+          "direction": "input",
+          "bits": 512
+        },
+        "sum": {
+          "direction": "output",
+          "bits": 128
+        },
+        "v_out": {
+          "direction": "output",
+          "bits": 1
+        },
+        "e_out": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "actual_module_sha256": "fe6930449ef45de3bc7012655616198a7b013acd499433813c073d34263fd520",
+      "caller_connection_bits": {
+        "clk": 1,
+        "e_out": 1,
+        "red_in": 1,
+        "rst_n": 1,
+        "src": 512,
+        "sum": 128,
+        "v_out": 1
+      }
+    }
+  ],
+  "required": [
+    "All8 exact selected module/body/params reused once; no5/8policy",
+    "Actual selected constant/clock/reset/registeredABI and current original-to-new-view proof remain required",
+    "Old180physicalview never supplied as current source proof; newNIOLEF/LIB/PPA missing"
+  ]
+}

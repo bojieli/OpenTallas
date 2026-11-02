@@ -1,0 +1,428 @@
+{
+  "status": "DISABLED_PHYSICAL_PIN_WINDOW_SOURCE_EVENT_NOT_RELEASED",
+  "delta_um": 43.2,
+  "total_delta_um": 60.48,
+  "changes": [
+    {
+      "type": "coll_core",
+      "bus": "io_collective__in_data",
+      "before": [
+        303.568,
+        410.464
+      ],
+      "proposed": [
+        346.768,
+        453.664
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__in_last",
+      "before": [
+        302.208,
+        302.608
+      ],
+      "proposed": [
+        345.408,
+        345.808
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__in_mode",
+      "before": [
+        300.848,
+        301.248
+      ],
+      "proposed": [
+        344.048,
+        344.448
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__in_tag",
+      "before": [
+        293.28,
+        299.888
+      ],
+      "proposed": [
+        336.48,
+        343.088
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__in_valid",
+      "before": [
+        291.92,
+        292.32
+      ],
+      "proposed": [
+        335.12,
+        335.52
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__cmd_mode",
+      "before": [
+        290.56,
+        290.96
+      ],
+      "proposed": [
+        333.76,
+        334.16
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__cmd_tag",
+      "before": [
+        282.992,
+        289.6
+      ],
+      "proposed": [
+        326.192,
+        332.8
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__cmd_v",
+      "before": [
+        281.632,
+        282.032
+      ],
+      "proposed": [
+        324.832,
+        325.232
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__cmd_words",
+      "before": [
+        277.264,
+        280.672
+      ],
+      "proposed": [
+        320.464,
+        323.872
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__cmd_free",
+      "before": [
+        23.136,
+        23.536
+      ],
+      "proposed": [
+        66.336,
+        66.736
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__fault",
+      "before": [
+        21.6,
+        22.176
+      ],
+      "proposed": [
+        64.8,
+        65.376
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__out_data",
+      "before": [
+        417.264,
+        523.424
+      ],
+      "proposed": [
+        460.464,
+        566.624
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__out_err",
+      "before": [
+        415.904,
+        416.304
+      ],
+      "proposed": [
+        459.104,
+        459.504
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__out_last",
+      "before": [
+        414.544,
+        414.944
+      ],
+      "proposed": [
+        457.744,
+        458.144
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__out_rank",
+      "before": [
+        412.784,
+        413.584
+      ],
+      "proposed": [
+        455.984,
+        456.784
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "io_collective__out_valid",
+      "before": [
+        411.424,
+        411.824
+      ],
+      "proposed": [
+        454.624,
+        455.024
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "rec_tx_s0",
+      "before": [
+        156.704,
+        271.072
+      ],
+      "proposed": [
+        199.904,
+        314.272
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "rec_rx_s0_i",
+      "before": [
+        41.408,
+        155.744
+      ],
+      "proposed": [
+        84.608,
+        198.944
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "flt_n_i",
+      "before": [
+        272.032,
+        272.736
+      ],
+      "proposed": [
+        315.232,
+        315.936
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "flt_o",
+      "before": [
+        40.048,
+        40.448
+      ],
+      "proposed": [
+        83.248,
+        83.648
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "fltv_n_i",
+      "before": [
+        273.696,
+        276.304
+      ],
+      "proposed": [
+        316.896,
+        319.504
+      ]
+    },
+    {
+      "type": "coll_core",
+      "bus": "fltv_o",
+      "before": [
+        24.496,
+        39.088
+      ],
+      "proposed": [
+        67.696,
+        82.288
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "ard_wo_in_data",
+      "side": "out",
+      "before": [
+        329.488,
+        436.384
+      ],
+      "proposed": [
+        372.688,
+        479.584
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "arl_wo_in_last",
+      "side": "out",
+      "before": [
+        328.128,
+        328.528
+      ],
+      "proposed": [
+        371.328,
+        371.728
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "arm_wo_in_mode",
+      "side": "out",
+      "before": [
+        326.768,
+        327.168
+      ],
+      "proposed": [
+        369.968,
+        370.368
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "art_wo_in_tag",
+      "side": "out",
+      "before": [
+        319.2,
+        325.808
+      ],
+      "proposed": [
+        362.4,
+        369.008
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "arv_wo_in_valid",
+      "side": "out",
+      "before": [
+        317.84,
+        318.24
+      ],
+      "proposed": [
+        361.04,
+        361.44
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "ccm_wo_cmd_mode",
+      "side": "out",
+      "before": [
+        316.48,
+        316.88
+      ],
+      "proposed": [
+        359.68,
+        360.08
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "cct_wo_cmd_tag",
+      "side": "out",
+      "before": [
+        308.912,
+        315.52
+      ],
+      "proposed": [
+        352.112,
+        358.72
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "ccv_wo_cmd_v",
+      "side": "out",
+      "before": [
+        307.552,
+        307.952
+      ],
+      "proposed": [
+        350.752,
+        351.152
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "ccw_wo_cmd_words",
+      "side": "out",
+      "before": [
+        303.184,
+        306.592
+      ],
+      "proposed": [
+        346.384,
+        349.792
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "crec_rx_s0",
+      "side": "out",
+      "before": [
+        67.328,
+        181.664
+      ],
+      "proposed": [
+        110.528,
+        224.864
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "fltk",
+      "side": "out",
+      "before": [
+        297.952,
+        298.656
+      ],
+      "proposed": [
+        341.152,
+        341.856
+      ]
+    },
+    {
+      "type": "coll_ftm",
+      "slot": "fltv",
+      "side": "out",
+      "before": [
+        299.616,
+        302.224
+      ],
+      "proposed": [
+        342.816,
+        345.424
+      ]
+    }
+  ],
+  "external_port_width_age_delta": 0
+}

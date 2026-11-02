@@ -1,0 +1,361 @@
+{
+  "status": "NORMAL_SOURCE_PREP_UNPAIRED_NO_BOOT_OR_PHASE_CREDIT",
+  "tree_metrics": {
+    "entry": "relayed",
+    "depth": 4,
+    "own_depth": 4,
+    "n_tree": 37,
+    "n_pad": 12,
+    "max_hop_um": 377.7,
+    "n_clock_taps": 6,
+    "n_reset_consumers": 6,
+    "core_resets": [
+      {
+        "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[0].u_fs",
+        "pin": "rst_n",
+        "pin_um": [
+          102.072,
+          207.40200000000002
+        ],
+        "xy": [
+          102.072,
+          203.04
+        ],
+        "internal_depth": 2,
+        "tap": 7
+      },
+      {
+        "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[0].u_fs",
+        "pin": "rst_n",
+        "pin_um": [
+          89.112,
+          518.358
+        ],
+        "xy": [
+          89.112,
+          522.72
+        ],
+        "internal_depth": 2,
+        "tap": 8
+      },
+      {
+        "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[1].u_fs",
+        "pin": "rst_n",
+        "pin_um": [
+          300.79200000000003,
+          207.40200000000002
+        ],
+        "xy": [
+          300.792,
+          203.04
+        ],
+        "internal_depth": 2,
+        "tap": 9
+      },
+      {
+        "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[1].u_fs",
+        "pin": "rst_n",
+        "pin_um": [
+          227.352,
+          518.358
+        ],
+        "xy": [
+          227.352,
+          522.72
+        ],
+        "internal_depth": 2,
+        "tap": 10
+      },
+      {
+        "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[2].u_fs",
+        "pin": "rst_n",
+        "pin_um": [
+          499.51200000000006,
+          207.40200000000002
+        ],
+        "xy": [
+          499.512,
+          203.04
+        ],
+        "internal_depth": 2,
+        "tap": 11
+      },
+      {
+        "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[2].u_fs",
+        "pin": "rst_n",
+        "pin_um": [
+          572.952,
+          518.358
+        ],
+        "xy": [
+          572.952,
+          522.72
+        ],
+        "internal_depth": 2,
+        "tap": 12
+      },
+      {
+        "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[3].u_fs",
+        "pin": "rst_n",
+        "pin_um": [
+          698.2320000000001,
+          207.40200000000002
+        ],
+        "xy": [
+          698.232,
+          203.04
+        ],
+        "internal_depth": 2,
+        "tap": 13
+      },
+      {
+        "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[3].u_fs",
+        "pin": "rst_n",
+        "pin_um": [
+          711.1920000000001,
+          518.358
+        ],
+        "xy": [
+          711.192,
+          522.72
+        ],
+        "internal_depth": 2,
+        "tap": 14
+      }
+    ]
+  },
+  "release_after_pin": 5,
+  "taps": [
+    [
+      "clk",
+      190.08,
+      181.44000000000003
+    ],
+    [
+      "clk_t1",
+      570.24,
+      181.44000000000003
+    ],
+    [
+      "clk_t2",
+      146.88,
+      544.32
+    ],
+    [
+      "clk_t3",
+      570.24,
+      544.32
+    ],
+    [
+      "clk_t4",
+      198.72,
+      881.28
+    ],
+    [
+      "clk_t5",
+      570.24,
+      943.92
+    ]
+  ],
+  "boundary_reset_selection": [
+    {
+      "instance": "u_bin_io_collective__in_data",
+      "port": "io_collective__in_data",
+      "direction": "in",
+      "proposed_reset": "rst_n_t5"
+    },
+    {
+      "instance": "u_bin_io_collective__in_last",
+      "port": "io_collective__in_last",
+      "direction": "in",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bin_io_collective__in_mode",
+      "port": "io_collective__in_mode",
+      "direction": "in",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bin_io_collective__in_tag",
+      "port": "io_collective__in_tag",
+      "direction": "in",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bin_io_collective__in_valid",
+      "port": "io_collective__in_valid",
+      "direction": "in",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bin_io_collective__cmd_mode",
+      "port": "io_collective__cmd_mode",
+      "direction": "in",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bin_io_collective__cmd_tag",
+      "port": "io_collective__cmd_tag",
+      "direction": "in",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bin_io_collective__cmd_v",
+      "port": "io_collective__cmd_v",
+      "direction": "in",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bin_io_collective__cmd_words",
+      "port": "io_collective__cmd_words",
+      "direction": "in",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bout_io_collective__cmd_free",
+      "port": "io_collective__cmd_free",
+      "direction": "out",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bout_io_collective__fault",
+      "port": "io_collective__fault",
+      "direction": "out",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bout_io_collective__out_data",
+      "port": "io_collective__out_data",
+      "direction": "out",
+      "proposed_reset": "rst_n_t5"
+    },
+    {
+      "instance": "u_bout_io_collective__out_err",
+      "port": "io_collective__out_err",
+      "direction": "out",
+      "proposed_reset": "rst_n_t5"
+    },
+    {
+      "instance": "u_bout_io_collective__out_last",
+      "port": "io_collective__out_last",
+      "direction": "out",
+      "proposed_reset": "rst_n_t5"
+    },
+    {
+      "instance": "u_bout_io_collective__out_rank",
+      "port": "io_collective__out_rank",
+      "direction": "out",
+      "proposed_reset": "rst_n_t5"
+    },
+    {
+      "instance": "u_bout_io_collective__out_valid",
+      "port": "io_collective__out_valid",
+      "direction": "out",
+      "proposed_reset": "rst_n_t5"
+    },
+    {
+      "instance": "u_bout_rec_tx_s1",
+      "port": "rec_tx_s1",
+      "direction": "out",
+      "proposed_reset": "rst_n_t0"
+    },
+    {
+      "instance": "u_bin_rec_rx_s1_i",
+      "port": "rec_rx_s1_i",
+      "direction": "in",
+      "proposed_reset": "rst_n_t0"
+    },
+    {
+      "instance": "u_bout_rec_tx_s2",
+      "port": "rec_tx_s2",
+      "direction": "out",
+      "proposed_reset": "rst_n_t1"
+    },
+    {
+      "instance": "u_bin_rec_rx_s2_i",
+      "port": "rec_rx_s2_i",
+      "direction": "in",
+      "proposed_reset": "rst_n_t0"
+    },
+    {
+      "instance": "u_bout_rec_tx_s0",
+      "port": "rec_tx_s0",
+      "direction": "out",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bin_rec_rx_s0_i",
+      "port": "rec_rx_s0_i",
+      "direction": "in",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bout_shr_r_tx",
+      "port": "shr_r_tx",
+      "direction": "out",
+      "proposed_reset": "rst_n_t2"
+    },
+    {
+      "instance": "u_bin_shr_r_rx_i",
+      "port": "shr_r_rx_i",
+      "direction": "in",
+      "proposed_reset": "rst_n_t0"
+    },
+    {
+      "instance": "u_bout_shr_p_tx",
+      "port": "shr_p_tx",
+      "direction": "out",
+      "proposed_reset": "rst_n_t0"
+    },
+    {
+      "instance": "u_bin_shr_p_rx_i",
+      "port": "shr_p_rx_i",
+      "direction": "in",
+      "proposed_reset": "rst_n_t0"
+    },
+    {
+      "instance": "u_bin_flt_s_i",
+      "port": "flt_s_i",
+      "direction": "in",
+      "proposed_reset": "rst_n_t1"
+    },
+    {
+      "instance": "u_bin_flt_n_i",
+      "port": "flt_n_i",
+      "direction": "in",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bin_flt_u_i",
+      "port": "flt_u_i",
+      "direction": "in",
+      "proposed_reset": "rst_n_t0"
+    },
+    {
+      "instance": "u_bout_flt_o",
+      "port": "flt_o",
+      "direction": "out",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bin_fltv_s_i",
+      "port": "fltv_s_i",
+      "direction": "in",
+      "proposed_reset": "rst_n_t1"
+    },
+    {
+      "instance": "u_bin_fltv_n_i",
+      "port": "fltv_n_i",
+      "direction": "in",
+      "proposed_reset": "rst_n_t4"
+    },
+    {
+      "instance": "u_bout_fltv_o",
+      "port": "fltv_o",
+      "direction": "out",
+      "proposed_reset": "rst_n_t4"
+    }
+  ],
+  "tool_sha256": "411396ca5f6a47360da36cd1e7ef51137ca27ce7b1c63757368c55b89d51ff55"
+}

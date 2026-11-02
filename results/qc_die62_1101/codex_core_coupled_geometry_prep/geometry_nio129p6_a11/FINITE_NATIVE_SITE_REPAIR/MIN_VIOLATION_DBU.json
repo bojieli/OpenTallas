@@ -1,0 +1,37 @@
+{
+  "status": "FINITE_INTEGER_DBU_MIN_VIOLATION_DIAGNOSTIC_NOT_ACCEPTANCE",
+  "scipy_status": 0,
+  "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "has_incumbent": true,
+  "total_min_violation_DBU": 5.999999999999659,
+  "nonzero_rows": 1,
+  "violations": [
+    {
+      "slack_DBU": 5.999999999999659,
+      "kind": "FFedge",
+      "a": "91447",
+      "b": "91543",
+      "a_name": "u_bound.u_cland_fltv_s_i.u_ring.dch[0].u_dsel.y[21]$_DFF_P_",
+      "b_name": "u_bound.u_cland_fltv_s_i.u_ring.s_d[0][21]$_DFFE_PP_",
+      "a_fixed": false,
+      "b_fixed": true,
+      "a_fixed_xy_um": null,
+      "b_fixed_xy_um": [
+        415.584,
+        68.44500000000001
+      ]
+    }
+  ],
+  "geometry_and_reach_budgets_unchanged": true,
+  "native_SITE_DBU": [
+    54,
+    270
+  ],
+  "FF_widths_DBU": [
+    1080,
+    1404
+  ],
+  "row_center_y_DBU": 135,
+  "interpretation": "Any nonzero slack is FAIL. These labeled rows identify frozen context conflicts only; no whole-source impossibility or399/402/149relaxation.",
+  "elapsed_s": 5.203983783721924
+}

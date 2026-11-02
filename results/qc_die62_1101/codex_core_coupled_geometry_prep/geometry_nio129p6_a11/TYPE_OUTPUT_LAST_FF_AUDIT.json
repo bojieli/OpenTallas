@@ -1,0 +1,105 @@
+{
+  "status": "ACTUAL_TYPE_OUTPUT_LAST_FF_SOURCE_PROPOSAL_AUDIT",
+  "ordinary_output_constraint_rows": 3418,
+  "last_FFs": 3418,
+  "nonFF_drivers": [],
+  "missing_typed_pins": [],
+  "center_budget_um": 149,
+  "failed_at_current_FF_sites": 3410,
+  "max_last_FF_to_pin_center_um": 1406.647,
+  "unqualified_infrastructure_top_outputs": [
+    "cland_fstart_out_flt_o",
+    "cland_fstart_out_fltv_o",
+    "cland_fstart_out_io_collective__cmd_free",
+    "cland_fstart_out_io_collective__fault",
+    "cland_fstart_out_io_collective__out_data",
+    "cland_fstart_out_io_collective__out_err",
+    "cland_fstart_out_io_collective__out_last",
+    "cland_fstart_out_io_collective__out_rank",
+    "cland_fstart_out_io_collective__out_valid",
+    "cland_fstart_out_rec_tx_s0",
+    "cland_fstart_out_rec_tx_s1",
+    "cland_fstart_out_rec_tx_s2",
+    "cland_fstart_out_shr_p_tx",
+    "cland_fstart_out_shr_r_tx",
+    "cland_up_fault",
+    "cland_up_ready",
+    "fclk_out_cland_up",
+    "fclk_out_flt_o",
+    "fclk_out_fltv_o",
+    "fclk_out_io_collective__cmd_free",
+    "fclk_out_io_collective__fault",
+    "fclk_out_io_collective__out_data",
+    "fclk_out_io_collective__out_err",
+    "fclk_out_io_collective__out_last",
+    "fclk_out_io_collective__out_rank",
+    "fclk_out_io_collective__out_valid",
+    "fclk_out_rec_tx_s0",
+    "fclk_out_rec_tx_s1",
+    "fclk_out_rec_tx_s2",
+    "fclk_out_shr_p_tx",
+    "fclk_out_shr_r_tx",
+    "rst_o_0",
+    "rst_o_1",
+    "start_o_0",
+    "start_o_1"
+  ],
+  "failure_groups": [
+    [
+      "shr_p_tx",
+      601
+    ],
+    [
+      "shr_r_tx",
+      568
+    ],
+    [
+      "rec_tx_s2",
+      549
+    ],
+    [
+      "rec_tx_s0",
+      549
+    ],
+    [
+      "rec_tx_s1",
+      543
+    ],
+    [
+      "io_collective__out_data",
+      513
+    ],
+    [
+      "fltv_o",
+      71
+    ],
+    [
+      "io_collective__out_rank",
+      4
+    ],
+    [
+      "io_collective__cmd_free",
+      2
+    ],
+    [
+      "io_collective__fault",
+      2
+    ],
+    [
+      "io_collective__out_err",
+      2
+    ],
+    [
+      "io_collective__out_last",
+      2
+    ],
+    [
+      "io_collective__out_valid",
+      2
+    ],
+    [
+      "flt_o",
+      2
+    ]
+  ]
+}

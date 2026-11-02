@@ -1,0 +1,36 @@
+{
+  "status": "ANALYTICAL_MIXED29_MACRO_CARRIER_PRICING_CONDITIONAL_ON_NEW8_VIEW_TARGET",
+  "frame_um": [
+    760.32,
+    1088.64
+  ],
+  "frame_area_um2": 827714.7648000001,
+  "actual_selected_SRAM_count": 21,
+  "uniform_new_NIO_view_count": 8,
+  "SRAM_body_area_um2": 247949.4879360001,
+  "new_uniform8_view_target_body_area_um2": 134369.28,
+  "disjoint_macro_body_union_um2": 382318.7679359998,
+  "disjoint_macro_halo_union_um2": 446337.85017599986,
+  "remaining_native_soft_std_lib_area_um2": 31667.16222,
+  "free_after_macro_body_union_um2": 445395.99686400034,
+  "remaining_soft_std_over_frame_minus_macro_body_union_percent": 7.109889276725903,
+  "remaining_soft_std_over_frame_minus_macro_halo_union_percent": 8.30337679227928,
+  "per_uniform_view_native_std_lib_area_um2": 7320.00564,
+  "per_uniform_view_target_std_percent": 43.58142361111111,
+  "policy": "METHODOLOGY1.14 target40-60% with statedreasonbelow60;12.11c5%/15%targets guidance. No new densitygate/waiver orFTstripe classification. This is a mixed SRAM+real arithmetic-fold macro carrier.",
+  "low_fill_reason": "Macro/FF and first/last capture reach, eight independent clock/reset contracts and per-bus parent frontage force geometry/channels. The target has physically meaningful21SRAM+8same arithmetic views; full actualFF site/source closure remains held.",
+  "limits": [
+    "The eight129.6 rectangles are proposed new-view targets, not actualqualifiedLEF/LIB",
+    "Actual native remainingsoftarea excludes proposedqv copy/newreset/sourceinfra deltas; these require new native source/count join",
+    "No new physicalGEN/P&R, globalboot/date/calendar/adoption orPPA credit"
+  ],
+  "source_site_search_box_um": [
+    0,
+    0,
+    760.32,
+    1084.32
+  ],
+  "metadata_correction": "Earlier geometry constructors carried stale inherited outline_area/free-fill fields from1296um target. This explicit new analytical record recomputes current1088.64 partitionframe; source site search conservatively excludes top4.32um. Historical failures and source site inputs retained.",
+  "macro_body_plus_remaining_soft_area_over_frame_percent": 50.01553044133879,
+  "all_primitive_std_plus_selected_SRAM_body_over_frame_percent": 40.856670637947765
+}
