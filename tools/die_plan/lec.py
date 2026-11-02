@@ -6412,9 +6412,16 @@ def _provenance(kit=None):
                  and rec["files"]["lec.py"] == hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
         if not valid:
             raise ValueError("source, input or running-tool identity mismatch")
-        return dict(source, source="validated kit PROVENANCE.json")
+        return dict(source, source="validated kit PROVENANCE.json", tool_update=rec.get("tool_update"))
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
-        return dict(commit=None, dirty=None, source=f"kit provenance invalid: {type(e).__name__}: {e}")
+        update = None
+        try:
+            candidate = json.loads((Path(kit) / "LEC_TOOL.json").read_text())
+            if candidate.get("sha256") == hashlib.sha256(Path(__file__).read_bytes()).hexdigest():
+                update = candidate
+        except (OSError, ValueError, TypeError, AttributeError):
+            pass
+        return dict(commit=None, dirty=None, source=f"kit provenance invalid: {type(e).__name__}: {e}", tool_update=update)
 
 
 PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE",
