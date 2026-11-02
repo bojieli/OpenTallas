@@ -55,6 +55,22 @@ for tag,root in [('old',a.old),('new',a.new)]:
  corecalls[tag]=instance((root/'qfd_qc_tt_ctlm_part_bound.sv').read_text(),'qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1','u_core')
 if corecalls['old']!=corecalls['new']:raise ValueError('Actual parent/core callsite port ABI differs')
 if corecalls['new']['ports']['ck_core']!='clk' or corecalls['new']['ports']['rst_n']!='rst_n':raise ValueError('Unexpected selected core clock/reset source')
+bound_traces={}
+for tag,root in [('old',a.old),('new',a.new)]:
+ text=(root/'qfd_qc_tt_ctlm_part_bound.sv').read_text()
+ if not re.search(r'wire\s+rst_n\s*=\s*rst_n_t0\s*;',text):raise ValueError('Core raw reset alias differs')
+ producers={}
+ for m in re.finditer(r'ot_dp_rrelay\s+(\w+)\s*\((.*?)\);',text):
+  ports0=argmap(m[2]);producers[ports0['q']]=dict(instance=m[1],ports=ports0,text=m[0])
+ trace=[];net='rst_n_t0';seen=set()
+ while net in producers:
+  if net in seen:raise ValueError('Bound reset relay loop')
+  seen.add(net);r=producers[net]
+  if r['ports']['clk']!='clk':raise ValueError('Bound reset clock differs')
+  trace.append(dict(net=net,**r));net=r['ports']['d']
+ if net!='arst_n' or len(trace)!=4:raise ValueError('Actual bound reset is not the observed4relays from arst_n')
+ bound_traces[tag]=trace
+if bound_traces['old']!=bound_traces['new']:raise ValueError('Actual bound reset path changed')
 # Source wrapper resolves MUT0 to these exact bit expressions; source body is included.
 resolved_ctl=dict(ctlcall['ports']);resolved_ctl.update(all_copies_authenticated='auth[81]&&!auth[82]',installed_epoch='auth[15:0]',start_epoch='start[15:0]',retire_user='retire[2:1]')
 def corebits(expr):
@@ -82,5 +98,5 @@ for n,nn in sorted(trans['proposed_correspondence'].items()):
 # Preserve actual reset/enable statements verbatim, without treating source comments as assumptions.
 control_lines=rows['qfd_dv_typed_witness_control'].splitlines();context='\n'.join(l for l in control_lines if any(t in l for t in ('reg rs1,rs2','rs1<=','rli(','rlr(','rlo(','f_start_stage<=','f_start_epoch<=','if(!rl_ins)','if(!rl_run)','if(!rl_out)')))
 (a.out/'selected_reset_enable_context.txt').write_text(context+'\n')
-subject=dict(status='PREP_EXACT_COMPOSITIONAL_STATE_SUBJECT_ONLY',module_bodies=body_files,resolved_control_parameters=resolved,resolved_wrapper_parameters=dict(MUT=0),derived_NC=6,actual_wrapper_to_control_callsite=ctlcall,actual_core_to_wrapper_callsite=newctx['actual_wtn_callsite'],actual_parent_to_core_callsite=corecalls['new'],actual_selected_control_inputs=inputs,old_new_callsite_input_identity=True,actual_clock_alias=newctx['clock_alias'],actual_reset_trace=newctx['reset_trace'],reset_trace_terminal=newctx['reset_trace_terminal'],upstream_registered_reset_edges=6,internal_reset_context='same source rs1/rs2 and rli/rlr/rlo; actual context included, no protocol/initial assumption added',capture_abi=captures,source_event_declared_netff=13,source_event_actual_netff=12,cycles_added=0,comparison_policy='Unconditional actual23 state relation; retain invalid-cycle comparison and all reset transitions. None/None is not proof.',native_base_proved=False,native_step_relation_accepted=False,physical_release=False,full_source_credit=False)
+subject=dict(status='PREP_EXACT_COMPOSITIONAL_STATE_SUBJECT_ONLY',module_bodies=body_files,resolved_control_parameters=resolved,resolved_wrapper_parameters=dict(MUT=0),derived_NC=6,actual_wrapper_to_control_callsite=ctlcall,actual_core_to_wrapper_callsite=newctx['actual_wtn_callsite'],actual_parent_to_core_callsite=corecalls['new'],actual_selected_control_inputs=inputs,old_new_callsite_input_identity=True,actual_clock_alias=newctx['clock_alias'],actual_reset_trace=newctx['reset_trace'],reset_trace_terminal=newctx['reset_trace_terminal'],upstream_registered_reset_edges=6,actual_bound_reset_alias='rst_n= rst_n_t0',actual_bound_reset_trace=bound_traces['new'],actual_root_reset_port='arst_n',total_synchronous_reset_relays_before_control=10,internal_reset_context='same source rs1/rs2 and rli/rlr/rlo; actual context included, no protocol/initial assumption added',capture_abi=captures,source_event_declared_netff=13,source_event_actual_netff=12,cycles_added=0,comparison_policy='Unconditional actual23 state relation; retain invalid-cycle comparison and all reset transitions. None/None is not proof.',native_base_proved=False,native_step_relation_accepted=False,physical_release=False,full_source_credit=False)
 (a.out/'subject.json').write_text(json.dumps(subject,indent=1)+'\n');print('EXACT_STATE_SUBJECT moduleBODY+params+allcallsiteinputs+6resetedges+23captureABI; no proof')

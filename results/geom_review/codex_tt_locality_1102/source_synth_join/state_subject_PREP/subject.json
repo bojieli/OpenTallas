@@ -543,6 +543,51 @@
  ],
  "reset_trace_terminal": "rst_n",
  "upstream_registered_reset_edges": 6,
+ "actual_bound_reset_alias": "rst_n= rst_n_t0",
+ "actual_bound_reset_trace": [
+  {
+   "net": "rst_n_t0",
+   "instance": "u_rrl_87",
+   "ports": {
+    "clk": "clk",
+    "d": "rst_rl_85",
+    "q": "rst_n_t0"
+   },
+   "text": "ot_dp_rrelay u_rrl_87 (.clk(clk), .d(rst_rl_85), .q(rst_n_t0));"
+  },
+  {
+   "net": "rst_rl_85",
+   "instance": "u_rrl_85",
+   "ports": {
+    "clk": "clk",
+    "d": "rst_rl_84",
+    "q": "rst_rl_85"
+   },
+   "text": "ot_dp_rrelay u_rrl_85 (.clk(clk), .d(rst_rl_84), .q(rst_rl_85));"
+  },
+  {
+   "net": "rst_rl_84",
+   "instance": "u_rrl_84",
+   "ports": {
+    "clk": "clk",
+    "d": "rst_root_n",
+    "q": "rst_rl_84"
+   },
+   "text": "ot_dp_rrelay u_rrl_84 (.clk(clk), .d(rst_root_n), .q(rst_rl_84));"
+  },
+  {
+   "net": "rst_root_n",
+   "instance": "u_rst_in",
+   "ports": {
+    "clk": "clk",
+    "d": "arst_n",
+    "q": "rst_root_n"
+   },
+   "text": "ot_dp_rrelay u_rst_in (.clk(clk), .d(arst_n), .q(rst_root_n));"
+  }
+ ],
+ "actual_root_reset_port": "arst_n",
+ "total_synchronous_reset_relays_before_control": 10,
  "internal_reset_context": "same source rs1/rs2 and rli/rlr/rlo; actual context included, no protocol/initial assumption added",
  "capture_abi": [
   {
