@@ -1,8 +1,10 @@
 {
   "status": "SOURCE_PREP_AND_USED_MASK_CODE_JOIN_ONLY_NO_EXECUTION",
   "used_code_bytes_compared": 720896,
+  "actual_padded_code_bytes_observed_zero": 327680,
   "contexts": [
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 0,
       "i_gbase": 0,
@@ -30,6 +32,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 1,
       "i_gbase": 4,
@@ -57,6 +60,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 2,
       "i_gbase": 8,
@@ -84,6 +88,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 3,
       "i_gbase": 12,
@@ -111,6 +116,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 4,
       "i_gbase": 16,
@@ -138,6 +144,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 5,
       "i_gbase": 20,
@@ -165,6 +172,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 6,
       "i_gbase": 24,
@@ -192,6 +200,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 7,
       "i_gbase": 28,
@@ -219,6 +228,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 8,
       "i_gbase": 32,
@@ -246,6 +256,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 9,
       "i_gbase": 36,
@@ -273,6 +284,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 10,
       "i_gbase": 40,
@@ -300,6 +312,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 11,
       "i_gbase": 44,
@@ -327,6 +340,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 12,
       "i_gbase": 48,
@@ -354,6 +368,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 13,
       "i_gbase": 52,
@@ -381,6 +396,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 14,
       "i_gbase": 56,
@@ -408,6 +424,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 15,
       "i_gbase": 60,
@@ -435,6 +452,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 16,
       "i_gbase": 64,
@@ -462,6 +480,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 17,
       "i_gbase": 68,
@@ -489,6 +508,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 18,
       "i_gbase": 72,
@@ -516,6 +536,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 19,
       "i_gbase": 76,
@@ -543,6 +564,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 20,
       "i_gbase": 80,
@@ -570,6 +592,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 21,
       "i_gbase": 84,
@@ -597,6 +620,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 22,
       "i_gbase": 88,
@@ -624,6 +648,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 23,
       "i_gbase": 92,
@@ -651,6 +676,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 24,
       "i_gbase": 96,
@@ -678,6 +704,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 25,
       "i_gbase": 100,
@@ -705,6 +732,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 26,
       "i_gbase": 104,
@@ -732,6 +760,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 27,
       "i_gbase": 108,
@@ -759,6 +788,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 28,
       "i_gbase": 112,
@@ -786,6 +816,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 29,
       "i_gbase": 116,
@@ -813,6 +844,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 30,
       "i_gbase": 120,
@@ -840,6 +872,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 31,
       "i_gbase": 124,
@@ -867,6 +900,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 32,
       "i_gbase": 128,
@@ -894,6 +928,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 33,
       "i_gbase": 132,
@@ -921,6 +956,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 34,
       "i_gbase": 136,
@@ -948,6 +984,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 35,
       "i_gbase": 140,
@@ -975,6 +1012,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 36,
       "i_gbase": 144,
@@ -1002,6 +1040,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 37,
       "i_gbase": 148,
@@ -1029,6 +1068,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 38,
       "i_gbase": 152,
@@ -1056,6 +1096,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 39,
       "i_gbase": 156,
@@ -1083,6 +1124,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 40,
       "i_gbase": 160,
@@ -1110,6 +1152,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 41,
       "i_gbase": 164,
@@ -1137,6 +1180,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 42,
       "i_gbase": 168,
@@ -1164,6 +1208,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 43,
       "i_gbase": 172,
@@ -1191,6 +1236,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 44,
       "i_gbase": 176,
@@ -1218,6 +1264,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 45,
       "i_gbase": 180,
@@ -1245,6 +1292,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 46,
       "i_gbase": 184,
@@ -1272,6 +1320,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 47,
       "i_gbase": 188,
@@ -1299,6 +1348,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 48,
       "i_gbase": 192,
@@ -1326,6 +1376,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 49,
       "i_gbase": 196,
@@ -1353,6 +1404,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 50,
       "i_gbase": 200,
@@ -1380,6 +1432,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 51,
       "i_gbase": 204,
@@ -1407,6 +1460,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 52,
       "i_gbase": 208,
@@ -1434,6 +1488,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 53,
       "i_gbase": 212,
@@ -1461,6 +1516,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 54,
       "i_gbase": 216,
@@ -1488,6 +1544,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 55,
       "i_gbase": 220,
@@ -1515,6 +1572,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 56,
       "i_gbase": 224,
@@ -1542,6 +1600,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 57,
       "i_gbase": 228,
@@ -1569,6 +1628,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 58,
       "i_gbase": 232,
@@ -1596,6 +1656,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 59,
       "i_gbase": 236,
@@ -1623,6 +1684,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 60,
       "i_gbase": 240,
@@ -1650,6 +1712,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 61,
       "i_gbase": 244,
@@ -1677,6 +1740,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 62,
       "i_gbase": 248,
@@ -1704,6 +1768,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 63,
       "i_gbase": 252,
@@ -1731,6 +1796,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 64,
       "i_gbase": 256,
@@ -1758,6 +1824,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 65,
       "i_gbase": 260,
@@ -1785,6 +1852,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 66,
       "i_gbase": 264,
@@ -1812,6 +1880,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 67,
       "i_gbase": 268,
@@ -1839,6 +1908,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 68,
       "i_gbase": 272,
@@ -1866,6 +1936,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 69,
       "i_gbase": 276,
@@ -1893,6 +1964,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 70,
       "i_gbase": 280,
@@ -1920,6 +1992,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 71,
       "i_gbase": 284,
@@ -1947,6 +2020,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 72,
       "i_gbase": 288,
@@ -1974,6 +2048,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 73,
       "i_gbase": 292,
@@ -2001,6 +2076,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 74,
       "i_gbase": 296,
@@ -2028,6 +2104,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 75,
       "i_gbase": 300,
@@ -2055,6 +2132,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 76,
       "i_gbase": 304,
@@ -2082,6 +2160,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 77,
       "i_gbase": 308,
@@ -2109,6 +2188,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 78,
       "i_gbase": 312,
@@ -2136,6 +2216,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 79,
       "i_gbase": 316,
@@ -2163,6 +2244,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 80,
       "i_gbase": 320,
@@ -2190,6 +2272,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 81,
       "i_gbase": 324,
@@ -2217,6 +2300,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 82,
       "i_gbase": 328,
@@ -2244,6 +2328,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 83,
       "i_gbase": 332,
@@ -2271,6 +2356,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 84,
       "i_gbase": 336,
@@ -2298,6 +2384,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 85,
       "i_gbase": 340,
@@ -2325,6 +2412,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 86,
       "i_gbase": 344,
@@ -2352,6 +2440,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 87,
       "i_gbase": 348,
@@ -2379,6 +2468,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 88,
       "i_gbase": 352,
@@ -2406,6 +2496,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 89,
       "i_gbase": 356,
@@ -2433,6 +2524,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 90,
       "i_gbase": 360,
@@ -2460,6 +2552,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 91,
       "i_gbase": 364,
@@ -2487,6 +2580,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 92,
       "i_gbase": 368,
@@ -2514,6 +2608,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 93,
       "i_gbase": 372,
@@ -2541,6 +2636,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 94,
       "i_gbase": 376,
@@ -2568,6 +2664,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 95,
       "i_gbase": 380,
@@ -2595,6 +2692,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 96,
       "i_gbase": 384,
@@ -2622,6 +2720,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 97,
       "i_gbase": 388,
@@ -2649,6 +2748,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 98,
       "i_gbase": 392,
@@ -2676,6 +2776,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 99,
       "i_gbase": 396,
@@ -2703,6 +2804,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 100,
       "i_gbase": 400,
@@ -2730,6 +2832,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 101,
       "i_gbase": 404,
@@ -2757,6 +2860,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 102,
       "i_gbase": 408,
@@ -2784,6 +2888,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 103,
       "i_gbase": 412,
@@ -2811,6 +2916,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 104,
       "i_gbase": 416,
@@ -2838,6 +2944,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 105,
       "i_gbase": 420,
@@ -2865,6 +2972,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 106,
       "i_gbase": 424,
@@ -2892,6 +3000,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 107,
       "i_gbase": 428,
@@ -2919,6 +3028,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 108,
       "i_gbase": 432,
@@ -2946,6 +3056,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 109,
       "i_gbase": 436,
@@ -2973,6 +3084,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 110,
       "i_gbase": 440,
@@ -3000,6 +3112,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 111,
       "i_gbase": 444,
@@ -3027,6 +3140,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 112,
       "i_gbase": 448,
@@ -3054,6 +3168,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 113,
       "i_gbase": 452,
@@ -3081,6 +3196,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 114,
       "i_gbase": 456,
@@ -3108,6 +3224,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 115,
       "i_gbase": 460,
@@ -3135,6 +3252,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 116,
       "i_gbase": 464,
@@ -3162,6 +3280,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 117,
       "i_gbase": 468,
@@ -3189,6 +3308,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 118,
       "i_gbase": 472,
@@ -3216,6 +3336,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 119,
       "i_gbase": 476,
@@ -3243,6 +3364,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 120,
       "i_gbase": 480,
@@ -3270,6 +3392,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 121,
       "i_gbase": 484,
@@ -3297,6 +3420,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 122,
       "i_gbase": 488,
@@ -3324,6 +3448,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 123,
       "i_gbase": 492,
@@ -3351,6 +3476,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 124,
       "i_gbase": 496,
@@ -3378,6 +3504,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 125,
       "i_gbase": 500,
@@ -3405,6 +3532,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 126,
       "i_gbase": 504,
@@ -3432,6 +3560,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 0,
       "tile": 127,
       "i_gbase": 508,
@@ -3459,6 +3588,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 512,
       "i_gbase": 2048,
@@ -3486,6 +3616,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 513,
       "i_gbase": 2052,
@@ -3513,6 +3644,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 514,
       "i_gbase": 2056,
@@ -3540,6 +3672,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 515,
       "i_gbase": 2060,
@@ -3567,6 +3700,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 516,
       "i_gbase": 2064,
@@ -3594,6 +3728,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 517,
       "i_gbase": 2068,
@@ -3621,6 +3756,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 518,
       "i_gbase": 2072,
@@ -3648,6 +3784,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 519,
       "i_gbase": 2076,
@@ -3675,6 +3812,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 520,
       "i_gbase": 2080,
@@ -3702,6 +3840,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 521,
       "i_gbase": 2084,
@@ -3729,6 +3868,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 522,
       "i_gbase": 2088,
@@ -3756,6 +3896,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 523,
       "i_gbase": 2092,
@@ -3783,6 +3924,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 524,
       "i_gbase": 2096,
@@ -3810,6 +3952,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 525,
       "i_gbase": 2100,
@@ -3837,6 +3980,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 526,
       "i_gbase": 2104,
@@ -3864,6 +4008,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 527,
       "i_gbase": 2108,
@@ -3891,6 +4036,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 528,
       "i_gbase": 2112,
@@ -3918,6 +4064,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 529,
       "i_gbase": 2116,
@@ -3945,6 +4092,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 530,
       "i_gbase": 2120,
@@ -3972,6 +4120,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 531,
       "i_gbase": 2124,
@@ -3999,6 +4148,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 532,
       "i_gbase": 2128,
@@ -4026,6 +4176,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 533,
       "i_gbase": 2132,
@@ -4053,6 +4204,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 534,
       "i_gbase": 2136,
@@ -4080,6 +4232,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 535,
       "i_gbase": 2140,
@@ -4107,6 +4260,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 536,
       "i_gbase": 2144,
@@ -4134,6 +4288,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 537,
       "i_gbase": 2148,
@@ -4161,6 +4316,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 538,
       "i_gbase": 2152,
@@ -4188,6 +4344,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 539,
       "i_gbase": 2156,
@@ -4215,6 +4372,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 540,
       "i_gbase": 2160,
@@ -4242,6 +4400,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 541,
       "i_gbase": 2164,
@@ -4269,6 +4428,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 542,
       "i_gbase": 2168,
@@ -4296,6 +4456,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 543,
       "i_gbase": 2172,
@@ -4323,6 +4484,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 544,
       "i_gbase": 2176,
@@ -4350,6 +4512,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 545,
       "i_gbase": 2180,
@@ -4377,6 +4540,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 546,
       "i_gbase": 2184,
@@ -4404,6 +4568,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 547,
       "i_gbase": 2188,
@@ -4431,6 +4596,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 548,
       "i_gbase": 2192,
@@ -4458,6 +4624,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 549,
       "i_gbase": 2196,
@@ -4485,6 +4652,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 550,
       "i_gbase": 2200,
@@ -4512,6 +4680,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 551,
       "i_gbase": 2204,
@@ -4539,6 +4708,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 552,
       "i_gbase": 2208,
@@ -4566,6 +4736,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 553,
       "i_gbase": 2212,
@@ -4593,6 +4764,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 554,
       "i_gbase": 2216,
@@ -4620,6 +4792,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 555,
       "i_gbase": 2220,
@@ -4647,6 +4820,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 556,
       "i_gbase": 2224,
@@ -4674,6 +4848,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 557,
       "i_gbase": 2228,
@@ -4701,6 +4876,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 558,
       "i_gbase": 2232,
@@ -4728,6 +4904,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 559,
       "i_gbase": 2236,
@@ -4755,6 +4932,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 560,
       "i_gbase": 2240,
@@ -4782,6 +4960,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 561,
       "i_gbase": 2244,
@@ -4809,6 +4988,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 562,
       "i_gbase": 2248,
@@ -4836,6 +5016,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 563,
       "i_gbase": 2252,
@@ -4863,6 +5044,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 564,
       "i_gbase": 2256,
@@ -4890,6 +5072,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 565,
       "i_gbase": 2260,
@@ -4917,6 +5100,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 566,
       "i_gbase": 2264,
@@ -4944,6 +5128,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 567,
       "i_gbase": 2268,
@@ -4971,6 +5156,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 568,
       "i_gbase": 2272,
@@ -4998,6 +5184,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 569,
       "i_gbase": 2276,
@@ -5025,6 +5212,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 570,
       "i_gbase": 2280,
@@ -5052,6 +5240,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 571,
       "i_gbase": 2284,
@@ -5079,6 +5268,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 572,
       "i_gbase": 2288,
@@ -5106,6 +5296,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 573,
       "i_gbase": 2292,
@@ -5133,6 +5324,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 574,
       "i_gbase": 2296,
@@ -5160,6 +5352,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 575,
       "i_gbase": 2300,
@@ -5187,6 +5380,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 576,
       "i_gbase": 2304,
@@ -5214,6 +5408,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 577,
       "i_gbase": 2308,
@@ -5241,6 +5436,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 578,
       "i_gbase": 2312,
@@ -5268,6 +5464,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 579,
       "i_gbase": 2316,
@@ -5295,6 +5492,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 580,
       "i_gbase": 2320,
@@ -5322,6 +5520,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 581,
       "i_gbase": 2324,
@@ -5349,6 +5548,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 582,
       "i_gbase": 2328,
@@ -5376,6 +5576,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 583,
       "i_gbase": 2332,
@@ -5403,6 +5604,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 584,
       "i_gbase": 2336,
@@ -5430,6 +5632,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 585,
       "i_gbase": 2340,
@@ -5457,6 +5660,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 586,
       "i_gbase": 2344,
@@ -5484,6 +5688,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 587,
       "i_gbase": 2348,
@@ -5511,6 +5716,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 588,
       "i_gbase": 2352,
@@ -5538,6 +5744,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 589,
       "i_gbase": 2356,
@@ -5565,6 +5772,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 590,
       "i_gbase": 2360,
@@ -5592,6 +5800,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 591,
       "i_gbase": 2364,
@@ -5619,6 +5828,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 592,
       "i_gbase": 2368,
@@ -5646,6 +5856,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 593,
       "i_gbase": 2372,
@@ -5673,6 +5884,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 594,
       "i_gbase": 2376,
@@ -5700,6 +5912,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 595,
       "i_gbase": 2380,
@@ -5727,6 +5940,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 596,
       "i_gbase": 2384,
@@ -5754,6 +5968,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 597,
       "i_gbase": 2388,
@@ -5781,6 +5996,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 598,
       "i_gbase": 2392,
@@ -5808,6 +6024,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 599,
       "i_gbase": 2396,
@@ -5835,6 +6052,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 600,
       "i_gbase": 2400,
@@ -5862,6 +6080,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 601,
       "i_gbase": 2404,
@@ -5889,6 +6108,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 602,
       "i_gbase": 2408,
@@ -5916,6 +6136,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 603,
       "i_gbase": 2412,
@@ -5943,6 +6164,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 604,
       "i_gbase": 2416,
@@ -5970,6 +6192,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 605,
       "i_gbase": 2420,
@@ -5997,6 +6220,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 606,
       "i_gbase": 2424,
@@ -6024,6 +6248,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 607,
       "i_gbase": 2428,
@@ -6051,6 +6276,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 608,
       "i_gbase": 2432,
@@ -6078,6 +6304,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 609,
       "i_gbase": 2436,
@@ -6105,6 +6332,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 610,
       "i_gbase": 2440,
@@ -6132,6 +6360,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 611,
       "i_gbase": 2444,
@@ -6159,6 +6388,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 612,
       "i_gbase": 2448,
@@ -6186,6 +6416,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 613,
       "i_gbase": 2452,
@@ -6213,6 +6444,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 614,
       "i_gbase": 2456,
@@ -6240,6 +6472,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 615,
       "i_gbase": 2460,
@@ -6267,6 +6500,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 616,
       "i_gbase": 2464,
@@ -6294,6 +6528,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 617,
       "i_gbase": 2468,
@@ -6321,6 +6556,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 618,
       "i_gbase": 2472,
@@ -6348,6 +6584,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 619,
       "i_gbase": 2476,
@@ -6375,6 +6612,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 620,
       "i_gbase": 2480,
@@ -6402,6 +6640,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 621,
       "i_gbase": 2484,
@@ -6429,6 +6668,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 622,
       "i_gbase": 2488,
@@ -6456,6 +6696,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 623,
       "i_gbase": 2492,
@@ -6483,6 +6724,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 624,
       "i_gbase": 2496,
@@ -6510,6 +6752,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 625,
       "i_gbase": 2500,
@@ -6537,6 +6780,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 626,
       "i_gbase": 2504,
@@ -6564,6 +6808,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 627,
       "i_gbase": 2508,
@@ -6591,6 +6836,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 628,
       "i_gbase": 2512,
@@ -6618,6 +6864,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 629,
       "i_gbase": 2516,
@@ -6645,6 +6892,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 630,
       "i_gbase": 2520,
@@ -6672,6 +6920,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 631,
       "i_gbase": 2524,
@@ -6699,6 +6948,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 632,
       "i_gbase": 2528,
@@ -6726,6 +6976,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 633,
       "i_gbase": 2532,
@@ -6753,6 +7004,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 634,
       "i_gbase": 2536,
@@ -6780,6 +7032,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 635,
       "i_gbase": 2540,
@@ -6807,6 +7060,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 636,
       "i_gbase": 2544,
@@ -6834,6 +7088,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 637,
       "i_gbase": 2548,
@@ -6861,6 +7116,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 638,
       "i_gbase": 2552,
@@ -6888,6 +7144,7 @@
       ]
     },
     {
+      "native_fetch_words": 64,
       "block": 148,
       "tile": 639,
       "i_gbase": 2556,
@@ -6926,12 +7183,14 @@
     "manifest_sha256": "500248c4b3ab8af5fe52b37fc78570cad4b4e5b5df89c79dbe6e8d6f47c301c7"
   },
   "counts": {
-    "count_scope": "bounded publicPART1 one-round operations for source rounds0/24, not replayall4nativeIBs; full4IBexecutionwould1600readspercontext",
-    "actual_ROMconverter_BF16_response_payload_bytes": 1441792,
-    "minimum_transcript_bytes_with16byte_metadata_perword": 1622016,
-    "PART1_code_reads": 11264,
-    "raw_TG4_vectors": 11264,
-    "raw_TG4_scalar_prefix_values": 180224,
+    "count_scope": "actual IL8 one-round reads64 forbothcontexts; referenceusefulsubset64block0/24tail, notnativefetchcount; full4IBwould1600readspercontext",
+    "actual_ROMconverter_BF16_response_payload_bytes": 2097152,
+    "minimum_transcript_bytes_with16byte_metadata_perword": 2359296,
+    "PART1_code_reads": 16384,
+    "raw_TG4_vectors": 16384,
+    "raw_TG4_scalar_prefix_values": 262144,
+    "reference_required_TG4_vectors": 11264,
+    "reference_required_TG4_scalar_prefix_values": 180224,
     "logical_L6_stream_contexts": 16,
     "logical_L6_vectors": 704,
     "logical_L6_scalar_prefix_values": 11264
@@ -6941,7 +7200,7 @@
     "rom_producer": "unchanged ot_qwen_romleaf_logic with original req_m\u2192actual ot_rom_4096x266_m8\u2192rd[255:0] wiring for each column",
     "macro_binding": "actual public macro VIAMAP parameter may use fixed component filenames in distinct immutable fresh-process contexts; full genuine source path/tile/column/hash recorded; INSTANCE remains empty. This is generic macro content-context ABI, NOT selected ROM_TILE fullleaf identity retarget or wrapper proof",
     "ROM_latency": "wromrequest publicationM\u2192preseamrelayM+1\u2192nativeleafMPRM+2\u2192actualmacroM+3\u2192capM+4\u2192expandAM+5\u2192expandBM+6\u2192groupgM+7\u2192relayrM+8\u2192RQR M+9; MEM_EXTRA8 means returnM+1+8. Exact REGROOT3/RPH3/ROM_ARELAY2/CAP2=1/CAPX2/RQR1; noL1extra",
-    "X_latency": "original public x_addr/x_re required; request/address response must preserve one memoryedge+MEM_EXTRA8; BF16RNEH4096 expanded low16zero; nofittedXLoffset",
+    "X_latency": "selected NX0 gives NPX0: no x_re/x_addr generation. Keep NX0 and sourcejoin context c=(i_gbase+g)%512,k from realwromaddress, Hindex8*c+k; one registeredHread+actualdelay8 gives x_q returnM+9; BF16RNEH expanded low16zero. No invented Xrequest or fittedXLoffset",
     "transcript": "must record contextid/requestordinal/wromaddr/launchcount/returncount1024bitBF16response; consumer rejects wrong request/address/date/context. Replay actual executed ROMproducer data only, never substitute expectedoracle code/weights",
     "clocks": "functional single-region clock cut only where exactselected39literal clk binding proves it; no physicalphase/START claim"
   },

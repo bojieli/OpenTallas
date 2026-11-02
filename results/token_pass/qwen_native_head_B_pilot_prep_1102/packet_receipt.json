@@ -1,0 +1,46 @@
+{
+  "status": "IMMUTABLE_PREP_NOT_RUN",
+  "packet_path": "/home/ubuntu/coord/tmp/codex-native-head-B-pilot-packet1",
+  "manifest_sha256": "b9b915112ac5752994a458fdce56d2cc33d2f3363dc9fe5bde9c393a71ba84d6",
+  "guarded_files": 55,
+  "full_genuine_mask_files": 4,
+  "mask_source_bytes": 1091584,
+  "request_counts_per_context": [
+    64,
+    64
+  ],
+  "raw_vectors_per_context": [
+    64,
+    64
+  ],
+  "reference_useful_vectors": [
+    64,
+    24
+  ],
+  "genuine_padding_vectors": [
+    0,
+    40
+  ],
+  "scope": "coupledpublicROM/PART1 withauthenticatedactualwiretranscript; noselectedROM_TILEretarget/offlinereplay/full512/physicalphaseclaim",
+  "resource_proposal": {
+    "status": "PREP_NOT_RUN_REVIEW_REQUIRED",
+    "resources": {
+      "host": "Intel1_only",
+      "kind": "normal",
+      "memory_GB": 4,
+      "threads": 1,
+      "disk_GB": 2
+    },
+    "build": "oneVL5.050/O0/g++ serialbuild;freshimmutableprocesses tile0/639;sameELFwrongAddress/wrongCycle controls",
+    "basis": "ActualselectedTG4 predecessor generation2449860KB/make1243112KB. Thiscut retainsoneactual64MACPART1 plus2actualROMmacros/converters; oldfullleaf had10ROMs+outerfaces.4GB proposed against measuredpredecessor, not newpilot measurement.",
+    "source_files": 31,
+    "source_bytes": 398131,
+    "contexts": 2,
+    "requests": 128,
+    "ROM_BF16_response_bytes": 16384,
+    "raw_vectors": 128,
+    "reference_useful_vectors": 88,
+    "genuine_padding_vectors": 40,
+    "scope": "coupledpublicROM/PART1 pilot with authenticated consumed-wiretranscript; no selectedROM_TILEwrapper,offline-transcriptreplay,full512execution or productionphaseclaim"
+  }
+}

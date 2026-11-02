@@ -23,8 +23,9 @@ Selected REGROOT3/RPH3 uses one pre-seam request relay, native MPR, actual macro
 read, capture, two expansion rungs, group g, return r, and RQR. Request publication
 M returns BF16 atM+9, exactly MEM_EXTRA8's M+1+8. No extra L1 is present. The bare
 unmodified public PART1 consumes WCONV1 1024-bit BF16 returns. Its i_gbase is an
-existing strap and must stay constant through a fresh process. Its X return must
-preserve public x_re/x_addr and one memory edge plus MEM_EXTRA8, using BF16-RNE H.
+existing strap and must stay constant through a fresh process. Selected NX0 disables public x_re/x_addr generation. Its X return must keep
+that configuration and use the context group/K mapping at public x_q, with
+one registered H read plus MEM_EXTRA8, using BF16-RNE H.
 A future transcript must carry context, ordinal, address, launch/return counts
 and actual producer response; executor-side guards must reject mismatches.
 Expected oracle values cannot replace actual observed ROMproducer responses.
@@ -38,9 +39,12 @@ Whole-file SHA values are currently manifest declarations; actual pilot masks
 must be fully hashed before execution. The local extraction artifact is
 `/home/ubuntu/coord/tmp/codex-native-head-full512-source/genuine_mask_rows_metadata.json`.
 
-Bounded one-round public PART1 operations need11,264 code reads/rawTG4 vectors
-and180,224 raw scalar prefixes, then actual L6 composes16 stream contexts and704
-vectors. These counts describe rounds0/24 at the public execution boundary, not
+Actual IL8 one-round PART1 operations require16,384 code reads/rawTG4 vectors
+and262,144 raw scalar prefixes across256contexts:64fetches for each context.
+The11,264vectors/180,224scalars are the useful reference subset. Tail padding
+adds327,680 genuine code bytes, observed zero in the same physical-row excerpt.
+The unchanged 176row reference still needs16 L6 stream contexts and704vectors;
+actual collector suppression of padding is a separate source-join question. These counts describe rounds0/24 at the public execution boundary, not
 all four native GME descriptors. Replaying the original8/8/8/1 instructions would
 instead require1600 reads per context. Public one-round descriptors must retain
 proper global q validity: block0 one-round nout768, tail last-round nout560;
