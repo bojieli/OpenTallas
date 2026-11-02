@@ -6,3 +6,5 @@ Native gate passed; propose the coherent canonical QC source/calendar correction
 4. Re-run numerical source/current-token checks as their vehicles become ready. Existing bring-up jobs may finish on their frozen inputs; their old-source outcomes do not qualify the corrected numerical mission. ROOT aggregation/RSTD, known HEAD receiver/programme gaps and full-die timing remain separate open gates.
 
 The actual selected CALR/native-pair join and source tests pass; native1536-word arithmetic plusOLD_CALLER/SCALE/USER controls pass. Whole-layer/token correctness and rates are not declared by this event. ROOT's merge and new-image selection complete adoption; this branch does not mutate another lane's selected files.
+
+The composed full-layer source model was checked after the native result: corrected default versus explicit legacy changes exactly12 caller words, with identical composition timing and issue edges. A regression now checks that residual1 calls PS1 while residual2 calls PS2, rather than merely counting a complete calendar.
