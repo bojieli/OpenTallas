@@ -1,0 +1,11 @@
+{
+ "client_gone": true,
+ "terminal_not_run": true,
+ "admitted_marker": false,
+ "B_dir_exists": false,
+ "tail": [
+  "ot-run: -> localhost (will queue: admits 12 GB < 32 GB)",
+  "ot-heavy: waiting for memory on tolerant-swine: need 0.7 x 32 = 22 GB, admissible 1 GB: available 249 GB, growth charged 51 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 51 GB at x1), young 51 GB, floor 50 GB; invariant: committed 943 GB (in use 759, other 301, units max(now, peak) 592, + reserve 0 + fresh 50) vs physical - 64 = 943 GB -> headroom 1 GB",
+  "ot-run: interrupted (signal 15 from pid 2952777 (python3 /home/ubuntu/.local/bin/ot-run --cancel /srv/opentallas-scratch2/claude/codex-head-stm-prd-1131/run.sh B; parent 2952769 (sshd-session: ubuntu@notty))) while waiting for memory on localhost; waiter cancelled: NOT RUN"
+ ]
+}
