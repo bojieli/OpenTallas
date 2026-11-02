@@ -1,0 +1,232 @@
+{
+  "schema": "opentallas.ctl_source_clock_reset_graph.v1",
+  "scope": "exact frozen source closure only; no mapped/native clock or reset timing qualification",
+  "source_intake_commit": "d55715edb",
+  "closure_sha256": "ff736f49006105d4f4cfd092302867f0615d045aafc19277b804e5dd47f52482",
+  "provider_source_sha256": "d8ce0deda2761ffcbdf5e87360cc42d45d81f3214251546c832a70edd43ff1cc",
+  "module": "ot_hgi_sfu_core_split3__ctl",
+  "ports": {
+    "clock_input": "clk[0]",
+    "delivered_reset_input": "rst_n[0]",
+    "generated_reset_output": "u_core_u_rst__rst_n[0]",
+    "named_START_ports": []
+  },
+  "clock_graph": {
+    "root": "clk[0]",
+    "all_direct_state_clock": "clk[0]",
+    "VM_clk": "{clk[0]}",
+    "VM_lane_clocks": "{clk[0], clk[0], clk[0], clk[0]}",
+    "relay_clock": "clk[0]",
+    "declared_preopt_state_bits": 36240,
+    "actual_mapped_sinks": "UNMEASURED",
+    "secondary_clock_inputs": []
+  },
+  "direct_state": [
+    {
+      "register": "g_compose_m16_q",
+      "bits": 1,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n0",
+      "source_assignment_edge": "posedge",
+      "data_input_expression": "{n20}"
+    },
+    {
+      "register": "g_compose_m17_q",
+      "bits": 8,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n0",
+      "source_assignment_edge": "posedge",
+      "data_input_expression": "{u_core_procdff_66896__D[7], u_core_procdff_66896__D[6], u_core_procdff_66896__D[5], u_core_procdff_66896__D[4], u_core_procdff_66896__D[3], u_core_procdff_66896__D[2], u_core_procdff_66896__D[1], u_core_procdff_66896__D[0]}"
+    },
+    {
+      "register": "g_compose_m18_q",
+      "bits": 8,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n0",
+      "source_assignment_edge": "posedge",
+      "data_input_expression": "{u_core_procdff_66901__D[7], u_core_procdff_66901__D[6], u_core_procdff_66901__D[5], u_core_procdff_66901__D[4], u_core_procdff_66901__D[3], u_core_procdff_66901__D[2], u_core_procdff_66901__D[1], u_core_procdff_66901__D[0]}"
+    },
+    {
+      "register": "g_compose_m19_q",
+      "bits": 256,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n0",
+      "source_assignment_edge": "posedge",
+      "data_input_expression_sha256": "c426d5e75d53dd73b013149a9fe9ae77c94bc9aa0507f4759888af4381bfa2e4"
+    },
+    {
+      "register": "g_compose_m20_q",
+      "bits": 256,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n0",
+      "source_assignment_edge": "posedge",
+      "data_input_expression_sha256": "05f171a1349fc6159b9121d67df1d7160e1fd5b89a7a90825b67d3bd9e3a1d9e"
+    },
+    {
+      "register": "g_compose_m21_q",
+      "bits": 136,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n6",
+      "source_assignment_edge": "posedge",
+      "data_input_expression_sha256": "0c81db41ca428d1632527a9088382ddf907b67ebde0467a4390c19d1a06186ef"
+    },
+    {
+      "register": "g_compose_m22_q",
+      "bits": 2248,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n6",
+      "source_assignment_edge": "posedge",
+      "data_input_expression_sha256": "43ede00f3faab3d8de2191e35586039fc89e150603917018c55e89dfe33781e0"
+    },
+    {
+      "register": "g_compose_m23_q",
+      "bits": 2056,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n6",
+      "source_assignment_edge": "posedge",
+      "data_input_expression_sha256": "9f2624e7b508bd3c06a88db622273534fb80b0cbe79f96ff7c8c80524fbb9285"
+    },
+    {
+      "register": "g_compose_m24_q",
+      "bits": 8,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n6",
+      "source_assignment_edge": "posedge",
+      "data_input_expression": "{u_core_procdff_66931__D[7], u_core_procdff_66931__D[6], u_core_procdff_66931__D[5], u_core_procdff_66931__D[4], u_core_procdff_66931__D[3], u_core_procdff_66931__D[2], u_core_procdff_66931__D[1], u_core_procdff_66931__D[0]}"
+    },
+    {
+      "register": "g_compose_m25_q",
+      "bits": 471,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n0",
+      "source_assignment_edge": "posedge",
+      "data_input_expression_sha256": "0f29d104406b1a6f467624be1073b467dc3c9653e28101eab9b1f30a59384522"
+    },
+    {
+      "register": "g_compose_m26_q",
+      "bits": 1742,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n0",
+      "source_assignment_edge": "posedge",
+      "data_input_expression_sha256": "cbc44fc2c319c06026cf7b0f73dc5306076e2b5162e109a1ea3bd8f0ba807014"
+    },
+    {
+      "register": "g_compose_m48_q",
+      "bits": 1,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n9595",
+      "source_assignment_edge": "posedge",
+      "data_input_expression": "{n9618}"
+    },
+    {
+      "register": "g_compose_m54_q",
+      "bits": 1742,
+      "clock": "clk[0]",
+      "async_active_low_reset": "n9595",
+      "source_assignment_edge": "posedge",
+      "data_input_expression_sha256": "a43f53463c559ffe5f33d87599584a091e5af662a69fedc5a94e5c8fa000d23b"
+    }
+  ],
+  "direct_reset_bit_counts": {
+    "n0": 2742,
+    "n6": 4448,
+    "n9595": 1743
+  },
+  "reset_relay": {
+    "instance": "m55",
+    "instances": 1,
+    "parameters": {
+      "REGIONS": 4,
+      "SYNC_STAGES": 2,
+      "TREE_STAGES": 1
+    },
+    "sync_q_bits": 2,
+    "regional_relay_bits": 4,
+    "async_assert_input": "rst_n[0]",
+    "regions": [
+      {
+        "index": 0,
+        "net": "n11363",
+        "generated_by": "m55.relay_q[0][0]",
+        "direct_FF_bits": 0,
+        "VM_central_FF_bits": 8545,
+        "exported_port": null
+      },
+      {
+        "index": 1,
+        "net": "n9595",
+        "generated_by": "m55.relay_q[0][1]",
+        "direct_FF_bits": 1743,
+        "VM_central_FF_bits": 0,
+        "exported_port": "u_core_u_rst__rst_n[0]"
+      },
+      {
+        "index": 2,
+        "net": "n6",
+        "generated_by": "m55.relay_q[0][2]",
+        "direct_FF_bits": 4448,
+        "VM_central_FF_bits": 0,
+        "exported_port": null
+      },
+      {
+        "index": 3,
+        "net": "n0",
+        "generated_by": "m55.relay_q[0][3]",
+        "direct_FF_bits": 2742,
+        "VM_central_FF_bits": 0,
+        "exported_port": null
+      }
+    ]
+  },
+  "VM": {
+    "instance": "m56",
+    "parameters": {
+      "LWB": 15,
+      "READ_RETURN": 88,
+      "WRITE_RETURN": 85
+    },
+    "clock_reset_connections": {
+      "clk": "{clk[0]}",
+      "clk_lg": "{clk[0], clk[0], clk[0], clk[0]}",
+      "rst_lg_n": "{rst_n[0], rst_n[0], rst_n[0], rst_n[0]}",
+      "rst_n": "{n11363}"
+    },
+    "central_generated_reset_state_bits": 8545,
+    "lane_groups": 4,
+    "per_group_delivered_reset_state_bits": 4093,
+    "per_group_unreset_state_bits": 596,
+    "total_state_bits": 27301
+  },
+  "reset_edge_schedule": {
+    "reference": "first clk[0] rising edge after delivered rst_n[0] is high, under ideal RTL edge semantics only",
+    "edge1": "sync_q[0] rises; regional outputs remain0; lane reset state may execute active branch",
+    "edge2": "sync_q[1] rises; regional outputs remain0",
+    "edge3": "all four m55 relay_q outputs rise after NBA; generated-reset consumers still execute reset branch on this edge",
+    "edge4": "first active capture opportunity for state using generated regional reset; no guarantee command/epoch valid",
+    "downstream": "exported reset is generated regional output1, not an alias of delivered reset; downstream arrival/capture must use actual clk/RC/recovery relationship"
+  },
+  "START_join": {
+    "command_input": "u_core_procdff_66941__D[1741:0]",
+    "first_command_capture": "g_compose_m26_q",
+    "first_capture_reset": "m55.rst_n[3] / n0",
+    "second_command_capture": "g_compose_m54_q",
+    "second_capture_reset": "m55.rst_n[1] / n9595",
+    "first_sticky_epoch": "g_compose_m16_q -> u_core_procdff_66891__Q[0]",
+    "second_sticky_epoch": "g_compose_m48_q -> n18",
+    "meaning": "opaque command/epoch ABI must be bound to actual compiler-control source; neither sticky epoch is automatically 66START",
+    "required_parent_fields": [
+      "Exact selected parent instance/module, command1742-bit bus and associated epoch/valid port-bit mapping",
+      "Actual top-qualified clk[0] input net and accepted current clock-graph driver cell/pin/net, waveform/phase TT+FF",
+      "Delivered rst_n[0] provider instance/pin/net, release-cycle reference, assertion contract and actual arrival/recovery/removal",
+      "Generated reset output regional1 actual mapped FF/Q or QN+inverter, complete downstream reset loads, routed arrival and capture clocks",
+      "Current 66START stage/source identity, actual stage FF clock pin and reset/SETTLE reference, relation to both command capture/epoch families",
+      "Source/native/model event identity, priced wrapper delivery and relay cycles, exact mapped state census; no oldB node/phase alias"
+    ]
+  },
+  "holds": [
+    "Conditional component four-edge reset selector is nonrelease; does not provide historical die64 receipt",
+    "Parent wrapper t22 delivery is separate from the internal m55 three-edge release",
+    "Native mapped area/FF/load/clock decomposition/PG/pins unmeasured",
+    "No source/default/provider/START activation or P&R authorization"
+  ]
+}
