@@ -1,0 +1,231 @@
+{
+ "event": "DIE-KV-60/adp 11-01 MACRO-FIT qkd_hr_phy_adp (native SRAM ot_sram_1r1w_512x128_m4_r2c2 174.12 x 29.736)",
+ "chosen": "V1",
+ "tool": "physical/die_plan/qwen_kvsys/delta_phy_adp_macrofit_1101.py",
+ "outline_old_um": [
+  103.68,
+  95.04
+ ],
+ "outline_new_um": [
+  51.84,
+  207.36
+ ],
+ "derivation": "kv3_hub_Wi lot x 164.16..665.28 (phy_pad E / cdc_ci W), y 120.96..328.32 (FT stations end 109.89 / start 339.37). Unrotated the macro needs a core >= ~191 um wide (2 per row, 4 rows <= 51.8 tall in 207: aspect >= 3.7 and no logic band) and 8 x (191 x 95.5 at aspect 2) = 146k um2 > lot 104k um2, so aspect <= 2 has no solution inside the lot without neighbour moves (12.20). R270: one row of 8 tall cores H 207.36 (old two-row span), W 51.84, 8.64 gaps, origins on the 8.64 lattice.",
+ "macro": {
+  "inst": "u_slice.u_body.g_grp[0].u_rb.g_sram.g_t[0].u_m",
+  "orient": "R270",
+  "xy_um": [
+   17.772,
+   17.28
+  ],
+  "footprint_um": [
+   29.736,
+   174.12
+  ],
+  "halo_um": 4.32,
+  "pins": "macro short ends face the N / S gutters; core W band 9.13 um holds the 409 W-face pin flops"
+ },
+ "cores": {
+  "host__qkd_hr_phy_adp_0": {
+   "old": {
+    "origin_um": [
+     181.44,
+     120.96
+    ],
+    "outline_um": [
+     103.68,
+     95.04
+    ],
+    "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+   },
+   "origin_um": [
+    172.8,
+    120.96
+   ],
+   "orient": "R0",
+   "tap": [
+    198.552,
+    328.224
+   ]
+  },
+  "host__qkd_hr_phy_adp_4": {
+   "old": {
+    "origin_um": [
+     181.44,
+     233.28
+    ],
+    "outline_um": [
+     103.68,
+     95.04
+    ],
+    "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+   },
+   "origin_um": [
+    233.28,
+    120.96
+   ],
+   "orient": "R0",
+   "tap": [
+    259.032,
+    328.224
+   ]
+  },
+  "host__qkd_hr_phy_adp_1": {
+   "old": {
+    "origin_um": [
+     302.4,
+     120.96
+    ],
+    "outline_um": [
+     103.68,
+     95.04
+    ],
+    "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+   },
+   "origin_um": [
+    293.76,
+    120.96
+   ],
+   "orient": "R0",
+   "tap": [
+    319.512,
+    328.224
+   ]
+  },
+  "host__qkd_hr_phy_adp_5": {
+   "old": {
+    "origin_um": [
+     302.4,
+     233.28
+    ],
+    "outline_um": [
+     103.68,
+     95.04
+    ],
+    "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+   },
+   "origin_um": [
+    354.24,
+    120.96
+   ],
+   "orient": "R0",
+   "tap": [
+    379.992,
+    328.224
+   ]
+  },
+  "host__qkd_hr_phy_adp_2": {
+   "old": {
+    "origin_um": [
+     423.36,
+     120.96
+    ],
+    "outline_um": [
+     103.68,
+     95.04
+    ],
+    "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+   },
+   "origin_um": [
+    414.72,
+    120.96
+   ],
+   "orient": "MX",
+   "tap": [
+    440.472,
+    121.056
+   ]
+  },
+  "host__qkd_hr_phy_adp_6": {
+   "old": {
+    "origin_um": [
+     423.36,
+     233.28
+    ],
+    "outline_um": [
+     103.68,
+     95.04
+    ],
+    "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+   },
+   "origin_um": [
+    475.2,
+    120.96
+   ],
+   "orient": "R0",
+   "tap": [
+    500.952,
+    328.224
+   ]
+  },
+  "host__qkd_hr_phy_adp_3": {
+   "old": {
+    "origin_um": [
+     544.32,
+     120.96
+    ],
+    "outline_um": [
+     103.68,
+     95.04
+    ],
+    "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+   },
+   "origin_um": [
+    535.68,
+    120.96
+   ],
+   "orient": "R0",
+   "tap": [
+    561.432,
+    328.224
+   ]
+  },
+  "host__qkd_hr_phy_adp_7": {
+   "old": {
+    "origin_um": [
+     544.32,
+     233.28
+    ],
+    "outline_um": [
+     103.68,
+     95.04
+    ],
+    "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+   },
+   "origin_um": [
+    596.16,
+    120.96
+   ],
+   "orient": "R0",
+   "tap": [
+    621.912,
+    328.224
+   ]
+  }
+ },
+ "plan_checks": {
+  "schema": "PASS",
+  "strict_bind": {
+   "partitions": 160,
+   "types": 56,
+   "crossings": 2545,
+   "errors": 0,
+   "unbound": 0
+  },
+  "g0c": {
+   "base_errors": 27,
+   "fin_errors": 27,
+   "new_errors": 0,
+   "new_warnings": "1 text change (kv3_hub_Wi tap_sinks 10438.4 -> 10439.4)"
+  }
+ },
+ "core_place_probes": {
+  "V1": "AUTO-GEOM FAIL qkd_hr_phy_adp DIE-KV-60/adp MACRO-FIT V1 aspect=FAIL(4.0) empty=FAIL(0.5272) outline=ok(51.84x207.36) fill=ok(0.2084) fill_hi=ok(0.2084) pin_reg_p90=ok(7.36) pin_reg_max=ok(16.53) pin_unreg=ok(0) r2r=ok(222.86) r2r_count=ok(0) pin_density=ok(3.2) std_band=ok(1.0) cells_on_macros=ok(0) partial_face=ok(0) channel_h=ok(0.397) channel_v=ok(0.552) col_v=ok(0.552) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) grt=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(2066)",
+  "V2": "AUTO-GEOM FAIL qkd_hr_phy_adp DIE-KV-60/adp MACRO-FIT V2 aspect=FAIL(3.692) empty=FAIL(0.5738) outline=ok(56.16x207.36) fill=ok(0.1797) fill_hi=ok(0.1797) pin_reg_p90=ok(7.2) pin_reg_max=ok(17.23) pin_unreg=ok(0) r2r=ok(232.79) r2r_count=ok(0) pin_density=ok(3.0) std_band=ok(1.0) cells_on_macros=ok(0) partial_face=ok(0) channel_h=ok(0.276) channel_v=ok(0.56) col_v=ok(0.56) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) grt=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(2066)"
+ },
+ "core_flow_fixes": "gen_core_kit_kv: PDN_MACRO_M4_ROT (vertical M4 PG of a 90-degree child -> M6 straps + M4-M6 connect); IFP-0002 R90 stand-in master (+ liberty) for initialize_floorplan only; MPL-0006 rtl_macro_placer replaced by a fixed-site check when every child is FIRM",
+ "open": [
+  "aspect 4.0 / empty 0.527: structural for this macro in this lot (die ring 4.32 + halo bins count as empty; macro 48 % < 50 % macro-dominated INFO cut) -> COORD geometry exception",
+  "hub_Wi die-level GRT/route with the new outline not run here (wave)"
+ ]
+}
