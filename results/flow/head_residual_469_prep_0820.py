@@ -11,6 +11,7 @@ import copy
 import gc
 
 w = Path('/out')
+assert hashlib.sha256((w/'SOURCE_JOIN.json').read_bytes()).hexdigest() == '808db7759772766610f16ceae483d1cd8b6fd414f1501ea784789c4bf27af23f'
 receipt = json.loads((w/'SOURCE_JOIN.json').read_text())
 assert receipt['scope'] == 'EXACT_IMMUTABLE_TYPED70_SUBJECT_RESIDUAL_FOLLOWUP'
 for rel, expected in receipt['files_sha256'].items():
@@ -37,6 +38,27 @@ exec(compile(caller[start:end], 'typed70_current_reset_prior_compatibility', 'ex
 start = caller.index('# Joint next-state proof retains original prior')
 end = caller.index('points=[x[\'point\']')
 exec(compile(caller[start:end], 'typed70_current_base_and_joint_context', 'exec'), globals())
+# Bind the reused reset-image certificate to the very same compiled full-AIG
+# graph/context, not merely a mutable list of file labels. AIG.write retains
+# every AND node: this checks the actual original graph and all assumptions,
+# including nodes outside the selected 98 outputs. No solver is repeated.
+base_names, base_outs = list(m.onames), list(m.outs)
+old16 = [x['point'] for x in old['unproven_points'] if any('.u_s.ld#t[' in k for k in x.get('cone_unmatched_keys', []))]
+assert len(old16) == 16
+old_names = set(old16) | {'hyp:'+sd+':'+key for sd,key in huntkeys} | {'cons:'+sd+':'+keys[0] for sd,keys,_ in L.cons}
+old_selected = [(n,o) for n,o in zip(base_names,base_outs) if n in old_names]
+m.onames = [n for n,_ in old_selected]
+m.outs = [o for _,o in old_selected]
+for sd,k,h in keep:
+    m.onames.append('keep_next:'+sd+':'+k)
+    m.outs.append(m.XOR(L.dlit[sd,k], L.dlit[h[1],h[2]] ^ h[3]))
+for f in fields:
+    m.onames.append('typed_next:'+f['gold'])
+    m.outs.append(m.XOR(L.dlit['gate',f['gate']], L.dlit['gold',f['gold']] ^ f['proposed_xor']))
+assert len(m.onames) == 98
+m.write(w/'reconstructed_typed70_joint98.aig')
+assert hashlib.sha256((w/'reconstructed_typed70_joint98.aig').read_bytes()).hexdigest() == '7071c26da3036a1e4636bb14fd9b4f80dc3644df73d7813cec094ab5e14e8f31', 'immutable typed70 native proof graph/context differs'
+m.onames, m.outs = base_names, base_outs
 residuals = old['failing'] + old['unproven_points']
 points = [row['point'] for row in residuals]
 assert len(points) == 469 and len(set(points)) == 469
@@ -66,6 +88,7 @@ assert len(aux) == 82
 output = dict(status='BOUNDED_469_RESIDUAL_CLASSIFICATION_COMPLETE', original_verdict_unchanged=True,
               original_counts=old['counts'], prior_count=12732, matched=58437, reset_cycles=64,
               typed70_certificate_reused=True, reset_only_facts_added_to_transition=False,
+              typed70_native_full_aig_byte_identical=True,
               auxiliary_statuses=aux, residuals=classification,
               residual_counts={s:sum(row['native_status'] == s for row in classification) for s in set(stats.values())},
               auxiliary_all_proved=all(x == 'proved' for x in aux.values()),
