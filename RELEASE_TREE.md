@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 08:22 PST)
 
-_COORD 2026-11-01 16:20 PST: count 50 (S81 23/54, HEAD 3/4, QC 5/15, KV 14/35, HBM 5/84; HBM ring back after re-LEC). Merge train: canreg, kcc, pwromit, KV adp, HBM d44q, samplegap, leafmean upd, S81 col (26 types). QC token builds starved in ot-run -> die-job memory reservation (FLOW-21). Types 0/485. Codex on QC/KV/xfin/cap_rt (split rule)._
+_COORD 2026-11-01 17:20 PST: count 50 flat 5 h. Root cause: since 11:50 the post-CTS gate crashes in all gen_phys/hbm/tkm_noid kits (core_clock_band not staged) -> FLOW-21 ccband pre-approved, merging first, then batch relaunch of every FAIL_POSTCTS. HEAD 4th core kp4 e13a TT +2.48 re-signing (HEAD 4/4 next). Train: ccband, diersv, stnbank, canreg/kcc done; col rebasing. Types 0/485._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -23,7 +23,7 @@ _COORD 2026-11-01 16:20 PST: count 50 (S81 23/54, HEAD 3/4, QC 5/15, KV 14/35, H
 ## DIE s81_head · HEAD · rev l48x (approved 19:0x: l48w + 51 rst_start_raw pin moves) · FROZEN 12.20 (l47u exception)
 - [ ] HEAD.CLK Die clock 12.25 · DIE-HEAD-53 · BLOCKED(kits) · l48x + START leaves h + --ca-write-fall: TT +252.75, contract 0
 - [ ] HEAD.RINGHOLD hd_turn_a SIGNED l48x (TT +142.43 / FF +9.46, LEC EQ) -> count by SIGNOFF-SPRINT-15 · DONE pending count
-- [ ] HEAD.SERDES hd_serdes e3 DRT ~it 55/64, 17-22 viol, ~2 h/it -> parallel incremental reroute / 2nd variant · HEAD-SERDES-3 · RUNNING
+- [ ] HEAD.SERDES kp4_dchn e13a (one-endpoint ECO) TT +2.48 / FF +11.85 / DRC 0 -> n-head re-sign + LEC --crit · SIGNOFF-SPRINT-19 · RUNNING
 - [ ] HEAD.HOSTLEC HOST LEC hints · DIE-HEAD-52 · RUNNING · LEC C ~20:00 → READY 3af0682a7
 - [ ] HEAD.KITS hold limit -100+min(0,in_min+40,-W_t) approved 22:0x: hd_spn_end l49x routes; hd_tile l48y 3 variants (tap assign / port offsets / hold repair); hd_st_m local PASS needs parent hold · DIE-HEAD-53 / KIT-WAVE-10 · RUNNING
   - [ ] HEAD.TILES Tile sign-offs · DIE-HEAD-53 · RUNNING · 3/4 hard cores, 0/25 types
@@ -62,7 +62,7 @@ _COORD 2026-11-01 16:20 PST: count 50 (S81 23/54, HEAD 3/4, QC 5/15, KV 14/35, H
 
 ## INFRA · Merge, hosts, disks
 - [ ] INFRA.MERGE Approved READY merged in order · ROOT-MERGE-AL · RUNNING · see header queue
-- [ ] INFRA.DISK scratch intel1 93% (251 GB) / intel2 91% (320 GB) / epyc2 86% (124 GB) -> PRUNE-1101E epyc2 · COORD · RUNNING
+- [ ] INFRA.DISK scratch free intel1 123 GB (97%) / intel2 257 GB / epyc2 85 GB -> PRUNE-1101E (intel1 first, then epyc2) · COORD · RUNNING
 - [ ] INFRA.LOAD load intel1 186/112, intel2 370/112, epyc2 99/128; waiters 129/91/21 (queue full); die-job memory reservation → FLOW-21 · COORD
 
 ## WAITS · who
