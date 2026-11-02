@@ -1,0 +1,30 @@
+{
+  "verdict": "PASS",
+  "local_ports": 73,
+  "early_core_ports": 4,
+  "actual_native_pin_identity": true,
+  "canonical_obstacles": 9,
+  "canonical_clock_halo_hits": [],
+  "canonical_ft_body_hits": 0,
+  "canonical_findings": [],
+  "max_load": 1307.0,
+  "max_radius": 176.8960000000001,
+  "controls": [
+    [
+      "arst_n",
+      1822.56,
+      777.632
+    ],
+    [
+      "rst_o_0",
+      549.536,
+      8.608
+    ],
+    [
+      "rst_o_1",
+      8.16,
+      466.592
+    ]
+  ],
+  "scope": "actual planned contacts/normal-FT/reset; nativeSTART and built clock/source qualification held"
+}
