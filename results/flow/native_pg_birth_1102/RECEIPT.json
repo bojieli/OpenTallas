@@ -1,0 +1,86 @@
+{
+ "runtime": {
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "openroad_binary_sha256": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+  "source_revision": "6cb3f2b704604a8961573218e1c8adaae9fe9937"
+ },
+ "cases": {
+  "repair_control": {
+   "checked": 39054,
+   "unbound": 11572,
+   "elapsed_s": "0:14.74",
+   "peak_kb": 385348
+  },
+  "repair_callback": {
+   "checked": 39054,
+   "unbound": 0,
+   "elapsed_s": "0:15.64",
+   "peak_kb": 375220,
+   "fresh_saved_db_audit": {
+    "checked": 39054,
+    "failure_count": 0
+   }
+  },
+  "hold_control": {
+   "checked": 30920,
+   "unbound": 3438,
+   "elapsed_s": "0:18.06",
+   "peak_kb": 553804
+  },
+  "hold_callback": {
+   "checked": 30920,
+   "unbound": 0,
+   "elapsed_s": "0:44.57",
+   "peak_kb": 555400,
+   "fresh_saved_db_audit": {
+    "checked": 30920,
+    "failure_count": 0
+   }
+  },
+  "repair_strict_v1": {
+   "checked": 39054,
+   "unbound": 0,
+   "elapsed_s": "0:23.01",
+   "peak_kb": 433516,
+   "fresh_saved_db_audit": {
+    "checked": 39054,
+    "failure_count": 0
+   }
+  }
+ },
+ "guards": {
+  "repair_control_vs_repair_callback": {
+   "instance_geometry_functional_connectivity_netflags_equal": true,
+   "data_clock_wires_guides_and_bterms_equal": true
+  },
+  "repair_control_vs_repair_strict_v1": {
+   "instance_geometry_functional_connectivity_netflags_equal": true,
+   "data_clock_wires_guides_and_bterms_equal": true
+  },
+  "hold_control_vs_hold_callback": {
+   "instance_geometry_functional_connectivity_netflags_equal": true,
+   "data_clock_wires_guides_and_bterms_equal": true
+  }
+ },
+ "inputs": {
+  "input.odb": "9ad14f9225afc0cedd173359d8b12bdaadd6a76855459c03bac6a32c413d20a3",
+  "input_grt.odb": "c486c827d7fba70efe2986b134482b9874c0729c00df9862a3388fca0c80b684",
+  "nativepgbirth.so": "24acd70f5b2f00dad7580e6ec9b495ed68197d3bc905cb8dc5d60b979f103c65",
+  "v1/build/nativepgbirth.so": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b"
+ },
+ "negative_controls": {
+  "ambiguous": "PASS",
+  "regional": "PASS",
+  "signal_rule": "PASS",
+  "existing_wrong_domain": "PASS",
+  "protected_unbound": "PASS",
+  "unknown_new_master": "PASS",
+  "swap_wrong_role": "PASS"
+ },
+ "physical_release": false,
+ "ordinary_full_flow_canary_run": false,
+ "strict_guards_admit_only": [
+  "repair_design",
+  "repair_timing"
+ ]
+}
