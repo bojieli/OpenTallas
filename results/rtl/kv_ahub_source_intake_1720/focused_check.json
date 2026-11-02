@@ -1,0 +1,44 @@
+{
+ "status": "FOCUSED_SOURCE_INTEGRATION_CHECK",
+ "function_AST_identity": {
+  "age_next_register": {
+   "ref": "f237c537b",
+   "equal": true
+  },
+  "nblk_zmask_register": {
+   "ref": "f237c537b",
+   "equal": true
+  },
+  "prepare": {
+   "ref": "f237c537b",
+   "equal": true
+  },
+  "stage_anchors": {
+   "ref": "f237c537b",
+   "equal": true
+  },
+  "stage_tap_balance": {
+   "ref": "81c1ceb83",
+   "equal": true
+  }
+ },
+ "actual_core_matches": {
+  "G": {
+   "transformed_current_main_core_token_equal_frozen": true,
+   "current_tokens": 4085,
+   "frozen_tokens": 4085
+  },
+  "N": {
+   "transformed_current_main_core_token_equal_frozen": true,
+   "current_tokens": 4182,
+   "frozen_tokens": 4182
+  }
+ },
+ "source_only_default_off": true,
+ "excluded": "d50e9c3f4 prototype-only childintrinsic optimizer; ROOT clockmodel owner",
+ "physical_gates": "OWNG NOTSIGNED, foreignECO advancing; no canonicalactivation",
+ "proof_refs": {
+  "G": "intel2 kits/G/lec/lec.json EQ6311/6311 source81c1ceb83",
+  "N": "intel2 kits/N/lec/lec.json EQ6371/6371 source1c21531a0"
+ }
+}
