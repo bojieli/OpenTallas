@@ -7,8 +7,8 @@ Every frame packet input group now joins its ACTUAL source part instance in the 
 Four groups are NOT literal aliases at their producer:
 - 0R03 reads0R02 source fW0_p5_b0, s81p_col_h9_r0_p5__t1.
 - 2R13 reads2R12 source fW4_p5_b0, same native type with its actual parameters.
-- 5L03 reads5L02 source fW6_p1_b0, col_h9_r0_p2__t1__cl9f71e63d.
-- 7L13 reads7L12 source fW7_p1_b0, same native type with its actual parameters.
+- 5L03 reads5L02 source fE1_p2_b0, col_h9_r0_p2__t1__cl9f71e63d.
+- 7L13 reads7L12 source fE5_p2_b0, same native type with its actual parameters.
 
 For each, packetbit1 originates at lane0 forwarded output bit1 and packetbit567 at lane2 forwarded output bit15. Each follows two actual ot_s81_rly RSREG1/W276 cells to distinct incoming packet bits1/567 of w_u_r0_3_Y. Lane0 uses w_u_r0_2_Y[0]/xrl0_sync_rst_n; lane2 uses w_u_r0_2_Y[2]/xrl2_sync_rst_n. Equal relay depth does not make distinct wires equal at the same absolute time: the upstream packet relation, forwarded-clock epoch, synchronized reset release and next landing sample relation must be joined. They remain temporal transport obligations, not a proved same-wire alias or a source cohort approval.
 
