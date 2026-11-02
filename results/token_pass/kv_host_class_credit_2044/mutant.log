@@ -1,0 +1,4 @@
+PHYSICAL_ONLY_STALL host=4 ctrl=4 done=4
+[157000000] %Fatal: tb_host_class_credit.sv:42: Assertion failed in tb_host_class_credit: class credit did not resume all six payloads 6/4/6
+%Error: tb_host_class_credit.sv:42: Verilog $stop
+Aborting...
