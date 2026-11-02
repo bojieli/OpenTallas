@@ -1,0 +1,248 @@
+{
+  "status": "SOURCE ONLY conservative textual reach; no elaboration/equivalence/qualification",
+  "reachable_counts": {
+    "retained": 21,
+    "current": 21
+  },
+  "edges": {
+    "retained": {
+      "kv3_head_eighth_e0": [
+        "ot_qkh_head_frontq_native",
+        "ot_qkh_head_stin_native",
+        "ot_qkh_head_stk_native",
+        "ot_qkh_ktree_lk",
+        "ot_qkh_lane8"
+      ],
+      "ot_qkh_lane8": [
+        "ot_hdc_delay",
+        "ot_hdc_fp32_add_lat_nr",
+        "ot_qwen_nearhbm_prod",
+        "ot_rst_relay"
+      ],
+      "ot_rst_relay": [],
+      "ot_qwen_nearhbm_prod": [],
+      "ot_hdc_fp32_add_lat_nr": [
+        "ot_hdc_add_hcopy36",
+        "ot_hdc_ksadd_k",
+        "ot_hdc_lzc32",
+        "ot_hdc_w11_cut_v"
+      ],
+      "ot_hdc_w11_cut_v": [],
+      "ot_hdc_lzc32": [],
+      "ot_hdc_ksadd_k": [],
+      "ot_hdc_add_hcopy36": [],
+      "ot_hdc_delay": [],
+      "ot_qkh_ktree_lk": [
+        "ot_qkh_ktree",
+        "ot_rst_relay"
+      ],
+      "ot_qkh_ktree": [
+        "ot_hdc_fp32_add_lat_nr",
+        "ot_hdc_fp32_mul_lat",
+        "ot_rst_relay"
+      ],
+      "ot_hdc_fp32_mul_lat": [
+        "ot_hdc_ksadd_k",
+        "ot_hdc_lzc32",
+        "ot_hdc_mul24_rows",
+        "ot_hdc_mul24_rows_k",
+        "ot_hdc_mul_kcp48",
+        "ot_hdc_w11_cut"
+      ],
+      "ot_hdc_w11_cut": [],
+      "ot_hdc_mul_kcp48": [],
+      "ot_hdc_mul24_rows_k": [],
+      "ot_hdc_mul24_rows": [],
+      "ot_qkh_head_stk_native": [
+        "ot_qkh_relay",
+        "ot_rst_relay"
+      ],
+      "ot_qkh_relay": [],
+      "ot_qkh_head_stin_native": [
+        "ot_qkh_relay",
+        "ot_rst_relay"
+      ],
+      "ot_qkh_head_frontq_native": [
+        "ot_qkh_relay",
+        "ot_rst_relay"
+      ]
+    },
+    "current": {
+      "kv3_head_eighth_e0": [
+        "ot_qkh_head_frontq_native",
+        "ot_qkh_head_stin_native",
+        "ot_qkh_head_stk_native",
+        "ot_qkh_ktree_lk",
+        "ot_qkh_lane8"
+      ],
+      "ot_qkh_lane8": [
+        "ot_hdc_delay",
+        "ot_hdc_fp32_add_lat_nr",
+        "ot_qwen_nearhbm_prod",
+        "ot_rst_relay"
+      ],
+      "ot_rst_relay": [],
+      "ot_qwen_nearhbm_prod": [],
+      "ot_hdc_fp32_add_lat_nr": [
+        "ot_hdc_add_hcopy36",
+        "ot_hdc_ksadd_k",
+        "ot_hdc_lzc32",
+        "ot_hdc_w11_cut_v"
+      ],
+      "ot_hdc_w11_cut_v": [],
+      "ot_hdc_lzc32": [],
+      "ot_hdc_ksadd_k": [],
+      "ot_hdc_add_hcopy36": [],
+      "ot_hdc_delay": [],
+      "ot_qkh_ktree_lk": [
+        "ot_qkh_ktree",
+        "ot_rst_relay"
+      ],
+      "ot_qkh_ktree": [
+        "ot_hdc_fp32_add_lat_nr",
+        "ot_hdc_fp32_mul_lat",
+        "ot_rst_relay"
+      ],
+      "ot_hdc_fp32_mul_lat": [
+        "ot_hdc_ksadd_k",
+        "ot_hdc_lzc32",
+        "ot_hdc_mul24_rows",
+        "ot_hdc_mul24_rows_k",
+        "ot_hdc_mul_kcp48",
+        "ot_hdc_w11_cut"
+      ],
+      "ot_hdc_w11_cut": [],
+      "ot_hdc_mul_kcp48": [],
+      "ot_hdc_mul24_rows_k": [],
+      "ot_hdc_mul24_rows": [],
+      "ot_qkh_head_stk_native": [
+        "ot_qkh_relay",
+        "ot_rst_relay"
+      ],
+      "ot_qkh_relay": [],
+      "ot_qkh_head_stin_native": [
+        "ot_qkh_relay",
+        "ot_rst_relay"
+      ],
+      "ot_qkh_head_frontq_native": [
+        "ot_qkh_relay",
+        "ot_rst_relay"
+      ]
+    }
+  },
+  "changed_reachable_modules": [
+    {
+      "module": "kv3_head_eighth_e0",
+      "retained_file": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/e0_assessment_inputs/rtl/kv3_head_eighth_e0.sv",
+      "current_file": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/actual_parent/rtl/2204b735ffa15ab0d2d002b776b7d28a681d6fcfd4bc968753de1a4912dcaa6a.sv",
+      "comment_stripped_equal": false
+    },
+    {
+      "module": "ot_qkh_relay",
+      "retained_file": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/e0_assessment_inputs/rtl/ot_qwen_nearhbm_head_hs.sv",
+      "current_file": "/srv/opentallas-scratch/claude/wt/codex-kv-signed-consumer-1507/results/kv_signed_consumer_1515/actual_parent/rtl/ot_qwen_nearhbm_head_hs.sv",
+      "comment_stripped_equal": false
+    }
+  ],
+  "equal_reachable_common_modules": [
+    "ot_hdc_add_hcopy36",
+    "ot_hdc_delay",
+    "ot_hdc_fp32_add_lat_nr",
+    "ot_hdc_fp32_mul_lat",
+    "ot_hdc_ksadd_k",
+    "ot_hdc_lzc32",
+    "ot_hdc_mul24_rows",
+    "ot_hdc_mul24_rows_k",
+    "ot_hdc_mul_kcp48",
+    "ot_hdc_w11_cut",
+    "ot_hdc_w11_cut_v",
+    "ot_qkh_head_frontq_native",
+    "ot_qkh_head_stin_native",
+    "ot_qkh_head_stk_native",
+    "ot_qkh_ktree",
+    "ot_qkh_ktree_lk",
+    "ot_qkh_lane8",
+    "ot_qwen_nearhbm_prod",
+    "ot_rst_relay"
+  ],
+  "method": "Conservative textual module reach after comment removal, includes both generate branches; no parameter elaboration. Source imports from exact retained e0 RTL packet and actual native HG generated kit.",
+  "body_findings": {
+    "reachable_modules_each_side": 21,
+    "equal_common_module_bodies_after_comment_removal": 19,
+    "only_helper_delta": {
+      "module": "ot_qkh_relay",
+      "change": "retained (* keep = 1 *) attribute on reg r array is absent in current; executable statements identical"
+    },
+    "other_file_changes": "qkd_static_k_issuer and changed ot_qkd_ectl_parts modules are not reachable from e0 by this conservative graph; no helper body functional delta found."
+  },
+  "top_parameter_changes": [
+    {
+      "module": "ot_qkh_head_frontq_native",
+      "instance": "front",
+      "parameters": {
+        "STRAP_SAMPLE": [
+          1,
+          0
+        ],
+        "PORT_REGS": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "module": "ot_qkh_lane8",
+      "instances": [
+        "lane0",
+        "lane1"
+      ],
+      "parameters": {
+        "STRAP_DIRECT": [
+          1,
+          0
+        ],
+        "S3_COPY": [
+          1,
+          0
+        ],
+        "LT_COPY": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "module": "ot_qkh_ktree_lk",
+      "instance": "ktree",
+      "parameters": {
+        "PORT_REGS": [
+          1,
+          0
+        ]
+      }
+    }
+  ],
+  "semantic_risks": [
+    {
+      "parameter": "ktree PORT_REGS",
+      "actual_source": "g_pr registers gf_in[15:0] and kpv_in[15:1], then compares captured kpv against kv_q; g_comb compares current kpv and gf inputs. g_f output is directly exposed by top. Source comment explicitly says fault g_f +1 edge; data sc_d/sc_f schedule unchanged.",
+      "required": "Full fault-output comparison under actual reset/current parameters; no output mask or assumed added cycle."
+    },
+    {
+      "parameter": "STRAP_DIRECT",
+      "actual_source": "Retained uses bsel port directly; current uses sampled bs3.",
+      "required": "Actual parent-bound strap values must be preserved; arbitrary changing-strap equivalence is not justified."
+    },
+    {
+      "parameter": "STRAP_SAMPLE",
+      "actual_source": "Retained hid2 forced0 while internal rp low; current captures hid throughout reset.",
+      "required": "Compare reset and release outputs; do not skip reset differences using mission-only scope."
+    },
+    {
+      "parameter": "front PORT_REGS / S3_COPY / LT_COPY",
+      "actual_source": "Branches replicate registers with same intended edge but actual reset/control and full port data must be proved.",
+      "required": "Full-output exact reset proof with no trusted copied-flop equality; mutation controls for stale/shifted copy/fault path."
+    }
+  ],
+  "conclusion": "Dead7 clock shim alone does not establish current-source equivalence: top specialization has real parameter changes, including documented +1 fault edge. No identity, EQ or qualification claim; no formal/CAD launched."
+}
