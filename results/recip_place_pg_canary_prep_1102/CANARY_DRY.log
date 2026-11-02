@@ -1,0 +1,15 @@
+ot-run: intel2         admits   323 GB (avail 458, reserve 0, fresh 12.9, peak 57.7, headroom 0, waiters 1/360 GB) load 91/112 running 50 disk 94 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-306392-1793632926 after 1 s
+PASS_PRIVATE_CANARY_INPUTS pre original94+instrumentation pinned; no stage4+
+/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 1  /OpenROAD-flow-scripts/flow/scripts/noop.tcl
+mkdir -p /work/run/objects/asap7/hc_ot_qkh_recip_leaf__216x216/base
+touch /work/run/objects/asap7/hc_ot_qkh_recip_leaf__216x216/base/copyright.txt
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_1_place_gp_skip_io global_place_skip_io
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_4_place_resized resize
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+cp /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_5_place_dp.odb /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_place.odb
+PASS_PRIVATE_CANARY_INPUTS dry original94+instrumentation pinned; no stage4+
+ot-run: RAN on intel2 (unit oth-ubuntu-306392-1793632926): exit 0

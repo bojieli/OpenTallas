@@ -1,0 +1,61 @@
+{
+  "status": "PREP_ONLY_SOURCE_PATCH_NO_CAD",
+  "stages": [
+    {
+      "stage": "3_1_place_gp_skip_io",
+      "entry": "global_place_skip_io.tcl",
+      "original_sha256": "d8d7cfeea598ef6f7f3a0e3c575f226f1c6f46c7bc73240b5cc23377d371ff22",
+      "instrumented_body_sha256": "c235591052943c179082223577c13b6646d0183681a8be1b43bfeb5f5139c64f",
+      "entry_wrapper_sha256": "e76a757b2a795f197aac2be002bcba91abbbbbcf760c80032c4917d766695366",
+      "original_whole_body_preserved": true,
+      "begin_before_entire_PRE": true,
+      "finish_after_POST_before_primary_save": true,
+      "io_save_before_POST_retained": false
+    },
+    {
+      "stage": "3_2_place_iop",
+      "entry": "io_placement.tcl",
+      "original_sha256": "95c9b5a0901c52a586407b7601c6dd6d4f3f14c0057e99a16da140d3f165517e",
+      "instrumented_body_sha256": "e2a6db4af460c753e7e0f3adeb974186590742d34da3e6c465f8b5c3d8f533bd",
+      "entry_wrapper_sha256": "0f3d0d18acf753cfefdaa64833db9ea6483c5a6d87e402db348e04d8bc2da3f6",
+      "original_whole_body_preserved": true,
+      "begin_before_entire_PRE": true,
+      "finish_after_POST_before_primary_save": false,
+      "io_save_before_POST_retained": true
+    },
+    {
+      "stage": "3_3_place_gp",
+      "entry": "global_place.tcl",
+      "original_sha256": "05a7a124580f8a023113ad1f4d56c15e61c3640142f4581c27d5ebaa6aa59e33",
+      "instrumented_body_sha256": "00eb2b363c0fb3084f2f3cdc39986278e7ba8c96574facad1e063b46c02fe1c3",
+      "entry_wrapper_sha256": "c3a11ff9165b425a70b24c3dd743c6cfb463686da1180462058cb2b752caf0b4",
+      "original_whole_body_preserved": true,
+      "begin_before_entire_PRE": true,
+      "finish_after_POST_before_primary_save": true,
+      "io_save_before_POST_retained": false
+    },
+    {
+      "stage": "3_4_place_resized",
+      "entry": "resize.tcl",
+      "original_sha256": "94a124271b030d3a23caa7bcce2d46fc5b5fb997b7ec01f1fbb99ffde23dd4dd",
+      "instrumented_body_sha256": "771c5918c2b9979228755cc5365a2d18f790c36eb129c4a057610b43c5c72260",
+      "entry_wrapper_sha256": "6f5fa045b7640a4b4277cab195b95b0636e39d011444cbaab79377072d21470e",
+      "original_whole_body_preserved": true,
+      "begin_before_entire_PRE": true,
+      "finish_after_POST_before_primary_save": true,
+      "io_save_before_POST_retained": false
+    },
+    {
+      "stage": "3_5_place_dp",
+      "entry": "detail_place.tcl",
+      "original_sha256": "a86b26b72a3a7d9c357cb4b421245a66b242df454ffe4159732c2661439f3300",
+      "instrumented_body_sha256": "5db498797b78ff5c9b12fb71989611d7a2fe31f2720c845bf53708ae491ef992",
+      "entry_wrapper_sha256": "e2a8c7b92284e57da5297748b1908da89c048f6373051e58b4f6ddb1d0d0b7bc",
+      "original_whole_body_preserved": true,
+      "begin_before_entire_PRE": true,
+      "finish_after_POST_before_primary_save": true,
+      "io_save_before_POST_retained": false
+    }
+  ],
+  "flags_source_MM_geometry_changed": false
+}
