@@ -77,6 +77,98 @@
       "cmd": "0000cc358637bd0001908000c0417"
     }
   ],
+  "retained_stream_setup": {
+    "extra_commands": 0,
+    "tag": 1,
+    "source_calls": [
+      {
+        "index": 373,
+        "slice": 0,
+        "edge": 5069,
+        "dirs": 1,
+        "cmd": "0000000000000000000000000005b"
+      },
+      {
+        "index": 374,
+        "slice": 1,
+        "edge": 5070,
+        "dirs": 3,
+        "cmd": "1000000000000000000000000007b"
+      },
+      {
+        "index": 375,
+        "slice": 2,
+        "edge": 5071,
+        "dirs": 3,
+        "cmd": "2000000000000000000000000007b"
+      },
+      {
+        "index": 376,
+        "slice": 3,
+        "edge": 5072,
+        "dirs": 3,
+        "cmd": "3000000000000000000000000007b"
+      },
+      {
+        "index": 377,
+        "slice": 4,
+        "edge": 5073,
+        "dirs": 3,
+        "cmd": "4000000000000000000000000007b"
+      },
+      {
+        "index": 378,
+        "slice": 5,
+        "edge": 5074,
+        "dirs": 3,
+        "cmd": "5000000000000000000000000007b"
+      },
+      {
+        "index": 379,
+        "slice": 6,
+        "edge": 5075,
+        "dirs": 3,
+        "cmd": "6000000000000000000000000007b"
+      },
+      {
+        "index": 380,
+        "slice": 7,
+        "edge": 5076,
+        "dirs": 3,
+        "cmd": "7000000000000000000000000007b"
+      },
+      {
+        "index": 381,
+        "slice": 8,
+        "edge": 5077,
+        "dirs": 3,
+        "cmd": "8000000000000000000000000007b"
+      },
+      {
+        "index": 382,
+        "slice": 9,
+        "edge": 5078,
+        "dirs": 3,
+        "cmd": "9000000000000000000000000007b"
+      },
+      {
+        "index": 383,
+        "slice": 10,
+        "edge": 5079,
+        "dirs": 3,
+        "cmd": "a000000000000000000000000007b"
+      },
+      {
+        "index": 384,
+        "slice": 11,
+        "edge": 5080,
+        "dirs": 3,
+        "cmd": "b000000000000000000000000007b"
+      }
+    ],
+    "lifetime": "retained through HEAD; LOCAL4 tables do not rewrite cfg",
+    "headtap": "actual s6 tap exposes X valid/address/data, no tag"
+  },
   "native_apply_commands": [
     {
       "slice": 0,
