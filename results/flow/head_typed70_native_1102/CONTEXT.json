@@ -1,0 +1,46 @@
+{
+ "classification": "UNTRUSTED_BOUNDED_BASE_STEP_ONLY",
+ "original_verdict_unchanged": true,
+ "original_keep": {
+  "declared": 17542,
+  "in_netlist": 17538,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 4,
+   "first": [
+    "ff:u_dut.u_core.u_la.u_ln.u.u_gb.g_pc[11].ps[3]",
+    "ff:u_dut.u_core.u_la.u_ln.u.u_gb.g_pc[5].ps[4]",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.g_pc[0].ps[5]",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.g_pc[11].ps[3]"
+   ]
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "s81_head",
+   "edges": 64,
+   "assert_edges": 66,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 64,
+  "debug_overrides": {}
+ },
+ "prior_count": 12732,
+ "matched_original": 58437,
+ "matched_replay": 58437,
+ "common_shape_enabled": false,
+ "prior_sha256": "406a2470ce1e46b959bd4cce99d4272d216c6dc2545152deff53b2acc0a7f7d6",
+ "missing_prior": [],
+ "no_comparepoint_or_full_proof": true
+}

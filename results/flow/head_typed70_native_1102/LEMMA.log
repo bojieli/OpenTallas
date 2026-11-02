@@ -1,0 +1,89 @@
+slang element names: 12 gold register keys normalized from driver Q nets
+gold JSON Q aliases: 109 gate flops re-keyed to exact gold wire bits
+alias array: gate xpn_f#t (1190 b) -> gold xpn_f (1190 b, Q-net alias evidence 1190); source memory layout (595, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate xpn_f#t (1190 b) -> gold xpn_f (1190 b, Q-net alias evidence 1190); source memory layout (595, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate fq_a#t (194 b) -> gold fq_a (194 b, Q-net alias evidence 194); source memory layout (97, 2, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate fq_b#t (194 b) -> gold fq_b (194 b, Q-net alias evidence 194); source memory layout (97, 2, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+==== upper_gold
+======== ABC command line "&r /out/upper_gold.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /out/upper_gold_swept.aig"
+[1;37m/out/upper_gold[0m : i/o = 191802/     16  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 2.93 MB
+[1;37m/out/upper_gold[0m : i/o = 191802/     16  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 2.93 MB
+SAT solver statistics:
+CO =       16  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/out/upper_gold[0m : i/o = 191802/     16  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 2.93 MB
+
+==== onto_gold
+======== ABC command line "&r /out/onto_gold.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /out/onto_gold_swept.aig"
+[1;37m/out/onto_gold[0m : i/o =     54/     70  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.00 MB
+[1;37m/out/onto_gold[0m : i/o =     54/     70  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.00 MB
+SAT solver statistics:
+CO =       70  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/out/onto_gold[0m : i/o =     54/     70  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.00 MB
+
+==== upper_gate
+======== ABC command line "&r /out/upper_gate.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /out/upper_gate_swept.aig"
+[1;37m/out/upper_gate[0m : i/o =1980641/     16  [1;36mand =    1712[0m  [1;35mlev =   66[0m [1;35m(66.00)[0m  mem =30.24 MB
+[1;37m/out/upper_gate[0m : i/o =1980641/     16  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem =30.22 MB
+SAT solver statistics:
+CO =       16  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.02 sec
+[1;37m/out/upper_gate[0m : i/o =1980641/     16  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem =30.22 MB
+
+==== onto_gate
+======== ABC command line "&r /out/onto_gate.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /out/onto_gate_swept.aig"
+[1;37m/out/onto_gate[0m : i/o =     54/     70  [1;36mand =     144[0m  [1;35mlev =    6[0m [1;35m(1.37)[0m  mem = 0.00 MB
+[1;37m/out/onto_gate[0m : i/o =     54/     70  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.00 MB
+SAT solver statistics:
+CO =       70  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/out/onto_gate[0m : i/o =     54/     70  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.00 MB
+
+==== negative_wrongslot
+======== ABC command line "&r /out/negative_wrongslot.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /out/negative_wrongslot_swept.aig"
+[1;37m/out/negative_wrongslot[0m : i/o =1980641/     16  [1;36mand =    1712[0m  [1;35mlev =   66[0m [1;35m(66.00)[0m  mem =30.24 MB
+[1;37m/out/negative_wrongslot[0m : i/o =1980641/     16  [1;36mand =     599[0m  [1;35mlev =   57[0m [1;35m(3.56)[0m  mem =30.23 MB
+SAT solver statistics:
+CO =       16  AND =      599  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      1  (100.00 %)   Ave conf =      5.0   Time =     0.00 sec (  0.44 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.04 sec
+[1;37m/out/negative_wrongslot[0m : i/o =1980641/     16  [1;36mand =     599[0m  [1;35mlev =   57[0m [1;35m(3.56)[0m  mem =30.23 MB
+
+==== negative_wrongpolarity
+======== ABC command line "&r /out/negative_wrongpolarity.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /out/negative_wrongpolarity_swept.aig"
+[1;37m/out/negative_wrongpolarity[0m : i/o =1980641/     16  [1;36mand =    1712[0m  [1;35mlev =   66[0m [1;35m(66.00)[0m  mem =30.24 MB
+[1;37m/out/negative_wrongpolarity[0m : i/o =1980641/     16  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem =30.22 MB
+SAT solver statistics:
+CO =       16  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.03 sec
+[1;37m/out/negative_wrongpolarity[0m : i/o =1980641/     16  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem =30.22 MB
+
+==== joint_step_and_16_pending
+======== ABC command line "&r /out/joint_step_and_16_pending.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /out/joint_step_and_16_pending_swept.aig"
+[1;37m/out/joint_step_and_16_pending[0m : i/o = 144687/     98  [1;36mand =    1812[0m  [1;35mlev =   71[0m [1;35m(14.16)[0m  mem = 2.23 MB
+[1;37m/out/joint_step_and_16_pending[0m : i/o = 144687/     98  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 2.21 MB
+SAT solver statistics:
+CO =       98  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/out/joint_step_and_16_pending[0m : i/o = 144687/     98  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 2.21 MB
