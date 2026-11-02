@@ -1,0 +1,2510 @@
+{
+  "schema": "opentallas.cap_west2_partial_diagnostic.v1",
+  "kind": "partial_diagnostic_preserved_FAILURE",
+  "policy": "actualSDC833/setup0/hold25; unchangedcanonical9db functions, freshGRTestimation",
+  "corners": {
+    "TT": {
+      "native_exit": 1,
+      "failure_class": "AUX_COLLECTION_PRINTER_AFTER_ALL8_PATH_QUERIES",
+      "exact_error": "STA2204 get_full_name applied to multi-pin $loads collection",
+      "standard_timing": {
+        "STD_WNS_MAX": -11.47,
+        "STD_WNS_MIN": 25.23,
+        "STD_TNS_MAX": -67.02,
+        "STD_TNS_MIN": 0.0,
+        "STD_NVIOL_MAX": 14.0,
+        "STD_NVIOL_MIN": 0.0
+      },
+      "clock_insertion": {
+        "corner": "TT",
+        "pinreg_n": 768,
+        "pinreg_mean_ps": 326.23,
+        "pinreg_min_ps": 288.54,
+        "pinreg_max_ps": 407.46,
+        "bound_ps": 316.5,
+        "dev_ps": 9.73,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": -11.47,
+        "hold_wns_est_ps": 25.23,
+        "rc": "/work/setRC_rcx.tcl",
+        "parasitics": "global_routing",
+        "verdict": "PASS",
+        "band_policy": "info",
+        "band_verdict": "PASS"
+      },
+      "path_queries": {
+        "A1/max": {
+          "slack_ps": 213.537689,
+          "startpoint": "la_gs[2]$_DFF_P_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "la_gs[2]$_DFF_P_/QN",
+              "arrival_ps": 405.757751
+            },
+            {
+              "pin": "place9661/A",
+              "arrival_ps": 410.282074
+            },
+            {
+              "pin": "place9661/Y",
+              "arrival_ps": 445.225067
+            },
+            {
+              "pin": "wire11999/A",
+              "arrival_ps": 446.963837
+            },
+            {
+              "pin": "wire11999/Y",
+              "arrival_ps": 473.466614
+            },
+            {
+              "pin": "wire18061/A",
+              "arrival_ps": 473.590546
+            },
+            {
+              "pin": "wire18061/Y",
+              "arrival_ps": 498.802124
+            },
+            {
+              "pin": "wire18662/A",
+              "arrival_ps": 501.640015
+            },
+            {
+              "pin": "wire18662/Y",
+              "arrival_ps": 527.917236
+            },
+            {
+              "pin": "wire19289/A",
+              "arrival_ps": 529.115173
+            },
+            {
+              "pin": "wire19289/Y",
+              "arrival_ps": 555.19989
+            },
+            {
+              "pin": "_27646_/A1",
+              "arrival_ps": 592.08313
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 654.43689
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 656.881104
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 691.266907
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 707.376709
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 736.145142
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 736.582336
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 767.350525
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 767.489929
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 781.946716
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 782.062683
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 803.459045
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 803.640625
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 828.599915
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 828.677673
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 872.8125
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 873.037476
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 905.659851
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 905.70813
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_04280_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "lweco_2_n19419",
+            "net11998",
+            "net17964",
+            "net18062",
+            "net18663",
+            "net19290",
+            "net9660"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "A1/min": {
+          "slack_ps": 449.238373,
+          "startpoint": "la_gs[2]$_DFF_P_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "la_gs[2]$_DFF_P_/QN",
+              "arrival_ps": 381.109253
+            },
+            {
+              "pin": "place9661/A",
+              "arrival_ps": 384.805725
+            },
+            {
+              "pin": "place9661/Y",
+              "arrival_ps": 414.800262
+            },
+            {
+              "pin": "wire11999/A",
+              "arrival_ps": 416.267792
+            },
+            {
+              "pin": "wire11999/Y",
+              "arrival_ps": 439.660767
+            },
+            {
+              "pin": "wire18061/A",
+              "arrival_ps": 439.754456
+            },
+            {
+              "pin": "wire18061/Y",
+              "arrival_ps": 462.055786
+            },
+            {
+              "pin": "wire18662/A",
+              "arrival_ps": 464.527069
+            },
+            {
+              "pin": "wire18662/Y",
+              "arrival_ps": 487.706818
+            },
+            {
+              "pin": "wire19289/A",
+              "arrival_ps": 488.688873
+            },
+            {
+              "pin": "wire19289/Y",
+              "arrival_ps": 511.944
+            },
+            {
+              "pin": "_27646_/A1",
+              "arrival_ps": 545.641602
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 601.744568
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 603.933777
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 634.638855
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 649.846069
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 674.994202
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 675.379639
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 691.985413
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 692.110229
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 702.122009
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 702.220215
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 722.789734
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 722.933533
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 748.824341
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 748.888611
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 775.214478
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 775.410034
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 793.894653
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 793.937622
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_04280_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "lweco_2_n19419",
+            "net11998",
+            "net17964",
+            "net18062",
+            "net18663",
+            "net19290",
+            "net9660"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "A2/max": {
+          "slack_ps": 91.160744,
+          "startpoint": "g_st[7].u_g/la_sl[1]$_DFF_P_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "g_st[7].u_g/la_sl[1]$_DFF_P_/QN",
+              "arrival_ps": 431.057373
+            },
+            {
+              "pin": "g_st[7].u_g/rebuffer12085/A",
+              "arrival_ps": 440.302948
+            },
+            {
+              "pin": "g_st[7].u_g/rebuffer12085/Y",
+              "arrival_ps": 477.327911
+            },
+            {
+              "pin": "g_st[7].u_g/place9685/A",
+              "arrival_ps": 478.167908
+            },
+            {
+              "pin": "g_st[7].u_g/place9685/Y",
+              "arrival_ps": 500.603546
+            },
+            {
+              "pin": "g_st[7].u_g/fanout11096/A",
+              "arrival_ps": 500.737244
+            },
+            {
+              "pin": "g_st[7].u_g/fanout11096/Y",
+              "arrival_ps": 551.086487
+            },
+            {
+              "pin": "g_st[7].u_g/_05834_/B",
+              "arrival_ps": 553.753174
+            },
+            {
+              "pin": "g_st[7].u_g/_05834_/Y",
+              "arrival_ps": 576.335999
+            },
+            {
+              "pin": "g_st[7].u_g/_05835_/B",
+              "arrival_ps": 576.395325
+            },
+            {
+              "pin": "g_st[7].u_g/_05835_/Y",
+              "arrival_ps": 605.709412
+            },
+            {
+              "pin": "g_st[7].u_g/_05836_/C",
+              "arrival_ps": 605.747986
+            },
+            {
+              "pin": "g_st[7].u_g/_05836_/Y",
+              "arrival_ps": 624.417358
+            },
+            {
+              "pin": "g_st[7].u_g/_05837_/B",
+              "arrival_ps": 624.525696
+            },
+            {
+              "pin": "g_st[7].u_g/_05837_/Y",
+              "arrival_ps": 650.040771
+            },
+            {
+              "pin": "_27644_/A",
+              "arrival_ps": 650.648926
+            },
+            {
+              "pin": "_27644_/Y",
+              "arrival_ps": 694.244812
+            },
+            {
+              "pin": "_27646_/A2",
+              "arrival_ps": 710.117004
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 776.813965
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 779.258179
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 813.643921
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 829.753784
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 858.522217
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 858.959412
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 889.7276
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 889.866943
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 904.323792
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 904.439758
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 925.83606
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 926.017639
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 950.97699
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 951.054688
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 995.189514
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 995.414429
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 1028.036743
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 1028.085083
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_14198_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "g_st[7].u_g/_01043_",
+            "g_st[7].u_g/_01633_",
+            "g_st[7].u_g/_01634_",
+            "g_st[7].u_g/_01635_",
+            "g_st[7].u_g/net11095",
+            "g_st[7].u_g/net12084",
+            "g_st[7].u_g/net9684",
+            "ga_key[7][19]",
+            "lweco_2_n19419",
+            "net17964"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "A2/min": {
+          "slack_ps": 428.420959,
+          "startpoint": "g_st[7].u_g/key_g[4][19]$_DFFE_PP_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "g_st[7].u_g/key_g[4][19]$_DFFE_PP_/QN",
+              "arrival_ps": 378.249115
+            },
+            {
+              "pin": "g_st[7].u_g/_05821_/A",
+              "arrival_ps": 378.371216
+            },
+            {
+              "pin": "g_st[7].u_g/_05821_/Y",
+              "arrival_ps": 390.640259
+            },
+            {
+              "pin": "g_st[7].u_g/_05823_/A1",
+              "arrival_ps": 390.723206
+            },
+            {
+              "pin": "g_st[7].u_g/_05823_/Y",
+              "arrival_ps": 411.562439
+            },
+            {
+              "pin": "g_st[7].u_g/_05828_/A2",
+              "arrival_ps": 411.579498
+            },
+            {
+              "pin": "g_st[7].u_g/_05828_/Y",
+              "arrival_ps": 430.161011
+            },
+            {
+              "pin": "g_st[7].u_g/_05837_/A2",
+              "arrival_ps": 430.1875
+            },
+            {
+              "pin": "g_st[7].u_g/_05837_/Y",
+              "arrival_ps": 455.852142
+            },
+            {
+              "pin": "_27644_/A",
+              "arrival_ps": 456.386169
+            },
+            {
+              "pin": "_27644_/Y",
+              "arrival_ps": 507.559204
+            },
+            {
+              "pin": "_27646_/A2",
+              "arrival_ps": 523.314453
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 580.927124
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 583.116394
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 613.821411
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 629.028687
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 654.176819
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 654.562256
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 671.16803
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 671.292786
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 681.304626
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 681.402832
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 701.97229
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 702.11615
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 728.006958
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 728.071228
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 754.397095
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 754.59259
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 773.077271
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 773.120239
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_14198_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "g_st[7].u_g/_00657_",
+            "g_st[7].u_g/_01620_",
+            "g_st[7].u_g/_01622_",
+            "g_st[7].u_g/_01627_",
+            "ga_key[7][19]",
+            "lweco_2_n19419",
+            "net17964"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "B/max": {
+          "slack_ps": 30.708769,
+          "startpoint": "la_gs[2]$_DFF_P_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "la_gs[2]$_DFF_P_/QN",
+              "arrival_ps": 405.757751
+            },
+            {
+              "pin": "place9661/A",
+              "arrival_ps": 410.282074
+            },
+            {
+              "pin": "place9661/Y",
+              "arrival_ps": 445.225067
+            },
+            {
+              "pin": "wire11999/A",
+              "arrival_ps": 446.963837
+            },
+            {
+              "pin": "wire11999/Y",
+              "arrival_ps": 473.466614
+            },
+            {
+              "pin": "wire18061/A",
+              "arrival_ps": 473.590546
+            },
+            {
+              "pin": "wire18061/Y",
+              "arrival_ps": 498.802124
+            },
+            {
+              "pin": "wire18662/A",
+              "arrival_ps": 501.640015
+            },
+            {
+              "pin": "wire18662/Y",
+              "arrival_ps": 527.917236
+            },
+            {
+              "pin": "wire19289/A",
+              "arrival_ps": 529.115173
+            },
+            {
+              "pin": "wire19289/Y",
+              "arrival_ps": 555.19989
+            },
+            {
+              "pin": "_27645_/A",
+              "arrival_ps": 635.483032
+            },
+            {
+              "pin": "_27645_/Y",
+              "arrival_ps": 773.674072
+            },
+            {
+              "pin": "_27646_/B",
+              "arrival_ps": 789.521729
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 850.375854
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 852.822021
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 884.604614
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 900.814575
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 926.540527
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 926.973755
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 944.151001
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 944.290527
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 955.264771
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 955.381653
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 981.331665
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 981.497009
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 1011.428955
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 1011.506653
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 1055.641479
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 1055.866455
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 1088.48877
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 1088.536987
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_04280_",
+            "_14199_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "lweco_2_n19419",
+            "net11998",
+            "net17964",
+            "net18062",
+            "net18663",
+            "net19290",
+            "net9660"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "B/min": {
+          "slack_ps": 428.757324,
+          "startpoint": "g_st[3].u_g/key_g[4][19]$_DFFE_PP_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "g_st[3].u_g/key_g[4][19]$_DFFE_PP_/QN",
+              "arrival_ps": 377.416779
+            },
+            {
+              "pin": "g_st[3].u_g/_05821_/A",
+              "arrival_ps": 377.548615
+            },
+            {
+              "pin": "g_st[3].u_g/_05821_/Y",
+              "arrival_ps": 389.896393
+            },
+            {
+              "pin": "g_st[3].u_g/_05823_/A1",
+              "arrival_ps": 389.945648
+            },
+            {
+              "pin": "g_st[3].u_g/_05823_/Y",
+              "arrival_ps": 411.33609
+            },
+            {
+              "pin": "g_st[3].u_g/_05828_/A2",
+              "arrival_ps": 411.382385
+            },
+            {
+              "pin": "g_st[3].u_g/_05828_/Y",
+              "arrival_ps": 430.326599
+            },
+            {
+              "pin": "g_st[3].u_g/_05837_/A2",
+              "arrival_ps": 430.375885
+            },
+            {
+              "pin": "g_st[3].u_g/_05837_/Y",
+              "arrival_ps": 457.598663
+            },
+            {
+              "pin": "_27645_/B",
+              "arrival_ps": 458.389343
+            },
+            {
+              "pin": "_27645_/Y",
+              "arrival_ps": 512.472473
+            },
+            {
+              "pin": "_27646_/B",
+              "arrival_ps": 527.820312
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 581.263489
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 583.452759
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 614.157776
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 629.36499
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 654.513184
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 654.89856
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 671.504333
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 671.62915
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 681.640991
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 681.739197
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 702.308655
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 702.452515
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 728.343262
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 728.407532
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 754.733459
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 754.928955
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 773.413635
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 773.456604
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_14199_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "g_st[3].u_g/_00657_",
+            "g_st[3].u_g/_01620_",
+            "g_st[3].u_g/_01622_",
+            "g_st[3].u_g/_01627_",
+            "ga_key[3][19]",
+            "lweco_2_n19419",
+            "net17964"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "C/max": {
+          "slack_ps": 104.885323,
+          "startpoint": "la_gs[1]$_DFF_P_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "la_gs[1]$_DFF_P_/QN",
+              "arrival_ps": 393.334686
+            },
+            {
+              "pin": "fanout11501/A",
+              "arrival_ps": 393.7966
+            },
+            {
+              "pin": "fanout11501/Y",
+              "arrival_ps": 450.467926
+            },
+            {
+              "pin": "_15863_/A",
+              "arrival_ps": 452.369873
+            },
+            {
+              "pin": "_15863_/Y",
+              "arrival_ps": 481.932373
+            },
+            {
+              "pin": "fanout11496/A",
+              "arrival_ps": 482.40152
+            },
+            {
+              "pin": "fanout11496/Y",
+              "arrival_ps": 535.855469
+            },
+            {
+              "pin": "wire11963/A",
+              "arrival_ps": 546.330811
+            },
+            {
+              "pin": "wire11963/Y",
+              "arrival_ps": 585.948547
+            },
+            {
+              "pin": "wire19263/A",
+              "arrival_ps": 588.202148
+            },
+            {
+              "pin": "wire19263/Y",
+              "arrival_ps": 608.953796
+            },
+            {
+              "pin": "wire19399/A",
+              "arrival_ps": 609.060669
+            },
+            {
+              "pin": "wire19399/Y",
+              "arrival_ps": 628.985413
+            },
+            {
+              "pin": "_27646_/C",
+              "arrival_ps": 673.462891
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 763.089355
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 765.533569
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 799.919373
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 816.029175
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 844.797607
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 845.234802
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 876.002991
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 876.142395
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 890.599182
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 890.715149
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 912.111511
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 912.293091
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 937.25238
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 937.330078
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 981.464905
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 981.689819
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 1014.312195
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 1014.360474
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_04279_",
+            "_07220_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "lweco_2_n19419",
+            "net11495",
+            "net11500",
+            "net11962",
+            "net17964",
+            "net19264",
+            "net19400"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "C/min": {
+          "slack_ps": 537.989441,
+          "startpoint": "la_gs[1]$_DFF_P_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "la_gs[1]$_DFF_P_/QN",
+              "arrival_ps": 382.075745
+            },
+            {
+              "pin": "fanout11501/A",
+              "arrival_ps": 382.47641
+            },
+            {
+              "pin": "fanout11501/Y",
+              "arrival_ps": 432.749451
+            },
+            {
+              "pin": "_15863_/A",
+              "arrival_ps": 434.401855
+            },
+            {
+              "pin": "_15863_/Y",
+              "arrival_ps": 461.952545
+            },
+            {
+              "pin": "fanout11496/A",
+              "arrival_ps": 462.352722
+            },
+            {
+              "pin": "fanout11496/Y",
+              "arrival_ps": 513.903137
+            },
+            {
+              "pin": "wire11963/A",
+              "arrival_ps": 523.139038
+            },
+            {
+              "pin": "wire11963/Y",
+              "arrival_ps": 558.855652
+            },
+            {
+              "pin": "wire19263/A",
+              "arrival_ps": 560.747192
+            },
+            {
+              "pin": "wire19263/Y",
+              "arrival_ps": 579.303101
+            },
+            {
+              "pin": "wire19399/A",
+              "arrival_ps": 579.380859
+            },
+            {
+              "pin": "wire19399/Y",
+              "arrival_ps": 597.598022
+            },
+            {
+              "pin": "_27646_/C",
+              "arrival_ps": 641.608887
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 690.495605
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 692.684875
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 723.389893
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 738.597107
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 763.7453
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 764.130676
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 780.73645
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 780.861267
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 790.873108
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 790.971313
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 811.540771
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 811.684631
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 837.575378
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 837.639709
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 863.965576
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 864.161072
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 882.645752
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 882.688721
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_04279_",
+            "_07220_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "lweco_2_n19419",
+            "net11495",
+            "net11500",
+            "net11962",
+            "net17964",
+            "net19264",
+            "net19400"
+          ],
+          "missing_route_warnings_on_path": []
+        }
+      },
+      "EST0026_missing_route_net_count": 0,
+      "EST0026_missing_route_nets": [],
+      "coverage_affected_paths": []
+    },
+    "FF": {
+      "native_exit": 1,
+      "failure_class": "AUX_COLLECTION_PRINTER_AFTER_ALL8_PATH_QUERIES",
+      "exact_error": "STA2204 get_full_name applied to multi-pin $loads collection",
+      "standard_timing": {
+        "STD_WNS_MAX": 167.19,
+        "STD_WNS_MIN": 10.0,
+        "STD_TNS_MAX": 0.0,
+        "STD_TNS_MIN": 0.0,
+        "STD_NVIOL_MAX": 0.0,
+        "STD_NVIOL_MIN": 0.0
+      },
+      "clock_insertion": {
+        "corner": "FF",
+        "pinreg_n": 768,
+        "pinreg_mean_ps": 262.09,
+        "pinreg_min_ps": 227.73,
+        "pinreg_max_ps": 336.12,
+        "bound_ps": 253.6,
+        "dev_ps": 8.49,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 167.19,
+        "hold_wns_est_ps": 10.0,
+        "rc": "/work/setRC_rcx.tcl",
+        "parasitics": "global_routing",
+        "verdict": "PASS",
+        "band_policy": "info",
+        "band_verdict": "PASS"
+      },
+      "path_queries": {
+        "A1/max": {
+          "slack_ps": 363.256866,
+          "startpoint": "la_gs[2]$_DFF_P_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "la_gs[2]$_DFF_P_/QN",
+              "arrival_ps": 313.569153
+            },
+            {
+              "pin": "place9661/A",
+              "arrival_ps": 318.496338
+            },
+            {
+              "pin": "place9661/Y",
+              "arrival_ps": 342.586212
+            },
+            {
+              "pin": "wire11999/A",
+              "arrival_ps": 344.412048
+            },
+            {
+              "pin": "wire11999/Y",
+              "arrival_ps": 363.597565
+            },
+            {
+              "pin": "wire18061/A",
+              "arrival_ps": 363.73465
+            },
+            {
+              "pin": "wire18061/Y",
+              "arrival_ps": 381.699432
+            },
+            {
+              "pin": "wire18662/A",
+              "arrival_ps": 384.576569
+            },
+            {
+              "pin": "wire18662/Y",
+              "arrival_ps": 403.872864
+            },
+            {
+              "pin": "wire19289/A",
+              "arrival_ps": 405.14975
+            },
+            {
+              "pin": "wire19289/Y",
+              "arrival_ps": 423.879822
+            },
+            {
+              "pin": "_27646_/A1",
+              "arrival_ps": 461.932098
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 508.534058
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 511.073029
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 535.526794
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 551.730713
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 573.668518
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 574.126404
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 595.954834
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 596.110291
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 606.262085
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 606.387451
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 621.545044
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 621.738098
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 643.389832
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 643.474365
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 675.313354
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 675.552307
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 698.792664
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 698.845459
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_04280_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "lweco_2_n19419",
+            "net11998",
+            "net17964",
+            "net18062",
+            "net18663",
+            "net19290",
+            "net9660"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "A1/min": {
+          "slack_ps": 336.121399,
+          "startpoint": "la_gs[2]$_DFF_P_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "la_gs[2]$_DFF_P_/QN",
+              "arrival_ps": 296.63797
+            },
+            {
+              "pin": "place9661/A",
+              "arrival_ps": 300.700897
+            },
+            {
+              "pin": "place9661/Y",
+              "arrival_ps": 321.246155
+            },
+            {
+              "pin": "wire11999/A",
+              "arrival_ps": 322.805176
+            },
+            {
+              "pin": "wire11999/Y",
+              "arrival_ps": 340.481903
+            },
+            {
+              "pin": "wire18061/A",
+              "arrival_ps": 340.588104
+            },
+            {
+              "pin": "wire18061/Y",
+              "arrival_ps": 357.483124
+            },
+            {
+              "pin": "wire18662/A",
+              "arrival_ps": 360.030823
+            },
+            {
+              "pin": "wire18662/Y",
+              "arrival_ps": 377.876465
+            },
+            {
+              "pin": "wire19289/A",
+              "arrival_ps": 378.941467
+            },
+            {
+              "pin": "wire19289/Y",
+              "arrival_ps": 396.551025
+            },
+            {
+              "pin": "_27646_/A1",
+              "arrival_ps": 430.94339
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 472.861633
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 475.140533
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 497.08078
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 512.385498
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 531.36615
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 531.772034
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 544.115662
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 544.255249
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 551.530762
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 551.637817
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 566.374878
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 566.529663
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 584.643311
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 584.713623
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 603.810364
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 604.017761
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 617.490356
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 617.537781
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_04280_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "lweco_2_n19419",
+            "net11998",
+            "net17964",
+            "net18062",
+            "net18663",
+            "net19290",
+            "net9660"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "A2/max": {
+          "slack_ps": 279.737457,
+          "startpoint": "g_st[7].u_g/la_sl[1]$_DFF_P_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "g_st[7].u_g/la_sl[1]$_DFF_P_/QN",
+              "arrival_ps": 338.345398
+            },
+            {
+              "pin": "g_st[7].u_g/rebuffer12085/A",
+              "arrival_ps": 347.940674
+            },
+            {
+              "pin": "g_st[7].u_g/rebuffer12085/Y",
+              "arrival_ps": 373.905914
+            },
+            {
+              "pin": "g_st[7].u_g/place9685/A",
+              "arrival_ps": 374.798706
+            },
+            {
+              "pin": "g_st[7].u_g/place9685/Y",
+              "arrival_ps": 390.79245
+            },
+            {
+              "pin": "g_st[7].u_g/fanout11096/A",
+              "arrival_ps": 390.932587
+            },
+            {
+              "pin": "g_st[7].u_g/fanout11096/Y",
+              "arrival_ps": 428.223663
+            },
+            {
+              "pin": "g_st[7].u_g/_05834_/B",
+              "arrival_ps": 431.087402
+            },
+            {
+              "pin": "g_st[7].u_g/_05834_/Y",
+              "arrival_ps": 446.503601
+            },
+            {
+              "pin": "g_st[7].u_g/_05835_/B",
+              "arrival_ps": 446.567993
+            },
+            {
+              "pin": "g_st[7].u_g/_05835_/Y",
+              "arrival_ps": 467.694611
+            },
+            {
+              "pin": "g_st[7].u_g/_05836_/C",
+              "arrival_ps": 467.738892
+            },
+            {
+              "pin": "g_st[7].u_g/_05836_/Y",
+              "arrival_ps": 481.28064
+            },
+            {
+              "pin": "g_st[7].u_g/_05837_/B",
+              "arrival_ps": 481.397217
+            },
+            {
+              "pin": "g_st[7].u_g/_05837_/Y",
+              "arrival_ps": 499.746368
+            },
+            {
+              "pin": "_27644_/A",
+              "arrival_ps": 500.381012
+            },
+            {
+              "pin": "_27644_/Y",
+              "arrival_ps": 529.423096
+            },
+            {
+              "pin": "_27646_/A2",
+              "arrival_ps": 545.039124
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 592.053467
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 594.592407
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 619.046204
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 635.250122
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 657.187927
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 657.645813
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 679.474243
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 679.6297
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 689.781494
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 689.90686
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 705.064453
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 705.257507
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 726.909241
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 726.993774
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 758.832764
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 759.071716
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 782.312073
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 782.364868
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_14198_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "g_st[7].u_g/_01043_",
+            "g_st[7].u_g/_01633_",
+            "g_st[7].u_g/_01634_",
+            "g_st[7].u_g/_01635_",
+            "g_st[7].u_g/net11095",
+            "g_st[7].u_g/net12084",
+            "g_st[7].u_g/net9684",
+            "ga_key[7][19]",
+            "lweco_2_n19419",
+            "net17964"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "A2/min": {
+          "slack_ps": 306.936707,
+          "startpoint": "g_st[7].u_g/key_g[4][19]$_DFFE_PP_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "g_st[7].u_g/key_g[4][19]$_DFFE_PP_/QN",
+              "arrival_ps": 301.552856
+            },
+            {
+              "pin": "g_st[7].u_g/_05821_/A",
+              "arrival_ps": 301.687866
+            },
+            {
+              "pin": "g_st[7].u_g/_05821_/Y",
+              "arrival_ps": 310.258789
+            },
+            {
+              "pin": "g_st[7].u_g/_05823_/A1",
+              "arrival_ps": 310.350891
+            },
+            {
+              "pin": "g_st[7].u_g/_05823_/Y",
+              "arrival_ps": 325.31012
+            },
+            {
+              "pin": "g_st[7].u_g/_05828_/A2",
+              "arrival_ps": 325.328735
+            },
+            {
+              "pin": "g_st[7].u_g/_05828_/Y",
+              "arrival_ps": 338.390106
+            },
+            {
+              "pin": "g_st[7].u_g/_05837_/A2",
+              "arrival_ps": 338.41861
+            },
+            {
+              "pin": "g_st[7].u_g/_05837_/Y",
+              "arrival_ps": 356.415649
+            },
+            {
+              "pin": "_27644_/A",
+              "arrival_ps": 356.972229
+            },
+            {
+              "pin": "_27644_/Y",
+              "arrival_ps": 389.339844
+            },
+            {
+              "pin": "_27646_/A2",
+              "arrival_ps": 404.700165
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 443.676941
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 445.955811
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 467.896057
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 483.200806
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 502.181396
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 502.587311
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 514.930908
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 515.070557
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 522.346069
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 522.453064
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 537.190186
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 537.344971
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 555.458557
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 555.528931
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 574.625671
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 574.833069
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 588.305603
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 588.353088
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_14198_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "g_st[7].u_g/_00657_",
+            "g_st[7].u_g/_01620_",
+            "g_st[7].u_g/_01622_",
+            "g_st[7].u_g/_01627_",
+            "ga_key[7][19]",
+            "lweco_2_n19419",
+            "net17964"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "B/max": {
+          "slack_ps": 213.395691,
+          "startpoint": "la_gs[2]$_DFF_P_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "la_gs[2]$_DFF_P_/QN",
+              "arrival_ps": 313.569153
+            },
+            {
+              "pin": "place9661/A",
+              "arrival_ps": 318.496338
+            },
+            {
+              "pin": "place9661/Y",
+              "arrival_ps": 342.586212
+            },
+            {
+              "pin": "wire11999/A",
+              "arrival_ps": 344.412048
+            },
+            {
+              "pin": "wire11999/Y",
+              "arrival_ps": 363.597565
+            },
+            {
+              "pin": "wire18061/A",
+              "arrival_ps": 363.73465
+            },
+            {
+              "pin": "wire18061/Y",
+              "arrival_ps": 381.699432
+            },
+            {
+              "pin": "wire18662/A",
+              "arrival_ps": 384.576569
+            },
+            {
+              "pin": "wire18662/Y",
+              "arrival_ps": 403.872864
+            },
+            {
+              "pin": "wire19289/A",
+              "arrival_ps": 405.14975
+            },
+            {
+              "pin": "wire19289/Y",
+              "arrival_ps": 423.879822
+            },
+            {
+              "pin": "_27645_/A",
+              "arrival_ps": 507.492615
+            },
+            {
+              "pin": "_27645_/Y",
+              "arrival_ps": 614.145325
+            },
+            {
+              "pin": "_27646_/B",
+              "arrival_ps": 629.988586
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 671.286133
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 673.819885
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 696.373657
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 712.627747
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 731.972534
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 732.426331
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 745.169128
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 745.324402
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 753.166504
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 753.292969
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 771.794556
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 771.972656
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 793.251038
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 793.335571
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 825.174561
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 825.413452
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 848.653809
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 848.706604
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_04280_",
+            "_14199_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "lweco_2_n19419",
+            "net11998",
+            "net17964",
+            "net18062",
+            "net18663",
+            "net19290",
+            "net9660"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "B/min": {
+          "slack_ps": 306.755127,
+          "startpoint": "g_st[3].u_g/key_g[4][19]$_DFFE_PP_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "g_st[3].u_g/key_g[4][19]$_DFFE_PP_/QN",
+              "arrival_ps": 300.761475
+            },
+            {
+              "pin": "g_st[3].u_g/_05821_/A",
+              "arrival_ps": 300.907196
+            },
+            {
+              "pin": "g_st[3].u_g/_05821_/Y",
+              "arrival_ps": 309.541962
+            },
+            {
+              "pin": "g_st[3].u_g/_05823_/A1",
+              "arrival_ps": 309.59668
+            },
+            {
+              "pin": "g_st[3].u_g/_05823_/Y",
+              "arrival_ps": 324.944641
+            },
+            {
+              "pin": "g_st[3].u_g/_05828_/A2",
+              "arrival_ps": 324.994659
+            },
+            {
+              "pin": "g_st[3].u_g/_05828_/Y",
+              "arrival_ps": 338.312561
+            },
+            {
+              "pin": "g_st[3].u_g/_05837_/A2",
+              "arrival_ps": 338.365326
+            },
+            {
+              "pin": "g_st[3].u_g/_05837_/Y",
+              "arrival_ps": 357.405792
+            },
+            {
+              "pin": "_27645_/B",
+              "arrival_ps": 358.207672
+            },
+            {
+              "pin": "_27645_/Y",
+              "arrival_ps": 392.807281
+            },
+            {
+              "pin": "_27646_/B",
+              "arrival_ps": 407.789642
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 443.495361
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 445.774231
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 467.714478
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 483.019226
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 501.999847
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 502.405731
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 514.749329
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 514.888977
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 522.16449
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 522.271484
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 537.008606
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 537.163391
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 555.276978
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 555.347351
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 574.444092
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 574.651489
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 588.124023
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 588.171509
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_14199_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "g_st[3].u_g/_00657_",
+            "g_st[3].u_g/_01620_",
+            "g_st[3].u_g/_01622_",
+            "g_st[3].u_g/_01627_",
+            "ga_key[3][19]",
+            "lweco_2_n19419",
+            "net17964"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "C/max": {
+          "slack_ps": 280.467865,
+          "startpoint": "la_gs[1]$_DFF_P_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "la_gs[1]$_DFF_P_/QN",
+              "arrival_ps": 308.399658
+            },
+            {
+              "pin": "fanout11501/A",
+              "arrival_ps": 308.882507
+            },
+            {
+              "pin": "fanout11501/Y",
+              "arrival_ps": 346.379547
+            },
+            {
+              "pin": "_15863_/A",
+              "arrival_ps": 348.37793
+            },
+            {
+              "pin": "_15863_/Y",
+              "arrival_ps": 367.552002
+            },
+            {
+              "pin": "fanout11496/A",
+              "arrival_ps": 368.046448
+            },
+            {
+              "pin": "fanout11496/Y",
+              "arrival_ps": 405.095459
+            },
+            {
+              "pin": "wire11963/A",
+              "arrival_ps": 415.914551
+            },
+            {
+              "pin": "wire11963/Y",
+              "arrival_ps": 444.073425
+            },
+            {
+              "pin": "wire19263/A",
+              "arrival_ps": 446.411469
+            },
+            {
+              "pin": "wire19263/Y",
+              "arrival_ps": 461.794098
+            },
+            {
+              "pin": "wire19399/A",
+              "arrival_ps": 461.912567
+            },
+            {
+              "pin": "wire19399/Y",
+              "arrival_ps": 476.273621
+            },
+            {
+              "pin": "_27646_/C",
+              "arrival_ps": 520.723938
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 591.322998
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 593.861938
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 618.315735
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 634.519653
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 656.457458
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 656.915344
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 678.743835
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 678.899292
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 689.051086
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 689.176453
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 704.334045
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 704.5271
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 726.178833
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 726.263367
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 758.102356
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 758.341309
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 781.581665
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 781.634399
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_04279_",
+            "_07220_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "lweco_2_n19419",
+            "net11495",
+            "net11500",
+            "net11962",
+            "net17964",
+            "net19264",
+            "net19400"
+          ],
+          "missing_route_warnings_on_path": []
+        },
+        "C/min": {
+          "slack_ps": 391.273193,
+          "startpoint": "la_gs[1]$_DFF_P_/QN",
+          "endpoint": "fa_kh$_DFF_P_/D",
+          "points": [
+            {
+              "pin": "la_gs[1]$_DFF_P_/QN",
+              "arrival_ps": 296.198547
+            },
+            {
+              "pin": "fanout11501/A",
+              "arrival_ps": 296.619537
+            },
+            {
+              "pin": "fanout11501/Y",
+              "arrival_ps": 330.888702
+            },
+            {
+              "pin": "_15863_/A",
+              "arrival_ps": 332.631592
+            },
+            {
+              "pin": "_15863_/Y",
+              "arrival_ps": 351.362488
+            },
+            {
+              "pin": "fanout11496/A",
+              "arrival_ps": 351.783813
+            },
+            {
+              "pin": "fanout11496/Y",
+              "arrival_ps": 386.973602
+            },
+            {
+              "pin": "wire11963/A",
+              "arrival_ps": 396.557251
+            },
+            {
+              "pin": "wire11963/Y",
+              "arrival_ps": 421.172089
+            },
+            {
+              "pin": "wire19263/A",
+              "arrival_ps": 423.158295
+            },
+            {
+              "pin": "wire19263/Y",
+              "arrival_ps": 437.26825
+            },
+            {
+              "pin": "wire19399/A",
+              "arrival_ps": 437.356903
+            },
+            {
+              "pin": "wire19399/Y",
+              "arrival_ps": 451.026733
+            },
+            {
+              "pin": "_27646_/C",
+              "arrival_ps": 494.750641
+            },
+            {
+              "pin": "_27646_/Y",
+              "arrival_ps": 528.013428
+            },
+            {
+              "pin": "wire17963/A",
+              "arrival_ps": 530.292297
+            },
+            {
+              "pin": "wire17963/Y",
+              "arrival_ps": 552.232544
+            },
+            {
+              "pin": "lweco_219418/A",
+              "arrival_ps": 567.537292
+            },
+            {
+              "pin": "lweco_219418/Y",
+              "arrival_ps": 586.517883
+            },
+            {
+              "pin": "_27650_/B",
+              "arrival_ps": 586.923767
+            },
+            {
+              "pin": "_27650_/Y",
+              "arrival_ps": 599.267395
+            },
+            {
+              "pin": "_27651_/A2",
+              "arrival_ps": 599.407043
+            },
+            {
+              "pin": "_27651_/Y",
+              "arrival_ps": 606.682556
+            },
+            {
+              "pin": "_27652_/B",
+              "arrival_ps": 606.789551
+            },
+            {
+              "pin": "_27652_/Y",
+              "arrival_ps": 621.526672
+            },
+            {
+              "pin": "_27653_/B",
+              "arrival_ps": 621.681458
+            },
+            {
+              "pin": "_27653_/Y",
+              "arrival_ps": 639.795044
+            },
+            {
+              "pin": "_27654_/E",
+              "arrival_ps": 639.865356
+            },
+            {
+              "pin": "_27654_/Y",
+              "arrival_ps": 658.962158
+            },
+            {
+              "pin": "_27655_/D",
+              "arrival_ps": 659.169556
+            },
+            {
+              "pin": "_27655_/Y",
+              "arrival_ps": 672.64209
+            },
+            {
+              "pin": "fa_kh$_DFF_P_/D",
+              "arrival_ps": 672.689575
+            }
+          ],
+          "nets": [
+            "_00062_",
+            "_04279_",
+            "_07220_",
+            "_14200_",
+            "_14204_",
+            "_14205_",
+            "_14206_",
+            "_14207_",
+            "_14208_",
+            "lweco_2_n19419",
+            "net11495",
+            "net11500",
+            "net11962",
+            "net17964",
+            "net19264",
+            "net19400"
+          ],
+          "missing_route_warnings_on_path": []
+        }
+      },
+      "EST0026_missing_route_net_count": 0,
+      "EST0026_missing_route_nets": [],
+      "coverage_affected_paths": []
+    }
+  },
+  "remaining_globalTT": "d3_v[0] -> cw_n_d[126], \u221211.47ps/14endpoints; oldlweco_019416 andlweco_119417 sequential DATAchain",
+  "reset_correction": "u_rr.rst_n[15] recovery path MET+321.74, notthecriticalsetupfailure",
+  "closed": false,
+  "pair_census": "NOT RUN due auxiliary printer failure (TT datafailure would stop it anyway)",
+  "next": "No physical rerun or pricing replay solely forprinter; preservealllogs; GRT-onlyguidecoverage and actualsourceRCXvsGRT basis limitations remain"
+}

@@ -1,0 +1,11 @@
+from pathlib import Path
+import json
+import matplotlib;matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+p=Path('/home/ubuntu/coord/tmp/codex-cap-d3-source-0840');x=json.load(open(p/'DIAGNOSIS.json'));d=x['path_cells'];order=['d3_v[0]$_DFF_PN0_','wire12067','lweco_019416','wire12066','hold13472','_15941_','_17319_','_17320_','wire11949','wire11948','wire19387','lweco_119417','place9190','fanout10577','fanout10576','_17957_','_17958_','_17959_','cw_n_d[126]$_DFF_P_'];fig,ax=plt.subplots(figsize=(13,7));ax.add_patch(Rectangle((43.2,43.2),174.12,29.736,fc='gray',alpha=.3));ax.add_patch(Rectangle((38.88,38.88),182.76,38.376,fill=False,ls='--',ec='red'));ax.text(130,58,'actual u_st SRAM /4.32um halo',ha='center');xx=[d[n]['x'] for n in order];yy=[d[n]['y'] for n in order];ax.plot(xx,yy,'o-',c='#b2182b',lw=1.5,ms=4,label='actual DATA-cone joins (not routed wire paths)')
+labels={'d3_v[0]$_DFF_PN0_':'Launch d3_v[0]','cw_n_d[126]$_DFF_P_':'Capture cw_n_d[126]','lweco_019416':'existing BUF12f LWECO0\n95.57ps wire+cell stage','lweco_119417':'existing BUF12f LWECO1\n101.34ps wire+cell stage','wire12067':'wire12067 north driver','wire19387':'wire19387 east driver','_15941_':'low control logic','_17361_':'shared net19388 alternate\nNAND2 branch: headroom unknown'}
+for n,label in labels.items():
+ a=d[n];ax.scatter(a['x'],a['y'],s=35,c='orange' if n=='_17361_' else '#b2182b');ax.annotate(label,(a['x'],a['y']),xytext=(8,12 if n not in ['lweco_119417','wire12067'] else -28),textcoords='offset points',fontsize=8,arrowprops={'arrowstyle':'-','lw':.6})
+a=d['_17361_'];b=d['wire19387'];ax.plot([b['x'],a['x']],[b['y'],a['y']],c='darkorange',ls='--',lw=1)
+ax.set(xlim=(0,259.2),ylim=(0,129.6),aspect='equal',xlabel='um',ylabel='um',title='Cap WEST2 next DATA setup frontier: TT−11.47ps/14ep on fresh GRT basis\nTwo existing strong repeaters are near sinks after long incoming macro-wall segments; no new cells proposed');ax.legend(loc='lower right',fontsize=8);ax.grid(alpha=.1);fig.suptitle('SOURCE DIAGNOSIS ONLY: same clock/reset/RTL/cycles; no new STA or physical candidate\nExact A-pin arrival/slew and every shared-branch setup+hold headroom are missing, so a new locality/drive move remains HOLD',fontsize=10);fig.tight_layout();fig.savefig(p/'actual_D3_source_frontier.png',dpi=160)

@@ -1,0 +1,1846 @@
+{
+  "source": "/srv/opentallas-scratch2/claude/codex-cap-west2-0730-r1/after.def",
+  "scope": "READONLY sourceDEF existing reports; NO STA/P&R/candidate edit",
+  "path_cells": {
+    "_15941_": {
+      "name": "_15941_",
+      "master": "INVx1_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 125.28,
+      "y": 9.99,
+      "orient": "FS"
+    },
+    "_17319_": {
+      "name": "_17319_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 124.146,
+      "y": 12.42,
+      "orient": "N"
+    },
+    "_17320_": {
+      "name": "_17320_",
+      "master": "AND4x2_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 124.524,
+      "y": 12.69,
+      "orient": "FS"
+    },
+    "_17361_": {
+      "name": "_17361_",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 124.038,
+      "y": 100.98,
+      "orient": "N"
+    },
+    "_17957_": {
+      "name": "_17957_",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 158.436,
+      "y": 120.15,
+      "orient": "FS"
+    },
+    "_17958_": {
+      "name": "_17958_",
+      "master": "OA211x2_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 158.49,
+      "y": 120.69,
+      "orient": "FS"
+    },
+    "_17959_": {
+      "name": "_17959_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 158.166,
+      "y": 120.69,
+      "orient": "FS"
+    },
+    "cw_n_d[126]$_DFF_P_": {
+      "name": "cw_n_d\\[126\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 158.922,
+      "y": 124.47,
+      "orient": "FS"
+    },
+    "d3_v[0]$_DFF_PN0_": {
+      "name": "d3_v\\[0\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 123.066,
+      "y": 94.5,
+      "orient": "N"
+    },
+    "fanout10576": {
+      "name": "fanout10576",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 151.362,
+      "y": 119.88,
+      "orient": "N"
+    },
+    "fanout10577": {
+      "name": "fanout10577",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 150.768,
+      "y": 119.61,
+      "orient": "FS"
+    },
+    "hold13472": {
+      "name": "hold13472",
+      "master": "BUFx2_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 83.538,
+      "y": 13.5,
+      "orient": "N"
+    },
+    "lweco_019416": {
+      "name": "lweco_019416",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "status": "PLACED",
+      "x": 41.202,
+      "y": 21.6,
+      "orient": "N"
+    },
+    "lweco_119417": {
+      "name": "lweco_119417",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "status": "PLACED",
+      "x": 133.272,
+      "y": 100.44,
+      "orient": "N"
+    },
+    "place9190": {
+      "name": "place9190",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 125.28,
+      "y": 100.98,
+      "orient": "N"
+    },
+    "wire11948": {
+      "name": "wire11948",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 221.778,
+      "y": 41.04,
+      "orient": "N"
+    },
+    "wire11949": {
+      "name": "wire11949",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 126.846,
+      "y": 18.09,
+      "orient": "FS"
+    },
+    "wire12066": {
+      "name": "wire12066",
+      "master": "BUFx10_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 40.986,
+      "y": 13.5,
+      "orient": "N"
+    },
+    "wire12067": {
+      "name": "wire12067",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 124.524,
+      "y": 94.5,
+      "orient": "N"
+    },
+    "wire19387": {
+      "name": "wire19387",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "status": "FIXED",
+      "x": 232.848,
+      "y": 48.33,
+      "orient": "FS"
+    }
+  },
+  "incident_data_and_clock_nets": {
+    "_00049_": [
+      [
+        "d3_v[0]$_DFF_PN0_",
+        "D"
+      ],
+      [
+        "_28331_",
+        "Y"
+      ]
+    ],
+    "_01101_": [
+      [
+        "wire12075",
+        "A"
+      ],
+      [
+        "_17361_",
+        "A"
+      ],
+      [
+        "d3_a[0][3]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "_01287_": [
+      [
+        "wire12067",
+        "A"
+      ],
+      [
+        "d3_v[0]$_DFF_PN0_",
+        "QN"
+      ]
+    ],
+    "_04244_": [
+      [
+        "cw_n_d[126]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "_27187_",
+        "A"
+      ]
+    ],
+    "_04942_": [
+      [
+        "hold14459",
+        "A"
+      ],
+      [
+        "_15192_",
+        "A"
+      ],
+      [
+        "_17319_",
+        "A"
+      ],
+      [
+        "_17391_",
+        "A"
+      ],
+      [
+        "_17421_",
+        "A"
+      ],
+      [
+        "_17630_",
+        "A"
+      ],
+      [
+        "_17700_",
+        "A"
+      ],
+      [
+        "_28338_",
+        "A"
+      ],
+      [
+        "d3_k[0][1]$_SDFF_PP0_",
+        "QN"
+      ],
+      [
+        "_28886_",
+        "A"
+      ],
+      [
+        "_28885_",
+        "A"
+      ],
+      [
+        "_28748_",
+        "A"
+      ]
+    ],
+    "_07269_": [
+      [
+        "_28341_",
+        "A"
+      ],
+      [
+        "_17391_",
+        "B"
+      ],
+      [
+        "_17386_",
+        "C"
+      ],
+      [
+        "_17319_",
+        "B"
+      ],
+      [
+        "_15942_",
+        "C"
+      ],
+      [
+        "_15941_",
+        "Y"
+      ]
+    ],
+    "_07883_": [
+      [
+        "_17320_",
+        "C"
+      ],
+      [
+        "_17812_",
+        "B"
+      ],
+      [
+        "_17807_",
+        "B"
+      ],
+      [
+        "_17803_",
+        "C"
+      ],
+      [
+        "_17799_",
+        "B"
+      ],
+      [
+        "_17771_",
+        "B"
+      ],
+      [
+        "_17767_",
+        "B"
+      ],
+      [
+        "_17756_",
+        "B"
+      ],
+      [
+        "_17698_",
+        "A"
+      ],
+      [
+        "_17319_",
+        "Y"
+      ]
+    ],
+    "_07884_": [
+      [
+        "wire11949",
+        "A"
+      ],
+      [
+        "_17325_",
+        "B"
+      ],
+      [
+        "_17326_",
+        "A2"
+      ],
+      [
+        "_17331_",
+        "B"
+      ],
+      [
+        "_17332_",
+        "A2"
+      ],
+      [
+        "_17342_",
+        "B"
+      ],
+      [
+        "_17343_",
+        "A2"
+      ],
+      [
+        "_28514_",
+        "B"
+      ],
+      [
+        "_28515_",
+        "A2"
+      ],
+      [
+        "_17320_",
+        "Y"
+      ]
+    ],
+    "_07919_": [
+      [
+        "_17362_",
+        "B"
+      ],
+      [
+        "_17361_",
+        "Y"
+      ]
+    ],
+    "_08403_": [
+      [
+        "_17958_",
+        "C"
+      ],
+      [
+        "_17957_",
+        "Y"
+      ]
+    ],
+    "_08404_": [
+      [
+        "_17959_",
+        "B"
+      ],
+      [
+        "_17958_",
+        "Y"
+      ]
+    ],
+    "clknet_leaf_459_clk_regs": [
+      [
+        "clkload544",
+        "A"
+      ],
+      [
+        "g_st[5].u_g/key_g[3][14]$_DFFE_PP_",
+        "CLK"
+      ],
+      [
+        "g_st[5].u_g/key_g[0][14]$_DFFE_PP_",
+        "CLK"
+      ],
+      [
+        "g_st[5].u_g/key_g[3][12]$_DFFE_PP_",
+        "CLK"
+      ],
+      [
+        "g_st[5].u_g/key_g[0][12]$_DFFE_PP_",
+        "CLK"
+      ],
+      [
+        "g_st[5].u_g/key_g[2][12]$_DFFE_PP_",
+        "CLK"
+      ],
+      [
+        "d1_v[0]$_DFF_PN0_",
+        "CLK"
+      ],
+      [
+        "d3_v[0]$_DFF_PN0_",
+        "CLK"
+      ],
+      [
+        "g_st[5].u_g/key_g[3][11]$_DFFE_PP_",
+        "CLK"
+      ],
+      [
+        "clkbuf_leaf_459_clk_regs",
+        "Y"
+      ]
+    ],
+    "clknet_leaf_616_clk_regs": [
+      [
+        "clkload605",
+        "A"
+      ],
+      [
+        "cw_n_d[126]$_DFF_P_",
+        "CLK"
+      ],
+      [
+        "lf_p[1]$_DFF_PN0_",
+        "CLK"
+      ],
+      [
+        "cw_n_d[118]$_DFF_P_",
+        "CLK"
+      ],
+      [
+        "cw_n_d[121]$_DFF_P_",
+        "CLK"
+      ],
+      [
+        "cw_n_d[127]$_DFF_P_",
+        "CLK"
+      ],
+      [
+        "u_n6.na[26]$_DFF_P_",
+        "CLK"
+      ],
+      [
+        "cw_d[313]$_DFF_P_",
+        "CLK"
+      ],
+      [
+        "cw_n_d[124]$_DFF_P_",
+        "CLK"
+      ],
+      [
+        "clkbuf_leaf_616_clk_regs",
+        "Y"
+      ]
+    ],
+    "cw_d[318]": [
+      [
+        "_17958_",
+        "A1"
+      ],
+      [
+        "_16113_",
+        "Y"
+      ]
+    ],
+    "cw_d_n[318]": [
+      [
+        "cw_n_d[126]$_DFF_P_",
+        "D"
+      ],
+      [
+        "cw_d[318]$_DFF_P_",
+        "D"
+      ],
+      [
+        "_17959_",
+        "Y"
+      ]
+    ],
+    "d3_k[0][2]": [
+      [
+        "_28887_",
+        "B"
+      ],
+      [
+        "_28886_",
+        "B"
+      ],
+      [
+        "_17387_",
+        "A"
+      ],
+      [
+        "_17320_",
+        "A"
+      ],
+      [
+        "_15934_",
+        "A"
+      ],
+      [
+        "_15931_",
+        "B"
+      ],
+      [
+        "_15123_",
+        "Y"
+      ]
+    ],
+    "lweco_0_n19417": [
+      [
+        "wire12066",
+        "A"
+      ],
+      [
+        "lweco_019416",
+        "Y"
+      ]
+    ],
+    "lweco_1_n19418": [
+      [
+        "place9190",
+        "A"
+      ],
+      [
+        "lweco_119417",
+        "Y"
+      ]
+    ],
+    "net10575": [
+      [
+        "_18117_",
+        "A2"
+      ],
+      [
+        "_18116_",
+        "B"
+      ],
+      [
+        "_18102_",
+        "A2"
+      ],
+      [
+        "_18101_",
+        "B"
+      ],
+      [
+        "_18086_",
+        "B"
+      ],
+      [
+        "_18077_",
+        "A2"
+      ],
+      [
+        "_18076_",
+        "B"
+      ],
+      [
+        "_18057_",
+        "A2"
+      ],
+      [
+        "_18056_",
+        "B"
+      ],
+      [
+        "_18047_",
+        "A2"
+      ],
+      [
+        "_18046_",
+        "B"
+      ],
+      [
+        "_18020_",
+        "A2"
+      ],
+      [
+        "_18019_",
+        "B"
+      ],
+      [
+        "_17992_",
+        "B"
+      ],
+      [
+        "_17988_",
+        "A2"
+      ],
+      [
+        "_17987_",
+        "B"
+      ],
+      [
+        "_17973_",
+        "A2"
+      ],
+      [
+        "_17972_",
+        "B"
+      ],
+      [
+        "_17968_",
+        "A2"
+      ],
+      [
+        "_17967_",
+        "B"
+      ],
+      [
+        "_17963_",
+        "A2"
+      ],
+      [
+        "_17962_",
+        "B"
+      ],
+      [
+        "_17958_",
+        "A2"
+      ],
+      [
+        "_17957_",
+        "B"
+      ],
+      [
+        "fanout10576",
+        "Y"
+      ]
+    ],
+    "net10576": [
+      [
+        "fanout10576",
+        "A"
+      ],
+      [
+        "_18072_",
+        "A2"
+      ],
+      [
+        "_18071_",
+        "B"
+      ],
+      [
+        "_18032_",
+        "A2"
+      ],
+      [
+        "_18031_",
+        "B"
+      ],
+      [
+        "_18015_",
+        "A2"
+      ],
+      [
+        "_18013_",
+        "B"
+      ],
+      [
+        "_18009_",
+        "A2"
+      ],
+      [
+        "_18008_",
+        "B"
+      ],
+      [
+        "_18003_",
+        "A2"
+      ],
+      [
+        "_18002_",
+        "B"
+      ],
+      [
+        "_17993_",
+        "A2"
+      ],
+      [
+        "fanout10577",
+        "Y"
+      ]
+    ],
+    "net10643": [
+      [
+        "_17320_",
+        "D"
+      ],
+      [
+        "_29217_",
+        "B"
+      ],
+      [
+        "_28971_",
+        "B"
+      ],
+      [
+        "_28969_",
+        "B"
+      ],
+      [
+        "_28969_",
+        "A"
+      ],
+      [
+        "_17817_",
+        "A"
+      ],
+      [
+        "_17771_",
+        "A"
+      ],
+      [
+        "_17767_",
+        "A"
+      ],
+      [
+        "_17756_",
+        "A"
+      ],
+      [
+        "_17700_",
+        "B"
+      ],
+      [
+        "_17632_",
+        "C"
+      ],
+      [
+        "_17601_",
+        "A"
+      ],
+      [
+        "_17571_",
+        "A"
+      ],
+      [
+        "_17563_",
+        "A"
+      ],
+      [
+        "_17549_",
+        "A"
+      ],
+      [
+        "_17538_",
+        "A"
+      ],
+      [
+        "_17530_",
+        "A"
+      ],
+      [
+        "_17523_",
+        "A"
+      ],
+      [
+        "_17492_",
+        "A"
+      ],
+      [
+        "_17483_",
+        "A"
+      ],
+      [
+        "_17470_",
+        "A"
+      ],
+      [
+        "_17466_",
+        "A"
+      ],
+      [
+        "_17392_",
+        "C"
+      ],
+      [
+        "_15937_",
+        "A"
+      ],
+      [
+        "fanout10644",
+        "Y"
+      ]
+    ],
+    "net11947": [
+      [
+        "wire19387",
+        "A"
+      ],
+      [
+        "wire11948",
+        "Y"
+      ]
+    ],
+    "net11948": [
+      [
+        "_18111_",
+        "B"
+      ],
+      [
+        "_18106_",
+        "B"
+      ],
+      [
+        "_18096_",
+        "B"
+      ],
+      [
+        "_18091_",
+        "B"
+      ],
+      [
+        "_18081_",
+        "B"
+      ],
+      [
+        "_18066_",
+        "B"
+      ],
+      [
+        "_18041_",
+        "B"
+      ],
+      [
+        "_18025_",
+        "B"
+      ],
+      [
+        "_17997_",
+        "B"
+      ],
+      [
+        "_17980_",
+        "B"
+      ],
+      [
+        "wire11948",
+        "A"
+      ],
+      [
+        "wire11949",
+        "Y"
+      ]
+    ],
+    "net11969": [
+      [
+        "_18267_",
+        "A1"
+      ],
+      [
+        "_17959_",
+        "A1"
+      ],
+      [
+        "wire11970",
+        "Y"
+      ]
+    ],
+    "net11991": [
+      [
+        "_18265_",
+        "A"
+      ],
+      [
+        "_17957_",
+        "A"
+      ],
+      [
+        "wire11992",
+        "Y"
+      ]
+    ],
+    "net12065": [
+      [
+        "hold13472",
+        "A"
+      ],
+      [
+        "_17630_",
+        "C"
+      ],
+      [
+        "wire12066",
+        "Y"
+      ]
+    ],
+    "net12066": [
+      [
+        "lweco_019416",
+        "A"
+      ],
+      [
+        "wire12067",
+        "Y"
+      ]
+    ],
+    "net125": [
+      [
+        "d3_v[0]$_DFF_PN0_",
+        "SETN"
+      ],
+      [
+        "d3_v[0]$_DFF_PN0__126",
+        "H"
+      ]
+    ],
+    "net13473": [
+      [
+        "hold13894",
+        "A"
+      ],
+      [
+        "_17421_",
+        "B"
+      ],
+      [
+        "_15941_",
+        "A"
+      ],
+      [
+        "hold13472",
+        "Y"
+      ]
+    ],
+    "net13826": [
+      [
+        "_17320_",
+        "B"
+      ],
+      [
+        "_17308_",
+        "A"
+      ],
+      [
+        "hold13825",
+        "Y"
+      ]
+    ],
+    "net18053": [
+      [
+        "f9[1]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "f9[0]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "f8$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "d3_v[1]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "d3_v[0]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "d2_v[1]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "d2_v[0]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "d1_v[1]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "d1_v[0]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "cw_n_v[3]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "cw_n_v[2]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "cw_n_v[1]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "cw_n_v[0]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "wire18052",
+        "Y"
+      ]
+    ],
+    "net19388": [
+      [
+        "lweco_119417",
+        "A"
+      ],
+      [
+        "_17361_",
+        "B"
+      ],
+      [
+        "wire19387",
+        "Y"
+      ]
+    ],
+    "net9083": [
+      [
+        "_17988_",
+        "B"
+      ],
+      [
+        "_17968_",
+        "B"
+      ],
+      [
+        "_17958_",
+        "B"
+      ],
+      [
+        "_18117_",
+        "C"
+      ],
+      [
+        "_18102_",
+        "C"
+      ],
+      [
+        "_18087_",
+        "C"
+      ],
+      [
+        "_18077_",
+        "C"
+      ],
+      [
+        "_18072_",
+        "C"
+      ],
+      [
+        "_18057_",
+        "C"
+      ],
+      [
+        "_18052_",
+        "C"
+      ],
+      [
+        "_18047_",
+        "C"
+      ],
+      [
+        "_18037_",
+        "C"
+      ],
+      [
+        "_18032_",
+        "C"
+      ],
+      [
+        "_18020_",
+        "C"
+      ],
+      [
+        "_18015_",
+        "C"
+      ],
+      [
+        "_18009_",
+        "C"
+      ],
+      [
+        "_18003_",
+        "C"
+      ],
+      [
+        "_17993_",
+        "C"
+      ],
+      [
+        "_17973_",
+        "C"
+      ],
+      [
+        "_17963_",
+        "C"
+      ],
+      [
+        "place9084",
+        "Y"
+      ]
+    ],
+    "net9085": [
+      [
+        "_18118_",
+        "A2"
+      ],
+      [
+        "_18103_",
+        "A2"
+      ],
+      [
+        "_18088_",
+        "A2"
+      ],
+      [
+        "_18078_",
+        "A2"
+      ],
+      [
+        "_18073_",
+        "A2"
+      ],
+      [
+        "_18058_",
+        "A2"
+      ],
+      [
+        "_18053_",
+        "A2"
+      ],
+      [
+        "_18048_",
+        "A2"
+      ],
+      [
+        "_18038_",
+        "A2"
+      ],
+      [
+        "_18033_",
+        "A2"
+      ],
+      [
+        "_18021_",
+        "A2"
+      ],
+      [
+        "_18016_",
+        "A2"
+      ],
+      [
+        "_18010_",
+        "A2"
+      ],
+      [
+        "_18004_",
+        "A2"
+      ],
+      [
+        "_17994_",
+        "A2"
+      ],
+      [
+        "_17989_",
+        "A2"
+      ],
+      [
+        "_17974_",
+        "A2"
+      ],
+      [
+        "_17969_",
+        "A2"
+      ],
+      [
+        "_17964_",
+        "A2"
+      ],
+      [
+        "_17959_",
+        "A2"
+      ],
+      [
+        "_17379_",
+        "A2"
+      ],
+      [
+        "_17363_",
+        "A2"
+      ],
+      [
+        "place9086",
+        "Y"
+      ]
+    ],
+    "net9189": [
+      [
+        "fanout10577",
+        "A"
+      ],
+      [
+        "_18087_",
+        "A2"
+      ],
+      [
+        "_18052_",
+        "A2"
+      ],
+      [
+        "_18051_",
+        "B"
+      ],
+      [
+        "_18037_",
+        "A2"
+      ],
+      [
+        "_18036_",
+        "B"
+      ],
+      [
+        "_17378_",
+        "A2"
+      ],
+      [
+        "_17377_",
+        "B"
+      ],
+      [
+        "_17372_",
+        "A2"
+      ],
+      [
+        "_17370_",
+        "B"
+      ],
+      [
+        "_17362_",
+        "A2"
+      ],
+      [
+        "place9190",
+        "Y"
+      ]
+    ]
+  },
+  "two_repeater_inputs_outputs": {
+    "lweco_019416": {
+      "A": [
+        {
+          "net": "net12066",
+          "connections": [
+            [
+              "lweco_019416",
+              "A"
+            ],
+            [
+              "wire12067",
+              "Y"
+            ]
+          ],
+          "terminal_poses": {
+            "lweco_019416": {
+              "name": "lweco_019416",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "status": "PLACED",
+              "x": 41.202,
+              "y": 21.6,
+              "orient": "N"
+            },
+            "wire12067": {
+              "name": "wire12067",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "status": "FIXED",
+              "x": 124.524,
+              "y": 94.5,
+              "orient": "N"
+            }
+          }
+        }
+      ],
+      "Y": [
+        {
+          "net": "lweco_0_n19417",
+          "connections": [
+            [
+              "wire12066",
+              "A"
+            ],
+            [
+              "lweco_019416",
+              "Y"
+            ]
+          ],
+          "terminal_poses": {
+            "wire12066": {
+              "name": "wire12066",
+              "master": "BUFx10_ASAP7_75t_R",
+              "status": "FIXED",
+              "x": 40.986,
+              "y": 13.5,
+              "orient": "N"
+            },
+            "lweco_019416": {
+              "name": "lweco_019416",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "status": "PLACED",
+              "x": 41.202,
+              "y": 21.6,
+              "orient": "N"
+            }
+          }
+        }
+      ]
+    },
+    "lweco_119417": {
+      "A": [
+        {
+          "net": "net19388",
+          "connections": [
+            [
+              "lweco_119417",
+              "A"
+            ],
+            [
+              "_17361_",
+              "B"
+            ],
+            [
+              "wire19387",
+              "Y"
+            ]
+          ],
+          "terminal_poses": {
+            "lweco_119417": {
+              "name": "lweco_119417",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "status": "PLACED",
+              "x": 133.272,
+              "y": 100.44,
+              "orient": "N"
+            },
+            "_17361_": {
+              "name": "_17361_",
+              "master": "NAND2x1_ASAP7_75t_R",
+              "status": "FIXED",
+              "x": 124.038,
+              "y": 100.98,
+              "orient": "N"
+            },
+            "wire19387": {
+              "name": "wire19387",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "status": "FIXED",
+              "x": 232.848,
+              "y": 48.33,
+              "orient": "FS"
+            }
+          }
+        }
+      ],
+      "Y": [
+        {
+          "net": "lweco_1_n19418",
+          "connections": [
+            [
+              "place9190",
+              "A"
+            ],
+            [
+              "lweco_119417",
+              "Y"
+            ]
+          ],
+          "terminal_poses": {
+            "place9190": {
+              "name": "place9190",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "status": "FIXED",
+              "x": 125.28,
+              "y": 100.98,
+              "orient": "N"
+            },
+            "lweco_119417": {
+              "name": "lweco_119417",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "status": "PLACED",
+              "x": 133.272,
+              "y": 100.44,
+              "orient": "N"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "timing_path_rows": [
+    {
+      "pin": "clk",
+      "master": "in",
+      "fanout": 1,
+      "cap_ff": 5.9,
+      "slew_ps": 0.0,
+      "stage_increment_ps": 0.0,
+      "arrival_ps": 0.0
+    },
+    {
+      "pin": "wire11505/Y",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 7.79,
+      "slew_ps": 12.06,
+      "stage_increment_ps": 17.89,
+      "arrival_ps": 17.89
+    },
+    {
+      "pin": "clkbuf_regs_0_clk/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 1,
+      "cap_ff": 2.89,
+      "slew_ps": 9.18,
+      "stage_increment_ps": 26.03,
+      "arrival_ps": 43.93
+    },
+    {
+      "pin": "clkbuf_0_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 11.46,
+      "slew_ps": 13.45,
+      "stage_increment_ps": 23.97,
+      "arrival_ps": 67.89
+    },
+    {
+      "pin": "clkbuf_1_1_0_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 1,
+      "cap_ff": 5.92,
+      "slew_ps": 10.6,
+      "stage_increment_ps": 27.51,
+      "arrival_ps": 95.41
+    },
+    {
+      "pin": "clkbuf_1_1_1_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 8.41,
+      "slew_ps": 11.82,
+      "stage_increment_ps": 27.13,
+      "arrival_ps": 122.54
+    },
+    {
+      "pin": "clkbuf_2_3_0_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 8.54,
+      "slew_ps": 11.6,
+      "stage_increment_ps": 26.17,
+      "arrival_ps": 148.7
+    },
+    {
+      "pin": "clkbuf_3_6_0_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 8.37,
+      "slew_ps": 11.48,
+      "stage_increment_ps": 28.44,
+      "arrival_ps": 177.14
+    },
+    {
+      "pin": "clkbuf_4_12_0_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 8.46,
+      "slew_ps": 11.73,
+      "stage_increment_ps": 28.97,
+      "arrival_ps": 206.11
+    },
+    {
+      "pin": "clkbuf_5_24_0_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 4,
+      "cap_ff": 14.12,
+      "slew_ps": 15.12,
+      "stage_increment_ps": 29.12,
+      "arrival_ps": 235.23
+    },
+    {
+      "pin": "clkbuf_7_98__f_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 13,
+      "cap_ff": 36.25,
+      "slew_ps": 28.7,
+      "stage_increment_ps": 34.57,
+      "arrival_ps": 269.8
+    },
+    {
+      "pin": "clkbuf_leaf_459_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 9,
+      "cap_ff": 5.93,
+      "slew_ps": 11.02,
+      "stage_increment_ps": 33.13,
+      "arrival_ps": 302.93
+    },
+    {
+      "pin": "d3_v[0]$_DFF_PN0_/QN",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "fanout": 1,
+      "cap_ff": 2.43,
+      "slew_ps": 35.4,
+      "stage_increment_ps": 66.5,
+      "arrival_ps": 370.54
+    },
+    {
+      "pin": "wire12067/Y",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "fanout": 1,
+      "cap_ff": 26.24,
+      "slew_ps": 11.16,
+      "stage_increment_ps": 27.12,
+      "arrival_ps": 397.66
+    },
+    {
+      "pin": "lweco_019416/Y",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "fanout": 1,
+      "cap_ff": 2.7,
+      "slew_ps": 12.52,
+      "stage_increment_ps": 95.57,
+      "arrival_ps": 493.23
+    },
+    {
+      "pin": "wire12066/Y",
+      "master": "BUFx10_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 16.17,
+      "slew_ps": 18.41,
+      "stage_increment_ps": 25.44,
+      "arrival_ps": 518.67
+    },
+    {
+      "pin": "hold13472/Y",
+      "master": "BUFx2_ASAP7_75t_R",
+      "fanout": 3,
+      "cap_ff": 10.07,
+      "slew_ps": 44.46,
+      "stage_increment_ps": 58.41,
+      "arrival_ps": 577.09
+    },
+    {
+      "pin": "_15941_/Y",
+      "master": "INVx1_ASAP7_75t_R",
+      "fanout": 5,
+      "cap_ff": 5.11,
+      "slew_ps": 55.56,
+      "stage_increment_ps": 48.15,
+      "arrival_ps": 625.23
+    },
+    {
+      "pin": "_17319_/Y",
+      "master": "AND2x2_ASAP7_75t_R",
+      "fanout": 9,
+      "cap_ff": 6.74,
+      "slew_ps": 37.12,
+      "stage_increment_ps": 44.22,
+      "arrival_ps": 669.45
+    },
+    {
+      "pin": "_17320_/Y",
+      "master": "AND4x2_ASAP7_75t_R",
+      "fanout": 9,
+      "cap_ff": 10.52,
+      "slew_ps": 61.61,
+      "stage_increment_ps": 63.02,
+      "arrival_ps": 732.47
+    },
+    {
+      "pin": "wire11949/Y",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "fanout": 11,
+      "cap_ff": 27.5,
+      "slew_ps": 16.55,
+      "stage_increment_ps": 37.22,
+      "arrival_ps": 769.69
+    },
+    {
+      "pin": "wire11948/Y",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "fanout": 1,
+      "cap_ff": 5.15,
+      "slew_ps": 12.12,
+      "stage_increment_ps": 65.71,
+      "arrival_ps": 835.41
+    },
+    {
+      "pin": "wire19387/Y",
+      "master": "BUFx16f_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 29.05,
+      "slew_ps": 11.27,
+      "stage_increment_ps": 23.21,
+      "arrival_ps": 858.62
+    },
+    {
+      "pin": "lweco_119417/Y",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "fanout": 1,
+      "cap_ff": 3.94,
+      "slew_ps": 13.63,
+      "stage_increment_ps": 101.34,
+      "arrival_ps": 959.96
+    },
+    {
+      "pin": "place9190/Y",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "fanout": 11,
+      "cap_ff": 17.72,
+      "slew_ps": 19.21,
+      "stage_increment_ps": 21.24,
+      "arrival_ps": 981.2
+    },
+    {
+      "pin": "fanout10577/Y",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "fanout": 12,
+      "cap_ff": 13.13,
+      "slew_ps": 17.49,
+      "stage_increment_ps": 38.77,
+      "arrival_ps": 1019.97
+    },
+    {
+      "pin": "fanout10576/Y",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "fanout": 24,
+      "cap_ff": 24.95,
+      "slew_ps": 26.69,
+      "stage_increment_ps": 27.18,
+      "arrival_ps": 1047.16
+    },
+    {
+      "pin": "_17957_/Y",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "fanout": 1,
+      "cap_ff": 0.59,
+      "slew_ps": 17.69,
+      "stage_increment_ps": 15.45,
+      "arrival_ps": 1062.6
+    },
+    {
+      "pin": "_17958_/Y",
+      "master": "OA211x2_ASAP7_75t_R",
+      "fanout": 1,
+      "cap_ff": 0.8,
+      "slew_ps": 13.31,
+      "stage_increment_ps": 39.54,
+      "arrival_ps": 1102.14
+    },
+    {
+      "pin": "_17959_/Y",
+      "master": "AO21x1_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 1.97,
+      "slew_ps": 21.1,
+      "stage_increment_ps": 27.84,
+      "arrival_ps": 1129.98
+    },
+    {
+      "pin": "clk",
+      "master": "in",
+      "fanout": 1,
+      "cap_ff": 5.35,
+      "slew_ps": 0.0,
+      "stage_increment_ps": 0.0,
+      "arrival_ps": 833.0
+    },
+    {
+      "pin": "wire11505/Y",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 6.62,
+      "slew_ps": 10.78,
+      "stage_increment_ps": 16.97,
+      "arrival_ps": 849.97
+    },
+    {
+      "pin": "clkbuf_regs_0_clk/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 1,
+      "cap_ff": 2.3,
+      "slew_ps": 8.87,
+      "stage_increment_ps": 24.93,
+      "arrival_ps": 874.9
+    },
+    {
+      "pin": "clkbuf_0_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 10.29,
+      "slew_ps": 12.75,
+      "stage_increment_ps": 23.6,
+      "arrival_ps": 898.5
+    },
+    {
+      "pin": "clkbuf_1_1_0_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 1,
+      "cap_ff": 5.33,
+      "slew_ps": 10.34,
+      "stage_increment_ps": 26.69,
+      "arrival_ps": 925.2
+    },
+    {
+      "pin": "clkbuf_1_1_1_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 7.23,
+      "slew_ps": 11.3,
+      "stage_increment_ps": 26.26,
+      "arrival_ps": 951.46
+    },
+    {
+      "pin": "clkbuf_2_3_0_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 7.37,
+      "slew_ps": 11.19,
+      "stage_increment_ps": 25.37,
+      "arrival_ps": 976.83
+    },
+    {
+      "pin": "clkbuf_3_6_0_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 7.2,
+      "slew_ps": 11.1,
+      "stage_increment_ps": 27.3,
+      "arrival_ps": 1004.13
+    },
+    {
+      "pin": "clkbuf_4_13_0_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 2,
+      "cap_ff": 7.86,
+      "slew_ps": 11.41,
+      "stage_increment_ps": 27.59,
+      "arrival_ps": 1031.72
+    },
+    {
+      "pin": "clkbuf_5_27_0_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 4,
+      "cap_ff": 11.98,
+      "slew_ps": 13.94,
+      "stage_increment_ps": 28.26,
+      "arrival_ps": 1059.98
+    },
+    {
+      "pin": "clkbuf_7_110__f_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 10,
+      "cap_ff": 21.86,
+      "slew_ps": 19.94,
+      "stage_increment_ps": 29.86,
+      "arrival_ps": 1089.84
+    },
+    {
+      "pin": "clkbuf_leaf_616_clk_regs/Y",
+      "master": "BUFx24_ASAP7_75t_R",
+      "fanout": 9,
+      "cap_ff": 4.5,
+      "slew_ps": 10.04,
+      "stage_increment_ps": 28.74,
+      "arrival_ps": 1118.58
+    }
+  ],
+  "verdict": "SOURCE_ONLY_DIAGNOSIS; NO_CANDIDATE_UNTIL_INPUT_AND_BRANCH_HEADROOM",
+  "remaining_failure": {
+    "TT_WNS_ps": -11.47,
+    "endpoints": 14,
+    "launch": "d3_v[0]",
+    "capture": "cw_n_d[126]",
+    "type": "DATA_SETUP",
+    "data_arrival_ps": 1130.27,
+    "required_ps": 1118.8,
+    "reset_path": "separate recovery MET+321.74"
+  },
+  "repeater_diagnosis": {
+    "lweco_019416": {
+      "master": "BUFx12f",
+      "stage_increment_ps": 95.57,
+      "output_cap_ff": 2.7,
+      "output_slew_ps": 12.52,
+      "fanout": 1,
+      "input_path": "d3_v[0] QN -> wire12067/Y -> lone input net12066 -> lweco_019416/A",
+      "output_branch": "one wire12066/A, then hold13472/fanout3 and low control gates",
+      "geometry": "driver124.524,94.500 north ofSRAM -> repeater41.202,21.600 southwest -> receiver40.986,13.500; near-sink repeater does not shorten the long north-to-south incoming segment"
+    },
+    "lweco_119417": {
+      "master": "BUFx12f",
+      "stage_increment_ps": 101.34,
+      "output_cap_ff": 3.94,
+      "output_slew_ps": 13.63,
+      "fanout": 1,
+      "input_driver": "wire19387 BUFx16f at232.848,48.330",
+      "input_shared_net": "net19388 also feeds _17361_/B NAND2x1 at124.038,100.980",
+      "output_receiver": "place9190 at125.280,100.980",
+      "geometry": "incoming long east-ofSRAM to north segment; repeater133.272,100.440 already nearreceiver"
+    },
+    "decomposition_limit": "report_checks outputs Y-only stages:95.57/101.34 include incoming wire plus buffer arc. Exact Aarrival/Aslew and per-arc cellincrement are NOT in existing reports; no fabricated cell/wire split."
+  },
+  "missing_gates": [
+    "lweco_019416/A andlweco_119417/A arrival/slew versusY tosplit wire/cell terms",
+    "setupANDhold endpointheadroom for wire12066 downstreambranches",
+    "setupANDhold on shared net19388 alternate NAND2 _17361_/B branch",
+    "both _17361_ input path headrooms before moving its shared driver/input route"
+  ],
+  "next": "No newSTA/route. Existing data establishes locality problem; conservative existing-cell proposal remainsHOLD until measured branch headrooms, perparent instruction."
+}

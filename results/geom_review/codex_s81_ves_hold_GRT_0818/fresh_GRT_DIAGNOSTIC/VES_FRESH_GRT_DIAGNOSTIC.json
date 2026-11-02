@@ -1,0 +1,288 @@
+{
+  "kind": "fresh_GRT_ALL_RC_diagnostic_only",
+  "original_physical_clock_RC_restored": false,
+  "original_routed_clock_means_ps": {
+    "TT": 251.26,
+    "FF": 205.65
+  },
+  "unqualified_frozen_protocol_reason": "22 unchangedzero-wire driver-only CLOCK spurs unsupportedbycurrenttypedguard; legacygatefrozenmodeintegration pendingFLOW; no spursdroppedorretyped",
+  "policy": {
+    "period_ps": 833,
+    "setup_unc_ps": 0,
+    "hold_unc_ps": 25
+  },
+  "ODB_sha256": "84c29dae0308cb633e37c1e061bf5e0c65f213aad11306fe0b960d3231970d07",
+  "actual_SDC_sha256": "988634b3c8bddc316c263c9914813a068e982ce97b0947489a7e00328a0d7daa",
+  "actual_uncertainty_lines": [
+    "set_clock_uncertainty 0.0000 -setup [all_clocks]",
+    "set_clock_uncertainty 25.0000 -hold [all_clocks]",
+    "set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -setup 0.0000",
+    "set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -setup 0.0000",
+    "set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold 12.5000",
+    "set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold 12.5000"
+  ],
+  "corners": {
+    "TT": {
+      "exit": 0,
+      "queries_complete": true,
+      "loaded_clock_gate": {
+        "corner": "TT",
+        "pinreg_n": 498,
+        "pinreg_mean_ps": 251.74,
+        "pinreg_min_ps": 246.02,
+        "pinreg_max_ps": 260.05,
+        "bound_ps": 250.0,
+        "dev_ps": 1.74,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": -5.16,
+        "hold_wns_est_ps": 22.79,
+        "rc": "/work/setRC_rcx.tcl",
+        "parasitics": "global_routing",
+        "verdict": "PASS",
+        "band_policy": "info",
+        "band_verdict": "PASS"
+      },
+      "policy_corner": {
+        "done": true,
+        "design": "ot_s81sl_ve_s",
+        "cells": 168783.0,
+        "parasitics": "global_routing",
+        "clocks": [
+          "clk",
+          "vclk"
+        ],
+        "vclks": [
+          "vclk"
+        ],
+        "periods": {
+          "clk": 833.0,
+          "vclk": 833.0
+        },
+        "clock_ports": [
+          "clk"
+        ],
+        "inputs": [
+          "m_dd",
+          "m_hh",
+          "m_kk",
+          "m_pre",
+          "m_v",
+          "rst_n"
+        ],
+        "outputs": [
+          "fault",
+          "p_c",
+          "p_dd",
+          "p_hh",
+          "p_kk",
+          "p_v"
+        ],
+        "overlay": "applied vclk in_min -40 out_min 0",
+        "ff_vclk_reference": null,
+        "sdc_wns_max": -5.16,
+        "sdc_wns_min": 22.79,
+        "sdc_tns_max": -5.16,
+        "sdc_tns_min": 0.0,
+        "sdc_nviol_max": 1.0,
+        "sdc_nviol_min": 0.0,
+        "std_wns_max": -5.16,
+        "std_wns_min": 22.79,
+        "std_tns_max": -5.16,
+        "std_tns_min": 0.0,
+        "std_nviol_max": 1.0,
+        "std_nviol_min": 0.0,
+        "slew_viol": null,
+        "cap_viol": null,
+        "fanout_max": null,
+        "fanout_worst_net": null,
+        "fanout_viol": null,
+        "check_setup": {
+          "unconstrained": 0,
+          "unclocked": 0,
+          "loops": 0,
+          "multiple_clock": 0,
+          "generated": 0
+        },
+        "ck_errors": null,
+        "pg_terms": null,
+        "pg_open": null,
+        "pg_first_open": null,
+        "insertion_all": null,
+        "insertion_pinflops": null,
+        "pair_skew": {
+          "done": false,
+          "checks": {},
+          "counts": {},
+          "method": null,
+          "seconds": null,
+          "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+          "tsv": "pair_skew.tsv"
+        },
+        "clock_endpoint_masters": [
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "DFFHQNx1_ASAP7_75t_R",
+          "DFFHQNx2_ASAP7_75t_R"
+        ],
+        "clock_endpoint_mapping_errors": 0.0,
+        "ocv5_wns_max": null,
+        "ocv5_wns_min": null
+      },
+      "required_fail": "setup_tt",
+      "complete_clock_census": false
+    },
+    "FF": {
+      "exit": 0,
+      "queries_complete": true,
+      "loaded_clock_gate": {
+        "corner": "FF",
+        "pinreg_n": 498,
+        "pinreg_mean_ps": 204.91,
+        "pinreg_min_ps": 199.77,
+        "pinreg_max_ps": 212.64,
+        "bound_ps": 202.5,
+        "dev_ps": 2.41,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 232.14,
+        "hold_wns_est_ps": 8.07,
+        "rc": "/work/setRC_rcx.tcl",
+        "parasitics": "global_routing",
+        "verdict": "PASS",
+        "band_policy": "info",
+        "band_verdict": "PASS"
+      },
+      "policy_corner": {
+        "done": true,
+        "design": "ot_s81sl_ve_s",
+        "cells": 168783.0,
+        "parasitics": "global_routing",
+        "clocks": [
+          "clk",
+          "vclk"
+        ],
+        "vclks": [
+          "vclk"
+        ],
+        "periods": {
+          "clk": 833.0,
+          "vclk": 833.0
+        },
+        "clock_ports": [
+          "clk"
+        ],
+        "inputs": [
+          "m_dd",
+          "m_hh",
+          "m_kk",
+          "m_pre",
+          "m_v",
+          "rst_n"
+        ],
+        "outputs": [
+          "fault",
+          "p_c",
+          "p_dd",
+          "p_hh",
+          "p_kk",
+          "p_v"
+        ],
+        "overlay": "applied vclk in_min -40 out_min 0",
+        "ff_vclk_reference": "applied mode bound_ff clock vclk latency_ps 202.500000",
+        "sdc_wns_max": 232.14,
+        "sdc_wns_min": 8.07,
+        "sdc_tns_max": 0.0,
+        "sdc_tns_min": 0.0,
+        "sdc_nviol_max": 0.0,
+        "sdc_nviol_min": 0.0,
+        "std_wns_max": 232.14,
+        "std_wns_min": 8.07,
+        "std_tns_max": 0.0,
+        "std_tns_min": 0.0,
+        "std_nviol_max": 0.0,
+        "std_nviol_min": 0.0,
+        "slew_viol": 0.0,
+        "cap_viol": 0.0,
+        "fanout_max": 72.0,
+        "fanout_worst_net": "mp_ck_T033210_out",
+        "fanout_viol": 4.0,
+        "check_setup": {
+          "unconstrained": 0,
+          "unclocked": 0,
+          "loops": 0,
+          "multiple_clock": 0,
+          "generated": 0
+        },
+        "ck_errors": 0.0,
+        "pg_terms": null,
+        "pg_open": null,
+        "pg_first_open": null,
+        "insertion_all": {
+          "n": 30810,
+          "min": 198.31,
+          "mean": 207.3,
+          "max": 222.51,
+          "spread": 24.2
+        },
+        "insertion_pinflops": {
+          "n": 486,
+          "min": 199.77,
+          "mean": 204.89,
+          "max": 212.64,
+          "spread": 12.87
+        },
+        "pair_skew": {
+          "done": true,
+          "checks": {
+            "max": {
+              "n": 479454.0,
+              "worst_abs_ps": 29.7,
+              "bounded": false,
+              "worst_signed_ps": -29.7,
+              "worst_launch": "tree_dd.add1.u.rnd[17]$_DFF_P_",
+              "worst_capture": "tree_dd.add1.u.y2[17]$_DFF_P_",
+              "worst_crpr_ps": 0.36,
+              "p99_raw_ps": 22.81,
+              "searched": 42.0,
+              "nopath": 0.0,
+              "verify_ps": 0.0
+            },
+            "min": {
+              "n": 479454.0,
+              "worst_abs_ps": 30.48,
+              "bounded": false,
+              "worst_signed_ps": 30.48,
+              "worst_launch": "mkk[80]$_DFF_P_",
+              "worst_capture": "ckk[208]$_DFF_P_",
+              "worst_crpr_ps": 0.75,
+              "p99_raw_ps": 22.04,
+              "searched": 964.0,
+              "nopath": 0.0,
+              "verify_ps": 0.0
+            }
+          },
+          "counts": {
+            "regs": 30810.0,
+            "no_clock_arrival": 0.0,
+            "data_pins": 30810.0,
+            "pairs": 479454.0,
+            "inter_clock": 0.0
+          },
+          "method": "tag",
+          "seconds": 133.0,
+          "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+          "tsv": "pair_skew.tsv"
+        },
+        "clock_endpoint_masters": [
+          "DFFASRHQNx1_ASAP7_75t_R",
+          "DFFHQNx1_ASAP7_75t_R",
+          "DFFHQNx2_ASAP7_75t_R"
+        ],
+        "clock_endpoint_mapping_errors": 0.0,
+        "ocv5_wns_max": 184.37,
+        "ocv5_wns_min": -10.63
+      },
+      "required_fail": null,
+      "complete_clock_census": true
+    }
+  },
+  "scope": "fresh nativeGRT estimates, noDUTedit/no routedRC/SIGNED/adoption/count credit"
+}
