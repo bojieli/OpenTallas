@@ -1,0 +1,52 @@
+{
+  "status": "PASS_NATIVE_FP_ONLY",
+  "unit": "oth-ubuntu-3816364-1793630163",
+  "geometry_read_unit": "oth-ubuntu-3844631-1793630284",
+  "resources": {
+    "mem_GB": 4,
+    "threads": 1,
+    "disk_GB": 2
+  },
+  "KW_RESUME": "FULL unchanged",
+  "classification": "MANUAL_PHYSICAL_CONTINUATION",
+  "native_outputs": {
+    "2_floorplan.odb": "971ced24ed1bfa8b7633fc8445ec21c63836fe8d0bdb3f0daaa1399627cbbdfb",
+    "2_floorplan.sdc": "e4ec52f97e4f7a9e9a612c513da2240637258dfe0a29878c6f9298a7a58140eb"
+  },
+  "input89_unchanged": true,
+  "peaks": {
+    "2_3_floorplan_tapcell.log": {
+      "elapsed": "0:06.31",
+      "peak_KB": 383936
+    },
+    "2_2_floorplan_macro.log": {
+      "elapsed": "0:05.78",
+      "peak_KB": 431656
+    },
+    "2_4_floorplan_pdn.log": {
+      "elapsed": "0:11.37",
+      "peak_KB": 441220
+    },
+    "2_1_floorplan.log": {
+      "elapsed": "1:25.33",
+      "peak_KB": 731284
+    }
+  },
+  "geometry": {
+    "signal_bits": 338,
+    "signal_rects": 338,
+    "all_signal_shapes_contained": true,
+    "south_pin_count": 268,
+    "south_center_span": [
+      2.172,
+      149.052
+    ],
+    "rows": 544,
+    "PG_both_nets_metal_present": true,
+    "PG_connectivity_final_signoff": "NOT_ASSERTED",
+    "PLACEMENT": "NOT_RUN",
+    "STA": "NOT_RUN"
+  },
+  "no_SYNTH_PLACE_CTS_route_STA": true,
+  "no_AHUB_selected_model_substitution": true
+}

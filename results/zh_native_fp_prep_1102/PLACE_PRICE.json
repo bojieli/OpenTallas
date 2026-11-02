@@ -1,0 +1,42 @@
+{
+  "status": "PRICE_ONLY_NO_JOB",
+  "measurements": [
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-q6-resume-prep-0230/source/zh/run/logs/asap7/hc_ot_nhb_zh__151_2x151_2/base/3_5_place_dp.log",
+      "elapsed": "4:20.17",
+      "peak_KB": 1089208,
+      "sha256": "bd1936d2641299b1291183a0ed2ce353a55da8d8d78b554a18c0e0a7ed021d3a"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-q6-resume-prep-0230/source/zh/run/logs/asap7/hc_ot_nhb_zh__151_2x151_2/base/3_1_place_gp_skip_io.log",
+      "elapsed": "0:09.33",
+      "peak_KB": 396996,
+      "sha256": "ca9c97a300645beebdcb027ea4f72220687d883cecbc45b6c8a72f2e9e39f162"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-q6-resume-prep-0230/source/zh/run/logs/asap7/hc_ot_nhb_zh__151_2x151_2/base/3_3_place_gp.log",
+      "elapsed": "11:45.55",
+      "peak_KB": 1495556,
+      "sha256": "ac2a305a3568aab89f0cb5254c0a238a8fac98256af5feacc3f02ad9e83e2b7d"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-q6-resume-prep-0230/source/zh/run/logs/asap7/hc_ot_nhb_zh__151_2x151_2/base/3_2_place_iop.log",
+      "elapsed": "0:09.85",
+      "peak_KB": 446040,
+      "sha256": "60b9e1ddb9888c6e54610f9c1959e74b17d928ec22f778722319db1076e082c7"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-q6-resume-prep-0230/source/zh/run/logs/asap7/hc_ot_nhb_zh__151_2x151_2/base/3_4_place_resized.log",
+      "elapsed": "3:52.48",
+      "peak_KB": 864240,
+      "sha256": "26c690538613cbefc80c23c24a28b02f6515c413ec80c96ad3fce858fdad1b52"
+    }
+  ],
+  "proposed_resources": {
+    "mem_GB": 4,
+    "threads": 1,
+    "disk_GB": 2
+  },
+  "standalone_current_Q6_geometry": true,
+  "release": "NOT_AUTOLAUNCHED"
+}
