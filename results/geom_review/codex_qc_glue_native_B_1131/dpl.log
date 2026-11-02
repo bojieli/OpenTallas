@@ -1,0 +1,30 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO DPL-0006] Core area: 1122804.63 um^2
+[INFO DPL-0007] Movable instances area: 1152.69 um^2
+[INFO DPL-0008] Fixed instances area within core: 56401.27 um^2
+[INFO DPL-0009] Utilization: 5.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (4 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 276248 cells
+[INFO DPL-0393]   height 170 row(s): 4 cells
+[INFO DPL-0393]   height 234 row(s): 1 cells
+[INFO DPL-0393]   height 289 row(s): 1 cells
+[INFO DPL-0500] Runtime: 8.68s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL         6171280.9 u
+legalized HPWL        6171280.9 u
+delta HPWL                    0 %
+
+NATIVE_B actual coordinate-only DPL complete; unselected fixed, source/census/postdiff pending

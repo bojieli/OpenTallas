@@ -1,0 +1,52 @@
+{
+  "odb": "/work/kit/run/results/asap7/dp_glue/base/3_place.odb",
+  "scope": "Actual placed pad-to-first-sequential-input Manhattan reach. Geometry only, no routed timing claim.",
+  "pads": [
+    {
+      "port": "bump_bump_fwd_epoch_pad_i[0]",
+      "actual_pad_xy_um": [
+        250.528,
+        207.36
+      ],
+      "visited_nets": 2,
+      "capture_count": 1,
+      "captures": [
+        {
+          "pin": "u_bound.u_d5_bump_fwd_epoch_o.r\\[0\\]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy_um": [
+            249.732,
+            207.495
+          ],
+          "manhattan_um": 0.9309999999999832,
+          "pin_role": "D"
+        }
+      ],
+      "other_macro_terminals": {},
+      "max_capture_manhattan_um": 0.9309999999999832
+    },
+    {
+      "port": "bump_bump_fwd_lrst_pad_i[0]",
+      "actual_pad_xy_um": [
+        302.368,
+        207.36
+      ],
+      "visited_nets": 2,
+      "capture_count": 1,
+      "captures": [
+        {
+          "pin": "u_bound.u_d5_bump_fwd_lrst_o.r\\[0\\]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy_um": [
+            301.607,
+            207.225
+          ],
+          "manhattan_um": 0.8959999999999866,
+          "pin_role": "D"
+        }
+      ],
+      "other_macro_terminals": {},
+      "max_capture_manhattan_um": 0.8959999999999866
+    }
+  ]
+}

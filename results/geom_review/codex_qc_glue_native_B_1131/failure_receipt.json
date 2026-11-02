@@ -1,0 +1,86 @@
+{
+  "status": "WHOLE_FAIL_NONADOPTION_NO_CONTINUATION",
+  "source": "Exact pre-D13 completedGLUE3_place;3953existing-cell coordinate-onlyB",
+  "controller": 1033541,
+  "actual_host": "intel1/key-cardinal",
+  "unit": "oth-ubuntu-755582-1793573689",
+  "actual_job_rc": 0,
+  "dpl_max_displacement_um": 0,
+  "postdiff": "PASS allunselectedcoordinates/cell-mastercensus/BTerms/fullnets/outline/core/technology",
+  "metrics": {
+    "r2r_max": {
+      "before": 2007.18,
+      "after": 1836.11
+    },
+    "r2r_captures_gt405": {
+      "before": 6252,
+      "after": 5306
+    },
+    "relay_collapsed": {
+      "before": 973,
+      "after": 358
+    },
+    "pin_reg_p90": {
+      "before": 167.28,
+      "after": 167.28
+    },
+    "pin_reg_max": {
+      "before": 756.68,
+      "after": 756.68
+    },
+    "channel_h_max": {
+      "before": 5.565,
+      "after": 5.76
+    },
+    "channel_v_max": {
+      "before": 0.663,
+      "after": 0.909
+    },
+    "col_v_max": {
+      "before": 4.731,
+      "after": 4.745
+    },
+    "grid_tap_sinks_max": {
+      "before": 11606,
+      "after": 10416
+    },
+    "std_cells": {
+      "before": 183963,
+      "after": 183963
+    },
+    "ff": {
+      "before": 47739,
+      "after": 47739
+    },
+    "clock_sinks": {
+      "before": 47745,
+      "after": 47745
+    },
+    "cells_on_macros": {
+      "before": 0,
+      "after": 0
+    }
+  },
+  "pad_capture_um": {
+    "epoch": 0.931,
+    "lrst": 0.896,
+    "unchanged": true
+  },
+  "actual_look": {
+    "self": true,
+    "independent": "/root/signoff_geom personallyLOOKED wholeFAIL; selectedclassdiagnosticvalid; channelsworsen, noGPL/STA/GRTapproval"
+  },
+  "next_source_only": [
+    "Relocatable existing native resetRL0 midpoint preservingfullresetgraph/clocks/release roles",
+    "Current fixed START interfaces/commonRAW/origin mode requireexplicit source/model event; no coordinate-onlyclosure",
+    "Independent macro/interfacecompaction obligation at actual20%core-freefill; no frozenoutlineexception"
+  ],
+  "not_run": [
+    "GPL",
+    "CTS",
+    "GRT",
+    "STA",
+    "route"
+  ],
+  "storage": "intel2+intel1 /srv/opentallas-scratch2/claude/codex-qc-glue/native_b_coordinate_1131 (outputsbacksynced)"
+}
