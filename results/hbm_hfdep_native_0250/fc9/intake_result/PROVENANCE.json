@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.kit_provenance.v1",
+ "provenance": {
+  "commit": "6997d0a07d8338f8425b635007273f502c76d0ab",
+  "dirty": false,
+  "source": "git"
+ },
+ "kit_hash": "ee774f13c14fbd54",
+ "files": {
+  "config.mk": "8081c46e32fe6999c2c7b95b8cfc704fc890af96067b9decc0c641d6438dc21c",
+  "freeze.json": "71b9f056795632a67f32a7dba32e2df5a4a73841764ecb328accd0f0b13b63ee",
+  "lec.py": "1826084c39be03a337c29d54ca703871d88243fc04e58dcd84010e0bfdd18b4b",
+  "core.json": "5f7544fc95277334510f24b290c4e9cbc4c7bda4a0233ef932b8b3cadbb08c89",
+  "pins.json": "6f4c42e05edc4a84930e88519104e19252608355c8bb78a22c040e5756e2edad",
+  "rtl/hfd_ep_static_fc9.sv": "1a51256532d17d513ddd56d092b5bc5fa732aec5ccd3c18499fdff1abfede0fb",
+  "rtl/ot_hep_rx_block.sv": "6d2f57182c64cadd136268b909f5d788a1a3bd3955fcb87239656b268f7ea787",
+  "rtl/ot_hep_rx_gbx.sv": "629dce13721e0d23a5981b849c25abd8c24a81494984a259b437af115b52fb7f",
+  "rtl/ot_hep_rx_leaf.sv": "8adafe78d41fa62f0f10a136ef383f16abb093d9ae34997c62f8d844be9eabe8",
+  "rtl/ot_hep_rx_pingpong.sv": "dbc4ef06a8011e1d4dfea52f264ea4576e2a558c62bd42dcb910dda06b32b6da",
+  "rtl/ot_hep_tx_gbx.sv": "68085ad7a68f390afd989b320babeac3f7aa8fe7152478ad5e6b0ffef2a71827",
+  "rtl/ot_sram_1r1w_64x512_m1_r2c2_bb.v": "619a3fc13acb0c172387f5564dee71faa3161ddc1ce000fd53353fbb2c4845b6",
+  "rtl/portlist.txt": "95bac667612783db1440b43a19ed78836c6f70288d4c519c2b4100e7488e1b8d"
+ }
+}

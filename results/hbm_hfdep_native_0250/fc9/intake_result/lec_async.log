@@ -1,0 +1,4 @@
+LEC_ASYNC watcher 2026-11-02 06:38:05 pid 3846073 waiting for the flow's LEC step
+LEC_ASYNC 2026-11-02 06:39:11 start (1): python3 -I /work/lec.py /work --netlist /work/run/results/asap7/hbc_hfd_ep_static_fc9/base/1_2_yosys.v --out /work/lec > /work/lec_run.log 2>&1
+LEC EQUIVALENT: hfd_ep_static_fc9 cp=14054 proved=14054 differs=0 undecided=0 14054 compare points proved; 10898 key points matched by name, 772 register pairs / merges and 3 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 63 of them reach an RTL X (don't care: equal wherever the RTL is not X) (270.7 s)
+LEC_ASYNC 2026-11-02 06:43:43 LEC exit 0
