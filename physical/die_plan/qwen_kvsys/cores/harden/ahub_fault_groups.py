@@ -26,8 +26,12 @@ def factor_fault_capture(text: str, module_name: str) -> str:
         raise ValueError("unexpected AHUB fault capture source; no transformation applied")
     if body.count("gqv<=0") != 1 or body.count("(|gqv || |gz || |tq)") != 1:
         raise ValueError("unexpected AHUB reset/observable fault consumer")
-    body = body.replace("reg [4:0] gqv;", "(* keep *) reg [20:0] gqv;", 1)
+    body = body.replace("reg [4:0] gqv;", "reg [20:0] gqv;", 1)
     body = body.replace(OLD_CAPTURE, NEW_CAPTURE, 1)
+    # This bank has a different state encoding: bit2 is now the scalar class,
+    # with compare classes in16 new bits. Give it an honest distinct name so
+    # equivalence does not assert the old internal bit2 as a correspondence.
+    body = re.sub(r"\bgqv\b", "gqv_groups", body)
     return text[:match.start()] + body + text[match.end():]
 
 

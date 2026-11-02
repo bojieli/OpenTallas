@@ -1,0 +1,16 @@
+{
+  "status": "QUEUED_NOT_ADOPTED",
+  "job": "hub codex-kv-ahub-fault-full-2055.service -> intel1",
+  "path": "/srv/opentallas-scratch2/claude/codex-kv-ahub-fault-full-2055",
+  "request_gb": 16,
+  "threads": 2,
+  "memory_basis": "identical baselineN gold.ys.log measured12185.15MB peak",
+  "source_scope": "entire actual NF2 qkd_ahub kit readset; only selected _ck7 faultbanksource altered; base sourceSHA1c69d14295082971b00d7c808dd018eed6433313cd2eda0ad3ebdee1ba43f384",
+  "engine": "complete main lec.py bundle outside own copied KIT; originalmapped1_2_yosys.v reference unchanged",
+  "controls": "normal source vs reference; actualfullsource omitted-lastgroupmutant vsreference, sameformalengine/reset/ports/blackboxinterfaces",
+  "baseline_source_flops": 5205,
+  "expected_candidate_source_flops": 5221,
+  "extra_cycles": 0,
+  "extra_pins": 0,
+  "adoption": "HELD: fullproof+mutant+census, then root source/count/parent review before any physical dispatch"
+}
