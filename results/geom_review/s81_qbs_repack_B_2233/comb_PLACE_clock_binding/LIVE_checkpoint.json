@@ -1,0 +1,26 @@
+{
+  "pid": 1119915,
+  "status": "EXACT_NATIVE_CK_BOUND_FAMILY_COUPON",
+  "utc": "2026-11-02T09:39:55.310938+00:00",
+  "command": [
+    "ssh",
+    "intel2",
+    "/home/ubuntu/.local/bin/ot-run",
+    "--mem",
+    "8",
+    "--threads",
+    "2",
+    "--disk",
+    "4",
+    "--priority",
+    "die",
+    "--stage",
+    "/srv/opentallas-scratch2/claude/codex-hist-combplace-familyck-0144",
+    "--dir",
+    "/srv/opentallas-scratch2/claude/codex-hist-combplace-familyck-0144",
+    "--",
+    "bash",
+    "/srv/opentallas-scratch2/claude/codex-hist-combplace-familyck-0144/run_place_once.sh"
+  ],
+  "scope": "Same cleananchoredFP and authorized FF-family data-buffering protection; no optimizer ran in previous clock-discovery failure; no CTS/GRT/proof"
+}

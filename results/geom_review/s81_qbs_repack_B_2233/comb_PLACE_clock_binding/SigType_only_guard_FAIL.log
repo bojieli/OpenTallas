@@ -1,0 +1,101 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+mkdir -p /work/run/objects/asap7/kl_dsdv_bksel_q_signed_source/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_1_place_gp_skip_io global_place_skip_io
+Running global_place_skip_io.tcl, stage 3_1_place_gp_skip_io
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /work/macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib
+read_liberty -corner tc /work/macros/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib
+read_liberty -corner tc /work/macros/ot_s81ph_native_sel_hist_bank_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /work/macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_ff.lib
+read_liberty -corner BC /work/macros/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib
+read_liberty -corner BC /work/macros/ot_s81ph_native_sel_hist_bank_ff.lib
+[WARNING STA-1140] /work/macros/ot_s81ph_native_sel_hist_bank_ff.lib line 1, library ot_s81ph_native_sel_hist_bank already exists.
+read_db /work/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/2_floorplan.odb
+read_sdc /work/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+All pins are placed. Skipping global placement without IOs
+Design area 139897 um^2 34% utilization.
+write_db /work/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/3_1_place_gp_skip_io.odb
+Elapsed time: 0:11.70[h:]min:sec. CPU time: user 10.15 sys 0.76 (93%). Peak memory: 484844KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_1_place_gp_skip_io      .odb           11            473 6abed38b459c8e3f54d2
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement
+Running io_placement.tcl, stage 3_2_place_iop
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /work/macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib
+read_liberty -corner tc /work/macros/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib
+read_liberty -corner tc /work/macros/ot_s81ph_native_sel_hist_bank_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /work/macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_ff.lib
+read_liberty -corner BC /work/macros/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib
+read_liberty -corner BC /work/macros/ot_s81ph_native_sel_hist_bank_ff.lib
+[WARNING STA-1140] /work/macros/ot_s81ph_native_sel_hist_bank_ff.lib line 1, library ot_s81ph_native_sel_hist_bank already exists.
+read_db /work/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/3_1_place_gp_skip_io.odb
+read_sdc /work/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+place_pins -hor_layers M4 -ver_layers M5
+Found 32 macro blocks.
+Using 2 tracks default min distance between IO pins.
+[INFO PPL-0001] Number of available slots 26399
+[INFO PPL-0002] Number of I/O             0
+[INFO PPL-0003] Number of I/O w/sink      0
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 0.00 um.
+Design area 139897 um^2 34% utilization.
+write_db /work/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/3_2_place_iop.odb
+Elapsed time: 0:11.71[h:]min:sec. CPU time: user 10.47 sys 0.90 (97%). Peak memory: 575284KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_2_place_iop             .odb           11            561 6abed38b459c8e3f54d2
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /work/macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib
+read_liberty -corner tc /work/macros/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib
+read_liberty -corner tc /work/macros/ot_s81ph_native_sel_hist_bank_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /work/macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_ff.lib
+read_liberty -corner BC /work/macros/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib
+read_liberty -corner BC /work/macros/ot_s81ph_native_sel_hist_bank_ff.lib
+[WARNING STA-1140] /work/macros/ot_s81ph_native_sel_hist_bank_ff.lib line 1, library ot_s81ph_native_sel_hist_bank already exists.
+read_db /work/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/3_2_place_iop.odb
+read_sdc /work/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/allFF_guard_bay_bufferable.tcl
+Error: global_place.tcl, 5 actual clock-net classification missing
+Elapsed time: 0:12.49[h:]min:sec. CPU time: user 10.67 sys 0.71 (91%). Peak memory: 578092KB.
+make[1]: *** [Makefile:499: do-3_3_place_gp] Error 1
+make: *** [Makefile:499: /work/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/3_3_place_gp.odb] Error 2
