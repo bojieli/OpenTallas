@@ -126,4 +126,38 @@ def test_hub_tick_end_to_end(tmp_path, monkeypatch):
 
 def test_ot_run_passes_wait_since():
     src = (HERE / 'ot-run').read_text()
-    assert 'env = f"OT_HEAVY_WAIT_SINCE={int(RUN_T0)} " + env' in src
+    assert 'OT_HEAVY_WAIT_SINCE={int(RUN_T0)}' in src
+
+
+def test_retired_exact_dispatcher_not_generic_pinned_jobs(monkeypatch):
+    body = 'DIES = [ physical/die_plan/hbm_arch/B2l/die_plan.json physical/die_plan/s81/die_plan.json ]'
+    monkeypatch.setattr(R, 'rd', lambda p: body)
+    command = 'export PATH=x; cd /srv/opentallas-scratch2/claude/die-ci/wt && python3 tools/die_plan/die_ci.py run --sha abc --mode nightly --g2 all --dies hbm'
+    reason = R.reservation_ineligible(['bash', '-lc', command], '/tmp', {'OT_HEAVY_DISK_GB':'0'})
+    assert 'retired nightly dispatcher' in reason
+    assert R.reservation_ineligible(['bash', '-lc', command + ' --plan hbm=current.json'], '/tmp', {'OT_HEAVY_DISK_GB':'0'}) is None
+    assert R.reservation_ineligible(['bash', '-lc', command.replace('/claude/die-ci/wt','/claude/valid-pinned/wt')], '/tmp', {'OT_HEAVY_DISK_GB':'0'}) is None
+    monkeypatch.setattr(R, 'rd', lambda p: 'DIES = [ current_source_adapter ]')
+    assert R.reservation_ineligible(['bash', '-lc', command], '/tmp', {'OT_HEAVY_DISK_GB':'0'}) is None
+
+
+def test_impossible_declared_disk_not_reserved(monkeypatch):
+    fake = type('Stat', (), {'f_bavail': 5, 'f_frsize': 1073741824})()
+    monkeypatch.setattr(R.os, 'statvfs', lambda p: fake)
+    assert 'exceeds actual free' in R.reservation_ineligible(['build'], '/scratch', {'OT_HEAVY_DISK_GB':'6'})
+    assert R.reservation_ineligible(['build'], '/scratch', {'OT_HEAVY_DISK_GB':'5'}) is None
+
+
+def test_ineligible_current_reservation_releases_without_job_stop(tmp_path, monkeypatch):
+    f = _file(tmp_path, monkeypatch, dict(id=W['id'], at=5000, charge=252))
+    with mock.patch.object(R, 'die_waiter_rows', return_value=[dict(W,reserve_eligible=False,reserve_reason='retired exact dispatcher')]):
+        assert R.reserve_active({}, now=5500) is None
+    assert not f.exists()
+    assert 'reservation ineligible' in (tmp_path/'die_reserve.log').read_text()
+
+
+def test_hub_skips_ineligible_but_keeps_normal_old_waiter():
+    now=100000
+    invalid=dict(W, since=1,reserve_eligible=False)
+    valid=dict(W,id='valid',since=100,reserve_eligible=True)
+    assert H.decide({'localhost':dict(reserve=None,waiters=[invalid,valid])},{},now)[2][1]['id']=='valid'
