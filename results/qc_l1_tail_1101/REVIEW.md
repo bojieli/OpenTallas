@@ -1,0 +1,7 @@
+# L1 EXP tail: data-only cap isolation placement coupon
+
+2026-11-01 CODEX personally viewed /home/ubuntu/.claude/jobs/b7f906df/tmp/geom107/l1c/auto_geom.png. The414.7x267.8um tile has two separated center SRAMs with open streets; the proposed x106.7um buffer column is clear of macros. The actual critical path clusters _279614_/_279615_/_279616_ around(106.7,200) but captures nint[6] at(106.272,100.980). XNOR2x2 drives10.48fF with52.95ps cell delay and10.27ps wire; cap isolation is a concrete physical repair candidate. The driver/capture span is~99um, both buffered segments remain below405um. No pipeline stage or cycle is added.
+
+Verdict PASS-COND for PLACE-only. Preserve every original instance's master/location/orientation and every CLOCK connection; buffer legalizes around(106.704,190.080). Original input is the completed three-edit coupon's actual5_1_grt.odb. New buffer must clear all rows/macros/PG and actual placement must be viewed before a separate incremental-GRT trial. No timing benefit or signoff claimed. Independent geometry reviewer agrees with this exact condition (coord lane GEOM,2026-11-01).
+
+Native runtime intel2:/srv/opentallas-scratch2/claude/codex-qc-l1-tail-2044. ot-run16GB2threads disk2GB --crit, dispatcher3309059, place.otrun.log. The first command only places and dumps geometry, with no repair loop or route completion. Candidate source scripts are here; runtime retains original exact TT/FF library paths and4_cts.sdc from the original coupon.
