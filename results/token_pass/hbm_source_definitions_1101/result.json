@@ -1,0 +1,44 @@
+{
+  "status": "ACTUAL_SU_CUT_FRONTEND_PASS; WHOLE_SOURCE11_PENDING",
+  "source10": {
+    "status": "FAIL",
+    "rc": 2,
+    "real_errors": 8,
+    "elapsed_seconds": 1351.15,
+    "max_RSS_KiB": 20809624,
+    "reason": "Six real helper definitions dropped by lexical filter at inline/multiple constructors"
+  },
+  "fix": {
+    "policy": "Retain one actual canonical preprocessed definition for every module; actual native frontend decides parameter reachability",
+    "canonical_definitions": 1487,
+    "lexical_estimate_only": 576,
+    "original_definitions_changed": false,
+    "undefined_assertion_guards_declared": false,
+    "unknown_modules_suppressed": false,
+    "syntax_open_repairs": 22
+  },
+  "gate": {
+    "top": "ot_hnx_su_exp__rst3",
+    "host": "intel2",
+    "unit": "oth-ubuntu-2378802-1793576022",
+    "elapsed_seconds": 26.65,
+    "max_RSS_KiB": 1273500,
+    "rc": 0,
+    "numeric_qualification": false
+  },
+  "source11": {
+    "client": "intel2:codex-hbm-whole-front11.service",
+    "root": "/srv/opentallas-scratch2/claude/codex-hbm-whole-1101",
+    "log": "/tmp/codex-hbm-whole-front11.otrun.log",
+    "driver": "elab_hbm_whole_hierarchy.sh",
+    "driver_byte_comparison": "identical to elab11.sh",
+    "memory_GB": 64,
+    "threads": 2,
+    "admission": "normal, stable specific class; no overrides/history removal or prior cache graft"
+  },
+  "holds": [
+    "Fullsource11resultpending",
+    "48strictunplanned/42407bits and152nativeinputs unchanged",
+    "SOURCE0/SOURCE3writeback andactualVMcopy/sourceprogrammejoins additional"
+  ]
+}

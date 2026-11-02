@@ -1,0 +1,232 @@
+{
+  "status": "SYNTAX_ONLY_OPEN_CONNECTION_RENDERING",
+  "connections": 22,
+  "source_sha256": "a83d817b2bf0665aa303fcc34020e203f6af3bcd26e5ad097827a22894bcbfb8",
+  "rendered_sha256": "a17a786e03fab2c1e30c0fd540a17720e4720dfd54252322aa307243548dba0a",
+  "production_source_changes": 0,
+  "new_nets": 0,
+  "new_drivers": 0,
+  "assertion_guards_changed": 0,
+  "repairs": [
+    {
+      "parent": "ot_hnx_su_exp__rst3",
+      "master": "ot_hbm_su_static_pinned_bank",
+      "instance": "m0",
+      "port": "read_return",
+      "direction": "output",
+      "before": ".read_return({})",
+      "after": ".read_return()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_su_plain4__lid9_rst3",
+      "master": "ot_hbm_su_static_pinned_bank",
+      "instance": "m0",
+      "port": "read_return",
+      "direction": "output",
+      "before": ".read_return({})",
+      "after": ".read_return()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_su_plain4__lid9_rst3",
+      "master": "ot_hbm_su_static_pinned_bank",
+      "instance": "m2",
+      "port": "read_return",
+      "direction": "output",
+      "before": ".read_return({})",
+      "after": ".read_return()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_su_plain4__lid9_rst3",
+      "master": "ot_hbm_su_static_pinned_bank",
+      "instance": "m4",
+      "port": "read_return",
+      "direction": "output",
+      "before": ".read_return({})",
+      "after": ".read_return()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_su_plain4__lid9_rst3",
+      "master": "ot_hbm_su_static_pinned_bank",
+      "instance": "m6",
+      "port": "read_return",
+      "direction": "output",
+      "before": ".read_return({})",
+      "after": ".read_return()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "master": "ot_hbm_su_static_pinned_bank",
+      "instance": "m0",
+      "port": "read_return",
+      "direction": "output",
+      "before": ".read_return({})",
+      "after": ".read_return()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "master": "ot_hbm_su_static_pinned_bank",
+      "instance": "m2",
+      "port": "read_return",
+      "direction": "output",
+      "before": ".read_return({})",
+      "after": ".read_return()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "master": "ot_hbm_su_static_pinned_bank",
+      "instance": "m4",
+      "port": "read_return",
+      "direction": "output",
+      "before": ".read_return({})",
+      "after": ".read_return()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "master": "ot_hbm_su_static_pinned_bank",
+      "instance": "m6",
+      "port": "read_return",
+      "direction": "output",
+      "before": ".read_return({})",
+      "after": ".read_return()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_sfu_lane__cf694489f05c",
+      "master": "ot_su12_sfu_sp2",
+      "instance": "m1",
+      "port": "side_v",
+      "direction": "output",
+      "before": ".side_v({})",
+      "after": ".side_v()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_sfu_lane__cf694489f05c",
+      "master": "ot_su12_sfu_sp2",
+      "instance": "m1",
+      "port": "side_x",
+      "direction": "output",
+      "before": ".side_x({})",
+      "after": ".side_x()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_sfu_lane__cf694489f05c",
+      "master": "ot_su12_sfu_sp2",
+      "instance": "m1",
+      "port": "side_y",
+      "direction": "input",
+      "before": ".side_y({})",
+      "after": ".side_y()",
+      "proof": "Selected wrapper side_y input has no references; internal child side_y is explicitly32d0"
+    },
+    {
+      "parent": "ot_hnx_sfu_store_a__da81d76763c9",
+      "master": "ot_hgi_su_lgroup2",
+      "instance": "m0",
+      "port": "sr_d",
+      "direction": "output",
+      "before": ".sr_d({})",
+      "after": ".sr_d()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_sfu_store_a__da81d76763c9",
+      "master": "ot_hgi_su_lgroup2",
+      "instance": "m0",
+      "port": "sr_rv",
+      "direction": "output",
+      "before": ".sr_rv({})",
+      "after": ".sr_rv()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_sfu_store_a__da81d76763c9",
+      "master": "ot_hgi_su_lgroup2",
+      "instance": "m1",
+      "port": "sr_d",
+      "direction": "output",
+      "before": ".sr_d({})",
+      "after": ".sr_d()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_sfu_store_a__da81d76763c9",
+      "master": "ot_hgi_su_lgroup2",
+      "instance": "m1",
+      "port": "sr_rv",
+      "direction": "output",
+      "before": ".sr_rv({})",
+      "after": ".sr_rv()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_sfu_store_b__1300886e9f18",
+      "master": "ot_hgi_su_lgroup2",
+      "instance": "m0",
+      "port": "sr_d",
+      "direction": "output",
+      "before": ".sr_d({})",
+      "after": ".sr_d()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_sfu_store_b__1300886e9f18",
+      "master": "ot_hgi_su_lgroup2",
+      "instance": "m0",
+      "port": "sr_rv",
+      "direction": "output",
+      "before": ".sr_rv({})",
+      "after": ".sr_rv()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_sfu_store_b__1300886e9f18",
+      "master": "ot_hgi_su_lgroup2",
+      "instance": "m1",
+      "port": "sr_d",
+      "direction": "output",
+      "before": ".sr_d({})",
+      "after": ".sr_d()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hnx_sfu_store_b__1300886e9f18",
+      "master": "ot_hgi_su_lgroup2",
+      "instance": "m1",
+      "port": "sr_rv",
+      "direction": "output",
+      "before": ".sr_rv({})",
+      "after": ".sr_rv()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hfd_coll_q2n2_vm_core",
+      "master": "ot_hgi_coll_static_vmwrite_roots_v6_physical",
+      "instance": "m1",
+      "port": "launch_done",
+      "direction": "output",
+      "before": ".launch_done({})",
+      "after": ".launch_done()",
+      "proof": "Open output; no receiving net exists"
+    },
+    {
+      "parent": "ot_hfd_coll_q3_vm_core",
+      "master": "ot_hgi_coll_static_vmwrite_roots_v6_physical",
+      "instance": "m1",
+      "port": "launch_done",
+      "direction": "output",
+      "before": ".launch_done({})",
+      "after": ".launch_done()",
+      "proof": "Open output; no receiving net exists"
+    }
+  ]
+}

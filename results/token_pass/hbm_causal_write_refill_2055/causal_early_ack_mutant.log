@@ -1,0 +1,5 @@
+HBM_MODEL_PRELOAD stack3 sectors=32768 file=/srv/opentallas-scratch2/claude/codex-hbm-causal3-2040/images/stack3.hex
+CAUSAL_FILL epoch7 cycle2071 reads1024
+[2025440000] %Fatal: tb_source_write_causal_1101.sv:32: Assertion failed in tb_source_write_causal_1101: CAUSAL_EARLY_ACK completed0 expected32
+%Error: sources/tb_source_write_causal_1101.sv:32: Verilog $stop
+Aborting...

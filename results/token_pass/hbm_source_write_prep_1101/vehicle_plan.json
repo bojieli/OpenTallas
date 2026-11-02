@@ -1,0 +1,198 @@
+{
+  "status": "SIMULATION_ONLY_PREP_NOT_ELABORATED_OR_RUN",
+  "clock_ps": 833,
+  "global_precision_fs": 1,
+  "clock_drive": "416500fs half edges, same833ps controller/stream clock",
+  "source_aliases": false,
+  "model": "Persistent external DRAM8f448: real row/column/strobe writes, strict images, READ29/resetflush",
+  "actual_current_selected_COPY": false,
+  "scratch": {
+    "global_word_range": [
+      261120,
+      262144
+    ],
+    "slots": [
+      [
+        261120,
+        261632
+      ],
+      [
+        261632,
+        262144
+      ]
+    ],
+    "VM_SID": 3,
+    "native_local_words": [
+      64512,
+      65024
+    ],
+    "alignment_words": 64,
+    "status": "UNITINPUT_RESERVATION_ONLY; canonical allocator currentlyscratch_reservedfalse",
+    "canonical_request": "Reserve entire1024wordinterval acrossallphases/indirectaccesses, effectivealloccap261120, recompile/recheck; no freeexistingreservation.",
+    "ownership": "Slot0 from actualstaging producerissue throughtrueWBACK/globalfence; Slot1 frombeforefirstoldreadback throughlastnewreadback. No overlap.",
+    "staged_DQ": "Initialization throughactualnativeDQ/Wslot6 andnativecompletion; NOT a fabricatedCOPYproducer or canonicalstagingcost."
+  },
+  "existing_partial_proofs": {
+    "RAW_26b5c1288": "ActualDBK\u2192WBK\u2192VMKS\u2192PC24writes, but independentreadpayloadfixture, not persistentcausalreadback.",
+    "WBK_QH": "ActualWBK\u2192VMKS/PC\u2192DRAM/ACK, but DMA-sideWD stimulus ratherthanDBK/nativeVMsource."
+  },
+  "mission": [
+    "Initialize externalmemoryoldpattern, all selectedfillrowsectors explicitly; no uninitializedreads.",
+    "Bootactualrefreshcfg. Fillownedepoch7 throughrealPC/VMKS; NPC2copyolddata toSlot1, verifythroughnativeRQ0/RR0.",
+    "InitializealignedSlot0 newknownwords throughnativeDQ, verifyactualVMdone/readback. Thisisunitstimulus, notcanonicalCOPY.",
+    "ProgramactualCW308collar withlegalresolvedordinal227, fixedissue/drainrelative dates. ObserveDBKmv_src separatelyfromtrueACK/mv_done.",
+    "At store_done sample after NBA settlement: case-delta physical_completion_count must equal exact fragment sectors. Independently require physical_write_count delta equal sectors; accepted columns are not ACK retirement.",
+    "Releaseoldcacheepoch7 afterlastconsumer. AfterACKfence begin/fillnewownedepoch8, copyfromactualupdatedDRAMthroughNPC2 toSlot1.",
+    "ReadactualnativeSRAM throughRQ0/RR0 andcompareeverywrittenword toSlot0knowninputs; no modelpeek substitutes forreadback."
+  ],
+  "negatives": {
+    "premature_ACK": "WB_MUT1 existing actual WBK mutant; event oracle observes independent service wk_done physical_completion_count at store_done, plus causal readback. Physical accepted-column count alone is insufficient.",
+    "missing_invalidation": "Keepactualepoch7cache andomitrelease/newfill, repeatrealNPC2copy; actualoldBRAMdata must failnewwordoracle."
+  },
+  "costs": {
+    "canonical_COPY_edges": null,
+    "issue_date": null,
+    "drain_date": null,
+    "RR_RT": 8,
+    "RR_RT_scope": "ProposedlocalnativeVMunitprofile; no added72edgefabricatedtransport. Mustmeasureinfirstcomponentgate.",
+    "HOST_config_wire_edges": null,
+    "global_fence_date": null,
+    "physical_route_latency": null
+  },
+  "holds": [
+    "No simulator/frontend/heavy job launched byprepare.",
+    "Completeactualtestdriver/control-datequalification beforeclaimingcausalPASS.",
+    "Selected raw COLL sector gather exists for QID2/3, but no VM0/1 source endpoint or complete bank-changing COPY programme is joined. Production COPY cost remains unpriced.",
+    "No canonicaltop/RTL/plan/targetallocation/source0writeproducer installed. ActualN6/HOST/globalmapping remainsseparate."
+  ],
+  "cases": [
+    {
+      "label": "stack0_q0",
+      "STK": 0,
+      "PHY_QUAD": 0,
+      "VM_SID": 3,
+      "record": 18,
+      "representative_position": 0,
+      "position_scope": "Component input only, not adopted actual N6 position",
+      "record_namespace": "original3916",
+      "words": 312,
+      "sectors": 39,
+      "real_first_sector": 536872473,
+      "quadrant_ordinal": 268436249,
+      "source_word_offset": 0,
+      "native_source_word": 64512,
+      "global_staged_word": 261120,
+      "global_readback_word": 261632,
+      "window": {
+        "row": 16384,
+        "col": 6,
+        "half": 0
+      },
+      "issue_at": null,
+      "drain_at": null,
+      "COPY_cost_edges": null,
+      "CFG256_words_per_command": 2,
+      "source_aliases": false
+    },
+    {
+      "label": "stack0_q1",
+      "STK": 0,
+      "PHY_QUAD": 1,
+      "VM_SID": 3,
+      "record": 18,
+      "representative_position": 0,
+      "position_scope": "Component input only, not adopted actual N6 position",
+      "record_namespace": "original3916",
+      "words": 200,
+      "sectors": 25,
+      "real_first_sector": 536872512,
+      "quadrant_ordinal": 268436224,
+      "source_word_offset": 312,
+      "native_source_word": 64512,
+      "global_staged_word": 261120,
+      "global_readback_word": 261632,
+      "window": {
+        "row": 16384,
+        "col": 6,
+        "half": 1
+      },
+      "issue_at": null,
+      "drain_at": null,
+      "COPY_cost_edges": null,
+      "CFG256_words_per_command": 2,
+      "source_aliases": false
+    },
+    {
+      "label": "stack3_q0",
+      "STK": 3,
+      "PHY_QUAD": 0,
+      "VM_SID": 3,
+      "record": 2,
+      "representative_position": null,
+      "position_scope": "Component input only, not adopted actual N6 position",
+      "record_namespace": "resident37226",
+      "words": 256,
+      "sectors": 32,
+      "real_first_sector": 680016960,
+      "quadrant_ordinal": 340008448,
+      "source_word_offset": 256,
+      "native_source_word": 64512,
+      "global_staged_word": 261120,
+      "global_readback_word": 261632,
+      "window": {
+        "row": 20752,
+        "col": 12,
+        "half": 0
+      },
+      "issue_at": null,
+      "drain_at": null,
+      "COPY_cost_edges": null,
+      "CFG256_words_per_command": 2,
+      "source_aliases": false
+    },
+    {
+      "label": "stack3_q1",
+      "STK": 3,
+      "PHY_QUAD": 1,
+      "VM_SID": 3,
+      "record": 2,
+      "representative_position": null,
+      "position_scope": "Component input only, not adopted actual N6 position",
+      "record_namespace": "resident37226",
+      "words": 256,
+      "sectors": 32,
+      "real_first_sector": 680016928,
+      "quadrant_ordinal": 340008480,
+      "source_word_offset": 0,
+      "native_source_word": 64512,
+      "global_staged_word": 261120,
+      "global_readback_word": 261632,
+      "window": {
+        "row": 20752,
+        "col": 12,
+        "half": 1
+      },
+      "issue_at": null,
+      "drain_at": null,
+      "COPY_cost_edges": null,
+      "CFG256_words_per_command": 2,
+      "source_aliases": false
+    }
+  ],
+  "priced_staging_plan": {
+    "status": "BLOCKED_SELECTED_DATA_COPY_SOURCE; FINITE_ALLOCATION_REQUEST",
+    "reservation": [
+      261120,
+      262144
+    ],
+    "allocator_required_cap": 261120,
+    "currently_reserved": false,
+    "SOURCE_COPY_selected": false,
+    "actual_COPY_cycles": null,
+    "actual_COPY_producer": null,
+    "native_read_chunks": "ceil(fragment_words/64)",
+    "WB_sectors": "fragment_words/8",
+    "issue_and_drain": "Actual native VM/route profile + COPY completion + WB epochs needed; dates deliberatelynot0",
+    "dependency": "Join actual VM0/1 source endpoint and selected raw COLL gather/delivery with a fixed bank-changing programme. No free generic COPY credit."
+  }
+}

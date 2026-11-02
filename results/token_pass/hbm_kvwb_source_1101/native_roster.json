@@ -1,0 +1,71 @@
+{
+  "cohort": "C11E4frozen",
+  "cache_path": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/asbuilt.json",
+  "top": "hbm_current_native_top",
+  "top_cells": 469,
+  "bit_order": "LSBfirst",
+  "DMA_writeback_cells": [
+    {
+      "canonical": "hb_dbk_NE",
+      "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+      "parameters": {
+        "RR_RT": "00000000000000000000000001010000"
+      },
+      "strap_bits": {
+        "stk": [
+          "0",
+          "1"
+        ]
+      }
+    },
+    {
+      "canonical": "hb_dbk_NW",
+      "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+      "parameters": {
+        "RR_RT": "00000000000000000000000001010000"
+      },
+      "strap_bits": {
+        "stk": [
+          "0",
+          "1"
+        ]
+      }
+    },
+    {
+      "canonical": "wbk_NE",
+      "master": "ot_hbm_svc_wb_kport_q",
+      "parameters": {
+        "MUT": "00000000000000000000000000000000",
+        "WOPEN": "00000000000000000000000000000000"
+      },
+      "strap_bits": {
+        "stk": [
+          "0",
+          "1"
+        ],
+        "quad": [
+          "1"
+        ]
+      }
+    },
+    {
+      "canonical": "wbk_NW",
+      "master": "ot_hbm_svc_wb_kport_q",
+      "parameters": {
+        "MUT": "00000000000000000000000000000000",
+        "WOPEN": "00000000000000000000000000000000"
+      },
+      "strap_bits": {
+        "stk": [
+          "0",
+          "1"
+        ],
+        "quad": [
+          "0"
+        ]
+      }
+    }
+  ],
+  "SOURCE0_DMA_writeback_present": false,
+  "corroborated_by": "bind owner same cachedhomes/topcells roster"
+}

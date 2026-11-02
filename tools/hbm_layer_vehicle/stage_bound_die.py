@@ -48,7 +48,7 @@ def portable_sources(selected, out):
     return [copies[p] for p in selected], sorted({p.parent for p in copies.values()}), missing
 
 
-def stage(bind, repo, out, source_roots=(), macro_models=None, defines=(), portable=False):
+def stage(bind, repo, out, source_roots=(), macro_models=None, defines=(), portable=False, file_list=None):
     if out.exists():
         raise ValueError("Use a new output directory; existing builds are preserved")
     out.mkdir(parents=True)
@@ -56,7 +56,7 @@ def stage(bind, repo, out, source_roots=(), macro_models=None, defines=(), porta
     shutil.copy2(bind / "bind_report.json", out / "bind_report.json")
     report = json.loads((bind / "bind_report.json").read_text())
     selected, missing_files, replacements = [], [], []
-    for line in (bind / "bind.f").read_text().splitlines():
+    for line in (file_list or bind / "bind.f").read_text().splitlines():
         path = Path(line)
         if not line.strip() or line.startswith("+"):
             continue
@@ -153,7 +153,8 @@ if __name__ == "__main__":
     ap.add_argument("--macro-model-map", type=Path, help="JSON map from external macro module names to explicit behavioral model files")
     ap.add_argument("--defines-from", type=Path, help="Original as-built manifest; inherit its exact preprocessor defines")
     ap.add_argument("--portable", action="store_true", help="Copy the selected source/header readset under the output so any fleet host can elaborate it")
+    ap.add_argument("--file-list", type=Path, help="Explicit binder-owned relocated file list; default bind/bind.f")
     args = ap.parse_args()
     models = {} if args.macro_model_map is None else {k: Path(v).resolve() for k, v in json.loads(args.macro_model_map.read_text()).items()}
     defines = [] if args.defines_from is None else json.loads(args.defines_from.read_text()).get("defines", [])
-    stage(args.bind.resolve(), args.repo.resolve(), args.out.resolve(), [p.resolve() for p in args.source_root], models, defines, args.portable)
+    stage(args.bind.resolve(), args.repo.resolve(), args.out.resolve(), [p.resolve() for p in args.source_root], models, defines, args.portable, args.file_list)

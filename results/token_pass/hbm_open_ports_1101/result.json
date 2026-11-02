@@ -1,0 +1,34 @@
+{
+  "status": "ACTUAL_SFU_CUT_FRONTEND_PASS; WHOLE_SOURCE10_PENDING",
+  "scope": "Copied render-boundary syntax repair; canonical wrappers/RTL/ports/defaults unchanged",
+  "original_control": {
+    "stage": "source9",
+    "status": "FAIL",
+    "real_errors": 3,
+    "reason": "Illegal empty vectors on m1ot_su12_sfu_sp2 side_v/side_x/unusedside_y"
+  },
+  "actual_gate": {
+    "top": "ot_hnx_sfu_lane__cf694489f05c",
+    "status": "PASS",
+    "host": "intel2",
+    "unit": "oth-ubuntu-683756-1793572882",
+    "elapsed_seconds": 32.2,
+    "max_RSS_KiB": 1241132,
+    "full_selected_preprocessed_source": true,
+    "source_timeprecision": "1fs",
+    "numeric_qualification": false
+  },
+  "source10": {
+    "client_host": "intel2",
+    "unit": "codex-hbm-whole-front10.service",
+    "root": "/srv/opentallas-scratch2/claude/codex-hbm-whole-1101",
+    "log": "/tmp/codex-hbm-whole-front10.otrun.log",
+    "memory_GB": 64,
+    "threads": 2,
+    "cache_reuse": "None: monolithic selected source hash changed; source9 artifacts preserved, no graft or manual skip"
+  },
+  "holds": [
+    "48strict UNPLANNED/42407bits,152native inputs remain",
+    "No source10 result yet; no full numeric or physical adoption"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+ "ot_hdc_v41x_ins": {
+  "source": "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+  "module_body_sha256": "ca64e5c20617a988f5c68163ae71246dda4a81f352af2c7f6aba2444f1b4ace9",
+  "production_RTL_changes": 0
+ },
+ "ot_hbm_su_static_replicated_bank": {
+  "source": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+  "module_body_sha256": "c52b430c437e208c00da493faa4f5db5e00541369d074fe5a087193b320211cd",
+  "production_RTL_changes": 0
+ },
+ "ot_hbm_svc_sm_group_rel_id": {
+  "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+  "module_body_sha256": "204c6d60b0513668c7e25c8997f4a29d96051d47cdd06e26a021c823dde8ee79",
+  "production_RTL_changes": 0
+ },
+ "ot_hbm_svc_sm_feed_programmed_rel_id": {
+  "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_id.sv",
+  "module_body_sha256": "2f63b4da537feeb4be1b08d4df1b7a217474d9aca0398f0b8b16fbc39759accd",
+  "production_RTL_changes": 0
+ },
+ "scope": "Only existing compatible API definitions; actualWCOPY0/ATT_MARK0 unchanged. No global C12 arithmetic replacement.",
+ "evidence": {
+  "INS": "Actual16SFUsplit3recipes C12; RING0 ports/functions/DMAX0/g_line byteidentical generic for allparams; branchSHAfb9ab6c18f634e70e1dcbdee2a67b62d7f0f41b226b72c6ffea37f98b6c1c08d; existing40kcycle RING3/2/0 verdict ae5899467",
+  "WCOPY": "cd8895f88 default-equivalence +7mutants; actualcache256banktemplates all0",
+  "ATT_MARK": "Actual8svg_NW contexts ATT_MARK0, no manifestoverrides; afterreset invariant at_r=at_c=at_f=0 so S1command/fault identical old; group only passes parameter"
+ }
+}
