@@ -1,0 +1,38 @@
+mkdir -p /work/run/logs/asap7/kl_ot_s81sl_vsw_cvB/base /work/run/reports/asap7/kl_ot_s81sl_vsw_cvB/base
+/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/run/logs/asap7/kl_ot_s81sl_vsw_cvB/base/generate_abstract.log --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 4  /OpenROAD-flow-scripts/flow/scripts/generate_abstract.tcl -metrics /work/run/logs/asap7/kl_ot_s81sl_vsw_cvB/base/generate_abstract.json
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+load_design 6_final.odb 6_final.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /work/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /work/macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/6_final.odb
+read_sdc -mode ss /work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/6_final.sdc
+read_sdc -mode ff /work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/6_final.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/6_final.sdc
+source /work/setRC_rcx.tcl
+Took 6 seconds: load_design 6_final.odb 6_final.sdc
+read_spef /work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/6_final.spef
+Took 17 seconds: read_spef /work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/6_final.spef
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+Generating abstract views
+write_timing_model -scene tc /work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/ot_s81sl_vsw_tc.lib
+Took 27 seconds: write_timing_model -scene tc /work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/ot_s81sl_vsw_tc.lib
+write_timing_model -scene BC /work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/ot_s81sl_vsw_BC.lib
+Took 19 seconds: write_timing_model -scene BC /work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/ot_s81sl_vsw_BC.lib
+write_abstract_lef -bloat_occupied_layers /work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/ot_s81sl_vsw.lef
+Took 9 seconds: write_abstract_lef -bloat_occupied_layers /work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/ot_s81sl_vsw.lef
+Elapsed time: 1:18.48[h:]min:sec. CPU time: user 90.71 sys 5.17 (122%). Peak memory: 1744204KB.

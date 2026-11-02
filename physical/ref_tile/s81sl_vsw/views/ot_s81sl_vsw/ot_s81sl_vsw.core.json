@@ -1,0 +1,30 @@
+{
+ "module": "ot_s81sl_vsw",
+ "plan_type": "ot_s81sl_leaf__t1",
+ "boundary_role": {
+  "clk": "clk",
+  "rst_n": "reset"
+ },
+ "clock_contract": {
+  "kind": "hard_core_latency",
+  "ruling": "COORD 10-24",
+  "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+  "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+ },
+ "clock_latency_measured": {
+  "tt": {
+   "n": 387,
+   "min": 278.06,
+   "mean": 301.9,
+   "max": 337.2,
+   "spread": 59.14
+  },
+  "ff": {
+   "n": 387,
+   "min": 218.27,
+   "mean": 240.64,
+   "max": 272.66,
+   "spread": 54.39
+  }
+ }
+}

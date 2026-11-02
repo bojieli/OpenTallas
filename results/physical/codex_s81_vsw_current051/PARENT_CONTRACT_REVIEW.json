@@ -1,0 +1,33 @@
+{
+  "verdict": "PASS_FOR_ROOT_REVIEW",
+  "module": "ot_s81sl_vsw",
+  "shape_um": [
+    224.64,
+    224.64
+  ],
+  "scalar_clock": {
+    "pin": "clk",
+    "layer": "M5",
+    "face": "C",
+    "xy_um": [
+      107.484,
+      117.18
+    ]
+  },
+  "pins_canon_sha256": "4adf036b05263317a92b21197ab6e96366c98e4c8833a4ff696014cddec33e20",
+  "parent_contract": {
+    "tt_mean_ps": 301.9,
+    "ff_mean_ps": 240.64,
+    "n": 387,
+    "basis": "SIGNED_extracted_boundary_pin_register_mean",
+    "require_signed_load": "PASS"
+  },
+  "original_build_commit": "2dd7de17846fb48356ea963092dbe53ceb15e789",
+  "golden_commit": "051340895d95ea77b712fcc1fe80a5de9f6449be",
+  "routed_EQ": [
+    15804,
+    15804
+  ],
+  "native_export_unit": "oth-ubuntu-809577-1793611765",
+  "publication_count_by_leaf": false
+}
