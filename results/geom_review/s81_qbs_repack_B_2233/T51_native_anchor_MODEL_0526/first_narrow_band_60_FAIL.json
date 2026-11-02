@@ -1,0 +1,3119 @@
+{
+  "scope": "DISABLED bounded T51 source geometry model; no nativeDB/plan/source mutation or CAD",
+  "requested_moves": 3707,
+  "allocated": 3647,
+  "byfamily": {
+    "ft6_stage2": 515,
+    "ft2_stage0": 515,
+    "ft2_ring_band_FFs": 2617
+  },
+  "failed": 60,
+  "failures": [
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[493\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        21.384,
+        1155.465
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1092320.0,
+        1382320.0,
+        -1361248.0,
+        -1071248.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[45\\]$_DFF_P_",
+          "xy": [
+            66.42,
+            1150.875
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          10.536,
+          1226.784,
+          "ft2_i[493]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[494\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        21.384,
+        1156.545
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1092440.0,
+        1382440.0,
+        -1361128.0,
+        -1071128.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[46\\]$_DFF_P_",
+          "xy": [
+            67.5,
+            1152.765
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          10.656,
+          1226.784,
+          "ft2_i[494]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[495\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        21.384,
+        1157.625
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1092032.0,
+        1382032.0,
+        -1361536.0,
+        -1071536.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[47\\]$_DFF_P_",
+          "xy": [
+            68.256,
+            1152.495
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          10.248,
+          1226.784,
+          "ft2_i[495]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[496\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        21.384,
+        1158.705
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1091992.0,
+        1381992.0,
+        -1361576.0,
+        -1071576.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[48\\]$_DFF_P_",
+          "xy": [
+            66.528,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          10.208,
+          1226.784,
+          "ft2_i[496]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[497\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        21.384,
+        1159.7849999999999
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1091600.0,
+        1381600.0,
+        -1361968.0,
+        -1071968.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[49\\]$_DFF_P_",
+          "xy": [
+            61.02,
+            1144.935
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          9.816,
+          1226.784,
+          "ft2_i[497]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[498\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        20.195999999999998,
+        1154.925
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1091608.0,
+        1381608.0,
+        -1361960.0,
+        -1071960.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[50\\]$_DFF_P_",
+          "xy": [
+            62.1,
+            1146.015
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          9.824,
+          1226.784,
+          "ft2_i[498]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[499\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        20.195999999999998,
+        1156.0049999999999
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1091168.0,
+        1381168.0,
+        -1362400.0,
+        -1072400.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[51\\]$_DFF_P_",
+          "xy": [
+            61.02,
+            1145.745
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          9.384,
+          1226.784,
+          "ft2_i[499]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[500\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        20.195999999999998,
+        1157.085
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1091160.0,
+        1381160.0,
+        -1362408.0,
+        -1072408.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[52\\]$_DFF_P_",
+          "xy": [
+            63.18,
+            1147.095
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          9.376,
+          1226.784,
+          "ft2_i[500]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[501\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        20.195999999999998,
+        1158.165
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1090736.0,
+        1380736.0,
+        -1362832.0,
+        -1072832.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[53\\]$_DFF_P_",
+          "xy": [
+            66.42,
+            1156.005
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          8.952,
+          1226.784,
+          "ft2_i[501]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[502\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        20.195999999999998,
+        1159.245
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1090712.0,
+        1380712.0,
+        -1362856.0,
+        -1072856.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[54\\]$_DFF_P_",
+          "xy": [
+            65.34,
+            1157.355
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          8.928,
+          1226.784,
+          "ft2_i[502]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[503\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        20.195999999999998,
+        1160.325
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1090304.0,
+        1380304.0,
+        -1363264.0,
+        -1073264.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[55\\]$_DFF_P_",
+          "xy": [
+            65.34,
+            1157.085
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          8.52,
+          1226.784,
+          "ft2_i[503]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[504\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        19.008,
+        1155.465
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1090264.0,
+        1380264.0,
+        -1363304.0,
+        -1073304.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[56\\]$_DFF_P_",
+          "xy": [
+            64.26,
+            1148.175
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          8.48,
+          1226.784,
+          "ft2_i[504]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[505\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        19.008,
+        1156.545
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1089872.0,
+        1379872.0,
+        -1363696.0,
+        -1073696.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[57\\]$_DFF_P_",
+          "xy": [
+            62.1,
+            1146.825
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          8.088,
+          1226.784,
+          "ft2_i[505]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[506\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        19.008,
+        1157.625
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1089880.0,
+        1379880.0,
+        -1363688.0,
+        -1073688.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[58\\]$_DFF_P_",
+          "xy": [
+            64.26,
+            1158.435
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          8.096,
+          1226.784,
+          "ft2_i[506]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[507\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        19.008,
+        1158.705
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1089440.0,
+        1379440.0,
+        -1364128.0,
+        -1074128.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[59\\]$_DFF_P_",
+          "xy": [
+            64.26,
+            1158.165
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          7.656,
+          1226.784,
+          "ft2_i[507]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[508\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        19.008,
+        1159.7849999999999
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1089432.0,
+        1379432.0,
+        -1364136.0,
+        -1074136.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[60\\]$_DFF_P_",
+          "xy": [
+            68.58,
+            1154.655
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          7.648,
+          1226.784,
+          "ft2_i[508]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[509\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        17.82,
+        1154.385
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1089008.0,
+        1379008.0,
+        -1364560.0,
+        -1074560.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[61\\]$_DFF_P_",
+          "xy": [
+            63.18,
+            1159.245
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          7.224,
+          1226.784,
+          "ft2_i[509]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[510\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        17.82,
+        1155.465
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1088984.0,
+        1378984.0,
+        -1364584.0,
+        -1074584.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[62\\]$_DFF_P_",
+          "xy": [
+            63.18,
+            1147.905
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          7.2,
+          1226.784,
+          "ft2_i[510]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[511\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        17.82,
+        1156.545
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1088576.0,
+        1378576.0,
+        -1364992.0,
+        -1074992.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[63\\]$_DFF_P_",
+          "xy": [
+            65.34,
+            1149.255
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          6.792,
+          1226.784,
+          "ft2_i[511]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[512\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        17.82,
+        1157.625
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1088600.0,
+        1378600.0,
+        -1364968.0,
+        -1074968.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[8\\].u_dsel/y\\[0\\]$_DFF_P_",
+          "xy": [
+            65.34,
+            1150.065
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          6.816,
+          1226.784,
+          "ft2_i[512]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[513\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        17.82,
+        1158.705
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1088000.0,
+        1378000.0,
+        -1365568.0,
+        -1075568.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[8\\].u_dsel/y\\[1\\]$_DFF_P_",
+          "xy": [
+            68.256,
+            1151.955
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          6.216,
+          1226.784,
+          "ft2_i[513]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[514\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        17.82,
+        1159.7849999999999
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1088152.0,
+        1378152.0,
+        -1365416.0,
+        -1075416.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[8\\].u_dsel/y\\[2\\]$_DFF_P_",
+          "xy": [
+            66.42,
+            1151.145
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          6.368,
+          1226.784,
+          "ft2_i[514]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[477\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        24.948,
+        1156.275
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1095920.0,
+        1385920.0,
+        -1357648.0,
+        -1067648.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[29\\]$_DFF_P_",
+          "xy": [
+            67.176,
+            1151.955
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          14.136,
+          1226.784,
+          "ft2_i[477]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[478\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        24.948,
+        1157.355
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1095896.0,
+        1385896.0,
+        -1357672.0,
+        -1067672.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[30\\]$_DFF_P_",
+          "xy": [
+            62.1,
+            1147.365
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          14.112,
+          1226.784,
+          "ft2_i[478]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[479\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        24.948,
+        1158.435
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1095488.0,
+        1385488.0,
+        -1358080.0,
+        -1068080.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[31\\]$_DFF_P_",
+          "xy": [
+            63.18,
+            1158.975
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          13.704,
+          1226.784,
+          "ft2_i[479]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[480\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        24.948,
+        1159.5149999999999
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1095448.0,
+        1385448.0,
+        -1358120.0,
+        -1068120.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[32\\]$_DFF_P_",
+          "xy": [
+            63.18,
+            1148.445
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          13.664,
+          1226.784,
+          "ft2_i[480]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[481\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        23.759999999999998,
+        1154.385
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1095056.0,
+        1385056.0,
+        -1358512.0,
+        -1068512.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[33\\]$_DFF_P_",
+          "xy": [
+            62.1,
+            1160.055
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          13.272,
+          1226.784,
+          "ft2_i[481]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[482\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        23.759999999999998,
+        1155.465
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1095256.0,
+        1385256.0,
+        -1358312.0,
+        -1068312.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[34\\]$_DFF_P_",
+          "xy": [
+            61.02,
+            1145.475
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          13.472,
+          1226.784,
+          "ft2_i[482]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[483\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        23.759999999999998,
+        1156.545
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1094624.0,
+        1384624.0,
+        -1358944.0,
+        -1068944.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[35\\]$_DFF_P_",
+          "xy": [
+            64.26,
+            1149.525
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          12.84,
+          1226.784,
+          "ft2_i[483]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[484\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        23.759999999999998,
+        1157.625
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1094232.0,
+        1384232.0,
+        -1359336.0,
+        -1069336.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[36\\]$_DFF_P_",
+          "xy": [
+            62.1,
+            1146.555
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          12.448,
+          1226.784,
+          "ft2_i[484]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[485\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        23.759999999999998,
+        1158.705
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1094192.0,
+        1384192.0,
+        -1359376.0,
+        -1069376.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[37\\]$_DFF_P_",
+          "xy": [
+            64.26,
+            1157.625
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          12.408,
+          1226.784,
+          "ft2_i[485]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[486\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        23.759999999999998,
+        1159.7849999999999
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1094168.0,
+        1384168.0,
+        -1359400.0,
+        -1069400.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[38\\]$_DFF_P_",
+          "xy": [
+            67.176,
+            1155.195
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          12.384,
+          1226.784,
+          "ft2_i[486]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[487\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        22.572,
+        1154.925
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1093760.0,
+        1383760.0,
+        -1359808.0,
+        -1069808.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[39\\]$_DFF_P_",
+          "xy": [
+            63.18,
+            1147.635
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          11.976,
+          1226.784,
+          "ft2_i[487]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[488\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        22.572,
+        1156.0049999999999
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1093720.0,
+        1383720.0,
+        -1359848.0,
+        -1069848.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[40\\]$_DFF_P_",
+          "xy": [
+            65.34,
+            1150.605
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          11.936,
+          1226.784,
+          "ft2_i[488]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[489\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        22.572,
+        1157.085
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1093328.0,
+        1383328.0,
+        -1360240.0,
+        -1070240.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[41\\]$_DFF_P_",
+          "xy": [
+            65.34,
+            1149.795
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          11.544,
+          1226.784,
+          "ft2_i[489]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[490\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        22.572,
+        1158.165
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1093272.0,
+        1383272.0,
+        -1360296.0,
+        -1070296.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[42\\]$_DFF_P_",
+          "xy": [
+            63.18,
+            1158.705
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          11.488,
+          1226.784,
+          "ft2_i[490]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[491\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        22.572,
+        1159.245
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1092896.0,
+        1382896.0,
+        -1360672.0,
+        -1070672.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[43\\]$_DFF_P_",
+          "xy": [
+            66.42,
+            1156.275
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          11.112,
+          1226.784,
+          "ft2_i[491]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[492\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        22.572,
+        1160.325
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1092888.0,
+        1382888.0,
+        -1360680.0,
+        -1070680.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[44\\]$_DFF_P_",
+          "xy": [
+            62.1,
+            1159.785
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          11.104,
+          1226.784,
+          "ft2_i[492]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[493\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        21.384,
+        1155.195
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1092320.0,
+        1382320.0,
+        -1361248.0,
+        -1071248.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[45\\]$_DFF_P_",
+          "xy": [
+            66.42,
+            1150.875
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          10.536,
+          1226.784,
+          "ft2_i[493]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[494\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        21.384,
+        1156.275
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1092440.0,
+        1382440.0,
+        -1361128.0,
+        -1071128.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[46\\]$_DFF_P_",
+          "xy": [
+            67.5,
+            1152.765
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          10.656,
+          1226.784,
+          "ft2_i[494]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[495\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        21.384,
+        1157.355
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1092032.0,
+        1382032.0,
+        -1361536.0,
+        -1071536.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[47\\]$_DFF_P_",
+          "xy": [
+            68.256,
+            1152.495
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          10.248,
+          1226.784,
+          "ft2_i[495]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[496\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        21.384,
+        1158.435
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1091992.0,
+        1381992.0,
+        -1361576.0,
+        -1071576.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[48\\]$_DFF_P_",
+          "xy": [
+            66.528,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          10.208,
+          1226.784,
+          "ft2_i[496]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[497\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        21.384,
+        1159.5149999999999
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1091600.0,
+        1381600.0,
+        -1361968.0,
+        -1071968.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[49\\]$_DFF_P_",
+          "xy": [
+            61.02,
+            1144.935
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          9.816,
+          1226.784,
+          "ft2_i[497]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[498\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        20.195999999999998,
+        1154.655
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1091608.0,
+        1381608.0,
+        -1361960.0,
+        -1071960.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[50\\]$_DFF_P_",
+          "xy": [
+            62.1,
+            1146.015
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          9.824,
+          1226.784,
+          "ft2_i[498]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[499\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        20.195999999999998,
+        1155.735
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1091168.0,
+        1381168.0,
+        -1362400.0,
+        -1072400.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[51\\]$_DFF_P_",
+          "xy": [
+            61.02,
+            1145.745
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          9.384,
+          1226.784,
+          "ft2_i[499]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[500\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        20.195999999999998,
+        1156.815
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1091160.0,
+        1381160.0,
+        -1362408.0,
+        -1072408.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[52\\]$_DFF_P_",
+          "xy": [
+            63.18,
+            1147.095
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          9.376,
+          1226.784,
+          "ft2_i[500]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[501\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        20.195999999999998,
+        1157.895
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1090736.0,
+        1380736.0,
+        -1362832.0,
+        -1072832.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[53\\]$_DFF_P_",
+          "xy": [
+            66.42,
+            1156.005
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          8.952,
+          1226.784,
+          "ft2_i[501]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[502\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        20.195999999999998,
+        1158.975
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1090712.0,
+        1380712.0,
+        -1362856.0,
+        -1072856.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[54\\]$_DFF_P_",
+          "xy": [
+            65.34,
+            1157.355
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          8.928,
+          1226.784,
+          "ft2_i[502]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[503\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        20.195999999999998,
+        1160.055
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1090304.0,
+        1380304.0,
+        -1363264.0,
+        -1073264.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[55\\]$_DFF_P_",
+          "xy": [
+            65.34,
+            1157.085
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          8.52,
+          1226.784,
+          "ft2_i[503]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[504\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        19.008,
+        1155.195
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1090264.0,
+        1380264.0,
+        -1363304.0,
+        -1073304.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[56\\]$_DFF_P_",
+          "xy": [
+            64.26,
+            1148.175
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          8.48,
+          1226.784,
+          "ft2_i[504]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[505\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        19.008,
+        1156.275
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1089872.0,
+        1379872.0,
+        -1363696.0,
+        -1073696.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[57\\]$_DFF_P_",
+          "xy": [
+            62.1,
+            1146.825
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          8.088,
+          1226.784,
+          "ft2_i[505]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[506\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        19.008,
+        1157.355
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1089880.0,
+        1379880.0,
+        -1363688.0,
+        -1073688.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[58\\]$_DFF_P_",
+          "xy": [
+            64.26,
+            1158.435
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          8.096,
+          1226.784,
+          "ft2_i[506]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[507\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        19.008,
+        1158.435
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1089440.0,
+        1379440.0,
+        -1364128.0,
+        -1074128.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[59\\]$_DFF_P_",
+          "xy": [
+            64.26,
+            1158.165
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          7.656,
+          1226.784,
+          "ft2_i[507]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[508\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        19.008,
+        1159.5149999999999
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1089432.0,
+        1379432.0,
+        -1364136.0,
+        -1074136.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[60\\]$_DFF_P_",
+          "xy": [
+            68.58,
+            1154.655
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          7.648,
+          1226.784,
+          "ft2_i[508]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[509\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        17.82,
+        1154.115
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1089008.0,
+        1379008.0,
+        -1364560.0,
+        -1074560.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[61\\]$_DFF_P_",
+          "xy": [
+            63.18,
+            1159.245
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          7.224,
+          1226.784,
+          "ft2_i[509]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[510\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        17.82,
+        1155.195
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1088984.0,
+        1378984.0,
+        -1364584.0,
+        -1074584.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[62\\]$_DFF_P_",
+          "xy": [
+            63.18,
+            1147.905
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          7.2,
+          1226.784,
+          "ft2_i[510]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[511\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        17.82,
+        1156.275
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1088576.0,
+        1378576.0,
+        -1364992.0,
+        -1074992.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[63\\]$_DFF_P_",
+          "xy": [
+            65.34,
+            1149.255
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          6.792,
+          1226.784,
+          "ft2_i[511]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[512\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        17.82,
+        1157.355
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1088600.0,
+        1378600.0,
+        -1364968.0,
+        -1074968.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[8\\].u_dsel/y\\[0\\]$_DFF_P_",
+          "xy": [
+            65.34,
+            1150.065
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          6.816,
+          1226.784,
+          "ft2_i[512]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[513\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        17.82,
+        1158.435
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1088000.0,
+        1378000.0,
+        -1365568.0,
+        -1075568.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[8\\].u_dsel/y\\[1\\]$_DFF_P_",
+          "xy": [
+            68.256,
+            1151.955
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          6.216,
+          1226.784,
+          "ft2_i[513]"
+        ]
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[514\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "desired": [
+        17.82,
+        1159.5149999999999
+      ],
+      "area_dbu": [
+        60480,
+        1134540,
+        145800,
+        1160460
+      ],
+      "UV_bounds_dbu": [
+        1088152.0,
+        1378152.0,
+        -1365416.0,
+        -1075416.0
+      ],
+      "neighbours": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[8\\].u_dsel/y\\[2\\]$_DFF_P_",
+          "xy": [
+            66.42,
+            1151.145
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[0\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.tc\\[1\\]$_DFF_N_",
+          "xy": [
+            61.074,
+            1134.675
+          ]
+        }
+      ],
+      "public_capture_constraints": [
+        [
+          6.368,
+          1226.784,
+          "ft2_i[514]"
+        ]
+      ]
+    }
+  ],
+  "all_native_obstacles": 319576,
+  "actual_TAP": 137673,
+  "actual_rows": 4512,
+  "all_existing_other_cells_fixed": true,
+  "masters_orientations_counts_preserved": true,
+  "R2R_constraint_um": 402.5,
+  "r2r": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 402.33,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 47511,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_bound.u_ft_ft5_o_0/q\\[505\\]$_DFF_P_ -> u_bound.u_ft_ft5_o_1/q\\[505\\]$_DFF_P_"
+  },
+  "remaining_over405": [],
+  "pin_metrics": {
+    "pins_registered": 15164,
+    "pins_to_macro": 0,
+    "pins_exempt": 93,
+    "pins_unregistered": 0,
+    "pins_land_ring": 3042,
+    "unregistered_sample": [],
+    "pin_reg_p50": 7.1,
+    "pin_reg_p90": 25.89,
+    "pin_reg_max": 281.99,
+    "pin_reg_worst": [
+      "282.0 ft2_i[509]",
+      "281.6 ft2_i[481]",
+      "281.2 ft2_i[498]",
+      "281.2 ft2_i[487]",
+      "281.2 ft2_i[493]"
+    ]
+  },
+  "clock_nearest_INFO": {
+    "clock_entry": "fclk_in_ft2_i[0]",
+    "clock_entry_xy": [
+      61.536,
+      1224.224
+    ],
+    "clock_entry_on_macro": 0,
+    "clock_entry_macro": [],
+    "clock_islands_fixed": 0,
+    "clock_reach_max": 200.09,
+    "clock_reach_far": [
+      888.7,
+      720.8
+    ],
+    "clock_leaf_reach_max": 1328.74,
+    "clock_leaf_reach_far": [
+      5.0,
+      4.7
+    ],
+    "clock_leaf_reach_driver": [
+      725.0,
+      613.4
+    ],
+    "clock_entry_sink_max": 2594.25,
+    "clock_entry_sink_far": [
+      1436.8,
+      5.3
+    ],
+    "clock_tree_leg_max": 1328.74,
+    "clock_tree_leg_worst": "clk -> u_bound.u_ft_ft0_o_4/q\\[1101\\]$_DFF_P_",
+    "clock_tree_leg_edges": 52044,
+    "clock_tree_clock_cells": 0,
+    "clock_tree_unrooted_sinks": 0,
+    "clock_tree_trace_errors": []
+  },
+  "ft6_all_five_stage_FFs": 2575,
+  "max_jog_um": 31.86,
+  "native_census": {
+    "scope": "READ_ONLY exact saved T51 PLACE all-native occupancy/rows/PG/pins metadata for disabled placement model; no write_db/placement/clock/RC/STA",
+    "source_sha256": "536ea7e5aac75121caf4bec8717c58984bc1a228c19841f9cb81277b29d5c46c",
+    "source_unchanged": true,
+    "dbu_per_um": 1000,
+    "die_dbu": [
+      0,
+      0,
+      1442880,
+      1226880
+    ],
+    "core_dbu": [
+      4320,
+      4320,
+      1438560,
+      1222560
+    ],
+    "rows": 4512,
+    "clock_pins": 52044,
+    "BTerms": 15259,
+    "counts": {
+      "cells_std": 185610,
+      "PG_terms": 646566,
+      "PG_null": 95696,
+      "cells_tap": 137673,
+      "PG_shapes": 6289235
+    }
+  },
+  "holds": [
+    "all95696originalPGnull terms remain on47848std buffers; no repair or retroactive timing claim",
+    "E/W partial-face pin geometry unchanged FAIL; sparsefill/actualcongestion remain",
+    "full native PG geometry unchanged; row parity/native master orientation preserved, but future PG landing/pinaccess must be checked before physical release",
+    "no public pins/clock names/source833/stages/cycles/RTL/FFcounts changed",
+    "FFtargets remain model-only; future bounded DPL/pose/master guard and all endpoint census required"
+  ]
+}

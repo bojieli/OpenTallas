@@ -1,0 +1,396 @@
+{
+  "scope": "exact projected native net-box contribution decomposition; no route/newvariant/physicalchange",
+  "column_um": [
+    60,
+    70
+  ],
+  "horizontal_cut_y_um": 967.5,
+  "total_crossing_weight": 1079.4591926355909,
+  "uniform_M2M7_column_capacity": 481.8,
+  "reconstructed_col_util": 2.240471549679516,
+  "weighted_classes": {
+    "moved_FF_without_comb": 0.00697350069735007,
+    "moved_FF_to_original_comb": 993.1493970033832,
+    "unchanged_net": 86.30282213151035
+  },
+  "weighted_comb_endpoint_ownership": {
+    "ft2_cland_comb": 1792.1932381907175,
+    "other_comb": 45.841852591852636
+  },
+  "crossing_nets": 2707,
+  "top_witnesses": [
+    {
+      "geom_net_index": 59261,
+      "column_crossing_weight": 1.0,
+      "classification": "moved_FF_to_original_comb",
+      "bbox": [
+        68.904,
+        951.885,
+        69.417,
+        1154.925
+      ],
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[271\\]$_DFFE_NP_",
+          "kind": "S",
+          "xy": [
+            68.904,
+            1154.925
+          ],
+          "moved": true
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07315_",
+          "kind": "B",
+          "xy": [
+            69.417,
+            951.885
+          ],
+          "moved": false
+        }
+      ]
+    },
+    {
+      "geom_net_index": 59267,
+      "column_crossing_weight": 1.0,
+      "classification": "moved_FF_to_original_comb",
+      "bbox": [
+        68.82300000000001,
+        951.615,
+        68.904,
+        1155.465
+      ],
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[277\\]$_DFFE_NP_",
+          "kind": "S",
+          "xy": [
+            68.904,
+            1155.465
+          ],
+          "moved": true
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07321_",
+          "kind": "B",
+          "xy": [
+            68.82300000000001,
+            951.615
+          ],
+          "moved": false
+        }
+      ]
+    },
+    {
+      "geom_net_index": 59268,
+      "column_crossing_weight": 1.0,
+      "classification": "moved_FF_to_original_comb",
+      "bbox": [
+        68.904,
+        951.075,
+        69.201,
+        1156.545
+      ],
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[278\\]$_DFFE_NP_",
+          "kind": "S",
+          "xy": [
+            68.904,
+            1156.545
+          ],
+          "moved": true
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07322_",
+          "kind": "B",
+          "xy": [
+            69.201,
+            951.075
+          ],
+          "moved": false
+        }
+      ]
+    },
+    {
+      "geom_net_index": 59269,
+      "column_crossing_weight": 1.0,
+      "classification": "moved_FF_to_original_comb",
+      "bbox": [
+        68.769,
+        966.465,
+        68.904,
+        1157.625
+      ],
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[279\\]$_DFFE_NP_",
+          "kind": "S",
+          "xy": [
+            68.904,
+            1157.625
+          ],
+          "moved": true
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07323_",
+          "kind": "B",
+          "xy": [
+            68.769,
+            966.465
+          ],
+          "moved": false
+        }
+      ]
+    },
+    {
+      "geom_net_index": 59270,
+      "column_crossing_weight": 1.0,
+      "classification": "moved_FF_to_original_comb",
+      "bbox": [
+        68.904,
+        964.575,
+        69.363,
+        1158.705
+      ],
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[280\\]$_DFFE_NP_",
+          "kind": "S",
+          "xy": [
+            68.904,
+            1158.705
+          ],
+          "moved": true
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07324_",
+          "kind": "B",
+          "xy": [
+            69.363,
+            964.575
+          ],
+          "moved": false
+        }
+      ]
+    },
+    {
+      "geom_net_index": 59271,
+      "column_crossing_weight": 1.0,
+      "classification": "moved_FF_to_original_comb",
+      "bbox": [
+        68.904,
+        962.415,
+        69.417,
+        1159.785
+      ],
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[281\\]$_DFFE_NP_",
+          "kind": "S",
+          "xy": [
+            68.904,
+            1159.785
+          ],
+          "moved": true
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07325_",
+          "kind": "B",
+          "xy": [
+            69.417,
+            962.415
+          ],
+          "moved": false
+        }
+      ]
+    },
+    {
+      "geom_net_index": 59272,
+      "column_crossing_weight": 1.0,
+      "classification": "moved_FF_to_original_comb",
+      "bbox": [
+        66.987,
+        953.775,
+        67.5,
+        1155.465
+      ],
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[282\\]$_DFFE_NP_",
+          "kind": "S",
+          "xy": [
+            67.5,
+            1155.465
+          ],
+          "moved": true
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07326_",
+          "kind": "B",
+          "xy": [
+            66.987,
+            953.775
+          ],
+          "moved": false
+        }
+      ]
+    },
+    {
+      "geom_net_index": 59273,
+      "column_crossing_weight": 1.0,
+      "classification": "moved_FF_to_original_comb",
+      "bbox": [
+        67.71600000000001,
+        952.155,
+        68.12100000000001,
+        1156.005
+      ],
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[283\\]$_DFFE_NP_",
+          "kind": "S",
+          "xy": [
+            67.71600000000001,
+            1156.005
+          ],
+          "moved": true
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07327_",
+          "kind": "B",
+          "xy": [
+            68.12100000000001,
+            952.155
+          ],
+          "moved": false
+        }
+      ]
+    },
+    {
+      "geom_net_index": 59274,
+      "column_crossing_weight": 1.0,
+      "classification": "moved_FF_to_original_comb",
+      "bbox": [
+        67.71600000000001,
+        962.145,
+        68.12100000000001,
+        1157.085
+      ],
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[284\\]$_DFFE_NP_",
+          "kind": "S",
+          "xy": [
+            67.71600000000001,
+            1157.085
+          ],
+          "moved": true
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07328_",
+          "kind": "B",
+          "xy": [
+            68.12100000000001,
+            962.145
+          ],
+          "moved": false
+        }
+      ]
+    },
+    {
+      "geom_net_index": 59275,
+      "column_crossing_weight": 1.0,
+      "classification": "moved_FF_to_original_comb",
+      "bbox": [
+        67.581,
+        965.655,
+        67.71600000000001,
+        1158.165
+      ],
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[285\\]$_DFFE_NP_",
+          "kind": "S",
+          "xy": [
+            67.71600000000001,
+            1158.165
+          ],
+          "moved": true
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07329_",
+          "kind": "B",
+          "xy": [
+            67.581,
+            965.655
+          ],
+          "moved": false
+        }
+      ]
+    },
+    {
+      "geom_net_index": 59276,
+      "column_crossing_weight": 1.0,
+      "classification": "moved_FF_to_original_comb",
+      "bbox": [
+        67.71600000000001,
+        967.005,
+        67.797,
+        1159.245
+      ],
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[286\\]$_DFFE_NP_",
+          "kind": "S",
+          "xy": [
+            67.71600000000001,
+            1159.245
+          ],
+          "moved": true
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07330_",
+          "kind": "B",
+          "xy": [
+            67.797,
+            967.005
+          ],
+          "moved": false
+        }
+      ]
+    },
+    {
+      "geom_net_index": 59277,
+      "column_crossing_weight": 1.0,
+      "classification": "moved_FF_to_original_comb",
+      "bbox": [
+        67.71600000000001,
+        963.765,
+        67.959,
+        1160.325
+      ],
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[287\\]$_DFFE_NP_",
+          "kind": "S",
+          "xy": [
+            67.71600000000001,
+            1160.325
+          ],
+          "moved": true
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07331_",
+          "kind": "B",
+          "xy": [
+            67.959,
+            963.765
+          ],
+          "moved": false
+        }
+      ]
+    }
+  ],
+  "moved_class_count": 2545
+}

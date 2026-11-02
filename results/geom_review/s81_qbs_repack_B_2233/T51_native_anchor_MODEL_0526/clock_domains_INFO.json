@@ -1,0 +1,66 @@
+{
+  "ft2_ring_band_FFs|clk": {
+    "count": 600,
+    "old_max_um": 1048.9209999999998,
+    "new_max_um": 1210.921,
+    "witness": {
+      "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[11\\]$_DFF_P_",
+      "family": "ft2_ring_band_FFs",
+      "root": "clk",
+      "root_xy": [
+        725.024,
+        613.408
+      ],
+      "old_root_distance_um": 1037.581,
+      "new_root_distance_um": 1210.921
+    }
+  },
+  "ft2_ring_band_FFs|fclk_in_ft2_i[0]": {
+    "count": 2077,
+    "old_max_um": 337.109,
+    "new_max_um": 138.65899999999993,
+    "witness": {
+      "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[3\\]\\[4\\]$_DFFE_NP_",
+      "family": "ft2_ring_band_FFs",
+      "root": "fclk_in_ft2_i[0]",
+      "root_xy": [
+        61.536,
+        1224.224
+      ],
+      "old_root_distance_um": 336.8389999999999,
+      "new_root_distance_um": 138.65899999999993
+    }
+  },
+  "ft2_stage0|clk": {
+    "count": 515,
+    "old_max_um": 796.8489999999999,
+    "new_max_um": 865.9689999999999,
+    "witness": {
+      "name": "u_bound.u_ft_ft2_o_0/q\\[496\\]$_DFF_P_",
+      "family": "ft2_stage0",
+      "root": "clk",
+      "root_xy": [
+        725.024,
+        613.408
+      ],
+      "old_root_distance_um": 796.8489999999999,
+      "new_root_distance_um": 865.9689999999999
+    }
+  },
+  "ft6_stage2|clk": {
+    "count": 515,
+    "old_max_um": 443.85500000000013,
+    "new_max_um": 431.92099999999994,
+    "witness": {
+      "name": "u_bound.u_ft_ft6_o_2/q\\[496\\]$_DFF_P_",
+      "family": "ft6_stage2",
+      "root": "clk",
+      "root_xy": [
+        725.024,
+        613.408
+      ],
+      "old_root_distance_um": 443.85500000000013,
+      "new_root_distance_um": 431.92099999999994
+    }
+  }
+}

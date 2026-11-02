@@ -1,0 +1,28 @@
+{
+  "scope": "READ_ONLY exact saved T51 PLACE all-native occupancy/rows/PG/pins metadata for disabled placement model; no write_db/placement/clock/RC/STA",
+  "source_sha256": "536ea7e5aac75121caf4bec8717c58984bc1a228c19841f9cb81277b29d5c46c",
+  "source_unchanged": true,
+  "dbu_per_um": 1000,
+  "die_dbu": [
+    0,
+    0,
+    1442880,
+    1226880
+  ],
+  "core_dbu": [
+    4320,
+    4320,
+    1438560,
+    1222560
+  ],
+  "rows": 4512,
+  "clock_pins": 52044,
+  "BTerms": 15259,
+  "counts": {
+    "cells_std": 185610,
+    "PG_terms": 646566,
+    "PG_null": 95696,
+    "cells_tap": 137673,
+    "PG_shapes": 6289235
+  }
+}

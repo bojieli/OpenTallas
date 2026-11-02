@@ -1,0 +1,538 @@
+{
+  "scope": "MODEL arithmetic translation occupancy pricing against ALL323283 actualnative cell footprints incl137673TAP/4512rows; no native DB/source edits",
+  "moved": 3707,
+  "all_targets_row_site_orient_legal": true,
+  "row_failures": [],
+  "collision_counts": {
+    "ft2_ring_band_FFs|std|FIRM": 315,
+    "ft2_ring_band_FFs|std|PLACED": 548,
+    "ft6_stage2|tap|LOCKED": 15
+  },
+  "collision_witnesses": [
+    {
+      "name": "u_bound.u_cland_ft2_i/arm\\[0\\]$_SDFF_PN0_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1134540,
+        18360,
+        1134810
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[1\\]\\[54\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1134540,
+            18360,
+            1134810
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/arm\\[1\\]$_SDFF_PN0_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1135350,
+        18360,
+        1135620
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[3\\]\\[51\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1135350,
+            18360,
+            1135620
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/arm\\[2\\]$_SDFF_PN0_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1136160,
+        18360,
+        1136430
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[1\\]\\[47\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1136160,
+            18360,
+            1136430
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/count\\[0\\]$_SDFFE_PN0P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1136970,
+        18360,
+        1137240
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[3\\]\\[44\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1136970,
+            18360,
+            1137240
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/count\\[1\\]$_SDFFE_PN0P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1137780,
+        18360,
+        1138050
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[0\\]\\[40\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1137780,
+            18360,
+            1138050
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/count\\[2\\]$_SDFFE_PN0P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1138590,
+        18360,
+        1138860
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[3\\]\\[37\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1138590,
+            18360,
+            1138860
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/count\\[3\\]$_SDFFE_PN0P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1139400,
+        18360,
+        1139670
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[0\\]\\[33\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1139400,
+            18360,
+            1139670
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/count\\[4\\]$_SDFFE_PN0P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1140210,
+        18360,
+        1140480
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.dch\\[0\\].u_dsel/y\\[31\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1140210,
+            18360,
+            1140480
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/fault_state$_SDFF_PN0_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1141020,
+        18360,
+        1141290
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[1\\]\\[27\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1141020,
+            18360,
+            1141290
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/ghi_ok$_DFF_P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1141830,
+        18360,
+        1142100
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[3\\]\\[24\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1141830,
+            18360,
+            1142100
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/glo_ok$_DFF_P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1142640,
+        18360,
+        1142910
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[1\\]\\[20\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1142640,
+            18360,
+            1142910
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/lap_ok$_DFF_P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1143450,
+        18360,
+        1143720
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[3\\]\\[17\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1143450,
+            18360,
+            1143720
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/on$_SDFF_PN0_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1144260,
+        18360,
+        1144530
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[0\\]\\[13\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1144260,
+            18360,
+            1144530
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/rv$_DFF_P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        17280,
+        1145070,
+        18360,
+        1145340
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft14_i/u_ring.s_d\\[3\\]\\[10\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "status": "FIRM",
+          "bbox": [
+            17280,
+            1145070,
+            18360,
+            1145340
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[5\\].u_dsel/y\\[47\\]$_DFF_P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        48168,
+        1153170,
+        49248,
+        1153440
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft15_i/_1516_",
+          "master": "OA211x2_ASAP7_75t_R",
+          "status": "PLACED",
+          "bbox": [
+            48006,
+            1153170,
+            48438,
+            1153440
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[5\\].u_dsel/y\\[52\\]$_DFF_P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        46980,
+        1153170,
+        48060,
+        1153440
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft15_i/_1512_",
+          "master": "INVx1_ASAP7_75t_R",
+          "status": "PLACED",
+          "bbox": [
+            47196,
+            1153170,
+            47358,
+            1153440
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft15_i/_1515_",
+          "master": "OR3x1_ASAP7_75t_R",
+          "status": "PLACED",
+          "bbox": [
+            47358,
+            1153170,
+            47682,
+            1153440
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft15_i/_1516_",
+          "master": "OA211x2_ASAP7_75t_R",
+          "status": "PLACED",
+          "bbox": [
+            48006,
+            1153170,
+            48438,
+            1153440
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft15_i/_1517_",
+          "master": "OR3x1_ASAP7_75t_R",
+          "status": "PLACED",
+          "bbox": [
+            47682,
+            1153170,
+            48006,
+            1153440
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[5\\].u_dsel/y\\[53\\]$_DFF_P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        48168,
+        1153440,
+        49248,
+        1153710
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft15_i/_1521_",
+          "master": "AO21x1_ASAP7_75t_R",
+          "status": "PLACED",
+          "bbox": [
+            47952,
+            1153440,
+            48276,
+            1153710
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[5\\].u_dsel/y\\[54\\]$_DFF_P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        46980,
+        1153710,
+        48060,
+        1153980
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft15_i/_1518_",
+          "master": "OR3x1_ASAP7_75t_R",
+          "status": "PLACED",
+          "bbox": [
+            47358,
+            1153710,
+            47682,
+            1153980
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[5\\].u_dsel/y\\[55\\]$_DFF_P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        48168,
+        1153980,
+        49248,
+        1154250
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft15_i/_1519_",
+          "master": "NAND2x1_ASAP7_75t_R",
+          "status": "PLACED",
+          "bbox": [
+            47898,
+            1153980,
+            48222,
+            1154250
+          ]
+        }
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[5\\].u_dsel/y\\[57\\]$_DFF_P_",
+      "family": "ft2_ring_band_FFs",
+      "target": [
+        46980,
+        1152900,
+        48060,
+        1153170
+      ],
+      "hits": [
+        {
+          "name": "u_bound.u_cland_ft15_i/_1511_",
+          "master": "XOR2x2_ASAP7_75t_R",
+          "status": "PLACED",
+          "bbox": [
+            47466,
+            1152900,
+            48060,
+            1153170
+          ]
+        }
+      ]
+    }
+  ],
+  "PG_bad_counts": {
+    "std|POWER|null": 47848,
+    "std|GROUND|null": 47848
+  },
+  "source_native_census": {
+    "scope": "READ_ONLY exact saved T51 PLACE all-native occupancy/rows/PG/pins metadata for disabled placement model; no write_db/placement/clock/RC/STA",
+    "source_sha256": "536ea7e5aac75121caf4bec8717c58984bc1a228c19841f9cb81277b29d5c46c",
+    "source_unchanged": true,
+    "dbu_per_um": 1000,
+    "die_dbu": [
+      0,
+      0,
+      1442880,
+      1226880
+    ],
+    "core_dbu": [
+      4320,
+      4320,
+      1438560,
+      1222560
+    ],
+    "rows": 4512,
+    "clock_pins": 52044,
+    "BTerms": 15259,
+    "counts": {
+      "cells_std": 185610,
+      "PG_terms": 646566,
+      "PG_null": 95696,
+      "cells_tap": 137673,
+      "PG_shapes": 6289235
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "scope": "Independent exact integer native-row/site/master/orientation/full-footprint sweep + projected graph demand from unchanged source; MODEL only, no CAD",
+  "targets": 3707,
+  "native_population": 323283,
+  "tap_count": 137673,
+  "row_site_failures": [],
+  "master_orient_dimension_failures": [],
+  "new_target_footprint_overlaps": [],
+  "ft2_slot_pins": 515,
+  "ft2_farthest_slot_max_um": 144.671,
+  "ft2_over150": 0,
+  "projected_placed_M2M7_demand": {
+    "channel_v_max": null,
+    "channel_v_at": null,
+    "blocked_v": 0,
+    "detour_v": 0,
+    "detour_v_extension_max_um": 0.0,
+    "detour_v_extent_at": null,
+    "col_v_max": 2.241,
+    "col_v_at": [
+      60.0,
+      967.5
+    ],
+    "tracks_v_per_um": 48.18,
+    "channel_h_max": null,
+    "channel_h_at": null,
+    "blocked_h": 0,
+    "detour_h": 0,
+    "detour_h_extension_max_um": 0.0,
+    "detour_h_extent_at": null,
+    "tracks_h_per_um": 48.18,
+    "demand_layers": "M2-M7"
+  },
+  "actual_clock_root_distance_INFO": {
+    "ft2_ring_band_FFs": {
+      "count": 2677,
+      "known_clock_roots": 2677,
+      "root_names": [
+        "clk",
+        "fclk_in_ft2_i[0]"
+      ],
+      "old_direct_root_distance_max_um": 1048.9209999999998,
+      "new_direct_root_distance_max_um": 1210.921,
+      "new_max_witness": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[7\\].u_dsel/y\\[11\\]$_DFF_P_",
+        "family": "ft2_ring_band_FFs",
+        "root": "clk",
+        "root_xy": [
+          725.024,
+          613.408
+        ],
+        "old_root_distance_um": 1037.581,
+        "new_root_distance_um": 1210.921
+      }
+    },
+    "ft2_stage0": {
+      "count": 515,
+      "known_clock_roots": 515,
+      "root_names": [
+        "clk"
+      ],
+      "old_direct_root_distance_max_um": 796.8489999999999,
+      "new_direct_root_distance_max_um": 865.9689999999999,
+      "new_max_witness": {
+        "name": "u_bound.u_ft_ft2_o_0/q\\[496\\]$_DFF_P_",
+        "family": "ft2_stage0",
+        "root": "clk",
+        "root_xy": [
+          725.024,
+          613.408
+        ],
+        "old_root_distance_um": 796.8489999999999,
+        "new_root_distance_um": 865.9689999999999
+      }
+    },
+    "ft6_stage2": {
+      "count": 515,
+      "known_clock_roots": 515,
+      "root_names": [
+        "clk"
+      ],
+      "old_direct_root_distance_max_um": 443.85500000000013,
+      "new_direct_root_distance_max_um": 431.92099999999994,
+      "new_max_witness": {
+        "name": "u_bound.u_ft_ft6_o_2/q\\[496\\]$_DFF_P_",
+        "family": "ft6_stage2",
+        "root": "clk",
+        "root_xy": [
+          725.024,
+          613.408
+        ],
+        "old_root_distance_um": 443.85500000000013,
+        "new_root_distance_um": 431.92099999999994
+      }
+    }
+  },
+  "holds": [
+    "savedactualGRT4843 unchanged; projectedcuts are no routing result",
+    "clock roots/distances are explicit preCTSINFO, not phase/leaf/internalclock qualification",
+    "actualPGshapes/nets unchanged; futurePGlanding/wholeDBguard remains;95696bufferPGnull terms explicit",
+    "E/W61of123bins remain2partialfaceFAIL; actualsparsefill remains"
+  ]
+}
