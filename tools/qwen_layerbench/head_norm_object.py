@@ -87,6 +87,8 @@ def main():
     a = ap.parse_args()
     meta = json.loads(a.head_data.read_text())
     own = D.ownership(a.plan, 's8')
+    if own['sources'][a.plan] != meta['source_sha256']['selected_plan']:
+        raise ValueError('gain source and native ownership use different plans')
     result = build(gains(a.gain_words, meta), own)
     result['sources'] = dict(ownership=own['sources'], recovered_gain_tensor=meta['norm_source'],
                              checkpoint_revision=meta['checkpoint_revision'],
