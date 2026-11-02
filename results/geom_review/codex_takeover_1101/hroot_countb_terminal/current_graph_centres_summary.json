@@ -1,0 +1,242 @@
+{
+ "scope": "STATIC whole name+master+size matched COUNTB FF centres on CURRENT graph only; unmatched current FFs preserved at current poses; no source/proof/occupancy/pin/clock adoption",
+ "current_ff": 22411,
+ "old_ff": 22411,
+ "matched": 22411,
+ "changed": 10299,
+ "missing_current": [],
+ "old_only": [],
+ "metrics": {
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 786.94,
+  "r2r_captures_gt405": 17,
+  "r2r_captures": 22408,
+  "comb_loop_cells": 0,
+  "r2r_worst": "u_bound.u_rrl_101/q$_DFF_P_ -> u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_"
+ },
+ "remaining_bad": [
+  {
+   "distance_um": 540.162,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_u_efault.cnt\\[3\\]$_DFFE_PN0N_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1361.502,
+    330.345
+   ]
+  },
+  {
+   "distance_um": 537.462,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_u_efault.cnt\\[4\\]$_DFFE_PN0N_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1359.342,
+    330.885
+   ]
+  },
+  {
+   "distance_um": 440.316,
+   "launch": "u_bound.u_cland_i_fch_pc_Q_N_q/u_ring.dch\\[0\\].u_dsel/y\\[0\\]$_DFF_P_",
+   "capture": "u_bound.u_bin_i_fch_pc_Q_N_q/q$_DFF_P_",
+   "launch_xy": [
+    870.912,
+    27.674999999999997
+   ],
+   "capture_xy": [
+    1243.998,
+    94.905
+   ]
+  },
+  {
+   "distance_um": 447.552,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_bin_i_fch_pc_Q_N_q/eq$_DFF_PN0_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1117.422,
+    178.87500000000003
+   ]
+  },
+  {
+   "distance_um": 772.092,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_bin_i_host_die_rst_n/eq$_DFF_PN0_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1582.362,
+    319.275
+   ]
+  },
+  {
+   "distance_um": 764.694,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_bin_i_host_hbm_rst_n/eq$_DFF_PN0_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1579.554,
+    323.865
+   ]
+  },
+  {
+   "distance_um": 669.222,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/eq$_DFF_PN0_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1357.182,
+    196.965
+   ]
+  },
+  {
+   "distance_um": 451.872,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_bin_i_kvpc_Q_N_pc__fo/eq$_DFF_PN0_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1121.742,
+    178.87500000000003
+   ]
+  },
+  {
+   "distance_um": 510.462,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_bin_i_slg_Q_N_o_ctl/eq$_DFF_PN0_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1188.702,
+    187.24500000000003
+   ]
+  },
+  {
+   "distance_um": 538.812,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_u_efault.cnt\\[5\\]$_DFFE_PN0N_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1359.342,
+    329.53499999999997
+   ]
+  },
+  {
+   "distance_um": 538.272,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_u_efault.cnt\\[0\\]$_DFFE_PN0N_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1359.342,
+    330.075
+   ]
+  },
+  {
+   "distance_um": 538.542,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_u_efault.cnt\\[1\\]$_DFFE_PN0N_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1359.342,
+    329.80500000000006
+   ]
+  },
+  {
+   "distance_um": 536.112,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_u_efault.cnt\\[2\\]$_DFFE_PN0N_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1357.182,
+    330.075
+   ]
+  },
+  {
+   "distance_um": 575.64,
+   "launch": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_",
+   "capture": "u_bound.u_u_efault.fault$_DFF_PN0_",
+   "launch_xy": [
+    1649.862,
+    612.765
+   ],
+   "capture_xy": [
+    1357.182,
+    329.805
+   ]
+  },
+  {
+   "distance_um": 713.394,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_bin_i_idsrc_Q_y/eq$_DFF_PN0_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1589.004,
+    384.615
+   ]
+  },
+  {
+   "distance_um": 786.942,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1649.862,
+    612.765
+   ]
+  },
+  {
+   "distance_um": 704.052,
+   "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+   "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/eq$_DFF_PN0_",
+   "launch_xy": [
+    983.3399999999999,
+    492.345
+   ],
+   "capture_xy": [
+    1617.732,
+    422.685
+   ]
+  }
+ ],
+ "master_size_mismatch_count": 357
+}
