@@ -1,0 +1,72 @@
+{
+  "status": "FAILED_GREEDY_SOURCE_SITE_ATTEMPT_NOT_IMPOSSIBILITY_PROOF",
+  "failed": 10805,
+  "failure_kinds": {
+    "PLACED_NEIGHBOR_DIAMONDS_EMPTY": 1162,
+    "NO_UNIQUE_FREE_NATIVE_GRID_SITE": 9643
+  },
+  "dominant_failed_families": [
+    [
+      "u_cland_rec_rx_s2_i.u_ring.s_d",
+      1797
+    ],
+    [
+      "u_cland_shr_r_rx_i.u_ring.s_d",
+      1672
+    ],
+    [
+      "u_cland_rec_rx_s1_i.u_ring.s_d",
+      1545
+    ],
+    [
+      "u_cland_io_collective__in_data.u_ring.s_d",
+      1432
+    ],
+    [
+      "u_cland_shr_p_rx_i.u_ring.s_d",
+      1021
+    ],
+    [
+      "u_cland_rec_rx_s0_i.u_ring.s_d",
+      877
+    ],
+    [
+      "u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.u_ctl.rx_flit",
+      468
+    ],
+    [
+      "u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.u_ctl.q_pin",
+      435
+    ],
+    [
+      "u_d5_io_collective_u_io_g_face_1_u_face_rx_data.r",
+      248
+    ],
+    [
+      "u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.u_ctl.q_pin",
+      244
+    ],
+    [
+      "u_d5_io_collective_u_io_u_collective_up_rec.r",
+      233
+    ],
+    [
+      "u_d5_io_collective_u_io_u_collective_ur_rec.r",
+      233
+    ],
+    [
+      "u_d5_io_collective_u_io_g_face_0_u_face_rx_data.r",
+      104
+    ],
+    [
+      "u_bin_shr_p_rx_i.q",
+      73
+    ],
+    [
+      "u_bin_rec_rx_s1_i.q",
+      29
+    ]
+  ],
+  "diagnosis": "Frozen clocklanding ring data stages and codec controls compete for narrow halo-free channels after independent greedy choices. Pure DATA interval constraints remain feasible; this is not evidence that extra cycles are necessary. Existing frozen landing_contract is not rederived for compact CORE geometry.",
+  "concrete_next_source_action": "Re-derive compact CORE collector/local landing contracts under matched frozen tool/readset; join actual port\u2192landingring\u2192BIN/SRR\u2192macro ages/positions and recompute source FF/cut count before any GEN. Preserve originalcount671634 and uniform8policy; no source/view credit from this heuristic."
+}

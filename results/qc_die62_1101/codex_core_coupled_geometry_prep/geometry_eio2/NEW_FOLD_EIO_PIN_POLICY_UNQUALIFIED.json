@@ -1,0 +1,44 @@
+{
+  "status": "OPT_IN_CURRENT_EIO_VIEW_PREP_NOT_QUALIFIED",
+  "default_enabled": false,
+  "module": "ot_coll_fold_slice",
+  "instances": 8,
+  "parameters": {
+    "N": 4,
+    "ADD_LAT": 7,
+    "SEAM": 1
+  },
+  "proposed_local_pin_centers_um": {
+    "red_in": [
+      179.958,
+      8.736
+    ]
+  },
+  "src_linear": {
+    "x_um": 179.958,
+    "first_y_um": 10.016,
+    "pitch_um": 0.32,
+    "count": 512,
+    "face": "E",
+    "layer": "M6",
+    "track_pitch_um": 0.064,
+    "track_offset_um": 0.032
+  },
+  "retained": "SUM/e/v/referenceclock/resetpincoordinates; no centercontrolpinoverride",
+  "outline_um": [
+    180,
+    180
+  ],
+  "orientations": [
+    "R0"
+  ],
+  "functional_edge_delta": 0,
+  "reason": "All PFcapture/lohi and PFsum capture are forced into/aroundXFmacros byoldW-input/E-outputgeometry. OneuniformEIOviewplacesexistingSEAMinputFFs/outputFFs ontheSRAM-facingEside, SRCM6+SUMM4, preservingexistingRTL/dataorder/cycles. XFalsoR0keepsitsSRC/SUM/controlontheSRAMside andremovesglobalxe spanconflictwithoutinventingFFs. red_in moveswithSRCtoE/M6, reflectingtheexistingSEAMvalidFFbesidetheexistingdataFFs; noextra register.",
+  "required": [
+    "ActualnewviewGEN+LOOK/function/reset/clock/currentSIGNEDqualification",
+    "Actual512SRCM6pins ondeclaredlattice and aggregateface density",
+    "InternalSRAMR90fullgeometry/OBS support",
+    "FullpairedparentLC/reset/START/programme/modelprice and allreaderFF-to-FF/controlreach"
+  ],
+  "red_in_layer": "M6"
+}

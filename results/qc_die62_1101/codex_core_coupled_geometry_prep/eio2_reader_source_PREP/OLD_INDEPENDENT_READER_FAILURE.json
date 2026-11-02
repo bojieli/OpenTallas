@@ -1,0 +1,30 @@
+{
+  "status": "PARTIAL_FF_TO_FF_SCREEN_NOT_CLOSED",
+  "tested_placed_FF_edges": 3957,
+  "failed_placed_FF_edges": 784,
+  "unplaced_predecessor_edges": 16674,
+  "max_failed_um": 725.436,
+  "fail_families": [
+    [
+      "u_bound.u_io_collective_u_io_u_collective.u_coll.out_data",
+      768
+    ],
+    [
+      "u_bound.u_io_collective_u_io_u_collective.u_coll.g_wd",
+      11
+    ],
+    [
+      "u_bound.u_io_collective_u_io_u_collective.u_coll.g_k",
+      3
+    ],
+    [
+      "u_bound.u_io_collective_u_io_u_collective.u_coll.f_cf$_DFFE_PN0P_",
+      1
+    ],
+    [
+      "u_bound.u_io_collective_u_io_u_collective.u_coll.g_run$_DFF_PN0_",
+      1
+    ]
+  ],
+  "scope": "Only the macro-constrained site proposal. Complete63,971FF placement and globalclock/reset/START notqualified."
+}
