@@ -1,0 +1,274 @@
+{
+  "status": "PASS_SELECTED_NATIVE64_READ_LEASE",
+  "clock_ps": 833,
+  "source_words": 64,
+  "RDOUT_pairs": 8,
+  "earliest_safe_issue_index": 24,
+  "preceding_rejected_issue_index": 23,
+  "safe": {
+    "issue": 24,
+    "cwext": 153,
+    "cwreg": 156,
+    "firstwrite": 158,
+    "lastwrite": 189,
+    "writes": 64,
+    "rdext": 177,
+    "rdreg": 180,
+    "firstread": 183,
+    "lastread": 190,
+    "reads": 16,
+    "native": 8,
+    "public": 8,
+    "collisions": 0,
+    "stale": 0,
+    "errors": 0,
+    "returncode": 0,
+    "qualified": true,
+    "read_events": [
+      {
+        "bank": 0,
+        "edge": 183,
+        "row": 112
+      },
+      {
+        "bank": 1,
+        "edge": 183,
+        "row": 112
+      },
+      {
+        "bank": 0,
+        "edge": 184,
+        "row": 113
+      },
+      {
+        "bank": 1,
+        "edge": 184,
+        "row": 113
+      },
+      {
+        "bank": 0,
+        "edge": 185,
+        "row": 114
+      },
+      {
+        "bank": 1,
+        "edge": 185,
+        "row": 114
+      },
+      {
+        "bank": 0,
+        "edge": 186,
+        "row": 115
+      },
+      {
+        "bank": 1,
+        "edge": 186,
+        "row": 115
+      },
+      {
+        "bank": 0,
+        "edge": 187,
+        "row": 116
+      },
+      {
+        "bank": 1,
+        "edge": 187,
+        "row": 116
+      },
+      {
+        "bank": 0,
+        "edge": 188,
+        "row": 117
+      },
+      {
+        "bank": 1,
+        "edge": 188,
+        "row": 117
+      },
+      {
+        "bank": 0,
+        "edge": 189,
+        "row": 118
+      },
+      {
+        "bank": 1,
+        "edge": 189,
+        "row": 118
+      },
+      {
+        "bank": 0,
+        "edge": 190,
+        "row": 119
+      },
+      {
+        "bank": 1,
+        "edge": 190,
+        "row": 119
+      }
+    ],
+    "native_publication_edges": [
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192
+    ],
+    "public_publication_edges": [
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193
+    ],
+    "physical_same_address_read_write_qualified": false
+  },
+  "previous": {
+    "issue": 23,
+    "cwext": 153,
+    "cwreg": 156,
+    "firstwrite": 158,
+    "lastwrite": 189,
+    "writes": 64,
+    "rdext": 176,
+    "rdreg": 179,
+    "firstread": 182,
+    "lastread": 189,
+    "reads": 16,
+    "native": 8,
+    "public": 8,
+    "collisions": 2,
+    "stale": 2,
+    "errors": 2,
+    "returncode": 0,
+    "qualified": false,
+    "read_events": [
+      {
+        "bank": 0,
+        "edge": 182,
+        "row": 112
+      },
+      {
+        "bank": 1,
+        "edge": 182,
+        "row": 112
+      },
+      {
+        "bank": 0,
+        "edge": 183,
+        "row": 113
+      },
+      {
+        "bank": 1,
+        "edge": 183,
+        "row": 113
+      },
+      {
+        "bank": 0,
+        "edge": 184,
+        "row": 114
+      },
+      {
+        "bank": 1,
+        "edge": 184,
+        "row": 114
+      },
+      {
+        "bank": 0,
+        "edge": 185,
+        "row": 115
+      },
+      {
+        "bank": 1,
+        "edge": 185,
+        "row": 115
+      },
+      {
+        "bank": 0,
+        "edge": 186,
+        "row": 116
+      },
+      {
+        "bank": 1,
+        "edge": 186,
+        "row": 116
+      },
+      {
+        "bank": 0,
+        "edge": 187,
+        "row": 117
+      },
+      {
+        "bank": 1,
+        "edge": 187,
+        "row": 117
+      },
+      {
+        "bank": 0,
+        "edge": 188,
+        "row": 118
+      },
+      {
+        "bank": 1,
+        "edge": 188,
+        "row": 118
+      },
+      {
+        "bank": 0,
+        "edge": 189,
+        "row": 119
+      },
+      {
+        "bank": 1,
+        "edge": 189,
+        "row": 119
+      }
+    ],
+    "native_publication_edges": [
+      184,
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191
+    ],
+    "public_publication_edges": [
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192
+    ],
+    "physical_same_address_read_write_qualified": false
+  },
+  "early_old_version_control_caught": true,
+  "payload_control_caught": true,
+  "observed_registered_CV_to_first_SRAM_read_edges": 3,
+  "observed_registered_CV_to_last_SRAM_read_edges": 10,
+  "observed_registered_CV_to_native_LO_edges": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "physical_same_address_read_during_write_qualified": false,
+  "same_address_collision_runs_excluded": true,
+  "global_source_or_issuer_epochs_qualified": false,
+  "all80profiles_qualified": false,
+  "added_rtl_cycles": 0,
+  "full_token": false
+}

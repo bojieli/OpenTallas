@@ -1,0 +1,11 @@
+{
+  "scope": "one selected native leaf,full64-word capture slot,n8 RDOUT; read/write events and overlap; no silicon same-address guarantee",
+  "emitter": "4034b8b18",
+  "helper_sha256": "8737a4865c324180e7fc82ceba1c968f4b94505869fb0d7287b2c83ca9ba1536",
+  "input_words": 64,
+  "old_version": "BF16 mantissaLSB toggled sentinel",
+  "unchanged_leaf_sources_and_pins": true,
+  "stimulus_only_idle_opcode_constant6": true,
+  "clock_ps": 833,
+  "source_global_epochs_qualified": false
+}
