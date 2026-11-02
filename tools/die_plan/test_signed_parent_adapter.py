@@ -167,3 +167,11 @@ def test_ordinary_backend_has_no_optional_adapter_dependency(tmp_path,monkeypatc
     assert G.prepare_signed_parent_source(SimpleNamespace(types={'t':{}}),'t',tmp_path,[]) is None
     with pytest.raises(ValueError,match='requires staged signed_parent_adapter.py'):
         G.prepare_signed_parent_source(SimpleNamespace(types={'t':{'signed_parent_source':{'views':{'a':'b'}}}}),'t',tmp_path,[])
+
+
+def test_actual_nonmemory_gate_macro_requires_implementation_producer(tmp_path):
+    lib=tmp_path/'head_tt.lib';lib.write_text('library(x) {\ncell(other_logic) {}\n}')
+    gate=tmp_path/'parent.v';gate.write_text('module top(input clk,output q);\n other_logic u_h (.clk(clk),.q(q));\nendmodule\n')
+    env={'ADDITIONAL_LIBS':str(lib)}
+    assert A.missing_logic_expansions(gate,env,tmp_path,{'child'},set())==['other_logic']
+    assert A.missing_logic_expansions(gate,env,tmp_path,{'child','other_logic'},set())==[]

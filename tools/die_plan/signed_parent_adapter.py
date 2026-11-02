@@ -302,6 +302,16 @@ def check_synth_prep(kit):
                 native_gold_config_sha256=record['native_gold_config_sha256'])
 
 
+def missing_logic_expansions(parent, env, native, expanded, memories):
+    """Actual external gate masters need real logic bodies, not abstract cuts."""
+    import lec
+    library_masters = {m for lib in lec.macro_libs(env, native) for m in lec.lib_cells(lib)}
+    gate_masters = lec.netlist_cell_types(parent)
+    defined = set(lec.src_modules(parent))
+    gate_bbs = set(re.findall(r'\(\*[^*]*\bblackbox\b[^*]*\*\)\s*module\s+(\w+)', Path(parent).read_text(), re.S))
+    return sorted((gate_masters & library_masters) - set(expanded) - set(memories) - (defined - gate_bbs))
+
+
 def formal_inputs(descriptor):
     """Fail closed until genuine native gold, mapped parent and both readsets exist."""
     import lec
@@ -355,6 +365,9 @@ def formal_inputs(descriptor):
         joined[str(netlist)] = digest(netlist)
     if not children or len({m for m, _ in children}) != len(children):
         raise ValueError('one exact qualified implementation per child master required')
+    missing_expansions = missing_logic_expansions(parent, env, native, [m for m,_ in children], d.get('shared_memory_masters', []))
+    if missing_expansions:
+        raise ValueError('missing actual qualified gate expansion producer(s): ' + ', '.join(missing_expansions))
     census = {side: master_census(d.get(side + '_lef_readset'), selected) for side in ('parent', 'die')}
     mode_census = {side: mode_library_census(d.get(side + '_mode_readset'), {m: str(Path(p).parent) for m,p in selected.items()}) for side in ('parent','die')}
     # Standard LEC may cut actual shared memories only. Logic implementations
