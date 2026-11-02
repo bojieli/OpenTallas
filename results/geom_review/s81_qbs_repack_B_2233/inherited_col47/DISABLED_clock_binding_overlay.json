@@ -1,0 +1,148 @@
+{
+  "type": "col_h9_r0_p2__t1__cl9f71e63d",
+  "scope": "DISABLED existing-API source-only repair recipe; regenerate exactnextS39; no adoption",
+  "clock_tap_updates": [
+    {
+      "index": 0,
+      "old_name": "u_r0.u_e0.ck",
+      "new_name": "u_r0.u_e0.clk",
+      "xy": [
+        298.62,
+        207.36
+      ]
+    },
+    {
+      "index": 1,
+      "old_name": "u_r0.u_e1.ck",
+      "new_name": "u_r0.u_e1.clk",
+      "xy": [
+        860.2199999999999,
+        207.36
+      ]
+    },
+    {
+      "index": 2,
+      "old_name": "u_r0.u_e2.ck",
+      "new_name": "u_r0.u_e2.clk",
+      "xy": [
+        298.592,
+        561.568
+      ]
+    },
+    {
+      "index": 3,
+      "old_name": "u_r0.u_e3.ck",
+      "new_name": "u_r0.u_e3.clk",
+      "xy": [
+        860.2199999999999,
+        596.16
+      ]
+    },
+    {
+      "index": 4,
+      "old_name": "u_r0.u_e4e.u_view.ck",
+      "new_name": "u_r0.u_e4e.u_view.clk",
+      "xy": [
+        916.2840000000001,
+        941.76
+      ]
+    },
+    {
+      "index": 5,
+      "old_name": "u_r0.u_e4w.u_view.ck",
+      "new_name": "u_r0.u_e4w.u_view.clk",
+      "xy": [
+        268.284,
+        941.76
+      ]
+    }
+  ],
+  "core_tap_rows": [
+    [
+      "clk_c0",
+      "u_bound.u_u_r0_u_e0",
+      "clk",
+      169.0,
+      419.0
+    ],
+    [
+      "clk_c1",
+      "u_bound.u_u_r0_u_e1",
+      "clk",
+      169.0,
+      419.0
+    ],
+    [
+      "clk_c2",
+      "u_bound.u_u_r0_u_e2",
+      "clk",
+      169.0,
+      419.0
+    ],
+    [
+      "clk_c3",
+      "u_bound.u_u_r0_u_e3",
+      "clk",
+      169.0,
+      419.0
+    ],
+    [
+      "clk_c4",
+      "u_bound.u_u_r0_u_e4e.u_view",
+      "clk",
+      140.0,
+      390.0
+    ],
+    [
+      "clk_c5",
+      "u_bound.u_u_r0_u_e4w.u_view",
+      "clk",
+      140.0,
+      390.0
+    ]
+  ],
+  "private_kit_clock_receipt": [
+    {
+      "port": "clk_c0",
+      "instance": "u_u_r0_u_e0",
+      "pin": "clk",
+      "previous_net": "w_u_r0_0_Y[0]",
+      "mode": "rtl"
+    },
+    {
+      "port": "clk_c1",
+      "instance": "u_u_r0_u_e1",
+      "pin": "clk",
+      "previous_net": "w_u_r0_0_Y[0]",
+      "mode": "rtl"
+    },
+    {
+      "port": "clk_c2",
+      "instance": "u_u_r0_u_e2",
+      "pin": "clk",
+      "previous_net": "w_u_r0_0_Y[0]",
+      "mode": "rtl"
+    },
+    {
+      "port": "clk_c3",
+      "instance": "u_u_r0_u_e3",
+      "pin": "clk",
+      "previous_net": "w_u_r0_0_Y[0]",
+      "mode": "rtl"
+    },
+    {
+      "port": "clk_c4",
+      "instance": "u_bound.u_u_r0_u_e4e.u_view",
+      "pin": "clk",
+      "previous_net": null,
+      "mode": "physical_tap"
+    },
+    {
+      "port": "clk_c5",
+      "instance": "u_bound.u_u_r0_u_e4w.u_view",
+      "pin": "clk",
+      "previous_net": null,
+      "mode": "physical_tap"
+    }
+  ]
+}
