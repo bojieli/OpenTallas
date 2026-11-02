@@ -1,0 +1,204 @@
+{
+ "status": "PASS_COUNT_ABI_FACE_ONLY",
+ "scope": "Exact d90 original profiles; no PPA/view credit or silent current-cohort aliases",
+ "producer": "intel1 oth-ubuntu-3827736-1793595579; outer exit0",
+ "results": {
+  "sle_stm_v1__clbe630b9c": {
+   "type": "sle_stm_v1__clbe630b9c",
+   "source_sha": "d90b109213c6949da87b330ef143d96bbe937934",
+   "profile": {
+    "OT_S6_SIM": false,
+    "CAPTURE_STAGE": 0,
+    "LOCAL_JOIN": 0,
+    "TABLE_USER_RELOC": "default unchanged"
+   },
+   "stage": "TERMINAL",
+   "status": "PASS_COUNT_ABI_FACE_ONLY",
+   "start": 1793596014.1844041,
+   "PPA_view_credit": false,
+   "representative_alias": false,
+   "native_export": {
+    "module": "sle_stm_v1__clbe630b9c",
+    "defines": [
+     "OT_QFD_UP4_CK_ENTRIES",
+     "OT_S8_CROM_ALIGN"
+    ],
+    "params": "",
+    "files": {
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/items/sle_stm_v1__clbe630b9c/rtl-kit/sle_stm_v1__clbe630b9c.sv": "3f674c1fa252d2ec1650dab593605d1f116af8e6f1d9758d3953e6e2d6f0e218",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/items/sle_stm_v1__clbe630b9c/rtl-kit/sle_stm_v1__clbe630b9c_bound.sv": "150245c5b3c4fda1cc01ec1096cc12d82706cc2a7a625e44281bfbd6cc42fb2a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/bind/rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/qfd_dv_stream_tile.sv": "1fbc98437462164ac73505ec7ff813f68d5b4e2f587f25b8ac4c8d9c5253a02c",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/qfd_dv_slice_tload.sv": "bcfb27cf7de8a9f66c7af0159399b91ece2c417b7dc9e890e7889ce0d64b72c2",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/qfd_dv_table_rom_loader.sv": "cdf7aa179936b0c67d3f5aea74f606355bd982b7d8fe961d737d1ef49db6aaa2",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v": "8b641b7dc2a318f1d08868148c42713fb0889f8e9196bfabca7e30b4e59e021a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/common/ot_dp_clk_landing_ca.sv": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/common/ot_dp_clk_landing.sv": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/common/ot_meso_fifo.sv": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2"
+    },
+    "bound_module": "sle_stm_v1__clbe630b9c_bound"
+   },
+   "kit": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/items/sle_stm_v1__clbe630b9c/phys/sle_stm_v1__clbe630b9c",
+   "synth_rc": 0,
+   "native_total_leaves": 224155,
+   "stat": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/items/sle_stm_v1__clbe630b9c/phys/sle_stm_v1__clbe630b9c/run/reports/asap7/dp_sle_stm_v1__clbe630b9c/base/synth_stat.txt",
+   "stat_sha256": "80f84a3b84b194afdf0c951202e4259f837086f375e3a050083fdb9923cbe2ab",
+   "count_semantics": "hierarchy-expanded native count including hardROM leaves; no physical count/view claim",
+   "port_bind_rc": 0,
+   "land_slots_sha256": "76b55724429887c1d2df28aafd82f2b2d2b4bd4accab679b49eec4cf311d3bb0",
+   "face_guard_rc": 0,
+   "end": 1793597102.1848054
+  },
+  "sle_stm_v2__cl7b3062fa": {
+   "type": "sle_stm_v2__cl7b3062fa",
+   "source_sha": "d90b109213c6949da87b330ef143d96bbe937934",
+   "profile": {
+    "OT_S6_SIM": false,
+    "CAPTURE_STAGE": 0,
+    "LOCAL_JOIN": 0,
+    "TABLE_USER_RELOC": "default unchanged"
+   },
+   "stage": "TERMINAL",
+   "status": "PASS_COUNT_ABI_FACE_ONLY",
+   "start": 1793597102.1877677,
+   "PPA_view_credit": false,
+   "representative_alias": false,
+   "native_export": {
+    "module": "sle_stm_v2__cl7b3062fa",
+    "defines": [
+     "OT_QFD_UP4_CK_ENTRIES",
+     "OT_S8_CROM_ALIGN"
+    ],
+    "params": "",
+    "files": {
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/items/sle_stm_v2__cl7b3062fa/rtl-kit/sle_stm_v2__cl7b3062fa.sv": "87678f47e0a30b869fc9b23d4d0cb4392019e7756999b31a4551b98c5a33f5e7",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/items/sle_stm_v2__cl7b3062fa/rtl-kit/sle_stm_v2__cl7b3062fa_bound.sv": "65a68701b375ca095e2a2a3efe5773d20fc0f090a5a9e9401cf35af1c59e162d",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/bind/rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/qfd_dv_stream_tile.sv": "1fbc98437462164ac73505ec7ff813f68d5b4e2f587f25b8ac4c8d9c5253a02c",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/qfd_dv_slice_tload.sv": "bcfb27cf7de8a9f66c7af0159399b91ece2c417b7dc9e890e7889ce0d64b72c2",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/qfd_dv_table_rom_loader.sv": "cdf7aa179936b0c67d3f5aea74f606355bd982b7d8fe961d737d1ef49db6aaa2",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v": "8b641b7dc2a318f1d08868148c42713fb0889f8e9196bfabca7e30b4e59e021a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/common/ot_dp_clk_landing_ca.sv": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/common/ot_dp_clk_landing.sv": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/common/ot_meso_fifo.sv": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2"
+    },
+    "bound_module": "sle_stm_v2__cl7b3062fa_bound"
+   },
+   "kit": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/items/sle_stm_v2__cl7b3062fa/phys/sle_stm_v2__cl7b3062fa",
+   "synth_rc": 0,
+   "native_total_leaves": 222704,
+   "stat": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/items/sle_stm_v2__cl7b3062fa/phys/sle_stm_v2__cl7b3062fa/run/reports/asap7/dp_sle_stm_v2__cl7b3062fa/base/synth_stat.txt",
+   "stat_sha256": "78e0f75f7a8bc6d01be3c8f303ded9246c952a226076b6a482beada843516fe4",
+   "count_semantics": "hierarchy-expanded native count including hardROM leaves; no physical count/view claim",
+   "port_bind_rc": 0,
+   "land_slots_sha256": "6b48e1ffce5697ffa5c07c1c4de561e112e892ec6f3ddc63401ed6b7e028e26f",
+   "face_guard_rc": 0,
+   "end": 1793598102.7778456
+  },
+  "slw_stm_v1__cle34a73c3": {
+   "type": "slw_stm_v1__cle34a73c3",
+   "source_sha": "d90b109213c6949da87b330ef143d96bbe937934",
+   "profile": {
+    "OT_S6_SIM": false,
+    "CAPTURE_STAGE": 0,
+    "LOCAL_JOIN": 0,
+    "TABLE_USER_RELOC": "default unchanged"
+   },
+   "stage": "TERMINAL",
+   "status": "PASS_COUNT_ABI_FACE_ONLY",
+   "start": 1793598102.778584,
+   "PPA_view_credit": false,
+   "representative_alias": false,
+   "native_export": {
+    "module": "slw_stm_v1__cle34a73c3",
+    "defines": [
+     "OT_QFD_UP4_CK_ENTRIES",
+     "OT_S8_CROM_ALIGN"
+    ],
+    "params": "",
+    "files": {
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/items/slw_stm_v1__cle34a73c3/rtl-kit/slw_stm_v1__cle34a73c3.sv": "af7f34840b70d5b0cbb3e59780c2eac3d741d30f3e503c8e556aaa09c45b19c5",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/items/slw_stm_v1__cle34a73c3/rtl-kit/slw_stm_v1__cle34a73c3_bound.sv": "260e0d615f6b316d804143737f40b4d2c04fc6a94117b3f3f260b0c82d2bf674",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/bind/rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/qfd_dv_stream_tile.sv": "1fbc98437462164ac73505ec7ff813f68d5b4e2f587f25b8ac4c8d9c5253a02c",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/qfd_dv_slice_tload.sv": "bcfb27cf7de8a9f66c7af0159399b91ece2c417b7dc9e890e7889ce0d64b72c2",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/qfd_dv_table_rom_loader.sv": "cdf7aa179936b0c67d3f5aea74f606355bd982b7d8fe961d737d1ef49db6aaa2",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v": "8b641b7dc2a318f1d08868148c42713fb0889f8e9196bfabca7e30b4e59e021a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/common/ot_dp_clk_landing_ca.sv": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/common/ot_dp_clk_landing.sv": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/src/rtl/common/ot_meso_fifo.sv": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2"
+    },
+    "bound_module": "slw_stm_v1__cle34a73c3_bound"
+   },
+   "kit": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/items/slw_stm_v1__cle34a73c3/phys/slw_stm_v1__cle34a73c3",
+   "synth_rc": 0,
+   "native_total_leaves": 211592,
+   "stat": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/batch3/items/slw_stm_v1__cle34a73c3/phys/slw_stm_v1__cle34a73c3/run/reports/asap7/dp_slw_stm_v1__cle34a73c3/base/synth_stat.txt",
+   "stat_sha256": "69204b330f1dd368669637cb298548005f0e4beee7763624ca5ccb736ab8cf24",
+   "count_semantics": "hierarchy-expanded native count including hardROM leaves; no physical count/view claim",
+   "port_bind_rc": 0,
+   "land_slots_sha256": "25d9174a0caac8e6d6ba0f94f9755cbdcb5b203627c23f6cbbf7815d101da167",
+   "face_guard_rc": 0,
+   "end": 1793599088.354124
+  },
+  "sle_stm_v3": {
+   "type": "sle_stm_v3",
+   "source_sha": "d90b109213c6949da87b330ef143d96bbe937934",
+   "profile": {
+    "OT_S6_SIM": false,
+    "CAPTURE_STAGE": 0,
+    "LOCAL_JOIN": 0,
+    "TABLE_USER_RELOC": "default unchanged",
+    "OT_S8_CROM_ALIGN": true,
+    "MEMORY_ALIGNMENT": 3
+   },
+   "stage": "TERMINAL",
+   "status": "PASS_COUNT_ABI_FACE_ONLY",
+   "start": 1793599088.5026147,
+   "PPA_view_credit": false,
+   "representative_alias": false,
+   "native_export": {
+    "module": "qfd_qc_sle_stm",
+    "defines": [
+     "OT_QFD_UP4_CK_ENTRIES",
+     "OT_S8_CROM_ALIGN"
+    ],
+    "params": "",
+    "files": {
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/items/sle_stm_v3/rtl-kit/qfd_qc_sle_stm.sv": "512113b59e8ef8dc856f85f0ec6f1d20c3118fa8ce881fe140e99c82877a94ba",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/items/sle_stm_v3/rtl-kit/qfd_qc_sle_stm_bound.sv": "54502c51199080b88b304f944e290b8a72c3289014ef354d94a8a0775e9fe21a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/bind/rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/src/rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/src/rtl/qwen_dv/s5/s8/qfd_dv_s8_ce.sv": "c1a49ea1f9902f97052a9c689dfb0786ccd2e705ddc01936978fba64e373aab1",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/src/rtl/qwen_dv/qfd_dv_slice_tload.sv": "bcfb27cf7de8a9f66c7af0159399b91ece2c417b7dc9e890e7889ce0d64b72c2",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/src/rtl/qwen_dv/qfd_dv_table_rom_loader.sv": "cdf7aa179936b0c67d3f5aea74f606355bd982b7d8fe961d737d1ef49db6aaa2",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/src/physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v": "8b641b7dc2a318f1d08868148c42713fb0889f8e9196bfabca7e30b4e59e021a",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/src/rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/src/rtl/common/ot_dp_clk_landing_ca.sv": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/src/rtl/common/ot_dp_clk_landing.sv": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+     "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/src/rtl/common/ot_meso_fifo.sv": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2"
+    },
+    "bound_module": "qfd_qc_sle_stm_bound"
+   },
+   "kit": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/items/sle_stm_v3/phys/sle_stm_v3",
+   "synth_rc": 0,
+   "native_total_leaves": 156785,
+   "stat": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/count_asset4/slev3/items/sle_stm_v3/phys/sle_stm_v3/run/reports/asap7/dp_sle_stm_v3/base/synth_stat.txt",
+   "stat_sha256": "c20fc3e9ee3b03ff57bbe23e60bb4cdc216796dadce9d0f707a1a35cfefa9c74",
+   "count_semantics": "hierarchy-expanded native count including hardROM leaves; no physical count/view claim",
+   "port_bind_rc": 0,
+   "land_slots_sha256": "208889e8ea273e974906a6127154ec7e6c99b7b9cebfb55a337e69d1257df18e",
+   "face_guard_rc": 0,
+   "end": 1793599968.3461936
+  }
+ }
+}
