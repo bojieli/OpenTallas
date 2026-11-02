@@ -369,7 +369,8 @@ def explicit_tap_sites(P, tn):
         eps=1e-8
         clear=schema.TAP_CLEAR_UM
         typ=P.types[tn];w,h=typ["outline_um"]
-        boxes=list(schema.placed_macro_boxes(typ,halo=clear).values())
+        from placement_obstacles import placement_boxes
+        boxes=list(placement_boxes(typ,halo=clear).values())
         boxes += [(a-clear,b-clear,c+clear,d+clear) for a,b,c,d in ck.get("keepouts_um",[])]
         legal=(clear-eps<=x<=w-clear+eps and clear-eps<=y<=h-clear+eps
                and not any(abs(x-a)<clear-eps and abs(y-b)<clear-eps for a,b in taken)
@@ -418,7 +419,8 @@ def grid_explicit_sites(P, tn):
     clear = schema.TAP_CLEAR_UM
     typ = P.types[tn]
     w, h = typ["outline_um"]
-    boxes = list(schema.placed_macro_boxes(typ, halo=clear).values())
+    from placement_obstacles import placement_boxes
+    boxes = list(placement_boxes(typ, halo=clear).values())
     taken = [(x, y) for _, x, y in grid]
     out = list(grid)
     for p in table:
@@ -496,8 +498,8 @@ def density_taps(P, tn, control=True):
     taken = [(x, y) for _, x, y, _ in schema.core_taps(P, tn)]
     if control:
         taken += [(x, y) for _, x, y in control_pin_sinks(P, tn)]
-    boxes = [(c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
-              c["origin_um"][1] + c["outline_um"][1]) for c in t.get("hard_cores", []) or []]
+    from placement_obstacles import placement_boxes
+    boxes = list(placement_boxes(t).values())
     blocked = lambda x, y: any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in boxes)
     min_sinks = int(ck.get("tap_min_sinks", max(1, target // 20)))
     leaves = sorted(_bisect(pts, target, radius, blocked, min_sinks), key=lambda a: (round(a[1], 3), round(a[0], 3)))
@@ -604,7 +606,8 @@ def recentre_displaced(P, tn, grid, moved, iters=12):
     for p in pts:
         grp[min(range(len(xy)), key=lambda i: (abs(p[0] - xy[i][0]) + abs(p[1] - xy[i][1]), i))] += 1
     w, h = t["outline_um"]
-    boxes = list(schema.placed_macro_boxes(t).values()) + [tuple(b) for b in t.get("clock", {}).get("keepouts_um", [])]
+    from placement_obstacles import placement_boxes
+    boxes = list(placement_boxes(t).values()) + [tuple(b) for b in t.get("clock", {}).get("keepouts_um", [])]
 
     def dead(k):
         x0, y0, x1, y1 = cells[k]
