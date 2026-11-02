@@ -54,7 +54,7 @@ def decide(reports, done, now, after_s=AFTER_S):
     if held:
         return held[:1], [h for h, _ in held[1:]], None
     cands = sorted(((w["since"], h, w) for h, r in reports.items() for w in r.get("waiters", [])
-                    if now - w["since"] > after_s and f"{h}|{w['id']}" not in done), key=lambda x: x[0])
+                    if w.get("reserve_eligible") is not False and now - w["since"] > after_s and f"{h}|{w['id']}" not in done), key=lambda x: x[0])
     return [], [], ((cands[0][1], cands[0][2]) if cands else None)
 
 
