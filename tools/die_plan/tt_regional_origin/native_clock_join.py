@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+"""Join TT regional-event homes to native clock terminals, without mutating a tree.
+
+Inventory is exported from the *new* mapped source. Each exact model name must
+identify one native ITerm and its complete clock path. This adapter emits review
+metadata only: a separate guarded preCTS consumer must preserve that path.
+"""
+import argparse
+import gzip
+import json
+from pathlib import Path
+
+
+def read(path):
+    opener = gzip.open if str(path).endswith('.gz') else open
+    with opener(path, 'rt') as f:
+        return json.load(f)
+
+
+def join(proposal, inventory):
+    if inventory.get('source_event') != 'tt_regional_origin_13ff':
+        raise ValueError('Requires the newly generated regional source event, not the old checkpoint')
+    if inventory.get('stage') != 'mapped_preCTS':
+        raise ValueError('Requires mapped preCTS inventory; closed-leaf/CTS-open hooks are not this adapter')
+    if not inventory.get('source_sha256') or not inventory.get('netlist_sha256'):
+        raise ValueError('Missing actual source/netlist identity')
+    ports = proposal['clock_ports']
+    taps = inventory['ports']
+    if len(ports) != 63 or set(taps) != set(ports):
+        raise ValueError('Exactly the existing 63 clock input names must join')
+    for name, p in taps.items():
+        if (p.get('cohort'), p.get('period_ps'), p.get('phase_ps'), p.get('polarity')) != ('clk', 833, 0, 1):
+            raise ValueError('Clock cohort/period/phase/polarity mismatch: ' + name)
+    records = inventory['sinks']
+    by_name = {}
+    native_seen = set()
+    for r in records:
+        name = r['model_name']
+        if name in by_name or r['native_iterm'] in native_seen:
+            raise ValueError('Duplicate native/model clock endpoint: ' + name)
+        by_name[name] = r
+        native_seen.add(r['native_iterm'])
+    required = proposal['assignments'] + proposal['retained_other_cohorts']
+    if set(by_name) != {r['name'] for r in required}:
+        missing = {r['name'] for r in required} - set(by_name)
+        extra = set(by_name) - {r['name'] for r in required}
+        raise ValueError(f'Exact endpoint join failed: missing={len(missing)} extra={len(extra)}')
+    output = []
+    for a in proposal['assignments']:
+        r = by_name[a['name']]
+        if r.get('cohort') != 'clk' or r['root_port'] not in taps:
+            raise ValueError('Cross-root clock reassignment: ' + a['name'])
+        if r.get('edge') not in ('posedge', 'negedge'):
+            raise ValueError('Missing actual native clock edge: ' + a['name'])
+        if not isinstance(r.get('path'), list):
+            raise ValueError('Missing audited gate/inverter/buffer path: ' + a['name'])
+        for cell in r['path']:
+            if not all(cell.get(k) for k in ('instance', 'master', 'input_pin', 'output_pin', 'kind')):
+                raise ValueError('Incomplete path member: ' + a['name'])
+            if cell['kind'] not in ('buffer', 'inverter', 'clock_gate'):
+                raise ValueError('Unclassified clock logic: ' + a['name'])
+        output.append(dict(model_name=a['name'], native_iterm=r['native_iterm'],
+                           old_root_port=r['root_port'], target_root_port=a['parent_tap'],
+                           edge=r['edge'], preserve_path=r['path'],
+                           capacity_override='nearest_parent_tap' in a))
+    for a in proposal['retained_other_cohorts']:
+        if by_name[a['name']]['root_port'] != a['logical_root']:
+            raise ValueError('Other clock cohort changed: ' + a['name'])
+    if sum(r['capacity_override'] for r in output) != 51:
+        raise ValueError('Expected all 51 explicit capacity overrides')
+    return dict(schema='opentallas.tt_native_clock_join.v1', status='JOINED_METADATA_ONLY',
+                tree_applied=False, physical_release='HELD',
+                source_sha256=inventory['source_sha256'], netlist_sha256=inventory['netlist_sha256'],
+                clock_ports=ports, period_ps=833, assignments=output,
+                retained_other_cohorts=proposal['retained_other_cohorts'],
+                consumer_contract='Preserve each exact edge and full path; a shared gate branch with conflicting target roots requires a separate coherent branch-cut proposal. Never reconnect a gated/inverted sink directly to a port.')
+
+
+if __name__ == '__main__':
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--proposal', type=Path, required=True)
+    ap.add_argument('--inventory', type=Path, required=True)
+    ap.add_argument('--out', type=Path, required=True)
+    a = ap.parse_args()
+    result = join(read(a.proposal), read(a.inventory))
+    a.out.write_text(json.dumps(result, separators=(',', ':')) + '\n')
+    print('TT_NATIVE_CLOCK_JOIN', result['status'], len(result['assignments']))
