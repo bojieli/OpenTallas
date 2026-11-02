@@ -86,7 +86,7 @@ def ssq_family():
 
 
 def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mode='priced', attn_cycles=None,
-            tile_meas=None, qtp8=None, die_edges=None, correct_residual2=False):
+            tile_meas=None, qtp8=None, die_edges=None, correct_residual2=True):
     """TOKSIM-QW 10-19: attn_cycles = MEASURED attention round trip (q,k,v last D2D word at W5 -> first result dr word
     at the W5 return pin + 16, replaces the ctlm price); tile_mode 'measured' + tile_meas = {op: {first_rs, first_final,
     last_final, far}} edges from hr go at the slice pins (XT1 column-slice RTL run) replace the tile_first PARAMETER /
@@ -383,7 +383,7 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
         capacity=cap, gaps=gaps, notes=notes,
         events=[dict(edge_w5=e + R['R_CMD'], cmd=f'{c:029x}', label=l) for e, c, l in events])
     if correct_residual2:
-        out['native_residual2_source_candidate'] = True
+        out['native_residual2_operand'] = 'PS2'
     return out
 
 
@@ -397,7 +397,8 @@ def main():
     ap.add_argument('--tile-mode', default='priced', choices=('priced', 'first', 'measured'),
                     help='priced: the column-tile matvec time = the ctlm ME price (results no earlier than the priced '
                          'done); first: tile_first only (DV-side lower bound)')
-    ap.add_argument('--correct-residual2',action='store_true',help='candidate only: down residual calls native PS2 instruction')
+    ap.add_argument('--correct-residual2',dest='correct_residual2',action='store_true',default=True,help='native PS2 residual caller (default; qualified1536-word component gate)')
+    ap.add_argument('--legacy-residual2',dest='correct_residual2',action='store_false',help='retain the old incorrect PS1 caller for an explicit control only')
     a = ap.parse_args()
     r = compose(a.stage, a.tile_first, a.ar_order, a.lane_ages, a.tile_mode,correct_residual2=a.correct_residual2)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)

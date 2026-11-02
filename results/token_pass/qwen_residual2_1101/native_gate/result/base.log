@@ -1,0 +1,9 @@
+NATIVE_RES2_USER_PASS user0 pidx2 words384 first59 last106 PS1=1 PS2=2 X3f800000 expect40400000
+NATIVE_RES2_USER_PASS user1 pidx130 words384 first59 last106 PS1=1 PS2=2 X40000000 expect40800000
+NATIVE_RES2_USER_PASS user2 pidx258 words384 first59 last106 PS1=1 PS2=2 X40400000 expect40a00000
+NATIVE_RES2_USER_PASS user3 pidx386 words384 first59 last106 PS1=1 PS2=2 X40800000 expect40c00000
+NATIVE_RES2_PASS words1536 users4 checks1536 actualnativeMA_AB_AD_C PS1notPS2 period833ps
+- /srv/opentallas-scratch2/claude/codex-res2-native-1101/gate1/input/tb_mu_native.sv:48: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 58.991 s; speed 68.190 ns/s
+- Verilator: cpu 58.939 s on 1 threads; allocated 143 MB
