@@ -1,0 +1,36 @@
+{
+ "old_type": "ot_s81sl_leaf__t40__cl86ea32b3",
+ "new_types": {
+  "ot_s81sl_leaf__t40__cl86ea32b3__sid9": {
+   "part": "s_4N_L4",
+   "sid": 9
+  },
+  "ot_s81sl_leaf__t40__cl86ea32b3__sid10": {
+   "part": "s_5S_L4",
+   "sid": 10
+  }
+ },
+ "types": [
+  204,
+  205
+ ],
+ "sidecar_types": [
+  204,
+  205
+ ],
+ "reset_in_site": [
+  1434.72,
+  766.304
+ ],
+ "changed_keys": [
+  "partition_types",
+  "partitions[s_4N_L4,s_5S_L4].type",
+  "reset.in_sites",
+  "sidecar collector.parts[s_4N_L4,s_5S_L4].type",
+  "sidecar collector.types"
+ ],
+ "added_ports": 0,
+ "added_cycles": 0,
+ "geometry_identical": true,
+ "credit": "type copy / cohort logic from Codex coord/tmp/s81_leaf40_sid_split_1617/prepare_split.py"
+}
