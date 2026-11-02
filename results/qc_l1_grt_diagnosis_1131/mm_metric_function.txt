@@ -1,0 +1,11 @@
+45e004f796e67435f9539914dcc3594e2267e8a0616c8d59623d290cad983ab1  /srv/opentallas-scratch2/claude/codex-qc-su/l1/orfs_hold_mm.tcl
+proc ot_mm_ws {check scene} {
+  set w 1e6
+  foreach p [find_timing_paths -path_delay $check -scenes $scene -group_path_count 1] {
+    set s [get_property $p slack]; if {$s ne "INF" && $s < $w} { set w $s }
+  }
+  return $w
+}
+
+# RC-CAL (ROOT-RST 2026-10-19, s81lk_kp4_dec-p1-e86bf8cae): route-time HOLD repair times the clock trees on the
+# RCX-calibrated upper-layer RC, not on the platform setRC.tcl values.  setRC.tcl (asap7) prices M6 / M7 wire at

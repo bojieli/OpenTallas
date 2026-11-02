@@ -1,0 +1,525 @@
+{
+  "start_clock_ps": 395.53,
+  "end_clock_raw_ps": 1190.08,
+  "period_ps": 833,
+  "cppr_ps": 4.8,
+  "setup_ps": 9.77,
+  "cell_delay_ps": 785.74,
+  "wire_delay_ps": 18.5,
+  "top_data_delays": [
+    {
+      "pin": "_323593_/SN",
+      "master": "HAxp5_ASAP7_75t_R",
+      "delay_ps": 66.39,
+      "arrival_ps": 647.53,
+      "kind": "cell",
+      "raw": "     2    2.16   59.25   66.39  647.53 v _323593_/SN (HAxp5_ASAP7_75t_R)"
+    },
+    {
+      "pin": "u_u_exp1.u_exp.m_t.g_l.u.y[23]$_DFF_PN0_/QN",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "delay_ps": 66.38,
+      "arrival_ps": 461.91,
+      "kind": "cell",
+      "raw": "     2    1.95   32.02   66.38  461.91 v u_u_exp1.u_exp.m_t.g_l.u.y[23]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279616_/Y",
+      "master": "XNOR2x2_ASAP7_75t_R",
+      "delay_ps": 52.85,
+      "arrival_ps": 1189.48,
+      "kind": "cell",
+      "raw": "     1   10.48   47.72   52.85 1189.48 v _279616_/Y (XNOR2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "fanout24569/Y",
+      "master": "BUFx2_ASAP7_75t_R",
+      "delay_ps": 51.22,
+      "arrival_ps": 579.07,
+      "kind": "cell",
+      "raw": "    17   13.03   51.83   51.22  579.07 v fanout24569/Y (BUFx2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279614_/Y",
+      "master": "OR4x1_ASAP7_75t_R",
+      "delay_ps": 43.31,
+      "arrival_ps": 1120.83,
+      "kind": "cell",
+      "raw": "     2    1.76   22.02   43.31 1120.83 v _279614_/Y (OR4x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "fanout35164/Y",
+      "master": "BUFx3_ASAP7_75t_R",
+      "delay_ps": 35.41,
+      "arrival_ps": 525.03,
+      "kind": "cell",
+      "raw": "    24   16.54   45.23   35.41  525.03 v fanout35164/Y (BUFx3_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227649_/Y",
+      "master": "INVx1_ASAP7_75t_R",
+      "delay_ps": 31.41,
+      "arrival_ps": 679.13,
+      "kind": "cell",
+      "raw": "     2    2.61   37.53   31.41  679.13 ^ _227649_/Y (INVx1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227702_/Y",
+      "master": "AND4x1_ASAP7_75t_R",
+      "delay_ps": 31.37,
+      "arrival_ps": 849.65,
+      "kind": "cell",
+      "raw": "     1    0.75   15.45   31.37  849.65 ^ _227702_/Y (AND4x1_ASAP7_75t_R)"
+    }
+  ],
+  "trace": [
+    {
+      "pin": "u_u_exp1.u_exp.m_t.g_l.u.y[23]$_DFF_PN0_/QN",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "delay_ps": 66.38,
+      "arrival_ps": 461.91,
+      "kind": "cell",
+      "raw": "     2    1.95   32.02   66.38  461.91 v u_u_exp1.u_exp.m_t.g_l.u.y[23]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "place23089/A",
+      "master": "BUFx3_ASAP7_75t_R",
+      "delay_ps": 0.15,
+      "arrival_ps": 462.06,
+      "kind": "wire",
+      "raw": "                 32.02    0.15  462.06 v place23089/A (BUFx3_ASAP7_75t_R)"
+    },
+    {
+      "pin": "place23089/Y",
+      "master": "BUFx3_ASAP7_75t_R",
+      "delay_ps": 27.33,
+      "arrival_ps": 489.39,
+      "kind": "cell",
+      "raw": "     2    2.52   11.26   27.33  489.39 v place23089/Y (BUFx3_ASAP7_75t_R)"
+    },
+    {
+      "pin": "fanout35164/A",
+      "master": "BUFx3_ASAP7_75t_R",
+      "delay_ps": 0.23,
+      "arrival_ps": 489.62,
+      "kind": "wire",
+      "raw": "                 11.28    0.23  489.62 v fanout35164/A (BUFx3_ASAP7_75t_R)"
+    },
+    {
+      "pin": "fanout35164/Y",
+      "master": "BUFx3_ASAP7_75t_R",
+      "delay_ps": 35.41,
+      "arrival_ps": 525.03,
+      "kind": "cell",
+      "raw": "    24   16.54   45.23   35.41  525.03 v fanout35164/Y (BUFx3_ASAP7_75t_R)"
+    },
+    {
+      "pin": "fanout24569/A",
+      "master": "BUFx2_ASAP7_75t_R",
+      "delay_ps": 2.82,
+      "arrival_ps": 527.85,
+      "kind": "wire",
+      "raw": "                 45.77    2.82  527.85 v fanout24569/A (BUFx2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "fanout24569/Y",
+      "master": "BUFx2_ASAP7_75t_R",
+      "delay_ps": 51.22,
+      "arrival_ps": 579.07,
+      "kind": "cell",
+      "raw": "    17   13.03   51.83   51.22  579.07 v fanout24569/Y (BUFx2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_323593_/B",
+      "master": "HAxp5_ASAP7_75t_R",
+      "delay_ps": 2.07,
+      "arrival_ps": 581.14,
+      "kind": "wire",
+      "raw": "                 52.06    2.07  581.14 v _323593_/B (HAxp5_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_323593_/SN",
+      "master": "HAxp5_ASAP7_75t_R",
+      "delay_ps": 66.39,
+      "arrival_ps": 647.53,
+      "kind": "cell",
+      "raw": "     2    2.16   59.25   66.39  647.53 v _323593_/SN (HAxp5_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227649_/A",
+      "master": "INVx1_ASAP7_75t_R",
+      "delay_ps": 0.18,
+      "arrival_ps": 647.71,
+      "kind": "wire",
+      "raw": "                 59.25    0.18  647.71 v _227649_/A (INVx1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227649_/Y",
+      "master": "INVx1_ASAP7_75t_R",
+      "delay_ps": 31.41,
+      "arrival_ps": 679.13,
+      "kind": "cell",
+      "raw": "     2    2.61   37.53   31.41  679.13 ^ _227649_/Y (INVx1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227690_/A2",
+      "master": "OA21x2_ASAP7_75t_R",
+      "delay_ps": 0.44,
+      "arrival_ps": 679.57,
+      "kind": "wire",
+      "raw": "                 37.55    0.44  679.57 ^ _227690_/A2 (OA21x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227690_/Y",
+      "master": "OA21x2_ASAP7_75t_R",
+      "delay_ps": 27.89,
+      "arrival_ps": 707.45,
+      "kind": "cell",
+      "raw": "     1    0.71   10.42   27.89  707.45 ^ _227690_/Y (OA21x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227691_/B",
+      "master": "AO21x1_ASAP7_75t_R",
+      "delay_ps": 0.04,
+      "arrival_ps": 707.49,
+      "kind": "wire",
+      "raw": "                 10.42    0.04  707.49 ^ _227691_/B (AO21x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227691_/Y",
+      "master": "AO21x1_ASAP7_75t_R",
+      "delay_ps": 15.67,
+      "arrival_ps": 723.16,
+      "kind": "cell",
+      "raw": "     1    0.73   12.21   15.67  723.16 ^ _227691_/Y (AO21x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227692_/C",
+      "master": "AND3x1_ASAP7_75t_R",
+      "delay_ps": 0.04,
+      "arrival_ps": 723.2,
+      "kind": "wire",
+      "raw": "                 12.21    0.04  723.20 ^ _227692_/C (AND3x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227692_/Y",
+      "master": "AND3x1_ASAP7_75t_R",
+      "delay_ps": 25.2,
+      "arrival_ps": 748.4,
+      "kind": "cell",
+      "raw": "     1    0.83   14.35   25.20  748.40 ^ _227692_/Y (AND3x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227693_/A2",
+      "master": "OA21x2_ASAP7_75t_R",
+      "delay_ps": 0.08,
+      "arrival_ps": 748.48,
+      "kind": "wire",
+      "raw": "                 14.35    0.08  748.48 ^ _227693_/A2 (OA21x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227693_/Y",
+      "master": "OA21x2_ASAP7_75t_R",
+      "delay_ps": 21.11,
+      "arrival_ps": 769.59,
+      "kind": "cell",
+      "raw": "     1    0.58    9.51   21.11  769.59 ^ _227693_/Y (OA21x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227698_/A2",
+      "master": "OA211x2_ASAP7_75t_R",
+      "delay_ps": 0.03,
+      "arrival_ps": 769.62,
+      "kind": "wire",
+      "raw": "                  9.51    0.03  769.62 ^ _227698_/A2 (OA211x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227698_/Y",
+      "master": "OA211x2_ASAP7_75t_R",
+      "delay_ps": 24.28,
+      "arrival_ps": 793.9,
+      "kind": "cell",
+      "raw": "     1    0.56   10.42   24.28  793.90 ^ _227698_/Y (OA211x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227701_/A3",
+      "master": "AO32x1_ASAP7_75t_R",
+      "delay_ps": 0.03,
+      "arrival_ps": 793.92,
+      "kind": "wire",
+      "raw": "                 10.42    0.03  793.92 ^ _227701_/A3 (AO32x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227701_/Y",
+      "master": "AO32x1_ASAP7_75t_R",
+      "delay_ps": 24.31,
+      "arrival_ps": 818.24,
+      "kind": "cell",
+      "raw": "     1    0.76   14.51   24.31  818.24 ^ _227701_/Y (AO32x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227702_/D",
+      "master": "AND4x1_ASAP7_75t_R",
+      "delay_ps": 0.05,
+      "arrival_ps": 818.28,
+      "kind": "wire",
+      "raw": "                 14.51    0.05  818.28 ^ _227702_/D (AND4x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227702_/Y",
+      "master": "AND4x1_ASAP7_75t_R",
+      "delay_ps": 31.37,
+      "arrival_ps": 849.65,
+      "kind": "cell",
+      "raw": "     1    0.75   15.45   31.37  849.65 ^ _227702_/Y (AND4x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227703_/A",
+      "master": "INVx1_ASAP7_75t_R",
+      "delay_ps": 0.04,
+      "arrival_ps": 849.69,
+      "kind": "wire",
+      "raw": "                 15.45    0.04  849.69 ^ _227703_/A (INVx1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227703_/Y",
+      "master": "INVx1_ASAP7_75t_R",
+      "delay_ps": 9.55,
+      "arrival_ps": 859.23,
+      "kind": "cell",
+      "raw": "     1    0.86    9.97    9.55  859.23 v _227703_/Y (INVx1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227719_/A2",
+      "master": "AO21x1_ASAP7_75t_R",
+      "delay_ps": 0.09,
+      "arrival_ps": 859.32,
+      "kind": "wire",
+      "raw": "                  9.97    0.09  859.32 v _227719_/A2 (AO21x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227719_/Y",
+      "master": "AO21x1_ASAP7_75t_R",
+      "delay_ps": 20.97,
+      "arrival_ps": 880.29,
+      "kind": "cell",
+      "raw": "     1    0.89   10.92   20.97  880.29 v _227719_/Y (AO21x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227720_/B",
+      "master": "AND2x2_ASAP7_75t_R",
+      "delay_ps": 0.1,
+      "arrival_ps": 880.4,
+      "kind": "wire",
+      "raw": "                 10.92    0.10  880.40 v _227720_/B (AND2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_227720_/Y",
+      "master": "AND2x2_ASAP7_75t_R",
+      "delay_ps": 21.74,
+      "arrival_ps": 902.13,
+      "kind": "cell",
+      "raw": "     1    1.83   11.55   21.74  902.13 v _227720_/Y (AND2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_318531_/B",
+      "master": "HAxp5_ASAP7_75t_R",
+      "delay_ps": 0.37,
+      "arrival_ps": 902.5,
+      "kind": "wire",
+      "raw": "                 11.59    0.37  902.50 v _318531_/B (HAxp5_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_318531_/CON",
+      "master": "HAxp5_ASAP7_75t_R",
+      "delay_ps": 14.41,
+      "arrival_ps": 916.92,
+      "kind": "cell",
+      "raw": "     1    0.68   23.30   14.41  916.92 ^ _318531_/CON (HAxp5_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279593_/A",
+      "master": "INVx1_ASAP7_75t_R",
+      "delay_ps": 0.03,
+      "arrival_ps": 916.95,
+      "kind": "wire",
+      "raw": "                 23.30    0.03  916.95 ^ _279593_/A (INVx1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279593_/Y",
+      "master": "INVx1_ASAP7_75t_R",
+      "delay_ps": 17.5,
+      "arrival_ps": 934.45,
+      "kind": "cell",
+      "raw": "     2    2.40   21.72   17.50  934.45 v _279593_/Y (INVx1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_318487_/B",
+      "master": "HAxp5_ASAP7_75t_R",
+      "delay_ps": 0.33,
+      "arrival_ps": 934.79,
+      "kind": "wire",
+      "raw": "                 21.73    0.33  934.79 v _318487_/B (HAxp5_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_318487_/CON",
+      "master": "HAxp5_ASAP7_75t_R",
+      "delay_ps": 18.77,
+      "arrival_ps": 953.56,
+      "kind": "cell",
+      "raw": "     1    0.80   24.51   18.77  953.56 ^ _318487_/CON (HAxp5_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279496_/A",
+      "master": "INVx1_ASAP7_75t_R",
+      "delay_ps": 0.05,
+      "arrival_ps": 953.6,
+      "kind": "wire",
+      "raw": "                 24.51    0.05  953.60 ^ _279496_/A (INVx1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279496_/Y",
+      "master": "INVx1_ASAP7_75t_R",
+      "delay_ps": 15.1,
+      "arrival_ps": 968.71,
+      "kind": "cell",
+      "raw": "     2    1.65   17.10   15.10  968.71 v _279496_/Y (INVx1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279512_/A",
+      "master": "AND2x2_ASAP7_75t_R",
+      "delay_ps": 0.14,
+      "arrival_ps": 968.84,
+      "kind": "wire",
+      "raw": "                 17.11    0.14  968.84 v _279512_/A (AND2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279512_/Y",
+      "master": "AND2x2_ASAP7_75t_R",
+      "delay_ps": 24.03,
+      "arrival_ps": 992.87,
+      "kind": "cell",
+      "raw": "     2    1.31    9.53   24.03  992.87 v _279512_/Y (AND2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279608_/A",
+      "master": "AND2x2_ASAP7_75t_R",
+      "delay_ps": 0.11,
+      "arrival_ps": 992.98,
+      "kind": "wire",
+      "raw": "                  9.54    0.11  992.98 v _279608_/A (AND2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279608_/Y",
+      "master": "AND2x2_ASAP7_75t_R",
+      "delay_ps": 20.75,
+      "arrival_ps": 1013.73,
+      "kind": "cell",
+      "raw": "     1    1.09    9.19   20.75 1013.73 v _279608_/Y (AND2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279609_/B",
+      "master": "XNOR2x2_ASAP7_75t_R",
+      "delay_ps": 0.12,
+      "arrival_ps": 1013.84,
+      "kind": "wire",
+      "raw": "                  9.20    0.12 1013.84 v _279609_/B (XNOR2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279609_/Y",
+      "master": "XNOR2x2_ASAP7_75t_R",
+      "delay_ps": 30.62,
+      "arrival_ps": 1044.46,
+      "kind": "cell",
+      "raw": "     2    1.98   15.13   30.62 1044.46 ^ _279609_/Y (XNOR2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279610_/B",
+      "master": "OR2x2_ASAP7_75t_R",
+      "delay_ps": 0.27,
+      "arrival_ps": 1044.73,
+      "kind": "wire",
+      "raw": "                 15.15    0.27 1044.73 ^ _279610_/B (OR2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279610_/Y",
+      "master": "OR2x2_ASAP7_75t_R",
+      "delay_ps": 22.97,
+      "arrival_ps": 1067.7,
+      "kind": "cell",
+      "raw": "     2    2.18   14.79   22.97 1067.70 ^ _279610_/Y (OR2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279613_/A",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "delay_ps": 0.19,
+      "arrival_ps": 1067.89,
+      "kind": "wire",
+      "raw": "                 14.80    0.19 1067.89 ^ _279613_/A (NAND2x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279613_/Y",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "delay_ps": 9.56,
+      "arrival_ps": 1077.45,
+      "kind": "cell",
+      "raw": "     1    0.69   10.67    9.56 1077.45 v _279613_/Y (NAND2x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279614_/D",
+      "master": "OR4x1_ASAP7_75t_R",
+      "delay_ps": 0.06,
+      "arrival_ps": 1077.51,
+      "kind": "wire",
+      "raw": "                 10.67    0.06 1077.51 v _279614_/D (OR4x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279614_/Y",
+      "master": "OR4x1_ASAP7_75t_R",
+      "delay_ps": 43.31,
+      "arrival_ps": 1120.83,
+      "kind": "cell",
+      "raw": "     2    1.76   22.02   43.31 1120.83 v _279614_/Y (OR4x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279615_/B",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "delay_ps": 0.07,
+      "arrival_ps": 1120.89,
+      "kind": "wire",
+      "raw": "                 22.03    0.07 1120.89 v _279615_/B (NAND2x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279615_/Y",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "delay_ps": 15.64,
+      "arrival_ps": 1136.53,
+      "kind": "cell",
+      "raw": "     1    1.10   22.01   15.64 1136.53 ^ _279615_/Y (NAND2x1_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279616_/B",
+      "master": "XNOR2x2_ASAP7_75t_R",
+      "delay_ps": 0.1,
+      "arrival_ps": 1136.64,
+      "kind": "wire",
+      "raw": "                 22.02    0.10 1136.64 ^ _279616_/B (XNOR2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "_279616_/Y",
+      "master": "XNOR2x2_ASAP7_75t_R",
+      "delay_ps": 52.85,
+      "arrival_ps": 1189.48,
+      "kind": "cell",
+      "raw": "     1   10.48   47.72   52.85 1189.48 v _279616_/Y (XNOR2x2_ASAP7_75t_R)"
+    },
+    {
+      "pin": "u_u_exp1.u_exp.nint[6]$_DFF_P_/D",
+      "master": "DFFHQNx3_ASAP7_75t_R",
+      "delay_ps": 10.27,
+      "arrival_ps": 1199.75,
+      "kind": "wire",
+      "raw": "                 56.01   10.27 1199.75 v u_u_exp1.u_exp.nint[6]$_DFF_P_/D (DFFHQNx3_ASAP7_75t_R)"
+    }
+  ]
+}

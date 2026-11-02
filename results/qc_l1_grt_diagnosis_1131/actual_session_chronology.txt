@@ -1,0 +1,22 @@
+15: read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+16: read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+17: read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+18: read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+19: read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+20: read_liberty /work/macros/ot_sram_1r1w2c_128x64_m1_tt.lib
+21: read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+22: read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+23: read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+24: read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+25: read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+26: read_liberty /work/macros/ot_sram_1r1w2c_128x64_m1_ff.lib
+2548: OT_HOLD_MM after repair: SS setup ws -13.72 / FF hold ws -9.54 ps
+3389: OT_HOLD_MM after repair: OT_HOLD_GUARD chunk buffer caps reached (RSZ-0060); continuing
+3391: OT_HOLD_MM after repair: SS setup ws -13.72 / FF hold ws 8.24 ps
+3396: OT_HOLD_MM after repair: SS setup ws -13.72 / FF hold ws 8.24 ps
+3452: repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+3466: Took 128 seconds: repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+3483: source /work/grt_post_core.tcl
+3552: Took 662 seconds: source /work/grt_post_core.tcl
+3553: write_db /work/run/results/asap7/kq_qfd_qc_su_lane_w_l1_w0e61bf/base/5_1_grt.odb
+3554: write_sdc -no_timestamp /work/run/results/asap7/kq_qfd_qc_su_lane_w_l1_w0e61bf/base/5_1_grt.sdc

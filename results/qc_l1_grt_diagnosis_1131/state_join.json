@@ -1,0 +1,86 @@
+{
+  "scope": "Read-only actual retained L1 GRT diagnosis; no ECO, clock/constraint/flag changes, routing, placement, resynthesis or proof",
+  "original_kit": "intel2:/srv/opentallas-scratch2/claude/codex-qc-su/l1",
+  "probe": "intel2:/srv/opentallas-scratch2/claude/codex-qc-su/l1_snapshot_diag1131",
+  "unit": "oth-ubuntu-2655272-1793576438",
+  "rc": 0,
+  "resource_basis": "16GB/2threads from actual same GRT6786MB peak",
+  "parasitics": "Native stored GRT estimator accepted retained5_1.odb; NO placement-RC or reroute fallback",
+  "unique_setup_endpoints": [
+    {
+      "launch": "u_u_exp1.u_exp.m_t.g_l.u.y[23]$_DFF_PN0_",
+      "capture": "u_u_exp1.u_exp.nint[6]$_DFF_P_/D",
+      "data_transition": "fall",
+      "slack_ps": -14.64,
+      "role": "ordinary setup clk->clk; two emitted path records are byte-identical, NOT another EXP bit"
+    },
+    {
+      "launch": "u_u_head1.u_h.u_lane.mc_y[28]$_DFF_P_",
+      "capture": "u_u_head1.u_h.u_lane.u_mc.u.s1_rows[221]$_DFF_P_/D",
+      "data_transition": "rise",
+      "slack_ps": -0.67,
+      "role": "ordinary setup clk->clk"
+    }
+  ],
+  "actual_retained_ff_negative": {
+    "launch": "u_u_lrly1.u_pa.q[157]$_DFF_P_",
+    "capture": "u_u_lrly1.c_va[29]$_DFF_P_/D",
+    "mode": "ff",
+    "corner": "BC",
+    "check": "ordinary register-to-register hold, falling data/rising capture clock",
+    "slack_ps": -2.52,
+    "clock": "clk, rising edge0, source latency0 for both",
+    "launch_clock_insertion_ps": 307.33,
+    "capture_clock_insertion_ps": 339.83,
+    "clock_skew_ps": 32.5,
+    "uncertainty_ps": 25,
+    "cppr_ps": -4.17,
+    "library_hold_ps": 12.24,
+    "data_arrival_ps": 370.37,
+    "required_ps": 372.89
+  },
+  "tt_state_join": {
+    "libs": "Exact original run_grt.log read_liberty TT files, including actual SRAM TT model; no alternate library selection",
+    "scene": "single ss/tc diagnostic scene from retained final5_1_grt.sdc; original final report labels ss/tc",
+    "clock_period_ps": 833,
+    "setup_uncertainty_ps": 0,
+    "hold_uncertainty_ps": 25,
+    "seam_hold_uncertainty_ps": 12.5,
+    "physical_clk_source_ps": 0,
+    "virtual_clk_source_tt_ps": 392.5,
+    "virtual_clk_ff_overlay_ps": 321,
+    "no_explicit_derates_in_final_sdc": true,
+    "no_placement_rc": true,
+    "native_final_report_and_query_agree": "EXP nint[6]/D -14.64ps, same start/end/arrival/required/clock trace",
+    "component_trace_exact_token_match": false,
+    "original_trace_rows": 102,
+    "query_trace_rows": 53
+  },
+  "mm_summary_state_join": {
+    "earlier_summary": "TT(labelSS) -13.72 / FF +8.24 after repair",
+    "point_in_time": "Last summary line3396 precedes native vt_swap/reroute line3452 and postGRT hook line3483,662sec; final ODB/SDC lines3553/3554",
+    "selection_claim": "NO report-selection bug established. Retained ot_mm_ws is global minimum over find_timing_paths -scenes scene, not an intentional IO-only query. Earlier summary and final report are not demonstrated identical parasitic/timing points.",
+    "ff_scope": "NegativeFF -2.52 comes directly from original final FF/BC report, NOT reconstructed using diagnosticTT SDC. +8.24 also occurs on reported outputIO c_o[38]; coincidence is not proof of summary selection scope."
+  },
+  "coverage_join": {
+    "clock": "All1936 connectedCLOCK nets present in DB/nativeguide; nonspecial/noSWires/no special clockITerms",
+    "signal": "All277230 connectedSIGNAL nets DB-guided/nonspecial/noSWires;683 absent external route.guide, export defect separate from valid DB route coverage",
+    "pg": "Power/Ground special flags and SWires preserved",
+    "timing_substitution": "NONE; coverage does not change timing basis",
+    "guide_fix_owner": "KIT existing late native write_guides fix76d9436b0; no duplicate implementation"
+  },
+  "release": "BOTH TT and FF held. No DRT, source qualification or ECO proposal credit.",
+  "retained_input_sha256": {
+    "inputs/4_cts.odb": "6666bd6b2cca5684bd2110a0fb35c48cd3dab518f5d2941704f14dfe73d67e51",
+    "inputs/route.guide": "9a0091ad0781690ad9439d290ea79c10eff6fb95ff297084a5437aa170d62dc6",
+    "inputs/setRC_rcx.tcl": "365a649fc66d3e08ee9a1055b49946d2c38758a7cc83837a7f908bb580946329",
+    "inputs/5_1_grt.odb": "f2ea233f4efaf564046b47fd1beb15b16363f52e4a5455e645564a94fce10d66",
+    "inputs/5_1_grt.sdc": "a28f918382c26159349ee07465c894e63e4bd6afa70a0aead7fe8480823b91c6",
+    "inputs/config.mk": "cfcd8c27eb020b405707f0acade39aac2156733efcef3116822e3054d0526a33",
+    "inputs/run_grt.log": "842fe94e22b407ac02bfa0c7eeeb1c4c820d5614862bd903b142e9646b1314d8",
+    "inputs/image.txt": "32a5219df16c2a20176d657abfd4fbfdacf70f36370a8cdc55f680eb314581a9",
+    "inputs/macros/ot_sram_1r1w2c_128x64_m1_tt.lib": "419f4a06c07b54061a91db7b2faad842f4d05cf738c2ac60b4d384ca63bc736e",
+    "inputs/macros/ot_sram_1r1w2c_128x64_m1.lef": "737a650260dfd52a14003b0e0aad97378b81ebc1adb0b6b9383c256c67ea92d6",
+    "inputs/macros/ot_sram_1r1w2c_128x64_m1_ff.lib": "4d5bcb7447f037190288977e0b8297d93b6e11724a90ff93f25fe3f4402458a4"
+  }
+}

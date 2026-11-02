@@ -1,0 +1,71 @@
+{
+  "source": "/srv/opentallas-scratch2/claude/codex-qc-su/l1/run_grt.log",
+  "actual_read_liberty_commands": [
+    {
+      "line": 15,
+      "command": "read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz"
+    },
+    {
+      "line": 16,
+      "command": "read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz"
+    },
+    {
+      "line": 17,
+      "command": "read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz"
+    },
+    {
+      "line": 18,
+      "command": "read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib"
+    },
+    {
+      "line": 19,
+      "command": "read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+    },
+    {
+      "line": 20,
+      "command": "read_liberty /work/macros/ot_sram_1r1w2c_128x64_m1_tt.lib"
+    },
+    {
+      "line": 21,
+      "command": "read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz"
+    },
+    {
+      "line": 22,
+      "command": "read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz"
+    },
+    {
+      "line": 23,
+      "command": "read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz"
+    },
+    {
+      "line": 24,
+      "command": "read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+    },
+    {
+      "line": 25,
+      "command": "read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib"
+    },
+    {
+      "line": 26,
+      "command": "read_liberty /work/macros/ot_sram_1r1w2c_128x64_m1_ff.lib"
+    }
+  ],
+  "TT": [
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+    "/work/macros/ot_sram_1r1w2c_128x64_m1_tt.lib"
+  ],
+  "FF": [
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+    "/work/macros/ot_sram_1r1w2c_128x64_m1_ff.lib"
+  ],
+  "setup_mapping": "retained config OT_MM_SETUP_CORNER=tc; retained report Mode:ss/Corner:tc",
+  "hold_mapping": "retained report Mode:ff/Corner:BC"
+}

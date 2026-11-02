@@ -1,0 +1,79 @@
+{
+  "4_cts": {
+    "CLOCK": {
+      "nets": 1936,
+      "connected": 1936,
+      "special": 0,
+      "swires": 0,
+      "connected_without_db_guide": 1936,
+      "clock_special_iterms": 0
+    },
+    "SIGNAL": {
+      "nets": 269498,
+      "connected": 268369,
+      "special": 0,
+      "swires": 0,
+      "connected_without_db_guide": 268369,
+      "clock_special_iterms": 0
+    },
+    "POWER": {
+      "nets": 1,
+      "connected": 1,
+      "special": 1,
+      "swires": 1,
+      "connected_without_db_guide": 1,
+      "clock_special_iterms": 0
+    },
+    "GROUND": {
+      "nets": 1,
+      "connected": 1,
+      "special": 1,
+      "swires": 1,
+      "connected_without_db_guide": 1,
+      "clock_special_iterms": 0
+    }
+  },
+  "5_1_grt": {
+    "CLOCK": {
+      "nets": 1936,
+      "connected": 1936,
+      "special": 0,
+      "swires": 0,
+      "connected_without_db_guide": 0,
+      "clock_special_iterms": 0,
+      "missing_native_guide": 0,
+      "first_missing": []
+    },
+    "SIGNAL": {
+      "nets": 278359,
+      "connected": 277230,
+      "special": 0,
+      "swires": 0,
+      "connected_without_db_guide": 0,
+      "clock_special_iterms": 0,
+      "missing_native_guide": 683,
+      "first_missing": [
+        "net43253",
+        "net43254",
+        "net43255",
+        "net43256"
+      ]
+    },
+    "POWER": {
+      "nets": 1,
+      "connected": 1,
+      "special": 1,
+      "swires": 1,
+      "connected_without_db_guide": 1,
+      "clock_special_iterms": 0
+    },
+    "GROUND": {
+      "nets": 1,
+      "connected": 1,
+      "special": 1,
+      "swires": 1,
+      "connected_without_db_guide": 1,
+      "clock_special_iterms": 0
+    }
+  }
+}
