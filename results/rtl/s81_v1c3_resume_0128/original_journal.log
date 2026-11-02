@@ -1,0 +1,4 @@
+Nov 01 21:10:55 dear-crayfish systemd[58918]: Started oth-ubuntu-182056-1793588951.scope - [systemd-run] /usr/local/lib/ot-heavy/ot-heavy-exit oth-ubuntu-182056-1793588951 env J=12 OT_VL_JCAP=0 /home/ubuntu/scratch-root/claude/tok-ds-2/v1c3_all.sh.
+Nov 02 01:24:07 dear-crayfish systemd[58918]: oth-ubuntu-182056-1793588951.scope: The kernel OOM killer killed some processes in this unit.
+Nov 02 01:24:13 dear-crayfish systemd[58918]: oth-ubuntu-182056-1793588951.scope: Failed with result 'oom-kill'.
+Nov 02 01:24:13 dear-crayfish systemd[58918]: oth-ubuntu-182056-1793588951.scope: Consumed 2d 54min 38.579s CPU time over 4h 13min 17.729s wall clock time, 96G memory peak.
