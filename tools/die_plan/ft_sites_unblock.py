@@ -31,12 +31,9 @@ def placement_boxes(t):
     The placed-macro record wins on duplicate names so its track offset is
     applied once, exactly as in check_ft_macro_sites.
     """
-    from placement_obstacles import probe_blockages
-    boxes = dict(S.placed_macro_boxes(t, halo=0.0))
-    for block in probe_blockages(t):
-        x, y = block['origin_um']; w, h = block['outline_um']
-        boxes.setdefault(block['inst'], (x, y, x+w, y+h))
-    return boxes
+    from placement_obstacles import placement_boxes as canonical_boxes
+    return canonical_boxes(t)
+
 
 def inside(p, boxes):
     return any(x0 < p[0] < x1 and y0 < p[1] < y1 for x0, y0, x1, y1 in boxes)
