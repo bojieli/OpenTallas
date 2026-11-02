@@ -1,0 +1,12 @@
+base {"die": "hbm_arch_B2o", "partitions": 90, "types": {"types": 81, "partitions": 90, "singleton_types": 72, "max_instances": 2, "near_duplicate_groups": 13, "near_duplicate_types": 26, "mergeable_saving
+new  {"die": "hbm_arch_B2o", "partitions": 90, "types": {"types": 81, "partitions": 90, "singleton_types": 72, "max_instances": 2, "near_duplicate_groups": 13, "near_duplicate_types": 26, "mergeable_saving
+NEW {}
+GONE {'ERROR': 4, 'WARN': 4}
+   GONE ERROR hops lane L730: hop 33 via mandatory slot pins is 633 um > reach 405 (add stations to the crossed partition's slot or shorten it)
+   GONE ERROR hops lane L731: hop 6 via mandatory slot pins is 623 um > reach 405 (add stations to the crossed partition's slot or shorten it)
+   GONE ERROR hops lane L730m: hop 33 via mandatory slot pins is 633 um > reach 405 (add stations to the crossed partition's slot or shorten it)
+   GONE ERROR hops lane L731m: hop 6 via mandatory slot pins is 623 um > reach 405 (add stations to the crossed partition's slot or shorten it)
+   GONE WARN reach [G0C] lane L730: hop 33 is 630 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NW_su11)
+   GONE WARN reach [G0C] lane L731: hop 6 is 623 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NW_b002)
+   GONE WARN reach [G0C] lane L730m: hop 33 is 630 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NE_su11)
+   GONE WARN reach [G0C] lane L731m: hop 6 is 623 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NE_b002)
