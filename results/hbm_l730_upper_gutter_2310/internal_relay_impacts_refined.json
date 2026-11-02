@@ -1,0 +1,160 @@
+[
+  {
+    "type": "q_su00",
+    "nominal_relay_hop_max_um": 401.7600000000001,
+    "nominal_hops_over405": false,
+    "remaining_nominal_body_contacts": [
+      {
+        "station": 32,
+        "conn": "bus:L102_i",
+        "reg": 8,
+        "xy": [
+          116.64,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      },
+      {
+        "station": 33,
+        "conn": "bus:L134_o",
+        "reg": 7,
+        "xy": [
+          116.64,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      },
+      {
+        "station": 34,
+        "conn": "bus:L36_i",
+        "reg": 5,
+        "xy": [
+          116.64,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      },
+      {
+        "station": 35,
+        "conn": "bus:L55_o",
+        "reg": 7,
+        "xy": [
+          116.64,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      },
+      {
+        "station": 45,
+        "conn": "bus:L134_o",
+        "reg": 8,
+        "xy": [
+          228.96,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      },
+      {
+        "station": 46,
+        "conn": "bus:L36_i",
+        "reg": 5,
+        "xy": [
+          228.96,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      },
+      {
+        "station": 47,
+        "conn": "bus:L55_o",
+        "reg": 8,
+        "xy": [
+          228.96,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      }
+    ],
+    "new_contacts_after_refinement": 0,
+    "scope": "Nominal plan targets only, not placed FF sites;7remaining pre-existing SFU contacts still held"
+  },
+  {
+    "type": "q_su00__physical_v1",
+    "nominal_relay_hop_max_um": 401.7600000000001,
+    "nominal_hops_over405": false,
+    "remaining_nominal_body_contacts": [
+      {
+        "station": 32,
+        "conn": "bus:L102_i",
+        "reg": 8,
+        "xy": [
+          116.64,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      },
+      {
+        "station": 33,
+        "conn": "bus:L134_o",
+        "reg": 7,
+        "xy": [
+          116.64,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      },
+      {
+        "station": 34,
+        "conn": "bus:L36_i",
+        "reg": 5,
+        "xy": [
+          116.64,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      },
+      {
+        "station": 35,
+        "conn": "bus:L55_o",
+        "reg": 7,
+        "xy": [
+          116.64,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      },
+      {
+        "station": 45,
+        "conn": "bus:L134_o",
+        "reg": 8,
+        "xy": [
+          228.96,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      },
+      {
+        "station": 46,
+        "conn": "bus:L36_i",
+        "reg": 5,
+        "xy": [
+          228.96,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      },
+      {
+        "station": 47,
+        "conn": "bus:L55_o",
+        "reg": 8,
+        "xy": [
+          228.96,
+          444.96
+        ],
+        "macro": "u_sfu_Q0"
+      }
+    ],
+    "new_contacts_after_refinement": 0,
+    "scope": "Nominal plan targets only, not placed FF sites;7remaining pre-existing SFU contacts still held"
+  }
+]

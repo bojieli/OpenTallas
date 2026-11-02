@@ -1,0 +1,44 @@
+{
+  "status": "PASS_FT_ALTERNATIVE_FULL_PLAN_CLOCK_SOURCE_RELAY_BLOCKED",
+  "paired_window_um": [
+    647.648,
+    924.8147
+  ],
+  "macro_translation_x_um": 17.28,
+  "counts_and_outlines_unchanged": true,
+  "added_FF_vs_lower_window": 0,
+  "added_cycles_vs_lower_window": 0,
+  "types": [
+    "q_su00",
+    "q_su00__physical_v1"
+  ],
+  "allFT_internal_cells_per_type": 32823,
+  "newL730_internal_cells_per_type": 11641,
+  "allFT_constructor_hop_max_um": 397.17,
+  "all_neighbor_hop_max_um": 383.053,
+  "canonical_union_obstacles": 16,
+  "canonical_FT_body_findings": 0,
+  "current_lane_cycles": {
+    "L730": 45,
+    "L730m": 45
+  },
+  "B113_upstream_added_cycle_min": 2,
+  "current_latency_after_min_upstream_repair": 47,
+  "alternative_saves_vs_minimum_lower_window_repair": {
+    "cycles": 1,
+    "ps": 833,
+    "FF_per_B113_type": 1663
+  },
+  "internal_relay_target_endpoints_translated_per_type": 12,
+  "new_nominal_home_body_contacts": 4,
+  "new_nominal_homes_repaired_x_um": 475.2,
+  "remaining_preexisting_nominal_SFU_contacts_per_type": 7,
+  "actual_internal_relay_bank_join": "HOLD",
+  "clock_gate": "FAIL_OLD_LOWER_WINDOW_PROFILE_EMPTY_CLK_T30",
+  "core_entry_translation_scope": "declared matching-cut clock entries translated17.28; actual native entry/profile hold",
+  "execution_host": "intel1",
+  "unit": "oth-ubuntu-2607945-1793603457",
+  "wall_s": 26.7,
+  "rss_kb": 484260,
+  "PnR_dispatched": false
+}

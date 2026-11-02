@@ -1,0 +1,704 @@
+{
+  "schema": "opentallas.qwen.native-head-source-lease.v1",
+  "status": "PREP_ONLY_NOT_ADOPTED",
+  "allocation": {
+    "gain_base": 1088,
+    "gain_row": 68,
+    "apply_pidx": 16,
+    "prior_crom_last": 1087,
+    "selected_prog_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "optional_monitor_reserved_indices": [
+      12,
+      13,
+      14,
+      15
+    ],
+    "prior_gain_region_access": "NONE_IN_SELECTED36_STAGE_READ_OR_WRITE_FOOTPRINT",
+    "prior_apply_pair_access": "NONE_IN_SELECTED36_STAGE_PROG_WRITES_OR_OPTIONAL_MONITOR",
+    "users": [
+      {
+        "user": 0,
+        "crom_first": 1088,
+        "crom_end": 1472,
+        "pidx": 16,
+        "vm_x_first": 0,
+        "vm_x_end": 384,
+        "vm_rstd": 400
+      },
+      {
+        "user": 1,
+        "crom_first": 3136,
+        "crom_end": 3520,
+        "pidx": 144,
+        "vm_x_first": 4096,
+        "vm_x_end": 4480,
+        "vm_rstd": 4496
+      },
+      {
+        "user": 2,
+        "crom_first": 5184,
+        "crom_end": 5568,
+        "pidx": 272,
+        "vm_x_first": 8192,
+        "vm_x_end": 8576,
+        "vm_rstd": 8592
+      },
+      {
+        "user": 3,
+        "crom_first": 7232,
+        "crom_end": 7616,
+        "pidx": 400,
+        "vm_x_first": 12288,
+        "vm_x_end": 12672,
+        "vm_rstd": 12688
+      }
+    ]
+  },
+  "selected_sources": [
+    {
+      "manifest_sha256": "b674e4106deddd93680f1c2736d864c9cfa885e10e5ae72abe0b7d7a3fbfbaba",
+      "source": {
+        "lowering_commit": "5f1fc8e446c5ba63f4fe2da235246ad88c2616d0",
+        "checkpoint_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+        "user_relocation_certificate_sha256": "ae6ab5ec2d517857323c78ab89a4ae7e0d225d80eaa0c2964122372d4800f079"
+      },
+      "crom_write_last": 1023,
+      "crom_read_last": 1087,
+      "prog_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "stored_words": 20736,
+      "live_words": 14688,
+      "crom_reads_by_pidx": {
+        "1": [
+          {
+            "field": "b",
+            "first": 0,
+            "last": 255
+          },
+          {
+            "field": "b",
+            "first": 0,
+            "last": 383
+          }
+        ],
+        "2": [
+          {
+            "field": "b",
+            "first": 384,
+            "last": 639
+          },
+          {
+            "field": "b",
+            "first": 384,
+            "last": 767
+          }
+        ],
+        "6": [
+          {
+            "field": "c",
+            "first": 768,
+            "last": 895
+          },
+          {
+            "field": "c",
+            "first": 896,
+            "last": 1023
+          }
+        ],
+        "7": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ],
+        "8": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ]
+      }
+    },
+    {
+      "manifest_sha256": "12c2a7312a12efe28682dcd733b38626b5d16efa548be00b3ea879c20cf314df",
+      "source": {
+        "lowering_commit": "5f1fc8e446c5ba63f4fe2da235246ad88c2616d0",
+        "checkpoint_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+        "user_relocation_certificate_sha256": "039f04c26f6b520e81e6f7e2772f508aceb333a5235af7a936c5056a4b6b63ba"
+      },
+      "crom_write_last": 1023,
+      "crom_read_last": 1087,
+      "prog_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "stored_words": 20736,
+      "live_words": 14688,
+      "crom_reads_by_pidx": {
+        "1": [
+          {
+            "field": "b",
+            "first": 0,
+            "last": 255
+          },
+          {
+            "field": "b",
+            "first": 0,
+            "last": 383
+          }
+        ],
+        "2": [
+          {
+            "field": "b",
+            "first": 384,
+            "last": 639
+          },
+          {
+            "field": "b",
+            "first": 384,
+            "last": 767
+          }
+        ],
+        "6": [
+          {
+            "field": "c",
+            "first": 768,
+            "last": 895
+          },
+          {
+            "field": "c",
+            "first": 896,
+            "last": 1023
+          }
+        ],
+        "7": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ],
+        "8": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ]
+      }
+    },
+    {
+      "manifest_sha256": "61d2d642e6993ec2c75e0f0a6dc492986a4dcaf383b311ade55e60b7570ca1cd",
+      "source": {
+        "lowering_commit": "100bcd7ead2b04dab15c8f104c7c1363aeb1fa25",
+        "checkpoint_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+        "user_relocation_certificate_sha256": "79524863072c25a62f47845d04ae20d375ea84ecbf40b7f3e1849eb73e4fa5ee"
+      },
+      "crom_write_last": 1023,
+      "crom_read_last": 1087,
+      "prog_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "stored_words": 20736,
+      "live_words": 14688,
+      "crom_reads_by_pidx": {
+        "1": [
+          {
+            "field": "b",
+            "first": 0,
+            "last": 255
+          },
+          {
+            "field": "b",
+            "first": 0,
+            "last": 383
+          }
+        ],
+        "2": [
+          {
+            "field": "b",
+            "first": 384,
+            "last": 639
+          },
+          {
+            "field": "b",
+            "first": 384,
+            "last": 767
+          }
+        ],
+        "6": [
+          {
+            "field": "c",
+            "first": 768,
+            "last": 895
+          },
+          {
+            "field": "c",
+            "first": 896,
+            "last": 1023
+          }
+        ],
+        "7": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ],
+        "8": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ]
+      }
+    },
+    {
+      "manifest_sha256": "442dc694c1a8e25027ed8e405a0686f9871b989619906d521fea0e100a88b471",
+      "source": {
+        "lowering_commit": "100bcd7ead2b04dab15c8f104c7c1363aeb1fa25",
+        "checkpoint_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+        "user_relocation_certificate_sha256": "f8fbe63a2910c20fb47a59f53bc343272a6e70e09addfde935fac2f244a4a8b9"
+      },
+      "crom_write_last": 1023,
+      "crom_read_last": 1087,
+      "prog_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "stored_words": 20736,
+      "live_words": 14688,
+      "crom_reads_by_pidx": {
+        "1": [
+          {
+            "field": "b",
+            "first": 0,
+            "last": 255
+          },
+          {
+            "field": "b",
+            "first": 0,
+            "last": 383
+          }
+        ],
+        "2": [
+          {
+            "field": "b",
+            "first": 384,
+            "last": 639
+          },
+          {
+            "field": "b",
+            "first": 384,
+            "last": 767
+          }
+        ],
+        "6": [
+          {
+            "field": "c",
+            "first": 768,
+            "last": 895
+          },
+          {
+            "field": "c",
+            "first": 896,
+            "last": 1023
+          }
+        ],
+        "7": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ],
+        "8": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ]
+      }
+    },
+    {
+      "manifest_sha256": "99b004c97d8494eefe8916603ff97e8de7e281aec5f619d23e4469d9f89a0cd0",
+      "source": {
+        "lowering_commit": "100bcd7ead2b04dab15c8f104c7c1363aeb1fa25",
+        "checkpoint_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+        "user_relocation_certificate_sha256": "93db7c413eff1fd0bf92607e6f81a72527c9d36ca507ab31cd7f641d3a4f2b3e"
+      },
+      "crom_write_last": 1023,
+      "crom_read_last": 1087,
+      "prog_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "stored_words": 20736,
+      "live_words": 14688,
+      "crom_reads_by_pidx": {
+        "1": [
+          {
+            "field": "b",
+            "first": 0,
+            "last": 255
+          },
+          {
+            "field": "b",
+            "first": 0,
+            "last": 383
+          }
+        ],
+        "2": [
+          {
+            "field": "b",
+            "first": 384,
+            "last": 639
+          },
+          {
+            "field": "b",
+            "first": 384,
+            "last": 767
+          }
+        ],
+        "6": [
+          {
+            "field": "c",
+            "first": 768,
+            "last": 895
+          },
+          {
+            "field": "c",
+            "first": 896,
+            "last": 1023
+          }
+        ],
+        "7": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ],
+        "8": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ]
+      }
+    },
+    {
+      "manifest_sha256": "f48d6ceec62d84595639d9713c8b97ad5d5b76086e942d509954afb17db32834",
+      "source": {
+        "lowering_commit": "100bcd7ead2b04dab15c8f104c7c1363aeb1fa25",
+        "checkpoint_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+        "user_relocation_certificate_sha256": "e2ad10ef70c169617cfc15a1c48006f7e5f78222e49bdae4f7f9dc41050b966d"
+      },
+      "crom_write_last": 1023,
+      "crom_read_last": 1087,
+      "prog_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "stored_words": 20736,
+      "live_words": 14688,
+      "crom_reads_by_pidx": {
+        "1": [
+          {
+            "field": "b",
+            "first": 0,
+            "last": 255
+          },
+          {
+            "field": "b",
+            "first": 0,
+            "last": 383
+          }
+        ],
+        "2": [
+          {
+            "field": "b",
+            "first": 384,
+            "last": 639
+          },
+          {
+            "field": "b",
+            "first": 384,
+            "last": 767
+          }
+        ],
+        "6": [
+          {
+            "field": "c",
+            "first": 768,
+            "last": 895
+          },
+          {
+            "field": "c",
+            "first": 896,
+            "last": 1023
+          }
+        ],
+        "7": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ],
+        "8": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ]
+      }
+    },
+    {
+      "manifest_sha256": "53a16a3b0d6455465dae4805c023b8804c5f3a2cbd5a2f196f26d2c9613d8b6c",
+      "source": {
+        "lowering_commit": "100bcd7ead2b04dab15c8f104c7c1363aeb1fa25",
+        "checkpoint_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+        "user_relocation_certificate_sha256": "d70f7aa9bfb7e704e6aaf3943e68f3b601cc152e62f0395bff994dba118a9d62"
+      },
+      "crom_write_last": 1023,
+      "crom_read_last": 1087,
+      "prog_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "stored_words": 20736,
+      "live_words": 14688,
+      "crom_reads_by_pidx": {
+        "1": [
+          {
+            "field": "b",
+            "first": 0,
+            "last": 255
+          },
+          {
+            "field": "b",
+            "first": 0,
+            "last": 383
+          }
+        ],
+        "2": [
+          {
+            "field": "b",
+            "first": 384,
+            "last": 639
+          },
+          {
+            "field": "b",
+            "first": 384,
+            "last": 767
+          }
+        ],
+        "6": [
+          {
+            "field": "c",
+            "first": 768,
+            "last": 895
+          },
+          {
+            "field": "c",
+            "first": 896,
+            "last": 1023
+          }
+        ],
+        "7": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ],
+        "8": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ]
+      }
+    },
+    {
+      "manifest_sha256": "c1639295283719252017295c659e549ad5cce81d1ce59d00092b2568293233bf",
+      "source": {
+        "lowering_commit": "100bcd7ead2b04dab15c8f104c7c1363aeb1fa25",
+        "checkpoint_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+        "user_relocation_certificate_sha256": "ec5b42f8e898bd5d667ccb879fb4a216784b9a85badb0e6eb8318c6efd103f2a"
+      },
+      "crom_write_last": 1023,
+      "crom_read_last": 1087,
+      "prog_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "stored_words": 20736,
+      "live_words": 14688,
+      "crom_reads_by_pidx": {
+        "1": [
+          {
+            "field": "b",
+            "first": 0,
+            "last": 255
+          },
+          {
+            "field": "b",
+            "first": 0,
+            "last": 383
+          }
+        ],
+        "2": [
+          {
+            "field": "b",
+            "first": 384,
+            "last": 639
+          },
+          {
+            "field": "b",
+            "first": 384,
+            "last": 767
+          }
+        ],
+        "6": [
+          {
+            "field": "c",
+            "first": 768,
+            "last": 895
+          },
+          {
+            "field": "c",
+            "first": 896,
+            "last": 1023
+          }
+        ],
+        "7": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ],
+        "8": [
+          {
+            "field": "b",
+            "first": 1024,
+            "last": 1087
+          }
+        ]
+      }
+    }
+  ],
+  "x_lease": "existing final residual2 X publication through apply-H last read",
+  "rstd_lease": "existing final fused ROOT publication through apply-H last read",
+  "h_storage": "native W_X BF16 stream, no additional VM region",
+  "new_first_use": "ABSENT_FROM_SELECTED_HEAD_CALENDAR_ZERO_NATIVE_SU_COMMANDS",
+  "exact_operand_dates": "REQUIRES_NATIVE_APPLY_H_WITNESS_AND_PARENT_CALENDAR_JOIN",
+  "gain_and_prog_region_reuse": false,
+  "calendar": "NOT_EMITTED",
+  "boot": "NOT_INSTALLED"
+}
