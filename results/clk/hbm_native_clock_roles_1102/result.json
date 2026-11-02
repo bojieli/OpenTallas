@@ -1,0 +1,276 @@
+{
+  "scope": "exact native saved synth ODB direct root roles; no source adoption or physical timing",
+  "profiles": [
+    {
+      "view": "hnx_vms_bank_q0_faces__vecd4ae@0bb6804dab59",
+      "status": "NO_ACTUAL_SYNTH_ODB",
+      "declared_clock_inputs": 8,
+      "role_qualified": false
+    },
+    {
+      "view": "hnx_vms_bank_q0_faces__vecd4ae@5a03758c3d07",
+      "status": "NO_ACTUAL_SYNTH_ODB",
+      "declared_clock_inputs": 8,
+      "role_qualified": false
+    },
+    {
+      "view": "hnx_vms_bank_q0_faces__vecd4ae@88b84f19c25b",
+      "status": "NO_ACTUAL_SYNTH_ODB",
+      "declared_clock_inputs": 8,
+      "role_qualified": false
+    },
+    {
+      "view": "hnx_vms_bank_q0_faces__vecd4ae@d6532bde006e",
+      "status": "NO_ACTUAL_SYNTH_ODB",
+      "declared_clock_inputs": 8,
+      "role_qualified": false
+    },
+    {
+      "view": "hnx_vms_bank_q0_faces__vecd4ae@def761e36c82",
+      "status": "NO_ACTUAL_SYNTH_ODB",
+      "declared_clock_inputs": 8,
+      "role_qualified": false
+    },
+    {
+      "view": "hnx_vms_bank_q0_faces__vecd4ae@ed4cba8a8b2a",
+      "status": "NO_ACTUAL_SYNTH_ODB",
+      "declared_clock_inputs": 8,
+      "role_qualified": false
+    },
+    {
+      "view": "hnx_vms_bank_q0_faces__vecd4ae@f9c1bd05a046",
+      "status": "NO_ACTUAL_SYNTH_ODB",
+      "declared_clock_inputs": 8,
+      "role_qualified": false
+    },
+    {
+      "view": "hnx_vms_bank_q0_faces__vecd4ae@114e9076fa98",
+      "status": "ACTUAL_SYNTH_ODB_DIRECT_ROOT_ROLES",
+      "source_odb": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/r4/gen/hnx_vms_bank_q0_faces__vecd4ae_114e9076fa98/run/results/asap7/hbc_hnx_vms_bank_q0_faces__vecd4ae/base/1_synth.odb",
+      "source_odb_sha256": "6ee58da2bf107ce114559f0836339ffff445b082f9fc95041a62de9ee94a15ff",
+      "roots": [
+        {
+          "port": "clk",
+          "native_net": "clk",
+          "ff_clock_pins": 4014,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_e",
+          "native_net": "clk_e",
+          "ff_clock_pins": 1109,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_macro0",
+          "native_net": "clk_macro0",
+          "ff_clock_pins": 0,
+          "macro_clock_pins": 1,
+          "unused": false
+        },
+        {
+          "port": "clk_macro1",
+          "native_net": "clk_macro1",
+          "ff_clock_pins": 0,
+          "macro_clock_pins": 1,
+          "unused": false
+        },
+        {
+          "port": "clk_macro2",
+          "native_net": "clk_macro2",
+          "ff_clock_pins": 0,
+          "macro_clock_pins": 1,
+          "unused": false
+        },
+        {
+          "port": "clk_n",
+          "native_net": "clk_n",
+          "ff_clock_pins": 587,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_s",
+          "native_net": "clk_s",
+          "ff_clock_pins": 1107,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_w",
+          "native_net": "clk_w",
+          "ff_clock_pins": 1107,
+          "macro_clock_pins": 0,
+          "unused": false
+        }
+      ],
+      "ff_clock_pins": 7924,
+      "macro_clock_pins": 3,
+      "role_qualified": true,
+      "source_profile_only": true
+    },
+    {
+      "view": "ot_hgi_sm_xload_cl2_bfqg@a188c76ca5a0",
+      "status": "ACTUAL_SYNTH_ODB_DIRECT_ROOT_ROLES",
+      "source_odb": "/srv/opentallas-scratch2/claude/codex-bfqg-native-1520/gen/ot_hgi_sm_xload_cl2_bfqg_a188c76ca5a0/run/results/asap7/hbc_ot_hgi_sm_xload_cl2_bfqg/base/1_synth.odb",
+      "source_odb_sha256": "df028877f77169763fb59f43aeed8832b61cd4baa74ac8f385f8f7e2a6b0e6e5",
+      "roots": [
+        {
+          "port": "clk",
+          "native_net": "clk",
+          "ff_clock_pins": 2568,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_ctrl",
+          "native_net": "clk_ctrl",
+          "ff_clock_pins": 26,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_l0",
+          "native_net": "clk_l0",
+          "ff_clock_pins": 2,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_l1",
+          "native_net": "clk_l1",
+          "ff_clock_pins": 2,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_l2",
+          "native_net": "clk_l2",
+          "ff_clock_pins": 2,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_l3",
+          "native_net": "clk_l3",
+          "ff_clock_pins": 2,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_l4",
+          "native_net": "clk_l4",
+          "ff_clock_pins": 2,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_l5",
+          "native_net": "clk_l5",
+          "ff_clock_pins": 2,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_l6",
+          "native_net": "clk_l6",
+          "ff_clock_pins": 2,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_l7",
+          "native_net": "clk_l7",
+          "ff_clock_pins": 2,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_m0",
+          "native_net": "clk_m0",
+          "ff_clock_pins": 0,
+          "macro_clock_pins": 1,
+          "unused": false
+        },
+        {
+          "port": "clk_m1",
+          "native_net": "clk_m1",
+          "ff_clock_pins": 0,
+          "macro_clock_pins": 1,
+          "unused": false
+        },
+        {
+          "port": "clk_m2",
+          "native_net": "clk_m2",
+          "ff_clock_pins": 0,
+          "macro_clock_pins": 1,
+          "unused": false
+        },
+        {
+          "port": "clk_m3",
+          "native_net": "clk_m3",
+          "ff_clock_pins": 0,
+          "macro_clock_pins": 1,
+          "unused": false
+        },
+        {
+          "port": "clk_m4",
+          "native_net": "clk_m4",
+          "ff_clock_pins": 0,
+          "macro_clock_pins": 1,
+          "unused": false
+        },
+        {
+          "port": "clk_m5",
+          "native_net": "clk_m5",
+          "ff_clock_pins": 0,
+          "macro_clock_pins": 1,
+          "unused": false
+        },
+        {
+          "port": "clk_m6",
+          "native_net": "clk_m6",
+          "ff_clock_pins": 0,
+          "macro_clock_pins": 1,
+          "unused": false
+        },
+        {
+          "port": "clk_m7",
+          "native_net": "clk_m7",
+          "ff_clock_pins": 0,
+          "macro_clock_pins": 1,
+          "unused": false
+        },
+        {
+          "port": "clk_n",
+          "native_net": "clk_n",
+          "ff_clock_pins": 1024,
+          "macro_clock_pins": 0,
+          "unused": false
+        },
+        {
+          "port": "clk_s",
+          "native_net": "clk_s",
+          "ff_clock_pins": 256,
+          "macro_clock_pins": 0,
+          "unused": false
+        }
+      ],
+      "ff_clock_pins": 3890,
+      "macro_clock_pins": 8,
+      "role_qualified": true,
+      "source_profile_only": true
+    }
+  ],
+  "qualified_profiles": 2,
+  "unqualified_profiles": 7,
+  "declared_body_join": "32 bodies/448 formal clock inputs remains declared-profile scope; no automatic cross-profile role transfer",
+  "holds": [
+    "Current parent native pin/instance/source event coherent adoption",
+    "16 VMS planned4SRAM versus actual3 mismatch",
+    "Hardened LEF/typed TT+FF/PG/route/phase/reset/START joins",
+    "Seven GEN-only profiles lack saved native synth ODB"
+  ]
+}

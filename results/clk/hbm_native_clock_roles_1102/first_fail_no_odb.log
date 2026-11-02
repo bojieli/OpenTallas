@@ -1,0 +1,9 @@
+ot-run: intel1         admits    32 GB (avail 260, reserve 0, fresh 48, peak 115.2, headroom 0, waiters 33/1718 GB) load 142/112 running 67 disk 339 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-158422-1793622584 after 2 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-hbm-native-clock-roles-0235/run.py", line 5, in <module>
+    kit=Path(p['kit']);matches=list(kit.glob('run/results/**/1_synth.odb'));assert len(matches)==1,(kit,matches)
+                                                                                   ^^^^^^^^^^^^^^^
+AssertionError: (PosixPath('/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/0bb6804dab59/gen/hnx_vms_bank_q0_faces__vecd4ae_0bb6804dab59'), [])
+ot-run: RAN on intel1 (unit oth-ubuntu-158422-1793622584): exit 1

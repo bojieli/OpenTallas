@@ -1,0 +1,7 @@
+# Actual native clock input roles, source PREP only
+
+Read-only saved `1_synth.odb` census, no new synthesis/CTS/routing or STA. Exact VMS `vecd4ae@114e9076fa98` has 8 input roots, 7,924 FF CLK pins and 3 SRAM clock inputs. Exact BFQG `a188c76ca5a0` has 20 input roots, 3,890 FF CLK pins and 8 SRAM clock inputs. All 28 actual input roots have real loads; macro-only roots are distinguished from FF roots. BTerms retain their native SIGNAL classification; every counted load MTerm is INPUT/CLOCK. FF counts use actual DFF master CLK pins, not declared-formal counts.
+
+Both machine-readable censuses pass the existing `native_clock_domains._census` schema/identity/root/count consumer. Actual ODB SHA and exact native instance/net/pin rows are retained. Native database source kits are identified in result/progress. Seven other GEN-only pin-placement variants have no saved synth ODB and remain unqualified, rather than transferring one profile's physical identity. The initial worker failed before any read because it assumed those databases existed; the retry diagnoses every absent variant and reads only the two existing databases.
+
+These results do not adopt a source event, bind current parent/provider pins, qualify hardened LEF or TT/FF timing, or close PG/reset/START. The 32-body/448-pin matrix still describes declared profiles. Planned four-SRAM versus actual three-SRAM VMS mismatch remains held. Future phase/arrival uses the accepted current graph, never stale node IDs.
