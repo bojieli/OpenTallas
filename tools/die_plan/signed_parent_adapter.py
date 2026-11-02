@@ -81,7 +81,7 @@ def master_census(readset, selected):
                 sources={str(p): digest(p) for p in paths}, masters=masters)
 
 
-def export_native_view(kit, out, master):
+def export_native_view(kit, out, master, shared_memory_masters=()):
     """Adapt the normal native collector to the existing complete-view schema.
 
     Boundary measurements are copied verbatim from official SIGNED records;
@@ -91,7 +91,11 @@ def export_native_view(kit, out, master):
     so_path = required(kit / 'signoff/signoff.json', 'leaf SIGNED record')
     eq_path = required(kit / 'lec/lec.json', 'leaf own-final-netlist equivalence')
     so, eq = json.loads(so_path.read_text()), json.loads(eq_path.read_text())
-    if so.get('verdict') != 'SIGNED' or eq.get('verdict') != 'EQUIVALENT' or eq.get('black_boxes'):
+    allowed = set(shared_memory_masters)
+    actual_bbs = set(eq.get('black_boxes') or {})
+    if any(not m.startswith(('ot_sram_', 'ot_rom_')) for m in allowed) or not actual_bbs <= allowed:
+        raise ValueError('leaf own-final proof has nonmatching or nonmemory black boxes')
+    if so.get('verdict') != 'SIGNED' or eq.get('verdict') != 'EQUIVALENT':
         raise ValueError('leaf needs actual SIGNED and own final EQ without logic black boxes')
     if eq.get('top') != master or Path(eq.get('netlist', '')).name != '6_final.v':
         raise ValueError('leaf equivalence is not its own actual final netlist')
@@ -356,6 +360,10 @@ def formal_inputs(descriptor):
             expected_hash = [v for k, v in packet.get('views', {}).items() if k.endswith('/' + name)]
             if len(expected_hash) != 1 or digest(Path(view['view']) / name) != expected_hash[0]:
                 raise ValueError(f'{master}: actual selected view differs from qualified packet: {name}')
+        leaf_eq = json.loads((Path(view['view']) / 'lec_post.json').read_text())
+        leaf_bbs = set(leaf_eq.get('black_boxes') or {})
+        if not leaf_bbs <= set(d.get('shared_memory_masters', [])) or any(not m.startswith(('ot_sram_', 'ot_rom_')) for m in leaf_bbs):
+            raise ValueError(f'{master}: child proof has unjoined or nonmemory black boxes')
         eq_hash = packet['backing_artifact_sha256'].get('lec/lec.json')
         if digest(Path(view['view']) / 'lec_post.json') != eq_hash:
             raise ValueError(f'{master}: own-final proof record differs from qualified packet')

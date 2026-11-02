@@ -175,3 +175,14 @@ def test_actual_nonmemory_gate_macro_requires_implementation_producer(tmp_path):
     env={'ADDITIONAL_LIBS':str(lib)}
     assert A.missing_logic_expansions(gate,env,tmp_path,{'child'},set())==['other_logic']
     assert A.missing_logic_expansions(gate,env,tmp_path,{'child','other_logic'},set())==[]
+
+
+def test_export_accepts_only_explicit_actual_memory_cuts(tmp_path):
+    kit=native_leaf(tmp_path);path=kit/'lec/lec.json';eq=json.loads(path.read_text())
+    eq['black_boxes']={'ot_sram_1r1w_128x256_m1_r2c2':12};path.write_text(json.dumps(eq))
+    with pytest.raises(ValueError,match='nonmatching or nonmemory'):
+        A.export_native_view(kit,tmp_path/'blocked','child')
+    A.export_native_view(kit,tmp_path/'child','child',shared_memory_masters={'ot_sram_1r1w_128x256_m1_r2c2'})
+    eq['black_boxes']={'logic_sram_named_controller':1};path.write_text(json.dumps(eq))
+    with pytest.raises(ValueError,match='nonmatching or nonmemory'):
+        A.export_native_view(kit,tmp_path/'bad','child',shared_memory_masters={'logic_sram_named_controller'})
