@@ -1,0 +1,29 @@
+slang element names: 12 gold register keys normalized from driver Q nets
+gold JSON Q aliases: 109 gate flops re-keyed to exact gold wire bits
+alias array: gate xpn_f#t (1190 b) -> gold xpn_f (1190 b, Q-net alias evidence 1190); source memory layout (595, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate xpn_f#t (1190 b) -> gold xpn_f (1190 b, Q-net alias evidence 1190); source memory layout (595, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate fq_a#t (194 b) -> gold fq_a (194 b, Q-net alias evidence 194); source memory layout (97, 2, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate fq_b#t (194 b) -> gold fq_b (194 b, Q-net alias evidence 194); source memory layout (97, 2, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+==== keep_and_hunt
+======== ABC command line "&r /out/keep_and_hunt.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /out/keep_and_hunt_swept.aig"
+[1;37m/out/keep_and_hunt[0m : i/o = 144751/     12  [1;36mand =    1089[0m  [1;35mlev =   71[0m [1;35m(50.50)[0m  mem = 2.22 MB
+[1;37m/out/keep_and_hunt[0m : i/o = 144751/     12  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 2.21 MB
+SAT solver statistics:
+CO =       12  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/out/keep_and_hunt[0m : i/o = 144751/     12  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 2.21 MB
+
+==== ld16
+======== ABC command line "&r /out/ld16.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /out/ld16_swept.aig"
+[1;37m/out/ld16[0m : i/o = 144741/     16  [1;36mand =     417[0m  [1;35mlev =   15[0m [1;35m(15.00)[0m  mem = 2.21 MB
+[1;37m/out/ld16[0m : i/o = 144741/     16  [1;36mand =     415[0m  [1;35mlev =   16[0m [1;35m(16.00)[0m  mem = 2.21 MB
+SAT solver statistics:
+CO =       16  AND =      415  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls     16  (100.00 %)   Ave conf =      0.4   Time =     0.00 sec (  8.89 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.01 sec
+[1;37m/out/ld16[0m : i/o = 144741/     16  [1;36mand =     415[0m  [1;35mlev =   16[0m [1;35m(16.00)[0m  mem = 2.21 MB
