@@ -1,0 +1,342 @@
+{
+  "status": "LOGICAL_ROLES_RESOLVED_LOCAL_TIE_REGIONS_PROPOSED_ACCESS_UNQUALIFIED",
+  "source": "/srv/opentallas-scratch2/claude/codex-qc-glue/place_spill/kit/1_synth_odb.v",
+  "macros": [
+    {
+      "instance": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram",
+      "master": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+      "counts": [
+        {
+          "face": "E",
+          "role": "constant0",
+          "pins": 32
+        },
+        {
+          "face": "E",
+          "role": "constant1",
+          "pins": 137
+        },
+        {
+          "face": "E",
+          "role": "live_input_or_unresolved",
+          "pins": 60
+        },
+        {
+          "face": "W",
+          "role": "clock",
+          "pins": 1
+        },
+        {
+          "face": "W",
+          "role": "constant1",
+          "pins": 1
+        },
+        {
+          "face": "W",
+          "role": "live_input_or_unresolved",
+          "pins": 90
+        },
+        {
+          "face": "W",
+          "role": "output",
+          "pins": 137
+        }
+      ]
+    },
+    {
+      "instance": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram",
+      "master": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+      "counts": [
+        {
+          "face": "E",
+          "role": "constant0",
+          "pins": 32
+        },
+        {
+          "face": "E",
+          "role": "constant1",
+          "pins": 137
+        },
+        {
+          "face": "E",
+          "role": "live_input_or_unresolved",
+          "pins": 60
+        },
+        {
+          "face": "W",
+          "role": "clock",
+          "pins": 1
+        },
+        {
+          "face": "W",
+          "role": "constant1",
+          "pins": 1
+        },
+        {
+          "face": "W",
+          "role": "live_input_or_unresolved",
+          "pins": 90
+        },
+        {
+          "face": "W",
+          "role": "output",
+          "pins": 137
+        }
+      ]
+    },
+    {
+      "instance": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram",
+      "master": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+      "counts": [
+        {
+          "face": "E",
+          "role": "constant0",
+          "pins": 32
+        },
+        {
+          "face": "E",
+          "role": "constant1",
+          "pins": 137
+        },
+        {
+          "face": "E",
+          "role": "live_input_or_unresolved",
+          "pins": 60
+        },
+        {
+          "face": "W",
+          "role": "clock",
+          "pins": 1
+        },
+        {
+          "face": "W",
+          "role": "constant1",
+          "pins": 1
+        },
+        {
+          "face": "W",
+          "role": "live_input_or_unresolved",
+          "pins": 90
+        },
+        {
+          "face": "W",
+          "role": "output",
+          "pins": 137
+        }
+      ]
+    },
+    {
+      "instance": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram",
+      "master": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+      "counts": [
+        {
+          "face": "E",
+          "role": "constant0",
+          "pins": 32
+        },
+        {
+          "face": "E",
+          "role": "constant1",
+          "pins": 137
+        },
+        {
+          "face": "E",
+          "role": "live_input_or_unresolved",
+          "pins": 60
+        },
+        {
+          "face": "W",
+          "role": "clock",
+          "pins": 1
+        },
+        {
+          "face": "W",
+          "role": "constant1",
+          "pins": 1
+        },
+        {
+          "face": "W",
+          "role": "live_input_or_unresolved",
+          "pins": 90
+        },
+        {
+          "face": "W",
+          "role": "output",
+          "pins": 137
+        }
+      ]
+    },
+    {
+      "instance": "u_bound.u_embed_prov.store.codes",
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "counts": [
+        {
+          "face": "E",
+          "role": "constant0",
+          "pins": 34
+        },
+        {
+          "face": "E",
+          "role": "constant1",
+          "pins": 512
+        },
+        {
+          "face": "E",
+          "role": "live_input_or_unresolved",
+          "pins": 246
+        },
+        {
+          "face": "W",
+          "role": "clock",
+          "pins": 1
+        },
+        {
+          "face": "W",
+          "role": "live_input_or_unresolved",
+          "pins": 280
+        },
+        {
+          "face": "W",
+          "role": "output",
+          "pins": 512
+        }
+      ]
+    },
+    {
+      "instance": "u_bound.u_sys_face.u_ot_pr_core.u_rom",
+      "master": "ot_rom_4096x72_m8",
+      "counts": [
+        {
+          "face": "E",
+          "role": "output",
+          "pins": 43
+        },
+        {
+          "face": "W",
+          "role": "clock",
+          "pins": 1
+        },
+        {
+          "face": "W",
+          "role": "live_input_or_unresolved",
+          "pins": 13
+        },
+        {
+          "face": "W",
+          "role": "output",
+          "pins": 29
+        }
+      ]
+    }
+  ],
+  "local_existing_tie_regions": [
+    {
+      "group": "D2D0 W one read-enable tie",
+      "rect_um": [
+        53.592,
+        51.852,
+        56.16,
+        97.524
+      ],
+      "tie_cells": 1,
+      "band_area_um2": 117.28569599999992,
+      "actual_tie_area_um2": 0.04374,
+      "gross_tie_area_fraction": 0.0003729355027231968,
+      "scope": "Proposed source-level local tie region outside4.32 macro placement halos, not a site/row assignment. Existing connected tie IDs retained; exact per-port bijection, halos, PG/rail/via cuts and legality require actual labeled native census."
+    },
+    {
+      "group": "D2D0 E constants + D2D1 W read-enable",
+      "rect_um": [
+        122.712,
+        51.852,
+        125.28,
+        97.524
+      ],
+      "tie_cells": 170,
+      "band_area_um2": 117.28569599999992,
+      "actual_tie_area_um2": 7.4358,
+      "gross_tie_area_fraction": 0.06339903546294345,
+      "scope": "Proposed source-level local tie region outside4.32 macro placement halos, not a site/row assignment. Existing connected tie IDs retained; exact per-port bijection, halos, PG/rail/via cuts and legality require actual labeled native census."
+    },
+    {
+      "group": "D2D1 E constants + D2D2 W read-enable",
+      "rect_um": [
+        191.832,
+        51.852,
+        194.4,
+        97.524
+      ],
+      "tie_cells": 170,
+      "band_area_um2": 117.28569600000056,
+      "actual_tie_area_um2": 7.4358,
+      "gross_tie_area_fraction": 0.0633990354629431,
+      "scope": "Proposed source-level local tie region outside4.32 macro placement halos, not a site/row assignment. Existing connected tie IDs retained; exact per-port bijection, halos, PG/rail/via cuts and legality require actual labeled native census."
+    },
+    {
+      "group": "D2D2 E constants + D2D3 W read-enable",
+      "rect_um": [
+        260.952,
+        51.852,
+        263.52,
+        97.524
+      ],
+      "tie_cells": 170,
+      "band_area_um2": 117.28569599999926,
+      "actual_tie_area_um2": 7.4358,
+      "gross_tie_area_fraction": 0.06339903546294381,
+      "scope": "Proposed source-level local tie region outside4.32 macro placement halos, not a site/row assignment. Existing connected tie IDs retained; exact per-port bijection, halos, PG/rail/via cuts and legality require actual labeled native census."
+    },
+    {
+      "group": "D2D3 E constants",
+      "rect_um": [
+        330.072,
+        51.852,
+        332.64,
+        97.524
+      ],
+      "tie_cells": 169,
+      "band_area_um2": 117.28569599999926,
+      "actual_tie_area_um2": 7.392060000000001,
+      "gross_tie_area_fraction": 0.06302609996022061,
+      "scope": "Proposed source-level local tie region outside4.32 macro placement halos, not a site/row assignment. Existing connected tie IDs retained; exact per-port bijection, halos, PG/rail/via cuts and legality require actual labeled native census."
+    },
+    {
+      "group": "code E constant mask/repair",
+      "rect_um": [
+        357.048,
+        250.572,
+        358.56,
+        328.356
+      ],
+      "tie_cells": 546,
+      "band_area_um2": 117.60940800000002,
+      "actual_tie_area_um2": 23.88204,
+      "gross_tie_area_fraction": 0.203062326442456,
+      "scope": "Proposed source-level local tie region outside4.32 macro placement halos, not a site/row assignment. Existing connected tie IDs retained; exact per-port bijection, halos, PG/rail/via cuts and legality require actual labeled native census."
+    }
+  ],
+  "pdn_source_constraints": {
+    "M5": {
+      "width_um": 0.12,
+      "spacing_um": 0.072,
+      "pitch_um": 4.32,
+      "offset_um": 2.064
+    },
+    "M6": {
+      "width_um": 0.288,
+      "spacing_um": 0.096,
+      "pitch_um": 4.32,
+      "offset_um": 1.968
+    },
+    "M7": {
+      "width_um": 0.288,
+      "spacing_um": 0.096,
+      "pitch_um": 8.64,
+      "offset_um": 4.128
+    },
+    "macro_connection": "actual source M4-to-M5 for all6macros",
+    "scope": "Exact current source PDN recipe, not regenerated compact-grid native stripes or actual cut availability."
+  },
+  "upper_escape_obligation": "Use existing M4 pin access outside interior OBS; choose actual via/track ownership for nonconstant contacts, potentially M6/M8 horizontal escape over M5+ macro-free layers. Do not count local constant contacts as all long-distance traffic or assume upper vias/PG cuts are free. No track assignment or routing PASS is asserted.",
+  "unresolved": "Actual placed ITerm-to-existing-tie-instance labels, legal rows/sites, rail access, via stacks, signal/clock/PG track reservations and full source/consumer geometry. No new tie, relay, cell, state, cycle, source/default or CAD adoption."
+}
