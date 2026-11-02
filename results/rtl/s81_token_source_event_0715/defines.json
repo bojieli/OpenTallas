@@ -1,0 +1,28 @@
+{
+  "defines": [
+    "DSFD_PQ_STATIC_X2",
+    "S81CTRL_SRAM_FIFO",
+    "S81CTRL_SRAM_P192",
+    "S81CTRL_NATIVE32",
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF",
+    "OT_S81ENG_TAP_N32R2",
+    "OT_S81SL_KV_TRANSPORT",
+    "OT_SVC_ALLQ",
+    "SU_SMU_T",
+    "OT_ATTN_HCORE",
+    "OT_S81ENG_RR_N32",
+    "OT_S81C_HCORE_CTLA",
+    "OT_S81C_HCORE_RST_TIMED",
+    "S81_HOSTB_LAND_OBS",
+    "OT_S81_SH_SRAM",
+    "OT_S81_SH_RSZ",
+    "OT_S81_SH_P192",
+    "OT_S81_SH_APIPE9",
+    "OT_S81_SH_APIPE10"
+  ],
+  "added": [],
+  "removed": [],
+  "count": 20,
+  "DSFD_PQ_HAS_BF_X2": "No new global define; actual selected component source has no use, original dsfd_sp_pq_n derives it locally from existing STATIC_X2"
+}
