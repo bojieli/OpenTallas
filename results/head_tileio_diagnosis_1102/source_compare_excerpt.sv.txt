@@ -1,0 +1,41 @@
+182:             sel_v    <= ready;
+183:             o_rv     <= sel_v;
+184:         end
+185: 
+186:     // ---------------- max under the ot_rom_argmax_rows key ----------------------------------------------------------
+187:     function automatic [31:0] okey(input [31:0] x);        // order-preserving key; -0 as +0
+188:         reg [31:0] c;
+189:         begin
+190:             c = (x == 32'h8000_0000) ? 32'd0 : x;
+191:             okey = c[31] ? ~c : (c | 32'h8000_0000);
+192:         end
+193:     endfunction
+194:     // CMP_STAGES 2: operand hop registers (bundle result / chain hold may sit ~350 um from the compare)
+195:     reg [16:0] rr_h, cr_h;
+196:     reg [31:0] rb_h, cb_h;
+197:     always @(posedge ck) begin rr_h <= res_row; rb_h <= res_bits; cr_h <= ch_row; cb_h <= ch_bits; end
+198:     wire [16:0] c_rr = CMP_STAGES >= 2 ? rr_h : res_row, c_cr = CMP_STAGES >= 2 ? cr_h : ch_row;
+199:     wire [31:0] c_rb = CMP_STAGES >= 2 ? rb_h : res_bits, c_cb = CMP_STAGES >= 2 ? cb_h : ch_bits;
+200:     wire [31:0] k_own = okey(c_rb), k_ch = okey(c_cb);
+201: `ifdef OT_S81HD_MUT_TIE_FLIP
+202:     wire row_lt = c_rr > c_cr;                                                        // MUTANT: highest id on ties
+203: `else
+204:     wire row_lt = c_rr < c_cr;
+205: `endif
+206:     // CMP_STAGES 3 (tile_prev2: the one-cycle 49-b compare after the hop was 22 levels, -38 ps at placement): the
+207:     // two 16-b key halves and the row compare are registered, then combined
+208:     reg kh_gt, kh_eq, kl_gt, kl_eq, rl_q;
+209:     always @(posedge ck) begin
+210:         kh_gt <= k_own[31:16] > k_ch[31:16]; kh_eq <= k_own[31:16] == k_ch[31:16];
+211:         kl_gt <= k_own[15:0] > k_ch[15:0];   kl_eq <= k_own[15:0] == k_ch[15:0];
+212:         rl_q  <= row_lt;
+213:     end
+214:     wire own_better = CMP_STAGES >= 3 ? b_en && (kh_gt || (kh_eq && (kl_gt || (kl_eq && rl_q))))
+215:                                       : b_en && (k_own > k_ch || (k_own == k_ch && row_lt));
+216:     reg        better_q;                     // CMP_STAGES >= 1: the registered compare
+217:     always @(posedge ck) better_q <= own_better;
+218:     wire       better_m = CMP_STAGES >= 1 ? better_q : own_better;
+219:     // select copies: [0] row, [1] bits[15:0], [2] bits[31:16]; kept cells (a (* keep *) reg was merged into one flop)
+220:     wire [2:0] sel_q;
+221:     ot_s81hd_kreg #(.W(1)) u_sel0 (.clk(ck), .d(better_m), .q(sel_q[0]));
+222:     ot_s81hd_kreg #(.W(1)) u_sel1 (.clk(ck), .d(better_m), .q(sel_q[1]));

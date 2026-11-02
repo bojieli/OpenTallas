@@ -1,0 +1,52 @@
+{
+ "scope": "SOURCE_AND_EXISTING_REPORT_ONLY, no native job or source/placement change",
+ "runtime": "intel2:/srv/opentallas-scratch2/claude/die-head-48/dh53/v1/tileIO",
+ "source_sha256": {
+  "1_2_yosys.v": "3b6d69ed8ffb2b206cd3d601744274fb21b8713cf89607eb64aeb5066f9bfe36",
+  "6_final.v": "84faebec6157ab4bb45dca2ec6723844227f636ca247aac5b2c73f29389a50d2",
+  "6_finish.rpt": "fc2cc76e4cad50306985cf0cc526a2a61481c346f178237425bb19162f6fa0dd",
+  "ot_s81hd_tile_native.sv": "1d36b6466c983c6b6c6d3156267f87efb6e9fba7f6bbb8f874f2163d188b424d",
+  "ot_s81hd_tile_p.sv": "7c0cd6c00afd7afb9db8dbfce25d10bb5e3a6f94d94832f62fa2af9579b003d2"
+ },
+ "selected_parameters": {
+  "CV": 1,
+  "A_INPUT_STAGES": 1,
+  "MERGE_HOP": 1,
+  "CMP_STAGES": 3
+ },
+ "delay_ps": {
+  "wire": 721.35,
+  "buffer": 598.9,
+  "logic": 498.64,
+  "clock_to_q": 90.25,
+  "total": 1909.14
+ },
+ "wire_plus_buffer_fraction": 0.6915,
+ "existing_finish_slack_ps": -1089.3,
+ "final_cone": {
+  "combinational_cells": 726,
+  "buffer_inv": 271,
+  "other_logic": 455,
+  "boundary_ff": 98,
+  "capture_ff": 5,
+  "outside_native_compare_street": 503
+ },
+ "original_mapped_cone": {
+  "combinational_cells": 568,
+  "boundary_ff": 98,
+  "capture_ff": 5
+ },
+ "fixed_boundary": {
+  "x_range": [
+   253.26,
+   414.612
+  ],
+  "y": 704.16
+ },
+ "native_compare_street_y": [
+  699.852,
+  734.412
+ ],
+ "native_api_job": "NONE",
+ "active_foreign_producer": "tileIO existing v1pb/v1route/signoff preserved; signoff PID1901672 observed live"
+}

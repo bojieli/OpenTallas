@@ -1,0 +1,239 @@
+{
+ "path": "/srv/opentallas-scratch2/claude/die-head-48/dh53/v1/tileIO/run/results/asap7/dp_hd_tile/base/6_final.def",
+ "dbu": 1000,
+ "rows": [
+  {
+   "name": "_48038_",
+   "master": "XOR2x2_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 503.28,
+   "y": 943.11,
+   "orient": "FS"
+  },
+  {
+   "name": "_48039_",
+   "master": "OAI22x1_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 299.484,
+   "y": 711.72,
+   "orient": "N"
+  },
+  {
+   "name": "_48040_",
+   "master": "AO21x2_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 304.506,
+   "y": 1031.67,
+   "orient": "FS"
+  },
+  {
+   "name": "_48211_",
+   "master": "NOR2x2_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 44.766,
+   "y": 723.87,
+   "orient": "FS"
+  },
+  {
+   "name": "_48213_",
+   "master": "OA21x2_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 212.706,
+   "y": 867.51,
+   "orient": "FS"
+  },
+  {
+   "name": "_48214_",
+   "master": "OAI21x1_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 487.134,
+   "y": 702.0,
+   "orient": "N"
+  },
+  {
+   "name": "_48216_",
+   "master": "OA211x2_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 350.784,
+   "y": 665.28,
+   "orient": "N"
+  },
+  {
+   "name": "_48222_",
+   "master": "OAI21x1_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 353.268,
+   "y": 638.55,
+   "orient": "FS"
+  },
+  {
+   "name": "_48265_",
+   "master": "OA31x2_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 352.836,
+   "y": 636.66,
+   "orient": "N"
+  },
+  {
+   "name": "place11276",
+   "master": "BUFx8_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 343.872,
+   "y": 697.41,
+   "orient": "FS"
+  },
+  {
+   "name": "rebuffer37973",
+   "master": "BUFx12f_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 145.638,
+   "y": 749.79,
+   "orient": "FS"
+  },
+  {
+   "name": "u_core.c_rb[31]$_DFF_P_",
+   "master": "DFFHQNx2_ASAP7_75t_R",
+   "status": "FIXED",
+   "x": 375.624,
+   "y": 704.16,
+   "orient": "N"
+  },
+  {
+   "name": "u_core.kh_gt$_DFF_P_",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "status": "FIXED",
+   "x": 261.846,
+   "y": 704.43,
+   "orient": "FS"
+  },
+  {
+   "name": "u_core.u_b.g_cv.u_eA0",
+   "master": "ot_s81hd_elemA_cv",
+   "status": "FIXED",
+   "x": 17.292,
+   "y": 8.676,
+   "orient": "FS"
+  },
+  {
+   "name": "u_core.u_b.g_cv.u_eA1",
+   "master": "ot_s81hd_elemA_cv",
+   "status": "FIXED",
+   "x": 362.916,
+   "y": 8.676,
+   "orient": "S"
+  },
+  {
+   "name": "u_core.u_b.g_cv.u_eA2",
+   "master": "ot_s81hd_elemA_cv",
+   "status": "FIXED",
+   "x": 17.292,
+   "y": 380.172,
+   "orient": "N"
+  },
+  {
+   "name": "u_core.u_b.g_cv.u_eA3",
+   "master": "ot_s81hd_elemA_cv",
+   "status": "FIXED",
+   "x": 371.556,
+   "y": 380.172,
+   "orient": "FN"
+  },
+  {
+   "name": "u_core.u_b.g_cvb.u_eB",
+   "master": "ot_s81hd_elemB_cv",
+   "status": "FIXED",
+   "x": 216.012,
+   "y": 734.412,
+   "orient": "N"
+  },
+  {
+   "name": "wire35902",
+   "master": "BUFx24_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 302.346,
+   "y": 731.7,
+   "orient": "N"
+  },
+  {
+   "name": "wire35903",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 212.706,
+   "y": 868.05,
+   "orient": "FS"
+  },
+  {
+   "name": "wire35912",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 44.766,
+   "y": 867.78,
+   "orient": "N"
+  },
+  {
+   "name": "wire35913",
+   "master": "BUFx12_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 44.766,
+   "y": 723.6,
+   "orient": "N"
+  },
+  {
+   "name": "wire36018",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 145.638,
+   "y": 921.24,
+   "orient": "N"
+  },
+  {
+   "name": "wire36019",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 304.668,
+   "y": 1031.4,
+   "orient": "N"
+  },
+  {
+   "name": "wire36040",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 300.132,
+   "y": 731.43,
+   "orient": "FS"
+  },
+  {
+   "name": "wire36478",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 299.538,
+   "y": 1021.68,
+   "orient": "N"
+  },
+  {
+   "name": "wire36479",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 503.604,
+   "y": 943.38,
+   "orient": "N"
+  },
+  {
+   "name": "wire37553",
+   "master": "BUFx24_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 507.006,
+   "y": 811.89,
+   "orient": "FS"
+  },
+  {
+   "name": "wire37554",
+   "master": "BUFx24_ASAP7_75t_R",
+   "status": "PLACED",
+   "x": 366.228,
+   "y": 708.75,
+   "orient": "FS"
+  }
+ ],
+ "missing": []
+}
