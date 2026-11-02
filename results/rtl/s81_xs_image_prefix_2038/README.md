@@ -23,3 +23,12 @@ No canonical bind rule or active source cohort was changed. Per-slice mission
 programme content, production image linking, reset/source correspondence and
 full token execution still need qualification; the candidate creates the
 missing selection mechanism. Added RTL cycles: zero.
+
+`tools/s81_dv/xs_rom_dir.py` makes the candidate usable with per-slice programmes:
+pass an explicit JSON list of original_xgt_path/program_dir mappings and a fresh
+output directory. Optional --base-rom-dir carries existing frame/other ROM
+images into the new directory. It closes all seven source images per slice and
+refuses duplicate selectors before creating output. A filesystem smoke against
+the two actual gate image sets produced14 correct links. Caller-supplied path
+and programme correspondence remain explicit; linking assets is not mission
+qualification and does not change an active ROM directory.
