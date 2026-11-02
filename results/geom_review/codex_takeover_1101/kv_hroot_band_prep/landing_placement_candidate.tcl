@@ -580,6 +580,31 @@ set cland_status {
 if {![info exists ff_blk] || ![info exists ff_dbu]} { error "OT_CLAND missing face placement context" }
 set cland_occ {}; set cland_done {}; set cland_n 0
 proc cland_ours {name} { return [regexp {(^|[/.])u_cland_} $name] }
+# Ring/collector placement changes cell locations/status only. Start a fresh
+# instance epoch on every source (clock/reset synthesis may have changed the DB
+# before the hook); preserve original DB iteration order within each group.
+unset -nocomplain cland_instance_index
+proc cland_group_insts {prefix} {
+ global ff_blk cland_instance_index
+ if {![regexp {^[A-Za-z_][A-Za-z0-9_]*$} $prefix]} {
+  set hit {}
+  foreach i [$ff_blk getInsts] {
+   if {[regexp [format {(^|[/.])%s[/.]} $prefix] [$i getName]]} {lappend hit $i}
+  }
+  return $hit
+ }
+ if {![info exists cland_instance_index]} {
+  set cland_instance_index {}
+  foreach i [$ff_blk getInsts] {
+   # The final path component is the cell itself: the legacy regex requires
+   # a separator after the group name, so that component is not a group.
+   set groups [lrange [split [string map {. /} [$i getName]] /] 0 end-1]
+   foreach group [lsort -unique $groups] {dict lappend cland_instance_index $group $i}
+  }
+ }
+ if {[dict exists $cland_instance_index $prefix]} {return [dict get $cland_instance_index $prefix]}
+ return {}
+}
 proc cland_occupy {x y w h} {
  global cland_occ ff_y0 ff_rh
  set r0 [expr {int(floor(double($y-$ff_y0)/$ff_rh))}]
@@ -646,6 +671,16 @@ foreach spec $cland_groups {
   }
  }
 }
+# DIE-S81-47 11-01 (S81 "landing band absent", 17 bands in 11 svc/leaf types): a band with plan rects_um (2..N
+# disjoint rects, each within reach of its bus pin) is emitted as one cland_groups entry per rect, same prefix and ring
+# tag, nearest the pin first.  The ring is packed into the rects in that order (cland_put moves to the next rect when
+# one is full); plans whose ring tags each appear once (every band with a single rect_um) are unchanged.
+set cland_multi {}
+foreach spec $cland_groups {
+ lassign $spec prefix rect tag
+ if {[string match {ring:*} $tag]} { dict lappend cland_multi $tag $rect }
+}
+foreach k [dict keys $cland_multi] { if {[llength [dict get $cland_multi $k]] < 2} { dict unset cland_multi $k } }
 set cland_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
 # FLOW-6 10-30: widest master of a cell's drive family (OT_CLAND_FIT_RESERVE=resize), cached per master name.
 set cland_famw {}
@@ -720,6 +755,29 @@ proc cland_put_column {i ax ay bx by tag sp cur fw} {
 # site this band placed (ordered fill: O(n) instead of the O(n^2) rescan from the band corner). Defaults unchanged.
 proc cland_put {i rect tag {sp {}} {cur 0}} {
  global ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh cland_cursor
+ # multi-rect band (::cland_multi, called with its first rect): a cell with no site in the current rect goes to the
+ # next rect (the row cursors restart there); the rect index stays where the last cell went.  Any other error, and a
+ # cell that fits in no rect, fails closed.  Single-rect bands skip this block.
+ if {([info exists ::cland_multi] && [dict exists $::cland_multi $tag]) && ![info exists ::cland_multi_in]
+     && [lmap v $rect {expr {double($v)}}] eq [lmap v [lindex [dict get $::cland_multi $tag] 0] {expr {double($v)}}]} {
+  set rects [dict get $::cland_multi $tag]
+  set k 0; if {[info exists ::cland_multi_at] && [dict exists $::cland_multi_at $tag]} { set k [dict get $::cland_multi_at $tag] }
+  for {} {$k < [llength $rects]} {incr k} {
+   set ::cland_multi_in 1
+   set rc [catch {cland_put $i [lindex $rects $k] $tag $sp $cur} err opts]
+   unset ::cland_multi_in
+   if {!$rc} {
+    if {!([info exists ::cland_multi_at] && [dict exists $::cland_multi_at $tag] && [dict get $::cland_multi_at $tag] == $k)} {
+     puts "OT_CLAND multi-rect $tag: rect [expr {$k+1}]/[llength $rects] {[lindex $rects $k]} from [$i getName]"
+    }
+    dict set ::cland_multi_at $tag $k
+    return
+   }
+   if {![string match {OT_CLAND no legal*} $err]} { return -options $opts $err }
+   set cland_cursor {}; set ::cland_col_cursor {}
+  }
+  error "OT_CLAND no legal nonoverlapping row/site in reserved band for [$i getName] ($tag, [llength $rects] rects)"
+ }
  set name [$i getName]
  if {[dict exists $cland_done $name]} { error "OT_CLAND duplicate placement $name" }
  lassign $rect ax ay bx by
@@ -855,25 +913,65 @@ proc cland_drivers {n} {
  foreach it [$n getITerms] { if {[[$it getMTerm] getIoType] eq "OUTPUT"} { lappend d [$it getInst] } }
  return $d
 }
+# AUTOBUILD-PIPE-2 10-31 (collectors) + KIT-TRIAGE-1/G4 11-01 (status): a cell with no free site in its +-2.16 um window
+# takes the window grown about the same centre x2, x4, x8 (<= +-17.28 um); still none fails closed with the same
+# error.  KV kv3_io_cor@4 (3_3 'no legal ... (status:landing_ready_ft10_i)'): the ready/fault status stages of a ring
+# share ONE plan point on the S face, inside the FIRM pin-register strip of the neighbouring bus bits, so the 4.32 um
+# window had no site; a registered status output 17 um from its pin is far inside any timing / reach budget.
+proc cland_put_grow {i rect tag kind} {
+ lassign $rect ax ay bx by
+ set cx [expr {($ax+$bx)/2.0}]; set cy [expr {($ay+$by)/2.0}]; set hx [expr {($bx-$ax)/2.0}]; set hy [expr {($by-$ay)/2.0}]
+ foreach g {1 2 4 8} {
+  set w [list [expr {$cx-$hx*$g}] [expr {$cy-$hy*$g}] [expr {$cx+$hx*$g}] [expr {$cy+$hy*$g}]]
+  if {![catch {cland_put $i $w $tag} err]} {
+   if {$g > 1} { puts "OT_CLAND $kind grow [$i getName] ($tag): window x$g (+-[format %.2f [expr {$hx*$g}]] um)" }
+   return
+  }
+  if {![string match {OT_CLAND no legal*} $err]} { error $err $::errorInfo }
+ }
+ error $err
+}
 # Registered status outputs sit at their declared source point, separately
 # from the ring storage band; the collector then follows its original tree.
-foreach spec $cland_status {
- lassign $spec net x y
+# Status placement only moves cells; it does not create, remove or rename nets.
+# Reset the lookup epoch on every hook invocation (reset/clock hooks may have
+# changed connectivity before this source). Cache simple suffixes in one DB
+# pass instead of scanning every net for every parent-prefixed status output.
+proc cland_status_net {net} {
+ global ff_blk cland_status_suffix
  set n [$ff_blk findNet $net]
- if {$n eq "NULL"} {
-  # DIE-KV-32 10-29 (KV hroot 3_3_place_gp): a --kit-rtl kit flattens the bound wrapper, so the status net carries
-  # its instance prefix (u_bound.landing_ready_ft0_i), as the ring groups above already allow ((^|[/.])prefix).
-  # Exactly one hierarchical match is taken; none or several stay errors (fail closed).
-  set cland_cand {}; set cland_l [string length $net]
-  foreach cland_x [$ff_blk getNets] {
-   set cland_nm [$cland_x getName]
-   if {[string length $cland_nm] > $cland_l && [string range $cland_nm end-[expr {$cland_l-1}] end] eq $net
-       && [string index $cland_nm end-$cland_l] in {. /}} { lappend cland_cand $cland_x }
+ if {$n ne "NULL"} { return $n }
+ set candidates {}
+ if {![regexp {[/.]} $net]} {
+  if {![info exists cland_status_suffix]} {
+   set cland_status_suffix {}
+   foreach dn [$ff_blk getNets] {
+    set name [$dn getName]
+    if {[regexp {^.*[/.]([^/.]+)$} $name -> tail]} {
+     dict lappend cland_status_suffix $tail $dn
+    }
+   }
   }
-  if {[llength $cland_cand] == 1} { set n [lindex $cland_cand 0] } elseif {[llength $cland_cand] > 1} {
-   error "OT_CLAND ambiguous status net $net: [llength $cland_cand] hierarchical matches"
+  if {[dict exists $cland_status_suffix $net]} {set candidates [dict get $cland_status_suffix $net]}
+ } else {
+  # Unusual hierarchical requested names retain the original exact suffix law.
+  set length [string length $net]
+  foreach dn [$ff_blk getNets] {
+   set name [$dn getName]
+   if {[string length $name] > $length && [string range $name end-[expr {$length-1}] end] eq $net
+       && [string index $name end-$length] in {. /}} {lappend candidates $dn}
   }
  }
+ if {[llength $candidates] == 1} {return [lindex $candidates 0]}
+ if {[llength $candidates] > 1} {
+  error "OT_CLAND ambiguous status net $net: [llength $candidates] hierarchical matches"
+ }
+ return NULL
+}
+unset -nocomplain cland_status_suffix
+foreach spec $cland_status {
+ lassign $spec net x y
+ set n [cland_status_net $net]
  if {$n eq "NULL"} { error "OT_CLAND missing actual status net $net" }
  set drivers [cland_drivers $n]
  # FLOW-GEN-1 10-28 (DIE-HEAD-9 bug 4): ASAP7 maps the status FF as DFFHQN + INV (no Q flop): follow exactly one
@@ -888,13 +986,17 @@ foreach spec $cland_status {
  if {[llength $drivers]!=1 || ![string match "*DFF*" [[[lindex $drivers 0] getMaster] getName]]} {
   error "OT_CLAND $net requires one actual dedicated output FF"
  }
- cland_put [lindex $drivers 0] [list [expr {$x-2.16}] [expr {$y-2.16}] [expr {$x+2.16}] [expr {$y+2.16}]] status:$net
+ set cland_sw [list [expr {$x-2.16}] [expr {$y-2.16}] [expr {$x+2.16}] [expr {$y+2.16}]]
+ # grow only a window that touches the core (a crowded window); a status point wholly outside the core fails closed
+ if {[lindex $cland_sw 2]*$ff_dbu > $ff_x0 && [lindex $cland_sw 0]*$ff_dbu < $ff_x1 &&
+     [lindex $cland_sw 3]*$ff_dbu > $ff_y0 && [lindex $cland_sw 1]*$ff_dbu < $ff_y1} {
+  cland_put_grow [lindex $drivers 0] $cland_sw status:$net status
+ } else { cland_put [lindex $drivers 0] $cland_sw status:$net }
 }
 foreach spec $cland_optional_groups {
  lassign $spec prefix rect tag
- foreach i [$ff_blk getInsts] {
+ foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
-  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   cland_put $i $rect $tag
  }
@@ -1152,12 +1254,26 @@ proc cland_place_pinslot_col {ordered rect tag pins rev {psp 1.0} {rows 2}} {
  } finally { unset -nocomplain ::cland_pinslot_fit cland_col_reduce; set cland_col_cursor {} }
  return [list $n [llength $rest] "$face face strip [format %.2f [expr {double($s1-$s0)/$ff_dbu}]] um deep, $nc columns over pin x [format %.2f [expr {double($lo)/$ff_dbu}]]..[format %.2f [expr {double($hi)/$ff_dbu}]], $nf by the whole band"]
 }
+# START is scalar, including the bound-wrapper singleton [0] spelling.  An
+# ambiguous or wider inventory is an ABI error, never a choice of nearest bit.
+proc cland_start_bterm_name {names bus} {
+ set scalar "cland_fstart_in_$bus"
+ set singleton "${scalar}\[0\]"
+ set found {}
+ foreach name $names {
+  if {$name eq $scalar || [string first "${scalar}\[" $name] == 0} { lappend found $name }
+ }
+ if {![llength $found]} { return {} }
+ if {[llength $found] != 1 || [lindex $found 0] ni [list $scalar $singleton]} {
+  error "OT_CLAND START is not a unique scalar/singleton: $scalar: $found"
+ }
+ return [lindex $found 0]
+}
 proc cland_place_ff {prefix rect tag} {
  global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
  set ffs {};set comb 0;set need 0.0
- foreach i [$ff_blk getInsts] {
+ foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
-  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   set m [$i getMaster]
   if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
@@ -1183,10 +1299,11 @@ proc cland_place_ff {prefix rect tag} {
  # START pin or without a storage bus keep the old keys.
  if {[regexp {^ring:([^@+]+)} $tag -> cbus]} {
   set sx {}; set bxy {}
+  set start_name [cland_start_bterm_name [lmap bt [$ff_blk getBTerms] {$bt getName}] $cbus]
   foreach bt [$ff_blk getBTerms] {
    set bn [$bt getName]; set bb [$bt getBBox]
    set cx [expr {([$bb xMin]+[$bb xMax])/2}]; set cy [expr {([$bb yMin]+[$bb yMax])/2}]
-   if {$bn eq "cland_fstart_in_$cbus"} { set sx [list $cx $cy] }
+   if {$bn eq $start_name} { set sx [list $cx $cy] }
    if {[regexp {^(.*)\[([0-9]+)\]$} $bn -> bbn bbi] && $bbn eq $cbus} { lappend bxy [list $bbi $cx $cy] }
   }
   set base {}
@@ -1200,12 +1317,16 @@ proc cland_place_ff {prefix rect tag} {
   }
  }
  if {$wch} { puts "OT_CLAND ring_place=ff $prefix: chunked read registers keyed to their word bits (chunk width $wch, bus $bus width $nbits)" }
+ # multi-rect band: the fill spread uses the summed area of its rects
+ set barea 0.0; set brects [list $rect]; if {([info exists ::cland_multi] && [dict exists $::cland_multi $tag])} { set brects [dict get $::cland_multi $tag] }
+ foreach brect $brects { lassign $brect ax ay bx by; set barea [expr {$barea+($bx-$ax)*($by-$ay)}] }
  lassign $rect ax ay bx by
- set sp [expr {max(1.0,$cland_ff_fill*($bx-$ax)*($by-$ay)*$ff_dbu*$ff_dbu/$need)}]
+ set sp [expr {max(1.0,$cland_ff_fill*$barea*$ff_dbu*$ff_dbu/$need)}]
  set cland_cursor {};set cland_col_cursor {}
  set ordered [lsort -dictionary -index 0 $ffs]
  set pinx {}
  if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_PINSLOT)] && $::env(OT_CLAND_PINSLOT) eq "1"
+     && !([info exists ::cland_multi] && [dict exists $::cland_multi $tag])
      && [regexp {^ring:([^@+]+)} $tag -> pbus] && [dict size [set ppins [cland_bus_pins $pbus]]]} {
   # FLOW-12 10-30: pins along x (N/S face) in key order -> face strip; anything else returns n=0 having placed nothing
   set psp 1.0
@@ -1223,7 +1344,7 @@ proc cland_place_ff {prefix rect tag} {
    foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
   } finally {unset -nocomplain cland_col_reduce}
  } elseif {[info exists ::env(OT_CLAND_PINSLOT)] && $::env(OT_CLAND_PINSLOT) eq "1" && [regexp {^ring:([^@+]+)} $tag -> pbus]
-            && [dict size [set ppins [cland_bus_pins $pbus]]]} {
+            && !([info exists ::cland_multi] && [dict exists $::cland_multi $tag]) && [dict size [set ppins [cland_bus_pins $pbus]]]} {
   # spread 1.0 (the base w/0.4 reserve): the band spread (tag @<spread>, fill-derived $sp) widens each footprint so a
   # low-corner pack fills its band; the stretched fill already spans the band along the pins, and a wider reserve only
   # pushes each row's later flops away from the face (turn_a what-ifs: fill spread 3.81 -> 3rd flop of a row 38 um
@@ -1260,9 +1381,8 @@ proc cland_band_fit {prefix rect tag} {
  global ff_blk ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done
  set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp
  set need 0.0; set maxrw 0; set minw {}; set n 0
- foreach i [$ff_blk getInsts] {
+ foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
-  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   set m [$i getMaster]
   if {[$m isBlock]} return
@@ -1275,13 +1395,16 @@ proc cland_band_fit {prefix rect tag} {
   incr n
  }
  if {!$n} return
- lassign $rect ax ay bx by
+ # multi-rect band: the upper bound is the sum over its rects (one rect: the loop body runs once, unchanged)
+ set cap 0.0
+ set brects [list $rect]; if {([info exists ::cland_multi] && [dict exists $::cland_multi $tag])} { set brects [dict get $::cland_multi $tag] }
+ foreach brect $brects {
+ lassign $brect ax ay bx by
  set ax [expr {int(ceil($ax*$ff_dbu))}];set ay [expr {int(ceil($ay*$ff_dbu))}]
  set bx [expr {int(floor($bx*$ff_dbu))}];set by [expr {int(floor($by*$ff_dbu))}]
  if {$ax < $ff_x0 || $ay < $ff_y0 || $bx > $ff_x1 || $by > $ff_y1} return
  set startx [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
  set starty [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
- set cap 0.0
  for {set y $starty} {$y+$ff_rh<=$by} {incr y $ff_rh} {
   if {![dict exists $ff_orient $y]} continue
   set r [expr {int(($y-$ff_y0)/$ff_rh)}]
@@ -1296,6 +1419,7 @@ proc cland_band_fit {prefix rect tag} {
    if {$x >= $bx} break
   }
  }
+ }
  if {$need > $cap} {
   set a2 [expr {double($ff_dbu)*$ff_dbu}]
   error [format "OT_CLAND no legal nonoverlapping row/site in reserved band for %s (%s): %d cells reserve %.1f um2 > band upper bound %.1f um2 (ratio %.2f), checked before placement" $prefix $tag $n [expr {$need/$a2}] [expr {$cap/$a2}] [expr {$cap > 0 ? $need/$cap : 0}]]
@@ -1307,21 +1431,15 @@ proc cland_band_fit {prefix rect tag} {
 # took (t21 rst_n_t8 in ft5_i).  A collector cell with no site in its window takes the window grown about the same
 # centre x2, x4, x8 (<= +-17.28 um; a reset status hop, far below the 405 um relay reach); still none fails closed as
 # before.  Rings, status, start relays and every collector that fits its window are unchanged.
-proc cland_put_collector {i rect tag} {
- lassign $rect ax ay bx by
- set cx [expr {($ax+$bx)/2.0}]; set cy [expr {($ay+$by)/2.0}]; set hx [expr {($bx-$ax)/2.0}]; set hy [expr {($by-$ay)/2.0}]
- foreach g {1 2 4 8} {
-  set w [list [expr {$cx-$hx*$g}] [expr {$cy-$hy*$g}] [expr {$cx+$hx*$g}] [expr {$cy+$hy*$g}]]
-  if {![catch {cland_put $i $w $tag} err]} {
-   if {$g > 1} { puts "OT_CLAND collector grow [$i getName] ($tag): window x$g (+-[format %.2f [expr {$hx*$g}]] um)" }
-   return
-  }
-  if {![string match {OT_CLAND no legal*} $err]} { error $err $::errorInfo }
- }
- error $err
-}
+proc cland_put_collector {i rect tag} { cland_put_grow $i $rect $tag collector }
+set cland_multi_seen {}
 foreach spec $cland_groups {
  lassign $spec prefix rect tag
+ # multi-rect band: its first entry places the whole ring over all its rects; the later entries are the same group
+ if {[dict exists $cland_multi $tag]} {
+  if {[dict exists $cland_multi_seen $tag]} continue
+  dict set cland_multi_seen $tag 1
+ }
  set hit 0
  if {[string match {ring:*+ff} $tag] || [string match {ring:*+ffr} $tag]} {
   if {![cland_place_ff $prefix $rect $tag]} { error "OT_CLAND no mapped ring flops found under $prefix" }
@@ -1329,9 +1447,8 @@ foreach spec $cland_groups {
  }
  set coll [string match {collector:*} $tag]
  if {!$coll} { cland_band_fit $prefix $rect $tag }
- foreach i [$ff_blk getInsts] {
+ foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
-  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   if {[[$i getMaster] isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   if {$coll} { cland_put_collector $i $rect $tag } else { cland_put $i $rect $tag };incr hit
