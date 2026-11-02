@@ -1,0 +1,17 @@
+{
+  "scope": "Ordinary logical PG binding on retained actual native Tnode placed DB; read-only fixture, no CTS/STA/ODB write",
+  "unit": "intel1 oth-ubuntu-3819619-1793581846",
+  "exit_code": 0,
+  "resource_request": "2GB/1T --crit",
+  "fixture": "/srv/opentallas-scratch2/claude/codex-hbm-clock-tnode-native-1101/current/run/results/asap7/hbc_ot_hnx_fused_tnode/base/3_place.odb",
+  "raw_open_pg_terms": 3706,
+  "global_connect_rules": 2,
+  "protected_instances_rebound": 0,
+  "total_pg_terms": 31008,
+  "open_pg_terms_after_normal_hook": 0,
+  "verdict": "PASS_ORDINARY_LOGICAL_PG_BINDING",
+  "physical_pg_grid": "NOT_MEASURED",
+  "source_scope": "Existing native source4730EQ/reset4/all live pads FREE retained; no source/parent adoption",
+  "remaining_hold": "Measured freefill6.57%/empty83.41% still FAIL; no CTS, compact parent event not adopted",
+  "release_qualified": false
+}
