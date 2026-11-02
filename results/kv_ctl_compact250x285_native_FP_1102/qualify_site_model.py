@@ -1,7 +1,7 @@
-import json,gzip,csv,sys,collections,re
+import json,gzip,csv,sys,collections,re,os
 from pathlib import Path
 O=Path(__file__).resolve().parent;C=Path('/srv/opentallas-scratch/claude/codex-kv-ctl-compact250-0430/collector');sys.path.insert(0,str(O.parents[1]/'tools/autopilot'));import geom_rules as G
-D=G.Design(str(C/'geom.tsv'),[str(O.parent/'kv_ctl_place_1102/memory_tt.lib')],True);ids={c[6]:i for i,c in D.cells.items()};poses=json.loads(gzip.decompress((O/'FF_sites.json.gz').read_bytes()));raw=list(csv.DictReader(open(C/'instances.csv')));rows=collections.defaultdict(list)
+D=G.Design(str(C/'geom.tsv'),[str(O.parent/'kv_ctl_place_1102/memory_tt.lib')],True);ids={c[6]:i for i,c in D.cells.items()};poses=json.loads(gzip.decompress((O/os.environ.get('FF_SITE_FILE','FF_sites.json.gz')).read_bytes()));raw=list(csv.DictReader(open(C/'instances.csv')));rows=collections.defaultdict(list)
 for r in json.load(open(C/'rows.json'))['rows']:rows[r['bbox'][1]].append(r)
 occ=collections.defaultdict(list);bad=[];master_changes=[];byname={q['name']:q for q in raw}
 for q in raw:
@@ -20,4 +20,4 @@ for y,rs in occ.items():
 rr=G.r2r_metrics(D);pr=G.pin_reg_metrics(D,re.compile(G.STRAP_RE_DEFAULT));D.cells={i:c for i,c in D.cells.items() if c[0] in 'SM'};area=G.area_metrics(D)
 r=dict(status='LEGAL_NATIVE_FF_SITE_MODEL_NOT_PLACE',FFs=len(poses),target_master_resizes=len(master_changes),native_rows=2008,native_taps=7184,row_site_orientation_violations=bad,FF_TAP_fixed_overlap=overlaps,R2R=rr,pins=pr,FF_only_density=area,holds=['Ordinary combinational placement/model channels NOT qualified','No new source state, latency or parent profile adopted'])
 assert len(poses)==18768 and len(master_changes)==54 and not bad and not overlaps
-(O/'FF_site_report.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps({k:v for k,v in r.items() if k not in ['FF_only_density','holds']},indent=2))
+(O/os.environ.get('SITE_REPORT_FILE','FF_site_report.json')).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps({k:v for k,v in r.items() if k not in ['FF_only_density','holds']},indent=2))

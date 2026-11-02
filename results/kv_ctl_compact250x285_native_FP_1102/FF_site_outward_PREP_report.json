@@ -1,0 +1,90 @@
+{
+  "status": "PROPOSED_OUTWARD_MACROS_OLD_ROW_INTERSECTION_PREP_NOT_NATIVE_NEW_FP",
+  "FFs": 18768,
+  "target_master_resizes": 54,
+  "native_rows": 2008,
+  "native_taps": 7184,
+  "public_DATA_max": [
+    144.99900000000002,
+    "d2d__svc_74[8]"
+  ],
+  "public_DATA_gt150": 0,
+  "public_DATA_gt30": 437,
+  "R2R": {
+    "r2r_memory_instances": 6,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 392.74,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 16868,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_leaf.u_oobs.dr_q\\[0\\]$_DFF_P_ -> oobs__kv_drained_local$_DFF_PN0_"
+  },
+  "pins": {
+    "pins_registered": 6848,
+    "pins_to_macro": 0,
+    "pins_exempt": 1,
+    "pins_unregistered": 0,
+    "pins_land_ring": 0,
+    "unregistered_sample": [],
+    "pin_reg_p50": 17.05,
+    "pin_reg_p90": 25.86,
+    "pin_reg_max": 145.0,
+    "pin_reg_worst": [
+      "145.0 d2d__svc_74[8]",
+      "145.0 d2d__svc_92[17]",
+      "145.0 d2d__svc_74[4]",
+      "145.0 d2d__svc_74[13]",
+      "145.0 d2d__svc_74[6]"
+    ]
+  },
+  "FF_only_density": {
+    "outline": [
+      250.56,
+      285.12
+    ],
+    "aspect": 1.138,
+    "macros": 6,
+    "macro_area_pct": 17.55,
+    "std_cells": 18768,
+    "ff": 18768,
+    "fill_of_free": 0.1112,
+    "empty_area": 0.4299,
+    "band_share": 1.0,
+    "density_bin_um": 3.564,
+    "macro_list": [
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        25.92,
+        43.2
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        25.92,
+        120.96
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        25.92,
+        198.72
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        172.8,
+        43.2
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        172.8,
+        120.96
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        172.8,
+        198.72
+      ]
+    ]
+  },
+  "density_fill_moves": 1800,
+  "reset_anchor_FF": "_2750_\\[0\\]$_DFF_PN0_",
+  "ordinary_combinational_placement": "NOT RUN; channel model/PG coupling still OPEN"
+}

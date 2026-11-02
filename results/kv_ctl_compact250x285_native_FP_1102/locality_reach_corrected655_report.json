@@ -1,0 +1,29 @@
+{
+  "R2R": {
+    "r2r_memory_instances": 6,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 386.99,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 16868,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_leaf.u_dcfg.d_q\\[9\\]$_DFF_P_ -> o_hroot_ES\\[1088\\]$_DFF_PN0_"
+  },
+  "pins": {
+    "pins_registered": 6848,
+    "pins_to_macro": 0,
+    "pins_exempt": 1,
+    "pins_unregistered": 0,
+    "pins_land_ring": 0,
+    "unregistered_sample": [],
+    "pin_reg_p50": 17.06,
+    "pin_reg_p90": 25.9,
+    "pin_reg_max": 145.0,
+    "pin_reg_worst": [
+      "145.0 embgw__bw[238]",
+      "145.0 embgw__bw[233]",
+      "145.0 embgw__bw[218]",
+      "145.0 embgw__bw[213]",
+      "145.0 embgw__bw[198]"
+    ]
+  }
+}

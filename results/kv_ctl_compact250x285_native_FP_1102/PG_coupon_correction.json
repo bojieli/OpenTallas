@@ -1,0 +1,10 @@
+{
+  "status": "DIAGNOSED_MODEL_OVERCHARGE_REPAIRED_NO_CAD_VERDICT",
+  "incorrect_prior": "channel_model_PREP.json actual_track_PG_via_clipped_model",
+  "cause": "Lowercase native via1_2 full row-array names were not parsed; conservative unknown-via fallback charged their bounding boxes to M2-M5. Their real layers are M1/M2 only.",
+  "fix": "Parse complete native catalogue VIA23,VIA34,VIA45 and via1_2; fail closed on any unknown name. Union masks prevent repeated-obstacle double count.",
+  "corrected_same655FF": "channel_model_corrected655_PREP.json",
+  "preferred_source_local": "channel_model_minmove_PREP.json",
+  "physical_jobs_launched": 0,
+  "remaining": "All placement estimates remain over local channel budget; no routing or intrinsic infeasibility claim."
+}
