@@ -1,0 +1,381 @@
+{
+  "scope": "exact selected9-master complementary inventory; six missing owned by ex_closure, three retained by xfin; no broad search/proof/CAD or qualification transfer",
+  "selected_view_root": "physical/die_plan/qwen_kvsys/hgclk_1030/views",
+  "actual_native_gold_parent": "intel1:/srv/opentallas-scratch2/claude/codex-kv-signed-consumer-1507/kits/hg_ex_synth_prep_1",
+  "current_native_readset": "intel1:/srv/opentallas-scratch2/claude/codex-ex-hg-readsets-1131/kit_rtl/kv3_hg_v1/kit_rtl.json",
+  "protected_native_source": "intel1:/srv/opentallas-scratch2/claude/codex-kv-wave-1131/src",
+  "known_archive_or_bundle_index": null,
+  "archive_status": "No additional retained bundle/archive index is known; canonical Git contains selected LEF/LIB/signoff+RECORD/SHA256SUMS, not a claimed final-netlist bundle",
+  "masters": [
+    {
+      "master": "kv3_head_eighth_e0",
+      "selected_view": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0",
+      "selected_view_files_sha256": {
+        "kv3_head_eighth_e0.lef": "12c7da2f8ba31365f8b3a234523690a8a6c66acc7c8fe7803b825a78c4c07e51",
+        "kv3_head_eighth_e0_ff.lib": "7227f5fb0f9e6e2aebf99ca21fd63ee583b44941b4aa1fd60b5ef0f8aec4c04a",
+        "kv3_head_eighth_e0_tt.lib": "37255f5c41178d1d8ca3047f03119538d3ed0722a200451eda7e99bbdb0ed18c",
+        "signoff.json": "4c5d7539c8eaef532d82d04afd0ec37a2b482cf2a669a4f6aba3eda9faac29b3"
+      },
+      "provenance_record": "/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/e0_tag_eq/signoff.json",
+      "signoff_host": "tolerant-swine",
+      "actual_input_paths": {
+        "kit": "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2",
+        "final_v": "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/run/results/asap7/hc_kv3_head_eighth_e0__216x216/base/6_final.v",
+        "odb": "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/run/results/asap7/hc_kv3_head_eighth_e0__216x216/base/6_final.odb",
+        "spef": "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/run/results/asap7/hc_kv3_head_eighth_e0__216x216/base/6_final.spef",
+        "sdc": "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/constraint.sdc",
+        "synth": "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/run/results/asap7/hc_kv3_head_eighth_e0__216x216/base/1_2_yosys.v"
+      },
+      "expected_final_v_odb_spef_sha256": null,
+      "hash_status": "NOT RECORDED in selected view SHA256SUMS/signoff; do not guess expected backing hashes",
+      "original_source_manifest_paths": [
+        "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/core.json",
+        "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/freeze.json",
+        "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/config.mk",
+        "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/PROVENANCE.json",
+        "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/rtl/"
+      ],
+      "original_path_lookup": {
+        "master": "kv3_head_eighth_e0",
+        "kit": "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2",
+        "final_v": "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/run/results/asap7/hc_kv3_head_eighth_e0__216x216/base/6_final.v",
+        "kit_exists": true,
+        "final_v_exists": true,
+        "formal_records": {
+          "lec/lec.json": {
+            "verdict": "EQUIVALENT",
+            "netlist": "/work/run/results/asap7/hc_kv3_head_eighth_e0__216x216/base/1_2_yosys.v",
+            "top": "kv3_head_eighth_e0",
+            "black_boxes": {},
+            "counts": {
+              "compare_points": 46383,
+              "proved": 46383,
+              "differs": 0,
+              "undecided": 0
+            }
+          }
+        },
+        "host": "intel2"
+      }
+    },
+    {
+      "master": "kv3_head_eighth_e1",
+      "selected_view": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1",
+      "selected_view_files_sha256": {
+        "kv3_head_eighth_e1.lef": "0a98243f985d00109b3c81889f186a58320897adca8e29ce52872468f8e6ddb1",
+        "kv3_head_eighth_e1_ff.lib": "0de06a4d53d2c8639392871c29dcf58a248dfe3e5c12db381c13e7187d7a64a1",
+        "kv3_head_eighth_e1_tt.lib": "e794ed0b61f741683c7dfc40e70f2c543ab2baf8aba82590630dbcb60e30e677",
+        "signoff.json": "8202f47ba8b0073f3e36913f06c3e40cd8f43d88ba4c5b66b15b810f0d432967"
+      },
+      "provenance_record": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e1__3e7fccd216/kit/signoff/signoff.json",
+      "signoff_host": "tolerant-swine",
+      "actual_input_paths": {
+        "kit": "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216",
+        "final_v": "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216/run/results/asap7/hc_kv3_head_eighth_e1__216x216/base/6_final.v",
+        "odb": "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216/run/results/asap7/hc_kv3_head_eighth_e1__216x216/base/6_final.odb",
+        "spef": "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216/run/results/asap7/hc_kv3_head_eighth_e1__216x216/base/6_final.spef",
+        "sdc": "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216/constraint.sdc",
+        "synth": "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216/run/results/asap7/hc_kv3_head_eighth_e1__216x216/base/1_2_yosys.v"
+      },
+      "expected_final_v_odb_spef_sha256": null,
+      "hash_status": "NOT RECORDED in selected view SHA256SUMS/signoff; do not guess expected backing hashes",
+      "original_source_manifest_paths": [
+        "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216/core.json",
+        "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216/freeze.json",
+        "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216/config.mk",
+        "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216/PROVENANCE.json",
+        "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216/rtl/"
+      ],
+      "original_path_lookup": {
+        "master": "kv3_head_eighth_e1",
+        "kit": "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216",
+        "final_v": "/srv/opentallas-scratch2/claude/kv-kits-15-1028/kits_heads/kv3_head_eighth_e1__216x216/run/results/asap7/hc_kv3_head_eighth_e1__216x216/base/6_final.v",
+        "kit_exists": false,
+        "final_v_exists": false,
+        "formal_records": {},
+        "host": "intel2"
+      }
+    },
+    {
+      "master": "kv3_head_eighth_e2",
+      "selected_view": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2",
+      "selected_view_files_sha256": {
+        "kv3_head_eighth_e2.lef": "53fd80f7c069bb48116e78ab807682cf8827ac90473a863eb4452bba5a7fd1f2",
+        "kv3_head_eighth_e2_ff.lib": "f14add931e7418feddfe5636b19cee3e6b5325fd4388b116acd3368c2d702b85",
+        "kv3_head_eighth_e2_tt.lib": "b065a09fd9dee4fc496eaf27916e7445d6369774ee6286fffbb13e92c8249fd1",
+        "signoff.json": "2156fad8b9530e39a8399d15652387ee0455657e518497bd6c811f41c82644b4"
+      },
+      "provenance_record": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e2__3e7fccd216/kit/signoff/signoff.json",
+      "signoff_host": "tolerant-swine",
+      "actual_input_paths": {
+        "kit": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216",
+        "final_v": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/6_final.v",
+        "odb": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/6_final.odb",
+        "spef": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/6_final.spef",
+        "sdc": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216/constraint.sdc",
+        "synth": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/1_2_yosys.v"
+      },
+      "expected_final_v_odb_spef_sha256": null,
+      "hash_status": "NOT RECORDED in selected view SHA256SUMS/signoff; do not guess expected backing hashes",
+      "original_source_manifest_paths": [
+        "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216/core.json",
+        "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216/freeze.json",
+        "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216/config.mk",
+        "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216/PROVENANCE.json",
+        "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216/rtl/"
+      ],
+      "original_path_lookup": {
+        "master": "kv3_head_eighth_e2",
+        "kit": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216",
+        "final_v": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/6_final.v",
+        "kit_exists": false,
+        "final_v_exists": false,
+        "formal_records": {},
+        "host": "intel2"
+      }
+    },
+    {
+      "master": "kv3_head_eighth_e5",
+      "selected_view": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5",
+      "selected_view_files_sha256": {
+        "kv3_head_eighth_e5.lef": "7ad48d9a07fda39a1ddd5867709762facdb00bd7c071972a68f2af89801a5a22",
+        "kv3_head_eighth_e5_ff.lib": "a89f7ab5d364e5e4dcc7beb25a37c4f519b5e2158d4f489a51ad1e9c5fd72f2d",
+        "kv3_head_eighth_e5_tt.lib": "afbc48b3f870305d21640191ba5f95a92506e9e83018461e052c23f13a8e3e63",
+        "signoff.json": "f71c1271cbf547705eb115a01d8b0a15d7c143c60671fa8b55feb35f9a6646f5"
+      },
+      "provenance_record": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e5__3e7fccd216/kit/signoff/signoff.json",
+      "signoff_host": "tolerant-swine",
+      "actual_input_paths": {
+        "kit": "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216",
+        "final_v": "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216/run/results/asap7/hc_kv3_head_eighth_e5__216x216/base/6_final.v",
+        "odb": "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216/run/results/asap7/hc_kv3_head_eighth_e5__216x216/base/6_final.odb",
+        "spef": "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216/run/results/asap7/hc_kv3_head_eighth_e5__216x216/base/6_final.spef",
+        "sdc": "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216/constraint.sdc",
+        "synth": "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216/run/results/asap7/hc_kv3_head_eighth_e5__216x216/base/1_2_yosys.v"
+      },
+      "expected_final_v_odb_spef_sha256": null,
+      "hash_status": "NOT RECORDED in selected view SHA256SUMS/signoff; do not guess expected backing hashes",
+      "original_source_manifest_paths": [
+        "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216/core.json",
+        "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216/freeze.json",
+        "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216/config.mk",
+        "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216/PROVENANCE.json",
+        "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216/rtl/"
+      ],
+      "original_path_lookup": {
+        "master": "kv3_head_eighth_e5",
+        "kit": "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216",
+        "final_v": "/srv/opentallas-scratch2/claude/kv-kits-14-1028/kits_heads/kv3_head_eighth_e5__216x216/run/results/asap7/hc_kv3_head_eighth_e5__216x216/base/6_final.v",
+        "kit_exists": false,
+        "final_v_exists": false,
+        "formal_records": {},
+        "host": "intel2"
+      }
+    },
+    {
+      "master": "kv3_head_eighth_e6",
+      "selected_view": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6",
+      "selected_view_files_sha256": {
+        "kv3_head_eighth_e6.lef": "38e83fb894160ffbe7662519688fcc064071ff4da3806f66d8bf0eea00b0a55b",
+        "kv3_head_eighth_e6_ff.lib": "3523154e1535a08872f4775c03c9c5789398cacd51f37f622d0733863692f2d1",
+        "kv3_head_eighth_e6_tt.lib": "15dd82b19ed2fea8df672319573adbef554419056641687ee2ec6423a4de4e83",
+        "signoff.json": "59994ed46675e28ded1a15c54cfd0f633141747dcceb8a2433ed79f1853f0e3f"
+      },
+      "provenance_record": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e6__3e7fccd216/kit/signoff/signoff.json",
+      "signoff_host": "tolerant-swine",
+      "actual_input_paths": {
+        "kit": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216",
+        "final_v": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216/run/results/asap7/hc_kv3_head_eighth_e6__216x216/base/6_final.v",
+        "odb": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216/run/results/asap7/hc_kv3_head_eighth_e6__216x216/base/6_final.odb",
+        "spef": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216/run/results/asap7/hc_kv3_head_eighth_e6__216x216/base/6_final.spef",
+        "sdc": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216/constraint.sdc",
+        "synth": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216/run/results/asap7/hc_kv3_head_eighth_e6__216x216/base/1_2_yosys.v"
+      },
+      "expected_final_v_odb_spef_sha256": null,
+      "hash_status": "NOT RECORDED in selected view SHA256SUMS/signoff; do not guess expected backing hashes",
+      "original_source_manifest_paths": [
+        "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216/core.json",
+        "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216/freeze.json",
+        "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216/config.mk",
+        "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216/PROVENANCE.json",
+        "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216/rtl/"
+      ],
+      "original_path_lookup": {
+        "master": "kv3_head_eighth_e6",
+        "kit": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216",
+        "final_v": "/srv/opentallas-scratch2/claude/kv-kits-11-1028/kits_heads/kv3_head_eighth_e6__216x216/run/results/asap7/hc_kv3_head_eighth_e6__216x216/base/6_final.v",
+        "kit_exists": false,
+        "final_v_exists": false,
+        "formal_records": {},
+        "host": "intel2"
+      }
+    },
+    {
+      "master": "qkd_ectlk_q0",
+      "selected_view": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q0",
+      "selected_view_files_sha256": {
+        "qkd_ectlk_q0.lef": "9ab7a65fbadd5d049b56fb2b0c9391a408d49843b19d6828ae2cb1671afc4cea",
+        "qkd_ectlk_q0_ff.lib": "3f1867208d54d68695ec6de52d5a22c68c1caaa633ddfeb8adbc5b3826dadf96",
+        "qkd_ectlk_q0_tt.lib": "58f77ca1f125b599989853c37d448581e6c2f7c9651ba655d4fb44490dae8001",
+        "signoff.json": "dcdac992c1dbf473e78665398c8ccdc355d6e0a4bed1e9af87c23ea391f8b003"
+      },
+      "provenance_record": "intel1:/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/q0_native_eq/signoff.json",
+      "signoff_host": "key-cardinal",
+      "actual_input_paths": {
+        "kit": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c",
+        "final_v": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/run/results/asap7/hc_qkd_ectlk_q0__216x172_8/base/6_final.v",
+        "odb": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/run/results/asap7/hc_qkd_ectlk_q0__216x172_8/base/6_final.odb",
+        "spef": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/run/results/asap7/hc_qkd_ectlk_q0__216x172_8/base/6_final.spef",
+        "sdc": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/constraint.sdc",
+        "synth": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/run/results/asap7/hc_qkd_ectlk_q0__216x172_8/base/1_2_yosys.v"
+      },
+      "expected_final_v_odb_spef_sha256": null,
+      "hash_status": "NOT RECORDED in selected view SHA256SUMS/signoff; do not guess expected backing hashes",
+      "original_source_manifest_paths": [
+        "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/core.json",
+        "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/freeze.json",
+        "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/config.mk",
+        "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/PROVENANCE.json",
+        "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/rtl/"
+      ],
+      "original_path_lookup": {
+        "master": "qkd_ectlk_q0",
+        "kit": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c",
+        "final_v": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/run/results/asap7/hc_qkd_ectlk_q0__216x172_8/base/6_final.v",
+        "kit_exists": false,
+        "final_v_exists": false,
+        "formal_records": {},
+        "host": "intel1"
+      }
+    },
+    {
+      "master": "qkd_ectlk_q1",
+      "selected_view": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q1",
+      "selected_view_files_sha256": {
+        "qkd_ectlk_q1.lef": "4f3eb96c644fca6b916f606dd161e96afa816f65036bf3bd931dd40473c6a359",
+        "qkd_ectlk_q1_ff.lib": "133e052cd2d8113f3114f3b334254a08654d81ff125653e2df89a46e393efda3",
+        "qkd_ectlk_q1_tt.lib": "a8dc4887115512932150793cc0c8e4a47c8be9ade0bfa785cdf14fa9dd71b1f8",
+        "signoff.json": "b7fe3914063cb2792aa98f89e37d34b16a590849d763a919f368b84ec054f0cd"
+      },
+      "provenance_record": "intel1:/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/kv47_tag/signoff/signoff.json",
+      "signoff_host": "key-cardinal",
+      "actual_input_paths": {
+        "kit": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2",
+        "final_v": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/run/results/asap7/hc_qkd_ectlk_q1__233_28x172_8/base/6_final.v",
+        "odb": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/run/results/asap7/hc_qkd_ectlk_q1__233_28x172_8/base/6_final.odb",
+        "spef": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/run/results/asap7/hc_qkd_ectlk_q1__233_28x172_8/base/6_final.spef",
+        "sdc": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/constraint.sdc",
+        "synth": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/run/results/asap7/hc_qkd_ectlk_q1__233_28x172_8/base/1_2_yosys.v"
+      },
+      "expected_final_v_odb_spef_sha256": null,
+      "hash_status": "NOT RECORDED in selected view SHA256SUMS/signoff; do not guess expected backing hashes",
+      "original_source_manifest_paths": [
+        "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/core.json",
+        "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/freeze.json",
+        "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/config.mk",
+        "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/PROVENANCE.json",
+        "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/rtl/"
+      ],
+      "original_path_lookup": {
+        "master": "qkd_ectlk_q1",
+        "kit": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2",
+        "final_v": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/run/results/asap7/hc_qkd_ectlk_q1__233_28x172_8/base/6_final.v",
+        "kit_exists": true,
+        "final_v_exists": true,
+        "formal_records": {
+          "lec/lec.json": {
+            "verdict": "EQUIVALENT",
+            "netlist": "/work/run/results/asap7/hc_qkd_ectlk_q1__233_28x172_8/base/1_2_yosys.v",
+            "top": "qkd_ectlk_q1",
+            "black_boxes": {
+              "ot_sram_1r1w_128x256_m1_r2c2": 12
+            },
+            "counts": {
+              "compare_points": 10655,
+              "proved": 10655,
+              "differs": 0,
+              "undecided": 0
+            }
+          }
+        },
+        "host": "intel1"
+      }
+    },
+    {
+      "master": "qkd_ectlk_q2",
+      "selected_view": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q2",
+      "selected_view_files_sha256": {
+        "qkd_ectlk_q2.lef": "e1719b2034c63a9e8be3f32f3fe5916a1c45237dd1db14fe8434c2b5defca2a1",
+        "qkd_ectlk_q2_ff.lib": "60e8dcef776b9592293e4a1512d5a2eef13ffff203d53a426ff94790221eeedd",
+        "qkd_ectlk_q2_tt.lib": "8407c38b2009a2802c958ec978a3d4e58dcdf7da564ded9bdbd36abf2696fad0",
+        "signoff.json": "939ce70c313258ba636f3f93c9a4db077b47a6740967257a2f5eb03a931bdbbd"
+      },
+      "provenance_record": "intel1:/srv/opentallas-scratch2/claude/signoff-sprint-8/q2_bkv/signoff/signoff.json",
+      "signoff_host": "key-cardinal",
+      "actual_input_paths": {
+        "kit": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco",
+        "final_v": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco/run/results/asap7/hc_qkd_ectlk_q2__233_28x172_8/base/6_final.v",
+        "odb": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco/run/results/asap7/hc_qkd_ectlk_q2__233_28x172_8/base/6_final.odb",
+        "spef": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco/run/results/asap7/hc_qkd_ectlk_q2__233_28x172_8/base/6_final.spef",
+        "sdc": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco/constraint.sdc",
+        "synth": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco/run/results/asap7/hc_qkd_ectlk_q2__233_28x172_8/base/1_2_yosys.v"
+      },
+      "expected_final_v_odb_spef_sha256": null,
+      "hash_status": "NOT RECORDED in selected view SHA256SUMS/signoff; do not guess expected backing hashes",
+      "original_source_manifest_paths": [
+        "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco/core.json",
+        "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco/freeze.json",
+        "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco/config.mk",
+        "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco/PROVENANCE.json",
+        "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco/rtl/"
+      ],
+      "original_path_lookup": {
+        "master": "qkd_ectlk_q2",
+        "kit": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco",
+        "final_v": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q2_eco/run/results/asap7/hc_qkd_ectlk_q2__233_28x172_8/base/6_final.v",
+        "kit_exists": true,
+        "final_v_exists": true,
+        "formal_records": {},
+        "host": "intel1"
+      }
+    },
+    {
+      "master": "qkd_ectlk_q3",
+      "selected_view": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q3",
+      "selected_view_files_sha256": {
+        "qkd_ectlk_q3.lef": "4590f59fc3bde3590fbbce7a561978184656027fbd1ac8a32390965c5cff2174",
+        "qkd_ectlk_q3_ff.lib": "30a8339b4e312add3b0f43c2ba40d8d22935a4b31caabadb5b0dbe6884dcb7bb",
+        "qkd_ectlk_q3_tt.lib": "9a5638328240bbb6a9495278a04286445336f7e5b6fd48605372fdac8db7be98",
+        "signoff.json": "275e023cd2ac9198ed4328a850530697658921487f48509938f441e4f806f9ff"
+      },
+      "provenance_record": "intel1:/srv/opentallas-scratch2/claude/signoff-sprint-1/q3p30/signoff/signoff.json",
+      "signoff_host": "key-cardinal",
+      "actual_input_paths": {
+        "kit": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30",
+        "final_v": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/6_final.v",
+        "odb": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/6_final.odb",
+        "spef": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/6_final.spef",
+        "sdc": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/constraint.sdc",
+        "synth": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/1_2_yosys.v"
+      },
+      "expected_final_v_odb_spef_sha256": null,
+      "hash_status": "NOT RECORDED in selected view SHA256SUMS/signoff; do not guess expected backing hashes",
+      "original_source_manifest_paths": [
+        "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/core.json",
+        "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/freeze.json",
+        "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/config.mk",
+        "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/PROVENANCE.json",
+        "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/rtl/"
+      ],
+      "original_path_lookup": {
+        "master": "qkd_ectlk_q3",
+        "kit": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30",
+        "final_v": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/6_final.v",
+        "kit_exists": false,
+        "final_v_exists": false,
+        "formal_records": {},
+        "host": "intel1"
+      }
+    }
+  ]
+}
