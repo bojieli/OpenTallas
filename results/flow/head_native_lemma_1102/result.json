@@ -1,0 +1,709 @@
+{
+ "classification": "UNTRUSTED_BOUNDED_BASE_STEP_ONLY",
+ "original_verdict_unchanged": true,
+ "original_keep": {
+  "declared": 17542,
+  "in_netlist": 17538,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 4,
+   "first": [
+    "ff:u_dut.u_core.u_la.u_ln.u.u_gb.g_pc[11].ps[3]",
+    "ff:u_dut.u_core.u_la.u_ln.u.u_gb.g_pc[5].ps[4]",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.g_pc[0].ps[5]",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.g_pc[11].ps[3]"
+   ]
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "s81_head",
+   "edges": 64,
+   "assert_edges": 66,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 64,
+  "debug_overrides": {}
+ },
+ "prior_count": 12732,
+ "prior_sha256": "406a2470ce1e46b959bd4cce99d4272d216c6dc2545152deff53b2acc0a7f7d6",
+ "missing_prior": [],
+ "no_comparepoint_or_full_proof": true,
+ "results": [
+  {
+   "case": "keep_and_hunt",
+   "given": 12,
+   "applied": 12,
+   "skipped": [],
+   "base": [
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_ln.u.u_gb.g_pc[11].g_b[280].a2",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_la.u_ln.u.u_gb.g_pc[11].ps[3]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": 0,
+       "source": 0,
+       "native_same_literal": false,
+       "covered": true,
+       "status": "PASS"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_ln.u.u_gb.g_pc[5].g_b[140].a1",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_la.u_ln.u.u_gb.g_pc[5].ps[4]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": 0,
+       "source": 0,
+       "native_same_literal": false,
+       "covered": true,
+       "status": "PASS"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.g_pc[0].g_b[0].a0",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.g_pc[0].ps[5]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": 0,
+       "source": 0,
+       "native_same_literal": false,
+       "covered": true,
+       "status": "PASS"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.g_pc[11].g_b[280].a2",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.g_pc[11].ps[3]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": 0,
+       "source": 0,
+       "native_same_literal": false,
+       "covered": true,
+       "status": "PASS"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt#t[0]",
+     "hint": [
+      "cube",
+      "gold",
+      [
+       "ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt[0]",
+       "ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt[1]"
+      ],
+      [
+       0,
+       0
+      ]
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": 1,
+       "source": [
+        0,
+        0
+       ],
+       "predicate": 1,
+       "covered": true,
+       "status": "PASS"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt#t[2]",
+     "hint": [
+      "cube",
+      "gold",
+      [
+       "ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt[0]",
+       "ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt[1]"
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": 0,
+       "source": [
+        0,
+        0
+       ],
+       "predicate": 0,
+       "covered": true,
+       "status": "PASS"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt#t[1]",
+     "hint": [
+      "cube",
+      "gold",
+      [
+       "ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt[0]",
+       "ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt[1]"
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": 0,
+       "source": [
+        0,
+        0
+       ],
+       "predicate": 0,
+       "covered": true,
+       "status": "PASS"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt#t[0]",
+     "hint": [
+      "cube",
+      "gold",
+      [
+       "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt[0]",
+       "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt[1]"
+      ],
+      [
+       0,
+       0
+      ]
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": 1,
+       "source": [
+        0,
+        0
+       ],
+       "predicate": 1,
+       "covered": true,
+       "status": "PASS"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt#t[2]",
+     "hint": [
+      "cube",
+      "gold",
+      [
+       "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt[0]",
+       "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt[1]"
+      ],
+      [
+       1,
+       0
+      ]
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": 0,
+       "source": [
+        0,
+        0
+       ],
+       "predicate": 0,
+       "covered": true,
+       "status": "PASS"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt#t[1]",
+     "hint": [
+      "cube",
+      "gold",
+      [
+       "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt[0]",
+       "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt[1]"
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": 0,
+       "source": [
+        0,
+        0
+       ],
+       "predicate": 0,
+       "covered": true,
+       "status": "PASS"
+      }
+     ]
+    }
+   ],
+   "constraint_bases": [
+    {
+     "side": "gold",
+     "keys": [
+      "ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt[0]",
+      "ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt[1]"
+     ],
+     "covered": true,
+     "reset_cycles": 64,
+     "known_mask": "0x3",
+     "known_value": "0x0",
+     "unknown_bits": 0,
+     "covered_states": 1,
+     "values": [
+      0,
+      0
+     ]
+    },
+    {
+     "side": "gold",
+     "keys": [
+      "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt[0]",
+      "ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt[1]"
+     ],
+     "covered": true,
+     "reset_cycles": 64,
+     "known_mask": "0x3",
+     "known_value": "0x0",
+     "unknown_bits": 0,
+     "covered_states": 1,
+     "values": [
+      0,
+      0
+     ]
+    }
+   ],
+   "statuses": {
+    "hyp:gate:ff:u_dut.u_core.u_la.u_ln.u.u_gb.g_pc[11].g_b[280].a2": "proved",
+    "hyp:gate:ff:u_dut.u_core.u_la.u_ln.u.u_gb.g_pc[5].g_b[140].a1": "proved",
+    "hyp:gate:ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt#t[0]": "proved",
+    "hyp:gate:ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt#t[1]": "proved",
+    "hyp:gate:ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt#t[2]": "proved",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_ln.u.u_gb.g_pc[0].g_b[0].a0": "proved",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_ln.u.u_gb.g_pc[11].g_b[280].a2": "proved",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt#t[0]": "proved",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt#t[1]": "proved",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt#t[2]": "proved",
+    "cons:gold:ff:u_dut.u_core.u_la.u_ln.u.u_gb.hunt[0]": "proved",
+    "cons:gold:ff:u_dut.u_core.u_lb.u_ln.u.u_gb.hunt[0]": "proved"
+   },
+   "joint_step_complete": true,
+   "native_base_complete": true
+  },
+  {
+   "case": "ld16",
+   "given": 16,
+   "applied": 16,
+   "skipped": [],
+   "base": [
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[0]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[0]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[1]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[1]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[2]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[2]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[3]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[3]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[4]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[4]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[5]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[5]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[6]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[6]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[7]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[7]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[0]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[0]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[1]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[1]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[2]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[2]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[3]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[3]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[4]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[4]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[5]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[5]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[6]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[6]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    },
+    {
+     "side": "gate",
+     "key": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[7]",
+     "hint": [
+      "eq",
+      "gold",
+      "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[7]",
+      0
+     ],
+     "checks": [
+      {
+       "side": "gate",
+       "target": null,
+       "source": null,
+       "native_same_literal": false,
+       "covered": false,
+       "status": "UNKNOWN"
+      }
+     ]
+    }
+   ],
+   "constraint_bases": [],
+   "statuses": {
+    "hyp:gate:ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[0]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[1]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[2]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[3]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[4]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[5]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[6]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[7]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[0]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[1]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[2]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[3]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[4]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[5]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[6]": "differs",
+    "hyp:gate:ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[7]": "differs"
+   },
+   "joint_step_complete": false,
+   "native_base_complete": false
+  }
+ ],
+ "elapsed_s": 198.7248055934906
+}
