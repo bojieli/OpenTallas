@@ -1,0 +1,21 @@
+{
+  "status": "dead-input boundary diagnostic ONLY; no data/source equivalence asserted",
+  "retained_clock_named_inputs": 8,
+  "current_clock_named_inputs": 1,
+  "live_clock": "g_front_0_u_front__clk",
+  "retained_body_use_counts": {
+    "g_front_0_u_front__clk": 8,
+    "g_t_0_u_l8__clk": 0,
+    "g_t_0_u_stin__clk": 0,
+    "g_t_0_u_stk__clk": 0,
+    "g_t_1_u_l8__clk": 0,
+    "g_t_1_u_stin__clk": 0,
+    "g_t_1_u_stk__clk": 0,
+    "u_kt__clk": 0
+  },
+  "actual_final_v_other_clock_named_inputs": "declarations only; no instance connections",
+  "selected_signoff_clock_ports": [
+    "g_front_0_u_front__clk[0]"
+  ],
+  "correction": "Earlier nine-clock/live-phase-bridge diagnosis was wrong; preserve raw differences and require actual transitive source qualification"
+}
