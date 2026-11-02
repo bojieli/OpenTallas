@@ -15,13 +15,17 @@
   "nominal_macro_bits": 69632,
   "capture": {
     "old_pv_od_FF": 513,
-    "new_readtime_provenance_FF": 440,
+    "new_readtime_dynamic_provenance_FF": 48,
+    "reconstructed_constant_provenance_bits": 392,
     "new_resetfree_kind_FF": 3,
-    "new_total_external_capture_FF": 443,
-    "delta_external_FF": -70,
+    "new_total_external_capture_FF": 51,
+    "delta_external_FF": -462,
     "no_reset_added": true,
     "all_original_pvr_pvw_p_i_dr_on_valid_fault_logic_kept": true,
-    "raw_empty_and_warm_reset_output_hold_required": true
+    "raw_empty_and_warm_reset_output_hold_required": true,
+    "source_literal": "provenance={392'd0,pos21,live1,t4,q2,owner20}",
+    "source_hash": "107c4addac40494f621b463ca40a58bb47e560acddfc8d261aa1fe60c1ae5a88",
+    "upper_bits_are_source_constants_not_runtime_assumption": true
   },
   "header_rule": "latch original identityprovenance440 onlyonactualheader capture; never move itto write or borrowliveupstreamvalue afterwarmreset",
   "source_control_invariant": "p_i only0..4 afteroriginal reset/mod5update; an all-initial-state proof must retain original controls and account for arbitraryinitial/out-of-range selector semantics, not impose a new dont-care",
@@ -52,6 +56,16 @@
     "ttlib": "89e8a678c954a540f86a2c2571edfa312f8ff1ac3171a08556a7eeaa23670672"
   },
   "TT_FF_clock_and_readout_tables": "TT_FF_macro_tables.json",
-  "reset_semantics": "new provenance440 andkind3 are resetfree, enableonlyatnativecapture; originalp_i/pvr/pvw/dr_on/identityresetstaysunchanged. Holdlast513bits acrossreset/empty, evenheaderwhen identitycontextresets.",
-  "proof_compare": "all513rawpv_odbits everycycle includingdr_on0 andwarmreset; not justvalid output"
+  "reset_semantics": "new dynamicprovenance48 andkind3 are resetfree; sample48onlyatnativeheaderread and reconstructall440protocolbits. Preserve rawcold/empty/warmreset behavior; original sourcecontrol/identityresetstaysunchanged.",
+  "proof_compare": "all513rawpv_odbits everycycle includingdr_on0 andwarmreset; not justvalid output",
+  "conservative_full_provenance_capture": {
+    "old_pv_od_FF": 513,
+    "new_readtime_provenance_FF": 440,
+    "new_resetfree_kind_FF": 3,
+    "new_total_external_capture_FF": 443,
+    "delta_external_FF": -70,
+    "no_reset_added": true,
+    "all_original_pvr_pvw_p_i_dr_on_valid_fault_logic_kept": true,
+    "raw_empty_and_warm_reset_output_hold_required": true
+  }
 }

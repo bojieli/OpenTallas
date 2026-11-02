@@ -34,7 +34,10 @@
     "ENABLE": 1,
     "provenance_bits": 440,
     "read_time": true,
-    "constant_or_write_time_substitution_allowed": false
+    "constant_or_write_time_substitution_allowed": false,
+    "literal": "{392'd0,pos21,live1,t4,q2,owner20}",
+    "dynamic_bits": 48,
+    "source_constant_bits": 392
   },
   "control": {
     "p_i": "reset0; whiledr_on increments0\u21921\u21922\u21923\u21924\u21920",
