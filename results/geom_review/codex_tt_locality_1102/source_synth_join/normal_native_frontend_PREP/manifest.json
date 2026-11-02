@@ -130,5 +130,7 @@
  "aliases_accepted": false,
  "full_lec_credit": false,
  "physical_release": false,
- "source_phase_distinction": "Fresh mapped1_2_yosys.v declares PD3; post-eliminate SYNTH-ODB has12netFF rather than13declared. Native frontend may retain an unobserved declared PD3 because it preserves states; do not equate AIG/state counts with physical live census."
+ "source_phase_distinction": "Fresh mapped1_2_yosys.v declares PD3; post-eliminate SYNTH-ODB has12netFF rather than13declared. Native frontend may retain an unobserved declared PD3 because it preserves states; do not equate AIG/state counts with physical live census.",
+ "primitive_polarity": "Actual ff vars[IQN,IQNN], next_state=!D, output QN=IQN, so physical QN(t+1)=!D(t). Source bmath logical Q(t+1)=D(t) is a distinct source-level primitive, not the physical QN pin.",
+ "polarity_metadata_correction": "Previous d0464f88c PREP capture prose incorrectly said QNnext=D; corrected without changing actual retained Liberty fields or the universal proof, which already used !D."
 }

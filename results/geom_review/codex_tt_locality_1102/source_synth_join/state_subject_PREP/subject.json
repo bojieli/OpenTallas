@@ -599,11 +599,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50815_",
@@ -614,11 +618,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50816_",
@@ -629,11 +637,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50817_",
@@ -644,11 +656,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50818_",
@@ -659,11 +675,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50819_",
@@ -674,11 +694,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50820_",
@@ -689,11 +713,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50821_",
@@ -704,11 +732,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50822_",
@@ -719,11 +751,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50823_",
@@ -734,11 +770,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50824_",
@@ -749,11 +789,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50825_",
@@ -764,11 +808,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50826_",
@@ -779,11 +827,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50827_",
@@ -794,11 +846,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50828_",
@@ -809,11 +865,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50829_",
@@ -824,11 +884,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50830_",
@@ -839,11 +903,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50831_",
@@ -854,11 +922,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50832_",
@@ -869,11 +941,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50833_",
@@ -884,11 +960,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50834_",
@@ -899,11 +979,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50835_",
@@ -914,11 +998,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   },
   {
    "old_native": "_50836_",
@@ -929,11 +1017,15 @@
    "primitive": "DFFHQNx1_ASAP7_75t_R",
    "primitive_next_state": "!D",
    "primitive_output_function": "IQN",
-   "external_output_capture": "QN(t+1)=D(t)",
+   "external_output_capture": "QN(t+1)=!D(t)",
    "async_reset_pin": null,
    "enable_pin": null,
    "initial_relation": "UNPROVED",
-   "alias_accepted": false
+   "alias_accepted": false,
+   "actual_primitive_state_vars": [
+    "IQN",
+    "IQNN"
+   ]
   }
  ],
  "source_event_declared_netff": 13,
