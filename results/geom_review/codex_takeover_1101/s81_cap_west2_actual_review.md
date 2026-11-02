@@ -1,0 +1,7 @@
+Cap WEST2 actual saved geometry LOOK
+
+Personally VIEWED /home/ubuntu/coord/tmp/codex-cap-west2-0730/actual_saved_WEST2.png and parsed plan/receipt/saved_audit from owner packet0d0a97d57. Actual Intel2 codex-cap-west2-0730-r1/WEST2_geometry_ONLY.odb SHAe6b6b31ab2101c2dbd010ef60b2e8c98ceeacae75d9c52727e50b2f16aa0e845. Only _27646_ OA211x2 at37.044,54.54 and wire17963 BUFx12 at37.8,78.84 moved; sameN orientation/masters/status/DNT. Actual row/body/TAP/PG view with.096um conservative keepout shows clear slots west of SRAM. Three intersecting PG-only CORE_SPACER fillers removed; all non-target native snapshot/fullDEF masked digest equal, independent savedread PASS. No WEST4 master sizing adopted.
+
+Geometric CONCUR parent possible ONE journal-correct six-DATA-net GRT/readout only. C corridor155.066→78.192um/output193.104→101.358um improves geometric proxy, while A2/B .594/.324→79.272/78.462um worsens. Actual priorA2/B setup room36.708/36.949ps remains a real measured risk; no postmove slack predicted. Dirty DATA nets are net19290,_14198_,_14199_,net19400,_14200_,net17964. Old wires are unchanged and stale for moved endpoints; exact routing journal must register all6 by starting before moves or an explicitly reviewed marking API. Native PG preflight remains an owner gate.
+
+No cellbirth/extraarea/cycles/publicpin/clock/reset/source change, no DRT/SIGNED/adoption or route/timing credit. Original failedFIRM-copy receipt remains evidence; actual saved-copy review does not rewrite it.
