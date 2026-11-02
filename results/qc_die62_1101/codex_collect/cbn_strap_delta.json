@@ -1,0 +1,30 @@
+{
+ "type": "cbn_q11__cl49ae4555",
+ "added": {
+  "name": "strap_r8pad_u_t_2_2_n_b",
+  "width": 4,
+  "note": "OWNER 10-28 R8 pad-count strap; bind parent manifest, unchanged values/cycles",
+  "layer": "M5",
+  "sites_um": [
+   [
+    648.0,
+    1313.28
+   ],
+   [
+    622.08,
+    1339.2
+   ],
+   [
+    596.16,
+    1313.28
+   ],
+   [
+    596.16,
+    1308.96
+   ]
+  ]
+ },
+ "added_cycles": 0,
+ "source": "profile3_pad/bind_parent_id_straps.json: width4 kind r8pad_strap",
+ "scope": "plan pin declaration only; existing native parent values and RTL unchanged"
+}
