@@ -46,14 +46,14 @@
   {
    "src": "coll_f0",
    "dst": "coll_f1",
-   "before_um": 288.704,
-   "after_um": 284.352
+   "before_um": 292.928,
+   "after_um": 288.576
   },
   {
    "src": "coll_f1",
    "dst": "coll_f2",
-   "before_um": 288.704,
-   "after_um": 284.352
+   "before_um": 292.928,
+   "after_um": 288.576
   }
  ],
  "child_site_remap": [
@@ -129,5 +129,6 @@
   }
  ],
  "boot_model_scope": "Per-partition source release model at833ps; composed die boot/START qualification still held",
- "supersedes_rejected_proposal": "proposal2 resetdepthchange explained by400umgrid column threshold; rejected receipt remains immutable"
+ "supersedes_rejected_proposal": "proposal2 resetdepthchange explained by400umgrid column threshold; rejected receipt remains immutable",
+ "monitor_hop_scope": "maximum of ready/fault and forwarded clock when seam; actual physical LC endpoints"
 }

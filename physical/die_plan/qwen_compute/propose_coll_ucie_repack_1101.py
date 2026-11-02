@@ -92,9 +92,15 @@ def monitor_hops(P, side):
         def pin(part, name):
             lc = P.types[P.parts[part]["type"]]["clock"]["landing_contract"]
             return P.to_die(part, next(p["xy_um"] for p in lc["pins"] if p["name"] == name))
-        a = pin(src, "cland_up_ready")
-        b = pin(dst, "cland_dn_ready_" + str(e["dst_index"]))
-        out[(src, dst)] = round(abs(a[0] - b[0]) + abs(a[1] - b[1]), 6)
+        pairs = [("cland_up_ready", "cland_dn_ready_" + str(e["dst_index"])),
+                 ("cland_up_fault", "cland_dn_fault_" + str(e["dst_index"]))]
+        if e.get("seam"):
+            pairs.append(("fclk_out_cland_up", "fclk_in_cland_dn_" + str(e["dst_index"])))
+        lengths = []
+        for sp, dp in pairs:
+            a, b = pin(src, sp), pin(dst, dp)
+            lengths.append(abs(a[0] - b[0]) + abs(a[1] - b[1]))
+        out[(src, dst)] = round(max(lengths), 6)
     return out
 
 
