@@ -94,7 +94,7 @@ for n,nn in sorted(trans['proposed_correspondence'].items()):
  if 50814<=k<=50819:source=f'gp.f_start_stage[{k-50814}]'
  elif 50821<=k<=50836:source=f'gp.f_start_epoch[{k-50821}]'
  else:source='actual133-leaf comparator D function, universal proof unit3390831'
- captures.append(dict(old_native=n,fresh_native_candidate=nn,source_D_identity=source,actual_clock='clk',clock_edge='posedge',primitive='DFFHQNx1_ASAP7_75t_R',primitive_next_state='!D',primitive_output_function='IQN',external_output_capture='QN(t+1)=!D(t)',async_reset_pin=None,enable_pin=None,initial_relation='UNPROVED',alias_accepted=False))
+ captures.append(dict(old_native=n,fresh_native_candidate=nn,source_D_identity=source,actual_clock='clk',clock_edge='posedge',primitive='DFFHQNx1_ASAP7_75t_R',actual_primitive_state_vars=['IQN','IQNN'],primitive_next_state='!D',primitive_output_function='IQN',external_output_capture='QN(t+1)=!D(t)',async_reset_pin=None,enable_pin=None,initial_relation='UNPROVED',alias_accepted=False))
 # Preserve actual reset/enable statements verbatim, without treating source comments as assumptions.
 control_lines=rows['qfd_dv_typed_witness_control'].splitlines();context='\n'.join(l for l in control_lines if any(t in l for t in ('reg rs1,rs2','rs1<=','rli(','rlr(','rlo(','f_start_stage<=','f_start_epoch<=','if(!rl_ins)','if(!rl_run)','if(!rl_out)')))
 (a.out/'selected_reset_enable_context.txt').write_text(context+'\n')
