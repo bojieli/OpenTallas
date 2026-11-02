@@ -1,0 +1,155 @@
+{
+  "status": "DISABLED_SOURCE_EVENT_NOT_PHYSICALLY_QUALIFIED",
+  "enabled": false,
+  "SOURCE13_mutated": false,
+  "physical_ingress_stages": null,
+  "prototype_ingress_stages": 2,
+  "prototype_status_stages": 2,
+  "added_native_FF_per_lane": 572,
+  "added_native_FF_paired": 1144,
+  "added_ingress_edges": 2,
+  "added_observer_return_edges": 2,
+  "clock_ps": 833,
+  "exact_physical_latency": null,
+  "new_ingress_payload_bits": 279,
+  "real_CFG_desc_launch_bits": 279,
+  "actual_distinct_reset_identity_bits": 2,
+  "new_reset_distribution_FF": null,
+  "reset_distribution_physical_cycles": null,
+  "status_bits": 5,
+  "source_inputs": [
+    {
+      "module": "hbm_arch_B2o_bound_top",
+      "sha256": "eb1b461d9501109ea6ef0cde4dd6020618dcc210838d43422b6a7365e99a2064"
+    },
+    {
+      "module": "hbm_arch_q_hub__q_hub_nw",
+      "sha256": "1fd067da80ce3f7f96eedad5e2766c87d30f72d9ad542927440c4cb342b87626"
+    },
+    {
+      "module": "hbm_arch_q_b113",
+      "sha256": "2aef79214268563d7be05c52639a4f7fcf42c03de779e9820c782a5a7d815b79"
+    },
+    {
+      "module": "hbm_arch_q_hub__q_hub_ne",
+      "sha256": "e1e23fdbddecc14dd291806420ce97e6bff21c8c91b31d9de4051d74a72c69ab"
+    },
+    {
+      "module": "hbm_arch_q_b113__physical_v1",
+      "sha256": "5c2d1a70ed8e2402fae5b48df70a640663c386e7ea9d37d925a1d637c5878783"
+    }
+  ],
+  "records": [
+    {
+      "region": "NW",
+      "target": 118,
+      "forward_fields": [
+        {
+          "field": "cfg_v",
+          "lsb": 0,
+          "width": 1,
+          "actual_source": "w_u_hleaf_Q_b_cfg_v[0]"
+        },
+        {
+          "field": "cfg_target",
+          "lsb": 1,
+          "width": 8,
+          "actual_source": "w_u_hleaf_Q_b_cfg_target[7:0]"
+        },
+        {
+          "field": "cfg_addr",
+          "lsb": 9,
+          "width": 12,
+          "actual_source": "w_u_hleaf_Q_b_cfg_addr[11:0]"
+        },
+        {
+          "field": "cfg_data",
+          "lsb": 21,
+          "width": 256,
+          "actual_source": "w_u_hleaf_Q_b_cfg_data[255:0]"
+        },
+        {
+          "field": "desc_v",
+          "lsb": 277,
+          "width": 1,
+          "actual_source": "w_u_hleaf_Q_b_desc_v[0]"
+        },
+        {
+          "field": "launch_v",
+          "lsb": 278,
+          "width": 1,
+          "actual_source": "w_u_hleaf_Q_b_launch_v[0]"
+        }
+      ],
+      "return_status": [
+        "w_u_col_sfu_Q_active",
+        "w_u_col_sfu_Q_ready",
+        "w_u_col_sfu_Q_fault",
+        "w_u_sfup_Q_q1_programme_done",
+        "w_u_sfup_Q_q1_fault"
+      ],
+      "old_control_IO_faces_preserved": 4,
+      "old_fault_faces_preserved": 2
+    },
+    {
+      "region": "NE",
+      "target": 119,
+      "forward_fields": [
+        {
+          "field": "cfg_v",
+          "lsb": 0,
+          "width": 1,
+          "actual_source": "w_u_hleaf_Q_b_cfg_v[0]"
+        },
+        {
+          "field": "cfg_target",
+          "lsb": 1,
+          "width": 8,
+          "actual_source": "w_u_hleaf_Q_b_cfg_target[7:0]"
+        },
+        {
+          "field": "cfg_addr",
+          "lsb": 9,
+          "width": 12,
+          "actual_source": "w_u_hleaf_Q_b_cfg_addr[11:0]"
+        },
+        {
+          "field": "cfg_data",
+          "lsb": 21,
+          "width": 256,
+          "actual_source": "w_u_hleaf_Q_b_cfg_data[255:0]"
+        },
+        {
+          "field": "desc_v",
+          "lsb": 277,
+          "width": 1,
+          "actual_source": "w_u_hleaf_Q_b_desc_v[0]"
+        },
+        {
+          "field": "launch_v",
+          "lsb": 278,
+          "width": 1,
+          "actual_source": "w_u_hleaf_Q_b_launch_v[0]"
+        }
+      ],
+      "return_status": [
+        "w_u_col_sfu_Q_active",
+        "w_u_col_sfu_Q_ready",
+        "w_u_col_sfu_Q_fault",
+        "w_u_sfup_Q_q1_programme_done",
+        "w_u_sfup_Q_q1_fault"
+      ],
+      "old_control_IO_faces_preserved": 4,
+      "old_fault_faces_preserved": 2
+    }
+  ],
+  "cost_baseline": "Versus exact SOURCE13: producer state and old wide/fault face banks move, not recreated. Existing absolute parent FF/pin/clock budgets remain unjoined.",
+  "launch_latency_note": "Ingress I is configuration/descriptor/launch arrival latency. It does not add I to every L730 traversal or every resident programme opcode; actual VM0/COPY/observer issue and fence dates still need model qualification.",
+  "physical_new_banks": "UNPLACED; source/clock/reset/START/PG/model and parent child views required",
+  "native_delay_primitive": "ot_dp_st exact selected unchanged",
+  "native_delay_sha256": "d3d3f04be300eebdf3a00476647c86a0181bbb6a9a77ef238d5a348c18bffba2",
+  "regional_reset_note": "Actual hub and B113 arst_n differ; original native faces retain their respective delivered resets. Two actual hub reset identities use distinct explicit delivery ports, never ordinary data capture; their new physical R8 routes remain open. Any prototype top relay uses the actual top rst_n; physical regional reset/66/START joins remain unqualified.",
+  "qualification": "No whole-move miter or native programme proof claimed. Actual reset assertion identities stay direct and distinct; epoch gates command strobes; genuine66/START and reset-pending-transaction controls still required.",
+  "service_calendar": "Actual VM0/COPY/observer/fault and completion dates must account for new ingress/status edges; no programme dates invented",
+  "generator": "prepare_programme_local_move.py"
+}
