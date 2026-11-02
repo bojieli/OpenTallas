@@ -244,5 +244,17 @@
       "required": "Full-output exact reset proof with no trusted copied-flop equality; mutation controls for stale/shifted copy/fault path."
     }
   ],
-  "conclusion": "Dead7 clock shim alone does not establish current-source equivalence: top specialization has real parameter changes, including documented +1 fault edge. No identity, EQ or qualification claim; no formal/CAD launched."
+  "conclusion": "Dead7 clock shim alone does not establish current-source equivalence: top specialization has real parameter changes, including documented +1 fault edge. No identity, EQ or qualification claim; no formal/CAD launched.",
+  "actual_parent_reach": {
+    "file": "actual_parent/rtl/kv3_hg_v1_part_bound.sv",
+    "instances": [
+      "u_head0_e0",
+      "u_head1_e0"
+    ],
+    "g_f_consumers": [
+      "u_head0_u_score.gf_i",
+      "u_head1_u_score.gf_i"
+    ],
+    "strap_binding": "strap_head{0,1}_e0_strap_{bsel,hid} are public inputs in both bound parent and wrapper; no constant tie in these native KIT source files. Comments call them parent-tied quasi-static; actual higher-parent binding or approved proof scope is still required."
+  }
 }
