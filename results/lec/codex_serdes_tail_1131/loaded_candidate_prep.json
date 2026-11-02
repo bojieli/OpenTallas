@@ -335,7 +335,9 @@
       "obligations": [
         "Native reset-base must establish run==0 under unchanged4-edge reset contract.",
         "Joint induction must prove first run entry implies ph==0 and same-edge header load; if that source/control invariant is missing, retain failure.",
-        "All reads outside guard remain free and observed; no hidden bootvalid assumption."
+        "All reads outside guard remain free and observed; no hidden bootvalid assumption.",
+        "Jointly prove native cons candidate run0 impliesph0; never assume it. Allrun1/any4bitph states remain allowed (weaker than actualmod10).",
+        "Existing cons API does not check base: explicit native noreset_classify/rst_val must record run+ph4 allknown0 and show every possible reset assignment is allowed before cons is added."
       ],
       "native_controls": {
         "wrong_constant": [
@@ -370,7 +372,139 @@
             ]
           ]
         ]
-      }
+      },
+      "control_invariant_candidate": [
+        "cons",
+        "gold",
+        [
+          "ff:u_dut.u_bound.u_core.u_enc.run",
+          "ff:u_dut.u_bound.u_core.u_enc.ph[0]",
+          "ff:u_dut.u_bound.u_core.u_enc.ph[1]",
+          "ff:u_dut.u_bound.u_core.u_enc.ph[2]",
+          "ff:u_dut.u_bound.u_core.u_enc.ph[3]"
+        ],
+        [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ]
+      ]
     }
   },
   "all_hints": [
@@ -645,5 +779,11 @@
         0
       ]
     ]
-  ]
+  ],
+  "native_guard_canary": {
+    "file": "native_guard_canary.py",
+    "verdict": "PREP_ONLY_NOT_RUN",
+    "full_compare_default": "OFF",
+    "review": "Async helper read-only review confirms encoder17state invariant source preservation and native loaded API; explicitcons reset-base check added. No induction/canonicalEQ result for these new candidates."
+  }
 }
