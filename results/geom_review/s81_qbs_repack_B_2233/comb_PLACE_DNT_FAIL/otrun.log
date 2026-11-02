@@ -1,0 +1,8 @@
+ot-run: epyc2          admits    10 GB (avail 255, reserve 0, fresh 101.8, peak 78.5, headroom 0, waiters 1/150 GB) load 91/128 running 47 disk 78 GB 
+ot-run: intel1         admits    56 GB (avail 195, reserve 0, fresh 0, peak 75.3, headroom 0, waiters 55/2516 GB) load 194/112 running 69 disk 391 GB 
+ot-run: localhost      admits   221 GB (avail 384, reserve 0, fresh 53.6, peak 45.1, headroom 0, waiters 27/1127 GB) load 197/112 running 52 disk 168 GB 
+ot-run: epyc2 skipped for this die job: DISK 78 GB free - 150 GB running/queued die reservations < 4 GB
+ot-run: localhost skipped for this die job: DISK 168 GB free - 180 GB running/queued die reservations < 4 GB
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-518660-1793609950 after 24 s
+ot-run: RAN on intel1 (unit oth-ubuntu-518660-1793609950): exit 2
