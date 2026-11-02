@@ -51,8 +51,18 @@ for a,b in edges:
    if va and vb:forbid(a,ba,b,bb,'actual_first_register_DATA_reset_macro405')
    elif va:forbid(a,ba,reason='actual_first_register_DATA_reset_macro405')
    else:forbid(b,bb,reason='actual_first_register_DATA_reset_macro405')
+otherclocks={r['name']:r for r in clock['retained_other_cohorts']}
 for i in keys:
- tap=pins[assign[d.cells[i][6]]];targets=[(tap['x'],tap['y'],200.0,'same63clock_assignment')]
+ name=d.cells[i][6]
+ if name in assign:
+  tap=pins[assign[name]];targets=[(tap['x'],tap['y'],200.0,'same63clock_assignment')]
+ else:
+  root=otherclocks[name]['logical_root']
+  if root not in pins:raise ValueError('Missing actual retained other-cohort clock BPin '+root)
+  tap=pins[root];ox,oy=g.ctr(d.cells[i]);bound=abs(ox-tap['x'])+abs(oy-tap['y'])
+  # No imported-clock radius is invented. Keep its actual existing root and
+  # conservatively prevent any increase in the reference clock-center reach.
+  targets=[(tap['x'],tap['y'],bound,'retained_other_clock_no_reach_increase')]
  if i in pin_targets:targets.append((*pin_targets[i],30.0,'existing_TL_output_pin'))
  for bit,(x,y) in enumerate(choice[i]):
   for ax,ay,r,why in targets:
@@ -80,8 +90,8 @@ for root in reversed(order):
  count+=1
 bad=[d.cells[i][6] for i,k in idx.items() if component[2*k]==component[2*k+1]]
 out=dict(status='FINITE_HALF_SITE_UNSAT_NO_ARCHITECTURE_CLAIM' if bad else 'PASS_FINITE_HALF_SITE_CHOICES_ONLY',variables=N,actual_edges=len(edges),forbidden_combinations=len(clauses),unsat_variables=bad,source_declared_added_ff=13,source_actual_added_ff=12,dead_PD3_not_physical=True,accepted_aliases=False,native_placement=False,physical_release=False,required='Complete fresh38243 DATA/reset/macro/clock/row/collision audit and all native/source/parent gates; no sourcealias acceptance from these choices')
-(P/'fresh_halfsite_report.json').write_text(json.dumps(out,indent=1)+'\n')
-if bad:raise SystemExit(2)
+if bad:
+ (P/'fresh_halfsite_report.json').write_text(json.dumps(out,indent=1)+'\n');raise SystemExit(2)
 selected={i:int(component[2*k+1]>component[2*k]) for i,k in idx.items()}
 # Check every clause explicitly; component-order convention must never invert bits.
 for row in clauses:
@@ -90,4 +100,4 @@ for row in clauses:
 for i,b in selected.items():
  c=d.cells[i];w,hh=c[4]-c[2],c[5]-c[3];x,y=choice[i][b];d.cells[i]=(c[0],c[1],x-w/2,y-hh/2,x+w/2,y+hh/2,c[6])
 rows=[dict(name=d.cells[i][6],xy=list(g.ctr(d.cells[i]))) for i in sorted(variables|fresh)]
-(P/'fresh_repriced_homes_DISABLED.json').write_text(json.dumps(rows,separators=(',',':'))+'\n');print('FRESH_HALF_SITE',out['status'],N,'binary choices',len(edges),'actual edges; full audit stillrequired',flush=True)
+(P/'fresh_repriced_homes_DISABLED.json').write_text(json.dumps(rows,separators=(',',':'))+'\n');(P/'fresh_halfsite_report.json').write_text(json.dumps(out,indent=1)+'\n');print('FRESH_HALF_SITE',out['status'],N,'binary choices',len(edges),'actual edges; full audit stillrequired',flush=True)
