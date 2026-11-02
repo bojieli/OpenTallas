@@ -1,0 +1,3 @@
+TT_A actual GRT50/PLACE review — FAIL
+
+Image: auto_geom.png, viewed personally. Native GRT overflow0 does not close geometry. Large west macro wall and narrow internal passages separate dense logic banks; image shows strong clustering and unused top/right area. Measured fill0.1229, empty0.5824, 2192 r2r paths above ceiling/max866.21um, pin-register max257.92um, 398 relay collapses, H/V channel ratios2.021/1.964, largest clock tap15839sinks. Existing TT_C density/tap redesign is still advancing; preserve that distinct producer and collect before proposing another source correction. No additional TT_A route authorized by this failed image; no STA/signoff credit.
