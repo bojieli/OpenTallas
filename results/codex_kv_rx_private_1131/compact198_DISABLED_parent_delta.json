@@ -1,0 +1,51 @@
+{
+ "enabled": false,
+ "plan_source": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/src/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "entry": "partition_types.kv3_hub_Wi.hard_cores[6]",
+ "module": "qkd_hr_core_rx",
+ "inst": "host__qkd_hr_core_rx",
+ "orient": "R0",
+ "old_origin_um": [
+  587.52,
+  354.24
+ ],
+ "new_origin_um": [
+  617.76,
+  384.48
+ ],
+ "old_outline_um": [
+  259.2,
+  259.2
+ ],
+ "new_outline_um": [
+  198.72,
+  198.72
+ ],
+ "old_bbox_um": [
+  587.52,
+  354.24,
+  846.72,
+  613.44
+ ],
+ "new_bbox_um": [
+  617.76,
+  384.48,
+  816.48,
+  583.2
+ ],
+ "physical_occupancy": "newbbox strictly contained in oldbbox; allotherchildren unchanged",
+ "clock_tap_xy_unchanged_um": [
+  717.144,
+  483.84
+ ],
+ "data_pin_move_euclidean_max_um": 58.36492097141913,
+ "data_pin_move_euclidean_p90_um": 50.131605360291424,
+ "data_pin_move_manhattan_max_um": 80.16,
+ "moves_are": "endpoint displacement only, NOT routedlength or timing prediction",
+ "holds": [
+  "rootplan-eventapproval",
+  "actualmaster clocktree/sink review",
+  "actual placedgeometry/emptybins",
+  "normal TT0setup/FF25hold+10repair at833ps"
+ ]
+}
