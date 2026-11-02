@@ -1,0 +1,493 @@
+{
+  "status": "STATIC_SOURCE_SUBJECT_ONLY_NO_PROOF",
+  "subject": "/srv/opentallas-scratch2/claude/codex-qc-glue/place_spill/kit",
+  "files_sha256": {
+    "rtl/ot_qwen_d2d_safe5.sv": "9292c56ad28517f834840e66cd0a07a5b64d6a93c329634d6edde74a8a0eedee",
+    "rtl/ot_qwen_d2d_safe7.sv": "5488d066ced478eaeccf1a9ae4a31e4d6eb1d4cbc996708fc8252ef972ad8582",
+    "rtl/ot_qwen_d2d_services.sv": "5f195b4304470722e41f5af44337f74fc31b70990bc74bce5a680f6df2b41607",
+    "rtl/ot_qwen_status_observers_v1.sv": "69b74338e3eca226a34963cc3953f079538b5dc9fc4b121349a407f2ca188c24",
+    "rtl/qfd_qc_glue_part_bound.sv": "267eb96d1b9630f70b9f3c8cc29edcbd5299a6327023552152d2c380d133cd30",
+    "lec/gold.aliases.json": "8c00633d16c24c795bcc82d2ad811ef68489f5a25d8566731923f19d3a5c307a",
+    "lec/gold.map": "27e312f8af87940c6bcc40d20117fe9356398370f506232de294f3ca9fdace84",
+    "lec/gate.map": "7857fe9702e008f8a71a556405422c2e1ca4502914136d64191bb1986fdddc39"
+  },
+  "nets": {
+    "u_dut.u_bound.u_d2d_rom.u_core.fq_c": [
+      109538,
+      109539,
+      109540
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.g_eb[0].u_eb.q": [
+      109541
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_rec.epoch_begin": [
+      137013
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_rec.fq": [
+      137087,
+      137088,
+      137086
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_a[0].u_a.q": [
+      137401
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_a[1].u_a.q": [
+      137402
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_a[2].u_a.q": [
+      137403
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_a[3].u_a.q": [
+      137404
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[0].u_b.q": [
+      137016
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[17].u_b.q": [
+      113946
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[1].u_b.q": [
+      109537
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[20].u_b.q": [
+      120470
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q": [
+      137408
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.s0": [
+      137399
+    ],
+    "u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.s1": [
+      137400
+    ]
+  },
+  "drivers": {
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.$driver$fq_c": {
+      "type": "$aldff",
+      "parameters": {
+        "ALOAD_POLARITY": "00000000000000000000000000000000",
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000011"
+      },
+      "connections": {
+        "AD": [
+          "0",
+          "0",
+          "0"
+        ],
+        "ALOAD": [
+          109537
+        ],
+        "CLK": [
+          2346
+        ],
+        "D": [
+          105333,
+          109538,
+          109539
+        ],
+        "Q": [
+          109538,
+          109539,
+          109540
+        ]
+      },
+      "port_directions": {
+        "AD": "input",
+        "ALOAD": "input",
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:189.5|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\g_eb[0].u_eb.$driver$q": {
+      "type": "$aldff",
+      "parameters": {
+        "ALOAD_POLARITY": "00000000000000000000000000000000",
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "AD": [
+          "0"
+        ],
+        "ALOAD": [
+          109537
+        ],
+        "CLK": [
+          2346
+        ],
+        "D": [
+          109540
+        ],
+        "Q": [
+          109541
+        ]
+      },
+      "port_directions": {
+        "AD": "input",
+        "ALOAD": "input",
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:193.21|../../work/rtl/ot_qwen_d2d_safe5.sv:29.5|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_rec.$driver$epoch_begin": {
+      "type": "$aldff",
+      "parameters": {
+        "ALOAD_POLARITY": "00000000000000000000000000000000",
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "AD": [
+          "0"
+        ],
+        "ALOAD": [
+          137016
+        ],
+        "CLK": [
+          2346
+        ],
+        "D": [
+          137086
+        ],
+        "Q": [
+          137013
+        ]
+      },
+      "port_directions": {
+        "AD": "input",
+        "ALOAD": "input",
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:182.40|../../work/rtl/ot_qwen_d2d_services.sv:61.5|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_rec.$driver$fq": {
+      "type": "$aldff",
+      "parameters": {
+        "ALOAD_POLARITY": "00000000000000000000000000000000",
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000011"
+      },
+      "connections": {
+        "AD": [
+          "0",
+          "0",
+          "0"
+        ],
+        "ALOAD": [
+          137016
+        ],
+        "CLK": [
+          2346
+        ],
+        "D": [
+          105333,
+          137087,
+          137088
+        ],
+        "Q": [
+          137087,
+          137088,
+          137086
+        ]
+      },
+      "port_directions": {
+        "AD": "input",
+        "ALOAD": "input",
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:182.40|../../work/rtl/ot_qwen_d2d_services.sv:61.5|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_reset_regions.$driver$s0": {
+      "type": "$aldff",
+      "parameters": {
+        "ALOAD_POLARITY": "00000000000000000000000000000000",
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "AD": [
+          "0"
+        ],
+        "ALOAD": [
+          6635
+        ],
+        "CLK": [
+          2346
+        ],
+        "D": [
+          "1"
+        ],
+        "Q": [
+          137399
+        ]
+      },
+      "port_directions": {
+        "AD": "input",
+        "ALOAD": "input",
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:174.37|../../work/rtl/ot_qwen_d2d_safe7.sv:36.5|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_reset_regions.$driver$s1": {
+      "type": "$aldff",
+      "parameters": {
+        "ALOAD_POLARITY": "00000000000000000000000000000000",
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "AD": [
+          "0"
+        ],
+        "ALOAD": [
+          6635
+        ],
+        "CLK": [
+          2346
+        ],
+        "D": [
+          137399
+        ],
+        "Q": [
+          137400
+        ]
+      },
+      "port_directions": {
+        "AD": "input",
+        "ALOAD": "input",
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:174.37|../../work/rtl/ot_qwen_d2d_safe7.sv:36.5|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_reset_regions.\\g_a[0].u_a.$driver$q": {
+      "type": "$dff",
+      "parameters": {
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "CLK": [
+          2346
+        ],
+        "D": [
+          137400
+        ],
+        "Q": [
+          137401
+        ]
+      },
+      "port_directions": {
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:174.37|../../work/rtl/ot_qwen_d2d_safe5.sv:26.5|../../work/rtl/ot_qwen_d2d_safe7.sv:42.20|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_reset_regions.\\g_a[1].u_a.$driver$q": {
+      "type": "$dff",
+      "parameters": {
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "CLK": [
+          2346
+        ],
+        "D": [
+          137400
+        ],
+        "Q": [
+          137402
+        ]
+      },
+      "port_directions": {
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:174.37|../../work/rtl/ot_qwen_d2d_safe5.sv:26.5|../../work/rtl/ot_qwen_d2d_safe7.sv:42.20|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_reset_regions.\\g_a[2].u_a.$driver$q": {
+      "type": "$dff",
+      "parameters": {
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "CLK": [
+          2346
+        ],
+        "D": [
+          137400
+        ],
+        "Q": [
+          137403
+        ]
+      },
+      "port_directions": {
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:174.37|../../work/rtl/ot_qwen_d2d_safe5.sv:26.5|../../work/rtl/ot_qwen_d2d_safe7.sv:42.20|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_reset_regions.\\g_a[3].u_a.$driver$q": {
+      "type": "$dff",
+      "parameters": {
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "CLK": [
+          2346
+        ],
+        "D": [
+          137400
+        ],
+        "Q": [
+          137404
+        ]
+      },
+      "port_directions": {
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:174.37|../../work/rtl/ot_qwen_d2d_safe5.sv:26.5|../../work/rtl/ot_qwen_d2d_safe7.sv:42.20|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_reset_regions.\\g_b[0].u_b.$driver$q": {
+      "type": "$dff",
+      "parameters": {
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "CLK": [
+          2346
+        ],
+        "D": [
+          137401
+        ],
+        "Q": [
+          137016
+        ]
+      },
+      "port_directions": {
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:174.37|../../work/rtl/ot_qwen_d2d_safe5.sv:26.5|../../work/rtl/ot_qwen_d2d_safe7.sv:45.20|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_reset_regions.\\g_b[17].u_b.$driver$q": {
+      "type": "$dff",
+      "parameters": {
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "CLK": [
+          2346
+        ],
+        "D": [
+          137402
+        ],
+        "Q": [
+          113946
+        ]
+      },
+      "port_directions": {
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:174.37|../../work/rtl/ot_qwen_d2d_safe5.sv:26.5|../../work/rtl/ot_qwen_d2d_safe7.sv:45.20|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_reset_regions.\\g_b[1].u_b.$driver$q": {
+      "type": "$dff",
+      "parameters": {
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "CLK": [
+          2346
+        ],
+        "D": [
+          137402
+        ],
+        "Q": [
+          109537
+        ]
+      },
+      "port_directions": {
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:174.37|../../work/rtl/ot_qwen_d2d_safe5.sv:26.5|../../work/rtl/ot_qwen_d2d_safe7.sv:45.20|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_reset_regions.\\g_b[20].u_b.$driver$q": {
+      "type": "$dff",
+      "parameters": {
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "CLK": [
+          2346
+        ],
+        "D": [
+          137401
+        ],
+        "Q": [
+          120470
+        ]
+      },
+      "port_directions": {
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:174.37|../../work/rtl/ot_qwen_d2d_safe5.sv:26.5|../../work/rtl/ot_qwen_d2d_safe7.sv:45.20|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    },
+    "$flatten\\u_dut.\\u_bound.\\u_d2d_rom.\\u_core.\\u_reset_regions.\\g_b[38].u_b.$driver$q": {
+      "type": "$dff",
+      "parameters": {
+        "CLK_POLARITY": "00000000000000000000000000000001",
+        "WIDTH": "00000000000000000000000000000001"
+      },
+      "connections": {
+        "CLK": [
+          2346
+        ],
+        "D": [
+          137403
+        ],
+        "Q": [
+          137408
+        ]
+      },
+      "port_directions": {
+        "CLK": "input",
+        "D": "input",
+        "Q": "output"
+      },
+      "src": "/work/lec/wrap_gold.v:249.22-249.15951|../../work/rtl/qfd_qc_glue_part_bound.sv:2791.74|../../work/rtl/ot_qwen_status_observers_v1.sv:174.37|../../work/rtl/ot_qwen_d2d_safe5.sv:26.5|../../work/rtl/ot_qwen_d2d_safe7.sv:45.20|../../work/rtl/ot_qwen_status_observers_v1.sv:586.124|../../work/rtl/qfd_qc_glue_part.sv:357.28"
+    }
+  }
+}

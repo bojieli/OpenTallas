@@ -1,0 +1,616 @@
+{
+  "count": 13747,
+  "cohort_keys": [
+    {
+      "index": 670,
+      "row": [
+        "both",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_a[3].u_a.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_por_region.g_p[0].q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 671,
+      "row": [
+        "both",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_por_region.rst_n",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13361,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.epoch_begin",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.g_eb[0].u_eb.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13362,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.fq[0]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.fq_c[0]",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13363,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.fq[1]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.fq_c[1]",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13364,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_rec.fq[2]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.fq_c[2]",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13378,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_a[0].u_a.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_a[3].u_a.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13379,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_a[1].u_a.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_a[3].u_a.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13380,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_a[2].u_a.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_a[3].u_a.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13381,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[0].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13382,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[10].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13383,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[11].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13384,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[12].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13385,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[13].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13386,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[14].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13387,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[15].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13388,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[16].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13389,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[17].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13390,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[18].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13391,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[19].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13392,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[1].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13393,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[20].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13394,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[21].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13395,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[22].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13396,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[23].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13397,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[24].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13398,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[25].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13399,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[26].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13400,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[27].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13401,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[28].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13402,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[29].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13403,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[2].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13404,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[30].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13405,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[31].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13406,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[32].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13407,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[33].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13408,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[34].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13409,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[35].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13410,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[36].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13411,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[37].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13412,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[3].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13413,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[4].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13414,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[5].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13415,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[6].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13416,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[7].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13417,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[8].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    },
+    {
+      "index": 13418,
+      "row": [
+        "gold",
+        "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[9].u_b.q",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_bound.u_d2d_rom.u_core.u_reset_regions.g_b[38].u_b.q",
+          0
+        ]
+      ]
+    }
+  ]
+}
