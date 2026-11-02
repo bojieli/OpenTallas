@@ -1,0 +1,7 @@
+HFDEP actual SOURCE13 native source/ABI frontier PREP
+
+selected/ is the exact seven-definition frozen lexical closure plus actual callers. There are FOUR selected hfd_ep_static instances: NE_io N2, NW/NE_spb0 S0, vsN0 S1. All use the exact selected defaults IDLE_K204/MUT0. The two planned NW_io endpoints are a separate hfd_ep_static_vc2 class; they are not silently counted or rebound here.
+
+Native ABI2288 bits=1148input/1140output, including oneclk/onerst. Four real64×512 SRAMs store2banks×64×612 logicalframebits; eachbank has2W306leaves with true512bit physicalmaster padding. Existing native input/output capture and async2sync+parallelrelay3edge release are in the selected source; there is no outsidefaceFFshell. No source change/cycle addition is proposed. Old a2 +1in/+1out/2286FF/reset64/SYNTH16350EQ is a separate coupon and grants no native physical qualification.
+
+Geometry reference only: the old pin/macro arrangement is rendered with native hierarchical instance paths, no reuse as a source-qualified physical view. Four171.288×77.784 macros at427.68×246.24 leave broad central/lower logic streets. This fulloutline envelope exceeds405; actual flow-affinity/r2r/pin/clock/PG gates remain required. Clockentry220.344,25.92 and435/352 parentbudget are not adopted by this PREP. The backend would stage the globalHBM64 contract for this module; that needs an explicit current source/reset/latency join or distinct conditionalnative4formal scope before building. No GEN/SYNTH/LEC/P&R/STA has run here.
