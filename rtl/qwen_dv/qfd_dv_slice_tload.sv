@@ -24,7 +24,8 @@ module qfd_dv_slice_tload #(
     parameter integer LOCAL_JOIN = 0,            // opt-in: 16-bit data / 12-bit address select groups (<=32 gate loads)
     parameter integer NWC = 34,                  // 32 data copies (32 bits each) + kind + addr
     parameter integer MUT = 0,
-    parameter integer MONITOR_TAIL = 0          // candidate only, original88 reads/default remains unchanged
+    parameter integer MONITOR_TAIL = 0,         // candidate only, original88 reads/default remains unchanged
+    parameter integer HEAD_STAGE37 = 0          // candidate only, stage37 shared HEAD table layout
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -70,7 +71,7 @@ module qfd_dv_slice_tload #(
     wire [1:0]    l_kind;
     wire [23:0]   l_addr;
     wire [1023:0] l_data;
-    qfd_dv_table_rom_loader #(.SLICE(SLICE), .BTAB_COMPACT(1), .CAPTURE_STAGE(CAPTURE_STAGE), .CAPTURE_MUT(CAPTURE_MUT), .LOCAL_CTRL(LOCAL_JOIN), .WE_COPIES(JOIN_COPIES), .MONITOR_TAIL(MONITOR_TAIL)) u_ld (.ck(ck), .rst_n(rst_n),
+    qfd_dv_table_rom_loader #(.SLICE(SLICE), .BTAB_COMPACT(1), .CAPTURE_STAGE(CAPTURE_STAGE), .CAPTURE_MUT(CAPTURE_MUT), .LOCAL_CTRL(LOCAL_JOIN), .WE_COPIES(JOIN_COPIES), .MONITOR_TAIL(MONITOR_TAIL), .HEAD_STAGE37(HEAD_STAGE37)) u_ld (.ck(ck), .rst_n(rst_n),
         .start(l_start), .stage(l_stage), .user_id(l_user), .other_table_write(s_we),
         .tw_we(l_we), .tw_we_k(l_we_k), .tw_kind(l_kind), .tw_addr(l_addr), .tw_data(l_data),
         .busy(busy), .done(done), .fault(l_fault));
