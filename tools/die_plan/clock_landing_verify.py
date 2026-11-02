@@ -139,8 +139,18 @@ class Verification:
         prefix=ident(pn)+'.';path=prefix+'u_cland_origin';origin=self.instance(path,'ot_dp_landing_origin_s_regional')
         if not origin:return
         params=getattr(origin,'params',{})
-        if [int(params.get(k,-1)) for k in ('ENABLE','PADW','REGIONS')]!=[1,1,4]:self.fail(path+': actual regional parameters differ')
+        def parameter(key,default):
+            value=params.get(key,default)
+            if isinstance(value,int):return value
+            if re.fullmatch(r'-?[0-9]+',str(value)):return int(value)
+            match=re.fullmatch(r"([0-9]+)'b([01]+)",str(value))
+            if match and len(match[2])==int(match[1]):return int(match[2],2)
+            return None
+        if [parameter(k,{'ENABLE':0,'PADW':1,'REGIONS':4}[k]) for k in ('ENABLE','PADW','REGIONS')]!=[1,1,4]:self.fail(path+': actual regional parameters differ')
         self.clock(origin,pn)
+        if any(len(origin.ports.get(p,[]))!=4 for p in ('start_r','start_d_r','rst_region_raw_n')):
+            self.fail(path+': actual regional vector width differs')
+        self.equal_input(origin,'rst_raw_n',[self.output(prefix+'u_rrl_87','q')])
         raws=[]
         for r in range(4):
             rp=prefix+f'g_tt_raw_regions.g_region[{r}].u_raw_copy';raw=self.instance(rp,'ot_dp_rrelay')
