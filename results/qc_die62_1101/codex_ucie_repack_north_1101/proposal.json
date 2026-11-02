@@ -1,0 +1,401 @@
+{
+ "verdict": "PENDING_G0C_BIND_REVIEW",
+ "types": [
+  "coll_ucie",
+  "coll_core",
+  "coll_ft__cla4a25d77"
+ ],
+ "shifted_parts": [
+  "coll_f1",
+  "coll_f2",
+  "coll_core"
+ ],
+ "added_mission_cycles": 0,
+ "new_unowned_gap_um": 25.92,
+ "gap_beside": "coll_f1",
+ "reset_deltas": [
+  {
+   "type": "coll_ucie",
+   "old_depth": 3,
+   "new_depth": 4,
+   "old_relays": 21,
+   "new_relays": 44
+  },
+  {
+   "type": "coll_core",
+   "old_depth": 5,
+   "new_depth": 5,
+   "old_relays": 50,
+   "new_relays": 47
+  },
+  {
+   "type": "coll_ft__cla4a25d77",
+   "old_depth": 4,
+   "new_depth": 4,
+   "old_relays": 23,
+   "new_relays": 23
+  }
+ ],
+ "monitor_hop_diff": [
+  {
+   "src": "coll_core",
+   "dst": "coll_f3",
+   "before_um": 267.968,
+   "after_um": 293.888
+  },
+  {
+   "src": "coll_f0",
+   "dst": "coll_f1",
+   "before_um": 292.928,
+   "after_um": 288.576
+  },
+  {
+   "src": "coll_f1",
+   "dst": "coll_f2",
+   "before_um": 292.928,
+   "after_um": 288.576
+  }
+ ],
+ "child_site_remap": [
+  {
+   "type": "coll_core",
+   "child": "coll_ucie",
+   "face": "W",
+   "site_j": 0,
+   "before": [
+    8.16,
+    158.944
+   ],
+   "after": [
+    8.16,
+    158.944
+   ]
+  },
+  {
+   "type": "coll_ft__cla4a25d77",
+   "child": "coll_f0",
+   "face": "S",
+   "site_j": 2,
+   "before": [
+    655.2,
+    8.608
+   ],
+   "after": [
+    633.632,
+    8.608
+   ]
+  }
+ ],
+ "errors": {
+  "macro_fit": [],
+  "new_footprint_overlaps": [],
+  "new_monitor_reach": []
+ },
+ "held": [
+  "G0/C differential all reach/clock/reset/ports",
+  "strict native bind",
+  "new clock ABI/parent prefix and composed boot model event",
+  "actual measured fill/native source qualification",
+  "GEN and actual LOOK",
+  "licensed PHY remains assumed, no physical release"
+ ],
+ "boot_clock_model": [
+  {
+   "type": "coll_ucie",
+   "normal_clock_ports_before": 10,
+   "normal_clock_ports_after": 15,
+   "release_after_pin_before": 4,
+   "release_after_pin_after": 5,
+   "extra_local_boot_cycles": 1,
+   "extra_mission_cycles": 0
+  },
+  {
+   "type": "coll_core",
+   "normal_clock_ports_before": 8,
+   "normal_clock_ports_after": 8,
+   "release_after_pin_before": 6,
+   "release_after_pin_after": 6,
+   "extra_local_boot_cycles": 0,
+   "extra_mission_cycles": 0
+  },
+  {
+   "type": "coll_ft__cla4a25d77",
+   "normal_clock_ports_before": 8,
+   "normal_clock_ports_after": 8,
+   "release_after_pin_before": 5,
+   "release_after_pin_after": 5,
+   "extra_local_boot_cycles": 0,
+   "extra_mission_cycles": 0
+  },
+  {
+   "type": "coll_ftm",
+   "normal_clock_ports_before": 21,
+   "normal_clock_ports_after": 20,
+   "release_after_pin_before": 6,
+   "release_after_pin_after": 6,
+   "extra_local_boot_cycles": 0,
+   "extra_mission_cycles": 0
+  }
+ ],
+ "boot_model_scope": "Per-partition source release model at833ps; composed die boot/START qualification still held",
+ "supersedes_rejected_proposal": "proposal2 resetdepthchange explained by400umgrid column threshold; rejected receipt remains immutable",
+ "monitor_hop_scope": "maximum of ready/fault and forwarded clock when seam; actual physical LC endpoints",
+ "modified_types": [
+  "coll_ucie",
+  "coll_core",
+  "coll_ft__cla4a25d77",
+  "coll_ftm"
+ ],
+ "north_window_remap": [
+  {
+   "type": "coll_ftm",
+   "bus": "ard_wo_in_data_o",
+   "before": [
+    286.288,
+    393.184
+   ],
+   "after": [
+    312.208,
+    419.104
+   ],
+   "window_rule": "explicit +25.92",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "arl_wo_in_last_o",
+   "before": [
+    284.928,
+    285.328
+   ],
+   "after": [
+    310.848,
+    311.248
+   ],
+   "window_rule": "explicit +25.92",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "arm_wo_in_mode_o",
+   "before": [
+    283.568,
+    283.968
+   ],
+   "after": [
+    309.488,
+    309.888
+   ],
+   "window_rule": "explicit +25.92",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "art_wo_in_tag_o",
+   "before": [
+    276.0,
+    282.608
+   ],
+   "after": [
+    301.92,
+    308.528
+   ],
+   "window_rule": "explicit +25.92",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "arv_wo_in_valid_o",
+   "before": [
+    274.64,
+    275.04
+   ],
+   "after": [
+    300.56,
+    300.96
+   ],
+   "window_rule": "explicit +25.92",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "ccm_wo_cmd_mode_o",
+   "before": [
+    273.28,
+    273.68
+   ],
+   "after": [
+    299.2,
+    299.6
+   ],
+   "window_rule": "explicit +25.92",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "cct_wo_cmd_tag_o",
+   "before": [
+    265.712,
+    272.32
+   ],
+   "after": [
+    291.632,
+    298.24
+   ],
+   "window_rule": "explicit +25.92",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "ccv_wo_cmd_v_o",
+   "before": [
+    264.352,
+    264.752
+   ],
+   "after": [
+    290.272,
+    290.672
+   ],
+   "window_rule": "explicit +25.92",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "ccw_wo_cmd_words_o",
+   "before": [
+    259.984,
+    263.392
+   ],
+   "after": [
+    285.904,
+    289.312
+   ],
+   "window_rule": "explicit +25.92",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "cmd_free_io_cmd_free_i",
+   "before": null,
+   "after": null,
+   "window_rule": "input inherits moved coll_core north bank",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "fault_io_fault_i",
+   "before": null,
+   "after": null,
+   "window_rule": "input inherits moved coll_core north bank",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "out_data_rd_wi_i",
+   "before": null,
+   "after": null,
+   "window_rule": "input inherits moved coll_core north bank",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "out_err_re_wi_i",
+   "before": null,
+   "after": null,
+   "window_rule": "input inherits moved coll_core north bank",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "out_last_rl_wi_i",
+   "before": null,
+   "after": null,
+   "window_rule": "input inherits moved coll_core north bank",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "out_rank_rr_wi_i",
+   "before": null,
+   "after": null,
+   "window_rule": "input inherits moved coll_core north bank",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "out_valid_rv_wi_i",
+   "before": null,
+   "after": null,
+   "window_rule": "input inherits moved coll_core north bank",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "crec_tx_s0_i",
+   "before": null,
+   "after": null,
+   "window_rule": "input inherits moved coll_core north bank",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "crec_rx_s0_o",
+   "before": [
+    24.128,
+    138.464
+   ],
+   "after": [
+    50.048,
+    164.384
+   ],
+   "window_rule": "explicit +25.92",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "fltk_o",
+   "before": [
+    254.752,
+    255.456
+   ],
+   "after": [
+    280.672,
+    281.376
+   ],
+   "window_rule": "explicit +25.92",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "fltc_i",
+   "before": null,
+   "after": null,
+   "window_rule": "input inherits moved coll_core north bank",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "fltv_o",
+   "before": [
+    256.416,
+    259.024
+   ],
+   "after": [
+    282.336,
+    284.944
+   ],
+   "window_rule": "explicit +25.92",
+   "landing_translation_um": 25.92
+  },
+  {
+   "type": "coll_ftm",
+   "bus": "fltvc_i",
+   "before": null,
+   "after": null,
+   "window_rule": "input inherits moved coll_core north bank",
+   "landing_translation_um": 25.92
+  }
+ ],
+ "schema_errors": [],
+ "required_scope_extension": "coll_ftm complete S face +25.92um, including implicit input landing geometry"
+}
