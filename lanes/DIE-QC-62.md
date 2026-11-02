@@ -1,0 +1,8 @@
+# DIE-QC-62 (QC die owner, succeeds DIE-QC-61; Codex parked)
+
+2026-11-01 19:54 PST DIE-QC-62: CLAIM QC die (A0, bind, glue, cseq, su_lane, PHYs, kits). Branch claude/die-qc-62-band-1101 (intel2 wt/die-qc-62, base claude/die-qc-61-class-1101@c897f9b902c). Scratch intel2 /srv/opentallas-scratch2/claude/die-qc-62 (.keep).
+2026-11-01 19:54 PST DIE-QC-62: PROGRESS batch.
+ (1) L1 coupon: PLACE rc0 epyc2 19:12-19:15 (DPL 12->0, max disp 3.0 um, HPWL +0%); 3 edits 0 overlaps [CHECKED numeric]; GEOM-107 PASS-COND; placement_review.json written; route phase (incremental GRT + STA) via ot-run --crit, spilled to intel1. NEAR-COUNT row owner -> DIE-QC-62.
+ (2) coll_ftm root cause [CHECKED]: main tools rebuild coll_ftm reset tree with 70 relays (rst_n_t21 <- rst_rl_16), stored d90 plan+sidecar tree has 71 (rst_n_t21 <- rst_rl_17 <- rst_rl_16); d90 tools reproduce stored tree exactly. Strict bind main tools + d90 plan = 1 error (this one). Class: most landed QC types' stored collector trees drifted since d90 (tap-rule changes 0ddc1ccd8c8/1d753c326cf); only coll_ftm is fatal at bind. Fix = rederive_coll_1101.py (paired plan landing_contract + sidecar, QC-61 derive rules) for ALL drifted types -> running.
+ (3) SC band class fix (sle_sc_v1 x2 DPL-0033): delta_scband_1101.py = DIE-QC-49 STM mechanism (ring_ff x spread 2.0 + ring_place ff, reset boxes +12.96 um) on 9 SC types, 118 bands. G0C 96 err (= baseline, 0 new) / 594 warn (-7 pin_reg on SC). Pilot sle_sc_v1__cl115da35f in gen.
+ (4) Inherited jobs alive: GLUE LEC (last ABC cones), L7 GRT (intel1 GPL/repair), dqc61-ttA (GPL it 1060), dqc61-ttC (pre-route LEC).
