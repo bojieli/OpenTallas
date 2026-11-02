@@ -1,0 +1,399 @@
+{
+ "schema": "opentallas.die_plan.partition_budget.v1",
+ "die": "s81_head",
+ "type": "hd_st_n3_turn",
+ "module": "ot_s81hd_st_n3_turn",
+ "outline_um": [
+  1304.64,
+  604.8
+ ],
+ "period_ps": 833,
+ "pins": 2056,
+ "signal_max": "M7",
+ "clock": {
+  "tap_um": [
+   587.52,
+   17.28
+  ],
+  "insertion_ps": 450.0,
+  "insertion_ff_ps": 342.0,
+  "insertion_basis": {
+   "tt": "DIE-HEAD-47 l47: FF = 0.76 x TT plan (measured FF/TT 0.757-0.765: hd_spn_wshim_rx 321.29/419.73, hd_mesh_e 342.67/452.60, hd_st_m 336.79/444.87 GRT pin-register means); replaces the parent_budget 380 placeholder",
+   "ff": "DIE-HEAD-47 l47: FF = 0.76 x TT plan (measured FF/TT 0.757-0.765: hd_spn_wshim_rx 321.29/419.73, hd_mesh_e 342.67/452.60, hd_st_m 336.79/444.87 GRT pin-register means); replaces the parent_budget 380 placeholder"
+  },
+  "parent_early_tap_ps": 0.0,
+  "common_latency_ps": 450.0,
+  "insertion_tol_ps": 40,
+  "tap_mode": "density",
+  "tap_pitch_um": 100000.0,
+  "grid_taps": 0,
+  "taps": [
+   {
+    "name": "clk",
+    "xy": [
+     714.3467,
+     67.488
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     146.944,
+     84.6
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     448.392,
+     96.552
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     1027.3493,
+     120.928
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t4",
+    "xy": [
+     783.0187,
+     170.144
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t5",
+    "xy": [
+     291.808,
+     251.776
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t6",
+    "xy": [
+     605.76,
+     253.92
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t7",
+    "xy": [
+     973.248,
+     290.016
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t8",
+    "xy": [
+     124.768,
+     327.5093
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t9",
+    "xy": [
+     1287.36,
+     342.504
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t10",
+    "xy": [
+     733.248,
+     381.408
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t11",
+    "xy": [
+     453.924,
+     385.656
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t12",
+    "xy": [
+     1024.644,
+     392.808
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t13",
+    "xy": [
+     124.768,
+     587.52
+    ],
+    "kind": "density"
+   }
+  ],
+  "sink_taps": [
+   {
+    "name": "clk",
+    "xy": [
+     714.3467,
+     67.488
+    ],
+    "planned_sinks": 252,
+    "radius_um": 84.8
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     146.944,
+     84.6
+    ],
+    "planned_sinks": 334,
+    "radius_um": 155.9
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     448.392,
+     96.552
+    ],
+    "planned_sinks": 393,
+    "radius_um": 156.5
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     1027.3493,
+     120.928
+    ],
+    "planned_sinks": 515,
+    "radius_um": 136.8
+   },
+   {
+    "name": "clk_t4",
+    "xy": [
+     783.0187,
+     170.144
+    ],
+    "planned_sinks": 263,
+    "radius_um": 88.8
+   },
+   {
+    "name": "clk_t5",
+    "xy": [
+     291.808,
+     251.776
+    ],
+    "planned_sinks": 397,
+    "radius_um": 155.5
+   },
+   {
+    "name": "clk_t6",
+    "xy": [
+     605.76,
+     253.92
+    ],
+    "planned_sinks": 316,
+    "radius_um": 156.9
+   },
+   {
+    "name": "clk_t7",
+    "xy": [
+     973.248,
+     290.016
+    ],
+    "planned_sinks": 254,
+    "radius_um": 77.0
+   },
+   {
+    "name": "clk_t8",
+    "xy": [
+     124.768,
+     327.5093
+    ],
+    "planned_sinks": 515,
+    "radius_um": 136.8
+   },
+   {
+    "name": "clk_t9",
+    "xy": [
+     1287.36,
+     342.504
+    ],
+    "planned_sinks": 513,
+    "radius_um": 117.5
+   },
+   {
+    "name": "clk_t10",
+    "xy": [
+     733.248,
+     381.408
+    ],
+    "planned_sinks": 319,
+    "radius_um": 127.3
+   },
+   {
+    "name": "clk_t11",
+    "xy": [
+     453.924,
+     385.656
+    ],
+    "planned_sinks": 297,
+    "radius_um": 147.9
+   },
+   {
+    "name": "clk_t12",
+    "xy": [
+     1024.644,
+     392.808
+    ],
+    "planned_sinks": 259,
+    "radius_um": 77.9
+   },
+   {
+    "name": "clk_t13",
+    "xy": [
+     124.768,
+     587.52
+    ],
+    "planned_sinks": 515,
+    "radius_um": 117.9
+   }
+  ],
+  "taps_snapped": [
+   {
+    "name": "clk",
+    "xy": [
+     714.336,
+     67.488
+    ]
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     147.36,
+     84.768
+    ]
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     448.416,
+     96.544
+    ]
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     1027.36,
+     120.928
+    ]
+   },
+   {
+    "name": "clk_t4",
+    "xy": [
+     783.008,
+     170.144
+    ]
+   },
+   {
+    "name": "clk_t5",
+    "xy": [
+     291.808,
+     251.808
+    ]
+   },
+   {
+    "name": "clk_t6",
+    "xy": [
+     605.728,
+     253.92
+    ]
+   },
+   {
+    "name": "clk_t7",
+    "xy": [
+     973.216,
+     290.016
+    ]
+   },
+   {
+    "name": "clk_t8",
+    "xy": [
+     124.768,
+     327.52
+    ]
+   },
+   {
+    "name": "clk_t9",
+    "xy": [
+     1286.88,
+     342.496
+    ]
+   },
+   {
+    "name": "clk_t10",
+    "xy": [
+     733.216,
+     381.408
+    ]
+   },
+   {
+    "name": "clk_t11",
+    "xy": [
+     454.112,
+     385.632
+    ]
+   },
+   {
+    "name": "clk_t12",
+    "xy": [
+     1024.672,
+     392.8
+    ]
+   },
+   {
+    "name": "clk_t13",
+    "xy": [
+     124.768,
+     587.488
+    ]
+   }
+  ],
+  "core_taps": [],
+  "uncertainty_split": 0.5,
+  "edge_clocks": [
+   {
+    "name": "fclk_in_d1_i",
+    "xy": [
+     1302.496,
+     342.368
+    ],
+    "period_mult": 1
+   },
+   {
+    "name": "fclk_in_u1_i",
+    "xy": [
+     124.64,
+     602.144
+    ],
+    "period_mult": 1
+   }
+  ]
+ },
+ "core_latency": [],
+ "pin_reg_p90_um": 30.0,
+ "io_budget": 0.2,
+ "instances": [
+  "nst3_turn"
+ ]
+}

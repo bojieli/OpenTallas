@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.partition_freeze.v1",
+ "die": "s81_head",
+ "type": "hd_spn_eshim_tx",
+ "outline_um": [
+  95.04,
+  1036.8
+ ],
+ "pins_file": "plan_pins.json",
+ "pins_sha256": "93084624b4c8664e6a52e279a9448b5deb54e6bd7c1cc7d15bf34a77579d3645",
+ "pins_canon_sha256": "ad1f6ad69fe4349a60a50592915ee97254dfd8f4753d051201b8c23ea132397c",
+ "pins": 1149,
+ "reset_contract": {
+  "edges": 64,
+  "module": "ot_s81hd_spn_eshim_tx",
+  "die": "s81_head",
+  "contract": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/src/physical/die_plan/s81_head/reset_contract.json",
+  "contract_sha256": "59fe706fdf075230c9781691439e0c8ce520211b0bdfea3afca3f190289e5f0e",
+  "receipt_sha256": "b673a21c743652f9c05c56008c1c0c6a74f913e1769071b1e79c3633e6f3cd89"
+ }
+}

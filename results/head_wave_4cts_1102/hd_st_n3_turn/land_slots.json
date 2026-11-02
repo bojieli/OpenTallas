@@ -1,0 +1,41 @@
+{
+ "schema": "land_slots/3",
+ "buses": {
+  "d1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_dn_ready_d1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_dn_fault_d1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_d1_i": {
+   "form": "ring_start",
+   "ring": "d1_i"
+  },
+  "u1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_dn_ready_u1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_dn_fault_u1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_u1_i": {
+   "form": "ring_start",
+   "ring": "u1_i"
+  },
+  "cland_tstart_in": {
+   "form": "origin_start",
+   "origin": "u_cland_origin"
+  }
+ }
+}
