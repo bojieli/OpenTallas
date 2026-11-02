@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.hcol_regional.prep.v1",
   "source": "rtl/hdc/v41x/ot_hbm_idx_hcol_regional.sv",
-  "donor": "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv:ot_hidx_score_hcol",
+  "donor": "exact currentC 2623e7fdb026f8c1ad0320d079c08243968f8ecf native10file profile",
   "change": "two distinct region slices of qv_b/q_b/key, captured on respective clk_pair[r]",
   "reverse_identity": true,
   "regional_inputs": {
@@ -17,5 +17,30 @@
   "parent_required": "each region slice connected to original bus; new physical pin/window/lane capacity plan event",
   "parent_activated": false,
   "physical_qualification": "NOT RUN",
-  "proof": "RUNNING positive + one wrong regional query bit mutant, two equal-frequency clocks offset2ns"
+  "proof": "QUEUED corrected immutable native10file capsule r2; initial main-donor waiter cancelled NOTRUN before any compile",
+  "donor_body_sha256": "4486a8aa432582ea885e3662fce842796a9644d2ce2b139fd26ad79f2f58e067",
+  "source_files": {
+    "ot_rst_delivered3.sv": "ed2e4b9579d497e6264f60669aeba9a2d9003e46a413d6b56126387533cd34df",
+    "ot_hdc_v41x_idx_arith_lat.sv": "cfd24aee02f2a0171a39a123994338e6f2755b8ca1fab4cf4ab1cc11a05e01d0",
+    "ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "ot_hnx_idx_hcol_plan.sv": "540e71ea886d372537a7c95c97b11ae73ed774e81c00fbb1e6224495bd44c4f8",
+    "ot_hbm_idx_chunk_rt_h.sv": "7e6cc33c506ac418a02b99e0f2e3b2be56f41592cbde0e5498135956828607a2",
+    "ot_hdc_fp32_add_lat.sv": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "ot_hdc_prefix.sv": "0d6020a2d0f75cb9a29a8ff21ab7917c96ce8296a8d233651a0d4b2ba89133bf",
+    "ot_hdc_v41x_idx_arith.sv": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f"
+  },
+  "supersedes": "912bc167d main donor (RST_LOCAL dormant parameter/HALF0seed differs currentC), no proof credit",
+  "capture_slice_gate": {
+    "positive": {
+      "rc": 0,
+      "log": "HCOL_CAPTURE checks=24003 errors=0 mutant=0\nHCOL_CAPTURE PASS\n"
+    },
+    "mutant": {
+      "rc": 1,
+      "log": "HCOL_CAPTURE checks=24003 errors=23998 mutant=1\nFATAL: /srv/opentallas-scratch/claude/wt/codex-hbm-hcol-regional-1101/results/hbm_hcol_regional_1101/tb_capture.sv:9: HCOL_CAPTURE FAIL\n       Time: 120021 Scope: tb\n"
+    }
+  },
+  "capture_slice_scope": "exact selected currentC capture statement and candidate statement; two independently phased clocks/free region enables, unchanged downstream body proven reverseidentity"
 }
