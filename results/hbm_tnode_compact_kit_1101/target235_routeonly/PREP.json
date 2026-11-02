@@ -1,0 +1,15 @@
+{
+ "scope": "ROOT authorized CLOCK+SIGNAL50 route-only diagnostic; NO repair/newcells/production claim",
+ "original": "/srv/opentallas-scratch2/claude/codex-hbm-tnode-target235-pgfix-2343/kit",
+ "copy": "/srv/opentallas-scratch2/claude/codex-hbm-tnode-target235-routeonly-0010/kit",
+ "source_RTL_config_SDC": "copied unchanged",
+ "input": "PG0 saved4cts, native savedDB audit27482/0",
+ "clock_signal_layers": "M2-M5",
+ "adjustment": 0.25,
+ "iterations": 50,
+ "guards": "cell/count/pose/master/status/donttouch/DATA+CLOCK/netflags/BTerm geometry frozen; route wires/guides only may change",
+ "PG": "native before/after +fresh savedDB audit, no connect commands",
+ "timing": "same-source TT/FF helper fresh global_routing RC, separate processes",
+ "production_repair": false,
+ "SIGNED": false
+}
