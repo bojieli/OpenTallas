@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.kw_stage_resume.v1",
+ "decision": "resume",
+ "start": "cts",
+ "reuse": [
+  "synth",
+  "floorplan",
+  "place"
+ ],
+ "why": "first changed step route, old attempt complete through place",
+ "changed": [
+  [
+   "gate",
+   "file",
+   "LEC_TOOL.json"
+  ],
+  [
+   "gate",
+   "file",
+   "lec.py"
+  ]
+ ],
+ "fingerprints": {
+  "new": {
+   "synth": "6bc68a17e34ff3e99ced56562eaaccab436046f75e076adf1e5ed106e3302500",
+   "floorplan": "611a1d13233092c0b6f8aa4c28ab9f0979c8c4f95d871079f081ea53f9a3bbf1",
+   "place": "75a35204a7107c99909aa8475107bd80bbbbd004f0016cba1def6f6ef58456d9",
+   "cts": "de96bdb2287a8dcc01173191164131c14f8b5e23d2de6b2cb676c5633a1a70c1",
+   "grt": "c92e8125c88beba90ecc9195bc7b7eff1073209a411dae83bb0aba0258e262bb",
+   "route": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "gate": "79dbeb960e6c6547934385c099beab55a25e9b470c674f8026f4bd94d1d71149"
+  },
+  "old": {
+   "synth": "6bc68a17e34ff3e99ced56562eaaccab436046f75e076adf1e5ed106e3302500",
+   "floorplan": "611a1d13233092c0b6f8aa4c28ab9f0979c8c4f95d871079f081ea53f9a3bbf1",
+   "place": "75a35204a7107c99909aa8475107bd80bbbbd004f0016cba1def6f6ef58456d9",
+   "cts": "de96bdb2287a8dcc01173191164131c14f8b5e23d2de6b2cb676c5633a1a70c1",
+   "grt": "c92e8125c88beba90ecc9195bc7b7eff1073209a411dae83bb0aba0258e262bb",
+   "route": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "gate": "d8cfeae641c895649cf7bcf8f8adc090b077aeb0d5688784fd1384e05bff4689"
+  }
+ },
+ "start_fingerprint": "route",
+ "start_checkpoint": "cts"
+}
