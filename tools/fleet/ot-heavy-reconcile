@@ -326,10 +326,22 @@ def in_gp_grt(c):
 GENERIC = {"run.sh", "run_case.sh", "stage.sh", "run.py", "go.sh", "job.sh", "main.sh", "run_all.sh"}
 
 
+def class_token(text):
+    """Normalize run IDs while retaining explicit, bounded physics-stage numbers.
+
+    run_phase1.sh may repair a small checkpoint while run_phase2.sh runs DRT.
+    Their different peaks must never train the same admission-history class.
+    Long date/hash tokens retain the existing normalization.
+    """
+    parts = re.split(r"((?:^|[_-])(?:phase|stage)[_-]?[0-9]{1,2}(?:_[0-9]{1,2})?(?=[_.-]|$))", text)
+    return "".join(part if i % 2 else re.sub(r"[0-9a-f]{7,}|\d+", "#", part)
+                   for i, part in enumerate(parts))
+
+
 def classify(argv):
-    """command class for the size table: script basename + first plain argument, numbers and hashes normalised"""
+    """Script/argument class; stage numbers distinguish different physics."""
     a = list(argv)
-    norm = lambda s: re.sub(r"[0-9a-f]{7,}|\d+", "#", s)
+    norm = class_token
     if a and os.path.basename(a[0]) == "docker" and "run" in a[:3]:
         img = next((i for i, x in enumerate(a) if x.startswith("openroad/") or "orfs" in x), None)
         tail = [os.path.basename(x) for x in (a[img + 1:] if img is not None else a[-2:]) if not x.startswith("-")]
