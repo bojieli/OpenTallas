@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS-COND for one corrected FP/PLACE only",
+  "picture": "/home/ubuntu/coord/tmp/codex-hhp-corrected-2225/actual_corrected_layout.png",
+  "findings": [
+    "Four actual 94.824x41.064 SRAMs lie inside matching soft-PC lot guides; MY on left and R0 right.",
+    "Wide center streets and PC clock-center space preserved, no SRAM wall.",
+    "126 actual generated clock-driver island reservations plotted. Clock-tap port locations are not carried by pins.json; CTS remains unauthorized.",
+    "Five HHP and three HSL fixed sites are unchanged. Guides exclude fixed cells and release before DPL.",
+    "One PLACE must measure five FIRM positions <=2um, xe0->xe1b reach <=405um, HSL y<199 and pin-register reach<=150um.",
+    "PDN script retained unchanged; actual FP PG continuity and no-overlap must pass native flow."
+  ],
+  "hold_original": {
+    "controller": 2008998,
+    "status": "STOPPED after completed synthesis; never CONT"
+  },
+  "resume": "fresh successor; actual KW-RESUME firstchanged=floorplan reuse=synth"
+}

@@ -1,0 +1,34 @@
+{
+  "tests": 12,
+  "verdict": "PASS",
+  "command": "python3 -m unittest discover -s tools/die_plan -p test_bound_r8_straps.py -v",
+  "actual_projection": {
+    "owners": [
+      "pc_EN_0",
+      "pc_WN_0"
+    ],
+    "type": "kv3_pc__cl5a95b461",
+    "added": [
+      {
+        "name": "strap_r8pad_slg_x_tok",
+        "width": 4
+      }
+    ],
+    "raw_plan_unchanged": true
+  },
+  "ownership_diagnosis": "R8 logical port names are reused across bound variants; use exact kit_rtl.instances and verify raw owning type, never global same-name instance scan.",
+  "controls": [
+    "missing audit REJECT",
+    "auditFAIL/errors/zero checked bits REJECT",
+    "wrong width or direction REJECT",
+    "missing or extra bound inventory REJECT",
+    "invalid owner value REJECT",
+    "missing or duplicate owner identity REJECT",
+    "wrong owning type REJECT",
+    "foreign malformed same-name tie ignored",
+    "foreign valid same-name tie cannot supply missing owner",
+    "strap-free legacy without manifest PASS",
+    "R8 input without manifest REJECT"
+  ],
+  "private_hhp": "Normal PORT/FACE gates PASS; native cell cap903118>400000 stops before floorplan. This projection does not authorize P&R or override capacity."
+}

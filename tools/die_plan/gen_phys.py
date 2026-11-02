@@ -3585,6 +3585,8 @@ def bound_parent_id_plan(raw, kit_rtl):
     import copy
     from parent_id_straps import type_parent_id_straps
     from bind import short_id
+    from bound_r8_straps import project
+    raw = project(raw, kit_rtl)
     result = raw
     for tn, filelist in (kit_rtl or {}).items():
         t = raw["partition_types"][tn]
