@@ -1,0 +1,9 @@
+PREP ONLY: explicit GRT analysis role, unchanged nominal FF frame
+
+Fresh successor epyc2:/srv/opentallas-scratch2/claude/codex-qc-sc-red-1101/sc_native_data_repair_pg1_role_nominal; originalcandidateleftimmutable. NoCADlaunched, dispatch_readyfalse. Actualinputfilenames/ODB/SDCbytes remain truthfulfixed_clock_PLACE; no4CTS artifacts/aliases orCTSoperationcredit. Exactinputbyteguard plusnative42665fixed/rootedFF/2389fixedBUF24/2390eligibleCLOCK/0initialGUIDEs condition theprivate legacyenum mapping. ExistingstockGRTbodyroutesbeforeanyGRTrepair/RCsync.
+
+ExactprivateMMhelperdiff adds source/call aftersolefiletailassignment, keepsoriginalhelpercopy. Legacyot_mm_stage string4_cts.sdc is an INTERNAL ANALYSIS ENUM only, selectingGRT RC/sync/FFhold/clocklock. Allaffectedexistingbranches41,66,91,168,182,203,216,762 areexplicitlyrecorded; optionalfrozenCLOCKSPEFrestoration remainsOFF. Nothingenables thisglobally. FLOW semantic/rootphysicalreview pending.
+
+ExistingoptionalOT_MM_MEASURED_HOLD0 retainsgoldenFFvclk202.5 andallactualclockpaths/SDCbytes/STAreadout/gates/0setup25holduncertainty/833period. It is NOMINAL-FRAME DIAGNOSTIC ONLY, notgloballyconservative: comparedwithmeasuredpriorFFmean287.28, inputhold/removalpadding isstrongerby84.78ps, butoutputholdpaddingweakerby84.78ps andcanunderrepair actual later-neighborcapture/forwardedboundaryhold. Reg-to-regframeunchanged. Freshworsttok_idx16outputhold+101.84 nominal wouldalgebraicallybeabout+17.06 ifonlyvirtualcapturechangedby84.78; noqualifiedparentbudgetisinferred. Rootsource/parent/count/frameholdsremain.
+
+This avoids silentlybypassinganactualgate: allpost-readoutbandflags/timingfailuresstayvisible. Choosingnominalframeversusameasured-policyawareframe requiresROOTscope; noautomaticsignoffadoption. Exact49BUFgeometryimportandtrue4CTSREDretryareindependentandunaffectedbytheseSCcontextissues.
