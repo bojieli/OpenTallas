@@ -1,0 +1,65 @@
+{
+  "verdict": "EQUIVALENT",
+  "counts": {
+    "compare_points": 90951,
+    "proved": 90951,
+    "differs": 0,
+    "undecided": 0
+  },
+  "failing": [],
+  "unproven_points": [],
+  "reason": null,
+  "note": "90951 compare points proved; 45586 key points matched by name, 43225 register pairs / merges and 338 constant registers proved inductively; 0 RTL and 2458 gate registers unmatched and unobservable (proved as free inputs); 4317 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+  "t_total_s": 16227.5,
+  "provenance": {
+    "commit": null,
+    "dirty": null,
+    "source": "kit provenance invalid: ValueError: source, input or running-tool identity mismatch"
+  },
+  "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/work/reset_contract.json",
+      "die": "kv",
+      "edges": 16,
+      "assert_edges": 20,
+      "receipt": "/work/reset_contract/receipt.txt"
+    },
+    "used": 16,
+    "debug_overrides": {}
+  },
+  "constraints": null,
+  "path": "/srv/opentallas-scratch2/claude/kv60-pcx/fmx/resign_mkv/lec/lec.json",
+  "sha256": "2c2d8d275ee1ebb6d4b1b0e9718e2a07a65d17cc999a0530c07a468f34344f4d",
+  "root_keys": [
+    "schema",
+    "kit",
+    "generated",
+    "verdict",
+    "reset_contract",
+    "top",
+    "netlist",
+    "synth_frontend",
+    "gold_frontend",
+    "ft_parallel",
+    "implicit_nets",
+    "black_boxes",
+    "ports",
+    "t_aig_s",
+    "kit_reset_ports",
+    "hints",
+    "noreset_constants",
+    "t_corr_s",
+    "keypoints",
+    "t_prove_s",
+    "x_dont_care_points",
+    "kept_registers",
+    "counts",
+    "failing",
+    "unproven_points",
+    "note",
+    "t_total_s",
+    "provenance"
+  ]
+}
