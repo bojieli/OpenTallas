@@ -1,0 +1,193 @@
+{
+  "scope": "Necessary global-cut lowerbounds only; unconstrained freecomb, fullspan capacities, not local-window congestion or PG via-landing pass",
+  "guard_um": 1.404,
+  "signal_ceiling": "M5",
+  "track_derate": 0.75,
+  "PG": "M5 duty2*.12/4.32, M2 followpin duty2*.018/.54; actual future via/blockage may reduce",
+  "rows": [
+    {
+      "axis": "vertical_x",
+      "cut_um": 50,
+      "necessary_crossing_nets": 1167,
+      "nominal_derated_PG_duty_capacity_tracks": 12044.25,
+      "lowerbound_util": 0.09689,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "vertical_x",
+      "cut_um": 100,
+      "necessary_crossing_nets": 1407,
+      "nominal_derated_PG_duty_capacity_tracks": 14847.0,
+      "lowerbound_util": 0.09477,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "vertical_x",
+      "cut_um": 150,
+      "necessary_crossing_nets": 2485,
+      "nominal_derated_PG_duty_capacity_tracks": 12044.25,
+      "lowerbound_util": 0.20632,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "vertical_x",
+      "cut_um": 200,
+      "necessary_crossing_nets": 3192,
+      "nominal_derated_PG_duty_capacity_tracks": 22422.0,
+      "lowerbound_util": 0.14236,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "vertical_x",
+      "cut_um": 250,
+      "necessary_crossing_nets": 3752,
+      "nominal_derated_PG_duty_capacity_tracks": 12044.25,
+      "lowerbound_util": 0.31152,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "vertical_x",
+      "cut_um": 300,
+      "necessary_crossing_nets": 3865,
+      "nominal_derated_PG_duty_capacity_tracks": 22422.0,
+      "lowerbound_util": 0.17238,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "vertical_x",
+      "cut_um": 350,
+      "necessary_crossing_nets": 3523,
+      "nominal_derated_PG_duty_capacity_tracks": 12044.25,
+      "lowerbound_util": 0.2925,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "vertical_x",
+      "cut_um": 400,
+      "necessary_crossing_nets": 2418,
+      "nominal_derated_PG_duty_capacity_tracks": 12554.3,
+      "lowerbound_util": 0.1926,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "vertical_x",
+      "cut_um": 450,
+      "necessary_crossing_nets": 2072,
+      "nominal_derated_PG_duty_capacity_tracks": 13955.675,
+      "lowerbound_util": 0.14847,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "vertical_x",
+      "cut_um": 500,
+      "necessary_crossing_nets": 1488,
+      "nominal_derated_PG_duty_capacity_tracks": 21020.625,
+      "lowerbound_util": 0.07079,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "vertical_x",
+      "cut_um": 550,
+      "necessary_crossing_nets": 384,
+      "nominal_derated_PG_duty_capacity_tracks": 13955.675,
+      "lowerbound_util": 0.02752,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "vertical_x",
+      "cut_um": 600,
+      "necessary_crossing_nets": 276,
+      "nominal_derated_PG_duty_capacity_tracks": 13955.675,
+      "lowerbound_util": 0.01978,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "horizontal_y",
+      "cut_um": 50,
+      "necessary_crossing_nets": 84,
+      "nominal_derated_PG_duty_capacity_tracks": 18804.0,
+      "lowerbound_util": 0.00447,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "horizontal_y",
+      "cut_um": 100,
+      "necessary_crossing_nets": 619,
+      "nominal_derated_PG_duty_capacity_tracks": 18804.0,
+      "lowerbound_util": 0.03292,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "horizontal_y",
+      "cut_um": 137,
+      "necessary_crossing_nets": 898,
+      "nominal_derated_PG_duty_capacity_tracks": 13530.0,
+      "lowerbound_util": 0.06637,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "horizontal_y",
+      "cut_um": 190,
+      "necessary_crossing_nets": 1550,
+      "nominal_derated_PG_duty_capacity_tracks": 18804.0,
+      "lowerbound_util": 0.08243,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "horizontal_y",
+      "cut_um": 223,
+      "necessary_crossing_nets": 1688,
+      "nominal_derated_PG_duty_capacity_tracks": 9579.0,
+      "lowerbound_util": 0.17622,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "horizontal_y",
+      "cut_um": 288,
+      "necessary_crossing_nets": 3600,
+      "nominal_derated_PG_duty_capacity_tracks": 18471.0,
+      "lowerbound_util": 0.1949,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "horizontal_y",
+      "cut_um": 330,
+      "necessary_crossing_nets": 3269,
+      "nominal_derated_PG_duty_capacity_tracks": 22755.0,
+      "lowerbound_util": 0.14366,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "horizontal_y",
+      "cut_um": 377,
+      "necessary_crossing_nets": 3081,
+      "nominal_derated_PG_duty_capacity_tracks": 18471.0,
+      "lowerbound_util": 0.1668,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "horizontal_y",
+      "cut_um": 430,
+      "necessary_crossing_nets": 2132,
+      "nominal_derated_PG_duty_capacity_tracks": 18804.0,
+      "lowerbound_util": 0.11338,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "horizontal_y",
+      "cut_um": 500,
+      "necessary_crossing_nets": 1594,
+      "nominal_derated_PG_duty_capacity_tracks": 13530.0,
+      "lowerbound_util": 0.11781,
+      "necessary_condition_pass": true
+    },
+    {
+      "axis": "horizontal_y",
+      "cut_um": 600,
+      "necessary_crossing_nets": 1395,
+      "nominal_derated_PG_duty_capacity_tracks": 13530.0,
+      "lowerbound_util": 0.1031,
+      "necessary_condition_pass": true
+    }
+  ]
+}
