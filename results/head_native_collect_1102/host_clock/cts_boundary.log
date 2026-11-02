@@ -1,0 +1,104 @@
+read_db /work/run/results/asap7/dp_hd_host_n/base/3_place.odb
+read_sdc /work/run/results/asap7/dp_hd_host_n/base/3_place.sdc
+source /work/setRC_rcx.tcl
+source /work/pre_cts.tcl
+OT_CLOCK_TAPS 9 taps, 2796 sinks moved off clk: clk 145 clk_t1 566 clk_t2 188 clk_t3 282 clk_t4 184 clk_t5 6 clk_t6 748 clk_t7 94 clk_t8 728
+OT_CLOCK_TAPS cap 1500 sinks/tap: 0 sinks re-assigned; per tap: clk 145, clk_t1 566, clk_t2 188, clk_t3 282, clk_t4 184, clk_t5 6, clk_t6 748, clk_t7 94, clk_t8 728
+OT_CLOCK_TAPS per-tap sinks: "clk": 145, "clk_t1": 566, "clk_t2": 188, "clk_t3": 282, "clk_t4": 184, "clk_t5": 6, "clk_t6": 748, "clk_t7": 94, "clk_t8": 728; dropped (no sinks): 0 
+OT_CLAND_EXPORT fclk_out_ad_o <- clk_t4 via cland_fwd_fclk_out_ad_o (BUFx24_ASAP7_75t_R at the source)
+OT_CLAND_EXPORT fclk_out_au_o <- clk_t8 via cland_fwd_fclk_out_au_o (BUFx24_ASAP7_75t_R at the source)
+OT_CLAND_EXPORT fclk_out_bd_o <- clk_t2 via cland_fwd_fclk_out_bd_o (BUFx24_ASAP7_75t_R at the source)
+OT_CLAND_EXPORT fclk_out_bu_o <- clk_t8 via cland_fwd_fclk_out_bu_o (BUFx24_ASAP7_75t_R at the source)
+OT_CLAND_EXPORT fclk_out_h_rx_ft_o <- clk_t8 via cland_fwd_fclk_out_h_rx_ft_o (BUFx24_ASAP7_75t_R at the source)
+OT_RESET_TAPS role mission
+OT_RESET_TREE LEAF 18 sinks, max hop 362.880 um, limit 405 um: PASS
+OT_RESET_TAPS 9 taps (0 without a synchroniser: their flops use the nearest tap that has one), 0 synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: 0 re-pointed to the nearest tap's synchroniser, 18 already there, 0 without a same-polarity net (kept); per tap: 0 2 1 2 2 1 3 4 4 1 6 5 7 1 8 2
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "clk".
+[INFO CTS-0010]  Clock net "clk" has 145 sinks.
+[INFO CTS-0007] Net "clk_t1" found for clock "clk".
+[INFO CTS-0010]  Clock net "clk_t1" has 566 sinks.
+[INFO CTS-0007] Net "clk_t2" found for clock "clk".
+[INFO CTS-0011]  Clock net "clk_t2" for macros has 1 sinks.
+[INFO CTS-0011]  Clock net "clk_t2_regs" for registers has 188 sinks.
+[WARNING CTS-0041] Net "cland_fwd_fclk_out_bd_o" has 0 sinks. Skipping...
+[INFO CTS-0007] Net "clk_t3" found for clock "clk".
+[INFO CTS-0010]  Clock net "clk_t3" has 282 sinks.
+[INFO CTS-0007] Net "clk_t4" found for clock "clk".
+[INFO CTS-0011]  Clock net "clk_t4" for macros has 1 sinks.
+[INFO CTS-0011]  Clock net "clk_t4_regs" for registers has 184 sinks.
+[WARNING CTS-0041] Net "cland_fwd_fclk_out_ad_o" has 0 sinks. Skipping...
+[INFO CTS-0007] Net "clk_t5" found for clock "clk".
+[INFO CTS-0010]  Clock net "clk_t5" has 6 sinks.
+[INFO CTS-0007] Net "clk_t6" found for clock "clk".
+[INFO CTS-0010]  Clock net "clk_t6" has 748 sinks.
+[INFO CTS-0007] Net "clk_t7" found for clock "clk".
+[INFO CTS-0010]  Clock net "clk_t7" has 94 sinks.
+[INFO CTS-0007] Net "clk_t8" found for clock "clk".
+[INFO CTS-0011]  Clock net "clk_t8" for macros has 3 sinks.
+[INFO CTS-0011]  Clock net "clk_t8_regs" for registers has 728 sinks.
+[WARNING CTS-0041] Net "cland_fwd_fclk_out_h_rx_ft_o" has 0 sinks. Skipping...
+[WARNING CTS-0041] Net "cland_fwd_fclk_out_bu_o" has 0 sinks. Skipping...
+[WARNING CTS-0041] Net "cland_fwd_fclk_out_au_o" has 0 sinks. Skipping...
+[INFO CTS-0007] Net "fclk_in_ad_i" found for clock "fclk_in_ad_i".
+[INFO CTS-0010]  Clock net "fclk_in_ad_i" has 294 sinks.
+[INFO CTS-0007] Net "fclk_in_au_i" found for clock "fclk_in_au_i".
+[INFO CTS-0010]  Clock net "fclk_in_au_i" has 294 sinks.
+[INFO CTS-0007] Net "fclk_in_bd_i" found for clock "fclk_in_bd_i".
+[INFO CTS-0010]  Clock net "fclk_in_bd_i" has 294 sinks.
+[INFO CTS-0007] Net "fclk_in_bu_i" found for clock "fclk_in_bu_i".
+[INFO CTS-0010]  Clock net "fclk_in_bu_i" has 294 sinks.
+[INFO CTS-0007] Net "fclk_in_h_tx_ft_i" found for clock "fclk_in_h_tx_ft_i".
+[INFO CTS-0010]  Clock net "fclk_in_h_tx_ft_i" has 1146 sinks.
+[INFO CTS-0007] Net "cland_fwd_fclk_out_ad_o" found for clock "fclk_out_ad_o".
+[INFO CTS-0007] Net "cland_fwd_fclk_out_au_o" found for clock "fclk_out_au_o".
+[INFO CTS-0007] Net "cland_fwd_fclk_out_bd_o" found for clock "fclk_out_bd_o".
+[INFO CTS-0007] Net "cland_fwd_fclk_out_bu_o" found for clock "fclk_out_bu_o".
+[INFO CTS-0007] Net "cland_fwd_fclk_out_h_rx_ft_o" found for clock "fclk_out_h_rx_ft_o".
+[INFO CTS-0008] TritonCTS found 17 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0100]  Leaf buffers 13
+[INFO CTS-0101]  Average sink wire length 110.54 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 12
+[INFO CTS-0098] Clock net "fclk_in_h_tx_ft_i"
+[INFO CTS-0099]  Sinks 1173
+[INFO CTS-0100]  Leaf buffers 30
+[INFO CTS-0101]  Average sink wire length 48.33 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 27
+[INFO RSZ-0047] Found 9 long wires.
+[INFO RSZ-0048] Inserted 11 buffers in 9 nets.
+[INFO CTS-0033] Balancing latency for clock clk
+[WARNING STA-1062] generated clock fclk_out_bu_o source pin fclk_out_bu_o missing paths from master clock clk.
+[WARNING STA-1062] generated clock fclk_out_h_rx_ft_o source pin fclk_out_h_rx_ft_o missing paths from master clock clk.
+[INFO CTS-0036]  inserted 0 delay buffers
+[INFO CTS-0033] Balancing latency for clock clk
+[INFO CTS-0036]  inserted 0 delay buffers
+[INFO CTS-0033] Balancing latency for clock clk
+[INFO CTS-0036]  inserted 0 delay buffers
+[INFO CTS-0500] Runtime: 13.84s
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 5321 um^2 1% utilization.
+source /work/cts_post.tcl
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+[WARNING STA-1062] generated clock fclk_out_bu_o source pin fclk_out_bu_o missing paths from master clock clk.
+[WARNING STA-1062] generated clock fclk_out_h_rx_ft_o source pin fclk_out_h_rx_ft_o missing paths from master clock clk.
+OT_TAP_BALANCE it0 target 450: clk=286(276-428,145) clk_t1=101(94-233,566) clk_t2=249(240-280,188) clk_t3=315(306-378,282) clk_t4=117(110-128,184) clk_t5=42(42-42,6) clk_t6=256(248-273,748) clk_t7=102(99-113,94) clk_t8=339(328-401,728)
+[INFO DPL-0006] Core area: 929387.52 um^2
+OT_TAP_CHECK WARN trees over 470 ps: clk=492 clk_t2=498 clk_t3=484 clk_t4=489 clk_t6=473 clk_t8=489; re-pitch taps to <= 102930 um (partition clock.tap_pitch_um)
+OT_LEAF_AFF pairs 1822 groups 828 cross_leaf_before 1801 cross_leaf_after 1788 groups_moved 6 sinks_moved 9 same_leaf_already 0 skip_big 0 skip_far 822 skip_cap 0 skip_driver 0 skip_clock 0 skip_gate 0 leaf_cap 46 radius_um 30.0 report_only 0
+OT_PG_CONNECT cts_post rules=2 protected_rebound=0
+OT_PG_BOUND cts_post pg_terms=190376 open=0
+Took 66 seconds: source /work/cts_post.tcl
+write_db /work/run/results/asap7/dp_hd_host_n/base/4_1_cts.odb
+write_sdc -no_timestamp /work/run/results/asap7/dp_hd_host_n/base/4_cts.sdc
+Elapsed time: 2:50.18[h:]min:sec. CPU time: user 177.77 sys 10.96 (110%). Peak memory: 4070176KB.

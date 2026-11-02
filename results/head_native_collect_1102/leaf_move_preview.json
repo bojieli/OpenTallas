@@ -1,0 +1,39 @@
+{
+ "scope": "OFFLINE_ONLY candidate not native legal/timing pass",
+ "driver": {
+  "kind": "B",
+  "master": "BUFx16f_ASAP7_75t_R",
+  "box": [
+   359.586,
+   138.51,
+   360.774,
+   138.78
+  ],
+  "name": "u_rrl_118/wire11650"
+ },
+ "new_box": [
+  359.586,
+  129.87,
+  360.774,
+  130.14
+ ],
+ "delta_um": [
+  0,
+  -8.64
+ ],
+ "incident_clock_edges": [
+  {
+   "driver": "i105527",
+   "sink": "i64214c",
+   "before": 224.88299999999995,
+   "after": 216.243
+  },
+  {
+   "driver": "i105528",
+   "sink": "i105527",
+   "before": 122.14800000000002,
+   "after": 130.788
+  }
+ ],
+ "overlaps": []
+}
