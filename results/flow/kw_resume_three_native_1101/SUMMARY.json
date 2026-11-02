@@ -1,0 +1,491 @@
+{
+ "source": "33029910e",
+ "collected": 1793597713.0360897,
+ "cases": [
+  {
+   "name": "hd_st_m",
+   "original_failed_kit": "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l47/items/hd_st_m/attempt_2/gen/hd_st_m",
+   "decision": "resume",
+   "start": "cts",
+   "reused": [
+    "synth",
+    "floorplan",
+    "place"
+   ],
+   "apply_wall_s": 0.05513572692871094,
+   "apply": {
+    "schema": "opentallas.kw_stage_resume.v1",
+    "start": "cts",
+    "reused_steps": [
+     "synth",
+     "floorplan",
+     "place"
+    ],
+    "why": "first changed step route, old attempt complete through place",
+    "source": {
+     "host": "intel2",
+     "kit": "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l47/items/hd_st_m/attempt_2/gen/hd_st_m",
+     "attempt": 2,
+     "attempt_dir": null,
+     "relay": null
+    },
+    "source_checkpoint": {
+     "synth": {
+      "outputs": {
+       "1_2_yosys.v": [
+        294229,
+        1793445878.887265
+       ],
+       "1_synth.odb": [
+        3159302,
+        1793445884.3943586
+       ],
+       "1_synth.sdc": [
+        89508,
+        1793445884.3973587
+       ]
+      },
+      "complete": true,
+      "passed": true,
+      "end": 1793445884.3973587
+     },
+     "floorplan": {
+      "outputs": {
+       "2_floorplan.odb": [
+        33674723,
+        1793445929.585101
+       ],
+       "2_floorplan.sdc": [
+        90030,
+        1793445929.914017
+       ]
+      },
+      "complete": true,
+      "passed": true,
+      "end": 1793445929.914017
+     },
+     "place": {
+      "outputs": {
+       "3_place.odb": [
+        34008052,
+        1793446056.203127
+       ],
+       "3_place.sdc": [
+        90030,
+        1793446055.567118
+       ]
+      },
+      "complete": true,
+      "passed": true,
+      "end": 1793446056.203127
+     }
+    },
+    "changed": [
+     [
+      "gate",
+      "file",
+      "LEC_TOOL.json"
+     ],
+     [
+      "gate",
+      "file",
+      "lec.py"
+     ]
+    ],
+    "fingerprints": {
+     "new": {
+      "synth": "d28215622b16d64b7aaa80d3643dfd5ca05d79ef0f0974258754150977ce522e",
+      "floorplan": "fac6ef2eba16b284a40eb001960a1e3902d89b8dc94d81cafb88549b6173c9a3",
+      "place": "75a35204a7107c99909aa8475107bd80bbbbd004f0016cba1def6f6ef58456d9",
+      "cts": "de96bdb2287a8dcc01173191164131c14f8b5e23d2de6b2cb676c5633a1a70c1",
+      "grt": "92eed41dbe8f765d41f59800f3dd67225d28c8a1606da47fc10730b79cf48d00",
+      "route": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "gate": "819eede6db3a1e1939885e81d8e60726c9b7d40a22e975107e3cac6dc99b92b3"
+     },
+     "old": {
+      "synth": "d28215622b16d64b7aaa80d3643dfd5ca05d79ef0f0974258754150977ce522e",
+      "floorplan": "fac6ef2eba16b284a40eb001960a1e3902d89b8dc94d81cafb88549b6173c9a3",
+      "place": "75a35204a7107c99909aa8475107bd80bbbbd004f0016cba1def6f6ef58456d9",
+      "cts": "de96bdb2287a8dcc01173191164131c14f8b5e23d2de6b2cb676c5633a1a70c1",
+      "grt": "92eed41dbe8f765d41f59800f3dd67225d28c8a1606da47fc10730b79cf48d00",
+      "route": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "gate": "e4953c423076ba143aa2279cc2679f45ff71046cfdc208f5d1ef7d19fa0fc37c"
+     }
+    },
+    "keep_created": false,
+    "keep_path": null,
+    "applied": 1793596273.3265865,
+    "applied_on": "tolerant-swine",
+    "n_link": 12,
+    "n_copy": 44,
+    "bytes_link": 256141238,
+    "bytes_copy": 36258911
+   },
+   "runner_tool_update": {
+    "kind": "future-kit-lec",
+    "source_commit": "33029910e",
+    "sha256": "31a600f4292cd4c55dbc8f1ef6b626660b409a138a2fc91de6974eb717f06ae3",
+    "generated_sha256": "02e8ac6971273e5ac0a981ed2ce242ff9ed583f3617975cacace6bb4692f0018",
+    "source_receipt_present": false,
+    "runner_update": {
+     "adapted": true,
+     "reason": "resume harness only; normalized physical commands and gates identical",
+     "generated_sha256": "3869f3943f295637573a7d19c42d9aeff3d79058372872b8c17c937eb8b607cf",
+     "normalized_sha256": "3869f3943f295637573a7d19c42d9aeff3d79058372872b8c17c937eb8b607cf",
+     "template_sha256": "568c28fc7d879a87e73f14596fa67d5dabd8edcd96e2bc80935a672a674d0ceb",
+     "helper_sha256": "b64bd24c6f78ab405a89f14008606cc3c52340ba8ae23183113211cd8179a5a9",
+     "sha256": "80e0aa80c594cfd8b0b68b36664d6dda7b10f8645513afb223cac9439ac23716"
+    }
+   },
+   "run": {
+    "rc": 0,
+    "start": 1793597262,
+    "end": 1793597311,
+    "wall_s": 49
+   },
+   "verify_pass": true,
+   "skip_place": true,
+   "retained_completed_stage_elapsed_s": 156.38,
+   "retained_stage_logs": {
+    "1_1_yosys_canonicalize.log": 1.18,
+    "1_2_yosys.log": 4.78,
+    "1_synth.log": 4.74,
+    "2_1_floorplan.log": 6.28,
+    "2_2_floorplan_macro.log": 3.79,
+    "2_3_floorplan_tapcell.log": 3.82,
+    "2_4_floorplan_pdn.log": 8.89,
+    "3_1_place_gp_skip_io.log": 4.02,
+    "3_2_place_iop.log": 4.05,
+    "3_3_place_gp.log": 92.32,
+    "3_4_place_resized.log": 10.59,
+    "3_5_place_dp.log": 11.92
+   },
+   "lec_summary": "LEC EQUIVALENT: ot_s81hd_st_m cp=1858 proved=1858 differs=0 undecided=0 1858 compare points proved; 1648 key points matched by name, 57 register pairs / merges and 122 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 40 of them reach an RTL X (don't care: equal wherever the RTL is not X) (35.9 s)",
+   "scope": "checkpoint resume + ordinary PLACE gate recheck only; no CTS/GRT/DRT run, no signoff or parent credit; historical skipped stage elapsed is not a fresh control rebuild or measured route speedup"
+  },
+  {
+   "name": "hd_st_n4",
+   "original_failed_kit": "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l47/items/hd_st_n4/attempt_2/gen/hd_st_n4",
+   "decision": "resume",
+   "start": "cts",
+   "reused": [
+    "synth",
+    "floorplan",
+    "place"
+   ],
+   "apply_wall_s": 0.23840594291687012,
+   "apply": {
+    "schema": "opentallas.kw_stage_resume.v1",
+    "start": "cts",
+    "reused_steps": [
+     "synth",
+     "floorplan",
+     "place"
+    ],
+    "why": "first changed step route, old attempt complete through place",
+    "source": {
+     "host": "intel2",
+     "kit": "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l47/items/hd_st_n4/attempt_2/gen/hd_st_n4",
+     "attempt": 2,
+     "attempt_dir": null,
+     "relay": null
+    },
+    "source_checkpoint": {
+     "synth": {
+      "outputs": {
+       "1_2_yosys.v": [
+        3200946,
+        1793445934.115182
+       ],
+       "1_synth.odb": [
+        32583255,
+        1793445945.0812192
+       ],
+       "1_synth.sdc": [
+        1200849,
+        1793445945.1192195
+       ]
+      },
+      "complete": true,
+      "passed": true,
+      "end": 1793445945.1192195
+     },
+     "floorplan": {
+      "outputs": {
+       "2_floorplan.odb": [
+        217628295,
+        1793446486.8390572
+       ],
+       "2_floorplan.sdc": [
+        1202812,
+        1793446487.406059
+       ]
+      },
+      "complete": true,
+      "passed": true,
+      "end": 1793446487.406059
+     },
+     "place": {
+      "outputs": {
+       "3_place.odb": [
+        222885963,
+        1793448579.133156
+       ],
+       "3_place.sdc": [
+        1202812,
+        1793448577.2451499
+       ]
+      },
+      "complete": true,
+      "passed": true,
+      "end": 1793448579.133156
+     }
+    },
+    "changed": [
+     [
+      "gate",
+      "file",
+      "LEC_TOOL.json"
+     ],
+     [
+      "gate",
+      "file",
+      "lec.py"
+     ]
+    ],
+    "fingerprints": {
+     "new": {
+      "synth": "6bc68a17e34ff3e99ced56562eaaccab436046f75e076adf1e5ed106e3302500",
+      "floorplan": "611a1d13233092c0b6f8aa4c28ab9f0979c8c4f95d871079f081ea53f9a3bbf1",
+      "place": "75a35204a7107c99909aa8475107bd80bbbbd004f0016cba1def6f6ef58456d9",
+      "cts": "de96bdb2287a8dcc01173191164131c14f8b5e23d2de6b2cb676c5633a1a70c1",
+      "grt": "c92e8125c88beba90ecc9195bc7b7eff1073209a411dae83bb0aba0258e262bb",
+      "route": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "gate": "79dbeb960e6c6547934385c099beab55a25e9b470c674f8026f4bd94d1d71149"
+     },
+     "old": {
+      "synth": "6bc68a17e34ff3e99ced56562eaaccab436046f75e076adf1e5ed106e3302500",
+      "floorplan": "611a1d13233092c0b6f8aa4c28ab9f0979c8c4f95d871079f081ea53f9a3bbf1",
+      "place": "75a35204a7107c99909aa8475107bd80bbbbd004f0016cba1def6f6ef58456d9",
+      "cts": "de96bdb2287a8dcc01173191164131c14f8b5e23d2de6b2cb676c5633a1a70c1",
+      "grt": "c92e8125c88beba90ecc9195bc7b7eff1073209a411dae83bb0aba0258e262bb",
+      "route": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "gate": "d8cfeae641c895649cf7bcf8f8adc090b077aeb0d5688784fd1384e05bff4689"
+     }
+    },
+    "keep_created": false,
+    "keep_path": null,
+    "applied": 1793596295.0717673,
+    "applied_on": "tolerant-swine",
+    "n_link": 16,
+    "n_copy": 40,
+    "bytes_link": 1715459858,
+    "bytes_copy": 228536264
+   },
+   "runner_tool_update": {
+    "kind": "future-kit-lec",
+    "source_commit": "33029910e",
+    "sha256": "31a600f4292cd4c55dbc8f1ef6b626660b409a138a2fc91de6974eb717f06ae3",
+    "generated_sha256": "02e8ac6971273e5ac0a981ed2ce242ff9ed583f3617975cacace6bb4692f0018",
+    "source_receipt_present": false,
+    "runner_update": {
+     "adapted": true,
+     "reason": "resume harness only; normalized physical commands and gates identical",
+     "generated_sha256": "3869f3943f295637573a7d19c42d9aeff3d79058372872b8c17c937eb8b607cf",
+     "normalized_sha256": "3869f3943f295637573a7d19c42d9aeff3d79058372872b8c17c937eb8b607cf",
+     "template_sha256": "568c28fc7d879a87e73f14596fa67d5dabd8edcd96e2bc80935a672a674d0ceb",
+     "helper_sha256": "b64bd24c6f78ab405a89f14008606cc3c52340ba8ae23183113211cd8179a5a9",
+     "sha256": "80e0aa80c594cfd8b0b68b36664d6dda7b10f8645513afb223cac9439ac23716"
+    }
+   },
+   "run": {
+    "rc": 0,
+    "start": 1793597263,
+    "end": 1793597663,
+    "wall_s": 400
+   },
+   "verify_pass": true,
+   "skip_place": true,
+   "retained_completed_stage_elapsed_s": 2326.19,
+   "retained_stage_logs": {
+    "1_1_yosys_canonicalize.log": 1.99,
+    "1_2_yosys.log": 25.81,
+    "1_synth.log": 9.86,
+    "2_1_floorplan.log": 95.06,
+    "2_2_floorplan_macro.log": 10.32,
+    "2_3_floorplan_tapcell.log": 10.6,
+    "2_4_floorplan_pdn.log": 88.43,
+    "3_1_place_gp_skip_io.log": 13.48,
+    "3_2_place_iop.log": 12.52,
+    "3_3_place_gp.log": 1552.52,
+    "3_4_place_resized.log": 203.27,
+    "3_5_place_dp.log": 302.33
+   },
+   "lec_summary": "LEC EQUIVALENT: ot_s81hd_st_n4 cp=22399 proved=22399 differs=0 undecided=0 22399 compare points proved; 21409 key points matched by name, 408 register pairs / merges and 240 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 192 of them reach an RTL X (don't care: equal wherever the RTL is not X) (208.8 s)",
+   "scope": "checkpoint resume + ordinary PLACE gate recheck only; no CTS/GRT/DRT run, no signoff or parent credit; historical skipped stage elapsed is not a fresh control rebuild or measured route speedup"
+  },
+  {
+   "name": "hd_st_k5",
+   "original_failed_kit": "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l47/items/hd_st_k5/attempt_2/gen/hd_st_k5",
+   "decision": "resume",
+   "start": "cts",
+   "reused": [
+    "synth",
+    "floorplan",
+    "place"
+   ],
+   "apply_wall_s": 0.2384181022644043,
+   "apply": {
+    "schema": "opentallas.kw_stage_resume.v1",
+    "start": "cts",
+    "reused_steps": [
+     "synth",
+     "floorplan",
+     "place"
+    ],
+    "why": "first changed step route, old attempt complete through place",
+    "source": {
+     "host": "intel2",
+     "kit": "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l47/items/hd_st_k5/attempt_2/gen/hd_st_k5",
+     "attempt": 2,
+     "attempt_dir": null,
+     "relay": null
+    },
+    "source_checkpoint": {
+     "synth": {
+      "outputs": {
+       "1_2_yosys.v": [
+        3232260,
+        1793445910.2021008
+       ],
+       "1_synth.odb": [
+        19562300,
+        1793445922.006141
+       ],
+       "1_synth.sdc": [
+        679376,
+        1793445922.0271409
+       ]
+      },
+      "complete": true,
+      "passed": true,
+      "end": 1793445922.0271409
+     },
+     "floorplan": {
+      "outputs": {
+       "2_floorplan.odb": [
+        228042801,
+        1793446342.024566
+       ],
+       "2_floorplan.sdc": [
+        681567,
+        1793446342.5715678
+       ]
+      },
+      "complete": true,
+      "passed": true,
+      "end": 1793446342.5715678
+     },
+     "place": {
+      "outputs": {
+       "3_place.odb": [
+        231571918,
+        1793448661.9214377
+       ],
+       "3_place.sdc": [
+        681567,
+        1793448659.67343
+       ]
+      },
+      "complete": true,
+      "passed": true,
+      "end": 1793448661.9214377
+     }
+    },
+    "changed": [
+     [
+      "gate",
+      "file",
+      "LEC_TOOL.json"
+     ],
+     [
+      "gate",
+      "file",
+      "lec.py"
+     ]
+    ],
+    "fingerprints": {
+     "new": {
+      "synth": "7b24366543f5f96426cf7c9c9fbbdc4243df233c3f198f9734b644aa9385cab2",
+      "floorplan": "097a1a8151841b759dae58724ced7b2c4a1a2d8bf0b5bc98c8c602f1de0f728a",
+      "place": "75a35204a7107c99909aa8475107bd80bbbbd004f0016cba1def6f6ef58456d9",
+      "cts": "de96bdb2287a8dcc01173191164131c14f8b5e23d2de6b2cb676c5633a1a70c1",
+      "grt": "c92e8125c88beba90ecc9195bc7b7eff1073209a411dae83bb0aba0258e262bb",
+      "route": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "gate": "0ecece6ef75f5949ec15e3fa866fe202889c3cbc0504193adf0910617f01d547"
+     },
+     "old": {
+      "synth": "7b24366543f5f96426cf7c9c9fbbdc4243df233c3f198f9734b644aa9385cab2",
+      "floorplan": "097a1a8151841b759dae58724ced7b2c4a1a2d8bf0b5bc98c8c602f1de0f728a",
+      "place": "75a35204a7107c99909aa8475107bd80bbbbd004f0016cba1def6f6ef58456d9",
+      "cts": "de96bdb2287a8dcc01173191164131c14f8b5e23d2de6b2cb676c5633a1a70c1",
+      "grt": "c92e8125c88beba90ecc9195bc7b7eff1073209a411dae83bb0aba0258e262bb",
+      "route": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "gate": "4fa0655c401ac2d5299fd24cc2ebb2f3f468f6585b44f1fea5b55e37f2f02248"
+     }
+    },
+    "keep_created": false,
+    "keep_path": null,
+    "applied": 1793596313.100944,
+    "applied_on": "tolerant-swine",
+    "n_link": 14,
+    "n_copy": 42,
+    "bytes_link": 1731203704,
+    "bytes_copy": 237143637
+   },
+   "runner_tool_update": {
+    "kind": "future-kit-lec",
+    "source_commit": "33029910e",
+    "sha256": "31a600f4292cd4c55dbc8f1ef6b626660b409a138a2fc91de6974eb717f06ae3",
+    "generated_sha256": "02e8ac6971273e5ac0a981ed2ce242ff9ed583f3617975cacace6bb4692f0018",
+    "source_receipt_present": false,
+    "runner_update": {
+     "adapted": true,
+     "reason": "resume harness only; normalized physical commands and gates identical",
+     "generated_sha256": "3869f3943f295637573a7d19c42d9aeff3d79058372872b8c17c937eb8b607cf",
+     "normalized_sha256": "3869f3943f295637573a7d19c42d9aeff3d79058372872b8c17c937eb8b607cf",
+     "template_sha256": "568c28fc7d879a87e73f14596fa67d5dabd8edcd96e2bc80935a672a674d0ceb",
+     "helper_sha256": "b64bd24c6f78ab405a89f14008606cc3c52340ba8ae23183113211cd8179a5a9",
+     "sha256": "80e0aa80c594cfd8b0b68b36664d6dda7b10f8645513afb223cac9439ac23716"
+    }
+   },
+   "run": {
+    "rc": 0,
+    "start": 1793597324,
+    "end": 1793597598,
+    "wall_s": 274
+   },
+   "verify_pass": true,
+   "skip_place": true,
+   "retained_completed_stage_elapsed_s": 2528.43,
+   "retained_stage_logs": {
+    "1_1_yosys_canonicalize.log": 1.84,
+    "1_2_yosys.log": 26.62,
+    "1_synth.log": 10.77,
+    "2_1_floorplan.log": 64.75,
+    "2_2_floorplan_macro.log": 8.87,
+    "2_3_floorplan_tapcell.log": 7.58,
+    "2_4_floorplan_pdn.log": 96.15,
+    "3_1_place_gp_skip_io.log": 11.16,
+    "3_2_place_iop.log": 11.93,
+    "3_3_place_gp.log": 1941.96,
+    "3_4_place_resized.log": 127.79,
+    "3_5_place_dp.log": 219.01
+   },
+   "lec_summary": "LEC EQUIVALENT: ot_s81hd_st_k5 cp=14026 proved=14026 differs=0 undecided=0 14026 compare points proved; 12728 key points matched by name, 561 register pairs / merges and 242 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 136 of them reach an RTL X (don't care: equal wherever the RTL is not X) (166.0 s)",
+   "scope": "checkpoint resume + ordinary PLACE gate recheck only; no CTS/GRT/DRT run, no signoff or parent credit; historical skipped stage elapsed is not a fresh control rebuild or measured route speedup"
+  }
+ ],
+ "all_three_completed": true,
+ "all_three_pass": true
+}

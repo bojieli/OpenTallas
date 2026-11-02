@@ -1,0 +1,7 @@
+STAGE_RESUME start step 3 (synth,floorplan,place from intel2:/srv/opentallas-scratch2/claude/kit-wave/s81_head/l47/items/hd_st_n4/attempt_2/gen/hd_st_n4)
+KIT_PREFLIGHT PASS issues 0
+FACE_GUARD PASS top ot_s81hd_st_n4 bits 4146 ok 4146 fails {}
+REG_FANOUT PASS top=ot_s81hd_st_n4 registers=19542 over_64=0 hist={'1': 19265, '2-8': 273, '0': 4}
+FACE_GUARD PASS top ot_s81hd_st_n4 bits 4146 ok 4146 fails {}
+LEC EQUIVALENT: ot_s81hd_st_n4 cp=22399 proved=22399 differs=0 undecided=0 22399 compare points proved; 21409 key points matched by name, 408 register pairs / merges and 240 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 192 of them reach an RTL X (don't care: equal wherever the RTL is not X) (208.8 s)
+STAGE_RESUME skip make place (reused step, start step 3)
