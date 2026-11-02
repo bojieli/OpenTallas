@@ -1,0 +1,30 @@
+{
+ "module": "dsdv_gunit_l2",
+ "plan_type": "gunit__t1",
+ "boundary_role": {
+  "clk": "clk",
+  "rst_n": "reset"
+ },
+ "clock_contract": {
+  "kind": "hard_core_latency",
+  "ruling": "COORD 10-24",
+  "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+  "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+ },
+ "clock_latency_measured": {
+  "tt": {
+   "n": 3142,
+   "min": 306.46,
+   "mean": 324.51,
+   "max": 349.18,
+   "spread": 42.72
+  },
+  "ff": {
+   "n": 3142,
+   "min": 242.98,
+   "mean": 262.56,
+   "max": 284.04,
+   "spread": 41.06
+  }
+ }
+}
