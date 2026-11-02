@@ -1,0 +1,7 @@
+# Actual emitted capture transport stages
+
+Selected emitted top7dcc inventory supplies72actual frame-producer return paths to the three CAP families and80CAP-output paths to registered native leaf inputs. All66meaningful return bits and all90CW bits per leaf trace uniquely with equal valid/address/data ages. Frame-return source bits are before the partition's source ot_dp_st; their producer-component GO epoch remains unjoined. Actual return depths24..73include66receiver-pad edges once. bind.py's bound_stages already includes lane_pad(L): adding the observed pad again would be wrong. A local adapter reads the emitted concatenated epoch/data pad without changing the shared norm parser.
+
+CAP→registered-native depths2..30already include receiver/input_q landing. Widths594/595 and three actual field mappings remain explicit; no all595 assumption or extra3is applied. All3CAP constructor selections are checked (MUT0or parameter-free c2). Native-frame publication epochs, interframe FIN concurrency, actual native SRAM values/leases and physical/G5 qualification remain separate. Source-only wiring receipt, no RTL change.
+
+Intel1 capture_bound_routes_1131/bidirectional_routes_retry2.json, unit3103061-1793580010 exit0. The first ingress extraction failed on a concatenated receiver pad unsupported by the older helper; failed output/log remains. Event-basis wording here explicitly identifies the before-source-register origin; no transport value changed.
