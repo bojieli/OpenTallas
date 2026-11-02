@@ -68,9 +68,19 @@ def join(proposal, inventory):
         missing = {r['name'] for r in required} - set(by_name)
         extra = set(by_name) - {r['name'] for r in required}
         raise ValueError(f'Exact endpoint join failed: missing={len(missing)} extra={len(extra)}')
+    ff_names={r['model_name']:r['native_name'] for r in inventory.get('ff_cells',[])}
+    for a in required:
+        r=by_name[a['name']]
+        if '::' in a['name']:
+            instance,pin=a['name'].split('::',1)
+            if r['native_iterm']!=instance+'/'+pin:raise ValueError('Actual macro clock instance/pin identity differs: '+a['name'])
+        elif ff_names and (a['name'] not in ff_names or r['native_iterm'].rsplit('/',1)[0]!=ff_names[a['name']]):
+            raise ValueError('Clock ITerm does not belong to the joined native FF: '+a['name'])
     output = []
     for a in proposal['assignments']:
         r = by_name[a['name']]
+        if '::' in a['name'] and (len(r.get('xy_um',[]))!=2 or any(abs(x-y)>1e-6 for x,y in zip(r['xy_um'],a['xy']))):
+            raise ValueError('Actual macro clock ITerm geometry differs: '+a['name'])
         if r.get('cohort') != 'clk' or r['root_port'] not in taps:
             raise ValueError('Cross-root clock reassignment: ' + a['name'])
         if r.get('edge') not in ('posedge', 'negedge'):
@@ -105,7 +115,18 @@ def join(proposal, inventory):
             raise ValueError('Other clock cohort changed: ' + a['name'])
     if sum(r['capacity_override'] for r in output) != proposal['reassociated_sinks']:
         raise ValueError('Explicit capacity overrides differ from this exact reviewed cohort')
-    return dict(schema='opentallas.tt_native_clock_join.v1', status='JOINED_METADATA_ONLY',
+    branches={}
+    for row in output:
+        for cell in row['preserve_path']:
+            key=(cell['instance'],cell['input_pin'])
+            branch=branches.setdefault(key,dict(instance=cell['instance'],input_pin=cell['input_pin'],master=cell['master'],kind=cell['kind'],targets=set(),sinks=0))
+            if (branch['master'],branch['kind'])!=(cell['master'],cell['kind']):raise ValueError('Inconsistent actual shared clock-path identity')
+            branch['targets'].add(row['target_root_port']);branch['sinks']+=1
+    splits=[dict(**{k:v for k,v in b.items() if k!='targets'},target_root_ports=sorted(b['targets'])) for b in branches.values() if len(b['targets'])>1]
+    gate_conflicts=[b for b in splits if b['kind']=='clock_gate']
+    return dict(schema='opentallas.tt_native_clock_join.v1', status='HELD_SHARED_CLOCK_GATE_BRANCH' if gate_conflicts else 'JOINED_METADATA_ONLY',
+                shared_stateless_branch_splits_required=[b for b in splits if b['kind']!='clock_gate'],
+                gated_branch_conflicts=gate_conflicts,
                 tree_applied=False, physical_release='HELD',
                 source_sha256=inventory['source_sha256'], netlist_sha256=inventory['netlist_sha256'],
                 clock_ports=ports,clock_port_xy_um=expected_xy,period_ps=833,assignments=output,

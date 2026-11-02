@@ -44,6 +44,24 @@ class JoinContract(unittest.TestCase):
         p,i=self.fixture();i['ports']['clk_t1']['xy_um'][0]+=8.64
         with self.assertRaisesRegex(ValueError,'coordinate differs'):join(p,i)
 
+    def test_shared_clock_gate_cannot_be_silently_split(self):
+        p,i=self.fixture();p['assignments'][0]['parent_tap']='clk_t2'
+        out=join(p,i)
+        self.assertEqual(out['status'],'HELD_SHARED_CLOCK_GATE_BRANCH')
+        self.assertEqual(len(out['gated_branch_conflicts']),1)
+        self.assertFalse(out['tree_applied'])
+
+    def test_clock_iterm_cannot_point_to_another_joined_ff(self):
+        p,i=self.fixture();i['ff_cells']=[dict(model_name=r['model_name'],native_name='q'+str(j)) for j,r in enumerate(i['sinks'])]
+        i['sinks'][0]['native_iterm']='q1/CLK'
+        with self.assertRaises(ValueError):join(p,i)
+
+    def test_macro_clock_pin_geometry_is_checked(self):
+        p,i=self.fixture();p['assignments'][0].update(name='macro::CLK',xy=[10.,20.]);i['sinks'][0].update(model_name='macro::CLK',native_iterm='macro/CLK',xy_um=[10.,20.])
+        self.assertEqual(join(p,i)['status'],'JOINED_METADATA_ONLY')
+        i['sinks'][0]['xy_um'][0]+=8.64
+        with self.assertRaisesRegex(ValueError,'macro clock ITerm geometry'):join(p,i)
+
     def test_wrong_phase_rejected(self):
         p,i=self.fixture();i['ports']['clk_t1']['phase_ps']=416.5
         with self.assertRaisesRegex(ValueError,'phase'):join(p,i)
