@@ -1,0 +1,693 @@
+{
+  "status": "CURRENT_HOME_GAPS_AND_LOCAL_CLONE_MODEL_ONLY",
+  "cohort_path": "/home/ubuntu/coord/tmp/codex-hbm-su00-upper-clock-2335/composite_root_PENDING.json",
+  "cohort_sha256": "6ecfacf5f23f700fedbbf38c9377dc08b229c882d39744fe36c1e52a4884dfc0",
+  "current_native_allocations": {
+    "StoreA_plan_master": "ot_hgi_sfu_core_split3__opstore_a",
+    "actual_SOURCE13_master": "ot_hnx_sfu_store_a__da81d76763c9",
+    "CTL_plan_master": "ot_hgi_sfu_core_split3__ctl",
+    "CTL_SOURCE13_ABI_bits": 11810,
+    "StoreA_SOURCE13_ABI_bits": 6040
+  },
+  "legacy_declared_pin_profiles": {
+    "ot_hgi_sfu_core_split3__opstore_a__760.32x483.84__d30o.json": {
+      "sha256": "edaf6c83789810dcd1e22512e383d129bc8b6bbd2b1c3588ad0006f5e5685fbf",
+      "pins": 7534,
+      "SOURCE13_66926_D_bits": 0,
+      "SOURCE13_stage_data_bits": 0,
+      "SOURCE13_store0_sw_d_bits": 0,
+      "scope": "legacy declared pin profile, no source-native alias"
+    },
+    "ot_hgi_sfu_core_split3__ctl__669.6x626.4__canon__codex_g21.json": {
+      "sha256": "6d5831d90fa5eff73fcdd7186061b51e35d57474d9c7d1fc228b329fd304d0fa",
+      "pins": 11819,
+      "SOURCE13_66926_D_bits": 0,
+      "SOURCE13_stage_data_bits": 0,
+      "SOURCE13_store0_sw_d_bits": 0,
+      "scope": "legacy declared pin profile, no source-native alias"
+    }
+  },
+  "old_D_body_bounds": [
+    {
+      "side": "NE",
+      "quarter": 0,
+      "old_D_source": "NE_su00.u_u_sfu_Q0.c_rr payload (actual source u_leaf.u_rrd output)",
+      "current_plan_reuse_inst": "u_sfu_Q0",
+      "current_plan_reuse_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "reuse_body_um": [
+        26248.32,
+        10765.44,
+        26464.32,
+        10834.560000000001
+      ],
+      "body_only": true,
+      "actual_c_rr_LEF_pin": "MISSING_CURRENT_COHORT_WITNESS",
+      "actual_mapped_payload_FF_home": "MISSING_CURRENT_COHORT_WITNESS",
+      "StoreA_allocation_um": [
+        26559.36,
+        11327.04,
+        27319.68,
+        11810.880000000001
+      ],
+      "minimum_body_distance_um": 587.5200000000004,
+      "minimum_405_segments": 2,
+      "SAME3edge_path": "BODY_BOUND_NOT_EXCLUDED_BUT_NO_HOME_PROOF",
+      "scope": "body lower bound only; no source cycles priced or inserted"
+    },
+    {
+      "side": "NE",
+      "quarter": 1,
+      "old_D_source": "NE_su11.u_u_sfu_Q1.c_rr payload (actual source u_leaf.u_rrd output)",
+      "current_plan_reuse_inst": "u_sfu_Q1",
+      "current_plan_reuse_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "reuse_body_um": [
+        17038.08,
+        10765.44,
+        17254.08,
+        10834.560000000001
+      ],
+      "body_only": true,
+      "actual_c_rr_LEF_pin": "MISSING_CURRENT_COHORT_WITNESS",
+      "actual_mapped_payload_FF_home": "MISSING_CURRENT_COHORT_WITNESS",
+      "StoreA_allocation_um": [
+        26559.36,
+        11327.04,
+        27319.68,
+        11810.880000000001
+      ],
+      "minimum_body_distance_um": 9797.759999999998,
+      "minimum_405_segments": 25,
+      "SAME3edge_path": "BODY_BOUND_EXCLUDES_RETAINED_HOME",
+      "scope": "body lower bound only; no source cycles priced or inserted"
+    },
+    {
+      "side": "NE",
+      "quarter": 2,
+      "old_D_source": "NE_su20.u_u_sfu_Q2.c_rr payload (actual source u_leaf.u_rrd output)",
+      "current_plan_reuse_inst": "u_sfu_Q2",
+      "current_plan_reuse_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "reuse_body_um": [
+        25729.920000000002,
+        5279.04,
+        25945.920000000002,
+        5495.04
+      ],
+      "body_only": true,
+      "actual_c_rr_LEF_pin": "MISSING_CURRENT_COHORT_WITNESS",
+      "actual_mapped_payload_FF_home": "MISSING_CURRENT_COHORT_WITNESS",
+      "StoreA_allocation_um": [
+        26559.36,
+        11327.04,
+        27319.68,
+        11810.880000000001
+      ],
+      "minimum_body_distance_um": 6445.44,
+      "minimum_405_segments": 16,
+      "SAME3edge_path": "BODY_BOUND_EXCLUDES_RETAINED_HOME",
+      "scope": "body lower bound only; no source cycles priced or inserted"
+    },
+    {
+      "side": "NE",
+      "quarter": 3,
+      "old_D_source": "NE_su31.u_u_sfu_Q3.c_rr payload (actual source u_leaf.u_rrd output)",
+      "current_plan_reuse_inst": "u_sfu_Q3",
+      "current_plan_reuse_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "reuse_body_um": [
+        16986.239999999998,
+        5538.24,
+        17072.64,
+        5754.24
+      ],
+      "body_only": true,
+      "actual_c_rr_LEF_pin": "MISSING_CURRENT_COHORT_WITNESS",
+      "actual_mapped_payload_FF_home": "MISSING_CURRENT_COHORT_WITNESS",
+      "StoreA_allocation_um": [
+        26559.36,
+        11327.04,
+        27319.68,
+        11810.880000000001
+      ],
+      "minimum_body_distance_um": 15059.520000000002,
+      "minimum_405_segments": 38,
+      "SAME3edge_path": "BODY_BOUND_EXCLUDES_RETAINED_HOME",
+      "scope": "body lower bound only; no source cycles priced or inserted"
+    },
+    {
+      "side": "NW",
+      "quarter": 0,
+      "old_D_source": "NW_su00.u_u_sfu_Q0.c_rr payload (actual source u_leaf.u_rrd output)",
+      "current_plan_reuse_inst": "u_sfu_Q0",
+      "current_plan_reuse_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "reuse_body_um": [
+        1935.36,
+        10765.44,
+        2151.3599999999997,
+        10834.560000000001
+      ],
+      "body_only": true,
+      "actual_c_rr_LEF_pin": "MISSING_CURRENT_COHORT_WITNESS",
+      "actual_mapped_payload_FF_home": "MISSING_CURRENT_COHORT_WITNESS",
+      "StoreA_allocation_um": [
+        1080.0,
+        11327.04,
+        1840.3200000000002,
+        11810.880000000001
+      ],
+      "minimum_body_distance_um": 587.5199999999993,
+      "minimum_405_segments": 2,
+      "SAME3edge_path": "BODY_BOUND_NOT_EXCLUDED_BUT_NO_HOME_PROOF",
+      "scope": "body lower bound only; no source cycles priced or inserted"
+    },
+    {
+      "side": "NW",
+      "quarter": 1,
+      "old_D_source": "NW_su11.u_u_sfu_Q1.c_rr payload (actual source u_leaf.u_rrd output)",
+      "current_plan_reuse_inst": "u_sfu_Q1",
+      "current_plan_reuse_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "reuse_body_um": [
+        11145.6,
+        10765.44,
+        11361.6,
+        10834.560000000001
+      ],
+      "body_only": true,
+      "actual_c_rr_LEF_pin": "MISSING_CURRENT_COHORT_WITNESS",
+      "actual_mapped_payload_FF_home": "MISSING_CURRENT_COHORT_WITNESS",
+      "StoreA_allocation_um": [
+        1080.0,
+        11327.04,
+        1840.3200000000002,
+        11810.880000000001
+      ],
+      "minimum_body_distance_um": 9797.76,
+      "minimum_405_segments": 25,
+      "SAME3edge_path": "BODY_BOUND_EXCLUDES_RETAINED_HOME",
+      "scope": "body lower bound only; no source cycles priced or inserted"
+    },
+    {
+      "side": "NW",
+      "quarter": 2,
+      "old_D_source": "NW_su20.u_u_sfu_Q2.c_rr payload (actual source u_leaf.u_rrd output)",
+      "current_plan_reuse_inst": "u_sfu_Q2",
+      "current_plan_reuse_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "reuse_body_um": [
+        2453.76,
+        5279.04,
+        2669.76,
+        5495.04
+      ],
+      "body_only": true,
+      "actual_c_rr_LEF_pin": "MISSING_CURRENT_COHORT_WITNESS",
+      "actual_mapped_payload_FF_home": "MISSING_CURRENT_COHORT_WITNESS",
+      "StoreA_allocation_um": [
+        1080.0,
+        11327.04,
+        1840.3200000000002,
+        11810.880000000001
+      ],
+      "minimum_body_distance_um": 6445.4400000000005,
+      "minimum_405_segments": 16,
+      "SAME3edge_path": "BODY_BOUND_EXCLUDES_RETAINED_HOME",
+      "scope": "body lower bound only; no source cycles priced or inserted"
+    },
+    {
+      "side": "NW",
+      "quarter": 3,
+      "old_D_source": "NW_su31.u_u_sfu_Q3.c_rr payload (actual source u_leaf.u_rrd output)",
+      "current_plan_reuse_inst": "u_sfu_Q3",
+      "current_plan_reuse_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "reuse_body_um": [
+        11327.039999999999,
+        5538.24,
+        11413.439999999999,
+        5754.24
+      ],
+      "body_only": true,
+      "actual_c_rr_LEF_pin": "MISSING_CURRENT_COHORT_WITNESS",
+      "actual_mapped_payload_FF_home": "MISSING_CURRENT_COHORT_WITNESS",
+      "StoreA_allocation_um": [
+        1080.0,
+        11327.04,
+        1840.3200000000002,
+        11810.880000000001
+      ],
+      "minimum_body_distance_um": 15059.52,
+      "minimum_405_segments": 38,
+      "SAME3edge_path": "BODY_BOUND_EXCLUDES_RETAINED_HOME",
+      "scope": "body lower bound only; no source cycles priced or inserted"
+    }
+  ],
+  "stage_home_ledger": [
+    {
+      "side": "NE",
+      "current_type": "q_b113__physical_v1",
+      "input_source_port": "xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__2",
+      "source_payload_width": 514,
+      "epoch_companion_bits": 1,
+      "source_stage1_instance": "u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__2",
+      "source_stage1_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME; source primitive only",
+      "declared_bus": null,
+      "matching_current_FT_slots": [],
+      "source_stage0_peer": {
+        "peer_part": "NE_su31",
+        "peer_module": "hbm_arch_q_su31",
+        "actual_selected_header": "    hbm_arch_q_su31 NE_su31 (",
+        "peer_output": "xo_u_sfu_Q3_c_rr",
+        "die_net": "x_NE_su31_xo_u_sfu_Q3_c_rr_NE_b113",
+        "output_capture_instance": "u_bout_xo_u_sfu_Q3_c_rr",
+        "width": 514,
+        "clock": "clk",
+        "payload_reset": "NONE",
+        "epoch_reset": "rst_n",
+        "D": "w_u_sfu_Q3_c_rr[513:0]",
+        "Q": "xo_u_sfu_Q3_c_rr[513:0]",
+        "native_source_before_output_capture": "Exact peer native SFU/VMS rr output (not assumed registered/reachable); D expression retained"
+      },
+      "peer_declared_output_bus": null,
+      "source_stage0_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME",
+      "source_stage2": "CTL g_compose_m23_q; no source-compatible current native pin/FF home",
+      "missing": "No bus/window/pin or FT stage declaration for this exact SOURCE13 input in current type; no alias assumed"
+    },
+    {
+      "side": "NE",
+      "current_type": "q_b113__physical_v1",
+      "input_source_port": "xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__1",
+      "source_payload_width": 514,
+      "epoch_companion_bits": 1,
+      "source_stage1_instance": "u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__1",
+      "source_stage1_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME; source primitive only",
+      "declared_bus": null,
+      "matching_current_FT_slots": [],
+      "source_stage0_peer": {
+        "peer_part": "NE_su20",
+        "peer_module": "hbm_arch_q_su20",
+        "actual_selected_header": "    hbm_arch_q_su20 #(.S_u_su_Q2_lanes8_11_lane_lane_id(44'b00000101011000001010100000010100100000101000)) NE_su20 (",
+        "peer_output": "xo_u_sfu_Q2_c_rr",
+        "die_net": "x_NE_su20_xo_u_sfu_Q2_c_rr_NE_b113",
+        "output_capture_instance": "u_bout_xo_u_sfu_Q2_c_rr",
+        "width": 514,
+        "clock": "clk",
+        "payload_reset": "NONE",
+        "epoch_reset": "rst_n",
+        "D": "w_u_sfu_Q2_c_rr[513:0]",
+        "Q": "xo_u_sfu_Q2_c_rr[513:0]",
+        "native_source_before_output_capture": "Exact peer native SFU/VMS rr output (not assumed registered/reachable); D expression retained"
+      },
+      "peer_declared_output_bus": null,
+      "source_stage0_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME",
+      "source_stage2": "CTL g_compose_m23_q; no source-compatible current native pin/FF home",
+      "missing": "No bus/window/pin or FT stage declaration for this exact SOURCE13 input in current type; no alias assumed"
+    },
+    {
+      "side": "NE",
+      "current_type": "q_b113__physical_v1",
+      "input_source_port": "xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__0",
+      "source_payload_width": 514,
+      "epoch_companion_bits": 1,
+      "source_stage1_instance": "u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__0",
+      "source_stage1_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME; source primitive only",
+      "declared_bus": null,
+      "matching_current_FT_slots": [],
+      "source_stage0_peer": {
+        "peer_part": "NE_su11",
+        "peer_module": "hbm_arch_q_su11",
+        "actual_selected_header": "    hbm_arch_q_su11 NE_su11 (",
+        "peer_output": "xo_u_sfu_Q1_c_rr",
+        "die_net": "x_NE_su11_xo_u_sfu_Q1_c_rr_NE_b113",
+        "output_capture_instance": "u_bout_xo_u_sfu_Q1_c_rr",
+        "width": 514,
+        "clock": "clk",
+        "payload_reset": "NONE",
+        "epoch_reset": "rst_n",
+        "D": "w_u_sfu_Q1_c_rr[513:0]",
+        "Q": "xo_u_sfu_Q1_c_rr[513:0]",
+        "native_source_before_output_capture": "Exact peer native SFU/VMS rr output (not assumed registered/reachable); D expression retained"
+      },
+      "peer_declared_output_bus": null,
+      "source_stage0_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME",
+      "source_stage2": "CTL g_compose_m23_q; no source-compatible current native pin/FF home",
+      "missing": "No bus/window/pin or FT stage declaration for this exact SOURCE13 input in current type; no alias assumed"
+    },
+    {
+      "side": "NE",
+      "current_type": "q_b113__physical_v1",
+      "input_source_port": "L54_i",
+      "source_payload_width": 514,
+      "epoch_companion_bits": 1,
+      "source_stage1_instance": "u_bin_L54_i",
+      "source_stage1_FF_home": "DECLARED_FACE_BUS_AND_NOMINAL_CONSTRUCTOR_TARGETS_ONLY; no current mapped/fixed FF home",
+      "declared_bus": {
+        "name": "L54_i",
+        "dir": "in",
+        "width": 514,
+        "kind": "data",
+        "face": "E",
+        "window_um": [
+          416.672,
+          509.136
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ],
+        "order": "lsb_low"
+      },
+      "matching_current_FT_slots": [],
+      "source_stage0_peer": {
+        "peer_part": "NE_su00",
+        "peer_module": "hbm_arch_q_su00",
+        "actual_selected_header": "    hbm_arch_q_su00 NE_su00 (",
+        "peer_output": "L54_o",
+        "die_net": "x_NE_su00_L54_o_NE_b113",
+        "output_capture_instance": "u_bout_L54_o",
+        "width": 514,
+        "clock": "clk",
+        "payload_reset": "NONE",
+        "epoch_reset": "rst_n",
+        "D": "{L410m_i_q[1:0], w_u_sfu_Q0_c_w_done[1:0], w_u_sfu_Q0_c_rr[513:4]}",
+        "Q": "L54_o[513:0]",
+        "native_source_before_output_capture": "Exact peer native SFU/VMS rr output (not assumed registered/reachable); D expression retained"
+      },
+      "peer_declared_output_bus": {
+        "name": "L54_o",
+        "dir": "out",
+        "width": 514,
+        "kind": "data",
+        "face": "W",
+        "window_um": [
+          416.672,
+          509.136
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ],
+        "order": "lsb_low"
+      },
+      "source_stage0_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME",
+      "source_stage2": "CTL g_compose_m23_q; no source-compatible current native pin/FF home",
+      "declared_input_window_kind": "optimistic entire data-pin window rectangle, not an actual FF/D pin",
+      "input_window_to_CTL_allocation_lowerbound_um": 1214.3279999999997,
+      "two_remaining_405_edges_to_original_CTL": "EXCLUDED"
+    },
+    {
+      "side": "NE",
+      "current_type": "q_b113__physical_v1",
+      "input_source_port": "L127_i",
+      "source_payload_width": 4,
+      "epoch_companion_bits": 1,
+      "source_stage1_instance": "u_bin_L127_i",
+      "source_stage1_FF_home": "DECLARED_FACE_BUS_AND_NOMINAL_CONSTRUCTOR_TARGETS_ONLY; no current mapped/fixed FF home",
+      "declared_bus": {
+        "name": "L127_i",
+        "dir": "in",
+        "width": 4,
+        "kind": "ctl",
+        "face": "E",
+        "window_um": [
+          509.616,
+          518.256
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ],
+        "order": "lsb_low"
+      },
+      "matching_current_FT_slots": [],
+      "source_stage0_peer": {
+        "peer_part": "NE_su00",
+        "peer_module": "hbm_arch_q_su00",
+        "actual_selected_header": "    hbm_arch_q_su00 NE_su00 (",
+        "peer_output": "L127_o",
+        "die_net": "x_NE_su00_L127_o_NE_b113",
+        "output_capture_instance": "u_bout_L127_o",
+        "width": 4,
+        "clock": "clk",
+        "payload_reset": "NONE",
+        "epoch_reset": "rst_n",
+        "D": "w_u_sfu_Q0_c_rr[3:0]",
+        "Q": "L127_o[3:0]",
+        "native_source_before_output_capture": "Exact peer native SFU/VMS rr output (not assumed registered/reachable); D expression retained"
+      },
+      "peer_declared_output_bus": {
+        "name": "L127_o",
+        "dir": "out",
+        "width": 4,
+        "kind": "ctl",
+        "face": "W",
+        "window_um": [
+          509.616,
+          518.256
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ],
+        "order": "lsb_low"
+      },
+      "source_stage0_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME",
+      "source_stage2": "CTL g_compose_m23_q; no source-compatible current native pin/FF home",
+      "declared_input_window_kind": "optimistic entire data-pin window rectangle, not an actual FF/D pin",
+      "input_window_to_CTL_allocation_lowerbound_um": 1205.2079999999999,
+      "two_remaining_405_edges_to_original_CTL": "EXCLUDED"
+    },
+    {
+      "side": "NW",
+      "current_type": "q_b113",
+      "input_source_port": "xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__2",
+      "source_payload_width": 514,
+      "epoch_companion_bits": 1,
+      "source_stage1_instance": "u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__2",
+      "source_stage1_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME; source primitive only",
+      "declared_bus": null,
+      "matching_current_FT_slots": [],
+      "source_stage0_peer": {
+        "peer_part": "NW_su31",
+        "peer_module": "hbm_arch_q_su31__physical_v1",
+        "actual_selected_header": "    hbm_arch_q_su31__physical_v1 NW_su31 (",
+        "peer_output": "xo_u_sfu_Q3_c_rr",
+        "die_net": "x_NW_su31_xo_u_sfu_Q3_c_rr_NW_b113",
+        "output_capture_instance": "u_bout_xo_u_sfu_Q3_c_rr",
+        "width": 514,
+        "clock": "clk",
+        "payload_reset": "NONE",
+        "epoch_reset": "rst_n",
+        "D": "w_u_sfu_Q3_c_rr[513:0]",
+        "Q": "xo_u_sfu_Q3_c_rr[513:0]",
+        "native_source_before_output_capture": "Exact peer native SFU/VMS rr output (not assumed registered/reachable); D expression retained"
+      },
+      "peer_declared_output_bus": null,
+      "source_stage0_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME",
+      "source_stage2": "CTL g_compose_m23_q; no source-compatible current native pin/FF home",
+      "missing": "No bus/window/pin or FT stage declaration for this exact SOURCE13 input in current type; no alias assumed"
+    },
+    {
+      "side": "NW",
+      "current_type": "q_b113",
+      "input_source_port": "xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__1",
+      "source_payload_width": 514,
+      "epoch_companion_bits": 1,
+      "source_stage1_instance": "u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__1",
+      "source_stage1_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME; source primitive only",
+      "declared_bus": null,
+      "matching_current_FT_slots": [],
+      "source_stage0_peer": {
+        "peer_part": "NW_su20",
+        "peer_module": "hbm_arch_q_su20__physical_v1",
+        "actual_selected_header": "    hbm_arch_q_su20__physical_v1 #(.S_u_su_Q2_lanes8_11_lane_lane_id(44'b00000101011000001010100000010100100000101000)) NW_su20 (",
+        "peer_output": "xo_u_sfu_Q2_c_rr",
+        "die_net": "x_NW_su20_xo_u_sfu_Q2_c_rr_NW_b113",
+        "output_capture_instance": "u_bout_xo_u_sfu_Q2_c_rr",
+        "width": 514,
+        "clock": "clk",
+        "payload_reset": "NONE",
+        "epoch_reset": "rst_n",
+        "D": "w_u_sfu_Q2_c_rr[513:0]",
+        "Q": "xo_u_sfu_Q2_c_rr[513:0]",
+        "native_source_before_output_capture": "Exact peer native SFU/VMS rr output (not assumed registered/reachable); D expression retained"
+      },
+      "peer_declared_output_bus": null,
+      "source_stage0_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME",
+      "source_stage2": "CTL g_compose_m23_q; no source-compatible current native pin/FF home",
+      "missing": "No bus/window/pin or FT stage declaration for this exact SOURCE13 input in current type; no alias assumed"
+    },
+    {
+      "side": "NW",
+      "current_type": "q_b113",
+      "input_source_port": "xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__0",
+      "source_payload_width": 514,
+      "epoch_companion_bits": 1,
+      "source_stage1_instance": "u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__0",
+      "source_stage1_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME; source primitive only",
+      "declared_bus": null,
+      "matching_current_FT_slots": [],
+      "source_stage0_peer": {
+        "peer_part": "NW_su11",
+        "peer_module": "hbm_arch_q_su11__physical_v1",
+        "actual_selected_header": "    hbm_arch_q_su11__physical_v1 NW_su11 (",
+        "peer_output": "xo_u_sfu_Q1_c_rr",
+        "die_net": "x_NW_su11_xo_u_sfu_Q1_c_rr_NW_b113",
+        "output_capture_instance": "u_bout_xo_u_sfu_Q1_c_rr",
+        "width": 514,
+        "clock": "clk",
+        "payload_reset": "NONE",
+        "epoch_reset": "rst_n",
+        "D": "w_u_sfu_Q1_c_rr[513:0]",
+        "Q": "xo_u_sfu_Q1_c_rr[513:0]",
+        "native_source_before_output_capture": "Exact peer native SFU/VMS rr output (not assumed registered/reachable); D expression retained"
+      },
+      "peer_declared_output_bus": null,
+      "source_stage0_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME",
+      "source_stage2": "CTL g_compose_m23_q; no source-compatible current native pin/FF home",
+      "missing": "No bus/window/pin or FT stage declaration for this exact SOURCE13 input in current type; no alias assumed"
+    },
+    {
+      "side": "NW",
+      "current_type": "q_b113",
+      "input_source_port": "L54_i",
+      "source_payload_width": 514,
+      "epoch_companion_bits": 1,
+      "source_stage1_instance": "u_bin_L54_i",
+      "source_stage1_FF_home": "DECLARED_FACE_BUS_AND_NOMINAL_CONSTRUCTOR_TARGETS_ONLY; no current mapped/fixed FF home",
+      "declared_bus": {
+        "name": "L54_i",
+        "dir": "in",
+        "width": 514,
+        "kind": "data",
+        "face": "E",
+        "window_um": [
+          416.672,
+          509.136
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ],
+        "order": "lsb_low"
+      },
+      "matching_current_FT_slots": [],
+      "source_stage0_peer": {
+        "peer_part": "NW_su00",
+        "peer_module": "hbm_arch_q_su00__physical_v1",
+        "actual_selected_header": "    hbm_arch_q_su00__physical_v1 NW_su00 (",
+        "peer_output": "L54_o",
+        "die_net": "x_NW_su00_L54_o_NW_b113",
+        "output_capture_instance": "u_bout_L54_o",
+        "width": 514,
+        "clock": "clk",
+        "payload_reset": "NONE",
+        "epoch_reset": "rst_n",
+        "D": "{L410_i_q[1:0], w_u_sfu_Q0_c_w_done[1:0], w_u_sfu_Q0_c_rr[513:4]}",
+        "Q": "L54_o[513:0]",
+        "native_source_before_output_capture": "Exact peer native SFU/VMS rr output (not assumed registered/reachable); D expression retained"
+      },
+      "peer_declared_output_bus": {
+        "name": "L54_o",
+        "dir": "out",
+        "width": 514,
+        "kind": "data",
+        "face": "W",
+        "window_um": [
+          416.672,
+          509.136
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ],
+        "order": "lsb_low"
+      },
+      "source_stage0_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME",
+      "source_stage2": "CTL g_compose_m23_q; no source-compatible current native pin/FF home",
+      "declared_input_window_kind": "optimistic entire data-pin window rectangle, not an actual FF/D pin",
+      "input_window_to_CTL_allocation_lowerbound_um": 1214.3279999999997,
+      "two_remaining_405_edges_to_original_CTL": "EXCLUDED"
+    },
+    {
+      "side": "NW",
+      "current_type": "q_b113",
+      "input_source_port": "L127_i",
+      "source_payload_width": 4,
+      "epoch_companion_bits": 1,
+      "source_stage1_instance": "u_bin_L127_i",
+      "source_stage1_FF_home": "DECLARED_FACE_BUS_AND_NOMINAL_CONSTRUCTOR_TARGETS_ONLY; no current mapped/fixed FF home",
+      "declared_bus": {
+        "name": "L127_i",
+        "dir": "in",
+        "width": 4,
+        "kind": "ctl",
+        "face": "E",
+        "window_um": [
+          509.616,
+          518.256
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ],
+        "order": "lsb_low"
+      },
+      "matching_current_FT_slots": [],
+      "source_stage0_peer": {
+        "peer_part": "NW_su00",
+        "peer_module": "hbm_arch_q_su00__physical_v1",
+        "actual_selected_header": "    hbm_arch_q_su00__physical_v1 NW_su00 (",
+        "peer_output": "L127_o",
+        "die_net": "x_NW_su00_L127_o_NW_b113",
+        "output_capture_instance": "u_bout_L127_o",
+        "width": 4,
+        "clock": "clk",
+        "payload_reset": "NONE",
+        "epoch_reset": "rst_n",
+        "D": "w_u_sfu_Q0_c_rr[3:0]",
+        "Q": "L127_o[3:0]",
+        "native_source_before_output_capture": "Exact peer native SFU/VMS rr output (not assumed registered/reachable); D expression retained"
+      },
+      "peer_declared_output_bus": {
+        "name": "L127_o",
+        "dir": "out",
+        "width": 4,
+        "kind": "ctl",
+        "face": "W",
+        "window_um": [
+          509.616,
+          518.256
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ],
+        "order": "lsb_low"
+      },
+      "source_stage0_FF_home": "NO_CURRENT_MAPPED_OR_FIXED_FF_HOME",
+      "source_stage2": "CTL g_compose_m23_q; no source-compatible current native pin/FF home",
+      "declared_input_window_kind": "optimistic entire data-pin window rectangle, not an actual FF/D pin",
+      "input_window_to_CTL_allocation_lowerbound_um": 1205.2079999999999,
+      "two_remaining_405_edges_to_original_CTL": "EXCLUDED"
+    }
+  ],
+  "conditional_local_copy_model": {
+    "regions": 4,
+    "macros_per_region": 8,
+    "strict_terminal_copy_FF": 8800,
+    "local_ANDs": 32,
+    "new_logical_cycles": 0,
+    "proof_status": "NOT_IMPLEMENTED_OR_PROVED",
+    "target_count_explanation": "8768 variable ABI field targets correspond to8800 strict sourceFF copies: each of32 regional stage_v fields requires2 FF plusAND; distinct global cell sites not allocated",
+    "existing_data_edges": "oldc_rrQ ->peerbout ->B113bin ->CTLm23 privatecopy; original payload/reset/epochs preserved",
+    "existing_metadata_edges": "oldmeta85Q ->meta86 ->meta87 ->meta88 privatecopy",
+    "extra_existing_stage_replication_FF_per_region": {
+      "data": 2048,
+      "metadata": 152
+    },
+    "source_D_condition": "Unknown/unmapped home is not a free D input; global source and native cut must provide actual endpoint/phase witnesses"
+  },
+  "holds": [
+    "Local+0cycle component can be prepared only with explicit oldD stream/reset contract; not a claim of global SAME3edge physical paths",
+    "Current3native xi/xo return interfaces have no exactnamed current plan port/window/FT witness; global token owner traces binder/date authority separately",
+    "Body minimum segments are not automatically added cycles; source latency/metadata/compiler must be matched coherently",
+    "Regional target points are independent wholeFFbody-access optimism; no simultaneous FF placement/Qpin or D/reset/clock proof",
+    "LegacyStoreA7534pins/CTL11819pins do not match SOURCE13StoreA6040/CTL11810ABI names; no pin/profile alias"
+  ]
+}

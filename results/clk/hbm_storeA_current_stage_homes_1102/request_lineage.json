@@ -1,0 +1,2040 @@
+{
+  "status": "ACTUAL_SOURCE13_REQUEST_LINEAGE_NO_DATE_PRICING",
+  "source_top_sha256": "eb1b461d9501109ea6ef0cde4dd6020618dcc210838d43422b6a7365e99a2064",
+  "source_CTL_ff": [
+    {
+      "kind": "c_rq",
+      "CTL_Q": "u_core_procdff_66916__Q[135:0]",
+      "register": "g_compose_m21_q[135:0]",
+      "D": "VM m56.local_rq[135:0]",
+      "VM_expression": "for b0..7 {prefetch_v[b],prefetch_sector[16*b+:16]}",
+      "clock": "clk[0]",
+      "reset": "n6/m55generatedregion2",
+      "enable": "NONE"
+    },
+    {
+      "kind": "c_wq",
+      "CTL_Q": "u_core_procdff_66921__Q[2247:0]",
+      "register": "g_compose_m22_q[2247:0]",
+      "D": "VM m56.local_wq[2247:0]",
+      "VM_expression": "fourg_lg[g].write_q[561:0] registers",
+      "clock": "clk[0]",
+      "reset": "n6/m55generatedregion2",
+      "enable": "NONE",
+      "preceding_VM_stage": {
+        "register": "m56.g_lg[g].write_q[561:0]",
+        "clock": "clk_lg[g]=clk[0]",
+        "reset": "NONE",
+        "update": "write_q<=0 each edge, selected281-bit packets overwrite {1,drain_sector16,round_sector(drain_data256,round_q),8hff}",
+        "source_cone": "actual drain_expected/drain_sector_q/drain_round_q and drain_data; not free or constant"
+      }
+    }
+  ],
+  "request_quarters": [
+    {
+      "side": "NE",
+      "quarter": 0,
+      "source_CTL": "u_u_sfucore_Q_ctl",
+      "destination_part": "NE_su00",
+      "destination_native_leaf": "u_u_sfu_Q0",
+      "destination_native_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "paths": {
+        "c_rq": {
+          "leaf_connection": "L47_i_q[33:0]",
+          "destination_input": "L47_i",
+          "destination_capture": {
+            "instance": "u_bin_L47_i",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "L47_i[595:0]",
+              "ea": "L47_i[596]",
+              "q": "L47_i_q",
+              "eq": "L47_i_eq"
+            }
+          },
+          "source_output": "L47_o",
+          "source_output_capture": {
+            "instance": "u_bout_L47_o",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "{w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[561:0], w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[33:0]}",
+              "ea": "rst_n",
+              "q": "L47_o[595:0]",
+              "eq": "L47_o[596]"
+            }
+          },
+          "source_payload_width": 596,
+          "planned_source_bus": {
+            "name": "L47_o",
+            "dir": "out",
+            "width": 664,
+            "kind": "data",
+            "face": "E",
+            "window_um": [
+              518.736,
+              637.984
+            ],
+            "layers": [
+              "M6",
+              "M4"
+            ],
+            "order": "lsb_low"
+          },
+          "planned_destination_bus": {
+            "name": "L47_i",
+            "dir": "in",
+            "width": 664,
+            "kind": "data",
+            "face": "W",
+            "window_um": [
+              518.736,
+              637.984
+            ],
+            "layers": [
+              "M6",
+              "M4"
+            ],
+            "order": "lsb_low"
+          },
+          "chain": [
+            {
+              "src_part": "NE_b113",
+              "src_port": "L47_o",
+              "dst_part": "NE_su00",
+              "dst_port": "L47_i",
+              "actual_top_net": "x_NE_b113_L47_o_NE_su00"
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 33,
+            "low": 0
+          },
+          "source_CTL_Q_slice": {
+            "high": 33,
+            "low": 0
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        },
+        "c_wq": {
+          "leaf_connection": "L47_i_q[595:34]",
+          "destination_input": "L47_i",
+          "destination_capture": {
+            "instance": "u_bin_L47_i",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "L47_i[595:0]",
+              "ea": "L47_i[596]",
+              "q": "L47_i_q",
+              "eq": "L47_i_eq"
+            }
+          },
+          "source_output": "L47_o",
+          "source_output_capture": {
+            "instance": "u_bout_L47_o",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "{w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[561:0], w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[33:0]}",
+              "ea": "rst_n",
+              "q": "L47_o[595:0]",
+              "eq": "L47_o[596]"
+            }
+          },
+          "source_payload_width": 596,
+          "planned_source_bus": {
+            "name": "L47_o",
+            "dir": "out",
+            "width": 664,
+            "kind": "data",
+            "face": "E",
+            "window_um": [
+              518.736,
+              637.984
+            ],
+            "layers": [
+              "M6",
+              "M4"
+            ],
+            "order": "lsb_low"
+          },
+          "planned_destination_bus": {
+            "name": "L47_i",
+            "dir": "in",
+            "width": 664,
+            "kind": "data",
+            "face": "W",
+            "window_um": [
+              518.736,
+              637.984
+            ],
+            "layers": [
+              "M6",
+              "M4"
+            ],
+            "order": "lsb_low"
+          },
+          "chain": [
+            {
+              "src_part": "NE_b113",
+              "src_port": "L47_o",
+              "dst_part": "NE_su00",
+              "dst_port": "L47_i",
+              "actual_top_net": "x_NE_b113_L47_o_NE_su00"
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 595,
+            "low": 34
+          },
+          "source_CTL_Q_slice": {
+            "high": 561,
+            "low": 0
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        }
+      }
+    },
+    {
+      "side": "NE",
+      "quarter": 1,
+      "source_CTL": "u_u_sfucore_Q_ctl",
+      "destination_part": "NE_su11",
+      "destination_native_leaf": "u_u_sfu_Q1",
+      "destination_native_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "paths": {
+        "c_rq": {
+          "leaf_connection": "xi_u_sfu_Q1_c_rq_q[33:0]",
+          "destination_input": "xi_u_sfu_Q1_c_rq",
+          "destination_capture": {
+            "instance": "u_bin_xi_u_sfu_Q1_c_rq",
+            "width": 34,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "xi_u_sfu_Q1_c_rq[33:0]",
+              "ea": "xi_u_sfu_Q1_c_rq[34]",
+              "q": "xi_u_sfu_Q1_c_rq_q",
+              "eq": "xi_u_sfu_Q1_c_rq_eq"
+            }
+          },
+          "source_output": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__0",
+          "source_output_capture": {
+            "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__0",
+            "width": 34,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[67:34]",
+              "ea": "rst_n",
+              "q": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__0[33:0]",
+              "eq": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__0[34]"
+            }
+          },
+          "source_payload_width": 34,
+          "planned_source_bus": null,
+          "planned_destination_bus": null,
+          "chain": [
+            {
+              "src_part": "NE_b113",
+              "src_port": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__0",
+              "dst_part": "NE_su11",
+              "dst_port": "xi_u_sfu_Q1_c_rq",
+              "actual_top_net": "x_NE_b113_xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q_0_NE_su11"
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 33,
+            "low": 0
+          },
+          "source_CTL_Q_slice": {
+            "high": 67,
+            "low": 34
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        },
+        "c_wq": {
+          "leaf_connection": "xi_u_sfu_Q1_c_wq_q[561:0]",
+          "destination_input": "xi_u_sfu_Q1_c_wq",
+          "destination_capture": {
+            "instance": "u_bin_xi_u_sfu_Q1_c_wq",
+            "width": 562,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "xi_u_sfu_Q1_c_wq[561:0]",
+              "ea": "xi_u_sfu_Q1_c_wq[562]",
+              "q": "xi_u_sfu_Q1_c_wq_q",
+              "eq": "xi_u_sfu_Q1_c_wq_eq"
+            }
+          },
+          "source_output": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__0",
+          "source_output_capture": {
+            "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__0",
+            "width": 562,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[1123:562]",
+              "ea": "rst_n",
+              "q": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__0[561:0]",
+              "eq": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__0[562]"
+            }
+          },
+          "source_payload_width": 562,
+          "planned_source_bus": null,
+          "planned_destination_bus": null,
+          "chain": [
+            {
+              "src_part": "NE_b113",
+              "src_port": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__0",
+              "dst_part": "NE_su11",
+              "dst_port": "xi_u_sfu_Q1_c_wq",
+              "actual_top_net": "x_NE_b113_xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q_0_NE_su11"
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 561,
+            "low": 0
+          },
+          "source_CTL_Q_slice": {
+            "high": 1123,
+            "low": 562
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        }
+      }
+    },
+    {
+      "side": "NE",
+      "quarter": 2,
+      "source_CTL": "u_u_sfucore_Q_ctl",
+      "destination_part": "NE_su20",
+      "destination_native_leaf": "u_u_sfu_Q2",
+      "destination_native_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "paths": {
+        "c_rq": {
+          "leaf_connection": "L731_i_q[33:0]",
+          "destination_input": "L731_i",
+          "destination_capture": {
+            "instance": "u_bin_L731_i",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "L731_i[595:0]",
+              "ea": "L731_i[596]",
+              "q": "L731_i_q",
+              "eq": "L731_i_eq"
+            }
+          },
+          "source_output": "L731_o",
+          "source_output_capture": {
+            "instance": "u_bout_L731_o",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "{w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[1685:1124], w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[101:68]}",
+              "ea": "rst_n",
+              "q": "L731_o[595:0]",
+              "eq": "L731_o[596]"
+            }
+          },
+          "source_payload_width": 596,
+          "planned_source_bus": {
+            "name": "L731_o",
+            "dir": "out",
+            "width": 596,
+            "kind": "data",
+            "face": "S",
+            "window_um": [
+              1756.0,
+              1855.5
+            ],
+            "layers": [
+              "M7",
+              "M5"
+            ],
+            "order": "lsb_low"
+          },
+          "planned_destination_bus": {
+            "name": "L731_i",
+            "dir": "in",
+            "width": 596,
+            "kind": "data",
+            "face": "N",
+            "window_um": [
+              226.72,
+              326.22
+            ],
+            "layers": [
+              "M7",
+              "M5"
+            ],
+            "order": "lsb_low"
+          },
+          "chain": [
+            {
+              "src_part": "NE_b113",
+              "src_port": "L731_o",
+              "dst_part": "NE_b012",
+              "dst_port": "L731x1_i",
+              "actual_top_net": "x_NE_b113_L731_o_NE_b012"
+            },
+            {
+              "src_part": "NE_b012",
+              "src_port": "L731x1_o",
+              "dst_part": "NE_b002",
+              "dst_port": "L731x2_i",
+              "actual_top_net": "x_NE_b012_L731x1_o_NE_b002",
+              "upstream_transit_stage": {
+                "part": "NE_b012",
+                "module": "hbm_arch_q_b012",
+                "slot": "L731x1",
+                "source_payload_FF_stage_count": 6,
+                "source_cells": [
+                  {
+                    "instance": "u_ft_L731x1_o_0",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_i[595:0]",
+                      "ea": "L731x1_i[596]",
+                      "q": "L731x1_o_s0[595:0]",
+                      "eq": "L731x1_o_s0[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_1",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s0[595:0]",
+                      "ea": "L731x1_o_s0[596]",
+                      "q": "L731x1_o_s1[595:0]",
+                      "eq": "L731x1_o_s1[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_2",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s1[595:0]",
+                      "ea": "L731x1_o_s1[596]",
+                      "q": "L731x1_o_s2[595:0]",
+                      "eq": "L731x1_o_s2[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_3",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s2[595:0]",
+                      "ea": "L731x1_o_s2[596]",
+                      "q": "L731x1_o_s3[595:0]",
+                      "eq": "L731x1_o_s3[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_4",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s3[595:0]",
+                      "ea": "L731x1_o_s3[596]",
+                      "q": "L731x1_o_s4[595:0]",
+                      "eq": "L731x1_o_s4[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_5",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s4[595:0]",
+                      "ea": "L731x1_o_s4[596]",
+                      "q": "L731x1_o[595:0]",
+                      "eq": "L731x1_o[596]"
+                    }
+                  }
+                ],
+                "planned_stations": 6,
+                "planned_fixed_positive_banks": 5,
+                "source_vs_plan": "MATCH",
+                "home_scope": "plan fixed positivebanks; no source-mapped current ODB placement/clock phase"
+              }
+            },
+            {
+              "src_part": "NE_b002",
+              "src_port": "L731x2_o",
+              "dst_part": "NE_su20",
+              "dst_port": "L731_i",
+              "actual_top_net": "x_NE_b002_L731x2_o_NE_su20",
+              "upstream_transit_stage": {
+                "part": "NE_b002",
+                "module": "hbm_arch_q_b002",
+                "slot": "L731x2",
+                "source_payload_FF_stage_count": 9,
+                "source_cells": [
+                  {
+                    "instance": "u_ft_L731x2_o_0",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_i[595:0]",
+                      "ea": "L731x2_i[596]",
+                      "q": "L731x2_o_s0[595:0]",
+                      "eq": "L731x2_o_s0[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_1",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s0[595:0]",
+                      "ea": "L731x2_o_s0[596]",
+                      "q": "L731x2_o_s1[595:0]",
+                      "eq": "L731x2_o_s1[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_2",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s1[595:0]",
+                      "ea": "L731x2_o_s1[596]",
+                      "q": "L731x2_o_s2[595:0]",
+                      "eq": "L731x2_o_s2[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_3",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s2[595:0]",
+                      "ea": "L731x2_o_s2[596]",
+                      "q": "L731x2_o_s3[595:0]",
+                      "eq": "L731x2_o_s3[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_4",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s3[595:0]",
+                      "ea": "L731x2_o_s3[596]",
+                      "q": "L731x2_o_s4[595:0]",
+                      "eq": "L731x2_o_s4[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_5",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s4[595:0]",
+                      "ea": "L731x2_o_s4[596]",
+                      "q": "L731x2_o_s5[595:0]",
+                      "eq": "L731x2_o_s5[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_6",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s5[595:0]",
+                      "ea": "L731x2_o_s5[596]",
+                      "q": "L731x2_o_s6[595:0]",
+                      "eq": "L731x2_o_s6[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_7",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s6[595:0]",
+                      "ea": "L731x2_o_s6[596]",
+                      "q": "L731x2_o_s7[595:0]",
+                      "eq": "L731x2_o_s7[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_8",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s7[595:0]",
+                      "ea": "L731x2_o_s7[596]",
+                      "q": "L731x2_o[595:0]",
+                      "eq": "L731x2_o[596]"
+                    }
+                  }
+                ],
+                "planned_stations": 10,
+                "planned_fixed_positive_banks": 9,
+                "source_vs_plan": "MISMATCH_OR_MISSING",
+                "home_scope": "plan fixed positivebanks; no source-mapped current ODB placement/clock phase"
+              }
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 33,
+            "low": 0
+          },
+          "source_CTL_Q_slice": {
+            "high": 101,
+            "low": 68
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        },
+        "c_wq": {
+          "leaf_connection": "L731_i_q[595:34]",
+          "destination_input": "L731_i",
+          "destination_capture": {
+            "instance": "u_bin_L731_i",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "L731_i[595:0]",
+              "ea": "L731_i[596]",
+              "q": "L731_i_q",
+              "eq": "L731_i_eq"
+            }
+          },
+          "source_output": "L731_o",
+          "source_output_capture": {
+            "instance": "u_bout_L731_o",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "{w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[1685:1124], w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[101:68]}",
+              "ea": "rst_n",
+              "q": "L731_o[595:0]",
+              "eq": "L731_o[596]"
+            }
+          },
+          "source_payload_width": 596,
+          "planned_source_bus": {
+            "name": "L731_o",
+            "dir": "out",
+            "width": 596,
+            "kind": "data",
+            "face": "S",
+            "window_um": [
+              1756.0,
+              1855.5
+            ],
+            "layers": [
+              "M7",
+              "M5"
+            ],
+            "order": "lsb_low"
+          },
+          "planned_destination_bus": {
+            "name": "L731_i",
+            "dir": "in",
+            "width": 596,
+            "kind": "data",
+            "face": "N",
+            "window_um": [
+              226.72,
+              326.22
+            ],
+            "layers": [
+              "M7",
+              "M5"
+            ],
+            "order": "lsb_low"
+          },
+          "chain": [
+            {
+              "src_part": "NE_b113",
+              "src_port": "L731_o",
+              "dst_part": "NE_b012",
+              "dst_port": "L731x1_i",
+              "actual_top_net": "x_NE_b113_L731_o_NE_b012"
+            },
+            {
+              "src_part": "NE_b012",
+              "src_port": "L731x1_o",
+              "dst_part": "NE_b002",
+              "dst_port": "L731x2_i",
+              "actual_top_net": "x_NE_b012_L731x1_o_NE_b002",
+              "upstream_transit_stage": {
+                "part": "NE_b012",
+                "module": "hbm_arch_q_b012",
+                "slot": "L731x1",
+                "source_payload_FF_stage_count": 6,
+                "source_cells": [
+                  {
+                    "instance": "u_ft_L731x1_o_0",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_i[595:0]",
+                      "ea": "L731x1_i[596]",
+                      "q": "L731x1_o_s0[595:0]",
+                      "eq": "L731x1_o_s0[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_1",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s0[595:0]",
+                      "ea": "L731x1_o_s0[596]",
+                      "q": "L731x1_o_s1[595:0]",
+                      "eq": "L731x1_o_s1[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_2",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s1[595:0]",
+                      "ea": "L731x1_o_s1[596]",
+                      "q": "L731x1_o_s2[595:0]",
+                      "eq": "L731x1_o_s2[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_3",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s2[595:0]",
+                      "ea": "L731x1_o_s2[596]",
+                      "q": "L731x1_o_s3[595:0]",
+                      "eq": "L731x1_o_s3[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_4",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s3[595:0]",
+                      "ea": "L731x1_o_s3[596]",
+                      "q": "L731x1_o_s4[595:0]",
+                      "eq": "L731x1_o_s4[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_5",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s4[595:0]",
+                      "ea": "L731x1_o_s4[596]",
+                      "q": "L731x1_o[595:0]",
+                      "eq": "L731x1_o[596]"
+                    }
+                  }
+                ],
+                "planned_stations": 6,
+                "planned_fixed_positive_banks": 5,
+                "source_vs_plan": "MATCH",
+                "home_scope": "plan fixed positivebanks; no source-mapped current ODB placement/clock phase"
+              }
+            },
+            {
+              "src_part": "NE_b002",
+              "src_port": "L731x2_o",
+              "dst_part": "NE_su20",
+              "dst_port": "L731_i",
+              "actual_top_net": "x_NE_b002_L731x2_o_NE_su20",
+              "upstream_transit_stage": {
+                "part": "NE_b002",
+                "module": "hbm_arch_q_b002",
+                "slot": "L731x2",
+                "source_payload_FF_stage_count": 9,
+                "source_cells": [
+                  {
+                    "instance": "u_ft_L731x2_o_0",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_i[595:0]",
+                      "ea": "L731x2_i[596]",
+                      "q": "L731x2_o_s0[595:0]",
+                      "eq": "L731x2_o_s0[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_1",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s0[595:0]",
+                      "ea": "L731x2_o_s0[596]",
+                      "q": "L731x2_o_s1[595:0]",
+                      "eq": "L731x2_o_s1[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_2",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s1[595:0]",
+                      "ea": "L731x2_o_s1[596]",
+                      "q": "L731x2_o_s2[595:0]",
+                      "eq": "L731x2_o_s2[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_3",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s2[595:0]",
+                      "ea": "L731x2_o_s2[596]",
+                      "q": "L731x2_o_s3[595:0]",
+                      "eq": "L731x2_o_s3[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_4",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s3[595:0]",
+                      "ea": "L731x2_o_s3[596]",
+                      "q": "L731x2_o_s4[595:0]",
+                      "eq": "L731x2_o_s4[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_5",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s4[595:0]",
+                      "ea": "L731x2_o_s4[596]",
+                      "q": "L731x2_o_s5[595:0]",
+                      "eq": "L731x2_o_s5[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_6",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s5[595:0]",
+                      "ea": "L731x2_o_s5[596]",
+                      "q": "L731x2_o_s6[595:0]",
+                      "eq": "L731x2_o_s6[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_7",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s6[595:0]",
+                      "ea": "L731x2_o_s6[596]",
+                      "q": "L731x2_o_s7[595:0]",
+                      "eq": "L731x2_o_s7[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_8",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s7[595:0]",
+                      "ea": "L731x2_o_s7[596]",
+                      "q": "L731x2_o[595:0]",
+                      "eq": "L731x2_o[596]"
+                    }
+                  }
+                ],
+                "planned_stations": 10,
+                "planned_fixed_positive_banks": 9,
+                "source_vs_plan": "MISMATCH_OR_MISSING",
+                "home_scope": "plan fixed positivebanks; no source-mapped current ODB placement/clock phase"
+              }
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 595,
+            "low": 34
+          },
+          "source_CTL_Q_slice": {
+            "high": 1685,
+            "low": 1124
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        }
+      }
+    },
+    {
+      "side": "NE",
+      "quarter": 3,
+      "source_CTL": "u_u_sfucore_Q_ctl",
+      "destination_part": "NE_su31",
+      "destination_native_leaf": "u_u_sfu_Q3",
+      "destination_native_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "paths": {
+        "c_rq": {
+          "leaf_connection": "xi_u_sfu_Q3_c_rq_q[33:0]",
+          "destination_input": "xi_u_sfu_Q3_c_rq",
+          "destination_capture": {
+            "instance": "u_bin_xi_u_sfu_Q3_c_rq",
+            "width": 34,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "xi_u_sfu_Q3_c_rq[33:0]",
+              "ea": "xi_u_sfu_Q3_c_rq[34]",
+              "q": "xi_u_sfu_Q3_c_rq_q",
+              "eq": "xi_u_sfu_Q3_c_rq_eq"
+            }
+          },
+          "source_output": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__1",
+          "source_output_capture": {
+            "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__1",
+            "width": 34,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[135:102]",
+              "ea": "rst_n",
+              "q": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__1[33:0]",
+              "eq": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__1[34]"
+            }
+          },
+          "source_payload_width": 34,
+          "planned_source_bus": null,
+          "planned_destination_bus": null,
+          "chain": [
+            {
+              "src_part": "NE_b113",
+              "src_port": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__1",
+              "dst_part": "NE_su31",
+              "dst_port": "xi_u_sfu_Q3_c_rq",
+              "actual_top_net": "x_NE_b113_xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q_1_NE_su31"
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 33,
+            "low": 0
+          },
+          "source_CTL_Q_slice": {
+            "high": 135,
+            "low": 102
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        },
+        "c_wq": {
+          "leaf_connection": "xi_u_sfu_Q3_c_wq_q[561:0]",
+          "destination_input": "xi_u_sfu_Q3_c_wq",
+          "destination_capture": {
+            "instance": "u_bin_xi_u_sfu_Q3_c_wq",
+            "width": 562,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "xi_u_sfu_Q3_c_wq[561:0]",
+              "ea": "xi_u_sfu_Q3_c_wq[562]",
+              "q": "xi_u_sfu_Q3_c_wq_q",
+              "eq": "xi_u_sfu_Q3_c_wq_eq"
+            }
+          },
+          "source_output": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__1",
+          "source_output_capture": {
+            "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__1",
+            "width": 562,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[2247:1686]",
+              "ea": "rst_n",
+              "q": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__1[561:0]",
+              "eq": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__1[562]"
+            }
+          },
+          "source_payload_width": 562,
+          "planned_source_bus": null,
+          "planned_destination_bus": null,
+          "chain": [
+            {
+              "src_part": "NE_b113",
+              "src_port": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__1",
+              "dst_part": "NE_su31",
+              "dst_port": "xi_u_sfu_Q3_c_wq",
+              "actual_top_net": "x_NE_b113_xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q_1_NE_su31"
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 561,
+            "low": 0
+          },
+          "source_CTL_Q_slice": {
+            "high": 2247,
+            "low": 1686
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        }
+      }
+    },
+    {
+      "side": "NW",
+      "quarter": 0,
+      "source_CTL": "u_u_sfucore_Q_ctl",
+      "destination_part": "NW_su00",
+      "destination_native_leaf": "u_u_sfu_Q0",
+      "destination_native_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "paths": {
+        "c_rq": {
+          "leaf_connection": "L47_i_q[33:0]",
+          "destination_input": "L47_i",
+          "destination_capture": {
+            "instance": "u_bin_L47_i",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "L47_i[595:0]",
+              "ea": "L47_i[596]",
+              "q": "L47_i_q",
+              "eq": "L47_i_eq"
+            }
+          },
+          "source_output": "L47_o",
+          "source_output_capture": {
+            "instance": "u_bout_L47_o",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "{w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[561:0], w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[33:0]}",
+              "ea": "rst_n",
+              "q": "L47_o[595:0]",
+              "eq": "L47_o[596]"
+            }
+          },
+          "source_payload_width": 596,
+          "planned_source_bus": {
+            "name": "L47_o",
+            "dir": "out",
+            "width": 664,
+            "kind": "data",
+            "face": "E",
+            "window_um": [
+              518.736,
+              637.984
+            ],
+            "layers": [
+              "M6",
+              "M4"
+            ],
+            "order": "lsb_low"
+          },
+          "planned_destination_bus": {
+            "name": "L47_i",
+            "dir": "in",
+            "width": 664,
+            "kind": "data",
+            "face": "W",
+            "window_um": [
+              518.736,
+              637.984
+            ],
+            "layers": [
+              "M6",
+              "M4"
+            ],
+            "order": "lsb_low"
+          },
+          "chain": [
+            {
+              "src_part": "NW_b113",
+              "src_port": "L47_o",
+              "dst_part": "NW_su00",
+              "dst_port": "L47_i",
+              "actual_top_net": "x_NW_b113_L47_o_NW_su00"
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 33,
+            "low": 0
+          },
+          "source_CTL_Q_slice": {
+            "high": 33,
+            "low": 0
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        },
+        "c_wq": {
+          "leaf_connection": "L47_i_q[595:34]",
+          "destination_input": "L47_i",
+          "destination_capture": {
+            "instance": "u_bin_L47_i",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "L47_i[595:0]",
+              "ea": "L47_i[596]",
+              "q": "L47_i_q",
+              "eq": "L47_i_eq"
+            }
+          },
+          "source_output": "L47_o",
+          "source_output_capture": {
+            "instance": "u_bout_L47_o",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "{w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[561:0], w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[33:0]}",
+              "ea": "rst_n",
+              "q": "L47_o[595:0]",
+              "eq": "L47_o[596]"
+            }
+          },
+          "source_payload_width": 596,
+          "planned_source_bus": {
+            "name": "L47_o",
+            "dir": "out",
+            "width": 664,
+            "kind": "data",
+            "face": "E",
+            "window_um": [
+              518.736,
+              637.984
+            ],
+            "layers": [
+              "M6",
+              "M4"
+            ],
+            "order": "lsb_low"
+          },
+          "planned_destination_bus": {
+            "name": "L47_i",
+            "dir": "in",
+            "width": 664,
+            "kind": "data",
+            "face": "W",
+            "window_um": [
+              518.736,
+              637.984
+            ],
+            "layers": [
+              "M6",
+              "M4"
+            ],
+            "order": "lsb_low"
+          },
+          "chain": [
+            {
+              "src_part": "NW_b113",
+              "src_port": "L47_o",
+              "dst_part": "NW_su00",
+              "dst_port": "L47_i",
+              "actual_top_net": "x_NW_b113_L47_o_NW_su00"
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 595,
+            "low": 34
+          },
+          "source_CTL_Q_slice": {
+            "high": 561,
+            "low": 0
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        }
+      }
+    },
+    {
+      "side": "NW",
+      "quarter": 1,
+      "source_CTL": "u_u_sfucore_Q_ctl",
+      "destination_part": "NW_su11",
+      "destination_native_leaf": "u_u_sfu_Q1",
+      "destination_native_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "paths": {
+        "c_rq": {
+          "leaf_connection": "xi_u_sfu_Q1_c_rq_q[33:0]",
+          "destination_input": "xi_u_sfu_Q1_c_rq",
+          "destination_capture": {
+            "instance": "u_bin_xi_u_sfu_Q1_c_rq",
+            "width": 34,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "xi_u_sfu_Q1_c_rq[33:0]",
+              "ea": "xi_u_sfu_Q1_c_rq[34]",
+              "q": "xi_u_sfu_Q1_c_rq_q",
+              "eq": "xi_u_sfu_Q1_c_rq_eq"
+            }
+          },
+          "source_output": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__0",
+          "source_output_capture": {
+            "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__0",
+            "width": 34,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[67:34]",
+              "ea": "rst_n",
+              "q": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__0[33:0]",
+              "eq": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__0[34]"
+            }
+          },
+          "source_payload_width": 34,
+          "planned_source_bus": null,
+          "planned_destination_bus": null,
+          "chain": [
+            {
+              "src_part": "NW_b113",
+              "src_port": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__0",
+              "dst_part": "NW_su11",
+              "dst_port": "xi_u_sfu_Q1_c_rq",
+              "actual_top_net": "x_NW_b113_xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q_0_NW_su11"
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 33,
+            "low": 0
+          },
+          "source_CTL_Q_slice": {
+            "high": 67,
+            "low": 34
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        },
+        "c_wq": {
+          "leaf_connection": "xi_u_sfu_Q1_c_wq_q[561:0]",
+          "destination_input": "xi_u_sfu_Q1_c_wq",
+          "destination_capture": {
+            "instance": "u_bin_xi_u_sfu_Q1_c_wq",
+            "width": 562,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "xi_u_sfu_Q1_c_wq[561:0]",
+              "ea": "xi_u_sfu_Q1_c_wq[562]",
+              "q": "xi_u_sfu_Q1_c_wq_q",
+              "eq": "xi_u_sfu_Q1_c_wq_eq"
+            }
+          },
+          "source_output": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__0",
+          "source_output_capture": {
+            "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__0",
+            "width": 562,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[1123:562]",
+              "ea": "rst_n",
+              "q": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__0[561:0]",
+              "eq": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__0[562]"
+            }
+          },
+          "source_payload_width": 562,
+          "planned_source_bus": null,
+          "planned_destination_bus": null,
+          "chain": [
+            {
+              "src_part": "NW_b113",
+              "src_port": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__0",
+              "dst_part": "NW_su11",
+              "dst_port": "xi_u_sfu_Q1_c_wq",
+              "actual_top_net": "x_NW_b113_xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q_0_NW_su11"
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 561,
+            "low": 0
+          },
+          "source_CTL_Q_slice": {
+            "high": 1123,
+            "low": 562
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        }
+      }
+    },
+    {
+      "side": "NW",
+      "quarter": 2,
+      "source_CTL": "u_u_sfucore_Q_ctl",
+      "destination_part": "NW_su20",
+      "destination_native_leaf": "u_u_sfu_Q2",
+      "destination_native_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "paths": {
+        "c_rq": {
+          "leaf_connection": "L731_i_q[33:0]",
+          "destination_input": "L731_i",
+          "destination_capture": {
+            "instance": "u_bin_L731_i",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "L731_i[595:0]",
+              "ea": "L731_i[596]",
+              "q": "L731_i_q",
+              "eq": "L731_i_eq"
+            }
+          },
+          "source_output": "L731_o",
+          "source_output_capture": {
+            "instance": "u_bout_L731_o",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "{w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[1685:1124], w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[101:68]}",
+              "ea": "rst_n",
+              "q": "L731_o[595:0]",
+              "eq": "L731_o[596]"
+            }
+          },
+          "source_payload_width": 596,
+          "planned_source_bus": {
+            "name": "L731_o",
+            "dir": "out",
+            "width": 596,
+            "kind": "data",
+            "face": "S",
+            "window_um": [
+              1756.0,
+              1855.5
+            ],
+            "layers": [
+              "M7",
+              "M5"
+            ],
+            "order": "lsb_low"
+          },
+          "planned_destination_bus": {
+            "name": "L731_i",
+            "dir": "in",
+            "width": 596,
+            "kind": "data",
+            "face": "N",
+            "window_um": [
+              226.72,
+              326.22
+            ],
+            "layers": [
+              "M7",
+              "M5"
+            ],
+            "order": "lsb_low"
+          },
+          "chain": [
+            {
+              "src_part": "NW_b113",
+              "src_port": "L731_o",
+              "dst_part": "NW_b012",
+              "dst_port": "L731x1_i",
+              "actual_top_net": "x_NW_b113_L731_o_NW_b012"
+            },
+            {
+              "src_part": "NW_b012",
+              "src_port": "L731x1_o",
+              "dst_part": "NW_b002",
+              "dst_port": "L731x2_i",
+              "actual_top_net": "x_NW_b012_L731x1_o_NW_b002",
+              "upstream_transit_stage": {
+                "part": "NW_b012",
+                "module": "hbm_arch_q_b012__physical_v1",
+                "slot": "L731x1",
+                "source_payload_FF_stage_count": 6,
+                "source_cells": [
+                  {
+                    "instance": "u_ft_L731x1_o_0",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_i[595:0]",
+                      "ea": "L731x1_i[596]",
+                      "q": "L731x1_o_s0[595:0]",
+                      "eq": "L731x1_o_s0[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_1",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s0[595:0]",
+                      "ea": "L731x1_o_s0[596]",
+                      "q": "L731x1_o_s1[595:0]",
+                      "eq": "L731x1_o_s1[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_2",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s1[595:0]",
+                      "ea": "L731x1_o_s1[596]",
+                      "q": "L731x1_o_s2[595:0]",
+                      "eq": "L731x1_o_s2[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_3",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s2[595:0]",
+                      "ea": "L731x1_o_s2[596]",
+                      "q": "L731x1_o_s3[595:0]",
+                      "eq": "L731x1_o_s3[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_4",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s3[595:0]",
+                      "ea": "L731x1_o_s3[596]",
+                      "q": "L731x1_o_s4[595:0]",
+                      "eq": "L731x1_o_s4[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_5",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s4[595:0]",
+                      "ea": "L731x1_o_s4[596]",
+                      "q": "L731x1_o[595:0]",
+                      "eq": "L731x1_o[596]"
+                    }
+                  }
+                ],
+                "planned_stations": 6,
+                "planned_fixed_positive_banks": 5,
+                "source_vs_plan": "MATCH",
+                "home_scope": "plan fixed positivebanks; no source-mapped current ODB placement/clock phase"
+              }
+            },
+            {
+              "src_part": "NW_b002",
+              "src_port": "L731x2_o",
+              "dst_part": "NW_su20",
+              "dst_port": "L731_i",
+              "actual_top_net": "x_NW_b002_L731x2_o_NW_su20",
+              "upstream_transit_stage": {
+                "part": "NW_b002",
+                "module": "hbm_arch_q_b002__physical_v1",
+                "slot": "L731x2",
+                "source_payload_FF_stage_count": 9,
+                "source_cells": [
+                  {
+                    "instance": "u_ft_L731x2_o_0",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_i[595:0]",
+                      "ea": "L731x2_i[596]",
+                      "q": "L731x2_o_s0[595:0]",
+                      "eq": "L731x2_o_s0[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_1",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s0[595:0]",
+                      "ea": "L731x2_o_s0[596]",
+                      "q": "L731x2_o_s1[595:0]",
+                      "eq": "L731x2_o_s1[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_2",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s1[595:0]",
+                      "ea": "L731x2_o_s1[596]",
+                      "q": "L731x2_o_s2[595:0]",
+                      "eq": "L731x2_o_s2[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_3",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s2[595:0]",
+                      "ea": "L731x2_o_s2[596]",
+                      "q": "L731x2_o_s3[595:0]",
+                      "eq": "L731x2_o_s3[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_4",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s3[595:0]",
+                      "ea": "L731x2_o_s3[596]",
+                      "q": "L731x2_o_s4[595:0]",
+                      "eq": "L731x2_o_s4[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_5",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s4[595:0]",
+                      "ea": "L731x2_o_s4[596]",
+                      "q": "L731x2_o_s5[595:0]",
+                      "eq": "L731x2_o_s5[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_6",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s5[595:0]",
+                      "ea": "L731x2_o_s5[596]",
+                      "q": "L731x2_o_s6[595:0]",
+                      "eq": "L731x2_o_s6[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_7",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s6[595:0]",
+                      "ea": "L731x2_o_s6[596]",
+                      "q": "L731x2_o_s7[595:0]",
+                      "eq": "L731x2_o_s7[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_8",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s7[595:0]",
+                      "ea": "L731x2_o_s7[596]",
+                      "q": "L731x2_o[595:0]",
+                      "eq": "L731x2_o[596]"
+                    }
+                  }
+                ],
+                "planned_stations": 10,
+                "planned_fixed_positive_banks": 9,
+                "source_vs_plan": "MISMATCH_OR_MISSING",
+                "home_scope": "plan fixed positivebanks; no source-mapped current ODB placement/clock phase"
+              }
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 33,
+            "low": 0
+          },
+          "source_CTL_Q_slice": {
+            "high": 101,
+            "low": 68
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        },
+        "c_wq": {
+          "leaf_connection": "L731_i_q[595:34]",
+          "destination_input": "L731_i",
+          "destination_capture": {
+            "instance": "u_bin_L731_i",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "L731_i[595:0]",
+              "ea": "L731_i[596]",
+              "q": "L731_i_q",
+              "eq": "L731_i_eq"
+            }
+          },
+          "source_output": "L731_o",
+          "source_output_capture": {
+            "instance": "u_bout_L731_o",
+            "width": 596,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "{w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[1685:1124], w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[101:68]}",
+              "ea": "rst_n",
+              "q": "L731_o[595:0]",
+              "eq": "L731_o[596]"
+            }
+          },
+          "source_payload_width": 596,
+          "planned_source_bus": {
+            "name": "L731_o",
+            "dir": "out",
+            "width": 596,
+            "kind": "data",
+            "face": "S",
+            "window_um": [
+              1756.0,
+              1855.5
+            ],
+            "layers": [
+              "M7",
+              "M5"
+            ],
+            "order": "lsb_low"
+          },
+          "planned_destination_bus": {
+            "name": "L731_i",
+            "dir": "in",
+            "width": 596,
+            "kind": "data",
+            "face": "N",
+            "window_um": [
+              226.72,
+              326.22
+            ],
+            "layers": [
+              "M7",
+              "M5"
+            ],
+            "order": "lsb_low"
+          },
+          "chain": [
+            {
+              "src_part": "NW_b113",
+              "src_port": "L731_o",
+              "dst_part": "NW_b012",
+              "dst_port": "L731x1_i",
+              "actual_top_net": "x_NW_b113_L731_o_NW_b012"
+            },
+            {
+              "src_part": "NW_b012",
+              "src_port": "L731x1_o",
+              "dst_part": "NW_b002",
+              "dst_port": "L731x2_i",
+              "actual_top_net": "x_NW_b012_L731x1_o_NW_b002",
+              "upstream_transit_stage": {
+                "part": "NW_b012",
+                "module": "hbm_arch_q_b012__physical_v1",
+                "slot": "L731x1",
+                "source_payload_FF_stage_count": 6,
+                "source_cells": [
+                  {
+                    "instance": "u_ft_L731x1_o_0",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_i[595:0]",
+                      "ea": "L731x1_i[596]",
+                      "q": "L731x1_o_s0[595:0]",
+                      "eq": "L731x1_o_s0[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_1",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s0[595:0]",
+                      "ea": "L731x1_o_s0[596]",
+                      "q": "L731x1_o_s1[595:0]",
+                      "eq": "L731x1_o_s1[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_2",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s1[595:0]",
+                      "ea": "L731x1_o_s1[596]",
+                      "q": "L731x1_o_s2[595:0]",
+                      "eq": "L731x1_o_s2[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_3",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s2[595:0]",
+                      "ea": "L731x1_o_s2[596]",
+                      "q": "L731x1_o_s3[595:0]",
+                      "eq": "L731x1_o_s3[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_4",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s3[595:0]",
+                      "ea": "L731x1_o_s3[596]",
+                      "q": "L731x1_o_s4[595:0]",
+                      "eq": "L731x1_o_s4[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x1_o_5",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x1_o_s4[595:0]",
+                      "ea": "L731x1_o_s4[596]",
+                      "q": "L731x1_o[595:0]",
+                      "eq": "L731x1_o[596]"
+                    }
+                  }
+                ],
+                "planned_stations": 6,
+                "planned_fixed_positive_banks": 5,
+                "source_vs_plan": "MATCH",
+                "home_scope": "plan fixed positivebanks; no source-mapped current ODB placement/clock phase"
+              }
+            },
+            {
+              "src_part": "NW_b002",
+              "src_port": "L731x2_o",
+              "dst_part": "NW_su20",
+              "dst_port": "L731_i",
+              "actual_top_net": "x_NW_b002_L731x2_o_NW_su20",
+              "upstream_transit_stage": {
+                "part": "NW_b002",
+                "module": "hbm_arch_q_b002__physical_v1",
+                "slot": "L731x2",
+                "source_payload_FF_stage_count": 9,
+                "source_cells": [
+                  {
+                    "instance": "u_ft_L731x2_o_0",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_i[595:0]",
+                      "ea": "L731x2_i[596]",
+                      "q": "L731x2_o_s0[595:0]",
+                      "eq": "L731x2_o_s0[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_1",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s0[595:0]",
+                      "ea": "L731x2_o_s0[596]",
+                      "q": "L731x2_o_s1[595:0]",
+                      "eq": "L731x2_o_s1[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_2",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s1[595:0]",
+                      "ea": "L731x2_o_s1[596]",
+                      "q": "L731x2_o_s2[595:0]",
+                      "eq": "L731x2_o_s2[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_3",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s2[595:0]",
+                      "ea": "L731x2_o_s2[596]",
+                      "q": "L731x2_o_s3[595:0]",
+                      "eq": "L731x2_o_s3[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_4",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s3[595:0]",
+                      "ea": "L731x2_o_s3[596]",
+                      "q": "L731x2_o_s4[595:0]",
+                      "eq": "L731x2_o_s4[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_5",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s4[595:0]",
+                      "ea": "L731x2_o_s4[596]",
+                      "q": "L731x2_o_s5[595:0]",
+                      "eq": "L731x2_o_s5[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_6",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s5[595:0]",
+                      "ea": "L731x2_o_s5[596]",
+                      "q": "L731x2_o_s6[595:0]",
+                      "eq": "L731x2_o_s6[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_7",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s6[595:0]",
+                      "ea": "L731x2_o_s6[596]",
+                      "q": "L731x2_o_s7[595:0]",
+                      "eq": "L731x2_o_s7[596]"
+                    }
+                  },
+                  {
+                    "instance": "u_ft_L731x2_o_8",
+                    "width": 596,
+                    "pins": {
+                      "clk": "clk",
+                      "rst_n": "rst_n",
+                      "d": "L731x2_o_s7[595:0]",
+                      "ea": "L731x2_o_s7[596]",
+                      "q": "L731x2_o[595:0]",
+                      "eq": "L731x2_o[596]"
+                    }
+                  }
+                ],
+                "planned_stations": 10,
+                "planned_fixed_positive_banks": 9,
+                "source_vs_plan": "MISMATCH_OR_MISSING",
+                "home_scope": "plan fixed positivebanks; no source-mapped current ODB placement/clock phase"
+              }
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 595,
+            "low": 34
+          },
+          "source_CTL_Q_slice": {
+            "high": 1685,
+            "low": 1124
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        }
+      }
+    },
+    {
+      "side": "NW",
+      "quarter": 3,
+      "source_CTL": "u_u_sfucore_Q_ctl",
+      "destination_part": "NW_su31",
+      "destination_native_leaf": "u_u_sfu_Q3",
+      "destination_native_module": "ot_hgi_sfu_lg_pair_tap_leaf",
+      "paths": {
+        "c_rq": {
+          "leaf_connection": "xi_u_sfu_Q3_c_rq_q[33:0]",
+          "destination_input": "xi_u_sfu_Q3_c_rq",
+          "destination_capture": {
+            "instance": "u_bin_xi_u_sfu_Q3_c_rq",
+            "width": 34,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "xi_u_sfu_Q3_c_rq[33:0]",
+              "ea": "xi_u_sfu_Q3_c_rq[34]",
+              "q": "xi_u_sfu_Q3_c_rq_q",
+              "eq": "xi_u_sfu_Q3_c_rq_eq"
+            }
+          },
+          "source_output": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__1",
+          "source_output_capture": {
+            "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__1",
+            "width": 34,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[135:102]",
+              "ea": "rst_n",
+              "q": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__1[33:0]",
+              "eq": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__1[34]"
+            }
+          },
+          "source_payload_width": 34,
+          "planned_source_bus": null,
+          "planned_destination_bus": null,
+          "chain": [
+            {
+              "src_part": "NW_b113",
+              "src_port": "xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__1",
+              "dst_part": "NW_su31",
+              "dst_port": "xi_u_sfu_Q3_c_rq",
+              "actual_top_net": "x_NW_b113_xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q_1_NW_su31"
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 33,
+            "low": 0
+          },
+          "source_CTL_Q_slice": {
+            "high": 135,
+            "low": 102
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        },
+        "c_wq": {
+          "leaf_connection": "xi_u_sfu_Q3_c_wq_q[561:0]",
+          "destination_input": "xi_u_sfu_Q3_c_wq",
+          "destination_capture": {
+            "instance": "u_bin_xi_u_sfu_Q3_c_wq",
+            "width": 562,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "xi_u_sfu_Q3_c_wq[561:0]",
+              "ea": "xi_u_sfu_Q3_c_wq[562]",
+              "q": "xi_u_sfu_Q3_c_wq_q",
+              "eq": "xi_u_sfu_Q3_c_wq_eq"
+            }
+          },
+          "source_output": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__1",
+          "source_output_capture": {
+            "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__1",
+            "width": 562,
+            "pins": {
+              "clk": "clk",
+              "rst_n": "rst_n",
+              "d": "w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[2247:1686]",
+              "ea": "rst_n",
+              "q": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__1[561:0]",
+              "eq": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__1[562]"
+            }
+          },
+          "source_payload_width": 562,
+          "planned_source_bus": null,
+          "planned_destination_bus": null,
+          "chain": [
+            {
+              "src_part": "NW_b113",
+              "src_port": "xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__1",
+              "dst_part": "NW_su31",
+              "dst_port": "xi_u_sfu_Q3_c_wq",
+              "actual_top_net": "x_NW_b113_xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q_1_NW_su31"
+            }
+          ],
+          "leaf_input_payload_slice": {
+            "high": 561,
+            "low": 0
+          },
+          "source_CTL_Q_slice": {
+            "high": 2247,
+            "low": 1686
+          },
+          "native_source_pin_and_FF_home": "Not supplied for exact current source ABI; no actual mapped/fixed boundary FF home inferred"
+        }
+      }
+    }
+  ],
+  "summary": {
+    "Q0": "L47 packedrq34+wq562 source596 versus plan664: explicitABI mismatch",
+    "Q1": "Two directxo/xi native links34/562; absentnamed current typeports/FT",
+    "Q2": "L731 packed596 through B012L731x1 source6=plan6 thenB002L731x2 source9 versusplan10, thenSU20inputcapture",
+    "Q3": "Two directxo/xi native links34/562; absentnamed current typeports/FT"
+  },
+  "scope": "exact source nets/cells/widths/reset roles, no read-return/write-return dates inferred or cycles inserted",
+  "holds": [
+    "Actual request transport/interface must be reconciled to current source/provider/plan event",
+    "L731x2 missing source stage is not automatically a newlypriced cycle if modelalreadyincludes10; exact proposednativeevent must showmatch",
+    "L47samebusname doesnotgrant664to596 mapping/padding equivalence",
+    "No current nativepin/FFhome/clock/reset physicalqualification or source/default activation"
+  ]
+}
