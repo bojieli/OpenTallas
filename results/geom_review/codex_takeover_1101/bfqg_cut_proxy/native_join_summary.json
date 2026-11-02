@@ -1,0 +1,39 @@
+{
+ "scope": "Actual saved native guide+truepin join to exact hot proxy contributors; guides are corridors not detailed wires/access/DRC",
+ "source_sha": "bf488330ba6836ff450c1dc6821b56a0e7c0c74670be41515db7fb0b94fd8b6f",
+ "proxy_contributors": 333,
+ "joined": 333,
+ "unresolved": [],
+ "unit_weight_nets": 214,
+ "unit_nets_any_native_cut_guide": 214,
+ "unit_nets_any_guide_outside_hot": 129,
+ "unit_nets_only_outside_hot": 119,
+ "unit_nets_any_guide_over_macro": 0,
+ "unit_native_cut_guide_layers": {
+  "M3": 120,
+  "M5": 101,
+  "M2": 10,
+  "M4": 4,
+  "M1": 1
+ },
+ "unit_over_macro_layers": {},
+ "all_native_cut_guide_layers": {
+  "M3": 1083,
+  "M5": 690,
+  "M4": 42,
+  "M1": 35,
+  "M2": 92
+ },
+ "true_endpoint_crossing_contributors": 333,
+ "hot333_inside_nets": 134,
+ "hot333_only_outside": 199,
+ "hot333_only_outside_streets": {
+  "west_x0..10": 152,
+  "central_x112..147": 47
+ },
+ "unit214_only_outside_streets": {
+  "west_x0..10": 108,
+  "central_x112..147": 11
+ },
+ "all_native_nets_touching_hot_guide_window": 220
+}

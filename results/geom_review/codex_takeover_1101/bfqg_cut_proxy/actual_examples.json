@@ -1,0 +1,154 @@
+[
+ {
+  "net_index": 113,
+  "name": "_00113_",
+  "proxy_weight": 1.0,
+  "proxy_box": [
+   14.85,
+   39.285,
+   15.282,
+   163.215
+  ],
+  "unit_weight": true,
+  "actual_endpoint_crosses_cut": true,
+  "native_cut_guides": [
+   {
+    "layer": "M3",
+    "box_um": [
+     114.57,
+     104.31,
+     115.14,
+     108.3
+    ]
+   }
+  ],
+  "native_inside_hot": [],
+  "native_outside_hot": [
+   {
+    "layer": "M3",
+    "box_um": [
+     114.57,
+     104.31,
+     115.14,
+     108.3
+    ]
+   }
+  ],
+  "native_over_macro": [],
+  "endpoint_terms": [
+   {
+    "instance": "cap[0][201]$_DFF_P_",
+    "instance_id": 5016,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "pin": "D",
+    "direction": "INPUT",
+    "macro": false,
+    "cell_box_um": [
+     14.742,
+     163.08,
+     15.822,
+     163.35
+    ],
+    "proxy_cell_centre_um": [
+     15.282,
+     163.215
+    ]
+   },
+   {
+    "instance": "_09785_",
+    "instance_id": 2316,
+    "master": "AND2x4_ASAP7_75t_R",
+    "pin": "Y",
+    "direction": "OUTPUT",
+    "macro": false,
+    "cell_box_um": [
+     14.58,
+     39.15,
+     15.12,
+     39.42
+    ],
+    "proxy_cell_centre_um": [
+     14.85,
+     39.285
+    ]
+   }
+  ],
+  "ports": []
+ },
+ {
+  "net_index": 118,
+  "name": "_00118_",
+  "proxy_weight": 1.0,
+  "proxy_box": [
+   10.097999999999999,
+   42.525,
+   10.584,
+   169.695
+  ],
+  "unit_weight": true,
+  "actual_endpoint_crosses_cut": true,
+  "native_cut_guides": [
+   {
+    "layer": "M5",
+    "box_um": [
+     5.7,
+     42.18,
+     6.27,
+     120.27
+    ]
+   }
+  ],
+  "native_inside_hot": [],
+  "native_outside_hot": [
+   {
+    "layer": "M5",
+    "box_um": [
+     5.7,
+     42.18,
+     6.27,
+     120.27
+    ]
+   }
+  ],
+  "native_over_macro": [],
+  "endpoint_terms": [
+   {
+    "instance": "cap[0][206]$_DFF_P_",
+    "instance_id": 5021,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "pin": "D",
+    "direction": "INPUT",
+    "macro": false,
+    "cell_box_um": [
+     9.558,
+     169.56,
+     10.638,
+     169.83
+    ],
+    "proxy_cell_centre_um": [
+     10.097999999999999,
+     169.695
+    ]
+   },
+   {
+    "instance": "_09779_",
+    "instance_id": 2310,
+    "master": "AND2x4_ASAP7_75t_R",
+    "pin": "Y",
+    "direction": "OUTPUT",
+    "macro": false,
+    "cell_box_um": [
+     10.314,
+     42.39,
+     10.854,
+     42.66
+    ],
+    "proxy_cell_centre_um": [
+     10.584,
+     42.525
+    ]
+   }
+  ],
+  "ports": []
+ }
+]

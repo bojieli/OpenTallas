@@ -1,0 +1,5 @@
+# Current Hroot391 endpoint witness, finite planned-grid cost
+
+STATIC only, current exact22411FF graph after paired rigid landing moves and65existingFF391um continuous witness; no source/plan/CAD mutation. Personally viewed clock_contact_search.png. Four same-name planned contacts: t19(0,-51.84), t20(-17.28,+43.2), t10(+8.64,0), t36(+8.64,0).13185grid sinks nearest radius216.055,0>220, nearest load1496<=1500, all39contacts nonempty. No added contact names/count/cycles. Prior two-contact trial FAIL19/245um then2/224um+1533load retained separately.
+
+CONCUR finite contact-cost PREP, not native clock closure. Actual builtclockcells0; dedicated fclk roots including4502KVScontrol are separate consumers and not forced into this grid assignment. PG-safe contact geometry, actual provider/source/parent clock event, intended assignment/clocktree/locality/latency, legal FF bodies/TAPs and all public-pin/19reach gates still require coherent review. Paired source window/Q12 compatibility held. This prices the clock-contact component of the combined65FF+pairedwindow+combguide event, no physical release.
