@@ -2980,3 +2980,5 @@ CODEX 2026-11-01 20:42 PST: HBM native writer source SID is fixed to STK strap; 
 
 CODEX: 2026-11-01 20:43 PST DS XS image-selection source4b45b3558 READY: actual7ROM/defaultmiter40/distinct2slice+mutantPASS;3sources,0cycles,defaultunchanged; asbuiltfragmentheldrootreview.
 CODEX: 2026-11-01 20:46 PST HBM L730 source-only52ce95d3d actualnormalS0 reach failures6→0 on6type coherent keyedcandidate,+0cycles; d44rclock qbayFTcollisions found/revised before route; currentPORstilld44c remains explicit.
+
+CODEX: FLOW sharedtool deployedall3; futureLEC39f754 merged,4scopedclass retriesqueued; t31existingreviewreleased; obsoletefuture die-ci timerdisabled(service187808 preserved). Realshortpool1GB1TIntel1smokeRANexit0, memorywait118s; ECO3pilotsstillqueued.
