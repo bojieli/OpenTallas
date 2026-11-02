@@ -1,0 +1,818 @@
+{
+  "status": "PASS_CONDITIONAL_SELECTED_NATIVE_READINESS_CONSTRAINTS",
+  "clock_ps": 833,
+  "inequality": "registered_CV + read_offset > every source-word commit",
+  "source_pairs": [
+    {
+      "ledger_i": 48,
+      "source_row_pair": [
+        224,
+        225
+      ],
+      "destination_row_pair": [
+        416,
+        417
+      ],
+      "production_burst_pair_index": null,
+      "production_registered_CV": null,
+      "alternatives": [
+        {
+          "conditional_burst_pair_index": 0,
+          "actual_SRAM_read_offset_from_CV": 3,
+          "native_LO_offset_from_CV": 5,
+          "public_LO_offset_from_CV": 6,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 896,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 510
+            },
+            {
+              "CAP_word_address": 897,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 511
+            },
+            {
+              "CAP_word_address": 898,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 514
+            },
+            {
+              "CAP_word_address": 899,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 515
+            },
+            {
+              "CAP_word_address": 900,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 495
+            },
+            {
+              "CAP_word_address": 901,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 496
+            },
+            {
+              "CAP_word_address": 902,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 524
+            },
+            {
+              "CAP_word_address": 903,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 525
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 1,
+          "actual_SRAM_read_offset_from_CV": 4,
+          "native_LO_offset_from_CV": 6,
+          "public_LO_offset_from_CV": 7,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 896,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 509
+            },
+            {
+              "CAP_word_address": 897,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 510
+            },
+            {
+              "CAP_word_address": 898,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 513
+            },
+            {
+              "CAP_word_address": 899,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 514
+            },
+            {
+              "CAP_word_address": 900,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 494
+            },
+            {
+              "CAP_word_address": 901,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 495
+            },
+            {
+              "CAP_word_address": 902,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 523
+            },
+            {
+              "CAP_word_address": 903,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 524
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 2,
+          "actual_SRAM_read_offset_from_CV": 5,
+          "native_LO_offset_from_CV": 7,
+          "public_LO_offset_from_CV": 8,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 896,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 508
+            },
+            {
+              "CAP_word_address": 897,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 509
+            },
+            {
+              "CAP_word_address": 898,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 512
+            },
+            {
+              "CAP_word_address": 899,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 513
+            },
+            {
+              "CAP_word_address": 900,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 493
+            },
+            {
+              "CAP_word_address": 901,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 494
+            },
+            {
+              "CAP_word_address": 902,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 522
+            },
+            {
+              "CAP_word_address": 903,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 523
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 3,
+          "actual_SRAM_read_offset_from_CV": 6,
+          "native_LO_offset_from_CV": 8,
+          "public_LO_offset_from_CV": 9,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 896,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 507
+            },
+            {
+              "CAP_word_address": 897,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 508
+            },
+            {
+              "CAP_word_address": 898,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 511
+            },
+            {
+              "CAP_word_address": 899,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 512
+            },
+            {
+              "CAP_word_address": 900,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 492
+            },
+            {
+              "CAP_word_address": 901,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 493
+            },
+            {
+              "CAP_word_address": 902,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 521
+            },
+            {
+              "CAP_word_address": 903,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 522
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 4,
+          "actual_SRAM_read_offset_from_CV": 7,
+          "native_LO_offset_from_CV": 9,
+          "public_LO_offset_from_CV": 10,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 896,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 506
+            },
+            {
+              "CAP_word_address": 897,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 507
+            },
+            {
+              "CAP_word_address": 898,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 510
+            },
+            {
+              "CAP_word_address": 899,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 511
+            },
+            {
+              "CAP_word_address": 900,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 491
+            },
+            {
+              "CAP_word_address": 901,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 492
+            },
+            {
+              "CAP_word_address": 902,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 520
+            },
+            {
+              "CAP_word_address": 903,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 521
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 5,
+          "actual_SRAM_read_offset_from_CV": 8,
+          "native_LO_offset_from_CV": 10,
+          "public_LO_offset_from_CV": 11,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 896,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 505
+            },
+            {
+              "CAP_word_address": 897,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 506
+            },
+            {
+              "CAP_word_address": 898,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 509
+            },
+            {
+              "CAP_word_address": 899,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 510
+            },
+            {
+              "CAP_word_address": 900,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 490
+            },
+            {
+              "CAP_word_address": 901,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 491
+            },
+            {
+              "CAP_word_address": 902,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 519
+            },
+            {
+              "CAP_word_address": 903,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 520
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 6,
+          "actual_SRAM_read_offset_from_CV": 9,
+          "native_LO_offset_from_CV": 11,
+          "public_LO_offset_from_CV": 12,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 896,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 504
+            },
+            {
+              "CAP_word_address": 897,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 505
+            },
+            {
+              "CAP_word_address": 898,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 508
+            },
+            {
+              "CAP_word_address": 899,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 509
+            },
+            {
+              "CAP_word_address": 900,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 489
+            },
+            {
+              "CAP_word_address": 901,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 490
+            },
+            {
+              "CAP_word_address": 902,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 518
+            },
+            {
+              "CAP_word_address": 903,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 519
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 7,
+          "actual_SRAM_read_offset_from_CV": 10,
+          "native_LO_offset_from_CV": 12,
+          "public_LO_offset_from_CV": 13,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 896,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 503
+            },
+            {
+              "CAP_word_address": 897,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 504
+            },
+            {
+              "CAP_word_address": 898,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 507
+            },
+            {
+              "CAP_word_address": 899,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase71]",
+              "minimum_CV_relative_to_source_epoch": 508
+            },
+            {
+              "CAP_word_address": 900,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 488
+            },
+            {
+              "CAP_word_address": 901,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 489
+            },
+            {
+              "CAP_word_address": 902,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 517
+            },
+            {
+              "CAP_word_address": 903,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase72]",
+              "minimum_CV_relative_to_source_epoch": 518
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ledger_i": 49,
+      "source_row_pair": [
+        226,
+        227
+      ],
+      "destination_row_pair": [
+        418,
+        419
+      ],
+      "production_burst_pair_index": null,
+      "production_registered_CV": null,
+      "alternatives": [
+        {
+          "conditional_burst_pair_index": 0,
+          "actual_SRAM_read_offset_from_CV": 3,
+          "native_LO_offset_from_CV": 5,
+          "public_LO_offset_from_CV": 6,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 904,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 512
+            },
+            {
+              "CAP_word_address": 905,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 513
+            },
+            {
+              "CAP_word_address": 906,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 488
+            },
+            {
+              "CAP_word_address": 907,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 489
+            },
+            {
+              "CAP_word_address": 908,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 511
+            },
+            {
+              "CAP_word_address": 909,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 512
+            },
+            {
+              "CAP_word_address": 910,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 515
+            },
+            {
+              "CAP_word_address": 911,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase75]",
+              "minimum_CV_relative_to_source_epoch": 518
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 1,
+          "actual_SRAM_read_offset_from_CV": 4,
+          "native_LO_offset_from_CV": 6,
+          "public_LO_offset_from_CV": 7,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 904,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 511
+            },
+            {
+              "CAP_word_address": 905,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 512
+            },
+            {
+              "CAP_word_address": 906,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 487
+            },
+            {
+              "CAP_word_address": 907,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 488
+            },
+            {
+              "CAP_word_address": 908,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 510
+            },
+            {
+              "CAP_word_address": 909,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 511
+            },
+            {
+              "CAP_word_address": 910,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 514
+            },
+            {
+              "CAP_word_address": 911,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase75]",
+              "minimum_CV_relative_to_source_epoch": 517
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 2,
+          "actual_SRAM_read_offset_from_CV": 5,
+          "native_LO_offset_from_CV": 7,
+          "public_LO_offset_from_CV": 8,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 904,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 510
+            },
+            {
+              "CAP_word_address": 905,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 511
+            },
+            {
+              "CAP_word_address": 906,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 486
+            },
+            {
+              "CAP_word_address": 907,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 487
+            },
+            {
+              "CAP_word_address": 908,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 509
+            },
+            {
+              "CAP_word_address": 909,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 510
+            },
+            {
+              "CAP_word_address": 910,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 513
+            },
+            {
+              "CAP_word_address": 911,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase75]",
+              "minimum_CV_relative_to_source_epoch": 516
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 3,
+          "actual_SRAM_read_offset_from_CV": 6,
+          "native_LO_offset_from_CV": 8,
+          "public_LO_offset_from_CV": 9,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 904,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 509
+            },
+            {
+              "CAP_word_address": 905,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 510
+            },
+            {
+              "CAP_word_address": 906,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 485
+            },
+            {
+              "CAP_word_address": 907,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 486
+            },
+            {
+              "CAP_word_address": 908,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 508
+            },
+            {
+              "CAP_word_address": 909,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 509
+            },
+            {
+              "CAP_word_address": 910,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 512
+            },
+            {
+              "CAP_word_address": 911,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase75]",
+              "minimum_CV_relative_to_source_epoch": 515
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 4,
+          "actual_SRAM_read_offset_from_CV": 7,
+          "native_LO_offset_from_CV": 9,
+          "public_LO_offset_from_CV": 10,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 904,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 508
+            },
+            {
+              "CAP_word_address": 905,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 509
+            },
+            {
+              "CAP_word_address": 906,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 484
+            },
+            {
+              "CAP_word_address": 907,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 485
+            },
+            {
+              "CAP_word_address": 908,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 507
+            },
+            {
+              "CAP_word_address": 909,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 508
+            },
+            {
+              "CAP_word_address": 910,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 511
+            },
+            {
+              "CAP_word_address": 911,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase75]",
+              "minimum_CV_relative_to_source_epoch": 514
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 5,
+          "actual_SRAM_read_offset_from_CV": 8,
+          "native_LO_offset_from_CV": 10,
+          "public_LO_offset_from_CV": 11,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 904,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 507
+            },
+            {
+              "CAP_word_address": 905,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 508
+            },
+            {
+              "CAP_word_address": 906,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 483
+            },
+            {
+              "CAP_word_address": 907,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 484
+            },
+            {
+              "CAP_word_address": 908,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 506
+            },
+            {
+              "CAP_word_address": 909,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 507
+            },
+            {
+              "CAP_word_address": 910,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 510
+            },
+            {
+              "CAP_word_address": 911,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase75]",
+              "minimum_CV_relative_to_source_epoch": 513
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 6,
+          "actual_SRAM_read_offset_from_CV": 9,
+          "native_LO_offset_from_CV": 11,
+          "public_LO_offset_from_CV": 12,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 904,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 506
+            },
+            {
+              "CAP_word_address": 905,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 507
+            },
+            {
+              "CAP_word_address": 906,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 482
+            },
+            {
+              "CAP_word_address": 907,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 483
+            },
+            {
+              "CAP_word_address": 908,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 505
+            },
+            {
+              "CAP_word_address": 909,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 506
+            },
+            {
+              "CAP_word_address": 910,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 509
+            },
+            {
+              "CAP_word_address": 911,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase75]",
+              "minimum_CV_relative_to_source_epoch": 512
+            }
+          ]
+        },
+        {
+          "conditional_burst_pair_index": 7,
+          "actual_SRAM_read_offset_from_CV": 10,
+          "native_LO_offset_from_CV": 12,
+          "public_LO_offset_from_CV": 13,
+          "all_word_lower_bounds": [
+            {
+              "CAP_word_address": 904,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 505
+            },
+            {
+              "CAP_word_address": 905,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 506
+            },
+            {
+              "CAP_word_address": 906,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 481
+            },
+            {
+              "CAP_word_address": 907,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase73]",
+              "minimum_CV_relative_to_source_epoch": 482
+            },
+            {
+              "CAP_word_address": 908,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 504
+            },
+            {
+              "CAP_word_address": 909,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 505
+            },
+            {
+              "CAP_word_address": 910,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase74]",
+              "minimum_CV_relative_to_source_epoch": 508
+            },
+            {
+              "CAP_word_address": 911,
+              "source_epoch": "TAU_native_frame_source_minus_model_edge_n[u_f_0L01,phase75]",
+              "minimum_CV_relative_to_source_epoch": 511
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "physical_same_address_read_write_qualified": false,
+  "actual_mission_capture_qualified": false,
+  "global_leases_qualified": false,
+  "production_burst_binding_qualified": false,
+  "added_rtl_cycles": 0,
+  "full_token": false,
+  "holds": [
+    "actual XS/frame publication epoch and source input readiness",
+    "simultaneous other-frame FIN traffic and CFG lifetime",
+    "production RD command group/issue binding",
+    "global source/destination leases",
+    "all80 native profiles and physical functional-view alignment"
+  ]
+}
