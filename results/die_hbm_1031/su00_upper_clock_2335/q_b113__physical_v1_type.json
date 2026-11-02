@@ -1,0 +1,2802 @@
+{
+  "module": "hbm_arch_q_b113__physical_v1",
+  "outline_um": [
+    1857.6,
+    1572.48
+  ],
+  "hard": false,
+  "face_layers": {
+    "E": [
+      "M6",
+      "M4"
+    ],
+    "W": [
+      "M6",
+      "M4"
+    ],
+    "N": [
+      "M7",
+      "M5"
+    ],
+    "S": [
+      "M7",
+      "M5"
+    ]
+  },
+  "buses": [
+    {
+      "name": "L47_o",
+      "dir": "out",
+      "width": 664,
+      "kind": "data",
+      "face": "E",
+      "window_um": [
+        518.736,
+        637.984
+      ],
+      "layers": [
+        "M6",
+        "M4"
+      ],
+      "order": "lsb_low"
+    },
+    {
+      "name": "L54_i",
+      "dir": "in",
+      "width": 514,
+      "kind": "data",
+      "face": "E",
+      "window_um": [
+        416.672,
+        509.136
+      ],
+      "layers": [
+        "M6",
+        "M4"
+      ],
+      "order": "lsb_low"
+    },
+    {
+      "name": "L127_i",
+      "dir": "in",
+      "width": 4,
+      "kind": "ctl",
+      "face": "E",
+      "window_um": [
+        509.616,
+        518.256
+      ],
+      "layers": [
+        "M6",
+        "M4"
+      ],
+      "order": "lsb_low"
+    },
+    {
+      "name": "L730_o",
+      "dir": "out",
+      "width": 1662,
+      "kind": "data",
+      "face": "E",
+      "window_um": [
+        647.648,
+        924.8147
+      ],
+      "layers": [
+        "M6",
+        "M4"
+      ],
+      "order": "lsb_low"
+    },
+    {
+      "name": "L731_o",
+      "dir": "out",
+      "width": 596,
+      "kind": "data",
+      "face": "S",
+      "window_um": [
+        1756.0,
+        1855.5
+      ],
+      "layers": [
+        "M7",
+        "M5"
+      ],
+      "order": "lsb_low"
+    }
+  ],
+  "ft_slots": [
+    {
+      "name": "L106x7",
+      "in_face": "E",
+      "out_face": "S",
+      "width": 20,
+      "stations": 5,
+      "regs_um": [
+        [
+          1857.6,
+          4.8069
+        ],
+        [
+          1503.36,
+          8.64
+        ],
+        [
+          1183.68,
+          8.64
+        ],
+        [
+          864.0,
+          8.64
+        ],
+        [
+          544.32,
+          8.64
+        ]
+      ],
+      "in_window_um": [
+        0.496,
+        9.136
+      ],
+      "in_layers": [
+        "M6",
+        "M4"
+      ],
+      "in_order": "lsb_low",
+      "out_window_um": [
+        319.68,
+        328.328
+      ],
+      "out_layers": [
+        "M7",
+        "M5"
+      ],
+      "out_order": "lsb_low",
+      "bit_site_cell_um": [
+        1.404,
+        0.27
+      ],
+      "bit_sites_um": [
+        [
+          [
+            1503.36,
+            8.37
+          ],
+          [
+            1503.36,
+            8.64
+          ],
+          [
+            1503.36,
+            8.1
+          ],
+          [
+            1503.36,
+            8.91
+          ],
+          [
+            1503.36,
+            9.18
+          ],
+          [
+            1503.36,
+            7.83
+          ],
+          [
+            1501.2,
+            8.37
+          ],
+          [
+            1501.2,
+            8.64
+          ],
+          [
+            1503.36,
+            7.56
+          ],
+          [
+            1503.36,
+            9.45
+          ],
+          [
+            1501.2,
+            8.1
+          ],
+          [
+            1501.2,
+            8.91
+          ],
+          [
+            1503.36,
+            7.29
+          ],
+          [
+            1503.36,
+            9.72
+          ],
+          [
+            1501.2,
+            9.18
+          ],
+          [
+            1501.2,
+            7.83
+          ],
+          [
+            1503.36,
+            9.99
+          ],
+          [
+            1503.36,
+            7.02
+          ],
+          [
+            1501.2,
+            7.56
+          ],
+          [
+            1501.2,
+            9.45
+          ],
+          [
+            1503.36,
+            6.75
+          ]
+        ],
+        [
+          [
+            1183.68,
+            8.37
+          ],
+          [
+            1183.68,
+            8.64
+          ],
+          [
+            1183.68,
+            8.1
+          ],
+          [
+            1183.68,
+            8.91
+          ],
+          [
+            1183.68,
+            9.18
+          ],
+          [
+            1183.68,
+            7.83
+          ],
+          [
+            1181.52,
+            8.37
+          ],
+          [
+            1181.52,
+            8.64
+          ],
+          [
+            1183.68,
+            7.56
+          ],
+          [
+            1183.68,
+            9.45
+          ],
+          [
+            1181.52,
+            8.1
+          ],
+          [
+            1181.52,
+            8.91
+          ],
+          [
+            1183.68,
+            7.29
+          ],
+          [
+            1183.68,
+            9.72
+          ],
+          [
+            1181.52,
+            9.18
+          ],
+          [
+            1181.52,
+            7.83
+          ],
+          [
+            1183.68,
+            9.99
+          ],
+          [
+            1183.68,
+            7.02
+          ],
+          [
+            1181.52,
+            7.56
+          ],
+          [
+            1181.52,
+            9.45
+          ],
+          [
+            1183.68,
+            6.75
+          ]
+        ],
+        [
+          [
+            864.0,
+            8.37
+          ],
+          [
+            864.0,
+            8.64
+          ],
+          [
+            864.0,
+            8.1
+          ],
+          [
+            864.0,
+            8.91
+          ],
+          [
+            864.0,
+            9.18
+          ],
+          [
+            864.0,
+            7.83
+          ],
+          [
+            861.84,
+            8.37
+          ],
+          [
+            861.84,
+            8.64
+          ],
+          [
+            864.0,
+            7.56
+          ],
+          [
+            864.0,
+            9.45
+          ],
+          [
+            861.84,
+            8.1
+          ],
+          [
+            861.84,
+            8.91
+          ],
+          [
+            864.0,
+            7.29
+          ],
+          [
+            864.0,
+            9.72
+          ],
+          [
+            861.84,
+            9.18
+          ],
+          [
+            861.84,
+            7.83
+          ],
+          [
+            864.0,
+            9.99
+          ],
+          [
+            864.0,
+            7.02
+          ],
+          [
+            861.84,
+            7.56
+          ],
+          [
+            861.84,
+            9.45
+          ],
+          [
+            864.0,
+            6.75
+          ]
+        ],
+        [
+          [
+            544.32,
+            8.37
+          ],
+          [
+            544.32,
+            8.64
+          ],
+          [
+            544.32,
+            8.1
+          ],
+          [
+            544.32,
+            8.91
+          ],
+          [
+            544.32,
+            9.18
+          ],
+          [
+            544.32,
+            7.83
+          ],
+          [
+            542.16,
+            8.37
+          ],
+          [
+            542.16,
+            8.64
+          ],
+          [
+            544.32,
+            7.56
+          ],
+          [
+            544.32,
+            9.45
+          ],
+          [
+            542.16,
+            8.1
+          ],
+          [
+            542.16,
+            8.91
+          ],
+          [
+            544.32,
+            7.29
+          ],
+          [
+            544.32,
+            9.72
+          ],
+          [
+            542.16,
+            9.18
+          ],
+          [
+            542.16,
+            7.83
+          ],
+          [
+            544.32,
+            9.99
+          ],
+          [
+            544.32,
+            7.02
+          ],
+          [
+            542.16,
+            7.56
+          ],
+          [
+            542.16,
+            9.45
+          ],
+          [
+            544.32,
+            6.75
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "L125x1",
+      "in_face": "S",
+      "out_face": "E",
+      "width": 7,
+      "stations": 4,
+      "regs_um": [
+        [
+          642.784,
+          0.0
+        ],
+        [
+          864.0,
+          8.64
+        ],
+        [
+          1183.68,
+          8.64
+        ],
+        [
+          1503.36,
+          8.64
+        ]
+      ],
+      "in_window_um": [
+        638.36,
+        647.0
+      ],
+      "in_layers": [
+        "M7",
+        "M5"
+      ],
+      "in_order": "lsb_low",
+      "out_window_um": [
+        9.616,
+        18.264
+      ],
+      "out_layers": [
+        "M6",
+        "M4"
+      ],
+      "out_order": "lsb_low",
+      "bit_site_cell_um": [
+        1.404,
+        0.27
+      ],
+      "bit_sites_um": [
+        [
+          [
+            864.0,
+            10.26
+          ],
+          [
+            861.84,
+            7.29
+          ],
+          [
+            861.84,
+            9.72
+          ],
+          [
+            864.0,
+            6.48
+          ],
+          [
+            864.0,
+            10.53
+          ],
+          [
+            861.84,
+            9.99
+          ],
+          [
+            861.84,
+            7.02
+          ],
+          [
+            866.16,
+            8.37
+          ]
+        ],
+        [
+          [
+            1183.68,
+            10.26
+          ],
+          [
+            1181.52,
+            7.29
+          ],
+          [
+            1181.52,
+            9.72
+          ],
+          [
+            1183.68,
+            6.48
+          ],
+          [
+            1183.68,
+            10.53
+          ],
+          [
+            1181.52,
+            9.99
+          ],
+          [
+            1181.52,
+            7.02
+          ],
+          [
+            1185.84,
+            8.37
+          ]
+        ],
+        [
+          [
+            1503.36,
+            10.26
+          ],
+          [
+            1501.2,
+            7.29
+          ],
+          [
+            1501.2,
+            9.72
+          ],
+          [
+            1503.36,
+            6.48
+          ],
+          [
+            1503.36,
+            10.53
+          ],
+          [
+            1501.2,
+            9.99
+          ],
+          [
+            1501.2,
+            7.02
+          ],
+          [
+            1505.52,
+            8.37
+          ]
+        ]
+      ]
+    }
+  ],
+  "clock": {
+    "tap_um": [
+      928.8,
+      332.64
+    ],
+    "layer": "M9",
+    "insertion_ps": 250,
+    "core_taps": "early",
+    "taps": [
+      {
+        "name": "clk",
+        "xy": [
+          864.672,
+          17.312
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t1",
+        "xy": [
+          544.992,
+          17.312
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t2",
+        "xy": [
+          1184.352,
+          17.312
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t3",
+        "xy": [
+          1504.032,
+          17.312
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t4",
+        "xy": [
+          1807.392,
+          17.312
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t5",
+        "xy": [
+          1839.84,
+          502.112
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t6",
+        "xy": [
+          1839.84,
+          688.48
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t7",
+        "xy": [
+          1839.84,
+          846.624
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t8",
+        "xy": [
+          185.248,
+          8.672
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t9",
+        "xy": [
+          1299.808,
+          8.672
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t10",
+        "xy": [
+          646.112,
+          8.672
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t11",
+        "xy": [
+          1848.48,
+          595.424
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t12",
+        "xy": [
+          1848.48,
+          416.352
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t13",
+        "xy": [
+          1848.48,
+          767.52
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t14",
+        "xy": [
+          1848.48,
+          924.64
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t15",
+        "xy": [
+          1756.192,
+          8.672
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t16",
+        "xy": [
+          1848.48,
+          8.672
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t17",
+        "xy": [
+          1848.48,
+          544.416
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t18",
+        "xy": [
+          1848.48,
+          647.84
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "clk_t19",
+        "xy": [
+          1848.48,
+          463.584
+        ],
+        "kind": "glue"
+      },
+      {
+        "name": "u_sfucore_Q_lane14",
+        "kind": "core",
+        "xy": [
+          1628.64,
+          388.8
+        ],
+        "insertion_ps": 250.0,
+        "insertion_ff_ps": 202.5,
+        "budget_owner": "ot_hgi_sfu_split3_lane_core__idpin",
+        "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_sfucore_Q_lane14.sfu_clk', 'u_sfucore_Q_lane14.map_clk']; native view clock pin(s) ['map_clk', 'sfu_clk'] NOT at the entry until the core is rebuilt on its plan slice"
+      },
+      {
+        "name": "u_sfucore_Q_lane15",
+        "kind": "core",
+        "xy": [
+          1628.64,
+          751.68
+        ],
+        "insertion_ps": 250.0,
+        "insertion_ff_ps": 202.5,
+        "budget_owner": "ot_hgi_sfu_split3_lane_core__idpin",
+        "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_sfucore_Q_lane15.sfu_clk', 'u_sfucore_Q_lane15.map_clk']; native view clock pin(s) ['map_clk', 'sfu_clk'] NOT at the entry until the core is rebuilt on its plan slice"
+      },
+      {
+        "name": "u_sfucore_Q_opstore_a.clk",
+        "kind": "core",
+        "xy": [
+          1460.16,
+          1183.68
+        ],
+        "insertion_ps": 250.0,
+        "insertion_ff_ps": 202.5,
+        "budget_owner": "ot_hgi_sfu_core_split3__opstore_a",
+        "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice"
+      },
+      {
+        "name": "u_sfucore_Q_opstore_b.clk",
+        "kind": "core",
+        "xy": [
+          1036.8,
+          561.6
+        ],
+        "insertion_ps": 250.0,
+        "insertion_ff_ps": 202.5,
+        "budget_owner": "ot_hgi_sfu_core_split3__opstore_b",
+        "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice"
+      },
+      {
+        "name": "u_sfucore_Q_ctl",
+        "kind": "core",
+        "xy": [
+          721.344,
+          1235.52
+        ],
+        "insertion_ps": 250.0,
+        "insertion_ff_ps": 202.5,
+        "budget_owner": "ot_hgi_sfu_core_split3__ctl",
+        "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk', 'clk_lg', 'clk_pe', 'clk_pw'] NOT at the entry until the core is rebuilt on its plan slice"
+      }
+    ],
+    "tap_mode": "explicit",
+    "tap_max_sinks": 1500,
+    "tap_target_sinks": 1200,
+    "tap_radius_um": 220,
+    "control_sinks": true
+  },
+  "reset": {
+    "tap_um": [
+      928.8,
+      332.64
+    ],
+    "sync_stages": 2
+  },
+  "contents": [
+    {
+      "inst": "u_sfucore_Q",
+      "module": "ot_hgi_sfu_core_split3",
+      "status": "rework",
+      "cells": 1219936,
+      "note": "as-built sfucore_NW (1/4 slice); hard cores = 5 split pieces of ot_hgi_sfu_core_split3",
+      "origin_um": [
+        604.8,
+        509.76
+      ],
+      "outline_um": [
+        51.84,
+        25.92
+      ]
+    }
+  ],
+  "cells": 1429626,
+  "hard_cores": [
+    {
+      "inst": "u_sfucore_Q_lane14",
+      "module": "ot_hgi_sfu_split3_lane_core__idpin",
+      "origin_um": [
+        1434.24,
+        216.0
+      ],
+      "outline_um": [
+        388.8,
+        345.6
+      ],
+      "track_offset_um": [
+        0.0,
+        0.0
+      ],
+      "pins_file": "cores/ot_hgi_sfu_split3_lane_core__idpin__master__codex_g21.json",
+      "note": "split piece lane14 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells | G0C-FIX orient MY -> MX: core_faces error ports 14 -> 0 (type 51 -> 37)",
+      "orient": "MX",
+      "parent_id_straps": {
+        "map_lane_j": {
+          "width": 4,
+          "value": 14
+        }
+      },
+      "obs_max": "M5"
+    },
+    {
+      "inst": "u_sfucore_Q_lane15",
+      "module": "ot_hgi_sfu_split3_lane_core__idpin",
+      "origin_um": [
+        1434.24,
+        578.88
+      ],
+      "outline_um": [
+        388.8,
+        345.6
+      ],
+      "track_offset_um": [
+        0.0,
+        0.0
+      ],
+      "pins_file": "cores/ot_hgi_sfu_split3_lane_core__idpin__master__codex_g21.json",
+      "note": "split piece lane15 of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 306861 cells | G0C-FIX orient MY -> R0: core_faces error ports 4 -> 0 (type 37 -> 33)",
+      "orient": "R0",
+      "parent_id_straps": {
+        "map_lane_j": {
+          "width": 4,
+          "value": 15
+        }
+      },
+      "obs_max": "M5"
+    },
+    {
+      "inst": "u_sfucore_Q_opstore_a",
+      "module": "ot_hgi_sfu_core_split3__opstore_a",
+      "origin_um": [
+        1080.0,
+        941.76
+      ],
+      "outline_um": [
+        760.32,
+        483.84
+      ],
+      "track_offset_um": [
+        0.0,
+        0.0
+      ],
+      "pins_file": "cores/ot_hgi_sfu_core_split3__opstore_a__760.32x483.84__d30o.json",
+      "note": "split piece opstore_a of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 240918 cells | G0C-FIX orient R0 -> MX: core_faces error ports 12 -> 5 (type 33 -> 26) | DIE-HBM C20: C17g outline growth re-pack (REPACK sub-lane) | DIE-HBM-30-O V1 q_b113 repack: K 4x8 static grid 760.32x483.84 at (1080, 941.76), pins re-spread same faces",
+      "obs_max": "M5",
+      "orient": "MX"
+    },
+    {
+      "inst": "u_sfucore_Q_opstore_b",
+      "module": "ot_hgi_sfu_core_split3__opstore_b",
+      "origin_um": [
+        656.64,
+        216.0
+      ],
+      "outline_um": [
+        760.32,
+        691.2
+      ],
+      "track_offset_um": [
+        0.0,
+        0.0
+      ],
+      "pins_file": "cores/ot_hgi_sfu_core_split3__opstore_b__760.32x691.2__q_b113_u_sfucore_Q_opstore_b.json",
+      "note": "split piece opstore_b of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 288099 cells | G0C-FIX orient R0 -> MX: core_faces error ports 12 -> 0 (type 26 -> 14)",
+      "obs_max": "M5",
+      "orient": "MX"
+    },
+    {
+      "inst": "u_sfucore_Q_ctl",
+      "module": "ot_hgi_sfu_core_split3__ctl",
+      "origin_um": [
+        388.8,
+        924.48
+      ],
+      "outline_um": [
+        669.6,
+        626.4
+      ],
+      "track_offset_um": [
+        -0.096,
+        0.0
+      ],
+      "pins_file": "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__canon__codex_g21.json",
+      "note": "split piece ctl of ot_hgi_sfu_core_split3 (ot_hgi_sfu_core_split3.split.json); 77197 cells | DIE-HBM-30-O V1 q_b113 repack: moved W 267.84 (656.64 -> 388.8) onto the NS ft band (M5 lost there, M7 kept)",
+      "orient": "MY",
+      "obs_max": "M5"
+    }
+  ],
+  "die_ft_bands": [
+    {
+      "dir": "EW",
+      "span_um": [
+        8.64,
+        207.36
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "die_share": 1.0
+    },
+    {
+      "dir": "NS",
+      "span_um": [
+        310.0,
+        656.0
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "die_share": 1.0
+    }
+  ],
+  "internal_stations": [
+    {
+      "conn": "u_sfucore_Q_lane14.sfu_vi_q|u_sfucore_Q_lane15",
+      "from_um": [
+        1476.956,
+        561.581
+      ],
+      "to_um": [
+        1780.324,
+        578.88
+      ],
+      "regs_um": [
+        [
+          1779.84,
+          570.24
+        ]
+      ],
+      "bits": 32,
+      "launch": "u_sfucore_Q_lane14.sfu_vi_q",
+      "capture": "u_sfucore_Q_lane15",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 363 um core link, 1 station(s), hops <= 360 um | G0C-FIX orient: 1 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane14.sfu_kv_waddr|u_sfucore_Q_lane15",
+      "from_um": [
+        1446.602,
+        561.581
+      ],
+      "to_um": [
+        1810.678,
+        578.88
+      ],
+      "regs_um": [
+        [
+          1797.12,
+          570.24
+        ]
+      ],
+      "bits": 24,
+      "launch": "u_sfucore_Q_lane14.sfu_kv_waddr",
+      "capture": "u_sfucore_Q_lane15",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 363 um core link, 1 station(s), hops <= 360 um | G0C-FIX orient: 1 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane14.sfu_kv_wdata|u_sfucore_Q_lane15",
+      "from_um": [
+        1495.626,
+        561.581
+      ],
+      "to_um": [
+        1761.654,
+        578.88
+      ],
+      "regs_um": [
+        [
+          1762.56,
+          570.24
+        ]
+      ],
+      "bits": 32,
+      "launch": "u_sfucore_Q_lane14.sfu_kv_wdata",
+      "capture": "u_sfucore_Q_lane15",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 363 um core link, 1 station(s), hops <= 360 um | G0C-FIX orient: 1 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane14.sfu_kv_we|u_sfucore_Q_lane15",
+      "from_um": [
+        1438.728,
+        561.581
+      ],
+      "to_um": [
+        1818.552,
+        578.88
+      ],
+      "regs_um": [
+        [
+          1788.48,
+          570.24
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_lane14.sfu_kv_we",
+      "capture": "u_sfucore_Q_lane15",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 363 um core link, 1 station(s), hops <= 360 um | G0C-FIX orient: 1 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane14.sfu_coll|u_sfucore_Q_ctl",
+      "from_um": [
+        1434.259,
+        559.416
+      ],
+      "to_um": [
+        1058.4,
+        924.48
+      ],
+      "regs_um": [
+        [
+          1425.6,
+          734.4
+        ],
+        [
+          1248.48,
+          915.84
+        ],
+        [
+          1062.72,
+          924.48
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_lane14.sfu_coll",
+      "capture": "u_sfucore_Q_ctl",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1203 um core link, 3 station(s), hops <= 360 um | G0C-FIX orient: 3 station(s) re-sited on the new route | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane14.sfu_fault|u_sfucore_Q_ctl",
+      "from_um": [
+        1434.259,
+        557.688
+      ],
+      "to_um": [
+        1058.4,
+        924.48
+      ],
+      "regs_um": [
+        [
+          1425.6,
+          734.4
+        ],
+        [
+          1248.48,
+          915.84
+        ],
+        [
+          1062.72,
+          924.48
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_lane14.sfu_fault",
+      "capture": "u_sfucore_Q_ctl",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1201 um core link, 3 station(s), hops <= 360 um | G0C-FIX orient: 3 station(s) re-sited on the new route | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane14.sfu_ro_v|u_sfucore_Q_ctl",
+      "from_um": [
+        1434.259,
+        556.008
+      ],
+      "to_um": [
+        1058.4,
+        924.48
+      ],
+      "regs_um": [
+        [
+          1425.6,
+          734.4
+        ],
+        [
+          1248.48,
+          915.84
+        ],
+        [
+          1062.72,
+          924.48
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_lane14.sfu_ro_v",
+      "capture": "u_sfucore_Q_ctl",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1200 um core link, 3 station(s), hops <= 360 um | G0C-FIX orient: 3 station(s) re-sited on the new route | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane14.sfu_ro_x|u_sfucore_Q_ctl",
+      "from_um": [
+        1434.259,
+        464.249
+      ],
+      "to_um": [
+        1058.4,
+        924.48
+      ],
+      "regs_um": [
+        [
+          1425.6,
+          734.4
+        ],
+        [
+          1248.48,
+          915.84
+        ],
+        [
+          1062.72,
+          924.48
+        ]
+      ],
+      "bits": 32,
+      "launch": "u_sfucore_Q_lane14.sfu_ro_x",
+      "capture": "u_sfucore_Q_ctl",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1108 um core link, 3 station(s), hops <= 360 um | G0C-FIX orient: 3 station(s) re-sited on the new route | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane14.sfu_vi_addr|u_sfucore_Q_lane15",
+      "from_um": [
+        1460.624,
+        561.581
+      ],
+      "to_um": [
+        1796.656,
+        578.88
+      ],
+      "regs_um": [
+        [
+          1797.12,
+          570.24
+        ]
+      ],
+      "bits": 24,
+      "launch": "u_sfucore_Q_lane14.sfu_vi_addr",
+      "capture": "u_sfucore_Q_lane15",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 363 um core link, 1 station(s), hops <= 360 um | G0C-FIX orient: 1 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane14.sfu_vi_re|u_sfucore_Q_lane15",
+      "from_um": [
+        1439.256,
+        561.581
+      ],
+      "to_um": [
+        1818.024,
+        578.88
+      ],
+      "regs_um": [
+        [
+          1788.48,
+          570.24
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_lane14.sfu_vi_re",
+      "capture": "u_sfucore_Q_lane15",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 363 um core link, 1 station(s), hops <= 360 um | G0C-FIX orient: 1 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane15.sfu_coll|u_sfucore_Q_ctl",
+      "from_um": [
+        1434.259,
+        581.064
+      ],
+      "to_um": [
+        1058.4,
+        924.48
+      ],
+      "regs_um": [
+        [
+          1425.6,
+          695.52
+        ],
+        [
+          1330.56,
+          924.48
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_lane15.sfu_coll",
+      "capture": "u_sfucore_Q_ctl",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 840 um core link, 2 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 2->2) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane15.sfu_fault|u_sfucore_Q_ctl",
+      "from_um": [
+        1434.259,
+        582.792
+      ],
+      "to_um": [
+        1058.4,
+        924.48
+      ],
+      "regs_um": [
+        [
+          1425.6,
+          695.52
+        ],
+        [
+          1330.56,
+          924.48
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_lane15.sfu_fault",
+      "capture": "u_sfucore_Q_ctl",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 838 um core link, 2 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 2->2) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane15.sfu_ro_v|u_sfucore_Q_ctl",
+      "from_um": [
+        1434.259,
+        584.472
+      ],
+      "to_um": [
+        1058.4,
+        924.48
+      ],
+      "regs_um": [
+        [
+          1425.6,
+          699.84
+        ],
+        [
+          1330.56,
+          924.48
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_lane15.sfu_ro_v",
+      "capture": "u_sfucore_Q_ctl",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 837 um core link, 2 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 2->2) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept)"
+    },
+    {
+      "conn": "u_sfucore_Q_lane15.sfu_ro_x|u_sfucore_Q_ctl",
+      "from_um": [
+        1434.259,
+        676.231
+      ],
+      "to_um": [
+        1058.4,
+        924.48
+      ],
+      "regs_um": [
+        [
+          1425.6,
+          760.32
+        ],
+        [
+          1330.56,
+          924.48
+        ]
+      ],
+      "bits": 32,
+      "launch": "u_sfucore_Q_lane15.sfu_ro_x",
+      "capture": "u_sfucore_Q_ctl",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 745 um core link, 2 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 2->2) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_flt|u_sfucore_Q_opstore_b",
+      "from_um": [
+        1785.48,
+        941.76
+      ],
+      "to_um": [
+        1416.96,
+        907.2
+      ],
+      "regs_um": [
+        [
+          1434.24,
+          933.12
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_flt",
+      "capture": "u_sfucore_Q_opstore_b",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 400 um core link, 1 station(s), hops <= 360 um | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_rd|u_sfucore_Q_opstore_b",
+      "from_um": [
+        1459.894,
+        941.76
+      ],
+      "to_um": [
+        1416.96,
+        907.2
+      ],
+      "regs_um": [
+        [
+          1416.96,
+          915.84
+        ]
+      ],
+      "bits": 512,
+      "launch": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_rd",
+      "capture": "u_sfucore_Q_opstore_b",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 563 um core link, 1 station(s), hops <= 360 um | G0C-FIX orient: 1 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_addr|u_sfucore_Q_opstore_b",
+      "from_um": [
+        1459.895,
+        941.76
+      ],
+      "to_um": [
+        1416.96,
+        907.2
+      ],
+      "regs_um": [
+        [
+          1416.96,
+          915.84
+        ]
+      ],
+      "bits": 120,
+      "launch": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_addr",
+      "capture": "u_sfucore_Q_opstore_b",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 461 um core link, 1 station(s), hops <= 360 um | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_flt|u_sfucore_Q_opstore_b",
+      "from_um": [
+        1134.84,
+        941.76
+      ],
+      "to_um": [
+        1416.96,
+        907.2
+      ],
+      "regs_um": [
+        [
+          1416.96,
+          915.84
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_flt",
+      "capture": "u_sfucore_Q_opstore_b",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 400 um core link, 1 station(s), hops <= 360 um | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_rd|u_sfucore_Q_opstore_b",
+      "from_um": [
+        1459.894,
+        941.76
+      ],
+      "to_um": [
+        1416.96,
+        907.2
+      ],
+      "regs_um": [
+        [
+          1615.68,
+          933.12
+        ],
+        [
+          1416.96,
+          915.84
+        ]
+      ],
+      "bits": 512,
+      "launch": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_rd",
+      "capture": "u_sfucore_Q_opstore_b",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 681 um core link, 2 station(s), hops <= 360 um | G0C-FIX orient: 2 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 2->2) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_u_output_flt|u_sfucore_Q_opstore_b",
+      "from_um": [
+        1785.0,
+        941.76
+      ],
+      "to_um": [
+        1416.96,
+        907.2
+      ],
+      "regs_um": [
+        [
+          1434.24,
+          933.12
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_u_output_flt",
+      "capture": "u_sfucore_Q_opstore_b",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 400 um core link, 1 station(s), hops <= 360 um | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_u_output_sr_addr|u_sfucore_Q_opstore_b",
+      "from_um": [
+        1459.902,
+        941.76
+      ],
+      "to_um": [
+        1416.96,
+        907.2
+      ],
+      "regs_um": [
+        [
+          1416.96,
+          915.84
+        ]
+      ],
+      "bits": 30,
+      "launch": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_u_output_sr_addr",
+      "capture": "u_sfucore_Q_opstore_b",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 422 um core link, 1 station(s), hops <= 360 um | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_u_output_sr_v|u_sfucore_Q_opstore_b",
+      "from_um": [
+        1459.92,
+        941.76
+      ],
+      "to_um": [
+        1416.96,
+        907.2
+      ],
+      "regs_um": [
+        [
+          1416.96,
+          915.84
+        ]
+      ],
+      "bits": 2,
+      "launch": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_u_output_sr_v",
+      "capture": "u_sfucore_Q_opstore_b",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 400 um core link, 1 station(s), hops <= 360 um | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_rq|u_sfucore_Q_opstore_b",
+      "from_um": [
+        1459.914,
+        941.76
+      ],
+      "to_um": [
+        1416.96,
+        907.2
+      ],
+      "regs_um": [
+        [
+          1416.96,
+          915.84
+        ]
+      ],
+      "bits": 16,
+      "launch": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_rq",
+      "capture": "u_sfucore_Q_opstore_b",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 413 um core link, 1 station(s), hops <= 360 um | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_v|u_sfucore_Q_opstore_b",
+      "from_um": [
+        1459.92,
+        941.76
+      ],
+      "to_um": [
+        1416.96,
+        907.2
+      ],
+      "regs_um": [
+        [
+          1416.96,
+          915.84
+        ]
+      ],
+      "bits": 8,
+      "launch": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_v",
+      "capture": "u_sfucore_Q_opstore_b",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 404 um core link, 1 station(s), hops <= 360 um | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_rq|u_sfucore_Q_opstore_b",
+      "from_um": [
+        1459.884,
+        941.76
+      ],
+      "to_um": [
+        1416.96,
+        907.2
+      ],
+      "regs_um": [
+        [
+          1416.96,
+          915.84
+        ]
+      ],
+      "bits": 16,
+      "launch": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_rq",
+      "capture": "u_sfucore_Q_opstore_b",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 416 um core link, 1 station(s), hops <= 360 um | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_sw_v|u_sfucore_Q_opstore_b",
+      "from_um": [
+        1459.854,
+        941.76
+      ],
+      "to_um": [
+        1416.96,
+        907.2
+      ],
+      "regs_um": [
+        [
+          1416.96,
+          915.84
+        ]
+      ],
+      "bits": 8,
+      "launch": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_sw_v",
+      "capture": "u_sfucore_Q_opstore_b",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 406 um core link, 1 station(s), hops <= 360 um | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 1->1)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_rq|u_sfucore_Q_opstore_a",
+      "from_um": [
+        672.141,
+        907.181
+      ],
+      "to_um": [
+        1080.0,
+        941.76
+      ],
+      "regs_um": [
+        [
+          751.68,
+          915.84
+        ],
+        [
+          833.76,
+          915.84
+        ],
+        [
+          915.84,
+          915.84
+        ],
+        [
+          1080.0,
+          933.12
+        ]
+      ],
+      "bits": 16,
+      "launch": "u_sfucore_Q_opstore_b.g_operand_2_u_group_rq",
+      "capture": "u_sfucore_Q_opstore_a",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1488 um core link, 4 station(s), hops <= 360 um | G0C-FIX orient: 4 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_sw_addr|u_sfucore_Q_opstore_a",
+      "from_um": [
+        725.644,
+        907.181
+      ],
+      "to_um": [
+        1080.0,
+        941.76
+      ],
+      "regs_um": [
+        [
+          794.88,
+          915.84
+        ],
+        [
+          868.32,
+          915.84
+        ],
+        [
+          937.44,
+          915.84
+        ],
+        [
+          1080.0,
+          933.12
+        ]
+      ],
+      "bits": 120,
+      "launch": "u_sfucore_Q_opstore_b.g_operand_2_u_group_sw_addr",
+      "capture": "u_sfucore_Q_opstore_a",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1434 um core link, 4 station(s), hops <= 360 um | G0C-FIX orient: 4 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_sw_v|u_sfucore_Q_opstore_a",
+      "from_um": [
+        662.766,
+        907.181
+      ],
+      "to_um": [
+        1080.0,
+        941.76
+      ],
+      "regs_um": [
+        [
+          747.36,
+          915.84
+        ],
+        [
+          829.44,
+          915.84
+        ],
+        [
+          911.52,
+          915.84
+        ],
+        [
+          1080.0,
+          933.12
+        ]
+      ],
+      "bits": 8,
+      "launch": "u_sfucore_Q_opstore_b.g_operand_2_u_group_sw_v",
+      "capture": "u_sfucore_Q_opstore_a",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1497 um core link, 4 station(s), hops <= 360 um | G0C-FIX orient: 4 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_b.g_operand_3_u_group_rq|u_sfucore_Q_opstore_a",
+      "from_um": [
+        679.704,
+        907.181
+      ],
+      "to_um": [
+        1080.0,
+        941.76
+      ],
+      "regs_um": [
+        [
+          760.32,
+          915.84
+        ],
+        [
+          838.08,
+          915.84
+        ],
+        [
+          920.16,
+          915.84
+        ],
+        [
+          1080.0,
+          933.12
+        ]
+      ],
+      "bits": 16,
+      "launch": "u_sfucore_Q_opstore_b.g_operand_3_u_group_rq",
+      "capture": "u_sfucore_Q_opstore_a",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1480 um core link, 4 station(s), hops <= 360 um | G0C-FIX orient: 4 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_b.g_operand_3_u_group_sw_v|u_sfucore_Q_opstore_a",
+      "from_um": [
+        666.516,
+        907.181
+      ],
+      "to_um": [
+        1080.0,
+        941.76
+      ],
+      "regs_um": [
+        [
+          747.36,
+          915.84
+        ],
+        [
+          833.76,
+          915.84
+        ],
+        [
+          915.84,
+          915.84
+        ],
+        [
+          1080.0,
+          933.12
+        ]
+      ],
+      "bits": 8,
+      "launch": "u_sfucore_Q_opstore_b.g_operand_3_u_group_sw_v",
+      "capture": "u_sfucore_Q_opstore_a",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1493 um core link, 4 station(s), hops <= 360 um | G0C-FIX orient: 4 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_b.u_output_sr_addr|u_sfucore_Q_opstore_a",
+      "from_um": [
+        690.461,
+        907.181
+      ],
+      "to_um": [
+        1080.0,
+        941.76
+      ],
+      "regs_um": [
+        [
+          768.96,
+          915.84
+        ],
+        [
+          846.72,
+          915.84
+        ],
+        [
+          924.48,
+          915.84
+        ],
+        [
+          1080.0,
+          933.12
+        ]
+      ],
+      "bits": 30,
+      "launch": "u_sfucore_Q_opstore_b.u_output_sr_addr",
+      "capture": "u_sfucore_Q_opstore_a",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1470 um core link, 4 station(s), hops <= 360 um | G0C-FIX orient: 4 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_b.u_output_sr_v|u_sfucore_Q_opstore_a",
+      "from_um": [
+        660.48,
+        907.181
+      ],
+      "to_um": [
+        1080.0,
+        941.76
+      ],
+      "regs_um": [
+        [
+          743.04,
+          915.84
+        ],
+        [
+          829.44,
+          915.84
+        ],
+        [
+          911.52,
+          915.84
+        ],
+        [
+          1080.0,
+          933.12
+        ]
+      ],
+      "bits": 2,
+      "launch": "u_sfucore_Q_opstore_b.u_output_sr_v",
+      "capture": "u_sfucore_Q_opstore_a",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1500 um core link, 4 station(s), hops <= 360 um | G0C-FIX orient: 4 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_flt|u_sfucore_Q_opstore_a",
+      "from_um": [
+        658.968,
+        907.181
+      ],
+      "to_um": [
+        1080.0,
+        941.76
+      ],
+      "regs_um": [
+        [
+          743.04,
+          915.84
+        ],
+        [
+          829.44,
+          915.84
+        ],
+        [
+          911.52,
+          915.84
+        ],
+        [
+          1080.0,
+          933.12
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_opstore_b.g_operand_2_u_group_flt",
+      "capture": "u_sfucore_Q_opstore_a",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1501 um core link, 4 station(s), hops <= 360 um | G0C-FIX orient: 4 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_rd|u_sfucore_Q_opstore_a",
+      "from_um": [
+        873.86,
+        907.181
+      ],
+      "to_um": [
+        1080.0,
+        941.76
+      ],
+      "regs_um": [
+        [
+          924.48,
+          915.84
+        ],
+        [
+          976.32,
+          915.84
+        ],
+        [
+          1080.0,
+          933.12
+        ]
+      ],
+      "bits": 512,
+      "launch": "u_sfucore_Q_opstore_b.g_operand_2_u_group_rd",
+      "capture": "u_sfucore_Q_opstore_a",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1286 um core link, 3 station(s), hops <= 360 um | G0C-FIX orient: 3 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_b.g_operand_3_u_group_flt|u_sfucore_Q_opstore_a",
+      "from_um": [
+        659.4,
+        907.181
+      ],
+      "to_um": [
+        1080.0,
+        941.76
+      ],
+      "regs_um": [
+        [
+          743.04,
+          915.84
+        ],
+        [
+          829.44,
+          915.84
+        ],
+        [
+          911.52,
+          915.84
+        ],
+        [
+          1080.0,
+          933.12
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_opstore_b.g_operand_3_u_group_flt",
+      "capture": "u_sfucore_Q_opstore_a",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1501 um core link, 4 station(s), hops <= 360 um | G0C-FIX orient: 4 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_b.g_operand_3_u_group_rd|u_sfucore_Q_opstore_a",
+      "from_um": [
+        1113.973,
+        907.181
+      ],
+      "to_um": [
+        1113.973,
+        941.76
+      ],
+      "regs_um": [
+        [
+          1192.32,
+          915.84
+        ],
+        [
+          1274.4,
+          915.84
+        ],
+        [
+          1434.24,
+          933.12
+        ]
+      ],
+      "bits": 512,
+      "launch": "u_sfucore_Q_opstore_b.g_operand_3_u_group_rd",
+      "capture": "u_sfucore_Q_opstore_a",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1046 um core link, 3 station(s), hops <= 360 um | G0C-FIX orient: 3 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept)"
+    },
+    {
+      "conn": "u_sfucore_Q_opstore_b.u_output_flt|u_sfucore_Q_opstore_a",
+      "from_um": [
+        659.832,
+        907.181
+      ],
+      "to_um": [
+        1080.0,
+        941.76
+      ],
+      "regs_um": [
+        [
+          743.04,
+          915.84
+        ],
+        [
+          829.44,
+          915.84
+        ],
+        [
+          911.52,
+          915.84
+        ],
+        [
+          1080.0,
+          933.12
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_opstore_b.u_output_flt",
+      "capture": "u_sfucore_Q_opstore_a",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1500 um core link, 4 station(s), hops <= 360 um | G0C-FIX orient: 4 station(s) re-sited on the new route | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 4->4)"
+    },
+    {
+      "conn": "bus:L127_i",
+      "from_um": [
+        1857.6,
+        513.936
+      ],
+      "to_um": [
+        878.65,
+        1550.88
+      ],
+      "regs_um": [
+        [
+          1831.68,
+          829.44
+        ],
+        [
+          1576.8,
+          933.12
+        ],
+        [
+          1257.12,
+          933.12
+        ],
+        [
+          1071.36,
+          1105.92
+        ],
+        [
+          1062.72,
+          1386.72
+        ],
+        [
+          876.96,
+          1559.52
+        ]
+      ],
+      "bits": 2056,
+      "launch": "face bus L127_i",
+      "capture": "u_sfucore_Q_ctl.local_rr",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1840 um core link, 6 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 6->6) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 6->6)"
+    },
+    {
+      "conn": "bus:L47_o",
+      "from_um": [
+        1857.6,
+        578.36
+      ],
+      "to_um": [
+        878.65,
+        1550.88
+      ],
+      "regs_um": [
+        [
+          1831.68,
+          829.44
+        ],
+        [
+          1576.8,
+          933.12
+        ],
+        [
+          1226.88,
+          933.12
+        ],
+        [
+          1071.36,
+          1136.16
+        ],
+        [
+          1062.72,
+          1386.72
+        ],
+        [
+          876.96,
+          1559.52
+        ]
+      ],
+      "bits": 2056,
+      "launch": "face bus L47_o",
+      "capture": "u_sfucore_Q_ctl.local_rr",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1776 um core link, 6 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 6->6) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 6->6)"
+    },
+    {
+      "conn": "bus:L54_i",
+      "from_um": [
+        1857.6,
+        462.904
+      ],
+      "to_um": [
+        878.65,
+        1550.88
+      ],
+      "regs_um": [
+        [
+          1607.04,
+          570.24
+        ],
+        [
+          1425.6,
+          747.36
+        ],
+        [
+          1278.72,
+          933.12
+        ],
+        [
+          1071.36,
+          1084.32
+        ],
+        [
+          1062.72,
+          1386.72
+        ],
+        [
+          876.96,
+          1559.52
+        ]
+      ],
+      "bits": 2056,
+      "launch": "face bus L54_i",
+      "capture": "u_sfucore_Q_ctl.local_rr",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1891 um core link, 6 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 6->6) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 6->6)"
+    },
+    {
+      "conn": "bus:L127_i",
+      "from_um": [
+        1857.6,
+        513.936
+      ],
+      "to_um": [
+        723.48,
+        1550.88
+      ],
+      "regs_um": [
+        [
+          1555.2,
+          570.24
+        ],
+        [
+          1425.6,
+          799.2
+        ],
+        [
+          1200.96,
+          933.12
+        ],
+        [
+          1062.72,
+          1153.44
+        ],
+        [
+          1062.72,
+          1512.0
+        ],
+        [
+          751.68,
+          1559.52
+        ]
+      ],
+      "bits": 8,
+      "launch": "face bus L127_i",
+      "capture": "u_sfucore_Q_ctl.local_w_done",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1571 um core link, 5 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 5->5) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 5->6)"
+    },
+    {
+      "conn": "bus:L47_o",
+      "from_um": [
+        1857.6,
+        578.36
+      ],
+      "to_um": [
+        723.48,
+        1550.88
+      ],
+      "regs_um": [
+        [
+          1831.68,
+          911.52
+        ],
+        [
+          1494.72,
+          933.12
+        ],
+        [
+          1136.16,
+          933.12
+        ],
+        [
+          1071.36,
+          1226.88
+        ],
+        [
+          1045.44,
+          1559.52
+        ]
+      ],
+      "bits": 8,
+      "launch": "face bus L47_o",
+      "capture": "u_sfucore_Q_ctl.local_w_done",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1507 um core link, 5 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 5->5) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 5->5)"
+    },
+    {
+      "conn": "bus:L54_i",
+      "from_um": [
+        1857.6,
+        462.904
+      ],
+      "to_um": [
+        723.48,
+        1550.88
+      ],
+      "regs_um": [
+        [
+          1607.04,
+          570.24
+        ],
+        [
+          1425.6,
+          747.36
+        ],
+        [
+          1252.8,
+          933.12
+        ],
+        [
+          1071.36,
+          1110.24
+        ],
+        [
+          1062.72,
+          1460.16
+        ],
+        [
+          803.52,
+          1559.52
+        ]
+      ],
+      "bits": 8,
+      "launch": "face bus L54_i",
+      "capture": "u_sfucore_Q_ctl.local_w_done",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1622 um core link, 5 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 5->5) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 5->6)"
+    },
+    {
+      "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll|u_sfucore_Q_lane14",
+      "from_um": [
+        407.352,
+        924.48
+      ],
+      "to_um": [
+        1434.24,
+        561.6
+      ],
+      "regs_um": [
+        [
+          756.0,
+          915.84
+        ],
+        [
+          1114.56,
+          915.84
+        ],
+        [
+          1425.6,
+          868.32
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll",
+      "capture": "u_sfucore_Q_lane14",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1143 um core link, 3 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3)"
+    },
+    {
+      "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault|u_sfucore_Q_lane14",
+      "from_um": [
+        407.064,
+        924.48
+      ],
+      "to_um": [
+        1434.24,
+        561.6
+      ],
+      "regs_um": [
+        [
+          756.0,
+          915.84
+        ],
+        [
+          1114.56,
+          915.84
+        ],
+        [
+          1425.6,
+          868.32
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault",
+      "capture": "u_sfucore_Q_lane14",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1143 um core link, 3 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3)"
+    },
+    {
+      "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v|u_sfucore_Q_lane14",
+      "from_um": [
+        406.776,
+        924.48
+      ],
+      "to_um": [
+        1434.24,
+        561.6
+      ],
+      "regs_um": [
+        [
+          756.0,
+          915.84
+        ],
+        [
+          1114.56,
+          915.84
+        ],
+        [
+          1425.6,
+          868.32
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v",
+      "capture": "u_sfucore_Q_lane14",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1143 um core link, 3 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3)"
+    },
+    {
+      "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x|u_sfucore_Q_lane14",
+      "from_um": [
+        401.996,
+        924.48
+      ],
+      "to_um": [
+        1434.24,
+        561.6
+      ],
+      "regs_um": [
+        [
+          751.68,
+          915.84
+        ],
+        [
+          1110.24,
+          915.84
+        ],
+        [
+          1425.6,
+          872.64
+        ]
+      ],
+      "bits": 32,
+      "launch": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x",
+      "capture": "u_sfucore_Q_lane14",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1152 um core link, 3 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3)"
+    },
+    {
+      "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll|u_sfucore_Q_lane15",
+      "from_um": [
+        744.216,
+        924.48
+      ],
+      "to_um": [
+        1434.24,
+        924.48
+      ],
+      "regs_um": [
+        [
+          1067.04,
+          924.48
+        ],
+        [
+          1425.6,
+          924.48
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll",
+      "capture": "u_sfucore_Q_lane15",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 781 um core link, 2 station(s), hops <= 360 um | G0C-SUPERSET superset u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll: 2 station(s) re-sited (count kept) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 2->2)"
+    },
+    {
+      "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault|u_sfucore_Q_lane15",
+      "from_um": [
+        702.888,
+        924.48
+      ],
+      "to_um": [
+        1434.24,
+        924.48
+      ],
+      "regs_um": [
+        [
+          1062.72,
+          924.48
+        ],
+        [
+          1421.28,
+          924.48
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault",
+      "capture": "u_sfucore_Q_lane15",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 781 um core link, 2 station(s), hops <= 360 um | G0C-SUPERSET superset u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault: 2 station(s) re-sited (count kept) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 2->2)"
+    },
+    {
+      "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v|u_sfucore_Q_lane15",
+      "from_um": [
+        744.12,
+        924.48
+      ],
+      "to_um": [
+        1434.24,
+        924.48
+      ],
+      "regs_um": [
+        [
+          1067.04,
+          924.48
+        ],
+        [
+          1425.6,
+          924.48
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v",
+      "capture": "u_sfucore_Q_lane15",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 782 um core link, 2 station(s), hops <= 360 um | G0C-SUPERSET superset u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v: 2 station(s) re-sited (count kept) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 2->2)"
+    },
+    {
+      "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x|u_sfucore_Q_lane15",
+      "from_um": [
+        723.504,
+        924.48
+      ],
+      "to_um": [
+        1434.24,
+        924.48
+      ],
+      "regs_um": [
+        [
+          1067.04,
+          924.48
+        ],
+        [
+          1425.6,
+          924.48
+        ]
+      ],
+      "bits": 32,
+      "launch": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x",
+      "capture": "u_sfucore_Q_lane15",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 802 um core link, 2 station(s), hops <= 360 um | G0C-SUPERSET superset u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x: 2 station(s) re-sited (count kept) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 2->2)"
+    },
+    {
+      "conn": "u_sfucore_Q_ctl.fault|u_sfucore_Q_lane14",
+      "from_um": [
+        407.64,
+        924.48
+      ],
+      "to_um": [
+        1434.24,
+        561.6
+      ],
+      "regs_um": [
+        [
+          756.0,
+          915.84
+        ],
+        [
+          1114.56,
+          915.84
+        ],
+        [
+          1425.6,
+          868.32
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_ctl.fault",
+      "capture": "u_sfucore_Q_lane14",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1145 um core link, 3 station(s), hops <= 360 um | G0C-SUPERSET superset u_sfucore_Q_ctl.fault: 3 station(s) re-sited (count kept) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 3->3)"
+    },
+    {
+      "conn": "u_sfucore_Q_ctl.fault|u_sfucore_Q_lane15",
+      "from_um": [
+        407.64,
+        924.48
+      ],
+      "to_um": [
+        1434.24,
+        924.48
+      ],
+      "regs_um": [
+        [
+          756.0,
+          915.84
+        ],
+        [
+          1114.56,
+          915.84
+        ]
+      ],
+      "bits": 1,
+      "launch": "u_sfucore_Q_ctl.fault",
+      "capture": "u_sfucore_Q_lane15",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 782 um core link, 2 station(s), hops <= 360 um | G0C-SUPERSET superset u_sfucore_Q_ctl.fault: 2 station(s) re-sited (count kept) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 2->2)"
+    },
+    {
+      "conn": "bus:L127_i",
+      "from_um": [
+        1857.6,
+        513.936
+      ],
+      "to_um": [
+        1039.674,
+        1550.88
+      ],
+      "regs_um": [
+        [
+          1848.96,
+          864.0
+        ],
+        [
+          1848.96,
+          1222.56
+        ],
+        [
+          1702.08,
+          1434.24
+        ],
+        [
+          1343.52,
+          1434.24
+        ],
+        [
+          1067.04,
+          1516.32
+        ]
+      ],
+      "bits": 136,
+      "launch": "face bus L127_i",
+      "capture": "u_sfucore_Q_ctl.local_rq",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1588 um core link, 5 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 5->5) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 5->5)"
+    },
+    {
+      "conn": "bus:L47_o",
+      "from_um": [
+        1857.6,
+        578.36
+      ],
+      "to_um": [
+        1039.674,
+        1550.88
+      ],
+      "regs_um": [
+        [
+          1831.68,
+          911.52
+        ],
+        [
+          1494.72,
+          933.12
+        ],
+        [
+          1136.16,
+          933.12
+        ],
+        [
+          1071.36,
+          1226.88
+        ],
+        [
+          1045.44,
+          1559.52
+        ]
+      ],
+      "bits": 136,
+      "launch": "face bus L47_o",
+      "capture": "u_sfucore_Q_ctl.local_rq",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1523 um core link, 5 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 5->5) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 5->5)"
+    },
+    {
+      "conn": "bus:L54_i",
+      "from_um": [
+        1857.6,
+        462.904
+      ],
+      "to_um": [
+        1039.674,
+        1550.88
+      ],
+      "regs_um": [
+        [
+          1831.68,
+          794.88
+        ],
+        [
+          1611.36,
+          933.12
+        ],
+        [
+          1252.8,
+          933.12
+        ],
+        [
+          1071.36,
+          1110.24
+        ],
+        [
+          1062.72,
+          1460.16
+        ]
+      ],
+      "bits": 136,
+      "launch": "face bus L54_i",
+      "capture": "u_sfucore_Q_ctl.local_rq",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1639 um core link, 5 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 5->5) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 5->5)"
+    },
+    {
+      "conn": "bus:L127_i",
+      "from_um": [
+        1857.6,
+        513.936
+      ],
+      "to_um": [
+        388.8,
+        1237.62
+      ],
+      "regs_um": [
+        [
+          1658.88,
+          570.24
+        ],
+        [
+          1425.6,
+          695.52
+        ],
+        [
+          1304.64,
+          915.84
+        ],
+        [
+          954.72,
+          915.84
+        ],
+        [
+          596.16,
+          915.84
+        ],
+        [
+          380.16,
+          1058.4
+        ],
+        [
+          380.16,
+          1235.52
+        ]
+      ],
+      "bits": 2248,
+      "launch": "face bus L127_i",
+      "capture": "u_sfucore_Q_ctl.local_wq",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1947 um core link, 7 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 7->7) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 7->7)"
+    },
+    {
+      "conn": "bus:L47_o",
+      "from_um": [
+        1857.6,
+        578.36
+      ],
+      "to_um": [
+        388.8,
+        1237.62
+      ],
+      "regs_um": [
+        [
+          1507.68,
+          570.24
+        ],
+        [
+          1425.6,
+          846.72
+        ],
+        [
+          1136.16,
+          915.84
+        ],
+        [
+          777.6,
+          915.84
+        ],
+        [
+          419.04,
+          915.84
+        ],
+        [
+          380.16,
+          1235.52
+        ]
+      ],
+      "bits": 2248,
+      "launch": "face bus L47_o",
+      "capture": "u_sfucore_Q_ctl.local_wq",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1882 um core link, 6 station(s), hops <= 360 um | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 6->6)"
+    },
+    {
+      "conn": "bus:L54_i",
+      "from_um": [
+        1857.6,
+        462.904
+      ],
+      "to_um": [
+        388.8,
+        1237.62
+      ],
+      "regs_um": [
+        [
+          1671.84,
+          570.24
+        ],
+        [
+          1425.6,
+          678.24
+        ],
+        [
+          1304.64,
+          915.84
+        ],
+        [
+          967.68,
+          915.84
+        ],
+        [
+          609.12,
+          915.84
+        ],
+        [
+          380.16,
+          1045.44
+        ],
+        [
+          380.16,
+          1235.52
+        ]
+      ],
+      "bits": 2248,
+      "launch": "face bus L54_i",
+      "capture": "u_sfucore_Q_ctl.local_wq",
+      "note": "B2o R3-INTERNAL (cores_b2 rule): 1998 um core link, 7 station(s), hops <= 360 um | DIE-HBM-14 station_resite FF homes out of core bodies (count 7->7) | DIE-HBM-30-O: endpoints follow the V1 repack (count kept) | DIE-HBM-14 station_resite FF homes out of core bodies (count 7->7)"
+    }
+  ],
+  "note": " | Explicit actual bound-content variant; same leaf masters/geometry, independent wrapper G3."
+}
