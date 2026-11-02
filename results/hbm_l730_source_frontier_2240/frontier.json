@@ -388,6 +388,30 @@
   "actual_port_pin_join": "HOLD: legacy pin files expose no exact selected source port names; no alias inferred",
   "extra_source_cycles_adopted": 0,
   "scope": "Bounding-box lower bounds only prove failure; they do not qualify actual selected port locations or constitute a repair.",
+  "candidate_lane_latency_before_source_repair": {
+    "L730": {
+      "cycles": 45,
+      "stations": 43,
+      "boundary": 2,
+      "faces": 8,
+      "fixed": 0,
+      "natural": 45,
+      "pad": 0
+    },
+    "L730m": {
+      "cycles": 45,
+      "stations": 43,
+      "boundary": 2,
+      "faces": 8,
+      "fixed": 0,
+      "natural": 45,
+      "pad": 0
+    }
+  },
+  "candidate_lane_latency_min_after_source_repair": {
+    "L730": 48,
+    "L730m": 48
+  },
   "new_lower_bound_repair_price_per_type": {
     "ctl_extra_banks": 3,
     "opstore_a_extra_banks": 1,
