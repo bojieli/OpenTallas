@@ -898,12 +898,7 @@
    },
    "take_states": [
     "NEEDS-KIT",
-    "FIX",
-    "REVIEW",
-    "ROUTING",
-    "GEOM-REQ",
-    "KIT-PLACED",
-    "SIGNED-UNVERSIONED"
+    "FIX"
    ],
    "lane": "KIT-WAVE-3",
    "die_max_inflight": 60,
@@ -1018,35 +1013,7 @@
    "pilot_max": 2,
    "owner_lane": "DIE-HBM-57",
    "pilot_mode": "queue",
-   "queue_src": "claude/die-hbm-57-taps-1101b@e5b857a7e34",
-   "hold_items": {
-    "ot_hbm_argmax_static_sw_vm_r2": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_argmax_static_sw_vm_r2__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_hc_root_static__hcp_sys1": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_hc_root_static__hcp_sys1__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_idx_qctl_static": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_idx_qctl_static__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_idx_score_hcol_h1": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_idx_score_hcol_h1__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_idx_selector_static_sel": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_idx_selector_static_sel__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_su_static_pgslice_lg__pretree": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_su_static_pgslice_lg__pretree__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_svc_sm_group_rel_id": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_svc_sm_group_rel_id__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_svc_wb_kport_q": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_svc_wb_kport_q__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_xp_aq_tree13_fmt": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hbm_xp_aq_tree13_fmt__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hgi_coll_inj_idx_join_rg": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hgi_coll_inj_idx_join_rg__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hgi_coll_tkm_m_tp192__root": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hgi_coll_tkm_m_tp192__root__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hgi_dma_back_static_vp4_banks_cp": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hgi_dma_back_static_vp4_banks_cp__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hgi_sm_xload_cl2_ctlx": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)",
-    "ot_hgi_sm_xload_cl2_ctlx__v*": "KIT-WAVE-14 14:5x DIE-HBM-57 taps ruling: wave takes only the 21 lane-built single-root views from lane states; this lane-built item keeps its lane build (not in the taps re-cut)"
-   }
+   "queue_src": "claude/die-hbm-57-taps-1101b@e5b857a7e34"
   }
  },
  "place_prefer": [
