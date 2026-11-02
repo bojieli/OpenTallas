@@ -1,0 +1,79 @@
+{
+ "reset_chain": [
+  "u_rst.rst_n$_DFF_PN0_",
+  "u_rst.sync_q[1]$_DFF_PN0_",
+  "u_rst.sync_q[0]$_DFF_PN0_"
+ ],
+ "candidates": [
+  {
+   "pin": "wce",
+   "mask": "_12360_",
+   "capture": "wce_q$_SDFF_PN0_",
+   "clock": "clk_ctrl"
+  },
+  {
+   "pin": "r_ce[0]",
+   "mask": "_12359_",
+   "capture": "g_t[0].rp_ce$_SDFF_PN0_",
+   "clock": "clk_ctrl"
+  },
+  {
+   "pin": "r_ce[1]",
+   "mask": "_12357_",
+   "capture": "g_t[1].rp_ce$_SDFF_PN0_",
+   "clock": "clk_ctrl"
+  },
+  {
+   "pin": "r_ce[2]",
+   "mask": "_12355_",
+   "capture": "g_t[2].rp_ce$_SDFF_PN0_",
+   "clock": "clk_ctrl"
+  },
+  {
+   "pin": "r_ce[3]",
+   "mask": "_12353_",
+   "capture": "g_t[3].rp_ce$_SDFF_PN0_",
+   "clock": "clk_ctrl"
+  },
+  {
+   "pin": "r_ce[4]",
+   "mask": "_12351_",
+   "capture": "g_t[4].rp_ce$_SDFF_PN0_",
+   "clock": "clk_ctrl"
+  },
+  {
+   "pin": "r_ce[5]",
+   "mask": "_12349_",
+   "capture": "g_t[5].rp_ce$_SDFF_PN0_",
+   "clock": "clk_ctrl"
+  },
+  {
+   "pin": "r_ce[6]",
+   "mask": "_12347_",
+   "capture": "g_t[6].rp_ce$_SDFF_PN0_",
+   "clock": "clk_ctrl"
+  },
+  {
+   "pin": "r_ce[7]",
+   "mask": "_12345_",
+   "capture": "g_t[7].rp_ce$_SDFF_PN0_",
+   "clock": "clk_ctrl"
+  }
+ ],
+ "physical_join": {
+  "actual_capture_edges": 9,
+  "note": "No geometry verdict or source-release effect"
+ },
+ "input_sha256": {
+  "mapped": "78df88ffe522cadb5fdc9d3b109f6997d4a21efa977a0c915fd04607aec4c3dd",
+  "actual_dump": "46128ee6acf6ec07889f5608e78d7c5f556516548aa611f47f0556023b841890",
+  "typed_dump": "dd69dc316219c0ae2b2c62f21d946686eb9817427e9124919e72349c31de199c",
+  "lec": "2082fd2be3ed6612999537f577abb147225d8015cf66a005a6dfa88e476e28e3",
+  "provenance": "1a41010f68c21ddf3a59f8f3df671c3a184aa3148f83c5b62985eb21eb3ed9b0"
+ },
+ "schema": "opentallas.reset_d_mask.canary.v1",
+ "scope": "SOURCE_SPECIFIC_CANDIDATE_ONLY",
+ "gating_changed": false,
+ "generic_comb_waiver": false,
+ "registration_release": false
+}

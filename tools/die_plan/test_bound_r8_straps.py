@@ -80,5 +80,20 @@ class BoundR8(unittest.TestCase):
         (self.d/'bind_parent_id_straps.json').unlink()
         with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json')
 
+    def test_native_station_manifest_without_bind_metadata_passes_through(self):
+        self.kr = dict(bound_module='native_bound', files=['native.sv'])
+        self.save()
+        self.assertIs(project(self.raw, {'T': str(self.d/'kit_rtl.f')}), self.raw)
+
+    def test_r8_input_without_bind_authority_rejected(self):
+        del self.kr['bind_out']
+        self.save()
+        with self.assertRaisesRegex(ValueError, 'bind authority'):
+            declared(self.d/'kit_rtl.json')
+
+    def test_plain_native_filelist_without_metadata_passes_through(self):
+        (self.d/'kit_rtl.json').unlink()
+        self.assertIs(project(self.raw, {'T': str(self.d/'native.f')}), self.raw)
+
 
 if __name__ == '__main__': unittest.main()

@@ -1,0 +1,20 @@
+{
+  "status": "PREP_ONLY_NOT_LAUNCHED",
+  "source_original_sha256": "b29866c094ab29551a4222a97f5f5bac444002693e07b1172fc7f53b4a93b46d",
+  "successor_sha256": "f0e1446037e5b70a597a5d608d9e5b0a372443ccebf8fdfc6254c2c95406ca30",
+  "source_files": 9,
+  "source_bytes": 174151,
+  "instances": "actual original/default-off/optin, NU4 CALREG7 CALR1 TABLE1",
+  "existing_load_requests": 144,
+  "new_load_requests": 4,
+  "nent": 1013,
+  "new_range": [
+    1012,
+    1
+  ],
+  "controls": [
+    "default-off37 rejection",
+    "MUT_USER shared-range wrong-owner catch"
+  ],
+  "scope": "actual CALR/CTLM request source only; no table payload loader, SU, ROOT, physical or token claim"
+}

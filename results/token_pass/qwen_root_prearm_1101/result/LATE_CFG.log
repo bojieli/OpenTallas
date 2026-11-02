@@ -1,0 +1,5 @@
+ROOT_AUTOBOOT_SETID cyc1122
+ROOT_CFG_DURING_LEASE cyc1303 active0 busy1
+[1231000000] %Fatal: tb_native_root.sv:68: Assertion failed in tb_native_root: ROOT_OUTPUT_ADDRESS active0 addr000191 hazard1
+%Error: src/tb_native_root.sv:68: Verilog $stop
+Aborting...

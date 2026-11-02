@@ -1,0 +1,5 @@
+{
+ "first": {"unit":"oth-ubuntu-3180431-1793604139","exit":1,"cause":"tb connected HB-only bi port to actual C1 xrt1 wrapper","fix":"Use exact native xrt1 interface; no RTL source changed"},
+ "second": {"unit":"oth-ubuntu-3244081-1793604478","exit":1,"cause":"Source readset omitted ot_v41_inc and actual 283_EW/266_EW relay wrapper definitions","fix":"Add actual ot_prefix and selected relay source files; no model, stage, fault or guard override"},
+ "passing": {"unit":"oth-ubuntu-3270885-1793604621","exit":0,"first_two_failure_directories_preserved":true}
+}

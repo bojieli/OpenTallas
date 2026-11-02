@@ -1,0 +1,7 @@
+ROOT_AUTOBOOT_SETID cyc1122
+NATIVE_ROOT_CASE user0 bits3fa6f0bb cfg_to_write208
+PREARM_AMAX_TOKEN user0 idx101 value40800000
+NATIVE_ROOT_CASE user1 bits3f8bd5c6 cfg_to_write208
+[1574000000] %Fatal: tb_native_root.sv:54: Assertion failed in tb_native_root: NATIVE_ROOT_FAULT active1 busy0 hazard0
+%Error: src/tb_native_root.sv:54: Verilog $stop
+Aborting...
