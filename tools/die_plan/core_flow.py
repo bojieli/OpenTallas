@@ -87,6 +87,15 @@ MODES_CHECK = "python3 -I /work/kit_modes.py check /work"
 MM_PATCH_STEP = ("if [ \\$rc = 0 ] && grep -q '^override export OT_HOLD_MM = 1' /work/config.mk; then "
                  "python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl "
                  "> /work/orfs_hold_mm.log 2>&1 || { cat /work/orfs_hold_mm.log; echo 'KIT_MODES FAIL orfs_hold_mm patch'; rc=9; }; fi; ")
+def runtime_mm_patch_step():
+    """The SAME canonical MM patch step for a direct common runtime shell.
+
+    Generator templates escape dollars for an enclosing bash -lc string;
+    a standalone admitted CTS consumer needs the unescaped shell form.
+    """
+    return MM_PATCH_STEP.replace("\\$", "$")
+
+
 FF_GRT_STEP = ("HM=\\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); "
                "VF=\\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk); "
                "MM=\\$(grep -c '^override export OT_HOLD_MM = 1' /work/config.mk); "
