@@ -1,0 +1,111 @@
+{
+  "verdict": "NOT EQUIVALENT",
+  "counts": {
+    "compare_points": 49656,
+    "proved": 49655,
+    "differs": 1,
+    "undecided": 0
+  },
+  "failing": [
+    {
+      "point": "ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.static_cmd[7]",
+      "status": "differs",
+      "cone_unmatched": [
+        "gold_only"
+      ],
+      "cone_unmatched_keys": [
+        "ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.active_row[6]"
+      ],
+      "cone_support_count": 451,
+      "cone_state_keys": [
+        "gold_only:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.active_row[6]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[0][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[0][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[10][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[10][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[11][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[11][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[12][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[12][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[13][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[13][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[14][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[14][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[15][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[15][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[1][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[1][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[2][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[2][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[3][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[3][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[4][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[4][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[5][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[5][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[6][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[6][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[7][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[7][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[8][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[8][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[9][45]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.image[9][84]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[0]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[100]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[101]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[102]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[103]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[104]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[105]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[106]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[107]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[108]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[109]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[10]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[110]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[111]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[112]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[113]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[114]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[115]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[116]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[117]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[118]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[119]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[11]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[120]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[121]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[122]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[123]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[124]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[125]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[126]",
+        "matched:ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.left_q[127]"
+      ]
+    }
+  ],
+  "unproven_points": [],
+  "reason": "1 compare points differ (first: ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.static_cmd[7]); RTL registers removed by synthesis although not constant: ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.active_row[6]",
+  "t_total_s": 16790.9,
+  "provenance": {
+    "commit": null,
+    "dirty": null,
+    "source": "kit provenance invalid: ValueError: source, input or running-tool identity mismatch"
+  },
+  "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/work/reset_contract.json",
+      "die": "kv",
+      "edges": 16,
+      "assert_edges": 20,
+      "receipt": "/work/reset_contract/receipt.txt"
+    },
+    "used": 16,
+    "debug_overrides": {}
+  },
+  "path": "/srv/opentallas-scratch2/claude/kv60-pcx/r27c/resign_mkv/lec/lec.json",
+  "sha256": "0d2d2d1c4be81ebbb3758b5522d6bce0585968273e8d110611d85c5ccb86222e"
+}
