@@ -1,0 +1,50 @@
+`timescale 1ns/1ps
+// Source-cut of frozen qfd_qc_cb_f_q00.u_u_t_0_0 literal39 clock bindings.
+// One selected region-clock interface, functional-only; no physical-phase claim.
+module native_tile0_cut(input wire clk,rst_n,input wire [507:0]tap,
+ output wire [513:0]t_out);
+ wire [513:0]ny;wire hi,lo;
+ qfd_tile_nk_rp2_romleaf_rr #(.ROM_TILE(0)) native_tile0(
+ .ck(clk),
+ .ck_de(clk),
+ .ck_dw(clk),
+ .ck_fa0(clk),
+ .ck_fa1(clk),
+ .ck_fa2(clk),
+ .ck_fa3(clk),
+ .ck_fa4(clk),
+ .ck_lsl0(clk),
+ .ck_lsl1(clk),
+ .ck_lsl2(clk),
+ .ck_lsl3(clk),
+ .ck_lsl4(clk),
+ .ck_lsl5(clk),
+ .ck_lsl6(clk),
+ .ck_lsl7(clk),
+ .ck_node(clk),
+ .ck_rn(clk),
+ .ck_rnw(clk),
+ .ck_rp0(clk),
+ .ck_rp1(clk),
+ .ck_rp2(clk),
+ .ck_rp3(clk),
+ .ck_rp4(clk),
+ .ck_rp5(clk),
+ .ck_rp6(clk),
+ .ck_rp7(clk),
+ .ck_rp8(clk),
+ .ck_rp9(clk),
+ .ck_rs(clk),
+ .ck_rsw(clk),
+ .ck_tx0(clk),
+ .ck_tx1(clk),
+ .ck_tx2(clk),
+ .ck_tx3(clk),
+ .ck_tx4(clk),
+ .ck_tx5(clk),
+ .ck_tx6(clk),
+ .ck_tx7(clk),
+
+ .rst_n(rst_n),.tile_id(16'd0),.tap(tap),.n_a(514'd0),.n_b(514'd0),
+ .t_out(t_out),.n_y(ny),.tie_hi(hi),.tie_lo(lo));
+endmodule
