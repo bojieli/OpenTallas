@@ -25,15 +25,15 @@ if {$pc_fresh_end_code} {
   if {$pc_fresh_end_code == 1} {return -options $pc_fresh_end_options $pc_fresh_end_result}
   error "PC_FRESH_NONLOCAL_CLEANUP_REFUSED $pc_fresh_end_code"
 }
+if {$pc_fresh_code != 0} {
+  if {$pc_fresh_code == 1} {return -options $pc_fresh_options $pc_fresh_result}
+  error "PC_FRESH_NONLOCAL_BODY_REFUSED $pc_fresh_code"
+}
 foreach k {creates swaps bound} {
   if {![dict exists $pc_fresh_end_result $k] || [dict get $pc_fresh_end_result $k] != 0} {error "PC_FRESH_UNEXPECTED_NATIVE_MUTATION $k receipt=$pc_fresh_end_result"}
 }
 set pc_fresh_status [ot_native_pg_status]
 if {![dict exists $pc_fresh_status active] || [dict get $pc_fresh_status active]} {error PC_FRESH_CALLBACK_STILL_ACTIVE}
-if {$pc_fresh_code != 0} {
-  if {$pc_fresh_code == 1} {return -options $pc_fresh_options $pc_fresh_result}
-  error "PC_FRESH_NONLOCAL_BODY_REFUSED $pc_fresh_code"
-}
 if {![info exists ::pc_fresh_grt_post_complete] || !$::pc_fresh_grt_post_complete} {error PC_FRESH_FULL_POST_NOT_REACHED}
 foreach f [list $::env(RESULTS_DIR)/5_1_grt.odb $::env(RESULTS_DIR)/5_1_grt.sdc $::env(RESULTS_DIR)/route.guide /work/reload_post_grt.clock.tsv] {
   if {![file exists $f] || [file size $f] == 0} {error "PC_FRESH_MISSING_OUTPUT $f"}
