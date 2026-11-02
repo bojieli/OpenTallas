@@ -206,8 +206,15 @@ def resolve(die, slice_inst, source_root=None):
         #     974ec6f3 plus kept same-D/same-enable/same-edge register copies only (act_g, hb_q1 -> hbk_o, wps0,
         #     keep_hierarchy bdec predecode = combinational) for native fanout <= 32; no register stage added on any
         #     path (diff-reviewed TOKc-S81 10-22: every new reg is loaded on the same edge/enable as the reg it copies).
+        #   0e49aefd = 50485a59 plus the default-empty simulation INSTANCE
+        #     filename prefix (980f1ce54). SYNTHESIS ROM expansion and capture
+        #     stage are unchanged; native seven-ROM/default lockstep and
+        #     distinct-slice/wrong-prefix controls are retained under
+        #     results/rtl/s81_xs_image_prefix_2038. This does not qualify a
+        #     BF profile, global source calendar or selected manifest.
         known = {'974ec6f3e0ca8deb84d6690c03f10035213b6a3bc94ff178edeb9549f29b9ca9',
-                 '50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808'}
+                 '50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808',
+                 '0e49aefdedcc41a1cb571c21cad73f247c2d97a7904799027af1373b16a920e1'}
         if sources[resolved_paths[streamer]] not in known:
             raise ValueError('changed XS4 source has no matching capture-stage receipt')
         added = 1
