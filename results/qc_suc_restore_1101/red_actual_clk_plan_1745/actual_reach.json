@@ -1,0 +1,69 @@
+{
+  "scope": "Actual NEW PLACE native CLK ITerm/Y ITerm bboxcentres and DBnet drivers, notFFcenterproxy; noSTA/routedRC/modelqualification",
+  "actual_clock_nodes": 8269,
+  "actual_clock_sinks": 34225,
+  "actual_leaf_drivers": 3452,
+  "clock_pin_L1_max_um": 74.95400000000001,
+  "leaves_over40um": 20,
+  "sinks_over40um": 143,
+  "worst": [
+    [
+      74.95400000000001,
+      "u.u_124319/Q$_DFF_P_",
+      "mp_ck_T023313"
+    ],
+    [
+      73.60399999999998,
+      "u.u_124320/Q$_DFF_P_",
+      "mp_ck_T023331"
+    ],
+    [
+      73.334,
+      "u.u_124337/Q$_DFF_P_",
+      "mp_ck_T023313"
+    ],
+    [
+      73.28,
+      "u.u_124327/Q$_DFF_P_",
+      "mp_ck_T023312"
+    ],
+    [
+      73.118,
+      "u.u_124338/Q$_DFF_P_",
+      "mp_ck_T023331"
+    ],
+    [
+      72.956,
+      "u.u_124307/Q$_DFF_P_",
+      "mp_ck_T032202"
+    ],
+    [
+      72.79400000000001,
+      "u.u_124324/Q$_DFF_P_",
+      "mp_ck_T023313"
+    ],
+    [
+      72.416,
+      "u.u_124331/Q$_DFF_P_",
+      "mp_ck_T032202"
+    ],
+    [
+      72.36200000000001,
+      "u.u_124311/Q$_DFF_P_",
+      "mp_ck_T023312"
+    ],
+    [
+      72.362,
+      "u.u_124350/Q$_DFF_P_",
+      "mp_ck_T032202"
+    ]
+  ],
+  "entry": [
+    {
+      "port": "ck",
+      "x": "138.252",
+      "y": "138.240",
+      "net": "ck"
+    }
+  ]
+}

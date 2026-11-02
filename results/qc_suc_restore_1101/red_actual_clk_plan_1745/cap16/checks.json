@@ -1,0 +1,192 @@
+{
+  "name": "cap16",
+  "scope": "PLAN MODEL of ACTUAL NEW PLACE fixed8269nodes/nativeCLKpins; inputframe conditional/unqualified, no ODB edit or CTS",
+  "assignment": {
+    "max_leaf_count": 16,
+    "all_3452_fixed_leaves_nonempty": true,
+    "originally_empty_leaves": 90,
+    "moved_sinks": 24516
+  },
+  "clock_nodes": 8269,
+  "sinks": 34225,
+  "missing": 0,
+  "duplicates": 0,
+  "max_actual_Y_to_CLK_L1_um": 15.76999999999998,
+  "sinks_gt40": 0,
+  "leaf_counts": [
+    1,
+    16
+  ],
+  "boundary_cases": {
+    "0": {
+      "TT": {
+        "mean": 296.37,
+        "leaf_mean_min": 288.36,
+        "leaf_mean_max": 301.44,
+        "window": 13.08,
+        "sink_min": 288.36,
+        "sink_max": 301.65,
+        "leaf_slew_in_max": 9.4,
+        "leaf_ct_ff": [
+          0.5,
+          12.1
+        ],
+        "leaf_out_slew_max": 19.7,
+        "estimated_clockwire_cap_fF": 11346.933970753427,
+        "buffer_input_cap_fF": 7045.5601050000005,
+        "native_DFFcap_fF": 16244.158293,
+        "primary_input_cap_fF": 0.9157430431500018,
+        "root_stub_L1_um": 0.4130000000000109,
+        "model_load_sum_fF": 34636.71606679658
+      },
+      "FF": {
+        "mean": 231.92,
+        "leaf_mean_min": 225.65,
+        "leaf_mean_max": 235.96,
+        "window": 10.31,
+        "sink_min": 225.65,
+        "sink_max": 236.34,
+        "leaf_slew_in_max": 6.8,
+        "leaf_ct_ff": [
+          0.6,
+          12.9
+        ],
+        "leaf_out_slew_max": 14.9,
+        "estimated_clockwire_cap_fF": 11346.933970753424,
+        "buffer_input_cap_fF": 7758.000607,
+        "native_DFFcap_fF": 17859.927412,
+        "primary_input_cap_fF": 1.0019010431500017,
+        "root_stub_L1_um": 0.4130000000000109,
+        "model_load_sum_fF": 36964.925687796574
+      }
+    },
+    "20": {
+      "TT": {
+        "mean": 303.46,
+        "leaf_mean_min": 295.45,
+        "leaf_mean_max": 308.52,
+        "window": 13.08,
+        "sink_min": 295.45,
+        "sink_max": 308.73,
+        "leaf_slew_in_max": 9.4,
+        "leaf_ct_ff": [
+          0.5,
+          12.1
+        ],
+        "leaf_out_slew_max": 19.7,
+        "estimated_clockwire_cap_fF": 11346.933970753427,
+        "buffer_input_cap_fF": 7045.5601050000005,
+        "native_DFFcap_fF": 16244.158293,
+        "primary_input_cap_fF": 0.9157430431500018,
+        "root_stub_L1_um": 0.4130000000000109,
+        "model_load_sum_fF": 34636.71606679658
+      },
+      "FF": {
+        "mean": 238.43,
+        "leaf_mean_min": 232.17,
+        "leaf_mean_max": 242.48,
+        "window": 10.31,
+        "sink_min": 232.17,
+        "sink_max": 242.86,
+        "leaf_slew_in_max": 6.8,
+        "leaf_ct_ff": [
+          0.6,
+          12.9
+        ],
+        "leaf_out_slew_max": 14.9,
+        "estimated_clockwire_cap_fF": 11346.933970753424,
+        "buffer_input_cap_fF": 7758.000607,
+        "native_DFFcap_fF": 17859.927412,
+        "primary_input_cap_fF": 1.0019010431500017,
+        "root_stub_L1_um": 0.4130000000000109,
+        "model_load_sum_fF": 36964.925687796574
+      }
+    },
+    "40": {
+      "TT": {
+        "mean": 310.57,
+        "leaf_mean_min": 302.56,
+        "leaf_mean_max": 315.63,
+        "window": 13.08,
+        "sink_min": 302.56,
+        "sink_max": 315.84,
+        "leaf_slew_in_max": 9.4,
+        "leaf_ct_ff": [
+          0.5,
+          12.1
+        ],
+        "leaf_out_slew_max": 19.7,
+        "estimated_clockwire_cap_fF": 11346.933970753427,
+        "buffer_input_cap_fF": 7045.5601050000005,
+        "native_DFFcap_fF": 16244.158293,
+        "primary_input_cap_fF": 0.9157430431500018,
+        "root_stub_L1_um": 0.4130000000000109,
+        "model_load_sum_fF": 34636.71606679658
+      },
+      "FF": {
+        "mean": 244.29,
+        "leaf_mean_min": 238.02,
+        "leaf_mean_max": 248.33,
+        "window": 10.31,
+        "sink_min": 238.02,
+        "sink_max": 248.71,
+        "leaf_slew_in_max": 6.8,
+        "leaf_ct_ff": [
+          0.6,
+          12.9
+        ],
+        "leaf_out_slew_max": 14.9,
+        "estimated_clockwire_cap_fF": 11346.933970753424,
+        "buffer_input_cap_fF": 7758.000607,
+        "native_DFFcap_fF": 17859.927412,
+        "primary_input_cap_fF": 1.0019010431500017,
+        "root_stub_L1_um": 0.4130000000000109,
+        "model_load_sum_fF": 36964.925687796574
+      }
+    },
+    "60": {
+      "TT": {
+        "mean": 316.3,
+        "leaf_mean_min": 308.29,
+        "leaf_mean_max": 321.36,
+        "window": 13.08,
+        "sink_min": 308.29,
+        "sink_max": 321.57,
+        "leaf_slew_in_max": 9.4,
+        "leaf_ct_ff": [
+          0.5,
+          12.1
+        ],
+        "leaf_out_slew_max": 19.7,
+        "estimated_clockwire_cap_fF": 11346.933970753427,
+        "buffer_input_cap_fF": 7045.5601050000005,
+        "native_DFFcap_fF": 16244.158293,
+        "primary_input_cap_fF": 0.9157430431500018,
+        "root_stub_L1_um": 0.4130000000000109,
+        "model_load_sum_fF": 34636.71606679658
+      },
+      "FF": {
+        "mean": 248.41,
+        "leaf_mean_min": 242.15,
+        "leaf_mean_max": 252.46,
+        "window": 10.31,
+        "sink_min": 242.15,
+        "sink_max": 252.84,
+        "leaf_slew_in_max": 6.8,
+        "leaf_ct_ff": [
+          0.6,
+          12.9
+        ],
+        "leaf_out_slew_max": 14.9,
+        "estimated_clockwire_cap_fF": 11346.933970753424,
+        "buffer_input_cap_fF": 7758.000607,
+        "native_DFFcap_fF": 17859.927412,
+        "primary_input_cap_fF": 1.0019010431500017,
+        "root_stub_L1_um": 0.4130000000000109,
+        "model_load_sum_fF": 36964.925687796574
+      }
+    }
+  },
+  "relative_model_gate": true,
+  "absolute_frame_qualified": false
+}

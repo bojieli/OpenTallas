@@ -1,0 +1,8 @@
+{
+  "shared_model": "existing R7 NLDM+Elmore equations, centrepoint buffer geometry and exact native CLKpin sinks",
+  "only_change": "Expose root input arrival/slew boundary; no sizing/topology/threshold/RC calibration change",
+  "before_sha256": "9c9c4c75796d00cadefec4b8c3fba603d03861e71bde7e09c42a0192ea128220",
+  "after_sha256": "2f4126742f9e2ea4a4bb442e3ff8a9f64c588af88827920d98769658e6cfe5ef",
+  "root_boundary_qualified": false,
+  "input_cases": "0/20/40/60ps hypotheses only; no source-backed parent input waveform or absolute frame yet"
+}
