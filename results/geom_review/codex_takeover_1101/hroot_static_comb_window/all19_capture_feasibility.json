@@ -1,0 +1,439 @@
+[
+ {
+  "capture": "u_bound.u_u_efault.cnt\\[3\\]$_DFFE_PN0N_",
+  "old_worst": "u_bound.u_rrl_101/q$_DFF_P_",
+  "old_distance": 461.808,
+  "class": "shared_reset_relay_101_to_fault_or_bin_eq",
+  "actual_upstream_flops": 5,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 231.849,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1168.533,
+   1881.4950000000001,
+   551.043,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_u_efault.cnt\\[2\\]$_DFFE_PN0N_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_u_efault.cnt\\[2\\]$_DFFE_PN0N_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[941\\]$_DFF_P_",
+  "old_worst": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[45\\]$_DFF_P_",
+  "old_distance": 422.604,
+  "class": "kvs_ctl_landing_to_bin_q_or_eq",
+  "actual_upstream_flops": 1,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 0.0,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1928.9070000000002,
+   2738.907,
+   1003.077,
+   1813.077
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[45\\]$_DFF_P_",
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[45\\]$_DFF_P_",
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[45\\]$_DFF_P_",
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[45\\]$_DFF_P_"
+  ],
+  "contains_reset101": false
+ },
+ {
+  "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[907\\]$_DFF_P_",
+  "old_worst": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[11\\]$_DFF_P_",
+  "old_distance": 429.57,
+  "class": "kvs_ctl_landing_to_bin_q_or_eq",
+  "actual_upstream_flops": 1,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 0.0,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1926.6390000000001,
+   2736.639,
+   1002.969,
+   1812.969
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[11\\]$_DFF_P_",
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[11\\]$_DFF_P_",
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[11\\]$_DFF_P_",
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[11\\]$_DFF_P_"
+  ],
+  "contains_reset101": false
+ },
+ {
+  "capture": "u_bound.u_u_efault.cnt\\[4\\]$_DFFE_PN0N_",
+  "old_worst": "u_bound.u_rrl_101/q$_DFF_P_",
+  "old_distance": 460.89,
+  "class": "shared_reset_relay_101_to_fault_or_bin_eq",
+  "actual_upstream_flops": 6,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 231.849,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1168.533,
+   1881.4950000000001,
+   551.043,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_u_efault.cnt\\[2\\]$_DFFE_PN0N_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_u_efault.cnt\\[2\\]$_DFFE_PN0N_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_bin_i_fch_pc_Q_N_q/eq$_DFF_PN0_",
+  "old_worst": "u_bound.u_cland_i_fch_pc_Q_N_q/u_ring.dch\\[0\\].u_dsel/y\\[1\\]$_DFF_P_",
+  "old_distance": 533.952,
+  "class": "other_landing_to_bin_eq",
+  "actual_upstream_flops": 2,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 287.604,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1071.4950000000001,
+   1306.287,
+   440.9370000000001,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_cland_i_fch_pc_Q_N_q/u_ring.dch\\[0\\].u_dsel/y\\[1\\]$_DFF_P_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_fch_pc_Q_N_q/u_ring.dch\\[0\\].u_dsel/y\\[1\\]$_DFF_P_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_bin_i_host_die_rst_n/eq$_DFF_PN0_",
+  "old_worst": "u_bound.u_rrl_101/q$_DFF_P_",
+  "old_distance": 559.818,
+  "class": "shared_reset_relay_101_to_fault_or_bin_eq",
+  "actual_upstream_flops": 2,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 500.985,
+  "capture_alone_405_feasible": false,
+  "feasible_uv": [
+   1705.725,
+   1881.4950000000001,
+   1089.315,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_host_die_rst_n/u_ring.dch\\[0\\].u_dsel/y\\[1\\]$_DFF_P_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_host_die_rst_n/u_ring.dch\\[0\\].u_dsel/y\\[1\\]$_DFF_P_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_bin_i_host_hbm_rst_n/eq$_DFF_PN0_",
+  "old_worst": "u_bound.u_rrl_101/q$_DFF_P_",
+  "old_distance": 550.692,
+  "class": "shared_reset_relay_101_to_fault_or_bin_eq",
+  "actual_upstream_flops": 2,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 494.64,
+  "capture_alone_405_feasible": false,
+  "feasible_uv": [
+   1713.0149999999999,
+   1881.4950000000001,
+   1076.625,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_host_hbm_rst_n/u_ring.dch\\[0\\].u_dsel/y\\[1\\]$_DFF_P_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_host_hbm_rst_n/u_ring.dch\\[0\\].u_dsel/y\\[1\\]$_DFF_P_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/eq$_DFF_PN0_",
+  "old_worst": "u_bound.u_rrl_101/q$_DFF_P_",
+  "old_distance": 561.546,
+  "class": "shared_reset_relay_101_to_fault_or_bin_eq",
+  "actual_upstream_flops": 2,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 410.454,
+  "capture_alone_405_feasible": false,
+  "feasible_uv": [
+   1104.003,
+   1881.4950000000001,
+   908.2529999999999,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[43\\]$_DFF_P_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[43\\]$_DFF_P_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_bin_i_kvpc_Q_N_pc__fo/eq$_DFF_PN0_",
+  "old_worst": "u_bound.u_cland_i_kvpc_Q_N_pc__fo/u_ring.dch\\[0\\].u_dsel/y\\[1\\]$_DFF_P_",
+  "old_distance": 534.276,
+  "class": "other_landing_to_bin_eq",
+  "actual_upstream_flops": 2,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 282.204,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1071.4950000000001,
+   1317.087,
+   451.7370000000001,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_cland_i_kvpc_Q_N_pc__fo/u_ring.dch\\[0\\].u_dsel/y\\[1\\]$_DFF_P_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_kvpc_Q_N_pc__fo/u_ring.dch\\[0\\].u_dsel/y\\[1\\]$_DFF_P_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[804\\]$_DFF_P_",
+  "old_worst": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[12\\].u_dsel/y\\[36\\]$_DFF_P_",
+  "old_distance": 441.018,
+  "class": "kvs_ctl_landing_to_bin_q_or_eq",
+  "actual_upstream_flops": 1,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 0.0,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1923.0749999999998,
+   2733.075,
+   999.405,
+   1809.405
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[12\\].u_dsel/y\\[36\\]$_DFF_P_",
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[12\\].u_dsel/y\\[36\\]$_DFF_P_",
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[12\\].u_dsel/y\\[36\\]$_DFF_P_",
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[12\\].u_dsel/y\\[36\\]$_DFF_P_"
+  ],
+  "contains_reset101": false
+ },
+ {
+  "capture": "u_bound.u_bout_o_fch_hroot_Q_q/q$_DFF_P_",
+  "old_worst": "u_bound.u_u_fch.q$_DFF_P_",
+  "old_distance": 629.694,
+  "class": "fch_source_to_output_face_ff",
+  "actual_upstream_flops": 1,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 0.0,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1094.391,
+   1904.391,
+   627.0210000000002,
+   1437.0210000000002
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_u_fch.q$_DFF_P_",
+   "u_bound.u_u_fch.q$_DFF_P_",
+   "u_bound.u_u_fch.q$_DFF_P_",
+   "u_bound.u_u_fch.q$_DFF_P_"
+  ],
+  "contains_reset101": false
+ },
+ {
+  "capture": "u_bound.u_u_efault.cnt\\[5\\]$_DFFE_PN0N_",
+  "old_worst": "u_bound.u_rrl_101/q$_DFF_P_",
+  "old_distance": 462.348,
+  "class": "shared_reset_relay_101_to_fault_or_bin_eq",
+  "actual_upstream_flops": 7,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 231.849,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1169.883,
+   1881.4950000000001,
+   551.043,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_u_efault.cnt\\[5\\]$_DFFE_PN0N_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_u_efault.cnt\\[2\\]$_DFFE_PN0N_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_u_efault.cnt\\[0\\]$_DFFE_PN0N_",
+  "old_worst": "u_bound.u_rrl_101/q$_DFF_P_",
+  "old_distance": 461.538,
+  "class": "shared_reset_relay_101_to_fault_or_bin_eq",
+  "actual_upstream_flops": 7,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 231.849,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1169.883,
+   1881.4950000000001,
+   551.043,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_u_efault.cnt\\[5\\]$_DFFE_PN0N_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_u_efault.cnt\\[2\\]$_DFFE_PN0N_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_u_efault.cnt\\[1\\]$_DFFE_PN0N_",
+  "old_worst": "u_bound.u_rrl_101/q$_DFF_P_",
+  "old_distance": 462.618,
+  "class": "shared_reset_relay_101_to_fault_or_bin_eq",
+  "actual_upstream_flops": 7,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 231.849,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1169.883,
+   1881.4950000000001,
+   551.043,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_u_efault.cnt\\[5\\]$_DFFE_PN0N_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_u_efault.cnt\\[2\\]$_DFFE_PN0N_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_u_efault.cnt\\[2\\]$_DFFE_PN0N_",
+  "old_worst": "u_bound.u_rrl_101/q$_DFF_P_",
+  "old_distance": 463.698,
+  "class": "shared_reset_relay_101_to_fault_or_bin_eq",
+  "actual_upstream_flops": 7,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 231.849,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1169.883,
+   1881.4950000000001,
+   551.043,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_u_efault.cnt\\[5\\]$_DFFE_PN0N_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_u_efault.cnt\\[2\\]$_DFFE_PN0N_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_u_efault.fault$_DFF_PN0_",
+  "old_worst": "u_bound.u_rrl_101/q$_DFF_P_",
+  "old_distance": 465.156,
+  "class": "shared_reset_relay_101_to_fault_or_bin_eq",
+  "actual_upstream_flops": 17,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 280.773,
+  "capture_alone_405_feasible": true,
+  "feasible_uv": [
+   1272.807,
+   1824.795,
+   648.8910000000001,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_bin_i_slg_Q_N_o_ctl/eq$_DFF_PN0_",
+   "u_bound.u_bin_i_host_hbm_rst_n/eq$_DFF_PN0_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_bin_i_kvpc_Q_N_o_next/eq$_DFF_PN0_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_bin_i_idsrc_Q_y/eq$_DFF_PN0_",
+  "old_worst": "u_bound.u_cland_i_idsrc_Q_y/u_ring.dch\\[0\\].u_dsel/y\\[2\\]$_DFF_P_",
+  "old_distance": 626.076,
+  "class": "other_landing_to_bin_eq",
+  "actual_upstream_flops": 2,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 443.097,
+  "capture_alone_405_feasible": false,
+  "feasible_uv": [
+   1851.3090000000002,
+   1881.4950000000001,
+   973.539,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_idsrc_Q_y/u_ring.dch\\[0\\].u_dsel/y\\[2\\]$_DFF_P_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_idsrc_Q_y/u_ring.dch\\[0\\].u_dsel/y\\[2\\]$_DFF_P_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_",
+  "old_worst": "u_bound.u_cland_i_seq__g_fan_N__u_fan_kc/u_ring.dch\\[0\\].u_dsel/y\\[33\\]$_DFF_P_",
+  "old_distance": 1010.34,
+  "class": "other_landing_to_bin_eq",
+  "actual_upstream_flops": 2,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 591.165,
+  "capture_alone_405_feasible": false,
+  "feasible_uv": [
+   2253.825,
+   1881.4950000000001,
+   638.415,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_seq__g_fan_N__u_fan_kc/u_ring.dch\\[0\\].u_dsel/y\\[33\\]$_DFF_P_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_seq__g_fan_N__u_fan_kc/u_ring.dch\\[0\\].u_dsel/y\\[33\\]$_DFF_P_"
+  ],
+  "contains_reset101": true
+ },
+ {
+  "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/eq$_DFF_PN0_",
+  "old_worst": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[17\\].u_dsel/y\\[30\\]$_DFF_P_",
+  "old_distance": 757.08,
+  "class": "kvs_ctl_landing_to_bin_q_or_eq",
+  "actual_upstream_flops": 2,
+  "direct_upstream_ports": [],
+  "best_free_capture_radius_um": 458.217,
+  "capture_alone_405_feasible": false,
+  "feasible_uv": [
+   1987.929,
+   1881.4950000000001,
+   958.4189999999999,
+   897.345
+  ],
+  "limiting_endpoints": [
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[17\\].u_dsel/y\\[30\\]$_DFF_P_",
+   "u_bound.u_rrl_101/q$_DFF_P_",
+   "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[17\\].u_dsel/y\\[30\\]$_DFF_P_"
+  ],
+  "contains_reset101": true
+ }
+]
