@@ -1,0 +1,853 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/3_2_place_iop.odb
+read_sdc /work/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/face_flops.tcl
+OT_MASTER_SLICE type=qfd_dv_s5_sc2_leaf blockages_new=0 obstructions_new=0 bays=0 entry_pins_placed=0 entry_pins_unbound=0
+OT_CORE_INFRA cells=2389 ports=0 bay_cells=0 added_data_cycles=0 added_reset_cycles=0
+OT_FACE_FLOPS placed 570 pin registers FIRM at their faces (0 signal ports without a flop within 2 buffers; 0 cells duplicated for output ports sharing a merged flop); 0 ft stations j>=1 FIRM on their routes (0 missing)
+Took 34 seconds: source /work/face_flops.tcl
+[INFO RSZ-0026] Removed 866 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 356 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 215 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.45 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+OT_GPL_SPARSE movable util 36.487 % (threshold 2.000 %): GPL modes unchanged
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  4.320  4.320 ) ( 240.192 509.760 ) um
+[INFO GPL-0016] Core area:                  119219.144 um^2
+[INFO GPL-0036] Movable instances area:      42927.981 um^2
+[INFO GPL-0037] Total instances area:        44495.623 um^2
+[INFO GPL-0035] Pin density area adjust:       981.318 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:            374651
+[INFO GPL-0007] Movable instances:              359515
+[INFO GPL-0008] Fixed instances:                 15136
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                 369177
+[INFO GPL-0011] Number of pins:                1009390
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 244.560 514.080 ) um
+[INFO GPL-0013] Placement BBox: (  4.320  4.320 ) ( 240.192 509.760 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                119219.144 um^2
+[INFO GPL-0017] Fixed instances area:         1567.642 um^2
+[INFO GPL-0018] Movable instances area:      43909.299 um^2
+[INFO GPL-0019] Utilization:                    37.321 %
+[INFO GPL-0020] Standard cells area:         43909.299 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 359515	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00081973 HPWL: 1372838148
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00003579 HPWL: 762626405
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00003856 HPWL: 758875906
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00003177 HPWL: 755271583
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00003084 HPWL: 750781936
+[InitialPlace]  Iter: 6 conjugate gradient residual: 0.00003000 HPWL: 748858601
+[InitialPlace]  Iter: 7 conjugate gradient residual: 0.00003379 HPWL: 747516321
+[InitialPlace]  Iter: 8 conjugate gradient residual: 0.00002873 HPWL: 747308127
+[InitialPlace]  Iter: 9 conjugate gradient residual: 0.00002524 HPWL: 746437107
+[InitialPlace]  Iter: 10 conjugate gradient residual: 0.00002539 HPWL: 746702151
+[InitialPlace]  Iter: 11 conjugate gradient residual: 0.00002370 HPWL: 745917952
+[InitialPlace]  Iter: 12 conjugate gradient residual: 0.00002331 HPWL: 746090597
+[InitialPlace]  Iter: 13 conjugate gradient residual: 0.00002342 HPWL: 745588188
+[InitialPlace]  Iter: 14 conjugate gradient residual: 0.00002171 HPWL: 745713520
+[InitialPlace]  Iter: 15 conjugate gradient residual: 0.00001910 HPWL: 745335516
+[InitialPlace]  Iter: 16 conjugate gradient residual: 0.00001904 HPWL: 745496190
+[InitialPlace]  Iter: 17 conjugate gradient residual: 0.00003597 HPWL: 745214965
+[InitialPlace]  Iter: 18 conjugate gradient residual: 0.00001238 HPWL: 745207625
+[InitialPlace]  Iter: 19 conjugate gradient residual: 0.00001245 HPWL: 745022227
+[InitialPlace]  Iter: 20 conjugate gradient residual: 0.00001162 HPWL: 745195097
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.4500
+[INFO GPL-0024] Movable insts average area:      0.122 um^2
+[INFO GPL-0025] Ideal bin area:                  0.271 um^2
+[INFO GPL-0026] Ideal bin count:                439260
+[INFO GPL-0027] Total bin area:             119219.144 um^2
+[INFO GPL-0028] Bin count (X, Y):         256 ,    512
+[INFO GPL-0029] Bin size (W * H):       0.921 *  0.987 um
+[INFO GPL-0030] Number of bins:                 131072
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9932 |  5.120334e+05 |   +0.00% |  3.50e-15 |      
+       10 |   0.9855 |  6.316089e+05 |  +23.35% |  5.61e-15 |      
+       20 |   0.9811 |  6.434200e+05 |   +1.87% |  9.11e-15 |      
+       30 |   0.9770 |  6.587455e+05 |   +2.38% |  1.48e-14 |      
+       40 |   0.9737 |  6.744524e+05 |   +2.38% |  2.41e-14 |      
+       50 |   0.9712 |  6.883949e+05 |   +2.07% |  3.92e-14 |      
+       60 |   0.9696 |  6.992634e+05 |   +1.58% |  6.37e-14 |      
+       70 |   0.9684 |  7.085046e+05 |   +1.32% |  1.04e-13 |      
+       80 |   0.9666 |  7.160305e+05 |   +1.06% |  1.69e-13 |      
+       90 |   0.9657 |  7.215550e+05 |   +0.77% |  2.75e-13 |      
+      100 |   0.9648 |  7.254766e+05 |   +0.54% |  4.47e-13 |      
+      110 |   0.9639 |  7.276739e+05 |   +0.30% |  7.29e-13 |      
+      120 |   0.9629 |  7.283200e+05 |   +0.09% |  1.19e-12 |      
+      130 |   0.9621 |  7.280896e+05 |   -0.03% |  1.93e-12 |      
+      140 |   0.9615 |  7.280131e+05 |   -0.01% |  3.15e-12 |      
+      150 |   0.9609 |  7.289161e+05 |   +0.12% |  5.13e-12 |      
+      160 |   0.9601 |  7.318271e+05 |   +0.40% |  8.35e-12 |      
+      170 |   0.9587 |  7.380171e+05 |   +0.85% |  1.36e-11 |      
+      180 |   0.9567 |  7.488827e+05 |   +1.47% |  2.21e-11 |      
+      190 |   0.9537 |  7.664220e+05 |   +2.34% |  3.60e-11 |      
+      200 |   0.9487 |  7.928232e+05 |   +3.44% |  5.84e-11 |      
+      210 |   0.9410 |  8.309885e+05 |   +4.81% |  9.48e-11 |      
+      220 |   0.9293 |  8.838860e+05 |   +6.37% |  1.53e-10 |      
+      230 |   0.9114 |  9.535120e+05 |   +7.88% |  2.48e-10 |      
+      240 |   0.8860 |  1.040428e+06 |   +9.12% |  4.01e-10 |      
+      250 |   0.8537 |  1.144148e+06 |   +9.97% |  6.45e-10 |      
+      260 |   0.8150 |  1.259424e+06 |  +10.08% |  1.04e-09 |      
+      270 |   0.7737 |  1.374127e+06 |   +9.11% |  1.67e-09 |      
+      280 |   0.7375 |  1.473540e+06 |   +7.23% |  2.69e-09 |      
+      290 |   0.7072 |  1.548873e+06 |   +5.11% |  4.34e-09 |      
+      300 |   0.6825 |  1.615469e+06 |   +4.30% |  7.01e-09 |      
+      310 |   0.6572 |  1.690137e+06 |   +4.62% |  1.13e-08 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 319, overflow: 0.633, keep resizer changes at: 1, HPWL: 1737672314
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    369177
+    final |     +0.3% |      83 |     516 |           316 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 179 slew violations.
+[INFO RSZ-0036] Found 4 capacitance violations.
+[INFO RSZ-0037] Found 299 long wires.
+[INFO RSZ-0039] Resized 83 instances.
+[INFO RSZ-0038] Inserted 516 buffers in 316 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |    331017
+    33100 |     +0.1% |       0 |      425 |    297917
+    66200 |     +0.1% |     121 |      743 |    264817
+    99300 |     +0.1% |     121 |      899 |    231717
+   132400 |     +0.2% |     136 |     1106 |    198617
+   165500 |     +0.2% |     147 |     1145 |    165517
+   198600 |     +0.2% |     152 |     1159 |    132417
+   231700 |     +0.2% |     152 |     1159 |     99317
+   264800 |     +0.2% |     175 |     1201 |     66217
+   297900 |     +0.1% |     324 |     1412 |     33117
+   331000 |     +0.1% |     516 |     1618 |        17
+    final |     +0.1% |     516 |     1618 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack 2.5322619e-11
+[INFO GPL-0107] Timing-driven: repair_design delta area: 166.211 um^2 (+0.38%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 1618 (+0.45%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 2134, deleted: 516
+[INFO GPL-0110] Timing-driven: new target density: 0.45141274
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      320 |   0.6280 |  1.744227e+06 |   +3.20% |  1.83e-08 |      
+      330 |   0.6087 |  1.776757e+06 |   +1.87% |  2.94e-08 |      
+[INFO GPL-0038] Routability snapshot saved at iter = 335
+      334 |   0.5984 |  1.773747e+06 |          |           |      
+      340 |   0.5777 |  1.796622e+06 |   +1.12% |  4.78e-08 |      
+      350 |   0.5376 |  1.869914e+06 |   +4.08% |  7.72e-08 |      
+      360 |   0.5037 |  1.904657e+06 |   +1.86% |  1.25e-07 |      
+      370 |   0.4674 |  1.833003e+06 |   -3.76% |  2.04e-07 |      
+      380 |   0.4223 |  1.860059e+06 |   +1.48% |  3.30e-07 |      
+      390 |   0.3746 |  1.810703e+06 |   -2.65% |  5.38e-07 |      
+      400 |   0.3318 |  1.787649e+06 |   -1.27% |  8.58e-07 |      
+[INFO GPL-0040] Routability iteration: 1
+[INFO GPL-0041] Total routing overflow: 199.4509
+[INFO GPL-0042] Number of overflowed tiles: 1648 (0.43%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.1016
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.0160
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.9320
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.8261
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.0588
+[INFO GPL-0048] Routing congestion (1.0588) lower than previous minimum (1e+30). Updating minimum.
+[INFO GPL-0086] Inflated area:                 158.246 um^2 (+0.36%)
+[INFO GPL-0052] Placement target density:       0.4514
+[INFO GPL-0076] Removing fillers, count: Before: 76753, After: 75409 (-1.75%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 9033.877, After: 8875.639 (-1.75%)
+[INFO GPL-0078] Removed fillers count: 1344, area removed: 158.189 um^2. Remaining area to be compensated by modifying density: 0.058 um^2
+[INFO GPL-0058] White space area:           117651.502 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      53109.387 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:            8875.639 um^2 (-1.75%)
+[INFO GPL-0061] Total non-inflated area:     53109.396 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         53267.642 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.4514
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      410 |   0.5958 |  1.776484e+06 |   -0.62% |  3.75e-08 |      
+      420 |   0.5614 |  1.811667e+06 |   +1.98% |  5.49e-08 |      
+      430 |   0.5326 |  1.864536e+06 |   +2.92% |  8.05e-08 |      
+      440 |   0.5102 |  1.844597e+06 |   -1.07% |  1.18e-07 |      
+      450 |   0.4808 |  1.790236e+06 |   -2.95% |  1.74e-07 |      
+      460 |   0.4441 |  1.817540e+06 |   +1.53% |  2.56e-07 |      
+      470 |   0.4102 |  1.769177e+06 |   -2.66% |  3.78e-07 |      
+      480 |   0.3797 |  1.738136e+06 |   -1.75% |  5.56e-07 |      
+      490 |   0.3415 |  1.707036e+06 |   -1.79% |  8.19e-07 |      
+      500 |   0.3047 |  1.703010e+06 |   -0.24% |  1.20e-06 |      
+[INFO GPL-0040] Routability iteration: 2
+[INFO GPL-0041] Total routing overflow: 139.6386
+[INFO GPL-0042] Number of overflowed tiles: 1150 (0.30%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.0596
+[INFO GPL-0044] Average top 1.0% routing congestion: 0.9782
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.8986
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.8012
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.0189
+[INFO GPL-0048] Routing congestion (1.0189) lower than previous minimum (1.059). Updating minimum.
+[INFO GPL-0086] Inflated area:                 117.183 um^2 (+0.26%)
+[INFO GPL-0052] Placement target density:       0.4514
+[INFO GPL-0076] Removing fillers, count: Before: 75409, After: 74414 (-1.32%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 8875.639, After: 8758.528 (-1.32%)
+[INFO GPL-0078] Removed fillers count: 995, area removed: 117.112 um^2. Remaining area to be compensated by modifying density: 0.072 um^2
+[INFO GPL-0058] White space area:           117651.502 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      53109.387 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:            8758.528 um^2 (-1.32%)
+[INFO GPL-0061] Total non-inflated area:     53109.467 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         53226.650 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.4514
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      510 |   0.5731 |  1.798855e+06 |   +5.63% |  4.88e-08 |      
+      520 |   0.5411 |  1.853054e+06 |   +3.01% |  7.15e-08 |      
+      530 |   0.5187 |  1.861763e+06 |   +0.47% |  1.05e-07 |      
+      540 |   0.4917 |  1.799964e+06 |   -3.32% |  1.55e-07 |      
+      550 |   0.4565 |  1.805983e+06 |   +0.33% |  2.28e-07 |      
+      560 |   0.4213 |  1.792791e+06 |   -0.73% |  3.35e-07 |      
+      570 |   0.3912 |  1.743408e+06 |   -2.75% |  4.93e-07 |      
+      580 |   0.3530 |  1.724177e+06 |   -1.10% |  7.26e-07 |      
+      590 |   0.3170 |  1.706612e+06 |   -1.02% |  1.07e-06 |      
+[INFO GPL-0040] Routability iteration: 3
+[INFO GPL-0041] Total routing overflow: 113.6760
+[INFO GPL-0042] Number of overflowed tiles: 1039 (0.27%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.0420
+[INFO GPL-0044] Average top 1.0% routing congestion: 0.9664
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.8913
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.7980
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.0042
+[INFO GPL-0050] Weighted routing congestion is lower than target routing congestion(1.0100), end routability optimization.
+[INFO GPL-0090] Routability finished. Target routing congestion achieved succesfully.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      600 |   0.2810 |  1.672803e+06 |   -1.98% |  1.58e-06 |      
+      610 |   0.2451 |  1.654342e+06 |   -1.10% |  2.32e-06 |      
+      620 |   0.2156 |  1.638297e+06 |   -0.97% |  3.42e-06 |      
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 628, overflow: 0.195, keep resizer changes at: 1, HPWL: 1621538217
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    370795
+    final |     +0.5% |      50 |     820 |           534 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 345 slew violations.
+[INFO RSZ-0036] Found 2 capacitance violations.
+[INFO RSZ-0037] Found 529 long wires.
+[INFO RSZ-0039] Resized 50 instances.
+[INFO RSZ-0038] Inserted 820 buffers in 534 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |    331017
+    33100 |     -0.1% |     425 |       47 |    297917
+    66200 |     -0.1% |     758 |      194 |    264817
+    99300 |     -0.2% |     916 |      208 |    231717
+   132400 |     -0.2% |    1138 |      360 |    198617
+   165500 |     -0.2% |    1189 |      417 |    165517
+   198600 |     -0.2% |    1209 |      448 |    132417
+   231700 |     -0.2% |    1209 |      448 |     99317
+   264800 |     -0.2% |    1283 |      496 |     66217
+   297900 |     -0.3% |    1694 |      735 |     33117
+   331000 |     -0.6% |    2438 |     1257 |        17
+    final |     -0.6% |    2438 |     1257 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -2.797046e-11
+[INFO GPL-0107] Timing-driven: repair_design delta area: -56.299 um^2 (-0.13%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -361 (-0.10%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 2077, deleted: 2438
+[INFO GPL-0110] Timing-driven: new target density: 0.4509349
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      630 |   0.1872 |  1.617066e+06 |   -1.30% |  5.03e-06 |      
+      640 |   0.1608 |  1.604918e+06 |   -0.75% |  7.41e-06 |      
+      650 |   0.1373 |  1.590106e+06 |   -0.92% |  1.09e-05 |      
+      660 |   0.1166 |  1.578001e+06 |   -0.76% |  1.61e-05 |      
+      670 |   0.0994 |  1.568315e+06 |   -0.61% |  2.37e-05 |      
+      670 |   0.0994 |  1.568315e+06 |          |  2.46e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 670
+[INFO GPL-1017] Routability mode iteration count: 258
+[INFO GPL-1005] Routability final weighted congestion: 0.7959
+[INFO GPL-1002] Placed Cell Area            44294.6406
+[INFO GPL-1003] Available Free Area         117651.5021
+[INFO GPL-1004] Minimum Feasible Density        0.3800 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.4183
+[INFO GPL-1008]     - For 80% usage of free space: 0.4706
+[INFO GPL-1009]     - For 50% usage of free space: 0.7530
+[INFO GPL-1011] Original area (um^2): 43909.30
+[INFO GPL-1012] Total routability artificial inflation: 275.43 (+0.63%)
+[INFO GPL-1013] Total timing-driven delta area: 109.91 (+0.25%)
+[INFO GPL-1014] Final placement area: 44294.64 (+0.88%)
+Took 658 seconds: global_placement -density 0.45 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Took 26 seconds: estimate_parasitics -placement
+Report metrics stage 3, global place...
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 44610 um^2 37% utilization.
+write_db /work/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/3_3_place_gp.odb
+Elapsed time: 14:44.99[h:]min:sec. CPU time: user 1042.26 sys 23.49 (120%). Peak memory: 4555272KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb          884           4448 d0c759b02031d10a9ed4
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_4_place_resized resize
+Running resize.tcl, stage 3_4_place_resized
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/3_3_place_gp.odb
+read_sdc /work/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/drv.tcl
+estimate_parasitics -placement
+Took 28 seconds: estimate_parasitics -placement
+Perform buffer insertion and gate resizing...
+repair_design -verbose -cap_margin 20 -slew_margin 20
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    370434
+     1000 |     +0.0% |       0 |       0 |             0 |    369434
+     2000 |     +0.0% |       0 |       0 |             0 |    368434
+     3000 |     +0.0% |       0 |       0 |             0 |    367434
+     4000 |     +0.0% |       0 |       0 |             0 |    366434
+     5000 |     +0.0% |       0 |       0 |             0 |    365434
+     6000 |     +0.0% |       0 |       0 |             0 |    364434
+     7000 |     +0.0% |       0 |       0 |             0 |    363434
+     8000 |     +0.0% |       0 |       0 |             0 |    362434
+     9000 |     +0.0% |       0 |       0 |             0 |    361434
+    10000 |     +0.0% |       0 |       2 |             1 |    360434
+    11000 |     +0.0% |       0 |       2 |             1 |    359434
+    12000 |     +0.0% |       0 |       2 |             1 |    358434
+    13000 |     +0.0% |       0 |       2 |             1 |    357434
+    14000 |     +0.0% |       0 |       2 |             1 |    356434
+    15000 |     +0.0% |       0 |       2 |             1 |    355434
+    16000 |     +0.0% |       0 |       2 |             1 |    354434
+    17000 |     +0.0% |       0 |       4 |             2 |    353434
+    18000 |     +0.0% |       0 |       4 |             2 |    352434
+    19000 |     +0.0% |       0 |       4 |             2 |    351434
+    20000 |     +0.0% |       0 |       4 |             2 |    350434
+    21000 |     +0.0% |       0 |       4 |             2 |    349434
+    22000 |     +0.0% |       0 |       4 |             2 |    348434
+    23000 |     +0.0% |       0 |       4 |             2 |    347434
+    24000 |     +0.0% |       0 |       4 |             2 |    346434
+    25000 |     +0.0% |       0 |       4 |             2 |    345434
+    26000 |     +0.0% |       0 |       4 |             2 |    344434
+    27000 |     +0.0% |       0 |       4 |             2 |    343434
+    28000 |     +0.0% |       0 |       4 |             2 |    342434
+    29000 |     +0.0% |       0 |       4 |             2 |    341434
+    30000 |     +0.0% |       0 |       4 |             2 |    340434
+    31000 |     +0.0% |       0 |       4 |             2 |    339434
+    32000 |     +0.0% |       0 |       4 |             2 |    338434
+    33000 |     +0.0% |       0 |       4 |             2 |    337434
+    34000 |     +0.0% |       0 |       4 |             2 |    336434
+    35000 |     +0.0% |       0 |       4 |             2 |    335434
+    36000 |     +0.0% |       0 |       4 |             2 |    334434
+    37000 |     +0.0% |       0 |       4 |             2 |    333434
+    38000 |     +0.0% |       0 |       4 |             2 |    332434
+    39000 |     +0.0% |       0 |       4 |             2 |    331434
+    40000 |     +0.0% |       0 |       4 |             2 |    330434
+    41000 |     +0.0% |       0 |       4 |             2 |    329434
+    42000 |     +0.0% |       0 |       4 |             2 |    328434
+    43000 |     +0.0% |       0 |       4 |             2 |    327434
+    44000 |     +0.0% |       0 |       4 |             2 |    326434
+    45000 |     +0.0% |       0 |       4 |             2 |    325434
+    46000 |     +0.0% |       0 |       4 |             2 |    324434
+    47000 |     +0.0% |       0 |       4 |             2 |    323434
+    48000 |     +0.0% |       0 |       4 |             2 |    322434
+    49000 |     +0.0% |       0 |       4 |             2 |    321434
+    50000 |     +0.0% |       0 |       4 |             2 |    320434
+    51000 |     +0.0% |       0 |       4 |             2 |    319434
+    52000 |     +0.0% |       0 |       4 |             2 |    318434
+    53000 |     +0.0% |       0 |       4 |             2 |    317434
+    54000 |     +0.0% |       0 |       4 |             2 |    316434
+    55000 |     +0.0% |       0 |       4 |             2 |    315434
+    56000 |     +0.0% |       0 |       4 |             2 |    314434
+    57000 |     +0.0% |       0 |       4 |             2 |    313434
+    58000 |     +0.0% |       0 |       4 |             2 |    312434
+    59000 |     +0.0% |       0 |       4 |             2 |    311434
+    60000 |     +0.0% |       0 |       4 |             2 |    310434
+    61000 |     +0.0% |       0 |       4 |             2 |    309434
+    62000 |     +0.0% |       0 |       4 |             2 |    308434
+    63000 |     +0.0% |       0 |       4 |             2 |    307434
+    64000 |     +0.0% |       0 |       4 |             2 |    306434
+    65000 |     +0.0% |       0 |       4 |             2 |    305434
+    66000 |     +0.0% |       0 |       4 |             2 |    304434
+    67000 |     +0.0% |       0 |       4 |             2 |    303434
+    68000 |     +0.0% |       0 |       4 |             2 |    302434
+    69000 |     +0.0% |       0 |       4 |             2 |    301434
+    70000 |     +0.0% |       0 |       4 |             2 |    300434
+    71000 |     +0.0% |       0 |       4 |             2 |    299434
+    72000 |     +0.0% |       0 |       4 |             2 |    298434
+    73000 |     +0.0% |       0 |       4 |             2 |    297434
+    74000 |     +0.0% |       0 |       4 |             2 |    296434
+    75000 |     +0.0% |       0 |       4 |             2 |    295434
+    76000 |     +0.0% |       0 |       4 |             2 |    294434
+    77000 |     +0.0% |       0 |       4 |             2 |    293434
+    78000 |     +0.0% |       0 |       4 |             2 |    292434
+    79000 |     +0.0% |       0 |       4 |             2 |    291434
+    80000 |     +0.0% |       0 |       4 |             2 |    290434
+    81000 |     +0.0% |       0 |       4 |             2 |    289434
+    82000 |     +0.0% |       0 |       4 |             2 |    288434
+    83000 |     +0.0% |       0 |       4 |             2 |    287434
+    84000 |     +0.0% |       0 |       4 |             2 |    286434
+    85000 |     +0.0% |       0 |       4 |             2 |    285434
+    86000 |     +0.0% |       0 |       4 |             2 |    284434
+    87000 |     +0.0% |       0 |       4 |             2 |    283434
+    88000 |     +0.0% |       0 |       4 |             2 |    282434
+    89000 |     +0.0% |       0 |       4 |             2 |    281434
+    90000 |     +0.0% |       0 |       4 |             2 |    280434
+    91000 |     +0.0% |       0 |       4 |             2 |    279434
+    92000 |     +0.0% |       0 |       4 |             2 |    278434
+    93000 |     +0.0% |       0 |       4 |             2 |    277434
+    94000 |     +0.0% |       0 |       4 |             2 |    276434
+    95000 |     +0.0% |       0 |       4 |             2 |    275434
+    96000 |     +0.0% |       0 |       4 |             2 |    274434
+    97000 |     +0.0% |       0 |       4 |             2 |    273434
+    98000 |     +0.0% |       0 |       4 |             2 |    272434
+    99000 |     +0.0% |       0 |       4 |             2 |    271434
+   100000 |     +0.0% |       0 |       4 |             2 |    270434
+   101000 |     +0.0% |       0 |       4 |             2 |    269434
+   102000 |     +0.0% |       0 |       4 |             2 |    268434
+   103000 |     +0.0% |       0 |       4 |             2 |    267434
+   104000 |     +0.0% |       0 |       4 |             2 |    266434
+   105000 |     +0.0% |       0 |       4 |             2 |    265434
+   106000 |     +0.0% |       0 |       4 |             2 |    264434
+   107000 |     +0.0% |       0 |       4 |             2 |    263434
+   108000 |     +0.0% |       0 |       4 |             2 |    262434
+   109000 |     +0.0% |       0 |       4 |             2 |    261434
+   110000 |     +0.0% |       0 |       4 |             2 |    260434
+   111000 |     +0.0% |       0 |       4 |             2 |    259434
+   112000 |     +0.0% |       0 |       4 |             2 |    258434
+   113000 |     +0.0% |       0 |       4 |             2 |    257434
+   114000 |     +0.0% |       0 |       4 |             2 |    256434
+   115000 |     +0.0% |       0 |       4 |             2 |    255434
+   116000 |     +0.0% |       0 |       4 |             2 |    254434
+   117000 |     +0.0% |       0 |       4 |             2 |    253434
+   118000 |     +0.0% |       0 |       4 |             2 |    252434
+   119000 |     +0.0% |       0 |       4 |             2 |    251434
+   120000 |     +0.0% |       0 |       4 |             2 |    250434
+   121000 |     +0.0% |       0 |       4 |             2 |    249434
+   122000 |     +0.0% |       0 |       4 |             2 |    248434
+   123000 |     +0.0% |       0 |       4 |             2 |    247434
+   124000 |     +0.0% |       0 |       4 |             2 |    246434
+   125000 |     +0.0% |       0 |       4 |             2 |    245434
+   126000 |     +0.0% |       0 |       4 |             2 |    244434
+   127000 |     +0.0% |       0 |       4 |             2 |    243434
+   128000 |     +0.0% |       0 |       4 |             2 |    242434
+   129000 |     +0.0% |       0 |       4 |             2 |    241434
+   130000 |     +0.0% |       0 |       4 |             2 |    240434
+   131000 |     +0.0% |       0 |       4 |             2 |    239434
+   132000 |     +0.0% |       0 |       4 |             2 |    238434
+   133000 |     +0.0% |       0 |       4 |             2 |    237434
+   134000 |     +0.0% |       0 |       4 |             2 |    236434
+   135000 |     +0.0% |       0 |       4 |             2 |    235434
+   136000 |     +0.0% |       0 |       4 |             2 |    234434
+   137000 |     +0.0% |       0 |       4 |             2 |    233434
+   138000 |     +0.0% |       0 |       5 |             3 |    232434
+   139000 |     +0.0% |       0 |       5 |             3 |    231434
+   140000 |     +0.0% |       0 |       5 |             3 |    230434
+   141000 |     +0.0% |       0 |       5 |             3 |    229434
+   142000 |     +0.0% |       0 |       5 |             3 |    228434
+   143000 |     +0.0% |       0 |       5 |             3 |    227434
+   144000 |     +0.0% |       0 |       5 |             3 |    226434
+   145000 |     +0.0% |       0 |       5 |             3 |    225434
+   146000 |     +0.0% |       0 |       5 |             3 |    224434
+   147000 |     +0.0% |       0 |       5 |             3 |    223434
+   148000 |     +0.0% |       0 |       5 |             3 |    222434
+   149000 |     +0.0% |       0 |       5 |             3 |    221434
+   150000 |     +0.0% |       0 |       5 |             3 |    220434
+   151000 |     +0.0% |       0 |       5 |             3 |    219434
+   152000 |     +0.0% |       0 |       5 |             3 |    218434
+   153000 |     +0.0% |       0 |       5 |             3 |    217434
+   154000 |     +0.0% |       0 |       5 |             3 |    216434
+   155000 |     +0.0% |       0 |       5 |             3 |    215434
+   156000 |     +0.0% |       0 |       5 |             3 |    214434
+   157000 |     +0.0% |       0 |       5 |             3 |    213434
+   158000 |     +0.0% |       0 |       5 |             3 |    212434
+   159000 |     +0.0% |       0 |       5 |             3 |    211434
+   160000 |     +0.0% |       0 |       5 |             3 |    210434
+   161000 |     +0.0% |       0 |       6 |             4 |    209434
+   162000 |     +0.0% |       0 |       6 |             4 |    208434
+   163000 |     +0.0% |       0 |       6 |             4 |    207434
+   164000 |     +0.0% |       0 |       6 |             4 |    206434
+   165000 |     +0.0% |       0 |       6 |             4 |    205434
+   166000 |     +0.0% |       0 |       6 |             4 |    204434
+   167000 |     +0.0% |       0 |       6 |             4 |    203434
+   168000 |     +0.0% |       0 |       6 |             4 |    202434
+   169000 |     +0.0% |       0 |       6 |             4 |    201434
+   170000 |     +0.0% |       0 |       6 |             4 |    200434
+   171000 |     +0.0% |       0 |       6 |             4 |    199434
+   172000 |     +0.0% |       0 |       6 |             4 |    198434
+   173000 |     +0.0% |       0 |       6 |             4 |    197434
+   174000 |     +0.0% |       0 |       6 |             4 |    196434
+   175000 |     +0.0% |       0 |       6 |             4 |    195434
+   176000 |     +0.0% |       0 |       6 |             4 |    194434
+   177000 |     +0.0% |       0 |       6 |             4 |    193434
+   178000 |     +0.0% |       0 |       6 |             4 |    192434
+   179000 |     +0.0% |       0 |       6 |             4 |    191434
+   180000 |     +0.0% |       0 |       7 |             5 |    190434
+   181000 |     +0.0% |       0 |      13 |            11 |    189434
+   182000 |     +0.0% |       0 |      13 |            11 |    188434
+   183000 |     +0.0% |       0 |      14 |            12 |    187434
+   184000 |     +0.0% |       0 |      14 |            12 |    186434
+   185000 |     +0.0% |       0 |      14 |            12 |    185434
+   186000 |     +0.0% |       0 |      14 |            12 |    184434
+   187000 |     +0.0% |       0 |      14 |            12 |    183434
+   188000 |     +0.0% |       0 |      14 |            12 |    182434
+   189000 |     +0.0% |       0 |      14 |            12 |    181434
+   190000 |     +0.0% |       0 |      14 |            12 |    180434
+   191000 |     +0.0% |       0 |      14 |            12 |    179434
+   192000 |     +0.0% |       0 |      14 |            12 |    178434
+   193000 |     +0.0% |       0 |      14 |            12 |    177434
+   194000 |     +0.0% |       0 |      16 |            14 |    176434
+   195000 |     +0.0% |       0 |      16 |            14 |    175434
+   196000 |     +0.0% |       0 |      16 |            14 |    174434
+   197000 |     +0.0% |       0 |      16 |            14 |    173434
+   198000 |     +0.0% |       0 |      16 |            14 |    172434
+   199000 |     +0.0% |       0 |      16 |            14 |    171434
+   200000 |     +0.0% |       0 |      16 |            14 |    170434
+   201000 |     +0.0% |       0 |      16 |            14 |    169434
+   202000 |     +0.0% |       0 |      16 |            14 |    168434
+   203000 |     +0.0% |       0 |      16 |            14 |    167434
+   204000 |     +0.0% |       0 |      16 |            14 |    166434
+   205000 |     +0.0% |       0 |      16 |            14 |    165434
+   206000 |     +0.0% |       0 |      16 |            14 |    164434
+   207000 |     +0.0% |       0 |      16 |            14 |    163434
+   208000 |     +0.0% |       0 |      16 |            14 |    162434
+   209000 |     +0.0% |       0 |      16 |            14 |    161434
+   210000 |     +0.0% |       0 |      16 |            14 |    160434
+   211000 |     +0.0% |       0 |      16 |            14 |    159434
+   212000 |     +0.0% |       0 |      16 |            14 |    158434
+   213000 |     +0.0% |       0 |      16 |            14 |    157434
+   214000 |     +0.0% |       0 |      16 |            14 |    156434
+   215000 |     +0.0% |       0 |      16 |            14 |    155434
+   216000 |     +0.0% |       0 |      16 |            14 |    154434
+   217000 |     +0.0% |       0 |      16 |            14 |    153434
+   218000 |     +0.0% |       0 |      16 |            14 |    152434
+   219000 |     +0.0% |       0 |      16 |            14 |    151434
+   220000 |     +0.0% |       0 |      16 |            14 |    150434
+   221000 |     +0.0% |       0 |      16 |            14 |    149434
+   222000 |     +0.0% |       0 |      16 |            14 |    148434
+   223000 |     +0.0% |       0 |      16 |            14 |    147434
+   224000 |     +0.0% |       0 |      16 |            14 |    146434
+   225000 |     +0.0% |       0 |      16 |            14 |    145434
+   226000 |     +0.0% |       0 |      16 |            14 |    144434
+   227000 |     +0.0% |       0 |      16 |            14 |    143434
+   228000 |     +0.0% |       0 |      16 |            14 |    142434
+   229000 |     +0.0% |       0 |      16 |            14 |    141434
+   230000 |     +0.0% |       0 |      16 |            14 |    140434
+   231000 |     +0.0% |       0 |      16 |            14 |    139434
+   232000 |     +0.0% |       0 |      16 |            14 |    138434
+   233000 |     +0.0% |       0 |      16 |            14 |    137434
+   234000 |     +0.0% |       0 |      16 |            14 |    136434
+   235000 |     +0.0% |       0 |      16 |            14 |    135434
+   236000 |     +0.0% |       0 |      16 |            14 |    134434
+   237000 |     +0.0% |       0 |      16 |            14 |    133434
+   238000 |     +0.0% |       0 |      16 |            14 |    132434
+   239000 |     +0.0% |       0 |      16 |            14 |    131434
+   240000 |     +0.0% |       0 |      16 |            14 |    130434
+   241000 |     +0.0% |       0 |      16 |            14 |    129434
+   242000 |     +0.0% |       0 |      29 |            27 |    128434
+   243000 |     +0.0% |       0 |      37 |            35 |    127434
+   244000 |     +0.0% |       0 |      37 |            35 |    126434
+   245000 |     +0.0% |       0 |      37 |            35 |    125434
+   246000 |     +0.0% |       0 |      37 |            35 |    124434
+   247000 |     +0.0% |       0 |      37 |            35 |    123434
+   248000 |     +0.0% |       0 |      37 |            35 |    122434
+   249000 |     +0.0% |       0 |      40 |            38 |    121434
+   250000 |     +0.0% |       0 |      40 |            38 |    120434
+   251000 |     +0.0% |       0 |      40 |            38 |    119434
+   252000 |     +0.0% |       0 |      40 |            38 |    118434
+   253000 |     +0.0% |       0 |      40 |            38 |    117434
+   254000 |     +0.0% |       0 |      40 |            38 |    116434
+   255000 |     +0.0% |       0 |      40 |            38 |    115434
+   256000 |     +0.0% |       0 |      40 |            38 |    114434
+   257000 |     +0.0% |       0 |      40 |            38 |    113434
+   258000 |     +0.0% |       0 |      40 |            38 |    112434
+   259000 |     +0.0% |       0 |      40 |            38 |    111434
+   260000 |     +0.0% |       0 |      41 |            39 |    110434
+   261000 |     +0.0% |       0 |      41 |            39 |    109434
+   262000 |     +0.0% |       0 |      41 |            39 |    108434
+   263000 |     +0.0% |       0 |      41 |            39 |    107434
+   264000 |     +0.0% |       0 |      41 |            39 |    106434
+   265000 |     +0.0% |       0 |      41 |            39 |    105434
+   266000 |     +0.0% |       0 |      41 |            39 |    104434
+   267000 |     +0.0% |       0 |      41 |            39 |    103434
+   268000 |     +0.0% |       0 |      41 |            39 |    102434
+   269000 |     +0.0% |       0 |      41 |            39 |    101434
+   270000 |     +0.0% |       0 |      41 |            39 |    100434
+   271000 |     +0.0% |       0 |      41 |            39 |     99434
+   272000 |     +0.0% |       0 |      41 |            39 |     98434
+   273000 |     +0.0% |       0 |      41 |            39 |     97434
+   274000 |     +0.0% |       0 |      41 |            39 |     96434
+   275000 |     +0.0% |       0 |      41 |            39 |     95434
+   276000 |     +0.0% |       0 |      41 |            39 |     94434
+   277000 |     +0.0% |       0 |      41 |            39 |     93434
+   278000 |     +0.0% |       0 |      41 |            39 |     92434
+   279000 |     +0.0% |       0 |      41 |            39 |     91434
+   280000 |     +0.0% |       0 |      41 |            39 |     90434
+   281000 |     +0.0% |       0 |      41 |            39 |     89434
+   282000 |     +0.0% |       0 |      41 |            39 |     88434
+   283000 |     +0.0% |       0 |      41 |            39 |     87434
+   284000 |     +0.0% |       0 |      41 |            39 |     86434
+   285000 |     +0.0% |       0 |      41 |            39 |     85434
+   286000 |     +0.0% |       0 |      43 |            41 |     84434
+   287000 |     +0.0% |       0 |      43 |            41 |     83434
+   288000 |     +0.0% |       0 |      43 |            41 |     82434
+   289000 |     +0.0% |       0 |      44 |            42 |     81434
+   290000 |     +0.0% |       0 |      46 |            43 |     80434
+   291000 |     +0.0% |       0 |      46 |            43 |     79434
+   292000 |     +0.0% |       0 |      46 |            43 |     78434
+   293000 |     +0.0% |       0 |      46 |            43 |     77434
+   294000 |     +0.0% |       0 |      46 |            43 |     76434
+   295000 |     +0.0% |       0 |      46 |            43 |     75434
+   296000 |     +0.0% |       0 |      46 |            43 |     74434
+   297000 |     +0.0% |       0 |      46 |            43 |     73434
+   298000 |     +0.0% |       0 |      46 |            43 |     72434
+   299000 |     +0.0% |       0 |      46 |            43 |     71434
+   300000 |     +0.0% |       0 |      46 |            43 |     70434
+   301000 |     +0.0% |       0 |      46 |            43 |     69434
+   302000 |     +0.0% |       0 |      46 |            43 |     68434
+   303000 |     +0.0% |       0 |      46 |            43 |     67434
+   304000 |     +0.0% |       0 |      46 |            43 |     66434
+   305000 |     +0.0% |       0 |      46 |            43 |     65434
+   306000 |     +0.0% |       0 |      46 |            43 |     64434
+   307000 |     +0.0% |       0 |      46 |            43 |     63434
+   308000 |     +0.0% |       0 |      46 |            43 |     62434
+   309000 |     +0.0% |       0 |      46 |            43 |     61434
+   310000 |     +0.0% |       0 |      46 |            43 |     60434
+   311000 |     +0.0% |       0 |      46 |            43 |     59434
+   312000 |     +0.0% |       0 |      46 |            43 |     58434
+   313000 |     +0.0% |       0 |      46 |            43 |     57434
+   314000 |     +0.0% |       0 |      46 |            43 |     56434
+   315000 |     +0.0% |       0 |      46 |            43 |     55434
+   316000 |     +0.0% |       0 |      46 |            43 |     54434
+   317000 |     +0.0% |       0 |      46 |            43 |     53434
+   318000 |     +0.0% |       0 |      47 |            44 |     52434
+   319000 |     +0.0% |       0 |      47 |            44 |     51434
+   320000 |     +0.0% |       0 |      47 |            44 |     50434
+   321000 |     +0.0% |       0 |      47 |            44 |     49434
+   322000 |     +0.0% |       0 |      47 |            44 |     48434
+   323000 |     +0.0% |       0 |      47 |            44 |     47434
+   324000 |     +0.0% |       0 |      47 |            44 |     46434
+   325000 |     +0.0% |       0 |      47 |            44 |     45434
+   326000 |     +0.0% |       0 |      47 |            44 |     44434
+   327000 |     +0.0% |       0 |      47 |            44 |     43434
+   328000 |     +0.0% |       0 |      47 |            44 |     42434
+   329000 |     +0.0% |       0 |      47 |            44 |     41434
+   330000 |     +0.0% |       0 |      47 |            44 |     40434
+   331000 |     +0.0% |       0 |      47 |            44 |     39434
+   332000 |     +0.0% |       0 |      47 |            44 |     38434
+   333000 |     +0.0% |       0 |      47 |            44 |     37434
+   334000 |     +0.0% |       0 |      47 |            44 |     36434
+   335000 |     +0.0% |       0 |      47 |            44 |     35434
+   336000 |     +0.0% |       0 |      47 |            44 |     34434
+   337000 |     +0.0% |       0 |      47 |            44 |     33434
+   338000 |     +0.0% |       0 |      47 |            44 |     32434
+   339000 |     +0.0% |       0 |      47 |            44 |     31434
+   340000 |     +0.0% |       0 |      47 |            44 |     30434
+   341000 |     +0.0% |       0 |      47 |            44 |     29434
+   342000 |     +0.0% |       0 |      47 |            44 |     28434
+   343000 |     +0.0% |       0 |      47 |            44 |     27434
+   344000 |     +0.0% |       0 |      47 |            44 |     26434
+   345000 |     +0.0% |       0 |      47 |            44 |     25434
+   346000 |     +0.0% |       0 |      47 |            44 |     24434
+   347000 |     +0.0% |       0 |      47 |            44 |     23434
+   348000 |     +0.0% |       0 |      47 |            44 |     22434
+   349000 |     +0.0% |       0 |      47 |            44 |     21434
+   350000 |     +0.0% |       0 |      47 |            44 |     20434
+   351000 |     +0.0% |       0 |      47 |            44 |     19434
+   352000 |     +0.0% |       0 |      47 |            44 |     18434
+   353000 |     +0.0% |       0 |      47 |            44 |     17434
+   354000 |     +0.0% |       0 |      47 |            44 |     16434
+   355000 |     +0.0% |       0 |      47 |            44 |     15434
+   356000 |     +0.0% |       0 |      47 |            44 |     14434
+   357000 |     +0.0% |       0 |      47 |            44 |     13434
+   358000 |     +0.0% |       0 |      47 |            44 |     12434
+   359000 |     +0.0% |       0 |      47 |            44 |     11434
+   360000 |     +0.0% |       0 |      47 |            44 |     10434
+   361000 |     +0.0% |       0 |      47 |            44 |      9434
+   362000 |     +0.0% |       0 |      47 |            44 |      8434
+   363000 |     +0.0% |       0 |      47 |            44 |      7434
+   364000 |     +0.0% |       0 |      47 |            44 |      6434
+   365000 |     +0.0% |       0 |      47 |            44 |      5434
+   366000 |     +0.0% |       0 |      47 |            44 |      4434
+   367000 |     +0.0% |       0 |      47 |            44 |      3434
+   368000 |     +0.0% |       0 |      47 |            44 |      2434
+   369000 |     +0.0% |       0 |      47 |            44 |      1434
+   370000 |     +0.0% |       0 |      47 |            44 |       434
+    final |     +0.0% |       0 |      47 |            44 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 44 slew violations.
+[INFO RSZ-0038] Inserted 47 buffers in 44 nets.
+[INFO RSZ-0504] Runtime: 82.09s
+Took 83 seconds: repair_design -verbose -cap_margin 20 -slew_margin 20
+Floating nets: 
+Report metrics stage 3, resizer...
+
+==========================================================================
+resizer report_design_area
+--------------------------------------------------------------------------
+Design area 44624 um^2 37% utilization.
+Instance count before 375908, after 375955
+Pin count before 1011332, after 1011426
+write_db /work/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/3_4_place_resized.odb
+Elapsed time: 5:48.48[h:]min:sec. CPU time: user 378.12 sys 10.04 (111%). Peak memory: 2283596KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_4_place_resized         .odb          348           2230 6ec15ee649c069edab56
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+Running detail_place.tcl, stage 3_5_place_dp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/3_4_place_resized.odb
+read_sdc /work/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/face_flops_release.tcl
+OT_FACE_FLOPS released 570 pin registers for DPL
+detailed_placement
+[INFO DPL-0006] Core area: 119219.14 um^2
+[INFO DPL-0007] Movable instances area: 43224.00 um^2
+[INFO DPL-0008] Fixed instances area within core: 1400.03 um^2
+[INFO DPL-0009] Utilization: 37.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 375955 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       1107 |       237 |       870
+        1 |        252 |        28 |       224
+        2 |         90 |         8 |        82
+        3 |         60 |         4 |        56
+        4 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 4.
+[INFO DPL-0500] Runtime: 19.11s
+Placement Analysis
+---------------------------------
+total displacement     111339.8 u
+average displacement        0.3 u
+max displacement            3.9 u
+original HPWL         1570981.6 u
+legalized HPWL        1649762.9 u
+delta HPWL                    5 %
+
+Took 19 seconds: detailed_placement
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 15138 fixed cells.
+[INFO DPL-0318] Collected 361389 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (4320, 4320) - (240192, 509760)
+[INFO DPL-0310] Assigned 361389 cells into segments.  Movement in X-direction is 0.000000, movement in Y-direction is 0.000000.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 1.649406e+09.
+[INFO DPL-0302] End of matching; objective is 1.647017e+09, improvement is 0.14 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 1.619875e+09.
+[INFO DPL-0306] Pass   2 of global swaps; hpwl is 1.615225e+09.
+[INFO DPL-0307] End of global swaps; objective is 1.615225e+09, improvement is 1.93 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 1.609405e+09.
+[INFO DPL-0309] End of vertical swaps; objective is 1.609405e+09, improvement is 0.36 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 1.608609e+09.
+[INFO DPL-0305] End of reordering; objective is 1.608609e+09, improvement is 0.05 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 7227780 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 7227780, swaps 588732, moves 2708151 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 1.608609e+09, Scratch cost 1.596215e+09, Incremental cost 1.596215e+09, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 1.596215e+09.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.77 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.770478 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 79663 cell flips.
+[INFO DPL-0384] End of flipping; objective is 1.576160e+09, improvement is 1.26 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL          1649762.9 u (  559592.3,  1090170.6)
+Final HPWL             1573454.4 u (  529647.3,  1043807.1)
+Delta HPWL                  -4.6 % (      -5.4,       -4.3)
+
+Took 203 seconds: improve_placement -max_displacement "5 1"
+optimize_mirroring
+[INFO DPL-0020] Mirrored 11716 instances
+[INFO DPL-0021] HPWL before          1573454.4 u
+[INFO DPL-0022] HPWL after           1572891.0 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+Took 9 seconds: optimize_mirroring
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Took 42 seconds: estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 44624 um^2 37% utilization.
+write_db /work/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/3_place.sdc
+Elapsed time: 9:44.25[h:]min:sec. CPU time: user 590.97 sys 35.45 (107%). Peak memory: 3051584KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb          584           2980 67f57815dbaf222f9a6c
+cp /work/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/3_5_place_dp.odb /work/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/3_place.odb
