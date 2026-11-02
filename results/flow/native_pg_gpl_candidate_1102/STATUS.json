@@ -1,15 +1,52 @@
 {
-  "status": "SOURCE_CANDIDATE_SAVED_AUDIT_PENDING",
+  "status": "READY_FOR_NARROW_COMMAND_ADMISSION_REVIEW",
   "main_deployed": false,
   "module_changed": false,
   "base_helper_source": "5621983f5",
   "native_module_sha256": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
   "private_place_source": "ab13b5308",
   "native_unit": "oth-ubuntu-413122-1793633354",
-  "global_placement": {"actual_timing_driven": true, "actual_routability_driven": true, "command_code": 0, "fallback": false, "creates": 1111, "swaps": 165, "bound": 2222},
-  "buffer_ports": {"creates": 68, "swaps": 0, "bound": 136},
+  "global_placement": {
+    "actual_timing_driven": true,
+    "actual_routability_driven": true,
+    "command_code": 0,
+    "fallback": false,
+    "creates": 1111,
+    "swaps": 165,
+    "bound": 2222
+  },
+  "buffer_ports": {
+    "creates": 68,
+    "swaps": 0,
+    "bound": 136
+  },
   "native_event_counts_are_not_retained_cell_deltas": true,
   "stage_global_place_end_active": 0,
-  "saved_native_audit": "PENDING_OWNER_COLLECTION",
-  "release_review": "PENDING_FINAL_SAVED_AUDIT_AND_GUARDS"
+  "saved_native_audit": {
+    "status": "PASS",
+    "checked": 106210,
+    "failures": 0,
+    "independent_read_unit": "oth-ubuntu-614166-1793634115",
+    "no_repair_or_STA_or_native_install": true,
+    "odb_sha256": "9ba70335e4f85dc5bd467e67629ab9a1db18143f8c319ea86656e531d3f9586f"
+  },
+  "release_review": "READY_MECHANISM_ONLY_NO_MAIN_MERGE_OR_DEPLOY_AUTHORITY",
+  "source_and_structure": {
+    "original_94_inputs_unchanged": true,
+    "rows_outline_unchanged": true,
+    "reviewed_FP_signal_pin_metal_unchanged": true,
+    "retained_added": 628,
+    "retained_removed": 0,
+    "existing_master_changes": 23,
+    "sequential_strength_master_changes": 9,
+    "sequential_names_count_clock_iterm_nets_preserved": 8994,
+    "functional_EQ_or_clock_load_preservation_claim": false
+  },
+  "review": "remaining_lanes CONCUR33b5c6cb0 source-only, no logic must-fix; KV parent authorizes READY after complete receipts",
+  "case_holds": "RECIP actual geometry review, nine FF clock-load changes, functional/final proof and later physical closure remain with parent; command readiness does not release them",
+  "collector_reference": {
+    "path": "/srv/opentallas-scratch/claude/wt/codex-recip-place-pg-canary-prep-0810/results/recip_place_pg_canary_prep_1102",
+    "final_result_sha256": "3c066478ddff4c32b4511d3833a28b3b66b62d1de7c232ed876915426a0fe316",
+    "full_inventories": "collector final_read/{SYNTH,FP,PLACE}_INVENTORY.json.gz"
+  }
 }
