@@ -1,0 +1,18 @@
+{
+  "status": "PASS_XS4_SEVEN_REAL_ROM_SELECTORS",
+  "default_lockstep_cycles": 40,
+  "distinct_slices": 2,
+  "selectors": [
+    "pq_calendar_action",
+    "pq_calendar_time",
+    "pq_phase0",
+    "pq_stream0",
+    "pq_stream1",
+    "pq_stream2",
+    "pq_stream3"
+  ],
+  "wrong_prefix_mutant_caught": true,
+  "full_streamer_arithmetic_tested": false,
+  "added_rtl_cycles": 0,
+  "production_bind_adopted": false
+}
