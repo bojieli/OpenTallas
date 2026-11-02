@@ -1,0 +1,57 @@
+{
+ "scope": "Current C native BFQG source-only PREP and one ordinary boundary canary; no PNR",
+ "top": "ot_hgi_sm_xload_cl2_bfqg",
+ "params": {},
+ "plan_sha256": "a0b917e76316f6e12c56e45f38e699084ab565364aa56255c41f312a29af9a36",
+ "views": [
+  "ot_hgi_sm_xload_cl2_bfqg@a188c76ca5a0"
+ ],
+ "source_manifest": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/asbuilt_c11e_portable.json",
+ "caller": {
+  "host": "epyc2",
+  "file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv",
+  "instance": "u_u_xq_Q_p0_bfq0",
+  "master": "ot_hgi_sm_xload_cl2_bfqg",
+  "params": {}
+ },
+ "clock_ports": [
+  "clk",
+  "clk_n",
+  "clk_s",
+  "clk_ctrl",
+  "clk_m0",
+  "clk_m1",
+  "clk_m2",
+  "clk_m3",
+  "clk_m4",
+  "clk_m5",
+  "clk_m6",
+  "clk_m7",
+  "clk_l0",
+  "clk_l1",
+  "clk_l2",
+  "clk_l3",
+  "clk_l4",
+  "clk_l5",
+  "clk_l6",
+  "clk_l7"
+ ],
+ "files": [
+  {
+   "file": "results/hbm_bfqg_native_source_1520/rtl/ot_hgi_sm_xload_bfqg.sv",
+   "sha256": "5317524cf8e6d9644e2fb9a04d6aff16fd338f95beb692bf13c67014dca315b5",
+   "selected_source": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_bfqg.sv"
+  },
+  {
+   "file": "results/hbm_bfqg_native_source_1520/rtl/ot_rst_relay.sv",
+   "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "selected_source": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv"
+  }
+ ],
+ "macros": {
+  "ot_sram_1r1w_128x256_m1_r2c2": 8
+ },
+ "added_generic_face_cycles": 0,
+ "reset": "Existing relay REGIONS1/SYNC_STAGES2/TREE_STAGES1 retained; any source proof requests actual4 edges",
+ "pipeline_source": "Captured inputs; synchronous macro read; bank cq capture; OR4 register; rwq output register. No source stage or edge changed."
+}

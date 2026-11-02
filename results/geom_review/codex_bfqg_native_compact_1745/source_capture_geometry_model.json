@@ -1,0 +1,804 @@
+{
+ "scope": "Staticactualmappednetlistcapturegraph +actualLEFpins +unlegalizedsourceFFguide targets. NOTactualplacedr2r/pinreg/route/timinggate.",
+ "source_netlist_sha256": "1cf747cf5b40f323ffad51b9b3b5c47d9c5a90a5309d29ea2ddb683ced75550e",
+ "sequential_capture_pairs": 10907,
+ "unknown_data_nets": 0,
+ "modeled_max_sequential_L1_um": 338.052,
+ "modeled_pairs_over405": 0,
+ "modeled_port_to_firstFF_L1_max_um": 133.8,
+ "worst_capture_pairs": [
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[255]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    205.368
+   ],
+   "L1_um": 338.052
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[254]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    205.272
+   ],
+   "L1_um": 337.956
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[253]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    205.176
+   ],
+   "L1_um": 337.86
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[252]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    205.07999999999998
+   ],
+   "L1_um": 337.764
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[251]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    204.98399999999998
+   ],
+   "L1_um": 337.668
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[250]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    204.888
+   ],
+   "L1_um": 337.572
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[249]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    204.792
+   ],
+   "L1_um": 337.476
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[248]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    204.696
+   ],
+   "L1_um": 337.38
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[247]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    204.6
+   ],
+   "L1_um": 337.284
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[246]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    204.504
+   ],
+   "L1_um": 337.188
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[245]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    204.40800000000002
+   ],
+   "L1_um": 337.09200000000004
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[244]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    204.312
+   ],
+   "L1_um": 336.99600000000004
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[243]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    204.216
+   ],
+   "L1_um": 336.90000000000003
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[242]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    204.12
+   ],
+   "L1_um": 336.80400000000003
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[241]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    204.024
+   ],
+   "L1_um": 336.708
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[240]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    203.928
+   ],
+   "L1_um": 336.612
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[239]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    203.832
+   ],
+   "L1_um": 336.516
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[238]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    203.736
+   ],
+   "L1_um": 336.42
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[237]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    203.64
+   ],
+   "L1_um": 336.324
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[236]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    203.54399999999998
+   ],
+   "L1_um": 336.228
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[235]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    203.448
+   ],
+   "L1_um": 336.132
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[234]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    203.352
+   ],
+   "L1_um": 336.036
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[233]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    203.256
+   ],
+   "L1_um": 335.94
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[232]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    203.16
+   ],
+   "L1_um": 335.844
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[231]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    203.064
+   ],
+   "L1_um": 335.748
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[230]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    202.968
+   ],
+   "L1_um": 335.652
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[229]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    202.872
+   ],
+   "L1_um": 335.55600000000004
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[228]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    202.776
+   ],
+   "L1_um": 335.46000000000004
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[227]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    202.68
+   ],
+   "L1_um": 335.36400000000003
+  },
+  {
+   "source": [
+    "FF",
+    "\\g_t[7].mask_hi$_DFF_P_"
+   ],
+   "sink": [
+    "MACRO",
+    7,
+    "w_mask_in[226]"
+   ],
+   "source_xy_um": [
+    5.784,
+    8.64
+   ],
+   "sink_xy_um": [
+    147.108,
+    202.584
+   ],
+   "L1_um": 335.26800000000003
+  }
+ ],
+ "worst_port_firstFF": [
+  {
+   "source": [
+    "PORT",
+    "wa[0]"
+   ],
+   "sink": [
+    "FF",
+    "\\wa_q[0]$_DFF_P_"
+   ],
+   "source_xy_um": [
+    4.344,
+    0.096
+   ],
+   "sink_xy_um": [
+    129.6,
+    8.64
+   ],
+   "L1_um": 133.8
+  },
+  {
+   "source": [
+    "PORT",
+    "wce"
+   ],
+   "sink": [
+    "FF",
+    "\\wce_q$_SDFF_PN0_"
+   ],
+   "source_xy_um": [
+    254.856,
+    0.096
+   ],
+   "sink_xy_um": [
+    129.6,
+    8.64
+   ],
+   "L1_um": 133.8
+  },
+  {
+   "source": [
+    "PORT",
+    "wa[1]"
+   ],
+   "sink": [
+    "FF",
+    "\\wa_q[1]$_DFF_P_"
+   ],
+   "source_xy_um": [
+    4.44,
+    0.096
+   ],
+   "sink_xy_um": [
+    129.6,
+    8.64
+   ],
+   "L1_um": 133.704
+  },
+  {
+   "source": [
+    "PORT",
+    "wa[6]"
+   ],
+   "sink": [
+    "FF",
+    "\\wa_q[6]$_DFF_P_"
+   ],
+   "source_xy_um": [
+    254.76,
+    0.096
+   ],
+   "sink_xy_um": [
+    129.6,
+    8.64
+   ],
+   "L1_um": 133.704
+  },
+  {
+   "source": [
+    "PORT",
+    "wa[2]"
+   ],
+   "sink": [
+    "FF",
+    "\\wa_q[2]$_DFF_P_"
+   ],
+   "source_xy_um": [
+    4.536,
+    0.096
+   ],
+   "sink_xy_um": [
+    129.6,
+    8.64
+   ],
+   "L1_um": 133.608
+  },
+  {
+   "source": [
+    "PORT",
+    "wa[5]"
+   ],
+   "sink": [
+    "FF",
+    "\\wa_q[5]$_DFF_P_"
+   ],
+   "source_xy_um": [
+    254.664,
+    0.096
+   ],
+   "sink_xy_um": [
+    129.6,
+    8.64
+   ],
+   "L1_um": 133.608
+  },
+  {
+   "source": [
+    "PORT",
+    "wa[4]"
+   ],
+   "sink": [
+    "FF",
+    "\\wa_q[4]$_DFF_P_"
+   ],
+   "source_xy_um": [
+    254.568,
+    0.096
+   ],
+   "sink_xy_um": [
+    129.6,
+    8.64
+   ],
+   "L1_um": 133.51200000000003
+  },
+  {
+   "source": [
+    "PORT",
+    "wa[3]"
+   ],
+   "sink": [
+    "FF",
+    "\\wa_q[3]$_DFF_P_"
+   ],
+   "source_xy_um": [
+    4.632,
+    0.096
+   ],
+   "sink_xy_um": [
+    129.6,
+    8.64
+   ],
+   "L1_um": 133.512
+  },
+  {
+   "source": [
+    "PORT",
+    "r_a[0]"
+   ],
+   "sink": [
+    "FF",
+    "\\ra_q[0]$_DFF_P_"
+   ],
+   "source_xy_um": [
+    5.112,
+    0.096
+   ],
+   "sink_xy_um": [
+    129.6,
+    8.64
+   ],
+   "L1_um": 133.032
+  },
+  {
+   "source": [
+    "PORT",
+    "r_a[6]"
+   ],
+   "sink": [
+    "FF",
+    "\\ra_q[6]$_DFF_P_"
+   ],
+   "source_xy_um": [
+    254.088,
+    0.096
+   ],
+   "sink_xy_um": [
+    129.6,
+    8.64
+   ],
+   "L1_um": 133.032
+  }
+ ],
+ "source_cut": "1319actualpublicboundaryFFs preserved,2571internalstateonlyguideable"
+}

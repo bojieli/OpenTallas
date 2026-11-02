@@ -1,0 +1,654 @@
+{
+ "block": "bfqg",
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-57/plan_s11/G",
+ "base_die_plan_sha256": "e0638225f8b38653671aa3a59d11023c566182278d7256359f8f5b221b34c492",
+ "changed_instances": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_bfq0",
+   "orient": "R0",
+   "old_origin": [
+    5486.4,
+    3551.04
+   ],
+   "new_origin": [
+    5503.68,
+    3551.04
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_bfq1",
+   "orient": "R0",
+   "old_origin": [
+    5071.68,
+    3551.04
+   ],
+   "new_origin": [
+    5088.96,
+    3551.04
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_bfq2",
+   "orient": "R0",
+   "old_origin": [
+    5451.84,
+    2678.4
+   ],
+   "new_origin": [
+    5469.12,
+    2678.4
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_bfq3",
+   "orient": "R0",
+   "old_origin": [
+    5814.72,
+    3551.04
+   ],
+   "new_origin": [
+    5832.0,
+    3551.04
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_bfq0",
+   "orient": "R0",
+   "old_origin": [
+    5123.52,
+    2462.4
+   ],
+   "new_origin": [
+    5140.8,
+    2462.4
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_bfq1",
+   "orient": "R0",
+   "old_origin": [
+    4795.2,
+    2462.4
+   ],
+   "new_origin": [
+    4821.12,
+    2462.4
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    3.384,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_bfq2",
+   "orient": "R0",
+   "old_origin": [
+    5581.44,
+    3879.36
+   ],
+   "new_origin": [
+    5598.72,
+    3879.36
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_bfq3",
+   "orient": "MX",
+   "old_origin": [
+    6894.72,
+    328.32
+   ],
+   "new_origin": [
+    6912.0,
+    406.08
+   ],
+   "old_outline": [
+    302.39999999999964,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_bfq0",
+   "orient": "R0",
+   "old_origin": [
+    3637.44,
+    3551.04
+   ],
+   "new_origin": [
+    3654.72,
+    3551.04
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_bfq1",
+   "orient": "R0",
+   "old_origin": [
+    5071.68,
+    3551.04
+   ],
+   "new_origin": [
+    5088.96,
+    3551.04
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_bfq2",
+   "orient": "R0",
+   "old_origin": [
+    5451.84,
+    2678.4
+   ],
+   "new_origin": [
+    5469.12,
+    2678.4
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_bfq3",
+   "orient": "R0",
+   "old_origin": [
+    5814.72,
+    3551.04
+   ],
+   "new_origin": [
+    5832.0,
+    3551.04
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_bfq0",
+   "orient": "R0",
+   "old_origin": [
+    5123.52,
+    2462.4
+   ],
+   "new_origin": [
+    5140.8,
+    2462.4
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_bfq1",
+   "orient": "R0",
+   "old_origin": [
+    4795.2,
+    2462.4
+   ],
+   "new_origin": [
+    4821.12,
+    2462.4
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    3.384,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_bfq2",
+   "orient": "R0",
+   "old_origin": [
+    5581.44,
+    3879.36
+   ],
+   "new_origin": [
+    5598.72,
+    3879.36
+   ],
+   "old_outline": [
+    302.4,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_bfq3",
+   "orient": "MX",
+   "old_origin": [
+    6894.72,
+    328.32
+   ],
+   "new_origin": [
+    6912.0,
+    406.08
+   ],
+   "old_outline": [
+    302.39999999999964,
+    298.08
+   ],
+   "new_outline": [
+    259.2,
+    220.32
+   ],
+   "old_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "new_pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -5.256,
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+ "pins_sha256": "69d23342c0e51fa59d6e0062f13c12160dbdad680fd500378281dbf6fc92424e",
+ "pins_n": 1340,
+ "lattice_snaps": [
+  {
+   "want": [
+    5508.0,
+    3551.04
+   ],
+   "snapped": [
+    5503.68,
+    3551.04
+   ]
+  },
+  {
+   "want": [
+    5093.28,
+    3551.04
+   ],
+   "snapped": [
+    5088.96,
+    3551.04
+   ]
+  },
+  {
+   "want": [
+    5473.44,
+    2678.4
+   ],
+   "snapped": [
+    5469.12,
+    2678.4
+   ]
+  },
+  {
+   "want": [
+    5836.32,
+    3551.04
+   ],
+   "snapped": [
+    5832.0,
+    3551.04
+   ]
+  },
+  {
+   "want": [
+    5145.12,
+    2462.4
+   ],
+   "snapped": [
+    5140.8,
+    2462.4
+   ]
+  },
+  {
+   "want": [
+    4816.8,
+    2462.4
+   ],
+   "snapped": [
+    4821.12,
+    2462.4
+   ]
+  },
+  {
+   "want": [
+    5603.04,
+    3879.36
+   ],
+   "snapped": [
+    5598.72,
+    3879.36
+   ]
+  },
+  {
+   "want": [
+    6916.32,
+    406.08
+   ],
+   "snapped": [
+    6912.0,
+    406.08
+   ]
+  },
+  {
+   "want": [
+    3659.04,
+    3551.04
+   ],
+   "snapped": [
+    3654.72,
+    3551.04
+   ]
+  },
+  {
+   "want": [
+    5093.28,
+    3551.04
+   ],
+   "snapped": [
+    5088.96,
+    3551.04
+   ]
+  },
+  {
+   "want": [
+    5473.44,
+    2678.4
+   ],
+   "snapped": [
+    5469.12,
+    2678.4
+   ]
+  },
+  {
+   "want": [
+    5836.32,
+    3551.04
+   ],
+   "snapped": [
+    5832.0,
+    3551.04
+   ]
+  },
+  {
+   "want": [
+    5145.12,
+    2462.4
+   ],
+   "snapped": [
+    5140.8,
+    2462.4
+   ]
+  },
+  {
+   "want": [
+    4816.8,
+    2462.4
+   ],
+   "snapped": [
+    4821.12,
+    2462.4
+   ]
+  },
+  {
+   "want": [
+    5603.04,
+    3879.36
+   ],
+   "snapped": [
+    5598.72,
+    3879.36
+   ]
+  },
+  {
+   "want": [
+    6916.32,
+    406.08
+   ],
+   "snapped": [
+    6912.0,
+    406.08
+   ]
+  }
+ ],
+ "n_instances": 16,
+ "new_die_plan_sha256": "efe8899ab040235a37533e028af5ec1c7972e5673fb9aa78c59ca59531094eef"
+}

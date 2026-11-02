@@ -1,0 +1,799 @@
+{
+ "scope": "ONE UNADOPTED current-native BFQG compact model; noGEN/CAD/source/pin/slotadoption",
+ "outline_um": [
+  259.2,
+  220.32
+ ],
+ "old_pin_sha256": "a188c76ca5a08579833441a987e111ce3fa38c654e9aca929e09cda2c4ba4d13",
+ "proposed_pin_sha256": "538f194222d051c92760e1522f8bc2528df0917108c326314731351a8a5beb38",
+ "source_netlist_sha256": "1cf747cf5b40f323ffad51b9b3b5c47d9c5a90a5309d29ea2ddb683ced75550e",
+ "source_readset": "results/hbm_bfqg_native_source_1520/readset.json",
+ "params": {},
+ "actual_FFs": 3890,
+ "public_boundary_FFs": 1319,
+ "residual_internal_FFs": 2571,
+ "added_source_cycles": 0,
+ "macro_placement": [
+  {
+   "inst": "g_t[0].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "x": 17.28,
+   "y": 17.292,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_t[1].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "x": 17.28,
+   "y": 67.02,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_t[2].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "x": 17.28,
+   "y": 118.956,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_t[3].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "x": 17.28,
+   "y": 168.684,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_t[4].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "x": 147.096,
+   "y": 17.292,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_t[5].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "x": 147.096,
+   "y": 67.02,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_t[6].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "x": 147.096,
+   "y": 118.956,
+   "orient": "MY"
+  },
+  {
+   "inst": "g_t[7].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "x": 147.096,
+   "y": 168.684,
+   "orient": "MY"
+  }
+ ],
+ "macro_orientations": "Banks0..5R0,6/7MY permittedbyactualLEFSYMMETRYXY; exactopposite read/mask faces accounted",
+ "actual_helper_receipts": {
+  "name": "preferred_native",
+  "outline_um": [
+   259.2,
+   220.32
+  ],
+  "macros": [
+   {
+    "inst": "g_t[0].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "x": 17.28,
+    "y": 17.292,
+    "orient": "R0"
+   },
+   {
+    "inst": "g_t[1].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "x": 17.28,
+    "y": 67.02,
+    "orient": "R0"
+   },
+   {
+    "inst": "g_t[2].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "x": 17.28,
+    "y": 118.956,
+    "orient": "R0"
+   },
+   {
+    "inst": "g_t[3].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "x": 17.28,
+    "y": 168.684,
+    "orient": "R0"
+   },
+   {
+    "inst": "g_t[4].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "x": 147.096,
+    "y": 17.292,
+    "orient": "R0"
+   },
+   {
+    "inst": "g_t[5].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "x": 147.096,
+    "y": 67.02,
+    "orient": "R0"
+   },
+   {
+    "inst": "g_t[6].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "x": 147.096,
+    "y": 118.956,
+    "orient": "MY"
+   },
+   {
+    "inst": "g_t[7].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "x": 147.096,
+    "y": 168.684,
+    "orient": "MY"
+   }
+  ],
+  "island_um": [
+   120.96,
+   138.24,
+   138.24,
+   155.52
+  ],
+  "source": "RealnativeGENmacroLEF/tracks, helpergeometryonlynotGEN/CAD",
+  "macro_channels": {
+   "errors": [],
+   "info": {
+    "applies": true,
+    "macros": 8,
+    "columns": 2,
+    "min_channel_um": 10.8,
+    "min_channel_note": "10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling"
+   }
+  },
+  "island_macro_clear": {
+   "errors": [],
+   "info": {
+    "applies": true,
+    "mode": "static",
+    "macros": 8,
+    "islands": 1,
+    "halo_um": 4.32
+   }
+  },
+  "clock_entry_clear": {
+   "errors": [],
+   "info": {
+    "applies": true,
+    "entries": 1,
+    "macros": 8
+   }
+  },
+  "macro_pin_grid": {
+   "errors": [],
+   "info": {
+    "applies": true,
+    "macros": 8,
+    "pins": 6552,
+    "tracks": "make_tracks.tcl",
+    "worst_off_nm": 0.0
+   }
+  }
+ },
+ "helper_inputs": {
+  "macro_lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf",
+  "make_tracks_sha256": "6f1836c3f11060f8112fed969a738aed096aea64200bd0858850463ec06936be"
+ },
+ "bank_internal_guides": [
+  {
+   "bank": 0,
+   "existing_FFs": 257,
+   "box_um": [
+    4.32,
+    17.292,
+    12.96,
+    58.356
+   ],
+   "scope": "Residual actual internal state ONLY; no CDQ/mask/RPce boundary FFs"
+  },
+  {
+   "bank": 1,
+   "existing_FFs": 257,
+   "box_um": [
+    4.32,
+    67.02,
+    12.96,
+    108.084
+   ],
+   "scope": "Residual actual internal state ONLY; no CDQ/mask/RPce boundary FFs"
+  },
+  {
+   "bank": 2,
+   "existing_FFs": 257,
+   "box_um": [
+    4.32,
+    118.956,
+    12.96,
+    160.02
+   ],
+   "scope": "Residual actual internal state ONLY; no CDQ/mask/RPce boundary FFs"
+  },
+  {
+   "bank": 3,
+   "existing_FFs": 257,
+   "box_um": [
+    4.32,
+    168.684,
+    12.96,
+    209.748
+   ],
+   "scope": "Residual actual internal state ONLY; no CDQ/mask/RPce boundary FFs"
+  },
+  {
+   "bank": 4,
+   "existing_FFs": 257,
+   "box_um": [
+    134.136,
+    17.292,
+    142.776,
+    58.356
+   ],
+   "scope": "Residual actual internal state ONLY; no CDQ/mask/RPce boundary FFs"
+  },
+  {
+   "bank": 5,
+   "existing_FFs": 257,
+   "box_um": [
+    134.136,
+    67.02,
+    142.776,
+    108.084
+   ],
+   "scope": "Residual actual internal state ONLY; no CDQ/mask/RPce boundary FFs"
+  },
+  {
+   "bank": 6,
+   "existing_FFs": 257,
+   "box_um": [
+    246.24,
+    118.956,
+    254.88,
+    160.02
+   ],
+   "scope": "Residual actual internal state ONLY; no CDQ/mask/RPce boundary FFs"
+  },
+  {
+   "bank": 7,
+   "existing_FFs": 257,
+   "box_um": [
+    246.24,
+    168.684,
+    254.88,
+    209.748
+   ],
+   "scope": "Residual actual internal state ONLY; no CDQ/mask/RPce boundary FFs"
+  }
+ ],
+ "boundary_guides": {
+  "S": [
+   4.32,
+   4.32,
+   254.88,
+   12.972
+  ],
+  "W": [
+   4.32,
+   12.972,
+   12.96,
+   216.0
+  ]
+ },
+ "actual_source_clock_groups": [
+  {
+   "input": "clk",
+   "input_xy_um": [
+    128.664,
+    146.88
+   ],
+   "actual_FF_sinks": 2568,
+   "actual_FF_masters": {
+    "DFFHQNx1_ASAP7_75t_R": 2568
+   },
+   "guide_target_bbox_um": [
+    8.64,
+    12.972,
+    250.56,
+    215.865
+   ],
+   "unbuffered_target_L1_max_um": 253.93199999999996,
+   "unbuffered_target_L1_mean_um": 144.73244392523367,
+   "status": "DIAGNOSTICpreCTS, not220gate; actualFFlocations/treeinsertionNOTRUN"
+  },
+  {
+   "input": "clk_n",
+   "input_xy_um": [
+    130.392,
+    0.24
+   ],
+   "actual_FF_sinks": 1024,
+   "actual_FF_masters": {
+    "DFFHQNx1_ASAP7_75t_R": 1024
+   },
+   "guide_target_bbox_um": [
+    6.168,
+    8.64,
+    252.936,
+    8.64
+   ],
+   "unbuffered_target_L1_max_um": 132.624,
+   "unbuffered_target_L1_mean_um": 75.93431250000003,
+   "status": "DIAGNOSTICpreCTS, not220gate; actualFFlocations/treeinsertionNOTRUN"
+  },
+  {
+   "input": "clk_l0",
+   "input_xy_um": [
+    130.68,
+    0.24
+   ],
+   "actual_FF_sinks": 2,
+   "actual_FF_masters": {
+    "DFFHQNx1_ASAP7_75t_R": 2
+   },
+   "guide_target_bbox_um": [
+    253.032,
+    8.64,
+    253.416,
+    8.64
+   ],
+   "unbuffered_target_L1_max_um": 131.136,
+   "unbuffered_target_L1_mean_um": 130.94400000000002,
+   "status": "DIAGNOSTICpreCTS, not220gate; actualFFlocations/treeinsertionNOTRUN"
+  },
+  {
+   "input": "clk_ctrl",
+   "input_xy_um": [
+    128.76,
+    0.24
+   ],
+   "actual_FF_sinks": 26,
+   "actual_FF_masters": {
+    "DFFHQNx1_ASAP7_75t_R": 23,
+    "DFFASRHQNx1_ASAP7_75t_R": 3
+   },
+   "guide_target_bbox_um": [
+    4.728,
+    8.64,
+    254.472,
+    8.64
+   ],
+   "unbuffered_target_L1_max_um": 134.11200000000002,
+   "unbuffered_target_L1_mean_um": 47.35938461538463,
+   "status": "DIAGNOSTICpreCTS, not220gate; actualFFlocations/treeinsertionNOTRUN"
+  },
+  {
+   "input": "clk_l1",
+   "input_xy_um": [
+    130.968,
+    0.24
+   ],
+   "actual_FF_sinks": 2,
+   "actual_FF_masters": {
+    "DFFHQNx1_ASAP7_75t_R": 2
+   },
+   "guide_target_bbox_um": [
+    5.688,
+    8.64,
+    6.072,
+    8.64
+   ],
+   "unbuffered_target_L1_max_um": 133.67999999999998,
+   "unbuffered_target_L1_mean_um": 133.488,
+   "status": "DIAGNOSTICpreCTS, not220gate; actualFFlocations/treeinsertionNOTRUN"
+  },
+  {
+   "input": "clk_l2",
+   "input_xy_um": [
+    131.16,
+    0.24
+   ],
+   "actual_FF_sinks": 2,
+   "actual_FF_masters": {
+    "DFFHQNx1_ASAP7_75t_R": 2
+   },
+   "guide_target_bbox_um": [
+    253.128,
+    8.64,
+    253.512,
+    8.64
+   ],
+   "unbuffered_target_L1_max_um": 130.752,
+   "unbuffered_target_L1_mean_um": 130.56,
+   "status": "DIAGNOSTICpreCTS, not220gate; actualFFlocations/treeinsertionNOTRUN"
+  },
+  {
+   "input": "clk_l3",
+   "input_xy_um": [
+    131.304,
+    0.24
+   ],
+   "actual_FF_sinks": 2,
+   "actual_FF_masters": {
+    "DFFHQNx1_ASAP7_75t_R": 2
+   },
+   "guide_target_bbox_um": [
+    5.592,
+    8.64,
+    5.976,
+    8.64
+   ],
+   "unbuffered_target_L1_max_um": 134.112,
+   "unbuffered_target_L1_mean_um": 133.92000000000002,
+   "status": "DIAGNOSTICpreCTS, not220gate; actualFFlocations/treeinsertionNOTRUN"
+  },
+  {
+   "input": "clk_l4",
+   "input_xy_um": [
+    131.448,
+    0.24
+   ],
+   "actual_FF_sinks": 2,
+   "actual_FF_masters": {
+    "DFFHQNx1_ASAP7_75t_R": 2
+   },
+   "guide_target_bbox_um": [
+    253.224,
+    8.64,
+    253.608,
+    8.64
+   ],
+   "unbuffered_target_L1_max_um": 130.56,
+   "unbuffered_target_L1_mean_um": 130.368,
+   "status": "DIAGNOSTICpreCTS, not220gate; actualFFlocations/treeinsertionNOTRUN"
+  },
+  {
+   "input": "clk_l5",
+   "input_xy_um": [
+    131.736,
+    0.24
+   ],
+   "actual_FF_sinks": 2,
+   "actual_FF_masters": {
+    "DFFHQNx1_ASAP7_75t_R": 2
+   },
+   "guide_target_bbox_um": [
+    5.496,
+    8.64,
+    5.88,
+    8.64
+   ],
+   "unbuffered_target_L1_max_um": 134.64,
+   "unbuffered_target_L1_mean_um": 134.44799999999998,
+   "status": "DIAGNOSTICpreCTS, not220gate; actualFFlocations/treeinsertionNOTRUN"
+  },
+  {
+   "input": "clk_l6",
+   "input_xy_um": [
+    132.024,
+    0.24
+   ],
+   "actual_FF_sinks": 2,
+   "actual_FF_masters": {
+    "DFFHQNx1_ASAP7_75t_R": 2
+   },
+   "guide_target_bbox_um": [
+    253.32,
+    8.64,
+    253.704,
+    8.64
+   ],
+   "unbuffered_target_L1_max_um": 130.08,
+   "unbuffered_target_L1_mean_um": 129.888,
+   "status": "DIAGNOSTICpreCTS, not220gate; actualFFlocations/treeinsertionNOTRUN"
+  },
+  {
+   "input": "clk_l7",
+   "input_xy_um": [
+    132.312,
+    0.24
+   ],
+   "actual_FF_sinks": 2,
+   "actual_FF_masters": {
+    "DFFHQNx1_ASAP7_75t_R": 2
+   },
+   "guide_target_bbox_um": [
+    5.4,
+    8.64,
+    5.784,
+    8.64
+   ],
+   "unbuffered_target_L1_max_um": 135.312,
+   "unbuffered_target_L1_mean_um": 135.12,
+   "status": "DIAGNOSTICpreCTS, not220gate; actualFFlocations/treeinsertionNOTRUN"
+  },
+  {
+   "input": "clk_s",
+   "input_xy_um": [
+    130.104,
+    0.24
+   ],
+   "actual_FF_sinks": 256,
+   "actual_FF_masters": {
+    "DFFHQNx1_ASAP7_75t_R": 256
+   },
+   "guide_target_bbox_um": [
+    6.48,
+    12.972,
+    6.48,
+    215.865
+   ],
+   "unbuffered_target_L1_max_um": 339.249,
+   "unbuffered_target_L1_mean_um": 261.94394531249986,
+   "status": "DIAGNOSTICpreCTS, not220gate; actualFFlocations/treeinsertionNOTRUN"
+  },
+  {
+   "input": "clk_m0",
+   "input_xy_um": [
+    129.624,
+    0.24
+   ],
+   "actual_macro_sinks": 1,
+   "actual_macro": "g_t[0].u_m",
+   "actual_LEF_CLK_layer": "M4",
+   "actual_transformed_CLK_rect_um": [
+    17.28,
+    18.060000000000002,
+    17.304000000000002,
+    18.084000000000003
+   ],
+   "actual_transformed_CLK_center_um": [
+    17.292,
+    18.072000000000003
+   ],
+   "unbuffered_input_to_CLK_L1_um": 130.164,
+   "status": "ActualLEFterminalmodel, notmacrocentre or postCTSreachqualification"
+  },
+  {
+   "input": "clk_m1",
+   "input_xy_um": [
+    129.336,
+    0.24
+   ],
+   "actual_macro_sinks": 1,
+   "actual_macro": "g_t[1].u_m",
+   "actual_LEF_CLK_layer": "M4",
+   "actual_transformed_CLK_rect_um": [
+    17.28,
+    67.788,
+    17.304000000000002,
+    67.812
+   ],
+   "actual_transformed_CLK_center_um": [
+    17.292,
+    67.8
+   ],
+   "unbuffered_input_to_CLK_L1_um": 179.604,
+   "status": "ActualLEFterminalmodel, notmacrocentre or postCTSreachqualification"
+  },
+  {
+   "input": "clk_m2",
+   "input_xy_um": [
+    129.816,
+    0.24
+   ],
+   "actual_macro_sinks": 1,
+   "actual_macro": "g_t[2].u_m",
+   "actual_LEF_CLK_layer": "M4",
+   "actual_transformed_CLK_rect_um": [
+    17.28,
+    119.724,
+    17.304000000000002,
+    119.748
+   ],
+   "actual_transformed_CLK_center_um": [
+    17.292,
+    119.736
+   ],
+   "unbuffered_input_to_CLK_L1_um": 232.02,
+   "status": "ActualLEFterminalmodel, notmacrocentre or postCTSreachqualification"
+  },
+  {
+   "input": "clk_m3",
+   "input_xy_um": [
+    129.96,
+    0.24
+   ],
+   "actual_macro_sinks": 1,
+   "actual_macro": "g_t[3].u_m",
+   "actual_LEF_CLK_layer": "M4",
+   "actual_transformed_CLK_rect_um": [
+    17.28,
+    169.452,
+    17.304000000000002,
+    169.476
+   ],
+   "actual_transformed_CLK_center_um": [
+    17.292,
+    169.464
+   ],
+   "unbuffered_input_to_CLK_L1_um": 281.892,
+   "status": "ActualLEFterminalmodel, notmacrocentre or postCTSreachqualification"
+  },
+  {
+   "input": "clk_m4",
+   "input_xy_um": [
+    129.048,
+    0.24
+   ],
+   "actual_macro_sinks": 1,
+   "actual_macro": "g_t[4].u_m",
+   "actual_LEF_CLK_layer": "M4",
+   "actual_transformed_CLK_rect_um": [
+    147.096,
+    18.060000000000002,
+    147.12,
+    18.084000000000003
+   ],
+   "actual_transformed_CLK_center_um": [
+    147.108,
+    18.072000000000003
+   ],
+   "unbuffered_input_to_CLK_L1_um": 35.89200000000001,
+   "status": "ActualLEFterminalmodel, notmacrocentre or postCTSreachqualification"
+  },
+  {
+   "input": "clk_m5",
+   "input_xy_um": [
+    128.904,
+    0.24
+   ],
+   "actual_macro_sinks": 1,
+   "actual_macro": "g_t[5].u_m",
+   "actual_LEF_CLK_layer": "M4",
+   "actual_transformed_CLK_rect_um": [
+    147.096,
+    67.788,
+    147.12,
+    67.812
+   ],
+   "actual_transformed_CLK_center_um": [
+    147.108,
+    67.8
+   ],
+   "unbuffered_input_to_CLK_L1_um": 85.76400000000001,
+   "status": "ActualLEFterminalmodel, notmacrocentre or postCTSreachqualification"
+  },
+  {
+   "input": "clk_m6",
+   "input_xy_um": [
+    128.616,
+    0.24
+   ],
+   "actual_macro_sinks": 1,
+   "actual_macro": "g_t[6].u_m",
+   "actual_LEF_CLK_layer": "M4",
+   "actual_transformed_CLK_rect_um": [
+    241.89600000000002,
+    119.724,
+    241.92000000000002,
+    119.748
+   ],
+   "actual_transformed_CLK_center_um": [
+    241.90800000000002,
+    119.736
+   ],
+   "unbuffered_input_to_CLK_L1_um": 232.788,
+   "status": "ActualLEFterminalmodel, notmacrocentre or postCTSreachqualification"
+  },
+  {
+   "input": "clk_m7",
+   "input_xy_um": [
+    128.472,
+    0.24
+   ],
+   "actual_macro_sinks": 1,
+   "actual_macro": "g_t[7].u_m",
+   "actual_LEF_CLK_layer": "M4",
+   "actual_transformed_CLK_rect_um": [
+    241.89600000000002,
+    169.452,
+    241.92000000000002,
+    169.476
+   ],
+   "actual_transformed_CLK_center_um": [
+    241.90800000000002,
+    169.464
+   ],
+   "unbuffered_input_to_CLK_L1_um": 282.65999999999997,
+   "status": "ActualLEFterminalmodel, notmacrocentre or postCTSreachqualification"
+  }
+ ],
+ "source_clock_budgets": "Existing250TT/202.5FFcommon-domainrulesunchanged; insertion/loads/actualcellanchorsmustbequalifiedbyordinarynativeCTS, NOTRUN",
+ "ordinary_clock_buffer_bay_model": {
+  "clk_s": [
+   [
+    8.64,
+    86.4
+   ],
+   [
+    8.64,
+    185.76
+   ]
+  ],
+  "clk": [
+   [
+    8.64,
+    90.72
+   ],
+   [
+    8.64,
+    190.08
+   ],
+   [
+    250.56,
+    90.72
+   ],
+   [
+    250.56,
+    190.08
+   ]
+  ],
+  "clk_m2": [
+   [
+    8.64,
+    73.44
+   ]
+  ],
+  "clk_m3": [
+   [
+    8.64,
+    77.76
+   ]
+  ],
+  "clk_m6": [
+   [
+    250.56,
+    82.08
+   ]
+  ],
+  "clk_m7": [
+   [
+    250.56,
+    86.4
+   ]
+  ],
+  "scope": "Candidateordinaryclockbuffersites, notnewpublicclocks ormissioncycles; actualbody/master/cap/legalization/TTFFnotqualified"
+ },
+ "data_pack": {
+  "S": {
+   "count": 1063,
+   "L1tracks": 35748,
+   "min_data_center_pitch_um": 0.096
+  },
+  "W": {
+   "count": 256,
+   "L1tracks": 56068,
+   "min_data_center_pitch_um": 0.096
+  }
+ },
+ "resource_projection": {
+  "die_area_um2": 57106.943999999996,
+  "macro_area_um2": 31150.821888,
+  "std_area_um2": 1521.262332,
+  "std_free_fill": 0.05860899888803853,
+  "macro_fraction": 0.545482207697894,
+  "basis": "geom_rules.area_metricsDIEareaminusmacros;existingmacro-heavyINFOonly,20%targetnotattained"
+ },
+ "holds": [
+  "AlltargetFFpointsareMODELpositions, notplacedODB/clockleaf/timingmetrics.",
+  "Actualparenttypedpin/clock/reset/newoutlineeventrequired;20sourceclocks/shapeskept,onlyfourspacingpointdeltas.",
+  "OrdinaryCTS maybufferlonginputroutes; rawpreCTSinput\u2192sinkL1 isnotanew220umrootgate.",
+  "ActualpostCTS220leaf,250/202.5timing,clockinclusivesameplacement50GRT,PGhook/gridandDRTNOTRUN.",
+  "No oldwrappedGRT/timingcredit and no genericcapture/outputstage may beadded."
+ ],
+ "actual_parent_world_proof": "actual_parent_world_deltas.json",
+ "clock_geometry_authority": "ActualnativeGENio.tcl rectangles;19S+oneinterior,noNpins,notcurrentGvirtualrootcentres",
+ "compact_extra_clock_pin_moves": [],
+ "nominal_S_M5_spacing_flags": []
+}

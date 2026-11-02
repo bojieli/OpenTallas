@@ -1,0 +1,1457 @@
+{
+ "base_plan": "/srv/opentallas-scratch2/claude/die-hbm-57/plan_s11/G",
+ "base_die_plan_sha256": "e0638225f8b38653671aa3a59d11023c566182278d7256359f8f5b221b34c492",
+ "new_die_plan_sha256": "efe8899ab040235a37533e028af5ec1c7972e5673fb9aa78c59ca59531094eef",
+ "module": "ot_hgi_sm_xload_cl2_bfqg",
+ "hard_cores": {
+  "q_hub_nw": [
+   {
+    "inst": "u_xq_Q_p0_bfq0",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     5503.68,
+     3551.04
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p0_bfq1",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     5088.96,
+     3551.04
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p0_bfq2",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     5469.12,
+     2678.4
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p0_bfq3",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     5832.0,
+     3551.04
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p1_bfq0",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     5140.8,
+     2462.4
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p1_bfq1",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     4821.12,
+     2462.4
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p1_bfq2",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     5598.72,
+     3879.36
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p1_bfq3",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     6912.0,
+     406.08
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | DIE-HBM C20: C17g outline growth re-pack (REPACK sub-lane) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "orient": "MX",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   }
+  ],
+  "q_hub_ne": [
+   {
+    "inst": "u_xq_Q_p0_bfq0",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     3654.72,
+     3551.04
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p0_bfq1",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     5088.96,
+     3551.04
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p0_bfq2",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     5469.12,
+     2678.4
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p0_bfq3",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     5832.0,
+     3551.04
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p1_bfq0",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     5140.8,
+     2462.4
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p1_bfq1",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     4821.12,
+     2462.4
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p1_bfq2",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     5598.72,
+     3879.36
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   },
+   {
+    "inst": "u_xq_Q_p1_bfq3",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "origin_um": [
+     6912.0,
+     406.08
+    ],
+    "outline_um": [
+     259.2,
+     220.32
+    ],
+    "track_offset_um": [
+     0.0,
+     0.0
+    ],
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "note": "d4g hard core; 20345 cells | DIE-HBM C20: C17g outline growth re-pack (REPACK sub-lane) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "obs_max": "M5",
+    "orient": "MX",
+    "lef": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef",
+    "lib": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_tt.lib"
+   }
+  ]
+ },
+ "taps": {
+  "q_hub_nw": [
+   {
+    "name": "u_xq_Q_p0_bfq0",
+    "kind": "core",
+    "xy": [
+     5632.344,
+     3697.92
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p0_bfq0.clk', 'u_xq_Q_p0_bfq0.clk_n', 'u_xq_Q_p0_bfq0.clk_s', 'u_xq_Q_p0_bfq0.clk_ctrl', 'u_xq_Q_p0_bfq0.clk_m0', 'u_xq_Q_p0_bfq0.clk_m1', 'u_xq_Q_p0_bfq0.clk_m2', 'u_xq_Q_p0_bfq0.clk_m3', 'u_xq_Q_p0_bfq0.clk_m4', 'u_xq_Q_p0_bfq0.clk_m5', 'u_xq_Q_p0_bfq0.clk_m6', 'u_xq_Q_p0_bfq0.clk_m7', 'u_xq_Q_p0_bfq0.clk_l0', 'u_xq_Q_p0_bfq0.clk_l1', 'u_xq_Q_p0_bfq0.clk_l2', 'u_xq_Q_p0_bfq0.clk_l3', 'u_xq_Q_p0_bfq0.clk_l4', 'u_xq_Q_p0_bfq0.clk_l5', 'u_xq_Q_p0_bfq0.clk_l6', 'u_xq_Q_p0_bfq0.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p0_bfq1",
+    "kind": "core",
+    "xy": [
+     5217.624,
+     3697.92
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p0_bfq1.clk', 'u_xq_Q_p0_bfq1.clk_n', 'u_xq_Q_p0_bfq1.clk_s', 'u_xq_Q_p0_bfq1.clk_ctrl', 'u_xq_Q_p0_bfq1.clk_m0', 'u_xq_Q_p0_bfq1.clk_m1', 'u_xq_Q_p0_bfq1.clk_m2', 'u_xq_Q_p0_bfq1.clk_m3', 'u_xq_Q_p0_bfq1.clk_m4', 'u_xq_Q_p0_bfq1.clk_m5', 'u_xq_Q_p0_bfq1.clk_m6', 'u_xq_Q_p0_bfq1.clk_m7', 'u_xq_Q_p0_bfq1.clk_l0', 'u_xq_Q_p0_bfq1.clk_l1', 'u_xq_Q_p0_bfq1.clk_l2', 'u_xq_Q_p0_bfq1.clk_l3', 'u_xq_Q_p0_bfq1.clk_l4', 'u_xq_Q_p0_bfq1.clk_l5', 'u_xq_Q_p0_bfq1.clk_l6', 'u_xq_Q_p0_bfq1.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p0_bfq2",
+    "kind": "core",
+    "xy": [
+     5597.784,
+     2825.28
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p0_bfq2.clk', 'u_xq_Q_p0_bfq2.clk_n', 'u_xq_Q_p0_bfq2.clk_s', 'u_xq_Q_p0_bfq2.clk_ctrl', 'u_xq_Q_p0_bfq2.clk_m0', 'u_xq_Q_p0_bfq2.clk_m1', 'u_xq_Q_p0_bfq2.clk_m2', 'u_xq_Q_p0_bfq2.clk_m3', 'u_xq_Q_p0_bfq2.clk_m4', 'u_xq_Q_p0_bfq2.clk_m5', 'u_xq_Q_p0_bfq2.clk_m6', 'u_xq_Q_p0_bfq2.clk_m7', 'u_xq_Q_p0_bfq2.clk_l0', 'u_xq_Q_p0_bfq2.clk_l1', 'u_xq_Q_p0_bfq2.clk_l2', 'u_xq_Q_p0_bfq2.clk_l3', 'u_xq_Q_p0_bfq2.clk_l4', 'u_xq_Q_p0_bfq2.clk_l5', 'u_xq_Q_p0_bfq2.clk_l6', 'u_xq_Q_p0_bfq2.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p0_bfq3",
+    "kind": "core",
+    "xy": [
+     5960.664,
+     3697.92
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p0_bfq3.clk', 'u_xq_Q_p0_bfq3.clk_n', 'u_xq_Q_p0_bfq3.clk_s', 'u_xq_Q_p0_bfq3.clk_ctrl', 'u_xq_Q_p0_bfq3.clk_m0', 'u_xq_Q_p0_bfq3.clk_m1', 'u_xq_Q_p0_bfq3.clk_m2', 'u_xq_Q_p0_bfq3.clk_m3', 'u_xq_Q_p0_bfq3.clk_m4', 'u_xq_Q_p0_bfq3.clk_m5', 'u_xq_Q_p0_bfq3.clk_m6', 'u_xq_Q_p0_bfq3.clk_m7', 'u_xq_Q_p0_bfq3.clk_l0', 'u_xq_Q_p0_bfq3.clk_l1', 'u_xq_Q_p0_bfq3.clk_l2', 'u_xq_Q_p0_bfq3.clk_l3', 'u_xq_Q_p0_bfq3.clk_l4', 'u_xq_Q_p0_bfq3.clk_l5', 'u_xq_Q_p0_bfq3.clk_l6', 'u_xq_Q_p0_bfq3.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p1_bfq0",
+    "kind": "core",
+    "xy": [
+     5269.464,
+     2609.28
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p1_bfq0.clk', 'u_xq_Q_p1_bfq0.clk_n', 'u_xq_Q_p1_bfq0.clk_s', 'u_xq_Q_p1_bfq0.clk_ctrl', 'u_xq_Q_p1_bfq0.clk_m0', 'u_xq_Q_p1_bfq0.clk_m1', 'u_xq_Q_p1_bfq0.clk_m2', 'u_xq_Q_p1_bfq0.clk_m3', 'u_xq_Q_p1_bfq0.clk_m4', 'u_xq_Q_p1_bfq0.clk_m5', 'u_xq_Q_p1_bfq0.clk_m6', 'u_xq_Q_p1_bfq0.clk_m7', 'u_xq_Q_p1_bfq0.clk_l0', 'u_xq_Q_p1_bfq0.clk_l1', 'u_xq_Q_p1_bfq0.clk_l2', 'u_xq_Q_p1_bfq0.clk_l3', 'u_xq_Q_p1_bfq0.clk_l4', 'u_xq_Q_p1_bfq0.clk_l5', 'u_xq_Q_p1_bfq0.clk_l6', 'u_xq_Q_p1_bfq0.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p1_bfq1",
+    "kind": "core",
+    "xy": [
+     4949.784,
+     2609.28
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p1_bfq1.clk', 'u_xq_Q_p1_bfq1.clk_n', 'u_xq_Q_p1_bfq1.clk_s', 'u_xq_Q_p1_bfq1.clk_ctrl', 'u_xq_Q_p1_bfq1.clk_m0', 'u_xq_Q_p1_bfq1.clk_m1', 'u_xq_Q_p1_bfq1.clk_m2', 'u_xq_Q_p1_bfq1.clk_m3', 'u_xq_Q_p1_bfq1.clk_m4', 'u_xq_Q_p1_bfq1.clk_m5', 'u_xq_Q_p1_bfq1.clk_m6', 'u_xq_Q_p1_bfq1.clk_m7', 'u_xq_Q_p1_bfq1.clk_l0', 'u_xq_Q_p1_bfq1.clk_l1', 'u_xq_Q_p1_bfq1.clk_l2', 'u_xq_Q_p1_bfq1.clk_l3', 'u_xq_Q_p1_bfq1.clk_l4', 'u_xq_Q_p1_bfq1.clk_l5', 'u_xq_Q_p1_bfq1.clk_l6', 'u_xq_Q_p1_bfq1.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p1_bfq2",
+    "kind": "core",
+    "xy": [
+     5727.384,
+     4026.24
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p1_bfq2.clk', 'u_xq_Q_p1_bfq2.clk_n', 'u_xq_Q_p1_bfq2.clk_s', 'u_xq_Q_p1_bfq2.clk_ctrl', 'u_xq_Q_p1_bfq2.clk_m0', 'u_xq_Q_p1_bfq2.clk_m1', 'u_xq_Q_p1_bfq2.clk_m2', 'u_xq_Q_p1_bfq2.clk_m3', 'u_xq_Q_p1_bfq2.clk_m4', 'u_xq_Q_p1_bfq2.clk_m5', 'u_xq_Q_p1_bfq2.clk_m6', 'u_xq_Q_p1_bfq2.clk_m7', 'u_xq_Q_p1_bfq2.clk_l0', 'u_xq_Q_p1_bfq2.clk_l1', 'u_xq_Q_p1_bfq2.clk_l2', 'u_xq_Q_p1_bfq2.clk_l3', 'u_xq_Q_p1_bfq2.clk_l4', 'u_xq_Q_p1_bfq2.clk_l5', 'u_xq_Q_p1_bfq2.clk_l6', 'u_xq_Q_p1_bfq2.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p1_bfq3",
+    "kind": "core",
+    "xy": [
+     7040.664,
+     479.52
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p1_bfq3.clk', 'u_xq_Q_p1_bfq3.clk_n', 'u_xq_Q_p1_bfq3.clk_s', 'u_xq_Q_p1_bfq3.clk_ctrl', 'u_xq_Q_p1_bfq3.clk_m0', 'u_xq_Q_p1_bfq3.clk_m1', 'u_xq_Q_p1_bfq3.clk_m2', 'u_xq_Q_p1_bfq3.clk_m3', 'u_xq_Q_p1_bfq3.clk_m4', 'u_xq_Q_p1_bfq3.clk_m5', 'u_xq_Q_p1_bfq3.clk_m6', 'u_xq_Q_p1_bfq3.clk_m7', 'u_xq_Q_p1_bfq3.clk_l0', 'u_xq_Q_p1_bfq3.clk_l1', 'u_xq_Q_p1_bfq3.clk_l2', 'u_xq_Q_p1_bfq3.clk_l3', 'u_xq_Q_p1_bfq3.clk_l4', 'u_xq_Q_p1_bfq3.clk_l5', 'u_xq_Q_p1_bfq3.clk_l6', 'u_xq_Q_p1_bfq3.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   }
+  ],
+  "q_hub_ne": [
+   {
+    "name": "u_xq_Q_p0_bfq0",
+    "kind": "core",
+    "xy": [
+     3783.384,
+     3697.92
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p0_bfq0.clk', 'u_xq_Q_p0_bfq0.clk_n', 'u_xq_Q_p0_bfq0.clk_s', 'u_xq_Q_p0_bfq0.clk_ctrl', 'u_xq_Q_p0_bfq0.clk_m0', 'u_xq_Q_p0_bfq0.clk_m1', 'u_xq_Q_p0_bfq0.clk_m2', 'u_xq_Q_p0_bfq0.clk_m3', 'u_xq_Q_p0_bfq0.clk_m4', 'u_xq_Q_p0_bfq0.clk_m5', 'u_xq_Q_p0_bfq0.clk_m6', 'u_xq_Q_p0_bfq0.clk_m7', 'u_xq_Q_p0_bfq0.clk_l0', 'u_xq_Q_p0_bfq0.clk_l1', 'u_xq_Q_p0_bfq0.clk_l2', 'u_xq_Q_p0_bfq0.clk_l3', 'u_xq_Q_p0_bfq0.clk_l4', 'u_xq_Q_p0_bfq0.clk_l5', 'u_xq_Q_p0_bfq0.clk_l6', 'u_xq_Q_p0_bfq0.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p0_bfq1",
+    "kind": "core",
+    "xy": [
+     5217.624,
+     3697.92
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p0_bfq1.clk', 'u_xq_Q_p0_bfq1.clk_n', 'u_xq_Q_p0_bfq1.clk_s', 'u_xq_Q_p0_bfq1.clk_ctrl', 'u_xq_Q_p0_bfq1.clk_m0', 'u_xq_Q_p0_bfq1.clk_m1', 'u_xq_Q_p0_bfq1.clk_m2', 'u_xq_Q_p0_bfq1.clk_m3', 'u_xq_Q_p0_bfq1.clk_m4', 'u_xq_Q_p0_bfq1.clk_m5', 'u_xq_Q_p0_bfq1.clk_m6', 'u_xq_Q_p0_bfq1.clk_m7', 'u_xq_Q_p0_bfq1.clk_l0', 'u_xq_Q_p0_bfq1.clk_l1', 'u_xq_Q_p0_bfq1.clk_l2', 'u_xq_Q_p0_bfq1.clk_l3', 'u_xq_Q_p0_bfq1.clk_l4', 'u_xq_Q_p0_bfq1.clk_l5', 'u_xq_Q_p0_bfq1.clk_l6', 'u_xq_Q_p0_bfq1.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p0_bfq2",
+    "kind": "core",
+    "xy": [
+     5597.784,
+     2825.28
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p0_bfq2.clk', 'u_xq_Q_p0_bfq2.clk_n', 'u_xq_Q_p0_bfq2.clk_s', 'u_xq_Q_p0_bfq2.clk_ctrl', 'u_xq_Q_p0_bfq2.clk_m0', 'u_xq_Q_p0_bfq2.clk_m1', 'u_xq_Q_p0_bfq2.clk_m2', 'u_xq_Q_p0_bfq2.clk_m3', 'u_xq_Q_p0_bfq2.clk_m4', 'u_xq_Q_p0_bfq2.clk_m5', 'u_xq_Q_p0_bfq2.clk_m6', 'u_xq_Q_p0_bfq2.clk_m7', 'u_xq_Q_p0_bfq2.clk_l0', 'u_xq_Q_p0_bfq2.clk_l1', 'u_xq_Q_p0_bfq2.clk_l2', 'u_xq_Q_p0_bfq2.clk_l3', 'u_xq_Q_p0_bfq2.clk_l4', 'u_xq_Q_p0_bfq2.clk_l5', 'u_xq_Q_p0_bfq2.clk_l6', 'u_xq_Q_p0_bfq2.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p0_bfq3",
+    "kind": "core",
+    "xy": [
+     5960.664,
+     3697.92
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p0_bfq3.clk', 'u_xq_Q_p0_bfq3.clk_n', 'u_xq_Q_p0_bfq3.clk_s', 'u_xq_Q_p0_bfq3.clk_ctrl', 'u_xq_Q_p0_bfq3.clk_m0', 'u_xq_Q_p0_bfq3.clk_m1', 'u_xq_Q_p0_bfq3.clk_m2', 'u_xq_Q_p0_bfq3.clk_m3', 'u_xq_Q_p0_bfq3.clk_m4', 'u_xq_Q_p0_bfq3.clk_m5', 'u_xq_Q_p0_bfq3.clk_m6', 'u_xq_Q_p0_bfq3.clk_m7', 'u_xq_Q_p0_bfq3.clk_l0', 'u_xq_Q_p0_bfq3.clk_l1', 'u_xq_Q_p0_bfq3.clk_l2', 'u_xq_Q_p0_bfq3.clk_l3', 'u_xq_Q_p0_bfq3.clk_l4', 'u_xq_Q_p0_bfq3.clk_l5', 'u_xq_Q_p0_bfq3.clk_l6', 'u_xq_Q_p0_bfq3.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p1_bfq0",
+    "kind": "core",
+    "xy": [
+     5269.464,
+     2609.28
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p1_bfq0.clk', 'u_xq_Q_p1_bfq0.clk_n', 'u_xq_Q_p1_bfq0.clk_s', 'u_xq_Q_p1_bfq0.clk_ctrl', 'u_xq_Q_p1_bfq0.clk_m0', 'u_xq_Q_p1_bfq0.clk_m1', 'u_xq_Q_p1_bfq0.clk_m2', 'u_xq_Q_p1_bfq0.clk_m3', 'u_xq_Q_p1_bfq0.clk_m4', 'u_xq_Q_p1_bfq0.clk_m5', 'u_xq_Q_p1_bfq0.clk_m6', 'u_xq_Q_p1_bfq0.clk_m7', 'u_xq_Q_p1_bfq0.clk_l0', 'u_xq_Q_p1_bfq0.clk_l1', 'u_xq_Q_p1_bfq0.clk_l2', 'u_xq_Q_p1_bfq0.clk_l3', 'u_xq_Q_p1_bfq0.clk_l4', 'u_xq_Q_p1_bfq0.clk_l5', 'u_xq_Q_p1_bfq0.clk_l6', 'u_xq_Q_p1_bfq0.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p1_bfq1",
+    "kind": "core",
+    "xy": [
+     4949.784,
+     2609.28
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p1_bfq1.clk', 'u_xq_Q_p1_bfq1.clk_n', 'u_xq_Q_p1_bfq1.clk_s', 'u_xq_Q_p1_bfq1.clk_ctrl', 'u_xq_Q_p1_bfq1.clk_m0', 'u_xq_Q_p1_bfq1.clk_m1', 'u_xq_Q_p1_bfq1.clk_m2', 'u_xq_Q_p1_bfq1.clk_m3', 'u_xq_Q_p1_bfq1.clk_m4', 'u_xq_Q_p1_bfq1.clk_m5', 'u_xq_Q_p1_bfq1.clk_m6', 'u_xq_Q_p1_bfq1.clk_m7', 'u_xq_Q_p1_bfq1.clk_l0', 'u_xq_Q_p1_bfq1.clk_l1', 'u_xq_Q_p1_bfq1.clk_l2', 'u_xq_Q_p1_bfq1.clk_l3', 'u_xq_Q_p1_bfq1.clk_l4', 'u_xq_Q_p1_bfq1.clk_l5', 'u_xq_Q_p1_bfq1.clk_l6', 'u_xq_Q_p1_bfq1.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p1_bfq2",
+    "kind": "core",
+    "xy": [
+     5727.384,
+     4026.24
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p1_bfq2.clk', 'u_xq_Q_p1_bfq2.clk_n', 'u_xq_Q_p1_bfq2.clk_s', 'u_xq_Q_p1_bfq2.clk_ctrl', 'u_xq_Q_p1_bfq2.clk_m0', 'u_xq_Q_p1_bfq2.clk_m1', 'u_xq_Q_p1_bfq2.clk_m2', 'u_xq_Q_p1_bfq2.clk_m3', 'u_xq_Q_p1_bfq2.clk_m4', 'u_xq_Q_p1_bfq2.clk_m5', 'u_xq_Q_p1_bfq2.clk_m6', 'u_xq_Q_p1_bfq2.clk_m7', 'u_xq_Q_p1_bfq2.clk_l0', 'u_xq_Q_p1_bfq2.clk_l1', 'u_xq_Q_p1_bfq2.clk_l2', 'u_xq_Q_p1_bfq2.clk_l3', 'u_xq_Q_p1_bfq2.clk_l4', 'u_xq_Q_p1_bfq2.clk_l5', 'u_xq_Q_p1_bfq2.clk_l6', 'u_xq_Q_p1_bfq2.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   },
+   {
+    "name": "u_xq_Q_p1_bfq3",
+    "kind": "core",
+    "xy": [
+     7040.664,
+     479.52
+    ],
+    "insertion_ps": 212.8,
+    "insertion_ff_ps": 174.4,
+    "budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+    "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xq_Q_p1_bfq3.clk', 'u_xq_Q_p1_bfq3.clk_n', 'u_xq_Q_p1_bfq3.clk_s', 'u_xq_Q_p1_bfq3.clk_ctrl', 'u_xq_Q_p1_bfq3.clk_m0', 'u_xq_Q_p1_bfq3.clk_m1', 'u_xq_Q_p1_bfq3.clk_m2', 'u_xq_Q_p1_bfq3.clk_m3', 'u_xq_Q_p1_bfq3.clk_m4', 'u_xq_Q_p1_bfq3.clk_m5', 'u_xq_Q_p1_bfq3.clk_m6', 'u_xq_Q_p1_bfq3.clk_m7', 'u_xq_Q_p1_bfq3.clk_l0', 'u_xq_Q_p1_bfq3.clk_l1', 'u_xq_Q_p1_bfq3.clk_l2', 'u_xq_Q_p1_bfq3.clk_l3', 'u_xq_Q_p1_bfq3.clk_l4', 'u_xq_Q_p1_bfq3.clk_l5', 'u_xq_Q_p1_bfq3.clk_l6', 'u_xq_Q_p1_bfq3.clk_l7']; native view clock pin(s) ['clk', 'clk_ctrl', 'clk_l0', 'clk_l1', 'clk_l2', 'clk_l3', 'clk_l4', 'clk_l5', 'clk_l6', 'clk_l7', 'clk_m0', 'clk_m1', 'clk_m2', 'clk_m3', 'clk_m4', 'clk_m5', 'clk_m6', 'clk_m7', 'clk_n', 'clk_s'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)"
+   }
+  ]
+ },
+ "clock_entries": {
+  "q_hub_nw": {
+   "u_xq_Q_p0_bfq0": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p0_bfq0",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p0_bfq1": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p0_bfq1",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p0_bfq2": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p0_bfq2",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p0_bfq3": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p0_bfq3",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p1_bfq0": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p1_bfq0",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p1_bfq1": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p1_bfq1",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p1_bfq2": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p1_bfq2",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p1_bfq3": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p1_bfq3",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   }
+  },
+  "q_hub_ne": {
+   "u_xq_Q_p0_bfq0": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p0_bfq0",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p0_bfq1": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p0_bfq1",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p0_bfq2": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p0_bfq2",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p0_bfq3": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p0_bfq3",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p1_bfq0": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p1_bfq0",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p1_bfq1": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p1_bfq1",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p1_bfq2": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p1_bfq2",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   },
+   "u_xq_Q_p1_bfq3": {
+    "xy_um": [
+     128.664,
+     146.88
+    ],
+    "island_um": [
+     125.28,
+     142.56,
+     133.92,
+     151.2
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_ctrl",
+     "clk_l0",
+     "clk_l1",
+     "clk_l2",
+     "clk_l3",
+     "clk_l4",
+     "clk_l5",
+     "clk_l6",
+     "clk_l7",
+     "clk_m0",
+     "clk_m1",
+     "clk_m2",
+     "clk_m3",
+     "clk_m4",
+     "clk_m5",
+     "clk_m6",
+     "clk_m7",
+     "clk_n",
+     "clk_s"
+    ],
+    "tap": "u_xq_Q_p1_bfq3",
+    "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_cl2_bfqg"
+   }
+  }
+ },
+ "core_macros": {
+  "status": "KNOWN",
+  "outline_um": [
+   259.2,
+   220.32
+  ],
+  "basis": "HBM-CORES-KITS-41 compact event k41c-bfqg: 302.4x298.08 -> 259.2x220.32 (Codex PREP bfqg-native-compact-1745, uncommitted WT codex-bfqg-native-1520 re-created; incl bfqg-native-spacing-1710 4 clock +-0.048 moves; main clk world fixed)",
+  "macros": [
+   {
+    "name": "u_fcore.g_t[0].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     17.28,
+     17.292,
+     112.104,
+     58.356
+    ]
+   },
+   {
+    "name": "u_fcore.g_t[1].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     17.28,
+     67.02,
+     112.104,
+     108.084
+    ]
+   },
+   {
+    "name": "u_fcore.g_t[2].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     17.28,
+     118.956,
+     112.104,
+     160.02
+    ]
+   },
+   {
+    "name": "u_fcore.g_t[3].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     17.28,
+     168.684,
+     112.104,
+     209.748
+    ]
+   },
+   {
+    "name": "u_fcore.g_t[4].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     147.096,
+     17.292,
+     241.92,
+     58.356
+    ]
+   },
+   {
+    "name": "u_fcore.g_t[5].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     147.096,
+     67.02,
+     241.92,
+     108.084
+    ]
+   },
+   {
+    "name": "u_fcore.g_t[6].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "orient": "MY",
+    "rect_um": [
+     147.096,
+     118.956,
+     241.92,
+     160.02
+    ]
+   },
+   {
+    "name": "u_fcore.g_t[7].u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "orient": "MY",
+    "rect_um": [
+     147.096,
+     168.684,
+     241.92,
+     209.748
+    ]
+   }
+  ],
+  "channel_rule_um": 10.8,
+  "previous": {
+   "status": "UNKNOWN",
+   "why": "DIE-HBM-49 re-site (macro_channels FAIL): was KNOWN basis 'placed', 8 macros, core_macros sha ea6bd3fa92e0"
+  },
+  "previous_k41": {
+   "outline_um": [
+    302.4,
+    298.08
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.g_t[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      21.6,
+      170.46,
+      116.424,
+      211.524
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      21.6,
+      211.596,
+      116.424,
+      252.66
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      21.6,
+      129.372,
+      116.424,
+      170.436
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      21.6,
+      252.684,
+      116.424,
+      293.748
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      127.272,
+      17.34,
+      222.096,
+      58.404
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      21.6,
+      17.34,
+      116.424,
+      58.404
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[6].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      21.6,
+      58.428,
+      116.424,
+      99.492
+     ]
+    },
+    {
+     "name": "u_fcore.g_t[7].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      127.272,
+      69.228,
+      222.096,
+      110.292
+     ]
+    }
+   ]
+  }
+ }
+}
