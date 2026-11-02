@@ -1,0 +1,104 @@
+{
+ "scope": "STATIC current actual preCTS clock classification; no CTS/tree/timing or source/parent qualification",
+ "actual_clock_cells": 0,
+ "candidate_clkt19_dy_um": -51.84,
+ "grid_taps": 39,
+ "grid_assigned_sinks": 13185,
+ "special_direct_roots": {
+  "fclk_in_ft0_i[0]": 82,
+  "fclk_in_ft10_i[0]": 158,
+  "fclk_in_ft11_i[0]": 158,
+  "fclk_in_ft12_i[0]": 158,
+  "fclk_in_ft13_i[0]": 34,
+  "fclk_in_ft1_i[0]": 34,
+  "fclk_in_ft2_i[0]": 1194,
+  "fclk_in_ft3_i[0]": 34,
+  "fclk_in_ft4_i[0]": 94,
+  "fclk_in_ft5_i[0]": 102,
+  "fclk_in_ft6_i[0]": 158,
+  "fclk_in_ft7_i[0]": 158,
+  "fclk_in_ft8_i[0]": 34,
+  "fclk_in_ft9_i[0]": 158,
+  "fclk_in_i_fch_pc_Q_N_q[0]": 34,
+  "fclk_in_i_host_die_rst_n[0]": 34,
+  "fclk_in_i_host_hbm_rst_n[0]": 34,
+  "fclk_in_i_idsrc_Q_y[0]": 38,
+  "fclk_in_i_kvpc_Q_N_o_next[0]": 1226,
+  "fclk_in_i_kvpc_Q_N_pc__fo[0]": 34,
+  "fclk_in_i_kvs_ctl_o_hroot_Q[0]": 4502,
+  "fclk_in_i_seq__g_fan_N__u_fan_kc[0]": 162,
+  "fclk_in_i_slg_Q_N_o_ctl[0]": 606
+ },
+ "grid_loads": {
+  "clk_t10": 348,
+  "clk_t28": 82,
+  "clk_t36": 224,
+  "clk_t11": 1345,
+  "clk_t25": 327,
+  "clk_t9": 1533,
+  "clk_t35": 1402,
+  "clk_t17": 753,
+  "clk_t20": 474,
+  "clk_t38": 791,
+  "clk_t37": 1057,
+  "clk_t18": 260,
+  "clk_t8": 231,
+  "clk_t14": 567,
+  "clk_t29": 81,
+  "clk_t2": 1058,
+  "clk_t5": 522,
+  "clk_t3": 663,
+  "clk_t26": 817,
+  "clk_t30": 59,
+  "clk_t34": 128,
+  "clk": 13,
+  "clk_t15": 13,
+  "clk_t21": 7,
+  "clk_t19": 3,
+  "clk_t1": 53,
+  "clk_t27": 92,
+  "clk_t4": 32,
+  "clk_t22": 43,
+  "clk_t24": 3,
+  "clk_t13": 119,
+  "clk_t33": 12,
+  "clk_t23": 52,
+  "clk_t31": 6,
+  "clk_t16": 4,
+  "clk_t7": 2,
+  "clk_t12": 3,
+  "clk_t6": 4,
+  "clk_t32": 2
+ },
+ "grid_max_load": 1533,
+ "nearest_grid_max_um": 224.211,
+ "nearest_grid_over220": 2,
+ "nearest_grid_worst": [
+  {
+   "name": "u_bound.u_u_efault.fault$_DFF_PN0_",
+   "xy": [
+    1416.6299999999999,
+    313.3149999999998
+   ],
+   "nearest_tap": "clk_t10",
+   "tap_xy": [
+    1223.904,
+    344.8
+   ],
+   "distance_um": 224.211
+  },
+  {
+   "name": "u_bound.u_bin_i_host_die_rst_n/eq$_DFF_PN0_",
+   "xy": [
+    1411.52,
+    308.2049999999999
+   ],
+   "nearest_tap": "clk_t36",
+   "tap_xy": [
+    1275.104,
+    223.008
+   ],
+   "distance_um": 221.613
+  }
+ ]
+}

@@ -10,7 +10,9 @@
   "success": false,
   "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
   "landing_dx_um": 172.8,
-  "landing_dy_um": -146.88
+  "landing_dy_um": -146.88,
+  "minimum_touching_radius_success": true,
+  "minimum_touching_radius_um": 390.2040000000002
  },
  {
   "variant": "B",
@@ -23,6 +25,8 @@
   "success": false,
   "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
   "landing_dx_um": 181.44,
-  "landing_dy_um": -151.2
+  "landing_dy_um": -151.2,
+  "minimum_touching_radius_success": true,
+  "minimum_touching_radius_um": 390.2040000000002
  }
 ]

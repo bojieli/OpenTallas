@@ -5,7 +5,7 @@ import numpy as np
 from scipy.optimize import linprog
 sys.path.insert(0,'/home/ubuntu/OpenTallas/tools/autopilot');import geom_rules as g
 import os
-P=Path(__file__).parent;results=[];reset_movable=os.environ.get('RESET_MOVABLE')=='1';all19=os.environ.get('ALL19')=='1';margin=os.environ.get('MARGIN_CAPTURE')=='1'
+P=Path(__file__).parent;results=[];reset_movable=os.environ.get('RESET_MOVABLE')=='1';all19=os.environ.get('ALL19')=='1';margin=os.environ.get('MARGIN_CAPTURE')=='1';target_um=float(os.environ.get('TARGET_UM','390'))
 for variant,dy,dx in [('A',-146.88,172.8),('B',-151.2,181.44)]:
  D=g.Design('/srv/opentallas-scratch/claude/codex-hroot-ff-place-2338/geom.tsv')
  def move(cid,x,y):
@@ -42,13 +42,13 @@ for variant,dy,dx in [('A',-146.88,172.8),('B',-151.2,181.44)]:
    for cid,sgn in [(a,1),(b,-1)]:
     if cid in index:k=index[cid];row[2*k]+=sgn*sx;row[2*k+1]+=sgn*sy
     else:x,y=g.ctr(D.cells[cid]);const+=sgn*(sx*x+sy*y)
-   A.append(row);B.append(390-const)
+   A.append(row);B.append(target_um-const)
  for cid,k in index.items():
   for axis,val in enumerate(g.ctr(D.cells[cid])):
    for sgn in [-1,1]:
     row=np.zeros(4*n);row[2*k+axis]=sgn;row[2*n+2*k+axis]=-1;A.append(row);B.append(sgn*val)
  r=linprog(np.r_[np.zeros(2*n),np.ones(2*n)],A_ub=np.asarray(A),b_ub=np.asarray(B),bounds=[(12,1888),(12,826)]*n+[(0,None)]*(2*n),method='highs')
- res=dict(variant=variant,scope='STATIC current graph LP; no occupancy/PG/site/clock or source-event qualification',selected_existing_ff=n,shared_reset101_movable=reset_movable,all19_captures_movable=all19,margin_capture_movable=margin,exact_touching_pairs=len(edges),success=r.success,message=r.message,landing_dx_um=dx,landing_dy_um=dy)
+ res=dict(variant=variant,scope='STATIC current graph LP; no occupancy/PG/site/clock or source-event qualification',selected_existing_ff=n,shared_reset101_movable=reset_movable,all19_captures_movable=all19,margin_capture_movable=margin,exact_touching_pairs=len(edges),target_touching_radius_um=target_um,success=r.success,message=r.message,landing_dx_um=dx,landing_dy_um=dy)
  if r.success:
   targets=[]
   for cid,k in index.items():
@@ -56,5 +56,10 @@ for variant,dy,dx in [('A',-146.88,172.8),('B',-151.2,181.44)]:
    if dist>.1:targets.append(dict(name=D.cells[cid][6],old=list(old),new=[float(x),float(y)],distance_um=float(dist)))
    move(cid,x,y)
   bad=[];res.update(targets=targets,metrics=g.r2r_metrics(D,capture_pairs=bad),remaining_bad=bad)
+ if margin and not r.success:
+  aa=np.c_[np.asarray(A),np.r_[-np.ones(4*len(edges)),np.zeros(len(A)-4*len(edges))]];bb=np.asarray(B).copy();bb[:4*len(edges)]-=target_um
+  rr=linprog(np.r_[np.zeros(4*n),1.0],A_ub=aa,b_ub=bb,bounds=[(12,1888),(12,826)]*n+[(0,None)]*(2*n)+[(0,None)],method='highs')
+  res['minimum_touching_radius_success']=rr.success
+  if rr.success:res['minimum_touching_radius_um']=float(rr.x[-1])
  results.append(res);print({k:v for k,v in res.items() if k not in ['targets','remaining_bad']},flush=True)
-(P/('current_graph_lp_margin.json' if margin else 'current_graph_lp_all19.json' if all19 else 'current_graph_lp_reset_movable.json' if reset_movable else 'current_graph_lp.json')).write_text(json.dumps(results,indent=1)+'\n')
+(P/('current_graph_lp_margin391.json' if target_um==391 else 'current_graph_lp_margin.json' if margin else 'current_graph_lp_all19.json' if all19 else 'current_graph_lp_reset_movable.json' if reset_movable else 'current_graph_lp.json')).write_text(json.dumps(results,indent=1)+'\n')
