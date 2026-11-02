@@ -167,7 +167,7 @@ proc fx_run {} {
   }
   close $fh
   set fh [open "$::fx_out/counts.tsv" w]
-  foreach {key value} [list phase ORIGINAL_CONSTRAINED_STD_BEFORE_ZERO_UNC queries $queries rows $total errors $errors missing $missing limited $limited clock_sources [llength $roots] additional_CPPR_credit NONE bounds UNCORRELATED_CONSERVATIVE_NOT_NATIVE_FWD_STD_SLACK] {puts $fh "$key\t$value"}
+  foreach {key value} [list phase ORIGINAL_CONSTRAINED_STD_BEFORE_ZERO_UNC queries $queries rows $total errors $errors missing $missing limited $limited clock_sources [llength $roots] native_engine_cppr_enabled [sta::crpr_enabled] additional_CPPR_credit NONE bounds UNCORRELATED_CONSERVATIVE_NOT_NATIVE_FWD_STD_SLACK] {puts $fh "$key\t$value"}
   close $fh
   puts "OT_FWD_EXPORT_COMPLETE"
 }
@@ -205,7 +205,7 @@ def validate(req,folder,log):
     if seen!=set(expected):raise ValueError('incomplete all-bit witness')
     state=folder/'original_state.sdc'
     if not state.is_file():raise ValueError('missing original constrained state snapshot')
-    return dict(original_state_sha256=hashlib.sha256(state.read_bytes()).hexdigest(),status='COMPLETE_OBSERVATION',qualification='NOT_ASSERTED',parent_or_link_coverage='NOT_ASSERTED',bits=len(rows)//2,rows=len(rows),actual_launch_roots=sorted({r['launch_source_port'] for r in rows}),bounds='UNCORRELATED_CONSERVATIVE_NO_ADDITIONAL_CPPR',native_STD_reference=req['native_output_clock'])
+    return dict(original_state_sha256=hashlib.sha256(state.read_bytes()).hexdigest(),status='COMPLETE_OBSERVATION',qualification='NOT_ASSERTED',parent_or_link_coverage='NOT_ASSERTED',bits=len(rows)//2,rows=len(rows),actual_launch_roots=sorted({r['launch_source_port'] for r in rows}),bounds='UNCORRELATED_CONSERVATIVE_NO_ADDITIONAL_CPPR',native_STD_reference=req['native_output_clock'],native_engine_cppr_enabled=counts['native_engine_cppr_enabled'])
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--sdc',required=True);p.add_argument('--netlist',required=True);p.add_argument('--module',required=True);p.add_argument('--out',required=True);p.add_argument('--out-dir',required=True);p.add_argument('--enable',action='store_true');p.add_argument('--query-limit',type=int,default=0)

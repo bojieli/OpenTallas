@@ -1,0 +1,20 @@
+{
+  "scope": "ROOT may authorize ONE baseline Anear normal CTS and TT/FF read-only witness; no route or qualification",
+  "source_changes": 0,
+  "GROUP_RE": "OFF_UNCHANGED",
+  "baseline_kit": "intel2:/srv/opentallas-scratch2/claude/codex-s81-bound-landing-r2-1131/Anear_corrected/gen/slice_station__t41",
+  "normal_CTS_input": "original run/results/asap7/dp_slice_station__t41/base/3_place.odb",
+  "hook_policy": "ordinary existing preCTS tap-cap and eight declared export buffers apply exactly once; do not rerun hooks over the audit post_hook.odb",
+  "observer": "intel2:/srv/opentallas-scratch2/claude/codex-t41-export-observer-1640/T41A_observer.tcl",
+  "request": "T41A_observer.tcl.request.json",
+  "expected": {"exports":8,"bits":4816,"max_data_path_queries":9632,"master_clock_sources":78,"corners":["TT","FF"]},
+  "session": "normal native libraries/RC/SDC plus correct FF corner overlay, actual completed CTS ODB; original constrained timing state only",
+  "placement_LOOK": "owner collects actual CTS geometry and preserves all source/clock ownership evidence",
+  "observer_insertion": "after native timing inputs are loaded and propagated, BEFORE pair_skew zero_unc or forwarded export clock deletion",
+  "output_mapping": "each TT/FF session has its own /out directory; observer writes /out/t41_export_witness/{data_k.tsv,counts.tsv,original_state.sdc}",
+  "capture_actual_identities": ["CTS ODB/netlist", "loaded TT/FF library receipt", "golden SDC and FF overlays", "RC/estimate method", "original state SDC snapshot", "observer/request code"],
+  "native_vclk_slack": "kept separately; never label computed data/K difference as native forwarded-clock STD slack",
+  "relative_bounds": "uncorrelated conservative only; NO new CPPR; physical forwarded root F bound explicitly",
+  "consumer": "explicit L/F data-to-K relation; F/R receiver phase binding or existing conservative complete tap hull",
+  "holds": ["source and caller/START/reset gates unchanged", "sender80/falling write contract unchanged", "no assumption every bit owner equals F", "no CTS/GRT/DRT/route PASS from source PREP", "Bnear fallback preserved"]
+}

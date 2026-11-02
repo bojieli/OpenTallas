@@ -11,6 +11,7 @@ FAKE=r'''
 namespace eval sta {
  proc get_port_pin {x} {return $x}
  proc worst_slack_cmd {x} {return 0}
+ proc crpr_enabled {} {return 1}
 }
 proc write_sdc {path} {set f [open $path w];puts $f {set_clock_uncertainty 25 -hold [all_clocks]};close $f}
 proc get_full_name {x} {return $x}
