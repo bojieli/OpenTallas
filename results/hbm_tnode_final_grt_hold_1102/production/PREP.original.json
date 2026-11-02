@@ -1,0 +1,20 @@
+{
+  "status": "COMPLETE_PRODUCTION_GRT_HOLD_PREP_ROOT_REVIEW_REQUIRED_NO_CAD",
+  "source": "/srv/opentallas-scratch2/claude/codex-hbm-tnode-target235-pgfix-2343/kit",
+  "source_4_cts_sha256": "9ad14f9225afc0cedd173359d8b12bdaadd6a76855459c03bac6a32c413d20a3",
+  "native_helper_sha256": "e19c5fd9872e37f68d610e2dc46608359c9970b7c9e6de84f546f3b3c3ea3a2d",
+  "native_module_sha256": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
+  "normalflow": "Same-eb2 ordinaryGOALgrt; normalroute HM10/MM tc+BC branch extendedonlyto explicitgrtgoal; noCTSforced/noDRT",
+  "runtime": "AfterMMpatch wholebodyfinally driver; strict only actualmakegrt process; originalPRE/POST retained",
+  "guards": "CanonicalPRDactualclock-familydontuse beforefirstrepair, buffersusable/noinstanceDNT; blockingclockpose/master/connectivitydiff; freshsecondsavedPG0 beforefreshTTFFRC",
+  "constraints": "833ps, TT250/FF202.5 arrivals, current0/25 uncertainties/HM10/source/native4 unchanged",
+  "proof": "Original4730EQ/KEEP358native4 proofcache unchanged; nofakeBkselreceipt",
+  "reports": "FreshFFactualviolatingpaths in existingRCstage, no separateclassificationSTA",
+  "dispatch_ready": false,
+  "physical_release": false,
+  "clock_coverage": "NormalGRT actualroutableclocknets requireguides oractualwire; no wirefreeze or0010guidealias",
+  "launch_command_after_ROOT_approval": "~/.local/bin/ot-run --mem 8 --threads 2 --disk 5 --dir /srv/opentallas-scratch2/claude/codex-hbm-tnode-grt-hold-prep-r2-0240 -- bash run.sh",
+  "root_review_required": true,
+  "adapter_receipt": "Final standard stage_grt receipt generated AFTER all PRE/POST guard additions; prior unrun preparation archived, no runtime receipt fabricated",
+  "uncertainty_correction": "Actualunchangedconstraint.sdc has setup0/hold25 with12.5seamsplit; originalPREP60 wording wasstale. METH6.1 OWNER12.24c. Metadataonly, noSDC/scenechange."
+}

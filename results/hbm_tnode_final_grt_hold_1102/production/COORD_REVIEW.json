@@ -1,0 +1,16 @@
+{
+ "status": "COORDINATOR_REVIEW_AUTHORIZED_ONE_NORMAL_GRT_HOLD_DIAGNOSTIC",
+ "reviewer": "/root/hbm_all",
+ "original_PREP": "PREP.original.json",
+ "capsule_source": "EPYC2 r2-0240 exact copy; source files and cache mtimes preserved",
+ "actual_4CTS_sha256": "9ad14f9225afc0cedd173359d8b12bdaadd6a76855459c03bac6a32c413d20a3",
+ "dryrun": "Intel1 codex-tnode-normal-dryrun-0420 unit737396-1793624269 synth/cts both noop after normal MM+runtimewrapper",
+ "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+ "resources": {
+  "memory_gb": 8,
+  "threads": 2,
+  "disk_gb": 5
+ },
+ "scope": "GOALgrt only; genuinePG0CTS+nativebirth wholetransaction, no CTS rebuild/DRT/SIGNED/default/source/constraint changes; stop collect freshTTFF actualholdpaths+clockguard+secondsavedPG0",
+ "FLOW": "Final r2-0240 source/lifecycle CONCUR; no blocking finding"
+}
