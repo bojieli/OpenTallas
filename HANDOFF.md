@@ -2939,3 +2939,6 @@ CODEX: KV PARK2026-11-01 18:35 PST onexplicituserhandback; all5helpers+EX parked
 CODEX PARK 2026-11-01 18:38 PST: cap/bksel/PDSK safely parked on USER handback, children/API dispatcher toldstop; no new jobs or changes. Cap DRC0/ANT0/pin748 native route completed but051SIGFAIL TT−125.05/FF−16.01/43dataSlew; grouped8nets, no EQ/export. Exact packet /home/ubuntu/coord/handoff/codex_caprt_20261101_1838.md. No own live controller; f342R1 retry/R2adapter preparedheld, original failures/checkpoints/foreignjobs preserved.
 
 CODEX: PARKED HBM clock 2026-11-01 18:38 PST. Latest committed119fb3dc4 (283/66 missing joins), cleanclass/PG1d9982186; both onhub. PG3706→0 PASS, noCTS/genuinefillFAIL. NE_v1 DRT advancing +3 inherited queued, preserved. Protected tailtyped candidate8-placement catalogue/source reset/body relation draft preserved; seeCODEX-LOG.
+
+CODEX: S81 PARKED at explicitUSERhandback. Fullpacket handoff/codex_s81_20261101_1836.md; no newlaunches/retries/merges/EDA, allcurrentjobs/controllers/checkpoints preserved. CapactualfinaltimingFAIL andL2oneslewNOTSIGNED remainexplicit; whole-data-dieGRT/TTFFnotfinished.
+- 2026-11-01 18:40 PST COORD: Codex parked all lanes 18:35-18:40 (user handback). Claude owns all coordination again; split rule ended. RECONCILE-1101C is mapping the 13 packets to lanes, live jobs and READY tips.
