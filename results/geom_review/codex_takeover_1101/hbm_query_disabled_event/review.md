@@ -1,0 +1,5 @@
+# QUERY disabled full-event PREP
+
+Personally viewed native_event.png and parsed native model, exact normalized producer join and six-wrapper event. Scoped CONCUR for disabled geometry PREP only. Five real SRAMs in170.64×164.16 leave central/right streets and a plausible activeM5 contact/driver bay at86.376,82.08; nearest macro body is12.414um away. Pin census1630=1055input+567output+7clock+1reset is coherent. Six compatibility clocks remain source-unused; one activeclk does not claim seven active domains.
+
+Exact reverse head5/source normalization supports frozen source correspondence only. Eight carrier projections across six wrappers remove24 physical constant bits with epoch shifts; paired lane ABI/pin updates, fresh wrapper proofs and physical cuts must precede logical8 restoration. Proposed addedFF/cycles zero; removed mapped FF count is unknown. Hold clock311.5/262.6 versus GEN250/202.5 selection, two q1 contacts' real0.504um bridge, PG/contact/nativeclock, actual fill/reach/route and parent/source-provider joins. No source adoption, default activation or physical dispatch release.

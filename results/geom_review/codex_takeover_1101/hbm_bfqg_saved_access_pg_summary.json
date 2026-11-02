@@ -1,0 +1,1254 @@
+{
+ "scope": "Independent finite read of saved correctedBFQG PLACE access/PG evidence; no CAD",
+ "nativePG_status": "FAIL",
+ "checked": 32782,
+ "open_pins": 4680,
+ "open_buffer_instances": 2340,
+ "reason_counts": {
+  "OT_PG_FINAL_BINDING": 4680
+ },
+ "actual_net_counts": {
+  "": 4680
+ },
+ "existing_rules": [
+  {
+   "inst_pattern": ".*",
+   "pin_pattern": "^VDD$",
+   "net": "VDD",
+   "role": "POWER",
+   "region": ""
+  },
+  {
+   "inst_pattern": ".*",
+   "pin_pattern": "^VSS$",
+   "net": "VSS",
+   "role": "GROUND",
+   "region": ""
+  }
+ ],
+ "macro_faces": [
+  {
+   "instance": "g_t\\[0\\].u_m",
+   "orient": "R0",
+   "signals": 819,
+   "faces": {
+    "W": 410,
+    "E": 409
+   },
+   "nearest_bodies": {
+    "W_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "_09729_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       14.796,
+       44.01,
+       15.12,
+       44.28
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_09734_",
+      "master": "AND2x4_ASAP7_75t_R",
+      "box_um": [
+       14.58,
+       45.09,
+       15.12,
+       45.36
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_09735_",
+      "master": "AND2x4_ASAP7_75t_R",
+      "box_um": [
+       14.58,
+       42.93,
+       15.12,
+       43.2
+      ]
+     }
+    ],
+    "W_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_48_1_Right_1743",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       15.12,
+       17.28,
+       15.228,
+       17.55
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_49_1_Right_1744",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       15.12,
+       17.55,
+       15.228,
+       17.82
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_50_1_Right_1745",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       15.12,
+       17.82,
+       15.228,
+       18.09
+      ]
+     }
+    ],
+    "E_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[0\\].u_m_1",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       114.264,
+       55.62,
+       114.426,
+       55.89
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[0\\].u_m_8",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       114.264,
+       57.24,
+       114.426,
+       57.51
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[0\\].u_m_10",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       114.264,
+       55.89,
+       114.426,
+       56.16
+      ]
+     }
+    ],
+    "E_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_48_2_Left_1576",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       114.156,
+       17.28,
+       114.264,
+       17.55
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_49_2_Left_1577",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       114.156,
+       17.55,
+       114.264,
+       17.82
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_50_2_Left_1578",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       114.156,
+       17.82,
+       114.264,
+       18.09
+      ]
+     }
+    ]
+   },
+   "same_layer_PG_signal_overlap": 0
+  },
+  {
+   "instance": "g_t\\[1\\].u_m",
+   "orient": "R0",
+   "signals": 819,
+   "faces": {
+    "W": 410,
+    "E": 409
+   },
+   "nearest_bodies": {
+    "W_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "_09445_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       14.796,
+       92.61,
+       15.12,
+       92.88
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_09487_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       14.796,
+       92.88,
+       15.12,
+       93.15
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_09500_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       14.796,
+       90.72,
+       15.12,
+       90.99
+      ]
+     }
+    ],
+    "W_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_232_1_Right_2416",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       15.12,
+       66.96,
+       15.228,
+       67.23
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_233_1_Right_2417",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       15.12,
+       67.23,
+       15.228,
+       67.5
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_234_1_Right_2418",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       15.12,
+       67.5,
+       15.228,
+       67.77
+      ]
+     }
+    ],
+    "E_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "_11302_",
+      "master": "INVx3_ASAP7_75t_R",
+      "box_um": [
+       114.264,
+       90.18,
+       114.534,
+       90.45
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[1\\].u_m_38",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       114.264,
+       107.46,
+       114.426,
+       107.73
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[1\\].u_m_39",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       114.264,
+       107.19,
+       114.426,
+       107.46
+      ]
+     }
+    ],
+    "E_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_232_2_Left_2248",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       114.156,
+       66.96,
+       114.264,
+       67.23
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_233_2_Left_2249",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       114.156,
+       67.23,
+       114.264,
+       67.5
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_234_2_Left_2250",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       114.156,
+       67.5,
+       114.264,
+       67.77
+      ]
+     }
+    ]
+   },
+   "same_layer_PG_signal_overlap": 0
+  },
+  {
+   "instance": "g_t\\[2\\].u_m",
+   "orient": "R0",
+   "signals": 819,
+   "faces": {
+    "W": 410,
+    "E": 409
+   },
+   "nearest_bodies": {
+    "W_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "_09208_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       14.796,
+       129.87,
+       15.12,
+       130.14
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_09249_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       14.796,
+       136.35,
+       15.12,
+       136.62
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_09273_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       14.796,
+       120.15,
+       15.12,
+       120.42
+      ]
+     }
+    ],
+    "W_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_424_1_Right_3087",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       15.12,
+       118.8,
+       15.228,
+       119.07
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_425_1_Right_3088",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       15.12,
+       119.07,
+       15.228,
+       119.34
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_426_1_Right_3089",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       15.12,
+       119.34,
+       15.228,
+       119.61
+      ]
+     }
+    ],
+    "E_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "_10503_",
+      "master": "INVx1_ASAP7_75t_R",
+      "box_um": [
+       114.264,
+       133.38,
+       114.426,
+       133.65
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[2\\].u_m_74",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       114.264,
+       158.49,
+       114.426,
+       158.76
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[2\\].u_m_75",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       114.264,
+       159.03,
+       114.426,
+       159.3
+      ]
+     }
+    ],
+    "E_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_424_2_Left_2919",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       114.156,
+       118.8,
+       114.264,
+       119.07
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_425_2_Left_2920",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       114.156,
+       119.07,
+       114.264,
+       119.34
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_426_2_Left_2921",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       114.156,
+       119.34,
+       114.264,
+       119.61
+      ]
+     }
+    ]
+   },
+   "same_layer_PG_signal_overlap": 0
+  },
+  {
+   "instance": "g_t\\[3\\].u_m",
+   "orient": "R0",
+   "signals": 819,
+   "faces": {
+    "W": 410,
+    "E": 409
+   },
+   "nearest_bodies": {
+    "W_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "_07474_",
+      "master": "INVx1_ASAP7_75t_R",
+      "box_um": [
+       14.958,
+       169.02,
+       15.12,
+       169.29
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_08882_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       14.796,
+       193.32,
+       15.12,
+       193.59
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_08904_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       14.796,
+       191.16,
+       15.12,
+       191.43
+      ]
+     }
+    ],
+    "W_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_608_1_Right_3759",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       15.12,
+       168.48,
+       15.228,
+       168.75
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_609_1_Right_3760",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       15.12,
+       168.75,
+       15.228,
+       169.02
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_610_1_Right_3761",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       15.12,
+       169.02,
+       15.228,
+       169.29
+      ]
+     }
+    ],
+    "E_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "_11299_",
+      "master": "INVx3_ASAP7_75t_R",
+      "box_um": [
+       114.264,
+       180.36,
+       114.534,
+       180.63
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_11761_",
+      "master": "INVx1_ASAP7_75t_R",
+      "box_um": [
+       114.264,
+       171.45,
+       114.426,
+       171.72
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_11762_",
+      "master": "INVx1_ASAP7_75t_R",
+      "box_um": [
+       114.264,
+       171.18,
+       114.426,
+       171.45
+      ]
+     }
+    ],
+    "E_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_608_2_Left_3591",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       114.156,
+       168.48,
+       114.264,
+       168.75
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_609_2_Left_3592",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       114.156,
+       168.75,
+       114.264,
+       169.02
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_610_2_Left_3593",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       114.156,
+       169.02,
+       114.264,
+       169.29
+      ]
+     }
+    ]
+   },
+   "same_layer_PG_signal_overlap": 0
+  },
+  {
+   "instance": "g_t\\[4\\].u_m",
+   "orient": "R0",
+   "signals": 819,
+   "faces": {
+    "W": 410,
+    "E": 409
+   },
+   "nearest_bodies": {
+    "W_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "_08596_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       144.612,
+       44.28,
+       144.936,
+       44.55
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_08672_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       144.612,
+       37.8,
+       144.936,
+       38.07
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_08734_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       144.612,
+       51.57,
+       144.936,
+       51.84
+      ]
+     }
+    ],
+    "W_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_48_2_Right_2080",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       144.936,
+       17.28,
+       145.044,
+       17.55
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_49_2_Right_2081",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       144.936,
+       17.55,
+       145.044,
+       17.82
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_50_2_Right_2082",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       144.936,
+       17.82,
+       145.044,
+       18.09
+      ]
+     }
+    ],
+    "E_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[4\\].u_m_138",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       244.08,
+       55.62,
+       244.242,
+       55.89
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[4\\].u_m_139",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       244.08,
+       55.89,
+       244.242,
+       56.16
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[4\\].u_m_143",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       244.08,
+       57.24,
+       244.242,
+       57.51
+      ]
+     }
+    ],
+    "E_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_48_3_Left_1912",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       243.972,
+       17.28,
+       244.08,
+       17.55
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_49_3_Left_1913",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       243.972,
+       17.55,
+       244.08,
+       17.82
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_50_3_Left_1914",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       243.972,
+       17.82,
+       244.08,
+       18.09
+      ]
+     }
+    ]
+   },
+   "same_layer_PG_signal_overlap": 0
+  },
+  {
+   "instance": "g_t\\[5\\].u_m",
+   "orient": "R0",
+   "signals": 819,
+   "faces": {
+    "W": 410,
+    "E": 409
+   },
+   "nearest_bodies": {
+    "W_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "_08322_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       144.612,
+       96.93,
+       144.936,
+       97.2
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_08331_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       144.612,
+       103.68,
+       144.936,
+       103.95
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_08363_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       144.612,
+       98.01,
+       144.936,
+       98.28
+      ]
+     }
+    ],
+    "W_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_232_2_Right_2752",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       144.936,
+       66.96,
+       145.044,
+       67.23
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_233_2_Right_2753",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       144.936,
+       67.23,
+       145.044,
+       67.5
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_234_2_Right_2754",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       144.936,
+       67.5,
+       145.044,
+       67.77
+      ]
+     }
+    ],
+    "E_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[5\\].u_m_171",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       244.08,
+       105.3,
+       244.242,
+       105.57
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[5\\].u_m_176",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       244.08,
+       106.65,
+       244.242,
+       106.92
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[5\\].u_m_177",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       244.08,
+       106.92,
+       244.242,
+       107.19
+      ]
+     }
+    ],
+    "E_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_232_3_Left_2584",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       243.972,
+       66.96,
+       244.08,
+       67.23
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_233_3_Left_2585",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       243.972,
+       67.23,
+       244.08,
+       67.5
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_234_3_Left_2586",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       243.972,
+       67.5,
+       244.08,
+       67.77
+      ]
+     }
+    ]
+   },
+   "same_layer_PG_signal_overlap": 0
+  },
+  {
+   "instance": "g_t\\[6\\].u_m",
+   "orient": "MY",
+   "signals": 819,
+   "faces": {
+    "E": 410,
+    "W": 409
+   },
+   "nearest_bodies": {
+    "W_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "_10290_",
+      "master": "AND4x1_ASAP7_75t_R",
+      "box_um": [
+       144.558,
+       151.47,
+       144.936,
+       151.74
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_10300_",
+      "master": "AND4x1_ASAP7_75t_R",
+      "box_um": [
+       144.558,
+       147.42,
+       144.936,
+       147.69
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_10316_",
+      "master": "AND4x1_ASAP7_75t_R",
+      "box_um": [
+       144.558,
+       142.02,
+       144.936,
+       142.29
+      ]
+     }
+    ],
+    "W_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_424_2_Right_3423",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       144.936,
+       118.8,
+       145.044,
+       119.07
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_425_2_Right_3424",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       144.936,
+       119.07,
+       145.044,
+       119.34
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_426_2_Right_3425",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       144.936,
+       119.34,
+       145.044,
+       119.61
+      ]
+     }
+    ],
+    "E_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "_08089_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       244.08,
+       137.97,
+       244.404,
+       138.24
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_08130_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       244.08,
+       135.27,
+       244.404,
+       135.54
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_08226_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       244.08,
+       125.82,
+       244.404,
+       126.09
+      ]
+     }
+    ],
+    "E_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_424_3_Left_3255",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       243.972,
+       118.8,
+       244.08,
+       119.07
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_425_3_Left_3256",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       243.972,
+       119.07,
+       244.08,
+       119.34
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_426_3_Left_3257",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       243.972,
+       119.34,
+       244.08,
+       119.61
+      ]
+     }
+    ]
+   },
+   "same_layer_PG_signal_overlap": 0
+  },
+  {
+   "instance": "g_t\\[7\\].u_m",
+   "orient": "MY",
+   "signals": 819,
+   "faces": {
+    "E": 410,
+    "W": 409
+   },
+   "nearest_bodies": {
+    "W_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[7\\].u_m_239",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       144.774,
+       206.82,
+       144.936,
+       207.09
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[7\\].u_m_245",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       144.774,
+       208.71,
+       144.936,
+       208.98
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "g_t\\[7\\].u_m_247",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "box_um": [
+       144.774,
+       209.25,
+       144.936,
+       209.52
+      ]
+     }
+    ],
+    "W_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_608_2_Right_4095",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       144.936,
+       168.48,
+       145.044,
+       168.75
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_609_2_Right_4096",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       144.936,
+       168.75,
+       145.044,
+       169.02
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_610_2_Right_4097",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       144.936,
+       169.02,
+       145.044,
+       169.29
+      ]
+     }
+    ],
+    "E_active": [
+     {
+      "gap_um": 2.16,
+      "instance": "_07740_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       244.08,
+       198.72,
+       244.404,
+       198.99
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_07776_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       244.08,
+       191.43,
+       244.404,
+       191.7
+      ]
+     },
+     {
+      "gap_um": 2.16,
+      "instance": "_07783_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "box_um": [
+       244.08,
+       190.35,
+       244.404,
+       190.62
+      ]
+     }
+    ],
+    "E_tap_endcap": [
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_608_3_Left_3927",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       243.972,
+       168.48,
+       244.08,
+       168.75
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_609_3_Left_3928",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       243.972,
+       168.75,
+       244.08,
+       169.02
+      ]
+     },
+     {
+      "gap_um": 2.052,
+      "instance": "PHY_EDGE_ROW_610_3_Left_3929",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "box_um": [
+       243.972,
+       169.02,
+       244.08,
+       169.29
+      ]
+     }
+    ]
+   },
+   "same_layer_PG_signal_overlap": 0
+  }
+ ],
+ "PG_vias_not_expanded": 67553,
+ "limitations": [
+  "bbox overlap is not full DRC",
+  "PG via enclosure not expanded",
+  "pin-access legal points NOT RUN",
+  "no universal STD4.32 keepout inferred"
+ ]
+}

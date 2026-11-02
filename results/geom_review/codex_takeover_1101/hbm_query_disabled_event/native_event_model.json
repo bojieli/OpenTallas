@@ -1,0 +1,262 @@
+{
+  "status": "DISABLED_FULL_EVENT_PREP_NO_PHYSICAL_RELEASE",
+  "source": "intel1 immutable295a8ce4985 currentC7-filebasis + explicitH32head5 projection",
+  "view": "ot_hbm_idx_query_static@b58b69114710",
+  "outline_um": [
+    170.64,
+    164.16
+  ],
+  "physical_pins": 1630,
+  "input_data_bits": 1055,
+  "output_data_bits": 567,
+  "clocks": 7,
+  "resets": 1,
+  "source_active_clock_roots": [
+    "clk"
+  ],
+  "source_unused_compat_clock_inputs": [
+    "clk_quant",
+    "clk_quant_delay",
+    "clk_bank[0]",
+    "clk_bank[1]",
+    "clk_bank[2]",
+    "clk_bank[3]"
+  ],
+  "macros": [
+    {
+      "instance": "core.gcode\\[0\\].mem",
+      "x": 15.12,
+      "y": 15.132,
+      "w": 51.408,
+      "h": 20.79
+    },
+    {
+      "instance": "core.gcode\\[1\\].mem",
+      "x": 15.12,
+      "y": 48.876,
+      "w": 51.408,
+      "h": 20.79
+    },
+    {
+      "instance": "core.gcode\\[2\\].mem",
+      "x": 15.12,
+      "y": 82.62,
+      "w": 51.408,
+      "h": 20.79
+    },
+    {
+      "instance": "core.scmem",
+      "x": 79.488,
+      "y": 15.132,
+      "w": 51.408,
+      "h": 20.79
+    },
+    {
+      "instance": "core.gcode\\[3\\].mem",
+      "x": 79.488,
+      "y": 48.876,
+      "w": 51.408,
+      "h": 20.79
+    }
+  ],
+  "macro_area_um2": 5343.8616,
+  "native_head_capture_stages": 3,
+  "stage_sequence": [
+    "eh_r nativeinput",
+    "core ql_head",
+    "native ql_head"
+  ],
+  "added_ff": 0,
+  "added_cycles": 0,
+  "max_payload_input_bytes_per_cycle": 130,
+  "quantizer": "Actualsource fixedII1/13cycles,32FP32values per1024bitblock; sourcecalendar\u226514edges fromlastheadblock toemit unchanged",
+  "scope": "CurrentH32/currentoldN12RT171/173 source cohort only; no future192/new3319ABI or parentmission alias",
+  "proof": "Native component official EQ31379/KEEP1056/reset4 at5509017f0; wrapper event proofs NOTRUN",
+  "layout_holds": [
+    "Actual native clock event/budget not adopted: currentG311.5/262.6 versus GEN250/202.5 UNSELECTED",
+    "Two q1 contacts need real .504um bridge; two q0 contacts inside proposedBPin",
+    "Eight observed parent carriers require explicit3-bit prune and typedG0C event",
+    "No ordinary physical spacing/PG/fill/reach/route/clock gates measured on proposed entry"
+  ],
+  "parent": "Eightobservedcarrierpruningshift higherindices-3/keepdataidentitysites; restorelogical8 onlyafterphysicalcuts, no beforepackzeroexemption",
+  "active_clock_entry_um": [
+    86.376,
+    82.08
+  ],
+  "pg_anchor_um": [
+    86.4,
+    82.08
+  ],
+  "unused_clock_pitch_um": 0.144,
+  "selected_parent": "none adopted; composite_root_PENDING planning context only",
+  "producer_join": {
+    "top_reverse_head5_normalized_exact": true,
+    "core_reverse_head5_normalized_exact": true,
+    "normalization": "remove comments and whitespace only; explicit reverse3 head width/source edits",
+    "no_parent_adoption": true
+  },
+  "carrier_event": {
+    "status": "DISABLED_SOURCE_PREP_NO_BIND_OR_PHYSICAL_CREDIT",
+    "selected_source": "frozen SOURCE13 selected_preprocessed.sv",
+    "rows": [
+      {
+        "module": "hbm_arch_q_b000",
+        "input_sha256": "fec78e19bae4d6218de87e69d4f27611a33006a26f44841d1cf8b3ff92aab838",
+        "output_sha256": "0e2d42a575e207c9d7c01aaf04915daafb4e476a365c9cea216b926fbf7a8a99",
+        "carriers": [
+          {
+            "name": "L14_o",
+            "old_data": 4127,
+            "new_data": 4124,
+            "dropped": [
+              37,
+              35
+            ],
+            "epoch": [
+              4127,
+              4124
+            ]
+          }
+        ]
+      },
+      {
+        "module": "hbm_arch_q_b000__physical_v1",
+        "input_sha256": "a8f71ef46aa2d68286d2547b948d1ac5e0571a4742d59c993d17b00f7c8c24c5",
+        "output_sha256": "aa6ad710c04c657ba7f13842b0f202264aad1bef94a0d0ce62dcf8a14f32bf90",
+        "carriers": [
+          {
+            "name": "L14_o",
+            "old_data": 4127,
+            "new_data": 4124,
+            "dropped": [
+              37,
+              35
+            ],
+            "epoch": [
+              4127,
+              4124
+            ]
+          }
+        ]
+      },
+      {
+        "module": "hbm_arch_q_b100",
+        "input_sha256": "c078de26153c02a38143e408d162d9829f2a8cff8971dea2f1951ef0073cf939",
+        "output_sha256": "8efab8be0536244b22cdec0eabb0be78afddb91802df8b50ff253a259c591767",
+        "carriers": [
+          {
+            "name": "xo_procdff_71764_Q",
+            "old_data": 8,
+            "new_data": 5,
+            "dropped": [
+              7,
+              5
+            ],
+            "epoch": [
+              8,
+              5
+            ]
+          }
+        ]
+      },
+      {
+        "module": "hbm_arch_q_b100__physical_v1",
+        "input_sha256": "b25778f0fc4764b9657f75dbe2e5503f567140aee64495dd13c7ae0702ddff85",
+        "output_sha256": "6200f776492c9eb3f3d8e7cf7a6f9bf8e6567d4a06853d8824165de6e2f60830",
+        "carriers": [
+          {
+            "name": "xo_procdff_71764_Q",
+            "old_data": 8,
+            "new_data": 5,
+            "dropped": [
+              7,
+              5
+            ],
+            "epoch": [
+              8,
+              5
+            ]
+          }
+        ]
+      },
+      {
+        "module": "hbm_arch_q_hub__q_hub_ne",
+        "input_sha256": "e1e23fdbddecc14dd291806420ce97e6bff21c8c91b31d9de4051d74a72c69ab",
+        "output_sha256": "a1df0ee901fa4e1c88906225b44f50deff5e06d4fa3b7de9ac4301756bf079e6",
+        "carriers": [
+          {
+            "name": "L160m_o",
+            "old_data": 4986,
+            "new_data": 4983,
+            "dropped": [
+              519,
+              517
+            ],
+            "epoch": [
+              4986,
+              4983
+            ]
+          },
+          {
+            "name": "L6b_o",
+            "old_data": 828,
+            "new_data": 825,
+            "dropped": [
+              519,
+              517
+            ],
+            "epoch": [
+              828,
+              825
+            ]
+          }
+        ]
+      },
+      {
+        "module": "hbm_arch_q_hub__q_hub_nw",
+        "input_sha256": "1fd067da80ce3f7f96eedad5e2766c87d30f72d9ad542927440c4cb342b87626",
+        "output_sha256": "8421dbc6d86403be6d6b6bbb0c4f3ecc6d04835d06e7529c0670be70251e7e20",
+        "carriers": [
+          {
+            "name": "L160_o",
+            "old_data": 4986,
+            "new_data": 4983,
+            "dropped": [
+              519,
+              517
+            ],
+            "epoch": [
+              4986,
+              4983
+            ]
+          },
+          {
+            "name": "L6_o",
+            "old_data": 828,
+            "new_data": 825,
+            "dropped": [
+              519,
+              517
+            ],
+            "epoch": [
+              828,
+              825
+            ]
+          }
+        ]
+      }
+    ],
+    "new_cycles": 0,
+    "added_ff": 0,
+    "removed_boundary_data_bits": 24,
+    "removed_ff": "not counted until actual mapped synthesis; intermediate capture high3 projections also shrink",
+    "holds": [
+      "Producer native295a8 full7-source versus frozen SOURCE13 closure join must be exact before activation",
+      "Six wrapper re-GEN and full typed ABI/carrier lane pin-plan updates required",
+      "Upstream/downstream outside six selected wrappers must consume compact physical vectors before logical zero restore",
+      "Clock budgets 311.5/262.6 UNSELECTED; no adopted parent/as-built",
+      "New canonical wrapper proofs, pin/clock/PG/native geometry gates NOTRUN"
+    ]
+  },
+  "source_origin": "frozen SOURCE13 selected8module extraction joined to actual295a8 head5 via exactreverse/comment-whitespace normalization"
+}
