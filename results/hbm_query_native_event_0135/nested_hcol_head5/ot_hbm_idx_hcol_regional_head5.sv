@@ -5,7 +5,8 @@
 // Parent must connect BOTH slices to the same original logical bus; no shared
 // capture or cross-region data fanout is introduced. Cycle count and all
 // arithmetic/reset logic are identical to ot_hidx_score_hcol.
-// PREP ONLY: +1113 data input pins, +0 FF, +0 cycles. Parent pin/window and
+// PREP ONLY: q565 regional pins2323; no added cycles. Declared query capture
+// state is six bits smaller than head8; mapped/global costs UNQUALIFIED. Pin/window and
 // lane capacity must be replanned before physical release. Existing masters
 // and production bindings remain unchanged.
 module ot_hidx_score_hcol_regional_head5 #(

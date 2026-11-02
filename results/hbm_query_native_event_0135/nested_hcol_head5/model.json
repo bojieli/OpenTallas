@@ -15,7 +15,7 @@
   "declared_capture_state_delta": -6,
   "mapped_state_delta": "UNMEASURED (oldconstantcapturebits may already prune)",
   "old_regional_source_sha256": "8adda1baa1ab3022cb41fd7a24287bab2853c104ebb44fb083d02a21c73f67c3",
-  "proposed_sha256": "2eda5706748bd93c8eb869abd752998ec4b8fefa90aede9683a4950a83b9a2e8",
+  "proposed_sha256": "592446ad7667d504576296f88491a1cf44f3ef388d1fc4c6249efd669954699d",
   "exact_reverse_source_equal": true,
   "delta": [
     [
@@ -37,6 +37,10 @@
     [
       "q2 <= q_p[QW-9:0];",
       "q2 <= q_p[QW-6:0];"
+    ],
+    [
+      "// PREP ONLY: +1113 data input pins, +0 FF, +0 cycles. Parent pin/window and",
+      "// PREP ONLY: q565 regional pins2323; no added cycles. Declared query capture\n// state is six bits smaller than head8; mapped/global costs UNQUALIFIED. Pin/window and"
     ]
   ],
   "parent_cost": "Coherenthead5 single565+544+1\u2192regionalduplicate requires1110 additional OWNparentfaceFF/clockloads IF sameedgeD/enable/resetavailable; fullglobalclock/sourceDreach/pin/windowstillunqualified. Existing1113pricing forhead8 remains valid inthatcohort.",
@@ -46,5 +50,6 @@
     "Nativegeneratorprofile/2323actualpins/faceguard NOTRUN",
     "Full14wrapperevent stillrestoreslogical8 inheld consumerpacket; mustcompose new565 child/source/caller/pinplan",
     "No default/nativebinding activation; ownershipscope OWNER? logged"
-  ]
+  ],
+  "reverse_note": "Reverse5 functional edits plus1comment correction returns donor bytes"
 }
