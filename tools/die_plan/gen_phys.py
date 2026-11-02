@@ -3289,6 +3289,13 @@ def bound_parent_id_plan(raw, kit_rtl):
                     or name != short_id(f"strap_{leaf}__{port}", 80)
                     or actual.get(name) != ("input", width)):
                 raise ValueError(f"type {tn}: bound parent ID {name} disagrees with plan or kit ports")
+            if name in declared_top:
+                # DIE-QC-61 11-01: the plan already declares this validated child ID as a top-level strap (QC CB batch
+                # b1fef12091e: tile_id under count_straps).  Promoting it again duplicated the kit strap list
+                # (sdc_lint straps: duplicate names, 12 QC CB types).  Same name + width = already declared.
+                if declared_top[name] != width:
+                    raise ValueError(f"type {tn}: bound parent ID {name} width {width} != declared {declared_top[name]}")
+                continue
             additions.append(dict(name=name, width=width))
         if additions:
             if result is raw:
