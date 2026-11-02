@@ -38,7 +38,7 @@ set code [catch {
  } else {filler_placement $use}
 } message options]
 if {$case eq "missing_L"} {
- if {!$code || ![string match {*No fillers found for LVTN*} $message]} {error "EXPECTED_LVTN_FAILURE got=$message"}
+ if {!$code || $message ne "DPL-0050"} {error "EXPECTED_LVTN_FAILURE got=$message"}
  puts "EXPECTED_MISSING_L_FILLER_PASS $message"
  exit
 }
@@ -46,14 +46,15 @@ if {$code} {return -options $options $message}
 set geometry {};set opens 0;set count 0
 foreach i [$b getInsts] {
  lappend geometry [list [$i getName] [[$i getMaster] getName] [$i getOrient] [$i getLocation] [$i getPlacementStatus] [$i getSourceType] [$i isPhysicalOnly]]
- if {[$i isPhysicalOnly]} {
+ if {[$i getName] ni {ot_neighbor_R ot_neighbor_L}} {
+  if {[[$i getMaster] getName] ni $both || [$i getSourceType] ne "DIST"} {error UNEXPECTED_NATIVE_FILLER_IDENTITY}
   incr count
   foreach t [$i getITerms] {if {[[$t getMTerm] getSigType] in {POWER GROUND} && [$t getNet] eq "NULL"} {incr opens}}
  }
 }
 if {$count==0} {error NO_ACTUAL_FILLER_BIRTHS}
 set f [open /work/fill_${case}_geometry.txt {WRONLY CREAT EXCL}];puts $f [join [lsort $geometry] "\n"];close $f
-puts "FILL_VEHICLE case=$case physical_fillers=$count opens=$opens"
+puts "FILL_VEHICLE case=$case native_fillers=$count opens=$opens"
 if {$case eq "callback"} {
  if {$opens!=0} {error CALLBACK_OPEN}
  if {[dict get [ot_native_pg_status] active]} {error CALLBACK_NOT_CLEANED_UP}

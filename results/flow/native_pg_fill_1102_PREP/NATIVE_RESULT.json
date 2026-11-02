@@ -1,0 +1,25 @@
+{
+  "status": "NATIVE_MECHANISM_PASS_TARGET_ADOPTION_HELD",
+  "native_module_sha256": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
+  "host": "intel1",
+  "final_unit": "oth-ubuntu-948983-1793624854",
+  "final_exit": 0,
+  "new_fillers": 7,
+  "control_pg_opens": 14,
+  "callback_pg_opens": 0,
+  "native_callback": {
+    "creates": 7,
+    "swaps": 0,
+    "bound": 14
+  },
+  "independent_saved_checked": 18,
+  "independent_saved_failures": 0,
+  "paired_geometry_source_flags_sha256": "e8f569179b0623e1d8d39c6615e9b512e96c18119d611221954d69287d28e11d",
+  "missing_L": "native DPL0050/LVTN observed; original harness failure preserved separately",
+  "inactive_callback": "strict filler command refused",
+  "public_isPhysicalOnly": "false: getter tests module membership; native factory physical_only argument is true",
+  "actual_L1_finish_run": false,
+  "capability_deployed": false,
+  "physical_release": false,
+  "scope": "two-row R+L native filler mechanism only; no RC/STA/CTS/route/full target finish"
+}

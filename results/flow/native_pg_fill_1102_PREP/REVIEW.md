@@ -1,8 +1,8 @@
-# HELD filler process proposal — not qualified or dispatched
+# Filler mechanism passed; target integration and deployment remain held
 
 This branch proposes adding `filler_placement` to the real-module strict guard.
-Do not merge/deploy that admission until root reviews and the bounded native
-vehicle passes. The existing C++ module/ABI/source pins are unchanged.
+The bounded native vehicle has passed; do not merge/deploy that admission
+until its process integration and actual target scope are approved. The existing C++ module/ABI/source pins are unchanged.
 Production scope remains the already qualified two resizer commands meanwhile.
 
 The exact pinned ORFS fillcell script loads genuine `5_2_route.odb` and
@@ -31,7 +31,10 @@ normal MM patch:
 
 Native vehicle PREP: Intel2
 /srv/opentallas-scratch2/claude/codex-pg-birth-fill-0312/{vehicle.tcl,run.sh}.
-Proposed normal ot-run4GB1T; no native execution until required root review.
+The active QC owner reviewed and cleared one isolated4GB1T experiment under
+the original PG investigation scope. It ran on Intel1 with normal admission;
+EPYC2 was correctly excluded below the50GB floor. No bypass or target run.
+See NATIVE_RESULT.json and retained logs.
 
 The fixture intentionally makes a disposable tiny two-row design from an OWN
 Tnode PG0 copy solely to reuse actual R masters/rules. It deletes the original
@@ -48,3 +51,13 @@ filler_placement in three independent processes:
 Compare all actual filler/neighbor masters/poses/orient/status/source/physical
 flags between2/3, then independently reread saved callback ODB for native PG0.
 No RC/STA/GEN/PLACE/CTS/route or full target finish is run. No new C++ build.
+
+Actual result:7 native fillers (4R+3L), control14 PG opens versus callback0;
+callback creates7/bound14, saved fresh audit18/0. Paired all9 instance master/
+pose/orient/status/source/getter records are byte-identical. Strict inactive
+call refuses. Initial two harness failures are retained: Tcl catch returned
+DPL-0050 rather than the printed LVTN diagnostic, and isPhysicalOnly() tests
+module membership, so top-module fillers returnfalse despite native factory
+physical_only=true. Corrected census uses actual new identities, explicit
+master list and DIST source flags; the public getter remains in comparisons.
+The valid missing-L negative was not rerun; only unfinished cases were resumed.
