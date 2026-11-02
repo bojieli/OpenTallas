@@ -35,6 +35,10 @@ HERE = Path(__file__).resolve().parent
 SPEC = HERE / "canaries.json"
 IMAGE = "openroad/orfs:asap7lock"
 OT_RUN = "~/.local/bin/ot-run"
+# FLOW-21 CANSTALL 11-01: canaries gate the twice-daily flow tags (owner 12.9e); under the 1.5 x nproc load cap
+# (LOADCAP_1101) they waited 3.5 h behind volume kits at load 380.  --crit bypasses the load cap only (memory admission
+# unchanged) and gives the same CPU weight as token sims / die GRT.  OT_CANARY_CRIT=0 restores the default weight.
+CRIT = "" if os.environ.get("OT_CANARY_CRIT", "1") == "0" else "--crit "
 # A face register is required on every partition port except the clock / async reset inputs.  Unlike
 # tools/die_plan/face_guard.SKIP_RE this does NOT skip rst_o_* / start_o_* (reset wavefront outs are registered relays).
 CLOCK_ONLY_SKIP_RE = r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_n|rst_i|start_i)$"
@@ -509,7 +513,10 @@ def check_run(run, spec=None, die_plan_dir=None):
     par = (res["signoff"].get("parasitics") or {})
     res["rcx"] = st(None, "no signoff corners") if not par else st(all(v == "spef" for v in par.values()), str(par))
     errs = []
-    for l in step_logs + [str(kit / f) for f in ("hold_gate.log", "synth_odb_v.log")] + sorted(glob.glob(f"{kit}/run_*.log")):
+    # FLOW-21 CCBAND 11-01: the post-CTS insertion gate logs too -- a crashed gate ('Error: postcts_gate.tcl, 34 ...
+    # No module named core_clock_band') wrote 'OT_POSTCTS_GATE TT no result FAIL' and was judged a design stop.
+    gate_logs = ("hold_gate.log", "synth_odb_v.log", "postcts_gate_TT.log", "postcts_gate_FF.log")
+    for l in step_logs + [str(kit / f) for f in gate_logs] + sorted(glob.glob(f"{kit}/run_*.log")):
         for m in TCL_ERR_RE.finditer(read(l)):
             # a gate's deliberate 'error' (hold_gate.tcl structural FAIL) is a verdict, reported by grt_gate, not a crash
             line = read(l)[m.start():].split("\n", 1)[0]
@@ -649,10 +656,10 @@ def cmd_submit(a):
                                f"{runtime_src}/physical/die_plan/qwen_kvsys/cores/harden/; ")
         (run / "route.sh").write_text("#!/bin/bash\nset -u\n" + route +
                                       '\necho "CANARY_FLOW_RC $?"\n')
-        launch = (f"{OT_RUN} --mem {c['mem_gb']} --threads {kv['cpus']} --dir {run} -- bash {run}/job.sh; "
+        launch = (f"{OT_RUN} {CRIT}--mem {c['mem_gb']} --threads {kv['cpus']} --dir {run} -- bash {run}/job.sh; "
                   f"if [ -f {run}/GENERATED ]; then {prepare_runtime}"
                   f"cp {run}/route.sh {run}/gen/route_canary.sh; "
-                  f"{OT_RUN} --mem {c['mem_gb']} --threads {kv['cpus']} "
+                  f"{OT_RUN} {CRIT}--mem {c['mem_gb']} --threads {kv['cpus']} "
                   f"--dir {run}/gen --stage {run}/gen -- bash {run}/gen/route_canary.sh; "
                   f"python3 -I {run}/canary.py check --run {run}; fi")
         cmd = f"( {launch} ) > {run}/otrun.log 2>&1"

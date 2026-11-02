@@ -329,6 +329,10 @@ def grid_core_estimate(t, core, root=None):
 def latency_table(P, tn, root=None, require_signed=True):
     rows = []
     t = P.types[tn]
+    nolib = sorted(c.get('module', c['inst']) for c in t.get('hard_cores', []) if 'lib' not in c)
+    if nolib:
+        raise ContractError(f'{tn}: WAIT-DEP hard cores have no selected lib (no routed/provisional view yet): '
+                            + ', '.join(dict.fromkeys(nolib)))
     native = {m['inst'] for m in native_clock_models(P, tn, root)}
     for core in t.get('hard_cores', []):
         if core['inst'] in native:

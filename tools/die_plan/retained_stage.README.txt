@@ -1,0 +1,59 @@
+Default-OFF retained CTS continuation (no later-stage credit)
+
+retained_stage.py provides two explicit operations. Existing generated kit
+consumers are unchanged. This API never runs synthesis or LEC and never writes
+lec_async markers or a normal lec/lec.json receipt. It joins a completed normal
+standalone proof to exact retained source, raw/mapped synthesis, and reviewed
+3_place ODB/SDC in a fresh owned capsule. Historical provenance/reset limits stay
+in standalone_proof_join.json; its stage is CTS_ONLY_CONTINUATION and its
+source_qualified field is false.
+
+First reviewed consumer inputs (all on epyc2):
+  KIT=/srv/opentallas-scratch2/claude/codex-bksel-r1-fullcts-1604/kits/dsdv_bksel_c_pipe_ab_r1Q
+  PROOF=/srv/opentallas-scratch2/claude/codex-bksel-official-1323/kits/dsdv_bksel_c_pipe_ab_r1C
+  ODB=9e083b125cb3b1ba8029c46f71b0510bf279b99fce05bf1232f539af9e2487da
+  SDC=c91e8364c89169a644c3960d659419d037f2419e12f557c23bef3ae114faaa7f
+
+Prepare on the kit/proof host, using a NEW output path:
+  python3 -I tools/die_plan/retained_stage.py prepare --enable-retained-cts \
+    --kit "$KIT" --proof-kit "$PROOF" --out "$OUT" \
+    --place-sha256 "$ODB" --place-sdc-sha256 "$SDC" --threads 8
+
+Prepare validates and copies only; it launches no CAD. It refuses non-EQ or
+incomplete all-point/KEEP proof, debug-reset results, different proof hints,
+missing source/helper closure, changed input hashes, active native leases,
+async controller state, later physical outputs and existing output directories.
+The retained kit/proof remain untouched. The own output is:
+  OUT/kit/                          full retained kit snapshot
+  OUT/api/retained_stage.py          copied common consumer
+  OUT/api/core_flow.py               exact canonical MM patch accessor
+  OUT/api/kit_modes.py               common mode validator dependency
+  OUT/cts_runtime.sh                 SHA-bound runtime shell
+  OUT/standalone_proof_join.json     honest proof join and all file hashes
+No worktree or repository package is needed at execution. The descriptor pins
+an immutable local image ID; API files and runtime script are SHA-bound.
+
+Only AFTER ROOT reviews this helper/capsule, launch from the fleet hub with the
+owner's evidence-based MEM cap and matching eight admitted threads:
+  ot-run --mem "$MEM" --threads 8 --hosts epyc2 --no-spill --dir "$OUT" -- \
+    python3 -I "$OUT/api/retained_stage.py" run "$OUT" --mem "$MEM" --enable-retained-cts
+The consumer requires a real ot-heavy cgroup and refuses a container memory cap
+above that admitted scope. It locks its own lease, rechecks inputs, and runs one
+normal ORFS container with kit-local mode checks, core_flow.MM_PATCH_STEP, and
+the configured CTS hooks. Image inputs are not inherited from the host shell.
+
+The pinned ORFS Makefile is SHA256
+036a76c4b673214f346491ff548d7bd2af2ab74de0351975197d22f081ea3216.
+Its supported .PHONY do-cts target calls do-4_1_cts then do-4_cts. The first has
+only copyright.txt as a prerequisite; its canonical flow.sh invokes cts.tcl,
+which writes 4_1_cts.odb and 4_cts.sdc, with the configured POST_CTS_TCL. The
+second copies the ODB to 4_cts.odb. This dependency-free target is deliberate:
+ordinary `make cts` can rebuild GPL/synthesis when copied inputs have newer
+timestamps. The API NEVER uses that timestamp-sensitive target.
+
+cts_completion.json records the actual native rc plus any refusal, immutable
+4_cts ODB/SDC hashes, and the limited continuation scope. Every bound source,
+helper and stage1..3 result is checked after execution, including the reviewed
+3_place bytes. Unexpected stage5/6 outputs or a changed checkpoint refuse even
+when the native command returned zero. An interrupted scope cannot silently
+relaunch over partial stage4 outputs. There is no GRT/DRT/signoff entry.

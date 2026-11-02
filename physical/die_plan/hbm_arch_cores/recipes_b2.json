@@ -1339,5 +1339,49 @@
   "wrapper_by_pins_sha256": {
    "b2d5a1066f0c5c6c2b62bb08529798792d8df35c0d63535c8c3f04dc0b2693c2": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_static_pgslice_lg__lane_exp0_id.sv"
   }
+ },
+ "ot_hbm_su_programme_pslice_c5__trunk_x3": {
+  "top": "ot_hbm_su_programme_pslice_c5",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv"
+  ],
+  "defines": [
+   "OT_PSLICE_TRUNK"
+  ],
+  "params": {
+   "SB": 2470,
+   "XST": 3
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "DIE-HBM-57/PSLICE 11-01 plan fix of the d44o FAIL PLAN (GEOM-96/104): trunk form of the cluster top (define OT_PSLICE_TRUNK, XST 3 OSTG 1 HG 3 LFX 1 OSRC 0 EIDX 9), files from the tree; contract = the d34578d6f cluster top with inputs (except rst_n) +3 edges and outputs +1 edge (start advance +4); bench programme/landed/run_trunk_eq.sh; core plan pslice_trunk/ (pslice_trunk_plan.py): --macro-placement pslice_trunk/macro_placement.json --macro-inst-fmt '{k}' --reg-guide-boxes pslice_trunk/guides_x3.json --orfs-var OT_KEEP_WIRES=sync_q",
+  "source_commit": "d34578d6f",
+  "read_at_commit": false,
+  "asbuilt_inst": "pgp_NW"
+ },
+ "ot_hbm_su_programme_pslice_c5__trunk_x4": {
+  "top": "ot_hbm_su_programme_pslice_c5",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv"
+  ],
+  "defines": [
+   "OT_PSLICE_TRUNK"
+  ],
+  "params": {
+   "SB": 2470,
+   "XST": 4
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "DIE-HBM-57/PSLICE 11-01 plan fix of the d44o FAIL PLAN (GEOM-96/104): trunk form of the cluster top (define OT_PSLICE_TRUNK, XST 4 OSTG 1 HG 3 LFX 1 OSRC 0 EIDX 9), files from the tree; contract = the d34578d6f cluster top with inputs (except rst_n) +4 edges and outputs +1 edge (start advance +5); bench programme/landed/run_trunk_eq.sh; core plan pslice_trunk/ (pslice_trunk_plan.py): --macro-placement pslice_trunk/macro_placement.json --macro-inst-fmt '{k}' --reg-guide-boxes pslice_trunk/guides_x4.json --orfs-var OT_KEEP_WIRES=sync_q",
+  "source_commit": "d34578d6f",
+  "read_at_commit": false,
+  "asbuilt_inst": "pgp_NW"
  }
 }

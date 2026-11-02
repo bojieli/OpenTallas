@@ -1324,6 +1324,100 @@ def lit_val(val, mask, lit):
     return val[lit >> 1] ^ (mask if lit & 1 else 0)
 
 
+def cons_base_coverage(values, allowed):
+    """Cover the native ternary reset cube without enumerating unknown assignments.
+
+    Every distinct allowed row compatible with the known mask covers exactly one
+    member of that cube. Its complete cardinality is 2**unknown_bits. Duplicate
+    rows and rows contradicting known reset bits provide no additional coverage.
+    """
+    n = len(values)
+    if any(v not in (None, 0, 1) for v in values):
+        raise ValueError("non-ternary native reset value")
+    mask = sum(1 << i for i, v in enumerate(values) if v is not None)
+    value = sum(int(v) << i for i, v in enumerate(values) if v is not None)
+    compatible = set()
+    for row in allowed:
+        if len(row) != n or any(v not in (0, 1) for v in row):
+            raise ValueError("malformed allowed state")
+        bits = sum(int(v) << i for i, v in enumerate(row))
+        if bits & mask == value:
+            compatible.add(bits)
+    unknown = n - mask.bit_count()
+    count = len(compatible)
+    complete = count > 0 and count.bit_count() == 1 and count.bit_length() - 1 == unknown
+    return dict(covered=complete, known_mask=hex(mask), known_value=hex(value),
+                unknown_bits=unknown, covered_states=count)
+
+
+def _native_reset_stamp(L):
+    return (int(os.environ.get("OT_LEC_RESET_CYCLES", "4")),
+            os.environ.get("OT_LEC_RESET_PORTS", ""),
+            os.environ.get("OT_LEC_RESET_POLARITY", "struct"),
+            tuple(sorted(getattr(L, "kit_reset_ports", ()) or ())),
+            # Raw AIGs are immutable inside Lec; detect replacement, and the
+            # mutable PI projections that determine reset polarity/bindings.
+            id(L.gold), id(L.gate),
+            tuple(sorted((k, v) for k, v in L.gp.items() if k.startswith("pi:"))),
+            tuple(sorted((k, v) for k, v in L.tp.items() if k.startswith("pi:"))))
+
+
+def cons_base_check(L, side, keys, allowed, stamp=None):
+    """Check an invariant's BASE using raw native reset propagation, never hints."""
+    stamp = _native_reset_stamp(L) if stamp is None else stamp
+    report = dict(side=side, keys=list(keys) if isinstance(keys, (list, tuple)) else [],
+                  covered=False, reset_cycles=stamp[0])
+    try:
+        points = L.gp if side == "gold" else L.tp if side == "gate" else {}
+        if (not keys or len(set(keys)) != len(keys) or not allowed or
+                any(not isinstance(k, str) or not k.startswith("ff:") or k not in points for k in keys)):
+            raise ValueError("invalid constraint state keys/side")
+        if getattr(L, "_rst_stamp", None) != stamp:
+            noreset_classify(L)
+        # Project through the CURRENT point map: alias/layout proposals can add
+        # keys after classification. The underlying native AIG state is unchanged.
+        st = L._rst_state[side]
+        values = [None if (points[k] >> 1) not in st else st[points[k] >> 1] ^ (points[k] & 1)
+                  for k in keys]
+        report.update(cons_base_coverage(values, allowed), values=values)
+        if not report["covered"]:
+            report["why"] = "allowed states do not cover the native ternary reset-base cube"
+    except (KeyError, TypeError, ValueError) as error:
+        report["why"] = "native reset base unavailable: " + str(error)
+    return report
+
+
+def _record_cons_base(L, report):
+    checks = L.__dict__.setdefault("cons_base_checks", [])
+    if report not in checks:
+        checks.append(report)
+    if not report["covered"]:
+        refused = L.__dict__.setdefault("cons_base_refused", [])
+        if report not in refused:
+            refused.append(report)
+
+
+def filter_cons_bases(L):
+    """No explicit, discovered, or restored constraint may mask a miter before BASE."""
+    kept, refused = [], []
+    stamp = _native_reset_stamp(L)
+    for constraint in L.cons:
+        try:
+            side, keys, allowed = constraint
+        except (TypeError, ValueError):
+            report = dict(covered=False, side=None, keys=[], why="malformed constraint",
+                          reset_cycles=stamp[0])
+        else:
+            report = cons_base_check(L, side, keys, allowed, stamp=stamp)
+        _record_cons_base(L, report)
+        if report["covered"]:
+            kept.append((side, keys, allowed))
+        else:
+            refused.append(report)
+    L.cons = kept
+    return refused
+
+
 class Lec:
     """gold / gate key points + register correspondence hypotheses -> miter AIGs."""
 
@@ -1413,6 +1507,8 @@ class Lec:
         (ternary: an X source is X, an AND is X unless an input is a definite 0); a compare output is
         (gold != gate) & gold-not-X, and a hypothesis on an RTL register whose next state is X holds (the register
         may take the value synthesis chose)."""
+        if self.cons:
+            filter_cons_bases(self)
         m = Aig()
         kind = {}
         lg, lt = {0: 0}, {0: 0}
@@ -2634,7 +2730,7 @@ def sim_refine(L, log, tried, words=8, quiet=3, seed=4242, observe=None):
                 continue
             side, k = key
             tried[(side, k, "c") if h[0] == "const" else (side, k, h[2], h[3]) if h[0] == "eq" else
-                  (side, k, str(h[2]), str(h[3]))] += 1
+                  (side, k, *(str(v) for v in h[2:]))] += 1
             dropped += 1
         if badc:
             drop_failed(L, badc)
@@ -3346,21 +3442,27 @@ def reset_state(d, R, cycles):
 def noreset_classify(L):
     """per side: the reset-state value of every register (reset_state, OT_LEC_RESET_CYCLES edges, default 4) ->
     L.rst_val[(side, key)] = (value or None, first edge)."""
-    cycles = int(os.environ.get("OT_LEC_RESET_CYCLES", "4"))
-    L.rst_val, L.rst_ports = {}, {}
+    L.__dict__.pop("_rst_stamp", None)
+    stamp = _native_reset_stamp(L)
+    cycles = stamp[0]
+    rst_val, rst_ports, rst_asserted, rst_state = {}, {}, {}, {}
     pol = None
     for side, d, p in (("gold", L.gold, L.gp), ("gate", L.gate, L.tp)):
         lv = {}
         R = reset_vars(d, p, pol, lv, getattr(L, "kit_reset_ports", None))
         pol = lv if pol is None else pol
-        L.__dict__.setdefault("rst_asserted", {})[side] = lv
-        L.rst_ports[side] = sorted(k for k, lit in p.items() if (lit >> 1) in R and k.startswith("pi:"))
+        rst_asserted[side] = lv
+        rst_ports[side] = sorted(k for k, lit in p.items() if (lit >> 1) in R and k.startswith("pi:"))
         st, first = reset_state(d, R, cycles)
-        L.__dict__.setdefault("_rst_state", {})[side] = st
+        rst_state[side] = st
         for k, lit in p.items():
             if k.startswith("ff:"):
                 v = lit >> 1
-                L.rst_val[(side, k)] = (None if v not in st else st[v] ^ (lit & 1), first.get(v))
+                rst_val[(side, k)] = (None if v not in st else st[v] ^ (lit & 1), first.get(v))
+    L.rst_val, L.rst_ports = rst_val, rst_ports
+    L.rst_asserted, L._rst_state = rst_asserted, rst_state
+    L.__dict__.pop("_release_states", None)  # derived from the previous native base
+    L._rst_stamp = stamp
 
 
 def release_states(d, st, n):
@@ -5101,10 +5203,11 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             gone.add(k)
             # Equality candidates are looked up with an integer polarity. Keep
             # that key unchanged when recording rejection, or they are retried
-            # in every adding round. FSM cube tuples keep their textual key.
+            # in every adding round. FSM cube tuples keep their textual key;
+            # explicit fill/loaded hints have only three entries.
             tried[(side, k, "c") if h[0] == "const" else
                   (side, k, h[2], h[3]) if h[0] == "eq" else
-                  (side, k, str(h[2]), str(h[3]))] += 1
+                  (side, k, *(str(v) for v in h[2:]))] += 1
         if expired and gone:
             n0 = len(L.hyp)
             cascade_drop(L, sup, gone)
@@ -5242,6 +5345,13 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
             if not ok:
                 rec["skipped"].append(e)
                 continue
+            base = cons_base_check(L, csd, ck, allowed)
+            _record_cons_base(L, base)
+            if not base["covered"]:
+                rec.setdefault("cons_base_refused", []).append(base)
+                log.append(f"cons base refused {csd}:{ck[0]}: {base['why']}")
+                continue
+            rec.setdefault("cons_base", []).append(base)
             L.cons = [c for c in L.cons if not (c[0] == "gold" and list(c[1]) == list(ck))]
             L.cons.append(("gold", list(ck), [list(a) for a in allowed]))
             rec["applied"] += 1
@@ -5892,6 +6002,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         rec["noreset_constants"]["listing"] = noreset_listing(L, out / "noreset_constants.tsv")
         (out / "hyp.json").write_text(json.dumps([[sd, k, list(h)] for (sd, k), h in sorted(L.hyp.items())]) + "\n")
         m, kind = L.build(with_compare=True, with_hyp=True)
+        rec["constraint_bases"] = dict(checks=getattr(L, "cons_base_checks", []),
+                                       refused=getattr(L, "cons_base_refused", []))
         rec["t_corr_s"] = round(time.time() - t1, 1)
         hyp = L.hyp
         consts = sorted(k for (sd, k), h in hyp.items() if h[0] == "const")

@@ -30,7 +30,7 @@ def convert(src,out,canonical):
  q=out/'sdc_lint.json';ctx=json.load(open(q));ctx['inputs'].remove('tile_tid')
  for k in ['io_floor_ps','port_latency_ps']:ctx.get(k,{}).pop('tile_tid',None)
  save(q,ctx)
- for n in ['straps.py','sdc_lint.py','face_guard.py','signoff.py','lec.py','selrange_gate.py','vclk_corner.tcl','postcts_gate.tcl','pinreg_measure.tcl']:shutil.copyfile(R/'tools/die_plan'/n,out/n)
+ for n in ['straps.py','sdc_lint.py','face_guard.py','signoff.py','lec.py','selrange_gate.py','vclk_corner.tcl','postcts_gate.tcl','core_clock_band.py','pinreg_measure.tcl']:shutil.copyfile(R/'tools/die_plan'/n,out/n)
  subprocess.run([sys.executable,'-I',str(R/'tools/die_plan/signoff.py'),'bundle',str(out)],check=True)
  sin=[k for k in widths if dirs[k]=='input' and k not in s['passthrough']];sout=[k for k in widths if dirs[k]=='output' and k not in s['passthrough']]
  s.update(module=new,core=core,core_def_file=nr.name,widths=widths,dirs=dirs,keep=keep,in_buses=len(sin),out_buses=len(sout),in_bits=sum(keep[k] for k in sin),out_bits=sum(widths[k] for k in sout),face_flops=sum(keep[k] for k in sin)+sum(widths[k] for k in sout),unread_kept=[],files=[ns.name,'ot_hbm_face_reg.sv']);save(out/'face_shell.json',s)
