@@ -927,9 +927,10 @@ def _plan_contents(kd, plan_dir):
     return out
 
 
-def macro_boxes(kd, plan_dir=None, sites_out=None):
+def macro_boxes(kd, plan_dir=None, sites_out=None, insts_out=None):
     """(boxes [(name, x0, y0, x1, y1)], problem or None) from the kit's static macro placement.  sites_out (list):
-    gets (master, x, y, orient) per box, in box order."""
+    gets (master, x, y, orient) per box, in box order; insts_out (list): the placed instance name per box (None when
+    the placement form names only the master)."""
     kd = Path(kd)
     cfg = _mk(kd)
     sizes = _lef_sizes(kd, cfg)
@@ -962,6 +963,8 @@ def macro_boxes(kd, plan_dir=None, sites_out=None):
                     w, h = h, w
                 if sites_out is not None:
                     sites_out.append((master, x, y, o))
+                if insts_out is not None:
+                    insts_out.append(row.get("inst") if "sites" not in row else None)
                 boxes.append((f"{master}#{len(boxes)}", x, y, x + w, y + h))
     pm = list(re.finditer(r"place_macro\s+-macro_name\s+(\S+)\s+-location\s+\{\s*" + _NUM + r"\s+" + _NUM +
                           r"\s*\}(?:\s+-orientation\s+(\S+))?", txt))
@@ -986,6 +989,8 @@ def macro_boxes(kd, plan_dir=None, sites_out=None):
                 w, h = h, w
             if sites_out is not None:
                 sites_out.append((master, x, y, o))
+            if insts_out is not None:
+                insts_out.append(name)
             boxes.append((f"{master}#{len(boxes)}", x, y, x + w, y + h))
     # gen_core_kit_kv --hard-children form (one block per instance): master match, setOrient, setLocation
     # [expr {round(X * $dbu) ...}] [expr {round(Y * $dbu) ...}] (KV-KITS-7: static FIRM sites, was "no macro sites parsed")
@@ -999,6 +1004,8 @@ def macro_boxes(kd, plan_dir=None, sites_out=None):
             w, h = h, w
         if sites_out is not None:
             sites_out.append((master, x, y, o))
+        if insts_out is not None:
+            insts_out.append(None)
         boxes.append((f"{master}#{len(boxes)}", x, y, x + w, y + h))
     if not boxes:
         return None, f"{mp.name}: no macro sites parsed"
@@ -1070,7 +1077,8 @@ def macro_channels(kd, plan_dir=None, min_um=MIN_CHANNEL_UM):
 
 
 def clock_entry_clear(kd, plan_dir=None, entries=None):
-    boxes, prob = macro_boxes(kd, plan_dir)
+    insts = []
+    boxes, prob = macro_boxes(kd, plan_dir, insts_out=insts)
     if boxes == [] and prob is None:
         return [], dict(applies=False, reason="no macros")
     if prob:
@@ -1086,9 +1094,21 @@ def clock_entry_clear(kd, plan_dir=None, entries=None):
                 pts.append(("master_slice.json", isl.get("name"), *map(float, cp["xy_um"])))
     if not pts:
         return ["no clock entry coordinates found"], dict(applies=True)
+    # DIE-S81-47 svc_rs 11-01: a CP2 early core tap (core_taps.txt port -> core inst) lands ON the clock pin of the core
+    # it feeds (plan clock.taps kind core at the core view clock pin; clock_taps.tcl hangs that pin on the port), so its
+    # entry over that one macro is the planned form.  Over any other macro it still fails.
+    feeds = {}
+    ct = Path(kd) / "core_taps.txt"
+    if ct.is_file():
+        for line in ct.read_text().splitlines():
+            f = line.split()
+            if len(f) >= 2 and not f[0].startswith("#"):
+                feeds.setdefault(f[0], set()).add(f[1])
     err = []
     for src, name, x, y in pts:
-        for b in boxes:
+        for k, b in enumerate(boxes):
+            if k < len(insts) and insts[k] is not None and insts[k] in feeds.get(name, ()):
+                continue
             if b[1] - 1e-6 <= x <= b[3] + 1e-6 and b[2] - 1e-6 <= y <= b[4] + 1e-6:
                 err.append(f"{src}: clock entry {name} ({x:g}, {y:g}) over macro {b[0]} {[round(v, 3) for v in b[1:]]}")
     return list(dict.fromkeys(err)), dict(applies=True, entries=len(pts), macros=len(boxes))

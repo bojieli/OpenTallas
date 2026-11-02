@@ -146,6 +146,17 @@ def test_mutant_fails_its_check(kit, mutate, check):
         assert not others, {k: r[k]["errors"] for k in others}
 
 
+def test_core_tap_entry_over_its_own_core_passes(kit):
+    # DIE-S81-47 svc_rs 11-01: an early core tap port lands on the clock pin of the core it feeds (core_taps.txt);
+    # over that core it is the planned form, over any other macro it still fails
+    (kit / "macro_place.tcl").write_text("foreach {inst master x y orient} {u_m m 40 50 R0} {\n}\n")
+    assert KC.run_all(kit)["clock_entry_clear"]["verdict"] == "FAIL"
+    (kit / "core_taps.txt").write_text("# port inst pin|* early_ps insertion_ps\nclk u_m clk 10 300\n")
+    assert KC.run_all(kit)["clock_entry_clear"]["verdict"] == "PASS"
+    (kit / "core_taps.txt").write_text("clk u_other clk 10 300\n")
+    assert KC.run_all(kit)["clock_entry_clear"]["verdict"] == "FAIL"
+
+
 def test_no_macros_no_mesh_is_na(kit):
     for f in ("macros/m.lef", "macro_place.tcl", "mesh.json"):
         (kit / f).unlink()
