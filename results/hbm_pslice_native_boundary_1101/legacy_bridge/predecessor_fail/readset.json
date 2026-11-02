@@ -1,0 +1,24 @@
+{
+ "scope": "ActuallegacyC4 SB2470-only d345readset\u2192exact8b SB2470/NCX1/NATIVE_PINS1, sameedge allDEFINEDoutput bridge; no canonicaladoption.",
+ "files": {
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": {
+   "gold_commit": "d34578d6f",
+   "gold_sha256": "e1a7343e0253f19e646c9c5aa9eaf370a824d8311078d3f75e863ab55ce977d0",
+   "candidate_sha256": "97210c90acd49074379b07dee7aaaee2ffad6d81ddb963ed945368530c2b10b1"
+  },
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv": {
+   "gold_commit": "d34578d6f",
+   "gold_sha256": "de834bcd0dc4e267bad87ea0a5283ee873f30e0ae94ae6fa34a8588965eeb255",
+   "candidate_sha256": "7177c082566b69dab7c8ff3d9ec4d05ffbc80c78f38747b77e83fabfc3480ce3"
+  },
+  "rtl/lib/ot_rst_relay.sv": {
+   "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "commit": "d34578d6f"
+  },
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": {
+   "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+   "commit": "d34578d6f"
+  }
+ },
+ "stimulus": "Existing100macrofullC5fixture1776edges/shortwarmresets; referencelegacy has noNCXAPI. ExistingphaseMUT1mustfail."
+}
