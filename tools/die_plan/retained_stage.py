@@ -19,7 +19,6 @@ import sys
 import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import core_flow
 import kit_modes
 
 SCHEMA = 'opentallas.retained_cts.v1'
@@ -249,7 +248,10 @@ def makefile_contract(path):
             raise Refuse('ORFS dependency-free CTS contract absent')
 
 
-def runtime_script(threads):
+def runtime_bootstrap_script(threads):
+    # Generation-only constants need a repository tree. Runtime verification
+    # at /retained-api must not eagerly import that module.
+    import core_flow
     if type(threads) is not int or threads < 1:
         raise Refuse('positive integer threads required')
     return ('#!/bin/bash\nset -euo pipefail\n'
@@ -258,7 +260,11 @@ def runtime_script(threads):
             'python3 -I /retained-api/retained_stage.py check-makefile /OpenROAD-flow-scripts/flow/Makefile\n'
             'python3 -I /work/kit_modes.py check /work --step cts > /work/retained_cts_modes.log 2>&1\n'
             'rc=0\n' + core_flow.runtime_mm_patch_step() + '\n[ "$rc" = 0 ] || exit "$rc"\n'
-            'cd /OpenROAD-flow-scripts/flow\n'
+            'cd /OpenROAD-flow-scripts/flow\n')
+
+
+def runtime_script(threads):
+    return (runtime_bootstrap_script(threads) +
             f'make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES={threads} do-cts\n')
 
 

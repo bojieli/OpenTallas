@@ -203,3 +203,20 @@ def test_dry_common_bootstrap_calls_modes_patch_then_only_native_cts(tmp_path):
     assert 'check-makefile' in calls[0] and '--step cts' in calls[1]
     assert 'orfs_hold_mm.py' in calls[2] and calls[3].endswith('NUM_CORES=8 do-cts')
     assert len(calls)==4
+
+
+def test_runtime_only_entry_never_imports_repository_generation_module(tmp_path):
+    api=tmp_path/'api';api.mkdir()
+    for name in ('retained_stage.py','kit_modes.py'):
+        (api/name).write_text((Path(R.__file__).parent/name).read_text())
+    (api/'core_flow.py').write_text('raise RuntimeError("repository generation module must not load at runtime")\n')
+    # Missing-file refusal should come from the makefile check, never imports.
+    p=subprocess.run(['python3','-I',str(api/'retained_stage.py'),'check-makefile',str(tmp_path/'absent')],capture_output=True,text=True)
+    assert p.returncode==2 and 'RETAINED_CTS REFUSED' in p.stderr
+    assert 'repository generation module' not in p.stderr and 'Traceback' not in p.stderr
+
+
+def test_bootstrap_prefix_is_exact_normal_runtime_without_make():
+    prefix=R.runtime_bootstrap_script(8)
+    assert R.runtime_script(8)==prefix+'make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=8 do-cts\n'
+    assert '\nmake ' not in prefix and 'orfs_hold_mm.py' in prefix and '--step cts' in prefix
