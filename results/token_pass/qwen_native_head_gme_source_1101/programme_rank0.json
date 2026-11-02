@@ -10,7 +10,7 @@
   },
   "source_gme_sha256": "745e5087a4f5ae6bb4c7462e2ffc1f0f6d4787b9a44db42dbb2dc04b345235cb",
   "programme": {
-    "meta_rows": 30,
+    "meta_rows": 33,
     "word_bits": 1024,
     "PW_bits": 64,
     "PW_per_word": 16,
@@ -141,51 +141,71 @@
         "word_hex": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004"
       },
       {
-        "pc": 25,
+        "pc": 28,
         "unit": 1,
         "word_hex": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000112000001000008000000000000200004000001000000000001000008000040000000000400040c00000409"
       },
       {
-        "pc": 26,
+        "pc": 29,
         "unit": 1,
         "word_hex": "0000000000000000000000000000000230000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003000000112000001000008000000000000200004000301000000000001000008000040000200000400040c0000040d"
       },
       {
-        "pc": 27,
+        "pc": 30,
         "unit": 1,
         "word_hex": "0000000000000000000000000000000260000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000112000001000008000000000000200004000601000000000001000008000040000400000400040c0000040d"
       },
       {
-        "pc": 28,
+        "pc": 31,
         "unit": 1,
         "word_hex": "000000000000000000000000000000029000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000900000011200000100000800000000000020000400090100000000000100000800004000060000040000811800040d"
       },
       {
-        "pc": 29,
+        "pc": 32,
         "unit": 0,
         "word_hex": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004"
       }
     ],
-    "PW_instruction_range": [
-      0,
-      480
+    "actual_instructions": 30,
+    "reserved_WTN_rows": [
+      25,
+      26,
+      27
     ],
-    "allocator_rule": "fresh base generator recomputes payload allocation after meta_rows30; never overwrite an old PW image"
+    "reserved_WTN_PW": [
+      400,
+      445
+    ],
+    "reserved_alignment_PW": [
+      445,
+      448
+    ],
+    "PW_instruction_ranges": [
+      [
+        0,
+        400
+      ],
+      [
+        448,
+        528
+      ]
+    ],
+    "allocator_rule": "fresh base generator recomputes payload allocation after meta_rows33; never overwrite an old PW image"
   },
   "metadata_update": {
     "PW": 1017,
     "bit": 18,
     "width": 10,
-    "value": 30,
+    "value": 33,
     "tag": "CALS",
     "method": "fresh base generator preserves its stage/base issue fields and recomputes meta_rows"
   },
   "GME": {
-    "base": 25,
+    "base": 28,
     "rows": [
       {
         "PW": 984,
-        "fixed_hex": "0000101900000000",
+        "fixed_hex": "0000101c00000000",
         "relocations": [
           {
             "symbol": "HEAD_GME_CHUNK0_ISSUE",
@@ -197,7 +217,7 @@
       },
       {
         "PW": 985,
-        "fixed_hex": "0000101a00000000",
+        "fixed_hex": "0000101d00000000",
         "relocations": [
           {
             "symbol": "HEAD_GME_CHUNK1_ISSUE",
@@ -209,7 +229,7 @@
       },
       {
         "PW": 986,
-        "fixed_hex": "0000101b00000000",
+        "fixed_hex": "0000101e00000000",
         "relocations": [
           {
             "symbol": "HEAD_GME_CHUNK2_ISSUE",
@@ -221,7 +241,7 @@
       },
       {
         "PW": 987,
-        "fixed_hex": "0000101c00000000",
+        "fixed_hex": "0000101f00000000",
         "relocations": [
           {
             "symbol": "HEAD_GME_CHUNK3_ISSUE",
@@ -233,7 +253,7 @@
       },
       {
         "PW": 988,
-        "fixed_hex": "0000401d00000000",
+        "fixed_hex": "0000402000000000",
         "relocations": [
           {
             "symbol": "HEAD_GME_END_ISSUE",
@@ -250,7 +270,7 @@
       991
     ],
     "descriptor_PW": 993,
-    "descriptor_hex": "43414c4205000019",
+    "descriptor_hex": "43414c420500001c",
     "stop_PW": 992,
     "stop_fixed_hex": "43414c4700000000",
     "stop_relocation": {
@@ -306,7 +326,7 @@
       "width": 32
     }
   },
-  "base_fixed_issue_XPF_and_DW": "recomputed/preserved by current base generator source ABI; actual CALR source event independently links nent1013",
+  "base_fixed_issue_XPF_and_DW": "recomputed/preserved by current base generator source ABI; actual CALR source event independently links nent1017",
   "native_monitor": {
     "pidx": 17,
     "copy_of": 16,
@@ -315,14 +335,24 @@
     "copy_slice_symbol": "EARLIEST_HEAD_PRODUCER_SLICE",
     "primary_observation": "actual GI c_su&&c_u0 only"
   },
-  "install_context": "SEG_CAL1 programme metadata30; stage37 LOCAL_SEG base25 must begin GME/XPF before any native H SU issue; each primitive chunk<=8 rounds",
+  "dependency_contract": {
+    "module": "ot_qfd_tt_ctlm_static_hr_g5prep",
+    "NATIVE_STATIC_DEPS": 1,
+    "scope": "loaded_stage37 only; BASE1..36 follows original counters",
+    "native_SU_calls": 12,
+    "source_progress_for_slice0": 48,
+    "legacy_chase_n": 64,
+    "reason": "native CALR observers are not skipped legacy programme operations; source-bound WTN/XPF/calendar leases must replace other-unit snapshots",
+    "status": "PREP_UNPROVEN_NO_GLOBAL_LEASE"
+  },
+  "install_context": "SEG_CAL1 programme metadata33; stage37 LOCAL_SEG base28 must begin GME/XPF before any native H SU issue; each primitive chunk<=8 rounds",
   "executable": false,
   "physical_adoption": false,
   "remaining": [
     "resolve fixedissue/XPF cycles from native commandfront/HR/tap/live-X leases",
     "complete currentbase generator PW/descriptor/native CALR source join",
     "sourcecoherent monitor17 copy/caller",
-    "actual native GME/XPF helper decoder/component execution",
+    "actual native GME/XPF helper decoder/component execution including nonzero native SU counters and HEAD37 witness profile",
     "QC transitive module closure and boundary-source qualification"
   ]
 }

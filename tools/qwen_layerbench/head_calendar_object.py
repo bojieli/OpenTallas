@@ -10,7 +10,8 @@ import dv_lower as D
 import residual2_calendar_candidate as R
 
 
-def build(calendar):
+def build(calendar, monitor_slice=None):
+    if monitor_slice is not None and monitor_slice not in range(12):raise ValueError("monitor slice must be native0..11")
     words,dw=R.decode_image(calendar);base=R.entries(words,dw[2]);head=R.entries(words,dw[3])
     cfg=[e for e in head if e['decoded']['kind']==3]
     if len(head)!=320 or len(cfg)!=12 or sorted(e['decoded']['dst']for e in cfg)!=list(range(12)):
@@ -40,17 +41,22 @@ def build(calendar):
         if ((words[i//4]>>(128*(i%4)))&((1<<128)-1))!=(1<<116):
             raise ValueError('HEAD alignment padding differs')
     local37=(14<<112)|(37<<4)|9
+    seg28=(14<<112)|(28<<4)|5
     retired={e['index']for e in cfg}
     return dict(schema='opentallas.qwen.native-head-calr-object.v1',status='RELOCATABLE_NOT_EXECUTABLE',
       source_calendar_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest()for p in calendar.iterdir()if p.name in ('dw.hex','calendar_m0.viamap.hex','calendar_m1.viamap.hex')},
       root_patches=patches,retired_head_cfg=[dict(index=e['index'],edge=e['edge'],cmd=f"{e['cmd']:029x}")for e in cfg],
       retained_stream_setup=dict(extra_commands=0,tag=1,source_calls=[dict(index=e['index'],slice=i,edge=e['edge'],dirs=1 if i==0 else 3,cmd=f"{e['cmd']:029x}")for i,e in enumerate(streams)],lifetime='retained through HEAD; LOCAL4 tables do not rewrite cfg',headtap='actual s6 tap exposes X valid/address/data, no tag'),
-      native_apply_commands=[dict(slice=s,cmd=f'{D.cmd_su(16,s):029x}',pidx=16,user_relocation='actual CALR +128*user',issue_symbol=f'HEAD_APPLY_S{s}_ISSUE')for s in range(12)],
+      native_apply_commands=[dict(slice=s,cmd=f'{D.cmd_su(17 if s==monitor_slice else 16,s):029x}',pidx=17 if s==monitor_slice else 16,user_relocation='actual CALR +128*user',issue_symbol=f'HEAD_APPLY_S{s}_ISSUE')for s in range(12)],
       retained_head_commands=[dict(old_index=e['index'],old_edge=e['edge'],cmd=f"{e['cmd']:029x}")for e in head if e['index']not in retired],
-      local37_range=dict(first=1012,count=1,entry=f'{((8<<116)|local37):032x}',stage=37,users='same range invoked peruser by existing OPSEG',start_symbol='HEAD_TABLE_INSTALL_START'),
-      layout=dict(old_nent=nent,new_nent=1013,head_first=476,old_head_entries=320,retained_head_entries=308,new_apply_entries=12,new_head_entries=320,remaining_count_capacity=10),
+      native_monitor=dict(slice=monitor_slice,pidx=17,other_pidx=16,source_observer='primary user only',status='UNRESOLVED_EARLIEST_SLICE' if monitor_slice is None else 'SOURCE_CANDIDATE_ONLY'),
+      witness_profile=dict(module='qfd_dv_typed_witness_control_head37',HEAD_STAGE37=1,records=15,groups=[dict(pidx=17,slices='earliest singleton'),dict(pidx=16,slices='other eleven')],production_digest='must be recomputed after resolved source issue dates; test digest is not production authority'),
+      native_GME_start=dict(cmd=f'{seg28:029x}',base=28,issue_symbol='HEAD_GME_SEGMENT_START',extra_commands=1),
+      later_range_relocation=dict(old_first_min=796,entry_index_delta=4,includes=['BOOT','OPSEG stage0 init','all36 existing LOCAL4 preloads'],reason='HEAD320→321 requires next four-entry alignment'),
+      local37_range=dict(first=1016,count=1,entry=f'{((8<<116)|local37):032x}',stage=37,users='same range invoked peruser by existing OPSEG',start_symbol='HEAD_TABLE_INSTALL_START'),
+      layout=dict(old_nent=nent,new_nent=1017,head_first=476,old_head_entries=320,retained_head_entries=308,new_apply_entries=12,new_GME_start_entries=1,new_head_entries=321,remaining_count_capacity=6),
       unresolved_relocations=['HEAD_APPLY_S0..S11_ISSUE from measured native H stream profile and peruser SU lease',
-        'HEAD_TABLE_INSTALL_START and exclusive loader/stream window',
+        'HEAD_TABLE_INSTALL_START and exclusive loader/stream window; explicit LOCAL_SEG28 starts GME/XPF beforeH',
         'final residual RSTD publication through last H operand read, including actual native front/transport latency',
         'actual native headtap/Xfill readiness and repriced retained HEAD consumer dates'],
       required_component_receipts=['native ROOT amnb6 noninterference+sixcandidate AMAX+lease controls',
@@ -58,4 +64,4 @@ def build(calendar):
       executable=False,mask_emission='REFUSED_UNTIL_ALL_EXECUTION_RELOCATIONS_ARE_LINKED',physical_adoption=False)
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--calendar',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();r=build(a.calendar);a.out.write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r['layout']))
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--calendar',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--monitor-slice',type=int,choices=range(12));a=p.parse_args();r=build(a.calendar,a.monitor_slice);a.out.write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r['layout']))

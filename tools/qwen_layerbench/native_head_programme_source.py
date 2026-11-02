@@ -2,7 +2,7 @@
 """Build a fresh typed native programme source, not a patch of an old PW image.
 
 Current base instruction generator output is extended by four genuine HEAD
-ME chunks+END. Storage is allocated anew with meta_rows30; cycle fields remain
+ME chunks+END. Storage is allocated anew with meta_rows33; cycle fields remain
 explicit relocations for the global source linker. No old PW-free claim.
 """
 import argparse,hashlib,json,sys
@@ -18,7 +18,7 @@ def build(base_program,gme_object,rank):
     if h['rank']!=rank or len(h['programme_words'])!=5:raise ValueError('native fourchunk GME source object required')
     head=[int(r['word_hex'],16)for r in h['programme_words']]
     if [ISA.decode(w)['unit']for w in head]!=[1,1,1,1,0]:raise ValueError('legacy HEAD SU words must be absent')
-    allwords=base+head;meta_rows=len(allwords);first=len(base)
+    allwords=base+head;first=max(len(base),(400+45+15)//16);meta_rows=first+len(head)
     if meta_rows*16>976 or first+len(head)>4096:raise ValueError('actual dense programme metadata/PC capacity exceeded')
     slots=[]
     for n,r in enumerate(h['programme_words']):
@@ -34,16 +34,18 @@ def build(base_program,gme_object,rank):
       rank=rank,base_source=dict(path=str(base_program),sha256=hashlib.sha256(base_program.read_bytes()).hexdigest(),words=25,
         authority='explicit base instruction generator source, not82190 functional qualification or old PW-free capacity'),
       source_gme_sha256=hashlib.sha256(gme_object.read_bytes()).hexdigest(),programme=dict(meta_rows=meta_rows,word_bits=1024,PW_bits=64,PW_per_word=16,
-        instructions=[dict(pc=pc,unit=ISA.decode(w)['unit'],word_hex=f'{w:0256x}')for pc,w in enumerate(allwords)],
-        PW_instruction_range=[0,meta_rows*16],allocator_rule='fresh base generator recomputes payload allocation after meta_rows30; never overwrite an old PW image'),
+        instructions=[dict(pc=pc,unit=ISA.decode(w)['unit'],word_hex=f'{w:0256x}')for pc,w in enumerate(base)]+[dict(pc=first+n,unit=ISA.decode(w)['unit'],word_hex=f'{w:0256x}')for n,w in enumerate(head)],
+        actual_instructions=len(allwords),reserved_WTN_rows=[25,26,27],reserved_WTN_PW=[400,445],reserved_alignment_PW=[445,448],
+        PW_instruction_ranges=[[0,len(base)*16],[first*16,meta_rows*16]],allocator_rule='fresh base generator recomputes payload allocation after meta_rows33; never overwrite an old PW image'),
       metadata_update=dict(PW=1017,bit=18,width=10,value=meta_rows,tag='CALS',method='fresh base generator preserves its stage/base issue fields and recomputes meta_rows'),
       GME=dict(base=first,rows=slots,zero_padding_PW=[989,990,991],descriptor_PW=993,descriptor_hex=f'{((0x43414c42<<32)|(5<<24)|first):016x}',
         stop_PW=992,stop_fixed_hex=f'{0x43414c47<<32:016x}',stop_relocation=dict(symbol='HEAD_GME_STOP',bit=0,width=32)),
       G_XPF=dict(records=[xrec],zero_padding_PW=list(range(997,1003)),stop_PW=1003,stop_fixed_hex=f'{0x58505447<<32:016x}',stop_relocation=dict(symbol='HEAD_XPF_STOP',bit=0,width=32)),
-      base_fixed_issue_XPF_and_DW='recomputed/preserved by current base generator source ABI; actual CALR source event independently links nent1013',
+      base_fixed_issue_XPF_and_DW='recomputed/preserved by current base generator source ABI; actual CALR source event independently links nent1017',
       native_monitor=dict(pidx=17,copy_of=16,programme_pair=8,extra_pairs=0,copy_slice_symbol='EARLIEST_HEAD_PRODUCER_SLICE',primary_observation='actual GI c_su&&c_u0 only'),
-      install_context='SEG_CAL1 programme metadata30; stage37 LOCAL_SEG base25 must begin GME/XPF before any native H SU issue; each primitive chunk<=8 rounds',
-      executable=False,physical_adoption=False,remaining=['resolve fixedissue/XPF cycles from native commandfront/HR/tap/live-X leases','complete currentbase generator PW/descriptor/native CALR source join','sourcecoherent monitor17 copy/caller','actual native GME/XPF helper decoder/component execution','QC transitive module closure and boundary-source qualification'])
+      dependency_contract=dict(module='ot_qfd_tt_ctlm_static_hr_g5prep',NATIVE_STATIC_DEPS=1,scope='loaded_stage37 only; BASE1..36 follows original counters',native_SU_calls=12,source_progress_for_slice0=48,legacy_chase_n=64,reason='native CALR observers are not skipped legacy programme operations; source-bound WTN/XPF/calendar leases must replace other-unit snapshots',status='PREP_UNPROVEN_NO_GLOBAL_LEASE'),
+      install_context='SEG_CAL1 programme metadata33; stage37 LOCAL_SEG base28 must begin GME/XPF before any native H SU issue; each primitive chunk<=8 rounds',
+      executable=False,physical_adoption=False,remaining=['resolve fixedissue/XPF cycles from native commandfront/HR/tap/live-X leases','complete currentbase generator PW/descriptor/native CALR source join','sourcecoherent monitor17 copy/caller','actual native GME/XPF helper decoder/component execution including nonzero native SU counters and HEAD37 witness profile','QC transitive module closure and boundary-source qualification'])
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
