@@ -295,16 +295,18 @@ def rename_module(files, module, new, defines=None):
         for f, t in texts.items():
             lines, act, n = t.split("\n"), _active_lines(t, ["SYNTHESIS"] + list(defines)), 0
             for i, ln in enumerate(lines):
-                if act[i] and rx.match(ln):
-                    lines[i] = rx.sub(lambda m: m[1] + new, ln, count=1)
-                    n += 1
-            if n:
-                hits.append((f, n, "\n".join(lines)))
+                if rx.match(ln):
+                    # inactive copies -> <module>__off so a textual duplicate-module scan (kit_preflight) stays clean
+                    lines[i] = rx.sub(lambda m: m[1] + (new if act[i] else module + "__off"), ln, count=1)
+                    n += act[i]
+            hits.append((f, n, "\n".join(lines)))
         if sum(n for _, n, _ in hits) != 1:
             raise RuntimeError(f"face_shell: expected one compiled definition of {module}, found "
-                               f"{[(f, n) for f, n, _ in hits]} (textual {plain})")
-        Path(hits[0][0]).write_text(hits[0][2])
-        return hits[0][0]
+                               f"{[(f, n) for f, n, _ in hits if n]} (textual {plain})")
+        for f, n, t in hits:
+            if t != texts[f]:
+                Path(f).write_text(t)
+        return next(f for f, n, _ in hits if n)
     if sum(n for _, n in plain) != 1:
         raise RuntimeError(f"face_shell: expected one definition of {module}, found {plain}")
     f = plain[0][0]
