@@ -1,0 +1,9 @@
+# L1c actual native final review: geometry qualifies, parent IO gate held
+
+Intel2 original dsdv_gunit_l1c_ccA/B final ODBs, read-only4GB2T normal ot-run unit2321419-1793603357, completed23:09:41/23:09:50PST. Actual final failing-path images personally viewed. No physical repair/STA/proof launched.
+
+Both actual connected r2r255.53µm/3884captures/0>405/no loops, macrofree,86.4×216µm. 4887 actualclock sinks/all inputrooted,220clockcells. 29.42/29.49% standardfill;32.46% empty. Actual image shows a continuous usable logic body, left boundary input strip and localized comparator paths, no macro wall/halo/channel failure. These measurements qualify geometry only, not child or parent clock/timing closure.
+
+Actual A: TT−82.35/793ep,FF+2.46,7TT slew. Worst u_m01.s1[256]→u_m01.q[227]. Launch x1FF QN load14.48fF/slew149.86ps/clockQ103.24ps. OR4x1→OAI21 weak tiers add150.08ps; three BUFx2/3 fanout24 tiers add191.12ps. B: TT−97.17/762ep,FF+9.36,7TTslew; fd[248]→u_m01.s1[171] starts x1FF QN load24.05fF/slew201ps/clockQ113ps then HA190ps. This is a concrete load/slew/comparator-fanout cause; no evidence requires another RTL pipeline. Existing CPS2 sorter extra edge already priced.
+
+Next candidate should start from closer A with one current controlled setup/DRV→hold pass, clock-net/master freeze, no broad clock/FF resizing. Consider near-driver combinational isolation and critical weak comparator/fanout tiers, rather than arbitrary stages. But both original records have IO-hold qualification NEEDS_PARENT: actual matching parent receipt is mandatory before CAD. Do not remove that gate, invent a contract, launch a bypass diagnostic, or count a private child view. BF shared posthook fixed-class actual qualification also precedes another ECO consumer. Current status PREP/HELD; no candidate/controller exists.
