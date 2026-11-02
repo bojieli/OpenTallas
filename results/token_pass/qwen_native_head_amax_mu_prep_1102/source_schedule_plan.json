@@ -1,0 +1,455 @@
+{
+  "status": "SOURCE_PREP_ONLY_NO_RTL_EXECUTION",
+  "scope": "qfd_dv_amax_mu NU4 standalone logical numerical component with source-pinned actual checked post outputs; subset candidates only, no fullvocabulary/globaltoken proof",
+  "input": {
+    "path": "/srv/opentallas-scratch/claude/wt/codex-qwen-headlease-2130/results/token_pass/qwen_native_head_post_pass_1102/checked_scaled_rows.hex",
+    "sha256": "d30ff61ec386d96ef582d294e813983500432fbb0d795b65010425fab9d1435f",
+    "vectors": 11,
+    "scalars": 176,
+    "all_nonfinite_count": 0,
+    "duplicate_value_bit_patterns": 0
+  },
+  "source_readset": [
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
+      "relative_path": "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
+      "sha256": "cc7c0e78e337420b0e4871302619569c90dcaec25bd91c49e52d17f0f81fe1ca",
+      "relevant_lines": [
+        {
+          "line": 32,
+          "source": "module qfd_dv_amax_mu #("
+        }
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+      "relative_path": "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+      "sha256": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+      "relevant_lines": [
+        {
+          "line": 303,
+          "source": "            if (c_stn) begin stn_dst <= cmd_q[25:24]; stn_dbase <= cmd_q[49:26]; end"
+        },
+        {
+          "line": 318,
+          "source": "    wire [23:0] r_addr = stn_dbase + {12'd0, r_idx, 4'd0};"
+        },
+        {
+          "line": 327,
+          "source": "    qfd_dv_amax_mu #(.NU(MU_NU), .MUT(0)) u_amax (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]), .stn_pend(am_stn_pend),"
+        },
+        {
+          "line": 412,
+          "source": "    assign am_stn_pend = stn_busy && !stn_snd && !(stn_left == 9'd1 && r_v);"
+        }
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv",
+      "relative_path": "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv",
+      "sha256": "43e4fdb1799703b377cc2bf1af9531b6d1af9405b60d97175f1fb28138181f6e",
+      "relevant_lines": [
+        {
+          "line": 73,
+          "source": "end else if(MU_NU==4 && MUT==0) begin:g_safe4"
+        },
+        {
+          "line": 74,
+          "source": " qfd_dv_s5_ctl_repair4 u_ctl(.ck(ck),.rst_n(rst_n),.cmd_q(cmd_q),.chd_q(chd_q),.r_v(r_v),.r_idx(r_idx),.r_last(r_last),.r_d(r_d),.l9o_v(l9o_v),.stn_fault(stn_fault),.vm_we(vm_we),.vm_waddr(vm_waddr),.vm_wdata(vm_wdata),.kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.su_nr(su_nr),.su_idle(su_idle),.su_fault(su_fault),.su_prog(su_prog),.su_rows(su_rows),.vm_fault(vm_fault),.red_we(red_we),.red_addr(red_addr),.red_data(red_data),.sc_w1_we(sc_w1_we),.sc_w1_addr(sc_w1_addr),.sc_w1_data(sc_w1_data),.tok_v(tok_v),.tok_idx(tok_idx),.tok_own(tok_own),.tok_val(tok_val),.tok_user(tok_user),.sc_busy(sc_busy),.sc_fault(sc_fault),.stm_fault(stm_fault),.tld_fault(tld_fault),.hd_fault(hd_fault),.pc_bad(pc_bad),.sid(sid),.stn_cfg(stn_cfg),.sc_cfg(sc_cfg),.stm_cfg(stm_cfg),.su_cmd(su_cmd),.am_v(am_v),.am_idx(am_idx),.am_val(am_val),.am_u(am_u),.w16_we(w16_we),.w16_addr(w16_addr),.w16_data(w16_data),.w1_we(w1_we),.w1_addr(w1_addr),.w1_data(w1_data),.own_ch(own_ch),.ag_own(ag_own),.st(st),.cc_o(cc_o));"
+        }
+      ]
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+      "relative_path": "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+      "sha256": "eee27f3def670be904a761b5b73a7c714582da7c5d35c8b2503a0543f7499db8",
+      "relevant_lines": []
+    }
+  ],
+  "selected_boundary_caution": "Selected HARD1 NU4 ctl_repair4_leaf instantiates generated bounded qfd_dv_s5_ctl_repair4. It does not literally invoke qfd_dv_amax_mu. Standalone MU is source logical cut; hard selected implementation equivalence needs its own existing receipt or later actual hard cone proof.",
+  "source_closure": [
+    "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
+    "new finite testbench only; module has no instantiated RTL dependencies or floating-point arithmetic helpers"
+  ],
+  "edge_convention": "edge numbers are component clock rising edges, drive before edge/sample after NBA; clock833ps with1fsbench precision. Other fields return zero peredge; rst remains asserted/released as scheduled. STN nwords is component metadata; actual MU only sees c_stn/amax/user/pend.",
+  "actual_user_fields": {
+    "STN_user": "cmd[52:51]",
+    "STN_amax": "cmd[50]",
+    "AMAX_user": "cmd[9:8]",
+    "clear": "cmd[4]",
+    "emit": "cmd[5]"
+  },
+  "events": [
+    {
+      "edge": 0,
+      "rst": 0
+    },
+    {
+      "edge": 1,
+      "rst": 0
+    },
+    {
+      "edge": 2,
+      "rst": 1
+    },
+    {
+      "edge": 4,
+      "c_am": 1,
+      "am_clr": 1,
+      "am_user": 0
+    },
+    {
+      "edge": 5,
+      "c_am": 1,
+      "am_clr": 1,
+      "am_user": 1
+    },
+    {
+      "edge": 10,
+      "c_stn": 1,
+      "stn_user": 0,
+      "stn_amax_bit": 1,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 11,
+      "r_v": 1,
+      "result_user_from_preedge_STN": 0,
+      "fixture_vector": 0,
+      "r_addr": 0,
+      "source_rows": [
+        0,
+        16
+      ],
+      "c_stn": 1,
+      "stn_user": 0,
+      "stn_amax_bit": true,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 12,
+      "r_v": 1,
+      "result_user_from_preedge_STN": 0,
+      "fixture_vector": 4,
+      "r_addr": 64,
+      "source_rows": [
+        64,
+        80
+      ],
+      "c_stn": 1,
+      "stn_user": 0,
+      "stn_amax_bit": true,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 13,
+      "r_v": 1,
+      "result_user_from_preedge_STN": 0,
+      "fixture_vector": 8,
+      "r_addr": 18944,
+      "source_rows": [
+        18944,
+        18960
+      ],
+      "c_stn": 1,
+      "stn_user": 1,
+      "stn_amax_bit": true,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 14,
+      "r_v": 1,
+      "result_user_from_preedge_STN": 1,
+      "fixture_vector": 1,
+      "r_addr": 16,
+      "source_rows": [
+        16,
+        32
+      ],
+      "c_stn": 1,
+      "stn_user": 1,
+      "stn_amax_bit": true,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 15,
+      "r_v": 1,
+      "result_user_from_preedge_STN": 1,
+      "fixture_vector": 5,
+      "r_addr": 80,
+      "source_rows": [
+        80,
+        96
+      ],
+      "c_stn": 1,
+      "stn_user": 1,
+      "stn_amax_bit": true,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 16,
+      "r_v": 1,
+      "result_user_from_preedge_STN": 1,
+      "fixture_vector": 9,
+      "r_addr": 18960,
+      "source_rows": [
+        18960,
+        18976
+      ],
+      "c_stn": 1,
+      "stn_user": 2,
+      "stn_amax_bit": false,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 23,
+      "c_am": 1,
+      "am_clr": 1,
+      "am_user": 2
+    },
+    {
+      "edge": 24,
+      "c_stn": 1,
+      "stn_user": 2,
+      "stn_amax_bit": 1,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 25,
+      "r_v": 1,
+      "result_user_from_preedge_STN": 2,
+      "fixture_vector": 2,
+      "r_addr": 32,
+      "source_rows": [
+        32,
+        48
+      ],
+      "c_stn": 1,
+      "stn_user": 2,
+      "stn_amax_bit": true,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 26,
+      "r_v": 1,
+      "result_user_from_preedge_STN": 2,
+      "fixture_vector": 6,
+      "r_addr": 96,
+      "source_rows": [
+        96,
+        112
+      ],
+      "c_stn": 1,
+      "stn_user": 2,
+      "stn_amax_bit": true,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 27,
+      "r_v": 1,
+      "result_user_from_preedge_STN": 2,
+      "fixture_vector": 10,
+      "r_addr": 18976,
+      "source_rows": [
+        18976,
+        18992
+      ],
+      "c_stn": 1,
+      "stn_user": 3,
+      "stn_amax_bit": false,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 34,
+      "c_am": 1,
+      "am_clr": 1,
+      "am_user": 3
+    },
+    {
+      "edge": 35,
+      "c_stn": 1,
+      "stn_user": 3,
+      "stn_amax_bit": 1,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 36,
+      "r_v": 1,
+      "result_user_from_preedge_STN": 3,
+      "fixture_vector": 3,
+      "r_addr": 48,
+      "source_rows": [
+        48,
+        64
+      ],
+      "c_stn": 1,
+      "stn_user": 3,
+      "stn_amax_bit": true,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 37,
+      "r_v": 1,
+      "result_user_from_preedge_STN": 3,
+      "fixture_vector": 7,
+      "r_addr": 112,
+      "source_rows": [
+        112,
+        128
+      ],
+      "c_stn": 1,
+      "stn_user": 2,
+      "stn_amax_bit": false,
+      "stn_pend": 0,
+      "component_STN_nwords": 1
+    },
+    {
+      "edge": 44,
+      "c_am": 1,
+      "am_emit_cmd": 1,
+      "am_user": 0,
+      "expected_candidate": {
+        "user": 0,
+        "vectors": [
+          0,
+          4,
+          8
+        ],
+        "scalar_count": 48,
+        "expected_idx": 11,
+        "expected_val_hex": "410d3210"
+      }
+    },
+    {
+      "edge": 45,
+      "c_am": 1,
+      "am_emit_cmd": 1,
+      "am_user": 1,
+      "expected_candidate": {
+        "user": 1,
+        "vectors": [
+          1,
+          5,
+          9
+        ],
+        "scalar_count": 48,
+        "expected_idx": 30,
+        "expected_val_hex": "41078928"
+      }
+    },
+    {
+      "edge": 46,
+      "c_am": 1,
+      "am_emit_cmd": 1,
+      "am_user": 2,
+      "expected_candidate": {
+        "user": 2,
+        "vectors": [
+          2,
+          6,
+          10
+        ],
+        "scalar_count": 48,
+        "expected_idx": 36,
+        "expected_val_hex": "4119bef9"
+      }
+    },
+    {
+      "edge": 47,
+      "c_am": 1,
+      "am_emit_cmd": 1,
+      "am_user": 3,
+      "expected_candidate": {
+        "user": 3,
+        "vectors": [
+          3,
+          7
+        ],
+        "scalar_count": 32,
+        "expected_idx": 63,
+        "expected_val_hex": "40dd051a"
+      }
+    }
+  ],
+  "expected_candidates": [
+    {
+      "user": 0,
+      "vectors": [
+        0,
+        4,
+        8
+      ],
+      "scalar_count": 48,
+      "expected_idx": 11,
+      "expected_val_hex": "410d3210"
+    },
+    {
+      "user": 1,
+      "vectors": [
+        1,
+        5,
+        9
+      ],
+      "scalar_count": 48,
+      "expected_idx": 30,
+      "expected_val_hex": "41078928"
+    },
+    {
+      "user": 2,
+      "vectors": [
+        2,
+        6,
+        10
+      ],
+      "scalar_count": 48,
+      "expected_idx": 36,
+      "expected_val_hex": "4119bef9"
+    },
+    {
+      "user": 3,
+      "vectors": [
+        3,
+        7
+      ],
+      "scalar_count": 32,
+      "expected_idx": 63,
+      "expected_val_hex": "40dd051a"
+    }
+  ],
+  "pipeline_contract": {
+    "accept_E": "al0<=16 {r_v&&old_stn_amax,r_addr+lane,r_d}; au0<=old_stn_u. Simultaneous c_stn changes only next edge context, so last old result is correctly tagged.",
+    "Eplus1": "al1/au1",
+    "Eplus2": "al2/au2",
+    "Eplus3": "al3/au3",
+    "Eplus4": "al4/au4",
+    "Eplus5": "runningbest merges old al4/au4",
+    "drain": "Use six subsequent idle edges before clear/emit; scheduled lastaccept16 drain17..22, lastaccept27 drain28..33, lastaccept37 drain38..43.",
+    "AMAX_emit": "am_emit<=c_am&&emit; am_eu<=am_user. Candidate am_v/idx/val/u valid after same issue edge NBA; next edge closes open[prior_am_eu].",
+    "stn_pending": "Actual logical source am_stn_pend=stn_busy&&!stn_snd&&!(stn_left==1&&r_v). Each fixture op has1word, so nextSTN on oldlastresult is legal, stn_pend0. Do not assert stn_pend1 or relabel overlapping early results."
+  },
+  "causal_controls": {
+    "MUT2_current_STN_merge": "Last-user result is deliberately in tree when nextusers STN changes currentstn_u. Pipelinecarried baseline tag retained; mutant attributes pending results to currentnewuser.",
+    "MUT3_clear_all": "Clearu2 after settled u0/u1 then clearu3 after settledu2; their prior states must survive anotherusers clear. Allusers clear only beforeall data would not expose this bug.",
+    "MUT4_emit_current_STN_user": "Final currentSTNuser2 nonamax; first emitcommanduser0 must yielduser0/idx11/410d3210. Mutant selectsuser2/idx36/4119bef9. Assert am_u as well as value/index.",
+    "sameELF_wrong_emit_user": "Change first AMAX command user0\u2192user1 while expectation remainsuser0: actual native response must differ in tag/index/value. Label illegal expectedtag control, not native fault requirement.",
+    "sameELF_clear_open": "Clear an alreadyopen user after settled results. Native mu_fault must assert; do not expect baselinecandidate-only mismatch.",
+    "sameELF_STN_overlap": "Assert newSTN when actual previous result pending excludeslast=false; native MU fault is expected.",
+    "MUT1_tie_caution": "All176 genuine values have distinct bitpatterns. This fixture cannot qualify tie-rule mutation1; do not inject duplicate/padded logits and call them genuine. Separate explicit protocol tie fixture or existing originalbench evidence required.",
+    "MUT5_overlap_fault_caution": "Legal baseline uses stn_pend0 at last edge so does not kill dropped-overlap-fault mutant. Separate invalid overlap control needed."
+  },
+  "originalbench_caution": "results/rtl/mu_qwen_1018/head/tb_amax_mu.sv has original MUT1..5 intent and sixedge emit guard, but its2nsclock and all-tied stn_pend0 are historical, not new fixture authority. Preserve source module timescale; use exact833ps bench.",
+  "watchdog": "Finite schedule through edge49; bench can source-bound watchdog64edges (>=schedule + reset/drain margin), fatal with user/emits/edge. No host walltime cap."
+}

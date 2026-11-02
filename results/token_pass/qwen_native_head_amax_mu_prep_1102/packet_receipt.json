@@ -1,0 +1,22 @@
+{
+  "status": "IMMUTABLE_PREP_NOT_RUN",
+  "packet_path": "/home/ubuntu/coord/tmp/codex-native-head-amax-mu-packet1",
+  "manifest_sha256": "7608ed576aecf97771f9fd688d09767d4b0e56443de1d5142d6a892a7dbc03c7",
+  "guarded_files": 10,
+  "resource_proposal": {
+    "status": "SOURCE_PREP_NOT_RUN_REVIEW_REQUIRED",
+    "host": "Intel1 only; noEpyc2staging",
+    "resources": {
+      "memory_GB": 2,
+      "threads": 1,
+      "disk_GB": 2,
+      "kind": "normal"
+    },
+    "build": "one serialVL5.050/O0/g++ build, baseline plus nativeMUT2/3/4 in oneELF",
+    "source_bytes": 13073,
+    "rtl_files": 2,
+    "closure": "qfd_dv_amax_mu contains integer/FP32bit-order comparisons only; noexternalmodules/macros/includes; fourcopiesNU4",
+    "resource_basis": "No measured identical MU packet. Completed actualnativepost gate737660KB buildmaxRSS at2.63MB parsedsource. This packet has two smallRTLfiles and fourintegercompare MUcopies, noFPprimitive/SRAM/nativeME. Proposed2GB finite normal envelope forparentreview, not claimed measuredMUpeak.",
+    "scope": "11qualifiedvectors/176scalars across4distinctusers atlogicalMUboundary, noselectedhardctl/fullvocab/ROOT/tokenclaim"
+  }
+}

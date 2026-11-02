@@ -1,0 +1,16 @@
+{
+  "status": "SOURCE_PREP_NOT_RUN_REVIEW_REQUIRED",
+  "host": "Intel1 only; noEpyc2staging",
+  "resources": {
+    "memory_GB": 2,
+    "threads": 1,
+    "disk_GB": 2,
+    "kind": "normal"
+  },
+  "build": "one serialVL5.050/O0/g++ build, baseline plus nativeMUT2/3/4 in oneELF",
+  "source_bytes": 13073,
+  "rtl_files": 2,
+  "closure": "qfd_dv_amax_mu contains integer/FP32bit-order comparisons only; noexternalmodules/macros/includes; fourcopiesNU4",
+  "resource_basis": "No measured identical MU packet. Completed actualnativepost gate737660KB buildmaxRSS at2.63MB parsedsource. This packet has two smallRTLfiles and fourintegercompare MUcopies, noFPprimitive/SRAM/nativeME. Proposed2GB finite normal envelope forparentreview, not claimed measuredMUpeak.",
+  "scope": "11qualifiedvectors/176scalars across4distinctusers atlogicalMUboundary, noselectedhardctl/fullvocab/ROOT/tokenclaim"
+}
