@@ -1,0 +1,2551 @@
+{
+  "status": "SOURCE_ONLY_ABI_MODEL_REQUEST; NO_CANONICAL_EVENT_OR_PHYSICAL_ADOPTION",
+  "selected_scope": {
+    "KVWB_commands": 160,
+    "scalar_rows": 240,
+    "scalar_write_bytes": 2048,
+    "total_payload_bytes": 491520,
+    "accepted_token_normalization": false
+  },
+  "canonical_spill_source_gap": {
+    "records": 12155,
+    "format_counts": {
+      "U32": 12155
+    },
+    "stack_counts": {
+      "3": 12155
+    },
+    "backing_envelope": [
+      124839264256,
+      124841288896
+    ],
+    "logical_payload_bytes": 146759616,
+    "VM_source_mod64": {
+      "0": 7347,
+      "8": 1066,
+      "48": 484,
+      "56": 248,
+      "24": 994,
+      "32": 670,
+      "40": 457,
+      "16": 889
+    },
+    "native_producer": "No selectedSOURCE3DMAwriter in frozenC11E; onlySOURCE2pair. No stack3\u21922remap or backingcredit.",
+    "read_return": "Canonical spill LOAD read-returnownership also requires actualSOURCE3service/mapping proof; not established bySOURCE0/SOURCE2coupons.",
+    "backing_reservation": [
+      124839264256,
+      124841361408
+    ]
+  },
+  "actual_gap": "Frozen469cell C11E has onlySOURCE2 dbk_NE/NW andwbk_NE/NW. NoSOURCE0writer; no0\u21922alias/readfixturecredit.",
+  "existing_reuse": {
+    "SRC0_soft_read_wrapper": "24de429cd:rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_stack0_service.sv",
+    "wrapper_currently_write_capable": false,
+    "reason": "Its8VMKS wbw_v/base/total andw_k inputs are tied0; it exports no WB completion interface.",
+    "real_write_capable_children": [
+      "ot_hbm_svc_vm_kshare_splitstrap WBwindow/Kports/truew_k_wr_done",
+      "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b actualwritecolumns/data/strobes",
+      "ot_hbm_svc_wb_kport_q realquadrantordinalwriter withACK counting",
+      "ot_hgi_dma_back_static_vp4_banks_cp conditionalalignedVM\u2192HBM sourceproducer"
+    ],
+    "qualification": "Reuse ofRTLcapability only; no integratedSOURCE0writepathPASS or currentdieplacement credit"
+  },
+  "proposed_soft_boundary": {
+    "two_half_window_commands": {
+      "each_fields": {
+        "valid": 1,
+        "base_real_sector": 30,
+        "total": 12
+      },
+      "bits": 86
+    },
+    "write_K_ports": {
+      "valid": 32,
+      "address": 960,
+      "data": 8192,
+      "ready": 32,
+      "write_done": 32
+    },
+    "total_added_port_bits": 9334,
+    "mapping": "Groupg=0..7 gets4ports g*4+:4, half0groups0..3,half1groups4..7; forwardactualVMKS ready/done unchanged.",
+    "phy": "Retain real32PCcolumn/row/data/strobe boundary; no new fake DRAM service or response.",
+    "harden_wrapper": false,
+    "canonical_graph_changed": false
+  },
+  "producer_ABI": {
+    "per_actor": {
+      "command_bits": 308,
+      "move_bits": 227,
+      "issue_relative": 32,
+      "drain_relative": 32,
+      "WB_bank": 1,
+      "WB_epoch": 16,
+      "VM_rq_bits": 136,
+      "VM_rr_bits": 2056,
+      "WB_data_bits": 2312,
+      "WB_ACK_count_bits": 12
+    },
+    "required_partners": 2,
+    "partner_quads": [
+      0,
+      1
+    ],
+    "stack": 0,
+    "model_candidate": "Two existingDBK-class command interfaces andtwoWBpartners, ONLY if actualVMreadgroups/bankvisibility are allocated; otherwiseactorcount/VMgather must be revised.",
+    "VM_binding": "ActualscalarVMsources0..36128; resolve eachnativeowner/readgroup/address. Never reuseSOURCE2 q1rr wiring or invent freeports.",
+    "targets": "NewactualHOST target allocations required; fixture106/126/127 are not adopted.",
+    "RR_RT": "Actualnewroute measurement required; oldSOURCE2 RR_RT80 is a reference, not the newprofile.",
+    "lower_bound_RTL_storage_if_two_DBK_two_WB": {
+      "DBK_landing_macros": 16,
+      "DBK_table_macros": 4,
+      "WB_payload_macros": 64,
+      "total_128x256_macros": 84,
+      "scope": "LiteralgenericRTL8landing+2table perDBK and32payload perWB. No area/physicalview claim; SRC0readfamily32PC/8VMKS/2REF itself is not currentdiecredit."
+    }
+  },
+  "lowering": {
+    "position": "ActualruntimeDYNbankposition required; never recordordinal. Confirm MTP POS_SLOT versus legacyglobal rec_pos1 source; actualCW308 has no runtimePOS decoder.",
+    "scalar": "slot=POS&127; dstbyte=base+slot*2048; m=1,n=512,FP32 unchanged.",
+    "native_address": "q=s[6]^s[11]^s[16]; ordinal=deletebit6(s). Partitionreal64sectorrow into contiguoussamequad/ordinalfragments.",
+    "slot_variant_counts": {
+      "2": 124,
+      "1": 4
+    },
+    "maximum_native_commands": 480,
+    "maximum_commands_per_quad": 240,
+    "command_pages_per_quad_max": 2,
+    "table_depth": 128,
+    "maximum_CFG256_table_writes": 960,
+    "source_VM_mod64": {
+      "0": 231,
+      "24": 4,
+      "48": 2,
+      "32": 3
+    },
+    "original_rows_not64wordaligned": 9,
+    "native_constraint": "DBK p_static_ok requires VMbase%64==0, n%8==0. Allselectedsources are8wordaligned;9arenot64aligned. Ordinary39/25sectorfragments add VMoffset312words, also unaligned.",
+    "required_resolution": "RealdatedCOPY/gather intoallocated64wordalignedVMscratch OR qualifiedunalignedproducerextension. Neither is currently adopted; no freecopy/scratch/reorder.",
+    "scratch_candidate": "Two512wordalignedslots onlyifactualVMallocator/visibility/lifetime proof permits; no allocation made.",
+    "order": "Preserve originalBODY/ROWXwriteorder andKVWB-vs-attention/LOAD barriers; no groupingbyquad across barriers."
+  },
+  "host_and_cycles": [
+    "Publishactualbankpositions, physicalVMowners, inversefoldaddresses, targetIDs andper-commandissue/drain dates.",
+    "Price anyCOPY/staging, commandtableload/rearm/pagechange, WBbank/epochreserve, clock/resetrelease andglobalfence.",
+    "WBwindowopens after prior Kclient writes/readreturns are correctlydrained; no overlap/completionmissteering.",
+    "mv_src/sourceconsumed is notHBMvisibility. DateactualKwriteACKcountdrain/mv_done andglobalfence before affectedLOAD/refill; no newon-diewaitprotocol.",
+    "Invalidate retainedreadwindow versions, releaseoldownedepochafterlastconsumer, refillupdatedDRAM,acquirenewepoch.",
+    "CTL.ACCEPT doesnotrollbackotherstate underR-POS; rejected-rowwrites mustnotresurrect stalecacheversions."
+  ],
+  "holds": [
+    "No actualproducer/softwriteboundary/sourceplan added bythisrequest.",
+    "N6ring128 preappendcanoverwriteearlyrowwindow; confirmactualcohort/ATTmapping beforeallocationchange. No256patch.",
+    "Native152providers/48strictunplanned remain independent; newSOURCE0writegap is additional.",
+    "No newheavygate/PNR/fullnumericmission. Integrationdecision andactualsourceclock/reset/controlcohorts required."
+  ],
+  "real_sector_to_ordinal_variants": [
+    {
+      "ring_slot": 0,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268436249,
+          "real_sector_first": 536872473,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268436224,
+          "real_sector_first": 536872512,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 1,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268436249,
+          "real_sector_first": 536872537,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268436288,
+          "real_sector_first": 536872576,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 2,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268436313,
+          "real_sector_first": 536872601,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268436288,
+          "real_sector_first": 536872640,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 3,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268436313,
+          "real_sector_first": 536872665,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268436352,
+          "real_sector_first": 536872704,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 4,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268436377,
+          "real_sector_first": 536872729,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268436352,
+          "real_sector_first": 536872768,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 5,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268436377,
+          "real_sector_first": 536872793,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268436416,
+          "real_sector_first": 536872832,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 6,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268436441,
+          "real_sector_first": 536872857,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268436416,
+          "real_sector_first": 536872896,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 7,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268436441,
+          "real_sector_first": 536872921,
+          "VM_word_offset": 0,
+          "sectors": 64
+        }
+      ]
+    },
+    {
+      "ring_slot": 8,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268436505,
+          "real_sector_first": 536872985,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268436480,
+          "real_sector_first": 536873024,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 9,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268436505,
+          "real_sector_first": 536873049,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268436544,
+          "real_sector_first": 536873088,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 10,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268436569,
+          "real_sector_first": 536873113,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268436544,
+          "real_sector_first": 536873152,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 11,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268436569,
+          "real_sector_first": 536873177,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268436608,
+          "real_sector_first": 536873216,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 12,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268436633,
+          "real_sector_first": 536873241,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268436608,
+          "real_sector_first": 536873280,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 13,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268436633,
+          "real_sector_first": 536873305,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268436672,
+          "real_sector_first": 536873344,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 14,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268436697,
+          "real_sector_first": 536873369,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268436672,
+          "real_sector_first": 536873408,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 15,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268436697,
+          "real_sector_first": 536873433,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268436736,
+          "real_sector_first": 536873472,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 16,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268436761,
+          "real_sector_first": 536873497,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268436736,
+          "real_sector_first": 536873536,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 17,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268436761,
+          "real_sector_first": 536873561,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268436800,
+          "real_sector_first": 536873600,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 18,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268436825,
+          "real_sector_first": 536873625,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268436800,
+          "real_sector_first": 536873664,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 19,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268436825,
+          "real_sector_first": 536873689,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268436864,
+          "real_sector_first": 536873728,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 20,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268436889,
+          "real_sector_first": 536873753,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268436864,
+          "real_sector_first": 536873792,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 21,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268436889,
+          "real_sector_first": 536873817,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268436928,
+          "real_sector_first": 536873856,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 22,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268436953,
+          "real_sector_first": 536873881,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268436928,
+          "real_sector_first": 536873920,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 23,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268436953,
+          "real_sector_first": 536873945,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268436992,
+          "real_sector_first": 536873984,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 24,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437017,
+          "real_sector_first": 536874009,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268436992,
+          "real_sector_first": 536874048,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 25,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437017,
+          "real_sector_first": 536874073,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437056,
+          "real_sector_first": 536874112,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 26,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437081,
+          "real_sector_first": 536874137,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437056,
+          "real_sector_first": 536874176,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 27,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437081,
+          "real_sector_first": 536874201,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437120,
+          "real_sector_first": 536874240,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 28,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437145,
+          "real_sector_first": 536874265,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437120,
+          "real_sector_first": 536874304,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 29,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437145,
+          "real_sector_first": 536874329,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437184,
+          "real_sector_first": 536874368,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 30,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437209,
+          "real_sector_first": 536874393,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437184,
+          "real_sector_first": 536874432,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 31,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437209,
+          "real_sector_first": 536874457,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437248,
+          "real_sector_first": 536874496,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 32,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437273,
+          "real_sector_first": 536874521,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437248,
+          "real_sector_first": 536874560,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 33,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437273,
+          "real_sector_first": 536874585,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437312,
+          "real_sector_first": 536874624,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 34,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437337,
+          "real_sector_first": 536874649,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437312,
+          "real_sector_first": 536874688,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 35,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437337,
+          "real_sector_first": 536874713,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437376,
+          "real_sector_first": 536874752,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 36,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437401,
+          "real_sector_first": 536874777,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437376,
+          "real_sector_first": 536874816,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 37,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437401,
+          "real_sector_first": 536874841,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437440,
+          "real_sector_first": 536874880,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 38,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437465,
+          "real_sector_first": 536874905,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437440,
+          "real_sector_first": 536874944,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 39,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437465,
+          "real_sector_first": 536874969,
+          "VM_word_offset": 0,
+          "sectors": 64
+        }
+      ]
+    },
+    {
+      "ring_slot": 40,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437529,
+          "real_sector_first": 536875033,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437504,
+          "real_sector_first": 536875072,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 41,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437529,
+          "real_sector_first": 536875097,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437568,
+          "real_sector_first": 536875136,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 42,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437593,
+          "real_sector_first": 536875161,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437568,
+          "real_sector_first": 536875200,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 43,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437593,
+          "real_sector_first": 536875225,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437632,
+          "real_sector_first": 536875264,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 44,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437657,
+          "real_sector_first": 536875289,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437632,
+          "real_sector_first": 536875328,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 45,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437657,
+          "real_sector_first": 536875353,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437696,
+          "real_sector_first": 536875392,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 46,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437721,
+          "real_sector_first": 536875417,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437696,
+          "real_sector_first": 536875456,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 47,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437721,
+          "real_sector_first": 536875481,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437760,
+          "real_sector_first": 536875520,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 48,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437785,
+          "real_sector_first": 536875545,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437760,
+          "real_sector_first": 536875584,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 49,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437785,
+          "real_sector_first": 536875609,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437824,
+          "real_sector_first": 536875648,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 50,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437849,
+          "real_sector_first": 536875673,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437824,
+          "real_sector_first": 536875712,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 51,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437849,
+          "real_sector_first": 536875737,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437888,
+          "real_sector_first": 536875776,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 52,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437913,
+          "real_sector_first": 536875801,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437888,
+          "real_sector_first": 536875840,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 53,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437913,
+          "real_sector_first": 536875865,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268437952,
+          "real_sector_first": 536875904,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 54,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268437977,
+          "real_sector_first": 536875929,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268437952,
+          "real_sector_first": 536875968,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 55,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268437977,
+          "real_sector_first": 536875993,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438016,
+          "real_sector_first": 536876032,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 56,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438041,
+          "real_sector_first": 536876057,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438016,
+          "real_sector_first": 536876096,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 57,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438041,
+          "real_sector_first": 536876121,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438080,
+          "real_sector_first": 536876160,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 58,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438105,
+          "real_sector_first": 536876185,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438080,
+          "real_sector_first": 536876224,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 59,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438105,
+          "real_sector_first": 536876249,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438144,
+          "real_sector_first": 536876288,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 60,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438169,
+          "real_sector_first": 536876313,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438144,
+          "real_sector_first": 536876352,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 61,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438169,
+          "real_sector_first": 536876377,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438208,
+          "real_sector_first": 536876416,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 62,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438233,
+          "real_sector_first": 536876441,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438208,
+          "real_sector_first": 536876480,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 63,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438233,
+          "real_sector_first": 536876505,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438272,
+          "real_sector_first": 536876544,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 64,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438297,
+          "real_sector_first": 536876569,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438272,
+          "real_sector_first": 536876608,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 65,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438297,
+          "real_sector_first": 536876633,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438336,
+          "real_sector_first": 536876672,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 66,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438361,
+          "real_sector_first": 536876697,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438336,
+          "real_sector_first": 536876736,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 67,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438361,
+          "real_sector_first": 536876761,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438400,
+          "real_sector_first": 536876800,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 68,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438425,
+          "real_sector_first": 536876825,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438400,
+          "real_sector_first": 536876864,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 69,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438425,
+          "real_sector_first": 536876889,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438464,
+          "real_sector_first": 536876928,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 70,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438489,
+          "real_sector_first": 536876953,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438464,
+          "real_sector_first": 536876992,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 71,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438489,
+          "real_sector_first": 536877017,
+          "VM_word_offset": 0,
+          "sectors": 64
+        }
+      ]
+    },
+    {
+      "ring_slot": 72,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438553,
+          "real_sector_first": 536877081,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438528,
+          "real_sector_first": 536877120,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 73,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438553,
+          "real_sector_first": 536877145,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438592,
+          "real_sector_first": 536877184,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 74,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438617,
+          "real_sector_first": 536877209,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438592,
+          "real_sector_first": 536877248,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 75,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438617,
+          "real_sector_first": 536877273,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438656,
+          "real_sector_first": 536877312,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 76,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438681,
+          "real_sector_first": 536877337,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438656,
+          "real_sector_first": 536877376,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 77,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438681,
+          "real_sector_first": 536877401,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438720,
+          "real_sector_first": 536877440,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 78,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438745,
+          "real_sector_first": 536877465,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438720,
+          "real_sector_first": 536877504,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 79,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438745,
+          "real_sector_first": 536877529,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438784,
+          "real_sector_first": 536877568,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 80,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438809,
+          "real_sector_first": 536877593,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438784,
+          "real_sector_first": 536877632,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 81,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438809,
+          "real_sector_first": 536877657,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438848,
+          "real_sector_first": 536877696,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 82,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438873,
+          "real_sector_first": 536877721,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438848,
+          "real_sector_first": 536877760,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 83,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438873,
+          "real_sector_first": 536877785,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438912,
+          "real_sector_first": 536877824,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 84,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268438937,
+          "real_sector_first": 536877849,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438912,
+          "real_sector_first": 536877888,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 85,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268438937,
+          "real_sector_first": 536877913,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268438976,
+          "real_sector_first": 536877952,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 86,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439001,
+          "real_sector_first": 536877977,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268438976,
+          "real_sector_first": 536878016,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 87,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439001,
+          "real_sector_first": 536878041,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439040,
+          "real_sector_first": 536878080,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 88,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439065,
+          "real_sector_first": 536878105,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439040,
+          "real_sector_first": 536878144,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 89,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439065,
+          "real_sector_first": 536878169,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439104,
+          "real_sector_first": 536878208,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 90,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439129,
+          "real_sector_first": 536878233,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439104,
+          "real_sector_first": 536878272,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 91,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439129,
+          "real_sector_first": 536878297,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439168,
+          "real_sector_first": 536878336,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 92,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439193,
+          "real_sector_first": 536878361,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439168,
+          "real_sector_first": 536878400,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 93,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439193,
+          "real_sector_first": 536878425,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439232,
+          "real_sector_first": 536878464,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 94,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439257,
+          "real_sector_first": 536878489,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439232,
+          "real_sector_first": 536878528,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 95,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439257,
+          "real_sector_first": 536878553,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439296,
+          "real_sector_first": 536878592,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 96,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439321,
+          "real_sector_first": 536878617,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439296,
+          "real_sector_first": 536878656,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 97,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439321,
+          "real_sector_first": 536878681,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439360,
+          "real_sector_first": 536878720,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 98,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439385,
+          "real_sector_first": 536878745,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439360,
+          "real_sector_first": 536878784,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 99,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439385,
+          "real_sector_first": 536878809,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439424,
+          "real_sector_first": 536878848,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 100,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439449,
+          "real_sector_first": 536878873,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439424,
+          "real_sector_first": 536878912,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 101,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439449,
+          "real_sector_first": 536878937,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439488,
+          "real_sector_first": 536878976,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 102,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439513,
+          "real_sector_first": 536879001,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439488,
+          "real_sector_first": 536879040,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 103,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439513,
+          "real_sector_first": 536879065,
+          "VM_word_offset": 0,
+          "sectors": 64
+        }
+      ]
+    },
+    {
+      "ring_slot": 104,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439577,
+          "real_sector_first": 536879129,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439552,
+          "real_sector_first": 536879168,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 105,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439577,
+          "real_sector_first": 536879193,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439616,
+          "real_sector_first": 536879232,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 106,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439641,
+          "real_sector_first": 536879257,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439616,
+          "real_sector_first": 536879296,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 107,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439641,
+          "real_sector_first": 536879321,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439680,
+          "real_sector_first": 536879360,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 108,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439705,
+          "real_sector_first": 536879385,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439680,
+          "real_sector_first": 536879424,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 109,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439705,
+          "real_sector_first": 536879449,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439744,
+          "real_sector_first": 536879488,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 110,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439769,
+          "real_sector_first": 536879513,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439744,
+          "real_sector_first": 536879552,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 111,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439769,
+          "real_sector_first": 536879577,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439808,
+          "real_sector_first": 536879616,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 112,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439833,
+          "real_sector_first": 536879641,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439808,
+          "real_sector_first": 536879680,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 113,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439833,
+          "real_sector_first": 536879705,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439872,
+          "real_sector_first": 536879744,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 114,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439897,
+          "real_sector_first": 536879769,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439872,
+          "real_sector_first": 536879808,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 115,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439897,
+          "real_sector_first": 536879833,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268439936,
+          "real_sector_first": 536879872,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 116,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268439961,
+          "real_sector_first": 536879897,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268439936,
+          "real_sector_first": 536879936,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 117,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268439961,
+          "real_sector_first": 536879961,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268440000,
+          "real_sector_first": 536880000,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 118,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268440025,
+          "real_sector_first": 536880025,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268440000,
+          "real_sector_first": 536880064,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 119,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268440025,
+          "real_sector_first": 536880089,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268440064,
+          "real_sector_first": 536880128,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 120,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268440089,
+          "real_sector_first": 536880153,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268440064,
+          "real_sector_first": 536880192,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 121,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268440089,
+          "real_sector_first": 536880217,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268440128,
+          "real_sector_first": 536880256,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 122,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268440153,
+          "real_sector_first": 536880281,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268440128,
+          "real_sector_first": 536880320,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 123,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268440153,
+          "real_sector_first": 536880345,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268440192,
+          "real_sector_first": 536880384,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 124,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268440217,
+          "real_sector_first": 536880409,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268440192,
+          "real_sector_first": 536880448,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 125,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268440217,
+          "real_sector_first": 536880473,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268440256,
+          "real_sector_first": 536880512,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 126,
+      "fragments": [
+        {
+          "quad": 0,
+          "ordinal_first": 268440281,
+          "real_sector_first": 536880537,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 1,
+          "ordinal_first": 268440256,
+          "real_sector_first": 536880576,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    },
+    {
+      "ring_slot": 127,
+      "fragments": [
+        {
+          "quad": 1,
+          "ordinal_first": 268440281,
+          "real_sector_first": 536880601,
+          "VM_word_offset": 0,
+          "sectors": 39
+        },
+        {
+          "quad": 0,
+          "ordinal_first": 268440320,
+          "real_sector_first": 536880640,
+          "VM_word_offset": 312,
+          "sectors": 25
+        }
+      ]
+    }
+  ]
+}

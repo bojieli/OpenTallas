@@ -69,9 +69,9 @@ def prog_users(records):
     return out
 
 
-def stage_tables(stage, lowering, btab, crom):
+def stage_tables(stage, lowering, btab, crom, *, head_stage37=False):
     """Compose genuine per-slice lowering outputs, distributing CROM broadcasts."""
-    if not 1 <= stage <= P.STAGES:
+    if head_stage37 not in (False,True) or not 1 <= stage <= P.STAGES + int(head_stage37):
         raise ValueError('stage outside finite store')
     slices = []
     for sid in range(P.SLICES):
@@ -93,16 +93,21 @@ def stage_tables(stage, lowering, btab, crom):
     return dict(stage=stage, slices=slices)
 
 
-def compile_inputs(inputs, btab_compact=None):
+def compile_inputs(inputs, btab_compact=None, *, head_stage37=False):
     """Accept actual lowered streams, never a synthetic 36-stage replication."""
     if inputs.get('schema') != 'opentallas.qwen.native-table-streams.v1':
         raise ValueError('native source stream manifest required')
+    if head_stage37 not in (False,True):
+        raise ValueError('HEAD37 enable must be zero or one')
     stages = inputs['stages']
-    if sorted(s['stage'] for s in stages) != list(range(1, 37)):
-        raise ValueError('all 36 actual source stages required')
+    count = P.STAGES + int(head_stage37)
+    if sorted(s['stage'] for s in stages) != list(range(1, count+1)):
+        raise ValueError(f'all {count} actual source stages required')
     compact = inputs.get('btab_compact') if btab_compact is None else btab_compact
     if compact not in (0, 1):
         raise ValueError('exact selected native BTAB_COMPACT required')
+    if head_stage37 and compact != 1:
+        raise ValueError('HEAD37 requires native compact shared BTAB')
     source = inputs['source']
     for stage in stages:
         if not stage.get('image_sha256') or not stage.get('checkpoint_revision'):
@@ -113,15 +118,17 @@ def compile_inputs(inputs, btab_compact=None):
         external_windows='unchanged; requires calendar and token qualification',
         source_stages=[dict(stage=s['stage'], image_sha256=s['image_sha256'],
                             checkpoint_revision=s['checkpoint_revision']) for s in stages])
+    if head_stage37:
+        certificate['head_stage37'] = dict(shared_btab_window=[72,272],btab_records=50,crom_records=32)
     cert_bytes = (json.dumps(certificate, sort_keys=True) + '\n').encode()
     manifest = dict(schema='opentallas.qwen.mu-table-input.v1',
         parameters=dict(P.NATIVE_COMPACT_PARAMETERS) if compact else
                    dict(NU=4, PIDX_STRIDE=128, CROM_ROW_STRIDE=128, BTAB_WORD_STRIDE=128),
         source=dict(source, user_relocation_certificate_sha256=hashlib.sha256(cert_bytes).hexdigest()),
         qualification='TABLE LOWERING ONLY; ROOT/calendar/slice-ID/native-token gates OPEN',
-        stages=[stage_tables(s['stage'], s['prog_stream'], s['btab_stream'], s['crom_table'])
+        stages=[stage_tables(s['stage'], s['prog_stream'], s['btab_stream'], s['crom_table'], head_stage37=head_stage37)
                 for s in sorted(stages, key=lambda s: s['stage'])])
-    P.logical_images(manifest)  # reject incomplete shapes before emitting any masks
+    P.logical_images(manifest, head_stage37=head_stage37)  # reject incomplete shapes before emitting any masks
     return manifest, certificate
 
 
@@ -130,8 +137,9 @@ def main():
     ap.add_argument('--streams', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--btab-compact', type=int, choices=(0,1), help='selected native loader ABI for older stream bundles')
+    ap.add_argument('--head-stage37',action='store_true',help='explicit unadopted native HEAD37 source event')
     a = ap.parse_args()
-    manifest, certificate = compile_inputs(json.loads(a.streams.read_text()), a.btab_compact)
+    manifest, certificate = compile_inputs(json.loads(a.streams.read_text()), a.btab_compact,head_stage37=a.head_stage37)
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / 'mu_table_input.json').write_text(json.dumps(manifest, indent=1) + '\n')
     (a.out / 'user_relocation.json').write_text(json.dumps(certificate, sort_keys=True) + '\n')

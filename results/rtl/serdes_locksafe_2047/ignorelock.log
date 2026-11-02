@@ -1,0 +1,3 @@
+RESET_READY epoch=0 recovered_edges=66
+FATAL: /srv/opentallas-scratch2/claude/codex-serdes-locksafe-2047/src/rtl/dsrom_sys/s81_link/tb_pdie_locksafe_reset.sv:18: unsafe FIFO/reset state epoch=1
+       Time: 1295000  Scope: tb_pdie_locksafe_reset.assert_empty

@@ -1,0 +1,9 @@
+HBM_MODEL_PRELOAD stack3 sectors=32768 file=/srv/opentallas-scratch2/claude/codex-hbm-causal3-2040/images/stack3.hex
+CAUSAL_FILL epoch7 cycle2071 reads1024
+CAUSAL_FILL epoch8 cycle4272 reads2048
+CAUSAL_WRITE_REFILL PASS stack3 q0 words256 sectors32 writes32 completed32 reads2048 nativeACK96 cycle4387
+- sources/tb_source_write_causal_1101.sv:84: Verilog $finish
+HBM_MODEL stack3 reads=2048 writes=32 refreshes=917 first_cmd=148 last_cmd=4386
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 4.909 s; speed 744.447 ns/s
+- Verilator: cpu 4.882 s on 1 threads; allocated 19 MB

@@ -1,0 +1,115 @@
+{
+  "status": "SOURCE_EVENT_PREP_NOT_ADOPTED",
+  "macro": {
+    "words": 4096,
+    "bits": 1064,
+    "lanes": 4,
+    "lane_bits": 266,
+    "mux": 8
+  },
+  "transformer": {
+    "stages": 36,
+    "stride": 106,
+    "rows": [
+      0,
+      3816
+    ],
+    "reads_per_user": 88
+  },
+  "head": {
+    "stage": 37,
+    "rows": [
+      3816,
+      3922
+    ],
+    "per_user_prog_slots": 6,
+    "user_prog_slots": 24,
+    "shared_btab_slots": 50,
+    "crom_slots": 32,
+    "reads_per_user": 88,
+    "btab_window": [
+      72,
+      272
+    ],
+    "btab_counts": [
+      0,
+      50,
+      0,
+      50,
+      0,
+      50,
+      50,
+      0,
+      50,
+      0,
+      48,
+      0
+    ],
+    "crom_gain_counts": [
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      16,
+      16,
+      16,
+      16
+    ],
+    "gain_elements": 4096,
+    "shared_btab_total_records": 298,
+    "gain_total_records": 256
+  },
+  "monitor": {
+    "rows": [
+      3922,
+      3930
+    ],
+    "physical_rows": [
+      490,
+      491
+    ],
+    "physical_columns": [
+      [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "reads_added_per_user": 2
+  },
+  "free_rows": 166,
+  "bit_width_checks": {
+    "stage_port_bits": 6,
+    "max_stage": 37,
+    "rom_addr_bits": 12,
+    "max_read_addr": 3929,
+    "base_even": true,
+    "slot_bits": 7,
+    "max_slot": 89
+  },
+  "compatibility": {
+    "default_head_stage37": 0,
+    "default_monitor_tail": 0,
+    "transformer_prefix": "byte_identical",
+    "shared_head_btab_relocation": "none",
+    "per_user_crom_row_stride": 128,
+    "per_user_prog_pair_stride": 64
+  },
+  "remaining_contracts": [
+    "HEAD gain CROM allocation/reload/live-range lease",
+    "HEAD PROG slot allocation and canonical lowering",
+    "final ROOT RSTD lifetime and native issue/HEAD consumption calendar",
+    "production recipe/source-event adoption and changed type re-sign"
+  ]
+}

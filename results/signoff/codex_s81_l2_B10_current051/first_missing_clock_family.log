@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/flow/tools/die_plan/signoff.py", line 2160, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/flow/tools/die_plan/signoff.py", line 2156, in main
+    return cmd_run(a) if a.cmd == "run" else cmd_verdict(a)
+           ~~~~~~~^^^
+  File "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/flow/tools/die_plan/signoff.py", line 1923, in cmd_run
+    require_signoff_bundle()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/flow/tools/die_plan/signoff.py", line 274, in require_signoff_bundle
+    return signoff_bundle_sources()
+  File "/srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/flow/tools/die_plan/signoff.py", line 265, in signoff_bundle_sources
+    raise ValueError("signoff: incomplete tool bundle: " + ", ".join(missing))
+ValueError: signoff: incomplete tool bundle: clock_family.tcl

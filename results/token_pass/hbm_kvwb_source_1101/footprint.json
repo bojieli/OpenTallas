@@ -1,0 +1,4233 @@
+{
+  "status": "SOURCE_SEMANTICS_AND_MISSING_NATIVE_JOIN; NO_CACHE_ADOPTION",
+  "image": {
+    "path": "/home/ubuntu/OpenTallas/results/tok_hbm_1030/canonical_resident_cached/stream.hgi1r",
+    "sha256": "79a81185a91387fdfe5e8bea1cd4429f31b7ce4a19f9d5f962109878802e76a3",
+    "commands": 37226
+  },
+  "canonical_spill_STORE": {
+    "records": 12155,
+    "format_counts": {
+      "U32": 12155
+    },
+    "stack_counts": {
+      "3": 12155
+    },
+    "backing_envelope": [
+      124839264256,
+      124841288896
+    ],
+    "logical_payload_bytes": 146759616,
+    "VM_source_mod64": {
+      "0": 7347,
+      "8": 1066,
+      "48": 484,
+      "56": 248,
+      "24": 994,
+      "32": 670,
+      "40": 457,
+      "16": 889
+    },
+    "native_producer": "No selectedSOURCE3DMAwriter in frozenC11E; onlySOURCE2pair. No stack3\u21922remap or backingcredit.",
+    "read_return": "Canonical spill LOAD read-returnownership also requires actualSOURCE3service/mapping proof; not established bySOURCE0/SOURCE2coupons.",
+    "backing_reservation": [
+      124839264256,
+      124841361408
+    ]
+  },
+  "KVWB_commands": 160,
+  "scalar_rows": 240,
+  "scalar_payload_bytes": 491520,
+  "possible_logical_envelopes": [
+    [
+      17179919136,
+      17180181280
+    ]
+  ],
+  "semantics": "O.m is ring capacity, not rows written. One scalar writes n FP32 words at O.base+(POS & (O.m-1))*O.stride.",
+  "positions": "UNKNOWN: require actual doorbell/CTL.USERS/ROWX bank-position lowering; do not infer from record number",
+  "normative_evidence": [
+    "rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv:15-18,130,145-147,158-170",
+    "tools/hbm_next/isa_v1r_20261019/hbm_next/isa_rows.py:379-399,526-535"
+  ],
+  "actual_native_path": {
+    "command": "ot_hgi_dma_back_cp_collar CW308={epoch16,bank1,move227,drain32,issue32}",
+    "selected_wrapper": "ot_hgi_dma_back_static_vp4_banks_cp; no position/ring decode inputs",
+    "write_partner": "ot_hbm_svc_wb_kport_q -> ot_hbm_svc_vm_kshare -> PC controller -> external PHY",
+    "address": "Write partner accepts quadrant ordinal o, real sector={o[28:6],q^o[10]^o[15],o[5:0]}; logical byte addresses require inverse fold/partition lowering first",
+    "completion": "Controller mv_src is source consumed; mv_done waits pending sector ACK count to zero. Partner wa counts true PC write completions, not request readiness.",
+    "missing": [
+      "Actual HGI-1R bank position -> resolved227 source command producer",
+      "Logical real-sector -> per-quadrant ordinal + actual VM-source partitioning",
+      "Native fixed issue/drain dates, WB bank/epoch reservations and global drain fence",
+      "SOURCE0 DMA writeback producer absent from frozen469cell C11E top: onlyNE/NW bothstk2; require real new source/plan, never0\u21922 alias"
+    ],
+    "frozen_native_roster": {
+      "cohort": "C11E4frozen",
+      "cache_path": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/asbuilt.json",
+      "top": "hbm_current_native_top",
+      "top_cells": 469,
+      "bit_order": "LSBfirst",
+      "DMA_writeback_cells": [
+        {
+          "canonical": "hb_dbk_NE",
+          "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+          "parameters": {
+            "RR_RT": "00000000000000000000000001010000"
+          },
+          "strap_bits": {
+            "stk": [
+              "0",
+              "1"
+            ]
+          }
+        },
+        {
+          "canonical": "hb_dbk_NW",
+          "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+          "parameters": {
+            "RR_RT": "00000000000000000000000001010000"
+          },
+          "strap_bits": {
+            "stk": [
+              "0",
+              "1"
+            ]
+          }
+        },
+        {
+          "canonical": "wbk_NE",
+          "master": "ot_hbm_svc_wb_kport_q",
+          "parameters": {
+            "MUT": "00000000000000000000000000000000",
+            "WOPEN": "00000000000000000000000000000000"
+          },
+          "strap_bits": {
+            "stk": [
+              "0",
+              "1"
+            ],
+            "quad": [
+              "1"
+            ]
+          }
+        },
+        {
+          "canonical": "wbk_NW",
+          "master": "ot_hbm_svc_wb_kport_q",
+          "parameters": {
+            "MUT": "00000000000000000000000000000000",
+            "WOPEN": "00000000000000000000000000000000"
+          },
+          "strap_bits": {
+            "stk": [
+              "0",
+              "1"
+            ],
+            "quad": [
+              "0"
+            ]
+          }
+        }
+      ],
+      "SOURCE0_DMA_writeback_present": false,
+      "corroborated_by": "bind owner same cachedhomes/topcells roster"
+    }
+  },
+  "conservative_fence": [
+    "Invalidate any retained SOURCE0 window whose true source sectors intersect each resolved write; if position/fold mapping unknown, invalidate all SOURCE0 retained windows at KVWB.",
+    "Stop using affected old owned epoch; retire all prior consumers before release/reuse.",
+    "Do not issue replacement fill at mv_src/posted retirement: wait actual write completion/ACK drain (mv_done/quiet plus complete global fence).",
+    "Refill from updated external memory, then acquire a new owned epoch; current models do not establish cache snooping."
+  ],
+  "ring_hazard": {
+    "status": "SOURCE_LEVEL_CONDITIONAL_COUNTEREXAMPLE; NO_IMAGE_PATCH",
+    "selected_ring_slots": 128,
+    "selected_rows": 6,
+    "window": 128,
+    "example": "If six positions127..132 append before row0 attention, slots0..4 of its [0..127] window are overwritten by128..132.",
+    "required_join": "Confirm actual MTP position/cohort order and ATT/KVUNION mapping; never silently enlarge ring to256 or relocate allocations."
+  },
+  "rows": [
+    {
+      "resident_command": 241,
+      "source_record": 18,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 242,
+      "source_record": 18,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 243,
+      "source_record": 18,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 248,
+      "source_record": 18,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 248,
+      "source_record": 18,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 248,
+      "source_record": 18,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 1905,
+      "source_record": 171,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 1906,
+      "source_record": 171,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 1907,
+      "source_record": 171,
+      "DYN_bank": 2,
+      "VM_source_word": 4120,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 1910,
+      "source_record": 171,
+      "DYN_bank": 3,
+      "VM_source_word": 2048,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 1911,
+      "source_record": 171,
+      "DYN_bank": 4,
+      "VM_source_word": 2608,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 1912,
+      "source_record": 171,
+      "DYN_bank": 5,
+      "VM_source_word": 3120,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 2909,
+      "source_record": 300,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 2910,
+      "source_record": 300,
+      "DYN_bank": 1,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 2911,
+      "source_record": 300,
+      "DYN_bank": 2,
+      "VM_source_word": 2560,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 2915,
+      "source_record": 300,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 2915,
+      "source_record": 300,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 2915,
+      "source_record": 300,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 3800,
+      "source_record": 390,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 3801,
+      "source_record": 390,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 3802,
+      "source_record": 390,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 3807,
+      "source_record": 390,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 3807,
+      "source_record": 390,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 3807,
+      "source_record": 390,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 4651,
+      "source_record": 480,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 4652,
+      "source_record": 480,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 4653,
+      "source_record": 480,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 4658,
+      "source_record": 480,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 4658,
+      "source_record": 480,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 4658,
+      "source_record": 480,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 5505,
+      "source_record": 570,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 5506,
+      "source_record": 570,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 5507,
+      "source_record": 570,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 5512,
+      "source_record": 570,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 5512,
+      "source_record": 570,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 5512,
+      "source_record": 570,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 6359,
+      "source_record": 660,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 6360,
+      "source_record": 660,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 6361,
+      "source_record": 660,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 6366,
+      "source_record": 660,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 6366,
+      "source_record": 660,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 6366,
+      "source_record": 660,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 7213,
+      "source_record": 750,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 7214,
+      "source_record": 750,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 7215,
+      "source_record": 750,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 7220,
+      "source_record": 750,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 7220,
+      "source_record": 750,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 7220,
+      "source_record": 750,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 8266,
+      "source_record": 879,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 8267,
+      "source_record": 879,
+      "DYN_bank": 1,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 8268,
+      "source_record": 879,
+      "DYN_bank": 2,
+      "VM_source_word": 2560,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 8272,
+      "source_record": 879,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 8272,
+      "source_record": 879,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 8272,
+      "source_record": 879,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 9157,
+      "source_record": 969,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 9158,
+      "source_record": 969,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 9159,
+      "source_record": 969,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 9164,
+      "source_record": 969,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 9164,
+      "source_record": 969,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 9164,
+      "source_record": 969,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 10009,
+      "source_record": 1059,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 10010,
+      "source_record": 1059,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 10011,
+      "source_record": 1059,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 10016,
+      "source_record": 1059,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 10016,
+      "source_record": 1059,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 10016,
+      "source_record": 1059,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 10863,
+      "source_record": 1149,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 10864,
+      "source_record": 1149,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 10865,
+      "source_record": 1149,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 10870,
+      "source_record": 1149,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 10870,
+      "source_record": 1149,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 10870,
+      "source_record": 1149,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 11717,
+      "source_record": 1239,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 11718,
+      "source_record": 1239,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 11719,
+      "source_record": 1239,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 11724,
+      "source_record": 1239,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 11724,
+      "source_record": 1239,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 11724,
+      "source_record": 1239,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 12571,
+      "source_record": 1329,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 12572,
+      "source_record": 1329,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 12573,
+      "source_record": 1329,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 12578,
+      "source_record": 1329,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 12578,
+      "source_record": 1329,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 12578,
+      "source_record": 1329,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 14406,
+      "source_record": 1520,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 14406,
+      "source_record": 1520,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 14406,
+      "source_record": 1520,
+      "DYN_bank": 2,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 14410,
+      "source_record": 1520,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 14411,
+      "source_record": 1520,
+      "DYN_bank": 4,
+      "VM_source_word": 2048,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 14412,
+      "source_record": 1520,
+      "DYN_bank": 5,
+      "VM_source_word": 2560,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 15232,
+      "source_record": 1611,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 15233,
+      "source_record": 1611,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 15234,
+      "source_record": 1611,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 15239,
+      "source_record": 1611,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 15239,
+      "source_record": 1611,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 15239,
+      "source_record": 1611,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 16089,
+      "source_record": 1701,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 16090,
+      "source_record": 1701,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 16091,
+      "source_record": 1701,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 16096,
+      "source_record": 1701,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 16096,
+      "source_record": 1701,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 16096,
+      "source_record": 1701,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 16943,
+      "source_record": 1791,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 16944,
+      "source_record": 1791,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 16945,
+      "source_record": 1791,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 16950,
+      "source_record": 1791,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 16950,
+      "source_record": 1791,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 16950,
+      "source_record": 1791,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 17797,
+      "source_record": 1881,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 17798,
+      "source_record": 1881,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 17799,
+      "source_record": 1881,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 17804,
+      "source_record": 1881,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 17804,
+      "source_record": 1881,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 17804,
+      "source_record": 1881,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 18651,
+      "source_record": 1971,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 18652,
+      "source_record": 1971,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 18653,
+      "source_record": 1971,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 18658,
+      "source_record": 1971,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 18658,
+      "source_record": 1971,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 18658,
+      "source_record": 1971,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 19687,
+      "source_record": 2087,
+      "DYN_bank": 0,
+      "VM_source_word": 34592,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 19687,
+      "source_record": 2087,
+      "DYN_bank": 1,
+      "VM_source_word": 35104,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 19687,
+      "source_record": 2087,
+      "DYN_bank": 2,
+      "VM_source_word": 35616,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 19690,
+      "source_record": 2087,
+      "DYN_bank": 3,
+      "VM_source_word": 31576,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 19690,
+      "source_record": 2087,
+      "DYN_bank": 4,
+      "VM_source_word": 32088,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 19690,
+      "source_record": 2087,
+      "DYN_bank": 5,
+      "VM_source_word": 32600,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 20620,
+      "source_record": 2180,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 20621,
+      "source_record": 2180,
+      "DYN_bank": 1,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 20622,
+      "source_record": 2180,
+      "DYN_bank": 2,
+      "VM_source_word": 2560,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 20626,
+      "source_record": 2180,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 20626,
+      "source_record": 2180,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 20626,
+      "source_record": 2180,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 21474,
+      "source_record": 2270,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 21475,
+      "source_record": 2270,
+      "DYN_bank": 1,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 21476,
+      "source_record": 2270,
+      "DYN_bank": 2,
+      "VM_source_word": 2560,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 21480,
+      "source_record": 2270,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 21480,
+      "source_record": 2270,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 21480,
+      "source_record": 2270,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 22328,
+      "source_record": 2360,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 22329,
+      "source_record": 2360,
+      "DYN_bank": 1,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 22330,
+      "source_record": 2360,
+      "DYN_bank": 2,
+      "VM_source_word": 2560,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 22334,
+      "source_record": 2360,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 22334,
+      "source_record": 2360,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 22334,
+      "source_record": 2360,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 23420,
+      "source_record": 2463,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 23420,
+      "source_record": 2463,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 23420,
+      "source_record": 2463,
+      "DYN_bank": 2,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 23425,
+      "source_record": 2463,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 23426,
+      "source_record": 2463,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 23427,
+      "source_record": 2463,
+      "DYN_bank": 5,
+      "VM_source_word": 3392,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 24175,
+      "source_record": 2549,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 24176,
+      "source_record": 2549,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 24177,
+      "source_record": 2549,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 24182,
+      "source_record": 2549,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 24182,
+      "source_record": 2549,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 24182,
+      "source_record": 2549,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 25030,
+      "source_record": 2639,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 25031,
+      "source_record": 2639,
+      "DYN_bank": 1,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 25032,
+      "source_record": 2639,
+      "DYN_bank": 2,
+      "VM_source_word": 2560,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 25036,
+      "source_record": 2639,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 25036,
+      "source_record": 2639,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 25036,
+      "source_record": 2639,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 25884,
+      "source_record": 2729,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 25885,
+      "source_record": 2729,
+      "DYN_bank": 1,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 25886,
+      "source_record": 2729,
+      "DYN_bank": 2,
+      "VM_source_word": 2560,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 25890,
+      "source_record": 2729,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 25890,
+      "source_record": 2729,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 25890,
+      "source_record": 2729,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 26976,
+      "source_record": 2832,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 26976,
+      "source_record": 2832,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 26976,
+      "source_record": 2832,
+      "DYN_bank": 2,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 26981,
+      "source_record": 2832,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 26982,
+      "source_record": 2832,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 26983,
+      "source_record": 2832,
+      "DYN_bank": 5,
+      "VM_source_word": 3392,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 27731,
+      "source_record": 2918,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 27732,
+      "source_record": 2918,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 27733,
+      "source_record": 2918,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 27738,
+      "source_record": 2918,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 27738,
+      "source_record": 2918,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 27738,
+      "source_record": 2918,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 28586,
+      "source_record": 3008,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 28587,
+      "source_record": 3008,
+      "DYN_bank": 1,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 28588,
+      "source_record": 3008,
+      "DYN_bank": 2,
+      "VM_source_word": 2560,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 28592,
+      "source_record": 3008,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 28592,
+      "source_record": 3008,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 28592,
+      "source_record": 3008,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 29440,
+      "source_record": 3098,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 29441,
+      "source_record": 3098,
+      "DYN_bank": 1,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 29442,
+      "source_record": 3098,
+      "DYN_bank": 2,
+      "VM_source_word": 2560,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 29446,
+      "source_record": 3098,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 29446,
+      "source_record": 3098,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 29446,
+      "source_record": 3098,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 30532,
+      "source_record": 3201,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 30532,
+      "source_record": 3201,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 30532,
+      "source_record": 3201,
+      "DYN_bank": 2,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 30537,
+      "source_record": 3201,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 30538,
+      "source_record": 3201,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 30539,
+      "source_record": 3201,
+      "DYN_bank": 5,
+      "VM_source_word": 3392,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 31287,
+      "source_record": 3287,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 31288,
+      "source_record": 3287,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 31289,
+      "source_record": 3287,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 31294,
+      "source_record": 3287,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 31294,
+      "source_record": 3287,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 31294,
+      "source_record": 3287,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 32142,
+      "source_record": 3377,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 32143,
+      "source_record": 3377,
+      "DYN_bank": 1,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 32144,
+      "source_record": 3377,
+      "DYN_bank": 2,
+      "VM_source_word": 2560,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 32148,
+      "source_record": 3377,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 32148,
+      "source_record": 3377,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 32148,
+      "source_record": 3377,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 32996,
+      "source_record": 3467,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 32997,
+      "source_record": 3467,
+      "DYN_bank": 1,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 32998,
+      "source_record": 3467,
+      "DYN_bank": 2,
+      "VM_source_word": 2560,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 33002,
+      "source_record": 3467,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 33002,
+      "source_record": 3467,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 33002,
+      "source_record": 3467,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 34088,
+      "source_record": 3570,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 34088,
+      "source_record": 3570,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 34088,
+      "source_record": 3570,
+      "DYN_bank": 2,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 34093,
+      "source_record": 3570,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 34094,
+      "source_record": 3570,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 34095,
+      "source_record": 3570,
+      "DYN_bank": 5,
+      "VM_source_word": 3392,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 34828,
+      "source_record": 3656,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 34829,
+      "source_record": 3656,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 34830,
+      "source_record": 3656,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 34835,
+      "source_record": 3656,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 34835,
+      "source_record": 3656,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 34835,
+      "source_record": 3656,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 35676,
+      "source_record": 3746,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 35677,
+      "source_record": 3746,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 35678,
+      "source_record": 3746,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 35683,
+      "source_record": 3746,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 35683,
+      "source_record": 3746,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 35683,
+      "source_record": 3746,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 36530,
+      "source_record": 3836,
+      "DYN_bank": 0,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 36531,
+      "source_record": 3836,
+      "DYN_bank": 1,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 36532,
+      "source_record": 3836,
+      "DYN_bank": 2,
+      "VM_source_word": 1536,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 36537,
+      "source_record": 3836,
+      "DYN_bank": 3,
+      "VM_source_word": 0,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 36537,
+      "source_record": 3836,
+      "DYN_bank": 4,
+      "VM_source_word": 512,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    },
+    {
+      "resident_command": 36537,
+      "source_record": 3836,
+      "DYN_bank": 5,
+      "VM_source_word": 1024,
+      "words": 512,
+      "ring_base_byte": 17179919136,
+      "ring_slots": 128,
+      "slot_stride_bytes": 2048,
+      "scalar_write_bytes": 2048,
+      "possible_logical_envelope": [
+        17179919136,
+        17180181280
+      ],
+      "position": null,
+      "logical_write_interval": null
+    }
+  ]
+}

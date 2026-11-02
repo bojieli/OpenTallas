@@ -1232,6 +1232,13 @@ def stage_admission_tools(source_chain=None, source_tools=None, root=None):
              not any(x in ("__pycache__", ".pytest_cache", ".git") for x in p.relative_to(tools).parts)]
     chain_bytes = chain.read_bytes()
     payload = {path.relative_to(tools): path.read_bytes() for path in sorted(files)}
+    # signoff.py also depends on this shared physical helper. Standalone admission
+    # bundles have no repository sibling tree, so place it beside signoff.py.
+    if (tools / "signoff.py").is_file() and Path("clock_family.tcl") not in payload:
+        clock_family = tools.parents[1] / "physical/common_flow/clock_family.tcl"
+        if not clock_family.is_file():
+            raise ValueError("admission tools incomplete: missing physical/common_flow/clock_family.tcl")
+        payload[Path("clock_family.tcl")] = clock_family.read_bytes()
     digest = hashlib.sha256(chain_bytes)
     for relative, content in payload.items():
         digest.update(str(relative).encode()+b"\0")

@@ -120,6 +120,28 @@ def runner_norm(text):
     return re.sub(r"\$\{KWRS_\w+\}", "", t)
 
 
+def adapt_type_runner(text, template):
+    """Add only the pinned resume harness to a recognized old TYPE runner.
+
+    Normalized old physical commands and gates must remain byte-identical.
+    Unknown/core runners retain the existing full rebuild fallback.
+    """
+    if MARKER in text:
+        return text, "already supports resume"
+    anchor = re.findall(r"^NAME=dpkit-.*\n", text, re.M)
+    make = re.compile(r"(  M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=\$CPUS'; )rc=0;")
+    if len(anchor) != 1 or len(make.findall(text)) != 1:
+        return text, "unrecognized runner; normal full rebuild/ECO fallback"
+    start = template.index("# KW-RESUME-1 OT_STAGE_RESUME_V1")
+    end = template.index("fi  # KWRS", start) + len("fi  # KWRS")
+    harness = template[start:end] + "\n"
+    adapted = text.replace(anchor[0], anchor[0] + harness, 1)
+    adapted = make.sub(lambda m: m.group(1) + "${KWRS_M}rc=0;", adapted, count=1)
+    if runner_norm(adapted) != runner_norm(text):
+        raise ValueError("resume harness changed normalized physical runner")
+    return adapted, "resume harness only; normalized physical commands and gates identical"
+
+
 def H(o):
     return hashlib.sha256(json.dumps(o, sort_keys=True).encode()).hexdigest()
 

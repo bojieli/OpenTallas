@@ -1203,7 +1203,8 @@ def run_item(spec_path):
         if rc:
             return fail("lec_tools", txt)
         rc, txt = run("lec_tools", remote(f"python3 {q(staged)}/future_kit_lec.py {q(K)} "
-            f"{q(staged)}/lec.py {q(staged)}/TOOL.json"))
+            f"{q(staged)}/lec.py {q(staged)}/TOOL.json "
+            f"{q(runner.format(kit=K, work=W) if core else W + '/gen/run_kit.sh')} {q(staged)}/run_kit_template.sh"))
         if rc:
             return fail("lec_tools", txt)
         res["future_lec"] = lt
@@ -1642,7 +1643,22 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             check=True, capture_output=True).stdout
         if payload != tracked:
             raise ValueError("future LEC scheduler file differs from committed main tool")
-        meta = dict(commit=commit, sha256=hashlib.sha256(payload).hexdigest())
+        import ast
+        generator = subprocess.run(["git", "-C", str(source.parent), "show", f"{commit}:tools/die_plan/gen_phys.py"],
+            check=True, capture_output=True, text=True).stdout
+        tree = ast.parse(generator)
+        template = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign)
+            and any(isinstance(t, ast.Name) and t.id == "RUN_KIT" for t in n.targets))
+        resume_helper = Path(KR.__file__).read_bytes()
+        committed_helper = subprocess.run(["git", "-C", str(source.parent), "show", f"{commit}:tools/autopilot/kit_resume.py"],
+            check=True, capture_output=True).stdout
+        if resume_helper != committed_helper:
+            raise ValueError("resume helper differs from pinned scheduler commit")
+        (snapshot / "kit_resume.py").write_bytes(resume_helper)
+        (snapshot / "run_kit_template.sh").write_text(template)
+        meta = dict(commit=commit, sha256=hashlib.sha256(payload).hexdigest(),
+            runner_template_sha256=hashlib.sha256(template.encode()).hexdigest(),
+            resume_helper_sha256=hashlib.sha256(resume_helper).hexdigest())
         (snapshot / "lec.py").write_bytes(payload)
         (snapshot / "TOOL.json").write_text(json.dumps(meta) + "\n")
         (snapshot / "future_kit_lec.py").write_bytes(Path(__file__).with_name("future_kit_lec.py").read_bytes())

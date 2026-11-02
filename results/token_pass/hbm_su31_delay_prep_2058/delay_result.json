@@ -1,0 +1,22 @@
+{
+  "status": "PASS_DELAY_MITER_AND_MUTANT",
+  "clock_ps": 833,
+  "old_FF_stages": 7,
+  "new_FF_stages": 8,
+  "golden_added_cycles": 1,
+  "data_bits": 2725,
+  "epoch_bits": 1,
+  "checked_cycles": 4080,
+  "reset_low_edges": 208,
+  "reset_pulses": 52,
+  "mutant": "bit0 flip caught cycle17",
+  "unit": "oth-ubuntu-3833994-1793595765",
+  "execution_host": "localhost(intel2)",
+  "otrun_spill_copyback": "epyc2",
+  "scope": "Smallest native ot_dp_st mechanism; data unreset, epoch reset; common delivered reset input. Actual placed local reset/source/profile join remains unqualified.",
+  "added_FF": 2726,
+  "added_NW_L5_cycles": 1,
+  "added_NW_L5_ps": 833,
+  "NE_unchanged": true,
+  "physical_route": false
+}

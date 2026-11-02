@@ -11,7 +11,8 @@ module qfd_dv_table_rom_loader #(
     parameter integer CAPTURE_MUT=0, // bench causal: 1 metadata bypass;2 early done
     parameter integer CAPTURE_STAGE=0, // private structural ROM-capture successor (+1 write edge)
     parameter integer WE_COPIES=1,      // QW-F16PROG4: >1 = kept copies of tw_we for the VM-join select (<=32 loads each)
-    parameter integer MONITOR_TAIL=0   // candidate only: two invariant PROG pairs after the88-read prefix (+2 edges)
+    parameter integer MONITOR_TAIL=0,  // candidate only: two invariant PROG pairs after the88-read prefix (+2 edges)
+    parameter integer HEAD_STAGE37=0  // source-event candidate only; shared HEAD BTAB50/CROM32
 ) (
     input wire ck, rst_n,
     input wire start,
@@ -27,6 +28,12 @@ module qfd_dv_table_rom_loader #(
     output reg done,
     output reg fault
 );
+    localparam integer MAX_STAGE = 36 + HEAD_STAGE37;
+    localparam integer TAIL_BASE = 106 * MAX_STAGE;
+    generate if (HEAD_STAGE37!=0 && (HEAD_STAGE37!=1 || BTAB_COMPACT!=1 ||
+                  CAPTURE_STAGE!=0 || LOCAL_CTRL!=0 || WE_COPIES!=34)) begin:g_head_profile_bad
+        initial $fatal(1,"HEAD_STAGE37 requires native compact C0/LOCAL0/WE34 profile");
+    end endgenerate
     localparam integer LAST_SLOT = (MONITOR_TAIL!=0) ? 89 : 87;
     generate if (MONITOR_TAIL!=0 && (MONITOR_TAIL!=1 || BTAB_COMPACT!=1 ||
                   CAPTURE_STAGE!=0 || LOCAL_CTRL!=0 || WE_COPIES!=34)) begin:g_monitor_profile_bad
@@ -56,7 +63,7 @@ module qfd_dv_table_rom_loader #(
         begin
             pu=(MUT==4)?(u+2'd1):u;
             if (MONITOR_TAIL!=0 && k>=88)
-                row_addr=12'd3816+2*pu+(k-7'd88);
+                row_addr=12'(TAIL_BASE)+2*pu+(k-7'd88);
             else row_addr=b+((k<6)?(6*pu+k):(24+k-6));
         end
     endfunction
@@ -133,18 +140,20 @@ module qfd_dv_table_rom_loader #(
     ot_rom_4096x266_m8 #(.INSTANCE($sformatf("table_s%0d_m3",SLICE))) m3
 `endif
         (.clk(ck),.ce_in(active),.addr_in(rom_addr),.rd_out(rom_data[1063:798]));
+    // The base stays fixed through the capture/output tail; no new request may enter while busy.
+    wire shared_head = (HEAD_STAGE37!=0) && base==12'd3816;
     wire [1:0] kind=data[1026:1025];
     wire [23:0] local_addr=data[1050:1027];
     wire invalid=data[1063:1051]!=0 || kind==0 ||
-        (kind==3 && local_addr>=64) || (kind!=3 && local_addr>=128) ||
-        (BTAB_COMPACT!=0 && kind==2 && local_addr>=72) ||
+        (kind==3 && local_addr>=64) || (kind!=3 && local_addr>=128 && !(shared_head && kind==2)) ||
+        (BTAB_COMPACT!=0 && kind==2 && (shared_head ? (local_addr<72 || local_addr>=272) : local_addr>=72)) ||
         (kind==2 && local_addr[1:0]!=0);
     reg [8:0] btab_base;
     always @* case(data_owner)
         0:btab_base=0;1:btab_base=272;2:btab_base=344;default:btab_base=416;
     endcase
     wire [23:0] uaddr=(MUT==2)?local_addr:
-        ((BTAB_COMPACT!=0 && kind==2)?(local_addr+{15'd0,btab_base}):
+        ((BTAB_COMPACT!=0 && kind==2)?(shared_head ? local_addr : (local_addr+{15'd0,btab_base})):
         (local_addr|((kind==3)?({22'd0,data_owner}<<6):({22'd0,data_owner}<<7))));
     // No combinational input-to-output path. Output is the macro capture
     // register; a following VM write samples it on the next edge.
@@ -193,7 +202,7 @@ module qfd_dv_table_rom_loader #(
                 else slot<=slot+1;
             end
             if(p_start)begin
-                if(busy||p_stage==0||p_stage>36)fault<=1;
+                if(busy||p_stage==0||p_stage>MAX_STAGE)fault<=1;
                 else begin
                     active<=1;slot<=0;
                 end
@@ -204,7 +213,7 @@ module qfd_dv_table_rom_loader #(
         if(!addr_reset)begin base_hi<=0;rom_addr<=0;owner<=0;end
         else if(r2)begin
             if(active&&slot!=LAST_SLOT)rom_addr<=row_addr(base,owner,slot+1);
-            if(p_start&&!busy&&p_stage!=0&&p_stage<=36)begin
+            if(p_start&&!busy&&p_stage!=0&&p_stage<=MAX_STAGE)begin
                 base_hi<=go_base[11:1];owner<=p_user;rom_addr<=row_addr(go_base,p_user,0);
             end
         end

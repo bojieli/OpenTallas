@@ -1,0 +1,225 @@
+{
+  "status": "SOURCE_ONLY_WRITER_SID_CORRECTED_NO_COPY_OR_SCRATCH_ADOPTION",
+  "image_sha256": "79a81185a91387fdfe5e8bea1cd4429f31b7ce4a19f9d5f962109878802e76a3",
+  "STORE_records": 12155,
+  "scalar_words": 36689904,
+  "native_fragments": 83229,
+  "fragment_words_max": 512,
+  "fragments_by_quad": {
+    "1": 42166,
+    "0": 41063
+  },
+  "CP128_pages_per_quad_lower_bound": {
+    "1": 330,
+    "0": 321
+  },
+  "CP_table_configuration_words_256b": 166458,
+  "CP_table_payload_bytes": 5326656,
+  "native_issue_groups_64words": 579448,
+  "native_drain_groups_64words": 579448,
+  "physical_write_columns_32bytes": 4586238,
+  "maximum_real_window_span_sectors": 64,
+  "staged_fragments": 82939,
+  "staged_words": 36614960,
+  "staged_bytes": 146459840,
+  "stage_read_sectors_lower_bound": 4576870,
+  "stage_write_sectors_lower_bound": 4576870,
+  "original_source_SID_fragments": {
+    "0": 38916,
+    "1": 28198,
+    "2": 13519,
+    "3": 2596
+  },
+  "SID0_1_original_source_fragments": 67114,
+  "staged_fragments_missing_local_SU_source": 67114,
+  "holds": [
+    "Current selected writer pair is STK2; no STK3 writer installed.",
+    "The proposed [261120,262144) scratch lease is NOT reserved. A slot is owned before staging until true WB ACK/fence; serialize if reusing slot0.",
+    "No selected VM0/1 bank-changing staging path identified. Generic COPY and pure local BYPASS are not substitutes.",
+    "No live scratch data, extra VM ports, cross-quarter source route or host configuration bandwidth assumed.",
+    "Native DBK source SID is fixed to STK3 strap; aligned SID0/1/2 data also requires a real producer staging into SID3. No external sourceSID binding/alias exists. All candidate commands unexecuted.",
+    "CP page counts are capacity lower bounds for this explicit512word/boundary fragmentation only; original-order barriers/page handoff can add work. They are not an optimal fragment-count claim.",
+    "SID2/3 local SU presence does not prove bank-changing COPY, cross-half write ownership or a STK3 writer route.",
+    "No source staging overlap, global calendar, TPS or physical credit."
+  ],
+  "COPY_edges": null,
+  "issue_dates": null,
+  "drain_dates": null,
+  "HOST_wire_edges": null,
+  "representative_fragments": [
+    {
+      "resident_command": 2,
+      "DYN_bank": 0,
+      "source_word": 0,
+      "source_SID": 0,
+      "words": 256,
+      "stack": 3,
+      "target_byte": 124839756800,
+      "real_sector": 680016928,
+      "quad": 1,
+      "quadrant_ordinal": 340008480,
+      "requires_staging": true,
+      "proposed_scratch_word": 261120,
+      "candidate_native_source_local_word": 64512,
+      "candidate_native_source_SID": 3,
+      "candidate_move227_hex": "000400000040004000000006a220f10028000200000000000001f8015",
+      "selected_local_SU_source_SID_present": false,
+      "staging_reasons": [
+        "writer_source_SID"
+      ]
+    },
+    {
+      "resident_command": 2,
+      "DYN_bank": 0,
+      "source_word": 256,
+      "source_SID": 0,
+      "words": 512,
+      "stack": 3,
+      "target_byte": 124839757824,
+      "real_sector": 680016960,
+      "quad": 0,
+      "quadrant_ordinal": 340008448,
+      "requires_staging": true,
+      "proposed_scratch_word": 261120,
+      "candidate_native_source_local_word": 64512,
+      "candidate_native_source_SID": 3,
+      "candidate_move227_hex": "000800000040004000000006a220f00028000200000000000001f8015",
+      "selected_local_SU_source_SID_present": false,
+      "staging_reasons": [
+        "writer_source_SID"
+      ]
+    },
+    {
+      "resident_command": 2,
+      "DYN_bank": 0,
+      "source_word": 768,
+      "source_SID": 0,
+      "words": 512,
+      "stack": 3,
+      "target_byte": 124839759872,
+      "real_sector": 680017024,
+      "quad": 1,
+      "quadrant_ordinal": 340008512,
+      "requires_staging": true,
+      "proposed_scratch_word": 261120,
+      "candidate_native_source_local_word": 64512,
+      "candidate_native_source_SID": 3,
+      "candidate_move227_hex": "000800000040004000000006a220f20028000200000000000001f8015",
+      "selected_local_SU_source_SID_present": false,
+      "staging_reasons": [
+        "writer_source_SID"
+      ]
+    },
+    {
+      "resident_command": 2,
+      "DYN_bank": 0,
+      "source_word": 1280,
+      "source_SID": 0,
+      "words": 512,
+      "stack": 3,
+      "target_byte": 124839761920,
+      "real_sector": 680017088,
+      "quad": 0,
+      "quadrant_ordinal": 340008512,
+      "requires_staging": true,
+      "proposed_scratch_word": 261120,
+      "candidate_native_source_local_word": 64512,
+      "candidate_native_source_SID": 3,
+      "candidate_move227_hex": "000800000040004000000006a220f20028000200000000000001f8015",
+      "selected_local_SU_source_SID_present": false,
+      "staging_reasons": [
+        "writer_source_SID"
+      ]
+    },
+    {
+      "resident_command": 2,
+      "DYN_bank": 0,
+      "source_word": 1792,
+      "source_SID": 0,
+      "words": 512,
+      "stack": 3,
+      "target_byte": 124839763968,
+      "real_sector": 680017152,
+      "quad": 1,
+      "quadrant_ordinal": 340008576,
+      "requires_staging": true,
+      "proposed_scratch_word": 261120,
+      "candidate_native_source_local_word": 64512,
+      "candidate_native_source_SID": 3,
+      "candidate_move227_hex": "000800000040004000000006a220f40028000200000000000001f8015",
+      "selected_local_SU_source_SID_present": false,
+      "staging_reasons": [
+        "writer_source_SID"
+      ]
+    },
+    {
+      "resident_command": 2,
+      "DYN_bank": 0,
+      "source_word": 2304,
+      "source_SID": 0,
+      "words": 512,
+      "stack": 3,
+      "target_byte": 124839766016,
+      "real_sector": 680017216,
+      "quad": 0,
+      "quadrant_ordinal": 340008576,
+      "requires_staging": true,
+      "proposed_scratch_word": 261120,
+      "candidate_native_source_local_word": 64512,
+      "candidate_native_source_SID": 3,
+      "candidate_move227_hex": "000800000040004000000006a220f40028000200000000000001f8015",
+      "selected_local_SU_source_SID_present": false,
+      "staging_reasons": [
+        "writer_source_SID"
+      ]
+    },
+    {
+      "resident_command": 2,
+      "DYN_bank": 0,
+      "source_word": 2816,
+      "source_SID": 0,
+      "words": 512,
+      "stack": 3,
+      "target_byte": 124839768064,
+      "real_sector": 680017280,
+      "quad": 1,
+      "quadrant_ordinal": 340008640,
+      "requires_staging": true,
+      "proposed_scratch_word": 261120,
+      "candidate_native_source_local_word": 64512,
+      "candidate_native_source_SID": 3,
+      "candidate_move227_hex": "000800000040004000000006a220f60028000200000000000001f8015",
+      "selected_local_SU_source_SID_present": false,
+      "staging_reasons": [
+        "writer_source_SID"
+      ]
+    },
+    {
+      "resident_command": 2,
+      "DYN_bank": 0,
+      "source_word": 3328,
+      "source_SID": 0,
+      "words": 512,
+      "stack": 3,
+      "target_byte": 124839770112,
+      "real_sector": 680017344,
+      "quad": 0,
+      "quadrant_ordinal": 340008640,
+      "requires_staging": true,
+      "proposed_scratch_word": 261120,
+      "candidate_native_source_local_word": 64512,
+      "candidate_native_source_SID": 3,
+      "candidate_move227_hex": "000800000040004000000006a220f60028000200000000000001f8015",
+      "selected_local_SU_source_SID_present": false,
+      "staging_reasons": [
+        "writer_source_SID"
+      ]
+    }
+  ],
+  "newly_staged_SID_mismatch_fragments": 49591,
+  "writer_source_SID": 3,
+  "staging_reasons": {
+    "writer_source_SID": 80633,
+    "alignment": 33348
+  }
+}

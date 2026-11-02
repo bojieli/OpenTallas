@@ -1,0 +1,78 @@
+{
+  "status": "CURRENT051_SIGNED_AND_OWN_ROUTED_EQ",
+  "module": "dsdv_gunit_l2",
+  "signoff_sha256": "4d32566ec6550c56e0d05d4017e7877ef1530eb64578b5ac06718370ab5ddcea",
+  "lec_sha256": "d2ad7bcc767a3a32cd34b4df127f5945615ed30757046f15c8ba25454b77fab3",
+  "signoff_policy": {
+    "period_ps": 833.0,
+    "margin_policy": "nominal OWNER 12.24b/c (setup uncertainty 0, hold unchanged)",
+    "margin_policy_switch": "OT_MARGIN_POLICY=legacy | signoff.py run --margin-policy legacy",
+    "margin_policy_rule": "OWNER 12.24b/c 2026-10-31: nominal setup (setup clock uncertainty 0, hold 25 kept; legacy setup 60 = A/B only)",
+    "uncertainty_setup_ps": 0.0,
+    "uncertainty_hold_ps": 25.0,
+    "uncertainty_source": {
+      "setup": "in-session override after read_sdc",
+      "hold": "golden SDC as written"
+    },
+    "sdc_uncertainty_ps": {
+      "setup": 0.0,
+      "hold": 25.0
+    },
+    "sdc_uncertainty_overridden": {
+      "setup": {
+        "sdc": 0.0,
+        "signoff": 0.0,
+        "changed": false
+      }
+    },
+    "spread_max_ps": 80.0,
+    "spread_corners": [
+      "tt",
+      "ff"
+    ],
+    "insertion_tol_ps": 40.0,
+    "fanout_max": 64,
+    "ff_vclk": "bound-ff",
+    "ff_vclk_contract": "declared core FF insertion /srv/opentallas-scratch2/claude/codex-s81-l2-B10-portable/kit/sdc_lint.json",
+    "insertion_bound": null,
+    "ff_vclk_bound_ps": 202.5,
+    "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+    "derate": "none in the verdict (OWNER 12.24b/c: setup uncertainty 0, no spice clock factor; hold uncertainty per policy); ocv5_* = flat late 1.05 / early 0.95, information only",
+    "engine": "OpenSTA in OpenROAD (openroad/orfs:asap7lock), one process per corner",
+    "libs": "Exact routed-kit ORFS make TC/BC_LIB_FILES including macro views; hashed receipt",
+    "corner_rule": "setup TT / hold FF / uncertainty 0-25 ps (nominal) / related pair skew CPPR INFO (target 80); spread INFO; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a; OWNER 12.24b)"
+  },
+  "source_comparison_commit": "051340895",
+  "original_build_commit": null,
+  "source_generation_identity": "UNKNOWN: four selected RTLs byte-identical to051, not a recovered original generation event",
+  "current_tool_hashes": {
+    "signoff.py": "fe1e114f1cd64bc587fefab09a3bd4dd44e3b894c662d2a0a85793eaa371319e",
+    "lec.py": "341f0a0bd8609bfc001cbd7f5f3c10d12d424ff02daa72d81b6adb7582eacd41"
+  },
+  "measured_clock_mean_ps": {
+    "tt": {
+      "n": 3142,
+      "min": 306.46,
+      "mean": 324.51,
+      "max": 349.18,
+      "spread": 42.72
+    },
+    "ff": {
+      "n": 3142,
+      "min": 242.98,
+      "mean": 262.56,
+      "max": 284.04,
+      "spread": 41.06
+    }
+  },
+  "existing_reset_edges": 64,
+  "published_count": false,
+  "parent_adoption": false,
+  "added_cycles": 0,
+  "notes": [
+    "Initial current051 STA failed before CAD because inherited export lacked clock_family.tcl; failed result retained.",
+    "Fresh canonical051 clock_family completed bundle, STA rerun only; completedcurrent051 EQ6110 was not rerun.",
+    "Fresh actualfinalETMs queued4GB2T before canonicalexport, no production-view adoption inferred.",
+    "Current related-pair gate uses standard clock path/pair method; max-min spread is informational."
+  ]
+}
