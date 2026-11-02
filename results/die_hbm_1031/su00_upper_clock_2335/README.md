@@ -1,0 +1,9 @@
+# Upper-window SU00 local-clock PREP
+
+HELD source-only PREP, paired with upper-gutter geometry `50624739d`. Both actual slot-bank types retain the original paired B113 output/SU00 input window, all eight stages, 32,823 internal FF sites, and unchanged data cycles. The old lower-window local-clock dictionary has an empty clk_t30 after this new siting; it is not reusable.
+
+Normal fleet job Intel1 oth-ubuntu-2985073-1793604430 returned exit0. Density uses canonical hard-core/probe-blockage union keepouts, actual planned reset controls, 1,500 load cap and 220um radius. Both types now have63 local clock inputs and11 unchanged declared early-core inputs. Maximum load1500; maximum radius169.633um. Original24 local inputs/type means+78 parent local-clock inputs across the pair. Together with SU31 NE+51/NW+53 this candidate cohort needs+182 local inputs before any further ROOT changes.
+
+Image personally VIEWED: local contacts follow the native left/south street banks and preserve macro gaps; no outline or data-cycle change. Independent review requested. This is not current built-clock/PG/CTS proof. The final combined seventeen-type candidate must recompute global reset/contact choices because reset_tree.wf_solve/face_sites depends on current clock dictionaries. B113 clocks must be rechecked after restoring its original upper window. Native66START, current provider pins/source views and parent source/model/latency joins remain HELD.
+
+Actual SOURCE13 provider topology is being exported as a disabled native event; old split3 interfaces cannot alias selected HNX store/ctl cuts. The original upper producer path needs at least two additional aligned cycles, a lower bound only until real provider placement derives exact stages. No partial canonical activation or P&R release. Initial Intel1-controller attempt had DNS probe failure NOT RUN; one non-die waiter was cancelled before execution and resubmitted as a die-planning job, with no duplicate work.
