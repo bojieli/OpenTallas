@@ -1,0 +1,52 @@
+{
+  "scope": "ANALYTICAL_HISTORICAL_DAG_WITH_CURRENT_NATIVE_LANE_COSTS",
+  "full_token": false,
+  "measured_rate": false,
+  "workloads": {
+    "ar": {
+      "T_cycles": 1416387.58,
+      "tau": 1.0,
+      "by_grade": {
+        "measured-current-RTL": 101643.0,
+        "priced": 141257.17999999993,
+        "measured-old-RTL": 976943.4,
+        "priced-edge": 5740.0,
+        "plan-v4.8-lane": 102355.0,
+        "modelled-PHY": 88449.0
+      },
+      "tok_s": 847.2257289914953,
+      "unmapped_count": 6
+    },
+    "mtp": {
+      "T_cycles": 1831016.83,
+      "tau": 4.159,
+      "by_grade": {
+        "measured-old-RTL": 1315267.9999999998,
+        "modelled-PHY": 118237.6,
+        "plan-v4.8-lane": 117295.0,
+        "priced-edge": 6140.0,
+        "priced": 159738.22999999995,
+        "measured-current-RTL": 114338.0
+      },
+      "tok_s": 2725.698594479877,
+      "unmapped_count": 12
+    }
+  },
+  "stale_table_comparison": {
+    "ar": {
+      "T_cycles": 1387278.58,
+      "tok_s": 865.0029037426642,
+      "current_cost_delta_cycles": 29109.0
+    },
+    "mtp": {
+      "T_cycles": 1794545.83,
+      "tok_s": 2781.0936430639945,
+      "current_cost_delta_cycles": 36471.0
+    }
+  },
+  "stale_table_baseline_commit": "98a8705cb",
+  "current_plan_digest": "7bf83d029cc5ffb7",
+  "current_table_source_commit": "95c7bbfc7",
+  "consumer_commit": "5bdc9d371",
+  "scope_note": "Unchanged historical DAG/measurement inputs; only lane cost substitution differs. Existing plan-v4.8-lane grade label retained for compatibility; charged quantities are current native costs. Not a production rate."
+}

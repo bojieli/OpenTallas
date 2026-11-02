@@ -32,8 +32,18 @@ The five lane quantities consumed by compose_tok_ds change as follows:
 | link end (reported bound, not substituted) | 52 | 73 |
 
 These recover already-existing native transport costs omitted by the stale
-export. They add no RTL cycles, geometry or clocks. They are not summed into a
+export. They add no RTL cycles, geometry or clocks. They are not summed directly into a
 new token-rate claim. Full rates retain the historical model's explicit
 unmapped terms and unqualified mission scope. The default consumer must be
 merged with adoption of the matching current table; otherwise it now fails
 closed on the old export. Existing failed CI verdicts remain unchanged.
+
+The unchanged historical critical-path DAG was also evaluated with each table,
+using the same measurement inputs. Current lane costs increase AR by29,109
+cycles (1,387,278.58→1,416,387.58) and MTP by36,471 cycles
+(1,794,545.83→1,831,016.83). The corresponding analytical rates are
+865.00→847.23 AR and2,781.09→2,725.70 MTP tok/s (tau4.159). These are
+conditional historical-DAG sensitivities, not measured/current-production rates
+or a rate-of-record update. Six AR and12 MTP unmapped terms remain explicit.
+`analytical_current_lane_rates.json` retains the existing grade labels and
+separates the stale baseline from the current lane-price correction.
