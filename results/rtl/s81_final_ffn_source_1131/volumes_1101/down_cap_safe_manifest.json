@@ -1,0 +1,750 @@
+{
+  "status": "PASS_RANK0_CAP_SAFE_SINGLE_FRAME_IMAGES_BF_UNQUALIFIED",
+  "compiler_bundle": "gated2b8caf13b xs_place source +same coherent tools bundle; reuse non-down plans only",
+  "source_scope": "rank0 native source images; single-frame FIN safe; BF measurement explicitlyempty; no simultaneous-frame/nativeCW/state/lease/mission admission",
+  "production_enabled": false,
+  "workers": 4,
+  "reuse": [
+    "u_f_0L01"
+  ],
+  "results": [
+    {
+      "frame": "u_f_0L01",
+      "status": "REUSED_SOURCE_CANARY",
+      "phases": 131,
+      "images": 176,
+      "checked_rows": 126,
+      "max_fill": 1600
+    },
+    {
+      "frame": "u_f_0L02",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 509.7464759349823
+    },
+    {
+      "frame": "u_f_0R02",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 512.7262077331543
+    },
+    {
+      "frame": "u_f_0L03",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 522.1204521656036
+    },
+    {
+      "frame": "u_f_0R01",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 176,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 563.1466727256775
+    },
+    {
+      "frame": "u_f_0L12",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 503.24669790267944
+    },
+    {
+      "frame": "u_f_0R03",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 526.0040204524994
+    },
+    {
+      "frame": "u_f_0L10",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 522.8673040866852
+    },
+    {
+      "frame": "u_f_0L13",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 495.363511800766
+    },
+    {
+      "frame": "u_f_0R10",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 480.15431332588196
+    },
+    {
+      "frame": "u_f_0R12",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 470.8508470058441
+    },
+    {
+      "frame": "u_f_0R13",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 472.26826333999634
+    },
+    {
+      "frame": "u_f_1L01",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 176,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 512.8316252231598
+    },
+    {
+      "frame": "u_f_1L03",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 427.37327098846436
+    },
+    {
+      "frame": "u_f_1L02",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 457.7851963043213
+    },
+    {
+      "frame": "u_f_1L10",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 484.57640314102173
+    },
+    {
+      "frame": "u_f_1L12",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 486.4562647342682
+    },
+    {
+      "frame": "u_f_1L13",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 417.8630564212799
+    },
+    {
+      "frame": "u_f_2L02",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 378.50777769088745
+    },
+    {
+      "frame": "u_f_2L01",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 176,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 425.017147064209
+    },
+    {
+      "frame": "u_f_2L03",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 456.8508265018463
+    },
+    {
+      "frame": "u_f_2R03",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 588.3105990886688
+    },
+    {
+      "frame": "u_f_2R02",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 607.7810218334198
+    },
+    {
+      "frame": "u_f_2R01",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 176,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 630.5728368759155
+    },
+    {
+      "frame": "u_f_2L10",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 553.206337928772
+    },
+    {
+      "frame": "u_f_2L12",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 433.9783036708832
+    },
+    {
+      "frame": "u_f_2R10",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 435.8437833786011
+    },
+    {
+      "frame": "u_f_2L13",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 439.2763891220093
+    },
+    {
+      "frame": "u_f_2R12",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 438.84338569641113
+    },
+    {
+      "frame": "u_f_2R13",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 325.5317757129669
+    },
+    {
+      "frame": "u_f_3L02",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 374.72090554237366
+    },
+    {
+      "frame": "u_f_3L01",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 176,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 375.5260682106018
+    },
+    {
+      "frame": "u_f_3L03",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 406.880606174469
+    },
+    {
+      "frame": "u_f_3L10",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 354.23283219337463
+    },
+    {
+      "frame": "u_f_3L13",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 321.66746401786804
+    },
+    {
+      "frame": "u_f_3L12",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 346.5834879875183
+    },
+    {
+      "frame": "u_f_4R01",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 176,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 368.06864070892334
+    },
+    {
+      "frame": "u_f_4R02",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 356.5906400680542
+    },
+    {
+      "frame": "u_f_4R03",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 379.17324805259705
+    },
+    {
+      "frame": "u_f_4R10",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 379.13643503189087
+    },
+    {
+      "frame": "u_f_4R12",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 349.6367115974426
+    },
+    {
+      "frame": "u_f_4R13",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 322.1369733810425
+    },
+    {
+      "frame": "u_f_5L02",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 387.9423770904541
+    },
+    {
+      "frame": "u_f_5L01",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 176,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 414.32567405700684
+    },
+    {
+      "frame": "u_f_5L03",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 362.19009828567505
+    },
+    {
+      "frame": "u_f_5R01",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 176,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 377.72979521751404
+    },
+    {
+      "frame": "u_f_5R03",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 379.9111566543579
+    },
+    {
+      "frame": "u_f_5R02",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 401.9583694934845
+    },
+    {
+      "frame": "u_f_5L10",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 436.3797059059143
+    },
+    {
+      "frame": "u_f_5L12",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 420.4136164188385
+    },
+    {
+      "frame": "u_f_5R10",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 383.3109219074249
+    },
+    {
+      "frame": "u_f_5L13",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 404.90756916999817
+    },
+    {
+      "frame": "u_f_5R12",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 384.9955928325653
+    },
+    {
+      "frame": "u_f_5R13",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 318.64188528060913
+    },
+    {
+      "frame": "u_f_6R02",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 362.0727047920227
+    },
+    {
+      "frame": "u_f_6R01",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 176,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 372.2345106601715
+    },
+    {
+      "frame": "u_f_6R03",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 323.7460129261017
+    },
+    {
+      "frame": "u_f_6R10",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 330.0487413406372
+    },
+    {
+      "frame": "u_f_6R13",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 314.6374406814575
+    },
+    {
+      "frame": "u_f_6R12",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 133,
+      "max_fill": 1600,
+      "elapsed": 331.284218788147
+    },
+    {
+      "frame": "u_f_7L01",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 176,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 342.7047827243805
+    },
+    {
+      "frame": "u_f_7L02",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 336.92245602607727
+    },
+    {
+      "frame": "u_f_7L03",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 314.7222111225128
+    },
+    {
+      "frame": "u_f_7R01",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 176,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 325.70006012916565
+    },
+    {
+      "frame": "u_f_7R02",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 299.372371673584
+    },
+    {
+      "frame": "u_f_7R03",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 283.5422523021698
+    },
+    {
+      "frame": "u_f_7L10",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 293.1025586128235
+    },
+    {
+      "frame": "u_f_7L12",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 126,
+      "max_fill": 1600,
+      "elapsed": 296.3631875514984
+    },
+    {
+      "frame": "u_f_7L13",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 299.73878598213196
+    },
+    {
+      "frame": "u_f_7R10",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 278.844690322876
+    },
+    {
+      "frame": "u_f_7R12",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 284.9344336986542
+    },
+    {
+      "frame": "u_f_7R13",
+      "status": "PASS_SOURCE_FIELD",
+      "phases": 131,
+      "images": 165,
+      "checked_rows": 119,
+      "max_fill": 1600,
+      "elapsed": 277.60711002349854
+    }
+  ],
+  "source_spans": [
+    [
+      0,
+      104
+    ],
+    [
+      104,
+      104
+    ],
+    [
+      208,
+      56
+    ],
+    [
+      264,
+      56
+    ],
+    [
+      320,
+      104
+    ],
+    [
+      424,
+      104
+    ],
+    [
+      528,
+      56
+    ],
+    [
+      584,
+      56
+    ],
+    [
+      640,
+      56
+    ],
+    [
+      696,
+      56
+    ],
+    [
+      752,
+      104
+    ],
+    [
+      856,
+      104
+    ],
+    [
+      960,
+      56
+    ],
+    [
+      1016,
+      56
+    ],
+    [
+      1072,
+      104
+    ],
+    [
+      1176,
+      104
+    ]
+  ],
+  "topology": {
+    "enabled": true,
+    "frames_per_slice": [
+      6,
+      6,
+      3,
+      3,
+      6,
+      6,
+      3,
+      3,
+      3,
+      3,
+      6,
+      6,
+      3,
+      3,
+      6,
+      6
+    ],
+    "die_sha": "a5778b981be90b3b95e1ad6179f5cee40f956f861382d6f711d55ef22e23056e"
+  },
+  "failures": 0,
+  "checked_rows": 8960,
+  "images": 12012
+}
