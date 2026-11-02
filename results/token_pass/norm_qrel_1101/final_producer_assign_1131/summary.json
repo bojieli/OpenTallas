@@ -1,0 +1,545 @@
+{
+ "status": "SOURCE_BOUND_FINAL_POST_GAIN_NORM_ASSIGNMENT_ONLY",
+ "leaves": 80,
+ "experts": 7,
+ "words": 35840,
+ "RD_pairs": 4480,
+ "ordered_native_POST_halfrows": 1280,
+ "GAIN_WL_rows": 640,
+ "native_CAP_selected_words": {
+  "0": {
+   "frame": "u_f_0L01",
+   "phase": 71,
+   "source_sid": 0,
+   "source_leaf": 0,
+   "CW_word_address": 896,
+   "word_slot": 0,
+   "fresh_BF16_in_FP32": "bc470000",
+   "observations": [
+    {
+     "e6_lane_profile": 0,
+     "native_bench_edge": 606,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 464,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 3,
+     "native_bench_edge": 622,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 480,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 4,
+     "native_bench_edge": 630,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 488,
+     "actual_global_epoch": null
+    }
+   ],
+   "date_basis": "isolated native CAP input was shifted by a known constant from source-plan ret dates; physical field GO is unknown",
+   "actual_CW_to_SRAM_commit_qualified": false
+  },
+  "1": {
+   "frame": "u_f_0L01",
+   "phase": 71,
+   "source_sid": 0,
+   "source_leaf": 0,
+   "CW_word_address": 897,
+   "word_slot": 1,
+   "fresh_BF16_in_FP32": "bcb40000",
+   "observations": [
+    {
+     "e6_lane_profile": 0,
+     "native_bench_edge": 607,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 465,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 3,
+     "native_bench_edge": 623,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 481,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 4,
+     "native_bench_edge": 631,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 489,
+     "actual_global_epoch": null
+    }
+   ],
+   "date_basis": "isolated native CAP input was shifted by a known constant from source-plan ret dates; physical field GO is unknown",
+   "actual_CW_to_SRAM_commit_qualified": false
+  },
+  "2": {
+   "frame": "u_f_0L01",
+   "phase": 71,
+   "source_sid": 0,
+   "source_leaf": 0,
+   "CW_word_address": 898,
+   "word_slot": 2,
+   "fresh_BF16_in_FP32": "3db90000",
+   "observations": [
+    {
+     "e6_lane_profile": 0,
+     "native_bench_edge": 610,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 468,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 3,
+     "native_bench_edge": 626,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 484,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 4,
+     "native_bench_edge": 634,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 492,
+     "actual_global_epoch": null
+    }
+   ],
+   "date_basis": "isolated native CAP input was shifted by a known constant from source-plan ret dates; physical field GO is unknown",
+   "actual_CW_to_SRAM_commit_qualified": false
+  },
+  "3": {
+   "frame": "u_f_0L01",
+   "phase": 71,
+   "source_sid": 0,
+   "source_leaf": 0,
+   "CW_word_address": 899,
+   "word_slot": 3,
+   "fresh_BF16_in_FP32": "bdb10000",
+   "observations": [
+    {
+     "e6_lane_profile": 0,
+     "native_bench_edge": 611,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 469,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 3,
+     "native_bench_edge": 627,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 485,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 4,
+     "native_bench_edge": 635,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 493,
+     "actual_global_epoch": null
+    }
+   ],
+   "date_basis": "isolated native CAP input was shifted by a known constant from source-plan ret dates; physical field GO is unknown",
+   "actual_CW_to_SRAM_commit_qualified": false
+  },
+  "246": {
+   "frame": "u_f_1L03",
+   "phase": 71,
+   "source_sid": 2,
+   "source_leaf": 0,
+   "CW_word_address": 934,
+   "word_slot": 2,
+   "fresh_BF16_in_FP32": "3cfd0000",
+   "observations": [
+    {
+     "e6_lane_profile": 0,
+     "native_bench_edge": 602,
+     "port": 1,
+     "candidate_frame_GO_relative_edge": 466,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 3,
+     "native_bench_edge": 602,
+     "port": 1,
+     "candidate_frame_GO_relative_edge": 466,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 4,
+     "native_bench_edge": 602,
+     "port": 1,
+     "candidate_frame_GO_relative_edge": 466,
+     "actual_global_epoch": null
+    }
+   ],
+   "date_basis": "isolated native CAP input was shifted by a known constant from source-plan ret dates; physical field GO is unknown",
+   "actual_CW_to_SRAM_commit_qualified": false
+  },
+  "247": {
+   "frame": "u_f_1L03",
+   "phase": 71,
+   "source_sid": 2,
+   "source_leaf": 0,
+   "CW_word_address": 935,
+   "word_slot": 3,
+   "fresh_BF16_in_FP32": "bdf40000",
+   "observations": [
+    {
+     "e6_lane_profile": 0,
+     "native_bench_edge": 603,
+     "port": 1,
+     "candidate_frame_GO_relative_edge": 467,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 3,
+     "native_bench_edge": 603,
+     "port": 1,
+     "candidate_frame_GO_relative_edge": 467,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 4,
+     "native_bench_edge": 603,
+     "port": 1,
+     "candidate_frame_GO_relative_edge": 467,
+     "actual_global_epoch": null
+    }
+   ],
+   "date_basis": "isolated native CAP input was shifted by a known constant from source-plan ret dates; physical field GO is unknown",
+   "actual_CW_to_SRAM_commit_qualified": false
+  },
+  "248": {
+   "frame": "u_f_1L03",
+   "phase": 71,
+   "source_sid": 2,
+   "source_leaf": 0,
+   "CW_word_address": 936,
+   "word_slot": 0,
+   "fresh_BF16_in_FP32": "bd730000",
+   "observations": [
+    {
+     "e6_lane_profile": 0,
+     "native_bench_edge": 590,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 454,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 3,
+     "native_bench_edge": 590,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 454,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 4,
+     "native_bench_edge": 590,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 454,
+     "actual_global_epoch": null
+    }
+   ],
+   "date_basis": "isolated native CAP input was shifted by a known constant from source-plan ret dates; physical field GO is unknown",
+   "actual_CW_to_SRAM_commit_qualified": false
+  },
+  "249": {
+   "frame": "u_f_1L03",
+   "phase": 71,
+   "source_sid": 2,
+   "source_leaf": 0,
+   "CW_word_address": 937,
+   "word_slot": 1,
+   "fresh_BF16_in_FP32": "bccc0000",
+   "observations": [
+    {
+     "e6_lane_profile": 0,
+     "native_bench_edge": 591,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 455,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 3,
+     "native_bench_edge": 591,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 455,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 4,
+     "native_bench_edge": 591,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 455,
+     "actual_global_epoch": null
+    }
+   ],
+   "date_basis": "isolated native CAP input was shifted by a known constant from source-plan ret dates; physical field GO is unknown",
+   "actual_CW_to_SRAM_commit_qualified": false
+  },
+  "528": {
+   "frame": "u_f_3L01",
+   "phase": 71,
+   "source_sid": 6,
+   "source_leaf": 0,
+   "CW_word_address": 896,
+   "word_slot": 0,
+   "fresh_BF16_in_FP32": "bdb60000",
+   "observations": [
+    {
+     "e6_lane_profile": 0,
+     "native_bench_edge": 600,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 458,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 3,
+     "native_bench_edge": 600,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 458,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 4,
+     "native_bench_edge": 600,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 458,
+     "actual_global_epoch": null
+    }
+   ],
+   "date_basis": "isolated native CAP input was shifted by a known constant from source-plan ret dates; physical field GO is unknown",
+   "actual_CW_to_SRAM_commit_qualified": false
+  },
+  "529": {
+   "frame": "u_f_3L01",
+   "phase": 71,
+   "source_sid": 6,
+   "source_leaf": 0,
+   "CW_word_address": 897,
+   "word_slot": 1,
+   "fresh_BF16_in_FP32": "3d130000",
+   "observations": [
+    {
+     "e6_lane_profile": 0,
+     "native_bench_edge": 601,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 459,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 3,
+     "native_bench_edge": 601,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 459,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 4,
+     "native_bench_edge": 601,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 459,
+     "actual_global_epoch": null
+    }
+   ],
+   "date_basis": "isolated native CAP input was shifted by a known constant from source-plan ret dates; physical field GO is unknown",
+   "actual_CW_to_SRAM_commit_qualified": false
+  },
+  "530": {
+   "frame": "u_f_3L01",
+   "phase": 71,
+   "source_sid": 6,
+   "source_leaf": 0,
+   "CW_word_address": 898,
+   "word_slot": 2,
+   "fresh_BF16_in_FP32": "bd830000",
+   "observations": [
+    {
+     "e6_lane_profile": 0,
+     "native_bench_edge": 604,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 462,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 3,
+     "native_bench_edge": 604,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 462,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 4,
+     "native_bench_edge": 604,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 462,
+     "actual_global_epoch": null
+    }
+   ],
+   "date_basis": "isolated native CAP input was shifted by a known constant from source-plan ret dates; physical field GO is unknown",
+   "actual_CW_to_SRAM_commit_qualified": false
+  },
+  "531": {
+   "frame": "u_f_3L01",
+   "phase": 71,
+   "source_sid": 6,
+   "source_leaf": 0,
+   "CW_word_address": 899,
+   "word_slot": 3,
+   "fresh_BF16_in_FP32": "bd0f0000",
+   "observations": [
+    {
+     "e6_lane_profile": 0,
+     "native_bench_edge": 605,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 463,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 3,
+     "native_bench_edge": 605,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 463,
+     "actual_global_epoch": null
+    },
+    {
+     "e6_lane_profile": 4,
+     "native_bench_edge": 605,
+     "port": 0,
+     "candidate_frame_GO_relative_edge": 463,
+     "actual_global_epoch": null
+    }
+   ],
+   "date_basis": "isolated native CAP input was shifted by a known constant from source-plan ret dates; physical field GO is unknown",
+   "actual_CW_to_SRAM_commit_qualified": false
+  }
+ },
+ "source_spans": [
+  [
+   0,
+   104
+  ],
+  [
+   104,
+   104
+  ],
+  [
+   208,
+   56
+  ],
+  [
+   264,
+   56
+  ],
+  [
+   320,
+   104
+  ],
+  [
+   424,
+   104
+  ],
+  [
+   528,
+   56
+  ],
+  [
+   584,
+   56
+  ],
+  [
+   640,
+   56
+  ],
+  [
+   696,
+   56
+  ],
+  [
+   752,
+   104
+  ],
+  [
+   856,
+   104
+  ],
+  [
+   960,
+   56
+  ],
+  [
+   1016,
+   56
+  ],
+  [
+   1072,
+   104
+  ],
+  [
+   1176,
+   104
+  ]
+ ],
+ "source_top_sha256": "7dcc944c1d951d28fba997d4cdd5ee88175b8f2d84c1bbf947eb60a40e63c176",
+ "selected_consumer_rank_physical_mapping": null,
+ "final_FFN_fresh_arithmetic": {
+  "status": "PASS_FRESH_NEW_SOURCE_ASSIGNMENT_NORM_ARITHMETIC_ONLY",
+  "source_cases": 28,
+  "source_expert_rows": 35840,
+  "logical_ranks": 4,
+  "expert_order": [
+   "exp61",
+   "exp69",
+   "exp112",
+   "exp170",
+   "exp299",
+   "exp357",
+   "shared"
+  ],
+  "canonical64_groups": 80,
+  "source_mapping_words": 35840,
+  "partial0": "3f102d76",
+  "RSTD": "412a6100",
+  "sum80_native_tree": "42349bca",
+  "combined_matches_checkpoint": true,
+  "POST_matches_checkpoint": true,
+  "fresh_partial_source": "new actualreleased FMat5Ksegment recomputation \u2192 actual104/56candidatewordmap \u2192 routedIDorderVS13\u2192nativePOSTmath\u2192canonicalVN64groups\u2192native80partialtree",
+  "source_values_sha256": "fe9fc2cc568534925485f669cea2356c700c473bffaede4d18009f8200fd42ab",
+  "map_sha256": "8d3538809abd66f0e7e3486e65034f80ec51e5d097e8d8cdc7cb14e4e29bf52d",
+  "partial_sha256": "b40a85563ede866edf487248c648afd66ebb93c0b8cc8e59d43477e5eac47590",
+  "old_partial_payloads_read": false,
+  "actual_new_images_qualified": false,
+  "actual_native_CAP_RD_residency": false,
+  "actual_global_VN_epochs": false,
+  "actual_final_layer_HEAD_input": false,
+  "HOST_START_authority": false,
+  "canonical_adopted": false
+ },
+ "actual_final_layer_HEAD_state": false,
+ "logical_TP_contract": "each W2 shard owner combines20beats then broadcasts combined halves to other3 full-h replicas; POST follows on each replica; current80-leafbook is one selected consumer replica, not four bound dies",
+ "source_word_map_sha256": "8d3538809abd66f0e7e3486e65034f80ec51e5d097e8d8cdc7cb14e4e29bf52d",
+ "source_values_sha256": "fe9fc2cc568534925485f669cea2356c700c473bffaede4d18009f8200fd42ab",
+ "actual_ret_score_new_order_check": "PASS_INDEPENDENT_FRESH_SOURCE_RETURN_FOREST_ORDER",
+ "new_placement_numeric_scope_rows": 12,
+ "CW_payload_seam": {
+  "status": "GENUINE_WORD1_TO3_MASK_SEMANTICS_FAILURE_PENDING_OWNER_FIX",
+  "correct_SRAM_commit_for_all_words": false,
+  "source_assignment_not_a_workaround": true
+ },
+ "unknowns": [
+  "actual CW payload seam fixed source/adoption",
+  "all CAP commits and native RD leases",
+  "TP peer provider/route/arrival bindings",
+  "native VS13 combined SRAM commit ages",
+  "actual residual/HC/HEAD gain residency",
+  "per-leaf POST h-ready ages",
+  "real issuer-to-mission epoch and physical phases",
+  "HOST START and retirement"
+ ],
+ "absolute_producer_dates_qualified": false,
+ "physical_phase_qualified": false,
+ "HOST_START_authority": false,
+ "canonical_adopted": false
+}

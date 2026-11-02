@@ -1,0 +1,80 @@
+{
+  "status": "PASS_ALIGNED_MAP_IDENTITY_ONLY",
+  "source_spans": [
+    [
+      0,
+      104
+    ],
+    [
+      104,
+      104
+    ],
+    [
+      208,
+      56
+    ],
+    [
+      264,
+      56
+    ],
+    [
+      320,
+      104
+    ],
+    [
+      424,
+      104
+    ],
+    [
+      528,
+      56
+    ],
+    [
+      584,
+      56
+    ],
+    [
+      640,
+      56
+    ],
+    [
+      696,
+      56
+    ],
+    [
+      752,
+      104
+    ],
+    [
+      856,
+      104
+    ],
+    [
+      960,
+      56
+    ],
+    [
+      1016,
+      56
+    ],
+    [
+      1072,
+      104
+    ],
+    [
+      1176,
+      104
+    ]
+  ],
+  "records": 35840,
+  "global_element_formula": "rank*1280 + rank-local down output index",
+  "destination_formula": "sid=n//320;leaf=(n//64)%5;beat=n//64;assembled_word_offset=n%64",
+  "expert_order": "six routedIDs ascending then shared6; VS13 order unchanged",
+  "NORM_grouping": "unchanged64 global output words per beat; partial/XRT5sid+leaf order unchanged",
+  "pre": 1008,
+  "post": 1009,
+  "combined": 448,
+  "head_gain": 480,
+  "source_BF16_identity": "actual aligned source compiler and checkpoint canary pending; no fixture promotion",
+  "production_enabled": false
+}
