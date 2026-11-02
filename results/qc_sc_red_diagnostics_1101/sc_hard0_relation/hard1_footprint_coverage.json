@@ -1,0 +1,36 @@
+{
+  "scope": "EXACT_HARD1_LITERAL_CHANGED_FOOTPRINT_COVERAGE_OF_ARCHIVED_LOCAL_LEMMA",
+  "source_old": "051340895d9",
+  "source_new": "98bbbbd8184",
+  "archived_fixture": "41612e22eac",
+  "old_full_primitives": 131751,
+  "new_HARD1_full_primitives": 132352,
+  "old_selected_primitives": 509,
+  "new_HARD1_selected_primitives": 1110,
+  "outside_selected_primitives_equal": 131242,
+  "removed_outside_assignments": 0,
+  "added_assignments_all_in_selected_lemma": {
+    "n_28481=(sc_pin_rstcap_0&sc_pin_flag_u_15387)": 1,
+    "n_28483=(sc_pin_rstcap_1&sc_pin_flag_u_15389)": 1,
+    "n_28484=(sc_pin_rstcap_2&sc_pin_flag_u_15390)": 1,
+    "n_28494=(sc_pin_rstcap_3&sc_pin_flag_u_15400)": 1,
+    "n_235095=(sc_pin_rstcap_3&sc_pin_flag_u_222979)": 1,
+    "n_235096=(sc_pin_rstcap_3&sc_pin_flag_u_222980)": 1,
+    "n_235097=(sc_pin_rstcap_3&sc_pin_flag_u_222981)": 1,
+    "n_235098=(sc_pin_rstcap_3&sc_pin_flag_u_222982)": 1,
+    "n_235099=(sc_pin_rstcap_3&sc_pin_flag_u_222983)": 1,
+    "n_235111=(sc_pin_rstcap_1&sc_pin_flag_u_222995)": 1,
+    "n_235112=(sc_pin_rstcap_2&sc_pin_flag_u_222996)": 1,
+    "n_240463=(sc_pin_rstcap_0&sc_pin_flag_u_228347)": 1,
+    "n_240464=(sc_pin_rstcap_0&sc_pin_flag_u_228348)": 1,
+    "n_240465=(sc_pin_rstcap_0&sc_pin_flag_u_228349)": 1,
+    "n_240516=(sc_pin_rstcap_0&sc_pin_flag_u_228400)": 1
+  },
+  "actual_vs_archived_used_helper_bodies_equal": {
+    "qfd_s2_bmath_dff_pn0": true,
+    "qfd_s2_bmath_not": true,
+    "qfd_s2_bmath_dff_p": true
+  },
+  "verdict": "PASS",
+  "limits": "Source-literal composition audit of existing first-capture/four-step lemma only. No fresh wholeLEC, unrestricted invalid-state/reset/analog proof, native mapped parent count or adoption."
+}

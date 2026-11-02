@@ -7,7 +7,7 @@ new,n=gen.subn(lambda m:m[1],new)
 new,n_const=re.subn(r"HARD_PINREG\s*\?\s*1'b1\s*:\s*(\w+)",r'\1',new)
 new,n_mask=re.subn(r'HARD_PINREG\s*\?\s*\([^()]*\)\s*:\s*(\w+)',r'\1',new)
 assert not re.search(r'generate if \(HARD_PINREG\)',new)
-inst_re=re.compile(r'\b(qfd_s2_bmath_\w+)\s*#\(\.ID\((\d+)\)\)\s+(\w+)\((.*?)\);')
+inst_re=re.compile(r'\b(qfd_s2_bmath_\w+)\s*#\(\.ID\((\d+)\)\)\s+(\w+)\s*\((.*?)\);')
 port_re=re.compile(r'\.(\w+)\(([^()]*)\)')
 class UF:
  def __init__(self):self.p={}

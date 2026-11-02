@@ -7,7 +7,7 @@ def h0(t):
  t=pat.sub(lambda m:m[1],t)
  t=re.sub(r"HARD_PINREG\s*\?\s*1'b1\s*:\s*(\w+)",r'\1',t)
  return re.sub(r'HARD_PINREG\s*\?\s*\([^()]*\)\s*:\s*(\w+)',r'\1',t)
-inst=re.compile(r'\b(qfd_s2_bmath_\w+)\s*#\(\.ID\((\d+)\)\)\s+(\w+)\((.*?)\);')
+inst=re.compile(r'\b(qfd_s2_bmath_\w+)\s*#\(\.ID\((\d+)\)\)\s+(\w+)\s*\((.*?)\);')
 ports=re.compile(r'\.(\w+)\(([^()]*)\)')
 def model(t):
  uf={}
