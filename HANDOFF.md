@@ -2956,3 +2956,5 @@ CODEX: S81 PARKED at explicitUSERhandback. Fullpacket handoff/codex_s81_20261101
 
 CODEX: 2026-11-01 20:34 PST takeover active; all-lane inventory appended CODEX.md, six parent workers collecting/advancing all current dies+tokens+flow/geometry; root intake of approved late-stage resume/ECO and KV fixes.
 CODEX: 2026-11-01 20:35 PST S81 takeover collected: histguide gA live/gB queued, DS V0 actual96GiB OOM (split-hcore IMG2/V1c3 retained), current kw15d468sourcepaths closed/two stalecol retry requested; all S81 core/wave failures assigned.
+
+CODEX: 2026-11-01 20:35 PST KV/Qwen takeover collected active NOWAIT A/B + SOURCE13 hierarchy; no duplicate jobs; physical ECO hygiene and approved pickup intake advancing.
