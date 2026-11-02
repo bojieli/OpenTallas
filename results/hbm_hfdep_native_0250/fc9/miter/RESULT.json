@@ -1,0 +1,13 @@
+{
+ "verdict": "FINITE_ACTUAL_SOURCE_PROJECTION_EQ_AND_MUTANT_PASS",
+ "cycles": 2600,
+ "resets": 3,
+ "checks": 18200,
+ "diff": 0,
+ "actual_fault_active_cycles": 2577,
+ "wrong_retained_fault_bit_mutant_diff": 2579,
+ "SRAMs_each": 4,
+ "clock_reset_cycles_unchanged": true,
+ "scope": "All actual selected outputs compared, faultscalar exact, faultcause projected10:5+2:0 only; removedbitconstantsemantics and downstreamOBS136 are separate held proofs",
+ "formal_credit": false
+}

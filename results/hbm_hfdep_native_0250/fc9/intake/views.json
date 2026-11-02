@@ -1,0 +1,23 @@
+{
+ "plan": "plan.json",
+ "plan_sha256": "4923a61ece9e117bb6e6b03f1f23d879be996a622b48cfd8f2b9ef817086fd22",
+ "view_list": [
+  {
+   "module": "hfd_ep_static_fc9",
+   "view": "hfd_ep_static_fc9@source13_fc9_native4",
+   "outline_um": [
+    427.68,
+    246.24
+   ],
+   "pins_file": "pins.json",
+   "pins_sha256": "b580d2fb9c15a24dcbc36eca782ed389b6900eb33aa23e5f16b208888d270486",
+   "instances": [
+    "NE_io.u_u_ep_N2",
+    "NW_spb0.u_u_ep_S0",
+    "NE_spb0.u_u_ep_S0",
+    "vsN0.u_u_ep_S1"
+   ],
+   "placed": 0
+  }
+ ]
+}
