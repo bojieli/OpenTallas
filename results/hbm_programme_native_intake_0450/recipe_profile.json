@@ -1,15 +1,13 @@
 {
   "recipe": {
     "top": "ot_hgi_sfu_programme_store_r10",
-    "params": {
-      "PAGE_AW": 1
-    },
+    "params": {},
     "files": [
       "results/hbm_programme_source_frontier_0146/ot_hgi_sfu_programme_store_r10.sv",
       "results/hbm_programme_source_frontier_0146/ot_hgi_sfu_store_stripe_leaf_r10.sv",
       "results/hbm_programme_source_frontier_0146/ot_sram_1r1w_512x256_m1_r2c2.sv"
     ],
-    "source_commit": "d7fb7a967ef7b1d3de41e9603e6da97fee313260",
+    "source_commit": "cfee74ae8dab19c87301e33a6de991b718a0d8c5",
     "read_at_commit": false,
     "defines": [],
     "macros": [
@@ -416,12 +414,16 @@
     "source": "Exact selected SOURCE13 r10+leaf+real512nativeSRAM; no historical pstore body/proof alias"
   },
   "profile": {
-    "source_commit": "d7fb7a967ef7b1d3de41e9603e6da97fee313260",
+    "source_commit": "cfee74ae8dab19c87301e33a6de991b718a0d8c5",
     "family": "SOURCE13_SELECTED_PROGRAMME_R10_PAGE_AW1",
     "release_eligible": false,
     "qualification": "SOURCE_PROOF_ONLY_NATIVE_UNROUTED",
     "component_proof_reset_cycles": 4,
     "added_face_cycles": 0,
+    "selected_effective_params": {
+      "PAGE_AW": 1,
+      "AW": 11
+    },
     "endpoint_contract": {
       "kind": "INTERNAL_CORE",
       "parent_partition": "DISABLED_B113_LOCAL_MOVE",

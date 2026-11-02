@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -19,7 +20,12 @@ def prepare(repo):
     for f in model['files']:
         assert hashlib.sha256((repo/f['file']).read_bytes()).hexdigest() == f['sha256']
     commit = subprocess.check_output(['git', '-C', str(repo), 'rev-parse', 'HEAD'], text=True).strip()
-    recipe = dict(top=TOP, params=dict(PAGE_AW=1), files=[f['file'] for f in model['files']],
+    selected_top=(repo/model['files'][0]['file']).read_text()
+    if not re.search(r'parameter integer PAGE_AW=1, AW=10\+PAGE_AW',selected_top):
+        raise ValueError('exact selected native PAGE_AW1/AW11 default contract changed')
+    # No override: exact selected source already defaults PAGE_AW1/AW11 and
+    # rejects PAGE_AW!=1. Official explicit inventory forbids param overrides.
+    recipe = dict(top=TOP, params={}, files=[f['file'] for f in model['files']],
                   source_commit=commit, read_at_commit=False, defines=[], macros=[MASTER],
                   macro_placement=[dict(inst=m['inst'],xy_um=m['origin_um'],orient='R0',macro=MASTER)
                                    for m in model['macros']],
@@ -28,6 +34,7 @@ def prepare(repo):
     profile = dict(source_commit=commit,family='SOURCE13_SELECTED_PROGRAMME_R10_PAGE_AW1',
                    release_eligible=False,qualification='SOURCE_PROOF_ONLY_NATIVE_UNROUTED',
                    component_proof_reset_cycles=4,added_face_cycles=0,
+                   selected_effective_params=dict(PAGE_AW=1,AW=11),
                    endpoint_contract=dict(kind='INTERNAL_CORE',parent_partition='DISABLED_B113_LOCAL_MOVE',
                                           partition_rule='R2_INTERNAL_TIMED_IN_PARTITION'),
                    clock_ports=['clk'],reset_ports=['rst_n'],
