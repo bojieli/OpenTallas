@@ -131,3 +131,20 @@ def test_known_clock_mesh_recovery_stays_strict(tmp_path):
     plan.write_text(json.dumps({'clock':{'mesh':{'sites_file':'../outside.json','sites_sha256':known}}}))
     with pytest.raises(ValueError,match='escapes'):
         S.materialize_clock_mesh(src,plan,lambda _:b'')
+
+
+def test_untracked_base_inputs_copied_without_overwriting(tmp_path):
+    import subprocess
+    old, new = tmp_path / "old", tmp_path / "new"
+    for r in (old, new):
+        subprocess.run(["git", "init", "-q", str(r)], check=True)
+    (old / ".gitignore").write_text("*.pyc\n")
+    (old / "kv37").mkdir()
+    (old / "kv37" / "pads.json").write_text("{}")
+    (old / "keep.txt").write_text("old")
+    (old / "x.pyc").write_text("")
+    (new / "keep.txt").write_text("tracked-new")
+    got = S.copy_untracked_inputs(old, new)
+    assert (new / "kv37" / "pads.json").read_text() == "{}"
+    assert (new / "keep.txt").read_text() == "tracked-new"
+    assert "x.pyc" not in got and "kv37/pads.json" in got
