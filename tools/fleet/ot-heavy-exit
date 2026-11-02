@@ -8,6 +8,14 @@
 UNIT="$1"; shift
 D=/var/tmp/ot-heavy; T0=$(date +%s); PF="$D/pids.$UNIT"
 CG=/sys/fs/cgroup$(awk -F: '$1=="0"{print $3}' /proc/self/cgroup 2>/dev/null)
+# Completion status is prospective evidence. A running/killed wrapper is not
+# a completed-capacity observation; preserve its measured peak separately.
+mkdir -p "$D/completions"
+record_completion() {
+  local value=$1 end=$2 tmp="$D/completions/.$UNIT.$$"
+  printf '%s\t%s\t%s\t%s\n' "$UNIT" "$T0" "$end" "$value" > "$tmp" && mv "$tmp" "$D/completions/$UNIT"
+}
+record_completion running ''
 exec 9<&0
 "$@" 0<&9 9<&- &
 CH=$!
@@ -35,4 +43,5 @@ else
   kill $SAMP 2>/dev/null
 fi
 rm -f "$PF"
+record_completion "$rc" "$(date +%s)"
 exit $rc

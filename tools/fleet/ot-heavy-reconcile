@@ -390,7 +390,7 @@ def sizes():
         except (OSError, ValueError):
             continue
         for c, e in d.items():
-            o = t.setdefault(c, dict(n=0, live=0, proved=0, peak_gb=0.0, req_gb=0))
+            o = t.setdefault(c, dict(n=0, live=0, proved=0, partial=0, peak_gb=0.0, req_gb=0))
             for k in o:
                 o[k] = max(o[k], e.get(k, 0))
     for e in t.values():
@@ -398,10 +398,20 @@ def sizes():
     return t
 
 
+def completion_only_class(cls):
+    return (cls or "").split(":", 1)[0] == "elab_hbm_whole_hierarchy.sh"
+
+
+def capacity_sample_count(cls, entry):
+    # A serial all-hierarchy request can enter another frontend after a quiet
+    # phase. Only completion establishes its whole-workload peak.
+    return entry.get("n", 0) + (0 if completion_only_class(cls) else entry.get("proved", 0))
+
+
 def admit_size(mem, cls, table=None):
     """(GB charged, why) when a request is over 2x the measured peak of its class, else None"""
     e = (sizes() if table is None else table).get(cls)
-    if cls not in ("?", "cd") and (not e or e["n"] + e.get("proved", 0) < 1):
+    if cls not in ("?", "cd") and (not e or capacity_sample_count(cls, e) < 1):
         for pre, gb in SEED.items():
             if cls.startswith(pre):
                 fam, why = family_seed(cls, pre, table if table is not None else sizes())
@@ -409,7 +419,7 @@ def admit_size(mem, cls, table=None):
                 if gb < mem:
                     return gb, f"family '{pre}*' seed {gb:g}G ({why}; class '{cls}' not measured yet)"
                 return None
-    if cls in ("?", "cd") or not e or e["n"] + e.get("proved", 0) < 1 or mem <= 2 * e["peak_gb"]:
+    if cls in ("?", "cd") or not e or capacity_sample_count(cls, e) < 1 or mem <= 2 * e["peak_gb"]:
         return None
     res = math.ceil(max(1.5 * e["peak_gb"], e["peak_gb"] + 8))
     if res >= mem:
@@ -449,15 +459,40 @@ def growth_phase(procs_all):
     return "", False
 
 
+def completion_status(unit):
+    """Legacy unknown remains explicit; new wrappers provide real exit status."""
+    path = f"{D}/completions/{unit}"
+    try:
+        fields = open(path).read().rstrip("\n").split("\t")
+    except FileNotFoundError:
+        return "legacy"
+    except OSError:
+        return "unknown"
+    if len(fields) != 4 or fields[0] != unit:
+        return "unknown"
+    value = fields[3]
+    return value if value.isdigit() and 0 <= int(value) <= 255 else "unknown"
+
+
+def completed_peak_qualified(row):
+    """Failed/partial observations remain raw lower bounds, never upper-bound samples."""
+    status = row[6] if len(row) > 6 else "legacy"
+    if status == "legacy":
+        # New explicit all-hierarchy work must complete; it cannot inherit an
+        # unqualified generic elab#.sh observation or an unknown wrapper exit.
+        return not completion_only_class(row[2])
+    return status == "0"
+
+
 def rebuild_sizes(st):
     t = {}
     rows = [ln.split("\t") for ln in rd(PEAKS).splitlines()]
-    rows = [(r[2], float(r[4]), int(r[3]), "done") for r in rows if len(r) >= 5]
+    rows = [(r[2], float(r[4]), int(r[3]), "done" if completed_peak_qualified(r) else "partial") for r in rows if len(r) >= 5]
     rows += [(s["cls"], s["peak"], s["launch"], "live") for s in st.values() if s.get("cls") and s.get("age", 0) > 1800]
-    rows += [(s["cls"], s["peak"], s["launch"], "proved") for s in st.values() if s.get("cls") and s.get("past_peak")]
+    rows += [(s["cls"], s["peak"], s["launch"], "proved") for s in st.values() if s.get("cls") and s.get("past_peak") and not completion_only_class(s["cls"])]
     for cls, peak, req, kind in rows:
         peak = min(peak, req) if req > 0 else peak     # a unit cannot have held more than its MemoryMax (v6)
-        e = t.setdefault(cls, dict(n=0, live=0, proved=0, peak_gb=0.0, req_gb=0))
+        e = t.setdefault(cls, dict(n=0, live=0, proved=0, partial=0, peak_gb=0.0, req_gb=0))
         e["n" if kind == "done" else kind] += 1
         e["peak_gb"] = round(max(e["peak_gb"], peak), 1)
         e["req_gb"] = max(e["req_gb"], req)
@@ -566,7 +601,10 @@ def main():
         s["growing"] = rose
         kind, peak, why = None, max(hwm, max(vals)), f"procs {comms}"
         fast = bool(FAST.match(s["cls"] or ""))
-        if fast:                                           # v4: gate families, lowered whatever runs inside
+        if completion_only_class(s["cls"]):
+            s["past_peak"] = False
+            why = "all-hierarchy request still running; individual quiet phases are not whole-workload completion"
+        elif fast:                                           # v4: gate families, lowered whatever runs inside
             peak = max(peak, cgpeak)
             if len(vals) >= 2 and span >= FAST_S and flat:
                 kind, why = "fast", f"RSS flat {min(vals)/GB:.2f}..{max(vals)/GB:.2f} GiB over {span/60:.0f} min, procs {comms}"
@@ -627,7 +665,7 @@ def main():
     for u in [u for u in st if u not in seen]:
         s = st.pop(u)
         if s.get("cls") and s.get("age", 0) >= 240:       # finished: one row of history
-            open(PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{s['launch']}\t{s['peak']}\t{int(s['age'])}\n")
+            open(PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{s['launch']}\t{s['peak']}\t{int(s['age'])}\t{completion_status(u)}\n")
         try:
             os.unlink(f"{D}/use.{u}")
         except OSError:
@@ -783,7 +821,7 @@ def conf(key):
 
 def class_peak(cls, table):
     e = table.get(cls) if cls and cls not in ("?", "cd") else None
-    return e["peak_gb"] if e and e["n"] + e.get("proved", 0) >= 1 and e["peak_gb"] > 0 else None
+    return e["peak_gb"] if e and capacity_sample_count(cls, e) >= 1 and e["peak_gb"] > 0 else None
 
 
 def books(rows, total, avail, table, gf=None):
@@ -920,7 +958,7 @@ def class_late(cls, table):
         runs = {}
         for ln in rd(PEAKS).splitlines():
             f = ln.split("\t")
-            if len(f) >= 5:
+            if len(f) >= 5 and completed_peak_qualified(f):
                 try:
                     runs.setdefault(f[2], []).append(float(f[4]))
                 except ValueError:
