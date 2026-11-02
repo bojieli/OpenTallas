@@ -1,0 +1,173 @@
+ot-run: intel2         admits   287 GB (avail 412, reserve 0, fresh 19.2, peak 40.5, headroom 0, waiters 1/360 GB) load 101/112 running 46 disk 114 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2961941-1793626634 after 1 s
+MANUAL_PHYSICAL_CONTINUATION guardPASS pre 92 exact inputs; normalKWRS FULL retained
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+mkdir -p /work/run/objects/asap7/hc_ot_qkh_recip_leaf__216x216/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_1_floorplan floorplan
+Running floorplan.tcl, stage 2_1_floorplan
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/1_synth.odb
+read_sdc /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/1_synth.sdc
+source /work/setRC_rcx.tcl
+source /work/pre_floorplan_core.tcl
+
+==========================================================================
+Floorplan check_setup
+--------------------------------------------------------------------------
+number instances in verilog is 48515
+[INFO IFP-0001] Added 496 rows of 3920 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 216.000 138.240 ) um
+[INFO IFP-0101] Core BBox: (  2.160  2.160 ) ( 213.840 136.080 ) um
+[INFO IFP-0102] Core area:                        28348.186 um^2
+[INFO IFP-0103] Total instances area:              6434.621 um^2
+[INFO IFP-0104] Effective utilization:                0.227
+[INFO IFP-0105] Number of instances:                  48515
+source /work/make_tracks.tcl
+source /OpenROAD-flow-scripts/flow/platforms/asap7/fastroute.tcl
+set_dont_use "*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*"
+repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIELOx1_ASAP7_75t_R/L
+repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIEHIx1_ASAP7_75t_R/H
+[INFO RSZ-0042] Inserted 3369 tie TIEHIx1_ASAP7_75t_R instances.
+remove_buffers
+[INFO RSZ-0026] Removed 2389 buffers.
+Default units for flow
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+   Layer   | Unit Resistance | Unit Capacitance 
+           |       (kohm/um) |          (fF/um)
+------------------------------------------------
+        M1 |        7.04e-02 |         1.00e-10
+        M2 |        2.97e-02 |         1.68e-01
+        M3 |        3.13e-02 |         1.32e-01
+        M4 |        1.80e-02 |         1.28e-01
+        M5 |        1.90e-02 |         9.80e-02
+        M6 |        1.19e-02 |         1.31e-01
+        M7 |        1.25e-02 |         9.25e-02
+        M8 |        8.45e-03 |         1.04e-01
+        M9 |        8.90e-03 |         9.28e-02
+       Pad |        0.00e+00 |         0.00e+00
+------------------------------------------------
+
+   Layer   | Via Resistance 
+           |         (kohm) 
+----------------------------
+        V1 |       1.72e-02 
+        V2 |       1.72e-02 
+        V3 |       1.72e-02 
+        V4 |       1.18e-02 
+        V5 |       1.18e-02 
+        V6 |       8.20e-03 
+        V7 |       8.20e-03 
+        V8 |       6.30e-03 
+        V9 |       6.30e-03 
+----------------------------
+Report metrics stage 2, floorplan final...
+
+==========================================================================
+floorplan final report_design_area
+--------------------------------------------------------------------------
+Design area 6406 um^2 23% utilization.
+source /work/io.tcl
+write_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_1_floorplan.odb
+write_sdc -no_timestamp /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_1_floorplan.sdc
+Elapsed time: 0:44.29[h:]min:sec. CPU time: user 43.69 sys 0.56 (99%). Peak memory: 535176KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_1_floorplan             .odb           44            522 68ef5507fb66f661f992
+2_1_floorplan             .sdc                             3d8b1aef686392351489
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_2_floorplan_macro macro_place
+Running macro_place.tcl, stage 2_2_floorplan_macro
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_1_floorplan.odb
+read_sdc /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_1_floorplan.sdc
+source /work/setRC_rcx.tcl
+No macros found: Skipping macro_placement
+Design area 6406 um^2 23% utilization.
+write_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_2_floorplan_macro.odb
+Elapsed time: 0:08.58[h:]min:sec. CPU time: user 8.14 sys 0.43 (99%). Peak memory: 373416KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_2_floorplan_macro       .odb            8            364 68ef5507fb66f661f992
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_3_floorplan_tapcell tapcell
+Running tapcell.tcl, stage 2_3_floorplan_tapcell
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_2_floorplan_macro.odb
+read_sdc /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_1_floorplan.sdc
+source /work/setRC_rcx.tcl
+Tap and End Cap cell insertion
+  TAP Cell          : TAPCELL_ASAP7_75t_R
+  ENDCAP Cell       : TAPCELL_ASAP7_75t_R
+  Halo Around Macro : 2 2
+  TAP Cell Distance : 25
+[INFO TAP-0004] Inserted 992 endcaps.
+[INFO TAP-0005] Inserted 1992 tapcells.
+Design area 6493 um^2 23% utilization.
+write_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_3_floorplan_tapcell.odb
+Elapsed time: 0:06.75[h:]min:sec. CPU time: user 6.46 sys 0.29 (99%). Peak memory: 345456KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_3_floorplan_tapcell     .odb            6            337 aac745548f43b8b8c25f
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_4_floorplan_pdn pdn
+Running pdn.tcl, stage 2_4_floorplan_pdn
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_3_floorplan_tapcell.odb
+read_sdc /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_1_floorplan.sdc
+source /work/setRC_rcx.tcl
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0500] Runtime: 1.46s
+Design area 6493 um^2 23% utilization.
+write_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_4_floorplan_pdn.odb
+Elapsed time: 0:09.64[h:]min:sec. CPU time: user 9.26 sys 0.38 (99%). Peak memory: 387848KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_4_floorplan_pdn         .odb            9            378 eb2544ddf12d1936d112
+cp /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_4_floorplan_pdn.odb /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_floorplan.odb
+cp /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_1_floorplan.sdc /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_floorplan.sdc
+MANUAL_PHYSICAL_CONTINUATION guardPASS post 92 exact inputs; normalKWRS FULL retained
+ot-run: RAN on intel2 (unit oth-ubuntu-2961941-1793626634): exit 0

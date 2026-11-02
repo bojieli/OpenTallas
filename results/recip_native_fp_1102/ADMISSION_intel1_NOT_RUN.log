@@ -1,0 +1,5 @@
+ot-run: intel1         admits   -13 GB (avail 183, reserve 0, fresh 33, peak 98.5, headroom 0, waiters 26/1264 GB) load 170/112 running 68 disk 298 GB 
+ot-run: -> intel1 (will queue: admits -13 GB < 4 GB)
+ot-heavy: waiting for memory on key-cardinal: need 0.7 x 4 = 3 GB, admissible -11 GB: available 184 GB, growth charged 33 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 33 GB at x1), young 18 GB, floor 50 GB; invariant: committed 955 GB (in use 823, other 69, units max(now, peak) 853, + reserve 0 + fresh 33) vs physical - 64 = 943 GB -> headroom -11 GB
+Terminated                 OT_HEAVY_SHORT_SLOTS=12 OT_HEAVY_THREADS=1 OT_HEAVY_WAIT_SINCE=1793626108 OT_HEAVY_DISK_GB=2 /usr/local/bin/ot-heavy --mem 4 --tag otrun-ubuntu-1663910-626110063 -- bash /srv/opentallas-scratch2/claude/codex-recip-native-fp-0640/run_fp.sh
+ot-run: NOT RUN on intel1: ot-heavy exit 143
