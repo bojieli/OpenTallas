@@ -26,3 +26,22 @@ Source preparation used0.16s wall/37208KB peak RSS. No RTL compile, simulation,
 EDA or heavy dispatch occurred. Exact group-to-collector-port membership and
 fs/ns/fn/nn bracketing remain a source graph task; these inputs must not be wired
 by geographic guesses or clock aliases. Full STN/AMAX execution remains separate.
+
+The selected source mapping is now recorded in `selected_post_port_map.json`.
+`native_head_post_port_map.py` follows named ports from literal native tile IDs
+through all fifteen cluster add nodes and original die transport words to the
+station's four own inputs. Each cluster's 64 groups use the canonical adjacent
+balanced tree. Each pair covers eight disjoint 64-group intervals.
+
+| Block | Receiver held own bracket | Sender neighbor bracket | Final operation |
+| --- | --- | --- | --- |
+| 0 | `(L4+L5)+(L7+L6)` | `(L0+L1)+(L3+L2)` | receiver + sender |
+| 148 | `(L0+L1)+(L3+L2)` | `(L4+L5)+(L7+L6)` | receiver + sender |
+
+`Li` denotes logical split groups `[64*i,64*(i+1))`, relative to the block's
+code-group base. The literal brackets compare bitwise with the unchanged
+canonical reference on all 88 K-prefix vectors / 1,408 FP32 values. This is a
+source and reference arithmetic result. It does not prove executed collectors,
+arrival alignment, region clock phase, station scale timing, or AMAX integration.
+The actual near-input SKEW14 and neighbor transport remain required fixture
+premises; near inputs cannot simply be published with the far inputs.
