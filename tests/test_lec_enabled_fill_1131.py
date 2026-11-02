@@ -64,6 +64,9 @@ def proposals(wrong_data=False, wrong_enable=False, masks=False, wrong_mask=Fals
 
 
 class EnabledFill(unittest.TestCase):
+    def test_capability_advertises_explicit_opt_in(self):
+        self.assertEqual(E.main(["--require-options", "OT_LEC_ENABLE_FILL_GUARD"]), 0)
+
     def run_native(self, *, enabled=True, wrong_data=False, wrong_enable=False, gate_value=0,
                    async_mask=False, guard_masks=False, wrong_mask=False):
         with patch.dict(os.environ, {"OT_LEC_ENABLE_FILL_GUARD": "1" if enabled else "0"}):

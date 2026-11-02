@@ -6137,7 +6137,8 @@ def _provenance(kit=None):
         return dict(commit=None, dirty=None, source=f"kit provenance invalid: {type(e).__name__}: {e}")
 
 
-PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE")
+PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE",
+                 "OT_LEC_ENABLE_FILL_GUARD")
 
 
 def main(argv=None):
