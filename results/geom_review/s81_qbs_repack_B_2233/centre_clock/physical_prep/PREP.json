@@ -1,0 +1,17 @@
+{
+  "status": "PREPARED_NO_CAD",
+  "normal_new_FP": true,
+  "reuse": "Exact1_synth.odb/v/sdc stage only; raw1_2 SHA79f2923f, no previous FP/place/CTS/route ODB reused",
+  "source_FF_cleanup": "Raw1_2 has33269; ordinary1_synth has31847; model same31847",
+  "baseline_master_counts": {
+    "DFFHQNx1_ASAP7_75t_R": 28661,
+    "DFFASRHQNx1_ASAP7_75t_R": 2803,
+    "DFFHQNx3_ASAP7_75t_R": 53,
+    "DFFHQNx2_ASAP7_75t_R": 330
+  },
+  "before_GPL": "Restore383 baseline FF drive classes(330x2,53x3), validate target-row/TAP/halo/bay occupancy against freshly generated FP, then set ALL31847 FIRM with no later register resize/clone",
+  "clock": "New M5 centre BPin+empty4.32square driverbay, actual driver/CTS cell count/area/TTFF latency must be priced",
+  "old_FF_mirror": "Movable per-FF horizontal mirror not exported; use legal actual target-row R0/MX in this new physical event; original macro orientations exact",
+  "enabled": false,
+  "source_EQ": "Current051 single diagnostic dispatched; no source release/production/count/CAD qualification from debugproof alone"
+}
