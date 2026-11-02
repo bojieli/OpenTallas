@@ -47,6 +47,8 @@ def stage(kit,repo,entries=None):
         for part in [dest,*list(dest.parents)]:
             if part==kit:break
             if part.is_symlink():raise ValueError('runtime asset destination symlink refused')
+            if part!=dest and part.exists()and not part.is_dir():
+                raise ValueError('runtime asset destination ancestor is not a directory')
         dest.resolve().relative_to(kit)
         if dst in seen or dest.exists()or any(dst in q.parents or q in dst.parents for q in seen):
             raise ValueError('runtime asset destination collision/overwrite')

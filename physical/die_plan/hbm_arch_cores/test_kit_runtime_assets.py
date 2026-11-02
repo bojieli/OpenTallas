@@ -46,6 +46,12 @@ class RuntimeAssets(unittest.TestCase):
         one=self.row();one['destination']='runtime/a';two=self.row();two['destination']='runtime/a/b'
         with self.assertRaises(ValueError):stage(self.kit,self.repo,[one,two])
         self.assertFalse((self.kit/'runtime').exists())
+    def test_preexisting_file_ancestor_before_any_copy(self):
+        (self.kit/'runtime').mkdir();(self.kit/'runtime/file').write_text('preserved')
+        row=self.row();row['destination']='runtime/file/child'
+        with self.assertRaises(ValueError):stage(self.kit,self.repo,[self.row(),row])
+        self.assertFalse((self.kit/'runtime/rows.tcl').exists())
+        self.assertEqual((self.kit/'runtime/file').read_text(),'preserved')
     def identity_fixture(self,entries=None):
         for name in ('config.mk','lec.py'):(self.kit/name).write_text('actual '+name)
         (self.kit/'freeze.json').write_text(json.dumps({}if entries is None else dict(runtime_files=entries)))
