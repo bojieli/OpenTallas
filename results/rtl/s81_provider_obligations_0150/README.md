@@ -8,7 +8,7 @@ Recovered retained manifest versus current canonical h2 differs in ONLY3 fields:
 
 Canonical h2 still has only two INSTANCE rules (regular72-bit ROM and predecessor QX). It explicitly excludes BF pending reset/source correspondence. Disabled XS/BF selector event4ba6f3753 already has exact912 native image joins/readmemh-only source classification/two-frame native image gate and leaves canonical cohort untouched. Actual phase106 descriptor overlay2ed5e1d18 is still disabled, BF-active/Q-quiescent. Default1800 BF phase programmes remain unmeasured without explicit source-profile selection. No default activation is inferred from namespace or GO history.
 
-Current selected u_f_0L01's three partitions have36 native input landing groups,35 qualified relative-age relations and ONE unqualified R8 relation: sink u_f_0L01.u_r0.$3 portA, source u_s_0S.u_sl.$16.Y, lane x_W0_in. Exact bits and ages:
+Current selected u_f_0L01's three partitions have36 native input landing groups,35 aligned metadata relations and ONE unqualified R8 relation: sink u_f_0L01.u_r0.$3 portA, source u_s_0S.u_sl.$16.Y, lane x_W0_in. Exact bits and ages:
 
 |bits|lane|asbuilt stages|bound/landed stages|bound−asbuilt|
 |---|---|---|---|---|

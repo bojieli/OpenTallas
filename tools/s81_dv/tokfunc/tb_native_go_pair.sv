@@ -2,7 +2,7 @@
 // Native dated producer/control and selected NB2 arithmetic/EF feedback, controlled common clock/reset.
 module tb_native_go_pair;
  reg clk=0; always begin #416 clk=1; #417 clk=0; end
- reg rst_n=0; integer cyc=0,T=2000,gb=1,fix_tag=0,bad_tag=0,ring=0;
+ reg rst_n=0; integer cyc=0,T=2000,gb=1,fix_tag=0,bad_tag=0,ring=0,transport_mode=0;
  reg cv=0; reg[275:0] cb=0;
  wire iv,xf; wire[159:0] id;
  ot_s81sl_xrt1 xr(.clk(clk),.rst_n(rst_n),.sid(4'd0),
@@ -24,9 +24,11 @@ module tb_native_go_pair;
  reg[1:0]mk=0;always@(posedge clk)if(!rst_n)mk<=0;else mk<={mk[0],1'b1};
  wire[1103:0]word0={xw[1100:565],xw[0],mk[1],xw[564:0],mk[1]};
  // Actual current bind_ev2 x_W0_in: all four 276-bit lanes have41 bound stages.
- reg[1103:0]transport[0:40];integer k;
- always@(posedge clk)begin transport[0]<=word0;for(k=1;k<41;k=k+1)transport[k]<=transport[k-1];end
- wire[1103:0]w=transport[40];wire crs;wire[14:0]cc;wire[282:0]xa;wire[265:0]xb;wire[535:0]x2;wire[69:0]rd;
+ reg[1103:0]transport[0:46];integer k;
+ always@(posedge clk)begin transport[0]<=word0;for(k=1;k<47;k=k+1)transport[k]<=transport[k-1];end
+ // Disabled test-only age recipes: strict EV2 asbuilt ages lane0/1/2/3=46/41/45/47.
+ wire[1103:0]w=transport_mode==1?{transport[46][1103:828],transport[44][827:552],transport[40][551:276],transport[45][275:0]}:
+                  transport_mode==2?{transport[40][1103:276],transport[41][275:0]}:transport[40];wire crs;wire[14:0]cc;wire[282:0]xa;wire[265:0]xb;wire[535:0]x2;wire[69:0]rd;
  // Controlled L3 profile: forwarded clocks open after the regional reset release.
  reg gate=0;always@(negedge clk)gate<=crs;wire fclk=clk&gate;
  dsfd_cfifo_crs4 #(.LFACE(0),.LGATE(0)) cf(.cr(clk),.cr_s(clk),.rst(rst_n),.rs(crs),
@@ -75,7 +77,8 @@ module tb_native_go_pair;
  wire qfault=gb?qf1:qf0,walking=gb?wk1:wk0,qbusy=gb?busy1:busy0;
  reg[8191:0]dir;integer fd,rc,n=0,ep=0,ti,ki,j,et[0:1023],ek[0:1023];reg[1030:0]ev[0:1023],v;
  initial begin
-  void'($value$plusargs("T=%d",T));void'($value$plusargs("gb=%d",gb));void'($value$plusargs("fix_tag=%d",fix_tag));void'($value$plusargs("bad_tag=%d",bad_tag));void'($value$plusargs("ring=%d",ring));
+  void'($value$plusargs("T=%d",T));void'($value$plusargs("gb=%d",gb));void'($value$plusargs("fix_tag=%d",fix_tag));void'($value$plusargs("bad_tag=%d",bad_tag));void'($value$plusargs("ring=%d",ring));void'($value$plusargs("transport_mode=%d",transport_mode));
+  $display("TRANSPORT_PROFILE mode=%0d lane0=%0d lane1=41 lane2=%0d lane3=%0d",transport_mode,transport_mode==1?46:(transport_mode==2?42:41),transport_mode==1?45:41,transport_mode==1?47:41);
   if(!$value$plusargs("OT_ROM_DIR=%s",dir))$fatal(1,"missing images");fd=$fopen({dir,"/producer.txt"},"r");if(!fd)$fatal(1,"missing programme");
   while(!$feof(fd))begin rc=$fscanf(fd,"%d %d %h\n",ti,ki,v);if(rc==3)begin et[n]=ti;ek[n]=ki;ev[n]=v;n=n+1;end end $fclose(fd);
  end
