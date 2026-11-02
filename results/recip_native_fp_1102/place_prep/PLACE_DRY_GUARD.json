@@ -1,0 +1,30 @@
+{
+  "status": "PASS_PREP_ONLY",
+  "source_review": "865c16e31 native FP LOOKED",
+  "steps": [
+    [
+      "3_1_place_gp_skip_io",
+      "global_place_skip_io"
+    ],
+    [
+      "3_2_place_iop",
+      "io_placement"
+    ],
+    [
+      "3_3_place_gp",
+      "global_place"
+    ],
+    [
+      "3_4_place_resized",
+      "resize"
+    ],
+    [
+      "3_5_place_dp",
+      "detail_place"
+    ]
+  ],
+  "no_dispatch": true,
+  "normal_MM_patch_preserved": true,
+  "expected_sha256": "ae2336f7e0051de86dd3f113c549cffe3366757b08d82d080994e18b7ea1dc89",
+  "normal_KWRS": "FULL unchanged"
+}
