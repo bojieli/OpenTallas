@@ -1,0 +1,420 @@
+{
+  "schema": "opentallas.qwen.native-head-emission-profile.v1",
+  "status": "PASS_COMPONENT",
+  "slices": [
+    {
+      "slice": 0,
+      "users": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FP32_words": 384,
+      "BF16_stream_beats": [
+        {
+          "eaddr": 0,
+          "offset": 70
+        },
+        {
+          "eaddr": 64,
+          "offset": 78
+        },
+        {
+          "eaddr": 1536,
+          "offset": 86
+        },
+        {
+          "eaddr": 1600,
+          "offset": 94
+        },
+        {
+          "eaddr": 3072,
+          "offset": 102
+        },
+        {
+          "eaddr": 3136,
+          "offset": 110
+        }
+      ]
+    },
+    {
+      "slice": 1,
+      "users": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FP32_words": 384,
+      "BF16_stream_beats": [
+        {
+          "eaddr": 128,
+          "offset": 70
+        },
+        {
+          "eaddr": 192,
+          "offset": 78
+        },
+        {
+          "eaddr": 1664,
+          "offset": 86
+        },
+        {
+          "eaddr": 1728,
+          "offset": 94
+        },
+        {
+          "eaddr": 3200,
+          "offset": 102
+        },
+        {
+          "eaddr": 3264,
+          "offset": 110
+        }
+      ]
+    },
+    {
+      "slice": 2,
+      "users": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FP32_words": 384,
+      "BF16_stream_beats": [
+        {
+          "eaddr": 256,
+          "offset": 70
+        },
+        {
+          "eaddr": 320,
+          "offset": 78
+        },
+        {
+          "eaddr": 1792,
+          "offset": 86
+        },
+        {
+          "eaddr": 1856,
+          "offset": 94
+        },
+        {
+          "eaddr": 3328,
+          "offset": 102
+        },
+        {
+          "eaddr": 3392,
+          "offset": 110
+        }
+      ]
+    },
+    {
+      "slice": 3,
+      "users": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FP32_words": 384,
+      "BF16_stream_beats": [
+        {
+          "eaddr": 384,
+          "offset": 70
+        },
+        {
+          "eaddr": 448,
+          "offset": 78
+        },
+        {
+          "eaddr": 1920,
+          "offset": 86
+        },
+        {
+          "eaddr": 1984,
+          "offset": 94
+        },
+        {
+          "eaddr": 3456,
+          "offset": 102
+        },
+        {
+          "eaddr": 3520,
+          "offset": 110
+        }
+      ]
+    },
+    {
+      "slice": 4,
+      "users": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FP32_words": 384,
+      "BF16_stream_beats": [
+        {
+          "eaddr": 512,
+          "offset": 70
+        },
+        {
+          "eaddr": 576,
+          "offset": 78
+        },
+        {
+          "eaddr": 2048,
+          "offset": 86
+        },
+        {
+          "eaddr": 2112,
+          "offset": 94
+        },
+        {
+          "eaddr": 3584,
+          "offset": 102
+        },
+        {
+          "eaddr": 3648,
+          "offset": 110
+        }
+      ]
+    },
+    {
+      "slice": 5,
+      "users": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FP32_words": 384,
+      "BF16_stream_beats": [
+        {
+          "eaddr": 640,
+          "offset": 70
+        },
+        {
+          "eaddr": 704,
+          "offset": 78
+        },
+        {
+          "eaddr": 2176,
+          "offset": 86
+        },
+        {
+          "eaddr": 2240,
+          "offset": 94
+        },
+        {
+          "eaddr": 3712,
+          "offset": 102
+        },
+        {
+          "eaddr": 3776,
+          "offset": 110
+        }
+      ]
+    },
+    {
+      "slice": 6,
+      "users": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FP32_words": 384,
+      "BF16_stream_beats": [
+        {
+          "eaddr": 768,
+          "offset": 70
+        },
+        {
+          "eaddr": 832,
+          "offset": 78
+        },
+        {
+          "eaddr": 2304,
+          "offset": 86
+        },
+        {
+          "eaddr": 2368,
+          "offset": 94
+        },
+        {
+          "eaddr": 3840,
+          "offset": 102
+        },
+        {
+          "eaddr": 3904,
+          "offset": 110
+        }
+      ]
+    },
+    {
+      "slice": 7,
+      "users": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FP32_words": 384,
+      "BF16_stream_beats": [
+        {
+          "eaddr": 896,
+          "offset": 70
+        },
+        {
+          "eaddr": 960,
+          "offset": 78
+        },
+        {
+          "eaddr": 2432,
+          "offset": 86
+        },
+        {
+          "eaddr": 2496,
+          "offset": 94
+        },
+        {
+          "eaddr": 3968,
+          "offset": 102
+        },
+        {
+          "eaddr": 4032,
+          "offset": 110
+        }
+      ]
+    },
+    {
+      "slice": 8,
+      "users": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FP32_words": 256,
+      "BF16_stream_beats": [
+        {
+          "eaddr": 1024,
+          "offset": 70
+        },
+        {
+          "eaddr": 1088,
+          "offset": 78
+        },
+        {
+          "eaddr": 2560,
+          "offset": 86
+        },
+        {
+          "eaddr": 2624,
+          "offset": 94
+        }
+      ]
+    },
+    {
+      "slice": 9,
+      "users": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FP32_words": 256,
+      "BF16_stream_beats": [
+        {
+          "eaddr": 1152,
+          "offset": 70
+        },
+        {
+          "eaddr": 1216,
+          "offset": 78
+        },
+        {
+          "eaddr": 2688,
+          "offset": 86
+        },
+        {
+          "eaddr": 2752,
+          "offset": 94
+        }
+      ]
+    },
+    {
+      "slice": 10,
+      "users": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FP32_words": 256,
+      "BF16_stream_beats": [
+        {
+          "eaddr": 1280,
+          "offset": 70
+        },
+        {
+          "eaddr": 1344,
+          "offset": 78
+        },
+        {
+          "eaddr": 2816,
+          "offset": 86
+        },
+        {
+          "eaddr": 2880,
+          "offset": 94
+        }
+      ]
+    },
+    {
+      "slice": 11,
+      "users": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "FP32_words": 256,
+      "BF16_stream_beats": [
+        {
+          "eaddr": 1408,
+          "offset": 70
+        },
+        {
+          "eaddr": 1472,
+          "offset": 78
+        },
+        {
+          "eaddr": 2944,
+          "offset": 86
+        },
+        {
+          "eaddr": 3008,
+          "offset": 94
+        }
+      ]
+    }
+  ],
+  "origin": "direct native SU command fixture edge; production FDN/RP/CTL and die transport excluded",
+  "clock": {
+    "period_ps": 833,
+    "testbench_timescale": "1ns/1fs"
+  },
+  "fixture_stream_directions": 3,
+  "selected_stream_directions": {
+    "slice0": 1,
+    "other_slices": 3
+  },
+  "east_profile_transfer": "stream_tile east insertion de_k and west insertion dw_k are independent; common complete_k depends only on xpack; omit slice0 west traffic",
+  "last_3block_output_offset": 110,
+  "last_2block_output_offset": 94,
+  "boundary": "actual SU/VM/eight arithmetic heads and production BF16 stream tile; no ROOT/CTL globallease or paired token"
+}

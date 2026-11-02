@@ -1,0 +1,10 @@
+NATIVE_HEAD_BEAT slice0 user0 eaddr0 offset70
+NATIVE_HEAD_BEAT slice0 user0 eaddr64 offset78
+NATIVE_HEAD_BEAT slice0 user0 eaddr1536 offset86
+NATIVE_HEAD_BEAT slice0 user0 eaddr1600 offset94
+NATIVE_HEAD_BEAT slice0 user0 eaddr3072 offset102
+NATIVE_HEAD_BEAT slice0 user0 eaddr3136 offset110
+NATIVE_HEAD_CASE_PASS slice0 user0 words384 beats6 pidx16
+[508000000] %Fatal: tb_mu_native.sv:4518: Assertion failed in tb_mu_native: HEAD_NATIVE_VALUE slice0 user1 local0 got40000000 expected40880000
+%Error: input/tb_mu_native.sv:4518: Verilog $stop
+Aborting...
