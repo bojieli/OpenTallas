@@ -1,0 +1,95 @@
+{
+ "scope": "ONE paired readonly Turn source-profile B; no physical/gate/contract/kit adoption",
+ "unit": "intel1:oth-ubuntu-1945396-1793628422",
+ "exit": 0,
+ "request": "8GB2T normal",
+ "changes": "only all-real propagation profile1 on private exact legacy helper; tolerance profile OFF, all numeric frames unchanged",
+ "A": {
+  "TT_setup": -340.16,
+  "TT_hold_info": 12.59,
+  "FF_setup_info": -117.99,
+  "FF_hold": 10.01
+ },
+ "B": [
+  {
+   "corner": "TT",
+   "raw_readout": {
+    "corner": "TT",
+    "pinreg_n": 1146,
+    "pinreg_mean_ps": 421.97,
+    "pinreg_min_ps": 390.07,
+    "pinreg_max_ps": 467.42,
+    "bound_ps": 450.0,
+    "dev_ps": 28.03,
+    "tol_ps": 20.0,
+    "setup_wns_est_ps": -202.66,
+    "hold_wns_est_ps": 12.59,
+    "rc": "/work/setRC_rcx.tcl",
+    "parasitics": "global_routing",
+    "verdict": "FAIL",
+    "band_policy": "gate",
+    "band_verdict": "FAIL"
+   },
+   "propagation_profile": "OT_POSTCTS_CLOCK_PROFILE profile=declared_all_real propagated=clk fclk_in_d1_i fclk_in_u1_i fclk_out_d1_o fclk_out_u1_o ideal_io=vclk",
+   "paths": {
+    "MAX": {
+     "slack": -202.66,
+     "start": " cland_fstart_in_u1_i (input port clocked by vclk)",
+     "endpoint": "Endpoint: u_cland_u1_i/u_ring.s_d[1][10]$_DFFE_PP_",
+     "reported_paths": 30,
+     "reported_negative_paths": 10,
+     "counts_scope": "top5 per path group, not full endpoint census"
+    },
+    "MIN": {
+     "slack": 12.59,
+     "start": " u_ft_u1_s5/q[221]$_DFF_P_",
+     "endpoint": "Endpoint: u1_o[221] (output port clocked by vclk)",
+     "reported_paths": 30,
+     "reported_negative_paths": 0,
+     "counts_scope": "top5 per path group, not full endpoint census"
+    }
+   }
+  },
+  {
+   "corner": "FF",
+   "raw_readout": {
+    "corner": "FF",
+    "pinreg_n": 1146,
+    "pinreg_mean_ps": 327.65,
+    "pinreg_min_ps": 300.91,
+    "pinreg_max_ps": 349.71,
+    "bound_ps": 342.0,
+    "dev_ps": 14.35,
+    "tol_ps": 20.0,
+    "setup_wns_est_ps": 0.74,
+    "hold_wns_est_ps": 10.01,
+    "rc": "/work/setRC_rcx.tcl",
+    "parasitics": "global_routing",
+    "verdict": "PASS",
+    "band_policy": "gate",
+    "band_verdict": "PASS"
+   },
+   "propagation_profile": "OT_POSTCTS_CLOCK_PROFILE profile=declared_all_real propagated=clk fclk_in_d1_i fclk_in_u1_i fclk_out_d1_o fclk_out_u1_o ideal_io=vclk",
+   "paths": {
+    "MAX": {
+     "slack": 0.74,
+     "start": " cland_fstart_in_u1_i (input port clocked by vclk)",
+     "endpoint": "Endpoint: u_cland_u1_i/u_ring.s_d[2][14]$_DFFE_PP_",
+     "reported_paths": 30,
+     "reported_negative_paths": 0,
+     "counts_scope": "top5 per path group, not full endpoint census"
+    },
+    "MIN": {
+     "slack": 10.01,
+     "start": " u_srl_77/q$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)",
+     "endpoint": "Endpoint: u_srl_78/q$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)",
+     "reported_paths": 30,
+     "reported_negative_paths": 0,
+     "counts_scope": "top5 per path group, not full endpoint census"
+    }
+   }
+  }
+ ],
+ "CLK_means_unchanged": true,
+ "qualified_upstream_phase": false
+}

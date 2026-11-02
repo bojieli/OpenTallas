@@ -1,0 +1,46 @@
+Startpoint: link_i[542] (input port clocked by vclk)
+Endpoint: u_ft_link_s0/q[542]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock vclk (rise edge)
+                        450.00  450.00   clock network delay (ideal)
+                        -90.00  360.00 v input external delay
+     1    1.20   10.29    1.64  361.64 v link_i[542] (in)
+     1    0.61    6.86   18.49  380.13 v input497/Y (BUFx2_ASAP7_75t_R)
+                  6.86    0.03  380.16 v u_ft_link_s0/q[542]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                                380.16   data arrival time
+
+                          0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock source latency
+     1    0.63    0.00    0.00    0.00 ^ clk_t2 (in)
+     1    0.68    9.08   19.39   19.39 ^ clk_t2_tb0_d0/Y (BUFx4_ASAP7_75t_R)
+     1    0.70    9.07   22.19   41.58 ^ clk_t2_tb0_d1/Y (BUFx4_ASAP7_75t_R)
+     1    0.73    9.12   22.17   63.75 ^ clk_t2_tb0_d2/Y (BUFx4_ASAP7_75t_R)
+     1    0.68    9.04   22.17   85.92 ^ clk_t2_tb0_d3/Y (BUFx4_ASAP7_75t_R)
+     1    0.70    9.07   22.18  108.10 ^ clk_t2_tb0_d4/Y (BUFx4_ASAP7_75t_R)
+     1    0.73    9.13   22.18  130.28 ^ clk_t2_tb0_d5/Y (BUFx4_ASAP7_75t_R)
+     1    0.68    9.04   22.17  152.45 ^ clk_t2_tb0_d6/Y (BUFx4_ASAP7_75t_R)
+     1    0.70    9.07   22.18  174.63 ^ clk_t2_tb0_d7/Y (BUFx4_ASAP7_75t_R)
+     1    0.73    9.13   22.18  196.81 ^ clk_t2_tb0_d8/Y (BUFx4_ASAP7_75t_R)
+     1    0.68    9.04   22.18  218.99 ^ clk_t2_tb0_d9/Y (BUFx4_ASAP7_75t_R)
+     1    0.70    9.07   22.17  241.16 ^ clk_t2_tb0_d10/Y (BUFx4_ASAP7_75t_R)
+     1    0.74    9.14   22.19  263.35 ^ clk_t2_tb0_d11/Y (BUFx4_ASAP7_75t_R)
+     1   14.52   43.02   34.39  297.74 ^ clk_t2_tb0_d12/Y (BUFx4_ASAP7_75t_R)
+     2    8.99   13.09   47.81  345.54 ^ clkbuf_0_clk_t2/Y (BUFx24_ASAP7_75t_R)
+     4   13.28   14.24   30.62  376.17 ^ clkbuf_1_0_0_clk_t2/Y (BUFx24_ASAP7_75t_R)
+     2    5.92   10.76   32.75  408.91 ^ clkbuf_3_0_0_clk_t2/Y (BUFx24_ASAP7_75t_R)
+     5    5.78   10.59   25.03  433.94 ^ clkbuf_4_0__f_clk_t2/Y (BUFx24_ASAP7_75t_R)
+                 11.58    1.79  435.73 ^ u_ft_link_s0/q[542]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+                         12.50  448.23   inter-clock uncertainty
+                          0.00  448.23   clock reconvergence pessimism
+                         12.65  460.88   library hold time
+                                460.88   data required time
+-----------------------------------------------------------------------------
+                                460.88   data required time
+                               -380.16   data arrival time
+-----------------------------------------------------------------------------
+                                -80.73   slack (VIOLATED)
