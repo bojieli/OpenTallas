@@ -10,7 +10,7 @@ protected=[x for x in src.glob('rtl/**/*') if x.is_file()]+[src/n for n in ['con
 protected += [x for x in (src/'macros').glob('*') if x.is_file()]
 protected={str(x.relative_to(src)):sha(x)for x in protected}
 shutil.copytree(src,o)
-for n in ['apply_candidate.tcl','run_candidate.sh','load_candidate.tcl','candidate_manifest.json','lib_master_contract.json','combined_post.tcl','guide_coverage.py']:
+for n in ['apply_candidate.tcl','run_candidate.sh','load_candidate.tcl','candidate_manifest.json','lib_master_contract.json','combined_post.tcl','guide_coverage.py','connectivity_guard.tcl','validate_lib_contract.py']:
  shutil.copy2(r/n,o/n)
 (o/'snapshot').mkdir();shutil.copy2(base/'5_1_grt.odb',o/'snapshot/5_1_grt.odb');shutil.copy2(base/'5_1_grt.sdc',o/'snapshot/5_1_grt.sdc');shutil.copy2(base/'route.guide',o/'snapshot/route.guide')
 # Native MM calls its route-stage slot4_cts; alias retains FINAL5_1 SDC bytes exactly.

@@ -621,5 +621,8 @@
     "ICG*"
   ],
   "platform_config_sha256": "c5c868f35c7c04365a074aef2d81c72641441a8070a117bcb1a35b696942507c",
-  "phase_policy": "place coupon stops before route for actualLOOK; distinct route coupon replays immutable source and must match exact reviewed full placement digest; incrementalDATAtrial not newfullGRT50"
+  "phase_policy": "place coupon stops before route for actualLOOK; distinct route coupon replays immutable source and must match exact reviewed full placement digest; incrementalDATAtrial not newfullGRT50",
+  "connectivity_guard": "full existing ITerm and BTerm to net/class/special-flag incidence plus full net inventory before/after PLACE and ROUTE. ONLY exact hold sink split,newBUF A/Y and its VDD/VSS attachments allowed; every other existing DATA/PG connection unchanged.",
+  "clock_guard": "same clock-net incidence, all clock-connected instance master/coords/orientation/final placement status and original class/special flags, plus exact original native clock guide geometry",
+  "target_resolution": "exactly one OpenDB master; exact4physicalpins A/Y/VDD/VSS ABI; exactly one selected master in each explicit TT/FF Lib; selectedLibbytes/functionA contract and DONT_USE platformhash checked before native execution"
 }
