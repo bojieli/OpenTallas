@@ -110,6 +110,18 @@ if {[llength $ot_core_tap_markers]} {
 
 set ot_pg_bound [expr {$ot_pg_C eq "FF" ? $::env(OT_VCLK_FF) : $::env(OT_VCLK_TT)}]
 set ot_pg_tol [expr {[info exists ::env(OT_POSTCTS_TOL)] ? $::env(OT_POSTCTS_TOL) : 20.0}]
+# SOURCE-ONLY opt-in proposal: preserve legacy behavior unless a caller pins an
+# exact ordinary-partition freeze. This resolves tolerance, never band authority.
+if {[info exists ::env(OT_POSTCTS_BINDING_TOL)] && $::env(OT_POSTCTS_BINDING_TOL) ni {0 1}} {error "postcts: invalid binding-tolerance opt-in"}
+if {[info exists ::env(OT_POSTCTS_BINDING_TOL)] && $::env(OT_POSTCTS_BINDING_TOL) eq "1"} {
+  foreach key {OT_POSTCTS_PARTITION_TYPE OT_POSTCTS_PARTITION_FREEZE_SHA256} {
+    if {![info exists ::env($key)] || $::env($key) eq ""} {error "postcts: missing exact partition context $key"}
+  }
+  set ot_pg_binding_cmd [list python3 /work/partition_clock_binding.py --kit /work --corner $ot_pg_C --expected-type $::env(OT_POSTCTS_PARTITION_TYPE) --expected-freeze-sha256 $::env(OT_POSTCTS_PARTITION_FREEZE_SHA256) --bound $ot_pg_bound --record /work/postcts_partition_binding_${ot_pg_c}.json]
+  if {[info exists ::env(OT_POSTCTS_TOL)]} {lappend ot_pg_binding_cmd --tolerance-env $::env(OT_POSTCTS_TOL)}
+  set ot_pg_tol [exec {*}$ot_pg_binding_cmd]
+  puts "OT_POSTCTS_PARTITION_BINDING exact source tolerance $ot_pg_tol; band policy $ot_pg_band_policy unchanged"
+}
 set bound $ot_pg_bound
 set tol $ot_pg_tol
 # Forwarded/landing clock roots are real clocks too. Select the IO reference by
