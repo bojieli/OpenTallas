@@ -56,8 +56,14 @@ def prepare(original, proof, copied, producer_log, producer_unit, checker_sha256
         raise ValueError('current reset environment differs')
     if os.environ.get('OT_LEC_SUPERSET_VEC', '0') != '0':
         raise ValueError('source proof does not supply a postroute superset receipt')
-    if any((original / n).exists() for n in ('reset_contract.json',)):
+    if any((root / 'reset_contract.json').exists() for root in (original, copied)):
         raise ValueError('component proof cannot replace die reset receipt')
+    for name in ('lec_options.json',):
+        if (original / name).exists() != (copied / name).exists():
+            raise ValueError('proof option presence differs: ' + name)
+    rtl_sets = [{str(p.relative_to(root)) for p in (root / 'rtl').rglob('*') if p.is_file()} for root in (original, copied)]
+    if rtl_sets[0] != rtl_sets[1]:
+        raise ValueError('RTL readset inventory differs')
     provenance = json.loads(local(original, 'PROVENANCE.json').read_text())
     source = provenance.get('provenance', {})
     rp = report.get('provenance', {})
