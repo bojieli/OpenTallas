@@ -1,0 +1,7 @@
+ot-run: epyc2          admits    62 GB (avail 232, reserve 0, fresh 0, peak 105.4, headroom 0, waiters 0/0 GB) load 97/128 running 43 disk 52 GB 
+ot-run: intel1         admits    31 GB (avail 215, reserve 0, fresh 0, peak 119.3, headroom 0, waiters 42/2166 GB) load 165/112 running 71 disk 364 GB 
+ot-run: localhost      admits   210 GB (avail 378, reserve 0, fresh 31.9, peak 71.8, headroom 0, waiters 6/540 GB) load 199/112 running 58 disk 129 GB 
+ot-run: localhost skipped for this die job: DISK 129 GB free - 180 GB running/queued die reservations < 1 GB
+ot-run: -> epyc2
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-1598994-1793617698 after 1 s
+ot-run: RAN on epyc2 (unit oth-ubuntu-1598994-1793617698): exit 0

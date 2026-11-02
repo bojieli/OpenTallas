@@ -1,0 +1,7 @@
+ot-run: epyc2          admits    79 GB (avail 253, reserve 0, fresh 1.7, peak 107.6, headroom 0, waiters 0/0 GB) load 94/128 running 44 disk 50 GB 
+ot-run: intel1         admits    28 GB (avail 207, reserve 0, fresh 0, peak 114.8, headroom 0, waiters 41/2134 GB) load 187/112 running 72 disk 364 GB 
+ot-run: localhost      admits    74 GB (avail 362, reserve 0, fresh 154, peak 70.2, headroom 0, waiters 1/360 GB) load 175/112 running 60 disk 128 GB 
+ot-run: localhost skipped for this die job: DISK 128 GB free - 180 GB running/queued die reservations < 1 GB
+ot-run: -> epyc2
+ot-run: scratch disk /srv/opentallas-scratch2 has 48 GB free < floor 50 GB on dear-crayfish; the root fs is never a fallback
+ot-run: NOT RUN on epyc2: scratch disk below its floor / new run dir could not be placed on it (root fs never used)

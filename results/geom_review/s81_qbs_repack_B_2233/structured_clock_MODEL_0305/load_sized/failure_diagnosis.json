@@ -1,0 +1,608 @@
+{
+  "TT": {
+    "fastest": {
+      "node": "macro_leaf2",
+      "kind": "macro_PIN",
+      "sinks": 1,
+      "min_ps": 182.58873979907975,
+      "mean_ps": 182.58873979907975,
+      "max_ps": 182.58873979907975,
+      "calibration_reasons": []
+    },
+    "slowest": {
+      "node": "ff_leaf0",
+      "kind": "FF_cts_open",
+      "sinks": 248,
+      "min_ps": 449.1419183714237,
+      "mean_ps": 461.4789343714237,
+      "max_ps": 497.6853943714237,
+      "calibration_reasons": [],
+      "region_reach_um": 134.09799999999998,
+      "cts_levels": 2
+    },
+    "regional_window_gt40": [
+      {
+        "node": "ff_leaf0",
+        "planned_feed_stages": 10,
+        "CTSlevels": 2,
+        "reach_um": 134.09799999999998,
+        "regional_window_ps": 48.54347599999999,
+        "branch": [
+          "hist_root",
+          "branch_q0",
+          "q0_rep1",
+          "hub_q0",
+          "ff_branch0",
+          "f0_rep1",
+          "f0_rep2",
+          "f0_rep3",
+          "f0_rep4",
+          "ff_leaf0"
+        ]
+      },
+      {
+        "node": "ff_leaf1",
+        "planned_feed_stages": 9,
+        "CTSlevels": 2,
+        "reach_um": 113.578,
+        "regional_window_ps": 41.115236,
+        "branch": [
+          "hist_root",
+          "branch_q0",
+          "q0_rep1",
+          "hub_q0",
+          "ff_branch1",
+          "f1_rep1",
+          "f1_rep2",
+          "f1_rep3",
+          "ff_leaf1"
+        ]
+      },
+      {
+        "node": "ff_leaf3",
+        "planned_feed_stages": 7,
+        "CTSlevels": 2,
+        "reach_um": 130.64200000000002,
+        "regional_window_ps": 47.292404000000005,
+        "branch": [
+          "hist_root",
+          "branch_q0",
+          "q0_rep1",
+          "hub_q0",
+          "ff_branch3",
+          "f3_rep1",
+          "ff_leaf3"
+        ]
+      },
+      {
+        "node": "ff_leaf4",
+        "planned_feed_stages": 7,
+        "CTSlevels": 3,
+        "reach_um": 132.85599999999997,
+        "regional_window_ps": 48.09387199999998,
+        "branch": [
+          "hist_root",
+          "branch_q0",
+          "q0_rep1",
+          "hub_q0",
+          "ff_branch4",
+          "f4_rep1",
+          "ff_leaf4"
+        ]
+      },
+      {
+        "node": "ff_leaf5",
+        "planned_feed_stages": 7,
+        "CTSlevels": 3,
+        "reach_um": 114.23599999999999,
+        "regional_window_ps": 41.353432,
+        "branch": [
+          "hist_root",
+          "branch_q0",
+          "q0_rep1",
+          "hub_q0",
+          "ff_branch5",
+          "f5_rep1",
+          "ff_leaf5"
+        ]
+      },
+      {
+        "node": "ff_leaf7",
+        "planned_feed_stages": 7,
+        "CTSlevels": 2,
+        "reach_um": 147.595,
+        "regional_window_ps": 53.42939,
+        "branch": [
+          "hist_root",
+          "branch_q0",
+          "q0_rep1",
+          "hub_q0",
+          "ff_branch7",
+          "f7_rep1",
+          "ff_leaf7"
+        ]
+      },
+      {
+        "node": "ff_leaf12",
+        "planned_feed_stages": 9,
+        "CTSlevels": 2,
+        "reach_um": 135.34000000000003,
+        "regional_window_ps": 48.99308000000001,
+        "branch": [
+          "hist_root",
+          "branch_q1",
+          "q1_rep1",
+          "hub_q1",
+          "ff_branch12",
+          "f12_rep1",
+          "f12_rep2",
+          "f12_rep3",
+          "ff_leaf12"
+        ]
+      },
+      {
+        "node": "ff_leaf13",
+        "planned_feed_stages": 7,
+        "CTSlevels": 2,
+        "reach_um": 130.31799999999998,
+        "regional_window_ps": 47.175115999999996,
+        "branch": [
+          "hist_root",
+          "branch_q1",
+          "q1_rep1",
+          "hub_q1",
+          "ff_branch13",
+          "f13_rep1",
+          "ff_leaf13"
+        ]
+      },
+      {
+        "node": "ff_leaf14",
+        "planned_feed_stages": 6,
+        "CTSlevels": 3,
+        "reach_um": 120.86800000000005,
+        "regional_window_ps": 43.75421600000002,
+        "branch": [
+          "hist_root",
+          "branch_q1",
+          "q1_rep1",
+          "hub_q1",
+          "ff_branch14",
+          "ff_leaf14"
+        ]
+      },
+      {
+        "node": "ff_leaf21",
+        "planned_feed_stages": 9,
+        "CTSlevels": 2,
+        "reach_um": 150.298,
+        "regional_window_ps": 54.407876,
+        "branch": [
+          "hist_root",
+          "branch_q2",
+          "q2_rep1",
+          "q2_rep2",
+          "hub_q2",
+          "ff_branch21",
+          "f21_rep1",
+          "f21_rep2",
+          "ff_leaf21"
+        ]
+      },
+      {
+        "node": "ff_leaf24",
+        "planned_feed_stages": 10,
+        "CTSlevels": 2,
+        "reach_um": 119.78800000000001,
+        "regional_window_ps": 43.363256,
+        "branch": [
+          "hist_root",
+          "branch_q2",
+          "q2_rep1",
+          "q2_rep2",
+          "hub_q2",
+          "ff_branch24",
+          "f24_rep1",
+          "f24_rep2",
+          "f24_rep3",
+          "ff_leaf24"
+        ]
+      },
+      {
+        "node": "ff_leaf25",
+        "planned_feed_stages": 10,
+        "CTSlevels": 2,
+        "reach_um": 130.426,
+        "regional_window_ps": 47.214211999999996,
+        "branch": [
+          "hist_root",
+          "branch_q2",
+          "q2_rep1",
+          "q2_rep2",
+          "hub_q2",
+          "ff_branch25",
+          "f25_rep1",
+          "f25_rep2",
+          "f25_rep3",
+          "ff_leaf25"
+        ]
+      },
+      {
+        "node": "ff_leaf28",
+        "planned_feed_stages": 9,
+        "CTSlevels": 2,
+        "reach_um": 147.59799999999998,
+        "regional_window_ps": 53.43047599999999,
+        "branch": [
+          "hist_root",
+          "branch_q2",
+          "q2_rep1",
+          "q2_rep2",
+          "hub_q2",
+          "ff_branch28",
+          "f28_rep1",
+          "f28_rep2",
+          "ff_leaf28"
+        ]
+      },
+      {
+        "node": "ff_leaf29",
+        "planned_feed_stages": 9,
+        "CTSlevels": 3,
+        "reach_um": 124.60499999999996,
+        "regional_window_ps": 45.10700999999998,
+        "branch": [
+          "hist_root",
+          "branch_q2",
+          "q2_rep1",
+          "q2_rep2",
+          "hub_q2",
+          "ff_branch29",
+          "f29_rep1",
+          "f29_rep2",
+          "ff_leaf29"
+        ]
+      },
+      {
+        "node": "ff_leaf33",
+        "planned_feed_stages": 9,
+        "CTSlevels": 3,
+        "reach_um": 122.70400000000001,
+        "regional_window_ps": 44.418848000000004,
+        "branch": [
+          "hist_root",
+          "branch_q2",
+          "q2_rep1",
+          "q2_rep2",
+          "hub_q2",
+          "ff_branch33",
+          "f33_rep1",
+          "f33_rep2",
+          "ff_leaf33"
+        ]
+      },
+      {
+        "node": "ff_leaf37",
+        "planned_feed_stages": 8,
+        "CTSlevels": 3,
+        "reach_um": 126.11700000000008,
+        "regional_window_ps": 45.654354000000026,
+        "branch": [
+          "hist_root",
+          "branch_q3",
+          "q3_rep1",
+          "hub_q3",
+          "ff_branch37",
+          "f37_rep1",
+          "f37_rep2",
+          "ff_leaf37"
+        ]
+      },
+      {
+        "node": "ff_leaf40",
+        "planned_feed_stages": 7,
+        "CTSlevels": 3,
+        "reach_um": 144.272,
+        "regional_window_ps": 52.22646399999999,
+        "branch": [
+          "hist_root",
+          "branch_q3",
+          "q3_rep1",
+          "hub_q3",
+          "ff_branch40",
+          "f40_rep1",
+          "ff_leaf40"
+        ]
+      },
+      {
+        "node": "ff_leaf42",
+        "planned_feed_stages": 9,
+        "CTSlevels": 2,
+        "reach_um": 125.34999999999997,
+        "regional_window_ps": 45.376699999999985,
+        "branch": [
+          "hist_root",
+          "branch_q3",
+          "q3_rep1",
+          "hub_q3",
+          "ff_branch42",
+          "f42_rep1",
+          "f42_rep2",
+          "f42_rep3",
+          "ff_leaf42"
+        ]
+      }
+    ],
+    "feed_stage_range": [
+      6,
+      12
+    ],
+    "CTS_level_counts": {
+      "2": 18,
+      "3": 26
+    },
+    "region_reach_max": 150.298,
+    "FF_mean_ps": 343.390501510479,
+    "macro_mean_ps": 258.6008465123529
+  },
+  "FF": {
+    "fastest": {
+      "node": "macro_leaf2",
+      "kind": "macro_PIN",
+      "sinks": 1,
+      "min_ps": 141.67472786290367,
+      "mean_ps": 141.67472786290367,
+      "max_ps": 141.67472786290367,
+      "calibration_reasons": []
+    },
+    "slowest": {
+      "node": "ff_leaf0",
+      "kind": "FF_cts_open",
+      "sinks": 248,
+      "min_ps": 352.80233057685194,
+      "mean_ps": 364.3347585768519,
+      "max_ps": 396.3841805768519,
+      "calibration_reasons": [],
+      "region_reach_um": 134.09799999999998,
+      "cts_levels": 2
+    },
+    "regional_window_gt40": [
+      {
+        "node": "ff_leaf0",
+        "planned_feed_stages": 10,
+        "CTSlevels": 2,
+        "reach_um": 134.09799999999998,
+        "regional_window_ps": 43.581849999999996,
+        "branch": [
+          "hist_root",
+          "branch_q0",
+          "q0_rep1",
+          "hub_q0",
+          "ff_branch0",
+          "f0_rep1",
+          "f0_rep2",
+          "f0_rep3",
+          "f0_rep4",
+          "ff_leaf0"
+        ]
+      },
+      {
+        "node": "ff_leaf3",
+        "planned_feed_stages": 7,
+        "CTSlevels": 2,
+        "reach_um": 130.64200000000002,
+        "regional_window_ps": 42.45865000000001,
+        "branch": [
+          "hist_root",
+          "branch_q0",
+          "q0_rep1",
+          "hub_q0",
+          "ff_branch3",
+          "f3_rep1",
+          "ff_leaf3"
+        ]
+      },
+      {
+        "node": "ff_leaf4",
+        "planned_feed_stages": 7,
+        "CTSlevels": 3,
+        "reach_um": 132.85599999999997,
+        "regional_window_ps": 43.17819999999999,
+        "branch": [
+          "hist_root",
+          "branch_q0",
+          "q0_rep1",
+          "hub_q0",
+          "ff_branch4",
+          "f4_rep1",
+          "ff_leaf4"
+        ]
+      },
+      {
+        "node": "ff_leaf7",
+        "planned_feed_stages": 7,
+        "CTSlevels": 2,
+        "reach_um": 147.595,
+        "regional_window_ps": 47.968375,
+        "branch": [
+          "hist_root",
+          "branch_q0",
+          "q0_rep1",
+          "hub_q0",
+          "ff_branch7",
+          "f7_rep1",
+          "ff_leaf7"
+        ]
+      },
+      {
+        "node": "ff_leaf12",
+        "planned_feed_stages": 9,
+        "CTSlevels": 2,
+        "reach_um": 135.34000000000003,
+        "regional_window_ps": 43.98550000000001,
+        "branch": [
+          "hist_root",
+          "branch_q1",
+          "q1_rep1",
+          "hub_q1",
+          "ff_branch12",
+          "f12_rep1",
+          "f12_rep2",
+          "f12_rep3",
+          "ff_leaf12"
+        ]
+      },
+      {
+        "node": "ff_leaf13",
+        "planned_feed_stages": 7,
+        "CTSlevels": 2,
+        "reach_um": 130.31799999999998,
+        "regional_window_ps": 42.35335,
+        "branch": [
+          "hist_root",
+          "branch_q1",
+          "q1_rep1",
+          "hub_q1",
+          "ff_branch13",
+          "f13_rep1",
+          "ff_leaf13"
+        ]
+      },
+      {
+        "node": "ff_leaf21",
+        "planned_feed_stages": 9,
+        "CTSlevels": 2,
+        "reach_um": 150.298,
+        "regional_window_ps": 48.84685,
+        "branch": [
+          "hist_root",
+          "branch_q2",
+          "q2_rep1",
+          "q2_rep2",
+          "hub_q2",
+          "ff_branch21",
+          "f21_rep1",
+          "f21_rep2",
+          "ff_leaf21"
+        ]
+      },
+      {
+        "node": "ff_leaf25",
+        "planned_feed_stages": 10,
+        "CTSlevels": 2,
+        "reach_um": 130.426,
+        "regional_window_ps": 42.38845,
+        "branch": [
+          "hist_root",
+          "branch_q2",
+          "q2_rep1",
+          "q2_rep2",
+          "hub_q2",
+          "ff_branch25",
+          "f25_rep1",
+          "f25_rep2",
+          "f25_rep3",
+          "ff_leaf25"
+        ]
+      },
+      {
+        "node": "ff_leaf28",
+        "planned_feed_stages": 9,
+        "CTSlevels": 2,
+        "reach_um": 147.59799999999998,
+        "regional_window_ps": 47.96935,
+        "branch": [
+          "hist_root",
+          "branch_q2",
+          "q2_rep1",
+          "q2_rep2",
+          "hub_q2",
+          "ff_branch28",
+          "f28_rep1",
+          "f28_rep2",
+          "ff_leaf28"
+        ]
+      },
+      {
+        "node": "ff_leaf29",
+        "planned_feed_stages": 9,
+        "CTSlevels": 3,
+        "reach_um": 124.60499999999996,
+        "regional_window_ps": 40.49662499999999,
+        "branch": [
+          "hist_root",
+          "branch_q2",
+          "q2_rep1",
+          "q2_rep2",
+          "hub_q2",
+          "ff_branch29",
+          "f29_rep1",
+          "f29_rep2",
+          "ff_leaf29"
+        ]
+      },
+      {
+        "node": "ff_leaf37",
+        "planned_feed_stages": 8,
+        "CTSlevels": 3,
+        "reach_um": 126.11700000000008,
+        "regional_window_ps": 40.98802500000003,
+        "branch": [
+          "hist_root",
+          "branch_q3",
+          "q3_rep1",
+          "hub_q3",
+          "ff_branch37",
+          "f37_rep1",
+          "f37_rep2",
+          "ff_leaf37"
+        ]
+      },
+      {
+        "node": "ff_leaf40",
+        "planned_feed_stages": 7,
+        "CTSlevels": 3,
+        "reach_um": 144.272,
+        "regional_window_ps": 46.8884,
+        "branch": [
+          "hist_root",
+          "branch_q3",
+          "q3_rep1",
+          "hub_q3",
+          "ff_branch40",
+          "f40_rep1",
+          "ff_leaf40"
+        ]
+      },
+      {
+        "node": "ff_leaf42",
+        "planned_feed_stages": 9,
+        "CTSlevels": 2,
+        "reach_um": 125.34999999999997,
+        "regional_window_ps": 40.73874999999999,
+        "branch": [
+          "hist_root",
+          "branch_q3",
+          "q3_rep1",
+          "hub_q3",
+          "ff_branch42",
+          "f42_rep1",
+          "f42_rep2",
+          "f42_rep3",
+          "ff_leaf42"
+        ]
+      }
+    ],
+    "feed_stage_range": [
+      6,
+      12
+    ],
+    "CTS_level_counts": {
+      "2": 18,
+      "3": 26
+    },
+    "region_reach_max": 150.298,
+    "FF_mean_ps": 267.5143914440381,
+    "macro_mean_ps": 202.59005857403574
+  }
+}
