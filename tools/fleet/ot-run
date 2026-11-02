@@ -909,6 +909,11 @@ def crit_job():
     return os.environ.get("OT_RUN_CRIT", "") not in ("", "0")
 
 
+# DIE_RESERVE_1101 (FLOW-21): the waiter learns when this request was first made, so a REBALANCE re-try (a new ot-heavy
+# process every REQUEUE_S) keeps its age for the hub die reservation (ot-reserve / ot-heavy-reconcile --die-waiters).
+RUN_T0 = time.time()
+
+
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None, disk=None):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
@@ -917,6 +922,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     if disk is None:
         disk = DIE_DISK_GB if "OT_HEAVY_PRIO=die" in env else 20
     env += f"OT_HEAVY_DISK_GB={int(disk)} "
+    env += f"OT_HEAVY_WAIT_SINCE={int(RUN_T0)} "
     inner = f"{env}/usr/local/bin/ot-heavy --mem {mem} --tag {tag}" + (f" --max-wait {int(max_wait)}" if max_wait else "") \
         + " -- " + " ".join(shlex.quote(x) for x in cmd)
     # Recheck before output placement: never recreate an input directory that

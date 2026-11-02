@@ -1,0 +1,7 @@
+[Unit]
+Description=OpenTallas die-job memory reservation tick (tools/fleet/ot-reserve, DIE_RESERVE_1101: at most one host, 60 min -> reserve, 6 h max)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 -I %h/.local/bin/ot-reserve
+TimeoutStartSec=10min
