@@ -1,0 +1,246 @@
+{
+  "status": "PASS_FT_GEOMETRY_CONSTRUCTOR",
+  "type": "q_su00__physical_v1",
+  "obstacles": 16,
+  "internal_FF_bodies": 32823,
+  "body_hits": 0,
+  "grid_errors": 0,
+  "frame_errors": 0,
+  "global_FT_overlaps": 0,
+  "per_slot": [
+    {
+      "slot": "L28x3",
+      "stages": 14,
+      "bits": 1616,
+      "internal_legs": 21008,
+      "max_internal_hop_um": 373.18099999999987,
+      "over405": 0
+    },
+    {
+      "slot": "L106x6",
+      "stages": 7,
+      "bits": 21,
+      "internal_legs": 126,
+      "max_internal_hop_um": 363.0989999999999,
+      "over405": 0
+    },
+    {
+      "slot": "L125x2",
+      "stages": 7,
+      "bits": 8,
+      "internal_legs": 48,
+      "max_internal_hop_um": 319.68000000000006,
+      "over405": 0
+    },
+    {
+      "slot": "L730x1",
+      "stages": 8,
+      "bits": 1663,
+      "internal_legs": 11641,
+      "max_internal_hop_um": 397.16999999999996,
+      "over405": 0
+    }
+  ],
+  "interface_seams": [
+    {
+      "port": "L28_3",
+      "src": "NW_su00.L28x3_o",
+      "dst": "NW_sm0.L28_i",
+      "bits": 1616,
+      "max_hop_um": 370.41299999999956,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L36_3",
+      "src": "NW_b001.L36x3_o",
+      "dst": "NW_su00.L36_i",
+      "bits": 1330,
+      "max_hop_um": 383.0530000000017,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L47_0",
+      "src": "NW_b113.L47_o",
+      "dst": "NW_su00.L47_i",
+      "bits": 665,
+      "max_hop_um": 0,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L54_0",
+      "src": "NW_su00.L54_o",
+      "dst": "NW_b113.L54_i",
+      "bits": 515,
+      "max_hop_um": 0,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L55_0",
+      "src": "NW_su00.L55_o",
+      "dst": "NW_su01.L55x1_i",
+      "bits": 515,
+      "max_hop_um": 1.0000000000004547,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L102_1",
+      "src": "NW_su01.L102x1_o",
+      "dst": "NW_su00.L102_i",
+      "bits": 22,
+      "max_hop_um": 306.1769999999992,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L106_5",
+      "src": "NW_su01.L106x5_o",
+      "dst": "NW_su00.L106x6_i",
+      "bits": 21,
+      "max_hop_um": 314.0809999999997,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L106_6",
+      "src": "NW_su00.L106x6_o",
+      "dst": "NW_b113.L106x7_i",
+      "bits": 21,
+      "max_hop_um": 165.06099999999992,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L125_1",
+      "src": "NW_b113.L125x1_o",
+      "dst": "NW_su00.L125x2_i",
+      "bits": 8,
+      "max_hop_um": 366.7269999999985,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L125_2",
+      "src": "NW_su00.L125x2_o",
+      "dst": "NW_su01.L125x3_i",
+      "bits": 8,
+      "max_hop_um": 364.9930000000013,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L127_0",
+      "src": "NW_su00.L127_o",
+      "dst": "NW_b113.L127_i",
+      "bits": 5,
+      "max_hop_um": 0,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L134_0",
+      "src": "NW_su00.L134_o",
+      "dst": "NW_su01.L134x1_i",
+      "bits": 4,
+      "max_hop_um": 1.0000000000004547,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L28_detour",
+      "src": "NW_su01.L28_detour_o",
+      "dst": "NW_su00.L28x3_i",
+      "bits": 1616,
+      "max_hop_um": 184.2690000000007,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L162_0",
+      "src": "NW_su01.L162_o",
+      "dst": "NW_su00.L162_i",
+      "bits": 3729,
+      "max_hop_um": 4.547473508864641e-13,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L178_0",
+      "src": "NW_su00.L178_o",
+      "dst": "NW_su01.L178_i",
+      "bits": 1153,
+      "max_hop_um": 4.547473508864641e-13,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L206_0",
+      "src": "NW_su00.L206_o",
+      "dst": "NW_su01.L206x1_i",
+      "bits": 2,
+      "max_hop_um": 1.0000000000004547,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L410_0",
+      "src": "NW_su01.L410_o",
+      "dst": "NW_su00.L410_i",
+      "bits": 1651,
+      "max_hop_um": 4.547473508864641e-13,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L730_0",
+      "src": "NW_b113.L730_o",
+      "dst": "NW_su00.L730x1_i",
+      "bits": 1663,
+      "max_hop_um": 1.0,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L730_1",
+      "src": "NW_su00.L730x1_o",
+      "dst": "NW_b001.L730x2_i",
+      "bits": 1663,
+      "max_hop_um": 143.01700000000255,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    }
+  ],
+  "conservative_4p32_halo_diagnostic": {
+    "L28x3": 0,
+    "L106x6": 0,
+    "L125x2": 0,
+    "L730x1": 0
+  },
+  "clock_status": "FAIL_OLD_LOWER_WINDOW_PROFILE_EMPTY_CLK_T30_REGENERATE_DENSITY",
+  "clock_positions_scope": "Native core entry positions are not soft glue FF sites. Actual current explicit_taps raises empty clk_t30 after changed FT banks; new density is owed.",
+  "scope": "Exact normal-FT constructor centres and die-oriented neighbor pin/first-register models. No placed/routed capture, timing, PDN, reset, source-profile or full die credit.",
+  "clock_gate_status": "FAIL_CURRENT_PROFILE_EMPTY_CLK_T30"
+}

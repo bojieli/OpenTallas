@@ -1,0 +1,4 @@
+2079:     ot_dp_st #(.W(1662)) u_bout_L730_o (.clk(clk), .rst_n(rst_n), .d({w_u_sfucore_Q_opstore_b_cmd0_Q[895:576], w_u_sfucore_Q_opstore_a_cmd0_Q[895:576], w_u_sfucore_Q_ctl_u_core_u_engine_u_arithmetic_procdff_71639_Q[1021:0]}), .ea(rst_n), .q(L730_o[1661:0]), .eq(L730_o[1662]));
+3345:         .u_core_u_engine_u_arithmetic_procdff_71639__Q(w_u_sfucore_Q_ctl_u_core_u_engine_u_arithmetic_procdff_71639_Q),
+3423:         .cmd0_Q(w_u_sfucore_Q_opstore_a_cmd0_Q),
+3492:         .cmd0_Q(w_u_sfucore_Q_opstore_b_cmd0_Q),

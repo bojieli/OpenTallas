@@ -1,0 +1,344 @@
+{
+  "status": "PASS_FT_GEOMETRY_CONSTRUCTOR",
+  "type": "q_su31__physical_v1",
+  "obstacles": 9,
+  "internal_FF_bodies": 46540,
+  "body_hits": 0,
+  "grid_errors": 0,
+  "frame_errors": 0,
+  "global_FT_overlaps": 0,
+  "per_slot": [
+    {
+      "slot": "L48x10",
+      "stages": 8,
+      "bits": 635,
+      "internal_legs": 4445,
+      "max_internal_hop_um": 374.2199999999999,
+      "over405": 0
+    },
+    {
+      "slot": "L53x2",
+      "stages": 8,
+      "bits": 613,
+      "internal_legs": 4291,
+      "max_internal_hop_um": 371.2500000000001,
+      "over405": 0
+    },
+    {
+      "slot": "L117x7",
+      "stages": 6,
+      "bits": 12,
+      "internal_legs": 60,
+      "max_internal_hop_um": 358.02,
+      "over405": 0
+    },
+    {
+      "slot": "L138x7",
+      "stages": 6,
+      "bits": 3,
+      "internal_legs": 15,
+      "max_internal_hop_um": 347.4900000000001,
+      "over405": 0
+    },
+    {
+      "slot": "L5r0_1",
+      "stages": 8,
+      "bits": 2726,
+      "internal_legs": 19082,
+      "max_internal_hop_um": 405.0,
+      "over405": 0
+    },
+    {
+      "slot": "L34r0_1",
+      "stages": 6,
+      "bits": 1616,
+      "internal_legs": 8080,
+      "max_internal_hop_um": 405.0000000000001,
+      "over405": 0
+    },
+    {
+      "slot": "L35r0_1",
+      "stages": 6,
+      "bits": 1616,
+      "internal_legs": 8080,
+      "max_internal_hop_um": 404.46500000000015,
+      "over405": 0
+    },
+    {
+      "slot": "L6br0_1",
+      "stages": 4,
+      "bits": 829,
+      "internal_legs": 2487,
+      "max_internal_hop_um": 405.0000000000002,
+      "over405": 0
+    }
+  ],
+  "interface_seams": [
+    {
+      "port": "L48_t7_0",
+      "src": "NW_su30.L48x7_o",
+      "dst": "NW_su31.L48x10_i",
+      "bits": 635,
+      "max_hop_um": 362.57500000000255,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L48_t7_1",
+      "src": "NW_su31.L48x10_o",
+      "dst": "NW_b110.L48x9_i",
+      "bits": 635,
+      "max_hop_um": 361.3689999999997,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L53_t1_2",
+      "src": "NW_b110.L53x3_o",
+      "dst": "NW_su31.L53x2_i",
+      "bits": 613,
+      "max_hop_um": 317.1910000000007,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L53_t1_3",
+      "src": "NW_su31.L53x2_o",
+      "dst": "NW_su30.L53x5_i",
+      "bits": 613,
+      "max_hop_um": 344.26500000000124,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L117_t4_0",
+      "src": "NW_su30.L117x4_o",
+      "dst": "NW_su31.L117x7_i",
+      "bits": 12,
+      "max_hop_um": 346.0270000000028,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L117_t4_1",
+      "src": "NW_su31.L117x7_o",
+      "dst": "NW_b110.L117x6_i",
+      "bits": 12,
+      "max_hop_um": 111.66100000000097,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L138_t4_0",
+      "src": "NW_su30.L138x4_o",
+      "dst": "NW_su31.L138x7_i",
+      "bits": 3,
+      "max_hop_um": 344.62300000000323,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L138_t4_1",
+      "src": "NW_su31.L138x7_o",
+      "dst": "NW_b110.L138x6_i",
+      "bits": 3,
+      "max_hop_um": 111.1850000000004,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L5_r0_0",
+      "src": "NW_hub.L5_o",
+      "dst": "NW_su31.L5r0_1_i",
+      "bits": 2726,
+      "max_hop_um": 1.000000000001819,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L5_r0_1",
+      "src": "NW_su31.L5r0_1_o",
+      "dst": "NW_b110.L5_i",
+      "bits": 2726,
+      "max_hop_um": 404.9210000000003,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L174_r0_0",
+      "src": "NW_hub.L174_o",
+      "dst": "NW_su31.L174_i",
+      "bits": 2173,
+      "max_hop_um": 1.8189894035458565e-12,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L34_r0_0",
+      "src": "NW_hub.L34_o",
+      "dst": "NW_su31.L34r0_1_i",
+      "bits": 1616,
+      "max_hop_um": 1.000000000001819,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L34_r0_1",
+      "src": "NW_su31.L34r0_1_o",
+      "dst": "NW_sm3.L34_i",
+      "bits": 1616,
+      "max_hop_um": 404.4990000000025,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L35_r0_0",
+      "src": "NW_hub.L35_o",
+      "dst": "NW_su31.L35r0_1_i",
+      "bits": 1616,
+      "max_hop_um": 1.000000000001819,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L35_r0_1",
+      "src": "NW_su31.L35r0_1_o",
+      "dst": "NW_sm3.L35_i",
+      "bits": 1616,
+      "max_hop_um": 390.95900000000256,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L39_r0_0",
+      "src": "NW_hub.L39_o",
+      "dst": "NW_su31.L39_i",
+      "bits": 1330,
+      "max_hop_um": 1.8189894035458565e-12,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L181_r0_0",
+      "src": "NW_su31.L181_o",
+      "dst": "NW_su30.L181r0_1_i",
+      "bits": 1109,
+      "max_hop_um": 1.000000000001819,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L6b_r0_0",
+      "src": "NW_hub.L6b_o",
+      "dst": "NW_su31.L6br0_1_i",
+      "bits": 829,
+      "max_hop_um": 1.000000000001819,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L6b_r0_1",
+      "src": "NW_su31.L6br0_1_o",
+      "dst": "NW_b110.L6br0_2_i",
+      "bits": 829,
+      "max_hop_um": 310.9509999999991,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L61_r0_0",
+      "src": "NW_su31.L61_o",
+      "dst": "NW_hub.L61_i",
+      "bits": 515,
+      "max_hop_um": 1.8189894035458565e-12,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L105_r0_0",
+      "src": "NW_hub.L105_o",
+      "dst": "NW_su31.L105_i",
+      "bits": 22,
+      "max_hop_um": 1.8189894035458565e-12,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L131_r0_0",
+      "src": "NW_su31.L131_o",
+      "dst": "NW_hub.L131_i",
+      "bits": 5,
+      "max_hop_um": 1.8189894035458565e-12,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L400_0",
+      "src": "NW_su30.L400_o",
+      "dst": "NW_su31.L400_i",
+      "bits": 3357,
+      "max_hop_um": 1.8189894035458565e-12,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L402_0",
+      "src": "NW_su31.L402_o",
+      "dst": "NW_su30.L402_i",
+      "bits": 1400,
+      "max_hop_um": 1.8189894035458565e-12,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    },
+    {
+      "port": "L736_3",
+      "src": "NW_su30.L736x3_o",
+      "dst": "NW_su31.L736_i",
+      "bits": 2,
+      "max_hop_um": 5.888000000003558,
+      "over405": 0,
+      "pin_mismatch": 0,
+      "example": null
+    }
+  ],
+  "conservative_4p32_halo_diagnostic": {
+    "L48x10": 2454,
+    "L53x2": 2197,
+    "L117x7": 28,
+    "L138x7": 6,
+    "L5r0_1": 0,
+    "L34r0_1": 0,
+    "L35r0_1": 0,
+    "L6br0_1": 0
+  },
+  "current_soft_clock_ports_inside_G2_obstacles": [
+    "clk_t9",
+    "clk_t14"
+  ],
+  "clock_status": "HOLD_DENSITY_SOURCE_PARENT_JOIN",
+  "scope": "Exact normal-FT constructor centres and die-oriented neighbor pin/first-register models. No placed/routed capture, timing, PDN, reset, source-profile or full die credit."
+}

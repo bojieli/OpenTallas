@@ -1,0 +1,34 @@
+{
+  "status": "READY_FT_GEOMETRY_ONLY_FULL_KIT_CLOCK_BLOCKED",
+  "sha256": "428c7f804f083eced14013b46037087aedaf842cbe9b89052171d14f5b201afe",
+  "type": "q_su31__physical_v1",
+  "outline_um": [
+    1831.68,
+    1555.2
+  ],
+  "ft_slots": 8,
+  "internal_FF_bodies": 46540,
+  "all_actual_native_constructor_hops_max_um": 405.0,
+  "all_actual_native_neighbor_hops_max_um": 404.921,
+  "canonical_macro_body_gate_hits": 0,
+  "clock_ports_inside_obstacles": [
+    "clk_t9",
+    "clk_t14"
+  ],
+  "soft_FF_lower_bound": 64503,
+  "minimum_soft_taps_at1500": 44,
+  "added_FF_vs_native7_L5": 2726,
+  "added_NW_L5_cycles": 1,
+  "added_ps_per_traversal": 833,
+  "source_delay_miter": "codex/hbm-token-2038@a932bbf1a",
+  "execution_host": "intel1",
+  "unit": "oth-ubuntu-1197555-1793601259",
+  "solver_wall_s": 1458.73,
+  "solver_rss_kb": 655088,
+  "physical_route_dispatched": false,
+  "holds": [
+    "clock density/entry source",
+    "local reset/source profile/PG/timing",
+    "parent coherent d44r/native R8 and model/programme joins"
+  ]
+}

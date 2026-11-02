@@ -1,0 +1,20 @@
+{
+  "status": "READY_FT_GEOMETRY_ONLY_FULL_KIT_CLOCK_BLOCKED",
+  "sha256": "ed22d0b27e53de14a0a656a1bcc3996cdff26f811c961c3e86c49ed57d2c94b9",
+  "internal_FF_bodies": 43814,
+  "internal_R2R_constructor_legs": 43814,
+  "max_internal_hop_um": 404.73,
+  "interface_ports": 25,
+  "interface_bits": 26013,
+  "max_interface_hop_um": 399.033,
+  "canonical_body_hits": 0,
+  "full_G2_obstacles": 9,
+  "clock_pins_inside_obstacles": [
+    "clk_t9",
+    "clk_t14"
+  ],
+  "soft_FF": 61777,
+  "soft_clock_ports": 20,
+  "no_added_cycles": true,
+  "route": false
+}

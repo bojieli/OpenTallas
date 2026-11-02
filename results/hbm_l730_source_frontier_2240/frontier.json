@@ -1,0 +1,427 @@
+{
+  "status": "FAIL_UNSITED_SOURCE_TO_FACE_AND_NATIVE_VIEW_JOIN",
+  "source13_bout": "u_bout_L730_o: direct raw producer wires into one ot_dp_st W1662; no source relay chain",
+  "data_bits": 1662,
+  "epoch_bits": 1,
+  "type_results": [
+    {
+      "variant": "old",
+      "type": "q_b113",
+      "window": [
+        647.648,
+        924.8147
+      ],
+      "groups": [
+        {
+          "core": "u_sfucore_Q_ctl",
+          "source_port": "u_core_u_engine_u_arithmetic_procdff_71639__Q",
+          "lane_data_bits": [
+            0,
+            1021
+          ],
+          "source_bits": [
+            0,
+            1021
+          ],
+          "core_bbox_um": [
+            388.8,
+            924.48,
+            1058.4,
+            1550.88
+          ],
+          "min_possible_source_to_face_um": [
+            904.784,
+            1074.848
+          ],
+          "guaranteed_over405": 1022,
+          "minimum_extra_relay_banks_per_bit": [
+            2,
+            2
+          ],
+          "exact_selected_source_ports_missing_from_pinfile": 1022
+        },
+        {
+          "core": "u_sfucore_Q_opstore_a",
+          "source_port": "cmd0_Q",
+          "lane_data_bits": [
+            1022,
+            1341
+          ],
+          "source_bits": [
+            576,
+            895
+          ],
+          "core_bbox_um": [
+            1080.0,
+            941.76,
+            1840.3200000000002,
+            1425.6
+          ],
+          "min_possible_source_to_face_um": [
+            86.768,
+            140.024
+          ],
+          "guaranteed_over405": 0,
+          "minimum_extra_relay_banks_per_bit": [
+            0,
+            0
+          ],
+          "exact_selected_source_ports_missing_from_pinfile": 320
+        },
+        {
+          "core": "u_sfucore_Q_opstore_b",
+          "source_port": "cmd0_Q",
+          "lane_data_bits": [
+            1342,
+            1661
+          ],
+          "source_bits": [
+            576,
+            895
+          ],
+          "core_bbox_um": [
+            656.64,
+            216.0,
+            1416.96,
+            907.2
+          ],
+          "min_possible_source_to_face_um": [
+            439.64,
+            457.088
+          ],
+          "guaranteed_over405": 320,
+          "minimum_extra_relay_banks_per_bit": [
+            1,
+            1
+          ],
+          "exact_selected_source_ports_missing_from_pinfile": 320
+        }
+      ],
+      "internal_stations_claiming_L730": []
+    },
+    {
+      "variant": "old",
+      "type": "q_b113__physical_v1",
+      "window": [
+        647.648,
+        924.8147
+      ],
+      "groups": [
+        {
+          "core": "u_sfucore_Q_ctl",
+          "source_port": "u_core_u_engine_u_arithmetic_procdff_71639__Q",
+          "lane_data_bits": [
+            0,
+            1021
+          ],
+          "source_bits": [
+            0,
+            1021
+          ],
+          "core_bbox_um": [
+            388.8,
+            924.48,
+            1058.4,
+            1550.88
+          ],
+          "min_possible_source_to_face_um": [
+            904.784,
+            1074.848
+          ],
+          "guaranteed_over405": 1022,
+          "minimum_extra_relay_banks_per_bit": [
+            2,
+            2
+          ],
+          "exact_selected_source_ports_missing_from_pinfile": 1022
+        },
+        {
+          "core": "u_sfucore_Q_opstore_a",
+          "source_port": "cmd0_Q",
+          "lane_data_bits": [
+            1022,
+            1341
+          ],
+          "source_bits": [
+            576,
+            895
+          ],
+          "core_bbox_um": [
+            1080.0,
+            941.76,
+            1840.3200000000002,
+            1425.6
+          ],
+          "min_possible_source_to_face_um": [
+            86.768,
+            140.024
+          ],
+          "guaranteed_over405": 0,
+          "minimum_extra_relay_banks_per_bit": [
+            0,
+            0
+          ],
+          "exact_selected_source_ports_missing_from_pinfile": 320
+        },
+        {
+          "core": "u_sfucore_Q_opstore_b",
+          "source_port": "cmd0_Q",
+          "lane_data_bits": [
+            1342,
+            1661
+          ],
+          "source_bits": [
+            576,
+            895
+          ],
+          "core_bbox_um": [
+            656.64,
+            216.0,
+            1416.96,
+            907.2
+          ],
+          "min_possible_source_to_face_um": [
+            439.64,
+            457.088
+          ],
+          "guaranteed_over405": 320,
+          "minimum_extra_relay_banks_per_bit": [
+            1,
+            1
+          ],
+          "exact_selected_source_ports_missing_from_pinfile": 320
+        }
+      ],
+      "internal_stations_claiming_L730": []
+    },
+    {
+      "variant": "new",
+      "type": "q_b113",
+      "window": [
+        136.128,
+        413.2947
+      ],
+      "groups": [
+        {
+          "core": "u_sfucore_Q_ctl",
+          "source_port": "u_core_u_engine_u_arithmetic_procdff_71639__Q",
+          "lane_data_bits": [
+            0,
+            1021
+          ],
+          "source_bits": [
+            0,
+            1021
+          ],
+          "core_bbox_um": [
+            388.8,
+            924.48,
+            1058.4,
+            1550.88
+          ],
+          "min_possible_source_to_face_um": [
+            1416.272,
+            1586.384
+          ],
+          "guaranteed_over405": 1022,
+          "minimum_extra_relay_banks_per_bit": [
+            3,
+            3
+          ],
+          "exact_selected_source_ports_missing_from_pinfile": 1022
+        },
+        {
+          "core": "u_sfucore_Q_opstore_a",
+          "source_port": "cmd0_Q",
+          "lane_data_bits": [
+            1022,
+            1341
+          ],
+          "source_bits": [
+            576,
+            895
+          ],
+          "core_bbox_um": [
+            1080.0,
+            941.76,
+            1840.3200000000002,
+            1425.6
+          ],
+          "min_possible_source_to_face_um": [
+            598.256,
+            651.64
+          ],
+          "guaranteed_over405": 320,
+          "minimum_extra_relay_banks_per_bit": [
+            1,
+            1
+          ],
+          "exact_selected_source_ports_missing_from_pinfile": 320
+        },
+        {
+          "core": "u_sfucore_Q_opstore_b",
+          "source_port": "cmd0_Q",
+          "lane_data_bits": [
+            1342,
+            1661
+          ],
+          "source_bits": [
+            576,
+            895
+          ],
+          "core_bbox_um": [
+            656.64,
+            216.0,
+            1416.96,
+            907.2
+          ],
+          "min_possible_source_to_face_um": [
+            439.64,
+            439.64
+          ],
+          "guaranteed_over405": 320,
+          "minimum_extra_relay_banks_per_bit": [
+            1,
+            1
+          ],
+          "exact_selected_source_ports_missing_from_pinfile": 320
+        }
+      ],
+      "internal_stations_claiming_L730": []
+    },
+    {
+      "variant": "new",
+      "type": "q_b113__physical_v1",
+      "window": [
+        136.128,
+        413.2947
+      ],
+      "groups": [
+        {
+          "core": "u_sfucore_Q_ctl",
+          "source_port": "u_core_u_engine_u_arithmetic_procdff_71639__Q",
+          "lane_data_bits": [
+            0,
+            1021
+          ],
+          "source_bits": [
+            0,
+            1021
+          ],
+          "core_bbox_um": [
+            388.8,
+            924.48,
+            1058.4,
+            1550.88
+          ],
+          "min_possible_source_to_face_um": [
+            1416.272,
+            1586.384
+          ],
+          "guaranteed_over405": 1022,
+          "minimum_extra_relay_banks_per_bit": [
+            3,
+            3
+          ],
+          "exact_selected_source_ports_missing_from_pinfile": 1022
+        },
+        {
+          "core": "u_sfucore_Q_opstore_a",
+          "source_port": "cmd0_Q",
+          "lane_data_bits": [
+            1022,
+            1341
+          ],
+          "source_bits": [
+            576,
+            895
+          ],
+          "core_bbox_um": [
+            1080.0,
+            941.76,
+            1840.3200000000002,
+            1425.6
+          ],
+          "min_possible_source_to_face_um": [
+            598.256,
+            651.64
+          ],
+          "guaranteed_over405": 320,
+          "minimum_extra_relay_banks_per_bit": [
+            1,
+            1
+          ],
+          "exact_selected_source_ports_missing_from_pinfile": 320
+        },
+        {
+          "core": "u_sfucore_Q_opstore_b",
+          "source_port": "cmd0_Q",
+          "lane_data_bits": [
+            1342,
+            1661
+          ],
+          "source_bits": [
+            576,
+            895
+          ],
+          "core_bbox_um": [
+            656.64,
+            216.0,
+            1416.96,
+            907.2
+          ],
+          "min_possible_source_to_face_um": [
+            439.64,
+            439.64
+          ],
+          "guaranteed_over405": 320,
+          "minimum_extra_relay_banks_per_bit": [
+            1,
+            1
+          ],
+          "exact_selected_source_ports_missing_from_pinfile": 320
+        }
+      ],
+      "internal_stations_claiming_L730": []
+    }
+  ],
+  "actual_port_pin_join": "HOLD: legacy pin files expose no exact selected source port names; no alias inferred",
+  "extra_source_cycles_adopted": 0,
+  "scope": "Bounding-box lower bounds only prove failure; they do not qualify actual selected port locations or constitute a repair.",
+  "candidate_lane_latency_before_source_repair": {
+    "L730": {
+      "cycles": 45,
+      "stations": 43,
+      "boundary": 2,
+      "faces": 8,
+      "fixed": 0,
+      "natural": 45,
+      "pad": 0
+    },
+    "L730m": {
+      "cycles": 45,
+      "stations": 43,
+      "boundary": 2,
+      "faces": 8,
+      "fixed": 0,
+      "natural": 45,
+      "pad": 0
+    }
+  },
+  "candidate_lane_latency_min_after_source_repair": {
+    "L730": 48,
+    "L730m": 48
+  },
+  "new_lower_bound_repair_price_per_type": {
+    "ctl_extra_banks": 3,
+    "opstore_a_extra_banks": 1,
+    "opstore_b_extra_banks": 1,
+    "unaligned_data_FF_min": 3706,
+    "aligned_three_cycle_data_FF_min": 4986,
+    "aligned_three_cycle_epoch_FF_min": 3,
+    "aligned_latency_added_cycles_at_least": 3,
+    "clock_ps": 833,
+    "aligned_latency_added_ps_at_least": 2499,
+    "note": "This is a lower bound, not legal bank placement. Exact source pins/current physical views, body/clock/reset/source/miter/model joins required. Existing old placement already needed at least2 added ctl banks; move increases this minimum by1."
+  }
+}

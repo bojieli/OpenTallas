@@ -1,0 +1,19 @@
+{
+  "status": "FAIL",
+  "hits": 941,
+  "findings": [
+    {
+      "level": "ERROR",
+      "check": "geometry",
+      "msg": "type q_su31 slot L5r0_1: 900 actual-bit station cells/sites intersect physical macros (stage 6, bit 0, macro u_cxdl_Q3_s)",
+      "type": "q_su31"
+    },
+    {
+      "level": "ERROR",
+      "check": "geometry",
+      "msg": "type q_su31 slot L6br0_1: 41 actual-bit station cells/sites intersect physical macros (stage 3, bit 0, macro u_fl_Q3)",
+      "type": "q_su31"
+    }
+  ],
+  "scope": "Canonicalcheck.check_ft_macro_sites for only q_su31, including probe_blockages and exact internal FF rectangles; conservative4.32halo diagnostic retained separately."
+}
