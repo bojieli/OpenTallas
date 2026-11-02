@@ -339,5 +339,11 @@
       0.27
     ],
     "new_TAP_census_required_after_FP": true
-  }
+  },
+  "disabled_parent_origin_shift_um": [
+    47.52,
+    112.32
+  ],
+  "new_core_strictly_inside_old_child_bbox": true,
+  "parent_phase_preserved": "Both shifts are4.32um multiples; existing orientations and declared track offsets retained"
 }

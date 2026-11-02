@@ -43,6 +43,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
     ]
   },
   {
@@ -89,6 +120,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
     ]
   },
   {
@@ -135,6 +197,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
     ]
   },
   {
@@ -181,6 +274,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        907.2
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      993.636
     ]
   },
   {
@@ -227,6 +351,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
     ]
   },
   {
@@ -273,6 +428,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        907.2
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      993.636
     ]
   },
   {
@@ -319,6 +505,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        907.2
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      993.636
     ]
   },
   {
@@ -365,6 +582,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
     ]
   },
   {
@@ -411,6 +659,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        907.2
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      993.636
     ]
   },
   {
@@ -457,6 +736,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
     ]
   },
   {
@@ -503,6 +813,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
     ]
   },
   {
@@ -549,6 +890,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
     ]
   },
   {
@@ -595,6 +967,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
     ]
   },
   {
@@ -641,6 +1044,37 @@
       "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
       "real child view and measured parent timing/clock contract refreshed",
       "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        907.2
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      993.636
     ]
   }
 ]
