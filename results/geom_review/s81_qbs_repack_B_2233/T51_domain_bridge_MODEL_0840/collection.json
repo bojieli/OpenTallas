@@ -1,0 +1,1989 @@
+{
+  "scope": "Independent integer fullpopulation source-model audit and attribution of already-computed remaining240/1207.5 cut; no layout/capacity rerun/CAD",
+  "all_native_bodies": 323283,
+  "targets": 12995,
+  "FFtargets": 3707,
+  "DATA_targets": 9288,
+  "TAP137673_fixed": true,
+  "all_other_actual_bodies_fixed": 310288,
+  "row_site_failures": [],
+  "master_orient_dimension_failures": [],
+  "new_target_overlaps": [],
+  "other_band_hits": [],
+  "clock_source_membership_limit": "Actual native FF roots unchanged. Proposed clock assignment is source planning taps.assign using FF centres, not installed Tcl PRE_CTS or phase. Actual TCL uses instance location and optional reset-follow. Both geometric radius results and same-candidate LL sensitivity explicitly retained.",
+  "clock_diagnosis": {
+    "actual_baseline": {
+      "radius_violation_FFs": 1151,
+      "by_native_family": {
+        "u_bound.u_cland_ft3_i": 14,
+        "u_bound.u_ft_ft2_o_1": 143,
+        "u_bound.u_ft_ft5_o_3": 70,
+        "u_bound.u_ft_ft6_o_1": 515,
+        "ft6_stage2": 242,
+        "u_bound.u_ft_ft6_o_3": 167
+      },
+      "same_candidate_assignment_TCL_location_over150": 1141,
+      "actual_fixed_source_root_family": "clk(_tN)? only; source hook configured root clk; forwarded fclk excluded"
+    },
+    "joint_model": {
+      "radius_violation_FFs": 1079,
+      "by_native_family": {
+        "u_bound.u_cland_ft3_i": 14,
+        "u_bound.u_ft_ft2_o_1": 143,
+        "u_bound.u_ft_ft5_o_3": 70,
+        "u_bound.u_ft_ft6_o_1": 515,
+        "ft6_stage2": 170,
+        "u_bound.u_ft_ft6_o_3": 167
+      },
+      "same_candidate_assignment_TCL_location_over150": 1073,
+      "actual_fixed_source_root_family": "clk(_tN)? only; source hook configured root clk; forwarded fclk excluded"
+    },
+    "delta": {
+      "newly_bad": 60,
+      "resolved": 132,
+      "new_bad_names": [
+        "u_bound.u_ft_ft6_o_2/q\\[10\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[112\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[11\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[12\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[134\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[13\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[14\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[150\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[15\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[163\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[16\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[177\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[17\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[18\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[19\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[20\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[21\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[225\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[226\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[23\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[24\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[25\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[264\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[26\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[27\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[28\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[29\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[305\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[308\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[30\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[31\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[32\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[34\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[35\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[39\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[45\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[46\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[47\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[48\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[49\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[52\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[53\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[55\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[62\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[63\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[64\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[66\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[67\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[6\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[75\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[76\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[77\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[79\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[80\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[8\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[91\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[92\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[96\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[97\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[9\\]$_DFF_P_"
+      ],
+      "resolved_names": [
+        "u_bound.u_ft_ft6_o_2/q\\[194\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[195\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[207\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[209\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[211\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[224\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[227\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[228\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[229\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[232\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[243\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[244\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[245\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[246\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[248\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[249\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[259\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[260\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[261\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[262\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[263\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[265\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[266\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[267\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[268\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[271\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[278\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[279\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[280\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[281\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[282\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[283\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[284\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[285\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[288\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[289\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[296\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[297\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[299\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[300\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[301\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[302\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[303\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[309\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[310\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[311\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[313\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[314\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[315\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[318\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[319\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[321\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[322\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[324\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[325\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[330\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[331\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[332\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[333\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[334\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[336\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[340\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[341\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[343\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[344\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[346\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[354\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[355\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[356\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[357\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[359\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[360\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[362\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[363\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[366\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[368\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[374\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[377\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[378\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[379\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[380\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[381\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[382\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[383\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[384\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[385\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[388\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[389\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[400\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[401\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[402\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[403\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[404\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[405\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[406\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[407\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[412\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[413\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[423\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[425\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[426\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[427\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[428\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[429\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[430\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[431\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[433\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[434\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[435\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[445\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[450\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[453\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[454\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[455\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[456\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[457\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[458\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[459\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[472\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[477\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[478\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[480\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[481\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[484\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[485\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[499\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[500\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[507\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[508\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[509\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[512\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[513\\]$_DFF_P_"
+      ],
+      "candidate_moved_bad_details": [
+        {
+          "name": "u_bound.u_ft_ft6_o_2/eq$_DFF_PN0_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.12760000000003,
+          "same_assignment_TCL_location_distance_um": 155.56060000000002
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[0\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t28",
+          "distance_um": 158.913,
+          "same_assignment_TCL_location_distance_um": 158.23799999999994
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[10\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 155.17880000000002,
+          "same_assignment_TCL_location_distance_um": 155.8538000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[112\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.26480000000015,
+          "same_assignment_TCL_location_distance_um": 150.9398000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[11\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.8008000000001,
+          "same_assignment_TCL_location_distance_um": 155.47580000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[12\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.85280000000012,
+          "same_assignment_TCL_location_distance_um": 157.52780000000007
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[134\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.64280000000002,
+          "same_assignment_TCL_location_distance_um": 151.3178000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[13\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.55880000000008,
+          "same_assignment_TCL_location_distance_um": 154.23380000000014
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[14\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 155.44880000000006,
+          "same_assignment_TCL_location_distance_um": 156.12380000000013
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[150\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 151.34480000000008,
+          "same_assignment_TCL_location_distance_um": 152.01980000000015
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[15\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 159.66080000000017,
+          "same_assignment_TCL_location_distance_um": 160.33580000000012
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[163\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.21080000000012,
+          "same_assignment_TCL_location_distance_um": 150.88580000000007
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[16\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 157.3388000000001,
+          "same_assignment_TCL_location_distance_um": 158.01380000000006
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[177\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.64080000000013,
+          "same_assignment_TCL_location_distance_um": 153.31580000000008
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[17\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.45080000000013,
+          "same_assignment_TCL_location_distance_um": 154.12580000000008
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[18\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 160.7408000000001,
+          "same_assignment_TCL_location_distance_um": 161.41580000000016
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[19\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 158.0408000000001,
+          "same_assignment_TCL_location_distance_um": 158.71580000000006
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[1\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t28",
+          "distance_um": 159.2369999999999,
+          "same_assignment_TCL_location_distance_um": 158.56199999999995
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[20\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 158.58080000000012,
+          "same_assignment_TCL_location_distance_um": 159.25580000000008
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[21\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 159.98480000000012,
+          "same_assignment_TCL_location_distance_um": 160.65980000000008
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[225\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 151.02080000000007,
+          "same_assignment_TCL_location_distance_um": 151.69580000000013
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[226\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.0988000000001,
+          "same_assignment_TCL_location_distance_um": 154.77380000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[22\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 162.4688000000001,
+          "same_assignment_TCL_location_distance_um": 163.14380000000006
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[23\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 159.9308000000001,
+          "same_assignment_TCL_location_distance_um": 160.60580000000016
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[24\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 158.52680000000004,
+          "same_assignment_TCL_location_distance_um": 159.2018000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[25\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 161.1728000000001,
+          "same_assignment_TCL_location_distance_um": 161.84780000000006
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[264\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 155.9348000000001,
+          "same_assignment_TCL_location_distance_um": 156.60980000000006
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[26\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.91280000000006,
+          "same_assignment_TCL_location_distance_um": 151.58780000000002
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[27\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 151.77680000000004,
+          "same_assignment_TCL_location_distance_um": 152.4518000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[287\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.02560000000005,
+          "same_assignment_TCL_location_distance_um": 149.62059999999997
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[28\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.45080000000013,
+          "same_assignment_TCL_location_distance_um": 154.12580000000008
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[29\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.53080000000006,
+          "same_assignment_TCL_location_distance_um": 155.20580000000012
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[2\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t28",
+          "distance_um": 157.67099999999994,
+          "same_assignment_TCL_location_distance_um": 156.99599999999998
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[304\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.5116,
+          "same_assignment_TCL_location_distance_um": 150.10660000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[305\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.37080000000014,
+          "same_assignment_TCL_location_distance_um": 153.0458000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[306\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.72760000000005,
+          "same_assignment_TCL_location_distance_um": 150.32260000000008
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[308\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.75080000000008,
+          "same_assignment_TCL_location_distance_um": 151.42580000000004
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[30\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.21080000000012,
+          "same_assignment_TCL_location_distance_um": 150.88580000000007
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[31\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.6948000000001,
+          "same_assignment_TCL_location_distance_um": 153.36980000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[323\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.88760000000002,
+          "same_assignment_TCL_location_distance_um": 152.48260000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[326\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 151.10559999999998,
+          "same_assignment_TCL_location_distance_um": 150.7006
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[327\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.04960000000005,
+          "same_assignment_TCL_location_distance_um": 152.64459999999997
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[328\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.48160000000001,
+          "same_assignment_TCL_location_distance_um": 153.07659999999993
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[32\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.63880000000012,
+          "same_assignment_TCL_location_distance_um": 155.31380000000007
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[345\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.77759999999995,
+          "same_assignment_TCL_location_distance_um": 154.37259999999998
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[347\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.7276,
+          "same_assignment_TCL_location_distance_um": 150.32260000000002
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[348\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.61760000000004,
+          "same_assignment_TCL_location_distance_um": 152.21259999999995
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[349\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.61559999999997,
+          "same_assignment_TCL_location_distance_um": 154.2106
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[34\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 151.56080000000009,
+          "same_assignment_TCL_location_distance_um": 152.23580000000015
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[350\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.40159999999997,
+          "same_assignment_TCL_location_distance_um": 151.9966
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[353\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.34960000000007,
+          "same_assignment_TCL_location_distance_um": 149.94459999999998
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[358\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 157.31560000000002,
+          "same_assignment_TCL_location_distance_um": 156.91060000000004
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[35\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.4208000000001,
+          "same_assignment_TCL_location_distance_um": 157.09580000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[367\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.18760000000003,
+          "same_assignment_TCL_location_distance_um": 149.78259999999995
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[369\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 151.91559999999998,
+          "same_assignment_TCL_location_distance_um": 151.5106
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[370\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.01960000000003,
+          "same_assignment_TCL_location_distance_um": 155.61460000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[371\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.6696,
+          "same_assignment_TCL_location_distance_um": 154.26460000000003
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[372\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.58959999999996,
+          "same_assignment_TCL_location_distance_um": 153.1846
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[373\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.1816,
+          "same_assignment_TCL_location_distance_um": 155.77660000000003
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[375\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 157.96359999999999,
+          "same_assignment_TCL_location_distance_um": 157.5586
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[376\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 151.80760000000004,
+          "same_assignment_TCL_location_distance_um": 151.40259999999995
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[390\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.45559999999995,
+          "same_assignment_TCL_location_distance_um": 152.05059999999997
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[391\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.58959999999996,
+          "same_assignment_TCL_location_distance_um": 153.1846
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[392\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.23560000000003,
+          "same_assignment_TCL_location_distance_um": 155.83060000000006
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[393\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 157.36960000000005,
+          "same_assignment_TCL_location_distance_um": 156.96459999999996
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[394\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.34359999999998,
+          "same_assignment_TCL_location_distance_um": 155.9386
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[395\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 157.42359999999996,
+          "same_assignment_TCL_location_distance_um": 157.0186
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[396\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 158.5036,
+          "same_assignment_TCL_location_distance_um": 158.09860000000003
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[397\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 159.58360000000005,
+          "same_assignment_TCL_location_distance_um": 159.17860000000007
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[398\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.3736,
+          "same_assignment_TCL_location_distance_um": 152.96860000000004
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[399\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.02560000000005,
+          "same_assignment_TCL_location_distance_um": 149.62059999999997
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[39\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 151.23680000000013,
+          "same_assignment_TCL_location_distance_um": 151.91180000000008
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[3\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t28",
+          "distance_um": 160.42499999999995,
+          "same_assignment_TCL_location_distance_um": 159.75
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[411\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 159.90759999999995,
+          "same_assignment_TCL_location_distance_um": 159.50259999999997
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[414\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.7256,
+          "same_assignment_TCL_location_distance_um": 152.3206
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[415\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.80560000000003,
+          "same_assignment_TCL_location_distance_um": 153.40060000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[416\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 157.74759999999998,
+          "same_assignment_TCL_location_distance_um": 157.3426
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[417\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.93959999999998,
+          "same_assignment_TCL_location_distance_um": 154.5346
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[418\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 158.3956,
+          "same_assignment_TCL_location_distance_um": 157.99060000000003
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[419\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 160.28560000000004,
+          "same_assignment_TCL_location_distance_um": 159.88059999999996
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[420\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.2896,
+          "same_assignment_TCL_location_distance_um": 155.88460000000003
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[421\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.6436,
+          "same_assignment_TCL_location_distance_um": 153.23860000000002
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[422\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 160.6636000000001,
+          "same_assignment_TCL_location_distance_um": 160.2586
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[424\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 163.1476,
+          "same_assignment_TCL_location_distance_um": 162.74260000000004
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[436\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.07960000000003,
+          "same_assignment_TCL_location_distance_um": 149.6746
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[437\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.99559999999997,
+          "same_assignment_TCL_location_distance_um": 152.5906
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[438\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.88560000000007,
+          "same_assignment_TCL_location_distance_um": 154.48059999999998
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[439\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 155.96560000000005,
+          "same_assignment_TCL_location_distance_um": 155.56059999999997
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[440\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 157.09960000000007,
+          "same_assignment_TCL_location_distance_um": 156.69459999999998
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[441\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 160.12360000000007,
+          "same_assignment_TCL_location_distance_um": 159.71859999999998
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[442\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 161.85159999999996,
+          "same_assignment_TCL_location_distance_um": 161.4466
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[443\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 163.47160000000002,
+          "same_assignment_TCL_location_distance_um": 163.06660000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[444\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 163.1476,
+          "same_assignment_TCL_location_distance_um": 162.74260000000004
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[446\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 165.6316,
+          "same_assignment_TCL_location_distance_um": 165.22660000000002
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[447\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 158.82760000000002,
+          "same_assignment_TCL_location_distance_um": 158.42260000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[448\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 158.82760000000002,
+          "same_assignment_TCL_location_distance_um": 158.42260000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[449\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 155.2636,
+          "same_assignment_TCL_location_distance_um": 154.85860000000002
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[451\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.7256,
+          "same_assignment_TCL_location_distance_um": 152.3206
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[452\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.88959999999997,
+          "same_assignment_TCL_location_distance_um": 150.4846
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[45\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.8048000000001,
+          "same_assignment_TCL_location_distance_um": 151.47980000000007
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[460\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 165.41560000000004,
+          "same_assignment_TCL_location_distance_um": 165.01060000000007
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[461\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.61960000000005,
+          "same_assignment_TCL_location_distance_um": 150.21459999999996
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[462\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.07759999999996,
+          "same_assignment_TCL_location_distance_um": 151.67260000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[463\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.88560000000007,
+          "same_assignment_TCL_location_distance_um": 154.48059999999998
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[464\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.6696,
+          "same_assignment_TCL_location_distance_um": 154.26460000000003
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[465\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 158.82760000000007,
+          "same_assignment_TCL_location_distance_um": 158.4226
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[466\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 161.04159999999996,
+          "same_assignment_TCL_location_distance_um": 160.6366
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[467\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 161.2036,
+          "same_assignment_TCL_location_distance_um": 160.79860000000002
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[468\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 164.22760000000005,
+          "same_assignment_TCL_location_distance_um": 163.82259999999997
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[469\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 166.38760000000002,
+          "same_assignment_TCL_location_distance_um": 165.98260000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[46\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.42080000000016,
+          "same_assignment_TCL_location_distance_um": 157.0958000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[470\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 167.46760000000006,
+          "same_assignment_TCL_location_distance_um": 167.06259999999997
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[471\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 162.06760000000003,
+          "same_assignment_TCL_location_distance_um": 161.66259999999994
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[473\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 160.12360000000007,
+          "same_assignment_TCL_location_distance_um": 159.71859999999998
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[474\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.66760000000005,
+          "same_assignment_TCL_location_distance_um": 156.26260000000008
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[475\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.88560000000007,
+          "same_assignment_TCL_location_distance_um": 154.48059999999998
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[476\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.80560000000003,
+          "same_assignment_TCL_location_distance_um": 153.40060000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[479\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 151.21359999999999,
+          "same_assignment_TCL_location_distance_um": 150.80860000000007
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[47\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.3188,
+          "same_assignment_TCL_location_distance_um": 150.99380000000014
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[482\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.61960000000005,
+          "same_assignment_TCL_location_distance_um": 150.21459999999996
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[483\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.8356,
+          "same_assignment_TCL_location_distance_um": 150.43060000000003
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[487\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 167.2516,
+          "same_assignment_TCL_location_distance_um": 166.84660000000002
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[488\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.80560000000003,
+          "same_assignment_TCL_location_distance_um": 153.40060000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[489\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 157.5856,
+          "same_assignment_TCL_location_distance_um": 157.18060000000003
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[48\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.99080000000015,
+          "same_assignment_TCL_location_distance_um": 154.6658000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[490\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 157.69360000000006,
+          "same_assignment_TCL_location_distance_um": 157.28859999999997
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[491\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 160.7176,
+          "same_assignment_TCL_location_distance_um": 160.31260000000003
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[492\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 162.98560000000003,
+          "same_assignment_TCL_location_distance_um": 162.58060000000006
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[493\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 164.82160000000005,
+          "same_assignment_TCL_location_distance_um": 164.41660000000007
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[494\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 165.9016000000001,
+          "same_assignment_TCL_location_distance_um": 165.4966
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[495\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 166.49560000000008,
+          "same_assignment_TCL_location_distance_um": 166.0906
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[496\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t17",
+          "distance_um": 167.43480000000005,
+          "same_assignment_TCL_location_distance_um": 167.83980000000003
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[497\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 164.55160000000006,
+          "same_assignment_TCL_location_distance_um": 164.14659999999998
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[498\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 162.39159999999998,
+          "same_assignment_TCL_location_distance_um": 161.9866
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[49\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.85280000000006,
+          "same_assignment_TCL_location_distance_um": 157.5278
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[4\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t28",
+          "distance_um": 158.589,
+          "same_assignment_TCL_location_distance_um": 157.91399999999993
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[501\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 160.55560000000008,
+          "same_assignment_TCL_location_distance_um": 160.1506
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[502\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 157.5856,
+          "same_assignment_TCL_location_distance_um": 157.18060000000003
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[503\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 155.42560000000003,
+          "same_assignment_TCL_location_distance_um": 155.02059999999994
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[504\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.29560000000004,
+          "same_assignment_TCL_location_distance_um": 149.89060000000006
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[505\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 151.80760000000004,
+          "same_assignment_TCL_location_distance_um": 151.40259999999995
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[506\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.29360000000003,
+          "same_assignment_TCL_location_distance_um": 151.8886
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[510\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 153.80559999999997,
+          "same_assignment_TCL_location_distance_um": 153.4006
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[511\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 155.31760000000003,
+          "same_assignment_TCL_location_distance_um": 154.91260000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[52\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.69280000000015,
+          "same_assignment_TCL_location_distance_um": 155.3678000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[53\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 151.83080000000012,
+          "same_assignment_TCL_location_distance_um": 152.50580000000008
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[55\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.10280000000012,
+          "same_assignment_TCL_location_distance_um": 150.77780000000007
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[5\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t28",
+          "distance_um": 156.4829999999999,
+          "same_assignment_TCL_location_distance_um": 155.80799999999994
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[61\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t28",
+          "distance_um": 161.66700000000003,
+          "same_assignment_TCL_location_distance_um": 160.99199999999996
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[62\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 159.49880000000007,
+          "same_assignment_TCL_location_distance_um": 160.17380000000014
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[63\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 157.6088000000001,
+          "same_assignment_TCL_location_distance_um": 158.28380000000016
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[64\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 154.58480000000014,
+          "same_assignment_TCL_location_distance_um": 155.2598000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[66\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.26280000000014,
+          "same_assignment_TCL_location_distance_um": 152.9378000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[67\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 150.58880000000016,
+          "same_assignment_TCL_location_distance_um": 151.26380000000012
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[6\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.63680000000005,
+          "same_assignment_TCL_location_distance_um": 157.31180000000012
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[72\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t28",
+          "distance_um": 159.8309999999999,
+          "same_assignment_TCL_location_distance_um": 159.15599999999995
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[75\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 161.3348000000001,
+          "same_assignment_TCL_location_distance_um": 162.00980000000004
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[76\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 158.68880000000013,
+          "same_assignment_TCL_location_distance_um": 159.36380000000008
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[77\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 157.0148000000001,
+          "same_assignment_TCL_location_distance_um": 157.68980000000005
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[79\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 155.71880000000004,
+          "same_assignment_TCL_location_distance_um": 156.3938000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[7\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t28",
+          "distance_um": 161.5589999999999,
+          "same_assignment_TCL_location_distance_um": 160.88399999999996
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[80\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 152.74880000000007,
+          "same_assignment_TCL_location_distance_um": 153.42380000000014
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[8\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 156.25880000000006,
+          "same_assignment_TCL_location_distance_um": 156.93380000000013
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[90\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t28",
+          "distance_um": 162.04499999999996,
+          "same_assignment_TCL_location_distance_um": 161.37
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[91\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 161.2808000000001,
+          "same_assignment_TCL_location_distance_um": 161.95580000000007
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[92\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 159.7688000000001,
+          "same_assignment_TCL_location_distance_um": 160.44380000000007
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[96\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 158.09480000000013,
+          "same_assignment_TCL_location_distance_um": 158.7698000000001
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[97\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 155.7188000000001,
+          "same_assignment_TCL_location_distance_um": 156.39380000000006
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[99\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t28",
+          "distance_um": 158.9129999999999,
+          "same_assignment_TCL_location_distance_um": 158.23799999999994
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_2/q\\[9\\]$_DFF_P_",
+          "family": "ft6_stage2",
+          "tap": "clk_t32",
+          "distance_um": 158.41880000000015,
+          "same_assignment_TCL_location_distance_um": 159.0938000000001
+        }
+      ]
+    }
+  },
+  "remaining_original_NW_cut": {
+    "x_window_um": [
+      240,
+      250
+    ],
+    "cut_y_um": 1207.5,
+    "weighted_crossings": 507.9281472813044,
+    "capacity": 481.77083333333337,
+    "util": 1.0542941003028155,
+    "driver_roles": {
+      "fixedPIO": 15.301451247681221,
+      "held_comb": 305.99931508124223,
+      "held_FF": 186.62738095238095
+    },
+    "native_driver_families": {
+      "clk": 0.00697350069735007,
+      "fclk_in_ft3_i[0]": 0.125,
+      "input4554": 0.1,
+      "input4567": 0.5,
+      "input4575": 0.3333333333333333,
+      "input4580": 0.2222222222222222,
+      "input4584": 0.25,
+      "input4585": 0.16666666666666666,
+      "input4586": 0.3448275862068966,
+      "input4603": 0.14285714285714285,
+      "input4605": 0.16666666666666666,
+      "input4606": 0.3448275862068966,
+      "input4607": 0.16666666666666666,
+      "input4621": 1.0,
+      "input4630": 0.5,
+      "input4632": 0.5,
+      "input4633": 0.2564102564102564,
+      "input4637": 0.08333333333333333,
+      "input4638": 0.3333333333333333,
+      "input4641": 0.16666666666666666,
+      "input4663": 0.14285714285714285,
+      "input4664": 0.2857142857142857,
+      "input4666": 0.42857142857142855,
+      "input4675": 0.5,
+      "input4678": 0.03333333333333333,
+      "input4679": 0.03333333333333333,
+      "input4681": 0.06896551724137931,
+      "input4683": 0.35714285714285715,
+      "input4689": 0.2222222222222222,
+      "input4690": 0.6923076923076923,
+      "input4705": 0.0625,
+      "input4716": 0.03508771929824561,
+      "input4830": 0.23255813953488372,
+      "input5011": 0.19230769230769232,
+      "input5013": 0.2127659574468085,
+      "input5039": 0.1724137931034483,
+      "input5047": 0.07142857142857142,
+      "input5053": 0.2,
+      "ft3_i[9]": 0.3448275862068966,
+      "ft3_i[99]": 0.18181818181818182,
+      "ft3_i[98]": 0.18518518518518517,
+      "ft3_i[8]": 0.3333333333333333,
+      "ft3_i[81]": 0.20408163265306123,
+      "ft3_i[80]": 0.19230769230769232,
+      "ft3_i[7]": 0.3448275862068966,
+      "ft3_i[79]": 0.19607843137254902,
+      "ft3_i[78]": 0.18518518518518517,
+      "ft3_i[77]": 0.22727272727272727,
+      "ft3_i[76]": 0.20408163265306123,
+      "ft3_i[75]": 0.23255813953488372,
+      "ft3_i[74]": 0.2222222222222222,
+      "ft3_i[6]": 0.35714285714285715,
+      "ft3_i[5]": 0.38461538461538464,
+      "ft3_i[58]": 0.21739130434782608,
+      "ft3_i[57]": 0.19230769230769232,
+      "ft3_i[56]": 0.19607843137254902,
+      "ft3_i[55]": 0.2,
+      "ft3_i[54]": 0.2222222222222222,
+      "ft3_i[53]": 0.25,
+      "ft3_i[52]": 0.24390243902439024,
+      "ft3_i[51]": 0.2564102564102564,
+      "ft3_i[50]": 0.23809523809523808,
+      "ft3_i[4]": 0.3125,
+      "ft3_i[49]": 0.25,
+      "ft3_i[3]": 0.37037037037037035,
+      "ft3_i[33]": 0.21739130434782608,
+      "ft3_i[32]": 0.2702702702702703,
+      "ft3_i[31]": 0.2631578947368421,
+      "ft3_i[30]": 0.2702702702702703,
+      "ft3_i[2]": 0.3333333333333333,
+      "ft3_i[29]": 0.23809523809523808,
+      "ft3_i[28]": 0.30303030303030304,
+      "ft3_i[27]": 0.30303030303030304,
+      "ft3_i[26]": 0.29411764705882354,
+      "ft3_i[25]": 0.3225806451612903,
+      "ft3_i[206]": 0.12658227848101267,
+      "ft3_i[205]": 0.125,
+      "ft3_i[204]": 0.13157894736842105,
+      "ft3_i[203]": 0.12658227848101267,
+      "ft3_i[202]": 0.14492753623188406,
+      "ft3_i[1]": 0.3225806451612903,
+      "ft3_i[180]": 0.15625,
+      "ft3_i[179]": 0.14705882352941177,
+      "ft3_i[178]": 0.15151515151515152,
+      "ft3_i[177]": 0.14925373134328357,
+      "ft3_i[175]": 0.07547169811320754,
+      "ft3_i[174]": 0.07547169811320754,
+      "ft3_i[173]": 0.09259259259259259,
+      "ft3_i[172]": 0.07692307692307693,
+      "ft3_i[156]": 0.16393442622950818,
+      "ft3_i[154]": 0.15384615384615385,
+      "ft3_i[153]": 0.1694915254237288,
+      "ft3_i[152]": 0.1694915254237288,
+      "ft3_i[151]": 0.15384615384615385,
+      "ft3_i[148]": 0.14,
+      "ft3_i[147]": 0.14,
+      "ft3_i[131]": 0.16666666666666666,
+      "ft3_i[129]": 0.18867924528301888,
+      "ft3_i[128]": 0.18867924528301888,
+      "ft3_i[127]": 0.15873015873015872,
+      "ft3_i[126]": 0.17543859649122806,
+      "ft3_i[125]": 0.16393442622950818,
+      "ft3_i[123]": 0.13636363636363635,
+      "ft3_i[106]": 0.16666666666666666,
+      "ft3_i[105]": 0.16666666666666666,
+      "ft3_i[103]": 0.19230769230769232,
+      "ft3_i[102]": 0.20408163265306123,
+      "ft3_i[101]": 0.17543859649122806,
+      "ft3_i[100]": 0.2,
+      "ft3_i[0]": 0.3333333333333333,
+      "u_bound.u_cland_ft3_i": 436.60537488720973,
+      "u_bound.u_ft_ft8_o_4": 46.5
+    },
+    "net_count": 714,
+    "witnesses": [
+      {
+        "geom_net_index": 9017,
+        "weight": 1.0,
+        "driver": {
+          "name": "input4621",
+          "master": "BUFx2_ASAP7_75t_R",
+          "role": "held_comb",
+          "xy": [
+            243.459,
+            1219.995
+          ]
+        },
+        "endpoints": [
+          {
+            "name": "input4621",
+            "master": "BUFx2_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              243.459,
+              1219.995
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_13601_",
+            "master": "AND3x1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              245.808,
+              1174.365
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_12408_",
+            "master": "AND3x1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              245.808,
+              1174.905
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_11213_",
+            "master": "AND3x1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              244.674,
+              1174.365
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_10038_",
+            "master": "AND2x2_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              244.836,
+              1209.465
+            ]
+          }
+        ]
+      },
+      {
+        "geom_net_index": 70513,
+        "weight": 1.0,
+        "driver": {
+          "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[95\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "held_FF",
+          "xy": [
+            248.61599999999999,
+            1207.305
+          ]
+        },
+        "endpoints": [
+          {
+            "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[95\\]$_DFFE_NP_",
+            "master": "DFFLQNx1_ASAP7_75t_R",
+            "role": "held_FF",
+            "xy": [
+              248.61599999999999,
+              1207.305
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_07139_",
+            "master": "INVx1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              249.23700000000002,
+              1210.545
+            ]
+          }
+        ]
+      },
+      {
+        "geom_net_index": 70536,
+        "weight": 1.0,
+        "driver": {
+          "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[118\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "held_FF",
+          "xy": [
+            248.61599999999999,
+            1205.415
+          ]
+        },
+        "endpoints": [
+          {
+            "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[118\\]$_DFFE_NP_",
+            "master": "DFFLQNx1_ASAP7_75t_R",
+            "role": "held_FF",
+            "xy": [
+              248.61599999999999,
+              1205.415
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_07162_",
+            "master": "INVx1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              249.12900000000002,
+              1209.195
+            ]
+          }
+        ]
+      },
+      {
+        "geom_net_index": 70537,
+        "weight": 1.0,
+        "driver": {
+          "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[119\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "held_FF",
+          "xy": [
+            248.61599999999999,
+            1206.495
+          ]
+        },
+        "endpoints": [
+          {
+            "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[119\\]$_DFFE_NP_",
+            "master": "DFFLQNx1_ASAP7_75t_R",
+            "role": "held_FF",
+            "xy": [
+              248.61599999999999,
+              1206.495
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_07163_",
+            "master": "INVx1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              249.12900000000002,
+              1211.355
+            ]
+          }
+        ]
+      },
+      {
+        "geom_net_index": 70560,
+        "weight": 1.0,
+        "driver": {
+          "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[142\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "held_FF",
+          "xy": [
+            246.24,
+            1204.605
+          ]
+        },
+        "endpoints": [
+          {
+            "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[142\\]$_DFFE_NP_",
+            "master": "DFFLQNx1_ASAP7_75t_R",
+            "role": "held_FF",
+            "xy": [
+              246.24,
+              1204.605
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_07186_",
+            "master": "INVx1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              246.969,
+              1214.325
+            ]
+          }
+        ]
+      },
+      {
+        "geom_net_index": 70561,
+        "weight": 1.0,
+        "driver": {
+          "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[143\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "held_FF",
+          "xy": [
+            246.24,
+            1205.685
+          ]
+        },
+        "endpoints": [
+          {
+            "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[143\\]$_DFFE_NP_",
+            "master": "DFFLQNx1_ASAP7_75t_R",
+            "role": "held_FF",
+            "xy": [
+              246.24,
+              1205.685
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_07187_",
+            "master": "INVx1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              246.969,
+              1210.545
+            ]
+          }
+        ]
+      },
+      {
+        "geom_net_index": 70562,
+        "weight": 1.0,
+        "driver": {
+          "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[144\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "held_FF",
+          "xy": [
+            246.24,
+            1206.765
+          ]
+        },
+        "endpoints": [
+          {
+            "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[144\\]$_DFFE_NP_",
+            "master": "DFFLQNx1_ASAP7_75t_R",
+            "role": "held_FF",
+            "xy": [
+              246.24,
+              1206.765
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_07188_",
+            "master": "INVx1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              249.885,
+              1214.865
+            ]
+          }
+        ]
+      },
+      {
+        "geom_net_index": 70583,
+        "weight": 1.0,
+        "driver": {
+          "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[165\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "held_FF",
+          "xy": [
+            246.24,
+            1203.255
+          ]
+        },
+        "endpoints": [
+          {
+            "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[165\\]$_DFFE_NP_",
+            "master": "DFFLQNx1_ASAP7_75t_R",
+            "role": "held_FF",
+            "xy": [
+              246.24,
+              1203.255
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_07209_",
+            "master": "INVx1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              246.591,
+              1209.195
+            ]
+          }
+        ]
+      },
+      {
+        "geom_net_index": 70584,
+        "weight": 1.0,
+        "driver": {
+          "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[166\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "held_FF",
+          "xy": [
+            246.24,
+            1204.335
+          ]
+        },
+        "endpoints": [
+          {
+            "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[166\\]$_DFFE_NP_",
+            "master": "DFFLQNx1_ASAP7_75t_R",
+            "role": "held_FF",
+            "xy": [
+              246.24,
+              1204.335
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_07210_",
+            "master": "INVx1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              246.969,
+              1209.195
+            ]
+          }
+        ]
+      },
+      {
+        "geom_net_index": 70585,
+        "weight": 1.0,
+        "driver": {
+          "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[167\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "held_FF",
+          "xy": [
+            246.24,
+            1205.415
+          ]
+        },
+        "endpoints": [
+          {
+            "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[167\\]$_DFFE_NP_",
+            "master": "DFFLQNx1_ASAP7_75t_R",
+            "role": "held_FF",
+            "xy": [
+              246.24,
+              1205.415
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_07211_",
+            "master": "INVx1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              246.321,
+              1215.945
+            ]
+          }
+        ]
+      },
+      {
+        "geom_net_index": 70586,
+        "weight": 1.0,
+        "driver": {
+          "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[168\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "held_FF",
+          "xy": [
+            246.24,
+            1206.495
+          ]
+        },
+        "endpoints": [
+          {
+            "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[168\\]$_DFFE_NP_",
+            "master": "DFFLQNx1_ASAP7_75t_R",
+            "role": "held_FF",
+            "xy": [
+              246.24,
+              1206.495
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_07212_",
+            "master": "INVx1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              246.80700000000002,
+              1212.975
+            ]
+          }
+        ]
+      },
+      {
+        "geom_net_index": 70607,
+        "weight": 1.0,
+        "driver": {
+          "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[189\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "held_FF",
+          "xy": [
+            243.864,
+            1202.445
+          ]
+        },
+        "endpoints": [
+          {
+            "name": "u_bound.u_cland_ft3_i/u_ring.s_d\\[0\\]\\[189\\]$_DFFE_NP_",
+            "master": "DFFLQNx1_ASAP7_75t_R",
+            "role": "held_FF",
+            "xy": [
+              243.864,
+              1202.445
+            ]
+          },
+          {
+            "name": "u_bound.u_cland_ft3_i/_07233_",
+            "master": "INVx1_ASAP7_75t_R",
+            "role": "held_comb",
+            "xy": [
+              244.539,
+              1213.245
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

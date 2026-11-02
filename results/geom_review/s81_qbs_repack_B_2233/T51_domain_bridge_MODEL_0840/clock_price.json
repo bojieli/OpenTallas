@@ -1,0 +1,2035 @@
+{
+  "scope": "DISABLED actual52044FF unchanged-root geometric assignment using literal current source39 taps.assign; not a CTS/netlist/phase or reset qualification",
+  "source_plan_sha256": "63447e7ed16070432894f6b331468547c87d70d1b3b01ecd8bec766998026aca",
+  "native_root_counts": {
+    "clk": 39655,
+    "fclk_in_ft13_i[0]": 301,
+    "fclk_in_ft14_i[0]": 301,
+    "fclk_in_ft15_i[0]": 301,
+    "fclk_in_ft16_i[0]": 301,
+    "fclk_in_ft17_i[0]": 301,
+    "fclk_in_ft18_i[0]": 301,
+    "fclk_in_ft2_i[0]": 2077,
+    "fclk_in_ft3_i[0]": 2077,
+    "fclk_in_ft4_i[0]": 1125,
+    "fclk_in_ft5_i[0]": 2077,
+    "fclk_in_ft6_i[0]": 2077,
+    "fclk_in_ft7_i[0]": 1125,
+    "fclk_in_cland_dn_0[0]": 25
+  },
+  "clock_ports_added": 0,
+  "clock_control_FFs_added": 0,
+  "reset_FFs_added": 0,
+  "reset_release_cycles_delta": 0,
+  "functional_pipeline_cycles_delta": 0,
+  "fullgraph_counts_and_R2R_in_model_json": true,
+  "source_forwarded_domains_not_merged_into_mission": true,
+  "planned_source_sink_count_35382_is_not_actual_FF_count": true,
+  "results": {
+    "actual_baseline": {
+      "actual_native_FFs": 52044,
+      "mission_FFs": 39655,
+      "forwarded_FFs": 12389,
+      "declared_taps": 73,
+      "cap": 1500,
+      "radius_um": 150.0,
+      "max_load": 1318.0,
+      "max_radius_um": 200.2645000000001,
+      "bad_taps": [
+        {
+          "tap": "clk_t3",
+          "load": 1190.0,
+          "far_um": 159.27900000000005
+        },
+        {
+          "tap": "clk_t4",
+          "load": 1001.0,
+          "far_um": 158.33699999999993
+        },
+        {
+          "tap": "clk_t9",
+          "load": 1267.0,
+          "far_um": 169.67239999999978
+        },
+        {
+          "tap": "clk_t16",
+          "load": 209.0,
+          "far_um": 164.69900000000004
+        },
+        {
+          "tap": "clk_t17",
+          "load": 612.0,
+          "far_um": 168.9468
+        },
+        {
+          "tap": "clk_t20",
+          "load": 43.0,
+          "far_um": 170.0293999999999
+        },
+        {
+          "tap": "clk_t31",
+          "load": 534.0,
+          "far_um": 200.2645000000001
+        },
+        {
+          "tap": "clk_t32",
+          "load": 1000.0,
+          "far_um": 199.57040000000006
+        },
+        {
+          "tap": "clk_t36",
+          "load": 951.0,
+          "far_um": 164.77300000000008
+        },
+        {
+          "tap": "clk_t48",
+          "load": 719.0,
+          "far_um": 200.17390000000012
+        },
+        {
+          "tap": "clk_t58",
+          "load": 180.0,
+          "far_um": 160.61699999999988
+        }
+      ],
+      "radius_violation_FFs": 1151,
+      "moved_radius_violation_FFs": 242,
+      "radius_witnesses": [
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[310\\]$_DFF_P_",
+          "xy": [
+            886.248,
+            723.465
+          ],
+          "tap": "clk_t31",
+          "distance_um": 200.2645000000001,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[296\\]$_DFF_P_",
+          "xy": [
+            890.568,
+            719.145
+          ],
+          "tap": "clk_t31",
+          "distance_um": 200.2645,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[207\\]$_DFF_P_",
+          "xy": [
+            886.896,
+            722.925
+          ],
+          "tap": "clk_t48",
+          "distance_um": 200.17390000000012,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[160\\]$_DFF_P_",
+          "xy": [
+            888.3,
+            721.3050000000001
+          ],
+          "tap": "clk_t31",
+          "distance_um": 200.15650000000005,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[169\\]$_DFF_P_",
+          "xy": [
+            887.22,
+            722.385
+          ],
+          "tap": "clk_t31",
+          "distance_um": 200.15650000000005,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[144\\]$_DFF_P_",
+          "xy": [
+            888.3,
+            721.575
+          ],
+          "tap": "clk_t48",
+          "distance_um": 200.11990000000003,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[285\\]$_DFF_P_",
+          "xy": [
+            886.14,
+            723.735
+          ],
+          "tap": "clk_t48",
+          "distance_um": 200.11990000000003,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[140\\]$_DFF_P_",
+          "xy": [
+            887.706,
+            721.845
+          ],
+          "tap": "clk_t31",
+          "distance_um": 200.10250000000008,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[14\\]$_DFF_P_",
+          "xy": [
+            888.732,
+            720.765
+          ],
+          "tap": "clk_t31",
+          "distance_um": 200.0485,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[195\\]$_DFF_P_",
+          "xy": [
+            887.3820000000001,
+            722.655
+          ],
+          "tap": "clk_t48",
+          "distance_um": 199.9579,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[231\\]$_DFF_P_",
+          "xy": [
+            890.6759999999999,
+            719.415
+          ],
+          "tap": "clk_t48",
+          "distance_um": 199.90390000000014,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[15\\]$_DFF_P_",
+          "xy": [
+            889.2719999999999,
+            719.955
+          ],
+          "tap": "clk_t31",
+          "distance_um": 199.7785,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[497\\]$_DFF_P_",
+          "xy": [
+            884.8979999999999,
+            725.355
+          ],
+          "tap": "clk_t48",
+          "distance_um": 199.7419000000001,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[470\\]$_DFF_P_",
+          "xy": [
+            883.818,
+            725.355
+          ],
+          "tap": "clk_t31",
+          "distance_um": 199.72450000000003,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[442\\]$_DFF_P_",
+          "xy": [
+            884.6279999999999,
+            724.545
+          ],
+          "tap": "clk_t31",
+          "distance_um": 199.72449999999992,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[331\\]$_DFF_P_",
+          "xy": [
+            886.356,
+            724.005
+          ],
+          "tap": "clk_t48",
+          "distance_um": 199.63390000000004,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[242\\]$_DFF_P_",
+          "xy": [
+            889.38,
+            719.685
+          ],
+          "tap": "clk_t31",
+          "distance_um": 199.61649999999997,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[214\\]$_DFF_P_",
+          "xy": [
+            890.73,
+            719.685
+          ],
+          "tap": "clk_t48",
+          "distance_um": 199.57990000000007,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[6\\]$_DFF_P_",
+          "xy": [
+            891.54,
+            718.875
+          ],
+          "tap": "clk_t48",
+          "distance_um": 199.57990000000007,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[7\\]$_DFF_P_",
+          "xy": [
+            891.54,
+            718.335
+          ],
+          "tap": "clk_t32",
+          "distance_um": 199.57040000000006,
+          "moved": false
+        }
+      ],
+      "tap_table": [
+        {
+          "name": "clk",
+          "xy": [
+            725.04,
+            613.44
+          ],
+          "load": 496.0,
+          "radius_um": 69.07500000000005
+        },
+        {
+          "name": "clk_t1",
+          "xy": [
+            237.96,
+            17.28
+          ],
+          "load": 516.0,
+          "radius_um": 76.365
+        },
+        {
+          "name": "clk_t2",
+          "xy": [
+            549.0,
+            17.28
+          ],
+          "load": 681.0,
+          "radius_um": 116.253
+        },
+        {
+          "name": "clk_t3",
+          "xy": [
+            756.696,
+            17.28
+          ],
+          "load": 1190.0,
+          "radius_um": 159.27900000000005
+        },
+        {
+          "name": "clk_t4",
+          "xy": [
+            1050.12,
+            17.28
+          ],
+          "load": 1001.0,
+          "radius_um": 158.33699999999993
+        },
+        {
+          "name": "clk_t5",
+          "xy": [
+            1356.36,
+            17.28
+          ],
+          "load": 473.0,
+          "radius_um": 90.89699999999988
+        },
+        {
+          "name": "clk_t6",
+          "xy": [
+            1425.6,
+            60.264
+          ],
+          "load": 595.0,
+          "radius_um": 74.22300000000013
+        },
+        {
+          "name": "clk_t7",
+          "xy": [
+            8.64,
+            125.479
+          ],
+          "load": 1013.0,
+          "radius_um": 121.814
+        },
+        {
+          "name": "clk_t8",
+          "xy": [
+            361.0408,
+            125.8257
+          ],
+          "load": 866.0,
+          "radius_um": 121.30850000000002
+        },
+        {
+          "name": "clk_t9",
+          "xy": [
+            1081.652,
+            126.1346
+          ],
+          "load": 1267.0,
+          "radius_um": 169.67239999999978
+        },
+        {
+          "name": "clk_t10",
+          "xy": [
+            721.4461,
+            126.1461
+          ],
+          "load": 880.0,
+          "radius_um": 120.55900000000007
+        },
+        {
+          "name": "clk_t11",
+          "xy": [
+            1425.6,
+            185.12
+          ],
+          "load": 575.0,
+          "radius_um": 73.36699999999999
+        },
+        {
+          "name": "clk_t12",
+          "xy": [
+            1425.6,
+            308.376
+          ],
+          "load": 567.0,
+          "radius_um": 72.47700000000003
+        },
+        {
+          "name": "clk_t13",
+          "xy": [
+            57.192,
+            314.532
+          ],
+          "load": 667.0,
+          "radius_um": 122.27099999999997
+        },
+        {
+          "name": "clk_t14",
+          "xy": [
+            237.9862,
+            319.6113
+          ],
+          "load": 575.0,
+          "radius_um": 107.14010000000002
+        },
+        {
+          "name": "clk_t15",
+          "xy": [
+            756.6474,
+            326.9627
+          ],
+          "load": 1318.0,
+          "radius_um": 122.76229999999998
+        },
+        {
+          "name": "clk_t16",
+          "xy": [
+            114.168,
+            328.306
+          ],
+          "load": 209.0,
+          "radius_um": 164.69900000000004
+        },
+        {
+          "name": "clk_t17",
+          "xy": [
+            1050.1631,
+            339.1913
+          ],
+          "load": 612.0,
+          "radius_um": 168.9468
+        },
+        {
+          "name": "clk_t18",
+          "xy": [
+            549.0094,
+            344.4376
+          ],
+          "load": 630.0,
+          "radius_um": 102.82319999999999
+        },
+        {
+          "name": "clk_t19",
+          "xy": [
+            662.664,
+            347.604
+          ],
+          "load": 209.0,
+          "radius_um": 102.555
+        },
+        {
+          "name": "clk_t20",
+          "xy": [
+            1200.024,
+            347.9504
+          ],
+          "load": 43.0,
+          "radius_um": 170.0293999999999
+        },
+        {
+          "name": "clk_t21",
+          "xy": [
+            8.64,
+            366.643
+          ],
+          "load": 786.0,
+          "radius_um": 124.94600000000001
+        },
+        {
+          "name": "clk_t22",
+          "xy": [
+            17.28,
+            366.643
+          ],
+          "load": 55.0,
+          "radius_um": 149.24599999999998
+        },
+        {
+          "name": "clk_t23",
+          "xy": [
+            352.3891,
+            366.9585
+          ],
+          "load": 204.0,
+          "radius_um": 107.50059999999996
+        },
+        {
+          "name": "clk_t24",
+          "xy": [
+            361.0291,
+            366.9585
+          ],
+          "load": 1244.0,
+          "radius_um": 121.37560000000002
+        },
+        {
+          "name": "clk_t25",
+          "xy": [
+            399.144,
+            366.9585
+          ],
+          "load": 121.0,
+          "radius_um": 92.42550000000006
+        },
+        {
+          "name": "clk_t26",
+          "xy": [
+            1081.6501,
+            367.2773
+          ],
+          "load": 1151.0,
+          "radius_um": 121.39879999999994
+        },
+        {
+          "name": "clk_t27",
+          "xy": [
+            721.4402,
+            367.2969
+          ],
+          "load": 733.0,
+          "radius_um": 121.0519000000001
+        },
+        {
+          "name": "clk_t28",
+          "xy": [
+            888.984,
+            385.452
+          ],
+          "load": 105.0,
+          "radius_um": 121.83299999999997
+        },
+        {
+          "name": "clk_t29",
+          "xy": [
+            1361.1736,
+            388.7971
+          ],
+          "load": 470.0,
+          "radius_um": 64.57670000000002
+        },
+        {
+          "name": "clk_t30",
+          "xy": [
+            1425.6,
+            428.0
+          ],
+          "load": 595.0,
+          "radius_um": 71.52700000000016
+        },
+        {
+          "name": "clk_t31",
+          "xy": [
+            796.0109,
+            613.4376
+          ],
+          "load": 534.0,
+          "radius_um": 200.2645000000001
+        },
+        {
+          "name": "clk_t32",
+          "xy": [
+            986.2136,
+            613.4382
+          ],
+          "load": 1000.0,
+          "radius_um": 199.57040000000006
+        },
+        {
+          "name": "clk_t33",
+          "xy": [
+            262.8199,
+            613.4397
+          ],
+          "load": 300.0,
+          "radius_um": 58.83460000000002
+        },
+        {
+          "name": "clk_t34",
+          "xy": [
+            474.6094,
+            613.4397
+          ],
+          "load": 465.0,
+          "radius_um": 59.97069999999991
+        },
+        {
+          "name": "clk_t35",
+          "xy": [
+            1198.0494,
+            613.4397
+          ],
+          "load": 425.0,
+          "radius_um": 59.96129999999994
+        },
+        {
+          "name": "clk_t36",
+          "xy": [
+            69.236,
+            613.44
+          ],
+          "load": 951.0,
+          "radius_um": 164.77300000000008
+        },
+        {
+          "name": "clk_t37",
+          "xy": [
+            280.916,
+            613.44
+          ],
+          "load": 736.0,
+          "radius_um": 99.3250000000001
+        },
+        {
+          "name": "clk_t38",
+          "xy": [
+            569.448,
+            613.44
+          ],
+          "load": 331.0,
+          "radius_um": 119.49300000000005
+        },
+        {
+          "name": "clk_t39",
+          "xy": [
+            767.7456,
+            613.44
+          ],
+          "load": 332.0,
+          "radius_um": 36.82860000000005
+        },
+        {
+          "name": "clk_t40",
+          "xy": [
+            1110.3248,
+            613.44
+          ],
+          "load": 7.0,
+          "radius_um": 10.310199999999782
+        },
+        {
+          "name": "clk_t41",
+          "xy": [
+            1124.8464,
+            613.44
+          ],
+          "load": 96.0,
+          "radius_um": 36.82860000000005
+        },
+        {
+          "name": "clk_t42",
+          "xy": [
+            1034.9083,
+            838.0882
+          ],
+          "load": 520.0,
+          "radius_um": 113.00490000000013
+        },
+        {
+          "name": "clk_t43",
+          "xy": [
+            546.144,
+            842.16
+          ],
+          "load": 279.0,
+          "radius_um": 112.98000000000002
+        },
+        {
+          "name": "clk_t44",
+          "xy": [
+            146.912,
+            852.314
+          ],
+          "load": 2.0,
+          "radius_um": 4.07699999999997
+        },
+        {
+          "name": "clk_t45",
+          "xy": [
+            656.928,
+            866.2704
+          ],
+          "load": 390.0,
+          "radius_um": 100.88760000000002
+        },
+        {
+          "name": "clk_t46",
+          "xy": [
+            201.824,
+            881.45
+          ],
+          "load": 15.0,
+          "radius_um": 55.72099999999989
+        },
+        {
+          "name": "clk_t47",
+          "xy": [
+            400.1588,
+            882.4513
+          ],
+          "load": 517.0,
+          "radius_um": 112.42590000000013
+        },
+        {
+          "name": "clk_t48",
+          "xy": [
+            922.3062,
+            887.6887
+          ],
+          "load": 719.0,
+          "radius_um": 200.17390000000012
+        },
+        {
+          "name": "clk_t49",
+          "xy": [
+            835.4523,
+            899.929
+          ],
+          "load": 499.0,
+          "radius_um": 104.46230000000003
+        },
+        {
+          "name": "clk_t50",
+          "xy": [
+            749.6,
+            902.896
+          ],
+          "load": 736.0,
+          "radius_um": 105.231
+        },
+        {
+          "name": "clk_t51",
+          "xy": [
+            61.608,
+            905.52
+          ],
+          "load": 601.0,
+          "radius_um": 112.08899999999997
+        },
+        {
+          "name": "clk_t52",
+          "xy": [
+            287.6494,
+            907.2545
+          ],
+          "load": 1019.0,
+          "radius_um": 57.54510000000005
+        },
+        {
+          "name": "clk_t53",
+          "xy": [
+            721.44,
+            1143.912
+          ],
+          "load": 258.0,
+          "radius_um": 76.62900000000002
+        },
+        {
+          "name": "clk_t54",
+          "xy": [
+            360.72,
+            1157.484
+          ],
+          "load": 291.0,
+          "radius_um": 65.7659999999999
+        },
+        {
+          "name": "clk_t55",
+          "xy": [
+            1082.16,
+            1159.392
+          ],
+          "load": 415.0,
+          "radius_um": 80.09400000000005
+        },
+        {
+          "name": "clk_t56",
+          "xy": [
+            17.28,
+            1183.512
+          ],
+          "load": 672.0,
+          "radius_um": 109.31699999999987
+        },
+        {
+          "name": "clk_t57",
+          "xy": [
+            81.184,
+            1209.6
+          ],
+          "load": 116.0,
+          "radius_um": 57.82900000000001
+        },
+        {
+          "name": "clk_t58",
+          "xy": [
+            179.016,
+            1209.6
+          ],
+          "load": 180.0,
+          "radius_um": 160.61699999999988
+        },
+        {
+          "name": "clk_t59",
+          "xy": [
+            288.1715,
+            1209.6
+          ],
+          "load": 940.0,
+          "radius_um": 87.69649999999996
+        },
+        {
+          "name": "clk_t60",
+          "xy": [
+            400.7357,
+            1209.6
+          ],
+          "load": 679.0,
+          "radius_um": 82.59129999999988
+        },
+        {
+          "name": "clk_t61",
+          "xy": [
+            514.632,
+            1209.6
+          ],
+          "load": 624.0,
+          "radius_um": 81.68699999999978
+        },
+        {
+          "name": "clk_t62",
+          "xy": [
+            629.256,
+            1209.6
+          ],
+          "load": 572.0,
+          "radius_um": 65.57700000000011
+        },
+        {
+          "name": "clk_t63",
+          "xy": [
+            721.44,
+            1209.6
+          ],
+          "load": 746.0,
+          "radius_um": 64.82699999999977
+        },
+        {
+          "name": "clk_t64",
+          "xy": [
+            836.0138,
+            1209.6
+          ],
+          "load": 450.0,
+          "radius_um": 64.75879999999984
+        },
+        {
+          "name": "clk_t65",
+          "xy": [
+            922.8746,
+            1209.6
+          ],
+          "load": 462.0,
+          "radius_um": 68.48440000000016
+        },
+        {
+          "name": "clk_t66",
+          "xy": [
+            1035.4304,
+            1209.6
+          ],
+          "load": 529.0,
+          "radius_um": 68.19460000000026
+        },
+        {
+          "name": "clk_t67",
+          "xy": [
+            1199.4227,
+            17.28
+          ],
+          "load": 527.0,
+          "radius_um": 89.85429999999987
+        },
+        {
+          "name": "clk_t68",
+          "xy": [
+            721.44,
+            764.9637
+          ],
+          "load": 1.0,
+          "radius_um": 1.1066999999999325
+        },
+        {
+          "name": "clk_t69",
+          "xy": [
+            76.824,
+            17.28
+          ],
+          "load": 666.0,
+          "radius_um": 91.701
+        },
+        {
+          "name": "clk_t70",
+          "xy": [
+            387.864,
+            17.28
+          ],
+          "load": 765.0,
+          "radius_um": 90.98100000000001
+        },
+        {
+          "name": "clk_t71",
+          "xy": [
+            1425.6,
+            1112.256
+          ],
+          "load": 433.0,
+          "radius_um": 119.51099999999997
+        },
+        {
+          "name": "clk_t72",
+          "xy": [
+            1425.6,
+            741.3333
+          ],
+          "load": 8.0,
+          "radius_um": 3.2882999999999356
+        }
+      ],
+      "forwarded_root_direct_reach_INFO": {
+        "fclk_in_ft13_i[0]": {
+          "count": 301,
+          "max_um": 60.405000000000086,
+          "witness": "u_bound.u_cland_ft13_i/u_ring.s_lap\\[1\\]$_DFF_N_"
+        },
+        "fclk_in_ft14_i[0]": {
+          "count": 301,
+          "max_um": 60.20700000000022,
+          "witness": "u_bound.u_cland_ft14_i/u_ring.s_lap\\[1\\]$_DFF_N_"
+        },
+        "fclk_in_ft15_i[0]": {
+          "count": 301,
+          "max_um": 60.40700000000004,
+          "witness": "u_bound.u_cland_ft15_i/u_ring.s_lap\\[3\\]$_DFF_N_"
+        },
+        "fclk_in_ft16_i[0]": {
+          "count": 301,
+          "max_um": 60.49300000000005,
+          "witness": "u_bound.u_cland_ft16_i/u_ring.s_v0\\[2\\]$_DFF_N_"
+        },
+        "fclk_in_ft17_i[0]": {
+          "count": 301,
+          "max_um": 60.514999999999986,
+          "witness": "u_bound.u_cland_ft17_i/u_ring.s_v0\\[3\\]$_DFF_N_"
+        },
+        "fclk_in_ft18_i[0]": {
+          "count": 301,
+          "max_um": 116.06500000000008,
+          "witness": "u_bound.u_cland_ft18_i/u_ring.s_d\\[1\\]\\[44\\]$_DFFE_NP_"
+        },
+        "fclk_in_ft2_i[0]": {
+          "count": 2077,
+          "max_um": 337.109,
+          "witness": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[4\\]$_DFFE_NP_"
+        },
+        "fclk_in_ft3_i[0]": {
+          "count": 2077,
+          "max_um": 137.47099999999983,
+          "witness": "u_bound.u_cland_ft3_i/u_ring.s_lap\\[0\\]$_DFF_N_"
+        },
+        "fclk_in_ft4_i[0]": {
+          "count": 1125,
+          "max_um": 66.32099999999991,
+          "witness": "u_bound.u_cland_ft4_i/u_ring.tc\\[1\\]$_DFF_N_"
+        },
+        "fclk_in_ft5_i[0]": {
+          "count": 2077,
+          "max_um": 89.827,
+          "witness": "u_bound.u_cland_ft5_i/u_ring.s_v0\\[3\\]$_DFF_N_"
+        },
+        "fclk_in_ft6_i[0]": {
+          "count": 2077,
+          "max_um": 90.22300000000007,
+          "witness": "u_bound.u_cland_ft6_i/u_ring.s_v0\\[3\\]$_DFF_N_"
+        },
+        "fclk_in_ft7_i[0]": {
+          "count": 1125,
+          "max_um": 63.56700000000001,
+          "witness": "u_bound.u_cland_ft7_i/u_ring.s_lap\\[0\\]$_DFF_N_"
+        },
+        "fclk_in_cland_dn_0[0]": {
+          "count": 25,
+          "max_um": 60.823000000000015,
+          "witness": "u_bound.u_cland_monitor_0/u_ring.s_d\\[1\\]\\[0\\]$_DFFE_PP_"
+        }
+      }
+    },
+    "joint_model": {
+      "actual_native_FFs": 52044,
+      "mission_FFs": 39655,
+      "forwarded_FFs": 12389,
+      "declared_taps": 73,
+      "cap": 1500,
+      "radius_um": 150.0,
+      "max_load": 1318.0,
+      "max_radius_um": 200.2645000000001,
+      "bad_taps": [
+        {
+          "tap": "clk_t3",
+          "load": 1190.0,
+          "far_um": 159.27900000000005
+        },
+        {
+          "tap": "clk_t4",
+          "load": 1001.0,
+          "far_um": 158.33699999999993
+        },
+        {
+          "tap": "clk_t9",
+          "load": 1267.0,
+          "far_um": 169.67239999999978
+        },
+        {
+          "tap": "clk_t16",
+          "load": 209.0,
+          "far_um": 164.69900000000004
+        },
+        {
+          "tap": "clk_t17",
+          "load": 572.0,
+          "far_um": 167.43480000000005
+        },
+        {
+          "tap": "clk_t20",
+          "load": 43.0,
+          "far_um": 170.0293999999999
+        },
+        {
+          "tap": "clk_t28",
+          "load": 116.0,
+          "far_um": 162.04499999999996
+        },
+        {
+          "tap": "clk_t31",
+          "load": 534.0,
+          "far_um": 200.2645000000001
+        },
+        {
+          "tap": "clk_t32",
+          "load": 1029.0,
+          "far_um": 199.57040000000006
+        },
+        {
+          "tap": "clk_t36",
+          "load": 436.0,
+          "far_um": 164.77300000000008
+        },
+        {
+          "tap": "clk_t48",
+          "load": 719.0,
+          "far_um": 200.17390000000012
+        },
+        {
+          "tap": "clk_t58",
+          "load": 441.0,
+          "far_um": 160.61699999999988
+        }
+      ],
+      "radius_violation_FFs": 1079,
+      "moved_radius_violation_FFs": 170,
+      "radius_witnesses": [
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[310\\]$_DFF_P_",
+          "xy": [
+            886.248,
+            723.465
+          ],
+          "tap": "clk_t31",
+          "distance_um": 200.2645000000001,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[296\\]$_DFF_P_",
+          "xy": [
+            890.568,
+            719.145
+          ],
+          "tap": "clk_t31",
+          "distance_um": 200.2645,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[207\\]$_DFF_P_",
+          "xy": [
+            886.896,
+            722.925
+          ],
+          "tap": "clk_t48",
+          "distance_um": 200.17390000000012,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[160\\]$_DFF_P_",
+          "xy": [
+            888.3,
+            721.3050000000001
+          ],
+          "tap": "clk_t31",
+          "distance_um": 200.15650000000005,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[169\\]$_DFF_P_",
+          "xy": [
+            887.22,
+            722.385
+          ],
+          "tap": "clk_t31",
+          "distance_um": 200.15650000000005,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[144\\]$_DFF_P_",
+          "xy": [
+            888.3,
+            721.575
+          ],
+          "tap": "clk_t48",
+          "distance_um": 200.11990000000003,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[285\\]$_DFF_P_",
+          "xy": [
+            886.14,
+            723.735
+          ],
+          "tap": "clk_t48",
+          "distance_um": 200.11990000000003,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[140\\]$_DFF_P_",
+          "xy": [
+            887.706,
+            721.845
+          ],
+          "tap": "clk_t31",
+          "distance_um": 200.10250000000008,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[14\\]$_DFF_P_",
+          "xy": [
+            888.732,
+            720.765
+          ],
+          "tap": "clk_t31",
+          "distance_um": 200.0485,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[195\\]$_DFF_P_",
+          "xy": [
+            887.3820000000001,
+            722.655
+          ],
+          "tap": "clk_t48",
+          "distance_um": 199.9579,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[231\\]$_DFF_P_",
+          "xy": [
+            890.6759999999999,
+            719.415
+          ],
+          "tap": "clk_t48",
+          "distance_um": 199.90390000000014,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[15\\]$_DFF_P_",
+          "xy": [
+            889.2719999999999,
+            719.955
+          ],
+          "tap": "clk_t31",
+          "distance_um": 199.7785,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[497\\]$_DFF_P_",
+          "xy": [
+            884.8979999999999,
+            725.355
+          ],
+          "tap": "clk_t48",
+          "distance_um": 199.7419000000001,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[470\\]$_DFF_P_",
+          "xy": [
+            883.818,
+            725.355
+          ],
+          "tap": "clk_t31",
+          "distance_um": 199.72450000000003,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[442\\]$_DFF_P_",
+          "xy": [
+            884.6279999999999,
+            724.545
+          ],
+          "tap": "clk_t31",
+          "distance_um": 199.72449999999992,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[331\\]$_DFF_P_",
+          "xy": [
+            886.356,
+            724.005
+          ],
+          "tap": "clk_t48",
+          "distance_um": 199.63390000000004,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[242\\]$_DFF_P_",
+          "xy": [
+            889.38,
+            719.685
+          ],
+          "tap": "clk_t31",
+          "distance_um": 199.61649999999997,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[214\\]$_DFF_P_",
+          "xy": [
+            890.73,
+            719.685
+          ],
+          "tap": "clk_t48",
+          "distance_um": 199.57990000000007,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[6\\]$_DFF_P_",
+          "xy": [
+            891.54,
+            718.875
+          ],
+          "tap": "clk_t48",
+          "distance_um": 199.57990000000007,
+          "moved": false
+        },
+        {
+          "name": "u_bound.u_ft_ft6_o_1/q\\[7\\]$_DFF_P_",
+          "xy": [
+            891.54,
+            718.335
+          ],
+          "tap": "clk_t32",
+          "distance_um": 199.57040000000006,
+          "moved": false
+        }
+      ],
+      "tap_table": [
+        {
+          "name": "clk",
+          "xy": [
+            725.04,
+            613.44
+          ],
+          "load": 496.0,
+          "radius_um": 69.07500000000005
+        },
+        {
+          "name": "clk_t1",
+          "xy": [
+            237.96,
+            17.28
+          ],
+          "load": 516.0,
+          "radius_um": 76.365
+        },
+        {
+          "name": "clk_t2",
+          "xy": [
+            549.0,
+            17.28
+          ],
+          "load": 681.0,
+          "radius_um": 116.253
+        },
+        {
+          "name": "clk_t3",
+          "xy": [
+            756.696,
+            17.28
+          ],
+          "load": 1190.0,
+          "radius_um": 159.27900000000005
+        },
+        {
+          "name": "clk_t4",
+          "xy": [
+            1050.12,
+            17.28
+          ],
+          "load": 1001.0,
+          "radius_um": 158.33699999999993
+        },
+        {
+          "name": "clk_t5",
+          "xy": [
+            1356.36,
+            17.28
+          ],
+          "load": 473.0,
+          "radius_um": 90.89699999999988
+        },
+        {
+          "name": "clk_t6",
+          "xy": [
+            1425.6,
+            60.264
+          ],
+          "load": 595.0,
+          "radius_um": 74.22300000000013
+        },
+        {
+          "name": "clk_t7",
+          "xy": [
+            8.64,
+            125.479
+          ],
+          "load": 1013.0,
+          "radius_um": 121.814
+        },
+        {
+          "name": "clk_t8",
+          "xy": [
+            361.0408,
+            125.8257
+          ],
+          "load": 866.0,
+          "radius_um": 121.30850000000002
+        },
+        {
+          "name": "clk_t9",
+          "xy": [
+            1081.652,
+            126.1346
+          ],
+          "load": 1267.0,
+          "radius_um": 169.67239999999978
+        },
+        {
+          "name": "clk_t10",
+          "xy": [
+            721.4461,
+            126.1461
+          ],
+          "load": 880.0,
+          "radius_um": 120.55900000000007
+        },
+        {
+          "name": "clk_t11",
+          "xy": [
+            1425.6,
+            185.12
+          ],
+          "load": 575.0,
+          "radius_um": 73.36699999999999
+        },
+        {
+          "name": "clk_t12",
+          "xy": [
+            1425.6,
+            308.376
+          ],
+          "load": 567.0,
+          "radius_um": 72.47700000000003
+        },
+        {
+          "name": "clk_t13",
+          "xy": [
+            57.192,
+            314.532
+          ],
+          "load": 667.0,
+          "radius_um": 122.27099999999997
+        },
+        {
+          "name": "clk_t14",
+          "xy": [
+            237.9862,
+            319.6113
+          ],
+          "load": 575.0,
+          "radius_um": 107.14010000000002
+        },
+        {
+          "name": "clk_t15",
+          "xy": [
+            756.6474,
+            326.9627
+          ],
+          "load": 1318.0,
+          "radius_um": 122.76229999999998
+        },
+        {
+          "name": "clk_t16",
+          "xy": [
+            114.168,
+            328.306
+          ],
+          "load": 209.0,
+          "radius_um": 164.69900000000004
+        },
+        {
+          "name": "clk_t17",
+          "xy": [
+            1050.1631,
+            339.1913
+          ],
+          "load": 572.0,
+          "radius_um": 167.43480000000005
+        },
+        {
+          "name": "clk_t18",
+          "xy": [
+            549.0094,
+            344.4376
+          ],
+          "load": 630.0,
+          "radius_um": 102.82319999999999
+        },
+        {
+          "name": "clk_t19",
+          "xy": [
+            662.664,
+            347.604
+          ],
+          "load": 209.0,
+          "radius_um": 102.555
+        },
+        {
+          "name": "clk_t20",
+          "xy": [
+            1200.024,
+            347.9504
+          ],
+          "load": 43.0,
+          "radius_um": 170.0293999999999
+        },
+        {
+          "name": "clk_t21",
+          "xy": [
+            8.64,
+            366.643
+          ],
+          "load": 786.0,
+          "radius_um": 124.94600000000001
+        },
+        {
+          "name": "clk_t22",
+          "xy": [
+            17.28,
+            366.643
+          ],
+          "load": 55.0,
+          "radius_um": 149.24599999999998
+        },
+        {
+          "name": "clk_t23",
+          "xy": [
+            352.3891,
+            366.9585
+          ],
+          "load": 204.0,
+          "radius_um": 107.50059999999996
+        },
+        {
+          "name": "clk_t24",
+          "xy": [
+            361.0291,
+            366.9585
+          ],
+          "load": 1244.0,
+          "radius_um": 121.37560000000002
+        },
+        {
+          "name": "clk_t25",
+          "xy": [
+            399.144,
+            366.9585
+          ],
+          "load": 121.0,
+          "radius_um": 92.42550000000006
+        },
+        {
+          "name": "clk_t26",
+          "xy": [
+            1081.6501,
+            367.2773
+          ],
+          "load": 1151.0,
+          "radius_um": 121.39879999999994
+        },
+        {
+          "name": "clk_t27",
+          "xy": [
+            721.4402,
+            367.2969
+          ],
+          "load": 733.0,
+          "radius_um": 121.0519000000001
+        },
+        {
+          "name": "clk_t28",
+          "xy": [
+            888.984,
+            385.452
+          ],
+          "load": 116.0,
+          "radius_um": 162.04499999999996
+        },
+        {
+          "name": "clk_t29",
+          "xy": [
+            1361.1736,
+            388.7971
+          ],
+          "load": 470.0,
+          "radius_um": 64.57670000000002
+        },
+        {
+          "name": "clk_t30",
+          "xy": [
+            1425.6,
+            428.0
+          ],
+          "load": 595.0,
+          "radius_um": 71.52700000000016
+        },
+        {
+          "name": "clk_t31",
+          "xy": [
+            796.0109,
+            613.4376
+          ],
+          "load": 534.0,
+          "radius_um": 200.2645000000001
+        },
+        {
+          "name": "clk_t32",
+          "xy": [
+            986.2136,
+            613.4382
+          ],
+          "load": 1029.0,
+          "radius_um": 199.57040000000006
+        },
+        {
+          "name": "clk_t33",
+          "xy": [
+            262.8199,
+            613.4397
+          ],
+          "load": 300.0,
+          "radius_um": 58.83460000000002
+        },
+        {
+          "name": "clk_t34",
+          "xy": [
+            474.6094,
+            613.4397
+          ],
+          "load": 465.0,
+          "radius_um": 59.97069999999991
+        },
+        {
+          "name": "clk_t35",
+          "xy": [
+            1198.0494,
+            613.4397
+          ],
+          "load": 425.0,
+          "radius_um": 59.96129999999994
+        },
+        {
+          "name": "clk_t36",
+          "xy": [
+            69.236,
+            613.44
+          ],
+          "load": 436.0,
+          "radius_um": 164.77300000000008
+        },
+        {
+          "name": "clk_t37",
+          "xy": [
+            280.916,
+            613.44
+          ],
+          "load": 736.0,
+          "radius_um": 99.3250000000001
+        },
+        {
+          "name": "clk_t38",
+          "xy": [
+            569.448,
+            613.44
+          ],
+          "load": 331.0,
+          "radius_um": 119.49300000000005
+        },
+        {
+          "name": "clk_t39",
+          "xy": [
+            767.7456,
+            613.44
+          ],
+          "load": 332.0,
+          "radius_um": 36.82860000000005
+        },
+        {
+          "name": "clk_t40",
+          "xy": [
+            1110.3248,
+            613.44
+          ],
+          "load": 7.0,
+          "radius_um": 10.310199999999782
+        },
+        {
+          "name": "clk_t41",
+          "xy": [
+            1124.8464,
+            613.44
+          ],
+          "load": 96.0,
+          "radius_um": 36.82860000000005
+        },
+        {
+          "name": "clk_t42",
+          "xy": [
+            1034.9083,
+            838.0882
+          ],
+          "load": 520.0,
+          "radius_um": 113.00490000000013
+        },
+        {
+          "name": "clk_t43",
+          "xy": [
+            546.144,
+            842.16
+          ],
+          "load": 279.0,
+          "radius_um": 112.98000000000002
+        },
+        {
+          "name": "clk_t44",
+          "xy": [
+            146.912,
+            852.314
+          ],
+          "load": 187.0,
+          "radius_um": 136.92700000000002
+        },
+        {
+          "name": "clk_t45",
+          "xy": [
+            656.928,
+            866.2704
+          ],
+          "load": 390.0,
+          "radius_um": 100.88760000000002
+        },
+        {
+          "name": "clk_t46",
+          "xy": [
+            201.824,
+            881.45
+          ],
+          "load": 15.0,
+          "radius_um": 55.72099999999989
+        },
+        {
+          "name": "clk_t47",
+          "xy": [
+            400.1588,
+            882.4513
+          ],
+          "load": 517.0,
+          "radius_um": 112.42590000000013
+        },
+        {
+          "name": "clk_t48",
+          "xy": [
+            922.3062,
+            887.6887
+          ],
+          "load": 719.0,
+          "radius_um": 200.17390000000012
+        },
+        {
+          "name": "clk_t49",
+          "xy": [
+            835.4523,
+            899.929
+          ],
+          "load": 499.0,
+          "radius_um": 104.46230000000003
+        },
+        {
+          "name": "clk_t50",
+          "xy": [
+            749.6,
+            902.896
+          ],
+          "load": 736.0,
+          "radius_um": 105.231
+        },
+        {
+          "name": "clk_t51",
+          "xy": [
+            61.608,
+            905.52
+          ],
+          "load": 331.0,
+          "radius_um": 149.973
+        },
+        {
+          "name": "clk_t52",
+          "xy": [
+            287.6494,
+            907.2545
+          ],
+          "load": 1019.0,
+          "radius_um": 57.54510000000005
+        },
+        {
+          "name": "clk_t53",
+          "xy": [
+            721.44,
+            1143.912
+          ],
+          "load": 258.0,
+          "radius_um": 76.62900000000002
+        },
+        {
+          "name": "clk_t54",
+          "xy": [
+            360.72,
+            1157.484
+          ],
+          "load": 291.0,
+          "radius_um": 65.7659999999999
+        },
+        {
+          "name": "clk_t55",
+          "xy": [
+            1082.16,
+            1159.392
+          ],
+          "load": 415.0,
+          "radius_um": 80.09400000000005
+        },
+        {
+          "name": "clk_t56",
+          "xy": [
+            17.28,
+            1183.512
+          ],
+          "load": 672.0,
+          "radius_um": 109.31699999999987
+        },
+        {
+          "name": "clk_t57",
+          "xy": [
+            81.184,
+            1209.6
+          ],
+          "load": 455.0,
+          "radius_um": 139.1089999999998
+        },
+        {
+          "name": "clk_t58",
+          "xy": [
+            179.016,
+            1209.6
+          ],
+          "load": 441.0,
+          "radius_um": 160.61699999999988
+        },
+        {
+          "name": "clk_t59",
+          "xy": [
+            288.1715,
+            1209.6
+          ],
+          "load": 940.0,
+          "radius_um": 87.69649999999996
+        },
+        {
+          "name": "clk_t60",
+          "xy": [
+            400.7357,
+            1209.6
+          ],
+          "load": 679.0,
+          "radius_um": 82.59129999999988
+        },
+        {
+          "name": "clk_t61",
+          "xy": [
+            514.632,
+            1209.6
+          ],
+          "load": 624.0,
+          "radius_um": 81.68699999999978
+        },
+        {
+          "name": "clk_t62",
+          "xy": [
+            629.256,
+            1209.6
+          ],
+          "load": 572.0,
+          "radius_um": 65.57700000000011
+        },
+        {
+          "name": "clk_t63",
+          "xy": [
+            721.44,
+            1209.6
+          ],
+          "load": 746.0,
+          "radius_um": 64.82699999999977
+        },
+        {
+          "name": "clk_t64",
+          "xy": [
+            836.0138,
+            1209.6
+          ],
+          "load": 450.0,
+          "radius_um": 64.75879999999984
+        },
+        {
+          "name": "clk_t65",
+          "xy": [
+            922.8746,
+            1209.6
+          ],
+          "load": 462.0,
+          "radius_um": 68.48440000000016
+        },
+        {
+          "name": "clk_t66",
+          "xy": [
+            1035.4304,
+            1209.6
+          ],
+          "load": 529.0,
+          "radius_um": 68.19460000000026
+        },
+        {
+          "name": "clk_t67",
+          "xy": [
+            1199.4227,
+            17.28
+          ],
+          "load": 527.0,
+          "radius_um": 89.85429999999987
+        },
+        {
+          "name": "clk_t68",
+          "xy": [
+            721.44,
+            764.9637
+          ],
+          "load": 1.0,
+          "radius_um": 1.1066999999999325
+        },
+        {
+          "name": "clk_t69",
+          "xy": [
+            76.824,
+            17.28
+          ],
+          "load": 666.0,
+          "radius_um": 91.701
+        },
+        {
+          "name": "clk_t70",
+          "xy": [
+            387.864,
+            17.28
+          ],
+          "load": 765.0,
+          "radius_um": 90.98100000000001
+        },
+        {
+          "name": "clk_t71",
+          "xy": [
+            1425.6,
+            1112.256
+          ],
+          "load": 433.0,
+          "radius_um": 119.51099999999997
+        },
+        {
+          "name": "clk_t72",
+          "xy": [
+            1425.6,
+            741.3333
+          ],
+          "load": 8.0,
+          "radius_um": 3.2882999999999356
+        }
+      ],
+      "forwarded_root_direct_reach_INFO": {
+        "fclk_in_ft13_i[0]": {
+          "count": 301,
+          "max_um": 60.405000000000086,
+          "witness": "u_bound.u_cland_ft13_i/u_ring.s_lap\\[1\\]$_DFF_N_"
+        },
+        "fclk_in_ft14_i[0]": {
+          "count": 301,
+          "max_um": 60.20700000000022,
+          "witness": "u_bound.u_cland_ft14_i/u_ring.s_lap\\[1\\]$_DFF_N_"
+        },
+        "fclk_in_ft15_i[0]": {
+          "count": 301,
+          "max_um": 60.40700000000004,
+          "witness": "u_bound.u_cland_ft15_i/u_ring.s_lap\\[3\\]$_DFF_N_"
+        },
+        "fclk_in_ft16_i[0]": {
+          "count": 301,
+          "max_um": 60.49300000000005,
+          "witness": "u_bound.u_cland_ft16_i/u_ring.s_v0\\[2\\]$_DFF_N_"
+        },
+        "fclk_in_ft17_i[0]": {
+          "count": 301,
+          "max_um": 60.514999999999986,
+          "witness": "u_bound.u_cland_ft17_i/u_ring.s_v0\\[3\\]$_DFF_N_"
+        },
+        "fclk_in_ft18_i[0]": {
+          "count": 301,
+          "max_um": 116.06500000000008,
+          "witness": "u_bound.u_cland_ft18_i/u_ring.s_d\\[1\\]\\[44\\]$_DFFE_NP_"
+        },
+        "fclk_in_ft2_i[0]": {
+          "count": 2077,
+          "max_um": 93.40699999999995,
+          "witness": "u_bound.u_cland_ft2_i/u_ring.s_d\\[2\\]\\[4\\]$_DFFE_NP_"
+        },
+        "fclk_in_ft3_i[0]": {
+          "count": 2077,
+          "max_um": 137.47099999999983,
+          "witness": "u_bound.u_cland_ft3_i/u_ring.s_lap\\[0\\]$_DFF_N_"
+        },
+        "fclk_in_ft4_i[0]": {
+          "count": 1125,
+          "max_um": 66.32099999999991,
+          "witness": "u_bound.u_cland_ft4_i/u_ring.tc\\[1\\]$_DFF_N_"
+        },
+        "fclk_in_ft5_i[0]": {
+          "count": 2077,
+          "max_um": 89.827,
+          "witness": "u_bound.u_cland_ft5_i/u_ring.s_v0\\[3\\]$_DFF_N_"
+        },
+        "fclk_in_ft6_i[0]": {
+          "count": 2077,
+          "max_um": 90.22300000000007,
+          "witness": "u_bound.u_cland_ft6_i/u_ring.s_v0\\[3\\]$_DFF_N_"
+        },
+        "fclk_in_ft7_i[0]": {
+          "count": 1125,
+          "max_um": 63.56700000000001,
+          "witness": "u_bound.u_cland_ft7_i/u_ring.s_lap\\[0\\]$_DFF_N_"
+        },
+        "fclk_in_cland_dn_0[0]": {
+          "count": 25,
+          "max_um": 60.823000000000015,
+          "witness": "u_bound.u_cland_monitor_0/u_ring.s_d\\[1\\]\\[0\\]$_DFFE_PP_"
+        }
+      }
+    }
+  },
+  "holds": [
+    "all original native missingPG95696/partialface/fill/GRT4843 holds remain",
+    "core assignment uses same native root domain; a future source geometry event must publish exact assignment coherently, no old nearest-binding transfer",
+    "forwarded-root direct distance is INFO only; actual source export/window and propagated clock phase required",
+    "all unchanged-domain clock/control/reset graph node counts remain identical; spatial graph edges checked in complete r2r model"
+  ]
+}
