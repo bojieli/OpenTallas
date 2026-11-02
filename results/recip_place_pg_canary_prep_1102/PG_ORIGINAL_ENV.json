@@ -1,0 +1,22 @@
+{
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "image_env_PG": [],
+  "kit_native_pg_binding_present": false,
+  "kit_text_pg_mentions": [
+    {
+      "file": "pg_connect.tcl",
+      "line": 8,
+      "text": "#                              placement or size changes). OT_PG_STRICT=1 kits own binding themselves (no-op here)."
+    },
+    {
+      "file": "pg_connect.tcl",
+      "line": 28,
+      "text": "  if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq \"1\"} {"
+    },
+    {
+      "file": "pg_connect.tcl",
+      "line": 29,
+      "text": "    puts \"OT_PG_CONNECT $where strict=1 skipped (native_pg_binding owns binding)\"; return 0"
+    }
+  ]
+}
