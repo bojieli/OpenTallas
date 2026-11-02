@@ -3,7 +3,7 @@
 import argparse, importlib.util, json, re, collections, heapq
 from pathlib import Path
 
-def check(dump,homes,origin_homes,macro_delta,output,macro_ports,sdc):
+def check(dump,homes,origin_homes,macro_delta,output,macro_ports,sdc,raw_homes=None):
     root=Path(__file__).resolve().parents[3]
     spec=importlib.util.spec_from_file_location('geom',root/'tools/autopilot/geom_rules.py');g=importlib.util.module_from_spec(spec);spec.loader.exec_module(g)
     d=g.Design(dump);move={r['name']:r['xy'] for r in homes};mc={r['id']:(r['dx'],r['dy']) for r in macro_delta}
@@ -54,8 +54,8 @@ def check(dump,homes,origin_homes,macro_delta,output,macro_ports,sdc):
                 if c[6] in move:unknown.append('Non-main clock sink moved without its own cohort: '+c[6])
     for h in origin_homes:
         sinks.append(dict(name=f'u_bound.u_cland_origin/g_on.g_region[{h["region"]}].{h["stage"]}',xy=h['xy'],logical_root='clk'))
-    for h in origin_homes:
-        if h['stage']=='s2':sinks.append(dict(name=f'u_bound.g_tt_raw_regions.g_region[{h["region"]}].u_raw_copy/q',xy=h['xy'],logical_root='clk'))
+    for h in (raw_homes if raw_homes is not None else [h for h in origin_homes if h['stage']=='s2']):
+        sinks.append(dict(name=f'u_bound.g_tt_raw_regions.g_region[{h["region"]}].u_raw_copy/q',xy=h['xy'],logical_root='clk'))
     loads=collections.Counter();assign=[];bad=[]
     for sink in sinks:
         x,y=sink['xy'];tap=min(main,key=lambda p:abs(x-p['x'])+abs(y-p['y']));reach=abs(x-tap['x'])+abs(y-tap['y']);loads[tap['name']]+=1
@@ -74,8 +74,8 @@ def check(dump,homes,origin_homes,macro_delta,output,macro_ports,sdc):
         _,j,target,reach=heapq.heappop(queue);a=assign[j];source=a['parent_tap']
         if 'nearest_parent_tap' in a or loads[source]<=1200 or loads[target]>=1200:continue
         a['nearest_parent_tap']=source;a['parent_tap']=target;a['reach_um']=round(reach,6);loads[source]-=1;loads[target]+=1;changes+=1
-    summary=dict(schema='opentallas.tt_clock_association_prep.v1',status='PASS_MODEL_ONLY' if not unknown and not bad and max(loads.values())<=1200 else 'HELD',clock_ports=[p['name'] for p in main],port_count=63,policy='explicit capacity-aware same-cohort reassociation after the normal nearest split; source event must apply this metadata before CTS; no new tap count/strength/edge/waveform',clock_period_ps=float(declared[0][0]),reassociated_sinks=changes,nearest_load_max=nearest_max,nearest_loads=nearest_loads,native_clock_tree_applied=False,added_main_clock_ff=13,main_sinks=len(sinks),nonmain_sinks_retained=len(retained),max_reach_um=max(a['reach_um'] for a in assign),max_sinks=max(loads.values()),loads=dict(loads),unknown=unknown,reach_fail=bad,over_capacity={k:v for k,v in loads.items() if v>1200},arrival_or_timing_credit=False,assignments=assign,retained_other_cohorts=retained)
+    summary=dict(schema='opentallas.tt_clock_association_prep.v1',status='PASS_MODEL_ONLY' if not unknown and not bad and max(loads.values())<=1200 else 'HELD',clock_ports=[p['name'] for p in main],port_count=63,policy='explicit capacity-aware same-cohort reassociation after the normal nearest split; source event must apply this metadata before CTS; no new tap count/strength/edge/waveform',clock_period_ps=float(declared[0][0]),reassociated_sinks=changes,nearest_load_max=nearest_max,nearest_loads=nearest_loads,native_clock_tree_applied=False,preserve_existing_cell_clock_edge_and_clock_polarity_path=True,no_clock_gate_or_inverter_bypass=True,native_name_join_required=True,added_main_clock_ff=13,main_sinks=len(sinks),nonmain_sinks_retained=len(retained),max_reach_um=max(a['reach_um'] for a in assign),max_sinks=max(loads.values()),loads=dict(loads),unknown=unknown,reach_fail=bad,over_capacity={k:v for k,v in loads.items() if v>1200},arrival_or_timing_credit=False,assignments=assign,retained_other_cohorts=retained)
     output.write_text(json.dumps(summary,separators=(',',':'))+'\n');return summary
 if __name__=='__main__':
-    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--dump',type=Path,required=True);ap.add_argument('--homes',type=Path,required=True);ap.add_argument('--origin-homes',type=Path,required=True);ap.add_argument('--macro-delta',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--macro-ports',type=Path,required=True);ap.add_argument('--sdc',type=Path,required=True);a=ap.parse_args()
-    r=check(a.dump,json.loads(a.homes.read_text()),json.loads(a.origin_homes.read_text()),json.loads(a.macro_delta.read_text()),a.out,a.macro_ports,a.sdc);print('TT_CLOCK_ASSOCIATION',r['status'],'main',r['main_sinks'],'reach',r['max_reach_um'],'load',r['max_sinks'],'unknown',len(r['unknown']))
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--dump',type=Path,required=True);ap.add_argument('--homes',type=Path,required=True);ap.add_argument('--origin-homes',type=Path,required=True);ap.add_argument('--macro-delta',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--macro-ports',type=Path,required=True);ap.add_argument('--sdc',type=Path,required=True);ap.add_argument('--raw-homes',type=Path);a=ap.parse_args()
+    r=check(a.dump,json.loads(a.homes.read_text()),json.loads(a.origin_homes.read_text()),json.loads(a.macro_delta.read_text()),a.out,a.macro_ports,a.sdc,json.loads(a.raw_homes.read_text()) if a.raw_homes else None);print('TT_CLOCK_ASSOCIATION',r['status'],'main',r['main_sinks'],'reach',r['max_reach_um'],'load',r['max_sinks'],'unknown',len(r['unknown']))
