@@ -13,5 +13,7 @@
   "clock": "New M5 centre BPin+empty4.32square driverbay, actual driver/CTS cell count/area/TTFF latency must be priced",
   "old_FF_mirror": "Movable per-FF horizontal mirror not exported; use legal actual target-row R0/MX in this new physical event; original macro orientations exact",
   "enabled": false,
-  "source_EQ": "Current051 single diagnostic dispatched; no source release/production/count/CAD qualification from debugproof alone"
+  "source_EQ": "Current051 single diagnostic dispatched; no source release/production/count/CAD qualification from debugproof alone",
+  "allFF_guards": "Persistent dbInst DoNotTouch + FIRM; exact per-name/master/location/orient guard before GPL and DPL replaces face-only hooks; no later register resize/clone",
+  "native_helper_status": "Python syntax checked only, not run on new FP"
 }
