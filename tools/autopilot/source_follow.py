@@ -53,6 +53,30 @@ def materialize_clock_mesh(src, plan, read_archive):
             stream.write(body)
 
 
+def copy_untracked_inputs(old_source, new_source):
+    """Copy the base source's untracked plan/bind inputs into a fresh snapshot (never over a tracked file).
+
+    KV event sources carry untracked inputs read by the plan and the strict bind (kv36/kv37/kv40 pad tables,
+    the composed_rtl receipt); a snapshot of a newer main tip without them FAILs the strict bind
+    (KIT-WAVE-15 11-01: kv37/pv_col_pads_28b.json missing on b1a2125433d0)."""
+    import shutil
+    import subprocess
+    from pathlib import Path
+    old_source, new_source = Path(old_source), Path(new_source)
+    out = subprocess.run(["git", "-C", str(old_source), "ls-files", "--others", "--exclude-standard", "-z"],
+                         text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL).stdout
+    copied = []
+    for rel in sorted(x for x in out.split("\0") if x):
+        if rel.endswith(".pyc") or "/__pycache__/" in "/" + rel:
+            continue
+        f, nf = old_source / rel, new_source / rel
+        if f.is_file() and not f.is_symlink() and not nf.exists():
+            nf.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(f, nf)
+            copied.append(rel)
+    return copied
+
+
 def same_library_interface(parser, old_source, new_source, scratch):
     """Compare the exact interface stubs used by bind_elab for opaque library files."""
     from pathlib import Path
@@ -298,6 +322,7 @@ for name in ("bind.f","asbuilt_sources.json","provenance_elab.json"):
   for a,b in sorted(mapping.items(),key=lambda x:-len(x[0])): t=t.replace(a,b)
   p.write_text(t)
 plan=pathlib.Path(str(d["plan"]).replace(oldsrc,str(src)))
+print("SOURCE_FOLLOW untracked inputs copied:",copy_untracked_inputs(oldsrc,src),flush=True)
 materialize_clock_mesh(src,plan,lambda obj: subprocess.check_output(["git","-C",str(repo),"show",obj]))
 run([sys.executable,"tools/die_plan/bind.py","bind",str(plan),"--out",str(bind),"--asbuilt",str(recipe),"--strict"],cwd=src)
 r=json.load(open(bind/"bind_report.json")); errors=r.get("errors")
@@ -326,7 +351,7 @@ def worker(spec_path):
     host = spec["die_config"]["gen_host"]
     # ot-run owns the entire snapshot/bind operation and its RAM request.
     q = shlex.quote
-    payload = "python3 -I - " + q(json.dumps(spec)) + " <<'SOURCE_FOLLOW_PY'\n" + inspect.getsource(materialize_clock_mesh) + "\n" + inspect.getsource(same_library_interface) + "\n" + inspect.getsource(used_hdl_paths) + "\n" + REMOTE + "\nSOURCE_FOLLOW_PY\n"
+    payload = "python3 -I - " + q(json.dumps(spec)) + " <<'SOURCE_FOLLOW_PY'\n" + inspect.getsource(materialize_clock_mesh) + "\n" + inspect.getsource(copy_untracked_inputs) + "\n" + inspect.getsource(same_library_interface) + "\n" + inspect.getsource(used_hdl_paths) + "\n" + REMOTE + "\nSOURCE_FOLLOW_PY\n"
     remote_dir = str(Path(spec["die_config"].get("src_follow",{}).get("root","/srv/opentallas-scratch2/claude/source-follow"))/spec["die"]/spec["tip"][:12])
     subprocess.run(["ssh", "-o", "ControlPath=none", host, "mkdir", "-p", remote_dir], check=True)
     cmd = [str(Path.home()/".local/bin/ot-run"), "--hosts", host, "--mem", str(spec["die_config"].get("bind_mem_gb", 24)),
