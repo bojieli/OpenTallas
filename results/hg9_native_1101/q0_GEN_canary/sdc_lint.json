@@ -1,0 +1,95 @@
+{
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_ff_ps": 202.5,
+ "insertion_tol_ps": 40.0,
+ "clock_ports": [
+  "ck"
+ ],
+ "inputs": [
+  "rsp_epoch",
+  "rsp_layer",
+  "rsp_t",
+  "rsp_v",
+  "rsp_valid",
+  "s2",
+  "s3",
+  "rst_n",
+  "s0",
+  "s1",
+  "si",
+  "cfg",
+  "epoch",
+  "kgo",
+  "layer",
+  "rsp_data"
+ ],
+ "outputs": [
+  "so",
+  "t0",
+  "e2",
+  "e3",
+  "fault",
+  "req_epoch",
+  "req_layer",
+  "req_t",
+  "req_valid"
+ ],
+ "unc_setup_ps": 0.0,
+ "unc_hold_ps": 25.0,
+ "time_unit_ps": 1.0,
+ "io_floor_ps": {
+  "rsp_epoch": 166.60000000000002,
+  "rsp_layer": 166.60000000000002,
+  "rsp_t": 166.60000000000002,
+  "rsp_v": 166.60000000000002,
+  "rsp_valid": 166.60000000000002,
+  "s2": 166.60000000000002,
+  "s3": 166.60000000000002,
+  "rst_n": 166.60000000000002,
+  "s0": 166.60000000000002,
+  "s1": 166.60000000000002,
+  "si": 166.60000000000002,
+  "cfg": 166.60000000000002,
+  "epoch": 166.60000000000002,
+  "kgo": 166.60000000000002,
+  "layer": 166.60000000000002,
+  "rsp_data": 166.60000000000002,
+  "so": 166.60000000000002,
+  "t0": 166.60000000000002,
+  "e2": 166.60000000000002,
+  "e3": 166.60000000000002,
+  "fault": 166.60000000000002,
+  "req_epoch": 166.60000000000002,
+  "req_layer": 166.60000000000002,
+  "req_t": 166.60000000000002,
+  "req_valid": 166.60000000000002
+ },
+ "port_latency_ps": {},
+ "straps": [],
+ "ft_ports": {
+  "schema": "opentallas.ft_ports.v1",
+  "source": "pins/qkd_ectlk_q0_pins_r25.json@4cc0cb61c5a91857 island_ft",
+  "ports": [
+   {
+    "name": "ft_ck_i_0",
+    "direction": "INPUT"
+   },
+   {
+    "name": "ft_ck_o_0",
+    "direction": "OUTPUT"
+   }
+  ],
+  "arcs": [
+   {
+    "source": "ft_ck_i_0",
+    "sink": "ft_ck_o_0",
+    "kind": "clock",
+    "cells": [
+     "mp_isl0_ck0"
+    ]
+   }
+  ],
+  "sha256": "c2c772bc8d9cd4e0694f7e582339edccd3f74d1ebce26d08b4c573c08c05afa0"
+ }
+}

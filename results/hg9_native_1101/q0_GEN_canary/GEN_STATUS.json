@@ -1,0 +1,34 @@
+{
+ "status": "normalGEN PASS only; noSYNTH/physical/formalqualification yet",
+ "kit": "/srv/opentallas-scratch/claude/codex-hg9-native-1101/q0_gen_model_v2/qkd_ectlk_q0__216x172.8",
+ "native_core_json": "qkd_ectlk_q0_current_core.json",
+ "current_source_files": 10,
+ "native_pins": 1476,
+ "generated_signal_plus_FT_pins": 1478,
+ "power_pins_extra": 2,
+ "planned_outline_um": [
+  216,
+  172.8
+ ],
+ "native_calendar": {
+  "QK_ISSUE_AGE": 34,
+  "RESPONSE_LAT": 18
+ },
+ "FT_actual_cell": "BUFx24_ASAP7_75t_R mp_isl0_ck0",
+ "source_recipe_command_flags": [
+  "--ectlk-face-ports",
+  "--cts-setup-only",
+  "--two-mode-grt",
+  "--hold-ff-margin10"
+ ],
+ "engineering_note": "cts-setup-only uses existing engineeringstage target; finalTT60/FF25 ordinarysignoff notrunandunchanged",
+ "normal_fresh_reset_contract_edges": 16,
+ "reset_contract_note": "normalgeneratorstages existingprovenKVresetreceipt; q1retainedfinalproofindependentlykeepsoriginaldefault4",
+ "first_GEN_failure": "default--kit-rtl missing; preservedpartialq0_gen_model/GEN_FAILURE_missing_kitrtl.txt; v2usesactualnativekitrtlmetadata withlocalcanonicalmacropaths",
+ "SYNTH_only_job": "intel1:/srv/opentallas-scratch2/claude/codex-hg9-native-1101/q0_synth_model",
+ "SYNTH_controller_log": "/home/ubuntu/coord/tmp/hg9_q0_synth_only.otrun.log",
+ "SYNTH_only_scope": "normal frontend/SDC/selrange\u2192make synth\u2192dontuse\u2192unplacedcensus; noLEC/FLOORPLAN/STA/route",
+ "SYNTH_initial_state": "memoryadmissible; waitingordinaryCPUloadguard187>=168; no bypass",
+ "actual_GEN_source_commit": "c66dc7712abe8d0b2ad3a672ae6444925d5e73be",
+ "generator_code_base_commit": "7719c1d5e355cb6b0f596176051942be072f4018"
+}

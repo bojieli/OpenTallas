@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.kv.island_ft.v1",
+ "rule": "METHODOLOGY 12.2a1 die-owned ft arcs (CLOCK-KV-R25 island_ft)",
+ "pins_file": "pins/qkd_ectlk_q0_pins_r25.json",
+ "pins_sha256": "4cc0cb61c5a91857e5cd11f3971be789e152e4117dd47c2a9ea53fbed42e93ca",
+ "rtl": "qkd_ectlk_columns.sv",
+ "arcs": [
+  {
+   "k": 0,
+   "source": "ft_ck_i_0",
+   "sink": "ft_ck_o_0",
+   "kind": "clock",
+   "role": "tree_node",
+   "master": "BUFx24_ASAP7_75t_R",
+   "rect_um": [
+    102.168,
+    8.64,
+    103.788,
+    8.91
+   ],
+   "cells": [
+    {
+     "name": "mp_isl0_ck0",
+     "x_um": 102.168,
+     "y_um": 8.64
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.ft_ports.v1",
+ "source": "pins/qkd_ectlk_q0_pins_r25.json@4cc0cb61c5a91857 island_ft",
+ "ports": [
+  {
+   "name": "ft_ck_i_0",
+   "direction": "INPUT"
+  },
+  {
+   "name": "ft_ck_o_0",
+   "direction": "OUTPUT"
+  }
+ ],
+ "arcs": [
+  {
+   "source": "ft_ck_i_0",
+   "sink": "ft_ck_o_0",
+   "kind": "clock",
+   "cells": [
+    "mp_isl0_ck0"
+   ]
+  }
+ ],
+ "sha256": "c2c772bc8d9cd4e0694f7e582339edccd3f74d1ebce26d08b4c573c08c05afa0"
+}
