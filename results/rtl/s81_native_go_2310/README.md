@@ -1,6 +1,16 @@
 # Native GO/TAG retime mechanism; architectural oracle unresolved
 
-**Superseding correction:** this packet establishes the measured producer and
+**Further original-native comparison:** a new, previously unrun original
+DIRECT GB0/old-calendar condition (unit3568639-1793606405, exit0) produces
+tags1/2 at763/1275. It matches actual DIRECT GB1/advance1 exactly for all50
+CFG words,160 STREAM words and both GO/tag pairs, with all faults0. This
+confirms the original source boundary expects consumed1/2, agreeing with
+OPTAG1. The proposed+4FF pipe would change that contract and is rejected as
+a repair for this tested boundary. No added FF is required by this result.
+Full-Q arithmetic, real EF cadence and provider/physical authority remain
+unqualified. See original_native_direct_comparison.json and the original log.
+
+**Previous superseding correction:** this packet establishes the measured producer and
 retime mechanics. It does **not** establish a native architectural tag bug.
 f85fce6c4's claimed expected sequence0/1 was the CFG7 port's pre-increment
 sequence, not a proven architectural CAP/return oracle. Existing

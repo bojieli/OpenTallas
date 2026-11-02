@@ -1,6 +1,6 @@
 {
-  "status": "PASS_RETIME_MECHANISM_NATIVE_TAG_AUTHORITY_UNQUALIFIED",
-  "current_source_status": "UNQUALIFIED_ARCHITECTURAL_TAG_ORACLE",
+  "status": "PASS_SELECTED_DATED_GO_TAG_BOUNDARY_ORIGINAL_CONTRACT",
+  "current_source_status": "PASS_MATCHES_UNMODIFIED_ORIGINAL_DIRECT_GB0",
   "candidate_tags": [
     0,
     1
@@ -40,5 +40,38 @@
   ],
   "architectural_bug_established": false,
   "architectural_tag_authority": "Existing frame_return_plan.OPTAG=1 may require first consumed tag1; original directGB0 and actual CAP/return contract still need join",
-  "source_adoption": "HOLD: disabled counterfactual retime mechanism only"
+  "source_adoption": "No tag-retime change required for tested original contract; +4FF candidate incompatible with original tags. Full-Q/provider/physical authority still unqualified.",
+  "tested_native_boundary_tags": [
+    1,
+    2
+  ],
+  "original_direct_comparison": {
+    "status": "PASS_ORIGINAL_DIRECT_GB0_VS_NATIVE_DIRECT_GB1_BOUNDARY",
+    "unit": "oth-ubuntu-3568639-1793606405",
+    "exit": 0,
+    "new_condition": "originalGB0 oldcalendar directtag; no proposed retime",
+    "native_condition": "GB1 advance1 directtag",
+    "core": [
+      [
+        763,
+        1
+      ],
+      [
+        1275,
+        2
+      ]
+    ],
+    "exact_CFG_words": 50,
+    "exact_STREAM_words": 160,
+    "all_compared_words_and_dates_identical": true,
+    "faults": 0,
+    "first_native_tag": 1,
+    "retained_frame_model_OPTAG": 1,
+    "native_bug_established": false,
+    "parallel_tag_retime_compatible_with_original_contract": false,
+    "new_RTL_FF_needed_for_this_boundary": 0,
+    "native_provider_qualified": false,
+    "arithmetic_core_exercised": false,
+    "production_enabled": false
+  }
 }
