@@ -1,0 +1,92 @@
+{
+ "scope": "DIAGNOSTIC_SOURCE_EVENT_NOT_PRODUCTION_ADOPTION",
+ "authority": "COORD Q12 2026-11-01 18:50",
+ "candidate": "089003f7a5e+98bbbbd8184",
+ "source_base": "051340895d9",
+ "default_mode_also_changed": true,
+ "base_leaf_delta_per_instance": -387,
+ "preserved_pipeline_cycles": true,
+ "whole_HARD1_EQ_points": 55664,
+ "actual_old_mapped_std": 336662,
+ "actual_old_mapped_FFs": 42665,
+ "declared_vs_actual_note": "42671 declared/premerge and42665 actualmapped are distinct quantities. Actual freshSYNTH output controls new physical counts; never assign declared value as observed count.",
+ "plan_snapshot_scope": [
+  {
+   "type": "slw_sc_v3",
+   "instances": 1,
+   "source_family": "distinct_chain_end_not_qualified",
+   "new_declared_clock_sinks": null,
+   "old_declared_clock_sinks": null,
+   "delta": null
+  },
+  {
+   "type": "slw_sc_v2",
+   "instances": 2,
+   "source_family": "base_leaf_capture_sharing",
+   "new_declared_clock_sinks": 42671,
+   "old_declared_clock_sinks": 43058,
+   "delta": -387
+  },
+  {
+   "type": "sle_sc_v2",
+   "instances": 2,
+   "source_family": "base_leaf_capture_sharing",
+   "new_declared_clock_sinks": 42671,
+   "old_declared_clock_sinks": 43058,
+   "delta": -387
+  },
+  {
+   "type": "sle_sc_v3",
+   "instances": 1,
+   "source_family": "distinct_chain_end_not_qualified",
+   "new_declared_clock_sinks": null,
+   "old_declared_clock_sinks": null,
+   "delta": null
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "instances": 1,
+   "source_family": "base_leaf_capture_sharing",
+   "new_declared_clock_sinks": 42671,
+   "old_declared_clock_sinks": 43058,
+   "delta": -387
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "instances": 1,
+   "source_family": "base_leaf_capture_sharing",
+   "new_declared_clock_sinks": 42671,
+   "old_declared_clock_sinks": 43058,
+   "delta": -387
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "instances": 1,
+   "source_family": "base_leaf_capture_sharing",
+   "new_declared_clock_sinks": 42671,
+   "old_declared_clock_sinks": 43058,
+   "delta": -387
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "instances": 2,
+   "source_family": "base_leaf_capture_sharing",
+   "new_declared_clock_sinks": 42671,
+   "old_declared_clock_sinks": 43058,
+   "delta": -387
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "instances": 1,
+   "source_family": "base_leaf_capture_sharing",
+   "new_declared_clock_sinks": 42671,
+   "old_declared_clock_sinks": 43058,
+   "delta": -387
+  }
+ ],
+ "base_leaf_type_count": 7,
+ "base_leaf_replicas": 10,
+ "immutable_die_clock_count_unmodified": 1364730,
+ "canonical_default_or_plan_adopted": false,
+ "next": "Actual SC PLACE -> LOOK -> source-correlated sink census/root frame -> paired source/clock-count/parent event; CE types separately."
+}
