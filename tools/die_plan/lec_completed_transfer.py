@@ -63,7 +63,7 @@ def transfer(original, copied, *, finished_proof=False, validate_only=False):
         contract = reset.get('contract')
         if contract:
             staged = json.loads((original / 'reset_contract.json').read_text())
-            if contract.get('file') != '/work/reset_contract.json' or contract.get('edges') != staged.get('edges') or contract.get('die') != staged.get('die') or reset['used'] != staged.get('edges'):
+            if contract.get('file') != '/work/reset_contract.json' or contract.get('edges') != staged.get('edges') or contract.get('die') != staged.get('die'):
                 raise ValueError('completed native reset contract differs')
             receipt = contract.get('receipt', '')
             if not receipt.startswith('/work/'):
@@ -77,6 +77,10 @@ def transfer(original, copied, *, finished_proof=False, validate_only=False):
                     or rp.get('receipt') != receipt[6:]
                     or hashlib.sha256(receipt_file.read_bytes()).hexdigest() != rp.get('receipt_sha256')):
                 raise ValueError('native die reset contract/receipt proof differs')
+            proven=min(staged['edges'],rp['assert_edges'])
+            current_want=int(os.environ.get('OT_LEC_RESET_CYCLES',proven))
+            if current_want>proven or reset['used']!=max(current_want,1):
+                raise ValueError('current explicit native reset window differs from completed proof')
             required.append(receipt[6:])
         elif (original / 'reset_contract.json').exists() or (copied / 'reset_contract.json').exists():
             raise ValueError('unexpected die reset receipt')

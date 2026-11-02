@@ -63,7 +63,7 @@ def test_finished_proof_can_transfer_when_physical_scope_failed(tmp_path):
     assert transfer(k,c,finished_proof=True)==r
 
 
-def test_native64_receipt_is_preserved_and_wrong_receipt_refused(tmp_path):
+def test_native64_receipt_is_preserved_and_wrong_receipt_refused(tmp_path, monkeypatch):
     import hashlib
     k,c=finished_fixture(tmp_path)
     receipt='actual native reset proof'
@@ -79,6 +79,17 @@ def test_native64_receipt_is_preserved_and_wrong_receipt_refused(tmp_path):
     result=transfer(k,c,finished_proof=True,validate_only=True)
     assert 'reset_contract/receipt.txt' in result['current_files_sha256']
     assert not (c/'lec_before_finished_import').exists()
+    # Same official reset_contract_gate rule: explicit shorter is sound, but
+    # must remain explicit rather than silently become the contract default.
+    report['reset_contract'].update(requested=4,used=4)
+    (k/'lec/lec.json').write_text(json.dumps(report))
+    with pytest.raises(ValueError,match='explicit native reset window'):
+        transfer(k,c,finished_proof=True,validate_only=True)
+    monkeypatch.setenv('OT_LEC_RESET_CYCLES','4')
+    assert transfer(k,c,finished_proof=True,validate_only=True)['source_qualified'] is False
+    monkeypatch.delenv('OT_LEC_RESET_CYCLES')
+    report['reset_contract'].update(requested=None,used=64)
+    (k/'lec/lec.json').write_text(json.dumps(report))
     (k/'reset_contract/receipt.txt').write_text('wrong')
     with pytest.raises(ValueError,match='receipt proof'):transfer(k,c,finished_proof=True,validate_only=True)
 
