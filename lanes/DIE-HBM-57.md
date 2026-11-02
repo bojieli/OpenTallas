@@ -129,3 +129,14 @@ CODEX core_taps PARKED 20261101_1837: Claude handback. Ready VMS4e21d56ad and BF
 ### CODEX stations handback — PARKED 2026-11-01
 
 See /home/ubuntu/coord/handoff/codex_hbm_stations_d44q_handback_20261101.md. No current-SPU current0 was launched; inputs/strict current951 qualifier are staged on Intel1+Intel2, no current0 unit/container. Source546 is merged. Actual d44q PREP at Intel1 codex-hbm-stations-1131/d44q_unified21_PREP has3812 named-field operations/0whole-types, preserves6whole435/352/tol40 contracts+notes, and explicitly lists353 C11G prerequisites +11 C923 retirements +3482 clock/geometry fields. Actual POR lane costs: L203/m4→5,L70018→19,L730/m42→44,L731/m17→18,L96m18→19. All21 conditional frozen component types match and3077 clocks PASS on exact current-consumer stage; no native-body/source/G4 credit. SPU A model+LOOK PASS, existing5-stage control chains≤371.25um; L7306-stage/+2POR separate; historical moved-S0 actual0/50 HELD. Next current0 only after preflight,50 only after actual current0 geometry/capacity/pins PASS. Current66 production joins0/66 and CLK0/232; resetUNSUPPLIED; corrected legacy feed gaps not current routes. All source/parent/event holds preserved. No engineering/launch/cancel/retry/merge after PARK.
+- 2026-11-01 18:42 PST PARKED [DIE-HBM-57] (collect chain). READY c11g-1101@c3bb4ef0c4c has been sent to ROOT-MERGE-AL (after S11 8717480994c; ccband goes first).
+  Still running, to be appended to the READY (colg2s.sh on epyc2/intel1/intel2, in die-hbm-57/):
+  - c11H75 su00 pair 50-it (epyc2 direct);
+  - c11F b010pv1 50-it;
+  - s11 controls 50-it: b000, b001, b010, b101, b112, su01, su10, su21, su31;
+  - c11A/B/D 50-its;
+  - p3 hb_pv1_i50 / hb_b011_i50 and p2_pv1_i50.
+  su31 is OPEN. A +1 station (J20) and per-bit siting (J215 9.2M/10.2M) leave L5r0_1 (2725 bits, N->E) and L34r0_1 as the main overflow (M2 max 206; M6/M7 under 19% used). A +2-station mk_d (J3) found no legal row points.
+  Next form: re-route L5r0_1/L34r0_1 through M6/M7 (re-layer the slot in/out layers) or snap mk_d to macro-free points, decided on the s11 su31 50-it.
+  PSLICE sub-lane a2e3416e8c513123d is still running. BFQG PARKED, 40 um form routable, timing SOURCE_HOLD.
+  Dirs needed: plan_s11/{G,H75,J20,J215,J235} (.keep). I deleted only my own failed J3* and the old J35 (superseded broken-hop) dirs.
