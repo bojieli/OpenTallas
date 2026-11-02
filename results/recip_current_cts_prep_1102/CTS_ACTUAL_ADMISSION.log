@@ -1,0 +1,41 @@
+ot-run: intel2         admits   343 GB (avail 471, reserve 0, fresh 8, peak 55.6, headroom 0, waiters 1/360 GB) load 76/112 running 45 disk 104 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1926078-1793639007 after 1 s
+PASS_CTS_CURRENT_INPUT_GUARD pre 94 source inputs plus exact current PLACE and pinned instruments; no stage5+
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+mkdir -p /work/run/objects/asap7/hc_ot_qkh_recip_leaf__216x216/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+OT_MACRO_CTS unavailable: /src/physical/common_flow/macro_cts_cluster.tcl missing
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_place.odb
+read_sdc -mode ss /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_place.sdc
+read_sdc -mode ff /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_place.sdc
+source /work/setRC_rcx.tcl
+OT_PG_FINAL_PASS native_pg_terminals=106210
+PG_CTS_CANARY {"kind":"BEGIN","stage":"cts","strict_original":"UNSET","strict_cts_supported":"0","native":"creates 0 swaps 0 bound 0"}
+source /work/max_fanout.tcl
+KVCORES max_fanout 64
+PG_CTS_CANARY {"kind":"PRE_HOOK","stage":"cts","native_before":"creates 0 swaps 0 bound 0","native_after":"creates 0 swaps 0 bound 0"}
+OT_PG_FINAL_PASS native_pg_terminals=106210
+OT_PG_NATIVE_BIRTH_PASS creates 0 swaps 0 bound 0
+PG_CTS_CANARY {"kind":"END","stage":"cts","native":"creates 0 swaps 0 bound 0","native_status_after_end":"contract native_pg_birth.flat_literal.v1 active 0","cleanup_errors":""}
+Error: cts.tcl, 9 PG_CTS_CANARY_FROZEN_MACRO_WRAPPER_MISSING
+Elapsed time: 0:22.27[h:]min:sec. CPU time: user 21.50 sys 0.76 (99%). Peak memory: 507164KB.
+make: *** [Makefile:548: do-4_1_cts] Error 1
+ot-run: RAN on intel2 (unit oth-ubuntu-1926078-1793639007): exit 2

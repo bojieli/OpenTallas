@@ -1,0 +1,20 @@
+{
+  "status": "FAIL_CLOSED_BEFORE_CTS_CONSTRUCTOR",
+  "unit": "oth-ubuntu-1926078-1793639007",
+  "exit_code": 2,
+  "error": "PG_CTS_CANARY_FROZEN_MACRO_WRAPPER_MISSING",
+  "actual_source_loader": "/src/tools/orfs_hold_mm.tcl",
+  "missing_normal_include": "/src/physical/common_flow/macro_cts_cluster.tcl",
+  "input_and_END_PG0": 106210,
+  "native_events": {
+    "creates": 0,
+    "swaps": 0,
+    "bound": 0
+  },
+  "native_callback_inactive_after_cleanup": true,
+  "inverter_or_CTS_calls": 0,
+  "stage4_outputs": 0,
+  "no_CTS_qualification": true,
+  "correction": "Fresh r1 adds exact frozen normal macro dependency at canonical include path, with source-only real-alias closure and zero-macro argument-identity check; no helper relaxation",
+  "r0_artifacts_preserved": true
+}
