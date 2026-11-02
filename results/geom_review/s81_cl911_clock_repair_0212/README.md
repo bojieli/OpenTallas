@@ -1,3 +1,5 @@
+**Superseded reset comparison:** the original comparison below reused a Plan with a cached reset graph. Use `../s81_reset_cache_correction_0405/` for the corrected independent-Plan results and proof. The original source/logs remain historical evidence.
+
 # SOURCE-only cl911 clk_t28 repair — own native graph and proof
 
 FLOW complete supplemental17 census found col_h10_r0_p1__t1__cl911743eb, previously not reached by emitter, fails the unchanged200um bound at clk_t28: load413/radius219.173. Original failure remains in clock_supplement17_r2. This sibling has39 clocknodes and44 resetoutputs; its reset proof is independent of cl574's45-output proof.

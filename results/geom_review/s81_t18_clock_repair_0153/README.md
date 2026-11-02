@@ -1,3 +1,5 @@
+**Superseded reset comparison:** the original comparison below reused a Plan with a cached reset graph. Use `../s81_reset_cache_correction_0405/` for the corrected independent-Plan results and proof. The original source/logs remain historical evidence.
+
 # SOURCE-only slice_station__t18 tap correction
 
 Reviewed actual native census from frozen source39f754dda07e9746c4850ea0814d48d134a6cf2a and the private dead-proof-refreshed + clk_t28 plan. Original FAIL remains in FLOW bind_clk28 and census results.
