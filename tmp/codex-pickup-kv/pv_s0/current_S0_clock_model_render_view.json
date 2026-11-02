@@ -1,0 +1,209 @@
+{
+ "status": "CURRENT_NATIVE_PRECTS_SOURCE_IDENTITY_MODEL_NOT_LATENCY_QUALIFICATION",
+ "top": "kv3_pv_pair",
+ "native_active_clock": "s0__clk",
+ "physical_active_clock_pin": {
+  "bus": "s0__clk",
+  "bit": 0,
+  "layer": "M5",
+  "x": 190.104,
+  "y": 95.04,
+  "face": "interior",
+  "size": [
+   0.048,
+   0.48
+  ],
+  "clock": true
+ },
+ "native_unused_clock": "s1__clk",
+ "physical_unused_clock_pin": {
+  "bus": "s1__clk",
+  "bit": 0,
+  "layer": "M5",
+  "x": 190.488,
+  "y": 95.04,
+  "face": "interior",
+  "size": [
+   0.048,
+   0.48
+  ],
+  "clock": true
+ },
+ "unused_input_policy": "nativeunusedinputpreserved, no create_clock, no ties or inventedconsumers",
+ "ff_clock_consumer_count": 29770,
+ "ff_master_counts": {
+  "DFFHQNx1_ASAP7_75t_R": 28598,
+  "DFFASRHQNx1_ASAP7_75t_R": 1172
+ },
+ "macro_clock_consumers": {
+  "u_s0.u_slice.g_mem[0].u_mem": "ot_sram_1r1w_32x128_m1",
+  "u_s0.u_slice.g_mem[1].u_mem": "ot_sram_1r1w_32x128_m1",
+  "u_s0.u_slice.g_mem[2].u_mem": "ot_sram_1r1w_32x128_m1",
+  "u_s0.u_slice.g_mem[3].u_mem": "ot_sram_1r1w_32x128_m1",
+  "u_s1.u_slice.g_mem[0].u_mem": "ot_sram_1r1w_32x128_m1",
+  "u_s1.u_slice.g_mem[1].u_mem": "ot_sram_1r1w_32x128_m1",
+  "u_s1.u_slice.g_mem[2].u_mem": "ot_sram_1r1w_32x128_m1",
+  "u_s1.u_slice.g_mem[3].u_mem": "ot_sram_1r1w_32x128_m1"
+ },
+ "other_clock_nets": {},
+ "unused_S1_connected_instance_pins": 0,
+ "minimum_nonempty_FF_leaf_groups_at1500": 20,
+ "leaf_groups_actual": "notyetplaced/CTS; no virtualroots or oldtreelatency credited",
+ "source_sha256": {
+  "/srv/opentallas-scratch2/claude/codex-kv-pvpair-1131/kits/kv3_pv_pair__380.16x190.08/1_synth_odb.v": "5fbf480a046756713b85c0314e87420e61db1b8e7556962eca8f6e9910d25408",
+  "/srv/opentallas-scratch2/claude/codex-kv-pvpair-1131/kits/kv3_pv_pair__380.16x190.08/constraint.sdc": "6ca22f54ca6ff3c15fe36d230db5876c1af03880d8d96eda770ef19af87f72b5"
+ },
+ "source_clock_sdc": [
+  "create_clock -name clk -period 833.0000 [get_ports {s0__clk}]",
+  "create_clock -name vclk -period 833.0000"
+ ],
+ "old_S1_tree": "historicalpin-doccore_treeisUNAPPLIED; excludedfromthismodelandanyproposedactivation",
+ "latency": "NOT_MEASURED; normalactualTT/FFgatesrequired",
+ "native_core_scope": "29770FF+8SRAM onS0; excludesbutdoesnotprunerealwrapperFTpaths",
+ "real_wrapper_forward_scope": {
+  "physical_ports": [
+   {
+    "bus": "ft_ck_i_0",
+    "bit": null,
+    "layer": "M5",
+    "x": 267.0,
+    "y": 146.745,
+    "face": "interior",
+    "size": [
+     0.048,
+     0.48
+    ],
+    "clock": true
+   },
+   {
+    "bus": "ft_ck_o_0",
+    "bit": null,
+    "layer": "M5",
+    "x": 270.84,
+    "y": 146.745,
+    "face": "interior",
+    "size": [
+     0.048,
+     0.48
+    ],
+    "clock": true
+   },
+   {
+    "bus": "ft_ck_i_1",
+    "bit": null,
+    "layer": "M5",
+    "x": 106.344,
+    "y": 51.705,
+    "face": "interior",
+    "size": [
+     0.048,
+     0.48
+    ],
+    "clock": true
+   },
+   {
+    "bus": "ft_ck_o_1",
+    "bit": null,
+    "layer": "M5",
+    "x": 111.816,
+    "y": 51.705,
+    "face": "interior",
+    "size": [
+     0.048,
+     0.48
+    ],
+    "clock": true
+   }
+  ],
+  "arcs": [
+   {
+    "k": 0,
+    "source": "ft_ck_i_0",
+    "sink": "ft_ck_o_0",
+    "kind": "clock",
+    "role": "tree_node",
+    "master": "BUFx24_ASAP7_75t_R",
+    "rect_um": [
+     268.11,
+     146.61,
+     269.73,
+     146.88
+    ],
+    "cells": [
+     {
+      "name": "mp_isl0_ck0",
+      "x_um": 268.11,
+      "y_um": 146.61
+     }
+    ]
+   },
+   {
+    "k": 1,
+    "source": "ft_ck_i_1",
+    "sink": "ft_ck_o_1",
+    "kind": "clock",
+    "role": "mesh_driver",
+    "master": "BUFx24_ASAP7_75t_R",
+    "rect_um": [
+     107.46,
+     51.57,
+     110.7,
+     51.84
+    ],
+    "cells": [
+     {
+      "name": "mp_isl1_ck0",
+      "x_um": 107.46,
+      "y_um": 51.57
+     },
+     {
+      "name": "mp_isl1_ck1",
+      "x_um": 109.08,
+      "y_um": 51.57
+     }
+    ]
+   }
+  ],
+  "mapped_buffer_cells": {
+   "mp_isl0_ck0": {
+    "master": "BUFx24_ASAP7_75t_R",
+    "connections": {
+     "A": "ft_ck_i_0",
+     "Y": "ft_ck_o_0"
+    }
+   },
+   "mp_isl1_ck0": {
+    "master": "BUFx24_ASAP7_75t_R",
+    "connections": {
+     "A": "ft_ck_i_1",
+     "Y": "ft_ck_o_1"
+    }
+   },
+   "mp_isl1_ck1": {
+    "master": "BUFx24_ASAP7_75t_R",
+    "connections": {
+     "A": "ft_ck_i_1",
+     "Y": "ft_ck_o_1__p1"
+    }
+   }
+  },
+  "existing_guards": {
+   "raw": "PASS",
+   "odb": "PASS",
+   "island_ft": "PASS3realbuffers"
+  },
+  "policy": "4realFTports/3BUFx24bufferspreservedindependently; no mergedsource/tie/virtualroot; no oldS1latencytransfer"
+ },
+ "ff_consumers_by_top_instance_and_master": {
+  "u_s0/DFFASRHQNx1_ASAP7_75t_R": 586,
+  "u_s0/DFFHQNx1_ASAP7_75t_R": 14299,
+  "u_s1/DFFASRHQNx1_ASAP7_75t_R": 586,
+  "u_s1/DFFHQNx1_ASAP7_75t_R": 14299
+ },
+ "ff_consumers_count_check": 29770,
+ "derived_from": {
+  "file": "/srv/opentallas-scratch2/claude/codex-kv-pvpair-1131/current_S0_clock_model.json",
+  "sha256": "591f77407deb4320042a5d1059ef6c9b724d1aa7b4358ba8e4de0e8520a8dfbc",
+  "note": "ff_consumers list omitted here (29770 names) - see source file"
+ }
+}
