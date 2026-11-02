@@ -2952,3 +2952,4 @@ CODEX: S81 PARKED at explicitUSERhandback. Fullpacket handoff/codex_s81_20261101
 2026-11-01 19:56 PST COORD: OWNER late-stage iteration decision -> KW-RESUME-1 + KW-ECO-1 lanes; SIGNOFF-SPRINT-19 ECOs all near misses now.
 2026-11-01 20:24 PST COORD hourly: count 49 flat 3 h (HEAD e13a LEC EQ, reader fix pending); main a0f8f0ad6 (l48zgate); short-job slot pool ruling to FLOW-21; GEOM-109 + GEOM-108 live; KW-RESUME-1, KW-ECO-1 live.
 - 2026-11-01 20:27 PST SIGNOFF-SPRINT-19 PARKED: count 50 (HEAD 4/4 kp4_dchn counted); live: hd_st_m stm m20/m15 + HBM hcol rk90/rk60 ECOs queued on epyc2 (signoff-sprint-19/{stm,hcol}); chain tools ~/.claude/jobs/b7f906df/tmp/ss19 (cycle.sh N); see lanes/SIGNOFF-SPRINT-19.md PARKED.
+2026-11-01 20:28 PST COORD: count 50 (HEAD 4/4, kp4_dchn e13a). SIGNOFF-SPRINT-20 started; PRUNE-1101H intel2 scratch 96%; G0C-REGRESS-1 (HEAD l48x 1->3911, HBM d44c 14->250 after merges).
