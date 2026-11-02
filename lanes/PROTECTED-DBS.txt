@@ -1,5 +1,5 @@
-# PROTECTED-DBS (SIGNOFF-SPRINT-19, 2026-11-01 17:28 PST; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
-# Source: counted records in release_tree_plan cache (generated 17:13, main ad0610dd32) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
+# PROTECTED-DBS (SIGNOFF-SPRINT-19, 2026-11-01 18:43 PST; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
+# Source: counted records in release_tree_plan cache (generated 18:29, main 99172ad794) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
 # Format: host<TAB>path<TAB>die/design kind[, ...]. Regenerated after every forced refresh.
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49	hbm/ot_hbm_idx_tail_native lec_dir, hbm/ot_hbm_idx_tail_native provenance_dir, hbm/ot_hbm_idx_tail_native resign_dir
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49/signoff	hbm/ot_hbm_idx_tail_native record_dir
@@ -250,6 +250,8 @@ intel2	/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/rsC_k	KV qkd_hr_
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/kitM1	KV qkd_hr_core_tx rtlB GRT source of prdC_m10g_w80 (PRD.json input)
 intel1	/srv/opentallas-scratch2/claude/kv-fn-7/veh60	KV fresh whole-die vehicle on die-kv-60 bind_merged (KV-FN-7; bind copy + source worktrees kw12/0822/main + vdir/build)
 intel1	/srv/opentallas-scratch2/claude/kv-fn-7/src_o3	KV bWc_o3 vehicle source reconstruction (KV-FN-7; vehWc stage + ac0 worktree + regenerated lists)
+intel1	/srv/opentallas-scratch2/claude/kv-fn-7/b_es145	KV es145 vehicle build (KV-FN-7; obj + objx binary)
+intel1	/srv/opentallas-scratch2/claude/kv-fn-7/b_fx	KV FX (E3=1) vehicle build, running kvfn7-fx (KV-FN-7)
 epyc2	/srv/opentallas-scratch2/claude/kv-fn-7/e2stage	KV FX run copy kvfn7-fx-e2 (KV-FN-7)
 intel2	/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20	S81 internal child ot_s81ph_native_sel_hist_bank hrB20 (Codex, SIGNED + routed EQ 1866; not a plan hard core)
 intel2	/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/export_views/ot_s81ph_native_sel_hist_bank	S81 hist_bank hrB20 exported view (Codex)
@@ -262,6 +264,7 @@ intel2	/srv/opentallas-scratch2/claude/signoff-sprint-18	SIGNOFF-SPRINT-18 ring_
 epyc2 /srv/opentallas-scratch2/claude/codex-kv-ctl-alias-replay-1131 CODEX KV-FN-7 live untrusted-replay proof scope2489729; preserve source and results
 intel1	/srv/opentallas-scratch2/claude/kv-fn-7/vec	KV-FN-7 regenerated KV vectors (recipe 000167c13, KVATTN_VECTORS PASS, tree sha 88380c09); used by veh60 token runs + TOK-QK-2
 intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-alias-replay-1131 CODEX KV-FN-7 untrusted prior-hyp replay through original prover; preserve live inputs/results
-
+epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-19/kp4_e13a_n	s81_head/ot_s81_kp4_dchn resign_dir (SS19 n-head)
+epyc2	/srv/opentallas-scratch2/claude/head-serdes-2/e13a	s81_head/ot_s81_kp4_dchn kit_root (routed DB e13a)
 intel1 /srv/opentallas-scratch2/claude/codex-kvfn-monitor-1815 CODEX KV-FN-7 live readonly GEN1 event monitor service; preserve
 intel1 /srv/opentallas-scratch2/claude/codex-kvfn-perf-1755 CODEX KV-FN-7 denied single perf sample receipt; no permission changes
