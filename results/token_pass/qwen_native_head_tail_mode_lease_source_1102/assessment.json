@@ -1,0 +1,32 @@
+{
+  "status": "CHEAP_MODE_LATCH_NOT_QUALIFIED_BY_CURRENT_CALLER",
+  "scope": "sourceonly, noRTLimplementation/adoption/job",
+  "native_contract": "acceptedGO=go&&ready;ready=!active&&!pend;idle additionallywaitsallvline/memory/outputpending. EarlyGO ready1/idle0 is accepted and has no dedicatedbusyfault.",
+  "selected_caller": "TTromready literal1;idleproxy !ag_stn_busy. HEADchunks1..3/ENDbarrier1 are useful but not direct native drain. Fixedcalendar drives scheduledGO evenunavailable and faults separately.",
+  "fixture_limitation": "1024cyclegaps areTEST_ONLY, not authenticatedproductionperchunklease",
+  "slot_counter": {
+    "bits": 3,
+    "rule": "incrementonUNMASKEDraw_v modulo8;resetonlyunitreset, neverearlyGO",
+    "phase": "allselectedvalidoperationsissueIL8\u00d7K\u00d7rounds, so completebursts have multiple8words; reset also clearsvalidpipeline"
+  },
+  "cheap_mode": {
+    "bits": 2,
+    "encoding": "keepall / q4keep_slot<3 / q5keepnone;latchedONLYacceptedGO",
+    "cost": "5FFperTG4/3840perrank, plusdescriptor/qdecode/slotcompare/gating notmeasured",
+    "placement": "insidePART1 beforeTOREG; ifelsewhere, exactconsumptionpoint/outerfaceages mustbeincluded",
+    "necessary_assertion": "for every acceptedmode-changingGO, nativePART1 idle must already be1 at the same preedge; or prove previous rawpublication consumed by exactlease. No such proof currently exists.",
+    "qualification": "onlyexplicitdefaultOFF exact-schedulevariant after perchunkproductionlease+negativeearlyGOassertiongate; not safe unrestrictedPART1ABI"
+  },
+  "source_counterexample": {
+    "old_instruction": "HEADfullchunk2,nout6144,tiles8,K8",
+    "new_instruction": "HEADlastchunk3,wbase19968,nout560,tiles1",
+    "old_last_issue": "L",
+    "new_accepted_GO": "L+1:active0,pend0,ready1 whileoldrawpipelinepending",
+    "old_last_inner_raw_publication": "L+45 forselectedREGROOT3 MEM_EXTRA8/SD15/OD16/XTX2; source-derived, notnewmeasurement",
+    "bad_mode_effect": "newq4tailmode applies to45remainingoldfullrawpublications, potentiallydropping30genuinefullvectors; exactlegalnativecounterexamplebeforecallerleasequalifiesotherwise"
+  },
+  "robust_conclusion": "per-word alignedpredicate remainsrequired for unrestricted overlappingnativeGO. Cheapvariantcanonlybequalifiedby strictexactschedulepremise, cannotinfer fromcallerready/barrier/fault alone.",
+  "readset": {
+    "caller_report_sha256": "8fc043d3a547b9643192b6d8e2590c818d620ba96144f434fdf12788131b8803"
+  }
+}
