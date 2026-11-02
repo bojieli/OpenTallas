@@ -1,0 +1,34 @@
+{
+  "status": "ACTUAL_SYNTH_AND_UNPLACED_CENSUS_PASS_ONLY",
+  "unit": "oth-ubuntu-3267841-1793633739",
+  "host": "intel1",
+  "resource_scope": {
+    "GB": 4,
+    "threads": 1,
+    "disk_GB": 3
+  },
+  "current_profile": [
+    34,
+    18
+  ],
+  "census": {
+    "status": "SYNTH ONLY; no physical/formalqualification",
+    "instances": 21931,
+    "std_instances": 21927,
+    "macro_instances": 4,
+    "sequential_std": 9785,
+    "std_area_um2": 3819.91626,
+    "macro_area_um2": 15575.410944,
+    "placed_instances": 0,
+    "FT_buffer_instances": 0
+  },
+  "required_output_hashes": {
+    "run/results/asap7/hc_qkd_ectlk_q1__243_648x172_8/base/1_synth.odb": "7164bef9ad6bccadb3773ca8ab8bc35c28349ad5012cfe5d1976df6336296c20",
+    "run/results/asap7/hc_qkd_ectlk_q1__243_648x172_8/base/1_2_yosys.v": "0192e029133af666b4471c050351de321f789c6199626cc1332761b2dd71f35e",
+    "synth.time": "4f1d878ec15d73f830073dcf3d7ff14ec14c481c348cf8144a0bbdc217b64b3c",
+    "q1_synth_model_census.json": "247b1a2f22e4e260ac041be7ece0735aca63f6051b5af50df09624869fda4d3d"
+  },
+  "proof": false,
+  "physical_qualification": false,
+  "old_final_NOT_EQ_preserved": true
+}
