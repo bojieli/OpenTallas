@@ -1,0 +1,225 @@
+{
+  "status": "ACTUAL_SELECTED_CALLER_SOURCE_ONLY",
+  "relative_epoch": "layer edges are relative to S36; HEAD edges relative to S37, no absolute start relation assumed",
+  "corrected_residual2_calls": [
+    {
+      "index": 430,
+      "slice": 8,
+      "issue_edge": 5264,
+      "old_pidx": 1,
+      "corrected_pidx": 2
+    },
+    {
+      "index": 433,
+      "slice": 9,
+      "issue_edge": 5271,
+      "old_pidx": 1,
+      "corrected_pidx": 2
+    },
+    {
+      "index": 435,
+      "slice": 10,
+      "issue_edge": 5278,
+      "old_pidx": 1,
+      "corrected_pidx": 2
+    },
+    {
+      "index": 436,
+      "slice": 11,
+      "issue_edge": 5285,
+      "old_pidx": 1,
+      "corrected_pidx": 2
+    },
+    {
+      "index": 442,
+      "slice": 0,
+      "issue_edge": 5304,
+      "old_pidx": 1,
+      "corrected_pidx": 2
+    },
+    {
+      "index": 445,
+      "slice": 1,
+      "issue_edge": 5311,
+      "old_pidx": 1,
+      "corrected_pidx": 2
+    },
+    {
+      "index": 448,
+      "slice": 2,
+      "issue_edge": 5318,
+      "old_pidx": 1,
+      "corrected_pidx": 2
+    },
+    {
+      "index": 451,
+      "slice": 3,
+      "issue_edge": 5325,
+      "old_pidx": 1,
+      "corrected_pidx": 2
+    },
+    {
+      "index": 454,
+      "slice": 4,
+      "issue_edge": 5332,
+      "old_pidx": 1,
+      "corrected_pidx": 2
+    },
+    {
+      "index": 457,
+      "slice": 5,
+      "issue_edge": 5339,
+      "old_pidx": 1,
+      "corrected_pidx": 2
+    },
+    {
+      "index": 459,
+      "slice": 6,
+      "issue_edge": 5346,
+      "old_pidx": 1,
+      "corrected_pidx": 2
+    },
+    {
+      "index": 460,
+      "slice": 7,
+      "issue_edge": 5353,
+      "old_pidx": 1,
+      "corrected_pidx": 2
+    }
+  ],
+  "last_raw_X_stream_calls": [
+    {
+      "index": 461,
+      "slice": 8,
+      "issue_edge": 5372,
+      "pidx": 3
+    },
+    {
+      "index": 462,
+      "slice": 9,
+      "issue_edge": 5381,
+      "pidx": 3
+    },
+    {
+      "index": 463,
+      "slice": 0,
+      "issue_edge": 5427,
+      "pidx": 3
+    },
+    {
+      "index": 464,
+      "slice": 1,
+      "issue_edge": 5434,
+      "pidx": 3
+    },
+    {
+      "index": 465,
+      "slice": 2,
+      "issue_edge": 5441,
+      "pidx": 3
+    },
+    {
+      "index": 466,
+      "slice": 3,
+      "issue_edge": 5448,
+      "pidx": 3
+    },
+    {
+      "index": 467,
+      "slice": 4,
+      "issue_edge": 5471,
+      "pidx": 3
+    },
+    {
+      "index": 468,
+      "slice": 5,
+      "issue_edge": 5478,
+      "pidx": 3
+    },
+    {
+      "index": 469,
+      "slice": 6,
+      "issue_edge": 5485,
+      "pidx": 3
+    },
+    {
+      "index": 470,
+      "slice": 7,
+      "issue_edge": 5492,
+      "pidx": 3
+    },
+    {
+      "index": 471,
+      "slice": 10,
+      "issue_edge": 5515,
+      "pidx": 3
+    },
+    {
+      "index": 472,
+      "slice": 11,
+      "issue_edge": 5522,
+      "pidx": 3
+    }
+  ],
+  "root_for_last_residual": [
+    {
+      "index": 361,
+      "issue_edge": 5057,
+      "fields": {
+        "go": 1,
+        "kind": 3,
+        "dst": 0,
+        "root": 1,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 1,
+        "rx": 400,
+        "eps": 897988541,
+        "k": 12,
+        "amnb": 0,
+        "rdir": 0
+      }
+    }
+  ],
+  "head_root_config": [
+    {
+      "index": 488,
+      "issue_edge": 248,
+      "fields": {
+        "go": 1,
+        "kind": 3,
+        "dst": 0,
+        "root": 1,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 1,
+        "rx": 400,
+        "eps": 897988541,
+        "k": 12,
+        "amnb": 6,
+        "rdir": 0
+      }
+    }
+  ],
+  "head_native_apply_calls": [],
+  "rstd_publication": "NOT_DERIVABLE_FROM_CALLER_ISSUE_ALONE; actual native PSUM arrival/ROOT lease join required",
+  "new_gain_or_prog_prior_last_use": "NONE: regions are outside every selected36-stage read/write/store footprint and optional monitor reservation",
+  "new_apply_first_use": "ABSENT: selected HEAD descriptor contains no native SU command",
+  "candidate_storage": {
+    "gain_base": 1088,
+    "apply_pidx": 16,
+    "vm_x_base": 0,
+    "vm_rstd": 400,
+    "h_destination": "native W_X stream; no added VM region"
+  },
+  "calr_entry_capacity": {
+    "nent": 1009,
+    "limit": 1023,
+    "remaining": 14
+  },
+  "source_sha256": {
+    "dw.hex": "85529b1c37800d8a5719e2e4f72a21932ff5c0189339e9aeebf493be3b54afbd",
+    "calendar_m0.viamap.hex": "7dee758ab8fbc189c91330b2ef5a72a89fdd0dc7659496417fc35858e852b917",
+    "calendar_m1.viamap.hex": "db189eb816d21f02e08d882e6700d5f01f3ce57386b9a912b979adeb68573005"
+  }
+}
