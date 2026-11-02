@@ -26,6 +26,13 @@ def main():
     slot=plan['partition_types']['native_provider_slot'];slot['outline_um']=[W,H]
     slot['hard_cores'][0].update(outline_um=[W,H],pins_file=pins.name)
     (d/'GEN_plan.json').write_text(json.dumps(plan,indent=2)+'\n')
+    # Normal --core-macros auto consumes this table even when the callback
+    # recipe already carries placements. Bind it to these exact reviewed,
+    # native-pin-grid-snapped rectangles, never the smaller old GEN geometry.
+    core_macros=dict(schema='opentallas.core_macros.v1',cores={TOP:dict(status='KNOWN',
+      basis='DISABLED_REVIEWED_EXACT_STATIC_RECTS_NOT_PLACED_PROVIDER',
+      macros=[dict(name=q['name'],master=MASTER,rect_um=q['rect_um'],orient='R0')for q in m['macros']])})
+    (d/'core_macros.json').write_text(json.dumps(core_macros,indent=2)+'\n')
     views=dict(schema='opentallas.hbm_arch.views.v1',plan='GEN_plan.json',plan_sha256=sha(d/'GEN_plan.json'),
       view_list=[dict(view=view,module=TOP,outline_um=[W,H],pins_file=pins.name,pins_sha256=psha,pins=2904,
         recipe_keys=[TOP],family='SOURCE13_SELECTED_R10_PAGE_AW1',canonical_type=None,instances=['B113.DISABLED_moved_r10'],placed=0)])

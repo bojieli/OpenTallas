@@ -1,0 +1,495 @@
+{
+  "schema": "opentallas.core_macros.v1",
+  "cores": {
+    "ot_hgi_sfu_programme_store_r10": {
+      "status": "KNOWN",
+      "basis": "DISABLED_REVIEWED_EXACT_STATIC_RECTS_NOT_PLACED_PROVIDER",
+      "macros": [
+        {
+          "name": "g_leaf[0].u_leaf.g_page[0].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            17.28,
+            17.292,
+            113.83200000000001,
+            86.952
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[0].u_leaf.g_page[1].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            131.112,
+            17.292,
+            227.664,
+            86.952
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[0].u_leaf.g_page[2].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            244.944,
+            17.292,
+            341.496,
+            86.952
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[0].u_leaf.g_page[3].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            358.776,
+            17.292,
+            455.32800000000003,
+            86.952
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[1].u_leaf.g_page[0].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            472.608,
+            17.292,
+            569.16,
+            86.952
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[1].u_leaf.g_page[1].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            17.28,
+            104.22,
+            113.83200000000001,
+            173.88
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[1].u_leaf.g_page[2].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            131.112,
+            104.22,
+            227.664,
+            173.88
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[1].u_leaf.g_page[3].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            244.944,
+            104.22,
+            341.496,
+            173.88
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[2].u_leaf.g_page[0].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            358.77599999999995,
+            104.22,
+            455.328,
+            173.88
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[2].u_leaf.g_page[1].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            472.60799999999995,
+            104.22,
+            569.16,
+            173.88
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[2].u_leaf.g_page[2].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            17.28,
+            191.148,
+            113.83200000000001,
+            260.808
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[2].u_leaf.g_page[3].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            131.112,
+            191.148,
+            227.664,
+            260.808
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[3].u_leaf.g_page[0].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            244.944,
+            191.148,
+            341.496,
+            260.808
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[3].u_leaf.g_page[1].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            358.776,
+            191.148,
+            455.32800000000003,
+            260.808
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[3].u_leaf.g_page[2].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            472.608,
+            191.148,
+            569.16,
+            260.808
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[3].u_leaf.g_page[3].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            17.28,
+            278.076,
+            113.83200000000001,
+            347.736
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[4].u_leaf.g_page[0].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            131.112,
+            278.076,
+            227.664,
+            347.736
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[4].u_leaf.g_page[1].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            244.944,
+            278.076,
+            341.496,
+            347.736
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[4].u_leaf.g_page[2].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            358.776,
+            278.076,
+            455.32800000000003,
+            347.736
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[4].u_leaf.g_page[3].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            472.608,
+            278.076,
+            569.16,
+            347.736
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[5].u_leaf.g_page[0].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            17.28,
+            365.052,
+            113.83200000000001,
+            434.712
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[5].u_leaf.g_page[1].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            131.112,
+            365.052,
+            227.664,
+            434.712
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[5].u_leaf.g_page[2].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            244.944,
+            365.052,
+            341.496,
+            434.712
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[5].u_leaf.g_page[3].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            358.776,
+            365.052,
+            455.32800000000003,
+            434.712
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[6].u_leaf.g_page[0].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            472.608,
+            365.052,
+            569.16,
+            434.712
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[6].u_leaf.g_page[1].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            17.28,
+            451.98,
+            113.83200000000001,
+            521.64
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[6].u_leaf.g_page[2].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            131.112,
+            451.98,
+            227.664,
+            521.64
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[6].u_leaf.g_page[3].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            244.944,
+            451.98,
+            341.496,
+            521.64
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[7].u_leaf.g_page[0].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            358.77599999999995,
+            451.98,
+            455.328,
+            521.64
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[7].u_leaf.g_page[1].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            472.60799999999995,
+            451.98,
+            569.16,
+            521.64
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[7].u_leaf.g_page[2].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            17.28,
+            538.908,
+            113.83200000000001,
+            608.568
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[7].u_leaf.g_page[3].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            131.112,
+            538.908,
+            227.664,
+            608.568
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[8].u_leaf.g_page[0].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            244.944,
+            538.908,
+            341.496,
+            608.568
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[8].u_leaf.g_page[1].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            358.776,
+            538.908,
+            455.32800000000003,
+            608.568
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[8].u_leaf.g_page[2].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            472.608,
+            538.908,
+            569.16,
+            608.568
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[8].u_leaf.g_page[3].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            17.28,
+            625.836,
+            113.83200000000001,
+            695.496
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[9].u_leaf.g_page[0].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            131.112,
+            625.836,
+            227.664,
+            695.496
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[9].u_leaf.g_page[1].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            244.944,
+            625.836,
+            341.496,
+            695.496
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[9].u_leaf.g_page[2].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            358.776,
+            625.836,
+            455.32800000000003,
+            695.496
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[9].u_leaf.g_page[3].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            472.608,
+            625.836,
+            569.16,
+            695.496
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[10].u_leaf.g_page[0].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            17.28,
+            712.812,
+            113.83200000000001,
+            782.472
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[10].u_leaf.g_page[1].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            131.112,
+            712.812,
+            227.664,
+            782.472
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[10].u_leaf.g_page[2].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            244.944,
+            712.812,
+            341.496,
+            782.472
+          ],
+          "orient": "R0"
+        },
+        {
+          "name": "g_leaf[10].u_leaf.g_page[3].u_program",
+          "master": "ot_sram_1r1w_512x256_m1_r2c2",
+          "rect_um": [
+            358.776,
+            712.812,
+            455.32800000000003,
+            782.472
+          ],
+          "orient": "R0"
+        }
+      ]
+    }
+  }
+}
