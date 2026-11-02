@@ -45,3 +45,42 @@ def install_reach_slot(module, destination):
  lines[i:i+2]=[indent+x for x in replacement];source='\n'.join(lines)+'\n';code=compile(source,str(destination),'exec')
  Path(destination).write_text(source);exec(code,module.__dict__)
  return source
+
+def _weighted_distance(mask, pitches):
+ d=np.where(mask,0.,1e9)
+ for axis,pitch in enumerate(pitches):
+  shape=[1]*d.ndim;shape[axis]=d.shape[axis];q=np.arange(d.shape[axis]).reshape(shape)*pitch
+  left=np.minimum.accumulate(d-q,axis=axis)+q
+  right=np.flip(np.minimum.accumulate(np.flip(d+q,axis=axis),axis=axis),axis=axis)-q
+  d=np.minimum(left,right)
+ return d
+
+def _allocate_chain(self,start,goal,targets,reach=404.5):
+ """Atomic fixed-count path on actual unoccupied row cells; no reservations cached."""
+ if not targets or reach<=0:raise ValueError('invalid fixed-count chain')
+ xs=self.ox+np.arange(self.ix0,self.ix1+1)*self.cp+self.cw/2
+ ys=self.oy+np.arange(self.iy0,self.iy1+1)*self.rp+self.ch/2
+ X,Y=xs[:,None],ys[None,:];free=np.ones((len(xs),len(ys)),dtype=bool)
+ for a,b,c,d in self.blocks:
+  free&=~((X-self.cw/2<c-1e-8)&(X+self.cw/2>a+1e-8)&(Y-self.ch/2<d-1e-8)&(Y+self.ch/2>b+1e-8))
+ if self.used:
+  occupied=np.fromiter(self.used,dtype=np.int64);free[occupied%self.nx,occupied//self.nx]=False
+ backwards=[None]*len(targets);backwards[-1]=free&(abs(X-goal[0])+abs(Y-goal[1])<=reach+1e-8)
+ for j in range(len(targets)-2,-1,-1):backwards[j]=free&(_weighted_distance(backwards[j+1],(self.cp,self.rp))<=reach+1e-8)
+ chosen=[];ids=[];previous=start
+ for j,target in enumerate(targets):
+  lo=int(np.searchsorted(xs,previous[0]-reach));hi=int(np.searchsorted(xs,previous[0]+reach,side='right'))
+  bot=int(np.searchsorted(ys,previous[1]-reach));top=int(np.searchsorted(ys,previous[1]+reach,side='right'))
+  x,y=xs[lo:hi,None],ys[None,bot:top]
+  ok=free[lo:hi,bot:top]&backwards[j][lo:hi,bot:top]&(abs(x-previous[0])+abs(y-previous[1])<=reach+1e-8)
+  if not ok.any():raise ValueError(f'no fixed{len(targets)+1} occupied-row path atstage{j+1} underretainedreservations')
+  cost=np.where(ok,abs(x-target[0])+abs(y-target[1]),np.inf)
+  # Deterministic row-major ties, matching the base row allocator.
+  row,col=np.unravel_index(np.argmin(cost.T),cost.T.shape);ix,iy=lo+col,bot+row
+  previous=(float(xs[ix]),float(ys[iy]));chosen.append(previous);ids.append(int(iy*self.nx+ix));free[ix,iy]=False
+ chain=[start,*chosen,goal];worst=max(sum(abs(x-y)for x,y in zip(a,b))for a,b in zip(chain,chain[1:]))
+ if worst>reach+1e-6 or len(set(ids))!=len(ids):raise AssertionError('invalid actual-row path')
+ self.used.update(ids)
+ return chosen,dict(allocated=len(ids),max_hop_um=worst,grid_shape=free.shape,reservations_retained=len(self.used)-len(ids))
+
+ReachAllocator.allocate_chain=_allocate_chain
