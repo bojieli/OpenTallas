@@ -53,3 +53,20 @@ def test_die_edges_fold():
     assert len(c['stages']) == len(base['stages']) + 3
     with pytest.raises(ValueError):
         L.compose(stage=1, die_edges={'nowhere': [dict(label='x', cycles=1)]})
+
+
+def test_native_second_residual_uses_PS2_without_moving_calendar():
+    """Regression: reusing residual timing must not reuse the first post-scale."""
+    import dv_lower as D
+    fixed=L.compose(stage=1)
+    legacy=L.compose(stage=1,correct_residual2=False)
+    def residual_calls(rec,phase):
+        return [D.decode_cmd(int(e['cmd'],16)) for e in rec['events']
+                if e['label'].startswith(phase+':') and D.decode_cmd(int(e['cmd'],16))['kind']==1
+                and D.decode_cmd(int(e['cmd'],16))['pidx'] in (1,2)]
+    first=residual_calls(fixed,'resid1');second=residual_calls(fixed,'resid2')
+    assert len(first)==len(second)==12
+    assert {d['pidx'] for d in first}=={1} and {d['pidx'] for d in second}=={2}
+    assert fixed['composition']==legacy['composition']
+    changes=[(a,b) for a,b in zip(fixed['events'],legacy['events']) if a['cmd']!=b['cmd']]
+    assert len(changes)==12 and all(a['edge_w5']==b['edge_w5'] for a,b in changes)
