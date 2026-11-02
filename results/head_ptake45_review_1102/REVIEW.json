@@ -1,0 +1,23 @@
+{
+ "scope": "Independent static review only; FLOW sole native producer",
+ "caller_sha256": "6ba7a233b8f2a40f9019ded768d29220e465fe2e7856212258774fbab9c324df",
+ "source_packet_sha256": "5b07b1f3edb1afd6816f3690f8a31b1fe605cfc6bf39b5a9397236fbf981cdb0",
+ "LA_terminal_sha256": "0e78156ba3b28c7c66ca387e41f2fb9e76b5af1817679c4e00054f03239ab55c",
+ "verdict": "CONCUR_BOUNDED_DIAGNOSTIC_ONLY",
+ "expected_BASE_sides": 4,
+ "LA_BASE_rechecks": 4,
+ "joint_outputs": 135,
+ "groups": {
+  "remaining18": 18,
+  "original_native_goldX27": 27,
+  "retained_aux": 82,
+  "LA_gold_gate_NEXT": 4,
+  "p_take_gold_gate_NEXT": 4
+ },
+ "original_prior": 12732,
+ "matched": 58437,
+ "reset": 64,
+ "new_masks_or_reset_constraints": false,
+ "native_job_by_reviewer": false,
+ "source_credit": false
+}
