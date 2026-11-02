@@ -1,0 +1,36 @@
+{
+  "status": "PASS_NORMAL_DRY_STAGE2_ONLY",
+  "steps": [
+    [
+      "2_1_floorplan",
+      "floorplan"
+    ],
+    [
+      "2_2_floorplan_macro",
+      "macro_place"
+    ],
+    [
+      "2_3_floorplan_tapcell",
+      "tapcell"
+    ],
+    [
+      "2_4_floorplan_pdn",
+      "pdn"
+    ]
+  ],
+  "unit": "oth-ubuntu-3747285-1793629934",
+  "resources": {
+    "mem_GB": 4,
+    "threads": 1,
+    "disk_GB": 2
+  },
+  "no_CAD_dispatched": true,
+  "no_SYNTH_PLACE_CTS_route_STA": true,
+  "exact89inputs_unchanged": true,
+  "hashes": {
+    "EXPECTED.json": "d4dba252f9a81fcd558e7206c5164283a970479f3681413ffdde0706d4614ac3",
+    "inside_fp.sh": "456d80770e71562aa3d3cdaa5dbaca7849cf1a82f21db6d50c49b1c6bbdb5e35",
+    "run_dry.sh": "2c677730e5892dc3bc63f0fb86824caea645e2b5fc49bc6752d031cd83880c67",
+    "DRY.log": "d9e04ff6ffef976eb6d0c476571cd68f5b9a31a5d4e9a7b0a80d27bcb5e0a50f"
+  }
+}
