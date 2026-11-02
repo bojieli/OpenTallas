@@ -1,0 +1,53 @@
+{
+  "status": "EXACT_NATIVE_INTERFACE_JOIN_PREP_ONLY",
+  "qualified": false,
+  "module": "qkd_kvs_pc",
+  "native_hdl_vs_prepared_hdl_vs_LEF_signal_bits": 4133,
+  "source_clock_parameters": {
+    "CORE_CLOCK": 1,
+    "MU": 1,
+    "pc_identity": "runtime pc__pc[4:0], no header parameter substitution"
+  },
+  "corners": {
+    "tt": {
+      "sha256": "581c4f2e427b16aca2d495e6284e75038f0329b77a82602b3d4b44f6d8858304",
+      "clock_ports": [
+        "ck"
+      ],
+      "ports": 29,
+      "bus_direction_width_join": true
+    },
+    "ff": {
+      "sha256": "235388ad7f0e2f7928329254a390780f9989c44a3acde569954a25d655f381e7",
+      "clock_ports": [
+        "ck"
+      ],
+      "ports": 29,
+      "bus_direction_width_join": true
+    }
+  },
+  "lef_sha256": "b6a6b09f21cc43f2c1dc35f58514fbf86744935e1b7611795cb0c6b3552dab78",
+  "unchanged_full_event_key_source_sha256": {
+    "qkd_ctrl_pc_nc.sv": "8b2ba9264849ad77644c6f08c94cbac4dd0cf10927d1ef96dc000c61e66aeb8e",
+    "qkd_static_kv_pc_path_nc.sv": "8af6a269f7324570b9e72eef10ebfec7393eebae89fdd27e8a91a8355685b7de",
+    "qkd_kv_pc_chain_station_b.sv": "b78617a65c0b83c907c9ca010897178e3a1c2d4e25fbd5bca2570d5c98063749",
+    "qkd_static_kv_pc_path_fan_nc_b.sv": "31ca88dad084b0851c314238193c6f631cc75698bfb45c32513bb5504149e8fe"
+  },
+  "native_core_metadata_sha256": {
+    "ft_ports.json": "f0a37e81d07710522918f93c449a31e5cb528706c1a287345f562ded02f470fb",
+    "core.json": "c596bd6ff2dd62a8e5aee9732c69636fd251e85f35b31d440cdcda81ff3d519d",
+    "original_to_final.clock_diff.json": "ffa363606c456dfa2d97b7f587de951f15a1fdebbfac3bf1168a75b22074e10d",
+    "original_to_route.clock_diff.json": "8e2f7bc675009ba4724efb64266a80917173477b09f59e9737d586ddf2adfb64",
+    "island_ft.json": "2a4c535d6b47ef63a88f678aa10f8e45f0c913565c051b89101c7c5ef0209e8f",
+    "ft_interface.json": "604cb9a6466249e13915221631787d8fa6e47d028176bced8b32203906ed39f7",
+    "constraint.sdc": "766c8118de59cbe2d3489a6e60c641869b86378c25c12e2b98f4adb4975c31fd",
+    "PROVENANCE.json": "ee1a01203c441b7f818a7c4e51986a1b8b6a38cc8cf1d1b24395f0032766b743",
+    "sdc_lint.json": "24ef55f0c0c9c395270fb163be243a4a169dc148aeb55373c3e9c3e1816de60f",
+    "clock_binding.json": "a5d271300403141d7fa704fa082362e68200348110e183a5c762d6bcb53403f3",
+    "pins.json": "5f2f253b5e62ca26697f8455d6c388f88534daf91fb981efa6e83ba8746394ff"
+  },
+  "native_views_qualification": "PC_NOT_SIGNED TT-15.30/FF+8.07/DRV100+31; own-final-post-LEC/provenance HOLD",
+  "normal_registration_API": "gen_core_kit_kv --hard-children JSON, exact real master/view files and actual u_core_kvpc1/2/3 placements; not invoked",
+  "no_synthetic_blackbox_or_renamed_master": true,
+  "no_new_CAD_or_proof": true
+}

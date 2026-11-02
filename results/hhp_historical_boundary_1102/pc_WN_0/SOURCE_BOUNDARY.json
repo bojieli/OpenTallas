@@ -1,0 +1,425 @@
+{
+  "actual_parent_nets": [
+    "ckm_w_ckm_n10_h1101010010",
+    "ckm_w_ckm_n10_h1101010011",
+    "ckm_w_ckm_n10_h1101010110",
+    "ckm_w_ckm_n10_h1101010111",
+    "ck_mesh"
+  ],
+  "parent_wrapper_and_bound_extra_ports": 5,
+  "full_event_before_leaf_rename": true,
+  "leaf_renames": [
+    {
+      "src": "/srv/opentallas-scratch2/claude/codex-hhp-historical-boundary-0600/capsule_r4/common_after_full_event/qkd_kvs_pc_h_head_p.sv",
+      "copy": "/srv/opentallas-scratch2/claude/codex-hhp-historical-boundary-0600/capsule_r4/pc_WN_0/rtl/qkd_kvs_pc_h_head_p__leaf.sv",
+      "modules": [
+        "qkd_kvs_pc_h_head_p"
+      ]
+    },
+    {
+      "src": "/srv/opentallas-scratch2/claude/codex-hhp-historical-boundary-0600/capsule_r4/common_after_full_event/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+      "copy": "/srv/opentallas-scratch2/claude/codex-hhp-historical-boundary-0600/capsule_r4/pc_WN_0/rtl/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32__leaf.sv",
+      "modules": [
+        "qkd_kvs_pc"
+      ]
+    }
+  ],
+  "models": {
+    "kvpc0": {
+      "module": "qkd_kvs_pc_h_head_p",
+      "ports": 28,
+      "bits": 3291,
+      "FT": [
+        {
+          "input_port": "ft_ck_i_0",
+          "output_port": "ft_ck_o_0",
+          "input_net": "ckm_w_ckm_n10_h1101010111",
+          "output_net": "ck_mesh"
+        },
+        {
+          "input_port": "ft_ck_i_1",
+          "output_port": "ft_ck_o_1",
+          "input_net": "ckm_w_ckm_n10_h1101010110",
+          "output_net": "ck_mesh"
+        }
+      ]
+    },
+    "kvpc1": {
+      "module": "qkd_kvs_pc",
+      "ports": 29,
+      "bits": 4133,
+      "FT": [
+        {
+          "input_port": "ft_ck_i_0",
+          "output_port": "ft_ck_o_0",
+          "input_net": "ckm_w_ckm_n10_h1101010111",
+          "output_net": "ck_mesh"
+        },
+        {
+          "input_port": "ft_ck_i_1",
+          "output_port": "ft_ck_o_1",
+          "input_net": "ckm_w_ckm_n10_h1101010110",
+          "output_net": "ck_mesh"
+        }
+      ]
+    },
+    "kvpc2": {
+      "module": "qkd_kvs_pc",
+      "ports": 29,
+      "bits": 4133,
+      "FT": [
+        {
+          "input_port": "ft_ck_i_0",
+          "output_port": "ft_ck_o_0",
+          "input_net": "ckm_w_ckm_n10_h1101010011",
+          "output_net": "ck_mesh"
+        },
+        {
+          "input_port": "ft_ck_i_1",
+          "output_port": "ft_ck_o_1",
+          "input_net": "ckm_w_ckm_n10_h1101010010",
+          "output_net": "ck_mesh"
+        }
+      ]
+    },
+    "kvpc3": {
+      "module": "qkd_kvs_pc",
+      "ports": 29,
+      "bits": 4133,
+      "FT": [
+        {
+          "input_port": "ft_ck_i_0",
+          "output_port": "ft_ck_o_0",
+          "input_net": "ckm_w_ckm_n10_h1101010011",
+          "output_net": "ck_mesh"
+        },
+        {
+          "input_port": "ft_ck_i_1",
+          "output_port": "ft_ck_o_1",
+          "input_net": "ckm_w_ckm_n10_h1101010010",
+          "output_net": "ck_mesh"
+        }
+      ]
+    }
+  },
+  "soft_HEAD_normal_cells": [
+    {
+      "k": 0,
+      "source": "ckm_w_ckm_n10_h1101010111",
+      "sink": "ck_mesh",
+      "kind": "clock",
+      "role": "mesh_driver",
+      "master": "BUFx24_ASAP7_75t_R",
+      "rect_um": [
+        123.39,
+        86.4,
+        126.63,
+        86.67
+      ],
+      "cells": [
+        {
+          "name": "u_core_kvpc0.mp_isl0_ck0",
+          "x_um": 357.87,
+          "y_um": 285.12
+        },
+        {
+          "name": "u_core_kvpc0.mp_isl0_ck1",
+          "x_um": 356.25,
+          "y_um": 285.12
+        }
+      ]
+    },
+    {
+      "k": 1,
+      "source": "ckm_w_ckm_n10_h1101010110",
+      "sink": "ck_mesh",
+      "kind": "clock",
+      "role": "mesh_driver",
+      "master": "BUFx24_ASAP7_75t_R",
+      "rect_um": [
+        123.39,
+        276.48,
+        126.63,
+        276.75
+      ],
+      "cells": [
+        {
+          "name": "u_core_kvpc0.mp_isl1_ck0",
+          "x_um": 357.87,
+          "y_um": 475.2
+        },
+        {
+          "name": "u_core_kvpc0.mp_isl1_ck1",
+          "x_um": 356.25,
+          "y_um": 475.2
+        }
+      ]
+    }
+  ],
+  "soft_HEAD_private_net_allowlist": {
+    "u_core_kvpc0.mp_isl0_ck1": "u_core_kvpc0.ft_ck_o_0__p1",
+    "u_core_kvpc0.mp_isl1_ck1": "u_core_kvpc0.ft_ck_o_1__p1"
+  },
+  "actual_cut_shapes": {
+    "ckm_w_ckm_n10_h1101010111": [
+      {
+        "layer": "M1",
+        "rect_um": [
+          517.1979999999999,
+          189.83700000000022,
+          518.49,
+          189.85500000000025
+        ]
+      },
+      {
+        "layer": "M1",
+        "rect_um": [
+          518.472,
+          189.83700000000022,
+          518.49,
+          190.05300000000057
+        ]
+      },
+      {
+        "layer": "M1",
+        "rect_um": [
+          517.1979999999999,
+          190.03500000000054,
+          518.49,
+          190.05300000000057
+        ]
+      }
+    ],
+    "ckm_w_ckm_n10_h1101010110": [
+      {
+        "layer": "M1",
+        "rect_um": [
+          517.1979999999999,
+          569.9970000000001,
+          518.49,
+          570.0150000000001
+        ]
+      },
+      {
+        "layer": "M1",
+        "rect_um": [
+          518.472,
+          569.9970000000001,
+          518.49,
+          570.2130000000004
+        ]
+      },
+      {
+        "layer": "M1",
+        "rect_um": [
+          517.1979999999999,
+          570.1950000000004,
+          518.49,
+          570.2130000000004
+        ]
+      }
+    ],
+    "ckm_w_ckm_n10_h1101010011": [
+      {
+        "layer": "M1",
+        "rect_um": [
+          517.1979999999999,
+          950.1569999999999,
+          518.49,
+          950.175
+        ]
+      },
+      {
+        "layer": "M1",
+        "rect_um": [
+          518.472,
+          950.1569999999999,
+          518.49,
+          950.3730000000003
+        ]
+      },
+      {
+        "layer": "M1",
+        "rect_um": [
+          517.1979999999999,
+          950.3550000000002,
+          518.49,
+          950.3730000000003
+        ]
+      }
+    ],
+    "ckm_w_ckm_n10_h1101010010": [
+      {
+        "layer": "M1",
+        "rect_um": [
+          517.1979999999999,
+          1330.3169999999998,
+          518.49,
+          1330.3349999999998
+        ]
+      },
+      {
+        "layer": "M1",
+        "rect_um": [
+          518.472,
+          1330.3169999999998,
+          518.49,
+          1330.5330000000001
+        ]
+      },
+      {
+        "layer": "M1",
+        "rect_um": [
+          517.1979999999999,
+          1330.515,
+          518.49,
+          1330.5330000000001
+        ]
+      }
+    ],
+    "ck_mesh": [
+      {
+        "layer": "M9",
+        "rect_um": [
+          357.8000000000002,
+          285.0150000000001,
+          357.96000000000004,
+          285.49499999999966
+        ]
+      },
+      {
+        "layer": "M9",
+        "rect_um": [
+          357.8000000000002,
+          475.0949999999982,
+          357.96000000000004,
+          475.5750000000014
+        ]
+      },
+      {
+        "layer": "M9",
+        "rect_um": [
+          677.48,
+          285.0150000000001,
+          677.6399999999999,
+          285.49499999999966
+        ]
+      },
+      {
+        "layer": "M9",
+        "rect_um": [
+          677.48,
+          474.8250000000014,
+          677.6399999999999,
+          475.305000000001
+        ]
+      },
+      {
+        "layer": "M9",
+        "rect_um": [
+          677.48,
+          1045.3349999999998,
+          677.6399999999999,
+          1045.8149999999994
+        ]
+      },
+      {
+        "layer": "M9",
+        "rect_um": [
+          677.48,
+          1235.1450000000011,
+          677.6399999999999,
+          1235.6250000000007
+        ]
+      },
+      {
+        "layer": "M9",
+        "rect_um": [
+          357.8000000000002,
+          1045.3349999999998,
+          357.96000000000004,
+          1045.8149999999994
+        ]
+      },
+      {
+        "layer": "M9",
+        "rect_um": [
+          357.8000000000002,
+          1235.1450000000011,
+          357.96000000000004,
+          1235.6250000000007
+        ]
+      }
+    ]
+  },
+  "source_files_sha256": {
+    "qkd_host_static_pc.sv": "dbeff5405f1386e09915e4f2f205896afb88c285b2805168c2084613d4544d09",
+    "ot_dp_dly_cnt.sv": "401053e321710551d0debfa2d6dfeecfe0880cc4872c2b81accefcf94e096e62",
+    "kv3_pc__cl5a95b461.sv": "595898a3f7ffdcdb76307ab96d560c26f4365a782cdeb667706562d830752233",
+    "qkd_static_kv_landing_seg.sv": "2e0c93c17c26418d1f0be1c2afe089d29a5ce332bd3807295ff128e0c8f62ce2",
+    "ot_meso_fifo.sv": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2",
+    "qkd_hp_or2.sv": "f198c3fcd26190bcc62aed97b6a64a50978f75940f5573cf2d46bc41d0cc2508",
+    "ot_qfd_kv_landing_ecc.sv": "13c418c84138997b139dcb98ebd8ec3e93d1c6961d9e41a49ddb92ebf01bc851",
+    "qkd_static_kv_ownership.sv": "d1658764d09ede5b50022a7bdfdfa3ddcc079734dac069018a21e02cdd892c51",
+    "ot_qkvd_kcmd_tap.sv": "ed7fdbf48dd623a4f91736932aec6c2c5372a1b8cc57706a7b22e17f832a8503",
+    "qkd_host_ingest_station.sv": "28931dd981edaf460f2be7d928e3bea62ca8ea2cff8fa3ee72f78c36e96b460c",
+    "qkd_static_completion_ownerdemux.sv": "922105c31c62edb779b914b724d068af59f020c485af548a01d4c153a92fcf9c",
+    "ot_dp_efault.sv": "1669eae2f0c5d69e1e05fc4c576fb5f3bafd5f6fbe743381006c397a3c24b649",
+    "qkd_kvs_pc_h_head_p__leaf.sv": "7612087582f2fc91c5a536d96736e02070b148c9ae8538ea7f6ed4b034b38062",
+    "qkd_hbm_boot_static.sv": "2dfe24158efe1d80c724a0fdfdfab6f96540c93a80c45c4474bf8a67a866963b",
+    "group_r2c_native.sv": "6f88eccea7f32385fc8d91389ab3039751d0593288aa21d58f44787688e7f6b3",
+    "bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+    "ot_qkd_static_emb_cdc.sv": "54e84274ca2b982444f2665c98cf01bd0842559c0a79f92e7543ba63ec8a76ad",
+    "ot_qkd_static_ctrl_pc_emb.sv": "9c785288c6af0374ffa72b6dfc56f80a1bd3adf4254768b911887a959d2db193",
+    "qkd_kv_cfault_tree.sv": "36b8433daf480bcaaacce9b36c56afbc09974dbdf449f4fbc2e8fe9ee0968efb",
+    "qkd_static_kv_pc_es_merge_b.sv": "f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a",
+    "qkd_kvs_pc_h_head_p.sv": "945319efb9e1948d97c77e3031b273ac154aeebda4c03cfa5321834542a2f2d4",
+    "qkd_embedding_static_return_head.sv": "36d7943b7b7ec005b3b3378a95f9bf433cdd2d440080a74fd333967058262268",
+    "qkd_kv_pc_chain_station_b.sv": "b78617a65c0b83c907c9ca010897178e3a1c2d4e25fbd5bca2570d5c98063749",
+    "qkd_embedding_static_return_hop.sv": "c6031bb92dce5c170894b53f4933ff151f5b35c8b5c3fb880a10733c5425916c",
+    "ot_dp_clk_landing_ca.sv": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+    "qkd_controller_hbm_calendar.sv": "e03edfed2e9c4fb48ae2e49471a0f1693e3ecd56923f5376e8cc4791eda860f9",
+    "ot_dp_id.sv": "9ddf1e22d339f04091f0d3da62c3fe0e69a9421902e72b28dc27f4a690792610",
+    "ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+    "qkd_static_kv_boot_cdc.sv": "da3f8210eeb2d8407d36024d1dc238d0bacf61eb79d46cf8d22aee321d0bb453",
+    "qkd_host_pc_slice_die.sv": "b2b1d1e72368059e32aedc071824779dcc68425284b53122fde623dae604511c",
+    "qkd_static_kv_hop.sv": "d296cd7517d602033da253e158827035506e7b9abf4fd103bbb83586553127d9",
+    "qkd_static_kv_pc_path_fan_nc_b_head_p.sv": "b930e98dac3ec96851c9a2b12409d8c5c026efe31880b94d61b8964fe26e8f43",
+    "qkd_embedding_static_map.sv": "b493741925fa2d36dd5172fbc9ec40e174b995a7b319cddf829f3639bf25e4ef",
+    "qkd_ctrl_pc_nc.sv": "8b2ba9264849ad77644c6f08c94cbac4dd0cf10927d1ef96dc000c61e66aeb8e",
+    "ot_dp_clk_landing.sv": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+    "qkd_kv_pc_chain_station_b_p.sv": "355573479b55f4b57ee1588170d0a1d1f2df4dd25223425c99e518af6725033b",
+    "qkd_host_static_pc_emback.sv": "c9c6208fb9219217d8900ee1e8a8de0c6390fe8e6300fd1153d3e2c4ea79866c",
+    "qkd_static_kv_pc_es_merge.sv": "e10ff78a43fdcd55594163f251ea78b1c9a3cdc5cd6b0a99e38eb438da18530b",
+    "qkd_static_kv_return_calendar.sv": "c4fbd6573eec330725810a01f354e60fff68bdb21f8daddb76d627aa088041d4",
+    "qkd_hbm_boot_static_completion.sv": "fd4d71c80b86adb7ccbea8aac2d1060c3f1b02eeff6198af5ed3fcdbdb0b8612",
+    "ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+    "qkd_ctrl_pc_host_static_core.sv": "f9c488f04c142ba00152c1d3cac3210d07f5bbe4a8ea6ee6171d7f61f81a1f84",
+    "qkd_hbm_boot_pc.sv": "445921e88b5177bc3527fc2a4659e36af08d4c5660c80e3e52d6720267d58067",
+    "qkd_ctrl_pc_children.sv": "7b857785e3b64469b3d6fa74f72c303960b56c6277344fddf530181cd982b78b",
+    "qkd_static_kv_phase_launch.sv": "500cff106932b3116332bd79b66126e4793285664772c6c7895193801076fb98",
+    "qkd_static_kv_landing.sv": "54e52aa0e901080a940eb4911b86baa70821c69bdae7982d7e4ebbc30ed1ae41",
+    "qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32__leaf.sv": "d7f6ccf2ab94ffed2709fafb57b8556bf045c3a641b581f1c100a849ab944039",
+    "qkd_static_kv_return_slots_mc.sv": "10ab85b1ad30ed29941a8c28e17f61c7acef9cb3e8bd9a966ca33c727a817d48",
+    "kv3_pc__cl5a95b461_bound.sv": "c610591c617d1802c0c11113978910ee559bc38c370114b999bb4f5fc8739ea4",
+    "qkd_kv_landing_cal.sv": "85154ade4feab9a920cee09490a4d922d62b82a146d378d728bec7c0cb922091",
+    "qkd_kv_front_cal.sv": "ffe9e0047f35e66e750dc91648089be1ba2d1c31043fd50a214387a1acd4be15",
+    "qkd_static_kv_write_observer.sv": "b86f14f5e7e007e5e07b3d80ebd3787f5cbae669e94b984f887d4bef29cd06ca",
+    "qkd_kv_hbm_elastic_front_mc.sv": "f2e0c196a67d053ebf125d20b98d274b59ccbebdc1a3cbd92b30faa551671197",
+    "qkd_host_pc_slice_die_head.sv": "6c0f552f197c1c4145fbc80be4ba5fbcad49ca402a4f56e5c89d59069fe8d0e9",
+    "ot_kvpc_pin_ff.sv": "37ad509adf7b3d5bbd2676cd8df7d1e9e143985878b945d2cc7fcd885cf2bc67",
+    "qkd_kvs_pc.sv": "92d94ad10f011c1f59f74addd4ab0f9a85540e54d128e18487ecb7e4d5a45a6a",
+    "qkd_host_pc_slice.sv": "5a1cc9d9cab3dead2768d934999f938de75d3e96281328c5a1e4dc36fff2e1fa",
+    "qkd_static_kv_pc_path_nc.sv": "8af6a269f7324570b9e72eef10ebfec7393eebae89fdd27e8a91a8355685b7de",
+    "ot_qkd_static_kv_timing.sv": "b1dfa89091e4ed22ba65b8ffd19defdbb968f0fe8e764158c36d737099f74522",
+    "ot_async_fifo.sv": "7a3df9c5491bddcdef321105b931c4d0e2f5c973b3ea01c3ba50ff350bc784da",
+    "qkd_static_kv_pc_path_fan_nc_b.sv": "31ca88dad084b0851c314238193c6f631cc75698bfb45c32513bb5504149e8fe"
+  },
+  "holds": [
+    "Normal source/kit generation not run; source capsule only.",
+    "Actual BASE provisional models are PC_NOT_SIGNED; own final proof/provenance HOLD.",
+    "Physical hook exact endpoint inventory requires native post-SYNTH names before use.",
+    "Historical clock-only diagnostic; no production selection, fixed programme or source adoption.",
+    "Native M5 output to M9 external cut needs real vias/route before connection credit."
+  ]
+}
