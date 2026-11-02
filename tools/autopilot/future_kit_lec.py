@@ -10,7 +10,7 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def stage(kit, tool, meta):
+def stage(kit, tool, meta, runner=None, template=None):
     kit, tool = Path(kit), Path(tool)
     if any((kit / n).exists() for n in ('run', 'lec', 'lec_async.pid', 'lec_async.ready')):
         raise ValueError('physical/proof state already exists; live or resumed kit is never modified')
@@ -29,10 +29,29 @@ def stage(kit, tool, meta):
                 raise ValueError('source receipt differs: ' + name)
         if 'lec.py' not in files:
             raise ValueError('existing source receipt incomplete')
+    runner_update = None
+    if runner is not None and template is not None:
+        import kit_resume
+        runner, template = Path(runner), Path(template)
+        if runner.resolve() != (kit.parent / 'run_kit.sh').resolve():
+            runner_update = dict(adapted=False, reason='non-TYPE runner; normal full rebuild/ECO fallback')
+        else:
+            if sha(template) != meta['runner_template_sha256']:
+                raise ValueError('runner template differs from pinned scheduler snapshot')
+            if sha(Path(kit_resume.__file__)) != meta['resume_helper_sha256']:
+                raise ValueError('resume adapter differs from pinned scheduler snapshot')
+            before = runner.read_text()
+            after, reason = kit_resume.adapt_type_runner(before, template.read_text())
+            runner_update = dict(adapted=after != before, reason=reason,
+                generated_sha256=sha(runner), normalized_sha256=hashlib.sha256(kit_resume.runner_norm(before).encode()).hexdigest(),
+                template_sha256=sha(template), helper_sha256=meta['resume_helper_sha256'])
+            if after != before:
+                runner.write_text(after)
+            runner_update['sha256'] = sha(runner)
     old = sha(kit / 'lec.py')
     update = dict(kind='future-kit-lec', source_commit=meta['commit'],
                   sha256=meta['sha256'], generated_sha256=old,
-                  source_receipt_present=rec is not None)
+                  source_receipt_present=rec is not None, runner_update=runner_update)
     # An old generator may have no source receipt. Record the tool truthfully;
     # never manufacture a source-qualified provenance claim for that case.
     if rec is not None:
@@ -54,4 +73,4 @@ def stage(kit, tool, meta):
 
 if __name__ == '__main__':
     import sys
-    print(json.dumps(stage(sys.argv[1], sys.argv[2], json.loads(Path(sys.argv[3]).read_text()))))
+    print(json.dumps(stage(sys.argv[1], sys.argv[2], json.loads(Path(sys.argv[3]).read_text()), *(sys.argv[4:6]))))

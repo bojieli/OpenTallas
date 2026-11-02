@@ -42,3 +42,28 @@ class Staging(unittest.TestCase):
         (self.k/'PROVENANCE.json').write_text(json.dumps(rec))
         with self.assertRaisesRegex(ValueError,'differs'): F.stage(self.k,self.tool,self.meta)
 if __name__=='__main__': unittest.main()
+
+class RunnerAdapter(unittest.TestCase):
+    @staticmethod
+    def template():
+        import ast
+        tree=ast.parse((Path(__file__).resolve().parents[1]/'die_plan/gen_phys.py').read_text())
+        return next(ast.literal_eval(n.value) for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='RUN_KIT' for t in n.targets))
+    def test_exact_normalized_old_recipe_and_gates_preserved(self):
+        import kit_resume as R
+        old="#!/bin/bash\nNAME=dpkit-example-$$\n  M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0;\n  $M synth; existing_gate --unchanged; $M place\n"
+        new,reason=R.adapt_type_runner(old,self.template())
+        self.assertIn(R.MARKER,new)
+        self.assertEqual(R.runner_norm(new),old)
+        self.assertIn('identical',reason)
+    def test_core_unknown_runner_is_unchanged(self):
+        import kit_resume as R
+        old='#!/bin/bash\nmake core_route\n'
+        new,reason=R.adapt_type_runner(old,self.template())
+        self.assertEqual(new,old)
+        self.assertIn('fallback',reason)
+    def test_non_harness_change_refused(self):
+        import kit_resume as R
+        old="NAME=dpkit-x\n  M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0;\n"
+        bad=self.template().replace('RS=0; KWRS_M=  # KWRS','bad_physical_change')
+        with self.assertRaisesRegex(ValueError,'normalized'): R.adapt_type_runner(old,bad)
