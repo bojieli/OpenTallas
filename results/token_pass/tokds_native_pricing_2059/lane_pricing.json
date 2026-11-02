@@ -1,0 +1,113 @@
+{
+  "status": "PASS_CURRENT_NATIVE_BOUND_LANE_PRICING",
+  "plan": "physical/die_plan/s81/plan_h2_2249.json",
+  "plan_digest": "7bf83d029cc5ffb7",
+  "table": "/srv/opentallas-scratch/claude/codex-current-ci-2049/candidate_latency/s81/s81_latency.json",
+  "lanes": 873,
+  "period_ps": 833,
+  "lane_terms": {
+    "ring_link": {
+      "cycles": 5,
+      "lanes": [
+        "xring__s_0N_C__s_1N_C",
+        "xring__s_0S_C__s_1S_C",
+        "xring__s_1N_C__s_0N_C",
+        "xring__s_1N_C__s_2N_C",
+        "xring__s_1S_C__s_0S_C",
+        "xring__s_1S_C__s_2S_C",
+        "xring__s_2N_C__s_1N_C",
+        "xring__s_2N_C__s_3N_C",
+        "xring__s_2S_C__s_1S_C",
+        "xring__s_2S_C__s_3S_C",
+        "xring__s_3N_C__s_2N_C",
+        "xring__s_3N_C__s_4N_C",
+        "xring__s_3S_C__s_2S_C",
+        "xring__s_3S_C__s_4S_C",
+        "xring__s_4N_C__s_3N_C",
+        "xring__s_4N_C__s_5N_C",
+        "xring__s_4S_C__s_3S_C",
+        "xring__s_4S_C__s_5S_C",
+        "xring__s_5N_C__s_4N_C",
+        "xring__s_5N_C__s_6N_C",
+        "xring__s_5S_C__s_4S_C",
+        "xring__s_5S_C__s_6S_C",
+        "xring__s_6N_C__s_5N_C",
+        "xring__s_6N_C__s_7N_C",
+        "xring__s_6S_C__s_5S_C",
+        "xring__s_6S_C__s_7S_C",
+        "xring__s_7N_C__s_6N_C",
+        "xring__s_7S_C__s_6S_C"
+      ],
+      "rule": "max xring lane (slice hub C -> neighbour hub C)",
+      "base_cycles": 5,
+      "r8_pad_cycles": 0,
+      "r8_pad_lanes": {}
+    },
+    "field_round": {
+      "cycles": 159,
+      "lanes": [
+        "x_E3_out",
+        "xo_E3_out_a",
+        "xo_E3_out_b",
+        "fi_E3_p6_r0r1",
+        "fi_E3_p6_r1r0",
+        "fi_E3_p6_r1r2",
+        "fi_E3_p6_r2r1",
+        "rt_E3_out_2"
+      ],
+      "rule": "max over columns/positions of x + xo chain + 4 fi + rt (one hub->frame->hub round)",
+      "base_cycles": 159,
+      "r8_pad_cycles": 0,
+      "r8_pad_lanes": {}
+    },
+    "leaf_hub_rt": {
+      "cycles": 55,
+      "lanes": [
+        "dn_s_2N_L0",
+        "up_s_2N_L0"
+      ],
+      "rule": "max dn (hub C -> leaf) + max up (leaf -> hub C)",
+      "base_cycles": 55,
+      "r8_pad_cycles": 0,
+      "r8_pad_lanes": {}
+    },
+    "svc_to_hub": {
+      "cycles": 31,
+      "lanes": [
+        "attn__svc_11__s_4S_C"
+      ],
+      "rule": "max attn lane svc -> slice hub C (SO -> XS)",
+      "base_cycles": 31,
+      "r8_pad_cycles": 0,
+      "r8_pad_lanes": {}
+    },
+    "link_end": {
+      "cycles": 73,
+      "lanes": [
+        "coll__s_0S_LP__lk_WS2",
+        "kd_s_0N"
+      ],
+      "rule": "end slice hub C <-> LP (kd/ku) + LP <-> link (coll); NOT substituted (inside the measured xdie co-sim lane legs), reported as a bound",
+      "base_cycles": 73,
+      "r8_pad_cycles": 0,
+      "r8_pad_lanes": {}
+    }
+  },
+  "full_token": false,
+  "added_rtl_cycles": 0,
+  "native_bind": {
+    "source": "/home/ubuntu/coord/tmp/codex-ds-native-bind-2059.json",
+    "buses": 873,
+    "mismatches": [],
+    "extra_lanes": [],
+    "landing_pads": {},
+    "bus_groups": {
+      "landing_groups": 3862,
+      "landing_misaligned_by_lanes": 100,
+      "landing_misaligned_after_pads": 100,
+      "replica_sets": 13,
+      "replica_unequal": 13
+    },
+    "grouping_alignment_qualified": false
+  }
+}

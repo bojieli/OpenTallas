@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """TOK-DS/COMPOSE (2026-10-24): single-user DeepSeek-V4.1 token latency (AR + MTP) on the S81 array for the CURRENT die
-plan (v4.8, physical/die_plan/s81/die_plan.json, latency table physical/die_plan/s81/lat/s81_latency.json, 833 ps), then
+plan (physical/die_plan/s81/plan_h2_2249.json, latency table physical/die_plan/s81/lat/s81_latency.json, 833 ps), then
 the multi-user calendar on the same inputs.  Analytical only (AGENTS.md: simulate the minimum component, compose
 system timing analytically).
 
@@ -12,7 +12,7 @@ Composition
    1. REGRADE: a measured component is `measured-current-RTL` only if every RTL module its record names is
       blob-identical between the record's source revision and this tree's HEAD (rtl/); otherwise `measured-old-RTL`
       (the record and the differing modules are listed).  A priced / old / PHY component is never promoted.
-   2. LANES: the on-die wire terms the DAG carries for the old p4l plan are replaced by plan-v4.8 latency-table lanes,
+   2. LANES: the on-die wire terms the DAG carries for the old p4l plan are replaced by current selected-plan latency-table lanes,
       with an explicit DAG-term -> lane mapping (LANE_MAP below; every term that could not be mapped is listed).
    3. OFF-CHIP: each crossing's 453-cycle switched leg -> the class's direct-cabling D_cycles_max
       (results/arch/release_rack_1021/hop_latency.json; ladder.json off_chip_legs), grade modelled-PHY.
@@ -51,7 +51,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / 'results/token_pass/tokds_compose_1024'
-PLAN = ROOT / 'physical/die_plan/s81/die_plan.json'
+PLAN = ROOT / 'physical/die_plan/s81/plan_h2_2249.json'
 LAT = LAT_OF_RECORD = ROOT / 'physical/die_plan/s81/lat/s81_latency.json'
 LAT_R8 = ROOT / 'physical/die_plan/s81/r8/s81_latency.json'
 PLAN_VERSIONS = {'b4ac6d49d5198cd0': 'v4.8 (847f8568f, sha ea36999b, G0 PASS; G2 PASS 3be3c7df1)',
@@ -104,8 +104,60 @@ def plan_digest(raw):
 @functools.lru_cache(None)
 def lane_table():
     lat = json.loads(LAT.read_text())
-    dig = plan_digest(json.loads(PLAN.read_text()))
+    raw = json.loads(PLAN.read_text())
+    dig = plan_digest(raw)
+    validate_lane_table(lat, raw)
     return lat, dig
+
+
+
+def validate_lane_table(lat, raw):
+    """Reject stale exports before they can silently price a token."""
+    dig = plan_digest(raw)
+    if lat.get('plan_digest') != dig:
+        raise ValueError(f'latency table is stale: {lat.get("plan_digest")} != plan {dig}')
+    if lat.get('period_ps') != PERIOD_PS or raw['die']['period_ps'] != PERIOD_PS:
+        raise ValueError('latency pricing requires the 833 ps plan and table')
+    die_tools = str(ROOT / 'tools/die_plan')
+    if die_tools not in sys.path:
+        sys.path.insert(0, die_tools)
+    S = load(ROOT / 'tools/die_plan/schema.py', 'tokds_latency_schema')
+    P = S.Plan(raw)
+    if set(lat['lanes']) != set(P.lanes):
+        raise ValueError('latency table lane set differs from the selected plan')
+    mismatched = [lid for lid in P.lanes
+                  if lat['lanes'][lid]['cycles'] - lat['lanes'][lid].get('r8_pad', 0)
+                  != P.lane_latency(lid)['cycles']]
+    if mismatched:
+        raise ValueError(f'latency table differs from plan on {len(mismatched)} lanes: {mismatched[:3]}')
+
+
+def native_lane_pricing(bind_latency=None):
+    """Current plan quantities, optionally joined to actual emitted native costs."""
+    lat, dig = lane_table()
+    out = dict(status='CURRENT_PLAN_LANE_PRICING', plan=rel(PLAN),
+               plan_digest=dig, table=rel(LAT), lanes=len(lat['lanes']),
+               period_ps=lat['period_ps'], lane_terms=lane_terms(),
+               full_token=False, added_rtl_cycles=0)
+    if bind_latency is not None:
+        native = json.loads(Path(bind_latency).read_text())
+        planned = [b for b in native['buses'] if b.get('lane') is not None]
+        buses = {b['lane']: b for b in planned}
+        if len(buses) != len(planned):
+            raise ValueError('native bind repeats a lane identity')
+        mismatches = [lid for lid, v in lat['lanes'].items()
+                      if lid not in buses or buses[lid]['bound_stages'] != v['cycles']
+                      or buses[lid]['plan_cycles'] != v['cycles']]
+        extra = sorted(set(buses) - set(lat['lanes']))
+        out['native_bind'] = dict(source=str(bind_latency), buses=len(buses),
+                                  mismatches=mismatches, extra_lanes=extra,
+                                  landing_pads=native.get('landing_pads'),
+                                  bus_groups=native.get('bus_groups'),
+                                  grouping_alignment_qualified=False)
+        if mismatches or extra:
+            raise ValueError(f'native emitted costs differ: {len(mismatches)} mismatches, {len(extra)} extra lanes')
+        out['status'] = 'PASS_CURRENT_NATIVE_BOUND_LANE_PRICING'
+    return out
 
 
 def lanes(pattern, base=False):
@@ -993,7 +1045,7 @@ def write_readme(c1, cal, out):
              'context change (stations, landing) is covered only by the lane substitution.\n')
     L.append('## Latency table of record\n')
     d = c1['die_plan']
-    L.append(f'- `{d["latency_table"]}`: plan_digest `{d["plan_digest_in_table"]}` = digest of `die_plan.json` '
+    L.append(f'- `{d["latency_table"]}`: plan_digest `{d["plan_digest_in_table"]}` = digest of `{d["plan"]}` '
              f'(`{d["plan_digest_of_plan"]}`), {d["lanes"]} lanes, {d["period_ps"]} ps. **This table is of record.**')
     L.append(f'- Plan: {d["version"]}.')
     f = d.get('r8_fold') or {}
@@ -1200,7 +1252,7 @@ def selftest():
         chk(f'parity {wl} grades', d < 1.0, f'max diff {d:.1f}')
     # 2 latency table of record
     lat, dig = lane_table()
-    chk('latency table digest == plan v4.8 digest', lat['plan_digest'] == dig, f'{lat["plan_digest"]} / {dig}')
+    chk('latency table digest == selected current plan digest', lat['plan_digest'] == dig, f'{lat["plan_digest"]} / {dig}')
     chk('period 833 ps', lat['period_ps'] == PERIOD_PS)
     # 3 never promote: measured-current after regrade <= measured before; priced never measured
     r0 = compose('ar', dict(regrade=False))
@@ -1253,14 +1305,29 @@ def main(argv=None):
     ap.add_argument('--out', default=str(OUT))
     ap.add_argument('--check', action='store_true')
     ap.add_argument('--selftest', action='store_true')
+    ap.add_argument('--plan', type=Path, help='selected plan (default: current plan_h2_2249.json)')
+    ap.add_argument('--lane-pricing-only', action='store_true', help='price selected plan lanes without running the historical whole-token model')
+    ap.add_argument('--native-bind-latency', type=Path, help='actual emitted bind_latency.json, for --lane-pricing-only cost comparison')
     ap.add_argument('--lat', help='latency table to price (default: the table of record, physical/die_plan/s81/lat)')
     ap.add_argument('--compare', action='append', default=[], metavar='NAME=DIR',
                     help='earlier compose outputs (compose_1u.json + calendar_mu.json) to tabulate deltas against')
     a = ap.parse_args(argv)
+    global PLAN, LAT
+    if a.plan:
+        PLAN = a.plan.resolve()
+        lane_table.cache_clear()
     if a.lat:
-        global LAT
         LAT = Path(a.lat).resolve()
         lane_table.cache_clear()
+    if a.lane_pricing_only:
+        result = native_lane_pricing(a.native_bind_latency)
+        out = Path(a.out)
+        out.mkdir(parents=True, exist_ok=True)
+        with (out / 'lane_pricing.json').open('x') as f:
+            json.dump(result, f, indent=2)
+            f.write('\n')
+        print(result['status'], result['lanes'])
+        return 0
     if a.selftest:
         return 0 if selftest() else 1
     c1, cal = build(a.layer_cycles, a.components, a.attn)
