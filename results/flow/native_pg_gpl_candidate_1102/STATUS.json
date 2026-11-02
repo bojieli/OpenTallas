@@ -1,0 +1,15 @@
+{
+  "status": "SOURCE_CANDIDATE_SAVED_AUDIT_PENDING",
+  "main_deployed": false,
+  "module_changed": false,
+  "base_helper_source": "5621983f5",
+  "native_module_sha256": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
+  "private_place_source": "ab13b5308",
+  "native_unit": "oth-ubuntu-413122-1793633354",
+  "global_placement": {"actual_timing_driven": true, "actual_routability_driven": true, "command_code": 0, "fallback": false, "creates": 1111, "swaps": 165, "bound": 2222},
+  "buffer_ports": {"creates": 68, "swaps": 0, "bound": 136},
+  "native_event_counts_are_not_retained_cell_deltas": true,
+  "stage_global_place_end_active": 0,
+  "saved_native_audit": "PENDING_OWNER_COLLECTION",
+  "release_review": "PENDING_FINAL_SAVED_AUDIT_AND_GUARDS"
+}
