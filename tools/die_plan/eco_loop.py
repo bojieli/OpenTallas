@@ -33,6 +33,7 @@ Heavy: run through ot-run (--mem = honest peak, the ECO session + DRT + sign-off
 """
 import argparse
 import hashlib
+import tempfile
 import json
 import os
 import shlex
@@ -363,14 +364,15 @@ def summary(res):
 
 
 def run_lec(kit, res, mem, cpus, lec_tool=None, run=subprocess.call):
-    """standalone: the post-route LEC of the PASS netlist into BEST/lec (resign.py provenance --dir BEST reads it)"""
+    """Prove the actual ECO capsule; expose the fresh receipt for resign.py --lec."""
     best = res.get("best") or {}
     netlist = Path(best.get("base") or "") / "6_final.v"
     tool = Path(lec_tool) if lec_tool else Path(kit) / "lec.py"
-    out = Path(best["dir"]) / "lec"
-    rc = run([sys.executable, str(tool), str(kit), "--netlist", str(netlist), "--out", str(out), "--mem", str(mem),
+    candidate = Path(best["dir"]).resolve()
+    out = Path(tempfile.mkdtemp(prefix="lec_postroute_", dir=candidate))
+    rc = run([sys.executable, str(tool), str(candidate), "--netlist", str(netlist), "--out", str(out), "--mem", str(mem),
               "--jobs", str(cpus)], env=dict(os.environ, OT_LEC_SUPERSET_VEC="1"))
-    lec = load(out / "lec.json")
+    lec = load(out / "lec.json") if rc == 0 else {}
     res["lec"] = dict(tool=str(tool), netlist=str(netlist), record=str(out / "lec.json"), exit=rc,
                       verdict=lec.get("verdict"), all_shown=(lec.get("superset_vec") or {}).get("all_shown"))
     Path(res["root"], "eco_loop.json").write_text(json.dumps(res, indent=1) + "\n")
