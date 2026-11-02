@@ -1,0 +1,97 @@
+{
+  "scope": "PREP_ONLY_TWO_EXISTING_DN44_DATA_BUFFER_MOVES",
+  "source_input": "actual current SC threeBUF geometry, source unchanged",
+  "control_semantic": "dn_i[44] data capture (sourceRTL3900 n149), fresh worst path -388.81ps",
+  "start": "u.u_15645/Q$_DFF_P_",
+  "end": "u.u_15645/_1_",
+  "moves": [
+    {
+      "instance": "u.u_15645/place27055",
+      "master": "BUFx6f_ASAP7_75t_R",
+      "old_bbox": [
+        103.572,
+        317.25,
+        104.112,
+        317.52
+      ],
+      "new_bbox": [
+        191.484,
+        109.89,
+        192.024,
+        110.16
+      ],
+      "orient": "MX"
+    },
+    {
+      "instance": "u.u_15645/place27054",
+      "master": "BUFx6f_ASAP7_75t_R",
+      "old_bbox": [
+        103.788,
+        317.52,
+        104.328,
+        317.79
+      ],
+      "new_bbox": [
+        147.096,
+        213.84,
+        147.636,
+        214.11
+      ],
+      "orient": "R0"
+    }
+  ],
+  "points": [
+    [
+      236.97899999999998,
+      6.075
+    ],
+    [
+      191.75400000000002,
+      110.025
+    ],
+    [
+      147.36599999999999,
+      213.97500000000002
+    ],
+    [
+      103.167,
+      317.925
+    ]
+  ],
+  "hop_l1_um": [
+    149.17499999999995,
+    148.33800000000005,
+    148.14899999999997
+  ],
+  "max_hop_l1_um": 149.17499999999995,
+  "chain_fanouts": [
+    {
+      "driver": "u.u_15645/Q$_DFF_P_",
+      "sinks": [
+        "u.u_15645/place27055"
+      ],
+      "fanout": 1
+    },
+    {
+      "driver": "u.u_15645/place27055",
+      "sinks": [
+        "u.u_15645/place27054"
+      ],
+      "fanout": 1
+    },
+    {
+      "driver": "u.u_15645/place27054",
+      "sinks": [
+        "u.u_15645/_1_"
+      ],
+      "fanout": 1
+    }
+  ],
+  "original_first_hop_um": null,
+  "new_cells": 0,
+  "new_ff": 0,
+  "new_cycles": 0,
+  "public_pin_changes": 0,
+  "clock_changes": 0,
+  "all_existing_bodies_and_physical_TAPs_checked": true
+}
