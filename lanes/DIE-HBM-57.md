@@ -151,3 +151,10 @@ See /home/ubuntu/coord/handoff/codex_hbm_stations_d44q_handback_20261101.md. No 
   Owner of the run: HBM-CORES-KITS-41, or PSLICE sub-lane a2e3416e8c513123d if it is idle.
   Also: Pstore phi 1.01 GPL ended in GPL-0307 divergence (terminal, failed ODB kept). Class fix: GPL_ROUTABILITY_DRIVEN=0, the fallback that routed BFQG v40r3p. 2 variants are queued on intel2 via ot-run: die-hbm-57/pstore/ro0_c101 and ro0_c105. Codex's fan32_phi101 dir is untouched.
   SPU A current0 is launched direct on intel1 (codex-hbm-spu-current951-i0, run_spu_current.sh, 24 GB cap; this ot-run has no --crit). The current50 is gated on current0 strict geometry/capacity/pin PASS.
+
+## 11-01 20:03 Q9 d44r attribution + su31 P215n + su00 entry cap
+- d44r main-tools G0 vs PREP: 0 new ERROR. The only differences are su00 L730x1 S0->S1, 863 um in PREP -> 755 um in d44r (my H75 improves it; the error class predates d44r). Root tkmclk repeater overlap/halo errors and L6bm NE_su are already in PREP (prerequisites/clock21). They are not d44r's, so they go back to their owners.
+- su00 entry fix, 2 variants (HE150/HE250, sweep_site2.py --entry): station 1 sits <= E um along each bit's own in->out line, so S0->S1 <= 405. Running on intel1 (hen.sh).
+- su31 P2 (+2 stations, mk_d2): sweep a.15 keeps all 6 slots. nudge_c moved station-8 bits off u_cxdl_Q3_s/u_hc_Q3/u_fl_Q3 contents, giving P215n with cbox 0 hits. P215n 0-it probes are running directly on epyc2. m67 (M6/M7 adj 0.2) 0-it: J215 6.10M vs 9.16M, F 7.09M vs 10.3M (pv1). This helps, but su31 is still far from GRT0.
+- PSLICE tx3/tx4 kits passed gen/lint/preflight; place is queued on intel2 behind 99 waiters.
+- Sent HBM clock tips 1d998 + 119fb to FLOW-21 for intake.
