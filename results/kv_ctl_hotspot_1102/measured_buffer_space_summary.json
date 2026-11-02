@@ -1,0 +1,83 @@
+{
+  "status": "SPACE_RESERVE_ONLY_NO_NEW_BUFFERS_OR_NEW_POSTPLACE_CLAIM",
+  "predecessor_native_geometry": "/srv/opentallas-scratch/claude/codex-kv-ctl-rowfix-r2-0250/collector/geom.tsv",
+  "source_net_cohort": 2346,
+  "unpriced_bindings": [],
+  "selected_measured_buffers": 3698,
+  "selected_class_counts": {
+    "BUFx10_ASAP7_75t_R": 118,
+    "BUFx6f_ASAP7_75t_R": 732,
+    "BUFx24_ASAP7_75t_R": 8,
+    "BUFx3_ASAP7_75t_R": 2329,
+    "BUFx12f_ASAP7_75t_R": 193,
+    "BUFx12_ASAP7_75t_R": 101,
+    "BUFx16f_ASAP7_75t_R": 172,
+    "BUFx2_ASAP7_75t_R": 45
+  },
+  "selected_cell_area_um2": 470.71530000000007,
+  "space_at_genuine_GPL_density_point6_um2": 784.5255000000002,
+  "all_predecessor_buffer_classes": {
+    "BUFx2_ASAP7_75t_R": {
+      "count": 6909,
+      "width_um": 0.27,
+      "height_um": 0.27,
+      "area_um2": 503.66610000000003
+    },
+    "BUFx8_ASAP7_75t_R": {
+      "count": 2,
+      "width_um": 0.648,
+      "height_um": 0.27,
+      "area_um2": 0.34992
+    },
+    "BUFx6f_ASAP7_75t_R": {
+      "count": 1137,
+      "width_um": 0.54,
+      "height_um": 0.27,
+      "area_um2": 165.77460000000002
+    },
+    "BUFx3_ASAP7_75t_R": {
+      "count": 4396,
+      "width_um": 0.324,
+      "height_um": 0.27,
+      "area_um2": 384.56208000000004
+    },
+    "BUFx24_ASAP7_75t_R": {
+      "count": 9,
+      "width_um": 1.62,
+      "height_um": 0.27,
+      "area_um2": 3.9366000000000008
+    },
+    "BUFx10_ASAP7_75t_R": {
+      "count": 155,
+      "width_um": 0.756,
+      "height_um": 0.27,
+      "area_um2": 31.638600000000004
+    },
+    "BUFx12_ASAP7_75t_R": {
+      "count": 126,
+      "width_um": 0.864,
+      "height_um": 0.27,
+      "area_um2": 29.39328
+    },
+    "BUFx12f_ASAP7_75t_R": {
+      "count": 228,
+      "width_um": 0.972,
+      "height_um": 0.27,
+      "area_um2": 59.83632
+    },
+    "BUFx16f_ASAP7_75t_R": {
+      "count": 234,
+      "width_um": 1.188,
+      "height_um": 0.27,
+      "area_um2": 75.05784
+    }
+  },
+  "buffers_inserted": 0,
+  "FFs_added": 0,
+  "cycles_added": 0,
+  "limits": [
+    "Selected footprint is measured from genuine prior same-source normal port/repair BUF trees, not invented count",
+    "New geometry may require different repair classes/counts; ordinary actual PLACE/repair must measure them",
+    "No BUF tree is copied, forced or treated as a new physical result; this only reserves room"
+  ]
+}

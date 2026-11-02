@@ -1,0 +1,90 @@
+{
+  "status": "NEW_GEOMETRY_SPEC_OLD_ROWS_TAPS_GLOBAL_INTERSECTION_NOT_NEW_NATIVE_FP",
+  "FFs": 18768,
+  "target_master_resizes": 54,
+  "conservative_prior_row_intersection": 2008,
+  "translated_prior_TAP_obstacles": 5136,
+  "public_DATA_max": [
+    144.999,
+    "d2d__svc_74[6]"
+  ],
+  "public_DATA_gt150": 0,
+  "public_DATA_gt30": 441,
+  "R2R": {
+    "r2r_memory_instances": 6,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 390.53,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 16868,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_leaf.u_lprg.token_q\\[17\\]$_DFF_P_ -> o_attn\\[108\\]$_DFF_PN0_"
+  },
+  "pins": {
+    "pins_registered": 6848,
+    "pins_to_macro": 0,
+    "pins_exempt": 1,
+    "pins_unregistered": 0,
+    "pins_land_ring": 0,
+    "unregistered_sample": [],
+    "pin_reg_p50": 15.33,
+    "pin_reg_p90": 28.98,
+    "pin_reg_max": 145.0,
+    "pin_reg_worst": [
+      "145.0 d2d__svc_74[6]",
+      "145.0 d2d__svc_74[4]",
+      "145.0 d2d__svc_74[14]",
+      "145.0 d2d__svc_92[17]",
+      "145.0 d2d__svc_74[9]"
+    ]
+  },
+  "FF_only_density": {
+    "outline": [
+      233.28,
+      302.4
+    ],
+    "aspect": 1.296,
+    "macros": 6,
+    "macro_area_pct": 17.77,
+    "std_cells": 18768,
+    "ff": 18768,
+    "fill_of_free": 0.1129,
+    "empty_area": 0.4762,
+    "band_share": 1.0,
+    "density_bin_um": 3.78,
+    "macro_list": [
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        25.92,
+        43.2
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        25.92,
+        129.6
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        25.92,
+        216.0
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        155.52,
+        43.2
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        155.52,
+        129.6
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        155.52,
+        216.0
+      ]
+    ]
+  },
+  "density_fill_moves": 350,
+  "reset_anchor_FF": "_2750_\\[0\\]$_DFF_PN0_",
+  "ordinary_combinational_placement": "NOT RUN; channel model/PG coupling still OPEN"
+}

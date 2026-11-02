@@ -1,0 +1,250 @@
+{
+  "status": "SOURCE_PIN_ROAD_COUPONS_ONLY",
+  "global_M5_columns_with_derived_landing_clearance": 4212,
+  "M5_OBS_in_actual_SRAM_master": [],
+  "paths": [
+    {
+      "direction": "H",
+      "native_net_id": 2628,
+      "native_net_index": 2625,
+      "native_net_name": "_05109_",
+      "driver": {
+        "instance": "u_leaf.u_wrn.u_writer.g_l0\\[0\\].u_l0_hold.b\\[1\\]$_DFFE_PN0P_",
+        "pin": "QN",
+        "layer": "M1",
+        "xy": [
+          79.769,
+          263.754
+        ],
+        "window_um": [
+          79.744,
+          263.745,
+          79.794,
+          263.763
+        ]
+      },
+      "sink": {
+        "instance": "_67024_",
+        "pin": "A",
+        "layer": "M1",
+        "xy": [
+          76.6525,
+          284.346
+        ],
+        "window_um": [
+          76.563,
+          284.337,
+          76.742,
+          284.355
+        ]
+      },
+      "segments": [
+        {
+          "layer": "LOCAL_ACCESS_OPEN",
+          "start": [
+            79.769,
+            263.754
+          ],
+          "end": [
+            79.608,
+            263.754
+          ]
+        },
+        {
+          "layer": "M5",
+          "start": [
+            79.608,
+            263.754
+          ],
+          "end": [
+            79.608,
+            282.984
+          ]
+        },
+        {
+          "layer": "M4",
+          "start": [
+            79.608,
+            282.984
+          ],
+          "end": [
+            76.632,
+            282.984
+          ]
+        },
+        {
+          "layer": "M5",
+          "start": [
+            76.632,
+            282.984
+          ],
+          "end": [
+            76.632,
+            284.346
+          ]
+        },
+        {
+          "layer": "LOCAL_ACCESS_OPEN",
+          "start": [
+            76.632,
+            284.346
+          ],
+          "end": [
+            76.6525,
+            284.346
+          ]
+        }
+      ],
+      "trunk": {
+        "layer": "M4",
+        "y_um": 282.984,
+        "crosses_old_cut_at": [
+          77.5,
+          282.984
+        ],
+        "outside_old_window": true
+      },
+      "path_length_um": 23.749499999999983,
+      "endpoint_Manhattan_um": 23.708499999999987,
+      "extra_road_length_um": 0.04099999999999682,
+      "status": "METAL_ROAD_PG_OBS_COUPON_NOT_ACTUAL_SIGNAL_ROUTE",
+      "local_pin_access_and_via_stack": "OPEN_NORMAL_ROUTER",
+      "signal_signal_packing": "OPEN_NORMAL_ROUTER"
+    },
+    {
+      "direction": "V",
+      "native_net_id": 561,
+      "native_net_index": 560,
+      "native_net_name": "_03042_",
+      "driver": {
+        "instance": "u_leaf.u_lprg.c_stage\\[3\\]\\[2\\]$_DFFE_PN0N_",
+        "pin": "QN",
+        "layer": "M1",
+        "xy": [
+          106.87700000000001,
+          149.274
+        ],
+        "window_um": [
+          106.852,
+          149.265,
+          106.902,
+          149.283
+        ]
+      },
+      "sink": {
+        "instance": "_55571_",
+        "pin": "A",
+        "layer": "M1",
+        "xy": [
+          134.40300000000002,
+          146.745
+        ],
+        "window_um": [
+          134.37,
+          146.73600000000002,
+          134.436,
+          146.75400000000002
+        ]
+      },
+      "segments": [
+        {
+          "layer": "LOCAL_ACCESS_OPEN",
+          "start": [
+            106.87700000000001,
+            149.274
+          ],
+          "end": [
+            106.872,
+            149.274
+          ]
+        },
+        {
+          "layer": "M5",
+          "start": [
+            106.872,
+            149.274
+          ],
+          "end": [
+            106.872,
+            155.88
+          ]
+        },
+        {
+          "layer": "M4",
+          "start": [
+            106.872,
+            155.88
+          ],
+          "end": [
+            135.0,
+            155.88
+          ]
+        },
+        {
+          "layer": "M5",
+          "start": [
+            135.0,
+            155.88
+          ],
+          "end": [
+            135.0,
+            146.664
+          ]
+        },
+        {
+          "layer": "M4",
+          "start": [
+            135.0,
+            146.664
+          ],
+          "end": [
+            134.424,
+            146.664
+          ]
+        },
+        {
+          "layer": "M5",
+          "start": [
+            134.424,
+            146.664
+          ],
+          "end": [
+            134.424,
+            146.745
+          ]
+        },
+        {
+          "layer": "LOCAL_ACCESS_OPEN",
+          "start": [
+            134.424,
+            146.745
+          ],
+          "end": [
+            134.40300000000002,
+            146.745
+          ]
+        }
+      ],
+      "trunk": {
+        "layer": "M5",
+        "x_um": 135.0,
+        "crosses_old_cut_at": [
+          135.0,
+          147.5
+        ],
+        "outside_old_window": true
+      },
+      "path_length_um": 44.63300000000001,
+      "endpoint_Manhattan_um": 30.055000000000007,
+      "extra_road_length_um": 14.578000000000003,
+      "status": "METAL_ROAD_PG_OBS_COUPON_NOT_ACTUAL_SIGNAL_ROUTE",
+      "local_pin_access_and_via_stack": "OPEN_NORMAL_ROUTER",
+      "signal_signal_packing": "OPEN_NORMAL_ROUTER"
+    }
+  ],
+  "limits": [
+    "Real endpoint windows come from immutable native master shapes; selected existing comb cells use modeled guide sites",
+    "Metal trunks avoid macro OBS and source-phase PG and leave the old hotwindow; source clock bay bypassed",
+    "No local M1 pin-access/via-stack closure, route claim, threshold waiver or cells inserted"
+  ]
+}
