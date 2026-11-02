@@ -927,8 +927,57 @@ def replica_sample(designs, signed, every=10):
     return out
 
 
+# RTPTMP_1101 (COORD 11-01 19:5x: a 1-1.6 GB /tmp/release-tree-plan.* dir was left behind per run, 22 = 25.5 GB on
+# localhost root): the scratch dir carries the owner pid, SIGTERM unwinds through the rmtree, and each refresh first
+# removes leftovers older than 2 h whose pid is dead (or that carry no pid: pre-fix names).
+TMP_PREFIX = 'release-tree-plan.'
+STALE_TMP_S = 2 * 3600
+
+
+def _pid_alive(pid):
+    try:
+        os.kill(pid, 0)
+        return True
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+
+
+def sweep_stale_tmp(root=None, now=None):
+    root = pathlib.Path(root or tempfile.gettempdir())
+    now = time.time() if now is None else now
+    gone = []
+    for d in root.glob(TMP_PREFIX + '*'):
+        try:
+            st = d.lstat()
+            if d.is_symlink() or not d.is_dir() or st.st_uid != os.getuid() or now - st.st_mtime < STALE_TMP_S:
+                continue
+            m = re.match(re.escape(TMP_PREFIX) + r'(\d+)\.', d.name)
+            if m and _pid_alive(int(m.group(1))):
+                continue
+            shutil.rmtree(d, ignore_errors=True)
+            gone.append(str(d))
+        except OSError:
+            pass
+    return gone
+
+
+def _term_unwinds():
+    """SIGTERM -> SystemExit so the finally: rmtree of the scratch dir runs (main thread only; else a no-op)"""
+    import signal
+    def h(*_):
+        raise SystemExit(143)
+    try:
+        return signal.signal(signal.SIGTERM, h)
+    except ValueError:
+        return None
+
+
 def refresh(log=lambda *a: None):
     errs = []
+    for g in sweep_stale_tmp():
+        log('removed stale scratch dir %s' % g)
     UNREACHABLE.clear()
     res = dict(generated=time.time(), errors=errs, dies={}, plans={}, provenance_rule='v1')
     sha = None
@@ -936,7 +985,8 @@ def refresh(log=lambda *a: None):
     if r.returncode: errs.append('git fetch origin main failed: %s' % r.stderr.strip()[-200:])
     sha = sh(['git', '-C', str(REPO), 'rev-parse', '--short=10', 'origin/main'], 30).stdout.strip()
     res['origin_main'] = sha
-    tmp = pathlib.Path(tempfile.mkdtemp(prefix='release-tree-plan.'))
+    old_term = _term_unwinds()
+    tmp = pathlib.Path(tempfile.mkdtemp(prefix='%s%d.' % (TMP_PREFIX, os.getpid())))
     try:
         paths = plan_archive_paths()
         p1 = subprocess.Popen(['git', '-C', str(REPO), 'archive', 'origin/main'] + paths, stdout=subprocess.PIPE)
@@ -1030,6 +1080,9 @@ def refresh(log=lambda *a: None):
         errs.append('refresh: %s' % e)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+        if old_term is not None:
+            import signal
+            signal.signal(signal.SIGTERM, old_term)
     res['unreachable_hosts'] = sorted(UNREACHABLE)
     return res
 
