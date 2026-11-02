@@ -538,7 +538,7 @@ def lm_head_programme(plan_path: Path):
     if [o['unit'] for o in ops[:4]] != [2, 2, 2, 1] or not ops[3]['me_amax'] or ops[-1]['unit'] != 0:
         raise CompileError('head profile is not norm (3 SU) + AMAX matvec ... END')
     me = dict(ops[3])
-    me.update(me_nout=geo['rows'], me_tiles=geo['tiles_per_round'], me_wbase=0, me_wcs=0, me_obase=0, me_row0=0,
+    me.update(me_nout=geo['rows'], me_tiles=geo['rounds'], me_wbase=0, me_wcs=0, me_obase=0, me_row0=0,
               me_amc=0)
     if (geo['rows'] + geo['tiles_per_round'] * geo['rounds'] - 1) // (geo['tiles_per_round'] * geo['rounds']) > 128:
         raise CompileError('head rows exceed tiles x rounds x 128')

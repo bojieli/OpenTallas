@@ -21,6 +21,7 @@ def raw_json(value):return (json.dumps(value,sort_keys=True,separators=(',',':')
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--monitor-slice',type=int,choices=range(12),default=None,help='explicit unadopted dedicated upper HEAD pidx copy for G_XPF; defaultnone')
     ap.add_argument('--native',type=Path,required=True);ap.add_argument('--head-data',type=Path,required=True)
     ap.add_argument('--object',type=Path,required=True);ap.add_argument('--lease',type=Path,required=True)
     ap.add_argument('--source-commit',required=True);ap.add_argument('--out',type=Path,required=True)
@@ -37,7 +38,7 @@ def main():
             raise ValueError('native transformer and HEAD checkpoint sources differ')
         if sha(head/'head_final_norm_crom.hex')!=obj['sources']['gain_words_sha256']:
             raise ValueError('HEAD final gains differ between ranks/source object')
-        stage=H.link_stage(obj,json.loads((head/'head_btab.json').read_text()),alloc)
+        stage=H.link_stage(obj,json.loads((head/'head_btab.json').read_text()),alloc,monitor_slice=a.monitor_slice)
         out,certificate=H.assemble_manifest(manifest,stage,alloc,parent_manifest_sha256=sha(mp),lowering_commit=a.source_commit)
         images=P.logical_images(out,head_stage37=True)
         dest=a.out/f'rank{rank}';dest.mkdir();masks=dest/'masks';masks.mkdir()
@@ -55,7 +56,7 @@ def main():
                     raise ValueError(f'completed transformer prefix changed rank{rank}/{name}')
                 (masks/name).write_text('\n'.join(after)+'\n');hashes[name]=sha(masks/name)
         result=dict(rank=rank,status='SOURCE_IMAGES_ONLY_NOT_ACTIVATED',masks=len(hashes),
-                    transformer_rows_unchanged=3816,head_rows=[3816,3922],monitor_enabled=False,
+                    transformer_rows_unchanged=3816,head_rows=[3816,3922],monitor_enabled=False,monitor_scope='optional MONITOR_TAIL12..15',native_head_monitor_slice=a.monitor_slice,
                     gain_base=alloc['gain_base'],apply_pidx=alloc['apply_pidx'],
                     manifest_sha256=sha(dest/'mu_table_input.json'),certificate_sha256=sha(dest/'user_relocation.json'),
                     images=hashes)
