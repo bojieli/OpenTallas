@@ -1,0 +1,7 @@
+Reviewed bounded HEAD p_take diagnostic; no full proof/source/global KEEP credit.
+
+Independent QC reviewer concurred caller SHA6ba7a233b8f2a40f9019ded768d29220e465fe2e7856212258774fbab9c324df. Four native BASE side-pairs are measured before insertion; original12732 tuples/58437 matches/constraints remain literal through build. The135 obligations include45 original comparisons(18 p_take-copy residuals plus27 gold-X-labelled points),82 original auxiliary relations,4 LA replica NEXT and4 new p_take NEXT. The original Lec.build native X rail remains unchanged; there is no new/custom output mask or dropped target. Fourteen padding comparisons remain separate.
+
+Both lanes have known wrong-polarity BASE controls and actual wrong-function NEXT controls. A nondiscriminating all-proved wrong-function control refuses; timeout/unknown is recorded honestly and cannot confer qualification.
+
+First normal capsule Intel1 codex-head-ptake45-1010/unit255411 stopped before context/proof because an explicit input copy omitted the mandatory immutable typed70_joint98.aig. The failure/log remain intact. Corrected NEW capsule codex-head-ptake45-r2-1030 adds that exact hard-pinned original AIG, with unchanged caller/source. All SOURCE_JOIN files present. Controller Intel2 codex-flow-head-ptake45-r2-1030, actualIntel1 unit270248-1793638655, normal8GB2T/disk5. Runtime result is authoritative; PREP itself claims no native pass.
