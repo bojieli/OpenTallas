@@ -127,10 +127,16 @@ set tol $ot_pg_tol
 # Forwarded/landing clock roots are real clocks too. Select the IO reference by
 # its absent source rather than by excluding a single real clock named clk.
 set ot_pg_virtual {}
+set ot_pg_real {}
 foreach ot_pg_clock [all_clocks] {
-  if {![llength [get_property $ot_pg_clock sources]]} {lappend ot_pg_virtual $ot_pg_clock}
+  if {![llength [get_property $ot_pg_clock sources]]} {
+    lappend ot_pg_virtual $ot_pg_clock
+  } else {
+    lappend ot_pg_real $ot_pg_clock
+  }
 }
 if {[llength $ot_pg_virtual] != 1} {error "postcts: expected exactly one source-less virtual IO clock"}
+if {![llength $ot_pg_real]} {error "postcts: no declared real clock sources"}
 set_clock_latency -source $ot_pg_bound $ot_pg_virtual
 if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARASITICS_FILE)]} {
   source $::env(LAYER_PARASITICS_FILE)
@@ -143,7 +149,13 @@ if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARA
 # first left the clock tree with no wire RC and read the pin-register CK ~55-62 ps early (KITS-SPARE ve_m 193 vs 316,
 # FLOW 09:41 10-25; the earlier "placement reads ~75 ps early" rr_h0 note was this).  FLOW-INFRA-2 A/B 10-25 on the
 # head + KV canary 5_1_grt.odb: -global_routing is order-independent (bit-identical); fixed placement reads +10..+13 ps.
-set_propagated_clock [get_clocks clk]
+# The same source-backed real roots selected above include forwarded inputs
+# and generated outputs; leaving them ideal erases their saved physical tree.
+# The source-less IO reference stays ideal and all SDC values stay unchanged.
+set_propagated_clock $ot_pg_real
+set ot_pg_real_names {}
+foreach ot_pg_clock $ot_pg_real {lappend ot_pg_real_names [get_full_name $ot_pg_clock]}
+puts "OT_POSTCTS_CLOCK_PROFILE propagated=$ot_pg_real_names ideal_io=[get_full_name $ot_pg_virtual]"
 # A saved ODB retains wires/guides, not STA parasitic annotations. Explicit
 # frozen-clock consumers must restore the qualified clock-only RC in THIS process.
 set ot_pg_frozen_rc [expr {[info exists ::env(OT_POSTCTS_FROZEN_CLOCK_SPEFS)] && $::env(OT_POSTCTS_FROZEN_CLOCK_SPEFS) ne ""}]
