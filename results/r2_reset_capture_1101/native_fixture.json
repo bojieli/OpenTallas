@@ -1,0 +1,1323 @@
+{
+ "scope": "Exact native BFQG selected cone subgraph; real mapped/placement extraction",
+ "cells": {
+  "_07470_": {
+   "master": "INVx1_ASAP7_75t_R",
+   "ports": {
+    "A": "_02816_",
+    "Y": "u_rst.sync_q[0]"
+   }
+  },
+  "_12342_": {
+   "master": "BUFx4f_ASAP7_75t_R",
+   "ports": {
+    "A": "_06692_",
+    "Y": "_07465_"
+   }
+  },
+  "_12344_": {
+   "master": "INVx2_ASAP7_75t_R",
+   "ports": {
+    "A": "_07465_",
+    "Y": "u_rst.relay_q[0][0]"
+   }
+  },
+  "_12345_": {
+   "master": "AND2x2_ASAP7_75t_R",
+   "ports": {
+    "A": "u_rst.relay_q[0][0]",
+    "B": "r_ce[7]",
+    "Y": "_06707_"
+   }
+  },
+  "_12347_": {
+   "master": "AND2x2_ASAP7_75t_R",
+   "ports": {
+    "A": "u_rst.relay_q[0][0]",
+    "B": "r_ce[6]",
+    "Y": "_06709_"
+   }
+  },
+  "_12349_": {
+   "master": "AND2x2_ASAP7_75t_R",
+   "ports": {
+    "A": "u_rst.relay_q[0][0]",
+    "B": "r_ce[5]",
+    "Y": "_06711_"
+   }
+  },
+  "_12351_": {
+   "master": "AND2x2_ASAP7_75t_R",
+   "ports": {
+    "A": "u_rst.relay_q[0][0]",
+    "B": "r_ce[4]",
+    "Y": "_06713_"
+   }
+  },
+  "_12353_": {
+   "master": "AND2x2_ASAP7_75t_R",
+   "ports": {
+    "A": "u_rst.relay_q[0][0]",
+    "B": "r_ce[3]",
+    "Y": "_06715_"
+   }
+  },
+  "_12355_": {
+   "master": "AND2x2_ASAP7_75t_R",
+   "ports": {
+    "A": "u_rst.relay_q[0][0]",
+    "B": "r_ce[2]",
+    "Y": "_06717_"
+   }
+  },
+  "_12357_": {
+   "master": "AND2x2_ASAP7_75t_R",
+   "ports": {
+    "A": "u_rst.relay_q[0][0]",
+    "B": "r_ce[1]",
+    "Y": "_06719_"
+   }
+  },
+  "_12359_": {
+   "master": "AND2x2_ASAP7_75t_R",
+   "ports": {
+    "A": "u_rst.relay_q[0][0]",
+    "B": "r_ce[0]",
+    "Y": "_06721_"
+   }
+  },
+  "_12360_": {
+   "master": "AND2x2_ASAP7_75t_R",
+   "ports": {
+    "A": "u_rst.relay_q[0][0]",
+    "B": "wce",
+    "Y": "_06722_"
+   }
+  },
+  "_12368_": {
+   "master": "INVx1_ASAP7_75t_R",
+   "ports": {
+    "A": "_06693_",
+    "Y": "u_rst.sync_q[1]"
+   }
+  },
+  "_12370_": {
+   "master": "TIEHIx1_ASAP7_75t_R",
+   "ports": {
+    "H": "_07468_"
+   }
+  },
+  "g_t[0].rp_ce$_SDFF_PN0_": {
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "_06721_",
+    "QN": "_02817_"
+   }
+  },
+  "g_t[1].rp_ce$_SDFF_PN0_": {
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "_06719_",
+    "QN": "_02819_"
+   }
+  },
+  "g_t[2].rp_ce$_SDFF_PN0_": {
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "_06717_",
+    "QN": "_02821_"
+   }
+  },
+  "g_t[3].rp_ce$_SDFF_PN0_": {
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "_06715_",
+    "QN": "_02823_"
+   }
+  },
+  "g_t[4].rp_ce$_SDFF_PN0_": {
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "_06713_",
+    "QN": "_02825_"
+   }
+  },
+  "g_t[5].rp_ce$_SDFF_PN0_": {
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "_06711_",
+    "QN": "_02827_"
+   }
+  },
+  "g_t[6].rp_ce$_SDFF_PN0_": {
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "_06709_",
+    "QN": "_02829_"
+   }
+  },
+  "g_t[7].rp_ce$_SDFF_PN0_": {
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "_06707_",
+    "QN": "_02831_"
+   }
+  },
+  "u_rst.rst_n$_DFF_PN0_": {
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "u_rst.sync_q[1]",
+    "QN": "_06692_",
+    "RESETN": "rst_n",
+    "SETN": "_07468_"
+   }
+  },
+  "u_rst.sync_q[0]$_DFF_PN0_": {
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "_07468_",
+    "QN": "_02816_",
+    "RESETN": "rst_n",
+    "SETN": "_07468_"
+   }
+  },
+  "u_rst.sync_q[1]$_DFF_PN0_": {
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "u_rst.sync_q[0]",
+    "QN": "_06693_",
+    "RESETN": "rst_n",
+    "SETN": "_07468_"
+   }
+  },
+  "wce_q$_SDFF_PN0_": {
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "_06722_",
+    "QN": "_06691_"
+   }
+  }
+ },
+ "physical_dump": "C\t1\tB\tINVx1_ASAP7_75t_R\t231.2820\t7.8300\t231.4440\t8.1000\t_07470_\nC\t4875\tB\tINVx2_ASAP7_75t_R\t203.0940\t8.1000\t203.3100\t8.3700\t_12344_\nC\t4876\tL\tAND2x2_ASAP7_75t_R\t251.2620\t5.4000\t251.5860\t5.6700\t_12345_\nC\t4878\tL\tAND2x2_ASAP7_75t_R\t254.0160\t5.9400\t254.3400\t6.2100\t_12347_\nC\t4880\tL\tAND2x2_ASAP7_75t_R\t252.9900\t5.1300\t253.3140\t5.4000\t_12349_\nC\t4882\tL\tAND2x2_ASAP7_75t_R\t251.6940\t8.9100\t252.0180\t9.1800\t_12351_\nC\t4884\tL\tAND2x2_ASAP7_75t_R\t6.4800\t7.2900\t6.8040\t7.5600\t_12353_\nC\t4886\tL\tAND2x2_ASAP7_75t_R\t9.9900\t5.6700\t10.3140\t5.9400\t_12355_\nC\t4888\tL\tAND2x2_ASAP7_75t_R\t7.1820\t7.0200\t7.5060\t7.2900\t_12357_\nC\t4890\tL\tAND2x2_ASAP7_75t_R\t6.3180\t6.2100\t6.6420\t6.4800\t_12359_\nC\t4891\tL\tAND2x2_ASAP7_75t_R\t253.9080\t5.6700\t254.2320\t5.9400\t_12360_\nC\t4899\tB\tINVx1_ASAP7_75t_R\t232.4160\t8.1000\t232.5780\t8.3700\t_12368_\nC\t4902\tL\tTIEHIx1_ASAP7_75t_R\t232.7940\t8.1000\t232.9560\t8.3700\tu_rst.rst_n$_DFF_PN0__273\nC\t7977\tS\tDFFHQNx1_ASAP7_75t_R\t6.3180\t6.7500\t7.3980\t7.0200\tg_t\\[0\\].rp_ce$_SDFF_PN0_\nC\t7982\tS\tDFFHQNx1_ASAP7_75t_R\t7.9380\t7.8300\t9.0180\t8.1000\tg_t\\[1\\].rp_ce$_SDFF_PN0_\nC\t7987\tS\tDFFHQNx1_ASAP7_75t_R\t10.5300\t7.0200\t11.6100\t7.2900\tg_t\\[2\\].rp_ce$_SDFF_PN0_\nC\t7992\tS\tDFFHQNx1_ASAP7_75t_R\t6.4800\t7.5600\t7.5600\t7.8300\tg_t\\[3\\].rp_ce$_SDFF_PN0_\nC\t7997\tS\tDFFHQNx1_ASAP7_75t_R\t251.6400\t8.1000\t252.7200\t8.3700\tg_t\\[4\\].rp_ce$_SDFF_PN0_\nC\t8002\tS\tDFFHQNx1_ASAP7_75t_R\t252.7200\t6.2100\t253.8000\t6.4800\tg_t\\[5\\].rp_ce$_SDFF_PN0_\nC\t8007\tS\tDFFHQNx1_ASAP7_75t_R\t252.9360\t5.9400\t254.0160\t6.2100\tg_t\\[6\\].rp_ce$_SDFF_PN0_\nC\t8012\tS\tDFFHQNx1_ASAP7_75t_R\t251.1000\t5.6700\t252.1800\t5.9400\tg_t\\[7\\].rp_ce$_SDFF_PN0_\nC\t8790\tS\tDFFASRHQNx1_ASAP7_75t_R\t231.9840\t7.8300\t233.3880\t8.1000\tu_rst.rst_n$_DFF_PN0_\nC\t8791\tS\tDFFASRHQNx1_ASAP7_75t_R\t230.7960\t8.1000\t232.2000\t8.3700\tu_rst.sync_q\\[0\\]$_DFF_PN0_\nC\t8792\tS\tDFFASRHQNx1_ASAP7_75t_R\t231.1200\t7.5600\t232.5240\t7.8300\tu_rst.sync_q\\[1\\]$_DFF_PN0_\nC\t8800\tS\tDFFHQNx1_ASAP7_75t_R\t253.6380\t6.4800\t254.7180\t6.7500\twce_q$_SDFF_PN0_\nC\t9073\tL\tTIEHIx1_ASAP7_75t_R\t230.6340\t8.1000\t230.7960\t8.3700\tu_rst.sync_q\\[0\\]$_DFF_PN0__274\nC\t9074\tL\tTIEHIx1_ASAP7_75t_R\t231.6060\t7.8300\t231.7680\t8.1000\tu_rst.sync_q\\[0\\]$_DFF_PN0__275\nC\t9075\tL\tTIEHIx1_ASAP7_75t_R\t231.8220\t7.8300\t231.9840\t8.1000\tu_rst.sync_q\\[1\\]$_DFF_PN0__276\nC\t15099\tB\tBUFx2_ASAP7_75t_R\t5.9940\t5.6700\t6.2640\t5.9400\tinput1324\nC\t15100\tB\tBUFx2_ASAP7_75t_R\t5.8860\t6.7500\t6.1560\t7.0200\tinput1325\nC\t15101\tB\tBUFx2_ASAP7_75t_R\t6.2100\t5.4000\t6.4800\t5.6700\tinput1326\nC\t15102\tB\tBUFx2_ASAP7_75t_R\t5.1300\t4.5900\t5.4000\t4.8600\tinput1327\nC\t15103\tB\tBUFx2_ASAP7_75t_R\t253.9620\t5.1300\t254.2320\t5.4000\tinput1328\nC\t15104\tB\tBUFx2_ASAP7_75t_R\t253.9080\t4.3200\t254.1780\t4.5900\tinput1329\nC\t15105\tB\tBUFx2_ASAP7_75t_R\t254.0160\t4.5900\t254.2860\t4.8600\tinput1330\nC\t15106\tB\tBUFx2_ASAP7_75t_R\t253.9080\t4.8600\t254.1780\t5.1300\tinput1331\nC\t15107\tB\tBUFx2_ASAP7_75t_R\t254.3400\t7.2900\t254.6100\t7.5600\tinput1332\nC\t15115\tB\tBUFx2_ASAP7_75t_R\t254.2320\t4.3200\t254.5020\t4.5900\tinput1340\nC\t15701\tB\tBUFx16f_ASAP7_75t_R\t233.4960\t8.6400\t234.6840\t8.9100\tload_slew3797\nC\t15786\tB\tBUFx16f_ASAP7_75t_R\t172.5300\t7.5600\t173.7180\t7.8300\twire3768\nC\t15830\tB\tBUFx6f_ASAP7_75t_R\t233.3880\t7.8300\t233.9280\t8.1000\tplace3471\nC\t15835\tB\tBUFx3_ASAP7_75t_R\t203.1480\t7.8300\t203.4720\t8.1000\tplace2970\nP\t1025\tclk_ctrl\tINPUT\tSIGNAL\tM5\t128.7600\t0.2400\nP\t1067\tr_ce[0]\tINPUT\tSIGNAL\tM5\t4.7280\t0.0960\nP\t1068\tr_ce[1]\tINPUT\tSIGNAL\tM5\t4.8240\t0.0960\nP\t1069\tr_ce[2]\tINPUT\tSIGNAL\tM5\t4.9200\t0.0960\nP\t1070\tr_ce[3]\tINPUT\tSIGNAL\tM5\t5.0160\t0.0960\nP\t1071\tr_ce[4]\tINPUT\tSIGNAL\tM5\t254.1840\t0.0960\nP\t1072\tr_ce[5]\tINPUT\tSIGNAL\tM5\t254.2800\t0.0960\nP\t1073\tr_ce[6]\tINPUT\tSIGNAL\tM5\t254.3760\t0.0960\nP\t1074\tr_ce[7]\tINPUT\tSIGNAL\tM5\t254.4720\t0.0960\nP\t1075\trst_n\tINPUT\tSIGNAL\tM5\t258.0720\t0.0960\nP\t1339\twce\tINPUT\tSIGNAL\tM5\t254.8560\t0.0960\nN\tSIGNAL\ti8791\ti1\nN\tSIGNAL\ti7977\ti4889\ti2\nN\tSIGNAL\ti7982\ti4887\ti3\nN\tSIGNAL\ti7987\ti16264\nN\tSIGNAL\ti7992\ti15685\nN\tSIGNAL\ti7997\ti4881\ti6\nN\tSIGNAL\ti8002\ti15683\nN\tSIGNAL\ti8007\ti4877\ti8\nN\tSIGNAL\ti8012\ti15588\nN\tSIGNAL\ti8800\ti4893\nN\tSIGNAL\ti8790\ti15830\nN\tSIGNAL\ti8792\ti4899\nN\tSIGNAL\ti4876\ti8012\nN\tSIGNAL\ti4878\ti8007\nN\tSIGNAL\ti4880\ti8002\nN\tSIGNAL\ti4882\ti7997\nN\tSIGNAL\ti4884\ti7992\nN\tSIGNAL\ti4886\ti7987\nN\tSIGNAL\ti4888\ti7982\nN\tSIGNAL\ti4890\ti7977\nN\tSIGNAL\ti4891\ti8800\nN\tSIGNAL\ti4902\ti8790\nN\tCLOCK\tp1025\ti8800c\ti8799c\ti8798c\ti8797c\ti8796c\ti8795c\ti8794c\ti8793c\ti8792c\ti8791c\ti8790c\ti8533c\ti8532c\ti8531c\ti8530c\ti8529c\ti8528c\ti8527c\ti8012c\ti8007c\ti8002c\ti7997c\ti7992c\ti7987c\ti7982c\ti7977c\nN\tSIGNAL\ti15099\ti4890\nN\tSIGNAL\ti15100\ti4888\nN\tSIGNAL\ti15101\ti4886\nN\tSIGNAL\ti15102\ti4884\nN\tSIGNAL\ti15103\ti4882\nN\tSIGNAL\ti15104\ti4880\nN\tSIGNAL\ti15105\ti4878\nN\tSIGNAL\ti15106\ti4876\nN\tSIGNAL\ti15107\ti8792\ti8791\ti8790\nN\tSIGNAL\ti4875\ti15835\nN\tSIGNAL\ti1\ti8792\nN\tSIGNAL\ti4899\ti8790\nN\tSIGNAL\ti15115\ti4891\nN\tSIGNAL\ti9073\ti8791\nN\tSIGNAL\ti9074\ti8791\nN\tSIGNAL\ti9075\ti8792\nN\tSIGNAL\tp1067\ti15099\nN\tSIGNAL\tp1068\ti15100\nN\tSIGNAL\tp1069\ti15101\nN\tSIGNAL\tp1070\ti15102\nN\tSIGNAL\tp1071\ti15103\nN\tSIGNAL\tp1072\ti15104\nN\tSIGNAL\tp1073\ti15105\nN\tSIGNAL\tp1074\ti15106\nN\tSIGNAL\tp1075\ti15107\nN\tSIGNAL\tp1339\ti15115\nN\tSIGNAL\ti15701\ti15703\ti4881\ti4879\ti4875\nN\tSIGNAL\ti15786\ti4890\ti4888\ti4886\ti4884\nN\tSIGNAL\ti15830\ti15701\ti4877\ti4874\nN\tSIGNAL\ti15835\ti15786\ti4891\ti4882\ti4880\ti4878\ti4876\n",
+ "lec": {
+  "schema": "opentallas.lec.v1",
+  "kit": "/work",
+  "generated": "2026-11-02T06:15:13+0000",
+  "verdict": "EQUIVALENT",
+  "reset_contract": {
+   "default": 4,
+   "requested": 4,
+   "contract": {
+    "file": "/work/reset_contract.json",
+    "die": "hbm",
+    "edges": 64,
+    "assert_edges": 66,
+    "receipt": "/work/reset_contract/receipt.txt"
+   },
+   "used": 4,
+   "debug_overrides": {}
+  },
+  "top": "ot_hgi_sm_xload_cl2_bfqg",
+  "netlist": "/work/run/results/asap7/hbc_ot_hgi_sm_xload_cl2_bfqg/base/1_2_yosys.v",
+  "synth_frontend": "verilog",
+  "gold_frontend": "slang",
+  "implicit_nets": [],
+  "black_boxes": {
+   "ot_sram_1r1w_128x256_m1_r2c2": 12
+  },
+  "ports": {
+   "inputs": 1084,
+   "outputs": 256
+  },
+  "t_aig_s": 12.0,
+  "kit_reset_ports": [
+   "rst_n"
+  ],
+  "noreset_constants": {
+   "enabled": true,
+   "reset_ports": {
+    "gold": [
+     "pi:rst_n[0]"
+    ],
+    "gate": [
+     "pi:rst_n[0]"
+    ]
+   },
+   "reset_asserted": {
+    "gold": {
+     "pi:rst_n[0]": 0
+    },
+    "gate": {
+     "pi:rst_n[0]": 0
+    }
+   },
+   "reset_cycles": 4,
+   "release_edges": 8,
+   "n_release": 0,
+   "release": [],
+   "n_universal_raw_D": 0,
+   "universal_raw_D": [],
+   "raw_base_steps": 0,
+   "n_universal_raw_prefix": 0,
+   "universal_raw_prefix": [],
+   "n_kept": 0,
+   "n_reloaded": 0,
+   "n_dropped": 0,
+   "reloaded": [],
+   "dropped": [],
+   "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case",
+   "listing": {
+    "file": "/work/lec/noreset_constants.tsv",
+    "sha256": "9281382eae0f24f9f712bdb4a59941a62eb981266c9b391c19101559de2e8b23",
+    "n_kept": 0,
+    "n_dropped": 0
+   }
+  },
+  "t_corr_s": 9.3,
+  "keypoints": {
+   "gold": {
+    "inputs": 1093,
+    "flops": 10698,
+    "outputs": 0,
+    "ands": 3909
+   },
+   "gate": {
+    "inputs": 1102,
+    "flops": 14588,
+    "outputs": 0,
+    "ands": 3914
+   },
+   "matched": 4974,
+   "gold_constant_flops": {
+    "n": 0,
+    "first": []
+   },
+   "paired_flops": {
+    "n": 2048,
+    "first": [
+     "gate:ff:u_dut.cap[0][0]=ff:u_dut.g_t[0].cq[0]",
+     "gate:ff:u_dut.cap[0][100]=ff:u_dut.g_t[0].cq[100]",
+     "gate:ff:u_dut.cap[0][101]=ff:u_dut.g_t[0].cq[101]",
+     "gate:ff:u_dut.cap[0][102]=ff:u_dut.g_t[0].cq[102]",
+     "gate:ff:u_dut.cap[0][103]=ff:u_dut.g_t[0].cq[103]",
+     "gate:ff:u_dut.cap[0][104]=ff:u_dut.g_t[0].cq[104]",
+     "gate:ff:u_dut.cap[0][105]=ff:u_dut.g_t[0].cq[105]",
+     "gate:ff:u_dut.cap[0][106]=ff:u_dut.g_t[0].cq[106]",
+     "gate:ff:u_dut.cap[0][107]=ff:u_dut.g_t[0].cq[107]",
+     "gate:ff:u_dut.cap[0][108]=ff:u_dut.g_t[0].cq[108]",
+     "gate:ff:u_dut.cap[0][109]=ff:u_dut.g_t[0].cq[109]",
+     "gate:ff:u_dut.cap[0][10]=ff:u_dut.g_t[0].cq[10]",
+     "gate:ff:u_dut.cap[0][110]=ff:u_dut.g_t[0].cq[110]",
+     "gate:ff:u_dut.cap[0][111]=ff:u_dut.g_t[0].cq[111]",
+     "gate:ff:u_dut.cap[0][112]=ff:u_dut.g_t[0].cq[112]",
+     "gate:ff:u_dut.cap[0][113]=ff:u_dut.g_t[0].cq[113]",
+     "gate:ff:u_dut.cap[0][114]=ff:u_dut.g_t[0].cq[114]",
+     "gate:ff:u_dut.cap[0][115]=ff:u_dut.g_t[0].cq[115]",
+     "gate:ff:u_dut.cap[0][116]=ff:u_dut.g_t[0].cq[116]",
+     "gate:ff:u_dut.cap[0][117]=ff:u_dut.g_t[0].cq[117]",
+     "gate:ff:u_dut.cap[0][118]=ff:u_dut.g_t[0].cq[118]",
+     "gate:ff:u_dut.cap[0][119]=ff:u_dut.g_t[0].cq[119]",
+     "gate:ff:u_dut.cap[0][11]=ff:u_dut.g_t[0].cq[11]",
+     "gate:ff:u_dut.cap[0][120]=ff:u_dut.g_t[0].cq[120]",
+     "gate:ff:u_dut.cap[0][121]=ff:u_dut.g_t[0].cq[121]",
+     "gate:ff:u_dut.cap[0][122]=ff:u_dut.g_t[0].cq[122]",
+     "gate:ff:u_dut.cap[0][123]=ff:u_dut.g_t[0].cq[123]",
+     "gate:ff:u_dut.cap[0][124]=ff:u_dut.g_t[0].cq[124]",
+     "gate:ff:u_dut.cap[0][125]=ff:u_dut.g_t[0].cq[125]",
+     "gate:ff:u_dut.cap[0][126]=ff:u_dut.g_t[0].cq[126]",
+     "gate:ff:u_dut.cap[0][127]=ff:u_dut.g_t[0].cq[127]",
+     "gate:ff:u_dut.cap[0][128]=ff:u_dut.g_t[0].cq[128]",
+     "gate:ff:u_dut.cap[0][129]=ff:u_dut.g_t[0].cq[129]",
+     "gate:ff:u_dut.cap[0][12]=ff:u_dut.g_t[0].cq[12]",
+     "gate:ff:u_dut.cap[0][130]=ff:u_dut.g_t[0].cq[130]",
+     "gate:ff:u_dut.cap[0][131]=ff:u_dut.g_t[0].cq[131]",
+     "gate:ff:u_dut.cap[0][132]=ff:u_dut.g_t[0].cq[132]",
+     "gate:ff:u_dut.cap[0][133]=ff:u_dut.g_t[0].cq[133]",
+     "gate:ff:u_dut.cap[0][134]=ff:u_dut.g_t[0].cq[134]",
+     "gate:ff:u_dut.cap[0][135]=ff:u_dut.g_t[0].cq[135]"
+    ]
+   },
+   "gold_unmatched_live": {
+    "n": 0,
+    "first": []
+   },
+   "gate_unmatched": {
+    "n": 0,
+    "first": []
+   },
+   "gold_x_sources": 9,
+   "gold_unwritten_x": {
+    "n": 0,
+    "first": []
+   },
+   "gate_x_sources": 18,
+   "gold_only_compare": {
+    "n": 2048,
+    "first": [
+     "ff:u_dut.g_t[0].cq[0]",
+     "ff:u_dut.g_t[0].cq[100]",
+     "ff:u_dut.g_t[0].cq[101]",
+     "ff:u_dut.g_t[0].cq[102]",
+     "ff:u_dut.g_t[0].cq[103]",
+     "ff:u_dut.g_t[0].cq[104]",
+     "ff:u_dut.g_t[0].cq[105]",
+     "ff:u_dut.g_t[0].cq[106]",
+     "ff:u_dut.g_t[0].cq[107]",
+     "ff:u_dut.g_t[0].cq[108]",
+     "ff:u_dut.g_t[0].cq[109]",
+     "ff:u_dut.g_t[0].cq[10]",
+     "ff:u_dut.g_t[0].cq[110]",
+     "ff:u_dut.g_t[0].cq[111]",
+     "ff:u_dut.g_t[0].cq[112]",
+     "ff:u_dut.g_t[0].cq[113]",
+     "ff:u_dut.g_t[0].cq[114]",
+     "ff:u_dut.g_t[0].cq[115]",
+     "ff:u_dut.g_t[0].cq[116]",
+     "ff:u_dut.g_t[0].cq[117]",
+     "ff:u_dut.g_t[0].cq[118]",
+     "ff:u_dut.g_t[0].cq[119]",
+     "ff:u_dut.g_t[0].cq[11]",
+     "ff:u_dut.g_t[0].cq[120]",
+     "ff:u_dut.g_t[0].cq[121]",
+     "ff:u_dut.g_t[0].cq[122]",
+     "ff:u_dut.g_t[0].cq[123]",
+     "ff:u_dut.g_t[0].cq[124]",
+     "ff:u_dut.g_t[0].cq[125]",
+     "ff:u_dut.g_t[0].cq[126]",
+     "ff:u_dut.g_t[0].cq[127]",
+     "ff:u_dut.g_t[0].cq[128]",
+     "ff:u_dut.g_t[0].cq[129]",
+     "ff:u_dut.g_t[0].cq[12]",
+     "ff:u_dut.g_t[0].cq[130]",
+     "ff:u_dut.g_t[0].cq[131]",
+     "ff:u_dut.g_t[0].cq[132]",
+     "ff:u_dut.g_t[0].cq[133]",
+     "ff:u_dut.g_t[0].cq[134]",
+     "ff:u_dut.g_t[0].cq[135]"
+    ]
+   },
+   "gate_only_compare": {
+    "n": 2048,
+    "first": [
+     "ff:u_dut.cap[0][0]",
+     "ff:u_dut.cap[0][100]",
+     "ff:u_dut.cap[0][101]",
+     "ff:u_dut.cap[0][102]",
+     "ff:u_dut.cap[0][103]",
+     "ff:u_dut.cap[0][104]",
+     "ff:u_dut.cap[0][105]",
+     "ff:u_dut.cap[0][106]",
+     "ff:u_dut.cap[0][107]",
+     "ff:u_dut.cap[0][108]",
+     "ff:u_dut.cap[0][109]",
+     "ff:u_dut.cap[0][10]",
+     "ff:u_dut.cap[0][110]",
+     "ff:u_dut.cap[0][111]",
+     "ff:u_dut.cap[0][112]",
+     "ff:u_dut.cap[0][113]",
+     "ff:u_dut.cap[0][114]",
+     "ff:u_dut.cap[0][115]",
+     "ff:u_dut.cap[0][116]",
+     "ff:u_dut.cap[0][117]",
+     "ff:u_dut.cap[0][118]",
+     "ff:u_dut.cap[0][119]",
+     "ff:u_dut.cap[0][11]",
+     "ff:u_dut.cap[0][120]",
+     "ff:u_dut.cap[0][121]",
+     "ff:u_dut.cap[0][122]",
+     "ff:u_dut.cap[0][123]",
+     "ff:u_dut.cap[0][124]",
+     "ff:u_dut.cap[0][125]",
+     "ff:u_dut.cap[0][126]",
+     "ff:u_dut.cap[0][127]",
+     "ff:u_dut.cap[0][128]",
+     "ff:u_dut.cap[0][129]",
+     "ff:u_dut.cap[0][12]",
+     "ff:u_dut.cap[0][130]",
+     "ff:u_dut.cap[0][131]",
+     "ff:u_dut.cap[0][132]",
+     "ff:u_dut.cap[0][133]",
+     "ff:u_dut.cap[0][134]",
+     "ff:u_dut.cap[0][135]"
+    ]
+   }
+  },
+  "t_prove_s": 0.1,
+  "x_dont_care_points": {
+   "n": 0,
+   "first": []
+  },
+  "kept_registers": {
+   "declared": 1064,
+   "in_netlist": 1064,
+   "constant_proved": {
+    "n": 0,
+    "first": []
+   },
+   "missing": {
+    "n": 0,
+    "first": []
+   },
+   "unobservable_removed": {
+    "n": 0,
+    "first": []
+   },
+   "unobservable_reason": null
+  },
+  "counts": {
+   "compare_points": 8650,
+   "proved": 8650,
+   "differs": 0,
+   "undecided": 0
+  },
+  "failing": [],
+  "unproven_points": [],
+  "note": "8650 compare points proved; 4974 key points matched by name, 2048 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs)",
+  "t_total_s": 22.1,
+  "provenance": {
+   "commit": "717d8877ca38e964268ccabe9b3c11a35fda3b7c",
+   "dirty": false,
+   "source": "validated kit PROVENANCE.json"
+  }
+ },
+ "provenance": {
+  "schema": "opentallas.kit_provenance.v1",
+  "provenance": {
+   "commit": "717d8877ca38e964268ccabe9b3c11a35fda3b7c",
+   "dirty": false,
+   "source": "git"
+  },
+  "kit_hash": "216c9e4fa8556f69",
+  "files": {
+   "config.mk": "dc42e3d6808d3114eabc394fe4fcd45f2693b2b9ac83d7db109251cb6d19a38e",
+   "freeze.json": "91e66c39e76be1b96701ed0847f7183217283c7bcb494299a79fe62122b235ba",
+   "lec.py": "2d45c7d81e77b24362dd5f535b46131e806ce0cce2aa402c3262e1bd879924e6",
+   "core.json": "ebe6100767b2c7782d84fba4166ce3f7534df03f05c48c66f1ae5fc85109dbf9",
+   "pins.json": "457cf155caa63395737a943988aa1d4cdc0bca92003f15f250949b072c6558bf",
+   "rtl/ot_hgi_sm_xload_bfqg.sv": "5317524cf8e6d9644e2fb9a04d6aff16fd338f95beb692bf13c67014dca315b5",
+   "rtl/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "rtl/portlist.txt": "1d3466cec0f9ab366b017e7034275708e007fe68470f60715125a87cc3151592"
+  }
+ },
+ "typed_physical": {
+  "schema": "opentallas.typed_physical_connectivity.v1",
+  "source_odb": "/work/run/results/asap7/hbc_ot_hgi_sm_xload_cl2_bfqg/base/3_place.odb",
+  "source_odb_sha256": "af4aa5c2b7a7888f7b10d0ad55ff2c2e2dd0713c1afca0c8d84ac0b2a057af8e",
+  "cells": {
+   "_07470_": {
+    "master": "INVx1_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "_02816_",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "u_rst.sync_q[0]",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "_12344_": {
+    "master": "INVx2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "net3796",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "u_rst.relay_q[0][0]",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "_12345_": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "net2969",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "B": {
+      "net": "net1330",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "_06707_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "_12347_": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "net2969",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "B": {
+      "net": "net1329",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "_06709_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "_12349_": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "net2969",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "B": {
+      "net": "net1328",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "_06711_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "_12351_": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "net2969",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "B": {
+      "net": "net1327",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "_06713_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "_12353_": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "net3767",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "B": {
+      "net": "net1326",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "_06715_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "_12355_": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "net3767",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "B": {
+      "net": "net1325",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "_06717_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "_12357_": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "net3767",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "B": {
+      "net": "net1324",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "_06719_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "_12359_": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "net3767",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "B": {
+      "net": "net1323",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "_06721_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "_12360_": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "net2969",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "B": {
+      "net": "net1339",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "_06722_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "_12368_": {
+    "master": "INVx1_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "_06693_",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "u_rst.sync_q[1]",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "g_t[0].rp_ce$_SDFF_PN0_": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": {
+      "net": "clk_ctrl",
+      "direction": "INPUT",
+      "signal": "CLOCK"
+     },
+     "D": {
+      "net": "_06721_",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "QN": {
+      "net": "_02817_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "g_t[1].rp_ce$_SDFF_PN0_": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": {
+      "net": "clk_ctrl",
+      "direction": "INPUT",
+      "signal": "CLOCK"
+     },
+     "D": {
+      "net": "_06719_",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "QN": {
+      "net": "_02819_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "g_t[2].rp_ce$_SDFF_PN0_": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": {
+      "net": "clk_ctrl",
+      "direction": "INPUT",
+      "signal": "CLOCK"
+     },
+     "D": {
+      "net": "_06717_",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "QN": {
+      "net": "_02821_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "g_t[3].rp_ce$_SDFF_PN0_": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": {
+      "net": "clk_ctrl",
+      "direction": "INPUT",
+      "signal": "CLOCK"
+     },
+     "D": {
+      "net": "_06715_",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "QN": {
+      "net": "_02823_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "g_t[4].rp_ce$_SDFF_PN0_": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": {
+      "net": "clk_ctrl",
+      "direction": "INPUT",
+      "signal": "CLOCK"
+     },
+     "D": {
+      "net": "_06713_",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "QN": {
+      "net": "_02825_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "g_t[5].rp_ce$_SDFF_PN0_": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": {
+      "net": "clk_ctrl",
+      "direction": "INPUT",
+      "signal": "CLOCK"
+     },
+     "D": {
+      "net": "_06711_",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "QN": {
+      "net": "_02827_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "g_t[6].rp_ce$_SDFF_PN0_": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": {
+      "net": "clk_ctrl",
+      "direction": "INPUT",
+      "signal": "CLOCK"
+     },
+     "D": {
+      "net": "_06709_",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "QN": {
+      "net": "_02829_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "g_t[7].rp_ce$_SDFF_PN0_": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": {
+      "net": "clk_ctrl",
+      "direction": "INPUT",
+      "signal": "CLOCK"
+     },
+     "D": {
+      "net": "_06707_",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "QN": {
+      "net": "_02831_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "input1324": {
+    "master": "BUFx2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "r_ce[0]",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net1323",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "input1325": {
+    "master": "BUFx2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "r_ce[1]",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net1324",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "input1326": {
+    "master": "BUFx2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "r_ce[2]",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net1325",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "input1327": {
+    "master": "BUFx2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "r_ce[3]",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net1326",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "input1328": {
+    "master": "BUFx2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "r_ce[4]",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net1327",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "input1329": {
+    "master": "BUFx2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "r_ce[5]",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net1328",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "input1330": {
+    "master": "BUFx2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "r_ce[6]",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net1329",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "input1331": {
+    "master": "BUFx2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "r_ce[7]",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net1330",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "input1332": {
+    "master": "BUFx2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "rst_n",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net1331",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "input1340": {
+    "master": "BUFx2_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "wce",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net1339",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "load_slew3797": {
+    "master": "BUFx16f_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "net3470",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net3796",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "place2970": {
+    "master": "BUFx3_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "u_rst.relay_q[0][0]",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net2969",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "place3471": {
+    "master": "BUFx6f_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "_06692_",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net3470",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "u_rst.rst_n$_DFF_PN0_": {
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": {
+      "net": "clk_ctrl",
+      "direction": "INPUT",
+      "signal": "CLOCK"
+     },
+     "D": {
+      "net": "u_rst.sync_q[1]",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "QN": {
+      "net": "_06692_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     },
+     "RESETN": {
+      "net": "net1331",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "SETN": {
+      "net": "net272",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "u_rst.rst_n$_DFF_PN0__273": {
+    "master": "TIEHIx1_ASAP7_75t_R",
+    "ports": {
+     "H": {
+      "net": "net272",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "u_rst.sync_q[0]$_DFF_PN0_": {
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": {
+      "net": "clk_ctrl",
+      "direction": "INPUT",
+      "signal": "CLOCK"
+     },
+     "D": {
+      "net": "net273",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "QN": {
+      "net": "_02816_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     },
+     "RESETN": {
+      "net": "net1331",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "SETN": {
+      "net": "net274",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "u_rst.sync_q[0]$_DFF_PN0__274": {
+    "master": "TIEHIx1_ASAP7_75t_R",
+    "ports": {
+     "H": {
+      "net": "net273",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "u_rst.sync_q[0]$_DFF_PN0__275": {
+    "master": "TIEHIx1_ASAP7_75t_R",
+    "ports": {
+     "H": {
+      "net": "net274",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "u_rst.sync_q[1]$_DFF_PN0_": {
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": {
+      "net": "clk_ctrl",
+      "direction": "INPUT",
+      "signal": "CLOCK"
+     },
+     "D": {
+      "net": "u_rst.sync_q[0]",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "QN": {
+      "net": "_06693_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     },
+     "RESETN": {
+      "net": "net1331",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "SETN": {
+      "net": "net275",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "u_rst.sync_q[1]$_DFF_PN0__276": {
+    "master": "TIEHIx1_ASAP7_75t_R",
+    "ports": {
+     "H": {
+      "net": "net275",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "wce_q$_SDFF_PN0_": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": {
+      "net": "clk_ctrl",
+      "direction": "INPUT",
+      "signal": "CLOCK"
+     },
+     "D": {
+      "net": "_06722_",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "QN": {
+      "net": "_06691_",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   },
+   "wire3768": {
+    "master": "BUFx16f_ASAP7_75t_R",
+    "ports": {
+     "A": {
+      "net": "net2969",
+      "direction": "INPUT",
+      "signal": "SIGNAL"
+     },
+     "Y": {
+      "net": "net3767",
+      "direction": "OUTPUT",
+      "signal": "SIGNAL"
+     }
+    }
+   }
+  },
+  "ports": {
+   "clk_ctrl": {
+    "net": "clk_ctrl",
+    "direction": "INPUT",
+    "signal": "SIGNAL"
+   },
+   "r_ce[0]": {
+    "net": "r_ce[0]",
+    "direction": "INPUT",
+    "signal": "SIGNAL"
+   },
+   "r_ce[1]": {
+    "net": "r_ce[1]",
+    "direction": "INPUT",
+    "signal": "SIGNAL"
+   },
+   "r_ce[2]": {
+    "net": "r_ce[2]",
+    "direction": "INPUT",
+    "signal": "SIGNAL"
+   },
+   "r_ce[3]": {
+    "net": "r_ce[3]",
+    "direction": "INPUT",
+    "signal": "SIGNAL"
+   },
+   "r_ce[4]": {
+    "net": "r_ce[4]",
+    "direction": "INPUT",
+    "signal": "SIGNAL"
+   },
+   "r_ce[5]": {
+    "net": "r_ce[5]",
+    "direction": "INPUT",
+    "signal": "SIGNAL"
+   },
+   "r_ce[6]": {
+    "net": "r_ce[6]",
+    "direction": "INPUT",
+    "signal": "SIGNAL"
+   },
+   "r_ce[7]": {
+    "net": "r_ce[7]",
+    "direction": "INPUT",
+    "signal": "SIGNAL"
+   },
+   "rst_n": {
+    "net": "rst_n",
+    "direction": "INPUT",
+    "signal": "SIGNAL"
+   },
+   "wce": {
+    "net": "wce",
+    "direction": "INPUT",
+    "signal": "SIGNAL"
+   }
+  }
+ }
+}
