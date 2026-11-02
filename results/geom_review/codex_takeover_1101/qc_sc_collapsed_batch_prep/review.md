@@ -1,0 +1,7 @@
+# SC serial-buffer census and bounded placement PREP
+
+Read-only current actual three-buffer geometry and exact signal graph found 65 FF-output serial BUF chains with at least two buffers. Excluding 2389 real clock-cone cells, 24 chains have a first centre hop above 150 um; they contain 49 existing buffers. Twenty-three chains cluster within 10 um; dn_i[29] spans 11.394 um and remains explicitly included. The 150/10 um values are census filters, not new gates. Eleven source captures trace through pure BUF/INV to public inputs; 13 remain internal. No reset semantics are inferred from names.
+
+The first three-buffer replay remained GRT0 with complete CLOCK/SIGNAL coverage and PG0. Actual TT improved 22.36 ps to −388.81, while FF became −163.48; no closure. Worst setup switched to dn_i[44], confirming another collapsed chain rather than failure of the corrected dn_i[47] placement.
+
+Personally viewed the owner's full batch render and parsed the targets. All 49 selected names exactly match the independent census. Global body/TAP occupancy excludes only those old bodies, then inserts every new body; all FFs, pins, clock incidence, masters and source stay fixed. Maximum centre hop changes 444.447→149.175 um, with no new cells, FFs or cycles. CONCUR static PREP only for this bounded batch as the manual-placement alternative to ROOT's ordinary DATA-repair decision. It supersedes the isolated dn_i[44] two-buffer proposal. No native import, route or timing PASS is granted here; native saved-ODB/PG0/protected-body guards and actual LOOK precede any replay.
