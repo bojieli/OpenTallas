@@ -1,0 +1,362 @@
+{
+ "enabled": false,
+ "kind": "INTERNAL_MACRO_REPACK_ZERO_CYCLE",
+ "added_ff": 0,
+ "added_cycles": 0,
+ "canonical_adoption": false,
+ "rows_taps_PG": "REGEN_REQUIRED; original row holes retained only as conservative model capacity, original locked taps historical",
+ "changes": [
+  {
+   "name": "u_q.u_s.u_fq.g_bank\\[0\\].u_m",
+   "cid": 90270,
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "orient": "R0",
+   "old_bbox_um": [
+    43.2,
+    388.8,
+    94.608,
+    428.76
+   ],
+   "new_bbox_um": [
+    43.2,
+    356.4,
+    94.608,
+    396.36
+   ],
+   "delta_um": [
+    0,
+    -32.4
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_fq.g_bank\\[1\\].u_m",
+   "cid": 90271,
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "orient": "R0",
+   "old_bbox_um": [
+    129.6,
+    388.8,
+    181.008,
+    428.76
+   ],
+   "new_bbox_um": [
+    129.6,
+    356.4,
+    181.008,
+    396.36
+   ],
+   "delta_um": [
+    0,
+    -32.4
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_fq.g_bank\\[2\\].u_m",
+   "cid": 90272,
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "orient": "R0",
+   "old_bbox_um": [
+    216.0,
+    388.8,
+    267.408,
+    428.76
+   ],
+   "new_bbox_um": [
+    216.0,
+    356.4,
+    267.408,
+    396.36
+   ],
+   "delta_um": [
+    0,
+    -32.4
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_fq.g_bank\\[3\\].u_m",
+   "cid": 90273,
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "orient": "R0",
+   "old_bbox_um": [
+    302.4,
+    388.8,
+    353.808,
+    428.76
+   ],
+   "new_bbox_um": [
+    302.4,
+    356.4,
+    353.808,
+    396.36
+   ],
+   "delta_um": [
+    0,
+    -32.4
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_hc.g_bank\\[0\\].u_bank",
+   "cid": 91541,
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "orient": "R0",
+   "old_bbox_um": [
+    43.2,
+    43.2,
+    108.0,
+    97.2
+   ],
+   "new_bbox_um": [
+    43.2,
+    110.16,
+    108.0,
+    164.16
+   ],
+   "delta_um": [
+    0,
+    66.96
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_hc.g_bank\\[1\\].u_bank",
+   "cid": 91542,
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "orient": "R0",
+   "old_bbox_um": [
+    129.6,
+    43.2,
+    194.4,
+    97.2
+   ],
+   "new_bbox_um": [
+    129.6,
+    110.16,
+    194.4,
+    164.16
+   ],
+   "delta_um": [
+    0,
+    66.96
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_hc.g_bank\\[2\\].u_bank",
+   "cid": 91543,
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "orient": "R0",
+   "old_bbox_um": [
+    216.0,
+    43.2,
+    280.8,
+    97.2
+   ],
+   "new_bbox_um": [
+    216.0,
+    110.16,
+    280.8,
+    164.16
+   ],
+   "delta_um": [
+    0,
+    66.96
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_hc.g_bank\\[3\\].u_bank",
+   "cid": 91544,
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "orient": "R0",
+   "old_bbox_um": [
+    302.4,
+    43.2,
+    367.2,
+    97.2
+   ],
+   "new_bbox_um": [
+    302.4,
+    110.16,
+    367.2,
+    164.16
+   ],
+   "delta_um": [
+    0,
+    66.96
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_hc.g_bank\\[4\\].u_bank",
+   "cid": 91545,
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "orient": "R0",
+   "old_bbox_um": [
+    43.2,
+    129.6,
+    108.0,
+    183.6
+   ],
+   "new_bbox_um": [
+    43.2,
+    196.56,
+    108.0,
+    250.56
+   ],
+   "delta_um": [
+    0,
+    66.96
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_hc.g_bank\\[5\\].u_bank",
+   "cid": 91546,
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "orient": "R0",
+   "old_bbox_um": [
+    129.6,
+    129.6,
+    194.4,
+    183.6
+   ],
+   "new_bbox_um": [
+    129.6,
+    196.56,
+    194.4,
+    250.56
+   ],
+   "delta_um": [
+    0,
+    66.96
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_hc.g_bank\\[6\\].u_bank",
+   "cid": 91547,
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "orient": "R0",
+   "old_bbox_um": [
+    216.0,
+    129.6,
+    280.8,
+    183.6
+   ],
+   "new_bbox_um": [
+    216.0,
+    196.56,
+    280.8,
+    250.56
+   ],
+   "delta_um": [
+    0,
+    66.96
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_hc.g_bank\\[7\\].u_bank",
+   "cid": 91548,
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "orient": "R0",
+   "old_bbox_um": [
+    302.4,
+    129.6,
+    367.2,
+    183.6
+   ],
+   "new_bbox_um": [
+    302.4,
+    196.56,
+    367.2,
+    250.56
+   ],
+   "delta_um": [
+    0,
+    66.96
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_ofq.g_bank\\[0\\].u_m",
+   "cid": 91565,
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "orient": "R0",
+   "old_bbox_um": [
+    43.2,
+    216.0,
+    94.608,
+    255.96
+   ],
+   "new_bbox_um": [
+    43.2,
+    282.96,
+    94.608,
+    322.92
+   ],
+   "delta_um": [
+    0,
+    66.96
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_ofq.g_bank\\[1\\].u_m",
+   "cid": 91566,
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "orient": "R0",
+   "old_bbox_um": [
+    129.6,
+    216.0,
+    181.008,
+    255.96
+   ],
+   "new_bbox_um": [
+    129.6,
+    282.96,
+    181.008,
+    322.92
+   ],
+   "delta_um": [
+    0,
+    66.96
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_ofq.g_bank\\[2\\].u_m",
+   "cid": 91567,
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "orient": "R0",
+   "old_bbox_um": [
+    216.0,
+    216.0,
+    267.408,
+    255.96
+   ],
+   "new_bbox_um": [
+    216.0,
+    282.96,
+    267.408,
+    322.92
+   ],
+   "delta_um": [
+    0,
+    66.96
+   ]
+  },
+  {
+   "name": "u_q.u_s.u_ofq.g_bank\\[3\\].u_m",
+   "cid": 91568,
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "orient": "R0",
+   "old_bbox_um": [
+    302.4,
+    216.0,
+    353.808,
+    255.96
+   ],
+   "new_bbox_um": [
+    302.4,
+    282.96,
+    353.808,
+    322.92
+   ],
+   "delta_um": [
+    0,
+    66.96
+   ]
+  }
+ ]
+}

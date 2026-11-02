@@ -1,0 +1,27 @@
+{
+  "scope": "DISABLED REPACK B allFF legal-model candidate; old rows/taps conservative, future actual regeneration required",
+  "allFF": 31847,
+  "anchors": 31847,
+  "selected": 8227,
+  "failed": 0,
+  "max_ff_um": 404.946,
+  "ff_gt405": 0,
+  "max_macro_um": 404.943,
+  "macro_gt405": 0,
+  "independent_occupancy_errors": 0,
+  "actual_lattice_rows": 9866,
+  "movedFF": 8227,
+  "preserved_fixed_faceFF": 1801,
+  "historical_tapcells": 36783,
+  "macrohalos_um": 4.32,
+  "independent_full_G_r2r": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 404.95,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 29249,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_q.u_mem.q\\[1\\]\\[2\\]$_DFF_P_ -> u_q.u_s.o0_m\\[2\\]$_DFF_P_"
+  },
+  "errors": []
+}

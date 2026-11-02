@@ -1,0 +1,901 @@
+{
+ "summary": {
+  "status": "DISABLED_MODEL_ONLY",
+  "moved_macros": 16,
+  "native_net_graph_unchanged": true,
+  "fixed_face_ffs_preserved": 1801,
+  "all_movable_ffs": 30046,
+  "fixed_endpoint_bounds": 5749,
+  "direct_macro_ff_count": 4945,
+  "infeasible_count": 0,
+  "worst_radius_um": 399.936,
+  "macro_halo_overlap": [],
+  "min_parallel_macro_gap_um": 21.6,
+  "clock_root_um": [
+   304.56899999999996,
+   647.8679999999999
+  ],
+  "clock_root_macro_before_max_um": 845.865,
+  "clock_root_macro_after_max_um": 817.731,
+  "clock_target": "UNCHANGED TT250/FF202.5ps insertion,833ps core; not measured or signed",
+  "physical_rebuild": "Rows/taps/PG/CTS regenerate normally; no old-PG/clock pass transferred",
+  "new_rtl_or_ff_or_cycles": false
+ },
+ "infeasible": [],
+ "worst": [
+  {
+   "name": "u_q.u_s.mem_wdata1\\[189\\]$_DFF_P_",
+   "cid": 88427,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     370.236,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[61]"
+    ],
+    [
+     613.212,
+     53.964,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[189]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[190\\]$_DFF_P_",
+   "cid": 88429,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     370.428,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[62]"
+    ],
+    [
+     613.212,
+     54.156,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[190]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[191\\]$_DFF_P_",
+   "cid": 88430,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     370.62,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[63]"
+    ],
+    [
+     613.212,
+     54.348,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[191]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[192\\]$_DFF_P_",
+   "cid": 88431,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     370.812,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[64]"
+    ],
+    [
+     613.212,
+     54.54,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[192]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[193\\]$_DFF_P_",
+   "cid": 88432,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     371.004,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[65]"
+    ],
+    [
+     613.212,
+     54.732,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[193]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[194\\]$_DFF_P_",
+   "cid": 88433,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     371.196,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[66]"
+    ],
+    [
+     613.212,
+     54.924,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[194]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[195\\]$_DFF_P_",
+   "cid": 88434,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     371.388,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[67]"
+    ],
+    [
+     613.212,
+     55.116,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[195]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[196\\]$_DFF_P_",
+   "cid": 88435,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     371.58,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[68]"
+    ],
+    [
+     613.212,
+     55.308,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[196]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[197\\]$_DFF_P_",
+   "cid": 88436,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     371.772,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[69]"
+    ],
+    [
+     613.212,
+     55.5,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[197]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[198\\]$_DFF_P_",
+   "cid": 88437,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     371.964,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[70]"
+    ],
+    [
+     613.212,
+     55.692,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[198]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[199\\]$_DFF_P_",
+   "cid": 88438,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     372.156,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[71]"
+    ],
+    [
+     613.212,
+     55.884,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[199]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[200\\]$_DFF_P_",
+   "cid": 88441,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     372.348,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[72]"
+    ],
+    [
+     613.212,
+     56.076,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[200]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[201\\]$_DFF_P_",
+   "cid": 88442,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     372.54,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[73]"
+    ],
+    [
+     613.212,
+     56.268,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[201]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[202\\]$_DFF_P_",
+   "cid": 88443,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     372.732,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[74]"
+    ],
+    [
+     613.212,
+     56.46,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[202]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[203\\]$_DFF_P_",
+   "cid": 88444,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     372.924,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[75]"
+    ],
+    [
+     613.212,
+     56.652,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[203]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[204\\]$_DFF_P_",
+   "cid": 88445,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     373.116,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[76]"
+    ],
+    [
+     613.212,
+     56.844,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[204]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[205\\]$_DFF_P_",
+   "cid": 88446,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     373.308,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[77]"
+    ],
+    [
+     613.212,
+     57.036,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[205]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[206\\]$_DFF_P_",
+   "cid": 88447,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     373.5,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[78]"
+    ],
+    [
+     613.212,
+     57.228,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[206]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[207\\]$_DFF_P_",
+   "cid": 88448,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     373.692,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[79]"
+    ],
+    [
+     613.212,
+     57.42,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[207]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[208\\]$_DFF_P_",
+   "cid": 88449,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     373.884,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[80]"
+    ],
+    [
+     613.212,
+     57.612,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[208]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[209\\]$_DFF_P_",
+   "cid": 88450,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     374.076,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[81]"
+    ],
+    [
+     613.212,
+     57.804,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[209]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[210\\]$_DFF_P_",
+   "cid": 88452,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     374.268,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[82]"
+    ],
+    [
+     613.212,
+     57.996,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[210]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[211\\]$_DFF_P_",
+   "cid": 88453,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     374.46,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[83]"
+    ],
+    [
+     613.212,
+     58.188,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[211]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[212\\]$_DFF_P_",
+   "cid": 88454,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     374.652,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[84]"
+    ],
+    [
+     613.212,
+     58.38,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[212]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[213\\]$_DFF_P_",
+   "cid": 88455,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     374.844,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[85]"
+    ],
+    [
+     613.212,
+     58.572,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[213]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[214\\]$_DFF_P_",
+   "cid": 88456,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     375.036,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[86]"
+    ],
+    [
+     613.212,
+     58.764,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[214]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[215\\]$_DFF_P_",
+   "cid": 88457,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     375.228,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[87]"
+    ],
+    [
+     613.212,
+     58.956,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[215]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[216\\]$_DFF_P_",
+   "cid": 88458,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     375.42,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[88]"
+    ],
+    [
+     613.212,
+     59.148,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[216]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[217\\]$_DFF_P_",
+   "cid": 88459,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     375.612,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[89]"
+    ],
+    [
+     613.212,
+     59.34,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[217]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[218\\]$_DFF_P_",
+   "cid": 88460,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     375.804,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[90]"
+    ],
+    [
+     613.212,
+     59.532,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[218]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[219\\]$_DFF_P_",
+   "cid": 88461,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     375.996,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[91]"
+    ],
+    [
+     613.212,
+     59.724,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[219]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[220\\]$_DFF_P_",
+   "cid": 88463,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     376.188,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[92]"
+    ],
+    [
+     613.212,
+     59.916,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[220]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[221\\]$_DFF_P_",
+   "cid": 88464,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     376.38,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[93]"
+    ],
+    [
+     613.212,
+     60.108,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[221]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[222\\]$_DFF_P_",
+   "cid": 88465,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     376.572,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[94]"
+    ],
+    [
+     613.212,
+     60.3,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[222]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[223\\]$_DFF_P_",
+   "cid": 88466,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     376.764,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[95]"
+    ],
+    [
+     613.212,
+     60.492,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[223]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[224\\]$_DFF_P_",
+   "cid": 88467,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     376.956,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[96]"
+    ],
+    [
+     613.212,
+     60.684,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[224]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[225\\]$_DFF_P_",
+   "cid": 88468,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     377.148,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[97]"
+    ],
+    [
+     613.212,
+     60.876,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[225]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[226\\]$_DFF_P_",
+   "cid": 88469,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     377.34,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[98]"
+    ],
+    [
+     613.212,
+     61.068,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[226]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[227\\]$_DFF_P_",
+   "cid": 88470,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     377.532,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[99]"
+    ],
+    [
+     613.212,
+     61.26,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[227]"
+    ]
+   ]
+  },
+  {
+   "name": "u_q.u_s.mem_wdata1\\[228\\]$_DFF_P_",
+   "cid": 88471,
+   "radius_um": 399.936,
+   "witness": [
+    [
+     129.612,
+     377.724,
+     "M:u_q.u_s.u_fq.g_bank\\[1\\].u_m.rd_out[100]"
+    ],
+    [
+     613.212,
+     61.452,
+     "M:u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m.wd_in[228]"
+    ]
+   ]
+  }
+ ],
+ "clock": [
+  {
+   "macro": "u_q.u_mem.g_b\\[0\\].g_w\\[0\\].u_m",
+   "pin": "clk",
+   "before_um": 688.131,
+   "after_um": 688.131
+  },
+  {
+   "macro": "u_q.u_mem.g_b\\[0\\].g_w\\[1\\].u_m",
+   "pin": "clk",
+   "before_um": 558.531,
+   "after_um": 558.531
+  },
+  {
+   "macro": "u_q.u_mem.g_b\\[0\\].g_w\\[2\\].u_m",
+   "pin": "clk",
+   "before_um": 342.531,
+   "after_um": 342.531
+  },
+  {
+   "macro": "u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m",
+   "pin": "clk",
+   "before_um": 817.731,
+   "after_um": 817.731
+  },
+  {
+   "macro": "u_q.u_mem.g_b\\[1\\].g_w\\[1\\].u_m",
+   "pin": "clk",
+   "before_um": 688.131,
+   "after_um": 688.131
+  },
+  {
+   "macro": "u_q.u_mem.g_b\\[1\\].g_w\\[2\\].u_m",
+   "pin": "clk",
+   "before_um": 472.131,
+   "after_um": 472.131
+  },
+  {
+   "macro": "u_q.u_s.u_fq.g_bank\\[0\\].u_m",
+   "pin": "clk",
+   "before_um": 519.645,
+   "after_um": 552.045
+  },
+  {
+   "macro": "u_q.u_s.u_fq.g_bank\\[1\\].u_m",
+   "pin": "clk",
+   "before_um": 433.245,
+   "after_um": 465.645
+  },
+  {
+   "macro": "u_q.u_s.u_fq.g_bank\\[2\\].u_m",
+   "pin": "clk",
+   "before_um": 346.845,
+   "after_um": 379.245
+  },
+  {
+   "macro": "u_q.u_s.u_fq.g_bank\\[3\\].u_m",
+   "pin": "clk",
+   "before_um": 260.445,
+   "after_um": 292.845
+  },
+  {
+   "macro": "u_q.u_s.u_fq.g_bank\\[4\\].u_m",
+   "pin": "clk",
+   "before_um": 299.331,
+   "after_um": 299.331
+  },
+  {
+   "macro": "u_q.u_s.u_hc.g_bank\\[0\\].u_bank",
+   "pin": "clk",
+   "before_um": 845.865,
+   "after_um": 778.905
+  },
+  {
+   "macro": "u_q.u_s.u_hc.g_bank\\[1\\].u_bank",
+   "pin": "clk",
+   "before_um": 759.465,
+   "after_um": 692.505
+  },
+  {
+   "macro": "u_q.u_s.u_hc.g_bank\\[2\\].u_bank",
+   "pin": "clk",
+   "before_um": 673.065,
+   "after_um": 606.105
+  },
+  {
+   "macro": "u_q.u_s.u_hc.g_bank\\[3\\].u_bank",
+   "pin": "clk",
+   "before_um": 622.191,
+   "after_um": 555.231
+  },
+  {
+   "macro": "u_q.u_s.u_hc.g_bank\\[4\\].u_bank",
+   "pin": "clk",
+   "before_um": 759.465,
+   "after_um": 692.505
+  },
+  {
+   "macro": "u_q.u_s.u_hc.g_bank\\[5\\].u_bank",
+   "pin": "clk",
+   "before_um": 673.065,
+   "after_um": 606.105
+  },
+  {
+   "macro": "u_q.u_s.u_hc.g_bank\\[6\\].u_bank",
+   "pin": "clk",
+   "before_um": 586.665,
+   "after_um": 519.705
+  },
+  {
+   "macro": "u_q.u_s.u_hc.g_bank\\[7\\].u_bank",
+   "pin": "clk",
+   "before_um": 535.791,
+   "after_um": 468.831
+  },
+  {
+   "macro": "u_q.u_s.u_hf.g_bank\\[0\\].u_bank",
+   "pin": "clk",
+   "before_um": 413.865,
+   "after_um": 413.865
+  },
+  {
+   "macro": "u_q.u_s.u_hf.g_bank\\[1\\].u_bank",
+   "pin": "clk",
+   "before_um": 327.465,
+   "after_um": 327.465
+  },
+  {
+   "macro": "u_q.u_s.u_hf.g_bank\\[2\\].u_bank",
+   "pin": "clk",
+   "before_um": 241.065,
+   "after_um": 241.065
+  },
+  {
+   "macro": "u_q.u_s.u_hf.g_bank\\[3\\].u_bank",
+   "pin": "clk",
+   "before_um": 190.191,
+   "after_um": 190.191
+  },
+  {
+   "macro": "u_q.u_s.u_hf.g_bank\\[4\\].u_bank",
+   "pin": "clk",
+   "before_um": 327.465,
+   "after_um": 327.465
+  },
+  {
+   "macro": "u_q.u_s.u_hf.g_bank\\[5\\].u_bank",
+   "pin": "clk",
+   "before_um": 241.065,
+   "after_um": 241.065
+  },
+  {
+   "macro": "u_q.u_s.u_hf.g_bank\\[6\\].u_bank",
+   "pin": "clk",
+   "before_um": 154.665,
+   "after_um": 154.665
+  },
+  {
+   "macro": "u_q.u_s.u_hf.g_bank\\[7\\].u_bank",
+   "pin": "clk",
+   "before_um": 103.791,
+   "after_um": 103.791
+  },
+  {
+   "macro": "u_q.u_s.u_ofq.g_bank\\[0\\].u_m",
+   "pin": "clk",
+   "before_um": 692.445,
+   "after_um": 625.485
+  },
+  {
+   "macro": "u_q.u_s.u_ofq.g_bank\\[1\\].u_m",
+   "pin": "clk",
+   "before_um": 606.045,
+   "after_um": 539.085
+  },
+  {
+   "macro": "u_q.u_s.u_ofq.g_bank\\[2\\].u_m",
+   "pin": "clk",
+   "before_um": 519.645,
+   "after_um": 452.685
+  },
+  {
+   "macro": "u_q.u_s.u_ofq.g_bank\\[3\\].u_m",
+   "pin": "clk",
+   "before_um": 433.245,
+   "after_um": 366.285
+  },
+  {
+   "macro": "u_q.u_s.u_ofq.g_bank\\[4\\].u_m",
+   "pin": "clk",
+   "before_um": 212.931,
+   "after_um": 212.931
+  }
+ ]
+}
