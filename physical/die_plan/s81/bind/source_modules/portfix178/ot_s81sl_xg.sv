@@ -5,7 +5,7 @@
 // The rstop -> xs gather port is internal (3 x 1,031 b a cycle would otherwise cross a tile boundary).  The 5 beat
 // leaves' x beats enter as 276-b fragments (5 x 278 pins).
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_s81sl_xg (
+module ot_s81sl_xg #(parameter INSTANCE = "") (
     input  wire            clk,
     input  wire            rst_n,
     input  wire [3:0]      sid,
@@ -26,7 +26,7 @@ module ot_s81sl_xg (
         .vi(vi), .vo(vo), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .nx_wi(nx_wi), .nx_ei(nx_ei), .nx_eo(nx_eo), .nx_wo(nx_wo),
         .g_v(g_v), .g_fam(g_fam), .g_idx(g_idx), .g_d(g_d), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
         .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b({28'd0, ci_b}), .fault(f_r));
-    ot_s81sl_xs u_s (.clk(clk), .rst_n(rst_n), .g_v(g_v), .g_fam(g_fam), .g_idx(g_idx), .g_d(g_d),
+    ot_s81sl_xs #(.INSTANCE(INSTANCE)) u_s (.clk(clk), .rst_n(rst_n), .g_v(g_v), .g_fam(g_fam), .g_idx(g_idx), .g_d(g_d),
         .is_v(is_v), .is_d(is_d), .xw_v(), .xw_d(xw_d), .fault(f_s));
     reg flt;
     always @(posedge clk) flt <= f_r | f_s;
