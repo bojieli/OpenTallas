@@ -58,6 +58,27 @@ from pathlib import Path
 import plan_block_identity as BI
 import kit_resume as KR
 
+# A main merge can happen during a long tick. Never release a merged fix with
+# older in-memory launch logic; the next ordinary tick imports the new package.
+def scheduler_code_id():
+    h = hashlib.sha256()
+    for name in ("kit_wave.py", "autopilot.py", "source_follow.py", "kit_resume.py"):
+        p = Path(__file__).with_name(name)
+        h.update(name.encode())
+        h.update(p.read_bytes())
+    return h.hexdigest()
+
+
+IMPORTED_SCHEDULER_CODE = scheduler_code_id()
+
+
+def scheduler_current(AP):
+    if scheduler_code_id() == IMPORTED_SCHEDULER_CODE:
+        return True
+    AP.log("KIT-WAVE new launches deferred: scheduler files changed during this tick; next tick loads current code")
+    return False
+
+
 HOME = Path.home()
 AP_DIR = Path(os.environ.get("AP_DIR", str(HOME / "coord" / "autopilot")))
 OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
@@ -1590,6 +1611,8 @@ def resume_source(AP, prev):
 
 
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
+    if not scheduler_current(AP):
+        return None
     key = item_key(die, cfg["dies"][die]["event"], r["item"], r.get("block_sha"))
     prev = st["items"].get(key) or {}
     attempt = int(prev.get("attempt", 0)) + 1
@@ -1984,6 +2007,8 @@ def step(AP, ap_dir=None):
 
 
 def _step(AP, ap_dir):
+    if not scheduler_current(AP):
+        return None
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
     # NEAR-COUNT (COORD 11-01 KIT-WAVE-16 (6)): items in lanes/NEAR-COUNT.tsv launch with --priority die --crit
     cfg["_near_count"] = AP.parse_near_count(AP.read_coord(AP.NEAR_COUNT_FILE)) if hasattr(AP, "parse_near_count") else set()
