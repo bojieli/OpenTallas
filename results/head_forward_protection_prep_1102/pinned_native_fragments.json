@@ -1,0 +1,82 @@
+{
+ "native_revision": "6cb3f2b704604a8961573218e1c8adaae9fe9937",
+ "actual_producer_log_version": "OpenROAD 26Q3-1510-g6cb3f2b704",
+ "sha256": {
+  "TritonCTS.cpp": "6bf4c2b37e4ef5bb50164c7e70d329113324161ca9cde8727b819b429c8c2937",
+  "Resizer.cc": "128825a1afad674a7c636de18051c909e8b63f82a8e8311b557539a37a153627",
+  "RepairDesign.cc": "d18b9913d0a1cbdb048889abccd6d281c4041b6294c58e24fae5e0db1d285f06"
+ },
+ "git_blob": {
+  "TritonCTS.cpp": "5ff865bb8cc312c34f0c63b2cc88944ae48c2180",
+  "Resizer.cc": "11b65304f36262a47240b8ebd1b78da676ee2884",
+  "RepairDesign.cc": "2fd1c7db6cb4dc323b9827b5dc5cc97841a35d5f"
+ },
+ "fragments": [
+  {
+   "file": "TritonCTS.cpp",
+   "line_start": 99,
+   "line_end": 110,
+   "text": "  if (builders_.empty()) {\n    logger_->warn(CTS, 82, \"No valid clock nets in the design.\");\n  } else {\n    checkCharacterization();\n    buildClockTrees();\n    writeDataToDb();\n    setAllClocksPropagated();\n    if (options_->getRepairClockNets()) {\n      repairClockNets();\n    }\n    balanceMacroRegisterLatencies();\n  }"
+  },
+  {
+   "file": "TritonCTS.cpp",
+   "line_start": 1474,
+   "line_end": 1540,
+   "text": "    odb::dbNet*& net,\n    Clock& clockNet,\n    const std::unordered_set<odb::dbMaster*>& buffer_masters,\n    std::vector<std::pair<odb::dbInst*, odb::dbMTerm*>>& registerSinks,\n    std::vector<std::pair<odb::dbInst*, odb::dbMTerm*>>& macroSinks)\n{\n  odb::dbInst* skippedTimingBuf = nullptr;\n\n  for (odb::dbITerm* iterm : net->getITerms()) {\n    odb::dbInst* inst = iterm->getInst();\n\n    const bool isTimingBuffer\n        = buffer_masters.find(inst->getMaster()) != buffer_masters.end()\n          && inst->getSourceType() == odb::dbSourceType::TIMING;\n\n    if (iterm->isOutputSignal() && isTimingBuffer) {\n      logger_->warn(CTS,\n                    105,\n                    \"Net \\\"{}\\\" already has clock buffer {}. Skipping...\",\n                    clockNet.getName(),\n                    inst->getName());\n      return false;\n    }\n\n    // TIMING buffer sinks are traversed via initOneClockTree, not as sinks.\n    if (iterm->isInputSignal() && isTimingBuffer) {\n      skippedTimingBuf = inst;\n      continue;\n    }\n\n    if (iterm->isInputSignal() && inst->isPlaced()) {\n      // Cells with insertion delay, macros, clock gaters and inverters that\n      // drive macros are put in the macro sinks.\n      odb::dbMTerm* mterm = iterm->getMTerm();\n\n      bool nonSinkMacro = !isSink(iterm);\n      sta::Cell* masterCell = network_->dbToSta(mterm->getMaster());\n      sta::LibertyCell* libertyCell = network_->libertyCell(masterCell);\n      if (libertyCell && libertyCell->isInverter()) {\n        odb::dbITerm* invertedTerm\n            = inst->getFirstOutput()->getNet()->get1stSignalInput(false);\n        nonSinkMacro &= invertedTerm->getInst()->isBlock();\n      }\n\n      if (hasInsertionDelay(inst, mterm) || nonSinkMacro || inst->isBlock()) {\n        macroSinks.emplace_back(inst, mterm);\n      } else {\n        registerSinks.emplace_back(inst, mterm);\n      }\n    }\n  }\n  if (skippedTimingBuf && (registerSinks.size() + macroSinks.size()) < 2) {\n    logger_->warn(CTS,\n                  110,\n                  \"Net \\\"{}\\\" already has clock buffer {}. Skipping...\",\n                  clockNet.getName(),\n                  skippedTimingBuf->getName());\n    return false;\n  }\n\n  return true;\n}\n\nTreeBuilder* TritonCTS::addClockSinks(\n    Clock& clockNet,\n    odb::dbNet* topInputNet,\n    odb::dbNet* physicalNet,"
+  },
+  {
+   "file": "TritonCTS.cpp",
+   "line_start": 1669,
+   "line_end": 1698,
+   "text": "void TritonCTS::writeClockNetsToDb(TreeBuilder* builder,\n                                   odb::PtrSet<odb::dbNet>& clkLeafNets)\n{\n  Clock& clockNet = builder->getClock();\n  odb::dbNet* topClockNet = clockNet.getNetObj();\n  // gets the module for the driver for the net\n  sta::Pin* pin_driver = nullptr;\n  odb::dbModule* top_module = network_->getNetDriverParentModule(\n      network_->dbToSta(topClockNet), pin_driver);\n  (void) pin_driver;\n\n  disconnectAllSinksFromNet(topClockNet);\n\n  // If exists, remove the dangling dbModNet related to the topClockNet because\n  // topClockNet has no load pin now.\n  // After CTS, the driver pin will drive only a few of root clock buffers.\n  // So the hierarchical net (dbModNet) is not needed any more.\n  destroyClockModNet(pin_driver);\n\n  // re-connect top buffer that separates macros from registers\n  if (builder->getTreeType() == TreeType::RegisterTree) {\n    odb::dbInst* topRegBuffer\n        = block_->findInst(builder->getTopBufferName().c_str());\n    if (topRegBuffer) {\n      odb::dbITerm* topRegBufferInputPin = getFirstInput(topRegBuffer);\n      topRegBufferInputPin->connect(builder->getDrivingNet());\n    }\n  }\n\n  createClockBuffers(clockNet, top_module);"
+  },
+  {
+   "file": "TritonCTS.cpp",
+   "line_start": 2133,
+   "line_end": 2149,
+   "text": "void TritonCTS::disconnectAllSinksFromNet(odb::dbNet* net)\n{\n  odb::dbSet<odb::dbITerm> iterms = net->getITerms();\n  for (odb::dbITerm* iterm : iterms) {\n    if (iterm->getIoType() == odb::dbIoType::INPUT) {\n      iterm->disconnect();\n    }\n  }\n}\n\nvoid TritonCTS::disconnectAllPinsFromNet(odb::dbNet* net)\n{\n  odb::dbSet<odb::dbITerm> iterms = net->getITerms();\n  for (odb::dbITerm* iterm : iterms) {\n    iterm->disconnect();\n  }\n}"
+  },
+  {
+   "file": "TritonCTS.cpp",
+   "line_start": 2266,
+   "line_end": 2288,
+   "text": "bool TritonCTS::isSink(odb::dbITerm* iterm)\n{\n  odb::dbInst* inst = iterm->getInst();\n  sta::Cell* masterCell = network_->dbToSta(inst->getMaster());\n  sta::LibertyCell* libertyCell = network_->libertyCell(masterCell);\n  if (!libertyCell) {\n    return true;\n  }\n\n  if (inst->isBlock()) {\n    return true;\n  }\n\n  sta::LibertyPort* inputPort\n      = libertyCell->findLibertyPort(iterm->getMTerm()->getConstName());\n  if (inputPort) {\n    return inputPort->isRegClk();\n  }\n\n  return false;\n}\n\nbool TritonCTS::hasInsertionDelay(odb::dbInst* inst, odb::dbMTerm* mterm)"
+  },
+  {
+   "file": "TritonCTS.cpp",
+   "line_start": 2688,
+   "line_end": 2695,
+   "text": "void TritonCTS::repairClockNets()\n{\n  double max_wire_length\n      = resizer_->findMaxWireLength(/* don't issue error */ false);\n  if (max_wire_length > 0.0) {\n    resizer_->repairClkNets(max_wire_length);\n  }\n}"
+  },
+  {
+   "file": "Resizer.cc",
+   "line_start": 2847,
+   "line_end": 2885,
+   "text": "  sta::Pin* buffer_op_pin = nullptr;\n  getBufferPins(buffer, buffer_ip_pin, buffer_op_pin);\n\n  odb::dbInst* db_inst = db_network_->staToDb(buffer);\n  if (db_inst->isDoNotTouch()) {\n    if (honor_dont_touch_fixed) {\n      return false;\n    }\n    db_inst->setDoNotTouch(false);\n  }\n  if (db_inst->isFixed()) {\n    if (honor_dont_touch_fixed) {\n      return false;\n    }\n    db_inst->setPlacementStatus(odb::dbPlacementStatus::PLACED);\n  }\n\n  sta::LibertyPort* input_port = nullptr;\n  sta::LibertyPort* output_port = nullptr;\n  lib_cell->bufferPorts(input_port, output_port);\n  sta::Pin* input_pin = db_network_->findPin(buffer, input_port);\n  sta::Pin* output_pin = db_network_->findPin(buffer, output_port);\n  sta::Net* input_net = db_network_->net(input_pin);\n  sta::Net* output_net = db_network_->net(output_pin);\n  odb::dbNet* input_db_net = db_network_->findFlatDbNet(input_net);\n  odb::dbNet* output_db_net = db_network_->findFlatDbNet(output_net);\n  if ((input_db_net != nullptr && input_db_net->isDoNotTouch())\n      || (output_db_net != nullptr && output_db_net->isDoNotTouch())) {\n    if (honor_dont_touch_fixed) {\n      return false;\n    }\n    if (input_db_net != nullptr) {\n      input_db_net->setDoNotTouch(false);\n    }\n    if (output_db_net != nullptr) {\n      output_db_net->setDoNotTouch(false);\n    }\n  }\n"
+  },
+  {
+   "file": "Resizer.cc",
+   "line_start": 3618,
+   "line_end": 3654,
+   "text": "void Resizer::setDontTouch(const sta::Instance* inst, bool dont_touch)\n{\n  dbInst* db_inst = db_network_->staToDb(inst);\n  db_inst->setDoNotTouch(dont_touch);\n}\n\nbool Resizer::dontTouch(const sta::Instance* inst) const\n{\n  dbInst* db_inst = db_network_->staToDb(inst);\n  if (!db_inst) {\n    return false;\n  }\n  return db_inst->isDoNotTouch();\n}\n\nvoid Resizer::setDontTouch(const sta::Net* net, bool dont_touch)\n{\n  odb::dbNet* db_net = db_network_->staToDb(net);\n  db_net->setDoNotTouch(dont_touch);\n}\n\nbool Resizer::dontTouch(const sta::Net* net) const\n{\n  odb::dbNet* db_net = nullptr;\n  odb::dbModNet* db_mod_net = nullptr;\n  db_network_->staToDb(net, db_net, db_mod_net);\n  if (db_net == nullptr) {\n    return false;\n  }\n  return db_net->isDoNotTouch();\n}\n\nbool Resizer::dontTouch(const sta::Pin* pin) const\n{\n  return dontTouch(network_->instance(pin)) || dontTouch(network_->net(pin));\n}\n"
+  },
+  {
+   "file": "Resizer.cc",
+   "line_start": 5108,
+   "line_end": 5120,
+   "text": "void Resizer::repairClkNets(double max_wire_length)\n{\n  resizePreamble();\n\n  if (clk_buffers_.empty()) {\n    std::vector<std::string> inferred_buffers;\n    inferClockBufferList(nullptr, inferred_buffers);  // update clk_buffers_\n  }\n\n  utl::SetAndRestore set_buffers(buffer_cells_, clk_buffers_);\n\n  repair_design_->repairClkNets(max_wire_length);\n}"
+  },
+  {
+   "file": "RepairDesign.cc",
+   "line_start": 401,
+   "line_end": 468,
+   "text": "// Repair long wires from clock input pins to clock tree root buffer\n// because CTS ignores the issue.\n// no max_fanout/max_cap checks.\n// Use max_wire_length zero for none (meters)\nvoid RepairDesign::repairClkNets(double max_wire_length)\n{\n  init();\n\n  // Lift sizing restrictions for clock buffers.\n  // Save old values in area_limit and leakage_limit.\n  utl::SetAndRestore<std::optional<double>> area_limit(\n      resizer_->sizing_area_limit_, std::nullopt);\n  utl::SetAndRestore<std::optional<double>> leakage_limit(\n      resizer_->sizing_leakage_limit_, std::nullopt);\n\n  slew_margin_ = 0.0;\n  cap_margin_ = 0.0;\n\n  // Need slews to resize inserted buffers.\n  sta_->findDelays();\n\n  int slew_violations = 0;\n  int cap_violations = 0;\n  int fanout_violations = 0;\n  int length_violations = 0;\n  int repaired_net_count = 0;\n  inserted_buffer_count_ = 0;\n  resize_count_ = 0;\n  resizer_->resized_multi_output_insts_.clear();\n\n  {\n    est::IncrementalParasiticsGuard guard(estimate_parasitics_);\n    int max_length = resizer_->metersToDbu(max_wire_length);\n    for (sta::Clock* clk : sta_->cmdMode()->sdc()->clocks()) {\n      const sta::PinSet* clk_pins = sta_->pins(clk, sta_->cmdMode());\n      if (clk_pins) {\n        // Make a copy in case the set of pins is updated\n        const sta::PinSet clk_pins_copy = *clk_pins;\n        for (const sta::Pin* clk_pin : clk_pins_copy) {\n          // clang-format off\n          sta::Net* net = network_->isTopLevelPort(clk_pin)\n                         ? db_network_->dbToSta(\n                             db_network_->flatNet(network_->term(clk_pin)))\n                         : db_network_->dbToSta(db_network_->flatNet(clk_pin));\n          // clang-format on\n          if (net && network_->isDriver(clk_pin)) {\n            sta::Vertex* drvr = graph_->pinDrvrVertex(clk_pin);\n            // Do not resize clock tree gates.\n            repairNet(net,\n                      clk_pin,\n                      drvr,\n                      false,\n                      false,\n                      false,\n                      max_length,\n                      false,\n                      nullptr,\n                      repaired_net_count,\n                      slew_violations,\n                      cap_violations,\n                      fanout_violations,\n                      length_violations);\n          }\n        }\n      }\n    }\n  }\n"
+  },
+  {
+   "file": "RepairDesign.cc",
+   "line_start": 693,
+   "line_end": 720,
+   "text": "\n  // 1. Collect all sinks\n  std::vector<EnqueuedPin> sinks;\n\n  sta::NetConnectedPinIterator* pin_iter = network_->connectedPinIterator(net);\n  while (pin_iter->hasNext()) {\n    const sta::Pin* pin = pin_iter->next();\n    if (pin != drvr_pin && !network_->isTopLevelPort(pin)\n        && network_->direction(pin) == sta::PortDirection::input()\n        && network_->libertyPort(pin)) {\n      sta::Instance* inst = network_->instance(pin);\n      if (!resizer_->dontTouch(inst)) {\n        sta::Vertex* vertex = graph_->pinLoadVertex(pin);\n        sta::Path* req_path\n            = sta_->vertexWorstSlackPath(vertex, sta::MinMax::max());\n        sinks.push_back({const_cast<sta::Pin*>(pin), req_path, 0.0, 0});\n      } else {\n        logger_->warn(RSZ,\n                      143,\n                      \"dont-touch instance {} ignored when buffering net {}\",\n                      network_->name(inst),\n                      network_->name(net));\n      }\n    }\n  }\n  delete pin_iter;\n\n  // Keep track of the vertices at the boundary of the tree so we know where"
+  }
+ ]
+}
