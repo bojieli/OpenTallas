@@ -252,6 +252,28 @@ class TestRules(unittest.TestCase):
         self.assertEqual(G.stage_of_odb("5_1_grt.odb", 0), "other")
         self.assertEqual(G.stage_of_odb("5_route.odb", 1), "other")
 
+    def test_explicit_routed_geometry_preserves_label_and_no_capacity_credit(self):
+        p = self.base(name="routed_tree.tsv")
+        text = p.read_text().replace("N\tCLOCK\tp0\ti1c\ti2c", "N\tCLOCK\tp0\ti60\nN\tCLOCK\ti60\ti1c\ti2c")
+        p.write_text(text + "C\t60\tB\tBUFx12_ASAP7_75t_R\t99\t99\t101\t101\tclkbuf\n")
+        log = self.d / "prior_grt.log"
+        log.write_text(GRT_OK)
+        for name in ("5_2_route.odb", "6_final.odb"):
+            self.assertEqual(G.stage_of_odb(name, 1), "other")
+            self.assertEqual(G.stage_of_odb(name, 0, True), "other")
+            m = G.metrics(str(p), odb=name, grt_log=str(log), routed_geometry=True)
+            self.assertEqual(m["stage"], "routed")
+            self.assertEqual(m["checkpoint_name"], name)
+            self.assertIsNone(m["grt_overflow"])
+            self.assertNotIn("grt_layers", m)
+            rules, _ = G.judge(m, None, [200, 200])
+            status = {r["rule"]: r["status"] for r in rules}
+            self.assertNotIn("checkpoint", status)
+            self.assertEqual(status["grt"], "NA")
+            m["clock_leaf_reach_max"] = 500
+            self.assertEqual({r["rule"]:r["status"] for r in G.judge(m,None,[200,200])[0]}["clock_leaf_reach"], "FAIL")
+        self.assertEqual(G.stage_of_odb("unknown.odb", 1, True), "other")
+
     def test_outline_pin_table_and_macros_vs_template(self):
         t = G.metrics(str(self.base()), odb="3_place.odb")
         moved = dump(self.d / "m.tsv", flops=[(1, 2, 100), (2, 150, 100)], comb=[(50, 100, 100)] + fill_cells(100, 3600),

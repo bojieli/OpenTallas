@@ -1385,7 +1385,7 @@ def judge(m, template=None, outline=None, all_kits=False):
                 return
             detail = f"worse than template {tv}; " + detail
         add(rule, "FAIL", v, f"{'<=' if higher_bad else '>='}{limit}", src, detail)
-    if m.get("stage") not in ("placed", "cts"):
+    if m.get("stage") not in ("placed", "cts", "routed"):
         add("checkpoint", "NA", m.get("stage"), "3_place or 4_cts", "AUTO-GEOM scope (pre-route review points only)")
     W, H = m["outline"]
     slot = outline or (t["outline"] if t else None)
@@ -1486,9 +1486,9 @@ def judge(m, template=None, outline=None, all_kits=False):
         # clock_reach is only port-to-farthest-flop (no tree exists yet) -> INFO; at 4_cts the nearest-entry reach ignores
         # ordinary CTS buffers, so the gate there is clock_leaf_reach (sink to its OWN driver) <= 220 um, with the
         # 12.25 block arrival contracts judged in STA.  Pre-placed clock islands/taps at 3_place keep the clock_reach gate.
-        if m.get("stage") == "cts" or (m.get("stage") == "placed" and not m.get("clock_islands_fixed")):
+        if m.get("stage") in ("cts", "routed") or (m.get("stage") == "placed" and not m.get("clock_islands_fixed")):
             add("clock_reach", "INFO", m.get("clock_reach_max"), f"<={reach_lim} (info: "
-                + ("4_cts gate = clock_leaf_reach)" if m.get("stage") == "cts" else "pre-CTS, 0 fixed clock cells)"),
+                + ("4_cts gate = clock_leaf_reach)" if m.get("stage") in ("cts", "routed") else "pre-CTS, 0 fixed clock cells)"),
                 reach_src, reach_det)
         else:
             lim("clock_reach", "clock_reach_max", reach_lim, reach_src, detail=reach_det)
@@ -1500,7 +1500,7 @@ def judge(m, template=None, outline=None, all_kits=False):
         if m.get("clock_leaf_reach_max") is not None:
             leaf_src = "sink to its OWN clock driver (leaf cell or port), GEOM-REVIEW-46"
             leaf_det = f"sink {m.get('clock_leaf_reach_far')} driver {m.get('clock_leaf_reach_driver')}"
-            if m.get("stage") == "cts":
+            if m.get("stage") in ("cts", "routed"):
                 lim("clock_leaf_reach", "clock_leaf_reach_max", reach_lim,
                     leaf_src + "; 4_cts clock gate (COORD 11-01 04:4x) + 12.25 arrival contracts in STA", detail=leaf_det)
             else:
@@ -1537,7 +1537,7 @@ def judge(m, template=None, outline=None, all_kits=False):
             "owner 10-25 template rule")
         add("stage", "PASS" if m.get("stage") == t.get("stage") else "FAIL", m.get("stage"), f"== template ({t.get('stage')})",
             "a CTS checkpoint is compared with a reviewed CTS checkpoint (GEOM-REVIEW post-CTS reviews)")
-        if m.get("stage") == "cts" and t.get("stage") == "cts":
+        if m.get("stage") in ("cts", "routed") and t.get("stage") == m.get("stage"):
             for key in ("clock_depth_max", "clock_depth_spread", "leaf_sinks_max", "leaf_sinks_p90", "clock_net_hpwl_max",
                         "clock_net_hpwl_p90", "clock_cells"):
                 v, tv = m.get(key), t.get(key)
@@ -1595,21 +1595,24 @@ def _close_macros(a, b):
     return all(x[0] == y[0] and abs(x[1] - y[1]) <= OUTLINE_TOL and abs(x[2] - y[2]) <= OUTLINE_TOL for x, y in zip(a, b))
 
 
-def stage_of_odb(name, clock_cells=0):
+def stage_of_odb(name, clock_cells=0, routed_geometry=False):
     """Classify ordinary review points and a clock-built GRT continuation.
 
     GEOM-106/108 2026-11-01: 5_1_grt retains CTS geometry after repair.
     Its own native GRT log supplies overflow; this classification grants no timing pass.
-    Other routed checkpoints and GRT without a measured clock tree stay out of scope.
+    Explicit routed_geometry admits only native-clock5_2_route/6_final geometry.
+    It supplies no GRT capacity credit; all other routed checkpoints stay out of scope.
     """
     b = (name or "").rsplit("/", 1)[-1]
+    if routed_geometry and b in {"5_2_route.odb", "6_final.odb"} and clock_cells > 0:
+        return "routed"
     if b.startswith("5_1_grt") and clock_cells > 0:
         return "cts"
     return "placed" if b.startswith("3_place") else "cts" if b.startswith("4_cts") else "other" if b else ""
 
 
 def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False, ft_interface=None, ft_ports=None,
-            land_slots=None, face_guard=None):
+            land_slots=None, face_guard=None, routed_geometry=False):
     D = Design(path, memory_libs, memory_reach)
     sr = re.compile(strap_re)
     m = area_metrics(D)
@@ -1641,7 +1644,15 @@ def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=Non
     m.update(demand_metrics(D, max_layer or "M5"))
     m.update(clock_entry_metrics(D, ck))
     m.update(grt_metrics(grt_log))
-    st = stage_of_odb(odb, m.get("clock_cells", 0))
+    st = stage_of_odb(odb, m.get("clock_cells", 0), routed_geometry)
+    if st == "routed":
+        m["checkpoint_name"] = (odb or "").rsplit("/", 1)[-1]
+        # A routed geometry dump is not a same-scene GRT capacity measurement.
+        # Keep capacity NA even if an unrelated prior log was supplied.
+        m["routed_geometry_review"] = True
+        for key in list(m):
+            if key.startswith("grt_"): del m[key]
+        m.update(grt_overflow=None, grt_note="routed geometry only; separate exact-graph native GRT capacity evidence required")
     if (odb or "").rsplit("/", 1)[-1].startswith("5_1_grt") and st == "cts":
         m["grt_cts_review"] = True
     if st:
@@ -1673,6 +1684,7 @@ def main(argv=None):
     ap.add_argument("--title", default="")
     ap.add_argument("--odb", default="", help="checkpoint file name (stage: 3_place / 4_cts)")
     ap.add_argument("--max-layer", default="M5", help="kit MAX_ROUTING_LAYER (channel / column capacity)")
+    ap.add_argument("--routed-geometry", action="store_true", help="explicit5_2_route/6_final geometry review; actual native clock tree required, no GRT capacity credit")
     ap.add_argument("--grt-log", default=None, help="geom_grt.tcl log (>= 50 congestion iterations)")
     ap.add_argument("--ft-interface", help="typed die-owned clock/reset interface model")
     ap.add_argument("--ft-ports", help="matching hash-checked scalar FT declaration")
@@ -1680,7 +1692,7 @@ def main(argv=None):
     ap.add_argument("--face-guard", help="kit face_guard.json (verdict PASS) matching --land-slots")
     a = ap.parse_args(argv)
     m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach, a.ft_interface, a.ft_ports,
-                a.land_slots, a.face_guard)
+                a.land_slots, a.face_guard, a.routed_geometry)
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else (m["outline"] if a.outline_self else None)
     rules, verdict = judge(m, tmpl, outline, a.all_kits)
