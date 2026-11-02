@@ -197,11 +197,11 @@
       "name": "north CA / registered interface reserve",
       "rect_um": [
         4.32,
-        332.64,
+        332.856,
         427.68,
         375.84
       ],
-      "area_um2": 18289.151999999995
+      "area_um2": 18197.70624
     },
     {
       "name": "west CA / registered interface reserve",
@@ -224,7 +224,7 @@
       "area_um2": 9853.747200000002
     }
   ],
-  "reserve_area_um2": 39564.288,
+  "reserve_area_um2": 39472.84224,
   "existing_CA_reserve_requirement_um2": 32047.918,
   "reserve_caveat": "Area allowance only, not aper-buspacking/access/routing proof. Bankassignments may require movingcorrespondingparent physicalfaces; no CAdepth/width/source identity change implied.",
   "preserved_relative_pad_capture_homes": [
@@ -370,5 +370,12 @@
     "d2d_body_gap_um": 11.208,
     "d2d_gap_after_two_4p32_halos_um": 2.568,
     "unproven": "Actual signal face, layer/cut access, per-bit CA packing and routed/complete pin reach. Point bounds are unobstructed; no CAD or adoption approval."
+  },
+  "north_halo_correction": {
+    "actual_body_top_um": 328.356,
+    "halo_top_um": 332.676,
+    "old_bay_floor_um": 332.64,
+    "new_bay_floor_um": 332.856,
+    "extra_clearance_um": 0.18
   }
 }

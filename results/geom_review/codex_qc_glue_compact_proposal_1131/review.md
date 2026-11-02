@@ -6,7 +6,7 @@ The actual 28,564.946460 um² standard cells and six macro bodies totaling 26,29
 
 The single proposed outline is 432 × 380.16 um with the actual 4.32 um core inset. Core area is 157,286.707200 um², aspect 1.136, and free-core fill 21.807%. Four D2D SRAM homes remain. The code SRAM and sys-face ROM move into the upper band using their actual body dimensions. Exact local M7 epoch/lrst pads and their first capture homes remain at measured 0.931/0.896 um reach. Any change in the parent origin or absolute package locations needs an explicit interface contract.
 
-North, west and east interface bays reserve 39,564.288 um² against the current 32,047.918 um² CA reservation. This is an area allowance, not a per-bus bank, row, access or routing proof. All CA banks, real pin identities, widths, DEPTH4 contracts and parent-facing seams must be resolved in the physical event. No routing capacity or timing credit follows from this drawing.
+North, west and east interface bays reserve 39,472.842 um² against the current 32,047.918 um² CA reservation. This is an area allowance, not a per-bus bank, row, access or routing proof. All CA banks, real pin identities, widths, DEPTH4 contracts and parent-facing seams must be resolved in the physical event. No routing capacity or timing credit follows from this drawing.
 
 ## Protected source diagnosis
 

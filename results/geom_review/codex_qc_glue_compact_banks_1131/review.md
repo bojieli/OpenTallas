@@ -12,37 +12,37 @@ There are 890 literal source delay instances: 888 D1 and two D2. The two D2 inst
 
 | Bank | Actual contacted bus | Proposed face | Data+epoch bits | Existing assigned FFs | Existing cell area um² | Actual native consumer | Proposed membership rectangle um |
 |---|---|---|---:|---:|---:|---|---|
-| B01 | coll_flt_i | N | 2 | 81 | 64.531 | u_sys_face | (4.320,332.640)–(13.886,375.840) |
-| B02 | coll_fltv_i | N | 71 | 499 | 282.517 | u_or_0 | (13.886,332.640)–(54.539,375.840) |
-| B03 | ctlm_flt_i | N | 2 | 81 | 65.493 | u_or_0 | (54.539,332.640)–(64.213,375.840) |
+| B01 | coll_flt_i | N | 2 | 81 | 64.531 | u_sys_face | (4.320,332.856)–(13.886,375.840) |
+| B02 | coll_fltv_i | N | 71 | 499 | 282.517 | u_or_0 | (13.886,332.856)–(54.539,375.840) |
+| B03 | ctlm_flt_i | N | 2 | 81 | 65.493 | u_or_0 | (54.539,332.856)–(64.213,375.840) |
 | B04 | d2d_rom__native_tx_payload | W | 549 | 3395 | 1866.823 | u_d2d_rom | (4.320,108.000)–(56.160,201.960) |
 | B05 | d2d_rom__native_tx_v | W | 2 | 82 | 61.688 | u_d2d_rom | (4.320,201.960)–(56.160,205.600) |
 | B06 | d2d_rom__obs_native | W | 61 | 495 | 263.169 | u_d2d_rom | (4.320,205.600)–(56.160,219.210) |
 | B07 | d2d_rom__x3 | W | 525 | 3775 | 1898.491 | u_d2d_rom | (4.320,219.210)–(56.160,311.528) |
 | B08 | d2d_rom__x3_generation | W | 3 | 87 | 62.169 | u_d2d_rom | (4.320,311.528)–(56.160,315.370) |
 | B09 | d2d_rom__x3_identity | W | 60 | 429 | 240.760 | u_d2d_rom | (4.320,315.370)–(56.160,328.320) |
-| B10 | embed_prov__core_start | N | 2 | 81 | 58.801 | u_embed_prov | (64.213,332.640)–(73.138,375.840) |
-| B11 | embed_prov__core_token | N | 19 | 183 | 113.695 | u_embed_prov | (73.138,332.640)–(89.928,375.840) |
-| B12 | embed_prov__embed_code_addr | N | 25 | 219 | 130.899 | u_embed_prov | (89.928,332.640)–(109.216,375.840) |
-| B13 | embed_prov__embed_code_re | N | 2 | 81 | 59.851 | u_embed_prov | (109.216,332.640)–(118.259,375.840) |
-| B14 | embed_prov__embed_scale_addr | N | 19 | 201 | 118.506 | u_embed_prov | (118.259,332.640)–(135.587,375.840) |
-| B15 | embed_prov__embed_scale_re | N | 2 | 83 | 60.871 | u_embed_prov | (135.587,332.640)–(144.743,375.840) |
-| B16 | sys_face__head_descriptor_generation | N | 3 | 87 | 63.831 | u_sys_face | (144.743,332.640)–(154.423,375.840) |
-| B17 | sys_face__head_descriptor_tag | N | 60 | 429 | 258.664 | u_sys_face | (154.423,332.640)–(191.258,375.840) |
-| B18 | sys_face__head_descriptor_v | N | 2 | 81 | 60.755 | u_sys_face | (191.258,332.640)–(200.402,375.840) |
-| B19 | sys_face__io_cmd_free | N | 2 | 82 | 65.129 | u_sys_face | (200.402,332.640)–(210.034,375.840) |
-| B20 | sys_face__io_fault | N | 2 | 81 | 64.531 | u_sys_face | (210.034,332.640)–(219.600,375.840) |
-| B21 | sys_face__native_fault | N | 2 | 81 | 60.492 | u_sys_face | (219.600,332.640)–(228.714,375.840) |
-| B22 | sys_face__seq_cfg_image_ready | N | 2 | 82 | 61.076 | u_sys_face | (228.714,332.640)–(237.894,375.840) |
-| B23 | sys_face__seq_dc | N | 57 | 466 | 271.480 | u_sys_face | (237.894,332.640)–(275.970,375.840) |
-| B24 | sys_face__seq_descriptor_obs | N | 70 | 562 | 297.315 | u_sys_face | (275.970,332.640)–(318.086,375.840) |
+| B10 | embed_prov__core_start | N | 2 | 81 | 58.801 | u_embed_prov | (64.213,332.856)–(73.138,375.840) |
+| B11 | embed_prov__core_token | N | 19 | 183 | 113.695 | u_embed_prov | (73.138,332.856)–(89.928,375.840) |
+| B12 | embed_prov__embed_code_addr | N | 25 | 219 | 130.899 | u_embed_prov | (89.928,332.856)–(109.216,375.840) |
+| B13 | embed_prov__embed_code_re | N | 2 | 81 | 59.851 | u_embed_prov | (109.216,332.856)–(118.259,375.840) |
+| B14 | embed_prov__embed_scale_addr | N | 19 | 201 | 118.506 | u_embed_prov | (118.259,332.856)–(135.587,375.840) |
+| B15 | embed_prov__embed_scale_re | N | 2 | 83 | 60.871 | u_embed_prov | (135.587,332.856)–(144.743,375.840) |
+| B16 | sys_face__head_descriptor_generation | N | 3 | 87 | 63.831 | u_sys_face | (144.743,332.856)–(154.423,375.840) |
+| B17 | sys_face__head_descriptor_tag | N | 60 | 429 | 258.664 | u_sys_face | (154.423,332.856)–(191.258,375.840) |
+| B18 | sys_face__head_descriptor_v | N | 2 | 81 | 60.755 | u_sys_face | (191.258,332.856)–(200.402,375.840) |
+| B19 | sys_face__io_cmd_free | N | 2 | 82 | 65.129 | u_sys_face | (200.402,332.856)–(210.034,375.840) |
+| B20 | sys_face__io_fault | N | 2 | 81 | 64.531 | u_sys_face | (210.034,332.856)–(219.600,375.840) |
+| B21 | sys_face__native_fault | N | 2 | 81 | 60.492 | u_sys_face | (219.600,332.856)–(228.714,375.840) |
+| B22 | sys_face__seq_cfg_image_ready | N | 2 | 82 | 61.076 | u_sys_face | (228.714,332.856)–(237.894,375.840) |
+| B23 | sys_face__seq_dc | N | 57 | 466 | 271.480 | u_sys_face | (237.894,332.856)–(275.970,375.840) |
+| B24 | sys_face__seq_descriptor_obs | N | 70 | 562 | 297.315 | u_sys_face | (275.970,332.856)–(318.086,375.840) |
 | B25 | sys_face__seq_program_obs | E | 77 | 611 | 321.679 | u_sys_face | (358.560,108.000)–(427.680,250.560) |
-| B26 | sys_face__tt_command_stage | N | 7 | 117 | 79.024 | u_sys_face | (318.086,332.640)–(329.847,375.840) |
-| B27 | sys_face__tt_control_stores_ready | N | 2 | 83 | 61.192 | u_sys_face | (329.847,332.640)–(339.040,375.840) |
-| B28 | sys_face__tt_layer_context_v | N | 2 | 81 | 60.813 | u_sys_face | (339.040,332.640)–(348.190,375.840) |
-| B29 | sys_face__tt_native_pos | N | 19 | 183 | 115.503 | u_sys_face | (348.190,332.640)–(365.182,375.840) |
-| B30 | sys_face__tt_native_tok | N | 19 | 183 | 113.986 | u_sys_face | (365.182,332.640)–(382.004,375.840) |
-| B31 | sys_face__tt_program_obs | N | 77 | 611 | 322.291 | u_sys_face | (382.004,332.640)–(427.680,375.840) |
+| B26 | sys_face__tt_command_stage | N | 7 | 117 | 79.024 | u_sys_face | (318.086,332.856)–(329.847,375.840) |
+| B27 | sys_face__tt_control_stores_ready | N | 2 | 83 | 61.192 | u_sys_face | (329.847,332.856)–(339.040,375.840) |
+| B28 | sys_face__tt_layer_context_v | N | 2 | 81 | 60.813 | u_sys_face | (339.040,332.856)–(348.190,375.840) |
+| B29 | sys_face__tt_native_pos | N | 19 | 183 | 115.503 | u_sys_face | (348.190,332.856)–(365.182,375.840) |
+| B30 | sys_face__tt_native_tok | N | 19 | 183 | 113.986 | u_sys_face | (365.182,332.856)–(382.004,375.840) |
+| B31 | sys_face__tt_program_obs | N | 77 | 611 | 322.291 | u_sys_face | (382.004,332.856)–(427.680,375.840) |
 
 ## Actual transport and remaining source obligations
 
@@ -71,3 +71,5 @@ Twenty native59 south outputs feed proposed north banks, six native59 south outp
 The current GLUE origin is(0,10022.4), with native59 at(0,11491.2): the original1468.8um GLUE height abuts native59 south. Keeping the GLUE origin while shrinking to380.16um creates a1088.64um gap. West x=0 is also the die edge, so the six proposed N→W banks have no source counterpart west of the current frame. The same compact option therefore requires a coherent multi-part parent repack/interface event or a qualified bridge using already permitted stages. No new neighbor origins, bridge stages, cycles, clock ports, pad origin or global arrival contracts are assumed by this receipt.
 
 The current forwarded clock contracts select the actual source partition's clk port for all31 banks (27 native59,4 coll_f3). Literal generated identities are srcpart.fclk_out_<srcbus> → glue.fclk_in_<dstbus>, and srcpart.cland_fstart_out_<srcbus> → glue.cland_fstart_in_<dstbus>. These source-clock, START and phase/count identities must survive the physical interface event; no nearest-tap substitution or ideal-arrival claim is implied.
+
+Proposal halo correction: the actual code SRAM top328.356 plus4.32 halo reaches332.676. The old north bay floor332.640 overlapped that halo by0.036um. Raising only its floor to332.856 leaves0.180um additional clearance; north reserve is18,197.706240um² and total N/W/E reservation39,472.842240um², still above32,047.918um². Frame, macros, memberships, bit contacts, clocks, source/cycles and all native artifacts are unchanged. Updated drawing personally viewed; no packing or CAD approval implied.

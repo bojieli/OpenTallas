@@ -20,7 +20,7 @@ Actual baseline signal nets demonstrate why all pins must not be priced as long-
 
 The completed kit has 4,545 actual boundary contacts: north 1,633 M5 + 1,659 M7; south 588 M5 + 588 M7; east 38 M4 + 39 M6; west zero. There are 33 declared hold-mux buses, of which 31 have 1,747 external data contacts (north 828 M5 + 842 M7, east 38 M4 + 39 M6). The two remaining declarations are internal cland ready/fault paths without external data boundary contacts. Ring START and other controls are separate from this data count.
 
-The compact north/west/east bays reserve 18,289.152 / 11,421.389 / 9,853.747 um², respectively. Those are unassigned areas. In particular, no current bus owns the west bay. Each contacted CA bus still needs explicit bank/bit placement, parent-face correspondence and access cuts; multiplying bay area by a density does not make that assignment.
+The compact north/west/east bays reserve 18,197.706 / 11,421.389 / 9,853.747 um², respectively. Those are unassigned areas. In particular, no current bus owns the west bay. Each contacted CA bus still needs explicit bank/bit placement, parent-face correspondence and access cuts; multiplying bay area by a density does not make that assignment.
 
 Actual standard-cell FF inventory is 47,739 FFs occupying 14,317.473 um², plus six macro clock consumers. Within it, the current cland rings contain 11,109 FFs / 3,239.501 um². Their entire logic occupies 6,718.974 um², and native bin/bout logic another 2,909.337 um². The summary records the full actual cell/FF area groups. These areas are already included in the 28,564.946 um² actual standard-cell footprint used for compact sizing; do not add them again or claim a placement from this area census.
 
