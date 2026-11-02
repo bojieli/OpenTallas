@@ -1,0 +1,16 @@
+{
+  "scope": "DISABLED geometric stage2-family translation arithmetic only, no cells moved in nativeDB or plan; native row/TAP/clock/occupancy/source review pending",
+  "shift_x_um": -11.934,
+  "moved_count": 515,
+  "expected_stage2_count515": true,
+  "projected_full_graph": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 402.33,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 47511,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_bound.u_ft_ft5_o_0/q\\[505\\]$_DFF_P_ -> u_bound.u_ft_ft5_o_1/q\\[505\\]$_DFF_P_"
+  },
+  "remaining_over405": []
+}

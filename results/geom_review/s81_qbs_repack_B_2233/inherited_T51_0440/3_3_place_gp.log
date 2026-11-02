@@ -1,0 +1,273 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/dp_slice_station__t51/base/3_2_place_iop.odb
+Took 5 seconds: read_db /work/run/results/asap7/dp_slice_station__t51/base/3_2_place_iop.odb
+read_sdc /work/run/results/asap7/dp_slice_station__t51/base/2_floorplan.sdc
+Took 5 seconds: read_sdc /work/run/results/asap7/dp_slice_station__t51/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/face_flops.tcl
+OT_FACE_FLOPS placed 4542 pin registers FIRM at their faces (3062 signal ports without a flop within 2 buffers; 0 cells duplicated for output ports sharing a merged flop); 18156 ft stations j>=1 FIRM on their routes (0 missing)
+OT_FACE_FLOPS landed ft slots: 12675 stations s0..s<k-1> FIRM after their landing rings at L*(j+1)/k
+OT_RESET_TREE entry relayed depth 7 (106 tree + 156 pad relays, planned max hop 379.9 um): placed 264 flops FIRM, placed max hop 383.4 um, 0 hops > 405 um: PASS (missing: 0 )
+OT_RESET_TAPS role mission
+OT_RESET_TAPS 73 taps (0 without a synchroniser: their flops use the nearest tap that has one), 0 synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: 82 re-pointed to the nearest tap's synchroniser, 2 already there, 0 without a same-polarity net (kept); per tap: 0 2 1 1 2 2 3 3 4 3 5 1 6 2 8 1 12 1 13 1 14 1 15 2 16 1 17 1 19 3 20 1 25 1 26 1 28 1 30 1 31 2 32 1 33 1 35 1 36 1 37 1 38 2 41 1 42 1 44 1 45 2 47 2 48 1 49 1 50 1 51 1 52 1 53 4 54 5 55 6 59 1 60 2 63 2 64 1 66 2 69 2 70 2 71 6
+OT_CLAND ring_place=ff u_cland_ft13_i: chunked read registers keyed to their word bits (chunk width 64, bus ft13_i width 71)
+OT_CLAND pinslot u_cland_ft13_i: 359 ring flops next to their ft13_i bit pin (stretched over pin y 1112.93..1129.18, spread 1.0000), 70 by the band cursor
+OT_CLAND ring_place=ff u_cland_ft13_i: 429 ring flops FIRM bit-major at spread 2.0149, 1469 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_ft14_i: chunked read registers keyed to their word bits (chunk width 64, bus ft14_i width 71)
+OT_CLAND pinslot u_cland_ft14_i: 359 ring flops next to their ft14_i bit pin (stretched over pin y 1130.78..1147.49, spread 1.0000), 70 by the band cursor
+OT_CLAND ring_place=ff u_cland_ft14_i: 429 ring flops FIRM bit-major at spread 2.0149, 1469 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_ft15_i: chunked read registers keyed to their word bits (chunk width 64, bus ft15_i width 71)
+OT_CLAND pinslot u_cland_ft15_i: 359 ring flops next to their ft15_i bit pin (stretched over pin y 1149.22..1165.79, spread 1.0000), 70 by the band cursor
+OT_CLAND ring_place=ff u_cland_ft15_i: 429 ring flops FIRM bit-major at spread 2.0149, 1469 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_ft16_i: chunked read registers keyed to their word bits (chunk width 64, bus ft16_i width 71)
+OT_CLAND pinslot u_cland_ft16_i: 359 ring flops next to their ft16_i bit pin (stretched over pin y 1167.46..1184.03, spread 1.0000), 70 by the band cursor
+OT_CLAND ring_place=ff u_cland_ft16_i: 429 ring flops FIRM bit-major at spread 2.0149, 1469 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_ft17_i: chunked read registers keyed to their word bits (chunk width 64, bus ft17_i width 71)
+OT_CLAND pinslot u_cland_ft17_i: 359 ring flops next to their ft17_i bit pin (stretched over pin y 1186.34..1202.27, spread 1.0000), 70 by the band cursor
+OT_CLAND ring_place=ff u_cland_ft17_i: 429 ring flops FIRM bit-major at spread 2.0149, 1469 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_ft18_i: chunked read registers keyed to their word bits (chunk width 64, bus ft18_i width 71)
+OT_CLAND pinslot u_cland_ft18_i: 359 ring flops next to their ft18_i bit pin (stretched over pin y 1203.94..1219.87, spread 1.0000), 70 by the band cursor
+OT_CLAND ring_place=ff u_cland_ft18_i: 429 ring flops FIRM bit-major at spread 2.0149, 1469 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_ft2_i: chunked read registers keyed to their word bits (chunk width 64, bus ft2_i width 515)
+OT_CLAND pinslot u_cland_ft2_i: 2607 ring flops next to their ft2_i bit pin (N face strip 9.18 um deep, 93 columns over pin x 6.37..116.13, 0 by the whole band, +ff band as +x, spread 1.0000), 70 by the band cursor
+OT_CLAND ring_place=ff u_cland_ft2_i: 2677 ring flops FIRM bit-major at spread 1.3261, 8999 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_ft3_i: chunked read registers keyed to their word bits (chunk width 64, bus ft3_i width 515)
+OT_CLAND pinslot u_cland_ft3_i: 2607 ring flops next to their ft3_i bit pin (N face strip 39.05 um deep, 21 columns over pin x 119.26..228.45, 0 by the whole band, +ff band as +x, spread 1.0000), 70 by the band cursor
+OT_CLAND ring_place=ff u_cland_ft3_i: 2677 ring flops FIRM bit-major at spread 1.3124, 8999 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_ft4_i: chunked read registers keyed to their word bits (chunk width 64, bus ft4_i width 277)
+OT_CLAND pinslot u_cland_ft4_i: 1401 ring flops next to their ft4_i bit pin (N face strip 9.18 um deep, 50 columns over pin x 457.18..516.83, 0 by the whole band, +ff band as +x, spread 1.0000), 70 by the band cursor
+OT_CLAND ring_place=ff u_cland_ft4_i: 1471 ring flops FIRM bit-major at spread 1.3067, 4950 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_ft5_i: chunked read registers keyed to their word bits (chunk width 64, bus ft5_i width 515)
+OT_CLAND pinslot u_cland_ft5_i: 2607 ring flops next to their ft5_i bit pin (N face strip 8.91 um deep, 94 columns over pin x 518.43..629.73, 0 by the whole band, +ff band as +x, spread 1.0000), 70 by the band cursor
+OT_CLAND ring_place=ff u_cland_ft5_i: 2677 ring flops FIRM bit-major at spread 1.2240, 8999 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_ft6_i: chunked read registers keyed to their word bits (chunk width 64, bus ft6_i width 515)
+OT_CLAND pinslot u_cland_ft6_i: 2607 ring flops next to their ft6_i bit pin (N face strip 8.91 um deep, 94 columns over pin x 631.33..742.94, 0 by the whole band, +ff band as +x, spread 1.0000), 70 by the band cursor
+OT_CLAND ring_place=ff u_cland_ft6_i: 2677 ring flops FIRM bit-major at spread 1.2240, 8999 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_ft7_i: chunked read registers keyed to their word bits (chunk width 64, bus ft7_i width 277)
+OT_CLAND pinslot u_cland_ft7_i: 1401 ring flops next to their ft7_i bit pin (N face strip 9.99 um deep, 46 columns over pin x 744.42..799.84, 0 by the whole band, +ff band as +x, spread 1.0000), 70 by the band cursor
+OT_CLAND ring_place=ff u_cland_ft7_i: 1471 ring flops FIRM bit-major at spread 1.3161, 4950 ring logic cells left to global placement
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_160/_6_ (collector:rst_rl_160): window x4 (+-8.64 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_160/_7_ (collector:rst_rl_160): window x4 (+-8.64 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_160/fault_o$_SDFF_PN0_ (collector:rst_rl_160): window x4 (+-8.64 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_160/ready_o$_SDFF_PN0_ (collector:rst_rl_160): window x4 (+-8.64 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_42/_6_ (collector:rst_rl_42): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_42/_7_ (collector:rst_rl_42): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_42/fault_o$_SDFF_PN0_ (collector:rst_rl_42): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_42/ready_o$_SDFF_PN0_ (collector:rst_rl_42): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_43/_6_ (collector:rst_rl_43): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_43/_7_ (collector:rst_rl_43): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_43/fault_o$_SDFF_PN0_ (collector:rst_rl_43): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_43/ready_o$_SDFF_PN0_ (collector:rst_rl_43): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_51/_6_ (collector:rst_rl_51): window x4 (+-8.64 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_51/_7_ (collector:rst_rl_51): window x4 (+-8.64 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_51/fault_o$_SDFF_PN0_ (collector:rst_rl_51): window x4 (+-8.64 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_51/ready_o$_SDFF_PN0_ (collector:rst_rl_51): window x4 (+-8.64 um)
+OT_CLAND placed 16855 actual mapped cells FIRM in nonoverlapping reserved bands/relay sites
+OT_FACE_FLOPS landed line: 9635 stations of 3040 plan-siteless landed bits re-placed on their placed-ring -> out-pin lines (0 missing)
+OT_RESET_TAPS role mission
+OT_RESET_TAPS 73 taps (0 without a synchroniser: their flops use the nearest tap that has one), 0 synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: 9 re-pointed to the nearest tap's synchroniser, 28 already there, 0 without a same-polarity net (kept); per tap: 0 1 16 1 18 1 19 1 20 1 25 1 28 1 31 1 32 1 36 2 37 1 38 1 39 1 47 1 50 3 52 1 53 4 54 5 55 6 60 1 63 2
+Took 364 seconds: source /work/face_flops.tcl
+[INFO RSZ-0026] Removed 5165 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 7582 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 7582 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+OT_GPL_SPARSE movable util 0.395 % < 2.000 %: routability-driven GPL off, timing-driven kept
+OT_GPL_SPARSE global_placement -density 0.5 -pad_left 0 -pad_right 0 -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  4.320  4.320 ) ( 1438.560 1222.560 ) um
+[INFO GPL-0016] Core area:                  1747248.538 um^2
+[INFO GPL-0036] Movable instances area:       6829.053 um^2
+[INFO GPL-0037] Total instances area:        26066.591 um^2
+[INFO GPL-0035] Pin density area adjust:       196.002 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:            290599
+[INFO GPL-0007] Movable instances:              100437
+[INFO GPL-0008] Fixed instances:                190162
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                 160594
+[INFO GPL-0011] Number of pins:                 445933
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 1442.880 1226.880 ) um
+[INFO GPL-0013] Placement BBox: (  4.320  4.320 ) ( 1438.560 1222.560 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                1747248.538 um^2
+[INFO GPL-0017] Fixed instances area:        19237.537 um^2
+[INFO GPL-0018] Movable instances area:       7025.055 um^2
+[INFO GPL-0019] Utilization:                     0.407 %
+[INFO GPL-0020] Standard cells area:          7025.055 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 100437	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00026401 HPWL: 140366592688
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00000012 HPWL: 12657615739
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00000012 HPWL: 11303163198
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00000011 HPWL: 11241865101
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00000012 HPWL: 11232726981
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.070 um^2
+[INFO GPL-0025] Ideal bin area:                  0.140 um^2
+[INFO GPL-0026] Ideal bin count:              12490338
+[INFO GPL-0027] Total bin area:             1747248.538 um^2
+[INFO GPL-0028] Bin count (X, Y):        2048 ,   2048
+[INFO GPL-0029] Bin size (W * H):       0.700 *  0.595 um
+[INFO GPL-0030] Number of bins:                4194304
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.6011 |  1.111049e+07 |   +0.00% |  2.57e-13 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 1, overflow: 0.601, keep resizer changes at: 1, HPWL: 11110490694
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    160594
+    final |    +60.1% |   13991 |   59774 |         30623 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 28775 slew violations.
+[INFO RSZ-0036] Found 78 capacitance violations.
+[INFO RSZ-0037] Found 30448 long wires.
+[INFO RSZ-0039] Resized 13991 instances.
+[INFO RSZ-0038] Inserted 59774 buffers in 30623 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |    152829
+    15200 |     -0.0% |       6 |        8 |    137629
+    30400 |     -0.1% |     505 |      804 |    122429
+    45600 |     -2.7% |    5517 |     3490 |    107229
+    60800 |     -8.8% |   18806 |    11536 |     92029
+    76000 |    -14.4% |   29485 |    17281 |     76829
+    91200 |    -14.5% |   29806 |    17766 |     61629
+   106400 |    -18.3% |   37277 |    22023 |     46429
+   121600 |    -23.7% |   47035 |    26921 |     31229
+   136800 |    -28.0% |   55644 |    31459 |     16029
+   152000 |    -29.7% |   59774 |    33289 |       829
+    final |    -29.7% |   59774 |    33289 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -8.7004715e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: 3166.005 um^2 (+45.07%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 33289 (+33.14%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 93063, deleted: 59774
+[INFO GPL-0110] Timing-driven: new target density: 0.5018321
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+       10 |   0.4391 |  1.112118e+07 |   +0.10% |  4.18e-13 |      
+       20 |   0.4386 |  1.111772e+07 |   -0.03% |  6.81e-13 |      
+       30 |   0.4362 |  1.111518e+07 |   -0.02% |  1.11e-12 |      
+       40 |   0.4364 |  1.111269e+07 |   -0.02% |  1.81e-12 |      
+       50 |   0.4366 |  1.111024e+07 |   -0.02% |  2.94e-12 |      
+       60 |   0.4363 |  1.110798e+07 |   -0.02% |  4.79e-12 |      
+       70 |   0.4360 |  1.110526e+07 |   -0.02% |  7.81e-12 |      
+       80 |   0.4362 |  1.110272e+07 |   -0.02% |  1.27e-11 |      
+       90 |   0.4364 |  1.110061e+07 |   -0.02% |  2.07e-11 |      
+      100 |   0.4364 |  1.109812e+07 |   -0.02% |  3.37e-11 |      
+      110 |   0.4364 |  1.109549e+07 |   -0.02% |  5.49e-11 |      
+      120 |   0.4363 |  1.109346e+07 |   -0.02% |  8.95e-11 |      
+      130 |   0.4365 |  1.109086e+07 |   -0.02% |  1.46e-10 |      
+      140 |   0.4364 |  1.108894e+07 |   -0.02% |  2.37e-10 |      
+      150 |   0.4366 |  1.108704e+07 |   -0.02% |  3.86e-10 |      
+      160 |   0.4379 |  1.108668e+07 |   -0.00% |  6.29e-10 |      
+      170 |   0.4368 |  1.108783e+07 |   +0.01% |  1.02e-09 |      
+      180 |   0.4366 |  1.109271e+07 |   +0.04% |  1.67e-09 |      
+      190 |   0.4366 |  1.109996e+07 |   +0.07% |  2.72e-09 |      
+      200 |   0.4360 |  1.110363e+07 |   +0.03% |  4.42e-09 |      
+      210 |   0.4358 |  1.109339e+07 |   -0.09% |  7.20e-09 |      
+      220 |   0.4374 |  1.108222e+07 |   -0.10% |  1.17e-08 |      
+      230 |   0.4364 |  1.110171e+07 |   +0.18% |  1.91e-08 |      
+      240 |   0.4360 |  1.108781e+07 |   -0.13% |  3.11e-08 |      
+      250 |   0.4339 |  1.109494e+07 |   +0.06% |  5.05e-08 |      
+      260 |   0.4321 |  1.108742e+07 |   -0.07% |  8.23e-08 |      
+      270 |   0.4277 |  1.108486e+07 |   -0.02% |  1.34e-07 |      
+      280 |   0.4199 |  1.108510e+07 |   +0.00% |  2.18e-07 |      
+      290 |   0.4086 |  1.108571e+07 |   +0.01% |  3.56e-07 |      
+      300 |   0.3932 |  1.108856e+07 |   +0.03% |  5.79e-07 |      
+      310 |   0.3730 |  1.109621e+07 |   +0.07% |  9.42e-07 |      
+      320 |   0.3428 |  1.111300e+07 |   +0.15% |  1.52e-06 |      
+      330 |   0.3074 |  1.113318e+07 |   +0.18% |  2.23e-06 |      
+      340 |   0.2745 |  1.115793e+07 |   +0.22% |  3.28e-06 |      
+      350 |   0.2461 |  1.117976e+07 |   +0.20% |  4.82e-06 |      
+      360 |   0.2201 |  1.119685e+07 |   +0.15% |  7.09e-06 |      
+      370 |   0.1939 |  1.121104e+07 |   +0.13% |  1.04e-05 |      
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 371, overflow: 0.194, keep resizer changes at: 1, HPWL: 11211040617
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    193883
+    final |    +11.9% |       0 |   17498 |         17490 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 10 slew violations.
+[INFO RSZ-0037] Found 17480 long wires.
+[INFO RSZ-0038] Inserted 17498 buffers in 17490 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |    152829
+    15200 |     -0.0% |       8 |        7 |    137629
+    30400 |     -0.2% |     807 |      273 |    122429
+    45600 |     -1.2% |    5112 |     2942 |    107229
+    60800 |     -3.8% |   17474 |    10623 |     92029
+    76000 |     -5.9% |   26580 |    16441 |     76829
+    91200 |     -5.9% |   27029 |    16809 |     61629
+   106400 |     -7.2% |   33564 |    21455 |     46429
+   121600 |     -9.5% |   42046 |    26374 |     31229
+   136800 |    -10.7% |   48603 |    30860 |     16029
+   152000 |    -10.9% |   50787 |    32676 |       829
+    final |    -10.9% |   50787 |    32676 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -9.196732e-11
+[INFO GPL-0107] Timing-driven: repair_design delta area: -96.549 um^2 (-0.95%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -613 (-0.46%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 50174, deleted: 50787
+[INFO GPL-0110] Timing-driven: new target density: 0.5017763
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      380 |   0.1721 |  1.122722e+07 |   +0.14% |  1.53e-05 |      
+      390 |   0.1517 |  1.122740e+07 |   +0.00% |  2.26e-05 |      
+      400 |   0.1326 |  1.122828e+07 |   +0.01% |  3.33e-05 |      
+      410 |   0.1142 |  1.122784e+07 |   -0.00% |  4.90e-05 |      
+      419 |   0.0988 |  1.122700e+07 |          |  7.22e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 419
+[INFO GPL-1002] Placed Cell Area            10094.5114
+[INFO GPL-1003] Available Free Area         1728011.0003
+[INFO GPL-1004] Minimum Feasible Density        0.0100 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0065
+[INFO GPL-1008]     - For 80% usage of free space: 0.0073
+[INFO GPL-1009]     - For 50% usage of free space: 0.0117
+[INFO GPL-1011] Original area (um^2): 7025.06
+[INFO GPL-1013] Total timing-driven delta area: 3069.46 (+43.69%)
+[INFO GPL-1014] Final placement area: 10094.51 (+43.69%)
+Took 2056 seconds: global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Took 23 seconds: estimate_parasitics -placement
+Report metrics stage 3, global place...
+OT_INTERMEDIATE_POWER_SKIPPED stage 3: power not measured; final reporting unchanged
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 29245 um^2 2% utilization.
+write_db /work/run/results/asap7/dp_slice_station__t51/base/3_3_place_gp.odb
+Elapsed time: 45:22.77[h:]min:sec. CPU time: user 3106.11 sys 20.68 (114%). Peak memory: 3907104KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb         2722           3815 e878d99980af7ad61605

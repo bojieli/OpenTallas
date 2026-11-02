@@ -1,0 +1,665 @@
+{
+  "metrics": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 411.91,
+    "r2r_captures_gt405": 9,
+    "r2r_captures": 47511,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_bound.u_ft_ft6_o_1/q\\[471\\]$_DFF_P_ -> u_bound.u_ft_ft6_o_2/q\\[471\\]$_DFF_P_"
+  },
+  "over405": [
+    {
+      "distance_um": 410.238,
+      "launch": "u_bound.u_ft_ft6_o_1/q\\[502\\]$_DFF_P_",
+      "capture": "u_bound.u_ft_ft6_o_2/q\\[502\\]$_DFF_P_",
+      "launch_xy": [
+        854.172,
+        722.115
+      ],
+      "capture_xy": [
+        1024.65,
+        482.355
+      ],
+      "launch_master": "DFFHQNx1_ASAP7_75t_R",
+      "launch_bbox": [
+        853.632,
+        721.98,
+        854.712,
+        722.25
+      ],
+      "launch_direct_predecessor": "u_bound.u_ft_ft6_o_0/q\\[502\\]$_DFF_P_",
+      "capture_master": "DFFHQNx1_ASAP7_75t_R",
+      "capture_bbox": [
+        1024.11,
+        482.22,
+        1025.19,
+        482.49
+      ],
+      "capture_direct_predecessor": "u_bound.u_ft_ft6_o_1/q\\[502\\]$_DFF_P_"
+    },
+    {
+      "distance_um": 406.566,
+      "launch": "u_bound.u_ft_ft6_o_1/q\\[503\\]$_DFF_P_",
+      "capture": "u_bound.u_ft_ft6_o_2/q\\[503\\]$_DFF_P_",
+      "launch_xy": [
+        855.414,
+        721.845
+      ],
+      "capture_xy": [
+        1022.76,
+        482.625
+      ],
+      "launch_master": "DFFHQNx1_ASAP7_75t_R",
+      "launch_bbox": [
+        854.874,
+        721.71,
+        855.954,
+        721.98
+      ],
+      "launch_direct_predecessor": "u_bound.u_ft_ft6_o_0/q\\[503\\]$_DFF_P_",
+      "capture_master": "DFFHQNx1_ASAP7_75t_R",
+      "capture_bbox": [
+        1022.22,
+        482.49,
+        1023.3,
+        482.76
+      ],
+      "capture_direct_predecessor": "u_bound.u_ft_ft6_o_1/q\\[503\\]$_DFF_P_"
+    },
+    {
+      "distance_um": 409.266,
+      "launch": "u_bound.u_ft_ft6_o_1/q\\[446\\]$_DFF_P_",
+      "capture": "u_bound.u_ft_ft6_o_2/q\\[446\\]$_DFF_P_",
+      "launch_xy": [
+        862.38,
+        721.3050000000001
+      ],
+      "capture_xy": [
+        1031.886,
+        481.545
+      ],
+      "launch_master": "DFFHQNx1_ASAP7_75t_R",
+      "launch_bbox": [
+        861.84,
+        721.17,
+        862.92,
+        721.44
+      ],
+      "launch_direct_predecessor": "u_bound.u_ft_ft6_o_0/q\\[446\\]$_DFF_P_",
+      "capture_master": "DFFHQNx1_ASAP7_75t_R",
+      "capture_bbox": [
+        1031.346,
+        481.41,
+        1032.426,
+        481.68
+      ],
+      "capture_direct_predecessor": "u_bound.u_ft_ft6_o_1/q\\[446\\]$_DFF_P_"
+    },
+    {
+      "distance_um": 408.24,
+      "launch": "u_bound.u_ft_ft6_o_1/q\\[447\\]$_DFF_P_",
+      "capture": "u_bound.u_ft_ft6_o_2/q\\[447\\]$_DFF_P_",
+      "launch_xy": [
+        857.142,
+        721.845
+      ],
+      "capture_xy": [
+        1025.622,
+        482.08500000000004
+      ],
+      "launch_master": "DFFHQNx1_ASAP7_75t_R",
+      "launch_bbox": [
+        856.602,
+        721.71,
+        857.682,
+        721.98
+      ],
+      "launch_direct_predecessor": "u_bound.u_ft_ft6_o_0/q\\[447\\]$_DFF_P_",
+      "capture_master": "DFFHQNx1_ASAP7_75t_R",
+      "capture_bbox": [
+        1025.082,
+        481.95,
+        1026.162,
+        482.22
+      ],
+      "capture_direct_predecessor": "u_bound.u_ft_ft6_o_1/q\\[447\\]$_DFF_P_"
+    },
+    {
+      "distance_um": 405.27,
+      "launch": "u_bound.u_ft_ft6_o_1/q\\[448\\]$_DFF_P_",
+      "capture": "u_bound.u_ft_ft6_o_2/q\\[448\\]$_DFF_P_",
+      "launch_xy": [
+        860.652,
+        722.385
+      ],
+      "capture_xy": [
+        1025.3519999999999,
+        481.815
+      ],
+      "launch_master": "DFFHQNx1_ASAP7_75t_R",
+      "launch_bbox": [
+        860.112,
+        722.25,
+        861.192,
+        722.52
+      ],
+      "launch_direct_predecessor": "u_bound.u_ft_ft6_o_0/q\\[448\\]$_DFF_P_",
+      "capture_master": "DFFHQNx1_ASAP7_75t_R",
+      "capture_bbox": [
+        1024.812,
+        481.68,
+        1025.892,
+        481.95
+      ],
+      "capture_direct_predecessor": "u_bound.u_ft_ft6_o_1/q\\[448\\]$_DFF_P_"
+    },
+    {
+      "distance_um": 410.454,
+      "launch": "u_bound.u_ft_ft6_o_1/q\\[498\\]$_DFF_P_",
+      "capture": "u_bound.u_ft_ft6_o_2/q\\[498\\]$_DFF_P_",
+      "launch_xy": [
+        859.0319999999999,
+        722.385
+      ],
+      "capture_xy": [
+        1028.916,
+        481.815
+      ],
+      "launch_master": "DFFHQNx1_ASAP7_75t_R",
+      "launch_bbox": [
+        858.492,
+        722.25,
+        859.572,
+        722.52
+      ],
+      "launch_direct_predecessor": "u_bound.u_ft_ft6_o_0/q\\[498\\]$_DFF_P_",
+      "capture_master": "DFFHQNx1_ASAP7_75t_R",
+      "capture_bbox": [
+        1028.376,
+        481.68,
+        1029.456,
+        481.95
+      ],
+      "capture_direct_predecessor": "u_bound.u_ft_ft6_o_1/q\\[498\\]$_DFF_P_"
+    },
+    {
+      "distance_um": 411.912,
+      "launch": "u_bound.u_ft_ft6_o_1/q\\[471\\]$_DFF_P_",
+      "capture": "u_bound.u_ft_ft6_o_2/q\\[471\\]$_DFF_P_",
+      "launch_xy": [
+        856.98,
+        722.115
+      ],
+      "capture_xy": [
+        1028.3220000000001,
+        481.545
+      ],
+      "launch_master": "DFFHQNx1_ASAP7_75t_R",
+      "launch_bbox": [
+        856.44,
+        721.98,
+        857.52,
+        722.25
+      ],
+      "launch_direct_predecessor": "u_bound.u_ft_ft6_o_0/q\\[471\\]$_DFF_P_",
+      "capture_master": "DFFHQNx1_ASAP7_75t_R",
+      "capture_bbox": [
+        1027.782,
+        481.41,
+        1028.862,
+        481.68
+      ],
+      "capture_direct_predecessor": "u_bound.u_ft_ft6_o_1/q\\[471\\]$_DFF_P_"
+    },
+    {
+      "distance_um": 406.35,
+      "launch": "u_bound.u_ft_ft6_o_1/q\\[474\\]$_DFF_P_",
+      "capture": "u_bound.u_ft_ft6_o_2/q\\[474\\]$_DFF_P_",
+      "launch_xy": [
+        856.6020000000001,
+        721.575
+      ],
+      "capture_xy": [
+        1023.462,
+        482.08500000000004
+      ],
+      "launch_master": "DFFHQNx1_ASAP7_75t_R",
+      "launch_bbox": [
+        856.062,
+        721.44,
+        857.142,
+        721.71
+      ],
+      "launch_direct_predecessor": "u_bound.u_ft_ft6_o_0/q\\[474\\]$_DFF_P_",
+      "capture_master": "DFFHQNx1_ASAP7_75t_R",
+      "capture_bbox": [
+        1022.922,
+        481.95,
+        1024.002,
+        482.22
+      ],
+      "capture_direct_predecessor": "u_bound.u_ft_ft6_o_1/q\\[474\\]$_DFF_P_"
+    },
+    {
+      "distance_um": 405.594,
+      "launch": "u_bound.u_ft_ft6_o_1/q\\[501\\]$_DFF_P_",
+      "capture": "u_bound.u_ft_ft6_o_2/q\\[501\\]$_DFF_P_",
+      "launch_xy": [
+        860.706,
+        721.035
+      ],
+      "capture_xy": [
+        1027.35,
+        482.08500000000004
+      ],
+      "launch_master": "DFFHQNx1_ASAP7_75t_R",
+      "launch_bbox": [
+        860.166,
+        720.9,
+        861.246,
+        721.17
+      ],
+      "launch_direct_predecessor": "u_bound.u_ft_ft6_o_0/q\\[501\\]$_DFF_P_",
+      "capture_master": "DFFHQNx1_ASAP7_75t_R",
+      "capture_bbox": [
+        1026.81,
+        481.95,
+        1027.89,
+        482.22
+      ],
+      "capture_direct_predecessor": "u_bound.u_ft_ft6_o_1/q\\[501\\]$_DFF_P_"
+    }
+  ],
+  "collapsed_chains": [
+    {
+      "chain": [
+        "u_bound.u_cland_ft6_i/u_ring.dch\\[6\\].u_dsel/y\\[62\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_0/q\\[446\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_1/q\\[446\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[446\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_3/q\\[446\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_4/q\\[446\\]$_DFF_P_"
+      ],
+      "xy": [
+        [
+          646.11,
+          1202.715
+        ],
+        [
+          753.0840000000001,
+          962.415
+        ],
+        [
+          862.38,
+          721.3050000000001
+        ],
+        [
+          1031.886,
+          481.545
+        ],
+        [
+          1135.674,
+          241.515
+        ],
+        [
+          1251.18,
+          5.805
+        ]
+      ],
+      "hops_um": [
+        347.274,
+        350.40599999999984,
+        409.266,
+        343.81800000000004,
+        351.21600000000007
+      ]
+    },
+    {
+      "chain": [
+        "u_bound.u_cland_ft6_i/u_ring.dch\\[6\\].u_dsel/y\\[63\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_0/q\\[447\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_1/q\\[447\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[447\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_3/q\\[447\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_4/q\\[447\\]$_DFF_P_"
+      ],
+      "xy": [
+        [
+          646.11,
+          1202.985
+        ],
+        [
+          749.844,
+          962.415
+        ],
+        [
+          857.142,
+          721.845
+        ],
+        [
+          1025.622,
+          482.08500000000004
+        ],
+        [
+          1133.46,
+          241.515
+        ],
+        [
+          1248.372,
+          6.075
+        ]
+      ],
+      "hops_um": [
+        344.304,
+        347.86799999999994,
+        408.24,
+        348.408,
+        350.35200000000003
+      ]
+    },
+    {
+      "chain": [
+        "u_bound.u_cland_ft6_i/u_ring.dch\\[7\\].u_dsel/y\\[0\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_0/q\\[448\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_1/q\\[448\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[448\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_3/q\\[448\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_4/q\\[448\\]$_DFF_P_"
+      ],
+      "xy": [
+        [
+          646.11,
+          1203.255
+        ],
+        [
+          756.54,
+          962.955
+        ],
+        [
+          860.652,
+          722.385
+        ],
+        [
+          1025.3519999999999,
+          481.815
+        ],
+        [
+          1131.138,
+          241.515
+        ],
+        [
+          1245.78,
+          6.615
+        ]
+      ],
+      "hops_um": [
+        350.73,
+        344.68200000000013,
+        405.2699999999998,
+        346.08600000000007,
+        349.54200000000003
+      ]
+    },
+    {
+      "chain": [
+        "u_bound.u_cland_ft6_i/u_ring.dch\\[7\\].u_dsel/y\\[23\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_0/q\\[471\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_1/q\\[471\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[471\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_3/q\\[471\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_4/q\\[471\\]$_DFF_P_"
+      ],
+      "xy": [
+        [
+          641.358,
+          1203.525
+        ],
+        [
+          760.05,
+          964.035
+        ],
+        [
+          856.98,
+          722.115
+        ],
+        [
+          1028.3220000000001,
+          481.545
+        ],
+        [
+          1143.18,
+          240.435
+        ],
+        [
+          1261.008,
+          5.265000000000001
+        ]
+      ],
+      "hops_um": [
+        358.18200000000013,
+        338.85,
+        411.9120000000001,
+        355.96799999999996,
+        352.998
+      ]
+    },
+    {
+      "chain": [
+        "u_bound.u_cland_ft6_i/u_ring.dch\\[7\\].u_dsel/y\\[26\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_0/q\\[474\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_1/q\\[474\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[474\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_3/q\\[474\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_4/q\\[474\\]$_DFF_P_"
+      ],
+      "xy": [
+        [
+          640.1700000000001,
+          1202.985
+        ],
+        [
+          763.884,
+          964.035
+        ],
+        [
+          856.6020000000001,
+          721.575
+        ],
+        [
+          1023.462,
+          482.08500000000004
+        ],
+        [
+          1140.1019999999999,
+          241.515
+        ],
+        [
+          1254.204,
+          5.805
+        ]
+      ],
+      "hops_um": [
+        362.6639999999999,
+        335.178,
+        406.3499999999999,
+        357.2099999999999,
+        349.81200000000007
+      ]
+    },
+    {
+      "chain": [
+        "u_bound.u_cland_ft6_i/u_ring.dch\\[7\\].u_dsel/y\\[50\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_0/q\\[498\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_1/q\\[498\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[498\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_3/q\\[498\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_4/q\\[498\\]$_DFF_P_"
+      ],
+      "xy": [
+        [
+          635.418,
+          1203.795
+        ],
+        [
+          751.626,
+          963.495
+        ],
+        [
+          859.0319999999999,
+          722.385
+        ],
+        [
+          1028.916,
+          481.815
+        ],
+        [
+          1142.37,
+          239.89499999999998
+        ],
+        [
+          1267.38,
+          5.535
+        ]
+      ],
+      "hops_um": [
+        356.50800000000004,
+        348.51599999999996,
+        410.454,
+        355.37399999999997,
+        359.37000000000023
+      ]
+    },
+    {
+      "chain": [
+        "u_bound.u_cland_ft6_i/u_ring.dch\\[7\\].u_dsel/y\\[53\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_0/q\\[501\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_1/q\\[501\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[501\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_3/q\\[501\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_4/q\\[501\\]$_DFF_P_"
+      ],
+      "xy": [
+        [
+          634.23,
+          1202.715
+        ],
+        [
+          749.682,
+          961.335
+        ],
+        [
+          860.706,
+          721.035
+        ],
+        [
+          1027.35,
+          482.08500000000004
+        ],
+        [
+          1146.69,
+          240.435
+        ],
+        [
+          1260.792,
+          6.345000000000001
+        ]
+      ],
+      "hops_um": [
+        356.8319999999999,
+        351.32400000000007,
+        405.5939999999998,
+        360.9900000000002,
+        348.1919999999999
+      ]
+    },
+    {
+      "chain": [
+        "u_bound.u_cland_ft6_i/u_ring.dch\\[7\\].u_dsel/y\\[54\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_0/q\\[502\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_1/q\\[502\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[502\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_3/q\\[502\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_4/q\\[502\\]$_DFF_P_"
+      ],
+      "xy": [
+        [
+          634.23,
+          1202.985
+        ],
+        [
+          754.2719999999999,
+          963.765
+        ],
+        [
+          854.172,
+          722.115
+        ],
+        [
+          1024.65,
+          482.355
+        ],
+        [
+          1145.556,
+          240.97500000000002
+        ],
+        [
+          1258.632,
+          6.075
+        ]
+      ],
+      "hops_um": [
+        359.26199999999983,
+        341.55000000000007,
+        410.23800000000006,
+        362.28599999999994,
+        347.97600000000006
+      ]
+    },
+    {
+      "chain": [
+        "u_bound.u_cland_ft6_i/u_ring.dch\\[7\\].u_dsel/y\\[55\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_0/q\\[503\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_1/q\\[503\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_2/q\\[503\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_3/q\\[503\\]$_DFF_P_",
+        "u_bound.u_ft_ft6_o_4/q\\[503\\]$_DFF_P_"
+      ],
+      "xy": [
+        [
+          634.23,
+          1203.255
+        ],
+        [
+          755.6759999999999,
+          964.3050000000001
+        ],
+        [
+          855.414,
+          721.845
+        ],
+        [
+          1022.76,
+          482.625
+        ],
+        [
+          1144.2060000000001,
+          241.515
+        ],
+        [
+          1256.688,
+          6.885
+        ]
+      ],
+      "hops_um": [
+        360.39599999999996,
+        342.1980000000001,
+        406.56600000000003,
+        362.55600000000015,
+        347.11199999999997
+      ]
+    }
+  ],
+  "seq_count": 52044,
+  "source_only": "saved native geometry + graph; no source edit/CAD"
+}
