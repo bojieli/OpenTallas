@@ -1,6 +1,7 @@
 {
- "LOOK": "PASS-COND for initial placement prototype only, still ROOT HELD",
+ "LOOK": "LOOKED_GEOMETRY_CLEAR_MODEL_SYNTH_PASS_ROOT_PLACE_HOLD",
  "image": "plan.png",
  "findings": "Viewed exact338 retained native rectangles on151.2square. Registered south input buses feed nativeZstore/fourLAT7 adders and north outputs; no macros/halos/walls. Clock/reset entries are the existing upper-west pins (not a new central tap); unchanged open core allows buffered tree, with actualCTS/pair/reach/DRV gates required. M5signal/nativePG,M6parentstrap,coremargin2.16 retained. Conceptual arrow is not a placed or routed result. No pin movement or new cycles.",
- "scope": "Source identity10active modules also equals actual2b693 commit;630fullydefined source comparisons0errors+mutant630. Physicalclosure/clockwitness/postrouteEQ not asserted. No physical job launched."
+ "scope": "Source identity10active modules also equals actual2b693 commit;630fullydefined source comparisons0errors+mutant630. Physicalclosure/clockwitness/postrouteEQ not asserted. No physical job launched.",
+ "required": "Actual SYNTH standard/free fill45.589% clears>=20 model. Density0.5 predicts8.82% empty only analytically; actual empty-bin<=50, pin-reg, r2r, clock and DRV remain future placement gates. ROOT must accept model+LOOK before PLACE; no physical job launched."
 }

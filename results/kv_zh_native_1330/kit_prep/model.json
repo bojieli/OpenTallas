@@ -1,5 +1,5 @@
 {
- "status": "PREP_ONLY_NOT_LAUNCHED",
+ "status": "SYNTH_ONLY_AREA_MODEL_PASS_PHYSICAL_HELD",
  "module": "ot_nhb_zh",
  "outline_um": [
   151.2,
@@ -30,7 +30,7 @@
  "witness": "original normal signoff sessions --retain-child-clock-witness, completeTT/FFpayload export; qualificationNOTASSERTED until rootacceptance",
  "kit_hash": "8e01e8e03b6d52ac",
  "kit_source_commit": "46e4c49f8275defbcddc9057c3fa27d5666574ad",
- "held": "No physical launch before root ruling following final RECIP representative gates; no childview or parentcut activation.",
+ "held": "NO_PLACE until ROOT accepts actual fill model plus LOOK; actual empty-bin/r2r/pin/clock/DRV gates remain required",
  "exact_clock_reset_pins": [
   {
    "name": "clk",
@@ -74,5 +74,31 @@
    ],
    "direction": "input"
   }
- ]
+ ],
+ "fill_model_status": "MEASURED_SYNTH_STD_FREEFILL_PASS_EMPTY_UNMEASURED",
+ "binding_geometry_gates": {
+  "stdcell_freefill_min": 0.2,
+  "emptybins_max": 0.5
+ },
+ "actual_synth_area_model": "synth_area_model.json",
+ "actual_synth_std_cells": 93992,
+ "actual_synth_ff": 8338,
+ "actual_synth_area_um2": 10422.308880011877,
+ "actual_synth_free_area_um2": 22861.44,
+ "actual_synth_fill_of_free": 0.4558903061229686,
+ "empty_model": {
+  "place_density": 0.5,
+  "modeled_occupied_fraction": 0.9117806122459372,
+  "modeled_empty_fraction": 0.0882193877540628,
+  "status": "ANALYTICAL_ONLY_NOT_PLACED_BIN_VERDICT"
+ },
+ "actual_canary": {
+  "host": "intel2",
+  "kit": "/srv/opentallas-scratch2/claude/codex-kv-ahub-1131/kits/zh_native151_model",
+  "unit": "oth-ubuntu-4063608-1793578748",
+  "stage": "SYNTH_ONLY",
+  "rc": 0,
+  "budget_gb": 8,
+  "threads": 4
+ }
 }
