@@ -1,0 +1,481 @@
+{
+  "scope": "A-priori source-only self-driving repeater design from actual TT/FFNLDM and nativeM6/M7RC, noCTS/GRT/STA/measurements; length<=200um is a conservative MODEL bound, not a new policy",
+  "input_slew_ps": 40,
+  "output_slew_model_limit_ps": 80,
+  "valid_candidates": 78,
+  "best": {
+    "master": "BUFx16f_ASAP7_75t_R",
+    "length_um": 168,
+    "worst_normalized_delay_per_um": 0.0015729475334120998,
+    "samples": [
+      {
+        "corner": "TT",
+        "layer": "M6",
+        "load_ff": 24.26554,
+        "delay_ps": 60.783485020590476,
+        "slew_ps": 62.37292032001777,
+        "characterized": true,
+        "normalized_delay_per_um": 0.0014472258338235828
+      },
+      {
+        "corner": "TT",
+        "layer": "M7",
+        "load_ff": 17.88154,
+        "delay_ps": 53.41566482313561,
+        "slew_ps": 50.05747959923086,
+        "characterized": true,
+        "normalized_delay_per_um": 0.0012718015434079906
+      },
+      {
+        "corner": "FF",
+        "layer": "M6",
+        "load_ff": 24.52113,
+        "delay_ps": 53.51167508667963,
+        "slew_ps": 61.916731079246986,
+        "characterized": true,
+        "normalized_delay_per_um": 0.0015729475334120998
+      },
+      {
+        "corner": "FF",
+        "layer": "M7",
+        "load_ff": 18.13713,
+        "delay_ps": 46.71985811325358,
+        "slew_ps": 49.93342533768772,
+        "characterized": true,
+        "normalized_delay_per_um": 0.0013733056470680064
+      }
+    ]
+  },
+  "alternatives": [
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "length_um": 168,
+      "worst_normalized_delay_per_um": 0.0015729475334120998,
+      "samples": [
+        {
+          "corner": "TT",
+          "layer": "M6",
+          "load_ff": 24.26554,
+          "delay_ps": 60.783485020590476,
+          "slew_ps": 62.37292032001777,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0014472258338235828
+        },
+        {
+          "corner": "TT",
+          "layer": "M7",
+          "load_ff": 17.88154,
+          "delay_ps": 53.41566482313561,
+          "slew_ps": 50.05747959923086,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0012718015434079906
+        },
+        {
+          "corner": "FF",
+          "layer": "M6",
+          "load_ff": 24.52113,
+          "delay_ps": 53.51167508667963,
+          "slew_ps": 61.916731079246986,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0015729475334120998
+        },
+        {
+          "corner": "FF",
+          "layer": "M7",
+          "load_ff": 18.13713,
+          "delay_ps": 46.71985811325358,
+          "slew_ps": 49.93342533768772,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0013733056470680064
+        }
+      ]
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "length_um": 160,
+      "worst_normalized_delay_per_um": 0.001574285340661902,
+      "samples": [
+        {
+          "corner": "TT",
+          "layer": "M6",
+          "load_ff": 23.221540000000005,
+          "delay_ps": 58.21924417706848,
+          "slew_ps": 57.499723654129625,
+          "characterized": true,
+          "normalized_delay_per_um": 0.001455481104426712
+        },
+        {
+          "corner": "TT",
+          "layer": "M7",
+          "load_ff": 17.14154,
+          "delay_ps": 51.41839423547472,
+          "slew_ps": 46.30251233570205,
+          "characterized": true,
+          "normalized_delay_per_um": 0.001285459855886868
+        },
+        {
+          "corner": "FF",
+          "layer": "M6",
+          "load_ff": 23.477130000000002,
+          "delay_ps": 51.00684503744563,
+          "slew_ps": 56.96258679838317,
+          "characterized": true,
+          "normalized_delay_per_um": 0.001574285340661902
+        },
+        {
+          "corner": "FF",
+          "layer": "M7",
+          "load_ff": 17.39713,
+          "delay_ps": 44.7605512573918,
+          "slew_ps": 46.08680952987301,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0013814984955985124
+        }
+      ]
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "length_um": 176,
+      "worst_normalized_delay_per_um": 0.0015745152512658144,
+      "samples": [
+        {
+          "corner": "TT",
+          "layer": "M6",
+          "load_ff": 25.30954,
+          "delay_ps": 63.446944283312476,
+          "slew_ps": 67.47181556276465,
+          "characterized": true,
+          "normalized_delay_per_um": 0.00144197600643892
+        },
+        {
+          "corner": "TT",
+          "layer": "M7",
+          "load_ff": 18.621540000000003,
+          "delay_ps": 55.486992242796504,
+          "slew_ps": 53.983763933906346,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0012610680055181022
+        },
+        {
+          "corner": "FF",
+          "layer": "M6",
+          "load_ff": 25.56513,
+          "delay_ps": 56.115723555113625,
+          "slew_ps": 67.09475061164324,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0015745152512658144
+        },
+        {
+          "corner": "FF",
+          "layer": "M7",
+          "load_ff": 18.87713,
+          "delay_ps": 48.75322180111536,
+          "slew_ps": 53.9487517301761,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0013679355163051447
+        }
+      ]
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "length_um": 152,
+      "worst_normalized_delay_per_um": 0.0015783897019672596,
+      "samples": [
+        {
+          "corner": "TT",
+          "layer": "M6",
+          "load_ff": 22.17754,
+          "delay_ps": 55.72316346012495,
+          "slew_ps": 52.860550694781075,
+          "characterized": true,
+          "normalized_delay_per_um": 0.001466399038424341
+        },
+        {
+          "corner": "TT",
+          "layer": "M7",
+          "load_ff": 16.40154,
+          "delay_ps": 49.49518047981383,
+          "slew_ps": 42.719924864750844,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0013025047494687851
+        },
+        {
+          "corner": "FF",
+          "layer": "M6",
+          "load_ff": 22.433130000000002,
+          "delay_ps": 48.58283502655225,
+          "slew_ps": 52.2339223085939,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0015783897019672596
+        },
+        {
+          "corner": "FF",
+          "layer": "M7",
+          "load_ff": 16.657130000000002,
+          "delay_ps": 42.875301233530024,
+          "slew_ps": 42.40972767314074,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0013929597541757642
+        }
+      ]
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "length_um": 184,
+      "worst_normalized_delay_per_um": 0.001578609512687805,
+      "samples": [
+        {
+          "corner": "TT",
+          "layer": "M6",
+          "load_ff": 26.353540000000002,
+          "delay_ps": 66.20962196523448,
+          "slew_ps": 72.79560361626744,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0014393396079398798
+        },
+        {
+          "corner": "TT",
+          "layer": "M7",
+          "load_ff": 19.361539999999998,
+          "delay_ps": 57.63237649445739,
+          "slew_ps": 58.080438809094865,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0012528777498795084
+        },
+        {
+          "corner": "FF",
+          "layer": "M6",
+          "load_ff": 26.60913,
+          "delay_ps": 58.818990442747626,
+          "slew_ps": 72.49597069155101,
+          "characterized": true,
+          "normalized_delay_per_um": 0.001578609512687805
+        },
+        {
+          "corner": "FF",
+          "layer": "M7",
+          "load_ff": 19.61713,
+          "delay_ps": 50.860642320977135,
+          "slew_ps": 58.13208902064769,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0013650199227315388
+        }
+      ]
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "length_um": 192,
+      "worst_normalized_delay_per_um": 0.0015849144997320376,
+      "samples": [
+        {
+          "corner": "TT",
+          "layer": "M6",
+          "load_ff": 27.39754,
+          "delay_ps": 69.07151806635648,
+          "slew_ps": 78.3435808884094,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0014389899597157599
+        },
+        {
+          "corner": "TT",
+          "layer": "M7",
+          "load_ff": 20.10154,
+          "delay_ps": 59.85181757811828,
+          "slew_ps": 62.34669640247742,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0012469128662107975
+        },
+        {
+          "corner": "FF",
+          "layer": "M6",
+          "load_ff": 27.65313,
+          "delay_ps": 61.62147574958163,
+          "slew_ps": 78.11981593631317,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0015849144997320376
+        },
+        {
+          "corner": "FF",
+          "layer": "M7",
+          "load_ff": 20.357129999999998,
+          "delay_ps": 53.04211967283891,
+          "slew_ps": 62.482840322132354,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0013642520491985316
+        }
+      ]
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "length_um": 144,
+      "worst_normalized_delay_per_um": 0.0015858981836237398,
+      "samples": [
+        {
+          "corner": "TT",
+          "layer": "M6",
+          "load_ff": 21.133540000000004,
+          "delay_ps": 53.31976367375295,
+          "slew_ps": 48.451531800973704,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0014811045464931376
+        },
+        {
+          "corner": "TT",
+          "layer": "M7",
+          "load_ff": 15.66154,
+          "delay_ps": 47.64602355615294,
+          "slew_ps": 39.31093466764563,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0013235006543375815
+        },
+        {
+          "corner": "FF",
+          "layer": "M6",
+          "load_ff": 21.38913,
+          "delay_ps": 46.24479103446825,
+          "slew_ps": 47.731583232347525,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0015858981836237398
+        },
+        {
+          "corner": "FF",
+          "layer": "M7",
+          "load_ff": 15.91713,
+          "delay_ps": 41.06410804166825,
+          "slew_ps": 38.90315215184778,
+          "characterized": true,
+          "normalized_delay_per_um": 0.001408234157807553
+        }
+      ]
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "length_um": 136,
+      "worst_normalized_delay_per_um": 0.0015978927182855574,
+      "samples": [
+        {
+          "corner": "TT",
+          "layer": "M6",
+          "load_ff": 20.08954,
+          "delay_ps": 51.01558230658095,
+          "slew_ps": 44.2725381928361,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0015004583031347338
+        },
+        {
+          "corner": "TT",
+          "layer": "M7",
+          "load_ff": 14.92154,
+          "delay_ps": 45.87092346449206,
+          "slew_ps": 36.07693242271298,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0013491448077791782
+        },
+        {
+          "corner": "FF",
+          "layer": "M6",
+          "load_ff": 20.34513,
+          "delay_ps": 44.00596546158425,
+          "slew_ps": 43.45615861860679,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0015978927182855574
+        },
+        {
+          "corner": "FF",
+          "layer": "M7",
+          "load_ff": 15.17713,
+          "delay_ps": 39.32697168180647,
+          "slew_ps": 35.5682348950499,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0014279946144446795
+        }
+      ]
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "length_um": 128,
+      "worst_normalized_delay_per_um": 0.0016152144408912133,
+      "samples": [
+        {
+          "corner": "TT",
+          "layer": "M6",
+          "load_ff": 19.045540000000003,
+          "delay_ps": 48.81061935860895,
+          "slew_ps": 40.325102334214066,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0015253318549565298
+        },
+        {
+          "corner": "TT",
+          "layer": "M7",
+          "load_ff": 14.18154,
+          "delay_ps": 44.169880204831166,
+          "slew_ps": 33.01949796807564,
+          "characterized": true,
+          "normalized_delay_per_um": 0.001380308756400974
+        },
+        {
+          "corner": "FF",
+          "layer": "M6",
+          "load_ff": 19.30113,
+          "delay_ps": 41.86635830790025,
+          "slew_ps": 39.40900467685142,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0016152144408912133
+        },
+        {
+          "corner": "FF",
+          "layer": "M7",
+          "load_ff": 14.43713,
+          "delay_ps": 37.663892153944694,
+          "slew_ps": 32.40634367047749,
+          "characterized": true,
+          "normalized_delay_per_um": 0.001453082259025644
+        }
+      ]
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "length_um": 120,
+      "worst_normalized_delay_per_um": 0.0016389287890294754,
+      "samples": [
+        {
+          "corner": "TT",
+          "layer": "M6",
+          "load_ff": 18.00154,
+          "delay_ps": 46.704874829836946,
+          "slew_ps": 36.61094752732351,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0015568291609945647
+        },
+        {
+          "corner": "TT",
+          "layer": "M7",
+          "load_ff": 13.44154,
+          "delay_ps": 42.54289377717028,
+          "slew_ps": 30.140409598674218,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0014180964592390092
+        },
+        {
+          "corner": "FF",
+          "layer": "M6",
+          "load_ff": 18.25713,
+          "delay_ps": 39.82596957341625,
+          "slew_ps": 35.59173579936072,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0016389287890294754
+        },
+        {
+          "corner": "FF",
+          "layer": "M7",
+          "load_ff": 13.69713,
+          "delay_ps": 36.074869458082915,
+          "slew_ps": 29.419104244388826,
+          "characterized": true,
+          "normalized_delay_per_um": 0.0014845625291392147
+        }
+      ]
+    }
+  ]
+}
