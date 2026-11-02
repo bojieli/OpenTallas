@@ -56,7 +56,19 @@ def prepare(repo):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--repo',type=Path,default=ROOT)
     p.add_argument('--profile-out',type=Path);p.add_argument('--prepare-only',action='store_true')
+    p.add_argument('--row-plan',type=Path,help='Disabled exact native row/pin GEN proposal; no default change')
     a,args=p.parse_known_args();recipe,profile,views=prepare(a.repo)
+    view_path=a.repo/PACKET/'views.json'
+    if a.row_plan:
+        row_plan=(a.repo/a.row_plan).resolve();row_plan.relative_to(a.repo.resolve())
+        overlay=json.loads((row_plan/'recipe_overlay.json').read_text())
+        if set(overlay)!={'macro_placement','runtime_files','orfs_vars'}:
+            raise ValueError('unexpected native row recipe overlay keys')
+        recipe.update(overlay);view_path=row_plan/'views.json';views=json.loads(view_path.read_text())
+        profile['native_row_plan']=dict(file=str(row_plan.relative_to(a.repo.resolve())),
+            source_body_unchanged=True,added_FF=0,added_cycles=0,
+            endpoint_rule='INTERNAL_CORE timed in parent partition; no added partition-face requirement',
+            qualification='DISABLED_GEOMETRY_CANDIDATE_NO_PHYSICAL_RELEASE')
     if a.profile_out:a.profile_out.write_text(json.dumps(dict(recipe=recipe,profile=profile),indent=2)+'\n')
     if a.prepare_only:return
     # Explicit fail-closed API prerequisite: old GEN must not silently stage64.
@@ -68,7 +80,7 @@ def main():
         if key in args and args[args.index(key)+1]!=val:raise ValueError(key+' must be '+val)
         if key not in args:args.extend([key,val])
     if '--wrapper'in args:raise ValueError('source/provider wrappers not allowed')
-    if '--views'not in args:args.extend(['--views',str(a.repo/PACKET/'views.json')])
+    if '--views'not in args:args.extend(['--views',str(view_path)])
     if '--view'not in args:args.extend(['--view',views['view_list'][0]['view']])
     native_selector='SYNTH_BLACKBOXES='+MASTER
     if native_selector not in args:

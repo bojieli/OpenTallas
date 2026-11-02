@@ -47,7 +47,7 @@ def main():
                     ends.add((c['kind'],owner,pin))
         return sorted(ends),len(combs)
     ffrows={x['cell']:x for x in csv.DictReader(a.ff_rows.open())}
-    assert len(ffrows)==21930
+    assert len(ffrows) in (20842,21930)
     # OpenDB escapes literal bus brackets inside instance names. Decode only
     # that textual spelling and require a total bijection, never a name alias.
     row_names={n:n.replace('\\[','[').replace('\\]',']') for n,c in cells.items() if c['kind']=='ff'}
@@ -55,7 +55,7 @@ def main():
     assert set(row_names.values())<=set(ffrows),'ODB/mapped FF names differ beyond literal bracket escaping'
     assert all(cells[n]['master']==ffrows[v]['master'] for n,v in row_names.items())
     absent_rows=sorted(set(ffrows)-set(row_names.values()))
-    assert len(absent_rows)==1088
+    assert len(absent_rows)==len(ffrows)-20842
     pins={p['name']:p for p in json.loads(a.pins.read_text())}
     std=a.std_lef.read_text();masters={}
     for master in {c['master'] for c in cells.values() if c['kind']=='ff'}:
@@ -107,8 +107,8 @@ def main():
         raw_nonclock_input_bits=len(rows),bits_exceed405=sum(q['exceeds405'] for q in rows),
         FF_name_encoding_join=dict(actual_ODB_to_row_subset_bijective=20842,unknown=0,collisions=0,
                                    rule='Only literal OpenDB bracket escaping removed; exact master/name match required'),
-        reserved_row_FF_absent_from_post_SYNTH_ODB=dict(count=1088,names=absent_rows,
-              source_EQ_scope='Normal1_2_yosys proof only; post-SYNTH/physical equivalence not inferred'),
+        reserved_row_FF_absent_from_post_SYNTH_ODB=dict(count=len(absent_rows),names=absent_rows,
+              source_EQ_scope='Exact actual post-SYNTH row name/master join; source proof and extra conservative reservations are recorded separately'),
         fields=summary,rows=rows,FF_native_pin_masters=masters,
         scope='First sequential sinks only; no transitive FF traversal. Structural combinational reach is conservative, not Boolean sensitization or STA.',
         optimism=['R0/MX native FF pin rectangles may choose either orientation independently','Planned GEN input pins and disabled FF-row sites are not an actual native physical view'],

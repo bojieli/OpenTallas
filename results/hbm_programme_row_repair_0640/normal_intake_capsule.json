@@ -1,0 +1,80 @@
+{
+  "status": "DISABLED_NORMAL_GEN_READSET_READY_REVIEW_REQUIRED",
+  "view": "ot_hgi_sfu_programme_store_r10@941a1c747d90",
+  "DIE_AREA": [
+    0,
+    0,
+    604.8,
+    803.52
+  ],
+  "CORE_AREA": [
+    4.32,
+    4.32,
+    600.4799999999999,
+    799.1999999999999
+  ],
+  "macro_count": 44,
+  "actual_FF": 20842,
+  "ABI": 2904,
+  "added_FF": 0,
+  "added_cycles": 0,
+  "source_default_changed": false,
+  "normal_GEN": [
+    "python3",
+    "tools/hbm_b2/programme_current_native_kit.py",
+    "--row-plan",
+    "results/hbm_programme_row_repair_0640",
+    "--out",
+    "OWN_SCRATCH_KITS",
+    "--tag",
+    "rows"
+  ],
+  "recipe_overlay": "recipe_overlay.json",
+  "runtime_staging_api": "910a8eb70+bb7ce574b; default empty; FLOW peer concur",
+  "source_proof_capsule": {
+    "original_readonly_kit": "intel2:/srv/opentallas-scratch2/claude/codex-programme-native-0525/kits/ot_hgi_sfu_programme_store_r10_6a471c27f403-native_boundary",
+    "source_snapshot": "542757d902e",
+    "actual_synth_sha256": "403b159c3501a55715c55ea09779e000c2146f2c94be70eb5f6bfa1f937f0e41",
+    "actual_ODB_sha256": "67b6465b2e0804bf9447bedc5e403273dacb706a32b1197154638cddcdc4871e",
+    "official_target": "1_synth.v",
+    "official_points": 54439,
+    "official_EQ": "intel2:/srv/opentallas-scratch2/claude/codex-programme-postsynth-EQ-0605/lec",
+    "actual_LEC_sha256": "4ca4d77ba726c52ed4c8f2e640128742814110fd9be60fb45cda57dfa0d41cbe",
+    "reset_cycles": 4,
+    "reset_scope": "Conditional component SOURCE_EQ only; no64/66 physical reset credit",
+    "intake": "New exact checker/source/SYNTH join required; no automatic old-checker receipt or cache transfer"
+  },
+  "held": [
+    "Structured internal-clock model and ROOT review before PLACE",
+    "New GEN must regenerate all DIE/CORE/PDN extents and normal preflight",
+    "Normal actual row orientation/site/master checks; FIRM during GPL, normal DPL/guards unchanged",
+    "Actual I/O timing/reset/START/provider/collar/parent source event still unqualified"
+  ],
+  "area_model_um2": {
+    "old_context": 424438.9632,
+    "new_candidate": 485968.89599999995,
+    "delta": 61529.93279999995
+  },
+  "proposed_PLACE_resource": {
+    "memory_GB": 8,
+    "threads": 2,
+    "basis": "Context only: earlier44-master pstore placement measured2.69GB; actual current graph66230std/20842FF/44SRAM. Normal admission required; no physical receipt transferred.",
+    "stage": "PLACE_ONLY_AFTER_REVIEW"
+  },
+  "internal_clock_model": {
+    "status": "FINAL_CANDIDATE8_GEOMETRY_REVIEW_ONLY",
+    "owner": "hbm_clock",
+    "path": "intel2:/srv/opentallas-scratch2/claude/codex-programme-clock-final-0800",
+    "typed_sinks": 20886,
+    "regional_landing_reserves": 32,
+    "max_actual_sinks_per_root": 653,
+    "max_full_native_clock_pin_radius_um": 219.999,
+    "prospective_buffer_count_before_wire_repeaters": 709,
+    "prospective_all_BUFx24_area_um2": 310.117,
+    "held": [
+      "Normal CTS exact site integration and electrical sizing/arrivals",
+      "No clock-sites rounding at0.001um radius slack",
+      "No CTS authorization or physical reset/START qualification"
+    ]
+  }
+}

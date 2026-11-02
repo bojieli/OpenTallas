@@ -84,7 +84,15 @@ def main():
     def family(name):
         name=canonical(name).split('$_')[0]
         return re.sub(r'\[\d+\]$','',name)
-    stats=defaultdict(lambda:dict(edges=0,bad=0,max_optimistic_pin_distance_um=0.))
+    supports={}
+    def support(owner,pin):
+        key=owner,pin
+        if key not in supports:
+            rs=pin_boxes(owner,pin)
+            supports[key]=[max(sx*x+sy*y for u,v,U,V in rs for x,y in [(u,v),(u,V),(U,v),(U,V)])for sx,sy in [(1,1),(1,-1),(-1,1),(-1,-1)]]
+        return supports[key]
+    stats=defaultdict(lambda:dict(edges=0,bad=0,max_optimistic_pin_distance_um=0.,
+                                  bad_all_R0_MX_pin_corners=0,max_all_R0_MX_pin_corner_distance_um=0.))
     pairs=Counter();worst=[];serial=0
     with (a.out/'adjacent_sequential_edges.csv').open('w') as file:
         writer=csv.writer(file);writer.writerow(['launch_kind','launch_owner','launch_pin','capture_kind','capture_owner','capture_pin','optimistic_native_pin_distance_um'])
@@ -99,6 +107,10 @@ def main():
                     distance=min(rect_distance(s,t) for s in source for t in pin_boxes(target,tp))
                     writer.writerow([c['kind'],owner,pin,tc['kind'],target,tp,round(distance,6)])
                     q=stats[kind];q['edges']+=1;q['max_optimistic_pin_distance_um']=max(q['max_optimistic_pin_distance_um'],distance)
+                    ss,ts=support(owner,pin),support(target,tp)
+                    upper=max(ss[i]+ts[3-i]for i in range(4))
+                    q['max_all_R0_MX_pin_corner_distance_um']=max(q['max_all_R0_MX_pin_corner_distance_um'],upper)
+                    q['bad_all_R0_MX_pin_corners']+=upper>405+1e-8
                     if distance>405+1e-8:
                         q['bad']+=1;pairs[(kind,family(owner),family(target))]+=1
                         row=dict(launch_kind=c['kind'],launch_owner=owner,launch_pin=pin,

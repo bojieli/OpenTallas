@@ -1,0 +1,172 @@
+{
+  "status": "FAIL_PROPOSED_ADJACENT_SEQUENTIAL_GEOMETRY",
+  "actual_FF": 20842,
+  "actual_SRAM": 44,
+  "proposed_outline_um": [
+    604.8,
+    803.52
+  ],
+  "macro_halo_um": 4.32,
+  "edge_classes": {
+    "ff\u2192ff": {
+      "edges": 151475,
+      "bad": 0,
+      "max_optimistic_pin_distance_um": 392.3460000000001,
+      "bad_all_R0_MX_pin_corners": 0,
+      "max_all_R0_MX_pin_corner_distance_um": 392.865
+    },
+    "ff\u2192macro": {
+      "edges": 12496,
+      "bad": 10,
+      "max_optimistic_pin_distance_um": 428.0369999999999,
+      "bad_all_R0_MX_pin_corners": 10,
+      "max_all_R0_MX_pin_corner_distance_um": 428.35099999999994
+    },
+    "macro\u2192ff": {
+      "edges": 11264,
+      "bad": 0,
+      "max_optimistic_pin_distance_um": 377.271,
+      "bad_all_R0_MX_pin_corners": 0,
+      "max_all_R0_MX_pin_corner_distance_um": 377.57200000000006
+    }
+  },
+  "bad_bank_pairs": [
+    {
+      "kind": "ff\u2192macro",
+      "launch_family": "g_leaf[1].u_leaf.data_q",
+      "capture_family": "g_leaf[1].u_leaf.g_page[0].u_program",
+      "edges": 2
+    },
+    {
+      "kind": "ff\u2192macro",
+      "launch_family": "g_leaf[3].u_leaf.data_q",
+      "capture_family": "g_leaf[3].u_leaf.g_page[2].u_program",
+      "edges": 2
+    },
+    {
+      "kind": "ff\u2192macro",
+      "launch_family": "g_leaf[6].u_leaf.data_q",
+      "capture_family": "g_leaf[6].u_leaf.g_page[0].u_program",
+      "edges": 2
+    },
+    {
+      "kind": "ff\u2192macro",
+      "launch_family": "g_leaf[7].u_leaf.data_q",
+      "capture_family": "g_leaf[7].u_leaf.g_page[1].u_program",
+      "edges": 2
+    },
+    {
+      "kind": "ff\u2192macro",
+      "launch_family": "g_leaf[2].u_leaf.data_q",
+      "capture_family": "g_leaf[2].u_leaf.g_page[1].u_program",
+      "edges": 1
+    },
+    {
+      "kind": "ff\u2192macro",
+      "launch_family": "g_leaf[8].u_leaf.data_q",
+      "capture_family": "g_leaf[8].u_leaf.g_page[2].u_program",
+      "edges": 1
+    }
+  ],
+  "worst_bad_edges": [
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[1\\].u_leaf.data_q\\[187\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "macro",
+      "capture_owner": "g_leaf\\[1\\].u_leaf.g_page\\[0\\].u_program",
+      "capture_pin": "wd_in[187]",
+      "optimistic_native_pin_distance_um": 428.0369999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[1\\].u_leaf.data_q\\[243\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "macro",
+      "capture_owner": "g_leaf\\[1\\].u_leaf.g_page\\[0\\].u_program",
+      "capture_pin": "wd_in[243]",
+      "optimistic_native_pin_distance_um": 422.66099999999994
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[6\\].u_leaf.data_q\\[186\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "macro",
+      "capture_owner": "g_leaf\\[6\\].u_leaf.g_page\\[0\\].u_program",
+      "capture_pin": "wd_in[186]",
+      "optimistic_native_pin_distance_um": 417.60299999999995
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[3\\].u_leaf.data_q\\[189\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "macro",
+      "capture_owner": "g_leaf\\[3\\].u_leaf.g_page\\[2\\].u_program",
+      "capture_pin": "wd_in[189]",
+      "optimistic_native_pin_distance_um": 413.289
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[6\\].u_leaf.data_q\\[243\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "macro",
+      "capture_owner": "g_leaf\\[6\\].u_leaf.g_page\\[0\\].u_program",
+      "capture_pin": "wd_in[243]",
+      "optimistic_native_pin_distance_um": 412.4009999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[8\\].u_leaf.data_q\\[189\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "macro",
+      "capture_owner": "g_leaf\\[8\\].u_leaf.g_page\\[2\\].u_program",
+      "capture_pin": "wd_in[189]",
+      "optimistic_native_pin_distance_um": 409.5089999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[2\\].u_leaf.data_q\\[189\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "macro",
+      "capture_owner": "g_leaf\\[2\\].u_leaf.g_page\\[1\\].u_program",
+      "capture_pin": "wd_in[189]",
+      "optimistic_native_pin_distance_um": 409.4969999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[7\\].u_leaf.data_q\\[160\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "macro",
+      "capture_owner": "g_leaf\\[7\\].u_leaf.g_page\\[1\\].u_program",
+      "capture_pin": "wd_in[160]",
+      "optimistic_native_pin_distance_um": 408.77099999999984
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[3\\].u_leaf.data_q\\[245\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "macro",
+      "capture_owner": "g_leaf\\[3\\].u_leaf.g_page\\[2\\].u_program",
+      "capture_pin": "wd_in[245]",
+      "optimistic_native_pin_distance_um": 407.91299999999995
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[7\\].u_leaf.data_q\\[219\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "macro",
+      "capture_owner": "g_leaf\\[7\\].u_leaf.g_page\\[1\\].u_program",
+      "capture_pin": "wd_in[219]",
+      "optimistic_native_pin_distance_um": 405.26699999999994
+    }
+  ],
+  "traversal": "Actual MTerm INPUT/OUTPUT graph; combinational arcs conservatively all-input/all-output, stop at every sequential/native boundary, CLOCK targets excluded",
+  "geometry": "Actual native LEF signal rectangles; proposed R0 SRAM locations and either R0/MX FF orientation. Minimum rectangle distance is optimistic; >405 is a necessary failure, <=405 is not timing/routing closure.",
+  "extra_preopt_rows": 1088,
+  "extra_rows_placed_or_used_as_endpoints": false,
+  "holds": [
+    "No CAD/PLACE/CTS/route/STA/source/default activation",
+    "Native macro pin-grid snap and actual physical IO/clock/reset/START integration remain separate",
+    "Combinational structural reach may include unsensitized arcs; source-specific exclusion would need proof"
+  ]
+}
