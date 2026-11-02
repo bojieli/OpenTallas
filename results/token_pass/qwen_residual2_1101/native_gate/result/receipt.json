@@ -1,0 +1,32 @@
+{
+  "status": "PASS_NATIVE_RESIDUAL2_COMPONENT",
+  "host": "epyc2",
+  "unit": "oth-ubuntu-2065046-1793597839",
+  "period_ps": 833,
+  "native_words": 1536,
+  "users": 4,
+  "words_per_user": 384,
+  "pidx": [
+    2,
+    130,
+    258,
+    386
+  ],
+  "first_VM_write_from_command": 59,
+  "last_VM_write_from_command": 106,
+  "controls": {
+    "MUT_OLD_CALLER": "caught: wrong PS1 value2 vs3",
+    "MUT_SCALE": "caught: changed PS2 value5 vs4",
+    "MUT_USER": "caught: output wrong bank"
+  },
+  "build_seconds": 1783.82,
+  "build_peak_kib": 14157604,
+  "runtime_seconds": 58.991,
+  "source_join": {
+    "native_pair_cases": 1728,
+    "selected_CALR_sites": 12,
+    "changed_bits": 24,
+    "added_cycles": 0
+  },
+  "claim_boundary": "Native SU/VM actual arithmetic and corrected word-index caller only; not ROOT, full layer/token or rate"
+}

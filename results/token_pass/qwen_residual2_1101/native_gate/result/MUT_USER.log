@@ -1,0 +1,4 @@
+NATIVE_RES2_USER_PASS user0 pidx2 words384 first59 last106 PS1=1 PS2=2 X3f800000 expect40400000
+[1510000000] %Fatal: tb_mu_native.sv:55: Assertion failed in tb_mu_native: RES2_WRONG_USER_OR_ADDRESS user1 addr000000
+%Error: /srv/opentallas-scratch2/claude/codex-res2-native-1101/gate1/input/tb_mu_native.sv:55: Verilog $stop
+Aborting...

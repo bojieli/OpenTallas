@@ -39,3 +39,20 @@ def test_forged_logical_point_refuses_actual_metal(tmp_path):
     row=fixture(tmp_path);row["y"]+=.001
     (tmp_path/"pins.json").write_text(json.dumps([row]))
     assert K.pins_canonical(tmp_path)[0]
+
+
+def test_native_clock_reports_real_layer_without_waiving_core_rule(tmp_path):
+    fixture(tmp_path)
+    (tmp_path/"constraint.sdc").write_text("create_clock -period 833 [get_ports cfg_v]\n")
+    errors, info = K.clock_pin_geometry(tmp_path)
+    assert any("on M3, not M5" in e for e in errors)
+    assert not any("no static placement" in e for e in errors)
+    assert info["entries"][0][0] == "io.tcl native multiPORT"
+
+
+def test_native_clock_changed_metal_does_not_establish_placement(tmp_path):
+    fixture(tmp_path)
+    (tmp_path/"constraint.sdc").write_text("create_clock -period 833 [get_ports cfg_v]\n")
+    p=tmp_path/"io.tcl"
+    p.write_text(p.read_text().replace("394.445000", "394.455000"))
+    assert any("no static placement" in e for e in K.clock_pin_geometry(tmp_path)[0])
