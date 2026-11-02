@@ -1,0 +1,20 @@
+S81 gunit reset-time clock availability: deep relay + stopped-root controls (DIE-S81-47 helper, 2026-11-01 PST, intel1, Icarus Verilog 12.0)
+cells = results/die_s81_23_1029/rst64/cells.sv (887b194b718231caf4ff361ff898dca47f37eaf699c4aaba8324f0664fe0f7b0, ot_dp_rsync_s2 + ot_dp_rrelay as emitted by tools/die_plan/gen_rtl.py)
+tbdeep.sv = tb64.sv with the relay chain parameterised to DEPTH=128 (gunit core rst_n release cycle 85, die max_release 105 on plan_h2_2249)
+tbstop.sv = tbdeep.sv + STOP: the root clock is stopped for STOP of the HOLD clock periods while rst_n is low (HEAD stopped-PMA form)
+78909ab988081aec44a784df309005cdb28d01f2ad53ba76fab102843113da83  tbdeep.sv
+97fdede0bf82315e774d2b6093ccc90d051fa3357ca96c9ae6d43c4e480a661f  tbstop.sv
+cmd: iverilog -g2012 -P tb.HOLD=H -o rH tbdeep.sv cells.sv; vvp -n rH
+--- HOLD=64 (contract)
+COLD HOLD=64 depth0..128 min_sink_known_low=66 depth0=66 depthMAX=66
+WARM HOLD=64 depth0..128 min_sink_known_low=66 depth0=66 depthMAX=66
+--- HOLD=61 (mutant control)
+COLD HOLD=61 depth0..128 min_sink_known_low=63 depth0=63 depthMAX=63 BELOW64 -> CAUGHT
+WARM HOLD=61 depth0..128 min_sink_known_low=63 depth0=63 depthMAX=63 BELOW64 -> CAUGHT
+cmd: iverilog -g2012 -P tb.STOP=S -o sS tbstop.sv cells.sv; vvp -n sS
+--- STOP=0 (root runs through the hold)
+COLD/WARM min_sink_known_low=66
+--- STOP=62 (root stopped for 62 of the 64 hold periods; rst_n still low 64 periods of wall time)
+COLD HOLD=64 depth0..128 min_sink_known_low=4 BELOW64 -> CAUGHT
+WARM HOLD=64 depth0..128 min_sink_known_low=4 BELOW64 -> CAUGHT
+=> the 64-edge result is depth-independent (0..128 >= 85) and holds ONLY while the root clock toggles through the hold (condition C1).
