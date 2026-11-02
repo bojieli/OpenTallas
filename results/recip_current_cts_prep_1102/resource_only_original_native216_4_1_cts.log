@@ -1,0 +1,133 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_place.odb
+read_sdc /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_place.sdc
+source /work/setRC_rcx.tcl
+source /work/max_fanout.tcl
+KVCORES max_fanout 64
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "clk".
+[INFO CTS-0010]  Clock net "clk" has 8994 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 8994.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 64 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 64 and max clustering diameter of 76.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 410.
+[INFO CTS-0024]  Normalized sink region: [(3.20005, 3.00009), (153.712, 156.605)].
+[INFO CTS-0025]     Width:  150.5122.
+[INFO CTS-0026]     Height: 153.6045.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 205
+    Sub-region size: 150.5122 X 76.8022
+[INFO CTS-0034]     Segment length (rounded): 38.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 103
+    Sub-region size: 75.2561 X 76.8022
+[INFO CTS-0034]     Segment length (rounded): 38.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 52
+    Sub-region size: 75.2561 X 38.4011
+[INFO CTS-0034]     Segment length (rounded): 20.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 26
+    Sub-region size: 37.6280 X 38.4011
+[INFO CTS-0034]     Segment length (rounded): 18.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 37.6280 X 19.2006
+[INFO CTS-0034]     Segment length (rounded): 10.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 410.
+[INFO CTS-0018]     Created 473 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 7.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 7.
+[INFO CTS-0015]     Created 473 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 6:2, 7:1, 8:4, 9:3, 10:3, 11:9, 12:3, 13:6, 14:9, 15:14, 16:9, 17:11, 18:24, 19:24, 20:32, 21:46, 22:42, 23:46, 24:46, 25:41, 26:28, 27:21, 28:11, 29:4, 30:1, 31:2..
+[INFO CTS-0017]     Max level of the clock tree: 5.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 9384
+[INFO CTS-0100]  Leaf buffers 410
+[INFO CTS-0101]  Average sink wire length 274.51 um
+[INFO CTS-0102]  Path depth 6 - 7
+[INFO CTS-0207]  Dummy loads inserted 390
+[INFO CTS-0500] Runtime: 23.84s
+Took 24 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+estimate_parasitics -placement
+Took 7 seconds: estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 44808.42 um^2
+[INFO DPL-0007] Movable instances area: 6742.91 um^2
+[INFO DPL-0008] Fixed instances area within core: 137.40 um^2
+[INFO DPL-0009] Utilization: 15.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 55676 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          4 |         2 |         2
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 1.58s
+Placement Analysis
+---------------------------------
+total displacement        654.8 u
+average displacement        0.0 u
+max displacement            2.1 u
+original HPWL          117049.2 u
+legalized HPWL         117263.1 u
+delta HPWL                    0 %
+
+estimate_parasitics -placement
+Took 6 seconds: estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 6880 um^2 15% utilization.
+source /work/post_cts_setup.tcl
+OT_LEAF_AFF pairs 4267 groups 1318 cross_leaf_before 2418 cross_leaf_after 1508 groups_moved 738 sinks_moved 988 same_leaf_already 458 skip_big 33 skip_far 56 skip_cap 33 skip_driver 0 skip_clock 0 skip_gate 0 leaf_cap 35 radius_um 30.0 report_only 0
+OT_CTS_SETUP_TT before: worst setup 191.38 ps
+OT_CTS_SETUP_TT after: worst setup 191.38 ps
+Took 35 seconds: source /work/post_cts_setup.tcl
+write_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/4_1_cts.odb
+write_sdc -no_timestamp /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/4_cts.sdc
+Elapsed time: 3:13.09[h:]min:sec. CPU time: user 225.45 sys 3.25 (118%). Peak memory: 1071268KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb          193           1046 537e103b8ee7adff593f
