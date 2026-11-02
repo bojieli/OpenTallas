@@ -1,0 +1,28 @@
+{
+ "period_ps": 833.0,
+ "insertion_ps": 392.5,
+ "insertion_tol_ps": 40.0,
+ "clock_ports": [
+  "clk"
+ ],
+ "inputs": [
+  "c_i",
+  "rst_n"
+ ],
+ "outputs": [
+  "c_o"
+ ],
+ "unc_setup_ps": 0.0,
+ "unc_hold_ps": 25.0,
+ "time_unit_ps": 1.0,
+ "io_floor_ps": {
+  "c_i": 166.60000000000002,
+  "rst_n": 166.60000000000002,
+  "c_o": 166.60000000000002
+ },
+ "port_latency_ps": {},
+ "insertion_ff_ps": 321.0,
+ "hold_in_min_ps": 0.0,
+ "hold_out_min_ps": -25.0,
+ "seam_hold_ps": 25.0
+}
