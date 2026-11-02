@@ -25,11 +25,80 @@ import schema as S, gen_phys, check, ft_bit_sites  # noqa: E402
 INSET = {'E': (-1, 0), 'W': (1, 0), 'N': (0, -1), 'S': (0, 1)}
 
 
+def input_site(pin):
+    """Legacy face-placement target of a real input pin; never regs_um[0]."""
+    x, y, face = pin
+    dx, dy = INSET[face]
+    return x + dx, y + dy
+
+
+def pin_table(P, tn):
+    pins = defaultdict(dict)
+    for bus, bit, _, x, y, face in gen_phys.type_pins(P, tn):
+        pins[bus][bit] = (x, y, face)
+    return pins
+
+
+def normal_slot(P, tn, sn, *, full=None):
+    """Only normal FT has the input-face S0 constructor.
+
+    Exact native full-stage packets retain their named-cell coordinates.
+    Registered landing inputs retain their separate, legacy post-ring model.
+    """
+    if full is None:
+        from ft_full_stage import load
+        full = load(P, tn)
+    if sn in full:
+        return False
+    if P.types[tn].get('clock', {}).get('landing_contract'):
+        return False
+    raw = getattr(P, 'raw', {})
+    edges = raw.get('clock', {}).get('landing_network', {}).get('edges', [])
+    landed = {e['id'][len('cland_clk__'):] for e in edges
+              if e.get('id', '').startswith('cland_clk__')}
+    if not landed:
+        return True
+    return not any(pid in landed and p['dst']['bus'] == sn+'_i'
+                   and p['dst']['part'] in P.parts
+                   and P.parts[p['dst']['part']]['type'] == tn
+                   for pid, p in getattr(P, 'ports', {}).items())
+
+
+def station_site(slot, stage, bit, ap, bp, *, normal=True):
+    """Normal constructor targets; internal legacy placement stays unchanged."""
+    a, b = input_site(ap), input_site(bp)
+    if stage == 0 and normal:
+        return a
+    if slot.get('bit_sites_um') and stage > 0:
+        x, y = slot['bit_sites_um'][stage-1][bit]
+        w, h = slot['bit_site_cell_um']
+        return x+w/2, y+h/2
+    if slot.get('bit_sites_um'):
+        return a
+    if slot.get('regs_um'):
+        return tuple(slot['regs_um'][stage])
+    route = check.zroute(a, b, ap[2], bp[2])
+    return check.point_at(route, check.plen(route)*stage/int(slot.get('stations', 1)))
+
+
+def first_internal_hops(P, tn, slot, *, pins=None, full=None):
+    """Every REAL normal input bit's S0->S1 target distance, before placement.
+
+    An output-only epoch is not an invented input. Exact named/native and
+    landed paths keep their existing constructors and are not reinterpreted.
+    """
+    if int(slot.get('stations', 1)) < 2 or not normal_slot(P, tn, slot['name'], full=full):
+        return []
+    pins = pin_table(P, tn) if pins is None else pins
+    pi, po = pins[slot['name']+'_i'], pins[slot['name']+'_o']
+    return [(bit, md(station_site(slot, 0, bit, ap, po.get(bit) or ap),
+                     station_site(slot, 1, bit, ap, po.get(bit) or ap)))
+            for bit, ap in sorted(pi.items())]
+
+
 def type_tables(P, tn):
     """({bus: {bit: (x, y, face)}}, {slot: {bit: [station xy]}}), TYPE frame."""
-    pins = defaultdict(dict)
-    for bus, bit, _, x, y, f in gen_phys.type_pins(P, tn):
-        pins[bus][bit] = (x, y, f)
+    pins = pin_table(P, tn)
     from ft_full_stage import load, centre
     full = load(P, tn)
     chains = {}
@@ -37,22 +106,15 @@ def type_tables(P, tn):
         sn, k = slot['name'], int(slot.get('stations', 1))
         ft_bit_sites.validate_slot(slot)
         pi, po, ch = pins[sn + '_i'], pins[sn + '_o'], {}
+        normal = normal_slot(P, tn, sn, full=full)
         for bit in set(pi) | set(po):
             ap, bp = pi.get(bit) or po[bit], po.get(bit) or pi[bit]
-            a = (ap[0] + INSET[ap[2]][0], ap[1] + INSET[ap[2]][1])
-            b = (bp[0] + INSET[bp[2]][0], bp[1] + INSET[bp[2]][1])
-            seg = check.zroute(a, b, ap[2], bp[2]); L = check.plen(seg); st = []
+            st = []
             for j in range(k):
                 if sn in full:
                     st.append(centre(full[sn][j, bit]))
-                elif slot.get('bit_sites_um') and j > 0:
-                    x, y = slot['bit_sites_um'][j - 1][bit]; w, h = slot['bit_site_cell_um']; st.append((x + w / 2, y + h / 2))
-                elif slot.get('bit_sites_um'):
-                    st.append(a)
-                elif slot.get('regs_um'):
-                    st.append(tuple(slot['regs_um'][j]))
                 else:
-                    st.append(check.point_at(seg, L * j / k))
+                    st.append(station_site(slot, j, bit, ap, bp, normal=normal))
             ch[bit] = st
         chains[sn] = ch
     return pins, chains
