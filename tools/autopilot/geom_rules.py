@@ -1460,7 +1460,10 @@ def judge(m, template=None, outline=None, all_kits=False):
             if v is None:
                 continue
             at = f"at {m.get(key.replace('_max', '_at'))} ({m['demand_layers']}, est.)"
-            if v <= DEMAND_MAX:
+            if m.get("grt_cts_review") and grt_ok:
+                add(nm, "INFO", v, "measured native GRT 0 overflow", src,
+                    at + "; GEOM-106/108 GRT continuation: native routing overrides estimate")
+            elif v <= DEMAND_MAX:
                 add(nm, "PASS", v, f"<={DEMAND_MAX}", src, at)
             elif v <= DEMAND_HARD and grt_ok:
                 add(nm, "WARN", v, f"<={DEMAND_MAX} plan budget", src, at + "; GRT 0 overflow")
@@ -1592,10 +1595,16 @@ def _close_macros(a, b):
     return all(x[0] == y[0] and abs(x[1] - y[1]) <= OUTLINE_TOL and abs(x[2] - y[2]) <= OUTLINE_TOL for x, y in zip(a, b))
 
 
-def stage_of_odb(name):
-    """checkpoint stage from the ORFS file name: AUTO-GEOM judges only the pre-route review points (3_place / 4_cts);
-    GRT / routed checkpoints carry timing verdicts (GEOM-REVIEW 13:52 elemB_if2e 5_1_grt FAIL on clock timing)"""
+def stage_of_odb(name, clock_cells=0):
+    """Classify ordinary review points and a clock-built GRT continuation.
+
+    GEOM-106/108 2026-11-01: 5_1_grt retains CTS geometry after repair.
+    Its own native GRT log supplies overflow; this classification grants no timing pass.
+    Other routed checkpoints and GRT without a measured clock tree stay out of scope.
+    """
     b = (name or "").rsplit("/", 1)[-1]
+    if b.startswith("5_1_grt") and clock_cells > 0:
+        return "cts"
     return "placed" if b.startswith("3_place") else "cts" if b.startswith("4_cts") else "other" if b else ""
 
 
@@ -1632,7 +1641,9 @@ def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=Non
     m.update(demand_metrics(D, max_layer or "M5"))
     m.update(clock_entry_metrics(D, ck))
     m.update(grt_metrics(grt_log))
-    st = stage_of_odb(odb)
+    st = stage_of_odb(odb, m.get("clock_cells", 0))
+    if (odb or "").rsplit("/", 1)[-1].startswith("5_1_grt") and st == "cts":
+        m["grt_cts_review"] = True
     if st:
         m["stage"] = st
     return m
