@@ -1,0 +1,37 @@
+{
+  "status": "PREP_NOT_RUN_REVIEW_REQUIRED",
+  "host": "Intel1_only",
+  "kind": "normal",
+  "memory_GB": 4,
+  "threads": 1,
+  "disk_GB": 3,
+  "predecessor": {
+    "build_s": 719.39,
+    "max_RSS_KB": 2133700,
+    "object_tree_bytes": 1003978885,
+    "context_runtime_s": [
+      3.35,
+      3.03
+    ],
+    "context_RSS_KB": [
+      60396,
+      60204
+    ]
+  },
+  "proposal": "One generation and normal serial make, native sources/flags preserved. Optional immutable terminal cache copies only full-dependency-identical objects; no PCH/archive/ELF reuse and no promised speedup; ordinary make may rebuild all. 256 sequential fresh baseline processes (~14min actual-pilot extrapolation), same ELF controls.",
+  "genuine_masks": {
+    "files": 512,
+    "bytes": 139722752
+  },
+  "raw_ROM_records": 16384,
+  "raw_TG4_vectors": 16384,
+  "required_subset_vectors": 11264,
+  "padding_vectors": 5120,
+  "downstream_L6": {
+    "contexts": 16,
+    "raw_vectors": 1024,
+    "required_subset": 704,
+    "padding": 320
+  },
+  "disk_basis": "Old complete obj 1.004GB; conservative fresh object output plus optional copied objects/dependencies, 139.7MB masks, generated/PCH/temp peak. No pilot hardlinks/mutation, no cache forced stamps."
+}

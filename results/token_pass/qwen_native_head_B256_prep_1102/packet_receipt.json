@@ -1,0 +1,14 @@
+{
+  "status": "PREP_NOT_RUN",
+  "packet": "/home/ubuntu/coord/tmp/codex-native-head-B256-packet1",
+  "sha256sums_sha256": "00e3d38a81844e8cbc07367108bf84b500a22ef0368e6f8e9395ea1ca524247e",
+  "guarded_files": 1580,
+  "packet_bytes": 156454947,
+  "baseline_native_source_join": "All29 native sources and native DUT/X-return instantiation byte exact with B2; source byte comparison performed, no compile.",
+  "pilot_gold_join": "Both tile0/639 ROM/raw/H/IB files byte exact with passed B2.",
+  "input_preparation": "256\u00d764 records;11264 useful+5120 padding; all512fullmask SHA/canonicalcrop joins pass. Initial generator invocation failed missing sparse tools module path; corrected to original pinned /home/ubuntu/OpenTallas/tools, no native job.",
+  "syntax_checks": "Python py_compile and bash -n PASS; no build/runtime.",
+  "runtime_capture": "Required actual16384 ROM +16384 RAW, not yet executed",
+  "source_files": 31,
+  "scope": "public native ROM/PART1 independent contexts; no selected ROM_TILE retarget, L6 execution, production clock phase or tail suppression claim"
+}
