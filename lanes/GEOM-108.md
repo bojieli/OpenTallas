@@ -8,3 +8,5 @@
 
 ## CODEX notes
 2026-11-01 20:4x PST CODEX took over: outstanding geometry collection on codex/geom-1101; existing foreign jobs preserved.
+
+2026-11-01 20:4x PST CODEX second LOOK HBM su00_entry_review.png VIEWED +entryledger/hopcheck: scopedPASS-COND paired B113E/SU00W entry moved511.52um south; banks in openstreet,8stages/0addedcycles/max287.28<405. Conditions: actual B113 outputFF→newpin/finalbank hop check required; B001 downstream556>405 remainsFAIL; fullsource/clock event held. Artifact results/geom_review/codex_takeover_1101/hbm_su00_entry.md codex/geom-1101.
