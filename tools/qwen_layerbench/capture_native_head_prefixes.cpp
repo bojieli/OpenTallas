@@ -10,7 +10,9 @@
 #include <iostream>
 #include <memory>
 
-int main(int argc, char** argv) {
+// The grouped archive contains its original main alongside native classes.
+// Wrap only the CRT entry; never modify or relabel the passed model archive.
+extern "C" int __wrap_main(int argc, char** argv) {
     Verilated::debug(0);
     const std::unique_ptr<VerilatedContext> context{new VerilatedContext};
     context->threads(1);
