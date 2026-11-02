@@ -1,0 +1,30 @@
+{
+  "status": "PREP_ONLY_NO_QUERY_NO_MUTATION",
+  "case": "NEW_RECIP_OLD216_METAL_CURRENT_DRST1_SOURCE",
+  "subject_checkpoint": "intel2:/srv/opentallas-scratch2/claude/codex-kv-ahub-1131/kits/recip_native216/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/4_cts.odb",
+  "checkpoint_sha256": "b54439b801a2ea46303a08a9694b7404f1f58c3e366c2a05f92998ac9dc27ddf",
+  "subject_sdc_sha256": "39ae5356ec0e1da69d214f5ad0c0321ca09873c40b6688f891bc8081ab49f012",
+  "before_expected": {
+    "all_signal_bits": 69,
+    "all_signal_rectangles": 70,
+    "target_bterm": "x[31]",
+    "target_bpins": 2,
+    "target_rectangles": [
+      {"layer": "M5", "rect_um": [13.392,215.916,13.416,216.0]},
+      {"layer": "M5", "rect_um": [13.392,215.845,13.416,215.952]}
+    ]
+  },
+  "allowed_future_transform": "In an OWN checkpoint copy only, preserve both exact target M5 boxes in a single FIRM BPin; remove only the now-empty second BPin. Full69/70 layer/rect/direction/net inventory, all cells/routes/clocks/PG unchanged. Reject if actual DB differs from expected grouping or if any extra BPin/rectangle/context mismatch exists.",
+  "required_future_checks": [
+    "Parent authorizes bounded actual4CTS read-only inventory first; not performed by this packet",
+    "Exact source/readset/DRST1/SDC/clock contract and all checkpoint inputs joined for explicit NEW case",
+    "Actual before geometry render and LOOK; correct physical API/units and ordinary pin-access policy",
+    "Future own-copy transform must compare complete before/after inventory, no other source/clock/pin metal changes",
+    "Normal whole-PG birth/install hooks and complete nativeGRT dependency closure retained, no gate bypass",
+    "Normal source/final mapped proof and TT/FF/DRV/DRC/PG/clock gates required",
+    "New native LEF+TT/FF+full clock witness exported together; explicit new parent registration, no graft onto old libraries"
+  ],
+  "current_compact_Q6_case": "Separate; no geometry substitution",
+  "old_published_archive_context": "UNKNOWN",
+  "new_job_authorized": false
+}
