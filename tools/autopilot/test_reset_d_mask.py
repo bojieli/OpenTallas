@@ -56,6 +56,17 @@ class ResetDMaskTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             r.physical_join(self.cells, '\n'.join(lines), self.rows)
 
+    def test_actual_physical_reset_cell_is_not_async(self):
+        dump = self.fixture['physical_dump']
+        lines = []
+        for line in dump.splitlines():
+            f = line.split('\t')
+            if f[0] == 'C' and r.norm(f[8]) == 'u_rst.rst_n$_DFF_PN0_':
+                f[3] = 'DFFHQNx1_ASAP7_75t_R'
+            lines.append('\t'.join(f))
+        with self.assertRaises(ValueError):
+            r.physical_join(self.cells, '\n'.join(lines), self.rows)
+
     def test_wrong_capture_clock(self):
         self.cells[self.capture]['ports']['CLK'] = 'clk'
         self.reject()

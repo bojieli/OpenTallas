@@ -181,6 +181,12 @@ def physical_join(cells, dump, rows):
         return driver, parity
 
     inverse = {name: cid for cid, name in ids.items()}
+    for name in ['u_rst.rst_n$_DFF_PN0_', 'u_rst.sync_q[1]$_DFF_PN0_', 'u_rst.sync_q[0]$_DFF_PN0_']:
+        cid = inverse.get(name)
+        if cid is None or masters[cid] != 'DFFASRHQNx1_ASAP7_75t_R':
+            raise ValueError('actual reset relay cell class changed')
+        if len(clocks[cid]) != 1 or origin(next(iter(clocks[cid]))) != ('p' + str(pin_ids.get('clk_ctrl')), 0):
+            raise ValueError('actual reset relay clock changed')
     for row in rows:
         mask, capture = inverse.get(row['mask']), inverse.get(row['capture'])
         if mask is None or capture is None or 'i' + str(capture) not in loads.get('i' + str(mask), set()):

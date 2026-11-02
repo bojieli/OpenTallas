@@ -6,7 +6,7 @@ The positive is the real current frozen two-file BFQG source, fresh native full 
 
 The check requires all nine literal pins to own exactly one AND2 mask and one distinct named clk_ctrl DFF. The only other mask operand is the actual qualified reset relay. It verifies the three real asynchronous reset-release FFs, same clk_ctrl, literal rst_n assertion, tied-high preset and release seed, exact reset-chain polarity, and no functional release input. It independently follows the real placement's pure BUF/INV input paths, mask-to-own-capture edges, cell truth families, clock root and reset operand origin/polarity. This protects against matching a plausible mapped name while the actual physical cone differs.
 
-Fifteen tests include the native positive and controls for functional mask data, OR logic, a shared capture, an added functional enable, wrong capture clock, functional reset-release data, wrong reset assertion/polarity, shared input use, reset64, lost KEEP, changed source, a missing actual placement edge and an actual physical OR mask. All pass in under0.1s.
+Sixteen tests include the native positive and controls for functional mask data, OR logic, a shared capture, an added functional enable, wrong capture clock, functional reset-release data, wrong reset assertion/polarity, shared input use, reset64, lost KEEP, changed source, a missing actual placement edge and an actual physical OR mask and a substituted non-async physical reset cell. All pass in under0.1s.
 
 ```
 python3 -m unittest discover -s tools/autopilot -p test_reset_d_mask.py -v
