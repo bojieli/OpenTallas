@@ -1,5 +1,4 @@
 """Focused controls for the standalone historical clock-only candidate."""
-import copy
 import importlib.util
 import os
 from pathlib import Path
@@ -10,9 +9,26 @@ spec = importlib.util.spec_from_file_location("mesh_role", P)
 M = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(M)
 ROOT = P.parents[5]
-CAPSULE = Path(os.environ.get("HHP_HISTORICAL_CAPSULE", "/home/ubuntu/coord/tmp/codex-hhp-clock-role-1102/capsule_r4"))
+CAPSULE = None
 INPUTS = ROOT / "results/hhp_ft_roles_1102/inputs"
 PREP = ROOT / "results/hhp_historical_boundary_1102/SOURCE_PREP.json"
+
+
+@pytest.fixture(scope="module", autouse=True)
+def whole_capsule(tmp_path_factory):
+    global CAPSULE
+    if os.environ.get("HHP_HISTORICAL_CAPSULE"):
+        CAPSULE = Path(os.environ["HHP_HISTORICAL_CAPSULE"])
+    else:
+        import tarfile
+        target = tmp_path_factory.mktemp("historical_hhp")
+        archive = ROOT / "results/hhp_historical_boundary_1102/complete_source_capsule_r4.tar.gz"
+        with tarfile.open(archive) as tar:
+            for member in tar.getmembers():
+                assert not Path(member.name).is_absolute() and ".." not in Path(member.name).parts
+                assert not member.issym() and not member.islnk()
+            tar.extractall(target)
+        CAPSULE = target / "capsule_r4"
 
 
 def run(**kw):
