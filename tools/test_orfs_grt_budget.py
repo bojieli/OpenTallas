@@ -16,6 +16,9 @@ class Budget(unittest.TestCase):
    script+='if {[budget {}] ne "-congestion_iterations 30"} {error default}\n'
    script+='set ::env(GRT_OVERFLOW_ITERS) 50\nif {[budget {}] ne "-congestion_iterations 50"} {error requested}\n'
    script+='if {[budget cugr] ne "-congestion_iterations 10"} {error alternate_policy}\n'
+   script+='set ::env(GLOBAL_ROUTE_ARGS) {-congestion_iterations 50 -verbose}\nif {[budget {}] ne ""} {error dedup_explicit}\n'
+   script+='set ::env(GLOBAL_ROUTE_ARGS) {-verbose}\nif {[budget {}] ne "-congestion_iterations 50"} {error keep_default}\n'
+   script+='unset ::env(GLOBAL_ROUTE_ARGS)\n'
    script+='set ::env(GRT_OVERFLOW_ITERS) 0\nif {![catch {budget {}}]} {error invalid_budget}\nputs PASS\n'
    r=subprocess.run(['tclsh'],input=script,capture_output=True,text=True)
    self.assertEqual(r.returncode,0,r.stderr);self.assertIn('PASS',r.stdout);self.assertFalse(r.stderr,r.stderr)

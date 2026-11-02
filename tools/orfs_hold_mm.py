@@ -292,7 +292,13 @@ GRT_BUDGET_BLOCK = '''    # OT_GRT_BUDGET: respect the caller's normal FastRoute
         error "GRT_OVERFLOW_ITERS must be a positive integer: $ot_grt_budget"
       }
     }
-    set cong_iters "-congestion_iterations $ot_grt_budget"'''
+    set cong_iters "-congestion_iterations $ot_grt_budget"
+    # Q15 (FLOW-21 11-01, xfin relief probe ran "-congestion_iterations 30 -congestion_iterations 50"): global_route's
+    # parse_key_args keeps the LAST value, so an explicit budget in GLOBAL_ROUTE_ARGS already wins; drop the default
+    # so the command names the budget once
+    if {[info exists ::env(GLOBAL_ROUTE_ARGS)] && [lsearch -exact $::env(GLOBAL_ROUTE_ARGS) -congestion_iterations] >= 0} {
+      set cong_iters ""
+    }'''
 
 
 def patch_grt_budget(scripts: Path) -> str:
