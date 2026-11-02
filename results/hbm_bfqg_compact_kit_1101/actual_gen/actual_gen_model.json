@@ -1,0 +1,631 @@
+{
+  "status": "ACTUAL_GENERATED_INPUT_GEOMETRY_ONLY",
+  "outline_um": [
+    259.2,
+    220.32
+  ],
+  "pins": 1340,
+  "pin_faces": {
+    "I": 21,
+    "W": 256,
+    "S": 1063
+  },
+  "clocks": [
+    {
+      "bus": "clk",
+      "bit": null,
+      "layer": "M5",
+      "x": 128.664,
+      "y": 146.88,
+      "face": "I",
+      "entry": [
+        128.664,
+        146.88
+      ]
+    },
+    {
+      "bus": "clk_n",
+      "bit": null,
+      "layer": "M5",
+      "x": 130.392,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        130.392,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_s",
+      "bit": null,
+      "layer": "M5",
+      "x": 130.104,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        130.104,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_ctrl",
+      "bit": null,
+      "layer": "M5",
+      "x": 128.76,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        128.76,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_m0",
+      "bit": null,
+      "layer": "M5",
+      "x": 129.624,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        129.624,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_m1",
+      "bit": null,
+      "layer": "M5",
+      "x": 129.336,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        129.336,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_m2",
+      "bit": null,
+      "layer": "M5",
+      "x": 129.816,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        129.816,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_m3",
+      "bit": null,
+      "layer": "M5",
+      "x": 129.96,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        129.96,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_m4",
+      "bit": null,
+      "layer": "M5",
+      "x": 129.048,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        129.048,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_m5",
+      "bit": null,
+      "layer": "M5",
+      "x": 128.904,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        128.904,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_m6",
+      "bit": null,
+      "layer": "M5",
+      "x": 128.616,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        128.616,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_m7",
+      "bit": null,
+      "layer": "M5",
+      "x": 128.472,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        128.472,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_l0",
+      "bit": null,
+      "layer": "M5",
+      "x": 130.68,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        130.68,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_l1",
+      "bit": null,
+      "layer": "M5",
+      "x": 130.968,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        130.968,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_l2",
+      "bit": null,
+      "layer": "M5",
+      "x": 131.16,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        131.16,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_l3",
+      "bit": null,
+      "layer": "M5",
+      "x": 131.304,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        131.304,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_l4",
+      "bit": null,
+      "layer": "M5",
+      "x": 131.448,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        131.448,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_l5",
+      "bit": null,
+      "layer": "M5",
+      "x": 131.736,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        131.736,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_l6",
+      "bit": null,
+      "layer": "M5",
+      "x": 132.024,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        132.024,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    },
+    {
+      "bus": "clk_l7",
+      "bit": null,
+      "layer": "M5",
+      "x": 132.312,
+      "y": 0.24,
+      "face": "I",
+      "entry": [
+        132.312,
+        0.24
+      ],
+      "w": 0.048,
+      "h": 0.48,
+      "declared_native_shape": true
+    }
+  ],
+  "macros": [
+    {
+      "instance": "g_t\\[0\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin": [
+        17.28,
+        17.292
+      ],
+      "size": [
+        94.824,
+        41.064
+      ],
+      "orient": "R0",
+      "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+    },
+    {
+      "instance": "g_t\\[1\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin": [
+        17.28,
+        67.02
+      ],
+      "size": [
+        94.824,
+        41.064
+      ],
+      "orient": "R0",
+      "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+    },
+    {
+      "instance": "g_t\\[2\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin": [
+        17.28,
+        118.956
+      ],
+      "size": [
+        94.824,
+        41.064
+      ],
+      "orient": "R0",
+      "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+    },
+    {
+      "instance": "g_t\\[3\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin": [
+        17.28,
+        168.684
+      ],
+      "size": [
+        94.824,
+        41.064
+      ],
+      "orient": "R0",
+      "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+    },
+    {
+      "instance": "g_t\\[4\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin": [
+        147.096,
+        17.292
+      ],
+      "size": [
+        94.824,
+        41.064
+      ],
+      "orient": "R0",
+      "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+    },
+    {
+      "instance": "g_t\\[5\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin": [
+        147.096,
+        67.02
+      ],
+      "size": [
+        94.824,
+        41.064
+      ],
+      "orient": "R0",
+      "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+    },
+    {
+      "instance": "g_t\\[6\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin": [
+        147.096,
+        118.956
+      ],
+      "size": [
+        94.824,
+        41.064
+      ],
+      "orient": "MY",
+      "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+    },
+    {
+      "instance": "g_t\\[7\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin": [
+        147.096,
+        168.684
+      ],
+      "size": [
+        94.824,
+        41.064
+      ],
+      "orient": "MY",
+      "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+    }
+  ],
+  "freeze": {
+    "schema": "opentallas.hbm_arch.core_freeze.v1",
+    "view": "ot_hgi_sm_xload_cl2_bfqg@69d23342c0e5",
+    "module": "ot_hgi_sm_xload_cl2_bfqg",
+    "design": "ot_hgi_sm_xload_cl2_bfqg",
+    "rtl_top": "ot_hgi_sm_xload_cl2_bfqg",
+    "recipe_key": "ot_hgi_sm_xload_cl2_bfqg",
+    "recipe_sha256": "26595fd503d966b05a8b1bdaaa42cd571da9e45f0fe7264ed2c065501ca17959",
+    "canonical_type": null,
+    "wrapper": null,
+    "outline_um": [
+      259.2,
+      220.32
+    ],
+    "plan": "/srv/opentallas-scratch2/claude/codex-hbm-bfqg-compact-kit-1101/plan/die_plan.json",
+    "plan_sha256": "efe8899ab040235a37533e028af5ec1c7972e5673fb9aa78c59ca59531094eef",
+    "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+    "pins_sha256": "69d23342c0e51fa59d6e0062f13c12160dbdad680fd500378281dbf6fc92424e",
+    "pins_canon_sha256": "8106d0693a0f7396a987aace6b466ce916994ca0841b18b711310247a02a1a90",
+    "pins": 1340,
+    "clocks": [
+      "clk",
+      "clk_n",
+      "clk_s",
+      "clk_ctrl",
+      "clk_m0",
+      "clk_m1",
+      "clk_m2",
+      "clk_m3",
+      "clk_m4",
+      "clk_m5",
+      "clk_m6",
+      "clk_m7",
+      "clk_l0",
+      "clk_l1",
+      "clk_l2",
+      "clk_l3",
+      "clk_l4",
+      "clk_l5",
+      "clk_l6",
+      "clk_l7"
+    ],
+    "resets": [
+      "rst_n"
+    ],
+    "period_ps": 833.0,
+    "common_latency_ps": 250.0,
+    "corner": "TC",
+    "plan_common_latency_ps": 250.0,
+    "core_clock_contract": null,
+    "orfs_var_overrides": [],
+    "sdc_lint": "PASS (gen)",
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "face_shell": null,
+    "kit_hash": "216c9e4fa8556f69",
+    "source_profile": {
+      "source_commit": "717d8877ca38e964268ccabe9b3c11a35fda3b7c",
+      "family": "BFQG_CURRENT_NATIVE",
+      "physical_event": "K41_COMPACT_693e528b8",
+      "release_eligible": false,
+      "qualification": "SOURCE_PREP_UNROUTED",
+      "added_face_cycles": 0,
+      "endpoint_contract": {
+        "kind": "INTERNAL_CORE",
+        "parent_partition": "q_hub*",
+        "partition_rule": "R2_INTERNAL_TIMED_IN_PARTITION"
+      },
+      "clock_ports": [
+        "clk",
+        "clk_n",
+        "clk_s",
+        "clk_ctrl",
+        "clk_m0",
+        "clk_m1",
+        "clk_m2",
+        "clk_m3",
+        "clk_m4",
+        "clk_m5",
+        "clk_m6",
+        "clk_m7",
+        "clk_l0",
+        "clk_l1",
+        "clk_l2",
+        "clk_l3",
+        "clk_l4",
+        "clk_l5",
+        "clk_l6",
+        "clk_l7"
+      ],
+      "reset_ports": [
+        "rst_n"
+      ],
+      "source_manifest": {
+        "results/hbm_bfqg_native_source_1520/rtl/ot_hgi_sm_xload_bfqg.sv": "5317524cf8e6d9644e2fb9a04d6aff16fd338f95beb692bf13c67014dca315b5",
+        "results/hbm_bfqg_native_source_1520/rtl/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "source_caller": {
+        "host": "epyc2",
+        "file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv",
+        "instance": "u_u_xq_Q_p0_bfq0",
+        "master": "ot_hgi_sm_xload_cl2_bfqg",
+        "params": {}
+      },
+      "source_readset": "results/hbm_bfqg_native_source_1520/readset.json",
+      "pin_placement_policy": "DECLARED_CLOCK_RESET_POINTS",
+      "native_capacity": {
+        "macros": {
+          "ot_sram_1r1w_128x256_m1_r2c2": 8
+        },
+        "external_face_shell": false
+      },
+      "clock_stage": "HOLD_CTS: common-domain multi-port stage required"
+    },
+    "source_commit": "717d8877ca38e964268ccabe9b3c11a35fda3b7c",
+    "plan_external": true,
+    "clock_stage_hold": {
+      "ports": [
+        "clk",
+        "clk_n",
+        "clk_s",
+        "clk_ctrl",
+        "clk_m0",
+        "clk_m1",
+        "clk_m2",
+        "clk_m3",
+        "clk_m4",
+        "clk_m5",
+        "clk_m6",
+        "clk_m7",
+        "clk_l0",
+        "clk_l1",
+        "clk_l2",
+        "clk_l3",
+        "clk_l4",
+        "clk_l5",
+        "clk_l6",
+        "clk_l7"
+      ],
+      "reason": "reviewed common-domain multi-port stage required"
+    },
+    "flow_defaults": {
+      "rc_cal": true,
+      "f1": {
+        "io_tt_ps": 250.0,
+        "io_ff_ps": 202.5,
+        "mechanism": "two-mode GRT (scene BC vclk_ff.sdc FF hold, scene tc TT setup) + gates",
+        "basis": "FF_TT_INSERTION_RATIO 0.81 x TT"
+      },
+      "f4": true,
+      "cts_setup_tt": {
+        "previous_post_cts": "/work/f4_chain_leaf.tcl",
+        "repair": "setup only (scene tc / vclk OT_VCLK_TT)",
+        "hold": "GRT step only"
+      },
+      "timing_modes": {
+        "mode": "two-mode tc setup / BC hold",
+        "tt": 250.0,
+        "ff": 202.5
+      },
+      "rule": "FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)"
+    },
+    "clock_entry_source": {
+      "policy": "DECLARED_CLOCK_RESET_POINTS",
+      "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__259.2x220.32__k41c.json",
+      "pins_sha256": "69d23342c0e51fa59d6e0062f13c12160dbdad680fd500378281dbf6fc92424e",
+      "ports": [
+        "clk",
+        "clk_ctrl",
+        "clk_l0",
+        "clk_l1",
+        "clk_l2",
+        "clk_l3",
+        "clk_l4",
+        "clk_l5",
+        "clk_l6",
+        "clk_l7",
+        "clk_m0",
+        "clk_m1",
+        "clk_m2",
+        "clk_m3",
+        "clk_m4",
+        "clk_m5",
+        "clk_m6",
+        "clk_m7",
+        "clk_n",
+        "clk_s",
+        "rst_n"
+      ]
+    },
+    "reset_contract": {
+      "edges": 64,
+      "module": "ot_hgi_sm_xload_cl2_bfqg",
+      "die": "hbm",
+      "contract": "/srv/opentallas-scratch2/claude/wt/codex-hbm-bfqg-compact-kit-1101/physical/die_plan/hbm/reset_contract.json",
+      "contract_sha256": "df3508496db4614c7f07b7e13e9f557ab5263edbbbad7807e93ea9b2584c0418",
+      "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+    }
+  },
+  "placement": "NOT RUN",
+  "clock_tree": "NOT RUN",
+  "PDN": "GEN_RECIPE_ONLY_NO_PHYSICAL_CLAIM",
+  "source_scope": "exact frozen2files/native no external shell, previoussource8650EQ/reset4 component evidence; newphysical proof not yet run",
+  "parent_scope": "approved693e/planefe8899a/pin69d23342; snapped16instance tap/data changes still need actualparenttiming"
+}
