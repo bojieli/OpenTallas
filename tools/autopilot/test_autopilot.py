@@ -109,6 +109,24 @@ class TestAdmissionBundle(unittest.TestCase):
             self.assertIn("HELPER_PASS",result.stdout)
             self.assertIn("CHAIN_PASS",result.stdout)
 
+    def test_shared_clock_family_is_pinned_inside_standalone_bundle(self):
+        import autopilot
+        ap=importlib.reload(autopilot);ap.DRY=False
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);tools=root/"repo/tools/die_plan";tools.mkdir(parents=True)
+            common=root/"repo/physical/common_flow";common.mkdir(parents=True)
+            chain=root/"chain.py";chain.write_text("# chain")
+            (tools/"signoff.py").write_text("# checker")
+            family=common/"clock_family.tcl";family.write_text("# physical family1")
+            first=ap.stage_admission_tools(chain,tools,root/"scratch")
+            old=Path(first["dir"])/"die_plan/clock_family.tcl"
+            self.assertEqual(old.read_bytes(),family.read_bytes())
+            family.write_text("# physical family2")
+            second=ap.stage_admission_tools(chain,tools,root/"scratch")
+            self.assertNotEqual(first["dir"],second["dir"])
+            self.assertEqual(old.read_text(),"# physical family1")
+            self.assertEqual((Path(second["dir"])/"die_plan/clock_family.tcl").read_text(),"# physical family2")
+
     def test_source_changes_create_new_immutable_own_scratch_bundle(self):
         import autopilot
         ap = importlib.reload(autopilot)
