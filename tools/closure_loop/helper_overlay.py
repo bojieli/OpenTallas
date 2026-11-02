@@ -194,6 +194,8 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 RULE_COMMITS = {
     "5d01b8aa74dd7564d63a3335fefcfc4bdc9828f2": dict(kind="neutral", rule="final-native-guide-export", paths=("tools/orfs_hold_mm.py",),
         what="native guide serialization after successful final POST hook; DB routing, PG, timing and constraints unchanged"),
+    "d5fe8b3a68c39ed9298e5131ce2877cea54610f2": dict(kind="neutral", rule="bound-singleton-start-placement", paths=("tools/die_plan/landing_placement.tcl",),
+        what="future placement resolves sole declared scalar[0] START; existing geometry/timing/clock acceptance gates unchanged"),
     # Intermediate speculative power omission changes no final6 power/IR or saved gate verdict.
     "033440178fb4ef77d3f3409c705a9a2cebbb9678": dict(kind="neutral", rule="intermediate-metrics-power", paths=("tools/orfs_hold_mm.py",),
         what="stages1-5 metrics only; final6 power/IR and constraints unchanged; configured GRT budget preserved"),
