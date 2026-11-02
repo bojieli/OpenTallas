@@ -1,0 +1,7 @@
+# Finite ft6stage2 clock/data feasible-region diagnosis
+
+Normal4GB/1CPU Intel2 source-only unitoth-ubuntu-1278647-1793636443 terminal0. This selects no target layout and runs no capacity/clock topology/physical stage. It frees only the existing515ft6stage2 FF footprints, holding every other native323283-body pose including the corrected T51 FT2/DATA model,137673TAPs and52otherbands. Exact master/orientation supply-phase rows remain required.
+
+For every stage2 FF, its complete first-register data/control incident endpoints define an exact405um L1 region. Intersect that region with the73existing current-source mission tap150um diamonds and actual legal row/site/free-body footprints. All515regions are nonempty; minimum340188legal start sites, max independent nearest-site jog17.496um. All170current stage2 clock-radius failures therefore have a geometric contact-repair avenue using existing nodes/ports/cycles. This does not prove a simultaneous515FF allocation, fullclockload, fullgraph/cuts or physical result. Candidate start sites/individual witnesses are configuration space, not simultaneous capacity.
+
+The previous corrected joint model149342075 remains the sole selected model and its60new/132resolved stage2 radius violations are preserved. Next source-only step can jointly select515sites with exact existing tap membership/load caps and complete405/occupancy guards; no extra FF or cycle inferred. No GEN/DB edits/CAD, tap/clocknode adoption, oldnative qualification or target relaxation.
