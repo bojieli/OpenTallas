@@ -1,0 +1,1614 @@
+[
+ {
+  "variant": "A",
+  "scope": "STATIC current graph LP; no occupancy/PG/site/clock or source-event qualification",
+  "selected_existing_ff": 80,
+  "shared_reset101_movable": true,
+  "all19_captures_movable": true,
+  "margin_capture_movable": true,
+  "exact_touching_pairs": 206,
+  "target_touching_radius_um": 391.0,
+  "success": true,
+  "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "landing_dx_um": 172.8,
+  "landing_dy_um": -146.88,
+  "targets": [
+   {
+    "name": "u_bound.u_bin_i_host_die_rst_n/eq$_DFF_PN0_",
+    "old": [
+     1360.368,
+     308.205
+    ],
+    "new": [
+     1411.52,
+     308.2049999999999
+    ],
+    "distance_um": 51.1520000000001
+   },
+   {
+    "name": "u_bound.u_bin_i_host_hbm_rst_n/eq$_DFF_PN0_",
+    "old": [
+     1360.422,
+     317.385
+    ],
+    "new": [
+     1408.82,
+     318.19499999999994
+    ],
+    "distance_um": 49.207999999999856
+   },
+   {
+    "name": "u_bound.u_bin_i_idsrc_Q_y/eq$_DFF_PN0_",
+    "old": [
+     1263.708,
+     366.525
+    ],
+    "new": [
+     1426.424,
+     438.8850000000002
+    ],
+    "distance_um": 235.07600000000014
+   },
+   {
+    "name": "u_bound.u_bin_i_kvpc_Q_N_pc__fo/q$_DFF_P_",
+    "old": [
+     950.616,
+     359.505
+    ],
+    "new": [
+     950.616,
+     314.779
+    ],
+    "distance_um": 44.726
+   },
+   {
+    "name": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/eq$_DFF_PN0_",
+    "old": [
+     1265.274,
+     370.575
+    ],
+    "new": [
+     1569.3619999999999,
+     432.56700000000023
+    ],
+    "distance_um": 366.0800000000002
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_",
+    "old": [
+     1278.99,
+     369.495
+    ],
+    "new": [
+     1628.8699999999997,
+     492.07500000000005
+    ],
+    "distance_um": 472.4599999999997
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[0\\]$_DFF_P_",
+    "old": [
+     1484.109,
+     807.165
+    ],
+    "new": [
+     1484.109,
+     670.8820000000001
+    ],
+    "distance_um": 136.2829999999999
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[10\\]$_DFF_P_",
+    "old": [
+     1485.999,
+     807.705
+    ],
+    "new": [
+     1485.999,
+     670.0720000000001
+    ],
+    "distance_um": 137.63299999999992
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[11\\]$_DFF_P_",
+    "old": [
+     1488.537,
+     807.435
+    ],
+    "new": [
+     1488.537,
+     669.9100000000001
+    ],
+    "distance_um": 137.52499999999986
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[12\\]$_DFF_P_",
+    "old": [
+     1493.613,
+     807.165
+    ],
+    "new": [
+     1493.613,
+     672.2860000000001
+    ],
+    "distance_um": 134.8789999999999
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[13\\]$_DFF_P_",
+    "old": [
+     1495.665,
+     807.435
+    ],
+    "new": [
+     1495.665,
+     671.152
+    ],
+    "distance_um": 136.2829999999999
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[14\\]$_DFF_P_",
+    "old": [
+     1497.879,
+     807.165
+    ],
+    "new": [
+     1497.879,
+     670.6659999999999
+    ],
+    "distance_um": 136.49900000000002
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[15\\]$_DFF_P_",
+    "old": [
+     1500.633,
+     807.165
+    ],
+    "new": [
+     1500.633,
+     670.72
+    ],
+    "distance_um": 136.44499999999994
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[16\\]$_DFF_P_",
+    "old": [
+     1420.497,
+     807.435
+    ],
+    "new": [
+     1420.497,
+     672.5020000000002
+    ],
+    "distance_um": 134.93299999999977
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[17\\]$_DFF_P_",
+    "old": [
+     1421.7930000000001,
+     807.435
+    ],
+    "new": [
+     1421.7930000000001,
+     671.0980000000002
+    ],
+    "distance_um": 136.33699999999976
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[18\\]$_DFF_P_",
+    "old": [
+     1424.601,
+     807.435
+    ],
+    "new": [
+     1424.601,
+     671.2060000000001
+    ],
+    "distance_um": 136.22899999999981
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[19\\]$_DFF_P_",
+    "old": [
+     1429.461,
+     807.435
+    ],
+    "new": [
+     1429.461,
+     673.366
+    ],
+    "distance_um": 134.06899999999996
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[1\\]$_DFF_P_",
+    "old": [
+     1431.135,
+     807.705
+    ],
+    "new": [
+     1431.135,
+     672.3400000000001
+    ],
+    "distance_um": 135.3649999999999
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[20\\]$_DFF_P_",
+    "old": [
+     1431.729,
+     807.435
+    ],
+    "new": [
+     1431.729,
+     670.2340000000002
+    ],
+    "distance_um": 137.2009999999998
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[21\\]$_DFF_P_",
+    "old": [
+     1434.213,
+     807.435
+    ],
+    "new": [
+     1434.213,
+     670.018
+    ],
+    "distance_um": 137.41699999999992
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[22\\]$_DFF_P_",
+    "old": [
+     1438.479,
+     807.705
+    ],
+    "new": [
+     1438.479,
+     671.5840000000001
+    ],
+    "distance_um": 136.12099999999998
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[23\\]$_DFF_P_",
+    "old": [
+     1440.693,
+     807.435
+    ],
+    "new": [
+     1440.693,
+     671.098
+    ],
+    "distance_um": 136.337
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[24\\]$_DFF_P_",
+    "old": [
+     1443.501,
+     807.435
+    ],
+    "new": [
+     1443.501,
+     671.2060000000001
+    ],
+    "distance_um": 136.22899999999981
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[25\\]$_DFF_P_",
+    "old": [
+     1445.769,
+     807.435
+    ],
+    "new": [
+     1445.769,
+     670.7740000000001
+    ],
+    "distance_um": 136.66099999999983
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[26\\]$_DFF_P_",
+    "old": [
+     1450.467,
+     807.435
+    ],
+    "new": [
+     1450.467,
+     672.7720000000002
+    ],
+    "distance_um": 134.66299999999978
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[27\\]$_DFF_P_",
+    "old": [
+     1452.627,
+     807.435
+    ],
+    "new": [
+     1452.627,
+     672.232
+    ],
+    "distance_um": 135.20299999999997
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[28\\]$_DFF_P_",
+    "old": [
+     1454.787,
+     807.435
+    ],
+    "new": [
+     1454.787,
+     671.692
+    ],
+    "distance_um": 135.74299999999994
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[29\\]$_DFF_P_",
+    "old": [
+     1457.271,
+     807.705
+    ],
+    "new": [
+     1457.271,
+     671.4760000000001
+    ],
+    "distance_um": 136.22899999999993
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[2\\]$_DFF_P_",
+    "old": [
+     1459.917,
+     807.435
+    ],
+    "new": [
+     1459.917,
+     671.422
+    ],
+    "distance_um": 136.01299999999992
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[30\\]$_DFF_P_",
+    "old": [
+     1462.2930000000001,
+     807.435
+    ],
+    "new": [
+     1462.2930000000001,
+     671.0980000000002
+    ],
+    "distance_um": 136.33699999999976
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[31\\]$_DFF_P_",
+    "old": [
+     1464.453,
+     807.435
+    ],
+    "new": [
+     1464.453,
+     670.558
+    ],
+    "distance_um": 136.87699999999995
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[32\\]$_DFF_P_",
+    "old": [
+     1467.747,
+     807.435
+    ],
+    "new": [
+     1467.747,
+     671.152
+    ],
+    "distance_um": 136.2829999999999
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[3\\]$_DFF_P_",
+    "old": [
+     1472.985,
+     807.435
+    ],
+    "new": [
+     1472.985,
+     670.99
+    ],
+    "distance_um": 136.44499999999994
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[4\\]$_DFF_P_",
+    "old": [
+     1475.253,
+     807.435
+    ],
+    "new": [
+     1475.253,
+     670.558
+    ],
+    "distance_um": 136.87699999999995
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[5\\]$_DFF_P_",
+    "old": [
+     1477.413,
+     807.435
+    ],
+    "new": [
+     1477.413,
+     670.018
+    ],
+    "distance_um": 137.41699999999992
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[6\\]$_DFF_P_",
+    "old": [
+     1483.299,
+     807.705
+    ],
+    "new": [
+     1483.299,
+     673.204
+    ],
+    "distance_um": 134.5010000000001
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[7\\]$_DFF_P_",
+    "old": [
+     1483.407,
+     807.975
+    ],
+    "new": [
+     1483.407,
+     670.6120000000001
+    ],
+    "distance_um": 137.36299999999994
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[8\\]$_DFF_P_",
+    "old": [
+     1485.351,
+     807.435
+    ],
+    "new": [
+     1485.351,
+     669.8560000000002
+    ],
+    "distance_um": 137.57899999999972
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[9\\]$_DFF_P_",
+    "old": [
+     1488.807,
+     807.705
+    ],
+    "new": [
+     1488.807,
+     670.6120000000001
+    ],
+    "distance_um": 137.09299999999996
+   },
+   {
+    "name": "u_bound.u_bout_o_fch_hroot_Q_q/q$_DFF_P_",
+    "old": [
+     1894.5900000000001,
+     232.875
+    ],
+    "new": [
+     1852.172,
+     232.875
+    ],
+    "distance_um": 42.41800000000012
+   },
+   {
+    "name": "u_bound.u_u_efault.fault$_DFF_PN0_",
+    "old": [
+     1265.436,
+     307.935
+    ],
+    "new": [
+     1283.6209999999999,
+     446.32399999999984
+    ],
+    "distance_um": 156.57399999999978
+   },
+   {
+    "name": "u_bound.u_u_fch.q$_DFF_P_",
+    "old": [
+     1265.7060000000001,
+     233.685
+    ],
+    "new": [
+     1461.172,
+     232.875
+    ],
+    "distance_um": 196.2759999999999
+   },
+   {
+    "name": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[1044\\]$_DFF_P_",
+    "old": [
+     1574.316,
+     567.675
+    ],
+    "new": [
+     1574.316,
+     553.675
+    ],
+    "distance_um": 14.0
+   },
+   {
+    "name": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[804\\]$_DFF_P_",
+    "old": [
+     1548.0720000000001,
+     584.685
+    ],
+    "new": [
+     1548.0720000000001,
+     534.6670000000001
+    ],
+    "distance_um": 50.0179999999998
+   },
+   {
+    "name": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[907\\]$_DFF_P_",
+    "old": [
+     1556.604,
+     578.205
+    ],
+    "new": [
+     1556.604,
+     539.635
+    ],
+    "distance_um": 38.57000000000005
+   },
+   {
+    "name": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[941\\]$_DFF_P_",
+    "old": [
+     1561.248,
+     575.775
+    ],
+    "new": [
+     1561.248,
+     544.171
+    ],
+    "distance_um": 31.603999999999928
+   },
+   {
+    "name": "u_bound.u_bout_o_kvs_hroot_Q_o_pc/q\\[776\\]$_DFF_P_",
+    "old": [
+     1893.78,
+     6.345000000000001
+    ],
+    "new": [
+     1888.0,
+     12.0
+    ],
+    "distance_um": 11.434999999999972
+   },
+   {
+    "name": "u_bound.u_ft_ft7_o_0/q\\[23\\]$_DFF_P_",
+    "old": [
+     908.8199999999999,
+     340.33500000000004
+    ],
+    "new": [
+     908.8199999999999,
+     336.05500000000006
+    ],
+    "distance_um": 4.279999999999973
+   },
+   {
+    "name": "u_bound.u_ft_ft9_o_0/q\\[1\\]$_DFF_P_",
+    "old": [
+     910.98,
+     344.385
+    ],
+    "new": [
+     910.98,
+     340.91499999999996
+    ],
+    "distance_um": 3.4700000000000273
+   },
+   {
+    "name": "u_bound.u_ft_ft9_o_0/q\\[20\\]$_DFF_P_",
+    "old": [
+     913.248,
+     343.03499999999997
+    ],
+    "new": [
+     913.248,
+     340.48300000000006
+    ],
+    "distance_um": 2.5519999999999072
+   },
+   {
+    "name": "u_bound.u_ft_ft9_o_0/q\\[21\\]$_DFF_P_",
+    "old": [
+     913.3019999999999,
+     345.195
+    ],
+    "new": [
+     913.3019999999999,
+     337.837
+    ],
+    "distance_um": 7.358000000000004
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[33\\]$_DFF_P_",
+    "old": [
+     1610.82,
+     711.045
+    ],
+    "new": [
+     1610.3199999999997,
+     711.045
+    ],
+    "distance_um": 0.5000000000002274
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[35\\]$_DFF_P_",
+    "old": [
+     1611.9,
+     711.315
+    ],
+    "new": [
+     1610.5359999999996,
+     711.315
+    ],
+    "distance_um": 1.3640000000004875
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[37\\]$_DFF_P_",
+    "old": [
+     1609.74,
+     711.585
+    ],
+    "new": [
+     1609.74,
+     710.8689999999999
+    ],
+    "distance_um": 0.7160000000001219
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[57\\]$_DFF_P_",
+    "old": [
+     1612.98,
+     711.045
+    ],
+    "new": [
+     1612.3180000000002,
+     711.045
+    ],
+    "distance_um": 0.6619999999998072
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[59\\]$_DFF_P_",
+    "old": [
+     1614.276,
+     711.315
+    ],
+    "new": [
+     1608.6460000000002,
+     711.315
+    ],
+    "distance_um": 5.629999999999882
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[60\\]$_DFF_P_",
+    "old": [
+     1612.386,
+     711.585
+    ],
+    "new": [
+     1609.4560000000001,
+     711.585
+    ],
+    "distance_um": 2.9299999999998363
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[84\\]$_DFF_P_",
+    "old": [
+     1614.924,
+     711.585
+    ],
+    "new": [
+     1614.924,
+     707.4670000000001
+    ],
+    "distance_um": 4.117999999999938
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[86\\]$_DFF_P_",
+    "old": [
+     1616.166,
+     711.585
+    ],
+    "new": [
+     1610.3739999999998,
+     711.585
+    ],
+    "distance_um": 5.792000000000144
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[88\\]$_DFF_P_",
+    "old": [
+     1614.708,
+     711.855
+    ],
+    "new": [
+     1614.708,
+     707.3049999999998
+    ],
+    "distance_um": 4.550000000000182
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[8\\]$_DFF_P_",
+    "old": [
+     1611.9,
+     711.855
+    ],
+    "new": [
+     1611.562,
+     711.855
+    ],
+    "distance_um": 0.3380000000001928
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[91\\]$_DFF_P_",
+    "old": [
+     1610.982,
+     712.665
+    ],
+    "new": [
+     1610.982,
+     710.3829999999998
+    ],
+    "distance_um": 2.282000000000153
+   },
+   {
+    "name": "u_bound.u_kc.hr_q$_DFF_P_",
+    "old": [
+     1253.367,
+     318.735
+    ],
+    "new": [
+     1263.29,
+     318.46500000000015
+    ],
+    "distance_um": 10.19299999999987
+   },
+   {
+    "name": "u_bound.u_kc.rs_q$_DFF_P_",
+    "old": [
+     1464.669,
+     386.505
+    ],
+    "new": [
+     1464.669,
+     379.174
+    ],
+    "distance_um": 7.331000000000017
+   },
+   {
+    "name": "u_bound.u_rrl_101/q$_DFF_P_",
+    "old": [
+     984.4200000000001,
+     492.075
+    ],
+    "new": [
+     1237.8699999999997,
+     492.075
+    ],
+    "distance_um": 253.4499999999996
+   }
+  ],
+  "metrics": {
+   "r2r_memory_instances": 0,
+   "r2r_incomplete_macros": [],
+   "r2r_max": 391.0,
+   "r2r_captures_gt405": 0,
+   "r2r_captures": 22408,
+   "comb_loop_cells": 0,
+   "r2r_worst": "u_bound.u_rrl_101/q$_DFF_P_ -> u_bound.u_bin_i_kvs_ctl_o_hroot_Q/eq$_DFF_PN0_"
+  },
+  "remaining_bad": []
+ },
+ {
+  "variant": "B",
+  "scope": "STATIC current graph LP; no occupancy/PG/site/clock or source-event qualification",
+  "selected_existing_ff": 80,
+  "shared_reset101_movable": true,
+  "all19_captures_movable": true,
+  "margin_capture_movable": true,
+  "exact_touching_pairs": 206,
+  "target_touching_radius_um": 391.0,
+  "success": true,
+  "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "landing_dx_um": 181.44,
+  "landing_dy_um": -151.2,
+  "targets": [
+   {
+    "name": "u_bound.u_bin_i_host_die_rst_n/eq$_DFF_PN0_",
+    "old": [
+     1360.368,
+     308.205
+    ],
+    "new": [
+     1411.52,
+     308.2049999999999
+    ],
+    "distance_um": 51.1520000000001
+   },
+   {
+    "name": "u_bound.u_bin_i_host_hbm_rst_n/eq$_DFF_PN0_",
+    "old": [
+     1360.422,
+     317.385
+    ],
+    "new": [
+     1408.82,
+     318.19499999999994
+    ],
+    "distance_um": 49.207999999999856
+   },
+   {
+    "name": "u_bound.u_bin_i_idsrc_Q_y/eq$_DFF_PN0_",
+    "old": [
+     1263.708,
+     366.525
+    ],
+    "new": [
+     1426.424,
+     438.8850000000002
+    ],
+    "distance_um": 235.07600000000014
+   },
+   {
+    "name": "u_bound.u_bin_i_kvpc_Q_N_pc__fo/q$_DFF_P_",
+    "old": [
+     950.616,
+     359.505
+    ],
+    "new": [
+     950.616,
+     306.1389999999999
+    ],
+    "distance_um": 53.3660000000001
+   },
+   {
+    "name": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/eq$_DFF_PN0_",
+    "old": [
+     1265.274,
+     370.575
+    ],
+    "new": [
+     1567.202,
+     434.7270000000001
+    ],
+    "distance_um": 366.0800000000002
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_",
+    "old": [
+     1278.99,
+     369.495
+    ],
+    "new": [
+     1624.55,
+     492.07500000000005
+    ],
+    "distance_um": 468.14
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[0\\]$_DFF_P_",
+    "old": [
+     1484.109,
+     807.165
+    ],
+    "new": [
+     1484.109,
+     666.5619999999999
+    ],
+    "distance_um": 140.60300000000007
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[10\\]$_DFF_P_",
+    "old": [
+     1485.999,
+     807.705
+    ],
+    "new": [
+     1485.999,
+     665.752
+    ],
+    "distance_um": 141.9530000000001
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[11\\]$_DFF_P_",
+    "old": [
+     1488.537,
+     807.435
+    ],
+    "new": [
+     1488.537,
+     665.5899999999999
+    ],
+    "distance_um": 141.84500000000003
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[12\\]$_DFF_P_",
+    "old": [
+     1493.613,
+     807.165
+    ],
+    "new": [
+     1493.613,
+     667.9659999999999
+    ],
+    "distance_um": 139.19900000000007
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[13\\]$_DFF_P_",
+    "old": [
+     1495.665,
+     807.435
+    ],
+    "new": [
+     1495.665,
+     666.8319999999999
+    ],
+    "distance_um": 140.60300000000007
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[14\\]$_DFF_P_",
+    "old": [
+     1497.879,
+     807.165
+    ],
+    "new": [
+     1497.879,
+     666.3459999999998
+    ],
+    "distance_um": 140.8190000000002
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[15\\]$_DFF_P_",
+    "old": [
+     1500.633,
+     807.165
+    ],
+    "new": [
+     1500.633,
+     666.3999999999999
+    ],
+    "distance_um": 140.7650000000001
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[16\\]$_DFF_P_",
+    "old": [
+     1420.497,
+     807.435
+    ],
+    "new": [
+     1420.497,
+     668.1820000000002
+    ],
+    "distance_um": 139.2529999999997
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[17\\]$_DFF_P_",
+    "old": [
+     1421.7930000000001,
+     807.435
+    ],
+    "new": [
+     1421.7930000000001,
+     666.7780000000002
+    ],
+    "distance_um": 140.6569999999997
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[18\\]$_DFF_P_",
+    "old": [
+     1424.601,
+     807.435
+    ],
+    "new": [
+     1424.601,
+     666.8860000000002
+    ],
+    "distance_um": 140.54899999999975
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[19\\]$_DFF_P_",
+    "old": [
+     1429.461,
+     807.435
+    ],
+    "new": [
+     1429.461,
+     669.046
+    ],
+    "distance_um": 138.3889999999999
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[1\\]$_DFF_P_",
+    "old": [
+     1431.135,
+     807.705
+    ],
+    "new": [
+     1431.135,
+     668.0200000000002
+    ],
+    "distance_um": 139.68499999999983
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[20\\]$_DFF_P_",
+    "old": [
+     1431.729,
+     807.435
+    ],
+    "new": [
+     1431.729,
+     665.9140000000002
+    ],
+    "distance_um": 141.52099999999973
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[21\\]$_DFF_P_",
+    "old": [
+     1434.213,
+     807.435
+    ],
+    "new": [
+     1434.213,
+     665.6980000000001
+    ],
+    "distance_um": 141.73699999999985
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[22\\]$_DFF_P_",
+    "old": [
+     1438.479,
+     807.705
+    ],
+    "new": [
+     1438.479,
+     667.2640000000001
+    ],
+    "distance_um": 140.44099999999992
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[23\\]$_DFF_P_",
+    "old": [
+     1440.693,
+     807.435
+    ],
+    "new": [
+     1440.693,
+     666.778
+    ],
+    "distance_um": 140.65699999999993
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[24\\]$_DFF_P_",
+    "old": [
+     1443.501,
+     807.435
+    ],
+    "new": [
+     1443.501,
+     666.8860000000002
+    ],
+    "distance_um": 140.54899999999975
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[25\\]$_DFF_P_",
+    "old": [
+     1445.769,
+     807.435
+    ],
+    "new": [
+     1445.769,
+     666.4540000000002
+    ],
+    "distance_um": 140.98099999999977
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[26\\]$_DFF_P_",
+    "old": [
+     1450.467,
+     807.435
+    ],
+    "new": [
+     1450.467,
+     668.4520000000002
+    ],
+    "distance_um": 138.98299999999972
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[27\\]$_DFF_P_",
+    "old": [
+     1452.627,
+     807.435
+    ],
+    "new": [
+     1452.627,
+     667.912
+    ],
+    "distance_um": 139.5229999999999
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[28\\]$_DFF_P_",
+    "old": [
+     1454.787,
+     807.435
+    ],
+    "new": [
+     1454.787,
+     667.3720000000001
+    ],
+    "distance_um": 140.06299999999987
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[29\\]$_DFF_P_",
+    "old": [
+     1457.271,
+     807.705
+    ],
+    "new": [
+     1457.271,
+     667.1560000000002
+    ],
+    "distance_um": 140.54899999999986
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[2\\]$_DFF_P_",
+    "old": [
+     1459.917,
+     807.435
+    ],
+    "new": [
+     1459.917,
+     667.1020000000001
+    ],
+    "distance_um": 140.33299999999986
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[30\\]$_DFF_P_",
+    "old": [
+     1462.2930000000001,
+     807.435
+    ],
+    "new": [
+     1462.2930000000001,
+     666.7780000000002
+    ],
+    "distance_um": 140.6569999999997
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[31\\]$_DFF_P_",
+    "old": [
+     1464.453,
+     807.435
+    ],
+    "new": [
+     1464.453,
+     666.238
+    ],
+    "distance_um": 141.1969999999999
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[32\\]$_DFF_P_",
+    "old": [
+     1467.747,
+     807.435
+    ],
+    "new": [
+     1467.747,
+     666.8320000000001
+    ],
+    "distance_um": 140.60299999999984
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[3\\]$_DFF_P_",
+    "old": [
+     1472.985,
+     807.435
+    ],
+    "new": [
+     1472.985,
+     666.6700000000001
+    ],
+    "distance_um": 140.76499999999987
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[4\\]$_DFF_P_",
+    "old": [
+     1475.253,
+     807.435
+    ],
+    "new": [
+     1475.253,
+     666.238
+    ],
+    "distance_um": 141.1969999999999
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[5\\]$_DFF_P_",
+    "old": [
+     1477.413,
+     807.435
+    ],
+    "new": [
+     1477.413,
+     665.6980000000001
+    ],
+    "distance_um": 141.73699999999985
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[6\\]$_DFF_P_",
+    "old": [
+     1483.299,
+     807.705
+    ],
+    "new": [
+     1483.299,
+     668.884
+    ],
+    "distance_um": 138.82100000000003
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[7\\]$_DFF_P_",
+    "old": [
+     1483.407,
+     807.975
+    ],
+    "new": [
+     1483.407,
+     666.2920000000001
+    ],
+    "distance_um": 141.68299999999988
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[8\\]$_DFF_P_",
+    "old": [
+     1485.351,
+     807.435
+    ],
+    "new": [
+     1485.351,
+     665.5360000000003
+    ],
+    "distance_um": 141.89899999999966
+   },
+   {
+    "name": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/q\\[9\\]$_DFF_P_",
+    "old": [
+     1488.807,
+     807.705
+    ],
+    "new": [
+     1488.807,
+     666.2920000000001
+    ],
+    "distance_um": 141.4129999999999
+   },
+   {
+    "name": "u_bound.u_bout_o_fch_hroot_Q_q/q$_DFF_P_",
+    "old": [
+     1894.5900000000001,
+     232.875
+    ],
+    "new": [
+     1852.172,
+     232.875
+    ],
+    "distance_um": 42.41800000000012
+   },
+   {
+    "name": "u_bound.u_u_efault.fault$_DFF_PN0_",
+    "old": [
+     1265.436,
+     307.935
+    ],
+    "new": [
+     1281.461,
+     444.164
+    ],
+    "distance_um": 152.25400000000008
+   },
+   {
+    "name": "u_bound.u_u_fch.q$_DFF_P_",
+    "old": [
+     1265.7060000000001,
+     233.685
+    ],
+    "new": [
+     1461.172,
+     232.875
+    ],
+    "distance_um": 196.2759999999999
+   },
+   {
+    "name": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[1044\\]$_DFF_P_",
+    "old": [
+     1574.316,
+     567.675
+    ],
+    "new": [
+     1574.316,
+     553.675
+    ],
+    "distance_um": 14.0
+   },
+   {
+    "name": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[804\\]$_DFF_P_",
+    "old": [
+     1548.0720000000001,
+     584.685
+    ],
+    "new": [
+     1548.0720000000001,
+     534.6670000000001
+    ],
+    "distance_um": 50.0179999999998
+   },
+   {
+    "name": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[907\\]$_DFF_P_",
+    "old": [
+     1556.604,
+     578.205
+    ],
+    "new": [
+     1556.604,
+     539.635
+    ],
+    "distance_um": 38.57000000000005
+   },
+   {
+    "name": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[941\\]$_DFF_P_",
+    "old": [
+     1561.248,
+     575.775
+    ],
+    "new": [
+     1561.248,
+     544.171
+    ],
+    "distance_um": 31.603999999999928
+   },
+   {
+    "name": "u_bound.u_bout_o_kvs_hroot_Q_o_pc/q\\[776\\]$_DFF_P_",
+    "old": [
+     1893.78,
+     6.345000000000001
+    ],
+    "new": [
+     1888.0,
+     12.0
+    ],
+    "distance_um": 11.434999999999972
+   },
+   {
+    "name": "u_bound.u_ft_ft7_o_0/q\\[23\\]$_DFF_P_",
+    "old": [
+     908.8199999999999,
+     340.33500000000004
+    ],
+    "new": [
+     908.8199999999999,
+     336.05500000000006
+    ],
+    "distance_um": 4.279999999999973
+   },
+   {
+    "name": "u_bound.u_ft_ft9_o_0/q\\[1\\]$_DFF_P_",
+    "old": [
+     910.98,
+     344.385
+    ],
+    "new": [
+     910.98,
+     340.91499999999996
+    ],
+    "distance_um": 3.4700000000000273
+   },
+   {
+    "name": "u_bound.u_ft_ft9_o_0/q\\[20\\]$_DFF_P_",
+    "old": [
+     913.248,
+     343.03499999999997
+    ],
+    "new": [
+     913.248,
+     340.48300000000006
+    ],
+    "distance_um": 2.5519999999999072
+   },
+   {
+    "name": "u_bound.u_ft_ft9_o_0/q\\[21\\]$_DFF_P_",
+    "old": [
+     913.3019999999999,
+     345.195
+    ],
+    "new": [
+     913.3019999999999,
+     337.837
+    ],
+    "distance_um": 7.358000000000004
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[33\\]$_DFF_P_",
+    "old": [
+     1610.82,
+     711.045
+    ],
+    "new": [
+     1610.3199999999997,
+     711.045
+    ],
+    "distance_um": 0.5000000000002274
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[35\\]$_DFF_P_",
+    "old": [
+     1611.9,
+     711.315
+    ],
+    "new": [
+     1610.5359999999996,
+     711.315
+    ],
+    "distance_um": 1.3640000000004875
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[37\\]$_DFF_P_",
+    "old": [
+     1609.74,
+     711.585
+    ],
+    "new": [
+     1609.74,
+     710.8689999999999
+    ],
+    "distance_um": 0.7160000000001219
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[57\\]$_DFF_P_",
+    "old": [
+     1612.98,
+     711.045
+    ],
+    "new": [
+     1612.3180000000002,
+     711.045
+    ],
+    "distance_um": 0.6619999999998072
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[59\\]$_DFF_P_",
+    "old": [
+     1614.276,
+     711.315
+    ],
+    "new": [
+     1608.6460000000002,
+     711.315
+    ],
+    "distance_um": 5.629999999999882
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[60\\]$_DFF_P_",
+    "old": [
+     1612.386,
+     711.585
+    ],
+    "new": [
+     1609.4560000000001,
+     711.585
+    ],
+    "distance_um": 2.9299999999998363
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[84\\]$_DFF_P_",
+    "old": [
+     1614.924,
+     711.585
+    ],
+    "new": [
+     1614.924,
+     707.4670000000001
+    ],
+    "distance_um": 4.117999999999938
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[86\\]$_DFF_P_",
+    "old": [
+     1616.166,
+     711.585
+    ],
+    "new": [
+     1610.3739999999998,
+     711.585
+    ],
+    "distance_um": 5.792000000000144
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[88\\]$_DFF_P_",
+    "old": [
+     1614.708,
+     711.855
+    ],
+    "new": [
+     1614.708,
+     707.3049999999998
+    ],
+    "distance_um": 4.550000000000182
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[8\\]$_DFF_P_",
+    "old": [
+     1611.9,
+     711.855
+    ],
+    "new": [
+     1611.562,
+     711.855
+    ],
+    "distance_um": 0.3380000000001928
+   },
+   {
+    "name": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[91\\]$_DFF_P_",
+    "old": [
+     1610.982,
+     712.665
+    ],
+    "new": [
+     1610.982,
+     710.3829999999998
+    ],
+    "distance_um": 2.282000000000153
+   },
+   {
+    "name": "u_bound.u_kc.hr_q$_DFF_P_",
+    "old": [
+     1253.367,
+     318.735
+    ],
+    "new": [
+     1263.29,
+     318.46500000000015
+    ],
+    "distance_um": 10.19299999999987
+   },
+   {
+    "name": "u_bound.u_kc.rs_q$_DFF_P_",
+    "old": [
+     1464.669,
+     386.505
+    ],
+    "new": [
+     1464.669,
+     379.174
+    ],
+    "distance_um": 7.331000000000017
+   },
+   {
+    "name": "u_bound.u_rrl_101/q$_DFF_P_",
+    "old": [
+     984.4200000000001,
+     492.075
+    ],
+    "new": [
+     1233.55,
+     492.075
+    ],
+    "distance_um": 249.12999999999988
+   }
+  ],
+  "metrics": {
+   "r2r_memory_instances": 0,
+   "r2r_incomplete_macros": [],
+   "r2r_max": 391.0,
+   "r2r_captures_gt405": 0,
+   "r2r_captures": 22408,
+   "comb_loop_cells": 0,
+   "r2r_worst": "u_bound.u_rrl_101/q$_DFF_P_ -> u_bound.u_bin_i_kvs_ctl_o_hroot_Q/eq$_DFF_PN0_"
+  },
+  "remaining_bad": []
+ }
+]
