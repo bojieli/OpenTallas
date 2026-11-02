@@ -6,13 +6,13 @@ set b [ord::get_db_block]
 set units [expr {double([$b getDbUnitsPerMicron])}]
 proc need {ok msg} {if {!$ok} {error $msg}}
 proc cell_state {b} {
- set out {};foreach i [$b getInsts] {dict set out [$i getName] [list [[$i getMaster] getName] [$i getLocation] [$i getOrient] [$i getPlacementStatus]]};return $out
+ set out {};foreach i [$b getInsts] {dict set out [$i getName] [list [[$i getMaster] getName] [$i getLocation] [$i getOrient] [$i getPlacementStatus] [$i isDoNotTouch]]};return $out
 }
 proc incidence {b} {
  set out {};foreach i [$b getInsts] {foreach t [$i getITerms] {set n [$t getNet];set nn NULL;if {$n ne "NULL"} {set nn [$n getName]};dict set out [list [$i getName] [[$t getMTerm] getName]] $nn}};return $out
 }
 proc terms {b} {set out {};foreach p [$b getBTerms] {set n [$p getNet];set nn NULL;if {$n ne "NULL"} {set nn [$n getName]};dict set out [$p getName] [list [$p getIoType] [$p getSigType] $nn]};return $out}
-proc nets {b} {set out {};foreach n [$b getNets] {dict set out [$n getName] [list [$n getSigType] [$n isSpecial]]};return $out}
+proc nets {b} {set out {};foreach n [$b getNets] {dict set out [$n getName] [list [$n getSigType] [$n isSpecial] [$n isDoNotTouch]]};return $out}
 set before_cells [cell_state $b];set before_inc [incidence $b];set before_terms [terms $b];set before_nets [nets $b]
 set fh [open /work/node_names.list];set nodes [split [string trim [read $fh]] \n];close $fh
 need [expr {[llength $nodes]==8269}] {node count}
@@ -36,7 +36,19 @@ foreach row $rows {
  set dist [expr {(abs(([$ar xMin]+[$ar xMax])-([$yr xMin]+[$yr xMax]))+abs(([$ar yMin]+[$ar yMax])-([$yr yMin]+[$yr yMax])))/(2*$units)}]
  need [expr {$dist<=40.0}] "real Y-to-CLK reach $name $dist"
  set max_reach [expr {max($max_reach,$dist)}]
- if {[$pin getNet] ne $net} {$pin disconnect;$pin connect $net;incr changed}
+ if {[$pin getNet] ne $net} {
+  # These exact nodes/nets were frozen by the native pre-CTS plan. The
+  # authorized source rebind temporarily unlocks only this explicit edge;
+  # every flag is restored even if an OpenDB mutation raises an exception.
+  set protected {}
+  foreach obj [list $i [$pin getNet] $net] {
+   dict set protected $obj [$obj isDoNotTouch]
+   if {[$obj isDoNotTouch]} {$obj setDoNotTouch 0}
+  }
+  try {$pin disconnect;$pin connect $net;incr changed} finally {
+   dict for {obj flag} $protected {$obj setDoNotTouch $flag}
+  }
+ }
  dict incr leaf_counts $leaf
  dict set expected [list $name CLK] [$net getName]
 }
