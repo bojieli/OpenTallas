@@ -10,7 +10,7 @@ import dv_lower as D
 import residual2_calendar_candidate as R
 
 
-def build(calendar, monitor_slice=None, s8_event=None, rank=0):
+def build(calendar, monitor_slice=None, s8_event=None, rank=0, front_event=None):
     if monitor_slice is not None and monitor_slice not in range(12):raise ValueError("monitor slice must be native0..11")
     words,dw=R.decode_image(calendar);base=R.entries(words,dw[2]);head=R.entries(words,dw[3])
     cfg=[e for e in head if e['decoded']['kind']==3]
@@ -43,6 +43,10 @@ def build(calendar, monitor_slice=None, s8_event=None, rank=0):
     local37=(14<<112)|(37<<4)|9
     seg28=(14<<112)|(28<<4)|5
     retired={e['index']for e in cfg}
+    front=None
+    if front_event is not None:
+        front=json.loads(front_event.read_text())
+        if front['status']!='SOURCE_TRANSPORT_EQUATIONS_NOT_EXECUTABLE_DATES' or [e['slice']for e in front['rows']]!=list(range(12)):raise ValueError('actual full native command front source required')
     station=None;overrides={};extra_clears=[]
     if s8_event is not None:
         station=json.loads(s8_event.read_text());rr=station['ranks'][rank]
@@ -61,8 +65,9 @@ def build(calendar, monitor_slice=None, s8_event=None, rank=0):
       source_calendar_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest()for p in calendar.iterdir()if p.name in ('dw.hex','calendar_m0.viamap.hex','calendar_m1.viamap.hex')},
       root_patches=patches,retired_head_cfg=[dict(index=e['index'],edge=e['edge'],cmd=f"{e['cmd']:029x}")for e in cfg],
       retained_stream_setup=dict(extra_commands=0,tag=1,source_calls=[dict(index=e['index'],slice=i,edge=e['edge'],dirs=1 if i==0 else 3,cmd=f"{e['cmd']:029x}")for i,e in enumerate(streams)],lifetime='retained through HEAD; LOCAL4 tables do not rewrite cfg',headtap='actual s6 tap exposes X valid/address/data, no tag'),
-      native_apply_commands=[dict(slice=s,cmd=f'{D.cmd_su(17 if s==monitor_slice else 16,s):029x}',pidx=17 if s==monitor_slice else 16,user_relocation='actual CALR +128*user',issue_symbol=f'HEAD_APPLY_S{s}_ISSUE')for s in range(12)],
+      native_apply_commands=[dict(slice=s,cmd=f'{D.cmd_su(17 if s==monitor_slice else 16,s):029x}',pidx=17 if s==monitor_slice else 16,native_SU_input_age=front['rows'][s]['TT_to_native_SU_command']if front else None,native_SU_input_symbol=f'HEAD_NATIVE_SU_S{s}_CMD',user_relocation='actual CALR +128*user',issue_symbol=f'HEAD_APPLY_S{s}_ISSUE')for s in range(12)],
       retained_head_commands=[dict(old_index=e['index'],old_edge_context=e['edge'],cmd=overrides[e['index']]['new_cmd']if e['index']in overrides else f"{e['cmd']:029x}",issue_symbol=overrides[e['index']]['issue_symbol']if e['index']in overrides else f"HEAD_RETAINED_I{e['index']}_ISSUE")for e in head if e['index']not in retired],
+      native_front_join=dict(event_sha256=hashlib.sha256(front_event.read_bytes()).hexdigest(),status='SOURCE_EQUATIONS_ONLY')if front else dict(status='REQUIRED_UNRESOLVED'),
       native_s8_station_join=dict(rank=rank,event_sha256=hashlib.sha256(s8_event.read_bytes()).hexdigest(),status='SOURCE_ONLY')if station else dict(status='REQUIRED_UNRESOLVED'),
       native_AMAX_clears=extra_clears,
       native_monitor=dict(slice=monitor_slice,pidx=17,other_pidx=16,source_observer='primary user only',status='UNRESOLVED_EARLIEST_SLICE' if monitor_slice is None else 'SOURCE_CANDIDATE_ONLY'),
@@ -80,4 +85,4 @@ def build(calendar, monitor_slice=None, s8_event=None, rank=0):
       executable=False,mask_emission='REFUSED_UNTIL_ALL_EXECUTION_RELOCATIONS_ARE_LINKED',physical_adoption=False)
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--calendar',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--monitor-slice',type=int,choices=range(12));p.add_argument('--s8-event',type=Path);p.add_argument('--rank',type=int,choices=range(8),default=0);a=p.parse_args();r=build(a.calendar,a.monitor_slice,a.s8_event,a.rank);a.out.write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r['layout']))
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--calendar',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--monitor-slice',type=int,choices=range(12));p.add_argument('--s8-event',type=Path);p.add_argument('--rank',type=int,choices=range(8),default=0);p.add_argument('--front-event',type=Path);a=p.parse_args();r=build(a.calendar,a.monitor_slice,a.s8_event,a.rank,a.front_event);a.out.write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r['layout']))
