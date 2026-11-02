@@ -1,0 +1,75 @@
+{
+  "scope": "SOURCE CLOCK MODEL same-native-graph FF/macro-frontier relations; deterministic common feed cancels in differences; no additional CPPR credit or actual paired timing gate/STA. Macro endpoints are CLK PIN model, no internal insertion transfer.",
+  "corners": {
+    "TT": {
+      "relationships": 204655,
+      "nominal_gt80": 5156,
+      "interval_upper_gt80": 12073,
+      "nominal_max_ps": 158.80576227418538,
+      "interval_upper_max_ps": 179.92192227418536,
+      "FF_only_relationships": 171192,
+      "FF_only_nominal_max_ps": 126.10684808208691,
+      "FF_only_witness": {
+        "label": [
+          "u_q.u_s.u_ofq.wdata[162]$_DFF_P_",
+          "u_q.u_s.u_ofq.prevdata[162]$_DFF_P_"
+        ],
+        "launch_group": "ff_leaf23",
+        "capture_group": "ff_leaf8"
+      },
+      "nominal_witness": {
+        "label": [
+          "u_q.u_s.u_ofq.g_bank[1].u_m",
+          "u_q.oq[116]$_DFF_P_",
+          "macro_output"
+        ],
+        "launch_group": "macro_leaf28",
+        "capture_group": "ff_leaf8"
+      },
+      "interval_witness": {
+        "label": [
+          "u_q.u_s.u_ofq.g_bank[1].u_m",
+          "u_q.oq[116]$_DFF_P_",
+          "macro_output"
+        ],
+        "launch_group": "macro_leaf28",
+        "capture_group": "ff_leaf8"
+      }
+    },
+    "FF": {
+      "relationships": 204655,
+      "nominal_gt80": 1952,
+      "interval_upper_gt80": 7328,
+      "nominal_max_ps": 133.32979966452478,
+      "interval_upper_max_ps": 152.02151166452484,
+      "FF_only_relationships": 171192,
+      "FF_only_nominal_max_ps": 115.4274802222892,
+      "FF_only_witness": {
+        "label": [
+          "u_q.u_s.u_ofq.wdata[162]$_DFF_P_",
+          "u_q.u_s.u_ofq.prevdata[162]$_DFF_P_"
+        ],
+        "launch_group": "ff_leaf23",
+        "capture_group": "ff_leaf8"
+      },
+      "nominal_witness": {
+        "label": [
+          "u_q.u_s.u_ofq.g_bank[1].u_m",
+          "u_q.oq[116]$_DFF_P_",
+          "macro_output"
+        ],
+        "launch_group": "macro_leaf28",
+        "capture_group": "ff_leaf8"
+      },
+      "interval_witness": {
+        "label": [
+          "u_q.u_s.u_ofq.g_bank[1].u_m",
+          "u_q.oq[116]$_DFF_P_",
+          "macro_output"
+        ],
+        "launch_group": "macro_leaf28",
+        "capture_group": "ff_leaf8"
+      }
+    }
+  }
+}
