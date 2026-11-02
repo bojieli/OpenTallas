@@ -1,0 +1,19 @@
+{
+  "status": "PASS_ACTUAL_121_IO_NATIVE_BRANCH_EXECUTES",
+  "resolved_flags": {
+    "FLOORPLAN_DEF": {
+      "present_in_resolved_make_database": false,
+      "values": []
+    },
+    "FOOTPRINT": {
+      "present_in_resolved_make_database": false,
+      "values": []
+    },
+    "FOOTPRINT_TCL": {
+      "present_in_resolved_make_database": false,
+      "values": []
+    }
+  },
+  "source_make_database_sha256": "8a4e7468401e8a6127f1b90e8b55846516a8b582682d2321cf5abb3011131e4f",
+  "rule": "All three are absent or empty in actual resolved manual121 environment; stock IO condition is true, so it loads, begins and creates io_placement JSONL. No skipped-path claim or guard relaxation."
+}
