@@ -27,3 +27,19 @@ def probe_blockages(t, top="M7"):
             out.append(dict(h, obs_max=h.get("obs_max", top)))
     return out
 
+
+
+def placement_boxes(t, halo=0.0):
+    """Canonical G0/G2 footprints, including reuse leaves without LEFs.
+
+    A concrete placed macro wins by name, so core track offsets apply exactly
+    once. Split-container gaps remain open. Optional halo grows the same union.
+    """
+    import schema
+    boxes = dict(schema.placed_macro_boxes(t, halo=0.0))
+    for block in probe_blockages(t):
+        x, y = block['origin_um']; w, h = block['outline_um']
+        boxes.setdefault(block['inst'], (x, y, x+w, y+h))
+    if halo:
+        return {name: (a-halo,b-halo,c+halo,d+halo) for name,(a,b,c,d) in boxes.items()}
+    return boxes
