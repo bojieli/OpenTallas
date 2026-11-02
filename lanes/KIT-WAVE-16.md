@@ -29,3 +29,21 @@ Before (19:2x, plan_current=yes): 93 FAIL rows, 75 of them older than 6 h. Each 
 | LEC NOT EQUIVALENT x10 (HBM 7, QC 2, HEAD 1) | ROOT CAUSE (6 of 10): no-reset register loaded only with a constant is folded by yosys, LEC drops the constant hypothesis (10-27 power-up X), its readers differ. FIX claude/kit-wave-16-lec-1101@801a1c2a09f (auto 'loaded' valid-flag hypothesis, induction-proved) READY 19:4x. After merge + deploy: batch relaunch all 10 (all ran an old lec.py). Residual classes: kshare x2 gray-FIFO/CDC, q2n2 reference netlist, slw_st_b SRAM write-data | KIT-WAVE-16; merge ETA = next ROOT-MERGE-AL train |
 
 SUPERSEDED rows were written under kit_wave.lock (22 records, status CANCELLED class SUPERSEDED, reason names the newer kit).
+
+## 20:08 hourly class table (plan_current=yes)
+FAIL 64 (19:2x: 93), older than 6 h 53 (75). RUNNING: s81 147, qc 46, kv 29, hbm 19, head 7. Classes of 3 or more:
+
+| class | n | owner / fix | ETA |
+|---|---|---|---|
+| HBM LEC NOT EQUIVALENT (+QC 2, HEAD 1) | 6+1+2+1 | KIT-WAVE-16: claude/kit-wave-16-lec-1101@801a1c2a09f READY, not merged by 20:04 (main 1923c5d) | batch relaunch of all 10 on the next ROOT-MERGE-AL train |
+| S81 slice_station post-CTS hold | 6 | pilot t20@3 + t12@5 RUNNING on 6defc3c | batch after pilot post-CTS (~23:xx); on FAIL -> DIE-S81-47 |
+| HEAD geom aspect/fill x6 + hd_tile | 7 | DIE-HEAD-53 l48y source event | asked |
+| KV kv3_pv_v1..v4 ORD-2013 (NEW) | 4 | DIE-KV-60: LEF master ot_sram_1r1w_32x128_m1 missing from the pv kit LEF list (u_pv_u_g0_b0.u_slice.g_mem[0].u_mem); src efa6a9b already has the kv-macro fix 1adcd26, so this is a separate class -> one recipe/LEF fix + batch relaunch of 4 | asked |
+| QC CB sdc_lint x3 + strap + cbf_q11 | 5 | DIE-QC-62 class c897f9b902c (unmerged) | next train |
+| QC place GPL-0305 slw_fe/fw x3 | 3 | retry @1 queued; blocked by sibling units (slw_fe_v2__clf110fab2, slw_fw_v1__clf51c11d8__clc7ddab13) that have WAITED 8 h at gen_lint behind the intel2 load cap | after the siblings run |
+| S81 LP WAIT-DEP x3 | 3 | S81-LP | asked |
+| HEAD post-CTS hold x3 | 3 | DIE-HEAD-53 | asked |
+| S81 col_h9 kit_rtl x2 (NEW, singles >6 h) | 2 | DIE-S81-47: kit-RTL bind of record still names /srv/.../codex-s81-wave-1131/src/physical/rom* (pruned); retries @3/@2 repeat it -> repoint kit_rtl at the current strict bind | asked |
+
+Infra (FLOW-21): intel2 load1 ~300 vs cap 168 (1.5 x 112, mostly DRT) -> admissions fell 104/h (13:xx) -> 19/h (19:xx); 100 waiters; 2-thread gen_lint jobs have waited 8 h; review renders NOT RUN (load cap 120 s). Ask: let short low-thread kit stages (<= 2 threads) skip the cap, or route hub stages to epyc2/intel1.
+NEAR-COUNT duty (6): claude/kit-wave-16-nearcount-1101@bc6e04cda1c READY (inert until lanes/NEAR-COUNT.tsv exists).
