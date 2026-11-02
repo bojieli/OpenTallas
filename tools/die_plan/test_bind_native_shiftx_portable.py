@@ -6,12 +6,14 @@ import subprocess
 import sys
 from types import SimpleNamespace as NS
 
-import pytest
+import tempfile
+import unittest
+from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import bind_native_glue as NG
 
-pytestmark = pytest.mark.skipif(not shutil.which("iverilog") or
-    not (shutil.which("docker") or os.environ.get("OT_BIND_YOSYS")), reason="native Yosys and Icarus required")
+HAVE_TOOLS = bool(shutil.which("iverilog") and
+                  (shutil.which("docker") or os.environ.get("OT_BIND_YOSYS")))
 
 
 def run_case(tmp, aw, bw, yw, signed, constant=False, mutant=None):
@@ -31,7 +33,7 @@ wire[{aw-1}:0] ref_A={src};reg[{yw-1}:0] G;reg signed[{iw-1}:0]base,index;
 integer j,bad=0,checks=0,seed=93; {call}
 task check;begin #1;G='x;
 if((^B)!==1'bx)begin base={extend};for(j=0;j<{yw};j=j+1)begin index=base+j;if(index>=0&&index<{aw})G[j]=ref_A[index];end end
-checks++;if(G!==U)bad++;end endtask
+checks++;if(G!==U)begin bad++;if(bad<5)$display("DIFF B=%h G=%h U=%h",B,G,U);end end endtask
 initial begin A='1;
 for(integer k=-{yw+4};k<={aw+4};k++)begin B={bw}'(k);check;end
 for(integer k=0;k<128;k++)begin A=$random(seed);B=$random(seed);check;end
@@ -49,19 +51,38 @@ $display("SHIFTX_CHECKS %0d ERRORS %0d",checks,bad);if(bad)$fatal(1,"shiftx mism
     return native
 
 
-@pytest.mark.parametrize("aw,bw,yw,signed,constant", [(32,34,128,1,True), (128,34,32,1,False),
-                                                     (13,6,37,0,False), (1,1,1,1,False)])
-def test_shiftx_signed_large_indices_and_four_state(tmp_path, aw, bw, yw, signed, constant):
-    native = run_case(tmp_path, aw, bw, yw, signed, constant)
-    if constant:
-        assert native.files[0].stem == "ot_bind_native_4ee6006e6a5bb9ff1c0dff1c"  # canonical CW helper ABI
+@unittest.skipUnless(HAVE_TOOLS, "native Yosys and Icarus required")
+class NativeShiftxPortable(unittest.TestCase):
+    def setUp(self):
+        self.path = Path(tempfile.mkdtemp(prefix="shiftx_portable_"))
+
+    def test_canonical_cw_helper_and_abi(self):
+        native = run_case(self.path, 32, 34, 128, 1, True)
+        self.assertEqual(native.files[0].stem, "ot_bind_native_4ee6006e6a5bb9ff1c0dff1c")
+
+    def test_signed_downselect(self):
+        run_case(self.path, 128, 34, 32, 1)
+
+    def test_unsigned_non_power_of_two(self):
+        run_case(self.path, 13, 6, 37, 0)
+
+    def test_one_bit_signed_boundary(self):
+        run_case(self.path, 1, 1, 1, 1)
+
+    def mutant_case(self, mutation):
+        old = NG.SHIFTX_PORTABLE_MAP
+        new = (old.replace("index = base + PAD", "index = -base + PAD") if mutation == "wrong_shift"
+               else old.replace("1'bx", "1'b0"))
+        self.assertNotEqual(old, new)
+        with patch.object(NG, "SHIFTX_PORTABLE_MAP", new):
+            run_case(self.path, 32, 34, 128, 1, True, mutant=mutation)
+
+    def test_wrong_shift_control(self):
+        self.mutant_case("wrong_shift")
+
+    def test_zero_fill_control(self):
+        self.mutant_case("zero_fill")
 
 
-@pytest.mark.parametrize("mutation", ["wrong_shift", "zero_fill"])
-def test_shiftx_mutant_controls(tmp_path, monkeypatch, mutation):
-    old = NG.SHIFTX_PORTABLE_MAP
-    new = (old.replace("index = base + PAD", "index = -base + PAD") if mutation == "wrong_shift"
-           else old.replace("1'bx", "1'b0"))
-    assert old != new
-    monkeypatch.setattr(NG, "SHIFTX_PORTABLE_MAP", new)
-    run_case(tmp_path, 32, 34, 128, 1, True, mutant=mutation)
+if __name__ == "__main__":
+    unittest.main()
