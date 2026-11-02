@@ -1,0 +1,126 @@
+{
+  "status": "INACTIVE_READ_ONLY_BOUND_DATA_CUT_MAP_NO_REWRITE",
+  "native_gate": "09032d7ab",
+  "parent_sha256": "61c902f184b49e231c34de041d0f1832a4117749592f81fa3bf42d6ff4df504a",
+  "parent_bytes": 1640821,
+  "actual_selected_part": "svc_lo_dsdv_svc_rs__t7",
+  "scope": "Preserve all original control/ready/valid/reset cells and read-slot mux; replace only nativepmem plus two payloadcapture drivers. No new originalRTL ABI ports.",
+  "inputs": {
+    "clk": "clk",
+    "pr": "w_u_rsv_14_u_u_att_driver_pr_Q[8:0]",
+    "wa": "w_u_rsv_14_u_u_att_driver_pw_Q[8:0]",
+    "write_data": "w_u_rsv_14_u_src_b4e411b517a9f984ed73_Q[511:0]",
+    "write_mask": "w_u_rsv_14_u_u_att_src_edb47cb20fbd82577b0b_Y[511:0]",
+    "pstep": "w_u_rsv_14_u_u_att_716_Y[1:0]",
+    "owner": "w_u_rsv_14_u_u_att_719_Y[0]",
+    "push": "w_u_rsv_14_u_u_att_u_eng_111_Y[0]",
+    "wp": "w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_wp_Q[0]"
+  },
+  "outputs": {
+    "logical_slot0": "w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk0_Q[1023:0]",
+    "logical_slot1": "w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk1_Q[1023:0]"
+  },
+  "remove": {
+    "memory_instance": "g_u_rsv_14_u_u_att_pmem",
+    "memory_helper": "ot_bind_native_193c9bdc13b0c4251a5bbbc4",
+    "payload_FF_drivers": [
+      "g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk0_q",
+      "g_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk1_q"
+    ],
+    "payload_bits": 2048,
+    "rule": "remove exact two reg/alias/always driver blocks after matching parent hash; replace outputaliases from data-cut outputs. Never leave double drivers."
+  },
+  "retain": [
+    "all native sk_n/wp/rp controls and reset semantics",
+    "all native p_ready/p_v_i/p_ready_i logic and original rp readmux",
+    "all original pr/pw counters, pcnt faults, pstep/owner logic",
+    "all service/interface clock/reset/other RAM and stage8 logic"
+  ],
+  "new_data_cut": {
+    "real_macros": 4,
+    "older_payload_FF": 1024,
+    "format_FF": 3,
+    "latest_slot_FF": 1,
+    "reset_ports": 0,
+    "write_and_capture": "all resetfree source clk captures; push and original wp are inputs",
+    "external_FF_delta": -1020,
+    "added_macro_clock_pins": 4,
+    "new_functional_cycles": 0,
+    "negative_control_state_excluded": true
+  },
+  "old_async_fanout": {
+    "w_u_rsv_14_u_u_att_pmem_RD_DATA": [
+      {
+        "line": 3468,
+        "text": "wire [1023:0] w_u_rsv_14_u_u_att_pmem_RD_DATA;"
+      },
+      {
+        "line": 9966,
+        "text": "assign w_u_rsv_14_u_u_att_src_037d97b1cd2a5ab22e14_Y = w_u_rsv_14_u_u_att_719_Y[0] ? {w_u_rsv_14_u_u_att_src_c42275b8d43e8375c6e7_Y[511:0], w_u_rsv_14_u_u_att_pmem_RD_DATA[1023:512]} : {1024{1'b0}};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:501.31-501.123"
+      },
+      {
+        "line": 10371,
+        "text": "assign w_u_rsv_14_u_u_att_src_c42275b8d43e8375c6e7_Y = w_u_rsv_14_u_u_att_src_f3d8544a725953903764_Y[0] ? w_u_rsv_14_u_u_att_pmem_RD_DATA[511:0] : {512{1'b1}};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:501.40-501.98"
+      },
+      {
+        "line": 10507,
+        "text": "ot_bind_native_193c9bdc13b0c4251a5bbbc4 g_u_rsv_14_u_u_att_pmem (.RD_ADDR({w_u_rsv_14_u_u_att_driver_pr_Q[8:0], w_u_rsv_14_u_u_att_src_29b80db2284db6415584_Y[8:0]}), .RD_DATA(w_u_rsv_14_u_u_att_pmem_RD_DATA), .WR_ADDR(w_u_rsv_14_u_u_att_driver_pw_Q[8:0]), .WR_CLK(clk), .WR_DATA(w_u_rsv_14_u_src_b4e411b517a9f984ed73_Q[511:0]), .WR_EN(w_u_rsv_14_u_u_att_src_edb47cb20fbd82577b0b_Y[511:0]));"
+      }
+    ],
+    "w_u_rsv_14_u_u_att_733_Y": [
+      {
+        "line": 2326,
+        "text": "wire [1023:0] w_u_rsv_14_u_u_att_733_Y;"
+      },
+      {
+        "line": 8699,
+        "text": "assign w_u_rsv_14_u_u_att_733_Y = w_u_rsv_14_u_u_att_src_037d97b1cd2a5ab22e14_Y[1023:0];"
+      },
+      {
+        "line": 12375,
+        "text": "assign w_u_rsv_14_u_u_att_u_eng_src_75b927658e070e2d323b_Y = w_u_rsv_14_u_u_att_u_eng_src_c378f76dfef5197d822c_Y[0] ? w_u_rsv_14_u_u_att_733_Y[1023:0] : w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk1_Q[1023:0];  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:339.29-339.40|structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:339.13-339.40"
+      },
+      {
+        "line": 12379,
+        "text": "assign w_u_rsv_14_u_u_att_u_eng_src_7a2f9d574e2d0b99b375_Y = w_u_rsv_14_u_u_att_u_eng_src_d694d9c9afb64dd6bd84_Y[0] ? w_u_rsv_14_u_u_att_733_Y[1023:0] : w_u_rsv_14_u_u_att_u_eng_driver_g_pskid_sk0_Q[1023:0];  // structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:338.30-338.41|structural_full/5194a24ae085_ot_hdc_v41x_attn_s.sv:338.13-338.41"
+      }
+    ],
+    "w_u_rsv_14_u_u_att_src_c42275b8d43e8375c6e7_Y": [
+      {
+        "line": 2324,
+        "text": "wire [511:0] w_u_rsv_14_u_u_att_src_c42275b8d43e8375c6e7_Y;"
+      },
+      {
+        "line": 9966,
+        "text": "assign w_u_rsv_14_u_u_att_src_037d97b1cd2a5ab22e14_Y = w_u_rsv_14_u_u_att_719_Y[0] ? {w_u_rsv_14_u_u_att_src_c42275b8d43e8375c6e7_Y[511:0], w_u_rsv_14_u_u_att_pmem_RD_DATA[1023:512]} : {1024{1'b0}};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:501.31-501.123"
+      },
+      {
+        "line": 10371,
+        "text": "assign w_u_rsv_14_u_u_att_src_c42275b8d43e8375c6e7_Y = w_u_rsv_14_u_u_att_src_f3d8544a725953903764_Y[0] ? w_u_rsv_14_u_u_att_pmem_RD_DATA[511:0] : {512{1'b1}};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:501.40-501.98"
+      }
+    ],
+    "w_u_rsv_14_u_u_att_src_037d97b1cd2a5ab22e14_Y": [
+      {
+        "line": 2325,
+        "text": "wire [1023:0] w_u_rsv_14_u_u_att_src_037d97b1cd2a5ab22e14_Y;"
+      },
+      {
+        "line": 8699,
+        "text": "assign w_u_rsv_14_u_u_att_733_Y = w_u_rsv_14_u_u_att_src_037d97b1cd2a5ab22e14_Y[1023:0];"
+      },
+      {
+        "line": 9966,
+        "text": "assign w_u_rsv_14_u_u_att_src_037d97b1cd2a5ab22e14_Y = w_u_rsv_14_u_u_att_719_Y[0] ? {w_u_rsv_14_u_u_att_src_c42275b8d43e8375c6e7_Y[511:0], w_u_rsv_14_u_u_att_pmem_RD_DATA[1023:512]} : {1024{1'b0}};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:501.31-501.123"
+      }
+    ]
+  },
+  "old_logic_cleanup": "NativeRD_DATA feeds only owner/tail pword cone, then the two replacedcapture muxes. Remove that closed dead cone with the nativehelper; do not leave an undrivenneededwire. Exact final source/readset and no-doubledriver checks remain required.",
+  "actual_source_change_applied": false,
+  "cohort_or_physical_adopted": false,
+  "remaining": [
+    "Data-only projected source must retain exact09032d algorithm; currentfullcandidate is the measurednativevehicle, not automatickitrewrite",
+    "allinitial-state relational proof and physicalcollision/CE/repair/timing",
+    "newmacrogeometry/clock/model review before anyphysical flow",
+    "oldhelperdependency removed from freshkit only after no remaininginstance proof"
+  ]
+}
