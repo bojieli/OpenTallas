@@ -1,0 +1,7 @@
+# BFQG exact vertical-cut diagnosis in progress
+
+Personally viewed corrected_routeonly/auto_geom.png. Exact unchanged geometry, full native CLOCK+SIGNAL route0 does not overwrite raw channel_v HARD FAIL1.04 or nine registration failures. No CTS release or rule change.
+
+Read-only reproduction yields x10..17/y107.5 capacity255.208333 derated tracks, fractional bbox demand265.488493, ratio1.040281442.333 contributing nets:318 standard/public and15 macro projected. Entire cut has1478 bbox-crossing nets versus5500 modeled tracks: this is a local allocation, not a whole-cut deficit. M3/M5 modeled; SRAM full M1–M3 and interior M4 OBS leave M5 open. Macro xmin17.28 is conservatively binned17.
+
+Current algorithm projects macro endpoint to nearest boundary toward other-endpoint mean (not true signal MTerm), and distributes one crossing proportionally to capacity inside endpoint bbox. Nonzero capacity spans cannot detour outside bbox. A read-only sensitivity allowing each x bbox4um additional span lowers hot ratio0.9941 (8um0.7798); this diagnoses localization sensitivity, not an approved rule relaxation or proof of real pin access. Native saved guide/true-pin export is owned solely by HBM cores; await its join to measure actual hot-window crossings/upper-layer overflight/around-edge routes. Original3193 probe lacked native CLOCK/libs whereas current pass has20 clocks/TT/SDC, so do not attribute improvement solely to CQ guide moves.
