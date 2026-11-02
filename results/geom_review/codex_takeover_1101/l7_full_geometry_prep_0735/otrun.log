@@ -1,0 +1,3 @@
+ot-run: intel1         admits     2 GB (avail 140, reserve 0, fresh 3, peak 70.5, headroom 0, waiters 29/1303 GB) load 159/112 running 61 disk 281 GB 
+ot-run: -> intel1 (will queue: admits 2 GB < 8 GB)
+ot-heavy: waiting for memory on key-cardinal: need 0.7 x 8 = 6 GB, admissible 2 GB: available 139 GB, growth charged 3 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 3 GB at x1), young 3 GB, floor 50 GB; invariant: committed 941 GB (in use 868, other 47, units max(now, peak) 892, + reserve 0 + fresh 3) vs physical - 64 = 943 GB -> headroom 2 GB
