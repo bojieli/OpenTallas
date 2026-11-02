@@ -19,3 +19,12 @@ clock/reset or cycle changes from the passed GRT. Detailed route then actual
 DRC/antenna/RCX/signoff+own routed EQ decides closure; final current051 proof is
 required. Original source LEC uses explicit existing reset64; missing original
 PROVENANCE is retained, not replaced by a claim about its generation commit.
+
+CORRECTION / HOLD 2026-11-01 20:55 PST: the diagonal386.39um statement above is
+Euclidean and does not establish Manhattan reach. Manhattan outline bound is
+518.4um. Original G1 measured385.51um remains historical; current GRT full
+connected r2r census has not yet completed. The premature trial queue row was
+withdrawn append-only at coord0a5b5a8fb774 before any observed ot-run client.
+Current native connected geometry dump queued4GB2T (Intel2client3622256); current
+r2r census and review disposition are required before resubmitting DRT. Original
+review text preserved, its DRT release verdict is superseded by HOLD here.
