@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/home/ubuntu/coord/tmp/codex-s81-vsw-2058/export/ot_s81sl_vsw_exact.lef",
+ "verdict": "FAIL",
+ "fails": [
+  "(f) face-pin access: 66 of 388 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. i_v M5 (7.872,224.485), o_d[0] M5 (13.440,0.016), o_d[10] M5 (44.736,0.016)); fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef (73e17f447): move the pin's own same-layer stub from OBS into its PORT"
+ ],
+ "warns": [
+  "(f) face-pin access: 322 of 388 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. i_d[0] M5 (9.552,224.485), i_d[100] M5 (9.552,224.485), i_d[101] M5 (9.552,224.485))",
+  "(h) pockets: 2662 open own-layer pocket rects on M5 (4283 um2; gaps < 1.536 um between the child's own obstacles; largest (201.036,114.277)-(202.368,169.333), (201.036,58.933)-(202.368,112.835), (41.196,184.069)-(42.336,217.237)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M5 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)"
+ ],
+ "summary": "ot_s81sl_vsw 224.64 x 224.64: PG M5 VDD 50 stripes (94% spread, 100% cov) / VSS 50 stripes (94% spread, 100% cov); strap M6; face pins 388 blocked-above 0 blocked-same 66; clock clk insertion 395 ps; pockets M5 2662 (legacy view)",
+ "info": {
+  "cell": "ot_s81sl_vsw",
+  "W": 224.64,
+  "H": 224.64,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 50,
+     "dir": "V",
+     "spread": 0.942,
+     "coverage": 1.0,
+     "shapes_on_top": 50
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 50,
+     "dir": "V",
+     "spread": 0.942,
+     "coverage": 1.0,
+     "shapes_on_top": 50
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 388,
+   "blocked_above": 0,
+   "covered_below": 0,
+   "examples": [],
+   "blocked_same": 66,
+   "same_examples": [
+    "i_v M5 (7.872,224.485)",
+    "o_d[0] M5 (13.440,0.016)",
+    "o_d[10] M5 (44.736,0.016)",
+    "o_d[11] M5 (47.904,0.016)",
+    "o_d[12] M5 (50.976,0.016)",
+    "o_d[13] M5 (54.144,0.016)"
+   ],
+   "band_same": 322,
+   "band_examples": [
+    "i_d[0] M5 (9.552,224.485)",
+    "i_d[100] M5 (9.552,224.485)",
+    "i_d[101] M5 (9.552,224.485)",
+    "i_d[102] M5 (9.552,224.485)",
+    "i_d[103] M5 (9.552,224.485)",
+    "i_d[104] M5 (9.552,224.485)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 394.64,
+    "min_ps": 255.59
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": null,
+   "count": 2662,
+   "area_um2": 4282.998,
+   "examples": [
+    "(201.036,114.277)-(202.368,169.333)",
+    "(201.036,58.933)-(202.368,112.835)",
+    "(41.196,184.069)-(42.336,217.237)"
+   ]
+  },
+  "pin_access_violations": 0
+ }
+}

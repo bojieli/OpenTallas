@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.native_abstract_parent_access.v1",
+  "input_kind": "actual6_final.odb write_abstract_lef WITHOUT bloat",
+  "native_unit": "oth-ubuntu-1221638-1793612221",
+  "input_odb_sha256": "1b153a66d6971fdb5acb6d36cf6bdc2a1a0fe7a141160c20f3763a3f51b6ce75",
+  "tool": "tools/hier_contract/abstract_pin_stub.py",
+  "tool_sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890",
+  "raw_lef_sha256": "f20b2a422fd0c888d548cad2d2099a65ad8e9e824b2dd5aa548af87d8f40319f",
+  "parent_lef_sha256": "339062ee091d4fc9e36f7ae73bcfb030e2fd4c255be88e96a9513733a7019881",
+  "own_stub_rects_moved_into_PIN": 67,
+  "pocket_OBS_rects_added": 2664,
+  "first_pin_rect_centres_unchanged": true,
+  "child_lint_geometry": "PASS with strict pockets; SS-only required-corner check d excluded because this release contains TT/FF only",
+  "native_route_hashes_unchanged": true,
+  "export_exit1_receipt": "LEF command completed; post-check 4native files OK,2 host-relative kit config/constraint symlinks absent on Intel1; authoritative Epyc source copies unchanged, no new CAD retry"
+}
