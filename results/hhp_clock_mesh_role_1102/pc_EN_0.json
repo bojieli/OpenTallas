@@ -453,6 +453,54 @@
       "port:root"
     ]
   },
+  "closed_source_reference_census": {
+    "qkd_kvs_pc_h_head_p": {
+      "role_nets": [
+        "ft_ck_i_0",
+        "ft_ck_i_1",
+        "ft_ck_o_0",
+        "ft_ck_o_0__p1",
+        "ft_ck_o_1",
+        "ft_ck_o_1__p1"
+      ],
+      "exact_allowed_calls": 4,
+      "unclassified_references": 0
+    },
+    "qkd_kvs_pc": {
+      "role_nets": [
+        "ft_ck_i_0",
+        "ft_ck_i_1",
+        "ft_ck_o_0",
+        "ft_ck_o_0__p1",
+        "ft_ck_o_1",
+        "ft_ck_o_1__p1"
+      ],
+      "exact_allowed_calls": 4,
+      "unclassified_references": 0
+    },
+    "bound": {
+      "role_nets": [
+        "ck_mesh",
+        "ckm_w_ckm_n10_h1111111000",
+        "ckm_w_ckm_n10_h1111111001",
+        "ckm_w_ckm_n10_h1111111100",
+        "ckm_w_ckm_n10_h1111111101"
+      ],
+      "exact_allowed_calls": 4,
+      "unclassified_references": 0
+    },
+    "wrapper": {
+      "role_nets": [
+        "ck_mesh",
+        "ckm_w_ckm_n10_h1111111000",
+        "ckm_w_ckm_n10_h1111111001",
+        "ckm_w_ckm_n10_h1111111100",
+        "ckm_w_ckm_n10_h1111111101"
+      ],
+      "exact_allowed_calls": 1,
+      "unclassified_references": 0
+    }
+  },
   "source_prep_sha256": "5323c1ed3853aa9ebd8bb191f93631b531391ce475ca5231f4b3df5a921dfed7",
   "pinned_graphs": {
     "canonical_mesh.json.gz": "6294fefcd5db18b1f8c0efe2271a51c63a504278b8cd0216a63795c0fc90f4a6",

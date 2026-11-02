@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[5]
@@ -60,6 +61,23 @@ def cell_edges(text):
         r"(\w+)\s+(mp_isl[01]_ck[01])\s*\(\.A\((\w+)\),\s*\.Y\((\w+)\)\);", text)}
 
 
+def closed_reference_census(text, nets, allowed_calls):
+    """Fail closed on every role-net reference outside exact declarations/calls.
+
+    This narrow source-family check intentionally rejects unknown syntax rather
+    than pretending to parse arbitrary Verilog or infer arbitrary cell directions.
+    """
+    text = re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.S)
+    for call in allowed_calls:
+        require(text.count(call) == 1, "source census expected call missing/duplicated")
+        text = text.replace(call, "")
+    for net in nets:
+        text = re.sub(r"\b(?:input\s+wire|output\s+wire|wire)\s+" + re.escape(net) + r"\s*[,;]", "", text)
+    extra = sorted({net for net in nets if re.search(r"\b" + re.escape(net) + r"\b", text)})
+    require(not extra, "unclassified extra source driver/use on role nets: " + ", ".join(extra))
+    return dict(role_nets=sorted(nets), exact_allowed_calls=len(allowed_calls), unclassified_references=0)
+
+
 def load_context(capsule, inputs, prep_path):
     raw = prep_path.read_bytes()
     require(digest(raw) == PREP_SHA, "source receipt differs")
@@ -105,6 +123,8 @@ def proposal(capsule, inputs, prep_path, part, request_type=TYPE, kind="clock", 
     bound = (capsule / part / "rtl" / (TYPE + "_bound.sv")).read_text()
     wrapper = (capsule / part / "rtl" / (TYPE + ".sv")).read_text()
     raw_edges, public_drivers, joins, paths = [], [], [], {}
+    source_census = {}
+    bound_calls = {}
     owners = {"kvpc0": "qkd_kvs_pc_h_head_p", **{f"kvpc{k}": "qkd_kvs_pc" for k in (1, 2, 3)}}
     require(set(r["child"] for r in rows) == set(owners), "missing genuine HEAD or BASE owner")
     for row in rows:
@@ -113,11 +133,16 @@ def proposal(capsule, inputs, prep_path, part, request_type=TYPE, kind="clock", 
         require(row["role"] == "mesh_driver" and row["output_net"] == "ck_mesh", "wrong clock role/output")
         call = re.search(r"\b" + module + r"\s+u_core_" + child + r"\s*\((.*?)\);", bound, re.S)
         require(call is not None, "actual child instantiation missing")
+        bound_calls[child] = call.group(0)
         for port, net in ((row["input_port"], row["input_net"]), (row["output_port"], "ck_mesh")):
             require(re.search(r"\." + port + r"\(\s*" + net + r"\s*\)", call.group(1)), "actual source edge differs")
         leaf = (capsule / part / "rtl" / (module + ".sv")).read_text()
         edges = cell_edges(leaf)
         require(len(edges) == 4, "raw FT producer census differs")
+        if module not in source_census:
+            allowed = re.findall(r"\b" + BUF + r"\s+mp_isl[01]_ck[01]\s*\(\.A\(ft_ck_i_[01]\),\s*\.Y\(ft_ck_o_[01](?:__p1)?\)\);", leaf)
+            role_nets = {f"ft_ck_{dr}_{i}" for dr in ("i", "o") for i in (0, 1)} | {f"ft_ck_o_{i}__p1" for i in (0, 1)}
+            source_census[module] = closed_reference_census(leaf, role_nets, allowed)
         fixed = incoming.get(row["driver_pair"][0], [])
         require(len(fixed) == 1 and fixed[0]["name"] == row["input_net"] and fixed[0]["drv"] == row["input_driver"], "wrong actual pre-mesh source")
         require(set(mesh["drivers"][row["mesh_driver_id"]]["cells"]) == set(row["driver_pair"]), "wrong canonical pair")
@@ -144,11 +169,22 @@ def proposal(capsule, inputs, prep_path, part, request_type=TYPE, kind="clock", 
             header = re.sub(r"//[^\n]*", "", text).split(");", 1)[0]
             require(re.search(r"\b" + direction + r"\s+wire\s+" + port + r"\b", header), "actual five-port cut missing")
         require(re.search(r"\." + port + r"\(\s*" + port + r"\s*\)", wrapper), "wrapper cut forwarding differs")
+    for child, call in bound_calls.items():
+        expected = Counter(r["input_net"] for r in rows if r["child"] == child)
+        expected["ck_mesh"] = 2
+        actual = Counter(token for token in re.findall(r"\b\w+\b", call) if token in ports)
+        require(actual == expected, "extra role-net connection inside actual child call")
+    source_census["bound"] = closed_reference_census(bound, set(ports), list(bound_calls.values()))
+    wrapper_call = re.search(r"\b" + TYPE + r"_bound\s*#\(.*?\)\s+u_bound\s*\(.*?\);", wrapper, re.S)
+    require(wrapper_call is not None, "normal wrapper bound call missing")
+    actual = Counter(token for token in re.findall(r"\b\w+\b", wrapper_call.group(0)) if token in ports)
+    require(actual == Counter({net: 2 for net in ports}), "extra role-net connection inside wrapper call")
+    source_census["wrapper"] = closed_reference_census(wrapper, set(ports), [wrapper_call.group(0)])
     return dict(schema="opentallas.hhp.intentional_clock_mesh_role.proposal.v1", enabled_by_default=False,
                 enabled_for_private_proposal=True, qualified=False, TYPE=TYPE, cohort=COHORT, part=part,
                 role="intentional_clock_mesh", kind="clock", common_root="port:root", polarity="noninverting",
                 ports=ports, raw_private_edges=raw_edges, source_public_mesh_drivers=public_drivers,
-                physical_join_intent=joins, actual_ancestry=paths,
+                physical_join_intent=joins, actual_ancestry=paths, closed_source_reference_census=source_census,
                 source_prep_sha256=PREP_SHA, pinned_graphs=PINS,
                 master_family_receipt_sha256=MASTER_RECEIPT_SHA,
                 generic_ft_policy_changed=False, new_CAD=False,

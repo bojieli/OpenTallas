@@ -117,3 +117,12 @@ def test_missing_master_requires_explicit_pinned_family():
     with pytest.raises(ValueError, match="source-family"):
         M.ancestry("a", incoming, placed, {})
     assert M.ancestry("a", incoming, placed, {"a": {"kind": "node", "master": M.BUF}}) == ["a", "port:root"]
+
+
+@pytest.mark.parametrize("extra", ["assign mesh = 1'b0;", "BUFx4 rogue (.A(data), .Y(mesh));", "assign data = mesh;", "always @* mesh = data;"])
+def test_unclassified_source_driver_or_use_rejected(extra):
+    call = "BUF normal (.A(clock), .Y(mesh));"
+    source = "module t(input wire clock, output wire mesh, input wire data); " + call + " endmodule"
+    assert M.closed_reference_census(source, {"clock", "mesh"}, [call])["unclassified_references"] == 0
+    with pytest.raises(ValueError, match="unclassified extra"):
+        M.closed_reference_census(source.replace("endmodule", extra + " endmodule"), {"clock", "mesh"}, [call])
