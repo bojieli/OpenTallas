@@ -1,0 +1,5 @@
+DIFF age1 index0/1
+DIFF age2 index1/2
+TAIL_INDEX checks=19928 errors=19928 visitedages=199
+FATAL: /srv/opentallas-scratch/claude/wt/codex-hbm-tail-index-1101/results/hbm_tail_index_1101/tb.sv:26: TAIL_INDEX FAIL
+       Time: 201451 Scope: tb
