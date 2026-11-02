@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.hcol_regional.prep.v1",
+  "source": "rtl/hdc/v41x/ot_hbm_idx_hcol_regional.sv",
+  "donor": "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv:ot_hidx_score_hcol",
+  "change": "two distinct region slices of qv_b/q_b/key, captured on respective clk_pair[r]",
+  "reverse_identity": true,
+  "regional_inputs": {
+    "qv_b": 2,
+    "q_b": 1136,
+    "key": 1088
+  },
+  "old_pin_count": 1216,
+  "new_pin_count": 2329,
+  "added_input_pins": 1113,
+  "added_flops": 0,
+  "added_cycles": 0,
+  "parent_required": "each region slice connected to original bus; new physical pin/window/lane capacity plan event",
+  "parent_activated": false,
+  "physical_qualification": "NOT RUN",
+  "proof": "RUNNING positive + one wrong regional query bit mutant, two equal-frequency clocks offset2ns"
+}
