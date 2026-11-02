@@ -38,6 +38,22 @@ io=['# PROPOSAL ONLY: exact1341 named child BPin shapes; no parent event adoptio
 for p in new:
  io.append('place_pin -pin_name {'+p['name']+'} -layer '+p['layer']+' -location {'+f"{p['x']:.6f} {p['y']:.6f}"+'} -pin_size {'+f"{p['pin_size_um'][0]:.6f} {p['pin_size_um'][1]:.6f}"+'}')
 (P/'candidate_io.tcl').write_text('\n'.join(io)+'\n')
+boundary=[]
+for p in new:
+ name=p['name'];bus=name.split('[')[0];bit=int(name.split('[')[1][:-1]) if '[' in name else None
+ x,y=p['x'],p['y'];face=p['face']
+ if face=='W':x=0.
+ elif face=='E':x=W
+ elif face=='N':y=H
+ elif face=='S':y=0.
+ row=dict(bus=bus,bit=bit,layer=p['layer'],x=x,y=y,face='I' if face=='internal' else face)
+ if face=='internal':row.update(w=p['pin_size_um'][0],h=p['pin_size_um'][1],entry=[p['x'],p['y']])
+ boundary.append(row)
+(P/'candidate_boundary_pins.json').write_text(json.dumps(boundary,indent=1)+'\n')
+macro_tcl=['# PROPOSAL ONLY: exact current macro names/sizes, no source adoption.','foreach {inst master x y orient} {']
+for m in macros:macro_tcl.append('  {'+m['instance']+'} '+m['master']+' '+str(m['origin'][0])+' '+str(m['origin'][1])+' '+m['orient'])
+macro_tcl+=['} {','  place_macro -macro_name $inst -location [list $x $y] -orientation $orient -exact','}']
+(P/'candidate_macro_placement.tcl').write_text('\n'.join(macro_tcl)+'\n')
 assert len(new)==len(old)==1341 and {p['name'] for p in new}=={p['name'] for p in old}
 assert sum(p['role']=='LIVE_FREE_PAD_INPUT' for p in new)==7
 old_by={p['name']:p for p in old};deltas=[dict(name=p['name'],old=old_by[p['name']],new=p) for p in new]
