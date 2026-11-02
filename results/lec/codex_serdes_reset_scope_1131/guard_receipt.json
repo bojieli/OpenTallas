@@ -1,0 +1,24 @@
+{
+ "verdict": "HELD",
+ "checks": {
+  "run_exit_zero": false,
+  "native_diagnostic_completed": false,
+  "original_baseline_points": true,
+  "expected_final_obligations": false,
+  "all_baseline_names_present": false,
+  "original_tail_pairs": true,
+  "all_loaded_candidates": false,
+  "joint_profile_no_drops": false,
+  "joint_statuses_all_proved": false,
+  "cons_native_reset_base": false,
+  "full_comparison_off": false,
+  "bm_tail_high_reset_live_refused": false,
+  "bm_tail_high_wrong_value_differs": false,
+  "encoder_header_reset_live_refused": false,
+  "encoder_header_wrong_value_differs": false
+ },
+ "native_error": null,
+ "run_tail": "ot-run: localhost      admits    10 GB (avail 188, reserve 0, fresh 0, peak 113.3, headroom 0, waiters 86/2062 GB) load 499/112 running 52 disk 299 GB \not-run: -> localhost (will queue: admits 10 GB < 16 GB)\not-heavy: admitted on tolerant-swine as oth-ubuntu-183101-1793579347 after 60 s\not-run: RAN on localhost (unit oth-ubuntu-183101-1793579347): exit 1\n",
+ "full_equivalence": "NOT_RUN",
+ "scope": "Native guard canary only. No source adoption, canonical comparison, route or signoff credit."
+}

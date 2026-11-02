@@ -1,0 +1,6 @@
+RESET_CASE phase=0.000 mode=0 held=64 minimum=66 core_min=66 rx_min=68 rn_r_low=68 rx_leaf_low=68
+RESET_CASE phase=0.000 mode=1 held=64 minimum=66 core_min=66 rx_min=68 rn_r_low=68 rx_leaf_low=68
+RESET_CASE phase=0.000 mode=2 held=61 minimum=63 core_min=63 rx_min=65 rn_r_low=65 rx_leaf_low=65
+STOPPED_STATE rn_r=0 rx_leaf=1
+RESET_CASE phase=0.000 mode=3 held=64 minimum=2 core_min=66 rx_min=2 rn_r_low=2 rx_leaf_low=2
+RESET_SCOPE_DIAGNOSTIC_COMPLETE clock_period_ps=833; no full PHY/boot/adoption claim
