@@ -44,12 +44,13 @@ invented global source epochs. No RTL stage or clock is added.
 The selected native source matches98 of the100 retained H10 profile hashes,
 with **zero changed files**. The historical qualification manifest and the
 original source schedule JSON are absent in that sparse native worktree.
-Their absence is preserved in `current_phase106_inputs.json`; no hashes or
-proof records are rewritten. The profile's full source-hash guard therefore
-cannot honestly claim current production qualification there. After the XS
-selector source event, that profile also needs explicit correspondence for
-the changed simulation selector source; the old hash must not be relabeled.
-A coherent source/manifest/schedule staging event is the next concrete step.
+Their absence from that native worktree is preserved in
+`current_phase106_inputs.json`; no hashes or proof records are rewritten. A
+private complete retained closure is now staged (all100 exact hashes pass),
+and the production-default qualifier rejects its unqualified native GB
+provider, as detailed below. After the XS selector source event, the profile
+also needs explicit correspondence for the changed simulation selector
+source; the old hash must not be relabeled.
 
 The retained replay scope is BF-active/Q-idle with its measured reset/family
 profile. Actual activation residency and source epochs, BF row tags,
@@ -65,3 +66,28 @@ Fresh actual images are in
 base/candidate hashes; applying it requires the exact original base hashes.
 `overlay.json` contains all192 actual issue records plus retained returns.
 This is an image-generation check, not a new BF arithmetic/reset simulation.
+
+The two missing retained files have now been faithfully staged privately with
+the98 unchanged native files. All100 qualification hashes pass. The exact
+qualifier with production-default flags then **fails closed** at the real
+remaining guard: `GB frame requires its qualified one-edge-early GO/TAG
+provider: col_h10_l4_lp_asb_x` (unit638180-1793599299, exit1).
+This is more precise than the initial missing-file diagnosis. The old BF
+recompiler used the explicit bench-only `OT_XS_GB_PROVIDER_UNDER_TEST=1`
+and `OT_XS_Q_CPR=1`; those flags exercise an unqualified provider and never
+set `native_provider_qualified=true`. They can admit the retained experimental
+scope, but cannot qualify production. That refusal is retained separately.
+
+A second independently observed open contract is BF return row identity:
+`field_rank_images.tag_plan` deliberately skips BF. Actual current phase110
+owns rows6..11 but its CFG labels are0..5; tail122 owns24..28 and labels0..4.
+Phase106 owns0..5 and therefore happens to coincide. The packet records the
+actual extracted labels without editing them or asserting a production
+capture failure (the complete consuming mission contract is still absent).
+
+Exact source-profile admission in that original explicit bench-only scope
+passed unit677080-1793599463, exit0, `measured_bf_active_idle_q`.
+The default production refusal remains unchanged. The private complete
+retained source root is
+`intel1:/srv/opentallas-scratch2/claude/codex-ds-bf-selectors-2200/source_closure_candidate1`.
+No source proof is transferred to the newly proposed selector manifest.
