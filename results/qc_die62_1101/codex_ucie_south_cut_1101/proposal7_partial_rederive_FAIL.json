@@ -1,0 +1,279 @@
+{
+ "changed": 8,
+ "errors": [
+  [
+   "cbf_q00__cl1b5a6458",
+   "ResetError('type cbf_q00__cl1b5a6458: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbf_q00__cl870de686",
+   "ResetError('type cbf_q00__cl870de686: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbf_q00_s2",
+   "ResetError('type cbf_q00_s2: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbf_q01",
+   "ResetError('type cbf_q01: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbf_q01_s2",
+   "ResetError('type cbf_q01_s2: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbf_q11",
+   "ResetError('type cbf_q11: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbn_q00__cl622f65d2",
+   "ResetError('type cbn_q00__cl622f65d2: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbn_q00__cld7bf7197",
+   "ResetError('type cbn_q00__cld7bf7197: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbn_q00__cldbcda913",
+   "ResetError('type cbn_q00__cldbcda913: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbn_q01__clab6e67f2",
+   "ResetError('type cbn_q01__clab6e67f2: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbn_q01__cld9ff4c40",
+   "ResetError('type cbn_q01__cld9ff4c40: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbn_q01__cldd6ea846",
+   "ResetError('type cbn_q01__cldd6ea846: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbn_q11__cl49ae4555",
+   "ResetError('type cbn_q11__cl49ae4555: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbn_q11__cl5cc92dfe",
+   "ResetError('type cbn_q11__cl5cc92dfe: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbx_q10__cl89936551",
+   "ResetError('type cbx_q10__cl89936551: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "cbx_q10__cl94a12200",
+   "ResetError('type cbx_q10__cl94a12200: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "sle_su_c",
+   "ResetError('type sle_su_c: cannot uniquely resolve hard-core pin table cores/su/signed/qfd_dv_s8x_vmr_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "sle_su_l0__cl086d85ba",
+   "ResetError('type sle_su_l0__cl086d85ba: cannot uniquely resolve hard-core pin table cores/su/slw_su_l0_u_lane0_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "sle_su_l0__cl7a55c676",
+   "ResetError('type sle_su_l0__cl7a55c676: cannot uniquely resolve hard-core pin table cores/su/slw_su_l0_u_lane0_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "sle_su_l1__cl5ea486db",
+   "ResetError('type sle_su_l1__cl5ea486db: cannot uniquely resolve hard-core pin table cores/su/slw_su_l1_u_lane4_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "sle_su_l1__clc6d66f5b",
+   "ResetError('type sle_su_l1__clc6d66f5b: cannot uniquely resolve hard-core pin table cores/su/slw_su_l1_u_lane4_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "slw_su_c__cl19bb38ef",
+   "ResetError('type slw_su_c__cl19bb38ef: cannot uniquely resolve hard-core pin table cores/su/signed/qfd_dv_s8x_vmr_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "slw_su_c__cl92142dac",
+   "ResetError('type slw_su_c__cl92142dac: cannot uniquely resolve hard-core pin table cores/su/signed/qfd_dv_s8x_vmr_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "slw_su_l0__cl1a1c1f8f",
+   "ResetError('type slw_su_l0__cl1a1c1f8f: cannot uniquely resolve hard-core pin table cores/su/slw_su_l0_u_lane0_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "slw_su_l0__cl1e5219ea",
+   "ResetError('type slw_su_l0__cl1e5219ea: cannot uniquely resolve hard-core pin table cores/su/slw_su_l0_u_lane0_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "slw_su_l0__cl76fb247e",
+   "ResetError('type slw_su_l0__cl76fb247e: cannot uniquely resolve hard-core pin table cores/su/slw_su_l0_u_lane0_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "slw_su_l1__cla2a78701",
+   "ResetError('type slw_su_l1__cla2a78701: cannot uniquely resolve hard-core pin table cores/su/slw_su_l1_u_lane4_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ],
+  [
+   "slw_su_l1__clcc9d0155",
+   "ResetError('type slw_su_l1__clcc9d0155: cannot uniquely resolve hard-core pin table cores/su/slw_su_l1_u_lane4_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-repack-gates-1101')"
+  ]
+ ],
+ "rows": [
+  {
+   "type": "coll_ftm",
+   "changed": [
+    "tree"
+   ],
+   "relays_old": 63,
+   "relays_new": 61,
+   "only_old": [
+    "rst_rl_10",
+    "rst_rl_15",
+    "rst_rl_22",
+    "rst_rl_23",
+    "rst_rl_25",
+    "rst_rl_32",
+    "rst_rl_34",
+    "rst_rl_35"
+   ],
+   "only_new": [
+    "rst_rl_13",
+    "rst_rl_18",
+    "rst_rl_21",
+    "rst_rl_26",
+    "rst_rl_28",
+    "rst_rl_31",
+    "rst_rl_33",
+    "rst_rl_38"
+   ],
+   "depth_old": 5,
+   "depth_new": 5,
+   "src_taps": [],
+   "kids": [],
+   "export": []
+  },
+  {
+   "type": "sle_fe_v2",
+   "changed": [
+    "tree"
+   ],
+   "relays_old": 92,
+   "relays_new": 91,
+   "only_old": [
+    "rst_rl_40",
+    "rst_rl_41",
+    "rst_rl_47",
+    "rst_rl_48",
+    "rst_rl_55",
+    "rst_rl_57",
+    "rst_rl_60",
+    "rst_rl_65"
+   ],
+   "only_new": [
+    "rst_rl_42",
+    "rst_rl_44",
+    "rst_rl_49",
+    "rst_rl_53",
+    "rst_rl_56",
+    "rst_rl_59",
+    "rst_rl_61",
+    "rst_rl_66"
+   ],
+   "depth_old": 5,
+   "depth_new": 5,
+   "src_taps": [],
+   "kids": [],
+   "export": []
+  },
+  {
+   "type": "slw_fw_v1__cl51d45468",
+   "changed": [
+    "tree"
+   ],
+   "relays_old": 112,
+   "relays_new": 112,
+   "only_old": [],
+   "only_new": [],
+   "depth_old": 5,
+   "depth_new": 5,
+   "src_taps": [],
+   "kids": [],
+   "export": []
+  },
+  {
+   "type": "slw_fw_v1__clf51c11d8__cl592e3d37",
+   "changed": [
+    "tree"
+   ],
+   "relays_old": 112,
+   "relays_new": 112,
+   "only_old": [],
+   "only_new": [],
+   "depth_old": 5,
+   "depth_new": 5,
+   "src_taps": [],
+   "kids": [],
+   "export": []
+  },
+  {
+   "type": "slw_fw_v1__clf51c11d8__clc7ddab13",
+   "changed": [
+    "tree"
+   ],
+   "relays_old": 112,
+   "relays_new": 112,
+   "only_old": [],
+   "only_new": [],
+   "depth_old": 5,
+   "depth_new": 5,
+   "src_taps": [],
+   "kids": [],
+   "export": []
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "changed": [
+    "tree"
+   ],
+   "relays_old": 135,
+   "relays_new": 135,
+   "only_old": [],
+   "only_new": [],
+   "depth_old": 4,
+   "depth_new": 4,
+   "src_taps": [],
+   "kids": [],
+   "export": []
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "changed": [
+    "tree"
+   ],
+   "relays_old": 130,
+   "relays_new": 130,
+   "only_old": [],
+   "only_new": [],
+   "depth_old": 4,
+   "depth_new": 4,
+   "src_taps": [],
+   "kids": [],
+   "export": []
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "changed": [
+    "tree"
+   ],
+   "relays_old": 130,
+   "relays_new": 130,
+   "only_old": [],
+   "only_new": [],
+   "depth_old": 4,
+   "depth_new": 4,
+   "src_taps": [],
+   "kids": [],
+   "export": []
+  }
+ ],
+ "plan_in": "df20d5553a18a334ab63c421499523b9648079dad7286a476846770b7d92798f",
+ "plan_out": "f2c42cd663d620cfbdbe611d1a745c5a3ba9ab54dfbeec058a0b95accd445c7e",
+ "sidecar_in": "4c56c7a486c0ff8e758e60bd01d71b48d0ebd834a6b593179bf5d309f5612422",
+ "sidecar_out": "d3f81df8656f39d3351604eef1259a7f7389ed88a09417d447a78c9f976e52da"
+}

@@ -128,7 +128,8 @@ def main():
         print("  ERR", *e)
     if rep_p:
         open(rep_p, "w").write(json.dumps(rep, indent=1) + "\n")
+    return bool(errs)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
