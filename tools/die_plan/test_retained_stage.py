@@ -203,3 +203,14 @@ def test_dry_common_bootstrap_calls_modes_patch_then_only_native_cts(tmp_path):
     assert 'check-makefile' in calls[0] and '--step cts' in calls[1]
     assert 'orfs_hold_mm.py' in calls[2] and calls[3].endswith('NUM_CORES=8 do-cts')
     assert len(calls)==4
+
+
+def test_inert_normal_async_helper_is_bound_but_every_controller_marker_refuses(packet):
+    k=packet[0]
+    write(k/'lec_async.sh','#!/bin/bash\n# normal inert helper, never invoked by this consumer\n')
+    d=valid(packet)
+    assert d['files_sha256']['lec_async.sh']==R.digest(k/'lec_async.sh')
+    for marker in ('lec_async.ready','lec_async.rc','lec_async.identity','lec_async.on','lec_async.done','lec_async.pid','lec_async.sh.lock'):
+        write(k/marker,'retained controller state')
+        with pytest.raises(R.Refuse,match='async controller state'):valid(packet)
+        (k/marker).unlink()

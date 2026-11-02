@@ -139,7 +139,7 @@ def validate(kit, proof, place_sha, place_sdc_sha, stage='cts', lease_probe=nati
     if active:
         raise Refuse('active native lease: ' + ', '.join(active))
     no_later_stage(kit)
-    if list(kit.glob('lec_async.*')):
+    if any(p.name != 'lec_async.sh' for p in kit.glob('lec_async.*')):
         raise Refuse('standalone consumer refuses async controller state')
     if any(p.is_symlink() for p in kit.rglob('*')):
         raise Refuse('retained input tree contains symlinks')
@@ -228,6 +228,8 @@ def validate(kit, proof, place_sha, place_sdc_sha, stage='cts', lease_probe=nati
                  'source_proof/official_lec.status', 'source_proof_identity.json',
                  'SOURCE_EQ_GATE.json', 'prepared_input_closure.json'):
         binding[name] = digest(local(kit, name))
+    if (kit / 'lec_async.sh').is_file():
+        binding['lec_async.sh'] = digest(local(kit, 'lec_async.sh'))
     for f in (kit / 'run/results').rglob('*'):
         if f.is_file() and re.match('[1-3]_', f.name):
             binding.setdefault(str(f.relative_to(kit)), digest(f))
