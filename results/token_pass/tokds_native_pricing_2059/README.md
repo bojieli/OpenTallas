@@ -47,3 +47,13 @@ conditional historical-DAG sensitivities, not measured/current-production rates
 or a rate-of-record update. Six AR and12 MTP unmapped terms remain explicit.
 `analytical_current_lane_rates.json` retains the existing grade labels and
 separates the stale baseline from the current lane-price correction.
+
+The native group residual is diagnosed in native_group_diagnosis.json:
+99 landing groups contain members on one lane with different preserved
+as-built offsets (bound−asbuilt differs within that lane). A uniform extra
+per-lane scalar pad cannot repair that metadata relation. The remaining group
+is bk_sel: ca/cb are both as-built0, native59/58. All13 replica sets have
+unequal current bound depths. These are unqualified alignment relations, not
+an asserted mission failure without an actual witness; they require per-bit
+semantics/replica-calendar review. The old v47b scalar export is not a remedy.
+No new padding or source contract was applied by this diagnosis.
