@@ -1,0 +1,19 @@
+{
+  "enabled": false,
+  "module": "dsdv_bksel_q",
+  "clock_name": "ck",
+  "width": 1,
+  "period_ps": 833,
+  "contract_core_pins": "results/geom_review/s81_qbs_repack_B_2233/centre_clock/dsdv_bksel_q_core_pins.json",
+  "contract_child_LEF": "results/geom_review/s81_qbs_repack_B_2233/centre_clock/dsdv_bksel_q_contract.lef",
+  "all_parent_instances": "For every hard-core reference whose module/master is dsdv_bksel_q, replace core_pins and child LEF coherently in an own disabled plan copy; no partial parent/child switch",
+  "future_child_view": "Requires fresh actual exported view from this same macro/clock event; no old insertion/signoff transfer",
+  "source_inputs": [
+    "physical/die_plan/s81/inputs/core_pins/dsdv_bksel_q.json",
+    "physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q.lef",
+    "physical/die_plan/s81/die_plan.json",
+    "physical/die_plan/s81/plan_h2_2249.json",
+    "physical/die_plan/s81/cores/legacy/profiles/hist_pincopy_1101/spec/spec.json"
+  ],
+  "proof": "PREPARED current051 sameRTL/netlist; HOLD bothlegacyterminal+ROOTauthorization, no qualification"
+}

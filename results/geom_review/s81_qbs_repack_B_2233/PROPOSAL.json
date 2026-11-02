@@ -370,5 +370,16 @@
     "tolerance_ps": 40
   },
   "external_ABI": "outline/pins/1801 faceFF/clock reset nets unchanged",
-  "source_EQ": "HOLD alias1613 official70diff; rb2/rb4 legacyLIVE Intel2; current051 exact same RTL/netlist EQ required or ROOT-approved parallel actual proof. No duplication before legacyterminal."
+  "source_EQ": "HOLD alias1613 official70diff; rb2/rb4 legacyLIVE Intel2; current051 exact same RTL/netlist EQ required or ROOT-approved parallel actual proof. No duplication before legacyterminal.",
+  "optional_authorized_clock_entry_candidate": {
+    "enabled": false,
+    "path": "centre_clock/parent_type_overlay_disabled.json",
+    "clock": "ck same name/width/frequency; new physical M5 entry",
+    "pin_center_um": [
+      324.012,
+      331.212
+    ],
+    "allFF_model": "centre_clock/all31847_ff_anchors_with_clock_bay.json.gz",
+    "requires_actual_new_child_view": true
+  }
 }

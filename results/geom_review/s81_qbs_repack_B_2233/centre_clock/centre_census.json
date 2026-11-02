@@ -1,0 +1,72 @@
+{
+  "enabled": false,
+  "kind": "sameclock_physical_entry_only",
+  "old_ck": {
+    "name": "ck",
+    "layer": "M3",
+    "x": 304.569,
+    "y": 647.868
+  },
+  "new_ck": {
+    "enabled": false,
+    "name": "ck",
+    "width": 1,
+    "layer": "M5",
+    "center_um": [
+      324.012,
+      331.212
+    ],
+    "bbox_um": [
+      323.988,
+      330.972,
+      324.036,
+      331.452
+    ],
+    "driver_bay_um": [
+      321.84,
+      328.32,
+      326.16,
+      332.64
+    ],
+    "unchanged": [
+      "name",
+      "width",
+      "frequency",
+      "RTL",
+      "register_count"
+    ],
+    "actual_track": {
+      "offset_um": 0.012,
+      "pitch_um": 0.048
+    },
+    "normal_clock_PG_regen_required": true
+  },
+  "other_pin_entries_unchanged": 1802,
+  "LEF_non_ck_text_exact": true,
+  "native_track_offset_um": 0.012,
+  "native_track_pitch_um": 0.048,
+  "on_M5_XY_tracks": true,
+  "min_pin_width_um": 0.048,
+  "pin_length_um": 0.48,
+  "nominal_M5_PG_pair_clearance_um": 1.968,
+  "PG_clearance_scope": "source PDN stripe pair centre convention; actual regenerated PG/via landing still required",
+  "driver_bay_rows": 16,
+  "driver_bay_native_fixed_count": 0,
+  "driver_bay_fixed_types": [],
+  "driver_bay_historical_tap_area_um2": 0,
+  "driver_bay_nominal_row_area_um2": 18.66240000000022,
+  "FF_targets_inside_bay": 0,
+  "macro_clock_pins": 32,
+  "root_to_macro_clock_max_before_um": 817.731,
+  "root_to_macro_clock_max_after_um": 491.50800000000004,
+  "root_to_allFF_max_before_um": 941.34,
+  "root_to_allFF_max_after_um": 644.127,
+  "frequency_RTL_FF_count_unchanged": true,
+  "physical_buffer_price": "No buffer fabricated/preplaced; bay reserves capacity for normal clock-entry buffer/CTS. Actual added cells/area and TT+FF latency priced by future clock stage.",
+  "integer_DBU_endpoint_census": {
+    "dbu_per_um": 1000,
+    "max_FF_DBU": 404946,
+    "max_macro_DBU": 404943,
+    "FF_and_macro_gt405000": 0
+  }
+}
