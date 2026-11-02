@@ -334,6 +334,42 @@ class TestRules(unittest.TestCase):
         R, v = G.judge(far, {"metrics": t})
         self.assertIn("FAIL", [r["status"] for r in R if r["rule"] == "clk_clock_net_hpwl_max"])
 
+    def test_grt_checkpoint_with_clock_cells_uses_cts_rules_and_run_grt_log(self):
+        # GEOMGRT_1101 (COORD 11-01 19:4x): a 5_1_grt checkpoint holds the post-CTS tree -> 4_cts rule set
+        # (clock_leaf_reach gate, clock_reach INFO), GRT overflow from the run's own logs/.../5_1_grt.log
+        flops = [(i, 190, 10 + i) for i in range(1, 41)]
+        p = dump(self.d / "g.tsv", flops=flops, comb=fill_cells(1000, 3600),
+                 nets=[("CLOCK", "p0", ["i500"]), ("CLOCK", "i500", [f"i{i}c" for i in range(1, 41)])],
+                 pins=[(0, "clk", "INPUT", 0, 20, "CLOCK")])
+        p.write_text(p.read_text() + "C\t500\tK\tCKBUFx4_ASAP7_75t_R\t180\t5\t181\t6\tcb\n")
+        res = self.d / "kit/run/results/asap7/d/base"
+        logs = self.d / "kit/run/logs/asap7/d/base"
+        res.mkdir(parents=True)
+        logs.mkdir(parents=True)
+        (res / "5_1_grt.odb").write_text("")
+        (logs / "5_1_grt.log").write_text(
+            "[INFO GRT-0102] Start extra iteration 1/30\n[INFO GRT-0096] Final congestion report:\n"
+            "Layer Resource Demand Usage (%) Max H / Max V / Total Congestion\n"
+            "M2  100  50  50.00%  0 /  0 /  0\n"
+            "Total          100       50           50.00%             0 /  0 /  0\n")
+        m = G.metrics(str(p), odb=str(res / "5_1_grt.odb"))
+        self.assertEqual(m["stage"], "cts")
+        self.assertEqual(m["checkpoint"], "5_1_grt.odb")
+        self.assertEqual(m["grt_overflow"], 0)
+        self.assertEqual(m["grt_src"], str(logs / "5_1_grt.log"))
+        st = {r["rule"]: r["status"] for r in G.judge(m, None, [200, 200])[0]}
+        self.assertEqual(st["clock_reach"], "INFO")
+        self.assertEqual(st["clock_leaf_reach"], "PASS")
+        self.assertEqual(st["grt"], "PASS")
+        self.assertNotIn("checkpoint", st)
+        # same checkpoint without clock cells: still out of scope (NA)
+        q = dump(self.d / "g0.tsv", flops=flops, comb=fill_cells(1000, 3600),
+                 nets=[("CLOCK", "p0", [f"i{i}c" for i in range(1, 41)])], pins=[(0, "clk", "INPUT", 0, 20, "CLOCK")])
+        m0 = G.metrics(str(q), odb=str(res / "5_1_grt.odb"))
+        self.assertEqual(m0["stage"], "other")
+        self.assertEqual(G.stage_of_odb("x/5_2_route.odb"), "postcts")
+        self.assertEqual(G.stage_of_odb("x/3_place.odb"), "placed")
+
 
 class TestRegistry(unittest.TestCase):
     ROWT = ["t1", "qwen_kvsys", "kv3_astk", "kv3_astk", "0.0000 0.0000 190.0800 181.4400", "aa", "bb", "placed",

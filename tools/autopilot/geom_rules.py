@@ -52,6 +52,7 @@ import argparse
 import importlib.util
 from pathlib import Path
 import json
+import os
 import hashlib
 import math
 import re
@@ -1596,7 +1597,25 @@ def stage_of_odb(name):
     """checkpoint stage from the ORFS file name: AUTO-GEOM judges only the pre-route review points (3_place / 4_cts);
     GRT / routed checkpoints carry timing verdicts (GEOM-REVIEW 13:52 elemB_if2e 5_1_grt FAIL on clock timing)"""
     b = (name or "").rsplit("/", 1)[-1]
+    if b.startswith(POST_CTS_PREFIXES):
+        return "postcts"      # GEOMGRT_1101: metrics() maps it to the 4_cts rule set when the checkpoint has clock cells
     return "placed" if b.startswith("3_place") else "cts" if b.startswith("4_cts") else "other" if b else ""
+
+
+# GEOMGRT_1101 (COORD 11-01 19:4x): a 5_1_grt (or later) checkpoint carries the post-CTS clock tree; judging it with the
+# pre-CTS rules gave false FAILs.  With clock cells it is judged with the 4_cts rule set (clock_leaf_reach <= 220 is the
+# gate, clock_reach INFO), and GRT overflow is read from that run's own ORFS 5_1_grt.log (logs/ twin of results/).
+POST_CTS_PREFIXES = ("5_", "6_")
+
+
+def run_grt_log(odb):
+    """the ORFS run's 5_1_grt.log for a results/<platform>/<design>/<variant>/<checkpoint>.odb, or None"""
+    if not odb or "/results/" not in odb:
+        return None
+    d = os.path.dirname(odb)
+    i = d.find("/results/")
+    p = d[:i] + "/logs/" + d[i + len("/results/"):] + "/5_1_grt.log"
+    return p if os.path.isfile(p) else None
 
 
 def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False, ft_interface=None, ft_ports=None,
@@ -1631,8 +1650,14 @@ def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=Non
     m.update(relay_metrics(D))
     m.update(demand_metrics(D, max_layer or "M5"))
     m.update(clock_entry_metrics(D, ck))
-    m.update(grt_metrics(grt_log))
     st = stage_of_odb(odb)
+    rl = run_grt_log(odb) if st == "postcts" else None
+    m.update(grt_metrics(rl or grt_log))
+    if rl:
+        m["grt_src"] = rl
+    if st == "postcts":
+        m["checkpoint"] = os.path.basename(odb)
+        st = "cts" if m.get("clock_cells") else "other"
     if st:
         m["stage"] = st
     return m

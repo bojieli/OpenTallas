@@ -15,6 +15,9 @@ ODB=$(J odb ""); IMG=$(J image openroad/orfs:asap7lock); ID=$(J id x); MEM=$(J m
 GRT=$(J grt true); GITER=$(J grt_iter 50)
 test -f "$ODB" || { echo "AP_AUTO_GEOM_ERROR checkpoint missing: $ODB"; exit 2; }
 OD=$(dirname "$ODB"); OB=$(basename "$ODB")
+# GEOMGRT_1101 (COORD 11-01 19:4x): a 5_1_grt (or later) checkpoint is judged with the 4_cts rules and its GRT overflow
+# is read from that run's own logs/.../5_1_grt.log (geom_rules.run_grt_log); no probe GRT on top of a routed one
+case "$OB" in 5_*|6_*) RL="${OD/\/results\//\/logs\/}/5_1_grt.log"; [ -f "$RL" ] && GRT=false;; esac
 KIT=$(cd "$OD/../../../../.." 2>/dev/null && pwd)
 kv() { [ -f "$KIT/config.mk" ] && sed -nE "s/^\s*(export\s+)?$1\s*[:?]?=\s*(\S+).*/\2/p" "$KIT/config.mk" | tail -1; }
 GMAX=$(J grt_max "$(kv MAX_ROUTING_LAYER)"); GMAX=${GMAX:-M5}
