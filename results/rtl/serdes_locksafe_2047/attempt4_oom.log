@@ -1,0 +1,9 @@
+ot-run: epyc2          admits   -14 GB (avail 162, reserve 0, fresh 54.4, peak 57.2, headroom 0, waiters 7/391 GB) load 148/128 running 53 disk 191 GB 
+ot-run: intel1         admits    12 GB (avail 227, reserve 0, fresh 97.7, peak 53.6, headroom 0, waiters 194/2947 GB) load 156/112 running 66 disk 551 GB 
+ot-run: localhost      admits     0 GB (avail 359, reserve 0, fresh 70.7, peak 73, headroom 0, waiters 113/2358 GB) load 170/112 running 33 disk 216 GB 
+ot-run: epyc2 skipped for this die job: DISK 191 GB free - 210 GB running/queued die reservations < 2 GB
+ot-run: localhost skipped for this die job: DISK 216 GB free - 420 GB running/queued die reservations < 2 GB
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-3677016-1793595152 after 131 s
+ot-heavy: MEMCG-OOM on key-cardinal at 2026-11-01T20:55:37-0800: 1 process(es) of unit oth-ubuntu-3677016-1793595152 killed at the scope's own MemoryMax (4294967296 B, peak 4.0 GiB); job exit 143: raise --mem or lower -j
+ot-run: RAN on intel1 (unit oth-ubuntu-3677016-1793595152): exit 143

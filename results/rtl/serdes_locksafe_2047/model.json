@@ -1,0 +1,34 @@
+{
+  "status": "UNSELECTED_SOURCE_CANDIDATE",
+  "default_LOCKSAFE": 0,
+  "original_modules_and_callers_unchanged": true,
+  "analytic_added_control_ff_bits": 9,
+  "added_mission_cycles": 0,
+  "added_boot_recovered_edges": 66,
+  "helper_release_edges_measured": 66,
+  "native_recovered_reset_release_edges_measured": 68,
+  "native_variants": [
+    "flat",
+    "column"
+  ],
+  "epochs": [
+    "cold_PMA_stopped",
+    "lock_loss_relock_PMA_stopped",
+    "warm_reset_PMA_stopped"
+  ],
+  "default_off_lockstep_checks_each": 1011,
+  "mutants_caught": [
+    "hold63_released_early_edge65",
+    "ignored_lock_loss_kept_nonzero_FIFO_pointer_state",
+    "default_guard_activation_changed_reference_reset"
+  ],
+  "gate_4GiB": "MEMCG_OOM_during_Icarus_three_codec_elaboration",
+  "gate_8GiB": "PASS",
+  "production_adoption": false,
+  "physical_timing": "NOT_RUN",
+  "arithmetic_or_full_mission_claim": false,
+  "remaining_authority": [
+    "external_PMA_lock_and_independent_training_spec",
+    "production_bind_plan_reset_contract_and_boot_model_adoption"
+  ]
+}
