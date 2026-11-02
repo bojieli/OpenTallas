@@ -204,8 +204,14 @@
       "this_core_free_pad_bits": 7,
       "global_live_pad_producer_groups": 60,
       "global_tnode_instances": 30,
-      "physical_reservation_rectangles": "UNSUPPLIED_NOT_INVENTED",
+      "upstream_producer_reservation_rectangles": "UNSUPPLIED_NOT_INVENTED",
+      "this_core_all7_pad_BPin_rectangles": "PROVIDED_EXACT_LAYER_SIDE_RECT_IN_PIN_MAP",
       "ties_or_case_constraints": "NONE"
+    },
+    "actual_compact_geometry_gates": {
+      "empty_bin_area": "NOT_RUN_REQUIRES_ACTUAL_PLACEMENT",
+      "channel_demand": "NOT_RUN",
+      "pin_reach": "NOT_RUN"
     },
     "source_cycles": "UNCHANGED_RAW_NATIVE_NO_OUTER_FACE_SHELL",
     "holds": [
