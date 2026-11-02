@@ -1,0 +1,38 @@
+{
+  "status": "PASS_EXACT_NATIVE_MASTER_ABI",
+  "master": "ot_sram_1r1w_256x256_m2_r2c2",
+  "signal_bits": 821,
+  "native_master_count": 32,
+  "native_memory_bits": 2097152,
+  "failures": {
+    "LEF": {
+      "missing": [],
+      "extra": [],
+      "direction": []
+    },
+    "TT": {
+      "missing": [],
+      "extra": [],
+      "direction": []
+    },
+    "FF": {
+      "missing": [],
+      "extra": [],
+      "direction": []
+    },
+    "nativeBB": {
+      "missing": [],
+      "extra": [],
+      "direction": []
+    }
+  },
+  "hashes": {
+    "ot_sram_1r1w_256x256_m2_r2c2_ss.lib": "4b23140d5ad97bb322c9dc2ac5f5dc5c27ecf1f9c87616b4389a6f8b01ac69dc",
+    "ot_sram_1r1w_256x256_m2_r2c2_bb.v": "35e0905c083a17f1c222512a3093a059cec5b128f5f017fda999653084c9e75f",
+    "ot_sram_1r1w_256x256_m2_r2c2.lef": "5bddc67f77da42e5964b6537ee70069c8a7f60965b36d89cc0a849dce85c4131",
+    "ot_sram_1r1w_256x256_m2_r2c2_ff.lib": "a3a974f3e507422e63fb2ed36b88815b3eb21b0715d43c8fcce18aad0b40f7a9",
+    "ot_sram_1r1w_256x256_m2_r2c2_tt.lib": "c725d57f52609ac9bcd2f3557fac1d8bb617659329744ac037879f52281cbb00"
+  },
+  "preserved_native_semantics": "RB11 ra[10:3]/wa[10:3], registered ks=ra[2:0],32-bit ro[{ks,5b0}+:32],wd replicated8times with32-bit shifted mask; rr/cr repair controls stay literal0 in exact selected lbank. Same true native master only; no generic memory alias.",
+  "scope": "Signal names/width/direction and exact selected consumer wiring. Does not prove macro transistor behavior, provider mapped EQ, reset release or physical timing."
+}
