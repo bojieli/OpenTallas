@@ -91,7 +91,7 @@ def test_graph_source_mutant_rejected(tmp_path):
                                                ("missing", "missing or multiple"), ("multiple", "missing or multiple"),
                                                ("cycle", "cycle"), ("wrongroot", "missing ancestry")])
 def test_ancestry_controls(mutation, message):
-    placed = {"a": {"kind": "node"}, "b": {"kind": "rep", "lib": M.BUF}}
+    placed = {"a": {"kind": "node", "lib": M.BUF}, "b": {"kind": "rep", "lib": M.BUF}}
     incoming = {"a": [{"drv": "b"}], "b": [{"drv": "port:root"}]}
     assert M.ancestry("a", incoming, placed) == ["a", "b", "port:root"]
     if mutation == "polarity": placed["b"]["lib"] = "INVx1_ASAP7_75t_R"
@@ -107,3 +107,13 @@ def test_generic_data_multidriver_stays_rejected():
     with pytest.raises(M.F.FtError):
         M.F.declaration([dict(cell="a", source="data_a", sink="data_y", kind="clock"),
                          dict(cell="b", source="data_b", sink="data_y", kind="clock")], "control")
+
+
+def test_missing_master_requires_explicit_pinned_family():
+    placed = {"a": {"kind": "node"}}
+    incoming = {"a": [{"drv": "port:root"}]}
+    with pytest.raises(ValueError, match="missing actual master"):
+        M.ancestry("a", incoming, placed)
+    with pytest.raises(ValueError, match="source-family"):
+        M.ancestry("a", incoming, placed, {})
+    assert M.ancestry("a", incoming, placed, {"a": {"kind": "node", "master": M.BUF}}) == ["a", "port:root"]

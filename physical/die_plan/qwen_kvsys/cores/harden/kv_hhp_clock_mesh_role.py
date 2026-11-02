@@ -21,6 +21,7 @@ PINS = {
     "canonical_sites.json.gz": "d25f60c6f22e6921a36d73a850b3bc8a3822f0e5545879ff05e84bd1755513db",
     "historical_ft_manifest.json": "6204f0d885ba697ceb261a6d9cfb9e99b757ff56d4b16d90d3c2ab4ff966307b",
 }
+MASTER_RECEIPT_SHA = "91547a79f7671f58226daff55050f92ce6c5d662b60fa84481611935b8c85838"
 PREP_SHA = "5323c1ed3853aa9ebd8bb191f93631b531391ce475ca5231f4b3df5a921dfed7"
 
 
@@ -33,7 +34,7 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def ancestry(node, incoming, placed):
+def ancestry(node, incoming, placed, certified_family=None):
     """Trace actual fixed-wire edges; a shared clock label alone is insufficient."""
     path = []
     while node != "port:root":
@@ -41,7 +42,13 @@ def ancestry(node, incoming, placed):
         require(node in placed, "missing ancestry cell")
         cell = placed[node]
         require(cell.get("kind") in ("node", "rep"), "wrong ancestry cell role")
-        require(cell.get("lib", BUF) == BUF, "ancestry master/polarity is not certified noninverting BUF")
+        master = cell.get("lib")
+        if master is None and certified_family is not None:
+            entry = certified_family.get(node, {})
+            require(entry.get("kind") == cell.get("kind"), "missing explicit pinned source-family master receipt")
+            master = entry.get("master")
+        require(master is not None, "missing actual master or explicit pinned source-family receipt")
+        require(master == BUF, "ancestry master/polarity is not certified noninverting BUF")
         require(len(incoming.get(node, [])) == 1, "missing or multiple ancestry drivers")
         path.append(node)
         node = incoming[node][0]["drv"]
@@ -69,6 +76,11 @@ def load_context(capsule, inputs, prep_path):
         for name, sha in info["source_files_sha256"].items():
             require(digest((capsule / part / "rtl" / name).read_bytes()) == sha,
                     "actual source differs: " + part + "/" + name)
+    receipt_bytes = (ROOT / "results/hhp_clock_mesh_role_1102/canonical_master_family.json").read_bytes()
+    require(digest(receipt_bytes) == MASTER_RECEIPT_SHA, "pinned master-family receipt differs")
+    receipt = json.loads(receipt_bytes)
+    require(receipt["canonical_place_decompressed_sha256"] == PINS["canonical_place.json.gz"], "master-family graph differs")
+    data["master_family"] = receipt["cells"]
     return prep, data
 
 
@@ -109,7 +121,7 @@ def proposal(capsule, inputs, prep_path, part, request_type=TYPE, kind="clock", 
         fixed = incoming.get(row["driver_pair"][0], [])
         require(len(fixed) == 1 and fixed[0]["name"] == row["input_net"] and fixed[0]["drv"] == row["input_driver"], "wrong actual pre-mesh source")
         require(set(mesh["drivers"][row["mesh_driver_id"]]["cells"]) == set(row["driver_pair"]), "wrong canonical pair")
-        paths[row["input_net"]] = ancestry(row["input_driver"], incoming, placed)
+        paths[row["input_net"]] = ancestry(row["input_driver"], incoming, placed, data["master_family"])
         for j, c in enumerate(row["parallel_cells"]):
             name = f"mp_isl{k}_ck{j}"
             y = row["output_port"] + ("__p1" if j else "")
@@ -138,6 +150,7 @@ def proposal(capsule, inputs, prep_path, part, request_type=TYPE, kind="clock", 
                 ports=ports, raw_private_edges=raw_edges, source_public_mesh_drivers=public_drivers,
                 physical_join_intent=joins, actual_ancestry=paths,
                 source_prep_sha256=PREP_SHA, pinned_graphs=PINS,
+                master_family_receipt_sha256=MASTER_RECEIPT_SHA,
                 generic_ft_policy_changed=False, new_CAD=False,
                 holds=["Standalone proposal, not a normal FT declaration or installed waiver",
                        "Physical joins are intent, not already-short raw private outputs",
