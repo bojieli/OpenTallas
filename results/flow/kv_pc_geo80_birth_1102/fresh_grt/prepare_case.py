@@ -18,7 +18,7 @@ assert sha(S/B/'4_cts.odb')=='68650b4a50d838feab16db8b742775f5e05b1904d6e6a34687
 shutil.copy2(S/'repair_checkpoint.odb',D/B/'4_cts.odb')
 shutil.copy2(S/B/'4_cts.odb',D/'original_route.odb')
 shutil.copy2(S/'ORIGINAL.clock.tsv',D/'ORIGINAL.clock.tsv')
-for n in ['reload_pre.tcl','reload_post.tcl','eco_drt_pre.tcl','prd_route_keep.tcl','patch_entry.py','pc_native_grt_only.sh']:
+for n in ['reload_pre.tcl','reload_post.tcl','eco_drt_pre.tcl','prd_route_keep.tcl','patch_entry.py','pc_native_grt_only.sh','audit_saved.tcl','audit_only.mk']:
  shutil.copy2(H/n,D/n)
 assert sha(D/'native_pg_binding.tcl')=='e19c5fd9872e37f68d610e2dc46608359c9970b7c9e6de84f546f3b3c3ea3a2d'
 assert sha(D/'nativepgbirth.so')=='8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b'
