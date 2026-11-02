@@ -1,0 +1,192 @@
+{
+  "status": "ACTUAL_SOURCE_AGE_ONLY_NOT_COMPOSED_RELEASE_PRICE",
+  "source_runtime": "epyc2:/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/proposal9_bind/rtl/coll_ft__cla4a25d77.sv",
+  "copies": [
+    "coll_f1",
+    "coll_f2"
+  ],
+  "rows": [
+    {
+      "bus": "crec_tx_s1",
+      "data_width": 549,
+      "epoch_width": 1,
+      "direction": "N->S",
+      "input_landing_module": "ot_dp_clk_landing_cas",
+      "input_landing_depth": 4,
+      "input_fclk": "fclk_in_crec_tx_s1_i",
+      "postring_local_clock": "clk",
+      "actual_postring_instances": [
+        "u_ft_crec_tx_s1_o_0",
+        "u_ft_crec_tx_s1_o_1",
+        "u_ft_crec_tx_s1_o_2"
+      ],
+      "exact_postring_edge_age": 3,
+      "retained_postring_stages": 3,
+      "mission_data_edge_delta_if_pure_relocation": 0,
+      "source_landing_band_um": [
+        234.928,
+        935.28,
+        349.68,
+        976.32
+      ],
+      "clock_or_CAstrap_delta": "UNQUALIFIED, paired context rederive required",
+      "boot_or_reset_delta": "UNQUALIFIED, paired reset/START tree rederive required"
+    },
+    {
+      "bus": "crec_rx_s1",
+      "data_width": 547,
+      "epoch_width": 1,
+      "direction": "S->N",
+      "input_landing_module": "ot_dp_clk_landing_cas",
+      "input_landing_depth": 4,
+      "input_fclk": "fclk_in_crec_rx_s1_i",
+      "postring_local_clock": "clk",
+      "actual_postring_instances": [
+        "u_ft_crec_rx_s1_o_0",
+        "u_ft_crec_rx_s1_o_1",
+        "u_ft_crec_rx_s1_o_2"
+      ],
+      "exact_postring_edge_age": 3,
+      "retained_postring_stages": 3,
+      "mission_data_edge_delta_if_pure_relocation": 0,
+      "source_landing_band_um": [
+        40.968,
+        17.28,
+        82.008,
+        131.616
+      ],
+      "clock_or_CAstrap_delta": "UNQUALIFIED, paired context rederive required",
+      "boot_or_reset_delta": "UNQUALIFIED, paired reset/START tree rederive required"
+    },
+    {
+      "bus": "crec_tx_s2",
+      "data_width": 548,
+      "epoch_width": 1,
+      "direction": "N->S",
+      "input_landing_module": "ot_dp_clk_landing_cas",
+      "input_landing_depth": 4,
+      "input_fclk": "fclk_in_crec_tx_s2_i",
+      "postring_local_clock": "clk",
+      "actual_postring_instances": [
+        "u_ft_crec_tx_s2_o_0",
+        "u_ft_crec_tx_s2_o_1",
+        "u_ft_crec_tx_s2_o_2"
+      ],
+      "exact_postring_edge_age": 3,
+      "retained_postring_stages": 3,
+      "mission_data_edge_delta_if_pure_relocation": 0,
+      "source_landing_band_um": [
+        350.64,
+        935.28,
+        464.816,
+        976.32
+      ],
+      "clock_or_CAstrap_delta": "UNQUALIFIED, paired context rederive required",
+      "boot_or_reset_delta": "UNQUALIFIED, paired reset/START tree rederive required"
+    },
+    {
+      "bus": "crec_rx_s2",
+      "data_width": 547,
+      "epoch_width": 1,
+      "direction": "S->N",
+      "input_landing_module": "ot_dp_clk_landing_cas",
+      "input_landing_depth": 4,
+      "input_fclk": "fclk_in_crec_rx_s2_i",
+      "postring_local_clock": "clk",
+      "actual_postring_instances": [
+        "u_ft_crec_rx_s2_o_0",
+        "u_ft_crec_rx_s2_o_1",
+        "u_ft_crec_rx_s2_o_2"
+      ],
+      "exact_postring_edge_age": 3,
+      "retained_postring_stages": 3,
+      "mission_data_edge_delta_if_pure_relocation": 0,
+      "source_landing_band_um": [
+        119.616,
+        17.28,
+        233.968,
+        58.32
+      ],
+      "clock_or_CAstrap_delta": "UNQUALIFIED, paired context rederive required",
+      "boot_or_reset_delta": "UNQUALIFIED, paired reset/START tree rederive required"
+    },
+    {
+      "bus": "fltk",
+      "data_width": 1,
+      "epoch_width": 1,
+      "direction": "S->N",
+      "input_landing_module": "ot_dp_clk_landing_cas",
+      "input_landing_depth": 4,
+      "input_fclk": "fclk_in_fltk_i",
+      "postring_local_clock": "clk",
+      "actual_postring_instances": [
+        "u_ft_fltk_o_0",
+        "u_ft_fltk_o_1",
+        "u_ft_fltk_o_2"
+      ],
+      "exact_postring_edge_age": 3,
+      "retained_postring_stages": 3,
+      "mission_data_edge_delta_if_pure_relocation": 0,
+      "source_landing_band_um": [
+        461.656,
+        112.32,
+        470.296,
+        196.56
+      ],
+      "clock_or_CAstrap_delta": "UNQUALIFIED, paired context rederive required",
+      "boot_or_reset_delta": "UNQUALIFIED, paired reset/START tree rederive required"
+    },
+    {
+      "bus": "fltv",
+      "data_width": 25,
+      "epoch_width": 1,
+      "direction": "S->N",
+      "input_landing_module": "ot_dp_clk_landing_cas",
+      "input_landing_depth": 4,
+      "input_fclk": "fclk_in_fltv_i",
+      "postring_local_clock": "clk",
+      "actual_postring_instances": [
+        "u_ft_fltv_o_0",
+        "u_ft_fltv_o_1",
+        "u_ft_fltv_o_2"
+      ],
+      "exact_postring_edge_age": 3,
+      "retained_postring_stages": 3,
+      "mission_data_edge_delta_if_pure_relocation": 0,
+      "source_landing_band_um": [
+        465.416,
+        17.28,
+        474.056,
+        101.52
+      ],
+      "clock_or_CAstrap_delta": "UNQUALIFIED, paired context rederive required",
+      "boot_or_reset_delta": "UNQUALIFIED, paired reset/START tree rederive required"
+    }
+  ],
+  "supersedes": "Candidate1 H/3 automatic+2 edge conclusion is withdrawn: input is a real clock-landing ring, followed by3FFs. Depth4 is storage configuration, not asserted exact total edge latency.",
+  "zero_extra_data_edge_geometric_hypothesis": {
+    "expanded_height_um": 1270.08,
+    "final_FF_inset_um": 129.6,
+    "final_pin_to_FF_contract_um": 150,
+    "worst_input_ring_inset_assumption_um": 17.28,
+    "longitudinal_perhop_um": 374.4,
+    "lateral_budget_perhop_um": 30.6,
+    "N_to_S_postring_y_um": [
+      878.4,
+      504,
+      129.6
+    ],
+    "S_to_N_postring_y_um": [
+      391.68,
+      766.08,
+      1140.48
+    ],
+    "qualification": "Only longitudinal hypothesis, not source/site proof; actual ring/readbin x/y endpoints and ordinary per-bit pin ABI must be joined. No total0cycle or+2credit."
+  },
+  "required_composition": [
+    "all12 exact percopy source/fclk/CA-k cohorts with same-tool rederived landing and reset trees",
+    "each affected port path into ROOT/param_regen/programme calendar from genuine emittedmodel",
+    "mission data edges separately from boot/release/reset collector edges",
+    "exact pin->first/readbin and lastFF->pin contracts, perbit hops <=405"
+  ]
+}

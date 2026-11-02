@@ -1,0 +1,529 @@
+{
+  "status": "NECESSARY_GEOMETRY_ONLY_NOT_RELEASE_PRICE",
+  "source": "frozen candidate9/D762",
+  "rows": [
+    {
+      "bus": "ard_wo_in_data",
+      "direction": "N->S",
+      "width": 512,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_ard_wo_in_data_o_0",
+        "u_ft_ard_wo_in_data_o_1",
+        "u_ft_ard_wo_in_data_o_2",
+        "u_ft_ard_wo_in_data_o_3"
+      ],
+      "translated_landing_band_um": [
+        266.416,
+        1840.32,
+        373.12,
+        1883.52
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1736.072,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_ard_wo_in_data_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "arl_wo_in_last",
+      "direction": "N->S",
+      "width": 1,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_arl_wo_in_last_o_0",
+        "u_ft_arl_wo_in_last_o_1",
+        "u_ft_arl_wo_in_last_o_2",
+        "u_ft_arl_wo_in_last_o_3"
+      ],
+      "translated_landing_band_um": [
+        260.936,
+        1751.76,
+        269.576,
+        1836.0
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1643.256,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_arl_wo_in_last_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "arm_wo_in_mode",
+      "direction": "N->S",
+      "width": 1,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_arm_wo_in_mode_o_0",
+        "u_ft_arm_wo_in_mode_o_1",
+        "u_ft_arm_wo_in_mode_o_2",
+        "u_ft_arm_wo_in_mode_o_3"
+      ],
+      "translated_landing_band_um": [
+        259.312,
+        1920.24,
+        267.952,
+        2004.48
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1811.96,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_arm_wo_in_mode_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "art_wo_in_tag",
+      "direction": "N->S",
+      "width": 32,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_art_wo_in_tag_o_0",
+        "u_ft_art_wo_in_tag_o_1",
+        "u_ft_art_wo_in_tag_o_2",
+        "u_ft_art_wo_in_tag_o_3"
+      ],
+      "translated_landing_band_um": [
+        270.112,
+        1920.24,
+        278.752,
+        2004.48
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1799.816,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_art_wo_in_tag_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "arv_wo_in_valid",
+      "direction": "N->S",
+      "width": 1,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_arv_wo_in_valid_o_0",
+        "u_ft_arv_wo_in_valid_o_1",
+        "u_ft_arv_wo_in_valid_o_2",
+        "u_ft_arv_wo_in_valid_o_3"
+      ],
+      "translated_landing_band_um": [
+        250.12,
+        1777.68,
+        258.76,
+        1861.92
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1669.688,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_arv_wo_in_valid_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "ccm_wo_cmd_mode",
+      "direction": "N->S",
+      "width": 1,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_ccm_wo_cmd_mode_o_0",
+        "u_ft_ccm_wo_cmd_mode_o_1",
+        "u_ft_ccm_wo_cmd_mode_o_2",
+        "u_ft_ccm_wo_cmd_mode_o_3"
+      ],
+      "translated_landing_band_um": [
+        248.76,
+        1920.24,
+        257.4,
+        2004.48
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1812.264,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_ccm_wo_cmd_mode_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "cct_wo_cmd_tag",
+      "direction": "N->S",
+      "width": 32,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_cct_wo_cmd_tag_o_0",
+        "u_ft_cct_wo_cmd_tag_o_1",
+        "u_ft_cct_wo_cmd_tag_o_2",
+        "u_ft_cct_wo_cmd_tag_o_3"
+      ],
+      "translated_landing_band_um": [
+        219.592,
+        1920.24,
+        228.232,
+        2004.48
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1840.064,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_cct_wo_cmd_tag_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "ccv_wo_cmd_v",
+      "direction": "N->S",
+      "width": 1,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_ccv_wo_cmd_v_o_0",
+        "u_ft_ccv_wo_cmd_v_o_1",
+        "u_ft_ccv_wo_cmd_v_o_2",
+        "u_ft_ccv_wo_cmd_v_o_3"
+      ],
+      "translated_landing_band_um": [
+        239.76,
+        1777.68,
+        248.4,
+        1861.92
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1669.752,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_ccv_wo_cmd_v_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "ccw_wo_cmd_words",
+      "direction": "N->S",
+      "width": 16,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_ccw_wo_cmd_words_o_0",
+        "u_ft_ccw_wo_cmd_words_o_1",
+        "u_ft_ccw_wo_cmd_words_o_2",
+        "u_ft_ccw_wo_cmd_words_o_3"
+      ],
+      "translated_landing_band_um": [
+        239.32,
+        1920.24,
+        247.96,
+        2004.48
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1811.36,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_ccw_wo_cmd_words_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "cmd_free_io_cmd_free",
+      "direction": "S->W",
+      "width": 1,
+      "actual_postring_FFs": 1,
+      "actual_source_instances": [
+        "u_ft_cmd_free_io_cmd_free_o_0"
+      ],
+      "translated_landing_band_um": [
+        43.2,
+        17.28,
+        127.44,
+        25.92
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 441.584,
+      "necessary_postring_hops": 2,
+      "proposed_postring_FFs": 2,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_cmd_free_io_cmd_free_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "fault_io_fault",
+      "direction": "S->W",
+      "width": 1,
+      "actual_postring_FFs": 1,
+      "actual_source_instances": [
+        "u_ft_fault_io_fault_o_0"
+      ],
+      "translated_landing_band_um": [
+        43.2,
+        25.92,
+        127.44,
+        34.56
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 434.288,
+      "necessary_postring_hops": 2,
+      "proposed_postring_FFs": 2,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_fault_io_fault_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "out_data_rd_wi",
+      "direction": "S->N",
+      "width": 512,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_out_data_rd_wi_o_0",
+        "u_ft_out_data_rd_wi_o_1",
+        "u_ft_out_data_rd_wi_o_2",
+        "u_ft_out_data_rd_wi_o_3"
+      ],
+      "translated_landing_band_um": [
+        425.904,
+        185.76,
+        532.064,
+        228.96
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1688.28,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_out_data_rd_wi_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "out_err_re_wi",
+      "direction": "S->N",
+      "width": 1,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_out_err_re_wi_o_0",
+        "u_ft_out_err_re_wi_o_1",
+        "u_ft_out_err_re_wi_o_2",
+        "u_ft_out_err_re_wi_o_3"
+      ],
+      "translated_landing_band_um": [
+        382.624,
+        17.28,
+        466.864,
+        25.92
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1849.424,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_out_err_re_wi_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "out_last_rl_wi",
+      "direction": "S->N",
+      "width": 1,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_out_last_rl_wi_o_0",
+        "u_ft_out_last_rl_wi_o_1",
+        "u_ft_out_last_rl_wi_o_2",
+        "u_ft_out_last_rl_wi_o_3"
+      ],
+      "translated_landing_band_um": [
+        419.064,
+        25.92,
+        427.704,
+        110.16
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1802.976,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_out_last_rl_wi_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "out_rank_rr_wi",
+      "direction": "S->N",
+      "width": 3,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_out_rank_rr_wi_o_0",
+        "u_ft_out_rank_rr_wi_o_1",
+        "u_ft_out_rank_rr_wi_o_2",
+        "u_ft_out_rank_rr_wi_o_3"
+      ],
+      "translated_landing_band_um": [
+        332.664,
+        25.92,
+        416.904,
+        34.56
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1837.2,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_out_rank_rr_wi_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "out_valid_rv_wi",
+      "direction": "S->N",
+      "width": 1,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_out_valid_rv_wi_o_0",
+        "u_ft_out_valid_rv_wi_o_1",
+        "u_ft_out_valid_rv_wi_o_2",
+        "u_ft_out_valid_rv_wi_o_3"
+      ],
+      "translated_landing_band_um": [
+        415.944,
+        110.16,
+        424.584,
+        194.4
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1719.024,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_out_valid_rv_wi_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "crec_tx_s0",
+      "direction": "S->N",
+      "width": 548,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_crec_tx_s0_o_0",
+        "u_ft_crec_tx_s0_o_1",
+        "u_ft_crec_tx_s0_o_2",
+        "u_ft_crec_tx_s0_o_3"
+      ],
+      "translated_landing_band_um": [
+        165.344,
+        88.56,
+        279.712,
+        129.6
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1787.856,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_crec_tx_s0_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "crec_rx_s0",
+      "direction": "N->S",
+      "width": 547,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_crec_rx_s0_o_0",
+        "u_ft_crec_rx_s0_o_1",
+        "u_ft_crec_rx_s0_o_2",
+        "u_ft_crec_rx_s0_o_3"
+      ],
+      "translated_landing_band_um": [
+        17.28,
+        1963.44,
+        131.616,
+        2004.48
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1846.016,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_crec_rx_s0_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "fltk",
+      "direction": "N->S",
+      "width": 1,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_fltk_o_0",
+        "u_ft_fltk_o_1",
+        "u_ft_fltk_o_2",
+        "u_ft_fltk_o_3"
+      ],
+      "translated_landing_band_um": [
+        230.392,
+        1920.24,
+        239.032,
+        2004.48
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1812.52,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_fltk_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "fltc",
+      "direction": "S->W",
+      "width": 1,
+      "actual_postring_FFs": 1,
+      "actual_source_instances": [
+        "u_ft_fltc_o_0"
+      ],
+      "translated_landing_band_um": [
+        44.568,
+        34.56,
+        53.208,
+        118.8
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 333.264,
+      "necessary_postring_hops": 1,
+      "proposed_postring_FFs": 1,
+      "proposed_mission_data_edge_delta": 0,
+      "clock_cohort": "local clk after fclk_in_fltc_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "fltv",
+      "direction": "N->S",
+      "width": 12,
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_fltv_o_0",
+        "u_ft_fltv_o_1",
+        "u_ft_fltv_o_2",
+        "u_ft_fltv_o_3"
+      ],
+      "translated_landing_band_um": [
+        133.776,
+        1995.8400000000001,
+        218.016,
+        2004.48
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 1912.592,
+      "necessary_postring_hops": 5,
+      "proposed_postring_FFs": 5,
+      "proposed_mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_fltv_i; source CAk/boot/clock/reset unqualified"
+    },
+    {
+      "bus": "fltvc",
+      "direction": "S->W",
+      "width": 70,
+      "actual_postring_FFs": 1,
+      "actual_source_instances": [
+        "u_ft_fltvc_o_0"
+      ],
+      "translated_landing_band_um": [
+        55.368,
+        36.72,
+        69.96,
+        118.8
+      ],
+      "outputFF_pin_budget_um": 150,
+      "necessary_distance_um": 359.528,
+      "necessary_postring_hops": 1,
+      "proposed_postring_FFs": 1,
+      "proposed_mission_data_edge_delta": 0,
+      "clock_cohort": "local clk after fclk_in_fltvc_i; source CAk/boot/clock/reset unqualified"
+    }
+  ],
+  "holds": [
+    "all clock/reset/START and paired source rederive",
+    "programme/model/ROOT perpath composition",
+    "actual registered pin/first/lastFF allbit proof",
+    "internalR90 plan support",
+    "other macro/reader source graphs"
+  ]
+}

@@ -1,0 +1,593 @@
+{
+  "status": "DISABLED_COUPLED_SOURCE_CANDIDATE_NOT_RELEASED",
+  "core_origin_um": [
+    803.52,
+    8432.64
+  ],
+  "core_outline_um": [
+    760.32,
+    1036.8
+  ],
+  "uniform_fold_hardening": 8,
+  "shared_FT_copies": "BOTH original993.6 and original origins; harden-once reuse preserved",
+  "FTm_origin_um": [
+    777.6,
+    9469.44
+  ],
+  "FTm_outline_um": [
+    786.24,
+    2021.76
+  ],
+  "FTm_N_edge_unchanged": 11491.2,
+  "FTm_W_E_public_windows": "shift local+552.96 to preserve all globalpeerwindows",
+  "UCIE_origin_um": [
+    0,
+    7603.2
+  ],
+  "UCIE_outline_um": [
+    803.52,
+    1347.84
+  ],
+  "UCIE_E_to_CORE_W_offset_unchanged": 829.44,
+  "ucie_kv_origin_unchanged": [
+    0,
+    9244.8
+  ],
+  "glue_origin_unchanged": [
+    0,
+    10022.4
+  ],
+  "changed_partition_overlaps": [],
+  "new_partition_types": 0,
+  "die_edge_unchanged": true,
+  "rows": [
+    {
+      "bus": "ard_wo_in_data",
+      "width": 512,
+      "direction": "N->S",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_ard_wo_in_data_o_0",
+        "u_ft_ard_wo_in_data_o_1",
+        "u_ft_ard_wo_in_data_o_2",
+        "u_ft_ard_wo_in_data_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        266.416,
+        1840.32,
+        373.12,
+        1883.52
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1736.072,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_ard_wo_in_data_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "arl_wo_in_last",
+      "width": 1,
+      "direction": "N->S",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_arl_wo_in_last_o_0",
+        "u_ft_arl_wo_in_last_o_1",
+        "u_ft_arl_wo_in_last_o_2",
+        "u_ft_arl_wo_in_last_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        260.936,
+        1751.76,
+        269.576,
+        1836.0
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1643.256,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_arl_wo_in_last_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "arm_wo_in_mode",
+      "width": 1,
+      "direction": "N->S",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_arm_wo_in_mode_o_0",
+        "u_ft_arm_wo_in_mode_o_1",
+        "u_ft_arm_wo_in_mode_o_2",
+        "u_ft_arm_wo_in_mode_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        259.312,
+        1920.24,
+        267.952,
+        2004.48
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1811.96,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_arm_wo_in_mode_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "art_wo_in_tag",
+      "width": 32,
+      "direction": "N->S",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_art_wo_in_tag_o_0",
+        "u_ft_art_wo_in_tag_o_1",
+        "u_ft_art_wo_in_tag_o_2",
+        "u_ft_art_wo_in_tag_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        270.112,
+        1920.24,
+        278.752,
+        2004.48
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1799.816,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_art_wo_in_tag_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "arv_wo_in_valid",
+      "width": 1,
+      "direction": "N->S",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_arv_wo_in_valid_o_0",
+        "u_ft_arv_wo_in_valid_o_1",
+        "u_ft_arv_wo_in_valid_o_2",
+        "u_ft_arv_wo_in_valid_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        250.12,
+        1777.68,
+        258.76,
+        1861.92
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1669.688,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_arv_wo_in_valid_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "ccm_wo_cmd_mode",
+      "width": 1,
+      "direction": "N->S",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_ccm_wo_cmd_mode_o_0",
+        "u_ft_ccm_wo_cmd_mode_o_1",
+        "u_ft_ccm_wo_cmd_mode_o_2",
+        "u_ft_ccm_wo_cmd_mode_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        248.76,
+        1920.24,
+        257.4,
+        2004.48
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1812.264,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_ccm_wo_cmd_mode_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "cct_wo_cmd_tag",
+      "width": 32,
+      "direction": "N->S",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_cct_wo_cmd_tag_o_0",
+        "u_ft_cct_wo_cmd_tag_o_1",
+        "u_ft_cct_wo_cmd_tag_o_2",
+        "u_ft_cct_wo_cmd_tag_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        219.592,
+        1920.24,
+        228.232,
+        2004.48
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1840.064,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_cct_wo_cmd_tag_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "ccv_wo_cmd_v",
+      "width": 1,
+      "direction": "N->S",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_ccv_wo_cmd_v_o_0",
+        "u_ft_ccv_wo_cmd_v_o_1",
+        "u_ft_ccv_wo_cmd_v_o_2",
+        "u_ft_ccv_wo_cmd_v_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        239.76,
+        1777.68,
+        248.4,
+        1861.92
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1669.752,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_ccv_wo_cmd_v_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "ccw_wo_cmd_words",
+      "width": 16,
+      "direction": "N->S",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_ccw_wo_cmd_words_o_0",
+        "u_ft_ccw_wo_cmd_words_o_1",
+        "u_ft_ccw_wo_cmd_words_o_2",
+        "u_ft_ccw_wo_cmd_words_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        239.32,
+        1920.24,
+        247.96,
+        2004.48
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1811.36,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_ccw_wo_cmd_words_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "cmd_free_io_cmd_free",
+      "width": 1,
+      "direction": "S->W",
+      "actual_postring_FFs": 1,
+      "actual_source_instances": [
+        "u_ft_cmd_free_io_cmd_free_o_0"
+      ],
+      "retained_moved_landing_band_um": [
+        43.2,
+        17.28,
+        127.44,
+        25.92
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 441.584,
+      "necessary_postring_hops_at405": 2,
+      "proposed_postring_FFs": 2,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_cmd_free_io_cmd_free_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "fault_io_fault",
+      "width": 1,
+      "direction": "S->W",
+      "actual_postring_FFs": 1,
+      "actual_source_instances": [
+        "u_ft_fault_io_fault_o_0"
+      ],
+      "retained_moved_landing_band_um": [
+        43.2,
+        25.92,
+        127.44,
+        34.56
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 434.288,
+      "necessary_postring_hops_at405": 2,
+      "proposed_postring_FFs": 2,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_fault_io_fault_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "out_data_rd_wi",
+      "width": 512,
+      "direction": "S->N",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_out_data_rd_wi_o_0",
+        "u_ft_out_data_rd_wi_o_1",
+        "u_ft_out_data_rd_wi_o_2",
+        "u_ft_out_data_rd_wi_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        425.904,
+        185.76,
+        532.064,
+        228.96
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1688.28,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_out_data_rd_wi_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "out_err_re_wi",
+      "width": 1,
+      "direction": "S->N",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_out_err_re_wi_o_0",
+        "u_ft_out_err_re_wi_o_1",
+        "u_ft_out_err_re_wi_o_2",
+        "u_ft_out_err_re_wi_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        382.624,
+        17.28,
+        466.864,
+        25.92
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1849.424,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_out_err_re_wi_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "out_last_rl_wi",
+      "width": 1,
+      "direction": "S->N",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_out_last_rl_wi_o_0",
+        "u_ft_out_last_rl_wi_o_1",
+        "u_ft_out_last_rl_wi_o_2",
+        "u_ft_out_last_rl_wi_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        419.064,
+        25.92,
+        427.704,
+        110.16
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1802.976,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_out_last_rl_wi_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "out_rank_rr_wi",
+      "width": 3,
+      "direction": "S->N",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_out_rank_rr_wi_o_0",
+        "u_ft_out_rank_rr_wi_o_1",
+        "u_ft_out_rank_rr_wi_o_2",
+        "u_ft_out_rank_rr_wi_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        332.664,
+        25.92,
+        416.904,
+        34.56
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1837.2,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_out_rank_rr_wi_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "out_valid_rv_wi",
+      "width": 1,
+      "direction": "S->N",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_out_valid_rv_wi_o_0",
+        "u_ft_out_valid_rv_wi_o_1",
+        "u_ft_out_valid_rv_wi_o_2",
+        "u_ft_out_valid_rv_wi_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        415.944,
+        110.16,
+        424.584,
+        194.4
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1719.024,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_out_valid_rv_wi_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "crec_tx_s0",
+      "width": 548,
+      "direction": "S->N",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_crec_tx_s0_o_0",
+        "u_ft_crec_tx_s0_o_1",
+        "u_ft_crec_tx_s0_o_2",
+        "u_ft_crec_tx_s0_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        165.344,
+        88.56,
+        279.712,
+        129.6
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1787.856,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_crec_tx_s0_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "crec_rx_s0",
+      "width": 547,
+      "direction": "N->S",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_crec_rx_s0_o_0",
+        "u_ft_crec_rx_s0_o_1",
+        "u_ft_crec_rx_s0_o_2",
+        "u_ft_crec_rx_s0_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        17.28,
+        1963.44,
+        131.616,
+        2004.48
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1846.016,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_crec_rx_s0_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "fltk",
+      "width": 1,
+      "direction": "N->S",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_fltk_o_0",
+        "u_ft_fltk_o_1",
+        "u_ft_fltk_o_2",
+        "u_ft_fltk_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        230.392,
+        1920.24,
+        239.032,
+        2004.48
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1812.52,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_fltk_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "fltc",
+      "width": 1,
+      "direction": "S->W",
+      "actual_postring_FFs": 1,
+      "actual_source_instances": [
+        "u_ft_fltc_o_0"
+      ],
+      "retained_moved_landing_band_um": [
+        44.568,
+        34.56,
+        53.208,
+        118.8
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 333.264,
+      "necessary_postring_hops_at405": 1,
+      "proposed_postring_FFs": 1,
+      "mission_data_edge_delta": 0,
+      "clock_cohort": "local clk after fclk_in_fltc_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "fltv",
+      "width": 12,
+      "direction": "N->S",
+      "actual_postring_FFs": 4,
+      "actual_source_instances": [
+        "u_ft_fltv_o_0",
+        "u_ft_fltv_o_1",
+        "u_ft_fltv_o_2",
+        "u_ft_fltv_o_3"
+      ],
+      "retained_moved_landing_band_um": [
+        133.776,
+        1995.8400000000001,
+        218.016,
+        2004.48
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 1912.592,
+      "necessary_postring_hops_at405": 5,
+      "proposed_postring_FFs": 5,
+      "mission_data_edge_delta": 1,
+      "clock_cohort": "local clk after fclk_in_fltv_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    },
+    {
+      "bus": "fltvc",
+      "width": 70,
+      "direction": "S->W",
+      "actual_postring_FFs": 1,
+      "actual_source_instances": [
+        "u_ft_fltvc_o_0"
+      ],
+      "retained_moved_landing_band_um": [
+        55.368,
+        36.72,
+        69.96,
+        118.8
+      ],
+      "last_FF_pin_budget_um": 150,
+      "best_possible_max_pin_to_band_distance_minus_outputFF_budget_um": 359.528,
+      "necessary_postring_hops_at405": 1,
+      "proposed_postring_FFs": 1,
+      "mission_data_edge_delta": 0,
+      "clock_cohort": "local clk after fclk_in_fltvc_i landing; CAk/source/sourceage rederive HOLD",
+      "qualification": "Necessary lowerbound from entire band box to each outputpin; not actual endpoint/mappedgeometry PASS. Band is proposed translated oldband, no current source qualification."
+    }
+  ],
+  "zero_data_edge_alternative": "Candidate2 expanding both sharedFTs is rejected for UCIE/UCIeKV overlap. Compressing M6banks into259um also fails aggregate6pin/um necessary density bound; no density waiver orPHYrelocation adopted.",
+  "mission_data_price": "Per-slot delta above is only a proposal. N/S bundles5 preserve within-group stationcoherence; model/programme/root path composition not derived. WO ingress/return each gain1 in FTm if adopted. SerDes s0 eachdirection gains1; SW status/fault derived separately.",
+  "boot_price": "UNQUALIFIED independent clock/reset/START/collector rederive; no total0cycleclaim",
+  "other_holds": [
+    "Internal macroR90 native schema/geometry consumer support absent (selected SRAMLEF permitsR90). Runtime-only rotation forbidden.",
+    "Candidate2 PFcapturegeometry carries unchanged locally; other dpr_q/control/PFoutput/XF/S-ring/R-ring/codec graphs unqualified",
+    "Fold reference180view source/function/clock/reset/SIGNED unqualified",
+    "Current full paired LC/reset/START source event and actual programme/model price needed",
+    "No GEN/P&R/STA/canonical adoption"
+  ]
+}
