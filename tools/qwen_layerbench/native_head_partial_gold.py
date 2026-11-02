@@ -59,6 +59,7 @@ def build(codes_path, norm_path, consumer):
         source_layout='hdc_qwen_int8_image_w12.matrix_code/engine_word_arrays: round*64+kk*8+slot; bytegroup*16+lane',
         controlled_input=dict(raw_residual_fp32='42000000',mean_fp32='44800000',rstd_fp32=f'{int(G.bits(rstd)):08x}',
             H='mul(mul(FP32(32),canonical_rsqrt(FP32(1024))),genuine_model_norm); matvec rounds H to BF16',
+            consumer_input='STREAM BF16-RNE(H), expanded to FP32 with low16 zero; do not truncate raw upstream H',
             upstream_status='controlled component input; producer/clock/calendar transport not qualified'),
         oracle='hdc_golden.matvec: separate RNE mul/add sequential eight terms from+0, pairwise four-chunk tree',
         mutant=dict(field='first actual INT8 weight',gold_hex=f'{int(G.bits(partial[0])):08x}',mutant_hex=f'{int(G.bits(mutated[0])):08x}'),
@@ -72,6 +73,7 @@ def main():
     a=p.parse_args();m,rows,h,gold=build(a.codes,a.norm,a.consumer);a.out.mkdir(parents=True,exist_ok=True)
     (a.out/'row_indices.hex').write_text(''.join(f'{r:06x}\n'for r in rows))
     (a.out/'H32_fp32.hex').write_text(''.join(f'{int(x):08x}\n'for x in G.bits(h)))
+    (a.out/'H32_me_fp32.hex').write_text(''.join(f'{int(x):08x}\n'for x in G.bits(G.to_bf16(h))))
     (a.out/'H32_bf16.hex').write_text(''.join(f'{int(x)>>16:04x}\n'for x in G.bits(G.to_bf16(h))))
     (a.out/'raw_partial_expected.hex').write_text(''.join(f'{int(x):08x}\n'for x in G.bits(gold)))
     (a.out/'oracle.json').write_text(json.dumps(m,indent=2)+'\n')
