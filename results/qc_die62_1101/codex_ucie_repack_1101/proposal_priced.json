@@ -1,0 +1,133 @@
+{
+ "verdict": "PENDING_G0C_BIND_REVIEW",
+ "types": [
+  "coll_ucie",
+  "coll_core",
+  "coll_ft__cla4a25d77"
+ ],
+ "shifted_parts": [
+  "coll_f1",
+  "coll_f2",
+  "coll_core"
+ ],
+ "added_mission_cycles": 0,
+ "new_unowned_gap_um": 25.92,
+ "gap_beside": "coll_f1",
+ "reset_deltas": [
+  {
+   "type": "coll_ucie",
+   "old_depth": 3,
+   "new_depth": 4,
+   "old_relays": 21,
+   "new_relays": 44
+  },
+  {
+   "type": "coll_core",
+   "old_depth": 5,
+   "new_depth": 5,
+   "old_relays": 50,
+   "new_relays": 47
+  },
+  {
+   "type": "coll_ft__cla4a25d77",
+   "old_depth": 4,
+   "new_depth": 4,
+   "old_relays": 23,
+   "new_relays": 23
+  }
+ ],
+ "monitor_hop_diff": [
+  {
+   "src": "coll_core",
+   "dst": "coll_f3",
+   "before_um": 267.968,
+   "after_um": 293.888
+  },
+  {
+   "src": "coll_f0",
+   "dst": "coll_f1",
+   "before_um": 288.704,
+   "after_um": 284.352
+  },
+  {
+   "src": "coll_f1",
+   "dst": "coll_f2",
+   "before_um": 288.704,
+   "after_um": 284.352
+  }
+ ],
+ "child_site_remap": [
+  {
+   "type": "coll_core",
+   "child": "coll_ucie",
+   "face": "W",
+   "site_j": 0,
+   "before": [
+    8.16,
+    158.944
+   ],
+   "after": [
+    8.16,
+    158.944
+   ]
+  },
+  {
+   "type": "coll_ft__cla4a25d77",
+   "child": "coll_f0",
+   "face": "S",
+   "site_j": 2,
+   "before": [
+    655.2,
+    8.608
+   ],
+   "after": [
+    633.632,
+    8.608
+   ]
+  }
+ ],
+ "errors": {
+  "macro_fit": [],
+  "new_footprint_overlaps": [],
+  "new_monitor_reach": []
+ },
+ "held": [
+  "G0/C differential all reach/clock/reset/ports",
+  "strict native bind",
+  "new clock ABI/parent prefix and composed boot model event",
+  "actual measured fill/native source qualification",
+  "GEN and actual LOOK",
+  "licensed PHY remains assumed, no physical release"
+ ],
+ "boot_clock_model": [
+  {
+   "type": "coll_ucie",
+   "normal_clock_ports_before": 10,
+   "normal_clock_ports_after": 15,
+   "release_after_pin_before": 4,
+   "release_after_pin_after": 5,
+   "extra_local_boot_cycles": 1,
+   "extra_mission_cycles": 0
+  },
+  {
+   "type": "coll_core",
+   "normal_clock_ports_before": 8,
+   "normal_clock_ports_after": 8,
+   "release_after_pin_before": 6,
+   "release_after_pin_after": 6,
+   "extra_local_boot_cycles": 0,
+   "extra_mission_cycles": 0
+  },
+  {
+   "type": "coll_ft__cla4a25d77",
+   "normal_clock_ports_before": 8,
+   "normal_clock_ports_after": 8,
+   "release_after_pin_before": 5,
+   "release_after_pin_after": 5,
+   "extra_local_boot_cycles": 0,
+   "extra_mission_cycles": 0
+  }
+ ],
+ "boot_model_scope": "Per-partition source release model at833ps; composed die boot/START qualification still held",
+ "supersedes_rejected_proposal": "proposal2 resetdepthchange explained by400umgrid column threshold; rejected receipt remains immutable"
+}

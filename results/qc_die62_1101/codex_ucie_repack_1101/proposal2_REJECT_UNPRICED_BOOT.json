@@ -1,0 +1,110 @@
+{
+ "verdict": "REJECT",
+ "types": [
+  "coll_ucie",
+  "coll_core",
+  "coll_ft__cla4a25d77"
+ ],
+ "shifted_parts": [
+  "coll_f1",
+  "coll_f2",
+  "coll_core"
+ ],
+ "added_mission_cycles": 0,
+ "new_unowned_gap_um": 25.92,
+ "gap_beside": "coll_f1",
+ "reset_deltas": [
+  {
+   "type": "coll_ucie",
+   "old_depth": 3,
+   "new_depth": 4,
+   "old_relays": 21,
+   "new_relays": 44
+  },
+  {
+   "type": "coll_core",
+   "old_depth": 5,
+   "new_depth": 5,
+   "old_relays": 50,
+   "new_relays": 47
+  },
+  {
+   "type": "coll_ft__cla4a25d77",
+   "old_depth": 4,
+   "new_depth": 4,
+   "old_relays": 23,
+   "new_relays": 23
+  }
+ ],
+ "monitor_hop_diff": [
+  {
+   "src": "coll_core",
+   "dst": "coll_f3",
+   "before_um": 267.968,
+   "after_um": 293.888
+  },
+  {
+   "src": "coll_f0",
+   "dst": "coll_f1",
+   "before_um": 288.704,
+   "after_um": 284.352
+  },
+  {
+   "src": "coll_f1",
+   "dst": "coll_f2",
+   "before_um": 288.704,
+   "after_um": 284.352
+  }
+ ],
+ "child_site_remap": [
+  {
+   "type": "coll_core",
+   "child": "coll_ucie",
+   "face": "W",
+   "site_j": 0,
+   "before": [
+    8.16,
+    158.944
+   ],
+   "after": [
+    8.16,
+    158.944
+   ]
+  },
+  {
+   "type": "coll_ft__cla4a25d77",
+   "child": "coll_f0",
+   "face": "S",
+   "site_j": 2,
+   "before": [
+    655.2,
+    8.608
+   ],
+   "after": [
+    633.632,
+    8.608
+   ]
+  }
+ ],
+ "errors": {
+  "macro_fit": [],
+  "new_footprint_overlaps": [],
+  "new_monitor_reach": [],
+  "changed_reset_depth": [
+   {
+    "type": "coll_ucie",
+    "old_depth": 3,
+    "new_depth": 4,
+    "old_relays": 21,
+    "new_relays": 44
+   }
+  ]
+ },
+ "held": [
+  "G0/C differential all reach/clock/reset/ports",
+  "strict native bind",
+  "actual measured fill/native source qualification",
+  "GEN and actual LOOK",
+  "licensed PHY remains assumed, no physical release"
+ ]
+}
