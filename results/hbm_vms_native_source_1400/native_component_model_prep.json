@@ -119,13 +119,34 @@
  "unplaced_envelope_model": {
   "outline_area_um2": 109058.40000000001,
   "macro_area_um2": 36952.065216,
-  "standard_cell_area_um2": 3514.829844,
+  "standard_cell_area_um2": 3430.24,
   "free_area_um2": 72106.334784,
-  "std_free_fill": 0.048745090906769,
+  "std_free_fill": 0.047571964519837875,
   "macro_area_fraction": 0.33882823529411765,
-  "projected_unoccupied_outline_fraction": 0.6289428869303053,
+  "projected_unoccupied_outline_fraction": 0.6297185249737755,
   "actual_empty_bin_metric": "NOT_MEASURED_UNPLACED",
-  "same_resources_area_at_20pct_free_fill_um2": 54526.214436,
-  "conclusion": "MODEL_HOLD: std/free below15% low band and20%target, macroshare below50%exception. Concrete compact envelope, parent transformed declared pin contract and native tree model required before PNR. No source/pin/slot change authorized by this resource calculation."
+  "same_resources_area_at_20pct_free_fill_um2": 54103.265216,
+  "conclusion": "MODEL_HOLD: std/free below15% low band and20%target, macroshare below50%exception. Concrete compact envelope, parent transformed declared pin contract and native tree model required before PNR. No source/pin/slot change authorized by this resource calculation.",
+  "area_basis": "Final ORFS physical1_synth standard-cell area, exact macro LEF area; earlier Yosys liberty statistics remain source synthesis census, not final physical projection."
+ },
+ "final_orfs_synth_physical_resources": {
+  "basis": "actual completed run/logs/.../base/1_synth.json and mapped1_synth.v; earlier Yosys liberty-area statistics retained separately",
+  "std_cell_area_um2": 3430.24,
+  "macro_area_um2": 36952.1,
+  "total_cell_area_um2": 40382.3,
+  "FFs": 7924,
+  "FF_roots": {
+   "clk": 4014,
+   "clk_e": 1109,
+   "clk_s": 1107,
+   "clk_w": 1107,
+   "clk_n": 587
+  },
+  "macro_clock_roots": [
+   "clk_macro0",
+   "clk_macro1",
+   "clk_macro2"
+  ],
+  "mapped_netlist_sha256": "92ff40bbab463cb781ecb409eb1b8e83a41f3e993b9bb450879121bb9500a343"
  }
 }
