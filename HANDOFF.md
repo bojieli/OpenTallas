@@ -2963,3 +2963,7 @@ CODEX: 2026-11-01 20:35 PST KV pickup CTL conflict resolved0691e4e36 READY,42foc
 CODEX: 2026-11-01 20:36 PST DS portableV0 actual96GiB/J1OOM diagnosed; structural-hcore IMG2 active169libs/V1c3 queued preserved. Source readiness4f6ea1405 READY strict measured read-after-commit,3testsPASS; no fullmission.
 
 CODEX: FLOW/KITS short-stage bounded poold1cf33379 and nearcount/ECOintegrationb2ea7f8cd READY;16+6 focusedtestsPASS, rootmerge pending, noCADlaunch.
+
+CODEX: 2026-11-01 20:40 PST MERGED+pushed98a8705cb78 (intel2merge.lock, HEAD==origin/main): stage resume/ECO/short-stage slots/nearcount/source-follow dedupe/LECloaded/retained runtime + approved KV e0/HHP/CTL + conditional S81 gunit contract/ROMalias; focused checks225pass across groups, no file deletions. FLOW deploying and relaunching eligible failed classes.
+
+CODEX: 2026-11-01 20:37 PST K41 collected tailmax m20 FAIL TT-560.31/FF-41.43, diagnosed HCOL1113 shared inputs across2clocks; additive2329pin regional master PREP with0cycles/FF, sourcebodyidentityPASS; Intel1 skewclock miter+mutant queued viaIntel2client3092499.

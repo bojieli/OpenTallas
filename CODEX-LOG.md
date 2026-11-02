@@ -9787,3 +9787,8 @@ OWNER?
 2026-11-01 20:34 PST: HBM KIT-WAVE-16 asks to build reviewed q_su11/q_spu0 partition-type pilots before die clock PASS. This would override owner12.22 gate; default remains HOLD for types, hard cores and clock/other work continue. Does owner authorize that scoped allowlist?
 
 CODEX FLOW/KITS: ready shortpoold1cf33379 (16tests), nearcountintegrationb2ea7f8cd (6tests); ROOTmerge requested. Existing pilot/paused jobs preserved. OWNER? none for these scoped implementation changes.
+
+## CODEX notes 2026-11-01 20:40 PST
+CODEX: 2026-11-01 20:40 PST MERGED+pushed98a8705cb78 (intel2merge.lock, HEAD==origin/main): stage resume/ECO/short-stage slots/nearcount/source-follow dedupe/LECloaded/retained runtime + approved KV e0/HHP/CTL + conditional S81 gunit contract/ROMalias; focused checks225pass across groups, no file deletions. FLOW deploying and relaunching eligible failed classes.
+
+OWNER? 2026-11-01 20:37 PST HCOL native shared-input repair requires explicit parent pin/window/lane-capacity event: additive regional master duplicates1113 query/key/valid input pins (1216→2329 total),0FF/0cycles, preserving each clk_pair capture. May this event be adopted after actual boundary/capacity checks? Existing master/parent remains unchanged; source proof work continues.
