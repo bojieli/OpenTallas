@@ -16,7 +16,8 @@ foreach tni_i [$tni_b getInsts] {
   set tni_net "-"
   if {$tni_n ne "NULL"} {set tni_net [$tni_n getName]}
   puts $tni_o "PIN\t[$tni_i getName]\t[$tni_mt getName]\t[$tni_mt getIoType]\t[$tni_mt getSigType]\t$tni_net"
-  if {[$tni_m isBlock] && [$tni_mt getSigType] eq "CLOCK"} {
+  # SYNTH-only ODBs have no authorized macro poses. Export no invented geometry.
+  if {[$tni_m isBlock] && [$tni_mt getSigType] eq "CLOCK" && ![info exists ::env(OT_TT_SYNTH_ONLY)]} {
    if {[$tni_i getOrient] ne "R0"} {error "TT selected macro clock orientation changed"}
    set tni_ib [$tni_i getBBox];set tni_x0 1e30;set tni_y0 1e30;set tni_x1 -1e30;set tni_y1 -1e30
    foreach tni_mp [$tni_mt getMPins] {foreach tni_g [$tni_mp getGeometry] {

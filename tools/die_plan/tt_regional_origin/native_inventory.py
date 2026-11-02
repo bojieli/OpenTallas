@@ -93,7 +93,7 @@ def source_alias_prefix(target):
     if signal.endswith('.u_raw_copy.q'):return signal[:-2]+'/q'
     raise ValueError('Source alias is outside the finite regional mechanism')
 
-def build(dump,lib_paths,sdc,intent,proposal,source_readset,netlist):
+def build(dump,lib_paths,sdc,intent,proposal,source_readset,netlist,ff_only=False):
     cells,pins,ports,drivers,macro_xy=parse_dump(dump);models=L.read_liberty(lib_paths);medges=macro_edges(lib_paths,{c['master'] for c in cells.values() if c['is_block']})
     actual_ff={n:c for n,c in cells.items() if not c['is_block'] and models.get(c['master'],{}).get('ff')}
     for n,c in cells.items():
@@ -153,6 +153,15 @@ def build(dump,lib_paths,sdc,intent,proposal,source_readset,netlist):
             row.update(rtl_signal=identity[0],rtl_edge='negedge' if effective else 'posedge')
         ff_records.append(row)
     if set(model_to_native.values())!=set(actual_ff):raise ValueError('Extra/unpriced actual native FFs in full census')
+    if len(model_to_native)!=38244 or len([q for q in ff_records if 'rtl_signal' in q])!=18:raise ValueError('Actual source is not the complete selected TT+13FF cohort')
+    if ff_only:
+        return dict(schema='opentallas.tt_actual_synth_ff_inventory.v1',source_event='tt_regional_origin_13ff',stage='mapped_synth_only',
+                    status='PASS_NATIVE_FF_NAMES_FOOTPRINTS_ONLY',complete_ff_census=True,ff_cells=ff_records,
+                    source_sha256=hashlib.sha256(Path(source_readset).read_bytes()).hexdigest(),netlist_sha256=hashlib.sha256(Path(netlist).read_bytes()).hexdigest(),
+                    actual_dump_sha256=hashlib.sha256(Path(dump).read_bytes()).hexdigest(),
+                    selected_liberties={str(p):hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in lib_paths},
+                    clock_bpin_and_macro_pose_join='NOT_RUN: no floorplan/placement authorized',row_site_join='HELD: pending complete row intent',
+                    physical_release='HELD',placement_or_tree_applied=False,global_source_credit=False)
     ff_by_model={r['model_name']:r for r in ff_records}
     sink_records=[]
     for expected in proposal['assignments']+proposal['retained_other_cohorts']:
@@ -189,10 +198,10 @@ def build(dump,lib_paths,sdc,intent,proposal,source_readset,netlist):
 if __name__=='__main__':
     ap=argparse.ArgumentParser(description=__doc__)
     for n in ('dump','sdc','intent','proposal','source-readset','netlist','out'):ap.add_argument('--'+n,type=Path,required=True)
-    ap.add_argument('--lib',type=Path,action='append',required=True);a=ap.parse_args()
-    result=build(a.dump,a.lib,a.sdc,read(a.intent),read(a.proposal),a.source_readset,a.netlist)
+    ap.add_argument('--lib',type=Path,action='append',required=True);ap.add_argument('--ff-only',action='store_true');a=ap.parse_args()
+    result=build(a.dump,a.lib,a.sdc,read(a.intent),read(a.proposal),a.source_readset,a.netlist,a.ff_only)
     data=(json.dumps(result,separators=(',',':'))+'\n').encode()
     if str(a.out).endswith('.gz'):
         with gzip.GzipFile(filename=str(a.out),mode='wb',mtime=0) as f:f.write(data)
     else:a.out.write_bytes(data)
-    print('TT_ACTUAL_NATIVE_INVENTORY',len(result['ff_cells']),'FFs',len(result['sinks']),'clock endpoints; metadata only')
+    print('TT_ACTUAL_NATIVE_INVENTORY',len(result['ff_cells']),'FFs',len(result.get('sinks',[])),'clock endpoints; metadata only')
