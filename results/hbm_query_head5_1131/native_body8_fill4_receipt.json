@@ -1,0 +1,466 @@
+{
+  "scope": "CurrentCnativeH32 QUERYOLD8-outputABI source9572322, validcommit aa8a/requestedUSED4. Fullallcompare+KEEP+X unchanged. NOT newhead5ABI/currentparent/physical release.",
+  "positive": {
+    "verdict": "EQUIVALENT",
+    "counts": {
+      "compare_points": 31388,
+      "proved": 31388,
+      "differs": 0,
+      "undecided": 0
+    },
+    "reset_contract": {
+      "default": 4,
+      "requested": 4,
+      "contract": {
+        "file": "/work/reset_contract.json",
+        "die": "hbm",
+        "edges": 64,
+        "assert_edges": 66,
+        "receipt": "/work/reset_contract/receipt.txt"
+      },
+      "used": 4,
+      "debug_overrides": {}
+    },
+    "kept_registers": {
+      "declared": 1056,
+      "in_netlist": 1056,
+      "constant_proved": {
+        "n": 0,
+        "first": []
+      },
+      "missing": {
+        "n": 0,
+        "first": []
+      },
+      "unobservable_removed": {
+        "n": 0,
+        "first": []
+      },
+      "unobservable_reason": null
+    },
+    "hints": {
+      "given": 177,
+      "applied": 177,
+      "skipped": 0,
+      "dropped": {
+        "n": 0,
+        "first": []
+      },
+      "fill": [
+        {
+          "register": "ff:u_dut.core.quant.s0_fp4",
+          "value": 1,
+          "pred": null,
+          "base_filled": true
+        },
+        {
+          "register": "ff:u_dut.core.quant.s10_fp4",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.s9_fp4",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.s1_fp4",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.s0_fp4",
+          "base_filled": true
+        },
+        {
+          "register": "ff:u_dut.core.quant.s2_fp4",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.s2a_fp4",
+          "base_filled": true
+        },
+        {
+          "register": "ff:u_dut.core.quant.s2a_fp4",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.s1_fp4",
+          "base_filled": true
+        },
+        {
+          "register": "ff:u_dut.core.quant.s8_fp4",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.u_d27.g_line.line[9]",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.s9_fp4",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.s8_fp4",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.u_d27.g_line.line[1]",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.s2_fp4",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.u_d27.g_line.line[3]",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.u_d27.g_line.line[1]",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.u_d27.g_line.line[5]",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.u_d27.g_line.line[3]",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.u_d27.g_line.line[7]",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.u_d27.g_line.line[5]",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.u_d27.g_line.line[9]",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.u_d27.g_line.line[7]",
+          "base_filled": false
+        }
+      ],
+      "fill_refused": []
+    },
+    "provenance": {
+      "commit": "aa8a1efdca088e057422df70944dfeae2444b740",
+      "dirty": false,
+      "source": "validated kit PROVENANCE.json"
+    },
+    "cached_profile_probe": {
+      "discovery_rounds": 0,
+      "untrusted_hints": "/work/lec_fill4_hints.json",
+      "native_engine_sha256": "2f60d61b39dcade31d9ab3a07483cc150ac76cc1f4f9523dedef7ac0a9b74aa2",
+      "driver_sha256": "e116c16bf7263f531632292991daea3d5fa49d394a2c7d5423ce325359af006b",
+      "source": "same frozen source/netlist/AIG capsule; every proposal and compare re-proved",
+      "baseline_verdict": "NOT EQUIVALENT retained in original capsule"
+    },
+    "t_total_s": 238.6,
+    "full_receipt": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-query-nativeoff-r2-1131/gen/ot_hbm_idx_query_static_8685b722456c/lec_fill4/lec.json",
+    "full_receipt_sha256": "6309bab89182e9c4aa93483897c262877292ed2c4cfebe1ec94b18ec25ea9f68"
+  },
+  "wrong_s10_fill_value0": {
+    "verdict": "NOT EQUIVALENT",
+    "counts": {
+      "compare_points": 31259,
+      "proved": 31131,
+      "differs": 128,
+      "undecided": 0
+    },
+    "reset_contract": {
+      "default": 4,
+      "requested": 4,
+      "contract": {
+        "file": "/work/reset_contract.json",
+        "die": "hbm",
+        "edges": 64,
+        "assert_edges": 66,
+        "receipt": "/work/reset_contract/receipt.txt"
+      },
+      "used": 4,
+      "debug_overrides": {}
+    },
+    "kept_registers": {
+      "declared": 1056,
+      "in_netlist": 1056,
+      "constant_proved": {
+        "n": 0,
+        "first": []
+      },
+      "missing": {
+        "n": 0,
+        "first": []
+      },
+      "unobservable_removed": {
+        "n": 0,
+        "first": []
+      },
+      "unobservable_reason": null
+    },
+    "hints": {
+      "given": 177,
+      "applied": 177,
+      "skipped": 0,
+      "dropped": {
+        "n": 129,
+        "first": [
+          "ff:__gate_anon_16507",
+          "ff:__gate_anon_16520",
+          "ff:__gate_anon_16533",
+          "ff:__gate_anon_16546",
+          "ff:__gate_anon_16559",
+          "ff:__gate_anon_16572",
+          "ff:__gate_anon_16585",
+          "ff:__gate_anon_16598",
+          "ff:__gate_anon_16611",
+          "ff:__gate_anon_16624",
+          "ff:__gate_anon_16637",
+          "ff:__gate_anon_16650",
+          "ff:__gate_anon_16663",
+          "ff:__gate_anon_16676",
+          "ff:__gate_anon_16689",
+          "ff:__gate_anon_16702",
+          "ff:__gate_anon_16715",
+          "ff:__gate_anon_16728",
+          "ff:__gate_anon_16741",
+          "ff:__gate_anon_16755",
+          "ff:__gate_anon_16767",
+          "ff:__gate_anon_16780",
+          "ff:__gate_anon_16793",
+          "ff:__gate_anon_16806",
+          "ff:__gate_anon_16820",
+          "ff:__gate_anon_16832",
+          "ff:__gate_anon_16845",
+          "ff:__gate_anon_16858",
+          "ff:__gate_anon_16871",
+          "ff:__gate_anon_16884",
+          "ff:__gate_anon_16897",
+          "ff:__gate_anon_16910",
+          "ff:__gate_anon_16923",
+          "ff:__gate_anon_16937",
+          "ff:__gate_anon_16949",
+          "ff:__gate_anon_16962",
+          "ff:__gate_anon_16975",
+          "ff:__gate_anon_16988",
+          "ff:__gate_anon_17002",
+          "ff:__gate_anon_17014"
+        ]
+      },
+      "fill": [
+        {
+          "register": "ff:u_dut.core.quant.s0_fp4",
+          "value": 1,
+          "pred": null,
+          "base_filled": true
+        },
+        {
+          "register": "ff:u_dut.core.quant.s1_fp4",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.s0_fp4",
+          "base_filled": true
+        },
+        {
+          "register": "ff:u_dut.core.quant.s2_fp4",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.s2a_fp4",
+          "base_filled": true
+        },
+        {
+          "register": "ff:u_dut.core.quant.s2a_fp4",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.s1_fp4",
+          "base_filled": true
+        },
+        {
+          "register": "ff:u_dut.core.quant.s8_fp4",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.u_d27.g_line.line[9]",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.s9_fp4",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.s8_fp4",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.u_d27.g_line.line[1]",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.s2_fp4",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.u_d27.g_line.line[3]",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.u_d27.g_line.line[1]",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.u_d27.g_line.line[5]",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.u_d27.g_line.line[3]",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.u_d27.g_line.line[7]",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.u_d27.g_line.line[5]",
+          "base_filled": false
+        },
+        {
+          "register": "ff:u_dut.core.quant.u_d27.g_line.line[9]",
+          "value": 1,
+          "pred": "ff:u_dut.core.quant.u_d27.g_line.line[7]",
+          "base_filled": false
+        }
+      ],
+      "fill_refused": []
+    },
+    "provenance": {
+      "commit": null,
+      "dirty": null,
+      "source": "kit provenance invalid: ValueError: source, input or running-tool identity mismatch"
+    },
+    "cached_profile_probe": {
+      "discovery_rounds": 0,
+      "untrusted_hints": "/work/hints.json",
+      "native_engine_sha256": "d0dbdf09d4fa530406c121eed725661d52a502eb1ce550452e2b8dd2ac50f90b",
+      "driver_sha256": "e116c16bf7263f531632292991daea3d5fa49d394a2c7d5423ce325359af006b",
+      "source": "same frozen source/netlist/AIG capsule; every proposal and compare re-proved",
+      "baseline_verdict": "NOT EQUIVALENT retained in original capsule"
+    },
+    "t_total_s": 291.2,
+    "full_receipt": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-query-negative-r2-1131/kit/lec/lec.json",
+    "full_receipt_sha256": "de49cf0899b1d531148bc2d62ff1117277f1b959f106cd35e9992abe3a41d50d"
+  },
+  "negative_first_refutation": [
+    "hyp:gold:ff:u_dut.core.quant.s10_fp4"
+  ],
+  "negative_bookkeeping_patch": {
+    "original_engine_sha256": "2f60d61b39dcade31d9ab3a07483cc150ac76cc1f4f9523dedef7ac0a9b74aa2",
+    "patched_engine_sha256": "d0dbdf09d4fa530406c121eed725661d52a502eb1ce550452e2b8dd2ac50f90b",
+    "change": "ONLY two rejection-key bookkeeping comprehensions; no proof/AIG/base/reset/compare modifications. Fresh own copy; original frozen checker untouched.",
+    "scope": "Negativecontrol only, baseline positive native4 EQ31388 original checker remains separate."
+  },
+  "fill_hints_only": [
+    [
+      "gold",
+      "ff:u_dut.core.quant.s0_fp4",
+      [
+        "fill",
+        1,
+        null
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.s1_fp4",
+      [
+        "fill",
+        1,
+        "ff:u_dut.core.quant.s0_fp4"
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.s2a_fp4",
+      [
+        "fill",
+        1,
+        "ff:u_dut.core.quant.s1_fp4"
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.s2_fp4",
+      [
+        "fill",
+        1,
+        "ff:u_dut.core.quant.s2a_fp4"
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_d27.g_line.line[1]",
+      [
+        "fill",
+        1,
+        "ff:u_dut.core.quant.s2_fp4"
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_d27.g_line.line[3]",
+      [
+        "fill",
+        1,
+        "ff:u_dut.core.quant.u_d27.g_line.line[1]"
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_d27.g_line.line[5]",
+      [
+        "fill",
+        1,
+        "ff:u_dut.core.quant.u_d27.g_line.line[3]"
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_d27.g_line.line[7]",
+      [
+        "fill",
+        1,
+        "ff:u_dut.core.quant.u_d27.g_line.line[5]"
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.u_d27.g_line.line[9]",
+      [
+        "fill",
+        1,
+        "ff:u_dut.core.quant.u_d27.g_line.line[7]"
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.s8_fp4",
+      [
+        "fill",
+        1,
+        "ff:u_dut.core.quant.u_d27.g_line.line[9]"
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.s9_fp4",
+      [
+        "fill",
+        1,
+        "ff:u_dut.core.quant.s8_fp4"
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.core.quant.s10_fp4",
+      [
+        "fill",
+        1,
+        "ff:u_dut.core.quant.s9_fp4"
+      ]
+    ]
+  ],
+  "cache_scope": {
+    "source_commit": "aa8a1efdca088e057422df70944dfeae2444b740",
+    "scope": "Exact nativeH32 QUERYold8ABI failed320 vehicle; unchanged rawAIG/maps/current-source netlist; resetrequested4. No old64fixture or head5 ABIalias.",
+    "chain": [
+      "ff:u_dut.core.quant.s0_fp4",
+      "ff:u_dut.core.quant.s1_fp4",
+      "ff:u_dut.core.quant.s2a_fp4",
+      "ff:u_dut.core.quant.s2_fp4",
+      "ff:u_dut.core.quant.u_d27.g_line.line[1]",
+      "ff:u_dut.core.quant.u_d27.g_line.line[3]",
+      "ff:u_dut.core.quant.u_d27.g_line.line[5]",
+      "ff:u_dut.core.quant.u_d27.g_line.line[7]",
+      "ff:u_dut.core.quant.u_d27.g_line.line[9]",
+      "ff:u_dut.core.quant.s8_fp4",
+      "ff:u_dut.core.quant.s9_fp4",
+      "ff:u_dut.core.quant.s10_fp4"
+    ],
+    "base_untrusted_hints": 174,
+    "replaced_constant_hints": 9,
+    "new_untrusted_hints": 177,
+    "source_rule": "FP4literal1\u2192s0\u2192s1\u2192s2a\u2192s2\u21925W2delayoddindexbits\u2192s8\u2192s9\u2192s10; capturedEVERYedge,noreset. Existing toolfill ghosts prove both knownconstant and realXprefix; no state assumption.",
+    "raw_hashes": {
+      "gold.aig": "28b4dcbdf954cb58b902398fb0c305e588fc5ff5dc0b5d65d95a4f3e98990d81",
+      "gold.map": "6ca631f684de5b6d7ed3b963694be96a34fe5f66706a809ebd5b3e8e36887a04",
+      "gate.aig": "25522a28e7703f656c62dc5b95d2e069c25d534859014db62ce6d015a3df4420",
+      "gate.map": "049b9d4a87adcbf80a674462572df65c33a55df540302f3aa55444d6d794bd2b",
+      "gold.aliases.json": "3317e80e48b0107da1b962dad679a0c797be6f09ad9ada63c5c5a06dd1039e2d",
+      "gold.keep": "3e2091027c2ef63b01b597acc83e9d31290bb044f899f35916f8772a545d4c3e"
+    }
+  },
+  "old_failure": "Preservedlec_reset4/lec.json NEQ320/16856 and original3zero-outputfaceFAIL. Nativefixedreset4,no64orrawdebugoverride,no invaliddata mask."
+}
