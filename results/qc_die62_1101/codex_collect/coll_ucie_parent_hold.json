@@ -1,0 +1,23 @@
+{
+ "verdict": "HELD_PARENT_REPACK",
+ "type": "coll_ucie",
+ "added_mission_cycles": 0,
+ "old_width_um": 777.6,
+ "proposed_width_um": 803.52,
+ "macro_origin_um": [
+  12.996,
+  4.32
+ ],
+ "west_channel_um": 12.996,
+ "east_channel_um": 12.924,
+ "blocking_peers": [
+  "coll_f2",
+  "coll_core"
+ ],
+ "overlap_um": 25.92,
+ "remaining": [
+  "parent re-pack and all affected interfaces/clock/PG",
+  "new GEN and actual geometry review before physical dispatch",
+  "licensed abstract remains assumption, physical_qualification_eligible=false"
+ ]
+}

@@ -1,0 +1,70 @@
+{
+ "before": {
+  "channels": [
+   [
+    "macro column 0 x[0,777.6]: W vertical channel 0.000 um < 10.8",
+    "macro column 0 x[0,777.6]: E vertical channel 0.000 um < 10.8"
+   ],
+   {
+    "applies": true,
+    "macros": 1,
+    "columns": 1,
+    "min_channel_um": 10.8,
+    "min_channel_note": "10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling"
+   }
+  ],
+  "pin_grid": [
+   [
+    "macro ot_qfd_ucie_x64_phy#0 at (0, 0) R0: 2083 signal pin(s) off the make_tracks.tcl track grid (clk M5 centre 188.844 is 12.0 nm off the track)"
+   ],
+   {
+    "applies": true,
+    "macros": 1,
+    "pins": 2083,
+    "tracks": "make_tracks.tcl",
+    "worst_off_nm": 12.0
+   }
+  ],
+  "instances": [
+   [
+    "placed macro u_io_ucie: component 'u_io_ucie' is neither an instance nor a generate block of module qfd_qc_coll_ucie_part (path from qfd_qc_coll_ucie_part)"
+   ],
+   {
+    "applies": true,
+    "placed": 1,
+    "resolved": 0
+   }
+  ]
+ },
+ "candidate": {
+  "channels": [
+   [],
+   {
+    "applies": true,
+    "macros": 1,
+    "columns": 1,
+    "min_channel_um": 10.8,
+    "min_channel_note": "10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling"
+   }
+  ],
+  "pin_grid": [
+   [],
+   {
+    "applies": true,
+    "macros": 1,
+    "pins": 2092,
+    "tracks": "make_tracks.tcl",
+    "worst_off_nm": 0.0
+   }
+  ],
+  "instances": [
+   [],
+   {
+    "applies": true,
+    "placed": 1,
+    "resolved": 1
+   }
+  ]
+ },
+ "scope": "Read-only metadata fixture: no GEN/CAD/route/STA/proof or physical release; width803.52 proposal HELD (existing777.6 slot overlaps neighbours)"
+}
