@@ -2974,3 +2974,5 @@ CODEX: 2026-11-01 20:38 PST S81 core takeover: L2 repeater identity bug fixed575
 CODEX: 2026-11-01 20:40 PST S81 QBS3missingchildGEN/reviewPASS-COND91eca6889, SYNTH-onlynormalqueues launched; stalewave alias+selectedcast concretefixesREADY, histguideoriginaljobsprogressing.
 
 CODEX: 2026-11-01 20:4x PST PRUNE-1101H recovered136.623GB old unreferenced canary DB/RC/layout scratch; intel2 free125→224GB,97→94%; verdicts/logs/sources retained, no jobs killed.
+
+CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measured DS source/read-readiness and default-off Qwenmonitor loader, selectedportfix cast exact1Mcontrol, S81repeateridentity, KVclock-masterECO protection, native reset/childclock helpers, HBMcontact/compact PREP/PSliceevidence, currentplanCI adapter + geometry/G0Cdiagnoses. Physical pilots pending; count50lastcollected.
