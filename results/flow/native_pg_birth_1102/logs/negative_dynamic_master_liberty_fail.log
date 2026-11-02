@@ -1,0 +1,25 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+Signal 11 received
+Stack trace:
+ 0# 0x0000000000F1C787 in openroad
+ 1# 0x0000000000042520 in /lib/x86_64-linux-gnu/libc.so.6
+ 2# sta::dbNetwork::libertyCell(sta::Cell*) const in openroad
+ 3# sta::dbStaCbk::inDbInstSwapMasterBefore(odb::dbInst*, odb::dbMaster*) in openroad
+ 4# odb::dbInst::swapMaster(odb::dbMaster*) in openroad
+ 5# 0x00000000013FDD3F in openroad
+ 6# 0x000000000136875D in openroad
+ 7# TclNRRunCallbacks in /lib/x86_64-linux-gnu/libtcl8.6.so
+ 8# 0x000000000003E028 in /lib/x86_64-linux-gnu/libtcl8.6.so
+ 9# Tcl_EvalEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+10# Tcl_Eval in /lib/x86_64-linux-gnu/libtcl8.6.so
+11# sta::sourceTclFile(char const*, bool, bool, Tcl_Interp*) in openroad
+12# 0x0000000003E22810 in openroad
+13# ord::tclAppInit(Tcl_Interp*) in openroad
+14# Tcl_MainEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+15# main in openroad
+16# 0x0000000000029D90 in /lib/x86_64-linux-gnu/libc.so.6
+17# __libc_start_main in /lib/x86_64-linux-gnu/libc.so.6
+18# _start in openroad
