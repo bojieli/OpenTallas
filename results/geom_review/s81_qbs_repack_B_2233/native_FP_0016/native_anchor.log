@@ -1,0 +1,8 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+NATIVE_GEOM exported 122918 actual signal nets 32 macros; no extra ODB load
+ALLFF FIRM31847, baseline master restores383, regenerated row/TAP/halo/bay legality PASS; no physical timing or EQ claim
+swig/python detected a memory leak of type 'odb::Rect *', no destructor found.

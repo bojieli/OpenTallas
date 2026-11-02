@@ -1,0 +1,69 @@
+{
+  "schema": "opentallas.master_plan_slice.v1",
+  "enabled": false,
+  "kind": "core",
+  "die": "s81",
+  "type": "dsdv_bksel_q",
+  "module": "dsdv_bksel_q",
+  "outline_um": [
+    648,
+    648
+  ],
+  "instances": [
+    "u_bk_sel.u_sel.g_q[0].u_q",
+    "u_bk_sel.u_sel.g_q[1].u_q",
+    "u_bk_sel.u_sel.g_q[2].u_q",
+    "u_bk_sel.u_sel.g_q[3].u_q"
+  ],
+  "master_plan_sha256": "fba006a5783eff32cec20f73dbd5696f5485d642a7a3fa1cfb8b3b4d9235f6cc",
+  "frozen": false,
+  "master_plan_sha256_basis": "SHA256 of this packet inactive parent_type_overlay_disabled.json only; NOT a canonical die master-plan freeze/receipt",
+  "core_clock_port": "ck",
+  "islands": [
+    {
+      "name": "hist_ck_entry_driver",
+      "rect_um": [
+        321.84,
+        328.32,
+        326.16,
+        332.64
+      ],
+      "centre_um": [
+        324.012,
+        331.212
+      ],
+      "clock_pin": {
+        "layer": "M5",
+        "xy_um": [
+          324.012,
+          331.212
+        ]
+      }
+    }
+  ],
+  "bays": [
+    {
+      "name": "hist_ck_driver_bay",
+      "kind": "repeater",
+      "rect_um": [
+        321.84,
+        328.32,
+        326.16,
+        332.64
+      ]
+    }
+  ],
+  "entry_pins": [],
+  "keepouts": [],
+  "hard_cores": [],
+  "latency": {
+    "common_clock_latency_ps": {
+      "TT": 250,
+      "FF": 202.5
+    },
+    "tol_ps": 40
+  },
+  "clock_entry_source": "Actual native scalar BTermck, pins busck/bitnull, raw RTL moduleck; no bus alias fallback",
+  "stage": "DRAFT only; not consumed by current FP; merge under ROOT shared master-plan owner with coherent parent refs before normal GEN",
+  "physical_ownership": "Only reviewed4.32um driver bay is an island; no whole-core blockage. No pushdown core_tree or buffer cells invented. Ordinary CTS/cell count/area/TTFF remain pending; validate reserve/release ownership before consuming slice."
+}

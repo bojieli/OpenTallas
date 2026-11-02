@@ -1,0 +1,18 @@
+{
+  "scope": "ACTUAL preserved new FP + native allFF anchors, actual current122918-net graph, no PLACE/CTS",
+  "FF": 31847,
+  "FF_actual_r2r": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 404.95,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 29249,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_q.cq0\\[31\\]$_DFF_P_ -> u_q.cq_fg\\[2\\]$_DFF_P_"
+  },
+  "actual_macro_max_DBU": 404943,
+  "actual_macro_gt405000": 0,
+  "macro_bad": [],
+  "actual_FF_max_DBU": 404946,
+  "DBU_per_um": 1000
+}

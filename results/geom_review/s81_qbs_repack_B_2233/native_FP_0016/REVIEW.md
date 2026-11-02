@@ -1,0 +1,26 @@
+# Actual new FP/TAP/PG and native all-FF anchors: PASS-COND
+
+This is a disabled internal zero-cycle repack plus coherent centre-M5 clock-entry candidate. It adds0 RTL/registers/cycles. It is ready for ROOT review of ONE comb-only placement prototype. No PLACE/CTS/route/TTFF or source qualification is claimed.
+
+Native result:
+
+- One normal new floorplan/TAP/PG event moved the16 reviewed internal macros, preserved32 masters/orientations, and placed the exact scalar ck M5 entry(324.012,331.212),48×480nm. Ordinary exact1_synth.odb/v/sdc reuse was verified byte-for-byte before/after. No old FP/place/CTS/route ODB was imported.
+- Native pin audit PASS1803/1803,0missing/wrong-layer/wrong-place/extra. Macro PG probe has64 terms,0unconnected; all2700 declared PG shapes are touched. Native M5/M6 special-wire rectangles have0 overlap with the ck box.
+- The new FP has9866 actual row spans and36809 native TAPs. All31847 actual FFs now have FIRM status and persistent DoNotTouch;383 exact baseline drive classes were restored(330x2,53x3). No FF was added, removed or cloned. All1801 functional face targets remain fixed; new native row/site/orientation/TAP/macrohalo/driver-bay legality passes.
+- The actual current122918-net graph was exported in the same live-db pass, with exact directional macro pin geometry. Native G.r2r has29249 captures,0>405um and0comb loops. Exact FF maximum404946DBU, exact FF↔macro-port maximum404943DBU,0>405000 at1000DBU/um. This is the NEW actual graph, not the old128642-net model.
+- Actual M5 clock entry and4.32um driver bay are shown in actual_fp_anchored_LOOK.png. The bay has no FF/TAP occupancy; PG rails retain their normal supply ownership. I viewed the image and the parent independently viewed it with CONCUR PASS-COND.
+
+Failures retained and handled:
+
+1. Initial wrapper unit3190481 exited2 BEFORE CAD: recursive make -n could not model generated2_1_floorplan.sdc side effects. The corrected runner uses the direct normal do-2_1→macro→tapcell→pdn→final-copy targets and never traverses synthesis.
+2. Actual FP unit3335549 produced the valid new FP/TAP/PG, then exited1 on anchor legality. A full audit found1385 MOVABLE FF targets intersecting1400 regenerated TAP footprints,0fixed-face conflicts and0row/site/orientation errors. The first u_q.u_in.b_idx[307] was initially mislabeled as a face from its name; exact target metadata corrected that immediately. No face cleanup or TAP deletion was justified or performed.
+3. The model substituted the actual new rows/TAP inventory, retained every36809 TAP and all1801 faces, and reassigned movable FF targets. The model adapter's initial historical-row-phase lookup could not find an old FF coordinate covered by a newly moved macro; it was corrected to use the recorded original global row phase. No CAD or geometry variant was launched for that adapter failure.
+4. Native corrected application unit3849835(4GiB/1CPU) read the preserved new FP, applied the corrected targets and drive classes, checked actual legality, and wrote anchored.odb. It exited0. No second floorplan/TAP/PG event, global placement or CTS ran. Original failure logs/coordinates are preserved here.
+
+Actual artifact: Intel1 /srv/opentallas-scratch2/claude/codex-hist-nativeanchors-0005/anchored.odb(104MB). Original new FP and normal-stage logs remain under /srv/opentallas-scratch2/claude/codex-hist-centre-fp-2307/kit. The actual corrected target TSV/JSON in this packet supersedes the old model-only pre-TAP targets; do not feed the old TSV into a future guard.
+
+Before ONE comb PLACE: ROOT must select the inactive event, use this actual anchored ODB and exact corrected per-name/master/location/orientation guard, preserve all31847 FF FIRM/DoNotTouch, prohibit register resize/clone, and protect the empty clock-driver bay against comb fill through GPL/DPL. Comb/buffers remain free and there are no inclusive guide regions. Collect actual local congestion/geometry and LOOK before any further stage. Before CTS, require the structured clock-driver/entry plan, reserve/release ownership, actual buffer count/area price, unchanged833ps/TT250/FF202.5ps/40ps controls and actual TT+FF checks. No clock latency is assumed from geometry.
+
+Before parent routing: the contract-only LEF's old OBS overlaps the new ck aperture on M5/M6/M7. It is not a routable new child view and no obstruction was silently carved. The current inactive parent overlay holds its future actual LIB/view. Actual new child extraction and a truthful parent entry-access corridor/stack remain required. The disabled/unfrozen scalarck slice draft uses only the reviewed driver-bay rectangle; its digest refers to the inactive proposal, never a canonical die master-plan freeze.
+
+Source proof remains separate. Both foreign hist legacy rb2/rb4 are terminal EQUIVALENT88093/88093 with0differences; original alias1613 official70diff remains. ROOT authorized one current051 exact-rb2 diagnostic(client752026, Intel1 unit2802600); it is still active with rawbase2 DEBUG, real64edge reset receipt and missingPROVENANCE explicit. No extra proof variant or source/count/production credit is created here. The independent QBS9 watcher/proof is a different parent-glue scope.
