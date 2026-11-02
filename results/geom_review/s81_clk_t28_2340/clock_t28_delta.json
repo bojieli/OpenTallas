@@ -1,0 +1,31 @@
+{
+ "status": "SOURCE_EVENT_CANDIDATE_ROOT_APPROVED_ONE_RESET_RELAY",
+ "type": "col_h10_r0_p1__t1__cl574cc59d",
+ "path": [
+  "partition_types",
+  "col_h10_r0_p1__t1__cl574cc59d",
+  "clock",
+  "added_taps"
+ ],
+ "selector": {
+  "name": "clk_t28"
+ },
+ "old_xy_um": [
+  1126.44,
+  980.6
+ ],
+ "new_xy_um": [
+  1126.432,
+  958.496
+ ],
+ "unchanged_other_clock_ports": 39,
+ "clock_port_count": 40,
+ "tap_radius_um": 200,
+ "relay_graph_expected_count_before": 184,
+ "relay_graph_expected_count_after": 185,
+ "expected_all45_release_clocks": 7,
+ "FF_delta": 1,
+ "boot_cycles_delta": 0,
+ "mission_cycles_delta": 0,
+ "physical_reset_halo_class_hold": "RT.blockages raw origin omits canonical track offset/reuse union; original25/candidate26 near-halo points, no actual macro-body overlap; physical release needs canonical repair."
+}

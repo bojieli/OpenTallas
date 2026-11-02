@@ -1,0 +1,1967 @@
+{
+ "status": "PASS_NATIVE_ALL45_ASSERT_RELEASE_LOCKSTEP",
+ "unit": "oth-ubuntu-4140192-1793606835",
+ "source_old_equals_exact_failed_bind_census": true,
+ "old_relays": 184,
+ "new_relays": 185,
+ "FF_delta": 1,
+ "clock_load_delta": 1,
+ "reset_consumer_count": 45,
+ "same_named_outputs": true,
+ "source_assert_sample_cycles": [
+  66,
+  98,
+  103,
+  135,
+  199,
+  231,
+  241
+ ],
+ "assert_release_dates_old_new_equal": true,
+ "input_to_output_cycles_old_new": 7,
+ "boot_cycles_delta": 0,
+ "mission_cycles_delta": 0,
+ "lockstep_checks": 217440,
+ "simulated_cycles": 4895,
+ "exhaustive9bit_words": 512,
+ "mutant_mismatches": 2312,
+ "mutant": "exact one-edge-short rst_n_t28",
+ "dedicated_reset_out": "rst_o_0 old==new==same7edge history checked every cycle",
+ "outputs": [
+  {
+   "tap_index": 0,
+   "name": "clk",
+   "signal": "rst_n_t0",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 1,
+   "name": "clk_t1",
+   "signal": "rst_n_t1",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 2,
+   "name": "clk_t2",
+   "signal": "rst_n_t2",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 3,
+   "name": "clk_t3",
+   "signal": "rst_n_t3",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 4,
+   "name": "clk_t4",
+   "signal": "rst_n_t4",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 5,
+   "name": "clk_t5",
+   "signal": "rst_n_t5",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 6,
+   "name": "clk_t6",
+   "signal": "rst_n_t6",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 7,
+   "name": "clk_t7",
+   "signal": "rst_n_t7",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 8,
+   "name": "clk_t8",
+   "signal": "rst_n_t8",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 9,
+   "name": "clk_t9",
+   "signal": "rst_n_t9",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 10,
+   "name": "clk_t10",
+   "signal": "rst_n_t10",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 11,
+   "name": "clk_t11",
+   "signal": "rst_n_t11",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 12,
+   "name": "clk_t12",
+   "signal": "rst_n_t12",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 13,
+   "name": "clk_t13",
+   "signal": "rst_n_t13",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 14,
+   "name": "clk_t14",
+   "signal": "rst_n_t14",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 15,
+   "name": "clk_t15",
+   "signal": "rst_n_t15",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 16,
+   "name": "clk_t16",
+   "signal": "rst_n_t16",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 17,
+   "name": "clk_t17",
+   "signal": "rst_n_t17",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 18,
+   "name": "clk_t18",
+   "signal": "rst_n_t18",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 19,
+   "name": "clk_t19",
+   "signal": "rst_n_t19",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 20,
+   "name": "clk_t20",
+   "signal": "rst_n_t20",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 21,
+   "name": "clk_t21",
+   "signal": "rst_n_t21",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 22,
+   "name": "clk_t22",
+   "signal": "rst_n_t22",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 23,
+   "name": "clk_t23",
+   "signal": "rst_n_t23",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 24,
+   "name": "clk_t24",
+   "signal": "rst_n_t24",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 25,
+   "name": "clk_t25",
+   "signal": "rst_n_t25",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 26,
+   "name": "clk_t26",
+   "signal": "rst_n_t26",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 27,
+   "name": "clk_t27",
+   "signal": "rst_n_t27",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 28,
+   "name": "clk_t28",
+   "signal": "rst_n_t28",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 29,
+   "name": "clk_t29",
+   "signal": "rst_n_t29",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 30,
+   "name": "clk_t30",
+   "signal": "rst_n_t30",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 31,
+   "name": "clk_t31",
+   "signal": "rst_n_t31",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 32,
+   "name": "clk_t32",
+   "signal": "rst_n_t32",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 33,
+   "name": "clk_t33",
+   "signal": "rst_n_t33",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 34,
+   "name": "clk_t34",
+   "signal": "rst_n_t34",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 35,
+   "name": "clk_t35",
+   "signal": "rst_n_t35",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 36,
+   "name": "clk_t36",
+   "signal": "rst_n_t36",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 37,
+   "name": "clk_t37",
+   "signal": "rst_n_t37",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 38,
+   "name": "clk_t38",
+   "signal": "rst_n_t38",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 39,
+   "name": "clk_t39",
+   "signal": "rst_n_t39",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 40,
+   "name": "o0",
+   "signal": "rst_n_t40",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 41,
+   "name": "core_rst0",
+   "signal": "rst_n_t41",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 42,
+   "name": "core_rst1",
+   "signal": "rst_n_t42",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 43,
+   "name": "core_rst2",
+   "signal": "rst_n_t43",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  },
+  {
+   "tap_index": 44,
+   "name": "core_rst3",
+   "signal": "rst_n_t44",
+   "transitions": [
+    {
+     "cycle": 72,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 104,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 109,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 141,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 205,
+     "old": 1,
+     "new": 1
+    },
+    {
+     "cycle": 237,
+     "old": 0,
+     "new": 0
+    },
+    {
+     "cycle": 247,
+     "old": 1,
+     "new": 1
+    }
+   ],
+   "sampled_input_to_output_clocks": 7
+  }
+ ]
+}
