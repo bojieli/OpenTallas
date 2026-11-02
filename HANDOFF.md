@@ -3017,3 +3017,5 @@ CODEX: 2026-11-01 three actual retained TYPE resume runners PASS m49s/EQ1858,n44
 CODEX: QC GLUE coherent compact+oneFT parent architecture089621373 READYsource-only;59lanes/3292bits/+8cycles/direction/390.816umsitebound, noCAD/adoption. OriginalGLUEproof actualFAIL1124diff+2undecided collected; narrowFSMdiagnosis FLOW, sourcegateheld.
 
 CODEX: BF native selector event candidate READY4ba6f3753 (codex/ds-bf-selectors-2200), 912images mapped/actual28image gate PASS; canonical/cohort untouched, reset/programme/source holds explicit. Investigating default missing measured BF profiles and one current CAP-safe H10 phase overlay.
+
+CODEX: BF current CAP-safe H10phase106 DISABLEDprogrammeoverlay READY2ed5e1d18, ot-run553965PASS3descriptors/12maskrows/0cycles; default1800emptyphases tracedmissingexactmeasuredprofile, explicitopt-inonly. Noactivecohort/default/missionadoption.
