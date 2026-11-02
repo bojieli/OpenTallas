@@ -8,9 +8,14 @@ from pathlib import Path
 def declared(kit_rtl_json):
     kr = json.loads(Path(kit_rtl_json).read_text())
     root = Path(kr['bind_out'])
-    manifest = json.loads((root/'bind_parent_id_straps.json').read_text())
-    rows = manifest.get('types', {}).get(kr['bound_type'], {})
     ports = {r['port']: (r['dir'], r['width']) for r in kr.get('bound_only_pins', [])}
+    mf = root/'bind_parent_id_straps.json'
+    if not mf.exists():
+        if any(name.startswith('strap_r8pad_') for name in ports):
+            raise ValueError('R8 count ports lack their bind manifest')
+        return []
+    manifest = json.loads(mf.read_text())
+    rows = manifest.get('types', {}).get(kr.get('bound_type', kr.get('type')), {})
     result = []
     for name, row in rows.items():
         if row.get('kind') != 'r8pad_strap':
