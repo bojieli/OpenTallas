@@ -39,16 +39,31 @@ def main():
         x, y = 17.28+col*105.192, 17.28+row*78.3
         macros.append(dict(inst=f'g_leaf[{i//4}].u_leaf.g_page[{i%4}].u_program', master=MASTER,
                            origin_um=[round(x, 6), round(y, 6)], outline_um=[96.552, 69.66]))
-    pins, counters = [], {'W': 17.28, 'E': 17.28}
+    pins = []
+    flat = []
     for p in ports:
         side = 'W' if p['direction'] == 'input' else 'E'
         for bit in range(p['width']):
             name = p['name']+f'[{bit}]' if p['is_vector'] else p['name']
-            y = 4.32 if name == 'clk' else 8.64 if name == 'rst_n' else counters[side]
-            if name not in ('clk', 'rst_n'):
-                counters[side] += .064
-            pins.append(dict(name=name, direction=p['direction'], face=side, layer='M5',
-                             x=.024 if side == 'W' else 574.584, y=round(y, 6)))
+            flat.append((name, p['direction'], side))
+    # M4 is the vertical layer at E/W edges; pitch .048, offset .024.
+    # Inventory proposals stay inside the outline. Clock is explicitly planned
+    # near face centre; no old native entry point is reused or qualified.
+    clock_y = .024+round((738.72/2-.024)/.048)*.048
+    reset_y = clock_y+8.64
+    for side in ('W', 'E'):
+        ordinary = [x for x in flat if x[2] == side and x[0] not in ('clk','rst_n')]
+        tracks = [.024+i*.048 for i in range(15400) if 17.28 <= .024+i*.048 <= 738.72-17.28]
+        if side == 'W':
+            tracks = [y for y in tracks if abs(y-clock_y)>4.32 and abs(y-reset_y)>4.32]
+        assert len(tracks) >= len(ordinary)
+        for i,(name,direction,_) in enumerate(ordinary):
+            y=tracks[round(i*(len(tracks)-1)/(len(ordinary)-1))]
+            pins.append(dict(name=name,direction=direction,face=side,layer='M4',
+                             x=.024 if side=='W' else 574.536,y=round(y,6)))
+    for name,y in [('clk',clock_y),('rst_n',reset_y)]:
+        pins.append(dict(name=name,direction='input',face='W',layer='M4',x=.024,y=round(y,6)))
+    assert len({(p['layer'],p['x'],p['y']) for p in pins}) == 2904
     (OUT/'r10_pins.json').write_text(json.dumps(pins, indent=2)+'\n')
     rects = [dict(name=m['inst'], master=MASTER, rect_um=m['origin_um']+
                   [round(m['origin_um'][0]+96.552,6),round(m['origin_um'][1]+69.66,6)], orient='R0') for m in macros]

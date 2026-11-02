@@ -1,0 +1,36 @@
+{
+  "status": "PASS_GEN_INVENTORY_ONLY",
+  "bits": 2904,
+  "unique_positions": 2904,
+  "layer": "M4",
+  "pitch_um": 0.048,
+  "offset_um": 0.024,
+  "outline_um": [
+    574.56,
+    738.72
+  ],
+  "all_inside_outline": true,
+  "all_on_tracks": true,
+  "clock": {
+    "name": "clk",
+    "direction": "input",
+    "face": "W",
+    "layer": "M4",
+    "x": 0.024,
+    "y": 369.336
+  },
+  "reset": {
+    "name": "rst_n",
+    "direction": "input",
+    "face": "W",
+    "layer": "M4",
+    "x": 0.024,
+    "y": 377.976
+  },
+  "planned_entry_only": true,
+  "output_y_range_um": [
+    17.304,
+    721.416
+  ],
+  "physical_source_pin_reach_qualified": false
+}
