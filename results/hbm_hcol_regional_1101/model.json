@@ -42,5 +42,34 @@
       "log": "HCOL_CAPTURE checks=24003 errors=23998 mutant=1\nFATAL: /srv/opentallas-scratch/claude/wt/codex-hbm-hcol-regional-1101/results/hbm_hcol_regional_1101/tb_capture.sv:9: HCOL_CAPTURE FAIL\n       Time: 120021 Scope: tb\n"
     }
   },
-  "capture_slice_scope": "exact selected currentC capture statement and candidate statement; two independently phased clocks/free region enables, unchanged downstream body proven reverseidentity"
+  "capture_slice_scope": "exact selected currentC capture statement and candidate statement; two independently phased clocks/free region enables, unchanged downstream body proven reverseidentity",
+  "delta_scope": "CHILD_ONLY",
+  "added_flops_child": 0,
+  "added_cycles_child": 0,
+  "added_flops_global": null,
+  "added_cycles_global": null,
+  "parent_boundary_event": {
+    "status": "REQUIRED_NOT_QUALIFIED",
+    "rule": "each newparentoutputpin requiresitsownfaceflop; driving2pinsfromoneoldQ isshared-output failure",
+    "conditional_added_parent_flops_per_h1_boundary": 1113,
+    "h1_instances_in_current_profile": 128,
+    "conditional_added_parent_flops_all_h1": 142464,
+    "same_edge_conditions": [
+      "exactsourceD/enable/resetavailableatproducer",
+      "duplicatedFF keptdistinctthroughsynthesis",
+      "nativeDreachandoutputpinlocalityqualified",
+      "added1113clockloadsperboundaryandnewtap/PGbudgetqualified"
+    ],
+    "when_only_old_Q_available": "newparentcapture stage addslatency; cyclecount/compilerschedulemustbepricedbeforeactivation",
+    "global_zero_cycle_or_FF_claim": false
+  },
+  "measured_existing_child_synth": {
+    "std_area_um2": 24483.26088,
+    "sequential_area_um2": 8467.88904,
+    "async_FFs": 6738,
+    "plain_FFs": 20280,
+    "total_FFs": 27018,
+    "macros": 0,
+    "scope": "exactcurrentC nativeSYNTH prior1113sharedinputguardFAIL,notnewphysicalview"
+  }
 }
