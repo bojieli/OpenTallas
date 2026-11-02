@@ -12,7 +12,6 @@ set b [ord::get_db_block]
 set fh [open /work/pg_pre.json {WRONLY CREAT EXCL}]
 set pg [ot_pg_write_snapshot $b $fh]
 if {[dict get $pg failure_count] != 0} {error "HROOT_GUIDE_PG_INPUT_NOT_CLOSED"}
-close $fh
 source /work/strict_eval.tcl
 foreach mode {GPL_TIMING_DRIVEN GPL_ROUTABILITY_DRIVEN} {
  if {![info exists ::env($mode)] || $::env($mode) ne "0"} {error "HROOT_STRICT_PREP_EXACT_MODE_ZERO_REQUIRED $mode"}
@@ -62,7 +61,6 @@ dict for {n rec} $saved {
 set fh [open /work/pg_post.json {WRONLY CREAT EXCL}]
 set pg [ot_pg_write_snapshot $b $fh]
 if {[dict get $pg failure_count] != 0} {error "HROOT_GUIDE_PG_POST_NOT_CLOSED"}
-close $fh
 }]
 foreach field {creates swaps bound} {
  if {[dict get $hroot_eval native $field] != 0} {error "HROOT_STRICT_PREP_UNEXPECTED_NATIVE_BIRTH $hroot_eval"}
