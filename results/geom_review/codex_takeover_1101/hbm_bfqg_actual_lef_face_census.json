@@ -1,0 +1,102 @@
+{
+ "scope": "Exact frozen LEF signal/clock face census only; no native access/PG/routing qualification",
+ "signal_and_clock_pins": 819,
+ "face_counts": {
+  "W": 410,
+  "E": 409
+ },
+ "groups": [
+  {
+   "face": "W",
+   "bus": "clk",
+   "count": 1,
+   "y0": 0.768,
+   "y1": 0.792
+  },
+  {
+   "face": "W",
+   "bus": "r_ce_in",
+   "count": 1,
+   "y0": 0.864,
+   "y1": 0.888
+  },
+  {
+   "face": "W",
+   "bus": "r_addr_in",
+   "count": 7,
+   "y0": 0.96,
+   "y1": 1.56
+  },
+  {
+   "face": "W",
+   "bus": "rd_out",
+   "count": 256,
+   "y0": 1.632,
+   "y1": 26.136
+  },
+  {
+   "face": "W",
+   "bus": "w_ce_in",
+   "count": 1,
+   "y0": 26.208,
+   "y1": 26.232
+  },
+  {
+   "face": "W",
+   "bus": "w_addr_in",
+   "count": 7,
+   "y0": 26.304,
+   "y1": 26.904
+  },
+  {
+   "face": "W",
+   "bus": "wd_in",
+   "count": 137,
+   "y0": 26.976,
+   "y1": 40.056
+  },
+  {
+   "face": "E",
+   "bus": "wd_in",
+   "count": 119,
+   "y0": 0.768,
+   "y1": 12.12
+  },
+  {
+   "face": "E",
+   "bus": "w_mask_in",
+   "count": 256,
+   "y0": 12.192,
+   "y1": 36.696
+  },
+  {
+   "face": "E",
+   "bus": "rr_en",
+   "count": 2,
+   "y0": 36.768,
+   "y1": 36.888
+  },
+  {
+   "face": "E",
+   "bus": "rr_addr",
+   "count": 14,
+   "y0": 36.96,
+   "y1": 38.232
+  },
+  {
+   "face": "E",
+   "bus": "cr_en",
+   "count": 2,
+   "y0": 38.304,
+   "y1": 38.424
+  },
+  {
+   "face": "E",
+   "bus": "cr_sel",
+   "count": 16,
+   "y0": 38.496,
+   "y1": 39.96
+  }
+ ],
+ "finding": "All read outputs are west in R0/east in MY, but not all macro signals are west; write data spans both faces. Corrected CQ guides provide no global all-pin access claim."
+}
