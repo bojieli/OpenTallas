@@ -46,7 +46,12 @@ def join(proposal, inventory):
     taps = inventory['ports']
     if len(ports) != 63 or set(taps) != set(ports):
         raise ValueError('Exactly the existing 63 clock input names must join')
+    expected_xy=proposal.get('clock_port_xy_um')
+    if not expected_xy or set(expected_xy)!=set(ports):
+        raise ValueError('Missing exact existing 63 clock-entry coordinates')
     for name, p in taps.items():
+        if len(p.get('xy_um',[]))!=2 or any(abs(a-b)>1e-6 for a,b in zip(p['xy_um'],expected_xy[name])):
+            raise ValueError('Actual native clock-entry coordinate differs: '+name)
         if (p.get('cohort'), p.get('period_ps'), p.get('phase_ps'), p.get('polarity')) != ('clk', 833, 0, 1):
             raise ValueError('Clock cohort/period/phase/polarity mismatch: ' + name)
     records = inventory['sinks']
@@ -103,7 +108,7 @@ def join(proposal, inventory):
     return dict(schema='opentallas.tt_native_clock_join.v1', status='JOINED_METADATA_ONLY',
                 tree_applied=False, physical_release='HELD',
                 source_sha256=inventory['source_sha256'], netlist_sha256=inventory['netlist_sha256'],
-                clock_ports=ports, period_ps=833, assignments=output,
+                clock_ports=ports,clock_port_xy_um=expected_xy,period_ps=833,assignments=output,
                 retained_other_cohorts=proposal['retained_other_cohorts'],
                 consumer_contract='Preserve each exact edge and full path; a shared gate branch with conflicting target roots requires a separate coherent branch-cut proposal. Never reconnect a gated/inverted sink directly to a port.')
 

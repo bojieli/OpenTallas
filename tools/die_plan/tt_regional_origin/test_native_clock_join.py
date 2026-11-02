@@ -8,9 +8,9 @@ class JoinContract(unittest.TestCase):
     def fixture(self):
         ports = ['clk'] + ['clk_t'+str(i) for i in range(1,63)]
         path = [dict(instance='gate',master='ICG',input_pin='CLK',output_pin='GCLK',kind='clock_gate',polarity=1)]
-        proposal = dict(clock_ports=ports,reassociated_sinks=51,assignments=[dict(name='q'+str(i),parent_tap='clk_t1',nearest_parent_tap='clk') for i in range(51)],retained_other_cohorts=[])
+        proposal = dict(clock_ports=ports,clock_port_xy_um={p:[float(i),float(i)] for i,p in enumerate(ports)},reassociated_sinks=51,assignments=[dict(name='q'+str(i),parent_tap='clk_t1',nearest_parent_tap='clk') for i in range(51)],retained_other_cohorts=[])
         inv = dict(source_event='tt_regional_origin_13ff',stage='mapped_preCTS',source_sha256='source',netlist_sha256='mapped',
-                   ports={p:dict(cohort='clk',period_ps=833,phase_ps=0,polarity=1) for p in ports},
+                   ports={p:dict(cohort='clk',period_ps=833,phase_ps=0,polarity=1,xy_um=[float(i),float(i)]) for i,p in enumerate(ports)},
                    sinks=[dict(model_name='q'+str(i),native_iterm='q'+str(i)+'/CLK',cohort='clk',root_port='clk',edge='negedge',path=copy.deepcopy(path)) for i in range(51)])
         return proposal,inv
 
@@ -39,6 +39,10 @@ class JoinContract(unittest.TestCase):
     def test_retained_sf_missing_inverter_rejected(self):
         p,i=self.regional_fixture();i['sinks'][0]['path'].pop()
         with self.assertRaisesRegex(ValueError,'inversion/edge'):join(p,i)
+
+    def test_moved_native_clock_entry_rejected(self):
+        p,i=self.fixture();i['ports']['clk_t1']['xy_um'][0]+=8.64
+        with self.assertRaisesRegex(ValueError,'coordinate differs'):join(p,i)
 
     def test_wrong_phase_rejected(self):
         p,i=self.fixture();i['ports']['clk_t1']['phase_ps']=416.5
