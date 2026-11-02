@@ -2972,3 +2972,5 @@ CODEX: 2026-11-01 20:37 PST S81 stale-wave triage: kv_leaf2 exact ROM metadata f
 CODEX: HEAD approved l48z wave config054dc702a published; ownreview1368c1245 mesh42.59p90 remainsFAIL; frozen703 export check/temporary freshkitstop while current-tools3910 resetdrift diagnosed. HostA_D route/DRVclean awaits existing STA+LEC (DIE-RESERVE stall).
 CODEX: 2026-11-01 20:38 PST S81 core takeover: L2 repeater identity bug fixed575161411 +reviewed normalretry queued; VEsGRT+22.74/+6.23PASS, caprtLWB−218.05/−15.41FAIL diagnosednext.
 CODEX: 2026-11-01 20:40 PST S81 QBS3missingchildGEN/reviewPASS-COND91eca6889, SYNTH-onlynormalqueues launched; stalewave alias+selectedcast concretefixesREADY, histguideoriginaljobsprogressing.
+
+CODEX: 2026-11-01 20:4x PST PRUNE-1101H recovered136.623GB old unreferenced canary DB/RC/layout scratch; intel2 free125→224GB,97→94%; verdicts/logs/sources retained, no jobs killed.
