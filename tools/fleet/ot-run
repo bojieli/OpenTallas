@@ -916,6 +916,9 @@ SSH_CONNFAIL = ("kex_exchange_identification", "Connection reset by", "Connectio
                 "Connection closed by", "banner exchange", "ssh_exchange_identification")
 SSH_RETRY_BACKOFF_S = tuple(int(x) for x in os.environ.get("OT_RUN_SSH_BACKOFF", "5,15,45").split(",") if x)
 LAST_RUN = dict(connfail=False)
+# DIE_RESERVE_1101 (FLOW-21): the waiter learns when this request was first made, so a REBALANCE re-try (a new ot-heavy
+# process every REQUEUE_S) keeps its age for the hub die reservation (ot-reserve / ot-heavy-reconcile --die-waiters).
+RUN_T0 = time.time()
 
 
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None, disk=None):
@@ -923,6 +926,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
     env = os.environ.get("OT_RUN_PRIO_ENV", "") + ("OT_HEAVY_CPU=crit " if crit_job() else "") + env
+    env = f"OT_HEAVY_WAIT_SINCE={int(RUN_T0)} " + env
     if disk is None:
         disk = DIE_DISK_GB if "OT_HEAVY_PRIO=die" in env else 20
     env += f"OT_HEAVY_DISK_GB={int(disk)} "
