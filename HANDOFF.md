@@ -3019,3 +3019,5 @@ CODEX: QC GLUE coherent compact+oneFT parent architecture089621373 READYsource-o
 CODEX: BF native selector event candidate READY4ba6f3753 (codex/ds-bf-selectors-2200), 912images mapped/actual28image gate PASS; canonical/cohort untouched, reset/programme/source holds explicit. Investigating default missing measured BF profiles and one current CAP-safe H10 phase overlay.
 
 CODEX: BF current CAP-safe H10phase106 DISABLEDprogrammeoverlay READY2ed5e1d18, ot-run553965PASS3descriptors/12maskrows/0cycles; default1800emptyphases tracedmissingexactmeasuredprofile, explicitopt-inonly. Noactivecohort/default/missionadoption.
+
+CODEX: 2026-11-01 22:02 PST protectioncachefalsealarmfixDEPLOYED;2explicitretirementsclosed,231automaticentriespreserved,4legacyrowsnormalized;currentmanualregen+existingaudit0MISSING. Ownedcountcycle codex-protection-cycle-2159/hooks/cycle.sh;noforcedrecount/CAD.
