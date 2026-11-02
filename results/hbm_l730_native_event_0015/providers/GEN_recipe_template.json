@@ -1,0 +1,178 @@
+{
+  "ot_hnx_sfu_store_a__da81d76763c9": {
+    "top": "ot_hnx_sfu_store_a__da81d76763c9",
+    "files": [
+      "logic_ot_hnx_sfu_store_a__da81d76763c9.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "macro_place": {
+      "m0.g_bank[0].u_b.g_m11.u_m": [
+        17.28,
+        17.28,
+        "R0"
+      ],
+      "m0.g_bank[1].u_b.g_m11.u_m": [
+        198.744,
+        17.28,
+        "R0"
+      ],
+      "m0.g_bank[2].u_b.g_m11.u_m": [
+        380.208,
+        17.28,
+        "R0"
+      ],
+      "m0.g_bank[3].u_b.g_m11.u_m": [
+        561.672,
+        17.28,
+        "R0"
+      ],
+      "m0.g_bank[4].u_b.g_m11.u_m": [
+        17.28,
+        66.984,
+        "R0"
+      ],
+      "m0.g_bank[5].u_b.g_m11.u_m": [
+        198.744,
+        66.984,
+        "R0"
+      ],
+      "m0.g_bank[6].u_b.g_m11.u_m": [
+        380.208,
+        66.984,
+        "R0"
+      ],
+      "m0.g_bank[7].u_b.g_m11.u_m": [
+        561.672,
+        66.984,
+        "R0"
+      ],
+      "m0.g_bank[8].u_b.g_m11.u_m": [
+        17.28,
+        116.688,
+        "R0"
+      ],
+      "m0.g_bank[9].u_b.g_m11.u_m": [
+        198.744,
+        116.688,
+        "R0"
+      ],
+      "m0.g_bank[10].u_b.g_m11.u_m": [
+        380.208,
+        116.688,
+        "R0"
+      ],
+      "m0.g_bank[11].u_b.g_m11.u_m": [
+        561.672,
+        116.688,
+        "R0"
+      ],
+      "m0.g_bank[12].u_b.g_m11.u_m": [
+        17.28,
+        166.392,
+        "R0"
+      ],
+      "m0.g_bank[13].u_b.g_m11.u_m": [
+        198.744,
+        166.392,
+        "R0"
+      ],
+      "m0.g_bank[14].u_b.g_m11.u_m": [
+        380.208,
+        166.392,
+        "R0"
+      ],
+      "m0.g_bank[15].u_b.g_m11.u_m": [
+        561.672,
+        166.392,
+        "R0"
+      ],
+      "m1.g_bank[0].u_b.g_m11.u_m": [
+        17.28,
+        216.096,
+        "R0"
+      ],
+      "m1.g_bank[1].u_b.g_m11.u_m": [
+        198.744,
+        216.096,
+        "R0"
+      ],
+      "m1.g_bank[2].u_b.g_m11.u_m": [
+        380.208,
+        216.096,
+        "R0"
+      ],
+      "m1.g_bank[3].u_b.g_m11.u_m": [
+        561.672,
+        216.096,
+        "R0"
+      ],
+      "m1.g_bank[4].u_b.g_m11.u_m": [
+        17.28,
+        265.8,
+        "R0"
+      ],
+      "m1.g_bank[5].u_b.g_m11.u_m": [
+        198.744,
+        265.8,
+        "R0"
+      ],
+      "m1.g_bank[6].u_b.g_m11.u_m": [
+        380.208,
+        265.8,
+        "R0"
+      ],
+      "m1.g_bank[7].u_b.g_m11.u_m": [
+        561.672,
+        265.8,
+        "R0"
+      ],
+      "m1.g_bank[8].u_b.g_m11.u_m": [
+        17.28,
+        315.504,
+        "R0"
+      ],
+      "m1.g_bank[9].u_b.g_m11.u_m": [
+        198.744,
+        315.504,
+        "R0"
+      ],
+      "m1.g_bank[10].u_b.g_m11.u_m": [
+        380.208,
+        315.504,
+        "R0"
+      ],
+      "m1.g_bank[11].u_b.g_m11.u_m": [
+        561.672,
+        315.504,
+        "R0"
+      ],
+      "m1.g_bank[12].u_b.g_m11.u_m": [
+        17.28,
+        365.208,
+        "R0"
+      ],
+      "m1.g_bank[13].u_b.g_m11.u_m": [
+        198.744,
+        365.208,
+        "R0"
+      ],
+      "m1.g_bank[14].u_b.g_m11.u_m": [
+        380.208,
+        365.208,
+        "R0"
+      ],
+      "m1.g_bank[15].u_b.g_m11.u_m": [
+        561.672,
+        365.208,
+        "R0"
+      ]
+    },
+    "source": "exact immutable SOURCE13 selected native definition and exact selected generic dependencies; native SRAM consumer ABI unchanged",
+    "reset_metadata": "actual store0_rst_n from ctl u_core_u_rst__rst_n; internal source reset relay releases3edges; no inherited4edge proof",
+    "enabled": false
+  }
+}

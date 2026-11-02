@@ -1,0 +1,44 @@
+{
+  "status": "PASS_NATIVE_COMPONENT_MITERS_AND_MUTANTS_DISABLED_EVENT",
+  "upstream": {
+    "added_edges": 2,
+    "data_bits": 1662,
+    "checked": 3876,
+    "existing_XO_outputs_unchanged": 2,
+    "reset_pulses": 54,
+    "reset_low_edges": 216,
+    "mutant": "raw ctl bypass caught3876",
+    "clock_ps": 833,
+    "unit": "oth-ubuntu-2948077-1793605254",
+    "host": "intel2"
+  },
+  "downstream": {
+    "native_cases": [
+      "5\u21926",
+      "7\u21928"
+    ],
+    "data_bits": 1662,
+    "checked": [
+      3713,
+      3606
+    ],
+    "reset_pulses": 54,
+    "mutant_caught": [
+      3766,
+      3660
+    ],
+    "clock_ps": 833,
+    "unit": "oth-ubuntu-3987965-1793606373",
+    "host": "intel2"
+  },
+  "source_event_scope": "Exact disabled generator for2 source wrappers and6 selected FT wrappers. SOURCE13 untouched; other17-type cohort changes not generated here.",
+  "actual_SOURCE13_native_total_edges": 42,
+  "proposed_downstream_edges": 45,
+  "proposed_with_upstream_event_edges": 47,
+  "physical_exact_upstream_edges": null,
+  "mapped_provider_EQ": "NOT_RUN",
+  "new_provider_native_reset_phase_receipt": "NOT_RUN",
+  "programme_66START_join": "UNPLANNED compiler_control1742 still open",
+  "GEN_dispatched": false,
+  "PNR_dispatched": false
+}

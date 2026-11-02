@@ -1,0 +1,236 @@
+[
+  {
+    "module": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "ports": [
+      {
+        "name": "clk",
+        "direction": "input",
+        "is_vector": false,
+        "width": 1
+      },
+      {
+        "name": "r_ce_in",
+        "direction": "input",
+        "is_vector": false,
+        "width": 1
+      },
+      {
+        "name": "r_addr_in",
+        "direction": "input",
+        "is_vector": true,
+        "width": 10
+      },
+      {
+        "name": "rd_out",
+        "direction": "output",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "w_ce_in",
+        "direction": "input",
+        "is_vector": false,
+        "width": 1
+      },
+      {
+        "name": "w_addr_in",
+        "direction": "input",
+        "is_vector": true,
+        "width": 10
+      },
+      {
+        "name": "wd_in",
+        "direction": "input",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "w_mask_in",
+        "direction": "input",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "rr_en",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "rr_addr",
+        "direction": "input",
+        "is_vector": true,
+        "width": 18
+      },
+      {
+        "name": "cr_en",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "cr_sel",
+        "direction": "input",
+        "is_vector": true,
+        "width": 16
+      }
+    ],
+    "source_sha256": "34121e84a8ae7a42be586a68800f5c280d609d28d492748c002371a5b7ee077a"
+  },
+  {
+    "module": "ot_sram_1r1w_128x256_m1_r2c2",
+    "ports": [
+      {
+        "name": "clk",
+        "direction": "input",
+        "is_vector": false,
+        "width": 1
+      },
+      {
+        "name": "r_ce_in",
+        "direction": "input",
+        "is_vector": false,
+        "width": 1
+      },
+      {
+        "name": "r_addr_in",
+        "direction": "input",
+        "is_vector": true,
+        "width": 7
+      },
+      {
+        "name": "rd_out",
+        "direction": "output",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "w_ce_in",
+        "direction": "input",
+        "is_vector": false,
+        "width": 1
+      },
+      {
+        "name": "w_addr_in",
+        "direction": "input",
+        "is_vector": true,
+        "width": 7
+      },
+      {
+        "name": "wd_in",
+        "direction": "input",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "w_mask_in",
+        "direction": "input",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "rr_en",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "rr_addr",
+        "direction": "input",
+        "is_vector": true,
+        "width": 14
+      },
+      {
+        "name": "cr_en",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "cr_sel",
+        "direction": "input",
+        "is_vector": true,
+        "width": 16
+      }
+    ],
+    "source_sha256": "5dc243110b0165ffdc374d33887df1556f8b785760bdbcf9873d7b3572b18198"
+  },
+  {
+    "module": "ot_sram_1r1w_256x256_m2_r2c2",
+    "ports": [
+      {
+        "name": "clk",
+        "direction": "input",
+        "is_vector": false,
+        "width": 1
+      },
+      {
+        "name": "r_ce_in",
+        "direction": "input",
+        "is_vector": false,
+        "width": 1
+      },
+      {
+        "name": "r_addr_in",
+        "direction": "input",
+        "is_vector": true,
+        "width": 8
+      },
+      {
+        "name": "rd_out",
+        "direction": "output",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "w_ce_in",
+        "direction": "input",
+        "is_vector": false,
+        "width": 1
+      },
+      {
+        "name": "w_addr_in",
+        "direction": "input",
+        "is_vector": true,
+        "width": 8
+      },
+      {
+        "name": "wd_in",
+        "direction": "input",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "w_mask_in",
+        "direction": "input",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "rr_en",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "rr_addr",
+        "direction": "input",
+        "is_vector": true,
+        "width": 14
+      },
+      {
+        "name": "cr_en",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "cr_sel",
+        "direction": "input",
+        "is_vector": true,
+        "width": 16
+      }
+    ],
+    "source_sha256": "3a603a3de98e4c4251a1f05f4fc1bf1590766cf8d516204f7ae7b226f50302f0"
+  }
+]
