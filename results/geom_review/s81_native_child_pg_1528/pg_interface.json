@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.native_child_pg_interface.v1",
+ "masters_by_pg_pin_layer": {
+  "M4": [
+   "ot_sram_1r1w_32x128_m1_p192_rc",
+   "ot_sram_1r1w_128x256_m1_r2c2_p192_mir"
+  ],
+  "M5": [
+   "ot_s81ph_native_sel_hist_bank"
+  ]
+ },
+ "added_pg_layers": [
+  "M6"
+ ],
+ "added_signal_routing_layers": [],
+ "abstract_obstruction_min_layer": "M6",
+ "declared_parent_obs_max": "M7",
+ "parent_adoption": "requires explicit M6 PG reservation/obstruction in published view",
+ "m6_stripe_um": {
+  "width": 0.288,
+  "spacing": 0.096,
+  "pitch": 4.32,
+  "offset": 1.968
+ }
+}
