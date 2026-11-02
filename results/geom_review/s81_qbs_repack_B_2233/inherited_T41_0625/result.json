@@ -1,0 +1,18 @@
+{
+ "stage": "geom",
+ "verdict": "FAIL",
+ "die": "s81",
+ "item": "slice_station__t41",
+ "t0": 1793590884.5047178,
+ "place_async": true,
+ "ran_on": "intel1",
+ "cells": 140742,
+ "cells_basis": "actual synthesized top standard cells, excluding block macros",
+ "geom_dir": "intel1:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t41/geom",
+ "geom_line": "AP_AUTO_GEOM AUTO-GEOM FAIL slice_station__t41 KIT-WAVE b1a2125433d0 3_place WARN[col_v 0.726: at (320.0, 1182.5) (M2-M7, est.); GRT 0 overflow] fill=FAIL(0.0143) empty=FAIL(0.9083) pin_reg_max=FAIL(285.21) partial_face=FAIL(2) clock_tap_sinks=FAIL(1584) col_v=WARN(0.726) outline=ok(1442.88x1226.88) aspect=ok(1.176) fill_hi=ok(0.0143) pin_reg_p90=ok(26.62) pin_unreg=ok(0) r2r=ok(391.42) r2r_count=ok(0) pin_density=ok(4.4) relay_collapse=ok(0) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) grt=ok(0) clock_tap_empty=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(52678)",
+ "odb": "/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t41/gen/slice_station__t41/run/results/asap7/dp_slice_station__t41/base/3_place.odb",
+ "kit": "intel1:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t41/gen/slice_station__t41",
+ "tail": "AP_AUTO_GEOM AUTO-GEOM FAIL slice_station__t41 KIT-WAVE b1a2125433d0 3_place WARN[col_v 0.726: at (320.0, 1182.5) (M2-M7, est.); GRT 0 overflow] fill=FAIL(0.0143) empty=FAIL(0.9083) pin_reg_max=FAIL(285.21) partial_face=FAIL(2) clock_tap_sinks=FAIL(1584) col_v=WARN(0.726) outline=ok(1442.88x1226.88) aspect=ok(1.176) fill_hi=ok(0.0143) pin_reg_p90=ok(26.62) pin_unreg=ok(0) r2r=ok(391.42) r2r_count=ok(0) pin_density=ok(4.4) relay_collapse=ok(0) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) grt=ok(0) clock_tap_empty=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(52678)",
+ "errors": "AP_AUTO_GEOM AUTO-GEOM FAIL slice_station__t41 KIT-WAVE b1a2125433d0 3_place WARN[col_v 0.726: at (320.0, 1182.5) (M2-M7, est.); GRT 0 overflow] fill=FAIL(0.0143) empty=FAIL(0.9083) pin_reg_max=FAIL(285.21) partial_face=FAIL(2) clock_tap_sinks=FAIL(1584) col_v=WARN(0.726) outline=ok(1442.88x1226.88) aspect=ok(1.176) fill_hi=ok(0.0143) pin_reg_p90=ok(26.62) pin_unreg=ok(0) r2r=ok(391.42) r2r_count=ok(0) pin_density=ok(4.4) relay_collapse=ok(0) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) grt=ok(0) clock_tap_empty=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(52678)",
+ "evidence": "intel1:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t41/geom/auto_geom.json"
+}
