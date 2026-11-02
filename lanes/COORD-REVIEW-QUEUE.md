@@ -9368,3 +9368,4 @@ FAILED [AUTOPILOT 33b0eb7676a4] 2026-11-01 19:35:07 PST AUTOPILOT -> KIT-WAVE-5:
 - 2026-11-01 20:24 PST [COORD 20:24] APPROVED claude/kit-wave-16-nearcount-1101@bc6e04cda1c (NEAR-COUNT duty, NEAR-COUNT.tsv now exists) -> ROOT-MERGE-AL.
 - 2026-11-01 20:24 PST [COORD 20:24] RULING (KIT-WAVE-16 infra ask): short jobs (<=2 threads, <=8 GB: gen/lint/kit_rtl/views/preflight/geom/render/small LEC/STA) skip the ot-run load cap via a separate slot pool (12/host intel, 16 epyc2, memory check kept) -> FLOW-21 builds default-on; meanwhile the starved gen_lint + review renders run directly via docker with a memory cap.
 - 2026-11-01 20:24 PST [COORD 20:24] GEOM spot-check: KV HHP joint render viewed, CONCUR GEOM-108 PASS (max pin L1 396.6 <= 405, relay FFs in streets, HSL south band <= 287.9).
+- 2026-11-01 20:24 PST [COORD 20:24] APPROVED claude/codex-pickup-kv-ctl-1101@d9a5d87bf (= approved 72c7db731 + test capability fix after ROOT-MERGE SKIP) -> ROOT-MERGE-AL.
