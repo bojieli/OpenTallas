@@ -1,0 +1,17 @@
+slang element names: 12 gold register keys normalized from driver Q nets
+gold JSON Q aliases: 109 gate flops re-keyed to exact gold wire bits
+alias array: gate xpn_f#t (1190 b) -> gold xpn_f (1190 b, Q-net alias evidence 1190); source memory layout (595, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate xpn_f#t (1190 b) -> gold xpn_f (1190 b, Q-net alias evidence 1190); source memory layout (595, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate fq_a#t (194 b) -> gold fq_a (194 b, Q-net alias evidence 194); source memory layout (97, 2, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate fq_b#t (194 b) -> gold fq_b (194 b, Q-net alias evidence 194); source memory layout (97, 2, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+==== original_469_plus_82_proved_relations
+======== ABC command line "&r /out/original_469_plus_82_proved_relations.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /out/original_469_plus_82_proved_relations_swept.aig"
+[1;37m/out/original_469_plus_82_proved_relations[0m : i/o = 144687/    551  [1;36mand =   14942[0m  [1;35mlev =  168[0m [1;35m(48.76)[0m  mem = 2.39 MB
+[1;37m/out/original_469_plus_82_proved_relations[0m : i/o = 144687/    551  [1;36mand =    6593[0m  [1;35mlev =   71[0m [1;35m(18.51)[0m  mem = 2.29 MB
+SAT solver statistics:
+CO =      551  AND =     6593  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls    297  (100.00 %)   Ave conf =      0.4   Time =     0.06 sec ( 30.51 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.19 sec
+[1;37m/out/original_469_plus_82_proved_relations[0m : i/o = 144687/    551  [1;36mand =    6593[0m  [1;35mlev =   71[0m [1;35m(18.51)[0m  mem = 2.29 MB
