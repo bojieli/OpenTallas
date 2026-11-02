@@ -1,0 +1,33 @@
+{
+  "status": "GENERATED_SITE_GEOMETRY_PASS_ONLY",
+  "source": "d90b10921 pre-D13 immutableevent",
+  "kit_unit": "oth-ubuntu-1364730-1793567323",
+  "kit_rc": 0,
+  "stage_check": "PASS",
+  "clock_sites": 51596,
+  "native_ports_expected": 10929,
+  "clock_nets_expected": 51597,
+  "planned_site_illegal": {},
+  "actual_source_reach": {
+    "worst_um": 399.384,
+    "edges_over405": 0,
+    "missing_sites": 0,
+    "frozen_home_match": true
+  },
+  "self_look": true,
+  "independent_look": "signoff_geom a76619147 PASS-COND emittedSITEgeometry; densecentralbandneedsactualbody/accesscensus",
+  "measured_kit_peak_gb": 13.03,
+  "cap_gb": 48,
+  "not_claimed": [
+    "nativeplacementlegality",
+    "realcellbody/access",
+    "actualclosedchildphysicalviews",
+    "extractedRC/timing",
+    "PGqualification",
+    "currentSTARTfreeze",
+    "whole-dieclosure",
+    "D13adoption"
+  ],
+  "next": "Exactnativeprefix stagedforrootreviewONLY; noexecutionapproved. No --legalize-sites, no movedhomes, oldA2IDs/providersneverimported.",
+  "storage": "intel2:/srv/opentallas-scratch2/claude/codex-qc-bind/current_clock/out/kit and current_clock/native_prefix; sourceW remainsfrozen d90."
+}

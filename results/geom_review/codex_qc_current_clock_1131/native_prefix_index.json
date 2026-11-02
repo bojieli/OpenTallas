@@ -1,0 +1,44 @@
+{
+  "status": "STAGED_NOT_EXECUTED_SCOPE_APPROVAL_REQUIRED",
+  "source_event": "d90b10921 PRE-D13; completedKIT1364730 stage_checkPASS",
+  "target_kind": "Current-plan ABSTRACT clock-only native target, regenerated islands from NEW51596homes; not closed child physical views or functional die assembly.",
+  "expected": {
+    "cells": 51596,
+    "nets": 51597,
+    "consumed_native_M7_ports": 10929,
+    "primitive_masters": [
+      "CKINVDCx16_ASAP7_75t_R"
+    ],
+    "old_clock_ids_or_provider_maps": false
+  },
+  "inputs": {
+    "tree.json": "c729b2312e21613067fe55d7aea63bf62a472deb4bef410c8598f778a267f59f",
+    "ctree.v": "861a606d9cc29fa659c264490e9b9680876d9e724d7deaf745b71b6a2c248346"
+  },
+  "producer_file_sha256": "a6e2bcf6cbce827ec4601d8bc7d90e2df18eaf5b6f08e92ac8c952a59ec22c10",
+  "recipe": "run_prefix.sh (read-only frozen d90 source dependencies exist only on intel2 for abstract emission)",
+  "proposed_admission": {
+    "host": "intel2 (frozen source readset present)",
+    "memory_gb": 64,
+    "threads": 8,
+    "priority": "die; --crit only if root explicitly nominates this bounded shared dependency",
+    "basis": "Retain successful r55a same-form target48GB/import64GB caps; old graph51164cells/10833ports versus51596/10929 (+0.84%/+0.89%). Closest recorded native materializer run_materialize_clock.sh peak16.75GB atcap64 (different source not claimed exact); current actualKIT peak13.03GB atcap48. No cap lowering or ideal RSS claim."
+  },
+  "minimum_checks": [
+    "ctree primitive/sites/name sets exact; full single-root graph and10929outputaliases exact.",
+    "Target exact clock master A/Y, true reserved R0row/site, each expected native part/tap unconnected before import; one actual M7rectangle.",
+    "No --legalize-sites; every51596home/master/R0/FIRM identity unchanged after native serialization.",
+    "Actual primitive A/Y nets and consumed10929nativealiases exact; report all actual M7endpoint XY deltas from plan.",
+    "Actual master widths/heights, routing pin layers, clock-body overlaps, M1-M3obstruction/PG7access at0.25um margin; report collision instead of relocating any site.",
+    "Report unconnected PG, actualroot/nativeaccess conditions; no analysis until a separately reviewed PG/measurement scope."
+  ],
+  "not_authorized": [
+    "Execution",
+    "GRT/STA/PGqualification",
+    "provider/STARTimport",
+    "oldA2proofreuse",
+    "currentSTARTfreeze",
+    "D13source/viewadoption",
+    "clocksitelegalization/rebalancing"
+  ]
+}
