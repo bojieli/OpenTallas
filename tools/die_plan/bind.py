@@ -2942,7 +2942,14 @@ class Binder:
         out.mkdir(parents=True)
         cells = CELLS
         P = self.wavefront_plan()
+        clock_bad = set()
         if P is not None:
+            from clock_budget_census import census
+            clock_census = census(P, self.by_type)
+            (out.parent / "bind_clock_budgets.json").write_text(json.dumps(clock_census, indent=1))
+            for failure in clock_census["failures"]:
+                clock_bad.add(failure["type"])
+                self._gap("clock budget: " + failure["error"])
             import gen_rtl
             import reset_tree as RT
             # Use the same control-only reset cells as physical kits, not another
@@ -2967,6 +2974,8 @@ class Binder:
         self.parent_id_ports = {}
         self.parent_id_values = {}
         for tn, ps in sorted(self.by_type.items()):
+            if tn in clock_bad:
+                continue
             t = self.types[tn]
             if getattr(self, "collect_gaps", False):
                 try:
