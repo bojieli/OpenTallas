@@ -1,0 +1,17 @@
+CELL _104726_ INVx1_ASAP7_75t_R PLACED MX 46278 201150 46440 201420
+PIN _104726_ A _033502_
+PIN _104726_ VDD VDD
+PIN _104726_ VSS VSS
+PIN _104726_ Y {chunk_kk.term\[6\].add.u.b_exp\[1\]}
+CELL {chunk_kk.term\[6\].add.u.x_bexp\[1\]$_DFF_P_} DFFHQNx1_ASAP7_75t_R PLACED R0 44982 200880 46062 201150
+PIN {chunk_kk.term\[6\].add.u.x_bexp\[1\]$_DFF_P_} CLK mp_ck_T100131_out
+PIN {chunk_kk.term\[6\].add.u.x_bexp\[1\]$_DFF_P_} D {chunk_kk.term\[6\].add.u.b_exp\[1\]}
+PIN {chunk_kk.term\[6\].add.u.x_bexp\[1\]$_DFF_P_} QN _015489_
+PIN {chunk_kk.term\[6\].add.u.x_bexp\[1\]$_DFF_P_} VDD VDD
+PIN {chunk_kk.term\[6\].add.u.x_bexp\[1\]$_DFF_P_} VSS VSS
+CELL {chunk_kk.term\[6\].operand_line.g_ring.u.q\[24\]$_DFF_P_} DFFHQNx1_ASAP7_75t_R PLACED MX 50274 202230 51354 202500
+PIN {chunk_kk.term\[6\].operand_line.g_ring.u.q\[24\]$_DFF_P_} CLK mp_ck_T101200_out
+PIN {chunk_kk.term\[6\].operand_line.g_ring.u.q\[24\]$_DFF_P_} D {chunk_kk.term\[6\].operand_line.g_ring.u.g_s\[3\].rd\[0\]}
+PIN {chunk_kk.term\[6\].operand_line.g_ring.u.q\[24\]$_DFF_P_} QN _033502_
+PIN {chunk_kk.term\[6\].operand_line.g_ring.u.q\[24\]$_DFF_P_} VDD VDD
+PIN {chunk_kk.term\[6\].operand_line.g_ring.u.q\[24\]$_DFF_P_} VSS VSS

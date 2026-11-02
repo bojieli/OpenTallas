@@ -1,0 +1,108 @@
+{
+  "actual_saved_input_sha256": "4f29f4cbd33239a453376ec31c128699df4443495aac5284247a640e9ad75e5f",
+  "source": "Original VEs final routed NOTSIGNED baseline, no native mutation or STA",
+  "area": {
+    "outline": [
+      172.8,
+      345.6
+    ],
+    "aspect": 2.0,
+    "macros": 0,
+    "macro_area_pct": 0.0,
+    "std_cells": 161070,
+    "ff": 30810,
+    "fill_of_free": 0.3697,
+    "empty_area": 0.1397,
+    "band_share": 1.0,
+    "density_bin_um": 4.32,
+    "macro_list": []
+  },
+  "reach": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 385.51,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 30425,
+    "comb_loop_cells": 0,
+    "r2r_worst": "mv$_DFF_PN0_ -> e_lo\\[21\\]$_DFF_P_"
+  },
+  "clock": {
+    "taps": 1,
+    "grid_taps": 1,
+    "tap_mode": "tree",
+    "clock_sinks": 30810,
+    "unrooted_sinks": 0,
+    "grid_tap_sinks_min": 30810,
+    "grid_tap_sinks_max": 30810,
+    "grid_taps_empty": [],
+    "tap_sinks": {
+      "clk": 30810
+    },
+    "tap_set": [
+      [
+        "clk",
+        "area"
+      ]
+    ],
+    "clock_cells": 2586,
+    "clock_depth_max": 8,
+    "clock_depth_spread": 0,
+    "leaf_sinks_p90": 49.0,
+    "leaf_sinks_max": 72,
+    "clock_net_hpwl_max": 85.32,
+    "clock_net_hpwl_p90": 24.19,
+    "stage": "cts"
+  },
+  "target_cells": {
+    "_104726_": [
+      "CELL",
+      "_104726_",
+      "INVx1_ASAP7_75t_R",
+      "PLACED",
+      "MX",
+      "46278",
+      "201150",
+      "46440",
+      "201420"
+    ],
+    "chunk_kk.term\\[6\\].add.u.x_bexp\\[1\\]$_DFF_P_": [
+      "CELL",
+      "chunk_kk.term\\[6\\].add.u.x_bexp\\[1\\]$_DFF_P_",
+      "DFFHQNx1_ASAP7_75t_R",
+      "PLACED",
+      "R0",
+      "44982",
+      "200880",
+      "46062",
+      "201150"
+    ],
+    "chunk_kk.term\\[6\\].operand_line.g_ring.u.q\\[24\\]$_DFF_P_": [
+      "CELL",
+      "chunk_kk.term\\[6\\].operand_line.g_ring.u.q\\[24\\]$_DFF_P_",
+      "DFFHQNx1_ASAP7_75t_R",
+      "PLACED",
+      "MX",
+      "50274",
+      "202230",
+      "51354",
+      "202500"
+    ]
+  },
+  "target_pin_nets": {
+    "_104726_/A": "_033502_",
+    "_104726_/VDD": "VDD",
+    "_104726_/VSS": "VSS",
+    "_104726_/Y": "chunk_kk.term\\[6\\].add.u.b_exp\\[1\\]",
+    "chunk_kk.term\\[6\\].add.u.x_bexp\\[1\\]$_DFF_P_/CLK": "mp_ck_T100131_out",
+    "chunk_kk.term\\[6\\].add.u.x_bexp\\[1\\]$_DFF_P_/D": "chunk_kk.term\\[6\\].add.u.b_exp\\[1\\]",
+    "chunk_kk.term\\[6\\].add.u.x_bexp\\[1\\]$_DFF_P_/QN": "_015489_",
+    "chunk_kk.term\\[6\\].add.u.x_bexp\\[1\\]$_DFF_P_/VDD": "VDD",
+    "chunk_kk.term\\[6\\].add.u.x_bexp\\[1\\]$_DFF_P_/VSS": "VSS",
+    "chunk_kk.term\\[6\\].operand_line.g_ring.u.q\\[24\\]$_DFF_P_/CLK": "mp_ck_T101200_out",
+    "chunk_kk.term\\[6\\].operand_line.g_ring.u.q\\[24\\]$_DFF_P_/D": "chunk_kk.term\\[6\\].operand_line.g_ring.u.g_s\\[3\\].rd\\[0\\]",
+    "chunk_kk.term\\[6\\].operand_line.g_ring.u.q\\[24\\]$_DFF_P_/QN": "_033502_",
+    "chunk_kk.term\\[6\\].operand_line.g_ring.u.q\\[24\\]$_DFF_P_/VDD": "VDD",
+    "chunk_kk.term\\[6\\].operand_line.g_ring.u.q\\[24\\]$_DFF_P_/VSS": "VSS"
+  },
+  "FF_count": 30810
+}

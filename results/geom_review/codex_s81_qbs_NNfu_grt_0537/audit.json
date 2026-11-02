@@ -1,0 +1,99 @@
+{
+  "source": "Actual gen11 full-PG normal5_1_grt.odb",
+  "planned13node_changes_fromPLACE": [],
+  "planned_clock_PG_pin_errors": [],
+  "leaf_membership_errors": [],
+  "unexpected_clock_children": [],
+  "leaf_CTS_subtrees": {
+    "qb_SW": {
+      "sinks": 494,
+      "depth_counts": {
+        "3": 494
+      }
+    },
+    "qb_SE": {
+      "sinks": 495,
+      "depth_counts": {
+        "3": 495
+      }
+    },
+    "qb_NW": {
+      "sinks": 494,
+      "depth_counts": {
+        "3": 494
+      }
+    },
+    "qb_NE": {
+      "sinks": 495,
+      "depth_counts": {
+        "3": 495
+      }
+    }
+  },
+  "TAP_count": 641,
+  "TAP_exact_identity": true,
+  "PG_geometry_exact_identity": true,
+  "native_clock": {
+    "taps": 1,
+    "grid_taps": 0,
+    "tap_mode": "tree",
+    "clock_sinks": 1978,
+    "unrooted_sinks": 0,
+    "grid_tap_sinks_min": null,
+    "grid_tap_sinks_max": null,
+    "grid_taps_empty": [],
+    "tap_sinks": {
+      "clk[0]": 1978
+    },
+    "tap_set": [
+      [
+        "clk[0]",
+        "area"
+      ]
+    ],
+    "clock_cells": 103,
+    "clock_depth_max": 12,
+    "clock_depth_spread": 0,
+    "leaf_sinks_p90": 29.3,
+    "leaf_sinks_max": 32,
+    "clock_net_hpwl_max": 35.15,
+    "clock_net_hpwl_p90": 21.47,
+    "stage": "cts"
+  },
+  "native_geometry": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 78.62,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 1847,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_n.na\\[13\\]$_DFF_P_ -> u_n.add_sb\\[24\\]$_DFF_P_"
+  },
+  "area": {
+    "outline": [
+      43.2,
+      77.76
+    ],
+    "aspect": 1.8,
+    "macros": 0,
+    "macro_area_pct": 0.0,
+    "std_cells": 9558,
+    "ff": 1978,
+    "fill_of_free": 0.3903,
+    "empty_area": 0.2786,
+    "band_share": 1.0,
+    "density_bin_um": 2.0,
+    "macro_list": []
+  },
+  "all_clock_pose_master_changes_from_CTS": [],
+  "FF_pose_master_changes_from_CTS": [],
+  "functional_clock_cells": 103,
+  "dummy_clock_load_cells": 73,
+  "clock_cell_total": 176,
+  "clock_PG_terms": 352,
+  "clock_PG_errors": [],
+  "full_master_PG_terms": 20398,
+  "full_master_PG_errors": [],
+  "source_FF": 1978,
+  "dummy_with_output_nets": []
+}
