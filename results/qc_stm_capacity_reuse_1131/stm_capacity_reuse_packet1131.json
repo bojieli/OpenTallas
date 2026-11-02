@@ -1,0 +1,235 @@
+{
+  "scope": "capacity-only exact per-type source match; no aliases/view/source/profile adoption",
+  "source_current": "d90b109213c6949da87b330ef143d96bbe937934",
+  "source_old": "5346b95c915",
+  "types": {
+    "sle_stm_v2__cl55be2264": {
+      "status": "MATCHED_SOURCE_FOR_OWNER_CAPACITY_REVIEW",
+      "std_cells": 222702,
+      "hard_rom_leaves": 4,
+      "native_total_leaves": 222706,
+      "native_stat_path": "/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_stm_v2__cl55be2264/gen/sle_stm_v2__cl55be2264/run/reports/asap7/dp_sle_stm_v2__cl55be2264/base/synth_stat.txt",
+      "native_stat_sha256": "2c4820a169727cd81d9b8cf54b64584a1a19aea597f985bcaea494dfb4e883c6",
+      "normalization": "comments/whitespace/top module name only; one blackbox file extension .v\u2192.sv; hard-ROM asset/name/width unchanged, no model substitution",
+      "current_defines": [
+        "OT_QFD_UP4_CK_ENTRIES",
+        "OT_S8_CROM_ALIGN"
+      ],
+      "old_defines": [
+        "SYNTHESIS"
+      ],
+      "added_macros_unreferenced_in_entire_selected_closure": true,
+      "files": {
+        "sle_stm_v2__cl55be2264.sv": {
+          "old_file": "sle_stm_v2__cl55be2264.sv",
+          "old_sha256": "96f4f7ee044a6da98057c607ce5263df73ba9386c76a1b03e2feb0707985e922",
+          "current_sha256": "96f4f7ee044a6da98057c607ce5263df73ba9386c76a1b03e2feb0707985e922",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "sle_stm_v2__cl55be2264_bound.sv": {
+          "old_file": "sle_stm_v2__cl55be2264_bound.sv",
+          "old_sha256": "bd096a5e0782e60c4ff4377cad1a74b4f33b611b3229c490c497042b56f99bb4",
+          "current_sha256": "bd096a5e0782e60c4ff4377cad1a74b4f33b611b3229c490c497042b56f99bb4",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "bind_cells.sv": {
+          "old_file": "bind_cells.sv",
+          "old_sha256": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+          "current_sha256": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "ot_reset_sync.sv": {
+          "old_file": "ot_reset_sync.sv",
+          "old_sha256": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+          "current_sha256": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "qfd_dv_s6_leaves.sv": {
+          "old_file": "qfd_dv_s6_leaves.sv",
+          "old_sha256": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+          "current_sha256": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "qfd_dv_stream_tile.sv": {
+          "old_file": "qfd_dv_stream_tile.sv",
+          "old_sha256": "1fbc98437462164ac73505ec7ff813f68d5b4e2f587f25b8ac4c8d9c5253a02c",
+          "current_sha256": "1fbc98437462164ac73505ec7ff813f68d5b4e2f587f25b8ac4c8d9c5253a02c",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "qfd_dv_slice_tload.sv": {
+          "old_file": "qfd_dv_slice_tload.sv",
+          "old_sha256": "bcfb27cf7de8a9f66c7af0159399b91ece2c417b7dc9e890e7889ce0d64b72c2",
+          "current_sha256": "bcfb27cf7de8a9f66c7af0159399b91ece2c417b7dc9e890e7889ce0d64b72c2",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "qfd_dv_table_rom_loader.sv": {
+          "old_file": "qfd_dv_table_rom_loader.sv",
+          "old_sha256": "cdf7aa179936b0c67d3f5aea74f606355bd982b7d8fe961d737d1ef49db6aaa2",
+          "current_sha256": "cdf7aa179936b0c67d3f5aea74f606355bd982b7d8fe961d737d1ef49db6aaa2",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "ot_rom_4096x266_m8_bb.sv": {
+          "old_file": "ot_rom_4096x266_m8_bb.v",
+          "old_sha256": "8b641b7dc2a318f1d08868148c42713fb0889f8e9196bfabca7e30b4e59e021a",
+          "current_sha256": "6eb4f6f6d069b63acab6d59e6001187f579d8081ba0d25c4ee876f0d077a576b",
+          "normalized_equal": true,
+          "raw_equal": false
+        },
+        "qfd_dv_s5_leaves.sv": {
+          "old_file": "qfd_dv_s5_leaves.sv",
+          "old_sha256": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+          "current_sha256": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "ot_dp_clk_landing_ca.sv": {
+          "old_file": "ot_dp_clk_landing_ca.sv",
+          "old_sha256": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+          "current_sha256": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "ot_dp_clk_landing.sv": {
+          "old_file": "ot_dp_clk_landing.sv",
+          "old_sha256": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+          "current_sha256": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "ot_meso_fifo.sv": {
+          "old_file": "ot_meso_fifo.sv",
+          "old_sha256": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2",
+          "current_sha256": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2",
+          "normalized_equal": true,
+          "raw_equal": true
+        }
+      },
+      "remaining": "owner intake for capacity evidence only; physical geometry/fill/source programme/ABI-FACE qualification independent; not counted as other type"
+    },
+    "sle_stm_v1__cl27746664": {
+      "status": "MATCHED_SOURCE_FOR_OWNER_CAPACITY_REVIEW",
+      "std_cells": 224247,
+      "hard_rom_leaves": 4,
+      "native_total_leaves": 224251,
+      "native_stat_path": "/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_stm_v1__cl27746664/gen/sle_stm_v1__cl27746664/run/reports/asap7/dp_sle_stm_v1__cl27746664/base/synth_stat.txt",
+      "native_stat_sha256": "9f170088205fd8041c9d3e8b3cff34e2351c7fef3f33580254ff54eba789c18f",
+      "normalization": "comments/whitespace/top module name only; one blackbox file extension .v\u2192.sv; hard-ROM asset/name/width unchanged, no model substitution",
+      "current_defines": [
+        "OT_QFD_UP4_CK_ENTRIES",
+        "OT_S8_CROM_ALIGN"
+      ],
+      "old_defines": [
+        "SYNTHESIS"
+      ],
+      "added_macros_unreferenced_in_entire_selected_closure": true,
+      "files": {
+        "sle_stm_v1__cl27746664.sv": {
+          "old_file": "sle_stm_v1__cl27746664.sv",
+          "old_sha256": "c1468a45e416cba58e08ec741e7a5abe87b6b2317d8baa2c360f3c7cfc8c93c7",
+          "current_sha256": "c1468a45e416cba58e08ec741e7a5abe87b6b2317d8baa2c360f3c7cfc8c93c7",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "sle_stm_v1__cl27746664_bound.sv": {
+          "old_file": "sle_stm_v1__cl27746664_bound.sv",
+          "old_sha256": "6cd9e970fd0adb9b32ac982a4b932a0119d47ff362b043ad09f84bef060a39ea",
+          "current_sha256": "6cd9e970fd0adb9b32ac982a4b932a0119d47ff362b043ad09f84bef060a39ea",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "bind_cells.sv": {
+          "old_file": "bind_cells.sv",
+          "old_sha256": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+          "current_sha256": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "ot_reset_sync.sv": {
+          "old_file": "ot_reset_sync.sv",
+          "old_sha256": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+          "current_sha256": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "qfd_dv_s6_leaves.sv": {
+          "old_file": "qfd_dv_s6_leaves.sv",
+          "old_sha256": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+          "current_sha256": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "qfd_dv_stream_tile.sv": {
+          "old_file": "qfd_dv_stream_tile.sv",
+          "old_sha256": "1fbc98437462164ac73505ec7ff813f68d5b4e2f587f25b8ac4c8d9c5253a02c",
+          "current_sha256": "1fbc98437462164ac73505ec7ff813f68d5b4e2f587f25b8ac4c8d9c5253a02c",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "qfd_dv_slice_tload.sv": {
+          "old_file": "qfd_dv_slice_tload.sv",
+          "old_sha256": "bcfb27cf7de8a9f66c7af0159399b91ece2c417b7dc9e890e7889ce0d64b72c2",
+          "current_sha256": "bcfb27cf7de8a9f66c7af0159399b91ece2c417b7dc9e890e7889ce0d64b72c2",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "qfd_dv_table_rom_loader.sv": {
+          "old_file": "qfd_dv_table_rom_loader.sv",
+          "old_sha256": "cdf7aa179936b0c67d3f5aea74f606355bd982b7d8fe961d737d1ef49db6aaa2",
+          "current_sha256": "cdf7aa179936b0c67d3f5aea74f606355bd982b7d8fe961d737d1ef49db6aaa2",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "ot_rom_4096x266_m8_bb.sv": {
+          "old_file": "ot_rom_4096x266_m8_bb.v",
+          "old_sha256": "8b641b7dc2a318f1d08868148c42713fb0889f8e9196bfabca7e30b4e59e021a",
+          "current_sha256": "6eb4f6f6d069b63acab6d59e6001187f579d8081ba0d25c4ee876f0d077a576b",
+          "normalized_equal": true,
+          "raw_equal": false
+        },
+        "qfd_dv_s5_leaves.sv": {
+          "old_file": "qfd_dv_s5_leaves.sv",
+          "old_sha256": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+          "current_sha256": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "ot_dp_clk_landing_ca.sv": {
+          "old_file": "ot_dp_clk_landing_ca.sv",
+          "old_sha256": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+          "current_sha256": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "ot_dp_clk_landing.sv": {
+          "old_file": "ot_dp_clk_landing.sv",
+          "old_sha256": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+          "current_sha256": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+          "normalized_equal": true,
+          "raw_equal": true
+        },
+        "ot_meso_fifo.sv": {
+          "old_file": "ot_meso_fifo.sv",
+          "old_sha256": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2",
+          "current_sha256": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2",
+          "normalized_equal": true,
+          "raw_equal": true
+        }
+      },
+      "remaining": "owner intake for capacity evidence only; physical geometry/fill/source programme/ABI-FACE qualification independent; not counted as other type"
+    }
+  },
+  "sle_stm_v3_old_profile0": {
+    "std_cells": 156781,
+    "hard_rom_leaves": 4,
+    "current_CROM3_credit": false,
+    "reason": "selectedS8CE references added CROM flag; independent currentprofile count queued1805273"
+  }
+}
