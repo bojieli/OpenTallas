@@ -35,6 +35,8 @@ Kept registers (fail-closed): every register bit the RTL declares kept ((* keep 
 Hints (KIT/lec_hints.json or --hints; PATH-KV-PC4 10-25): untrusted register correspondences ('user match') for twins
         the signature search cannot find (rare-event bits, frontend array layouts); every hint is proved by the same
         induction and dropped if it fails, never a waiver (apply_hints).
+        An opt-in opentallas.lec_hint_plan.v1 object orders preseed/post candidates and discovery_rounds (0 = refine
+        supplied candidates only); all induction, reset-state, KEEP and final compare checks remain enabled.
 Verdict (DIR/lec.json; DIR defaults to KITDIR/lec):
   EQUIVALENT      every compare point proved (unmatched registers, if any, were free inputs: unobservable);
   NOT EQUIVALENT  >= 1 compare point differs and its cone sees only matched / proved key points and RTL registers the
@@ -5169,6 +5171,32 @@ def cascade_drop(L, sup, gone):
     return out
 
 
+HINT_PLAN_SCHEMA = "opentallas.lec_hint_plan.v1"
+
+
+def decode_hint_plan(value):
+    """Order untrusted candidates without changing induction or final comparisons.
+
+    Legacy arrays retain their existing discovery schedule. A structured plan can
+    replay candidates before discovery, then add source aliases afterward. Every
+    candidate still passes ordinary apply_hints/reset/refinement/build checks.
+    """
+    if isinstance(value, list):
+        return None, value, 24
+    if not isinstance(value, dict) or value.get("schema") != HINT_PLAN_SCHEMA:
+        raise LecError("hints must be an array or an opentallas.lec_hint_plan.v1 object")
+    unknown = set(value) - {"schema", "preseed", "post", "discovery_rounds"}
+    if unknown:
+        raise LecError("unknown hint-plan fields: " + ", ".join(sorted(unknown)))
+    preseed, post = value.get("preseed", []), value.get("post", [])
+    rounds = value.get("discovery_rounds", 24)
+    if not isinstance(preseed, list) or not isinstance(post, list):
+        raise LecError("hint-plan preseed and post must be arrays")
+    if type(rounds) is not int or rounds < 0:
+        raise LecError("hint-plan discovery_rounds must be a nonnegative integer")
+    return preseed, post, rounds
+
+
 def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
     """Untrusted correspondence hints (the commercial 'user match' / 'add mapped points'; PATH-KV-PC4 10-25):
     [[side, key, ['eq', oside, okey, inv] | ['const', c]], ...] for registers the signature search cannot pair
@@ -5903,21 +5931,26 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         L.kit_reset_ports = kit_reset_ports(kit)
         rec["kit_reset_ports"] = L.kit_reset_ports
         hf = Path(hints) if hints else Path(kit) / "lec_hints.json"
+        discovery_rounds = 24
         if hf.is_file():
-            supplied = json.loads(hf.read_text())
-            if os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
+            preseed, supplied, discovery_rounds = decode_hint_plan(json.loads(hf.read_text()))
+            if preseed is not None:
+                L.preseed_hints = preseed
+                rec["hint_plan"] = dict(schema=HINT_PLAN_SCHEMA, discovery_rounds=discovery_rounds,
+                                        preseed=len(preseed), post=len(supplied))
+            elif os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
                 L.preseed_hints = supplied
                 rec["hints_preseed_enabled"] = True
             L.fsm_hints = [e for e in supplied if isinstance(e, (list, tuple)) and e and
                            (e[0] == "cons" or (len(e) == 3 and isinstance(e[2], (list, tuple)) and
                                                e[2] and e[2][0] == "cube"))]
-        correspond(L, out, conflicts, log)
+        correspond(L, out, conflicts, log, rounds=discovery_rounds)
         if hasattr(L, "early_compare"):
             rec["early_compare"] = L.early_compare
         if hf.is_file():
             import hashlib
             rec["hints"] = dict(file=str(hf), sha256=hashlib.sha256(hf.read_bytes()).hexdigest())
-            rec["hints"].update(apply_hints(L, json.loads(hf.read_text()), out, conflicts, log))
+            rec["hints"].update(apply_hints(L, supplied, out, conflicts, log))
             rec["hints"]["skipped"] = len(rec["hints"]["skipped"])
             rec["hints"]["dropped"] = dict(n=len(rec["hints"]["dropped"]), first=rec["hints"]["dropped"][:40])
         elif hints:
@@ -6174,7 +6207,8 @@ def main(argv=None):
     global PROVE_JOBS
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv == ["--capabilities"]:
-        print(json.dumps(dict(schema="opentallas.lec_capabilities.v1", proof_options=list(PROOF_OPTIONS))))
+        print(json.dumps(dict(schema="opentallas.lec_capabilities.v1", proof_options=list(PROOF_OPTIONS),
+                              hint_plan_schema=HINT_PLAN_SCHEMA)))
         return 0
     if argv[:1] == ["--require-options"]:
         missing = sorted(set(argv[1:]) - set(PROOF_OPTIONS))
