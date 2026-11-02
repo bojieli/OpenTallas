@@ -1,0 +1,28 @@
+{
+  "scope": "SOURCE CANDIDATE ONLY; no native/profile/parameter/recipe/default adoption",
+  "base": "051340895d9",
+  "source_equivalent_to": "2d761bce9b5 candidate",
+  "source_sha256": {
+    "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv": "9d943818a85c00bccb8d16697de643a8435caff0c20b9a715dc60dbd3da2e943",
+    "rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv": "953b5b1001ed8610ed286c05800819dfdfd1120f0e7f4482985692e549994849"
+  },
+  "logic_contract": "Existingcaptureedges preserved; shared103plain+4resetdata captureclasses, originalresetflags; noaddedarchitecturalcycle",
+  "opt_in": "HARD_PINREG default0; optionalOT_QC_HARD_PINREG macro unusedbyrecipes",
+  "proofs": {
+    "local_old_vs_specialized": "41612e22eac 107input/509Q actual-literal conePASS+2mutants",
+    "whole_vs_mapped": "0eb23b82700 officialEQUIVALENT55664/55664/default4; oneRTL-Xconditionalpoint"
+  },
+  "actual_mapped": {
+    "stdcells": 336662,
+    "FFs": 42665,
+    "area_um2": 42146.53722,
+    "scope": "standaloneHARD1candidate, not nativeparentpostcutcount"
+  },
+  "held": [
+    "nativeparentsourceevent",
+    "actualparentpostcutcount",
+    "clock/reset/FT/CA/R8 andlayout",
+    "unsignedchildphysicalqualification",
+    "ROOTsourceadoption"
+  ]
+}
