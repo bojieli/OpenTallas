@@ -1,0 +1,65 @@
+{
+ "scope": "ONE_NATIVE4_PREFIX_AND_CONDITIONAL_STEP_ONLY",
+ "original_verdict": "NOT EQUIVALENT",
+ "original_counts": {
+  "compare_points": 14002,
+  "proved": 14000,
+  "differs": 2,
+  "undecided": 0
+ },
+ "native_reset": {
+  "default": 4,
+  "requested": 4,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_PI_values": {
+  "106": 0
+ },
+ "targets": {
+  "ff:u_dut.fault_cause[3]": 33294,
+  "ff:u_dut.fault_cause[4]": 33296
+ },
+ "source_credit": false,
+ "gating_changed": false,
+ "faceguard_constant_pin_fail_retained": true,
+ "abi_prune_still_required": true,
+ "input_hashes": {
+  "gate.aig": "4187255ee357dcdd05ad030cf7cc53c6e06373ce7314b28d936d463969bbac46",
+  "gold.map": "6b57f36922c41e7302250daf45bce15fb2c24a978822fb189025bc448a266f03",
+  "gate.map": "dae3c3ecc26d11a41268544c8968c10ea3d0eb257f3fdc5f5c030899d74c3d16",
+  "gold.aig": "de6bf948e03d2f26eedadbedf3292bac70084b96c0e2f60788686dc7b074cf40",
+  "lec.json": "a7a50e7b891305763d68cc967004982c8a85ead7ee13947c8f23cd5b6d23ddd9"
+ },
+ "cases": [
+  {
+   "tag": "native4_raw_BASE",
+   "statuses": {
+    "base:ff:u_dut.fault_cause[3]": "proved",
+    "base:ff:u_dut.fault_cause[4]": "proved"
+   },
+   "passed": true
+  },
+  {
+   "tag": "wrong_constant_BASE_negative",
+   "statuses": {
+    "base:ff:u_dut.fault_cause[3]": "differs",
+    "base:ff:u_dut.fault_cause[4]": "differs"
+   },
+   "passed": false
+  },
+  {
+   "tag": "native_same_side_joint_STEP",
+   "statuses": {
+    "step:ff:u_dut.fault_cause[3]": "differs",
+    "step:ff:u_dut.fault_cause[4]": "differs"
+   },
+   "passed": false
+  }
+ ],
+ "status": "STEP_NOT_PROVED_NO_HINT_ACCEPTED"
+}

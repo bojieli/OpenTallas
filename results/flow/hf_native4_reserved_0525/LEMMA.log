@@ -1,0 +1,23 @@
+==== official_validity_STEP
+======== ABC command line "&r /out/official_validity_STEP.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /out/official_validity_STEP_swept.aig"
+[1;37m/out/official_validity_STEP[0m : i/o =  11746/      2  [1;36mand =      15[0m  [1;35mlev =    5[0m [1;35m(5.00)[0m  mem = 0.18 MB
+[1;37m/out/official_validity_STEP[0m : i/o =  11746/      2  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.18 MB
+SAT solver statistics:
+CO =        2  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/out/official_validity_STEP[0m : i/o =  11746/      2  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.18 MB
+
+==== wrong_constant_STEP_negative
+======== ABC command line "&r /out/wrong_constant_STEP_negative.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /out/wrong_constant_STEP_negative_swept.aig"
+[1;37m/out/wrong_constant_STEP_negative[0m : i/o =  11746/      2  [1;36mand =      15[0m  [1;35mlev =    5[0m [1;35m(5.00)[0m  mem = 0.18 MB
+[1;37m/out/wrong_constant_STEP_negative[0m : i/o =  11746/      2  [1;36mand =       1[0m  [1;35mlev =    1[0m [1;35m(1.00)[0m  mem = 0.18 MB
+SAT solver statistics:
+CO =        2  AND =        1  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      2  (100.00 %)   Ave conf =      0.0   Time =     0.00 sec (  6.92 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/out/wrong_constant_STEP_negative[0m : i/o =  11746/      2  [1;36mand =       1[0m  [1;35mlev =    1[0m [1;35m(1.00)[0m  mem = 0.18 MB
