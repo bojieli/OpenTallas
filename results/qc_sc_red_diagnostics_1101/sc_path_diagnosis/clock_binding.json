@@ -1,0 +1,14 @@
+{
+ "type": "qfd_dv_s5_sc2_leaf",
+ "insertion_ps": {
+  "tt": 250.0,
+  "ff": 202.5
+ },
+ "insertion_tol_ps": 40.0,
+ "basis": {
+  "tt": "Common250/202.5 reference only; center structured tree is unqualified hypothesis until actual sink/NLDM/root-slew model",
+  "ff": "Common250/202.5 reference only; center structured tree is unqualified hypothesis until actual sink/NLDM/root-slew model"
+ },
+ "rc": "calibrated setRC_rcx_asap7.tcl",
+ "rule": "METHODOLOGY 9.7 / BRIEFING 5e; FLOW 2026-10-25; FLOW-FIX core generators"
+}
