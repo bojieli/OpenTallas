@@ -1,0 +1,351 @@
+{
+ "kind": "regional_strap_source_PREP",
+ "enabled": false,
+ "physical_qualified": false,
+ "padw": 1,
+ "raw_reset": "rst_n_t0",
+ "raw_parent": "rst_rl_85",
+ "raw_depth": 3,
+ "retained_sampling": [
+  "u_cland_origin.sf",
+  "u_cland_origin.s0"
+ ],
+ "retained_central_leaf": "u_rrl_87",
+ "old_replaced_states": [
+  "s1",
+  "s2",
+  "pd"
+ ],
+ "regions": [
+  {
+   "region": 0,
+   "raw_leaf": {
+    "stage": "raw",
+    "region": 0,
+    "xy": [
+     196.01999999999998,
+     130.00500000000002
+    ],
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "box": [
+     195.48,
+     129.87,
+     196.55999999999997,
+     130.14000000000004
+    ]
+   },
+   "states": [
+    {
+     "stage": "s1",
+     "region": 0,
+     "xy": [
+      194.4,
+      130.005
+     ],
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "box": [
+      193.85999999999999,
+      129.87,
+      194.94000000000003,
+      130.14
+     ]
+    },
+    {
+     "stage": "s2",
+     "region": 0,
+     "xy": [
+      194.39999999999998,
+      129.465
+     ],
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "box": [
+      193.85999999999999,
+      129.33,
+      194.93999999999997,
+      129.6
+     ]
+    },
+    {
+     "stage": "pd",
+     "region": 0,
+     "xy": [
+      197.64,
+      129.46500000000003
+     ],
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "box": [
+      197.1,
+      129.33000000000004,
+      198.17999999999998,
+      129.60000000000002
+     ]
+    }
+   ],
+   "receivers": [
+    "u_bound.u_cland_fstart_cal_descriptor_obs",
+    "u_bound.u_cland_fstart_cal_image_ready",
+    "u_bound.u_cland_fstart_cal_program_obs",
+    "u_bound.u_cland_fstart_command_stage__to_glue__sys_face__tt_command_stage",
+    "u_bound.u_cland_fstart_command_stage__to_native59__command_stage",
+    "u_bound.u_cland_fstart_control_stores_ready",
+    "u_bound.u_cland_fstart_dc",
+    "u_bound.u_cland_fstart_emb_position",
+    "u_bound.u_cland_fstart_emb_start__to_glue__embed_prov__core_start",
+    "u_bound.u_cland_fstart_emb_start__to_native59__head_prepare_v",
+    "u_bound.u_cland_fstart_emb_token__to_glue__embed_prov__core_token",
+    "u_bound.u_cland_fstart_emb_token__to_native59__head_prepare_token",
+    "u_bound.u_cland_fstart_emb_user",
+    "u_bound.u_cland_fstart_flt_o",
+    "u_bound.u_cland_fstart_layer_context_v__to_glue__sys_face__tt_layer_context_v",
+    "u_bound.u_cland_fstart_layer_context_v__to_native59__layer_context_v",
+    "u_bound.u_cland_fstart_native_cmd",
+    "u_bound.u_cland_fstart_native_pos__to_glue__sys_face__tt_native_pos",
+    "u_bound.u_cland_fstart_native_pos__to_native59__native_position",
+    "u_bound.u_cland_fstart_native_tok__to_glue__sys_face__tt_native_tok",
+    "u_bound.u_cland_fstart_native_tok__to_native59__native_token",
+    "u_bound.u_cland_fstart_program_obs",
+    "u_bound.u_cland_ctx_x",
+    "u_bound.u_cland_dh",
+    "u_bound.u_cland_dh_user",
+    "u_bound.u_cland_fab",
+    "u_bound.u_cland_kok",
+    "u_bound.u_cland_mu_flt_i",
+    "u_bound.u_cland_native_ret"
+   ]
+  },
+  {
+   "region": 1,
+   "raw_leaf": {
+    "stage": "raw",
+    "region": 1,
+    "xy": [
+     581.5799999999999,
+     130.00500000000002
+    ],
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "box": [
+     581.04,
+     129.87,
+     582.1199999999999,
+     130.14000000000004
+    ]
+   },
+   "states": [
+    {
+     "stage": "s1",
+     "region": 1,
+     "xy": [
+      583.2,
+      130.275
+     ],
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "box": [
+      582.6600000000001,
+      130.14,
+      583.74,
+      130.41000000000003
+     ]
+    },
+    {
+     "stage": "s2",
+     "region": 1,
+     "xy": [
+      583.1999999999999,
+      129.735
+     ],
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "box": [
+      582.66,
+      129.60000000000002,
+      583.7399999999999,
+      129.87
+     ]
+    },
+    {
+     "stage": "pd",
+     "region": 1,
+     "xy": [
+      586.4399999999999,
+      129.735
+     ],
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "box": [
+      585.9,
+      129.60000000000002,
+      586.9799999999999,
+      129.87
+     ]
+    }
+   ],
+   "receivers": [
+    "u_bound.u_cland_fstart_cmd",
+    "u_bound.u_cland_fstart_hr",
+    "u_bound.u_cland_ag5",
+    "u_bound.u_cland_ss5"
+   ]
+  },
+  {
+   "region": 2,
+   "raw_leaf": {
+    "stage": "raw",
+    "region": 2,
+    "xy": [
+     390.41999999999996,
+     173.47500000000005
+    ],
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "box": [
+     389.88,
+     173.34000000000003,
+     390.9599999999999,
+     173.61000000000007
+    ]
+   },
+   "states": [
+    {
+     "stage": "s1",
+     "region": 2,
+     "xy": [
+      388.8,
+      173.20500000000004
+     ],
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "box": [
+      388.26,
+      173.07000000000005,
+      389.34000000000003,
+      173.34000000000003
+     ]
+    },
+    {
+     "stage": "s2",
+     "region": 2,
+     "xy": [
+      388.79999999999995,
+      172.665
+     ],
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "box": [
+      388.26,
+      172.53,
+      389.3399999999999,
+      172.79999999999998
+     ]
+    },
+    {
+     "stage": "pd",
+     "region": 2,
+     "xy": [
+      392.03999999999996,
+      172.665
+     ],
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "box": [
+      391.5,
+      172.52999999999997,
+      392.5799999999999,
+      172.8
+     ]
+    }
+   ],
+   "receivers": [
+    "u_bound.u_cland_kwd",
+    "u_bound.u_cland_pw"
+   ]
+  },
+  {
+   "region": 3,
+   "raw_leaf": {
+    "stage": "raw",
+    "region": 3,
+    "xy": [
+     581.5799999999999,
+     388.125
+    ],
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "box": [
+     581.04,
+     387.99,
+     582.1199999999999,
+     388.26
+    ]
+   },
+   "states": [
+    {
+     "stage": "s1",
+     "region": 3,
+     "xy": [
+      522.288,
+      328.45500000000004
+     ],
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "box": [
+      521.748,
+      328.32000000000005,
+      522.828,
+      328.59000000000003
+     ]
+    },
+    {
+     "stage": "s2",
+     "region": 3,
+     "xy": [
+      583.1999999999999,
+      388.665
+     ],
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "box": [
+      582.66,
+      388.53000000000003,
+      583.7399999999999,
+      388.8
+     ]
+    },
+    {
+     "stage": "pd",
+     "region": 3,
+     "xy": [
+      586.4399999999999,
+      388.665
+     ],
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "box": [
+      585.9,
+      388.53000000000003,
+      586.9799999999999,
+      388.8
+     ]
+    }
+   ],
+   "receivers": [
+    "u_bound.u_cland_fstart_table_req",
+    "u_bound.u_cland_fstart_tl"
+   ]
+  }
+ ],
+ "same_edge": true,
+ "price": {
+  "added_mission_cycles": 0,
+  "added_boot_cycles": 0,
+  "added_posedge_clock_sinks": 13,
+  "added_raw_reset_sinks": 9,
+  "added_upstream_reset_data_sinks": 4,
+  "added_input_p_start_sinks": 0,
+  "added_s0_data_sinks": 3,
+  "added_strap_pad_mux_consumers": 3,
+  "old_state_ff_including_parent_raw_leaf": 6,
+  "new_state_ff_including_parent_and_copies": 19,
+  "added_state_ff": 13,
+  "clock": "same existing clk, no new root/guide",
+  "reset": "retain existing central rst_n_t0/u_rrl_87;4 same-D/CLK/depth copies from rst_rl_85; regional branch resets/FSTART take local copy; no new release edge"
+ },
+ "clock": "clk",
+ "source_sha256": "f46fd0964c31660911021559bbb27d7a45de316db9308c1f333a5fa680795c0b",
+ "global_derive_complete": false,
+ "consumer_requirements": [
+  "count_origin regional consumer",
+  "land_slots and native placement paths",
+  "source verifier and KEEP/count ABI",
+  "global reset producer and 63clock name/phase join"
+ ]
+}
