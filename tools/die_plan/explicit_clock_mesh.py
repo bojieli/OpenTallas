@@ -262,6 +262,21 @@ def routed_mesh_tcl(L, w, cells, ports, buf, rec):
                 rec.setdefault('extra_top',[]).append((w['name'],a[0],a[1],a[2],b[1],b[2]))
         L.append(f'$e addITerm [IT {u} {pin}]')
         rec['pin_stairs']=rec.get('pin_stairs',0)+1
+    for native in g.get('native_inputs',[]):
+        import mesh_native_contact as N
+        if native.get('net')!=w['name']:
+            raise ValueError('native actual ITerm is not on this mesh net')
+        at=tuple(native['anchor'])
+        if at not in jid:raise ValueError('native clock contact anchor is absent from mesh conductor')
+        pts=N.access_path(native)
+        L.extend(N.validate_tcl(native,w['name']))
+        L.append(f'$e newPath ${jid[at]} FIXED [RL {at[0]}]')
+        C._emit_steps(L,pts,split_down=True)
+        L.append(f'$e addITerm [IT {{{native["inst"]}}} {{{native["pin"]}}}]')
+        for a,b in zip(pts,pts[1:]):
+            if a[0]==b[0] and a[0]in('M8','M9') and a[1:]!=b[1:]:
+                rec.setdefault('extra_top',[]).append((w['name'],a[0],a[1],a[2],b[1],b[2]))
+        rec['native_pin_stairs']=rec.get('native_pin_stairs',0)+1
     for t in g['taps']:
         at=tuple(t['port_node']);pn=t['port']
         L.extend([f'$e newPath ${jid[at]} FIXED [RL {at[0]}]',
@@ -277,7 +292,12 @@ def access_paths(w,cells,buf):
     import clock_routed as C
     return [C.stair(anchor[0],anchor[1],anchor[2],
                     *C.pin_point(cells,u,pin,cells[u].get('lib',buf)))
-            for anchor,u,pin,_ in cell_contacts(w['mesh_graph'])]
+            for anchor,u,pin,_ in cell_contacts(w['mesh_graph'])] + native_access_paths(w)
+
+
+def native_access_paths(w):
+    import mesh_native_contact as N
+    return [N.access_path(native)for native in w['mesh_graph'].get('native_inputs',[])]
 
 
 def access_shapes(w,cells,buf):
@@ -302,6 +322,8 @@ def mesh_spef_section(w,cells,buf,layer_rc,via_kohm):
     stack model as the legacy native SPEF. Extracted RC remains the timing basis.
     """
     from die_clock_mesh import NDR
+    if w['mesh_graph'].get('native_inputs'):
+        raise ValueError('native macro contacts require actual extracted SPEF')
     import clock_routed as C
     nd=NDR[w['ndr']];g=w['mesh_graph'];nm=w['name']
     ids={tuple(p):f'{nm}:{i+1}' for i,p in enumerate(g['nodes'])}
