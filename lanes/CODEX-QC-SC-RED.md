@@ -10,3 +10,5 @@ Branch codex/qc-sc-red-1101@343baa122 (inherits experimental98bbb; doNOTmergewho
 
 ## Next
 Collect actual admissions/results. SC3_place→actualLOOK/count/source-correlated sinkgeometry beforeCTS. REDactualrebind→compare nativecensus/rootframe, no STAcredit. Both jobs normalmemoryreservations; no timing/physical PASS claimed whilequeued. OWNER? none.
+
+ROOT classification correction: RED296.37/231.92 versus250/202.5 is design-target deviation only, not a hardFAIL or mandatoryredesign. ActualrelatedpairTT/FF+countalignedcontract decide. No extraabsolute-latencygate added; importscope remainsunchanged, parent/currentviewqualification stillopen.
