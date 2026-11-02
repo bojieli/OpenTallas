@@ -1,0 +1,48 @@
+{
+  "scope": "Exact actual native clock-pin/domain census explains terminal chosen coupled-target failure; no second layout selected or native changes",
+  "ring_domain_groups": {
+    "clk": {
+      "count": 600,
+      "first_capture": 0,
+      "samples": [
+        "u_bound.u_cland_ft2_i/arm\\[0\\]$_SDFF_PN0_",
+        "u_bound.u_cland_ft2_i/arm\\[1\\]$_SDFF_PN0_",
+        "u_bound.u_cland_ft2_i/arm\\[2\\]$_SDFF_PN0_",
+        "u_bound.u_cland_ft2_i/count\\[0\\]$_SDFFE_PN0P_",
+        "u_bound.u_cland_ft2_i/count\\[1\\]$_SDFFE_PN0P_"
+      ],
+      "old_center_bbox_um": [
+        17.82,
+        935.955,
+        123.552,
+        956.475
+      ]
+    },
+    "fclk_in_ft2_i[0]": {
+      "count": 2077,
+      "first_capture": 2060,
+      "samples": [
+        "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[0\\]$_DFFE_NP_",
+        "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[100\\]$_DFFE_NP_",
+        "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[101\\]$_DFFE_NP_",
+        "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[102\\]$_DFFE_NP_",
+        "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[103\\]$_DFFE_NP_"
+      ],
+      "old_center_bbox_um": [
+        17.82,
+        935.955,
+        127.116,
+        961.605
+      ]
+    }
+  },
+  "terminal_unit": "oth-ubuntu-995784-1793635464",
+  "failed_stage0": 68,
+  "DATA_clock_cut_not_run": true,
+  "source_hashes": {
+    "FF_prepare.py": "6e5e8624f4f3fd1fdf4bd52c36d66c9019d1bdfae3733ca23d9ec062abc7d638",
+    "model.py": "bbd1efa6d554df33f22e72a6c79ed78861e014a8b98671798d6050988002d090",
+    "clock_price.py": "c94af63a0c370e3f47d30bd400b6137d57c561942774968ae63adf35e576e954",
+    "run_once.sh": "4418f90ea504edbb224f7c77ecc750555117eaafd1434b2d29d155ae3bb4fb4e"
+  }
+}
