@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-_Updated 2026-11-01 19:29 PST by COORD: count 49 (S81 23, HEAD 3, QC 5, KV 13, HBM 5); clock stays 1.2 GHz (owner); stale-FAIL sweep + LEC class live; localhost root 90% prune._
+_Updated 2026-11-01 20:24 PST by COORD: count 49 (S81 23, HEAD 3+e13a pending reader, QC 5, KV 13, HBM 5); 1.2 GHz kept; late-stage iteration (resume + auto ECO) building; short-job slot pool ruled._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
