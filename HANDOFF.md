@@ -2924,3 +2924,18 @@ CODEX T41 PREP-only 18:xx: complete private Intel2 codex-s81-t41-cts-prep-1810/{
 
 CODEX: 2026-11-01 18:26 PST DS source c0a601376 READY: realCAPsafe131phase/176mask+126gold+630tags; exactcache176images;72RET/80CWstages; correctednativeCW16wordstorage/RD PASS via separateG0C4034. Bothsourcevolumesadvance/noFAIL. Full64word/n8physicalpinleasegateBUILD Intel2 unit2956857; Intel1belowdiskfloor,no newrequest. Source epochs/globalleases stillheld, noG5.
 - 2026-11-01 18:28 PST COORD hourly: count 49 (KV adp event); ccband merged; disk critical intel1/epyc2 -> PRUNE-1101F + E, snapshot/worktree dedupe class; approved qc-61 tools + pslice (opt-in); superseded-kit cancel class; renders kv3_io_ft + sle_stm_v3 FAIL agreed.
+
+CODEX: HEAD parked 2026-11-01 18:35 PST; latest6145bf3b7, STmDlocalclean+EQ1734/KEEP856 protected/parentheld/auditpending, e13aSIGNEDexistingEQactive, alljobs preserved. FullHEADhandoff CODEX-LOG.
+
+CODEX Xfin/HG PARKED explicit user handback 18:36 PST; advancing GRT preserved, no further result waits/new work. Packet /home/ubuntu/coord/handoff/codex_xfin_20261101_1836.md; branch9926dd7f1 (consumer code399), Xfin581c91ade/source-only96f935. Actual relief140 terminalNOTRUN, last3h24/2.43GB nativefallback. HG SYNTHPASS retained; e0specialization/fault/staticstrap gap and HG9 missing backings explicit, no adoption. OWNER?: none.
+
+CODEX core_taps PARKED 20261101_1837: Claude handback. Ready VMS4e21d56ad and BF spacingbf4082ec0 pushed; no GEN/CAD/adoption. Latest uncommitted native BF compact PREP preserved in own WT codex-bfqg-native-1520, branch codex/bfqg-native-compact-1745@bf408:1319public+2571internal=3890, all20actualroot/LEFCLK groups,4actualhelpersPASS,10907staticpairsmax338.052/0>405,16actualparentclockproof256fixed/64spacingmoves. Unrendered/uncommitted model is NOT physicalqualification. Failed432.852/256 and424.404/9 controls retained. No own livejobs/cancellations/retries/merges. Full handoff /home/ubuntu/coord/handoff/codex_hbm_core_taps_20261101_1837_park.md.
+
+CODEX: 2026-11-01 18:37 PST explicit user handback. ROOT PARKED; all8parents told stop/cascade/preserve jobs. Full ## Handoff to Claude in CODEX-LOG.md. Rootclean051, remote991reported, releasepagecommit77f90f7ff. Critical newer facts: capfinalFAIL; STmDlocal+EQ1734,parentheld; PCfMXGRTTT+.692/FF+9.676PASS; HGq1FAIL82; QUERYhead5EQ31379+negative47; HBM96GB/J1singlefrontendOOM. No new work afterSTOP.
+CODEX: 2026-11-01 18:37 PST KVmacro PARKED explicitreset; fullpacket codex_kv_macro_20261101_late_reset.md;8ace sourceREADY,1b589 evidence;HG9e1actual37.0808%SYNonlyPASS,ownGpostEQ/foreign4ECOpreserved,ROOTnativeRECIPDRT/ZHPLACEholds and4.32halo heightgroupmodel remainheld.
+
+CODEX: KV PARK2026-11-01 18:35 PST onexplicituserhandback; all5helpers+EX parked, jobs preserved. Fullpacket handoff/codex_kv_to_claude_20261101_1835.md. Latestq1 actualfinalFAIL82; fMXfinalGRT TT+.692/FF+9.676/allzero; sourceREADYdb76/8ace/83dc pendingroot, no newmerges/launches.
+
+CODEX PARK 2026-11-01 18:38 PST: cap/bksel/PDSK safely parked on USER handback, children/API dispatcher toldstop; no new jobs or changes. Cap DRC0/ANT0/pin748 native route completed but051SIGFAIL TT−125.05/FF−16.01/43dataSlew; grouped8nets, no EQ/export. Exact packet /home/ubuntu/coord/handoff/codex_caprt_20261101_1838.md. No own live controller; f342R1 retry/R2adapter preparedheld, original failures/checkpoints/foreignjobs preserved.
+
+CODEX: PARKED HBM clock 2026-11-01 18:38 PST. Latest committed119fb3dc4 (283/66 missing joins), cleanclass/PG1d9982186; both onhub. PG3706→0 PASS, noCTS/genuinefillFAIL. NE_v1 DRT advancing +3 inherited queued, preserved. Protected tailtyped candidate8-placement catalogue/source reset/body relation draft preserved; seeCODEX-LOG.
