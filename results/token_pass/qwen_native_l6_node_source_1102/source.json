@@ -1,0 +1,34 @@
+{
+  "schema": "native_l6_node_component_source/1",
+  "status": "SOURCE_ONLY_NOT_EXECUTED",
+  "selected_profile": {
+    "REGROOT": 3,
+    "BMUT": 0,
+    "CHILD_CLOCKS": 1,
+    "TREE_LAT": 7,
+    "ANR": 2
+  },
+  "source_sha256": {
+    "/home/ubuntu/coord/tmp/codex-native-head-leaf-packet3/src/016_qfd_tile_nk_rp2_45.sv": "98ee8f9bea416cbb61bd6bcc395e7f6b6033471d1a1ea741e7e1ba378df9fac3",
+    "/home/ubuntu/coord/tmp/codex-native-head-leaf-packet3/src/018_ot_qwen_rom_tile_w12_land32.sv": "019e19dedcab454a9853a9d41e04dca72e51ad9044e7c36f66a11f8599fe829c",
+    "/home/ubuntu/coord/tmp/codex-native-head-leaf-packet3/src/022_ot_qwen_tile_node.sv": "f40676e8db499d7c1b146eb33d3e474721116a202fad4c633e8c4ce331e3e71c"
+  },
+  "copied_source_spans": {
+    "reset": "(* keep *) reg q;\n        always @(posedge ck_fa4) q <= rst_n;\n        assign reset_q = q;",
+    "operand_faces": "(* keep *) reg [513:0] n_a_q,n_b_q;\n    always @(posedge ck_fa0) n_a_q<=n_a;\n    always @(posedge ck_fa1) n_b_q<=n_b;",
+    "inner": "ot_qwen_tile_node u_node (.clk(CHILD_CLOCKS ? ck_node : clk), .rst_n(rst_n), .a(na_x), .b(n_b), .va(n_va),\n                                  .y(n_y), .vy(n_vy), .fault(node_fault),\n                                  .t_d(td_x), .t_vd(t_vout_i), .t_out(t_out_nd), .t_vout(t_vout_nd));",
+    "packed_output": "(* keep *) reg fy_q;\n    reg mis_q;\n    always @(posedge ck_fa3)\n        if (!reset_q) begin fy_q <= 1'b0; mis_q <= 1'b0; end\n        else begin\n            mis_q <= mis_q | (n_a_q[512] ^ n_b_q[512]);\n            fy_q  <= n_a_q[513] | n_b_q[513] | mis_q;\n        end\n    (* keep *) reg [513:0] n_y_q;\n    always @(posedge ck_fa3) begin\n        n_y_q[511:0]<=ny;\n        n_y_q[513:512]<=reset_q ? {fy_q,nvy} : 2'd0;\n    end\n    assign n_y=n_y_q;"
+  },
+  "native_clocks": [
+    "ck_fa0",
+    "ck_fa1",
+    "ck_fa3",
+    "ck_fa4",
+    "ck_node"
+  ],
+  "arithmetic": "16 actual FP32 pair adders, same input/valid/output and reset relay as selected source",
+  "fault": "selected outer leg-fault OR/sticky valid mismatch and packed output preserved; inner node_fault separately observable as in source",
+  "unused_ME_feedthrough": "td_x/t_vout_i remain explicit public inputs, not fabricated executed ME values",
+  "usage": "reuse complete component for15 source-proven adjacent subtrees per64split L6 after authenticated native TG4 outputs exist",
+  "qualification": "no build, fabricated L6 response, physical/provider phase, count-origin or global date claim"
+}
