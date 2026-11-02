@@ -509,7 +509,10 @@ def check_run(run, spec=None, die_plan_dir=None):
     par = (res["signoff"].get("parasitics") or {})
     res["rcx"] = st(None, "no signoff corners") if not par else st(all(v == "spef" for v in par.values()), str(par))
     errs = []
-    for l in step_logs + [str(kit / f) for f in ("hold_gate.log", "synth_odb_v.log")] + sorted(glob.glob(f"{kit}/run_*.log")):
+    # FLOW-21 CCBAND 11-01: the post-CTS insertion gate logs too -- a crashed gate ('Error: postcts_gate.tcl, 34 ...
+    # No module named core_clock_band') wrote 'OT_POSTCTS_GATE TT no result FAIL' and was judged a design stop.
+    gate_logs = ("hold_gate.log", "synth_odb_v.log", "postcts_gate_TT.log", "postcts_gate_FF.log")
+    for l in step_logs + [str(kit / f) for f in gate_logs] + sorted(glob.glob(f"{kit}/run_*.log")):
         for m in TCL_ERR_RE.finditer(read(l)):
             # a gate's deliberate 'error' (hold_gate.tcl structural FAIL) is a verdict, reported by grt_gate, not a crash
             line = read(l)[m.start():].split("\n", 1)[0]
