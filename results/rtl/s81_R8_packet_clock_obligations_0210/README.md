@@ -1,6 +1,6 @@
 # Conditional clock+transport obligations for current R8 packet inputs
 
-The selected native counterexample5c86a737d stays scoped to its explicit common-clock/startup mapping. It identifies a missing coherent clock+transport relation, not a bad table or a replacement native contract. Current100 unqualified input groups include28 frame packet-input groups. Every one has different metadata ages at sinkbits1/567, while each current bound pair has equal ages.26 originate at slice parents and2 at prior frame forwarders. Actual source/sink bit ranges are preserved, not inferred lane aliases. Only the selected0L01 literal source-valid duplication and native failure are proven here; the other27 are conditional obligations, not qualified cases.
+The selected native counterexample5c86a737d stays scoped to its explicit common-clock/startup mapping. It identifies a missing coherent clock+transport relation, not a bad table or a replacement native contract. Current100 unqualified input groups include28 frame packet-input groups. Every one has different metadata ages at sinkbits1/567, while each current bound pair has equal ages.24 originate at slice parents and4 at prior frame forwarders. Actual source/sink bit ranges are preserved, not inferred lane aliases. Only the selected0L01 literal source-valid duplication and native failure are proven here; the other27 are conditional obligations, not qualified cases.
 
 For duplicate source-valid bits, necessary consumer alignment is:
 
