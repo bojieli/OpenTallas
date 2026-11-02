@@ -1,0 +1,16 @@
+{
+  "status": "DISABLED_SOURCE_ONLY_CONSUMER_PREP_NOT_NATIVE_QUALIFIED",
+  "data_sha256": "7c571851153c90887bf5985495683399394d74a2952f46eaea62a084cde3ae43",
+  "data_gzip": "exact_native_clock_review_data.tcl.gz",
+  "model_sha256": "dd6387305f8fcd6dc00430766f2bafdac988e2c0d667b3def9e7c47466ab2663",
+  "actual_roots": 32,
+  "actual_typed_clock_sinks": 20886,
+  "FF": 20842,
+  "SRAM": 44,
+  "unit_tests": 9,
+  "actual_data_tcl_parse": "PASS32roots20886sinks; noODBloaded",
+  "native_vehicle": "NOT_RUN",
+  "CTS": "NOT_RUN",
+  "PG_constructor_qualification": "NOT_CLAIMED; canonicalmodule required",
+  "source_only_pg_review": "/root/pg_birth CONCUR after forced-error and status-cleanup corrections"
+}
