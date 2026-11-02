@@ -10,12 +10,24 @@ import json
 import re
 import os
 
-import odb  # noqa: E402  (OpenROAD python)
-
 TOL = 0.001
 
 
+def box_ok(p, box, W, H):
+    x0, y0, x1, y1 = box
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    f = p['face']
+    if f == 'interior':
+        return (abs(cx - p['x']) <= TOL and abs(cy - p['y']) <= TOL
+                and x0 >= -TOL and y0 >= -TOL and x1 <= W + TOL and y1 <= H + TOL)
+    along = abs(cy - p['y']) <= TOL if f in ('E', 'W') else abs(cx - p['x']) <= TOL
+    edge = {'E': abs(x1 - W) <= TOL, 'W': abs(x0) <= TOL,
+            'N': abs(y1 - H) <= TOL, 'S': abs(y0) <= TOL}[f]
+    return along and edge
+
+
 def main():
+    import odb  # noqa: E402  (OpenROAD python)
     db = odb.dbDatabase.create()
     db = odb.read_db(db, os.environ["ODB"])
     block = db.getChip().getBlock()
@@ -41,13 +53,7 @@ def main():
         if not lay:
             res["wrong_layer"].append([n, p["layer"], sorted({b[0] for b in boxes})])
             continue
-        good = False
-        for _, x0, y0, x1, y1 in lay:
-            cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
-            f = p["face"]
-            along = abs(cy - p["y"]) <= TOL if f in "EW" else abs(cx - p["x"]) <= TOL
-            edge = {"E": abs(x1 - W) <= TOL, "W": abs(x0) <= TOL, "N": abs(y1 - H) <= TOL, "S": abs(y0) <= TOL}[f]
-            good |= along and edge
+        good = any(box_ok(p, b[1:], W, H) for b in lay)
         if good:
             res["ok"] += 1
         else:
@@ -62,4 +68,5 @@ def main():
           f"{res['wrong_layer_n']} wrong_place {res['wrong_place_n']} extra {res['extra_n']}")
 
 
-main()
+if os.environ.get('ODB'):
+    main()
