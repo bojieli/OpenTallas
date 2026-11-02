@@ -1,0 +1,68 @@
+{
+  "schema": "opentallas.current_plan_stage.v1",
+  "sha": "98a8705cb78b717bcf2a7cfd59bf14f0da3fc70a",
+  "registry": "/home/ubuntu/coord/tools/release_tree_plan.py",
+  "registry_sha256": "424adb1420e61a59ecf016ad19da60bc7813cf80c0b69b65235512c84875ac65",
+  "plans": {
+    "s81": {
+      "path": "physical/die_plan/s81/plan_h2_2249.json",
+      "source": "physical/die_plan/s81/plan_h2_2249.json",
+      "overlays": [],
+      "refs_fetched": [
+        "results/token_pass/s81_dead_inputs_2148/proof_closing_s13obs_1029.json"
+      ],
+      "pin_aliases": []
+    },
+    "qwen_kvsys": {
+      "path": "physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+      "source": "physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+      "overlays": [],
+      "refs_fetched": [
+        "results/arch/kv_plan_0719/f7ch/g2_f7ch.json",
+        "results/arch/kv_plan_0719/g2_combined.json",
+        "results/arch/kv_plan_0719/hubwi/g2_hubwi.json",
+        "results/geom_review/kv_hgi_v8_2155_r2/g2_table.json"
+      ],
+      "pin_aliases": []
+    },
+    "hbm": {
+      "path": "physical/die_plan/hbm/plan_of_record/d44c/por__die_plan.json",
+      "source": "physical/die_plan/hbm/plan_of_record/d44c/die_plan.json.gz",
+      "overlays": [
+        "hbm/plan_of_record/d35a",
+        "hbm/plan_of_record/d35b",
+        "hbm/plan_of_record/d35c"
+      ],
+      "refs_fetched": [
+        "results/hbm_bind_2_1029/dead_qlate_proof.json"
+      ],
+      "pin_aliases": []
+    }
+  },
+  "scope": "Candidate base plan transport tables and SV packages only. No --inplace, R8-fold, binding, programme, pricing, or physical adoption.",
+  "ci_static_argv": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/codex-current-ci-2049/tools/die_plan/die_ci.py",
+    "run",
+    "--repo",
+    "/srv/opentallas-scratch/claude/codex-current-ci-2049",
+    "--sha",
+    "98a8705cb78b717bcf2a7cfd59bf14f0da3fc70a",
+    "--mode",
+    "manual",
+    "--g2",
+    "none",
+    "--sta",
+    "none",
+    "--prev",
+    "none",
+    "--plan",
+    "s81=/srv/opentallas-scratch/claude/codex-current-ci-2049/physical/die_plan/s81/plan_h2_2249.json",
+    "--plan",
+    "qwen_kvsys=/srv/opentallas-scratch/claude/codex-current-ci-2049/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "--plan",
+    "hbm=/srv/opentallas-scratch/claude/codex-current-ci-2049/physical/die_plan/hbm/plan_of_record/d44c/por__die_plan.json"
+  ],
+  "generator": "tools/die_plan/gen.py latency <exact staged plan> --out candidate_latency/<die>",
+  "generator_sha256": "b4863606d1b99628d11dbbaaa22c85caf71080fc0ed9abcca4c9fed530263904"
+}
