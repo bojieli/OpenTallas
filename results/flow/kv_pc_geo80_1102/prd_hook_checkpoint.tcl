@@ -193,6 +193,8 @@ source /work/pg_connect.tcl
 ot_pg_connect_all pc_geo80_repair_checkpoint
 ot_pg_require_bound pc_geo80_repair_checkpoint
 write_db /work/repair_checkpoint.odb
+write_def /work/repair_checkpoint.def
+write_verilog /work/repair_checkpoint.v
 write_sdc -no_timestamp /work/repair_checkpoint.active_mode.sdc
 ot_clk_dump /work/repair_checkpoint.clock.tsv repair_checkpoint
 set f [open /work/REPAIR_CHECKPOINT w]
