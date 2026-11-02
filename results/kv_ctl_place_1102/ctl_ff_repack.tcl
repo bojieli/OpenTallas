@@ -18792,6 +18792,9 @@ foreach {name wanted x y width height} {
  dict set expected $name 1
  if {![dict exists $actual $name]} {error "CTL_FF_PLAN missing exact source FF $name"}
  set i [dict get $actual $name]
+ # The ordinary face hook may already have made this exact planned FF FIRM.
+ $i setPlacementStatus PLACED
+ $i setDoNotTouch 0
  if {[[$i getMaster] getName] ne $wanted} {
   if {[[$i getMaster] getName] ne "DFFHQNx1_ASAP7_75t_R" || $wanted ne "DFFHQNx2_ASAP7_75t_R"} {error "CTL_FF_PLAN unpriced master change $name"}
   $i setDoNotTouch 0
@@ -18808,15 +18811,15 @@ foreach {name wanted x y width height} {
  set bb [$i getBBox]
  if {[$bb xMin] != $xx || [$bb yMin] != $yy} {error "CTL_FF_PLAN location mismatch $name"}
  $i setPlacementStatus FIRM
- # Preserve unobservable state; live DATA cells stay touchable for ordinary
- # combinational buffering. Process-local family exclusions preserve masters.
+ # Every DATA instance stays touchable for ordinary input buffering;
+ # process-local family exclusions preserve the exact FF masters.
  set live 0
  foreach it [$i getITerms] {
   set mt [$it getMTerm];set n [$it getNet]
   if {$n ne "NULL" && ([$mt getSigType] eq "CLOCK" || [$mt getName] in {CLK CK clk ck})} {$n setDoNotTouch 1}
   if {[$mt getIoType] eq "OUTPUT" && $n ne "NULL" && ([llength [$n getBTerms]] || [llength [$n getITerms]]>1)} {set live 1}
  }
- $i setDoNotTouch [expr {!$live}]
+ $i setDoNotTouch 0
 }
 if {[lsort [dict keys $expected]] ne [lsort [dict keys $actual]]} {error "CTL_FF_PLAN complete source FF inventory mismatch"}
 puts "CTL_FF_PLAN PASS [dict size $expected] exact source FF sites, $resized ordinary x1->x2 resizes, clock/reset connectivity untouched"
