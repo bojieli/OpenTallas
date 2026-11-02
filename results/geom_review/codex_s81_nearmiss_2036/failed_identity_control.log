@@ -1,0 +1,7 @@
+ECO REPEATER slweco_09370 net original at (187.2,5.1) loads 1
+WRONG EXISTING BUFFER slweco_09370
+    while executing
+"error "WRONG EXISTING BUFFER $selected""
+    invoked from within
+"if {$selected ne "ot_nm_repeater_2"} {error "WRONG EXISTING BUFFER $selected"}"
+    (file "/srv/opentallas-scratch/claude/wt/codex-s81-nearmiss-2036/results/geom_review/codex_s81_nearmiss_2036/failed_identity_control.tcl" line 18)
