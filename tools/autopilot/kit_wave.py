@@ -1740,6 +1740,10 @@ def queue_class(j):
     if stt == "DONE-CRASH":
         return "route", "FAIL", ("INFRA" if kind.startswith("infra") else "FLOW"), f"{kind}: {why}"
     if stt.startswith("DONE-"):
+        eco = (j.get("chain") or {}).get("eco") if isinstance(j.get("chain"), dict) else None
+        if isinstance(eco, dict) and eco.get("verdict") in ("EXHAUSTED", "ERROR") and "late-ECO" not in why:
+            # KW-ECO-1: the class table names a route/sign-off FAIL the late-stage ECO loop could not repair
+            why = (str(eco.get("summary") or "late-ECO exhausted")[:160] + " | " + why)[:300]
         fails = set(so.get("fails") or [])
         tt, ff = so.get("tt_wns"), so.get("ff_wns")
         drc = so.get("drc") or 0

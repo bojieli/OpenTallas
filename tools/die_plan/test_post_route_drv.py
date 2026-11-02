@@ -622,3 +622,30 @@ def test_prd_pg_preserves_native_ownership_and_checks_actual_binding(tmp_path, s
     run = subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
     assert run.returncode == 0, run.stderr
     assert run.stdout.strip() == f'{connected} 1'
+
+
+def test_mk_tt_only_variant_on_single_mode_kit(tmp_path):
+    # KW-ECO-1: t<N> = TT setup + DRV pass of a single-mode kit (hold stays in the FF-only b<N> pass)
+    kit = make_kit(tmp_path, mm=False)
+    (kit / "vclk_corner.tcl").write_text("# vclk\n")
+    r = mk(kit, tmp_path / "p1", "t10")
+    assert r.returncode == 0, r.stdout + r.stderr
+    p1 = tmp_path / "p1"
+    v = (p1 / "variant.env").read_text().splitlines()
+    assert "OT_PRD_NO_HOLD=1" in v and "OT_SETUP_MARGIN=10" in v and "ROUTE_CORNERS='CORNER=TC CORNERS=tc'" in v
+    assert not any(x.startswith("OT_VCLK_CORNER") for x in v)
+    cfg = (p1 / "config.mk").read_text()
+    assert "override export CORNERS = tc" in cfg and "override export OT_HOLD_MM = 0" in cfg
+    assert "CORNERS = bc" not in cfg
+    # refused on a two-mode kit (m<N> covers both corners there)
+    assert mk(make_kit(tmp_path / "mm"), tmp_path / "p2", "t10").returncode == 2
+
+
+def test_tt_only_eco_contract():
+    hook = (PRD / "prd_hook.tcl").read_text()
+    i = hook.index("OT_PRD_NO_HOLD")
+    assert hook.index("repair_timing -setup") < i < hook.index("ot_repair_hold_guarded")
+    km = (ROOT / "tools/die_plan/kit_modes_eco.tcl").read_text()
+    t = km.index('$km_cs eq "tc"')
+    assert t < km.index('[lindex $km_cs 0] ne "bc"') and "OT_PRD_NO_HOLD" in km[t:t + 200]
+    assert "-e OT_PRD_NO_HOLD" in (PRD / "prd_run.sh").read_text()
