@@ -3089,3 +3089,5 @@ CODEX: HBM StoreA source/geometry31d701040+930740047 READYmodel-only; capturegut
 CODEX 2026-11-02 07:1x PST: HBM nativeFC9 source14054EQ/2284facePASS f785d2b10; Tnode finalpostrepairfull50/TT+90.47/FF+4.79/PG0 93c9186e4 READY, noDRT/SIGNED. InheritedSPU50 FTdataPASS, PSlice truthfulprooftransferheld, topkA live.
 
 CODEX: TOK-DS-2 legacy source+native gate READY 723dd22f9/b12d983ca, oracle correction98ff484bf. Actual BF phase106 two partials/date exact but full guard preserved FAIL due wrong fixture Q status tie; source-only fixture fix compiling Intel2 codex-ds-bf-native-pair-0605 unit4180173. No production/cohort/provider/epoch flags changed; inherited serial V1c3 still running and IMG2 queued.
+
+CODEX: TOK-DS-2 b70e77239 native actual phase106 BF two-column data/date+all guards PASS with5 caught controls; source/mission/physical epochs held. 0bb288150 coherent inactive SOURCE token manifest/tool/readset/cache/image event READY, exact old7bf/newbbec clock-plan options unselected; no full frontend/backend or inherited cache mutation.
