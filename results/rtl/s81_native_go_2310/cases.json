@@ -902,7 +902,8 @@
     ],
     "faults": 0,
     "producer_stage_edges": 3,
-    "semantic_status": "PASS"
+    "preincrement_hypothesis_status": "PASS",
+    "native_semantic_status": "UNQUALIFIED_ARCHITECTURAL_TAG_ORACLE"
   },
   "current": {
     "core": [
@@ -1807,7 +1808,8 @@
     ],
     "faults": 0,
     "producer_stage_edges": 3,
-    "semantic_status": "FAIL_INDEPENDENT_GO_TAG_ORACLE"
+    "preincrement_hypothesis_status": "FAIL_INDEPENDENT_GO_TAG_ORACLE",
+    "native_semantic_status": "UNQUALIFIED_ARCHITECTURAL_TAG_ORACLE"
   },
   "candidate": {
     "core": [
@@ -2712,7 +2714,8 @@
     ],
     "faults": 0,
     "producer_stage_edges": 3,
-    "semantic_status": "PASS"
+    "preincrement_hypothesis_status": "PASS",
+    "native_semantic_status": "UNQUALIFIED_ARCHITECTURAL_TAG_ORACLE"
   },
   "wrong_date": {
     "core": [
@@ -3617,7 +3620,8 @@
     ],
     "faults": 0,
     "producer_stage_edges": 3,
-    "semantic_status": "FAIL_INDEPENDENT_GO_TAG_ORACLE"
+    "preincrement_hypothesis_status": "FAIL_INDEPENDENT_GO_TAG_ORACLE",
+    "native_semantic_status": "UNQUALIFIED_ARCHITECTURAL_TAG_ORACLE"
   },
   "wrong_tag": {
     "core": [
@@ -4522,6 +4526,7 @@
     ],
     "faults": 0,
     "producer_stage_edges": 3,
-    "semantic_status": "FAIL_INDEPENDENT_GO_TAG_ORACLE"
+    "preincrement_hypothesis_status": "FAIL_INDEPENDENT_GO_TAG_ORACLE",
+    "native_semantic_status": "UNQUALIFIED_ARCHITECTURAL_TAG_ORACLE"
   }
 }
