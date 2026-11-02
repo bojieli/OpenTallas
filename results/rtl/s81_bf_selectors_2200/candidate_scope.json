@@ -1,0 +1,47 @@
+{
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "base_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll_h2_2249.json",
+  "base_sha256": "0332ad64d7e5c2ea56b79445d23d516c54a2c5c5595ba1568f80a0839e1280e2",
+  "only_changed_fields": [
+    "instance_path_params",
+    "instance_path_params_note"
+  ],
+  "appended_rules": [
+    {
+      "module": "dsfd_bf_col",
+      "param": "INSTANCE"
+    },
+    {
+      "module": "dsfd_bf_front_roots",
+      "param": "INSTANCE"
+    },
+    {
+      "module": "ot_s81sl_xgt_xo",
+      "param": "INSTANCE"
+    }
+  ],
+  "source_prerequisites": [
+    "codex/ds-xs-prefix-2038@980f1ce54 (new INSTANCE parameter on actual selected xgt_xo and xs4)"
+  ],
+  "actual_BF_columns": 456,
+  "actual_BF_fronts": 228,
+  "BF_images": 912,
+  "frames": 72,
+  "unchanged": [
+    "all source paths",
+    "all defines/flags",
+    "all hardware parameters",
+    "reset/clock contracts",
+    "geometry",
+    "physical views",
+    "source programme files",
+    "all existing instance selector rules"
+  ],
+  "remaining_holds": [
+    "Original canonical BF exclusion pending reset/source correspondence has no waiver in this candidate",
+    "Current 72 fields have 1800 BF phases with zero descriptor records and calendar_unmeasured",
+    "Published BF full/tail/router gates are BF-active/Q-idle source classes, not current full-programme/residency/global epochs",
+    "All native profiles, exact physical body/clock/reset and real parent composition remain separately qualified",
+    "A future approved manifest event needs one strict rebind/normal runtime source staging; no full ELAB launched here"
+  ]
+}

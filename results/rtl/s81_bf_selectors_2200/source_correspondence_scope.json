@@ -1,0 +1,56 @@
+{
+  "status": "PASS_SCOPED_IMAGE_IDENTITY_CORRESPONDENCE",
+  "parents": [
+    {
+      "role": "column_wrapper",
+      "canonical_sha256": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3",
+      "IMG2_sha256": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3",
+      "byte_identical": true,
+      "conditional_note": ""
+    },
+    {
+      "role": "column",
+      "canonical_sha256": "66bf23bbce504d037bba98fb45af08559e7f77410d818d48d05adb761b983531",
+      "IMG2_sha256": "66bf23bbce504d037bba98fb45af08559e7f77410d818d48d05adb761b983531",
+      "byte_identical": true,
+      "conditional_note": ""
+    },
+    {
+      "role": "front_wrapper",
+      "canonical_sha256": "54c30803704601943e827a37263584f505e7546e0c1d8c62a8834031d5e16cf4",
+      "IMG2_sha256": "54c30803704601943e827a37263584f505e7546e0c1d8c62a8834031d5e16cf4",
+      "byte_identical": true,
+      "conditional_note": ""
+    },
+    {
+      "role": "front",
+      "canonical_sha256": "ee6caa2511c362c5122a5b49c4e5afe7f1a9e6ebc1762f5366583a3529a3f708",
+      "IMG2_sha256": "ee6caa2511c362c5122a5b49c4e5afe7f1a9e6ebc1762f5366583a3529a3f708",
+      "byte_identical": true,
+      "conditional_note": ""
+    },
+    {
+      "role": "front_core",
+      "canonical_sha256": "c72d93465a1c24277cb78fb021d06b95cee551a0da4af5c3c560c95d5e245b7d",
+      "IMG2_sha256": "c72d93465a1c24277cb78fb021d06b95cee551a0da4af5c3c560c95d5e245b7d",
+      "byte_identical": true,
+      "conditional_note": ""
+    },
+    {
+      "role": "macro",
+      "canonical_sha256": "9e83cdca202aa4e54e8024d91b35f5309ff9fca0961d23b36cd01a4e41c13e3f",
+      "IMG2_sha256": "ebd2cea8886246e9b8eafa9d5afeb95e7bd97543051dded4798d876e9432be52",
+      "byte_identical": false,
+      "conditional_note": "IMG2 adds only a two-line initial readmemh fallback for absolute INSTANCE when +OT_ROM_DIR and VIAMAP were absent. Under tested explicit +OT_ROM_DIR/nonempty original-path selector, first branch is selected and the fallback is unreachable. No reset/clock/arithmetic use."
+    }
+  ],
+  "current_bf_phases": 1800,
+  "descriptor_count_histogram": {
+    "0": 1800
+  },
+  "calendar_histogram": {
+    "calendar_unmeasured": 1800
+  },
+  "original_BF_exclusion_waived": false,
+  "production_programme_qualified": false
+}
