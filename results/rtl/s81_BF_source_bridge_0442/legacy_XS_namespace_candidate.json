@@ -35,8 +35,14 @@
     "Exact old-legacyXS vs defaultcandidate40cycles833ps lockstep",
     "Two actual legacy namespace instances with distinct7-ROM images +wrong-prefix control",
     "SYNTHESIS preprocessing no ROMselector connectivity difference",
-    "Only after gate, add exact new legacy source fingerprint to appropriate unchanged capture class; no XS4+1 borrow"
+    "After gate, pin the new legacy source receipt and preserve resolver added-capture0; current resolver has no legacy source hash allowlist, do not add this to XS4+1 fingerprints"
   ],
   "native_provider_qualified": false,
-  "profile_or_cohort_adopted": false
+  "profile_or_cohort_adopted": false,
+  "compiler_actual_capture_selection": {
+    "legacy_XS_added_edges": 0,
+    "XS4_added_edges": 1,
+    "actual_module_chain_followed": true,
+    "source_resolution_only": true
+  }
 }
