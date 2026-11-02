@@ -1,0 +1,37 @@
+{
+ "classification": "DISABLED_CANONICAL_RESET_PHYSICAL_REPLAN_PREP",
+ "tools": "c009da4ecfb080078c69f4acf0e7ddebe68d5720",
+ "type": "col_h10_r0_p1__t1__cl574cc59d",
+ "source_old_relays": 185,
+ "canonical_new_relays": 186,
+ "FF_delta": 1,
+ "named_outputs": 45,
+ "same_named_outputs": true,
+ "old_release_cycles": 7,
+ "new_release_cycles": 7,
+ "canonical_relay_point_hits": [
+  {
+   "q": "rst_rl_23",
+   "xy": [
+    275.064,
+    885.612
+   ]
+  },
+  {
+   "q": "rst_n_t43",
+   "xy": [
+    275.064,
+    885.612
+   ]
+  },
+  {
+   "q": "rst_n_t44",
+   "xy": [
+    836.664,
+    885.612
+   ]
+  }
+ ],
+ "canonical_obstacles": 87,
+ "clock_bad": []
+}

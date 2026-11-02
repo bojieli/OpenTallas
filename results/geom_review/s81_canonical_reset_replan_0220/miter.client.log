@@ -1,0 +1,7 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-reset-canonical-0220
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-reset-canonical-0220
+ot-run: localhost      admits   126 GB (avail 369, reserve 0, fresh 114.6, peak 64, headroom 0, waiters 1/360 GB) load 166/112 running 62 disk 115 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3423102-1793615359 after 1 s
+tb.sv:31: $finish called at 48952 (1s)
+ot-run: RAN on localhost (unit oth-ubuntu-3423102-1793615359): exit 0

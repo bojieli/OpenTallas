@@ -1,0 +1,17 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-reset-canonical-0220
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-reset-canonical-0220
+ot-run: localhost      admits   242 GB (avail 386, reserve 0, fresh 4, peak 76.1, headroom 0, waiters 5/492 GB) load 171/112 running 62 disk 121 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3254675-1793614889 after 1 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-s81-reset-canonical-0220/replan.py", line 3, in <module>
+    p=json.load(open(R/'source39_approved_clk28.json'));P=S.Plan(p);tn='col_h10_r0_p1__t1__cl574cc59d';old=json.load(open(R/'source_only_185.json'));new=RT.for_type(P,tn);(R/'canonical_tree.json').write_text(json.dumps(new,indent=1)+'\n')
+                                                                                                                                                         ~~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-s81-reset-canonical-0220/current/tools/die_plan/reset_tree.py", line 839, in for_type
+    T = _wf_type_tree(P, tn)
+  File "/srv/opentallas-scratch2/claude/codex-s81-reset-canonical-0220/current/tools/die_plan/reset_tree.py", line 1458, in _wf_type_tree
+    core_rst = core_reset_targets(P, tn)
+  File "/srv/opentallas-scratch2/claude/codex-s81-reset-canonical-0220/current/tools/die_plan/reset_tree.py", line 1420, in core_reset_targets
+    raise ResetError(f"type {tn}: cannot uniquely resolve hard-core pin table {c['pins_file']} from {lef}")
+reset_tree.ResetError: type col_h10_r0_p1__t1__cl574cc59d: cannot uniquely resolve hard-core pin table inputs/core_pins/dsfd_qbank_N.json from /srv/opentallas-scratch2/claude/codex-s81-reset-canonical-0220/current/physical/die_plan/s81/cores/legacy/lef/dsfd_qbank_N.lef
+ot-run: RAN on localhost (unit oth-ubuntu-3254675-1793614889): exit 1

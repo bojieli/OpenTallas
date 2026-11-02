@@ -1,0 +1,7 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-reset-canonical-0220
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-reset-canonical-0220
+ot-run: localhost      admits   166 GB (avail 377, reserve 0, fresh 70.6, peak 75.8, headroom 0, waiters 5/492 GB) load 167/112 running 62 disk 120 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3297707-1793615012 after 1 s
+{"classification": "DISABLED_CANONICAL_RESET_PHYSICAL_REPLAN_PREP", "tools": "c009da4ecfb080078c69f4acf0e7ddebe68d5720", "type": "col_h10_r0_p1__t1__cl574cc59d", "source_old_relays": 185, "canonical_new_relays": 186, "FF_delta": 1, "named_outputs": 45, "same_named_outputs": true, "old_release_cycles": 7, "new_release_cycles": 7, "canonical_relay_point_hits": [{"q": "rst_rl_23", "xy": [275.064, 885.612]}, {"q": "rst_n_t43", "xy": [275.064, 885.612]}, {"q": "rst_n_t44", "xy": [836.664, 885.612]}], "canonical_obstacles": 87, "clock_bad": []}
+ot-run: RAN on localhost (unit oth-ubuntu-3297707-1793615012): exit 0
