@@ -1,0 +1,1406 @@
+{
+ "schema": "opentallas.native_declared_clock_profiles.prep.v1",
+ "profiles": [
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@0bb6804dab59",
+   "master": "hnx_vms_bank_q0_faces__vecd4ae",
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "pin_contract_identity": "sha256:0bb6804dab5991684a7cf0fe1d49703168ea2c045e0dd2221d258b4d08e95484",
+   "pins_canon_sha256": "a2c349c6493683ea05eb651360b95b7b171a563cdc35971ab1d9bf6538702db0",
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_9eec3f962d.json",
+   "plan_sha256": "a0b917e76316f6e12c56e45f38e699084ab565364aa56255c41f312a29af9a36",
+   "source_identity": "source-manifest-sha256:ad36269f213febc4408504c1c836b4234d9165940dc6c6b18933f0dc42e8d1df",
+   "scope": "GEN-declared exact current native source profile ONLY; not hardened LEF or typed TT/FF qualification",
+   "clock_pins": [
+    "clk",
+    "clk_n",
+    "clk_s",
+    "clk_e",
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2",
+    "clk_w"
+   ],
+   "clock_pin_rects_um": {
+    "clk": [
+     133.536,
+     155.28,
+     133.584,
+     155.76
+    ],
+    "clk_n": [
+     136.512,
+     0.0,
+     136.56,
+     0.48
+    ],
+    "clk_s": [
+     136.704,
+     0.0,
+     136.752,
+     0.48
+    ],
+    "clk_e": [
+     136.896,
+     0.0,
+     136.944,
+     0.48
+    ],
+    "clk_macro0": [
+     137.088,
+     0.0,
+     137.136,
+     0.48
+    ],
+    "clk_macro1": [
+     138.336,
+     0.0,
+     138.384,
+     0.48
+    ],
+    "clk_macro2": [
+     138.528,
+     0.0,
+     138.576,
+     0.48
+    ],
+    "clk_w": [
+     138.72,
+     0.0,
+     138.768,
+     0.48
+    ]
+   },
+   "clock_points": {
+    "clk": {
+     "x": 133.56,
+     "y": 155.52,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_n": {
+     "x": 136.536,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_s": {
+     "x": 136.728,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_e": {
+     "x": 136.92,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro0": {
+     "x": 137.112,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro1": {
+     "x": 138.36,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro2": {
+     "x": 138.552,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_w": {
+     "x": 138.744,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    }
+   },
+   "io_tcl_sha256": "d6ef1b042a533dce678c7e0eccb4262f0057b76c55b1e24f1fd9edf69e43b6db",
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/0bb6804dab59/gen/hnx_vms_bank_q0_faces__vecd4ae_0bb6804dab59",
+   "qualification": "SOURCE_PREP_UNROUTED",
+   "hardened_LEF": "NOT_PRODUCED",
+   "actual_parent_net_binding": "NOT_CONSUMED"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@5a03758c3d07",
+   "master": "hnx_vms_bank_q0_faces__vecd4ae",
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "pin_contract_identity": "sha256:5a03758c3d07ac87c540ef83d19714cee01c640bfa7be423bcbc42d7f0415b04",
+   "pins_canon_sha256": "dc660bf4d6f73351601199dd79a7bc86482719ac5560362135781b673d36664e",
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_101f7349aa.json",
+   "plan_sha256": "a0b917e76316f6e12c56e45f38e699084ab565364aa56255c41f312a29af9a36",
+   "source_identity": "source-manifest-sha256:ad36269f213febc4408504c1c836b4234d9165940dc6c6b18933f0dc42e8d1df",
+   "scope": "GEN-declared exact current native source profile ONLY; not hardened LEF or typed TT/FF qualification",
+   "clock_pins": [
+    "clk",
+    "clk_n",
+    "clk_s",
+    "clk_e",
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2",
+    "clk_w"
+   ],
+   "clock_pin_rects_um": {
+    "clk": [
+     133.536,
+     155.28,
+     133.584,
+     155.76
+    ],
+    "clk_n": [
+     136.512,
+     0.0,
+     136.56,
+     0.48
+    ],
+    "clk_s": [
+     136.704,
+     0.0,
+     136.752,
+     0.48
+    ],
+    "clk_e": [
+     136.896,
+     0.0,
+     136.944,
+     0.48
+    ],
+    "clk_macro0": [
+     137.088,
+     0.0,
+     137.136,
+     0.48
+    ],
+    "clk_macro1": [
+     138.336,
+     0.0,
+     138.384,
+     0.48
+    ],
+    "clk_macro2": [
+     138.528,
+     0.0,
+     138.576,
+     0.48
+    ],
+    "clk_w": [
+     138.72,
+     0.0,
+     138.768,
+     0.48
+    ]
+   },
+   "clock_points": {
+    "clk": {
+     "x": 133.56,
+     "y": 155.52,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_n": {
+     "x": 136.536,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_s": {
+     "x": 136.728,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_e": {
+     "x": 136.92,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro0": {
+     "x": 137.112,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro1": {
+     "x": 138.36,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro2": {
+     "x": 138.552,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_w": {
+     "x": 138.744,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    }
+   },
+   "io_tcl_sha256": "4008426732becbce742d3b4c8768d093c21a9d75263550fa7c01756c30427ed5",
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/5a03758c3d07/gen/hnx_vms_bank_q0_faces__vecd4ae_5a03758c3d07",
+   "qualification": "SOURCE_PREP_UNROUTED",
+   "hardened_LEF": "NOT_PRODUCED",
+   "actual_parent_net_binding": "NOT_CONSUMED"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@88b84f19c25b",
+   "master": "hnx_vms_bank_q0_faces__vecd4ae",
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "pin_contract_identity": "sha256:88b84f19c25ba2e03ccb62fef544a0217003186fb0c946392bec5d47c6bb4cce",
+   "pins_canon_sha256": "436897fb38b2396d66376b8efe6a3d95603888745e118de7fb41164c23e011ed",
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_8087f86890.json",
+   "plan_sha256": "a0b917e76316f6e12c56e45f38e699084ab565364aa56255c41f312a29af9a36",
+   "source_identity": "source-manifest-sha256:ad36269f213febc4408504c1c836b4234d9165940dc6c6b18933f0dc42e8d1df",
+   "scope": "GEN-declared exact current native source profile ONLY; not hardened LEF or typed TT/FF qualification",
+   "clock_pins": [
+    "clk",
+    "clk_n",
+    "clk_s",
+    "clk_e",
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2",
+    "clk_w"
+   ],
+   "clock_pin_rects_um": {
+    "clk": [
+     133.536,
+     155.28,
+     133.584,
+     155.76
+    ],
+    "clk_n": [
+     136.512,
+     0.0,
+     136.56,
+     0.48
+    ],
+    "clk_s": [
+     136.704,
+     0.0,
+     136.752,
+     0.48
+    ],
+    "clk_e": [
+     136.896,
+     0.0,
+     136.944,
+     0.48
+    ],
+    "clk_macro0": [
+     137.088,
+     0.0,
+     137.136,
+     0.48
+    ],
+    "clk_macro1": [
+     138.336,
+     0.0,
+     138.384,
+     0.48
+    ],
+    "clk_macro2": [
+     138.528,
+     0.0,
+     138.576,
+     0.48
+    ],
+    "clk_w": [
+     138.72,
+     0.0,
+     138.768,
+     0.48
+    ]
+   },
+   "clock_points": {
+    "clk": {
+     "x": 133.56,
+     "y": 155.52,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_n": {
+     "x": 136.536,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_s": {
+     "x": 136.728,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_e": {
+     "x": 136.92,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro0": {
+     "x": 137.112,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro1": {
+     "x": 138.36,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro2": {
+     "x": 138.552,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_w": {
+     "x": 138.744,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    }
+   },
+   "io_tcl_sha256": "932a3ab815495126ce3942c20972a8c4b6900fd58fcab20379f731ad46fc848e",
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/88b84f19c25b/gen/hnx_vms_bank_q0_faces__vecd4ae_88b84f19c25b",
+   "qualification": "SOURCE_PREP_UNROUTED",
+   "hardened_LEF": "NOT_PRODUCED",
+   "actual_parent_net_binding": "NOT_CONSUMED"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@d6532bde006e",
+   "master": "hnx_vms_bank_q0_faces__vecd4ae",
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "pin_contract_identity": "sha256:d6532bde006e0f1bb32b6c7d77579125a37468828aeaa12256449377f5458d71",
+   "pins_canon_sha256": "ce9f0db57943343e60d4ad6af85487896d5fbfc774430d7f65ecf345b7ab94ae",
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MY__codex_g21.json",
+   "plan_sha256": "a0b917e76316f6e12c56e45f38e699084ab565364aa56255c41f312a29af9a36",
+   "source_identity": "source-manifest-sha256:ad36269f213febc4408504c1c836b4234d9165940dc6c6b18933f0dc42e8d1df",
+   "scope": "GEN-declared exact current native source profile ONLY; not hardened LEF or typed TT/FF qualification",
+   "clock_pins": [
+    "clk",
+    "clk_n",
+    "clk_s",
+    "clk_e",
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2",
+    "clk_w"
+   ],
+   "clock_pin_rects_um": {
+    "clk": [
+     133.536,
+     155.28,
+     133.584,
+     155.76
+    ],
+    "clk_n": [
+     136.512,
+     0.0,
+     136.56,
+     0.48
+    ],
+    "clk_s": [
+     136.704,
+     0.0,
+     136.752,
+     0.48
+    ],
+    "clk_e": [
+     136.896,
+     0.0,
+     136.944,
+     0.48
+    ],
+    "clk_macro0": [
+     137.088,
+     0.0,
+     137.136,
+     0.48
+    ],
+    "clk_macro1": [
+     138.336,
+     0.0,
+     138.384,
+     0.48
+    ],
+    "clk_macro2": [
+     138.528,
+     0.0,
+     138.576,
+     0.48
+    ],
+    "clk_w": [
+     138.72,
+     0.0,
+     138.768,
+     0.48
+    ]
+   },
+   "clock_points": {
+    "clk": {
+     "x": 133.56,
+     "y": 155.52,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_n": {
+     "x": 136.536,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_s": {
+     "x": 136.728,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_e": {
+     "x": 136.92,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro0": {
+     "x": 137.112,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro1": {
+     "x": 138.36,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro2": {
+     "x": 138.552,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_w": {
+     "x": 138.744,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    }
+   },
+   "io_tcl_sha256": "250daba465b5e19d1fc0ffd17850bc128d3b98e52889f92e518c7a064f34adf1",
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/d6532bde006e/gen/hnx_vms_bank_q0_faces__vecd4ae_d6532bde006e",
+   "qualification": "SOURCE_PREP_UNROUTED",
+   "hardened_LEF": "NOT_PRODUCED",
+   "actual_parent_net_binding": "NOT_CONSUMED"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@def761e36c82",
+   "master": "hnx_vms_bank_q0_faces__vecd4ae",
+   "outline_um": [
+    270.0000000000002,
+    403.91999999999996
+   ],
+   "pin_contract_identity": "sha256:def761e36c8269b144eb7864ba61f2300edd91b2b17579c1f49f95ea3ee0d7c1",
+   "pins_canon_sha256": "0599135f40f09832736b266ea1bf5361e0d963fddd8d780209e9df7836220abb",
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_79b1ed8e1d.json",
+   "plan_sha256": "a0b917e76316f6e12c56e45f38e699084ab565364aa56255c41f312a29af9a36",
+   "source_identity": "source-manifest-sha256:ad36269f213febc4408504c1c836b4234d9165940dc6c6b18933f0dc42e8d1df",
+   "scope": "GEN-declared exact current native source profile ONLY; not hardened LEF or typed TT/FF qualification",
+   "clock_pins": [
+    "clk",
+    "clk_n",
+    "clk_s",
+    "clk_e",
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2",
+    "clk_w"
+   ],
+   "clock_pin_rects_um": {
+    "clk": [
+     133.536,
+     155.28,
+     133.584,
+     155.76
+    ],
+    "clk_n": [
+     136.512,
+     0.0,
+     136.56,
+     0.48
+    ],
+    "clk_s": [
+     136.704,
+     0.0,
+     136.752,
+     0.48
+    ],
+    "clk_e": [
+     136.896,
+     0.0,
+     136.944,
+     0.48
+    ],
+    "clk_macro0": [
+     137.088,
+     0.0,
+     137.136,
+     0.48
+    ],
+    "clk_macro1": [
+     138.336,
+     0.0,
+     138.384,
+     0.48
+    ],
+    "clk_macro2": [
+     138.528,
+     0.0,
+     138.576,
+     0.48
+    ],
+    "clk_w": [
+     138.72,
+     0.0,
+     138.768,
+     0.48
+    ]
+   },
+   "clock_points": {
+    "clk": {
+     "x": 133.56,
+     "y": 155.52,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_n": {
+     "x": 136.536,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_s": {
+     "x": 136.728,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_e": {
+     "x": 136.92,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro0": {
+     "x": 137.112,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro1": {
+     "x": 138.36,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro2": {
+     "x": 138.552,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_w": {
+     "x": 138.744,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    }
+   },
+   "io_tcl_sha256": "051ff7ff89878055a15842e83ab4062e87374053ae8c2b7f3f28c2933e968ac6",
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/def761e36c82/gen/hnx_vms_bank_q0_faces__vecd4ae_def761e36c82",
+   "qualification": "SOURCE_PREP_UNROUTED",
+   "hardened_LEF": "NOT_PRODUCED",
+   "actual_parent_net_binding": "NOT_CONSUMED"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@ed4cba8a8b2a",
+   "master": "hnx_vms_bank_q0_faces__vecd4ae",
+   "outline_um": [
+    270.0000000000002,
+    403.91999999999996
+   ],
+   "pin_contract_identity": "sha256:ed4cba8a8b2aad188795e8b97c78c2906f8716156c2a0fa7b6758736b82b6f12",
+   "pins_canon_sha256": "fc77b9049943ae279e3939d402b94b3751fd50cbf2ff9f154128749e6d3b1aba",
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MX__codex_g21.json",
+   "plan_sha256": "a0b917e76316f6e12c56e45f38e699084ab565364aa56255c41f312a29af9a36",
+   "source_identity": "source-manifest-sha256:ad36269f213febc4408504c1c836b4234d9165940dc6c6b18933f0dc42e8d1df",
+   "scope": "GEN-declared exact current native source profile ONLY; not hardened LEF or typed TT/FF qualification",
+   "clock_pins": [
+    "clk",
+    "clk_n",
+    "clk_s",
+    "clk_e",
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2",
+    "clk_w"
+   ],
+   "clock_pin_rects_um": {
+    "clk": [
+     133.536,
+     155.28,
+     133.584,
+     155.76
+    ],
+    "clk_n": [
+     136.512,
+     0.0,
+     136.56,
+     0.48
+    ],
+    "clk_s": [
+     136.704,
+     0.0,
+     136.752,
+     0.48
+    ],
+    "clk_e": [
+     136.896,
+     0.0,
+     136.944,
+     0.48
+    ],
+    "clk_macro0": [
+     137.088,
+     0.0,
+     137.136,
+     0.48
+    ],
+    "clk_macro1": [
+     138.336,
+     0.0,
+     138.384,
+     0.48
+    ],
+    "clk_macro2": [
+     138.528,
+     0.0,
+     138.576,
+     0.48
+    ],
+    "clk_w": [
+     138.72,
+     0.0,
+     138.768,
+     0.48
+    ]
+   },
+   "clock_points": {
+    "clk": {
+     "x": 133.56,
+     "y": 155.52,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_n": {
+     "x": 136.536,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_s": {
+     "x": 136.728,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_e": {
+     "x": 136.92,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro0": {
+     "x": 137.112,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro1": {
+     "x": 138.36,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro2": {
+     "x": 138.552,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_w": {
+     "x": 138.744,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    }
+   },
+   "io_tcl_sha256": "bd570ae9b4330918ad767293915bab56fc084ac2d60e3ec1515e559d73069ea9",
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/ed4cba8a8b2a/gen/hnx_vms_bank_q0_faces__vecd4ae_ed4cba8a8b2a",
+   "qualification": "SOURCE_PREP_UNROUTED",
+   "hardened_LEF": "NOT_PRODUCED",
+   "actual_parent_net_binding": "NOT_CONSUMED"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@f9c1bd05a046",
+   "master": "hnx_vms_bank_q0_faces__vecd4ae",
+   "outline_um": [
+    270.0,
+    403.91999999999996
+   ],
+   "pin_contract_identity": "sha256:f9c1bd05a046d36a9584941e4ed61581369188a44198ed227312a2edb9c96b64",
+   "pins_canon_sha256": "5a7067c06140f7cd286dbb6a60197c9b3cb1ce76b69b5c409d461983e37bb35d",
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__codex_g21.json",
+   "plan_sha256": "a0b917e76316f6e12c56e45f38e699084ab565364aa56255c41f312a29af9a36",
+   "source_identity": "source-manifest-sha256:ad36269f213febc4408504c1c836b4234d9165940dc6c6b18933f0dc42e8d1df",
+   "scope": "GEN-declared exact current native source profile ONLY; not hardened LEF or typed TT/FF qualification",
+   "clock_pins": [
+    "clk",
+    "clk_n",
+    "clk_s",
+    "clk_e",
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2",
+    "clk_w"
+   ],
+   "clock_pin_rects_um": {
+    "clk": [
+     133.536,
+     155.28,
+     133.584,
+     155.76
+    ],
+    "clk_n": [
+     136.512,
+     0.0,
+     136.56,
+     0.48
+    ],
+    "clk_s": [
+     136.704,
+     0.0,
+     136.752,
+     0.48
+    ],
+    "clk_e": [
+     136.896,
+     0.0,
+     136.944,
+     0.48
+    ],
+    "clk_macro0": [
+     137.088,
+     0.0,
+     137.136,
+     0.48
+    ],
+    "clk_macro1": [
+     138.336,
+     0.0,
+     138.384,
+     0.48
+    ],
+    "clk_macro2": [
+     138.528,
+     0.0,
+     138.576,
+     0.48
+    ],
+    "clk_w": [
+     138.72,
+     0.0,
+     138.768,
+     0.48
+    ]
+   },
+   "clock_points": {
+    "clk": {
+     "x": 133.56,
+     "y": 155.52,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_n": {
+     "x": 136.536,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_s": {
+     "x": 136.728,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_e": {
+     "x": 136.92,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro0": {
+     "x": 137.112,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro1": {
+     "x": 138.36,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro2": {
+     "x": 138.552,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_w": {
+     "x": 138.744,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    }
+   },
+   "io_tcl_sha256": "4ec1bfea2f648802e859d097f12fdecad47dfe3e650ec11c0a78377b9c4c6ef0",
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/f9c1bd05a046/gen/hnx_vms_bank_q0_faces__vecd4ae_f9c1bd05a046",
+   "qualification": "SOURCE_PREP_UNROUTED",
+   "hardened_LEF": "NOT_PRODUCED",
+   "actual_parent_net_binding": "NOT_CONSUMED"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@114e9076fa98",
+   "master": "hnx_vms_bank_q0_faces__vecd4ae",
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "pin_contract_identity": "sha256:114e9076fa98bef95b37be0d1c50c469382d5b80723a816dd94482825e5099e4",
+   "pins_canon_sha256": "dc9eea7ea2bc3b67bbf950d71bb841bc11a3252bcea7143a088aa7078d936362",
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+   "plan_sha256": "a0b917e76316f6e12c56e45f38e699084ab565364aa56255c41f312a29af9a36",
+   "source_identity": "source-manifest-sha256:ad36269f213febc4408504c1c836b4234d9165940dc6c6b18933f0dc42e8d1df",
+   "scope": "GEN-declared exact current native source profile ONLY; not hardened LEF or typed TT/FF qualification",
+   "clock_pins": [
+    "clk",
+    "clk_n",
+    "clk_s",
+    "clk_e",
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2",
+    "clk_w"
+   ],
+   "clock_pin_rects_um": {
+    "clk": [
+     133.536,
+     155.28,
+     133.584,
+     155.76
+    ],
+    "clk_n": [
+     136.512,
+     0.0,
+     136.56,
+     0.48
+    ],
+    "clk_s": [
+     136.704,
+     0.0,
+     136.752,
+     0.48
+    ],
+    "clk_e": [
+     136.896,
+     0.0,
+     136.944,
+     0.48
+    ],
+    "clk_macro0": [
+     137.088,
+     0.0,
+     137.136,
+     0.48
+    ],
+    "clk_macro1": [
+     138.336,
+     0.0,
+     138.384,
+     0.48
+    ],
+    "clk_macro2": [
+     138.528,
+     0.0,
+     138.576,
+     0.48
+    ],
+    "clk_w": [
+     138.72,
+     0.0,
+     138.768,
+     0.48
+    ]
+   },
+   "clock_points": {
+    "clk": {
+     "x": 133.56,
+     "y": 155.52,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_n": {
+     "x": 136.536,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_s": {
+     "x": 136.728,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_e": {
+     "x": 136.92,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro0": {
+     "x": 137.112,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro1": {
+     "x": 138.36,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_macro2": {
+     "x": 138.552,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_w": {
+     "x": 138.744,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    }
+   },
+   "io_tcl_sha256": "51c414cf90bf6a6158c8cd2e2821297ebefa0d2474012ab99a6d2d663fd18d2e",
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/r4/gen/hnx_vms_bank_q0_faces__vecd4ae_114e9076fa98",
+   "qualification": "SOURCE_PREP_UNROUTED",
+   "hardened_LEF": "NOT_PRODUCED",
+   "actual_parent_net_binding": "NOT_CONSUMED"
+  },
+  {
+   "view": "ot_hgi_sm_xload_cl2_bfqg@a188c76ca5a0",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "outline_um": [
+    302.4,
+    298.08
+   ],
+   "pin_contract_identity": "sha256:a188c76ca5a08579833441a987e111ce3fa38c654e9aca929e09cda2c4ba4d13",
+   "pins_canon_sha256": "c058633c3c3495b863e6fbd16591fffd27fdd4574d6880588f00dd3b1287b6d6",
+   "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon__codex_g21.json",
+   "plan_sha256": "a0b917e76316f6e12c56e45f38e699084ab565364aa56255c41f312a29af9a36",
+   "source_identity": "source-manifest-sha256:179bfe0bcc032e91be6dafba535634436c195ca0a66e671d842ff93e3ce6dde6",
+   "scope": "GEN-declared exact current native source profile ONLY; not hardened LEF or typed TT/FF qualification",
+   "clock_pins": [
+    "clk",
+    "clk_n",
+    "clk_s",
+    "clk_ctrl",
+    "clk_m0",
+    "clk_m1",
+    "clk_m2",
+    "clk_m3",
+    "clk_m4",
+    "clk_m5",
+    "clk_m6",
+    "clk_m7",
+    "clk_l0",
+    "clk_l1",
+    "clk_l2",
+    "clk_l3",
+    "clk_l4",
+    "clk_l5",
+    "clk_l6",
+    "clk_l7"
+   ],
+   "clock_pin_rects_um": {
+    "clk": [
+     150.24,
+     146.64,
+     150.288,
+     147.12
+    ],
+    "clk_n": [
+     151.968,
+     0.0,
+     152.016,
+     0.48
+    ],
+    "clk_s": [
+     151.68,
+     0.0,
+     151.728,
+     0.48
+    ],
+    "clk_ctrl": [
+     150.336,
+     0.0,
+     150.384,
+     0.48
+    ],
+    "clk_m0": [
+     151.2,
+     0.0,
+     151.248,
+     0.48
+    ],
+    "clk_m1": [
+     150.912,
+     0.0,
+     150.96,
+     0.48
+    ],
+    "clk_m2": [
+     151.392,
+     0.0,
+     151.44,
+     0.48
+    ],
+    "clk_m3": [
+     151.488,
+     0.0,
+     151.536,
+     0.48
+    ],
+    "clk_m4": [
+     150.624,
+     0.0,
+     150.672,
+     0.48
+    ],
+    "clk_m5": [
+     150.432,
+     0.0,
+     150.48,
+     0.48
+    ],
+    "clk_m6": [
+     150.144,
+     0.0,
+     150.192,
+     0.48
+    ],
+    "clk_m7": [
+     150.048,
+     0.0,
+     150.096,
+     0.48
+    ],
+    "clk_l0": [
+     152.256,
+     0.0,
+     152.304,
+     0.48
+    ],
+    "clk_l1": [
+     152.544,
+     0.0,
+     152.592,
+     0.48
+    ],
+    "clk_l2": [
+     152.736,
+     0.0,
+     152.784,
+     0.48
+    ],
+    "clk_l3": [
+     152.832,
+     0.0,
+     152.88,
+     0.48
+    ],
+    "clk_l4": [
+     153.024,
+     0.0,
+     153.072,
+     0.48
+    ],
+    "clk_l5": [
+     153.312,
+     0.0,
+     153.36,
+     0.48
+    ],
+    "clk_l6": [
+     153.6,
+     0.0,
+     153.648,
+     0.48
+    ],
+    "clk_l7": [
+     153.888,
+     0.0,
+     153.936,
+     0.48
+    ]
+   },
+   "clock_points": {
+    "clk": {
+     "x": 150.264,
+     "y": 146.88,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_n": {
+     "x": 151.992,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_s": {
+     "x": 151.704,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_ctrl": {
+     "x": 150.36,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_m0": {
+     "x": 151.224,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_m1": {
+     "x": 150.936,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_m2": {
+     "x": 151.416,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_m3": {
+     "x": 151.512,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_m4": {
+     "x": 150.648,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_m5": {
+     "x": 150.456,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_m6": {
+     "x": 150.168,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_m7": {
+     "x": 150.072,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_l0": {
+     "x": 152.28,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_l1": {
+     "x": 152.568,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_l2": {
+     "x": 152.76,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_l3": {
+     "x": 152.856,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_l4": {
+     "x": 153.048,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_l5": {
+     "x": 153.336,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_l6": {
+     "x": 153.624,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    },
+    "clk_l7": {
+     "x": 153.912,
+     "y": 0.24,
+     "w": 0.048,
+     "h": 0.48,
+     "layer": "M5"
+    }
+   },
+   "io_tcl_sha256": "740e485272c6096dbc51cd2c496ab621853f68467636b97da694a2891145bcb1",
+   "kit": "/srv/opentallas-scratch2/claude/codex-bfqg-native-1520/gen/ot_hgi_sm_xload_cl2_bfqg_a188c76ca5a0",
+   "qualification": "SOURCE_PREP_UNROUTED",
+   "hardened_LEF": "NOT_PRODUCED",
+   "actual_parent_net_binding": "NOT_CONSUMED"
+  }
+ ]
+}
