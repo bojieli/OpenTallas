@@ -1,6 +1,6 @@
 # Native SU write-tuple phase source candidate
 
-HOLD / SOURCE PREP / default off. This table is not selected by any asbuilt, does not mutate the frozen821/factory-f79 table, and does not declare a selected numerical failure. Actual producer and selected-wrapper phase must be reviewed first. The parent-reviewed tiny conditional phase packet is still held; no extra gate is running.
+HOLD / SOURCE PREP / default off. This table is not selected by any asbuilt, does not mutate the frozen821/factory-f79 table, and does not declare a selected numerical failure. Actual producer and selected-wrapper phase must be reviewed first. The prepared tiny conditional phase packet is still held pending parent review; no extra gate is running.
 
 The frozen bus_groups source has all12STREAM consumers receive lane0..3 VM write tuples at17edges and lane4..7 at18. Every we/address/data field is internally grouped, but the two source partitions are separate R8 classes. Both native lane groups receive GB/GV/LV/pd and their operand/CROM fields at the same4edges. The actual qfd_dv_stream_tile beat_bad rule rejects a higher-lane write without lane0 or with a different64-element beat. Its exact finite nativeH component passed with equal per-lane cardinality/no duplicate output and no STREAM fault, using the same primary leaf source hash as this frozen cohort. No compensation receipt for the current bound producer/wrapper exists yet; this remains an explicit phase qualification obligation.
 
