@@ -29,6 +29,9 @@ def declared(kit_rtl_json):
         if not values or any(v.get('kind') != 'r8pad_strap' or v.get('width') != 4 or type(v.get('value')) is not int or not 0 <= v['value'] < 16 for v in values):
             raise ValueError(f'R8 count instance ties absent/invalid: {name}')
         result.append({'name': name, 'width': 4})
+    actual_r8 = {name for name in ports if name.startswith('strap_r8pad_')}
+    if actual_r8 != {row['name'] for row in result}:
+        raise ValueError('R8 count ports disagree with the declared bind inventory')
     return result
 
 
