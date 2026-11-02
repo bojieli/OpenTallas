@@ -42,5 +42,20 @@
     "final_GRT_metrics": "IN PROGRESS at packet preparation; no final GRT qualification implied",
     "final_DRT_signoff_EQ": "PENDING"
   },
-  "units_note": "Only native UI-ps values used. Earlier diagnostic raw-seconds stats mislabeled ps remain excluded. Placement RC estimates and normal native MM after-repair frames remain separate."
+  "units_note": "Only native UI-ps values used. Earlier diagnostic raw-seconds stats mislabeled ps remain excluded. Placement RC estimates and normal native MM after-repair frames remain separate.",
+  "complete_native_UI_stats": {
+    "unit": "ps via canonical sta::time_sta_ui",
+    "actual_unit": "codex-kvpc-fmx-clockmove-ui4-1131",
+    "native_exit": 0,
+    "files": [
+      "baseline_ff_ui_stats.json",
+      "baseline_tt_ui_stats.json",
+      "equal_ff_ui_stats.json",
+      "equal_tt_ui_stats.json",
+      "fanout_ff_ui_stats.json",
+      "fanout_tt_ui_stats.json"
+    ],
+    "source_frame": "immutable original pre-repair baseline and two buffer-move candidates; NOT normal-MM repaired frame",
+    "TT_setup_warning": "All three standalone frames have worst setup -102.548193ps. Baseline/equal/fanout setup violating endpoints281/283/285 and TNS -13108.322480/-13185.581568/-13203.436619ps. No standalone timing PASS claimed; ordinary full MM repair was required and subsequently CTS+0.11ps native."
+  }
 }
