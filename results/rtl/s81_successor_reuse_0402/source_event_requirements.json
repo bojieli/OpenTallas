@@ -1,0 +1,35 @@
+{
+  "status": "UNSELECTED_NO_ADOPTION",
+  "source_branch": "codex/ds-native-go-pair-2355",
+  "source_reference": "6430864fb",
+  "approved_XS_source_sha256": {
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "0e49aefdedcc41a1cb571c21cad73f247c2d97a7904799027af1373b16a920e1",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv": "13440eec230215a5c38c469df72ae4c4994cf521c6e0eeb501e5c1328a15d573",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "acbec655098ccfb3636e5a3331b00478f02dcad809ed63b5d444b2c3f8d3fc08",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xg_xo.sv": "2abfcdc6cdd3ef31009b2eabd9a5c79d4d5acbc45a63b65d09a38c58b453b2d2"
+  },
+  "inherited_XS4_sha256": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+  "selector_candidate": {
+    "commit": "4ba6f3753",
+    "path": "/srv/opentallas-scratch/claude/wt/codex-ds-bf-selectors-2200/results/rtl/s81_bf_selectors_2200/asbuilt_selector_candidate.json",
+    "sha256": "5b6c3ea4b1191b92752b62c619f8692f95579522a0f9a942b846c157d637770a",
+    "add_INSTANCE_rules_for": [
+      "dsfd_bf_col",
+      "dsfd_bf_front_roots",
+      "ot_s81sl_xgt_xo"
+    ]
+  },
+  "profile_requirements": [
+    "Select exact fresh ROM/profile source receipt; do not relabel old 50485a XS profile hash to current0e49",
+    "Preserve actual BF filename namespace,72frame/912native image correspondence from4ba",
+    "Do not equate selector fix with1800 BF phase mission availability: descriptors/defaultOFF and epochs/provider flags remain held",
+    "Optional selected phase106 programme2ed5 is disabled/measured BF-active Q-idle fixture only; nonzero rowlabels06ef still need production collector namespace authority"
+  ],
+  "cache_conditions": [
+    "Select coherent source manifest/native defines/clock sidecar/profile before frontend",
+    "Compare fresh actual source+parameter identity; old class basename or archive presence is insufficient",
+    "Retain wrapper and matching archive as one ABI/hash pair; never mix generated hashes",
+    "Any changed module/parameter/defines/transitive source/image selector invalidates candidate",
+    "Unconditional reuse/adoption count is zero until matching selected successor identities"
+  ]
+}
