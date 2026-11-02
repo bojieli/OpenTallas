@@ -1,0 +1,13 @@
+# Frozen SOURCE13 parent frontend repair
+
+The original hierarchy run completed all 86 native child frontends, then its final pure-connectivity parent exceeded32GiB. A JSON post-elaboration probe also exceeded8GiB; a bounded parse-only probe passed at1.32GiB. The old final command includes generated DPI wrappers and the full selected native corpus. The packaging fix resolves its static variant selection before invoking the parent frontend, so that unnecessary native-corpus elaboration is absent. The successful delta identifies hierarchy/parameter packaging growth; no particular internal Verilator allocator pass is claimed.
+
+`tools/hbm_layer_vehicle/link_generated_hier_top.py` reads the frozen selected preprocessed source, original top, generated hierarchical argument file and actual generated DPI wrappers. It accepts only a pure connectivity top. For every instance it compares effective default-plus-override parameter values against exactly one generated variant, requires the complete named port inventory, preserves all named connection expressions and independently reads the emitted graph back. Unknown expressions, missing/ambiguous variants and incomplete ports fail closed. The actual 90-instance graph matches82 direct generated variants. Four additional completed child frontends are nested, so all86 native child outputs remain available.
+
+The parent source contains the exact generated real DPI wrappers, with their original library symbols and protected-library hash checks. No synthetic functional model, native child body, production RTL or clock service was introduced. A real wrong-parameter mapping and a renamed DPI clock-port control were rejected. The graph transform adds zero cycles.
+
+The resolved parent frontend passed under normal ot-run8GiB/1thread/disk4GB in4.92s, maxRSS166052KiB, generating262 C++ files/15.393MB. Original failures and37GB native child frontend cache remain untouched. This is a separate successful packaging vehicle; the original failed run is not relabeled.
+
+This is frozen SOURCE13 (the old downstream42 source), not the newer disabled47 source event. No archive build, link, TB, runtime, numerical mission or token-rate qualification was performed. Future source epochs need changed-child frontend refresh and fresh source/parameter guards; this result cannot transfer their functional qualification.
+
+Actual packet: `intel1:/srv/opentallas-scratch2/claude/codex-source13-top-0010/linked_native`; hub controller `codex-source13-top-linked-0020`. The structural receipt records the actual source and wrapper hashes and each instance's effective parameters and port graph.

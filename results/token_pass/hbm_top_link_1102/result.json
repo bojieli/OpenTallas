@@ -1,0 +1,50 @@
+{
+  "status": "PASS_PARENT_FRONTEND_ONLY_FROZEN_SOURCE13",
+  "date": "2026-11-02",
+  "native_child_frontend_reports": 86,
+  "native_child_frontends_changed": 0,
+  "native_child_frontend_cache": "intel1:/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/elab13/obj",
+  "native_child_cache_size_GiB_approx": 37,
+  "top_instances": 90,
+  "direct_generated_dpi_variants": 82,
+  "top_contains_behavioral_logic": false,
+  "production_rtl_changed": false,
+  "cycles_added": 0,
+  "original_parent_failure": {
+    "memory_cap_GiB": 32,
+    "diagnosis": "Whole native corpus plus generated DPI wrappers enters automatic hierarchy/parameter elaboration for a pure connectivity parent",
+    "journal": "kernel OOM at 2026-11-02 00:05:50 PST; scope peak32G; no elab.rc",
+    "unit": "oth-ubuntu-2925877-1793592737"
+  },
+  "post_elab_json_probe": {
+    "cap_GiB": 8,
+    "exit": 143,
+    "result": "MEMCG-OOM"
+  },
+  "parse_only_probe": {
+    "cap_GiB": 4,
+    "exit": 0,
+    "wall_s": 31.18,
+    "max_rss_KiB": 1382848
+  },
+  "resolved_parent_frontend": {
+    "unit": "oth-ubuntu-361926-1793609470",
+    "cap_GiB": 8,
+    "threads": 1,
+    "disk_GB": 4,
+    "exit": 0,
+    "wall_s": 4.92,
+    "max_rss_KiB": 166052,
+    "cpp_files": 262,
+    "cpp_MB": 15.393
+  },
+  "controls": {
+    "wrong_hierarchy_parameter": "NW_mcb: expected one exact parameter variant, found 0",
+    "wrong_dpi_clock_port": "DPI port inventory mismatch: NE_b000",
+    "emitted_connectivity_graph": "EXACT_MATCH"
+  },
+  "runtime": "NOT_RUN",
+  "numeric_mission": "OPEN",
+  "source_epoch": "frozen SOURCE13 downstream42; not current disabled47 event",
+  "rate_qualified": false
+}
