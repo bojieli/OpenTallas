@@ -7,7 +7,10 @@ def main():
  p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--repo',type=Path,required=True);p.add_argument('--base',type=Path,required=True);a=p.parse_args()
  base=a.base;out=a.out;out.mkdir();inp=out/'input';inp.mkdir()
  sys.path.insert(0,str(a.repo/'tools/qwen_layerbench'));import dv_lower as D
- m=json.loads((base/'mu_table_input.json').read_text());srcs=[];seen={}
+ m=json.loads((base/'mu_table_input.json').read_text())
+ import residual2_calendar_candidate as R
+ pair_checks=R.verify_native_pair(m)
+ srcs=[];seen={};tags=[]
  def copy(src,name=None):
   name=name or src.name;blob=src.read_bytes();h=hashlib.sha256(blob).hexdigest()
   if name in seen:
@@ -42,8 +45,10 @@ def main():
   for u in range(4):
    payload=int(sl['prog_users'][u][1]['payload_hex'],16);f=D.su_unpack(payload&((1<<512)-1))
    if f['nout']!=(3 if si<8 else 2) or f['nin']!=128 or f['red']!=1 or f['redsq']!=1:raise ValueError('unexpected kernel')
+   if u==0:tags.extend(f['rb']+i*f['rso'] for i in range(f['nout']))
    init.append(f"pairs[{si}][{u}]=1024'h{payload:0256x};")
    init.append(f"r1pairs[{si}][{u}]=1024'h{sl['prog_users'][u][0]['payload_hex']};")
+ if sorted(tags)!=list(range(0xc00000,0xc00020)):raise ValueError('not exact32 ROOT tags')
  htb=(base/'native_head_packet3/input/tb_mu_native.sv').read_text()
  for line in htb.splitlines():
   if re.match(r'(prog|gains|gold)\[11\]',line):init.append(line.replace('[11]','[0]',1))
@@ -54,6 +59,6 @@ def main():
  shutil.copy2(Path(__file__).with_name('run_causal_res2_root_head.sh'),out/'run_gate.sh')
  (out/'run_gate.sh').chmod(0o755)
  (out/'packet.sha256').write_text(''.join(hashlib.sha256(t.read_bytes()).hexdigest()+'  input/'+t.name+'\n' for t in srcs)+''.join(hashlib.sha256((out/n).read_bytes()).hexdigest()+'  '+n+'\n' for n in ('source.f','defines.f','run_gate.sh')))
- report=dict(status='PREP_ONLY',files=len(srcs),bytes=sum(t.stat().st_size for t in srcs),scope='48 real residual/reducer contexts,32 unique ROOT tags/user,4 slice11 HEAD consumers; direct component wires, no production spatial/calendar claim')
+ report=dict(status='PREP_ONLY',native_pair_checks=pair_checks,manifest_sha256=hashlib.sha256((base/'mu_table_input.json').read_bytes()).hexdigest(),native_root_tags=tags,files=len(srcs),bytes=sum(t.stat().st_size for t in srcs),scope='48 real residual/reducer contexts,32 unique ROOT tags/user,4 slice11 HEAD consumers; direct component wires, no production spatial/calendar claim')
  (out/'preparation.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
 if __name__=='__main__':main()
