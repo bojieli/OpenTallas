@@ -292,6 +292,11 @@ for p in sys.stdin.read().split():
     r = dict(path=p, name=d.get('name'), top=fg.get('top') if isinstance(fg, dict) else None,
              generated=d.get('generated'), host=d.get('host'), pins_path=fg.get('pins') if isinstance(fg, dict) else None)
     r.update(prov(p, d, lambda f: json.load(open(f))))
+    # SIGNOFF-SPRINT-19 11-01: an INTERNAL_CORE face_guard (endpoint census, signoff 9242a82) names no pins file, so the
+    # record was never pin-fetched ('pins not readable', HEAD kp4_dchn e13a).  Key it on <record>/../pins.json: the
+    # fetch reads the routed DEF of the PROVENANCE routed_db first anyway, then the kit pins / signed LEF as before.
+    if not r.get('pins_path'):
+        r['pins_path'] = os.path.join(os.path.dirname(os.path.dirname(p)), 'pins.json')
     r['versioned'] = bool(r.get('src_commit') and r.get('flow_tag'))
     out.append(r)
 print(json.dumps(out))
