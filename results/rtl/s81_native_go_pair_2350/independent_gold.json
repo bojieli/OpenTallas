@@ -1,0 +1,62 @@
+{
+  "status": "PREPARED_CHECKPOINT_AND_NATIVE_CFG_PARTIAL_GOLD",
+  "frame": "u_f_0L01",
+  "phase": 0,
+  "selected_native_leaf": "u_f_0L01.u_r0.u_e0",
+  "expected_each_operation": [
+    {
+      "macro": 0,
+      "row": 224,
+      "segment": 0,
+      "nseg": 5,
+      "pos": 0,
+      "value": 3170246475
+    },
+    {
+      "macro": 1,
+      "row": 225,
+      "segment": 0,
+      "nseg": 5,
+      "pos": 0,
+      "value": 3134490176
+    }
+  ],
+  "gold_rows": {
+    "224": [
+      3170246475,
+      3169770066,
+      3168062018,
+      1005495111,
+      3167231775
+    ],
+    "225": [
+      3134490176,
+      3159268890,
+      3162800102,
+      3156029780,
+      999120538
+    ],
+    "226": [
+      1009563950,
+      3162849197,
+      984977356,
+      1000659486,
+      1012492150
+    ],
+    "227": [
+      3153581756,
+      1014334275,
+      1014354777,
+      1020351752,
+      994687680
+    ]
+  },
+  "first_operation_tag": 1,
+  "operation_tag_rule": "native consumed count after each broadcast, modulo4; OPTAG1 original first operation",
+  "source_sha256": {
+    "ops/attn.norm.scale.bin": "d3ee639f5701851a549e46720ac38075b195fda29a5eaa25eb94caebc0141805",
+    "weights/wq_a.bin": "b28303e9cc298160c163e94d64c27faad73f971a80ef138ad40823a286bb3055",
+    "weights/wq_a.scale.bin": "5ecfde0c3abfbd41e4c14a2613b08714146fb054a2f328d0637723e9ef834d22"
+  },
+  "production_enabled": false
+}

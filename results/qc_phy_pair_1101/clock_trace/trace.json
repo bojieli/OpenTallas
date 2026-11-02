@@ -1,0 +1,2238 @@
+{
+  "schema": "opentallas.qc_serdes_clock_trace.v1",
+  "scope": "READ_ONLY_CONTRACT_DIAGNOSIS",
+  "native_phy": {
+    "io_serdes": {
+      "module": "ot_qfd_serdes_112g_x12_phy_s597",
+      "clock_root": "pll_serdes0"
+    },
+    "io_serdes_1": {
+      "module": "ot_qfd_serdes_112g_x12_phy_s597",
+      "clock_root": "pll_serdes1"
+    },
+    "io_serdes_2": {
+      "module": "ot_qfd_serdes_112g_x12_phy_s597",
+      "clock_root": "pll_serdes2"
+    }
+  },
+  "native_face_clock_roles": {
+    "2": {
+      "cal_ck": "pll_coll",
+      "cal_lck": "pll_serdes0",
+      "tx_wck": "pll_coll",
+      "tx_rck": "pll_serdes0",
+      "rx_wck": "pll_serdes0",
+      "rx_rck": "pll_coll",
+      "codec_phy_ck": "pll_serdes0",
+      "codec_bank1": "pll_serdes0",
+      "codec_bank2": "pll_serdes0",
+      "codec_bank3": "pll_serdes0",
+      "codec_bank4": "pll_serdes0"
+    },
+    "3": {
+      "cal_ck": "pll_coll",
+      "cal_lck": "pll_serdes1",
+      "tx_wck": "pll_coll",
+      "tx_rck": "pll_serdes1",
+      "rx_wck": "pll_serdes1",
+      "rx_rck": "pll_coll",
+      "codec_phy_ck": "pll_serdes1",
+      "codec_bank1": "pll_serdes1",
+      "codec_bank2": "pll_serdes1",
+      "codec_bank3": "pll_serdes1",
+      "codec_bank4": "pll_serdes1"
+    },
+    "4": {
+      "cal_ck": "pll_coll",
+      "cal_lck": "pll_serdes2",
+      "tx_wck": "pll_coll",
+      "tx_rck": "pll_serdes2",
+      "rx_wck": "pll_serdes2",
+      "rx_rck": "pll_coll",
+      "codec_phy_ck": "pll_serdes2",
+      "codec_bank1": "pll_serdes2",
+      "codec_bank2": "pll_serdes2",
+      "codec_bank3": "pll_serdes2",
+      "codec_bank4": "pll_serdes2"
+    }
+  },
+  "source_clock_alias_rules": [
+    {
+      "module": "qfd_clkrx",
+      "kind": "clock",
+      "outputs": {
+        "pll_r\\d+": "core",
+        "pll_fwd": "core",
+        "pll_d2d": "d2d",
+        "pll_coll": "coll",
+        "pll_serdes(\\d)": "serdes"
+      }
+    }
+  ],
+  "actual_bound_instances": {
+    "io_serdes": {
+      "module": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes",
+      "clock_inputs": {
+        "clk": "clk_region_coll_n"
+      },
+      "fdi_connections": {
+        "rx_flit": "x_io_serdes_rx_flit_coll_n",
+        "rx_v": "x_io_serdes_rx_v_coll_n",
+        "tx_flit": "x_coll_n_io_collective_serdes_tx_io_serdes",
+        "tx_up": "x_io_serdes_tx_up_coll_n",
+        "tx_v": "x_coll_n_io_collective_serdes_tx_valid_io_serdes"
+      }
+    },
+    "io_serdes_1": {
+      "module": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes",
+      "clock_inputs": {
+        "clk": "clk_region_coll_s"
+      },
+      "fdi_connections": {
+        "rx_flit": "x_io_serdes_1_rx_flit_coll_s",
+        "rx_v": "x_io_serdes_1_rx_v_coll_s",
+        "tx_flit": "x_coll_s_io_collective_serdes_tx_to_io_serdes_1_tx_flit_io_serdes_1",
+        "tx_up": "x_io_serdes_1_tx_up_coll_s",
+        "tx_v": "x_coll_s_io_collective_serdes_tx_valid_to_io_serdes_1_tx_v_io_serdes_1"
+      }
+    },
+    "io_serdes_2": {
+      "module": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b",
+      "clock_inputs": {
+        "clk": "clk_region_c_W5_bf_01"
+      },
+      "fdi_connections": {
+        "rx_flit": "x_io_serdes_2_rx_flit_c_W5_bf_01",
+        "rx_v": "x_io_serdes_2_rx_v_c_W5_bf_01",
+        "tx_flit": "x_c_W5_bf_01_serdes_tx_tx_flit_o_io_serdes_2",
+        "tx_up": "x_io_serdes_2_tx_up_c_W5_bf_01",
+        "tx_v": "x_c_W5_bf_01_serdes_tx_valid_tx_v_o_io_serdes_2"
+      }
+    },
+    "coll_n": {
+      "module": "qfd_qc_coll_n_part",
+      "clock_inputs": {
+        "clk": "clk_region_coll_n",
+        "clk_coll": "clk_coll",
+        "clk_serdes": "clk_serdes"
+      },
+      "fdi_connections": {
+        "clk_serdes": "clk_serdes",
+        "io_collective__serdes_rx": "x_io_serdes_rx_flit_coll_n",
+        "io_collective__serdes_rx_valid": "x_io_serdes_rx_v_coll_n",
+        "io_collective__serdes_tx": "x_coll_n_io_collective_serdes_tx_io_serdes",
+        "io_collective__serdes_tx_valid": "x_coll_n_io_collective_serdes_tx_valid_io_serdes",
+        "io_collective__serdes_up": "x_io_serdes_tx_up_coll_n"
+      },
+      "native_face_clocks": {
+        "cal_ck": "clk_coll",
+        "cal_lck": "clk_serdes",
+        "codec_phy_ck": "clk_serdes",
+        "rx_rck": "clk_coll",
+        "rx_wck": "clk_serdes",
+        "tx_rck": "clk_serdes",
+        "tx_wck": "clk_coll"
+      }
+    },
+    "coll_s": {
+      "module": "qfd_qc_coll_s_part",
+      "clock_inputs": {
+        "clk": "clk_region_coll_s",
+        "clk_coll": "clk_coll",
+        "clk_serdes": "clk_serdes"
+      },
+      "fdi_connections": {
+        "fclk_out_io_collective__serdes_tx__to_io_serdes_2__tx_flit": "clock_landing_fwd_coll_s__io_collective__serdes_tx__to_io_serdes_2__tx_flit",
+        "fclk_out_io_collective__serdes_tx_valid__to_io_serdes_2__tx_v": "clock_landing_fwd_coll_s__io_collective__serdes_tx_valid__to_io_serdes_2__tx_v",
+        "cland_fstart_out_io_collective__serdes_tx__to_io_serdes_2__tx_flit": "clock_landing_start_coll_s__io_collective__serdes_tx__to_io_serdes_2__tx_flit",
+        "cland_fstart_out_io_collective__serdes_tx_valid__to_io_serdes_2__tx_v": "clock_landing_start_coll_s__io_collective__serdes_tx_valid__to_io_serdes_2__tx_v",
+        "fclk_in_io_collective__serdes_rx__from_io_serdes_2": "clock_landing_fwd_c_W5_bf_00__rx_flit_serdes_rx_o",
+        "cland_fstart_in_io_collective__serdes_rx__from_io_serdes_2": "clock_landing_start_c_W5_bf_00__rx_flit_serdes_rx_o",
+        "fclk_in_io_collective__serdes_rx_valid__from_io_serdes_2": "clock_landing_fwd_c_W5_bf_00__rx_v_serdes_rx_valid_o",
+        "cland_fstart_in_io_collective__serdes_rx_valid__from_io_serdes_2": "clock_landing_start_c_W5_bf_00__rx_v_serdes_rx_valid_o",
+        "fclk_in_io_collective__serdes_up__from_io_serdes_2": "clock_landing_fwd_c_W5_bf_00__tx_up_serdes_up_o",
+        "cland_fstart_in_io_collective__serdes_up__from_io_serdes_2": "clock_landing_start_c_W5_bf_00__tx_up_serdes_up_o",
+        "clk_serdes": "clk_serdes",
+        "io_collective__serdes_rx__from_io_serdes_1": "x_io_serdes_1_rx_flit_coll_s",
+        "io_collective__serdes_rx__from_io_serdes_2": "x_c_W5_bf_00_rx_flit_serdes_rx_o_coll_s",
+        "io_collective__serdes_rx_valid__from_io_serdes_1": "x_io_serdes_1_rx_v_coll_s",
+        "io_collective__serdes_rx_valid__from_io_serdes_2": "x_c_W5_bf_00_rx_v_serdes_rx_valid_o_coll_s",
+        "io_collective__serdes_tx__to_io_serdes_1__tx_flit": "x_coll_s_io_collective_serdes_tx_to_io_serdes_1_tx_flit_io_serdes_1",
+        "io_collective__serdes_tx__to_io_serdes_2__tx_flit": "x_coll_s_io_collective_serdes_tx_to_io_serdes_2_tx_flit_c_W5_bf_00",
+        "io_collective__serdes_tx_valid__to_io_serdes_1__tx_v": "x_coll_s_io_collective_serdes_tx_valid_to_io_serdes_1_tx_v_io_serdes_1",
+        "io_collective__serdes_tx_valid__to_io_serdes_2__tx_v": "x_coll_s_io_collective_serdes_tx_valid_to_io_serdes_2_tx_v_c_W5_bf_00",
+        "io_collective__serdes_up__from_io_serdes_1": "x_io_serdes_1_tx_up_coll_s",
+        "io_collective__serdes_up__from_io_serdes_2": "x_c_W5_bf_00_tx_up_serdes_up_o_coll_s"
+      },
+      "native_face_clocks": {
+        "cal_ck": "clk_coll",
+        "cal_lck": "clk_serdes",
+        "codec_phy_ck": "clk_serdes",
+        "rx_rck": "clk_coll",
+        "rx_wck": "clk_serdes",
+        "tx_rck": "clk_serdes",
+        "tx_wck": "clk_coll"
+      }
+    },
+    "c_W5_bf_00": {
+      "module": "qfd_qc_cb_f_q00",
+      "clock_inputs": {
+        "clk": "clk_region_c_W5_bf_00"
+      },
+      "fdi_connections": {
+        "fclk_out_rx_flit_serdes_rx_o": "clock_landing_fwd_c_W5_bf_00__rx_flit_serdes_rx_o",
+        "fclk_out_rx_v_serdes_rx_valid_o": "clock_landing_fwd_c_W5_bf_00__rx_v_serdes_rx_valid_o",
+        "fclk_out_serdes_tx_tx_flit_o": "clock_landing_fwd_c_W5_bf_00__serdes_tx_tx_flit_o",
+        "fclk_out_serdes_tx_valid_tx_v_o": "clock_landing_fwd_c_W5_bf_00__serdes_tx_valid_tx_v_o",
+        "fclk_out_tx_up_serdes_up_o": "clock_landing_fwd_c_W5_bf_00__tx_up_serdes_up_o",
+        "cland_fstart_out_rx_flit_serdes_rx_o": "clock_landing_start_c_W5_bf_00__rx_flit_serdes_rx_o",
+        "cland_fstart_out_rx_v_serdes_rx_valid_o": "clock_landing_start_c_W5_bf_00__rx_v_serdes_rx_valid_o",
+        "cland_fstart_out_serdes_tx_tx_flit_o": "clock_landing_start_c_W5_bf_00__serdes_tx_tx_flit_o",
+        "cland_fstart_out_serdes_tx_valid_tx_v_o": "clock_landing_start_c_W5_bf_00__serdes_tx_valid_tx_v_o",
+        "cland_fstart_out_tx_up_serdes_up_o": "clock_landing_start_c_W5_bf_00__tx_up_serdes_up_o",
+        "fclk_in_rx_flit_serdes_rx_i": "clock_landing_fwd_c_W5_bf_01__rx_flit_serdes_rx_o",
+        "cland_fstart_in_rx_flit_serdes_rx_i": "clock_landing_start_c_W5_bf_01__rx_flit_serdes_rx_o",
+        "fclk_in_rx_v_serdes_rx_valid_i": "clock_landing_fwd_c_W5_bf_01__rx_v_serdes_rx_valid_o",
+        "cland_fstart_in_rx_v_serdes_rx_valid_i": "clock_landing_start_c_W5_bf_01__rx_v_serdes_rx_valid_o",
+        "fclk_in_serdes_tx_tx_flit_i": "clock_landing_fwd_coll_s__io_collective__serdes_tx__to_io_serdes_2__tx_flit",
+        "cland_fstart_in_serdes_tx_tx_flit_i": "clock_landing_start_coll_s__io_collective__serdes_tx__to_io_serdes_2__tx_flit",
+        "fclk_in_serdes_tx_valid_tx_v_i": "clock_landing_fwd_coll_s__io_collective__serdes_tx_valid__to_io_serdes_2__tx_v",
+        "cland_fstart_in_serdes_tx_valid_tx_v_i": "clock_landing_start_coll_s__io_collective__serdes_tx_valid__to_io_serdes_2__tx_v",
+        "fclk_in_tx_up_serdes_up_i": "clock_landing_fwd_c_W5_bf_01__tx_up_serdes_up_o",
+        "cland_fstart_in_tx_up_serdes_up_i": "clock_landing_start_c_W5_bf_01__tx_up_serdes_up_o",
+        "rx_flit_serdes_rx_i": "x_c_W5_bf_01_rx_flit_serdes_rx_o_c_W5_bf_00",
+        "rx_flit_serdes_rx_o": "x_c_W5_bf_00_rx_flit_serdes_rx_o_coll_s",
+        "rx_v_serdes_rx_valid_i": "x_c_W5_bf_01_rx_v_serdes_rx_valid_o_c_W5_bf_00",
+        "rx_v_serdes_rx_valid_o": "x_c_W5_bf_00_rx_v_serdes_rx_valid_o_coll_s",
+        "serdes_tx_tx_flit_i": "x_coll_s_io_collective_serdes_tx_to_io_serdes_2_tx_flit_c_W5_bf_00",
+        "serdes_tx_tx_flit_o": "x_c_W5_bf_00_serdes_tx_tx_flit_o_c_W5_bf_01",
+        "serdes_tx_valid_tx_v_i": "x_coll_s_io_collective_serdes_tx_valid_to_io_serdes_2_tx_v_c_W5_bf_00",
+        "serdes_tx_valid_tx_v_o": "x_c_W5_bf_00_serdes_tx_valid_tx_v_o_c_W5_bf_01",
+        "tx_up_serdes_up_i": "x_c_W5_bf_01_tx_up_serdes_up_o_c_W5_bf_00",
+        "tx_up_serdes_up_o": "x_c_W5_bf_00_tx_up_serdes_up_o_coll_s"
+      }
+    },
+    "c_W5_bf_01": {
+      "module": "qfd_qc_cb_f_q01__cbf_q01_s2",
+      "clock_inputs": {
+        "clk": "clk_region_c_W5_bf_01"
+      },
+      "fdi_connections": {
+        "fclk_out_rx_flit_serdes_rx_o": "clock_landing_fwd_c_W5_bf_01__rx_flit_serdes_rx_o",
+        "fclk_out_rx_v_serdes_rx_valid_o": "clock_landing_fwd_c_W5_bf_01__rx_v_serdes_rx_valid_o",
+        "fclk_out_tx_up_serdes_up_o": "clock_landing_fwd_c_W5_bf_01__tx_up_serdes_up_o",
+        "cland_fstart_out_rx_flit_serdes_rx_o": "clock_landing_start_c_W5_bf_01__rx_flit_serdes_rx_o",
+        "cland_fstart_out_rx_v_serdes_rx_valid_o": "clock_landing_start_c_W5_bf_01__rx_v_serdes_rx_valid_o",
+        "cland_fstart_out_tx_up_serdes_up_o": "clock_landing_start_c_W5_bf_01__tx_up_serdes_up_o",
+        "fclk_in_serdes_tx_tx_flit_i": "clock_landing_fwd_c_W5_bf_00__serdes_tx_tx_flit_o",
+        "cland_fstart_in_serdes_tx_tx_flit_i": "clock_landing_start_c_W5_bf_00__serdes_tx_tx_flit_o",
+        "fclk_in_serdes_tx_valid_tx_v_i": "clock_landing_fwd_c_W5_bf_00__serdes_tx_valid_tx_v_o",
+        "cland_fstart_in_serdes_tx_valid_tx_v_i": "clock_landing_start_c_W5_bf_00__serdes_tx_valid_tx_v_o",
+        "rx_flit_serdes_rx_i": "x_io_serdes_2_rx_flit_c_W5_bf_01",
+        "rx_flit_serdes_rx_o": "x_c_W5_bf_01_rx_flit_serdes_rx_o_c_W5_bf_00",
+        "rx_v_serdes_rx_valid_i": "x_io_serdes_2_rx_v_c_W5_bf_01",
+        "rx_v_serdes_rx_valid_o": "x_c_W5_bf_01_rx_v_serdes_rx_valid_o_c_W5_bf_00",
+        "serdes_tx_tx_flit_i": "x_c_W5_bf_00_serdes_tx_tx_flit_o_c_W5_bf_01",
+        "serdes_tx_tx_flit_o": "x_c_W5_bf_01_serdes_tx_tx_flit_o_io_serdes_2",
+        "serdes_tx_valid_tx_v_i": "x_c_W5_bf_00_serdes_tx_valid_tx_v_o_c_W5_bf_01",
+        "serdes_tx_valid_tx_v_o": "x_c_W5_bf_01_serdes_tx_valid_tx_v_o_io_serdes_2",
+        "tx_up_serdes_up_i": "x_io_serdes_2_tx_up_c_W5_bf_01",
+        "tx_up_serdes_up_o": "x_c_W5_bf_01_tx_up_serdes_up_o_c_W5_bf_00"
+      }
+    }
+  },
+  "boundary_stations": [
+    {
+      "partition": "coll_n",
+      "instance": "u_bin_io_collective__serdes_rx",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "io_collective__serdes_rx[596:0]",
+        "ea": "io_collective__serdes_rx[597]",
+        "q": "io_collective__serdes_rx_q",
+        "eq": "io_collective__serdes_rx_eq"
+      },
+      "source": "ot_dp_st #(.W(597)) u_bin_io_collective__serdes_rx (.clk(clk), .rst_n(rst_n), .d(io_collective__serdes_rx[596:0]), .ea(io_collective__serdes_rx[597]), .q(io_collective__serdes_rx_q), .eq(io_collective__serdes_rx_eq));"
+    },
+    {
+      "partition": "coll_n",
+      "instance": "u_bin_io_collective__serdes_rx_valid",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "io_collective__serdes_rx_valid[0:0]",
+        "ea": "io_collective__serdes_rx_valid[1]",
+        "q": "io_collective__serdes_rx_valid_q",
+        "eq": "io_collective__serdes_rx_valid_eq"
+      },
+      "source": "ot_dp_st #(.W(1)) u_bin_io_collective__serdes_rx_valid (.clk(clk), .rst_n(rst_n), .d(io_collective__serdes_rx_valid[0:0]), .ea(io_collective__serdes_rx_valid[1]), .q(io_collective__serdes_rx_valid_q), .eq(io_collective__serdes_rx_valid_eq));"
+    },
+    {
+      "partition": "coll_n",
+      "instance": "u_bin_io_collective__serdes_up",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "io_collective__serdes_up[0:0]",
+        "ea": "io_collective__serdes_up[1]",
+        "q": "io_collective__serdes_up_q",
+        "eq": "io_collective__serdes_up_eq"
+      },
+      "source": "ot_dp_st #(.W(1)) u_bin_io_collective__serdes_up (.clk(clk), .rst_n(rst_n), .d(io_collective__serdes_up[0:0]), .ea(io_collective__serdes_up[1]), .q(io_collective__serdes_up_q), .eq(io_collective__serdes_up_eq));"
+    },
+    {
+      "partition": "coll_n",
+      "instance": "u_bout_io_collective__serdes_tx",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "w_core_phy_tx[596:0]",
+        "ea": "rst_n",
+        "q": "io_collective__serdes_tx[596:0]",
+        "eq": "io_collective__serdes_tx[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_bout_io_collective__serdes_tx (.clk(clk), .rst_n(rst_n), .d(w_core_phy_tx[596:0]), .ea(rst_n), .q(io_collective__serdes_tx[596:0]), .eq(io_collective__serdes_tx[597]));"
+    },
+    {
+      "partition": "coll_n",
+      "instance": "u_bout_io_collective__serdes_tx_valid",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "w_core_phy_tx_valid[0]",
+        "ea": "rst_n",
+        "q": "io_collective__serdes_tx_valid[0:0]",
+        "eq": "io_collective__serdes_tx_valid[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_bout_io_collective__serdes_tx_valid (.clk(clk), .rst_n(rst_n), .d(w_core_phy_tx_valid[0]), .ea(rst_n), .q(io_collective__serdes_tx_valid[0:0]), .eq(io_collective__serdes_tx_valid[1]));"
+    },
+    {
+      "partition": "coll_s",
+      "instance": "u_bin_io_collective__serdes_rx__from_io_serdes_1",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "io_collective__serdes_rx__from_io_serdes_1[596:0]",
+        "ea": "io_collective__serdes_rx__from_io_serdes_1[597]",
+        "q": "io_collective__serdes_rx__from_io_serdes_1_q",
+        "eq": "io_collective__serdes_rx__from_io_serdes_1_eq"
+      },
+      "source": "ot_dp_st #(.W(597)) u_bin_io_collective__serdes_rx__from_io_serdes_1 (.clk(clk), .rst_n(rst_n), .d(io_collective__serdes_rx__from_io_serdes_1[596:0]), .ea(io_collective__serdes_rx__from_io_serdes_1[597]), .q(io_collective__serdes_rx__from_io_serdes_1_q), .eq(io_collective__serdes_rx__from_io_serdes_1_eq));"
+    },
+    {
+      "partition": "coll_s",
+      "instance": "u_bin_io_collective__serdes_rx__from_io_serdes_2",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "cland_io_collective__serdes_rx__from_io_serdes_2[596:0]",
+        "ea": "cland_io_collective__serdes_rx__from_io_serdes_2[597]",
+        "q": "io_collective__serdes_rx__from_io_serdes_2_q",
+        "eq": "io_collective__serdes_rx__from_io_serdes_2_eq"
+      },
+      "source": "ot_dp_st #(.W(597)) u_bin_io_collective__serdes_rx__from_io_serdes_2 (.clk(clk), .rst_n(rst_n), .d(cland_io_collective__serdes_rx__from_io_serdes_2[596:0]), .ea(cland_io_collective__serdes_rx__from_io_serdes_2[597]), .q(io_collective__serdes_rx__from_io_serdes_2_q), .eq(io_collective__serdes_rx__from_io_serdes_2_eq));"
+    },
+    {
+      "partition": "coll_s",
+      "instance": "u_bin_io_collective__serdes_rx_valid__from_io_serdes_1",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "io_collective__serdes_rx_valid__from_io_serdes_1[0:0]",
+        "ea": "io_collective__serdes_rx_valid__from_io_serdes_1[1]",
+        "q": "io_collective__serdes_rx_valid__from_io_serdes_1_q",
+        "eq": "io_collective__serdes_rx_valid__from_io_serdes_1_eq"
+      },
+      "source": "ot_dp_st #(.W(1)) u_bin_io_collective__serdes_rx_valid__from_io_serdes_1 (.clk(clk), .rst_n(rst_n), .d(io_collective__serdes_rx_valid__from_io_serdes_1[0:0]), .ea(io_collective__serdes_rx_valid__from_io_serdes_1[1]), .q(io_collective__serdes_rx_valid__from_io_serdes_1_q), .eq(io_collective__serdes_rx_valid__from_io_serdes_1_eq));"
+    },
+    {
+      "partition": "coll_s",
+      "instance": "u_bin_io_collective__serdes_rx_valid__from_io_serdes_2",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "cland_io_collective__serdes_rx_valid__from_io_serdes_2[0:0]",
+        "ea": "cland_io_collective__serdes_rx_valid__from_io_serdes_2[1]",
+        "q": "io_collective__serdes_rx_valid__from_io_serdes_2_q",
+        "eq": "io_collective__serdes_rx_valid__from_io_serdes_2_eq"
+      },
+      "source": "ot_dp_st #(.W(1)) u_bin_io_collective__serdes_rx_valid__from_io_serdes_2 (.clk(clk), .rst_n(rst_n), .d(cland_io_collective__serdes_rx_valid__from_io_serdes_2[0:0]), .ea(cland_io_collective__serdes_rx_valid__from_io_serdes_2[1]), .q(io_collective__serdes_rx_valid__from_io_serdes_2_q), .eq(io_collective__serdes_rx_valid__from_io_serdes_2_eq));"
+    },
+    {
+      "partition": "coll_s",
+      "instance": "u_bin_io_collective__serdes_up__from_io_serdes_1",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "io_collective__serdes_up__from_io_serdes_1[0:0]",
+        "ea": "io_collective__serdes_up__from_io_serdes_1[1]",
+        "q": "io_collective__serdes_up__from_io_serdes_1_q",
+        "eq": "io_collective__serdes_up__from_io_serdes_1_eq"
+      },
+      "source": "ot_dp_st #(.W(1)) u_bin_io_collective__serdes_up__from_io_serdes_1 (.clk(clk), .rst_n(rst_n), .d(io_collective__serdes_up__from_io_serdes_1[0:0]), .ea(io_collective__serdes_up__from_io_serdes_1[1]), .q(io_collective__serdes_up__from_io_serdes_1_q), .eq(io_collective__serdes_up__from_io_serdes_1_eq));"
+    },
+    {
+      "partition": "coll_s",
+      "instance": "u_bin_io_collective__serdes_up__from_io_serdes_2",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "cland_io_collective__serdes_up__from_io_serdes_2[0:0]",
+        "ea": "cland_io_collective__serdes_up__from_io_serdes_2[1]",
+        "q": "io_collective__serdes_up__from_io_serdes_2_q",
+        "eq": "io_collective__serdes_up__from_io_serdes_2_eq"
+      },
+      "source": "ot_dp_st #(.W(1)) u_bin_io_collective__serdes_up__from_io_serdes_2 (.clk(clk), .rst_n(rst_n), .d(cland_io_collective__serdes_up__from_io_serdes_2[0:0]), .ea(cland_io_collective__serdes_up__from_io_serdes_2[1]), .q(io_collective__serdes_up__from_io_serdes_2_q), .eq(io_collective__serdes_up__from_io_serdes_2_eq));"
+    },
+    {
+      "partition": "coll_s",
+      "instance": "u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "w_g_face_3_u_face_phy_tx[596:0]",
+        "ea": "rst_n",
+        "q": "io_collective__serdes_tx__to_io_serdes_1__tx_flit[596:0]",
+        "eq": "io_collective__serdes_tx__to_io_serdes_1__tx_flit[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit (.clk(clk), .rst_n(rst_n), .d(w_g_face_3_u_face_phy_tx[596:0]), .ea(rst_n), .q(io_collective__serdes_tx__to_io_serdes_1__tx_flit[596:0]), .eq(io_collective__serdes_tx__to_io_serdes_1__tx_flit[597]));"
+    },
+    {
+      "partition": "coll_s",
+      "instance": "u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "w_g_face_4_u_face_phy_tx[596:0]",
+        "ea": "rst_n",
+        "q": "io_collective__serdes_tx__to_io_serdes_2__tx_flit[596:0]",
+        "eq": "io_collective__serdes_tx__to_io_serdes_2__tx_flit[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit (.clk(clk), .rst_n(rst_n), .d(w_g_face_4_u_face_phy_tx[596:0]), .ea(rst_n), .q(io_collective__serdes_tx__to_io_serdes_2__tx_flit[596:0]), .eq(io_collective__serdes_tx__to_io_serdes_2__tx_flit[597]));"
+    },
+    {
+      "partition": "coll_s",
+      "instance": "u_bout_io_collective__serdes_tx_valid__to_io_serdes_1__tx_v",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "w_g_face_3_u_face_phy_tx_valid[0]",
+        "ea": "rst_n",
+        "q": "io_collective__serdes_tx_valid__to_io_serdes_1__tx_v[0:0]",
+        "eq": "io_collective__serdes_tx_valid__to_io_serdes_1__tx_v[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_bout_io_collective__serdes_tx_valid__to_io_serdes_1__tx_v (.clk(clk), .rst_n(rst_n), .d(w_g_face_3_u_face_phy_tx_valid[0]), .ea(rst_n), .q(io_collective__serdes_tx_valid__to_io_serdes_1__tx_v[0:0]), .eq(io_collective__serdes_tx_valid__to_io_serdes_1__tx_v[1]));"
+    },
+    {
+      "partition": "coll_s",
+      "instance": "u_bout_io_collective__serdes_tx_valid__to_io_serdes_2__tx_v",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "w_g_face_4_u_face_phy_tx_valid[0]",
+        "ea": "rst_n",
+        "q": "io_collective__serdes_tx_valid__to_io_serdes_2__tx_v[0:0]",
+        "eq": "io_collective__serdes_tx_valid__to_io_serdes_2__tx_v[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_bout_io_collective__serdes_tx_valid__to_io_serdes_2__tx_v (.clk(clk), .rst_n(rst_n), .d(w_g_face_4_u_face_phy_tx_valid[0]), .ea(rst_n), .q(io_collective__serdes_tx_valid__to_io_serdes_2__tx_v[0:0]), .eq(io_collective__serdes_tx_valid__to_io_serdes_2__tx_v[1]));"
+    }
+  ],
+  "third_path_forwarding_stations": [
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_flit_serdes_rx_o_0",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "cland_rx_flit_serdes_rx_i[596:0]",
+        "ea": "cland_rx_flit_serdes_rx_i[597]",
+        "q": "rx_flit_serdes_rx_o_s0[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s0[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_0 (.clk(clk), .rst_n(rst_n), .d(cland_rx_flit_serdes_rx_i[596:0]), .ea(cland_rx_flit_serdes_rx_i[597]), .q(rx_flit_serdes_rx_o_s0[596:0]), .eq(rx_flit_serdes_rx_o_s0[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_flit_serdes_rx_o_1",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s0[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s0[597]",
+        "q": "rx_flit_serdes_rx_o_s1[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s1[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_1 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s0[596:0]), .ea(rx_flit_serdes_rx_o_s0[597]), .q(rx_flit_serdes_rx_o_s1[596:0]), .eq(rx_flit_serdes_rx_o_s1[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_flit_serdes_rx_o_2",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s1[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s1[597]",
+        "q": "rx_flit_serdes_rx_o_s2[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s2[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_2 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s1[596:0]), .ea(rx_flit_serdes_rx_o_s1[597]), .q(rx_flit_serdes_rx_o_s2[596:0]), .eq(rx_flit_serdes_rx_o_s2[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_flit_serdes_rx_o_3",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s2[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s2[597]",
+        "q": "rx_flit_serdes_rx_o_s3[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s3[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_3 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s2[596:0]), .ea(rx_flit_serdes_rx_o_s2[597]), .q(rx_flit_serdes_rx_o_s3[596:0]), .eq(rx_flit_serdes_rx_o_s3[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_flit_serdes_rx_o_4",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s3[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s3[597]",
+        "q": "rx_flit_serdes_rx_o_s4[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s4[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_4 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s3[596:0]), .ea(rx_flit_serdes_rx_o_s3[597]), .q(rx_flit_serdes_rx_o_s4[596:0]), .eq(rx_flit_serdes_rx_o_s4[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_flit_serdes_rx_o_5",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s4[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s4[597]",
+        "q": "rx_flit_serdes_rx_o_s5[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s5[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_5 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s4[596:0]), .ea(rx_flit_serdes_rx_o_s4[597]), .q(rx_flit_serdes_rx_o_s5[596:0]), .eq(rx_flit_serdes_rx_o_s5[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_flit_serdes_rx_o_6",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s5[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s5[597]",
+        "q": "rx_flit_serdes_rx_o_s6[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s6[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_6 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s5[596:0]), .ea(rx_flit_serdes_rx_o_s5[597]), .q(rx_flit_serdes_rx_o_s6[596:0]), .eq(rx_flit_serdes_rx_o_s6[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_flit_serdes_rx_o_7",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s6[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s6[597]",
+        "q": "rx_flit_serdes_rx_o_s7[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s7[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_7 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s6[596:0]), .ea(rx_flit_serdes_rx_o_s6[597]), .q(rx_flit_serdes_rx_o_s7[596:0]), .eq(rx_flit_serdes_rx_o_s7[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_flit_serdes_rx_o_8",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s7[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s7[597]",
+        "q": "rx_flit_serdes_rx_o[596:0]",
+        "eq": "rx_flit_serdes_rx_o[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_8 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s7[596:0]), .ea(rx_flit_serdes_rx_o_s7[597]), .q(rx_flit_serdes_rx_o[596:0]), .eq(rx_flit_serdes_rx_o[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_0",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "cland_rx_v_serdes_rx_valid_i[0:0]",
+        "ea": "cland_rx_v_serdes_rx_valid_i[1]",
+        "q": "rx_v_serdes_rx_valid_o_s0[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s0[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_0 (.clk(clk), .rst_n(rst_n), .d(cland_rx_v_serdes_rx_valid_i[0:0]), .ea(cland_rx_v_serdes_rx_valid_i[1]), .q(rx_v_serdes_rx_valid_o_s0[0:0]), .eq(rx_v_serdes_rx_valid_o_s0[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_1",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s0[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s0[1]",
+        "q": "rx_v_serdes_rx_valid_o_s1[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s1[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_1 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s0[0:0]), .ea(rx_v_serdes_rx_valid_o_s0[1]), .q(rx_v_serdes_rx_valid_o_s1[0:0]), .eq(rx_v_serdes_rx_valid_o_s1[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_2",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s1[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s1[1]",
+        "q": "rx_v_serdes_rx_valid_o_s2[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s2[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_2 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s1[0:0]), .ea(rx_v_serdes_rx_valid_o_s1[1]), .q(rx_v_serdes_rx_valid_o_s2[0:0]), .eq(rx_v_serdes_rx_valid_o_s2[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_3",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s2[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s2[1]",
+        "q": "rx_v_serdes_rx_valid_o_s3[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s3[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_3 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s2[0:0]), .ea(rx_v_serdes_rx_valid_o_s2[1]), .q(rx_v_serdes_rx_valid_o_s3[0:0]), .eq(rx_v_serdes_rx_valid_o_s3[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_4",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s3[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s3[1]",
+        "q": "rx_v_serdes_rx_valid_o_s4[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s4[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_4 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s3[0:0]), .ea(rx_v_serdes_rx_valid_o_s3[1]), .q(rx_v_serdes_rx_valid_o_s4[0:0]), .eq(rx_v_serdes_rx_valid_o_s4[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_5",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s4[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s4[1]",
+        "q": "rx_v_serdes_rx_valid_o_s5[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s5[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_5 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s4[0:0]), .ea(rx_v_serdes_rx_valid_o_s4[1]), .q(rx_v_serdes_rx_valid_o_s5[0:0]), .eq(rx_v_serdes_rx_valid_o_s5[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_6",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s5[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s5[1]",
+        "q": "rx_v_serdes_rx_valid_o_s6[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s6[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_6 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s5[0:0]), .ea(rx_v_serdes_rx_valid_o_s5[1]), .q(rx_v_serdes_rx_valid_o_s6[0:0]), .eq(rx_v_serdes_rx_valid_o_s6[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_7",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s6[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s6[1]",
+        "q": "rx_v_serdes_rx_valid_o_s7[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s7[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_7 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s6[0:0]), .ea(rx_v_serdes_rx_valid_o_s6[1]), .q(rx_v_serdes_rx_valid_o_s7[0:0]), .eq(rx_v_serdes_rx_valid_o_s7[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_8",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s7[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s7[1]",
+        "q": "rx_v_serdes_rx_valid_o[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_8 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s7[0:0]), .ea(rx_v_serdes_rx_valid_o_s7[1]), .q(rx_v_serdes_rx_valid_o[0:0]), .eq(rx_v_serdes_rx_valid_o[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_tx_flit_o_0",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "cland_serdes_tx_tx_flit_i[596:0]",
+        "ea": "cland_serdes_tx_tx_flit_i[597]",
+        "q": "serdes_tx_tx_flit_o_s0[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s0[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_0 (.clk(clk), .rst_n(rst_n), .d(cland_serdes_tx_tx_flit_i[596:0]), .ea(cland_serdes_tx_tx_flit_i[597]), .q(serdes_tx_tx_flit_o_s0[596:0]), .eq(serdes_tx_tx_flit_o_s0[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_tx_flit_o_1",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s0[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s0[597]",
+        "q": "serdes_tx_tx_flit_o_s1[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s1[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_1 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s0[596:0]), .ea(serdes_tx_tx_flit_o_s0[597]), .q(serdes_tx_tx_flit_o_s1[596:0]), .eq(serdes_tx_tx_flit_o_s1[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_tx_flit_o_2",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s1[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s1[597]",
+        "q": "serdes_tx_tx_flit_o_s2[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s2[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_2 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s1[596:0]), .ea(serdes_tx_tx_flit_o_s1[597]), .q(serdes_tx_tx_flit_o_s2[596:0]), .eq(serdes_tx_tx_flit_o_s2[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_tx_flit_o_3",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s2[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s2[597]",
+        "q": "serdes_tx_tx_flit_o_s3[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s3[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_3 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s2[596:0]), .ea(serdes_tx_tx_flit_o_s2[597]), .q(serdes_tx_tx_flit_o_s3[596:0]), .eq(serdes_tx_tx_flit_o_s3[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_tx_flit_o_4",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s3[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s3[597]",
+        "q": "serdes_tx_tx_flit_o_s4[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s4[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_4 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s3[596:0]), .ea(serdes_tx_tx_flit_o_s3[597]), .q(serdes_tx_tx_flit_o_s4[596:0]), .eq(serdes_tx_tx_flit_o_s4[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_tx_flit_o_5",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s4[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s4[597]",
+        "q": "serdes_tx_tx_flit_o_s5[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s5[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_5 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s4[596:0]), .ea(serdes_tx_tx_flit_o_s4[597]), .q(serdes_tx_tx_flit_o_s5[596:0]), .eq(serdes_tx_tx_flit_o_s5[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_tx_flit_o_6",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s5[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s5[597]",
+        "q": "serdes_tx_tx_flit_o_s6[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s6[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_6 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s5[596:0]), .ea(serdes_tx_tx_flit_o_s5[597]), .q(serdes_tx_tx_flit_o_s6[596:0]), .eq(serdes_tx_tx_flit_o_s6[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_tx_flit_o_7",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s6[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s6[597]",
+        "q": "serdes_tx_tx_flit_o_s7[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s7[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_7 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s6[596:0]), .ea(serdes_tx_tx_flit_o_s6[597]), .q(serdes_tx_tx_flit_o_s7[596:0]), .eq(serdes_tx_tx_flit_o_s7[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_tx_flit_o_8",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s7[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s7[597]",
+        "q": "serdes_tx_tx_flit_o[596:0]",
+        "eq": "serdes_tx_tx_flit_o[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_8 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s7[596:0]), .ea(serdes_tx_tx_flit_o_s7[597]), .q(serdes_tx_tx_flit_o[596:0]), .eq(serdes_tx_tx_flit_o[597]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_0",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "cland_serdes_tx_valid_tx_v_i[0:0]",
+        "ea": "cland_serdes_tx_valid_tx_v_i[1]",
+        "q": "serdes_tx_valid_tx_v_o_s0[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s0[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_0 (.clk(clk), .rst_n(rst_n), .d(cland_serdes_tx_valid_tx_v_i[0:0]), .ea(cland_serdes_tx_valid_tx_v_i[1]), .q(serdes_tx_valid_tx_v_o_s0[0:0]), .eq(serdes_tx_valid_tx_v_o_s0[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_1",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s0[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s0[1]",
+        "q": "serdes_tx_valid_tx_v_o_s1[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s1[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_1 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s0[0:0]), .ea(serdes_tx_valid_tx_v_o_s0[1]), .q(serdes_tx_valid_tx_v_o_s1[0:0]), .eq(serdes_tx_valid_tx_v_o_s1[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_2",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s1[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s1[1]",
+        "q": "serdes_tx_valid_tx_v_o_s2[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s2[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_2 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s1[0:0]), .ea(serdes_tx_valid_tx_v_o_s1[1]), .q(serdes_tx_valid_tx_v_o_s2[0:0]), .eq(serdes_tx_valid_tx_v_o_s2[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_3",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s2[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s2[1]",
+        "q": "serdes_tx_valid_tx_v_o_s3[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s3[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_3 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s2[0:0]), .ea(serdes_tx_valid_tx_v_o_s2[1]), .q(serdes_tx_valid_tx_v_o_s3[0:0]), .eq(serdes_tx_valid_tx_v_o_s3[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_4",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s3[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s3[1]",
+        "q": "serdes_tx_valid_tx_v_o_s4[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s4[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_4 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s3[0:0]), .ea(serdes_tx_valid_tx_v_o_s3[1]), .q(serdes_tx_valid_tx_v_o_s4[0:0]), .eq(serdes_tx_valid_tx_v_o_s4[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_5",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s4[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s4[1]",
+        "q": "serdes_tx_valid_tx_v_o_s5[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s5[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_5 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s4[0:0]), .ea(serdes_tx_valid_tx_v_o_s4[1]), .q(serdes_tx_valid_tx_v_o_s5[0:0]), .eq(serdes_tx_valid_tx_v_o_s5[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_6",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s5[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s5[1]",
+        "q": "serdes_tx_valid_tx_v_o_s6[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s6[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_6 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s5[0:0]), .ea(serdes_tx_valid_tx_v_o_s5[1]), .q(serdes_tx_valid_tx_v_o_s6[0:0]), .eq(serdes_tx_valid_tx_v_o_s6[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_7",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s6[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s6[1]",
+        "q": "serdes_tx_valid_tx_v_o_s7[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s7[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_7 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s6[0:0]), .ea(serdes_tx_valid_tx_v_o_s6[1]), .q(serdes_tx_valid_tx_v_o_s7[0:0]), .eq(serdes_tx_valid_tx_v_o_s7[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_8",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s7[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s7[1]",
+        "q": "serdes_tx_valid_tx_v_o[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_8 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s7[0:0]), .ea(serdes_tx_valid_tx_v_o_s7[1]), .q(serdes_tx_valid_tx_v_o[0:0]), .eq(serdes_tx_valid_tx_v_o[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_tx_up_serdes_up_o_0",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "cland_tx_up_serdes_up_i[0:0]",
+        "ea": "cland_tx_up_serdes_up_i[1]",
+        "q": "tx_up_serdes_up_o_s0[0:0]",
+        "eq": "tx_up_serdes_up_o_s0[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_0 (.clk(clk), .rst_n(rst_n), .d(cland_tx_up_serdes_up_i[0:0]), .ea(cland_tx_up_serdes_up_i[1]), .q(tx_up_serdes_up_o_s0[0:0]), .eq(tx_up_serdes_up_o_s0[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_tx_up_serdes_up_o_1",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s0[0:0]",
+        "ea": "tx_up_serdes_up_o_s0[1]",
+        "q": "tx_up_serdes_up_o_s1[0:0]",
+        "eq": "tx_up_serdes_up_o_s1[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_1 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s0[0:0]), .ea(tx_up_serdes_up_o_s0[1]), .q(tx_up_serdes_up_o_s1[0:0]), .eq(tx_up_serdes_up_o_s1[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_tx_up_serdes_up_o_2",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s1[0:0]",
+        "ea": "tx_up_serdes_up_o_s1[1]",
+        "q": "tx_up_serdes_up_o_s2[0:0]",
+        "eq": "tx_up_serdes_up_o_s2[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_2 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s1[0:0]), .ea(tx_up_serdes_up_o_s1[1]), .q(tx_up_serdes_up_o_s2[0:0]), .eq(tx_up_serdes_up_o_s2[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_tx_up_serdes_up_o_3",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s2[0:0]",
+        "ea": "tx_up_serdes_up_o_s2[1]",
+        "q": "tx_up_serdes_up_o_s3[0:0]",
+        "eq": "tx_up_serdes_up_o_s3[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_3 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s2[0:0]), .ea(tx_up_serdes_up_o_s2[1]), .q(tx_up_serdes_up_o_s3[0:0]), .eq(tx_up_serdes_up_o_s3[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_tx_up_serdes_up_o_4",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s3[0:0]",
+        "ea": "tx_up_serdes_up_o_s3[1]",
+        "q": "tx_up_serdes_up_o_s4[0:0]",
+        "eq": "tx_up_serdes_up_o_s4[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_4 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s3[0:0]), .ea(tx_up_serdes_up_o_s3[1]), .q(tx_up_serdes_up_o_s4[0:0]), .eq(tx_up_serdes_up_o_s4[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_tx_up_serdes_up_o_5",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s4[0:0]",
+        "ea": "tx_up_serdes_up_o_s4[1]",
+        "q": "tx_up_serdes_up_o_s5[0:0]",
+        "eq": "tx_up_serdes_up_o_s5[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_5 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s4[0:0]), .ea(tx_up_serdes_up_o_s4[1]), .q(tx_up_serdes_up_o_s5[0:0]), .eq(tx_up_serdes_up_o_s5[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_tx_up_serdes_up_o_6",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s5[0:0]",
+        "ea": "tx_up_serdes_up_o_s5[1]",
+        "q": "tx_up_serdes_up_o_s6[0:0]",
+        "eq": "tx_up_serdes_up_o_s6[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_6 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s5[0:0]), .ea(tx_up_serdes_up_o_s5[1]), .q(tx_up_serdes_up_o_s6[0:0]), .eq(tx_up_serdes_up_o_s6[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_tx_up_serdes_up_o_7",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s6[0:0]",
+        "ea": "tx_up_serdes_up_o_s6[1]",
+        "q": "tx_up_serdes_up_o_s7[0:0]",
+        "eq": "tx_up_serdes_up_o_s7[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_7 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s6[0:0]), .ea(tx_up_serdes_up_o_s6[1]), .q(tx_up_serdes_up_o_s7[0:0]), .eq(tx_up_serdes_up_o_s7[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_tx_up_serdes_up_o_8",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s7[0:0]",
+        "ea": "tx_up_serdes_up_o_s7[1]",
+        "q": "tx_up_serdes_up_o_s8[0:0]",
+        "eq": "tx_up_serdes_up_o_s8[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_8 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s7[0:0]), .ea(tx_up_serdes_up_o_s7[1]), .q(tx_up_serdes_up_o_s8[0:0]), .eq(tx_up_serdes_up_o_s8[1]));"
+    },
+    {
+      "partition": "c_W5_bf_00",
+      "instance": "u_ft_tx_up_serdes_up_o_9",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s8[0:0]",
+        "ea": "tx_up_serdes_up_o_s8[1]",
+        "q": "tx_up_serdes_up_o[0:0]",
+        "eq": "tx_up_serdes_up_o[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_9 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s8[0:0]), .ea(tx_up_serdes_up_o_s8[1]), .q(tx_up_serdes_up_o[0:0]), .eq(tx_up_serdes_up_o[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_flit_serdes_rx_o_0",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_i[596:0]",
+        "ea": "rx_flit_serdes_rx_i[597]",
+        "q": "rx_flit_serdes_rx_o_s0[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s0[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_0 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_i[596:0]), .ea(rx_flit_serdes_rx_i[597]), .q(rx_flit_serdes_rx_o_s0[596:0]), .eq(rx_flit_serdes_rx_o_s0[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_flit_serdes_rx_o_1",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s0[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s0[597]",
+        "q": "rx_flit_serdes_rx_o_s1[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s1[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_1 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s0[596:0]), .ea(rx_flit_serdes_rx_o_s0[597]), .q(rx_flit_serdes_rx_o_s1[596:0]), .eq(rx_flit_serdes_rx_o_s1[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_flit_serdes_rx_o_2",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s1[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s1[597]",
+        "q": "rx_flit_serdes_rx_o_s2[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s2[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_2 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s1[596:0]), .ea(rx_flit_serdes_rx_o_s1[597]), .q(rx_flit_serdes_rx_o_s2[596:0]), .eq(rx_flit_serdes_rx_o_s2[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_flit_serdes_rx_o_3",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s2[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s2[597]",
+        "q": "rx_flit_serdes_rx_o_s3[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s3[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_3 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s2[596:0]), .ea(rx_flit_serdes_rx_o_s2[597]), .q(rx_flit_serdes_rx_o_s3[596:0]), .eq(rx_flit_serdes_rx_o_s3[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_flit_serdes_rx_o_4",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s3[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s3[597]",
+        "q": "rx_flit_serdes_rx_o_s4[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s4[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_4 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s3[596:0]), .ea(rx_flit_serdes_rx_o_s3[597]), .q(rx_flit_serdes_rx_o_s4[596:0]), .eq(rx_flit_serdes_rx_o_s4[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_flit_serdes_rx_o_5",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s4[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s4[597]",
+        "q": "rx_flit_serdes_rx_o_s5[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s5[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_5 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s4[596:0]), .ea(rx_flit_serdes_rx_o_s4[597]), .q(rx_flit_serdes_rx_o_s5[596:0]), .eq(rx_flit_serdes_rx_o_s5[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_flit_serdes_rx_o_6",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s5[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s5[597]",
+        "q": "rx_flit_serdes_rx_o_s6[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s6[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_6 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s5[596:0]), .ea(rx_flit_serdes_rx_o_s5[597]), .q(rx_flit_serdes_rx_o_s6[596:0]), .eq(rx_flit_serdes_rx_o_s6[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_flit_serdes_rx_o_7",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s6[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s6[597]",
+        "q": "rx_flit_serdes_rx_o_s7[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s7[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_7 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s6[596:0]), .ea(rx_flit_serdes_rx_o_s6[597]), .q(rx_flit_serdes_rx_o_s7[596:0]), .eq(rx_flit_serdes_rx_o_s7[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_flit_serdes_rx_o_8",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s7[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s7[597]",
+        "q": "rx_flit_serdes_rx_o_s8[596:0]",
+        "eq": "rx_flit_serdes_rx_o_s8[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_8 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s7[596:0]), .ea(rx_flit_serdes_rx_o_s7[597]), .q(rx_flit_serdes_rx_o_s8[596:0]), .eq(rx_flit_serdes_rx_o_s8[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_flit_serdes_rx_o_9",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_flit_serdes_rx_o_s8[596:0]",
+        "ea": "rx_flit_serdes_rx_o_s8[597]",
+        "q": "rx_flit_serdes_rx_o[596:0]",
+        "eq": "rx_flit_serdes_rx_o[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_rx_flit_serdes_rx_o_9 (.clk(clk), .rst_n(rst_n), .d(rx_flit_serdes_rx_o_s8[596:0]), .ea(rx_flit_serdes_rx_o_s8[597]), .q(rx_flit_serdes_rx_o[596:0]), .eq(rx_flit_serdes_rx_o[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_0",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_i[0:0]",
+        "ea": "rx_v_serdes_rx_valid_i[1]",
+        "q": "rx_v_serdes_rx_valid_o_s0[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s0[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_0 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_i[0:0]), .ea(rx_v_serdes_rx_valid_i[1]), .q(rx_v_serdes_rx_valid_o_s0[0:0]), .eq(rx_v_serdes_rx_valid_o_s0[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_1",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s0[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s0[1]",
+        "q": "rx_v_serdes_rx_valid_o_s1[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s1[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_1 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s0[0:0]), .ea(rx_v_serdes_rx_valid_o_s0[1]), .q(rx_v_serdes_rx_valid_o_s1[0:0]), .eq(rx_v_serdes_rx_valid_o_s1[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_2",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s1[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s1[1]",
+        "q": "rx_v_serdes_rx_valid_o_s2[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s2[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_2 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s1[0:0]), .ea(rx_v_serdes_rx_valid_o_s1[1]), .q(rx_v_serdes_rx_valid_o_s2[0:0]), .eq(rx_v_serdes_rx_valid_o_s2[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_3",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s2[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s2[1]",
+        "q": "rx_v_serdes_rx_valid_o_s3[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s3[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_3 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s2[0:0]), .ea(rx_v_serdes_rx_valid_o_s2[1]), .q(rx_v_serdes_rx_valid_o_s3[0:0]), .eq(rx_v_serdes_rx_valid_o_s3[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_4",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s3[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s3[1]",
+        "q": "rx_v_serdes_rx_valid_o_s4[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s4[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_4 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s3[0:0]), .ea(rx_v_serdes_rx_valid_o_s3[1]), .q(rx_v_serdes_rx_valid_o_s4[0:0]), .eq(rx_v_serdes_rx_valid_o_s4[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_5",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s4[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s4[1]",
+        "q": "rx_v_serdes_rx_valid_o_s5[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s5[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_5 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s4[0:0]), .ea(rx_v_serdes_rx_valid_o_s4[1]), .q(rx_v_serdes_rx_valid_o_s5[0:0]), .eq(rx_v_serdes_rx_valid_o_s5[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_6",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s5[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s5[1]",
+        "q": "rx_v_serdes_rx_valid_o_s6[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s6[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_6 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s5[0:0]), .ea(rx_v_serdes_rx_valid_o_s5[1]), .q(rx_v_serdes_rx_valid_o_s6[0:0]), .eq(rx_v_serdes_rx_valid_o_s6[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_7",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s6[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s6[1]",
+        "q": "rx_v_serdes_rx_valid_o_s7[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s7[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_7 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s6[0:0]), .ea(rx_v_serdes_rx_valid_o_s6[1]), .q(rx_v_serdes_rx_valid_o_s7[0:0]), .eq(rx_v_serdes_rx_valid_o_s7[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_8",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s7[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s7[1]",
+        "q": "rx_v_serdes_rx_valid_o_s8[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o_s8[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_8 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s7[0:0]), .ea(rx_v_serdes_rx_valid_o_s7[1]), .q(rx_v_serdes_rx_valid_o_s8[0:0]), .eq(rx_v_serdes_rx_valid_o_s8[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_rx_v_serdes_rx_valid_o_9",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "rx_v_serdes_rx_valid_o_s8[0:0]",
+        "ea": "rx_v_serdes_rx_valid_o_s8[1]",
+        "q": "rx_v_serdes_rx_valid_o[0:0]",
+        "eq": "rx_v_serdes_rx_valid_o[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_rx_v_serdes_rx_valid_o_9 (.clk(clk), .rst_n(rst_n), .d(rx_v_serdes_rx_valid_o_s8[0:0]), .ea(rx_v_serdes_rx_valid_o_s8[1]), .q(rx_v_serdes_rx_valid_o[0:0]), .eq(rx_v_serdes_rx_valid_o[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_tx_flit_o_0",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "cland_serdes_tx_tx_flit_i[596:0]",
+        "ea": "cland_serdes_tx_tx_flit_i[597]",
+        "q": "serdes_tx_tx_flit_o_s0[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s0[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_0 (.clk(clk), .rst_n(rst_n), .d(cland_serdes_tx_tx_flit_i[596:0]), .ea(cland_serdes_tx_tx_flit_i[597]), .q(serdes_tx_tx_flit_o_s0[596:0]), .eq(serdes_tx_tx_flit_o_s0[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_tx_flit_o_1",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s0[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s0[597]",
+        "q": "serdes_tx_tx_flit_o_s1[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s1[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_1 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s0[596:0]), .ea(serdes_tx_tx_flit_o_s0[597]), .q(serdes_tx_tx_flit_o_s1[596:0]), .eq(serdes_tx_tx_flit_o_s1[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_tx_flit_o_2",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s1[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s1[597]",
+        "q": "serdes_tx_tx_flit_o_s2[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s2[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_2 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s1[596:0]), .ea(serdes_tx_tx_flit_o_s1[597]), .q(serdes_tx_tx_flit_o_s2[596:0]), .eq(serdes_tx_tx_flit_o_s2[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_tx_flit_o_3",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s2[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s2[597]",
+        "q": "serdes_tx_tx_flit_o_s3[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s3[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_3 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s2[596:0]), .ea(serdes_tx_tx_flit_o_s2[597]), .q(serdes_tx_tx_flit_o_s3[596:0]), .eq(serdes_tx_tx_flit_o_s3[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_tx_flit_o_4",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s3[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s3[597]",
+        "q": "serdes_tx_tx_flit_o_s4[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s4[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_4 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s3[596:0]), .ea(serdes_tx_tx_flit_o_s3[597]), .q(serdes_tx_tx_flit_o_s4[596:0]), .eq(serdes_tx_tx_flit_o_s4[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_tx_flit_o_5",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s4[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s4[597]",
+        "q": "serdes_tx_tx_flit_o_s5[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s5[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_5 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s4[596:0]), .ea(serdes_tx_tx_flit_o_s4[597]), .q(serdes_tx_tx_flit_o_s5[596:0]), .eq(serdes_tx_tx_flit_o_s5[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_tx_flit_o_6",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s5[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s5[597]",
+        "q": "serdes_tx_tx_flit_o_s6[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s6[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_6 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s5[596:0]), .ea(serdes_tx_tx_flit_o_s5[597]), .q(serdes_tx_tx_flit_o_s6[596:0]), .eq(serdes_tx_tx_flit_o_s6[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_tx_flit_o_7",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s6[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s6[597]",
+        "q": "serdes_tx_tx_flit_o_s7[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s7[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_7 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s6[596:0]), .ea(serdes_tx_tx_flit_o_s6[597]), .q(serdes_tx_tx_flit_o_s7[596:0]), .eq(serdes_tx_tx_flit_o_s7[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_tx_flit_o_8",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s7[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s7[597]",
+        "q": "serdes_tx_tx_flit_o_s8[596:0]",
+        "eq": "serdes_tx_tx_flit_o_s8[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_8 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s7[596:0]), .ea(serdes_tx_tx_flit_o_s7[597]), .q(serdes_tx_tx_flit_o_s8[596:0]), .eq(serdes_tx_tx_flit_o_s8[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_tx_flit_o_9",
+      "payload_width": 597,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_tx_flit_o_s8[596:0]",
+        "ea": "serdes_tx_tx_flit_o_s8[597]",
+        "q": "serdes_tx_tx_flit_o[596:0]",
+        "eq": "serdes_tx_tx_flit_o[597]"
+      },
+      "source": "ot_dp_st #(.W(597)) u_ft_serdes_tx_tx_flit_o_9 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_tx_flit_o_s8[596:0]), .ea(serdes_tx_tx_flit_o_s8[597]), .q(serdes_tx_tx_flit_o[596:0]), .eq(serdes_tx_tx_flit_o[597]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_0",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "cland_serdes_tx_valid_tx_v_i[0:0]",
+        "ea": "cland_serdes_tx_valid_tx_v_i[1]",
+        "q": "serdes_tx_valid_tx_v_o_s0[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s0[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_0 (.clk(clk), .rst_n(rst_n), .d(cland_serdes_tx_valid_tx_v_i[0:0]), .ea(cland_serdes_tx_valid_tx_v_i[1]), .q(serdes_tx_valid_tx_v_o_s0[0:0]), .eq(serdes_tx_valid_tx_v_o_s0[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_1",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s0[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s0[1]",
+        "q": "serdes_tx_valid_tx_v_o_s1[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s1[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_1 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s0[0:0]), .ea(serdes_tx_valid_tx_v_o_s0[1]), .q(serdes_tx_valid_tx_v_o_s1[0:0]), .eq(serdes_tx_valid_tx_v_o_s1[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_2",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s1[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s1[1]",
+        "q": "serdes_tx_valid_tx_v_o_s2[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s2[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_2 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s1[0:0]), .ea(serdes_tx_valid_tx_v_o_s1[1]), .q(serdes_tx_valid_tx_v_o_s2[0:0]), .eq(serdes_tx_valid_tx_v_o_s2[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_3",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s2[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s2[1]",
+        "q": "serdes_tx_valid_tx_v_o_s3[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s3[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_3 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s2[0:0]), .ea(serdes_tx_valid_tx_v_o_s2[1]), .q(serdes_tx_valid_tx_v_o_s3[0:0]), .eq(serdes_tx_valid_tx_v_o_s3[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_4",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s3[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s3[1]",
+        "q": "serdes_tx_valid_tx_v_o_s4[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s4[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_4 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s3[0:0]), .ea(serdes_tx_valid_tx_v_o_s3[1]), .q(serdes_tx_valid_tx_v_o_s4[0:0]), .eq(serdes_tx_valid_tx_v_o_s4[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_5",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s4[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s4[1]",
+        "q": "serdes_tx_valid_tx_v_o_s5[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s5[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_5 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s4[0:0]), .ea(serdes_tx_valid_tx_v_o_s4[1]), .q(serdes_tx_valid_tx_v_o_s5[0:0]), .eq(serdes_tx_valid_tx_v_o_s5[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_6",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s5[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s5[1]",
+        "q": "serdes_tx_valid_tx_v_o_s6[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s6[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_6 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s5[0:0]), .ea(serdes_tx_valid_tx_v_o_s5[1]), .q(serdes_tx_valid_tx_v_o_s6[0:0]), .eq(serdes_tx_valid_tx_v_o_s6[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_7",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s6[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s6[1]",
+        "q": "serdes_tx_valid_tx_v_o_s7[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s7[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_7 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s6[0:0]), .ea(serdes_tx_valid_tx_v_o_s6[1]), .q(serdes_tx_valid_tx_v_o_s7[0:0]), .eq(serdes_tx_valid_tx_v_o_s7[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_8",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s7[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s7[1]",
+        "q": "serdes_tx_valid_tx_v_o_s8[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o_s8[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_8 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s7[0:0]), .ea(serdes_tx_valid_tx_v_o_s7[1]), .q(serdes_tx_valid_tx_v_o_s8[0:0]), .eq(serdes_tx_valid_tx_v_o_s8[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_serdes_tx_valid_tx_v_o_9",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "serdes_tx_valid_tx_v_o_s8[0:0]",
+        "ea": "serdes_tx_valid_tx_v_o_s8[1]",
+        "q": "serdes_tx_valid_tx_v_o[0:0]",
+        "eq": "serdes_tx_valid_tx_v_o[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_serdes_tx_valid_tx_v_o_9 (.clk(clk), .rst_n(rst_n), .d(serdes_tx_valid_tx_v_o_s8[0:0]), .ea(serdes_tx_valid_tx_v_o_s8[1]), .q(serdes_tx_valid_tx_v_o[0:0]), .eq(serdes_tx_valid_tx_v_o[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_tx_up_serdes_up_o_0",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_i[0:0]",
+        "ea": "tx_up_serdes_up_i[1]",
+        "q": "tx_up_serdes_up_o_s0[0:0]",
+        "eq": "tx_up_serdes_up_o_s0[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_0 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_i[0:0]), .ea(tx_up_serdes_up_i[1]), .q(tx_up_serdes_up_o_s0[0:0]), .eq(tx_up_serdes_up_o_s0[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_tx_up_serdes_up_o_1",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s0[0:0]",
+        "ea": "tx_up_serdes_up_o_s0[1]",
+        "q": "tx_up_serdes_up_o_s1[0:0]",
+        "eq": "tx_up_serdes_up_o_s1[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_1 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s0[0:0]), .ea(tx_up_serdes_up_o_s0[1]), .q(tx_up_serdes_up_o_s1[0:0]), .eq(tx_up_serdes_up_o_s1[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_tx_up_serdes_up_o_2",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s1[0:0]",
+        "ea": "tx_up_serdes_up_o_s1[1]",
+        "q": "tx_up_serdes_up_o_s2[0:0]",
+        "eq": "tx_up_serdes_up_o_s2[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_2 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s1[0:0]), .ea(tx_up_serdes_up_o_s1[1]), .q(tx_up_serdes_up_o_s2[0:0]), .eq(tx_up_serdes_up_o_s2[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_tx_up_serdes_up_o_3",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s2[0:0]",
+        "ea": "tx_up_serdes_up_o_s2[1]",
+        "q": "tx_up_serdes_up_o_s3[0:0]",
+        "eq": "tx_up_serdes_up_o_s3[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_3 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s2[0:0]), .ea(tx_up_serdes_up_o_s2[1]), .q(tx_up_serdes_up_o_s3[0:0]), .eq(tx_up_serdes_up_o_s3[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_tx_up_serdes_up_o_4",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s3[0:0]",
+        "ea": "tx_up_serdes_up_o_s3[1]",
+        "q": "tx_up_serdes_up_o_s4[0:0]",
+        "eq": "tx_up_serdes_up_o_s4[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_4 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s3[0:0]), .ea(tx_up_serdes_up_o_s3[1]), .q(tx_up_serdes_up_o_s4[0:0]), .eq(tx_up_serdes_up_o_s4[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_tx_up_serdes_up_o_5",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s4[0:0]",
+        "ea": "tx_up_serdes_up_o_s4[1]",
+        "q": "tx_up_serdes_up_o_s5[0:0]",
+        "eq": "tx_up_serdes_up_o_s5[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_5 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s4[0:0]), .ea(tx_up_serdes_up_o_s4[1]), .q(tx_up_serdes_up_o_s5[0:0]), .eq(tx_up_serdes_up_o_s5[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_tx_up_serdes_up_o_6",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s5[0:0]",
+        "ea": "tx_up_serdes_up_o_s5[1]",
+        "q": "tx_up_serdes_up_o_s6[0:0]",
+        "eq": "tx_up_serdes_up_o_s6[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_6 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s5[0:0]), .ea(tx_up_serdes_up_o_s5[1]), .q(tx_up_serdes_up_o_s6[0:0]), .eq(tx_up_serdes_up_o_s6[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_tx_up_serdes_up_o_7",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s6[0:0]",
+        "ea": "tx_up_serdes_up_o_s6[1]",
+        "q": "tx_up_serdes_up_o_s7[0:0]",
+        "eq": "tx_up_serdes_up_o_s7[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_7 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s6[0:0]), .ea(tx_up_serdes_up_o_s6[1]), .q(tx_up_serdes_up_o_s7[0:0]), .eq(tx_up_serdes_up_o_s7[1]));"
+    },
+    {
+      "partition": "c_W5_bf_01",
+      "instance": "u_ft_tx_up_serdes_up_o_8",
+      "payload_width": 1,
+      "epoch_width": 1,
+      "pins": {
+        "clk": "clk",
+        "rst_n": "rst_n",
+        "d": "tx_up_serdes_up_o_s7[0:0]",
+        "ea": "tx_up_serdes_up_o_s7[1]",
+        "q": "tx_up_serdes_up_o[0:0]",
+        "eq": "tx_up_serdes_up_o[1]"
+      },
+      "source": "ot_dp_st #(.W(1)) u_ft_tx_up_serdes_up_o_8 (.clk(clk), .rst_n(rst_n), .d(tx_up_serdes_up_o_s7[0:0]), .ea(tx_up_serdes_up_o_s7[1]), .q(tx_up_serdes_up_o[0:0]), .eq(tx_up_serdes_up_o[1]));"
+    }
+  ],
+  "lanes": [
+    {
+      "lane": "coll_n__serdes_tx_tx_flit",
+      "src": "coll_n",
+      "dst": "io_serdes",
+      "bus_out": "io_collective__serdes_tx",
+      "bus_in": "tx_flit",
+      "width": 597,
+      "bound_stages": 2,
+      "plan_cycles": 2,
+      "macro_pin_reg_ends": [
+        "dst"
+      ]
+    },
+    {
+      "lane": "coll_n__serdes_tx_valid_tx_v",
+      "src": "coll_n",
+      "dst": "io_serdes",
+      "bus_out": "io_collective__serdes_tx_valid",
+      "bus_in": "tx_v",
+      "width": 1,
+      "bound_stages": 2,
+      "plan_cycles": 2,
+      "macro_pin_reg_ends": [
+        "dst"
+      ]
+    },
+    {
+      "lane": "coll_s__serdes_tx_tx_flit",
+      "src": "coll_s",
+      "dst": "io_serdes_1",
+      "bus_out": "io_collective__serdes_tx__to_io_serdes_1__tx_flit",
+      "bus_in": "tx_flit",
+      "width": 597,
+      "bound_stages": 2,
+      "plan_cycles": 2,
+      "macro_pin_reg_ends": [
+        "dst"
+      ]
+    },
+    {
+      "lane": "coll_s__serdes_tx_tx_flit_2",
+      "src": "coll_s",
+      "dst": "io_serdes_2",
+      "bus_out": "io_collective__serdes_tx__to_io_serdes_2__tx_flit",
+      "bus_in": "tx_flit",
+      "width": 597,
+      "bound_stages": 26,
+      "plan_cycles": 26,
+      "macro_pin_reg_ends": [
+        "dst"
+      ]
+    },
+    {
+      "lane": "coll_s__serdes_tx_valid_tx_v",
+      "src": "coll_s",
+      "dst": "io_serdes_1",
+      "bus_out": "io_collective__serdes_tx_valid__to_io_serdes_1__tx_v",
+      "bus_in": "tx_v",
+      "width": 1,
+      "bound_stages": 2,
+      "plan_cycles": 2,
+      "macro_pin_reg_ends": [
+        "dst"
+      ]
+    },
+    {
+      "lane": "coll_s__serdes_tx_valid_tx_v_2",
+      "src": "coll_s",
+      "dst": "io_serdes_2",
+      "bus_out": "io_collective__serdes_tx_valid__to_io_serdes_2__tx_v",
+      "bus_in": "tx_v",
+      "width": 1,
+      "bound_stages": 26,
+      "plan_cycles": 26,
+      "macro_pin_reg_ends": [
+        "dst"
+      ]
+    },
+    {
+      "lane": "io_serdes_1__rx_flit_serdes_rx",
+      "src": "io_serdes_1",
+      "dst": "coll_s",
+      "bus_out": "rx_flit",
+      "bus_in": "io_collective__serdes_rx__from_io_serdes_1",
+      "width": 597,
+      "bound_stages": 2,
+      "plan_cycles": 2,
+      "macro_pin_reg_ends": [
+        "src"
+      ]
+    },
+    {
+      "lane": "io_serdes_1__rx_v_serdes_rx_valid",
+      "src": "io_serdes_1",
+      "dst": "coll_s",
+      "bus_out": "rx_v",
+      "bus_in": "io_collective__serdes_rx_valid__from_io_serdes_1",
+      "width": 1,
+      "bound_stages": 2,
+      "plan_cycles": 2,
+      "macro_pin_reg_ends": [
+        "src"
+      ]
+    },
+    {
+      "lane": "io_serdes_1__tx_up_serdes_up",
+      "src": "io_serdes_1",
+      "dst": "coll_s",
+      "bus_out": "tx_up",
+      "bus_in": "io_collective__serdes_up__from_io_serdes_1",
+      "width": 1,
+      "bound_stages": 2,
+      "plan_cycles": 2,
+      "macro_pin_reg_ends": [
+        "src"
+      ]
+    },
+    {
+      "lane": "io_serdes_2__rx_flit_serdes_rx",
+      "src": "io_serdes_2",
+      "dst": "coll_s",
+      "bus_out": "rx_flit",
+      "bus_in": "io_collective__serdes_rx__from_io_serdes_2",
+      "width": 597,
+      "bound_stages": 28,
+      "plan_cycles": 28,
+      "macro_pin_reg_ends": [
+        "src"
+      ]
+    },
+    {
+      "lane": "io_serdes_2__rx_v_serdes_rx_valid",
+      "src": "io_serdes_2",
+      "dst": "coll_s",
+      "bus_out": "rx_v",
+      "bus_in": "io_collective__serdes_rx_valid__from_io_serdes_2",
+      "width": 1,
+      "bound_stages": 28,
+      "plan_cycles": 28,
+      "macro_pin_reg_ends": [
+        "src"
+      ]
+    },
+    {
+      "lane": "io_serdes_2__tx_up_serdes_up",
+      "src": "io_serdes_2",
+      "dst": "coll_s",
+      "bus_out": "tx_up",
+      "bus_in": "io_collective__serdes_up__from_io_serdes_2",
+      "width": 1,
+      "bound_stages": 28,
+      "plan_cycles": 28,
+      "macro_pin_reg_ends": [
+        "src"
+      ]
+    },
+    {
+      "lane": "io_serdes__rx_flit_serdes_rx",
+      "src": "io_serdes",
+      "dst": "coll_n",
+      "bus_out": "rx_flit",
+      "bus_in": "io_collective__serdes_rx",
+      "width": 597,
+      "bound_stages": 2,
+      "plan_cycles": 2,
+      "macro_pin_reg_ends": [
+        "src"
+      ]
+    },
+    {
+      "lane": "io_serdes__rx_v_serdes_rx_valid",
+      "src": "io_serdes",
+      "dst": "coll_n",
+      "bus_out": "rx_v",
+      "bus_in": "io_collective__serdes_rx_valid",
+      "width": 1,
+      "bound_stages": 2,
+      "plan_cycles": 2,
+      "macro_pin_reg_ends": [
+        "src"
+      ]
+    },
+    {
+      "lane": "io_serdes__tx_up_serdes_up",
+      "src": "io_serdes",
+      "dst": "coll_n",
+      "bus_out": "tx_up",
+      "bus_in": "io_collective__serdes_up",
+      "width": 1,
+      "bound_stages": 2,
+      "plan_cycles": 2,
+      "macro_pin_reg_ends": [
+        "src"
+      ]
+    }
+  ],
+  "source_excerpts": {
+    "tools/die_plan/clock_landings.py": {
+      "sha256": "28e940bb5d9e317cedd2d1d087577786fc2d7ed4ddc09dd26fd49767915c13d3",
+      "lines": [
+        [
+          1714,
+          "                body, count = re.subn(r\"\\.(clk(?:_[tc]\\d+)?)\\(clk\\)\", lambda mm: f\".{mm.group(1)}(clk_region_{ident(self.region[pn])})\", m.group(2))"
+        ],
+        [
+          1718,
+          "                body, count = re.subn(r\"\\.clk\\(clk_\\w+\\)\", f\".clk(clk_region_{ident(self.region[pn])})\", m.group(2), count=1)"
+        ],
+        [
+          1722,
+          "            # Functional binding uses the region source, as existing grid/core"
+        ]
+      ]
+    },
+    "tools/die_plan/bind.py": {
+      "sha256": "e1c156cd961df0fd8a6e098502d6e28c180e0e5f5acf8ffe2e5bcb3bc6855ca4",
+      "lines": [
+        [
+          1256,
+          "            self.clk_dom[p].add(s[1])"
+        ],
+        [
+          3362,
+          "                body.append(f\"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), .ea({n}[{W}]), \""
+        ],
+        [
+          3367,
+          "            body.append(f\"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), .ea({n}[{W}]), \""
+        ],
+        [
+          3409,
+          "                body.append(f\"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(pb_{n}), .ea(rst_n), \""
+        ],
+        [
+          3424,
+          "            body.append(f\"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({d}), .ea(rst_n), \""
+        ],
+        [
+          3439,
+          "                body.append(f\"    ot_dp_st #(.W({W})) u_ft_{o}_{k} (.clk(clk), .rst_n(rst_n), .d({prev}[{W - 1}:0]), \""
+        ],
+        [
+          3657,
+          "            body.append(f\"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({_concat(src)}), .ea(rst_n), \""
+        ],
+        [
+          3676,
+          "    def default_domain(self, p):"
+        ],
+        [
+          3763,
+          "            cs = [f\"        .clk(clk_{sv_id(dd)})\", f\"        .arst_n({reset_in.get(p, 'rst_n')})\"]"
+        ],
+        [
+          4851,
+          "            chain.append(f\"    ot_dp_st #(.W({wd})) u_ft_spare_{no}_s{j} (.clk(clk), .rst_n(1'b1), .d({prev}), .ea(1'b0), \""
+        ],
+        [
+          3677,
+          "        t = self.types[self.parts[p][\"type\"]]"
+        ],
+        [
+          3678,
+          "        d = t.get(\"clock\", {}).get(\"domain\")"
+        ],
+        [
+          3679,
+          "        if d:"
+        ],
+        [
+          3680,
+          "            return d"
+        ],
+        [
+          3681,
+          "        doms = sorted(self.clk_dom[p])"
+        ],
+        [
+          3682,
+          "        return doms[0] if len(doms) == 1 else self.ab.get(\"default_clock\", \"core\")"
+        ],
+        [
+          3683,
+          ""
+        ]
+      ]
+    },
+    "tools/die_plan/clock_landing_verify.py": {
+      "sha256": "fe7fce345ad2910bb4b8bfd1d0e807e99ceab91b409f7a6285547ee223f39cbd",
+      "lines": [
+        [
+          109,
+          "    def clock(self,c,part,port='clk'):"
+        ],
+        [
+          110,
+          "        self.equal_input(c,port,[('top','clk_region_'+ident(self.region[part]),0)])"
+        ]
+      ]
+    },
+    "rtl/physical/ot_qfd_coll_static_face.sv": {
+      "sha256": "be2dfc07c891a3fb73bd171296564ce989e29f31d6d59f84e6deb500d618875a",
+      "lines": [
+        [
+          87,
+          " qfd_static_ch546 u_tx(.wck(tx_wck),.rck(tx_rck),.rst_n(rst_n),"
+        ],
+        [
+          90,
+          " qfd_static_ch546 u_rx(.wck(rx_wck),.rck(rx_rck),.rst_n(rst_n),"
+        ]
+      ]
+    }
+  },
+  "candidate": {
+    "enabled": false,
+    "emit_allowed": false,
+    "target_existing_domain": "clk_serdes",
+    "proposed_hard_pin_bindings": {
+      "io_serdes": {
+        "clk": "clk_serdes"
+      },
+      "io_serdes_1": {
+        "clk": "clk_serdes"
+      },
+      "io_serdes_2": {
+        "clk": "clk_serdes"
+      }
+    },
+    "missing_contract": [
+      "per-bus FDI domain for all 15 bin/bout groups",
+      "FDI-domain FT/CA/FCLK/START/reset membership through c_W5_bf_00 and c_W5_bf_01",
+      "per-domain latency/calendar rederivation for direct2 and TX26/RX28 third paths",
+      "qualified real SerDes clock service and PHY hard views"
+    ],
+    "reason": "A three-PHY clock-only rewrite introduces unrelated-domain sampling outside native CDC; no source rewrite is permitted by this packet"
+  },
+  "physical_qualification_eligible": false,
+  "global_model_swap": false
+}

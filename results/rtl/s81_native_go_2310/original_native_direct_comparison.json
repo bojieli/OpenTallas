@@ -1,0 +1,29 @@
+{
+  "status": "PASS_ORIGINAL_DIRECT_GB0_VS_NATIVE_DIRECT_GB1_BOUNDARY",
+  "unit": "oth-ubuntu-3568639-1793606405",
+  "exit": 0,
+  "new_condition": "originalGB0 oldcalendar directtag; no proposed retime",
+  "native_condition": "GB1 advance1 directtag",
+  "core": [
+    [
+      763,
+      1
+    ],
+    [
+      1275,
+      2
+    ]
+  ],
+  "exact_CFG_words": 50,
+  "exact_STREAM_words": 160,
+  "all_compared_words_and_dates_identical": true,
+  "faults": 0,
+  "first_native_tag": 1,
+  "retained_frame_model_OPTAG": 1,
+  "native_bug_established": false,
+  "parallel_tag_retime_compatible_with_original_contract": false,
+  "new_RTL_FF_needed_for_this_boundary": 0,
+  "native_provider_qualified": false,
+  "arithmetic_core_exercised": false,
+  "production_enabled": false
+}
