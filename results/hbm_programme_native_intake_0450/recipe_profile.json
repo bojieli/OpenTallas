@@ -1,0 +1,590 @@
+{
+  "recipe": {
+    "top": "ot_hgi_sfu_programme_store_r10",
+    "params": {
+      "PAGE_AW": 1
+    },
+    "files": [
+      "results/hbm_programme_source_frontier_0146/ot_hgi_sfu_programme_store_r10.sv",
+      "results/hbm_programme_source_frontier_0146/ot_hgi_sfu_store_stripe_leaf_r10.sv",
+      "results/hbm_programme_source_frontier_0146/ot_sram_1r1w_512x256_m1_r2c2.sv"
+    ],
+    "source_commit": "83479767042dbbf7383db0eaa7871a6f199b294a",
+    "read_at_commit": false,
+    "defines": [],
+    "macros": [
+      "ot_sram_1r1w_512x256_m1_r2c2"
+    ],
+    "macro_placement": [
+      {
+        "inst": "g_leaf[0].u_leaf.g_page[0].u_program",
+        "xy_um": [
+          17.28,
+          17.28
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[0].u_leaf.g_page[1].u_program",
+        "xy_um": [
+          122.472,
+          17.28
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[0].u_leaf.g_page[2].u_program",
+        "xy_um": [
+          227.664,
+          17.28
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[0].u_leaf.g_page[3].u_program",
+        "xy_um": [
+          332.856,
+          17.28
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[1].u_leaf.g_page[0].u_program",
+        "xy_um": [
+          438.048,
+          17.28
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[1].u_leaf.g_page[1].u_program",
+        "xy_um": [
+          17.28,
+          95.58
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[1].u_leaf.g_page[2].u_program",
+        "xy_um": [
+          122.472,
+          95.58
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[1].u_leaf.g_page[3].u_program",
+        "xy_um": [
+          227.664,
+          95.58
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[2].u_leaf.g_page[0].u_program",
+        "xy_um": [
+          332.856,
+          95.58
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[2].u_leaf.g_page[1].u_program",
+        "xy_um": [
+          438.048,
+          95.58
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[2].u_leaf.g_page[2].u_program",
+        "xy_um": [
+          17.28,
+          173.88
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[2].u_leaf.g_page[3].u_program",
+        "xy_um": [
+          122.472,
+          173.88
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[3].u_leaf.g_page[0].u_program",
+        "xy_um": [
+          227.664,
+          173.88
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[3].u_leaf.g_page[1].u_program",
+        "xy_um": [
+          332.856,
+          173.88
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[3].u_leaf.g_page[2].u_program",
+        "xy_um": [
+          438.048,
+          173.88
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[3].u_leaf.g_page[3].u_program",
+        "xy_um": [
+          17.28,
+          252.18
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[4].u_leaf.g_page[0].u_program",
+        "xy_um": [
+          122.472,
+          252.18
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[4].u_leaf.g_page[1].u_program",
+        "xy_um": [
+          227.664,
+          252.18
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[4].u_leaf.g_page[2].u_program",
+        "xy_um": [
+          332.856,
+          252.18
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[4].u_leaf.g_page[3].u_program",
+        "xy_um": [
+          438.048,
+          252.18
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[5].u_leaf.g_page[0].u_program",
+        "xy_um": [
+          17.28,
+          330.48
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[5].u_leaf.g_page[1].u_program",
+        "xy_um": [
+          122.472,
+          330.48
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[5].u_leaf.g_page[2].u_program",
+        "xy_um": [
+          227.664,
+          330.48
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[5].u_leaf.g_page[3].u_program",
+        "xy_um": [
+          332.856,
+          330.48
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[6].u_leaf.g_page[0].u_program",
+        "xy_um": [
+          438.048,
+          330.48
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[6].u_leaf.g_page[1].u_program",
+        "xy_um": [
+          17.28,
+          408.78
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[6].u_leaf.g_page[2].u_program",
+        "xy_um": [
+          122.472,
+          408.78
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[6].u_leaf.g_page[3].u_program",
+        "xy_um": [
+          227.664,
+          408.78
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[7].u_leaf.g_page[0].u_program",
+        "xy_um": [
+          332.856,
+          408.78
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[7].u_leaf.g_page[1].u_program",
+        "xy_um": [
+          438.048,
+          408.78
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[7].u_leaf.g_page[2].u_program",
+        "xy_um": [
+          17.28,
+          487.08
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[7].u_leaf.g_page[3].u_program",
+        "xy_um": [
+          122.472,
+          487.08
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[8].u_leaf.g_page[0].u_program",
+        "xy_um": [
+          227.664,
+          487.08
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[8].u_leaf.g_page[1].u_program",
+        "xy_um": [
+          332.856,
+          487.08
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[8].u_leaf.g_page[2].u_program",
+        "xy_um": [
+          438.048,
+          487.08
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[8].u_leaf.g_page[3].u_program",
+        "xy_um": [
+          17.28,
+          565.38
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[9].u_leaf.g_page[0].u_program",
+        "xy_um": [
+          122.472,
+          565.38
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[9].u_leaf.g_page[1].u_program",
+        "xy_um": [
+          227.664,
+          565.38
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[9].u_leaf.g_page[2].u_program",
+        "xy_um": [
+          332.856,
+          565.38
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[9].u_leaf.g_page[3].u_program",
+        "xy_um": [
+          438.048,
+          565.38
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[10].u_leaf.g_page[0].u_program",
+        "xy_um": [
+          17.28,
+          643.68
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[10].u_leaf.g_page[1].u_program",
+        "xy_um": [
+          122.472,
+          643.68
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[10].u_leaf.g_page[2].u_program",
+        "xy_um": [
+          227.664,
+          643.68
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      },
+      {
+        "inst": "g_leaf[10].u_leaf.g_page[3].u_program",
+        "xy_um": [
+          332.856,
+          643.68
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_512x256_m1_r2c2"
+      }
+    ],
+    "source": "Exact selected SOURCE13 r10+leaf+real512nativeSRAM; no historical pstore body/proof alias"
+  },
+  "profile": {
+    "source_commit": "83479767042dbbf7383db0eaa7871a6f199b294a",
+    "family": "SOURCE13_SELECTED_PROGRAMME_R10_PAGE_AW1",
+    "release_eligible": false,
+    "qualification": "SOURCE_PROOF_ONLY_NATIVE_UNROUTED",
+    "component_proof_reset_cycles": 4,
+    "added_face_cycles": 0,
+    "endpoint_contract": {
+      "kind": "INTERNAL_CORE",
+      "parent_partition": "DISABLED_B113_LOCAL_MOVE",
+      "partition_rule": "R2_INTERNAL_TIMED_IN_PARTITION"
+    },
+    "clock_ports": [
+      "clk"
+    ],
+    "reset_ports": [
+      "rst_n"
+    ],
+    "source_manifest": {
+      "results/hbm_programme_source_frontier_0146/ot_hgi_sfu_programme_store_r10.sv": "6260a442a066ad4c57ad65cf2d56d53705f84be989994c459e7e49cc37ce9487",
+      "results/hbm_programme_source_frontier_0146/ot_hgi_sfu_store_stripe_leaf_r10.sv": "2889a6da816b04f32ce9fa9c445977d16bb353c5b3f7d61a59677ad661b0dfce",
+      "results/hbm_programme_source_frontier_0146/ot_sram_1r1w_512x256_m1_r2c2.sv": "bcdf01881ee0132395188c1d1dd3d5b822fdf01dcef97192e1a9b951951f26b7"
+    },
+    "source_caller": "SOURCE13 NW_hub/NE_hub.u_u_sfup_Q_q1 PAGE_AW1; disabled move only",
+    "source_readset": "results/hbm_programme_native_intake_0450/model.json",
+    "pin_placement_policy": "DECLARED_CLOCK_RESET_POINTS",
+    "port_inventory": {
+      "top": "ot_hgi_sfu_programme_store_r10",
+      "source_file": "results/hbm_programme_source_frontier_0146/ot_hgi_sfu_programme_store_r10.sv",
+      "source_sha256": "6260a442a066ad4c57ad65cf2d56d53705f84be989994c459e7e49cc37ce9487",
+      "ports": [
+        [
+          "clk",
+          "input",
+          1
+        ],
+        [
+          "rst_n",
+          "input",
+          1
+        ],
+        [
+          "cfg_we",
+          "input",
+          1
+        ],
+        [
+          "cfg_stripe",
+          "input",
+          3
+        ],
+        [
+          "cfg_addr",
+          "input",
+          11
+        ],
+        [
+          "cfg_data",
+          "input",
+          256
+        ],
+        [
+          "start_base",
+          "input",
+          11
+        ],
+        [
+          "start_limit",
+          "input",
+          12
+        ],
+        [
+          "start_loops",
+          "input",
+          16
+        ],
+        [
+          "programme_active",
+          "output",
+          1
+        ],
+        [
+          "programme_done",
+          "output",
+          1
+        ],
+        [
+          "programme_ordinal",
+          "output",
+          32
+        ],
+        [
+          "io_cfg_we",
+          "input",
+          1
+        ],
+        [
+          "io_cfg_stripe",
+          "input",
+          2
+        ],
+        [
+          "io_cfg_addr",
+          "input",
+          11
+        ],
+        [
+          "io_cfg_data",
+          "input",
+          256
+        ],
+        [
+          "io_start_v",
+          "input",
+          1
+        ],
+        [
+          "io_start_base",
+          "input",
+          11
+        ],
+        [
+          "io_start_limit",
+          "input",
+          12
+        ],
+        [
+          "io_start_loops",
+          "input",
+          16
+        ],
+        [
+          "io_active",
+          "output",
+          1
+        ],
+        [
+          "io_done",
+          "output",
+          1
+        ],
+        [
+          "io_ordinal",
+          "output",
+          32
+        ],
+        [
+          "io_word",
+          "output",
+          471
+        ],
+        [
+          "compiler_control",
+          "output",
+          1742
+        ],
+        [
+          "fault",
+          "output",
+          1
+        ]
+      ]
+    },
+    "native_capacity": {
+      "macros": 44,
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "memory_bits": 5767168,
+      "external_face_shell": false
+    },
+    "physical_reset_phase": "HELD: actual provider rst_n_t352/t350 versus B113 parent reset; no64/4phase credit",
+    "START": "Exact collar.io_start_v\u2192IOvalid stripe2bit26\u2192p_sv_q; component phase PASS only;66route held"
+  }
+}
