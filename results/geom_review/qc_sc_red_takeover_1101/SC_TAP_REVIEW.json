@@ -1,0 +1,10 @@
+{
+ "scope":"SC_TAP_AWARE_SEED_BEFORE_RETAINED_GPL_PLACE_RESUME",
+ "verdict":"PASS-COND",
+ "picture":"tap_seed_review.png",
+ "viewed":true,
+ "findings":"Actual floorplan has12177fixed obstacles.112of2389BUF24seedcells intersectTAPs; nearest-site correction clearsall with0.594ummaxXshift/norowmoves. Firstnativefailuremoves0.324umright, keepingTAPinplace. Newseedself/TAPoverlaps0; graph/masters/counts/stages unchanged; maxextraL1rootpath0.054um. Centerentry/islandandPDNbindingmechanism unchanged. No macros or newdensechannels.",
+ "allowed":"Retain exactfreshSYNTH/FP/3_2IO; normalGPL→resize→DPL-only, noSYNTHrepeat/no proofduplication. Standardoverlap/placementchecksremainactive; nativePGbindbeforeprotectunchanged.",
+ "stop":"Actual3_placeLOOKbeforeCTS/STA/GRT; anyactualcap/placement/ABI/prooffailure remainsFAIL.",
+ "planning":"FreshpreFPnative338681std/42665FF; clockseed2389 unchanged. No cycle or sourceRTLchange. Defaultplatformplacementpadding0; no new gap rule."
+}
