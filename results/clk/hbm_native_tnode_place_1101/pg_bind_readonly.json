@@ -13,5 +13,12 @@
   "physical_pg_grid": "NOT_MEASURED",
   "source_scope": "Existing native source4730EQ/reset4/all live pads FREE retained; no source/parent adoption",
   "remaining_hold": "Measured freefill6.57%/empty83.41% still FAIL; no CTS, compact parent event not adopted",
-  "release_qualified": false
+  "release_qualified": false,
+  "retained_live_pad_inputs": [
+    "pad_k[5:0]",
+    "pad_b"
+  ],
+  "pad_input_bits_per_component": 7,
+  "pad_ties_or_case_analysis": "NONE; all seven remain FREE",
+  "clock_view_qualification": "No current typed native LEF/TTFF/profile or parent-event adoption inferred"
 }
