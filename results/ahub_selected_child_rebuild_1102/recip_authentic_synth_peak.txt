@@ -1,0 +1,20 @@
+20. Executing CHECK pass (checking for obvious problems).
+21. Printing statistics.
+22. Executing CHECK pass (checking for obvious problems).
+23. Executing Verilog backend.
+23.1. Executing BMUXMAP pass.
+23.2. Executing DEMUXMAP pass.
+End of script. Logfile hash: 59eeea7582, time: 212.89s, user: 120.03s, system: 1.86s, MEM: 391.16 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 40% 1x abc (80 sec), 16% 1x extract_fa (33 sec), ...
+Elapsed time: 3:33.20[h:]min:sec. CPU time: user 199.67 sys 2.23 (94%). Peak memory: 400544KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_2_yosys                 .v            213            391 da1df7983ebc86cb302a
+source /work/core_keep_release.tcl
+OT_CORE_KEEP released 8994 sequential cells (prior dont_touch flags preserved)
+write_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/1_synth.odb
+write_sdc -no_timestamp /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/1_synth.sdc
+Elapsed time: 0:11.45[h:]min:sec. CPU time: user 10.62 sys 0.52 (97%). Peak memory: 463464KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_synth                   .odb           11            452 7dc2fcc0663ac82be3e4
+1_synth                   .sdc                             3d8b1aef686392351489

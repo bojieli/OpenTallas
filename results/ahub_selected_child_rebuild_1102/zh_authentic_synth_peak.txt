@@ -1,0 +1,16 @@
+22. Executing CHECK pass (checking for obvious problems).
+23. Executing Verilog backend.
+23.1. Executing BMUXMAP pass.
+23.2. Executing DEMUXMAP pass.
+End of script. Logfile hash: bd3256db96, time: 213.72s, user: 60.52s, system: 1.45s, MEM: 437.99 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 72% 1x abc (155 sec), 5% 52x opt_expr (11 sec), ...
+Elapsed time: 3:34.10[h:]min:sec. CPU time: user 213.51 sys 2.00 (100%). Peak memory: 449448KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_2_yosys                 .v            214            438 abf2c3c6868afc269a78
+write_db /work/run/results/asap7/hc_ot_nhb_zh__151_2x151_2/base/1_synth.odb
+write_sdc -no_timestamp /work/run/results/asap7/hc_ot_nhb_zh__151_2x151_2/base/1_synth.sdc
+Elapsed time: 0:13.64[h:]min:sec. CPU time: user 12.79 sys 0.69 (98%). Peak memory: 564648KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_synth                   .odb           13            551 056ec66e4d4a88023b9e
+1_synth                   .sdc                             609662636adc0dab98fa

@@ -1,0 +1,1055 @@
+{
+  "master": "ot_qkh_recip_leaf",
+  "outline_um": [
+    216.0,
+    216.0
+  ],
+  "signal_pins": {
+    "clk": {
+      "rects": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            113.904,
+            0.084,
+            113.928
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "fault": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            205.008,
+            0.0,
+            205.032,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "rst_n": {
+      "rects": [
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.0,
+            114.0,
+            0.084,
+            114.024
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "v": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            1.008,
+            215.916,
+            1.032,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "vo": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            205.104,
+            0.0,
+            205.128,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "x[0]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            1.104,
+            215.916,
+            1.128,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[10]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.064,
+            215.916,
+            2.088,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[11]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.16,
+            215.916,
+            2.184,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[12]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.256,
+            215.916,
+            2.28,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[13]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.352,
+            215.916,
+            2.376,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[14]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.448,
+            215.916,
+            2.472,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[15]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.544,
+            215.916,
+            2.568,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[16]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.64,
+            215.916,
+            2.664,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[17]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.736,
+            215.916,
+            2.76,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[18]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.832,
+            215.916,
+            2.856,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[19]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            2.928,
+            215.916,
+            2.952,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[1]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            1.2,
+            215.916,
+            1.224,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[20]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.024,
+            215.916,
+            3.048,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[21]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.12,
+            215.916,
+            3.144,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[22]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.216,
+            215.916,
+            3.24,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[23]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.312,
+            215.916,
+            3.336,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[24]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.408,
+            215.916,
+            3.432,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[25]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.504,
+            215.916,
+            3.528,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[26]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.6,
+            215.916,
+            3.624,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[27]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.696,
+            215.916,
+            3.72,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[28]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.792,
+            215.916,
+            3.816,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[29]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.888,
+            215.916,
+            3.912,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[2]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            1.296,
+            215.916,
+            1.32,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[30]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            3.984,
+            215.916,
+            4.008,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[31]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            13.392,
+            215.916,
+            13.416,
+            216.0
+          ]
+        },
+        {
+          "layer": "M5",
+          "rect_um": [
+            13.392,
+            215.845,
+            13.416,
+            215.952
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[3]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            1.392,
+            215.916,
+            1.416,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[4]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            1.488,
+            215.916,
+            1.512,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[5]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            1.584,
+            215.916,
+            1.608,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[6]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            1.68,
+            215.916,
+            1.704,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[7]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            1.776,
+            215.916,
+            1.8,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[8]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            1.872,
+            215.916,
+            1.896,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "x[9]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            1.968,
+            215.916,
+            1.992,
+            216.0
+          ]
+        }
+      ],
+      "direction": "INPUT",
+      "use": "SIGNAL"
+    },
+    "y[0]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            205.2,
+            0.0,
+            205.224,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[10]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            206.16,
+            0.0,
+            206.184,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[11]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            206.256,
+            0.0,
+            206.28,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[12]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            206.352,
+            0.0,
+            206.376,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[13]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            206.448,
+            0.0,
+            206.472,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[14]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            206.544,
+            0.0,
+            206.568,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[15]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            206.64,
+            0.0,
+            206.664,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[16]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            206.736,
+            0.0,
+            206.76,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[17]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            206.832,
+            0.0,
+            206.856,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[18]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            206.928,
+            0.0,
+            206.952,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[19]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            207.024,
+            0.0,
+            207.048,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[1]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            205.296,
+            0.0,
+            205.32,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[20]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            207.12,
+            0.0,
+            207.144,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[21]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            207.216,
+            0.0,
+            207.24,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[22]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            207.312,
+            0.0,
+            207.336,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[23]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            207.408,
+            0.0,
+            207.432,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[24]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            207.504,
+            0.0,
+            207.528,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[25]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            207.6,
+            0.0,
+            207.624,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[26]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            207.696,
+            0.0,
+            207.72,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[27]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            207.792,
+            0.0,
+            207.816,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[28]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            207.888,
+            0.0,
+            207.912,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[29]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            207.984,
+            0.0,
+            208.008,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[2]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            205.392,
+            0.0,
+            205.416,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[30]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            192.72,
+            0.0,
+            192.744,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[31]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            192.816,
+            0.0,
+            192.84,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[3]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            205.488,
+            0.0,
+            205.512,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[4]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            205.584,
+            0.0,
+            205.608,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[5]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            205.68,
+            0.0,
+            205.704,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[6]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            205.776,
+            0.0,
+            205.8,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[7]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            205.872,
+            0.0,
+            205.896,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[8]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            205.968,
+            0.0,
+            205.992,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    },
+    "y[9]": {
+      "rects": [
+        {
+          "layer": "M5",
+          "rect_um": [
+            206.064,
+            0.0,
+            206.088,
+            0.084
+          ]
+        }
+      ],
+      "direction": "OUTPUT",
+      "use": "SIGNAL"
+    }
+  },
+  "all_signal_rectangles_contained": true,
+  "different_signal_pin_rect_overlaps": []
+}
