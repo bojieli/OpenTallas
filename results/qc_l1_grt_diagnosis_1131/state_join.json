@@ -54,7 +54,10 @@
     "native_final_report_and_query_agree": "EXP nint[6]/D -14.64ps, same start/end/arrival/required/clock trace",
     "component_trace_exact_token_match": false,
     "original_trace_rows": 102,
-    "query_trace_rows": 53
+    "query_trace_rows": 53,
+    "report_format_difference": "Original emits combinational input pins/net segments; diagnostic folds input-net delay into output rows. Raw token row equality is not a state equivalence test.",
+    "common_output_and_register_pin_arrivals_match": true,
+    "common_arrival_rows": 53
   },
   "mm_summary_state_join": {
     "earlier_summary": "TT(labelSS) -13.72 / FF +8.24 after repair",
