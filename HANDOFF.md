@@ -3021,3 +3021,5 @@ CODEX: BF native selector event candidate READY4ba6f3753 (codex/ds-bf-selectors-
 CODEX: BF current CAP-safe H10phase106 DISABLEDprogrammeoverlay READY2ed5e1d18, ot-run553965PASS3descriptors/12maskrows/0cycles; default1800emptyphases tracedmissingexactmeasuredprofile, explicitopt-inonly. Noactivecohort/default/missionadoption.
 
 CODEX: 2026-11-01 22:02 PST protectioncachefalsealarmfixDEPLOYED;2explicitretirementsclosed,231automaticentriespreserved,4legacyrowsnormalized;currentmanualregen+existingaudit0MISSING. Ownedcountcycle codex-protection-cycle-2159/hooks/cycle.sh;noforcedrecount/CAD.
+
+CODEX: BF source100-pin closure staged; exact production GB provider guard refuses, retained experimental scope passes (READY16c3ac57d). Single nonzero-row native label experiment queued separately; source/mission authority holds remain explicit.
