@@ -25,10 +25,15 @@ module tb_native_head_leaf;
   #0.2;
   if(rst_n&&result[512])begin
    if(result[513])$fatal(1,"NATIVE_TILE_FAULT");
-   for(integer lane=0;lane<16;lane++)begin
-    if(outputs>=200)$fatal(1,"EXTRA_OUTPUT");
-    if(result[32*lane+:32]!==gold[16*outputs+lane])begin
-     $display("RAW_PARTIAL_MISMATCH vector=%0d lane=%0d row=%0d actual=%h expected=%h",outputs,lane,rows[16*outputs+lane],result[32*lane+:32],gold[16*outputs+lane]);
+   // Native t_vout publishes every K prefix. KC8 selects K7's last8slots.
+   // Reuse outputs as the raw ordinal; no new public state or golden arrays.
+   if(outputs==0)begin
+    $display("FIRST_K0_RAW actual=%h independent_expected=c3174c00",result[31:0]);
+   end
+   if(outputs>=1600)$fatal(1,"EXTRA_RAW_OUTPUT");
+   if(outputs%64>=56)for(integer lane=0;lane<16;lane++)begin
+    if(result[32*lane+:32]!==gold[16*((outputs/64)*8+outputs%8)+lane])begin
+     $display("RAW_PARTIAL_MISMATCH raw=%0d vector=%0d lane=%0d row=%0d actual=%h expected=%h",outputs,(outputs/64)*8+outputs%8,lane,rows[16*((outputs/64)*8+outputs%8)+lane],result[32*lane+:32],gold[16*((outputs/64)*8+outputs%8)+lane]);
      $fatal(1,"RAW_PARTIAL_MISMATCH");
     end
    end
@@ -47,7 +52,7 @@ module tb_native_head_leaf;
   for(chunk=0;chunk<4;chunk++)begin
    wait(actual_idle);@(negedge clk);tap={128'd0,ib[chunk],1'b1};
    @(posedge clk);#0.3;
-   r=(chunk==3)?1:8;goal=outputs+8*r;
+   r=(chunk==3)?1:8;goal=outputs+64*r;
    // Source-derived XOFF3: tap face + IREG precede the actual issue loop;
    // e_v=active, MEM_EXTRA delays data/tags equally, s1/s1b/s2/s3 consume X.
    // Thus xl for issue(r,k,j) arrives at tap GO+3+64*r+8*k+j.
@@ -66,9 +71,9 @@ module tb_native_head_leaf;
    repeat(2)@(negedge clk);
    if(outputs!=goal)$fatal(1,"CHUNK_OUTPUT_COUNT chunk=%0d actual=%0d goal=%0d",chunk,outputs,goal);
    if(reads!=((chunk==3)?1600:512*(chunk+1)))$fatal(1,"CHUNK_CODE_COUNT");
-   $display("CHUNK_PASS chunk=%0d vectors=%0d reads=%0d edges=%0d",chunk,outputs,reads,edges);
+   $display("CHUNK_PASS chunk=%0d raw_vectors=%0d reads=%0d edges=%0d",chunk,outputs,reads,edges);
   end
-  if(outputs!=200||reads!=1600)$fatal(1,"FINAL_COUNTS");
-  $display("NATIVE_HEAD_LEAF_PASS vectors=200 values=3200 code_words=1600");$finish;
+  if(outputs!=1600||reads!=1600)$fatal(1,"FINAL_COUNTS");
+  $display("NATIVE_HEAD_LEAF_PASS raw_vectors=1600 selected_vectors=200 values=3200 code_words=1600");$finish;
  end
 endmodule
