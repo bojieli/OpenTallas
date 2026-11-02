@@ -2959,3 +2959,5 @@ CODEX: 2026-11-01 20:35 PST S81 takeover collected: histguide gA live/gB queued,
 
 CODEX: 2026-11-01 20:35 PST KV/Qwen takeover collected active NOWAIT A/B + SOURCE13 hierarchy; no duplicate jobs; physical ECO hygiene and approved pickup intake advancing.
 CODEX: 2026-11-01 20:35 PST KV pickup CTL conflict resolved0691e4e36 READY,42focusedPASS; RECIP/ZH queued preserved, HHP/e0 approved train intake.
+
+CODEX: 2026-11-01 20:36 PST DS portableV0 actual96GiB/J1OOM diagnosed; structural-hcore IMG2 active169libs/V1c3 queued preserved. Source readiness4f6ea1405 READY strict measured read-after-commit,3testsPASS; no fullmission.
