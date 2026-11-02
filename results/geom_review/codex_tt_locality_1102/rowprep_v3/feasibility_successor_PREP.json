@@ -3,7 +3,7 @@
  "old_unit": "oth-ubuntu-550012-1793623734.scope",
  "no_duplicate_guard": true,
  "original_problem_script_sha256": "aade0a586f82164853ee925d95a992097d9df68b0ce7f842d141efd5d854f08e",
- "successor_sha256": "2074fdbb469d33a379cced9b43ffc3ab32f1da6e064f9a53557d01af8c95c48a",
+ "successor_sha256": "18d4321a885c3058f4d8cb4a623fe8e2b70def4e0269cb8994603256aea4fdcb",
  "same_cells": 87,
  "same_typed_edges": 3481,
  "same_fixed_ff_source_obstacles": 38157,
@@ -22,5 +22,6 @@
  "next_on_success": "full original candidate audit then prepared finite207 fresh-master2SAT and fresh38243 complete audit",
  "next_on_unresolved": "retained candidate/cuts/residual receipt; inspect finite obstruction and propose one bounded repair, never report architecture infeasible from timeout",
  "native_alias_accepted": false,
- "physical_release": false
+ "physical_release": false,
+ "launch_host_precondition": "Original Intel1 terminal must be collected before any successor; local unit-state guard is additional fail-closed protection, not authority to run concurrently on another host"
 }

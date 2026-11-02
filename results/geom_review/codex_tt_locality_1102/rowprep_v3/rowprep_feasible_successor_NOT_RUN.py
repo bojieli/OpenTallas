@@ -2,8 +2,12 @@
 from pathlib import Path
 import time,subprocess
 old_unit='oth-ubuntu-550012-1793623734.scope'
-if subprocess.run(['systemctl','--user','is-active','--quiet',old_unit]).returncode==0:
+probe=subprocess.run(['systemctl','--user','is-active',old_unit],capture_output=True,text=True)
+old_state=probe.stdout.strip()
+if old_state=='active':
  raise SystemExit('DEFER: original row87 still active; no duplicate permitted')
+if old_state not in ('inactive','failed','unknown'):
+ raise SystemExit('DEFER: original row87 state cannot be resolved; no duplicate permitted')
 solve_start=time.monotonic();total_budget_s=60.0
 script=Path(__file__).with_name('rowprep_greedy.py').read_text().split('# Place the most constrained')[0]
 script=script.replace("P/'final_composed_homes_DISABLED.json'","P/'rowprep_homes.json'")
