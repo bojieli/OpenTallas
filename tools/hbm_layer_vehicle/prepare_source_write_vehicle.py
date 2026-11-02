@@ -118,7 +118,10 @@ def prepare(repo,out,image=None,isa_repo=None):
                 (d/'expected_new_words.mem').write_text(''.join(f'{x:08x}\n'for x in words))
                 (d/'write_move227.mem').write_text(f'{move:057x}\n');(d/'read_move227.mem').write_text(f'{read:057x}\n')
                 image_rows[stk].add(chosen['real']>>15)
-                cases.append(dict(label=label,STK=stk,PHY_QUAD=q,VM_SID=3,record=record,representative_position=0 if stk==0 else None,
+                cases.append(dict(label=label,STK=stk,PHY_QUAD=q,VM_SID=3,
+                    writer_source_SID=stk,writer_source_SID_matches_scratch=(stk==3),
+                    source_SID_scope='DBK native issue_sec uses its STK strap as SID; STK0 cannot read SID3 scratch without a real COPY to VM0.',
+                    record=record,representative_position=0 if stk==0 else None,
                     position_scope='Component input only, not adopted actual N6 position',record_namespace='original3916' if stk==0 else'resident37226',words=n,sectors=chosen['sectors'],
                     real_first_sector=chosen['real'],quadrant_ordinal=chosen['o'],source_word_offset=chosen['wordoff'],
                     native_source_word=64512,global_staged_word=261120,global_readback_word=261632,

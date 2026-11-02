@@ -1,0 +1,30 @@
+{
+  "status": "QUEUED_COMPONENT_NOT_PASS",
+  "source11_OOM": "64GiB/J2",
+  "source12_OOM": "96GiB/J1",
+  "root4_fix_owner": "TOK-QK-2 a8e4e65ab1bd: proven ot_tkm_lt_live_sim W1..85, root4 rc0/220s/3.76GiB; SOURCE13 live, no duplicate",
+  "discovered_failure": {
+    "classification": "SOURCE_SID_MISMATCH",
+    "DBK_source": "24de429cd rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+    "expression": "issue_sec={1'b0,stk_q,chunk_vm[15:3]}",
+    "source0": "native SID0, incompatible with proposed SID3 scratch",
+    "source3": "native SID3 matches unit input scratch",
+    "policy": "No SID-rewrite adapter; fail closed on mismatch"
+  },
+  "first_job": {
+    "state": "NOT_RUN_CANCELLED_BEFORE_ADMISSION",
+    "controller": "codex-hbm-causal-2038.service",
+    "cause": "static SOURCE0 SID mismatch found before any build"
+  },
+  "current_job": {
+    "controller": "intel2 codex-hbm-causal3-2040.service",
+    "host": "intel1",
+    "path": "/srv/opentallas-scratch2/claude/codex-hbm-causal3-2040",
+    "log": "intel2 /tmp/codex-hbm-causal3-2040.otrun.log",
+    "resources": "24GiB/2T via ot-run --crit",
+    "case": "stack3_q0"
+  },
+  "production_COPY": false,
+  "scratch_reserved": false,
+  "G5": false
+}
