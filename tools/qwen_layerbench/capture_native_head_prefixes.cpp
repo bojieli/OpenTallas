@@ -1,4 +1,4 @@
-// Observe the unchanged, already-qualified native leaf model and its SV bench.
+// Observe an unchanged native leaf model after its finite gate has passed.
 // No clocks, inputs, arithmetic, responses or model state are supplied here.
 // This uses the same Verilator timing loop as the generated __main.cpp, adding
 // read-only observation after the bench increments its real raw-valid counter.
