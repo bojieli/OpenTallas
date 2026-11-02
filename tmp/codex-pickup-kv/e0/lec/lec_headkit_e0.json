@@ -1,0 +1,33 @@
+{
+ "gold": "retained_e0.sv",
+ "gate": "headkit_e0.sv",
+ "instances": [
+  "ot_qkh_head_frontq_native{'MUT': 0, 'PORT_REGS': 1, 'Q_FP32': 1, 'STRAP_SAMPLE': 1}",
+  "ot_qkh_head_stin_native{'MUT': 0}",
+  "ot_qkh_head_stk_native{'MUT': 0}",
+  "ot_qkh_ktree_lk{'ADD_LAT': 7, 'MUL_LAT': 6, 'MUT': 0, 'PORT_REGS': 1, 'SCALE': 1035273459}",
+  "ot_qkh_lane8{'ADD_LAT': 7, 'LTW': 12, 'LT_COPY': 1, 'S3_COPY': 1, 'STRAP_DIRECT': 1}"
+ ],
+ "instances_gate": [
+  "ot_qkh_head_frontq_native{'MUT': 0, 'PORT_REGS': 1, 'Q_FP32': 1, 'STRAP_SAMPLE': 1}",
+  "ot_qkh_head_stin_native{'MUT': 0}",
+  "ot_qkh_head_stk_native{'MUT': 0}",
+  "ot_qkh_ktree_lk{'ADD_LAT': 7, 'MUL_LAT': 6, 'MUT': 0, 'PORT_REGS': 1, 'SCALE': 1035273459}",
+  "ot_qkh_lane8{'ADD_LAT': 7, 'LTW': 12, 'LT_COPY': 1, 'S3_COPY': 1, 'STRAP_DIRECT': 1}"
+ ],
+ "inst_set_equal": true,
+ "input_ports_only_gold": [
+  "g_t_0_u_l8__clk",
+  "g_t_0_u_stin__clk",
+  "g_t_0_u_stk__clk",
+  "g_t_1_u_l8__clk",
+  "g_t_1_u_stin__clk",
+  "g_t_1_u_stk__clk",
+  "u_kt__clk"
+ ],
+ "input_ports_only_gate": [],
+ "extra_inputs_used": [],
+ "diffs": [],
+ "n_diffs": 0,
+ "verdict": "EQUIVALENT"
+}
