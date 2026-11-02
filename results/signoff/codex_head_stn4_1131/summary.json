@@ -1,0 +1,86 @@
+[
+ {
+  "net": "u_ft_d2_s0/net45453",
+  "connections": 2,
+  "driver": [
+   [
+    "u_ft_d2_s0/place45454",
+    "Y",
+    761.238,
+    326.16
+   ]
+  ],
+  "placement_origin_bbox_um": [
+   560.358,
+   326.16,
+   761.238,
+   326.43
+  ],
+  "max_driver_origin_manhattan_um": 201.1500000000001,
+  "routed_segment_length_um": 201.15,
+  "route_def_units_per_um": 1000
+ },
+ {
+  "net": "u_ft_u1_s0/net44891",
+  "connections": 2,
+  "driver": [
+   [
+    "u_ft_u1_s0/place44892",
+    "Y",
+    369.738,
+    641.52
+   ]
+  ],
+  "placement_origin_bbox_um": [
+   369.738,
+   641.52,
+   569.754,
+   641.79
+  ],
+  "max_driver_origin_manhattan_um": 200.286,
+  "routed_segment_length_um": 199.998,
+  "route_def_units_per_um": 1000
+ },
+ {
+  "net": "u_ft_d1_s0/net45923",
+  "connections": 2,
+  "driver": [
+   [
+    "u_ft_d1_s0/place45924",
+    "Y",
+    758.754,
+    861.3
+   ]
+  ],
+  "placement_origin_bbox_um": [
+   559.116,
+   861.3,
+   758.754,
+   861.57
+  ],
+  "max_driver_origin_manhattan_um": 199.90800000000013,
+  "routed_segment_length_um": 199.98,
+  "route_def_units_per_um": 1000
+ },
+ {
+  "net": "u_cland_u2_i/net43674",
+  "connections": 122,
+  "driver": [
+   [
+    "u_cland_u2_i/place43675",
+    "Y",
+    26.19,
+    140.4
+   ]
+  ],
+  "placement_origin_bbox_um": [
+   16.2,
+   140.4,
+   26.19,
+   193.59
+  ],
+  "max_driver_origin_manhattan_um": 61.397999999999996,
+  "routed_segment_length_um": 215.013,
+  "route_def_units_per_um": 1000
+ }
+]
