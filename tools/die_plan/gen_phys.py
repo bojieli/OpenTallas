@@ -3200,6 +3200,21 @@ if [ -f "$K/signed_parent_source.json" ]; then
 fi
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 NAME=dpkit-$(basename "$K")-$$
+# KW-RESUME-1 OT_STAGE_RESUME_V1: K/resume.json (kit_wave.py stage resume) names the first ORFS step to run.  # KWRS
+# The steps before it are hardlinked from the previous attempt, so later steps run the dependency-free do-* targets  # KWRS
+# (a make dependency check would rebuild the reused files and write through the links).  Gates always re-run.  # KWRS
+# Every edit is a '# KWRS' line or a ${KWRS_*} token: removing them gives the runner without stage resume.  # KWRS
+RS=0; KWRS_s=; KWRS_cx=; KWRS_C=; KWRS_tx=; KWRS_gx=; KWRS_GR=; KWRS_Gx=; KWRS_G=  # KWRS
+if [ -f "$K/resume.json" ]; then  # KWRS
+  RS=$(python3 -I -c 'import json,sys; print({"floorplan":1,"place":2,"cts":3,"grt":4,"route":5}[json.load(open(sys.argv[1]))["start"]])' "$K/resume.json") || { echo 'FAIL_PREFLOOR stage resume: resume.json unreadable' | tee -a "$K/FAIL_PREFLOOR"; exit 10; }  # KWRS
+  case "$GOAL" in place|cts|route) ;; *) echo "FAIL_PREFLOOR stage resume: goal $GOAL unsupported" | tee -a "$K/FAIL_PREFLOOR"; exit 10;; esac  # KWRS
+  KWRS_s=': '  # KWRS
+  if [ "$RS" -le 3 ]; then KWRS_C=do-cts; else KWRS_cx=': '; KWRS_tx=': '; fi  # KWRS
+  if [ "$RS" -le 4 ]; then KWRS_GR=do-grt; else KWRS_gx=': '; fi  # KWRS
+  case "$GOAL:$RS" in place:1) KWRS_G='do-floorplan do-place';; place:2) KWRS_G=do-place;; place:*|cts:*) KWRS_Gx=': ';;  # KWRS
+    route:*) KWRS_G='do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc';; esac  # KWRS
+  echo "STAGE_RESUME start step $RS ($(python3 -I -c 'import json,sys; d=json.load(open(sys.argv[1])); print(",".join(d["reused_steps"]), "from", d["source"]["host"]+":"+d["source"]["kit"])' "$K/resume.json"))"  # KWRS
+fi  # KWRS
 # Preserve existing gate verdicts when a corrected kit reuses a run directory.
 HISTORY="$K/preflight_history/$(date +%Y%m%d_%H%M%S)_$$"
 for f in rtl_lint.json sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json reg_fanout.json; do
@@ -3246,7 +3261,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ]; then python3 -I /work/rtl_lint.py /work; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR rtl_lint (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; fi; \\\
   SRP=; if [ \$rc = 0 ]; then (python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc) & SRP=\$!; fi; \
   if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py gen --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR adder_map_dontuse' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
-  if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
+  if [ \$rc = 0 ]; then ${KWRS_s}\$M synth; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py check --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --netlist \$(ls /work/run/results/asap7/*/base/1_2_yosys.v | tail -1) --report /work/dont_use_check.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR dont_use_check' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ -n \"\$SRP\" ]; then wait \$SRP; S=\$(cat /work/selrange.rc 2>/dev/null || echo 2); tail -3 /work/selrange.log; if [ \"\$S\" != 0 ]; then echo 'FAIL_PREFLOOR selrange (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
@@ -3262,8 +3277,8 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
-    \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
-    if [ \$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk; then \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
+    ${KWRS_cx}\$M ${KWRS_C:-cts} SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
+    if [ \$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk; then ${KWRS_tx}\$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS GRT-RC tap pre-pass (tapbal_grt.tcl)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; \
     if [ \$rc = 0 ]; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
@@ -3274,17 +3289,17 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
       if [ \$rc != 0 ]; then { grep -h 'OT_HOLD_GATE FAIL' /work/hold_gate.log || echo 'NOT RUN (no OT_HOLD_GATE verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
   HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk | tail -1); \
-  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; OT_VCLK_CORNER=ff \$MF grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; ${KWRS_gx}OT_VCLK_CORNER=ff \$MF ${KWRS_GR:-grt} CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
     for c in TT FF; do OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
       grep -h OT_POSTCTS_GATE /work/postcts_gate_\$c.log || echo \"OT_POSTCTS_GATE \$c no result FAIL\" | tee -a /work/postcts_gate_\$c.log; done; \
     if grep -hq 'OT_POSTCTS_GATE.*FAIL' /work/postcts_gate_TT.log /work/postcts_gate_FF.log; then \
       grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS pre-route insertion gate: /' >> /work/FAIL_POSTCTS; rc=6; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
-    if [ -z \"\$HM\" ] || [ $GOAL = finish ]; then \$M grt; rc=\$?; fi; \
+    if [ -z \"\$HM\" ] || [ $GOAL = finish ]; then ${KWRS_gx}\$M ${KWRS_GR:-grt}; rc=\$?; fi; \
     if [ \$rc = 0 ]; then python3 -I /work/legacy_gate.py /work grt; rc=\$?; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
-  if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
+  if [ \$rc = 0 ]; then ${KWRS_Gx}\$M ${KWRS_G:-$GOAL}; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -f /work/core_infra_post.v ] && [ -f /work/lec.py ]; then python3 -I /work/lec.py /work --netlist /work/core_infra_post.v --out /work/lec_post > /work/lec_post.log 2>&1; lr=\$?; tail -1 /work/lec_post.log; \
     if [ \$lr != 0 ]; then echo \"FAIL_POSTPLACE clock-gate copy LEC exit \$lr (lec_post/lec.json): copies not proved equivalent\" | tee -a /work/FAIL_POSTCTS; rc=5; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \

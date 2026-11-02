@@ -488,6 +488,13 @@ out["route_runs_finish"] = any("do-finish" in l and "route" in l for l in rt)
 cfg = _txt(os.path.join(K, "config.mk"))
 out["gds_gap"] = (bool(re.search(r"^export ADDITIONAL_LEFS", cfg, re.M)) and "ADDITIONAL_GDS" not in cfg
                   and not re.search(r"^export GDS_ALLOW_EMPTY", cfg, re.M))
+# KW-RESUME-1: a kit-wave stage-resumed kit (K/resume.json: ORFS steps reused from the previous attempt) -> PROVENANCE
+try:
+    with open(os.path.join(K, "resume.json")) as f: rj = json.load(f)
+    out["resume"] = {k: rj.get(k) for k in ("schema", "start", "reused_steps", "source", "why", "applied", "n_link",
+                                            "n_copy", "bytes_link", "bytes_copy")}
+except Exception:
+    out["resume"] = None
 done()
 '''
 
@@ -1608,6 +1615,8 @@ done()
 
 def write_provenance(host, dest, j):
     prov = {k: j.get(k) for k in ("id", "die", "type", "src", "src_commit", "flow_tag", "lane")}
+    if j.get("stage_resume"):                           # KW-RESUME-1: ORFS steps reused from the source attempt
+        prov["stage_resume"] = j["stage_resume"]
     prov.update(schema="opentallas.provenance.v1", verdict="SIGNED" if j.get("flow_tag") and j.get("src_commit")
                 else "SIGNED-UNVERSIONED", why=j.get("prov_error", ""), written=now_s())
     return rpy(host, PROBE_PROVENANCE, {"dest": dest, "prov": prov}, timeout=120)
@@ -1810,6 +1819,7 @@ def admit_new(st, rows):
             set_status(st, j, "REJECTED", why)
             continue
         j["runner"] = p["runner"]
+        j["stage_resume"] = p.get("resume")              # KW-RESUME-1: reused steps + source attempt (PROVENANCE)
         j.pop("hold_why", None)
         trial_why = ("mode trial" if r["mode"] == "trial" else f"goal {r.get('goal')} (diagnostic)" if r.get("goal") in ("cts", "grt")
                      else path_gate_hold(r))
