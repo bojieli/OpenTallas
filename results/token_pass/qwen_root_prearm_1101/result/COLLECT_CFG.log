@@ -1,0 +1,5 @@
+ROOT_AUTOBOOT_SETID cyc1122
+ROOT_CFG_DURING_LEASE cyc1231 active0 busy0
+[1953000000] %Fatal: tb_native_root.sv:86: Assertion failed in tb_native_root: NO_NATIVE_RSTD active0 busy0 hazard1
+%Error: src/tb_native_root.sv:86: Verilog $stop
+Aborting...

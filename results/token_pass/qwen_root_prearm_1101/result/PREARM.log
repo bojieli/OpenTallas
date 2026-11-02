@@ -1,0 +1,15 @@
+ROOT_AUTOBOOT_SETID cyc1122
+NATIVE_ROOT_CASE user0 bits3fa6f0bb cfg_to_write208
+PREARM_AMAX_TOKEN user0 idx101 value40800000
+NATIVE_ROOT_CASE user1 bits3f8bd5c6 cfg_to_write208
+PREARM_AMAX_TOKEN user1 idx101 value40800000
+NATIVE_ROOT_CASE user2 bits3f7570e7 cfg_to_write208
+PREARM_AMAX_TOKEN user2 idx101 value40800000
+NATIVE_ROOT_CASE user3 bits3f5d5312 cfg_to_write208
+PREARM_AMAX_TOKEN user3 idx101 value40800000
+NATIVE_ROOT_FOUR_CASES_PASS outputs4
+NATIVE_PREARM_ROOT_PASS amnb6 rstd4 tokens4
+- src/tb_native_root.sv:104: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 13.221 s; speed 167.722 ns/s
+- Verilator: cpu 13.215 s on 1 threads; allocated 57 MB
