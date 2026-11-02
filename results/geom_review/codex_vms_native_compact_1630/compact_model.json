@@ -1,0 +1,522 @@
+{
+ "schema": "opentallas.vms.native_compact_prep.v1",
+ "status": "UNADOPTED MODEL PREP; NO CAD",
+ "source_basis": "Exact current C three-SRAM source; previous source proof11560/11560 reset4,7924FF unchanged. No vec6293/mu1 alias.",
+ "outline_um": [
+  224.64,
+  267.84
+ ],
+ "source_changed": false,
+ "added_cycles": 0,
+ "macro_placement": [
+  {
+   "name": "u_core.u_ot_pr_core.bank.u_a",
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "orient": "R0",
+   "rect_um": [
+    34.56,
+    17.28,
+    209.304,
+    87.768
+   ]
+  },
+  {
+   "name": "u_core.u_ot_pr_core.bank.u_b",
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "orient": "R0",
+   "rect_um": [
+    34.56,
+    96.408,
+    209.304,
+    166.896
+   ]
+  },
+  {
+   "name": "u_core.u_ot_pr_core.bank.u_c",
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "orient": "R0",
+   "rect_um": [
+    34.56,
+    185.952,
+    209.304,
+    256.44
+   ]
+  }
+ ],
+ "macro_halo_um": 4.32,
+ "core_frame_um": [
+  4.32,
+  4.32,
+  220.32,
+  263.52
+ ],
+ "body_gaps_um": [
+  8.64,
+  19.056
+ ],
+ "south_std_band_um": [
+  4.32,
+  12.96
+ ],
+ "north_std_band_um": [
+  260.76,
+  263.52
+ ],
+ "main_clock": {
+  "pin_local_xy_um": [
+   111.96,
+   177.12
+  ],
+  "PG_driver_anchor_um": [
+   112.32,
+   177.12
+  ],
+  "reservation_um": [
+   103.68,
+   168.48,
+   120.96,
+   185.76
+  ],
+  "macro3_shift_from_touching_seed_um": 0.192,
+  "production_island_gate": {
+   "receipt": {
+    "entries": 1,
+    "checked": 1,
+    "over_macro": 0,
+    "unknown_macros": 0,
+    "no_entry": 0,
+    "sidecar": "/tmp/tmp0mbbg3zx/core_macros.json"
+   },
+   "errors": []
+  },
+  "expanded_halo_diagnostic": {
+   "receipt": {
+    "entries": 1,
+    "checked": 1,
+    "over_macro": 1,
+    "unknown_macros": 0,
+    "no_entry": 0,
+    "sidecar": "/tmp/tmpgglgb1yi/core_macros.json"
+   },
+   "errors": [
+    {
+     "level": "ERROR",
+     "check": "clock_entry_macro",
+     "msg": "type model core u_vms (native): clock entry [111.96, 177.12] / island [103.68, 168.48, 120.96, 185.76] over macro(s) ['u_core.u_ot_pr_core.bank.u_b', 'u_core.u_ot_pr_core.bank.u_c'] (+halo 4.32): move the entry to a std-cell region at the core's clock centroid (12.8a)",
+     "type": "model",
+     "g0c": true
+    }
+   ]
+  },
+  "actual_driver_cells": "NOT PLACED. Actual bodies must fit standard-cell free street; outer island overlaps macro keepout halos under4.32 diagnostic. No policy changed."
+ },
+ "boundary_ff": {
+  "count": 3910,
+  "native_roots": {
+   "clk_s": 1107,
+   "clk_n": 587,
+   "clk_w": 1107,
+   "clk_e": 1109
+  },
+  "unique_existing_flops": true,
+  "ownership_file": "boundary_ownership.csv",
+  "actual_physical_faces": "Per-profile census, not inferred from clock root names"
+ },
+ "other_ff": {
+  "count": 4014,
+  "root": "clk",
+  "proposed_guide_um": [
+   12.96,
+   12.96,
+   30.24,
+   260.76
+  ],
+  "placement": "UNMEASURED existing-register inclusive guide PREP only"
+ },
+ "resource_projection": {
+  "final_std_area_um2": 3430.24,
+  "macro_area_um2": 36952.065216,
+  "area_um2": 60167.57759999999,
+  "std_free_fill": 0.14775637699748137,
+  "macro_fraction": 0.6141524503722086,
+  "actual_empty_bins": "NOT RUN",
+  "rule": "Existing>=50%macro lowfillINFO only;20%targetnotattained;actualchannel demand remains HOLD"
+ },
+ "typed_profiles": [
+  {
+   "old_view": "hnx_vms_bank_q0_faces__vecd4ae@0bb6804dab59",
+   "old_pin_sha256": "0bb6804dab5991684a7cf0fe1d49703168ea2c045e0dd2221d258b4d08e95484",
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_9eec3f962d.json",
+   "proposed_pins_file": "0bb6804dab59_proposed_pins.json",
+   "proposed_pin_sha256": "eb988488d23c2ac52e1287fa950b93eeab2afe084bb30c5c921d137c62905ecd",
+   "proposed_identity": "UNADOPTED:sha256:eb988488d23c2ac52e1287fa950b93eeab2afe084bb30c5c921d137c62905ecd",
+   "face_census": {
+    "W": {
+     "pins": 260,
+     "average_pins_per_core_um": 1.0030864197530864,
+     "min_track_pitch_um": 0.96,
+     "source_root_counts": {
+      "clk_w": 258,
+      "clk_s": 1,
+      "clk_n": 1
+     }
+    },
+    "S": {
+     "pins": 845,
+     "average_pins_per_core_um": 3.912037037037037,
+     "min_track_pitch_um": 0.24,
+     "source_root_counts": {
+      "clk_s": 274,
+      "clk_n": 289,
+      "clk_e": 282
+     }
+    },
+    "E": {
+     "pins": 2250,
+     "average_pins_per_core_um": 8.680555555555555,
+     "min_track_pitch_um": 0.096,
+     "source_root_counts": {
+      "clk_n": 297,
+      "clk_e": 553,
+      "clk_w": 849,
+      "clk_s": 551
+     }
+    },
+    "N": {
+     "pins": 555,
+     "average_pins_per_core_um": 2.5694444444444446,
+     "min_track_pitch_um": 0.384,
+     "source_root_counts": {
+      "clk_e": 274,
+      "clk_s": 281
+     }
+    }
+   },
+   "scope": "Original physical DATA face assignments/order retained separately per exact profile; new master-local positions/shapes need native GEN and parent G0C event. No qualification alias."
+  },
+  {
+   "old_view": "hnx_vms_bank_q0_faces__vecd4ae@5a03758c3d07",
+   "old_pin_sha256": "5a03758c3d07ac87c540ef83d19714cee01c640bfa7be423bcbc42d7f0415b04",
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_101f7349aa.json",
+   "proposed_pins_file": "5a03758c3d07_proposed_pins.json",
+   "proposed_pin_sha256": "d2f399bcf434bf66e2ec1325c3df348b4e942d5102611e7f788727c8a16c920b",
+   "proposed_identity": "UNADOPTED:sha256:d2f399bcf434bf66e2ec1325c3df348b4e942d5102611e7f788727c8a16c920b",
+   "face_census": {
+    "W": {
+     "pins": 260,
+     "average_pins_per_core_um": 1.0030864197530864,
+     "min_track_pitch_um": 0.96,
+     "source_root_counts": {
+      "clk_w": 258,
+      "clk_s": 1,
+      "clk_n": 1
+     }
+    },
+    "S": {
+     "pins": 838,
+     "average_pins_per_core_um": 3.8796296296296298,
+     "min_track_pitch_um": 0.24,
+     "source_root_counts": {
+      "clk_s": 274,
+      "clk_e": 556,
+      "clk_n": 8
+     }
+    },
+    "E": {
+     "pins": 2250,
+     "average_pins_per_core_um": 8.680555555555555,
+     "min_track_pitch_um": 0.096,
+     "source_root_counts": {
+      "clk_n": 297,
+      "clk_e": 553,
+      "clk_w": 849,
+      "clk_s": 551
+     }
+    },
+    "N": {
+     "pins": 562,
+     "average_pins_per_core_um": 2.6018518518518516,
+     "min_track_pitch_um": 0.384,
+     "source_root_counts": {
+      "clk_n": 281,
+      "clk_s": 281
+     }
+    }
+   },
+   "scope": "Original physical DATA face assignments/order retained separately per exact profile; new master-local positions/shapes need native GEN and parent G0C event. No qualification alias."
+  },
+  {
+   "old_view": "hnx_vms_bank_q0_faces__vecd4ae@88b84f19c25b",
+   "old_pin_sha256": "88b84f19c25ba2e03ccb62fef544a0217003186fb0c946392bec5d47c6bb4cce",
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_8087f86890.json",
+   "proposed_pins_file": "88b84f19c25b_proposed_pins.json",
+   "proposed_pin_sha256": "e513a7a3ef3088c102911ab51664f82839f0ee244c29c2b56e803ff921339f43",
+   "proposed_identity": "UNADOPTED:sha256:e513a7a3ef3088c102911ab51664f82839f0ee244c29c2b56e803ff921339f43",
+   "face_census": {
+    "W": {
+     "pins": 3,
+     "average_pins_per_core_um": 0.011574074074074075,
+     "min_track_pitch_um": 129.552,
+     "source_root_counts": {
+      "clk_w": 1,
+      "clk_s": 1,
+      "clk_n": 1
+     }
+    },
+    "S": {
+     "pins": 1119,
+     "average_pins_per_core_um": 5.180555555555555,
+     "min_track_pitch_um": 0.192,
+     "source_root_counts": {
+      "clk_s": 274,
+      "clk_n": 289,
+      "clk_e": 556
+     }
+    },
+    "E": {
+     "pins": 2250,
+     "average_pins_per_core_um": 8.680555555555555,
+     "min_track_pitch_um": 0.096,
+     "source_root_counts": {
+      "clk_n": 297,
+      "clk_e": 553,
+      "clk_w": 849,
+      "clk_s": 551
+     }
+    },
+    "N": {
+     "pins": 538,
+     "average_pins_per_core_um": 2.490740740740741,
+     "min_track_pitch_um": 0.384,
+     "source_root_counts": {
+      "clk_s": 281,
+      "clk_w": 257
+     }
+    }
+   },
+   "scope": "Original physical DATA face assignments/order retained separately per exact profile; new master-local positions/shapes need native GEN and parent G0C event. No qualification alias."
+  },
+  {
+   "old_view": "hnx_vms_bank_q0_faces__vecd4ae@d6532bde006e",
+   "old_pin_sha256": "d6532bde006e0f1bb32b6c7d77579125a37468828aeaa12256449377f5458d71",
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MY__codex_g21.json",
+   "proposed_pins_file": "d6532bde006e_proposed_pins.json",
+   "proposed_pin_sha256": "64ae40901b99c1567a359ac0dc2b1290815330e3f034a0683e2314491e92f209",
+   "proposed_identity": "UNADOPTED:sha256:64ae40901b99c1567a359ac0dc2b1290815330e3f034a0683e2314491e92f209",
+   "face_census": {
+    "S": {
+     "pins": 1379,
+     "average_pins_per_core_um": 6.3842592592592595,
+     "min_track_pitch_um": 0.144,
+     "source_root_counts": {
+      "clk_s": 275,
+      "clk_n": 290,
+      "clk_e": 556,
+      "clk_w": 258
+     }
+    },
+    "E": {
+     "pins": 2531,
+     "average_pins_per_core_um": 9.764660493827162,
+     "min_track_pitch_um": 0.096,
+     "source_root_counts": {
+      "clk_n": 297,
+      "clk_e": 553,
+      "clk_w": 849,
+      "clk_s": 832
+     }
+    }
+   },
+   "scope": "Original physical DATA face assignments/order retained separately per exact profile; new master-local positions/shapes need native GEN and parent G0C event. No qualification alias."
+  },
+  {
+   "old_view": "hnx_vms_bank_q0_faces__vecd4ae@def761e36c82",
+   "old_pin_sha256": "def761e36c8269b144eb7864ba61f2300edd91b2b17579c1f49f95ea3ee0d7c1",
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_79b1ed8e1d.json",
+   "proposed_pins_file": "def761e36c82_proposed_pins.json",
+   "proposed_pin_sha256": "f6a390b2208a4ab489d3d3eff000afb095512e4bb459c6359ba95b7ed335b532",
+   "proposed_identity": "UNADOPTED:sha256:f6a390b2208a4ab489d3d3eff000afb095512e4bb459c6359ba95b7ed335b532",
+   "face_census": {
+    "W": {
+     "pins": 260,
+     "average_pins_per_core_um": 1.0030864197530864,
+     "min_track_pitch_um": 0.96,
+     "source_root_counts": {
+      "clk_w": 258,
+      "clk_s": 1,
+      "clk_n": 1
+     }
+    },
+    "S": {
+     "pins": 838,
+     "average_pins_per_core_um": 3.8796296296296298,
+     "min_track_pitch_um": 0.24,
+     "source_root_counts": {
+      "clk_s": 274,
+      "clk_e": 556,
+      "clk_n": 8
+     }
+    },
+    "E": {
+     "pins": 2531,
+     "average_pins_per_core_um": 9.764660493827162,
+     "min_track_pitch_um": 0.096,
+     "source_root_counts": {
+      "clk_n": 578,
+      "clk_e": 553,
+      "clk_w": 849,
+      "clk_s": 551
+     }
+    },
+    "N": {
+     "pins": 281,
+     "average_pins_per_core_um": 1.3009259259259258,
+     "min_track_pitch_um": 0.768,
+     "source_root_counts": {
+      "clk_s": 281
+     }
+    }
+   },
+   "scope": "Original physical DATA face assignments/order retained separately per exact profile; new master-local positions/shapes need native GEN and parent G0C event. No qualification alias."
+  },
+  {
+   "old_view": "hnx_vms_bank_q0_faces__vecd4ae@ed4cba8a8b2a",
+   "old_pin_sha256": "ed4cba8a8b2aad188795e8b97c78c2906f8716156c2a0fa7b6758736b82b6f12",
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_MX__codex_g21.json",
+   "proposed_pins_file": "ed4cba8a8b2a_proposed_pins.json",
+   "proposed_pin_sha256": "6c378caaa07b07747e5ae244bc52d85c2b0e614b81734353faec2474c9d5d955",
+   "proposed_identity": "UNADOPTED:sha256:6c378caaa07b07747e5ae244bc52d85c2b0e614b81734353faec2474c9d5d955",
+   "face_census": {
+    "S": {
+     "pins": 1402,
+     "average_pins_per_core_um": 6.4907407407407405,
+     "min_track_pitch_um": 0.144,
+     "source_root_counts": {
+      "clk_s": 556,
+      "clk_n": 290,
+      "clk_e": 556
+     }
+    },
+    "W": {
+     "pins": 258,
+     "average_pins_per_core_um": 0.9953703703703705,
+     "min_track_pitch_um": 1.008,
+     "source_root_counts": {
+      "clk_w": 258
+     }
+    },
+    "E": {
+     "pins": 2250,
+     "average_pins_per_core_um": 8.680555555555555,
+     "min_track_pitch_um": 0.096,
+     "source_root_counts": {
+      "clk_n": 297,
+      "clk_e": 553,
+      "clk_w": 849,
+      "clk_s": 551
+     }
+    }
+   },
+   "scope": "Original physical DATA face assignments/order retained separately per exact profile; new master-local positions/shapes need native GEN and parent G0C event. No qualification alias."
+  },
+  {
+   "old_view": "hnx_vms_bank_q0_faces__vecd4ae@f9c1bd05a046",
+   "old_pin_sha256": "f9c1bd05a046d36a9584941e4ed61581369188a44198ed227312a2edb9c96b64",
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__codex_g21.json",
+   "proposed_pins_file": "f9c1bd05a046_proposed_pins.json",
+   "proposed_pin_sha256": "a588f6d6a1c2e237d637b6a412fa5b1f152900ec4402fd4b3b315c4cf3d9feac",
+   "proposed_identity": "UNADOPTED:sha256:a588f6d6a1c2e237d637b6a412fa5b1f152900ec4402fd4b3b315c4cf3d9feac",
+   "face_census": {
+    "S": {
+     "pins": 1121,
+     "average_pins_per_core_um": 5.189814814814815,
+     "min_track_pitch_um": 0.192,
+     "source_root_counts": {
+      "clk_s": 275,
+      "clk_n": 290,
+      "clk_e": 556
+     }
+    },
+    "W": {
+     "pins": 258,
+     "average_pins_per_core_um": 0.9953703703703705,
+     "min_track_pitch_um": 1.008,
+     "source_root_counts": {
+      "clk_w": 258
+     }
+    },
+    "E": {
+     "pins": 2531,
+     "average_pins_per_core_um": 9.764660493827162,
+     "min_track_pitch_um": 0.096,
+     "source_root_counts": {
+      "clk_n": 297,
+      "clk_e": 553,
+      "clk_w": 849,
+      "clk_s": 832
+     }
+    }
+   },
+   "scope": "Original physical DATA face assignments/order retained separately per exact profile; new master-local positions/shapes need native GEN and parent G0C event. No qualification alias."
+  },
+  {
+   "old_view": "hnx_vms_bank_q0_faces__vecd4ae@114e9076fa98",
+   "old_pin_sha256": "114e9076fa98bef95b37be0d1c50c469382d5b80723a816dd94482825e5099e4",
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+   "proposed_pins_file": "114e9076fa98_proposed_pins.json",
+   "proposed_pin_sha256": "2bc1e2a0b1814518d02c392b1bed6ee01302a47a1c67bf01b3d4d6b227a5cb35",
+   "proposed_identity": "UNADOPTED:sha256:2bc1e2a0b1814518d02c392b1bed6ee01302a47a1c67bf01b3d4d6b227a5cb35",
+   "face_census": {
+    "W": {
+     "pins": 260,
+     "average_pins_per_core_um": 1.0030864197530864,
+     "min_track_pitch_um": 0.96,
+     "source_root_counts": {
+      "clk_w": 258,
+      "clk_s": 1,
+      "clk_n": 1
+     }
+    },
+    "S": {
+     "pins": 1119,
+     "average_pins_per_core_um": 5.180555555555555,
+     "min_track_pitch_um": 0.192,
+     "source_root_counts": {
+      "clk_s": 274,
+      "clk_n": 289,
+      "clk_e": 556
+     }
+    },
+    "E": {
+     "pins": 2250,
+     "average_pins_per_core_um": 8.680555555555555,
+     "min_track_pitch_um": 0.096,
+     "source_root_counts": {
+      "clk_n": 297,
+      "clk_e": 553,
+      "clk_w": 849,
+      "clk_s": 551
+     }
+    },
+    "N": {
+     "pins": 281,
+     "average_pins_per_core_um": 1.3009259259259258,
+     "min_track_pitch_um": 0.768,
+     "source_root_counts": {
+      "clk_s": 281
+     }
+    }
+   },
+   "scope": "Original physical DATA face assignments/order retained separately per exact profile; new master-local positions/shapes need native GEN and parent G0C event. No qualification alias."
+  }
+ ],
+ "parent_pose_proof_file": "parent_pose_proofs.json",
+ "holds": [
+  "No source, slot or new pin view adopted.",
+  "All3910 data points and rst_n require fresh child native GEN/pin LINT, exact source guard and full transformed parent G0C/calendar/physical endpoint event.",
+  "Main clock actual new pin moves\u00b121.6Y by pose; seven bottom clocks only kept globally by actual per-pose affine proof.",
+  "Actual clock tree/cell capacity/alignment, placed pin reach, standard-cell legality, actual channel/clock-inclusive50GRT and timing remain unmeasured.",
+  "Production macro-island helper uses existing sidecar halo0.0;4.32expanded island diagnostic failure retained rather than waived.",
+  "Current plan vec6293/mu1 source mismatch remains unresolved; no3\u21924alias."
+ ]
+}

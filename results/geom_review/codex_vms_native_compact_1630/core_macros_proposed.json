@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.core_macros.v1",
+ "scope": "UNADOPTED current-native proposal; existing production sidecar halo0.0 unchanged",
+ "halo_um": 0.0,
+ "cores": {
+  "hnx_vms_bank_q0_faces__vecd4ae": {
+   "status": "KNOWN",
+   "outline_um": [
+    224.64,
+    267.84
+   ],
+   "macros": [
+    {
+     "name": "u_core.u_ot_pr_core.bank.u_a",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      34.56,
+      17.28,
+      209.304,
+      87.768
+     ]
+    },
+    {
+     "name": "u_core.u_ot_pr_core.bank.u_b",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      34.56,
+      96.408,
+      209.304,
+      166.896
+     ]
+    },
+    {
+     "name": "u_core.u_ot_pr_core.bank.u_c",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      34.56,
+      185.952,
+      209.304,
+      256.44
+     ]
+    }
+   ]
+  }
+ }
+}
