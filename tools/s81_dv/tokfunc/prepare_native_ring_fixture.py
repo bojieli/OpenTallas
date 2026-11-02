@@ -21,11 +21,18 @@ def main():
         d=a.programme/label;events=[];beats=[]
         for line in (d/'producer.txt').read_text().splitlines():
             t,k,v=line.split();t,k,v=int(t),int(k),int(v,16)
-            if k==0:events.append((t,0,v))
+            if k==0:
+                if (v>>(21+26))==X.isd(gw=1,gw_fam=0,gw_par=0):
+                    del report['programmes'][label]['expected_issuer_pin'][str(t+3)]
+                    del report['programmes'][label]['source_commands'][str(t)]
+                    t=310
+                    report['programmes'][label]['expected_issuer_pin']['313']=f'{X.isd(gw=1,gw_fam=0,gw_par=0):040x}'
+                    report['programmes'][label]['source_commands']['310']=f'{X.isd(gw=1,gw_fam=0,gw_par=0):x}'
+                events.append((t,0,v))
             else:
                 assert k==1
                 index=v>>1024;data=v&((1<<1024)-1)
-                beats.append((456+4*index,1,index,data))
+                beats.append((370+4*index,1,index,data))
         assert len(beats)==80
         # Native GW control selects the BF write parity; family itself is decoded by rstop from K_XB.
         body=X.isd(gw=1,gw_fam=1,gw_par=0)
@@ -47,7 +54,7 @@ def main():
         (d/'producer.txt').write_text(''.join(f'{t} {k} {v:x}\n'for t,k,v in sorted(events)))
     report['native_ring_fixture']=dict(actual_producer='ot_s81sl_rstopt_xo own xf_v[2] four-fragment assembly',
         authoritative_family='native header kind K_XQ=1/K_XB=2, decoded by production rstop',
-        Q_beats=80,BF_beats=64,Q_start=456,BF_start=900,BF_window_source_date=800,
+        Q_beats=80,BF_beats=64,Q_start=370,Q_window_source_date=310,BF_start=900,BF_window_source_date=800,
         BF_payload='checkpoint norm-scale prefix4096, golden BF16 conversion; component fixture only',
         checkpoint_input_sha256=hashlib.sha256(input_path.read_bytes()).hexdigest(),
         phase106_mission_operand_qualified=False,production_enabled=False)

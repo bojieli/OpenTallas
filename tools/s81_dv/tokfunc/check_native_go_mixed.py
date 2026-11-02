@@ -64,6 +64,8 @@ def main():
         original_current_exact=eq,controls_caught=controls,
         native_CFG_sha256={f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in cfgfiles},
         first_capture_anchor='measured source-pinned same-cut phase0 boundary763; relative calendar dates independent',
+        native_ring_input_checks={n:{k:cases[n].get(k)for k in ['native_ring_terminal','native_fragment_header_gather_exact','native_fragment_gather_beats']}for n in names},
+        native_ring_fixture=programme.get('native_ring_fixture'),
         BF_arithmetic_or_operand_source_qualified=False,constant_checkpoint_Q_activation=True,
         fresh_operand_versions_qualified=False,native_provider_qualified=False,production_enabled=False,
         RTL_changes=0,added_FF=0,added_cycles=0,
