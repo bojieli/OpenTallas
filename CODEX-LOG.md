@@ -9779,3 +9779,9 @@ All children are parked or idle with PARK delivered; no new launches. Cap packet
 - L4 latest bounded216-cell readonly forecasts are F6 TT-8.29/F10-12.82 (from-74.07); FF-8.56 remains. No physical adoption.
 - SSTNGEN3873569 terminated at wrong contract class; corrected ordinary hard-core recipes are PREP only, no retry.
 - Owned gunit worktree sparse checkout FINISHED cleanly during park,46GB→1.9GB (~44GB recovered). All files remain inGit; closed50-file source/routedL0 bundle and routed datasets protected; foreign trees untouched. Do not infer that disk remains below floor from earlier sample; Claude should inventory before retries.
+
+## Active takeover 2026-11-01 20:34 PST
+All 494 lane files inventoried under lanes/CODEX.md; six parent workers cover current five dies, three token paths, flow/kits, geometry/disks. Root owns central integration. Existing jobs preserved. Current main origin a0f8f0ad6. Latest binding methodology precedence applies (6.1 owner12.24c setup uncertainty0, hold25, 833ps; no SS); no ad-hoc rule relaxations.
+
+OWNER?
+2026-11-01 20:34 PST: HBM KIT-WAVE-16 asks to build reviewed q_su11/q_spu0 partition-type pilots before die clock PASS. This would override owner12.22 gate; default remains HOLD for types, hard cores and clock/other work continue. Does owner authorize that scoped allowlist?
