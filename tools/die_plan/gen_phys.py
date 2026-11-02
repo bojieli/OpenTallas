@@ -2940,6 +2940,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         (kd / "landing_exports.tcl").write_text(LC.export_tcl(P, tn, bit0))
         hook = kd / "clock_taps.tcl"
         hook.write_text(hook.read_text() + "\nsource /work/landing_exports.tcl\n")
+        export_check = LC.export_check_tcl(P, tn, bit0)
+        if export_check:
+            (kd / "landing_exports_check.tcl").write_text(export_check)
+            hook.write_text(hook.read_text() + "source /work/landing_exports_check.tcl\n"
+                            + "ot_cland_export_require_continuity pre_cts\n")
         import landing_place as LP
         (kd / "landing_placement.tcl").write_text(LP.tcl(P, tn))
         hook = kd / "face_flops.tcl"

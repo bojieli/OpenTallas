@@ -4,6 +4,12 @@
 # ORFS sources POST_CTS inside a procedure. Both helpers define global procs
 # whose state must live at global scope too.
 set cp_dir [file dirname [file normalize [info script]]]
+# Catch a lost declared forward-clock path before balancing or further repair.
+set cp_export_check [file join $cp_dir landing_exports_check.tcl]
+if {[file exists $cp_export_check]} {
+  uplevel #0 [list source $cp_export_check]
+  ot_cland_export_require_continuity cts_post_entry
+}
 uplevel #0 [list source [file join $cp_dir tap_balance.tcl]]
 if {![info exists ::env(OT_LEAF_AFFINITY)] || $::env(OT_LEAF_AFFINITY) ne "0"} { uplevel #0 [list source [file join $cp_dir leaf_affinity.tcl]] }
 # Optional reset FF/driver pairs must retain the registered405um reach after CTS.
@@ -16,3 +22,4 @@ if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "
 uplevel #0 [list source [file join $cp_dir pg_connect.tcl]]
 ot_pg_connect_all cts_post
 ot_pg_require_bound cts_post
+if {[file exists $cp_export_check]} { ot_cland_export_require_continuity cts_post_exit }

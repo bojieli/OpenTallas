@@ -502,3 +502,65 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
                 "$cland_net setSigType CLOCK; $cland_fn setSigType CLOCK",
                 f"puts {{OT_CLAND_EXPORT {n} <- {s} via {fw} ({FWD_BUFFER_MASTER} at the source)}}"]
     return "\n".join(out)+"\n"
+
+
+def export_check_tcl(P, tn, bit0=frozenset()):
+    """Read-only continuity checks for declared forwarded-clock drivers.
+
+    CTS may insert a buffer tree before A, so compare its real fanin root,
+    rather than requiring A to remain on the original unbuffered source net.
+    This detects a disconnected export; it does not reconnect or protect it.
+    """
+    if export_form(P, tn) != "fwd_buffer":
+        return ""
+    pins = [p for p in P.types[tn].get("clock", {}).get("landing_contract", {}).get("pins", [])
+            if p["kind"] == "clock" and p["dir"] == "out"]
+    if not pins:
+        return ""
+    text = r'''# Generated declared-clock continuity only: no net/instance/placement mutation.
+proc ot_cland_export_check_one {where dst_name src_name inst_name master_name} {
+  set block [ord::get_db_block]
+  set dst [$block findBTerm $dst_name]
+  set src [$block findBTerm $src_name]
+  set inst [$block findInst $inst_name]
+  if {$dst eq "NULL" || $src eq "NULL" || $inst eq "NULL"} {
+    error "OT_CLAND_EXPORT_OPEN $where $dst_name: declared endpoint/driver missing"
+  }
+  if {[[$inst getMaster] getName] ne $master_name} {
+    error "OT_CLAND_EXPORT_OPEN $where $dst_name: declared driver master changed"
+  }
+  set a [$inst findITerm A]; set y [$inst findITerm Y]
+  if {$a eq "NULL" || $y eq "NULL" || [$a getNet] eq "NULL" || [$y getNet] eq "NULL"} {
+    error "OT_CLAND_EXPORT_OPEN $where $dst_name: driver A/Y disconnected"
+  }
+  if {[$src getNet] eq "NULL" || [$dst getNet] ne [$y getNet]} {
+    error "OT_CLAND_EXPORT_OPEN $where $dst_name: declared source/output net missing"
+  }
+  set ap [get_pins -quiet [list ${inst_name}/A]]
+  if {[llength $ap] != 1} { error "OT_CLAND_EXPORT_OPEN $where $dst_name: A timing pin missing" }
+  set roots {}
+  foreach p [get_fanin -to $ap -flat -startpoints_only -trace_arcs all] {
+    lappend roots [get_full_name $p]
+  }
+  set roots [lsort -unique $roots]
+  if {$roots ne [list $src_name]} {
+    error "OT_CLAND_EXPORT_OPEN $where $dst_name: root $roots != declared $src_name"
+  }
+  puts "OT_CLAND_EXPORT_CONNECTED $where $dst_name <- $src_name via $inst_name"
+  return 1
+}
+proc ot_cland_export_require_continuity {where} {
+  set count 0
+  foreach row $::ot_cland_export_links {
+    incr count [ot_cland_export_check_one $where {*}$row]
+  }
+  puts "OT_CLAND_EXPORT_BOUND $where links=$count open=0"
+  return $count
+}
+set ::ot_cland_export_links [list]
+'''
+    for p in pins:
+        text += (f"lappend ::ot_cland_export_links [list {{{_bterm(p['name'], bit0)}}} "
+                 f"{{{_bterm(p['source_clock_port'], bit0)}}} {{cland_fwd_{p['name']}}} "
+                 f"{{{FWD_BUFFER_MASTER}}}]\n")
+    return text

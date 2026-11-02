@@ -1,0 +1,13 @@
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+OT_CLAND_EXPORT_CONNECTED readonly_native fclk_out_ad_o <- clk_t4 via cland_fwd_fclk_out_ad_o
+OT_CLAND_EXPORT_CONNECTED readonly_native fclk_out_au_o <- clk_t8 via cland_fwd_fclk_out_au_o
+OT_CLAND_EXPORT_CONNECTED readonly_native fclk_out_bd_o <- clk_t2 via cland_fwd_fclk_out_bd_o
+EXPECTED_NATIVE_OPEN fclk_out_bu_o OT_CLAND_EXPORT_OPEN readonly_native fclk_out_bu_o: driver A/Y disconnected
+EXPECTED_NATIVE_OPEN fclk_out_h_rx_ft_o OT_CLAND_EXPORT_OPEN readonly_native fclk_out_h_rx_ft_o: driver A/Y disconnected
+EXPECTED_WRONG_SOURCE OT_CLAND_EXPORT_OPEN wrong_declared_source fclk_out_ad_o: root clk_t4 != declared clk_t8
+READ_ONLY_GUARD_TEST_PASS connected=3 physical_open=2 wrong_source_rejected=1; no ODB write/repair
