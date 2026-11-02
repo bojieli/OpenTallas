@@ -224,10 +224,33 @@ REQUEST_FILE = '.private_hhp_clock_mesh/request.json'
 REQUEST_SCHEMA = 'opentallas.hhp.private_clock_mesh_request.v1'
 
 
-def private_enabled(kit):
+
+def private_config_values(kit):
+    """Accept only the normal generated literal family, never a partial Make evaluator."""
     text = (Path(kit) / 'config.mk').read_text().replace('\\\n', ' ')
-    values = re.findall(r'^\s*(?:override\s+)?export\s+OT_PRIVATE_HHP_CLOCK_MESH\s*[:?]?=\s*(.*?)\s*$', text, re.M)
-    return values == ['1']
+    unique = {'PLATFORM', 'DESIGN_NAME', 'VERILOG_FILES', 'VERILOG_DEFINES', 'VERILOG_TOP_PARAMS',
+              'VERILOG_INCLUDE_DIRS', 'SYNTH_INCLUDE_DIRS', 'SYNTH_BLACKBOXES',
+              'OT_PRIVATE_HHP_CLOCK_MESH', 'OT_RTL_LINT_FLATTEN', 'TC_LIB_FILES', 'BC_LIB_FILES'}
+    values = {}
+    for number, line in enumerate(text.splitlines(), 1):
+        line = line.strip()
+        if not line or line.startswith('#'):
+            continue
+        match = re.fullmatch(r'(?:override\s+)?export\s+([A-Za-z_][A-Za-z0-9_]*)\s+=\s*(.*)', line)
+        require(match is not None, f'unsupported private generated config assignment/directive at line {number}')
+        key, value = match.groups()
+        require(not any(c in value for c in ('`', '#', ';')), 'unsupported private config literal: ' + key)
+        if '$' in value:
+            prefix = {'TC_LIB_FILES': '$(TC_NLDM_LIB_FILES)', 'BC_LIB_FILES': '$(BC_NLDM_LIB_FILES)'}.get(key)
+            require(prefix is not None and value.startswith(prefix) and '$' not in value[len(prefix):]
+                    and all(re.fullmatch(r'/work/macros/[A-Za-z0-9_.-]+\.lib(?:\.gz)?', x)
+                            for x in value[len(prefix):].split()), 'unsupported private config expansion: ' + key)
+        require(key not in unique or key not in values, 'duplicate private source config assignment: ' + key)
+        values[key] = value.split()
+    return values
+
+def private_enabled(kit):
+    return private_config_values(kit).get('OT_PRIVATE_HHP_CLOCK_MESH') == ['1']
 
 
 def _inside(kit, name):
@@ -238,14 +261,12 @@ def _inside(kit, name):
 
 
 def actual_source_config(kit):
-    text = (Path(kit) / 'config.mk').read_text().replace('\\\n', ' ')
-    profile = {}
-    expected = {'VERILOG_DEFINES': ['-DSYNTHESIS'], 'VERILOG_TOP_PARAMS': [],
+    values = private_config_values(kit)
+    expected = {'PLATFORM': ['asap7'], 'VERILOG_DEFINES': ['-DSYNTHESIS'], 'VERILOG_TOP_PARAMS': [],
                 'VERILOG_INCLUDE_DIRS': [], 'SYNTH_INCLUDE_DIRS': []}
+    profile = {}
     for name, value in expected.items():
-        rows = re.findall(r'^\s*(?:override\s+)?export\s+' + name + r'\s*[:?]?=\s*(.*?)\s*$', text, re.M)
-        require(len(rows) <= 1, 'duplicate actual source config assignment: ' + name)
-        actual = rows[0].split() if rows else []
+        actual = values.get(name, [])
         require(actual == value, 'actual parameter/define/include profile differs: ' + name)
         profile[name] = actual
     return profile
@@ -268,16 +289,14 @@ def validate_private_request(kit):
     require(json.loads(paths['certificate'].read_text()) == fresh, 'private clock certificate is stale/edited')
     prep = json.loads(paths['source_prep'].read_text())
     expected = prep['parts'][request['part']]['source_files_sha256']
-    cfg = (kit / 'config.mk').read_text().replace('\\\n', ' ')
-    tops = re.findall(r'^\s*(?:override\s+)?export\s+DESIGN_NAME\s*[:?]?=\s*(.*?)\s*$', cfg, re.M)
-    require(tops == [TYPE], 'private clock subject is not exact parent TYPE')
-    blackboxes = re.findall(r'^\s*(?:override\s+)?export\s+SYNTH_BLACKBOXES\s*[:?]?=\s*(.*?)\s*$', cfg, re.M)
-    require(len(blackboxes) <= 1 and (not blackboxes or blackboxes[0].split() == ['qkd_kvs_pc']),
-            'only real BASE may be blackboxed; genuine HEAD must remain soft')
-    source_values = re.findall(r'^\s*(?:override\s+)?export\s+VERILOG_FILES\s*[:?]?=\s*(.*?)\s*$', cfg, re.M)
-    require(len(source_values) == 1, 'private clock subject needs one exact VERILOG_FILES assignment')
+    cfg = private_config_values(kit)
+    require(cfg.get('DESIGN_NAME') == [TYPE], 'private clock subject is not exact parent TYPE')
+    blackboxes = cfg.get('SYNTH_BLACKBOXES', [])
+    require(blackboxes in ([], ['qkd_kvs_pc']), 'only real BASE may be blackboxed; genuine HEAD must remain soft')
+    source_values = cfg.get('VERILOG_FILES', [])
+    require(source_values, 'private clock subject needs one exact VERILOG_FILES assignment')
     actual = {}
-    for token in source_values[0].split():
+    for token in source_values:
         require(token.startswith('/work/rtl/'), 'private source is outside normal kit rtl directory')
         name = token.removeprefix('/work/rtl/')
         require('/' not in name and name not in actual, 'duplicate/non-flat private source member')
@@ -306,7 +325,7 @@ def stage_private_context(kit, bundle, *, top, sources, synth_blackboxes=()):
     for file in bundle.rglob('*'):
         require(not file.is_symlink(), 'private context bundle must not contain symlinks')
     shutil.copytree(bundle, target)
-    text = f'export DESIGN_NAME = {top}\nexport VERILOG_FILES = {" ".join(sources)}\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport OT_PRIVATE_HHP_CLOCK_MESH = 1\n'
+    text = f'export PLATFORM = asap7\nexport DESIGN_NAME = {top}\nexport VERILOG_FILES = {" ".join(sources)}\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport OT_PRIVATE_HHP_CLOCK_MESH = 1\n'
     if synth_blackboxes:
         text += 'export SYNTH_BLACKBOXES = ' + ' '.join(synth_blackboxes) + '\n'
     # Honest partial generator source config; the completed config is revalidated below.

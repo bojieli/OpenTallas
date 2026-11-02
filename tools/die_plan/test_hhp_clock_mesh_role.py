@@ -41,7 +41,7 @@ def kit_template(tmp_path_factory):
     (context / 'request.json').write_text(json.dumps(request))
     shutil.copytree(context / 'capsule_r4/pc_EN_0/rtl', kit / 'rtl')
     sources = ' '.join('/work/rtl/' + p.name for p in sorted((kit / 'rtl').iterdir()))
-    (kit / 'config.mk').write_text(f'export DESIGN_NAME = {M.TYPE}\nexport VERILOG_FILES = {sources}\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport OT_PRIVATE_HHP_CLOCK_MESH = 1\n')
+    (kit / 'config.mk').write_text(f'export PLATFORM = asap7\nexport DESIGN_NAME = {M.TYPE}\nexport VERILOG_FILES = {sources}\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport OT_PRIVATE_HHP_CLOCK_MESH = 1\n')
     return kit
 
 
@@ -190,7 +190,7 @@ def native_partition_fixture(kit_template, tmp_path, monkeypatch):
     with tarfile.open(ROOT / 'results/hhp_native_ft_join_1102/actual_PC0355_model_fixture.tar.gz') as tar:
         tar.extractall(kit / 'macros')
     srcs = ' '.join('/work/rtl/' + p.name for p in sorted((kit / 'rtl').iterdir()))
-    (kit / 'config.mk').write_text(f'export DESIGN_NAME = {M.TYPE}\nexport VERILOG_FILES = {srcs}\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport EXTRA_UNCHANGED = 123\n')
+    (kit / 'config.mk').write_text(f'export PLATFORM = asap7\nexport DESIGN_NAME = {M.TYPE}\nexport VERILOG_FILES = {srcs}\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport EXTRA_UNCHANGED = 123\n')
     for name in ('face_keep_release.tcl', 'face_flops.tcl', 'face_flops_release.tcl', 'cts_post.tcl', 'grt_post.tcl'):
         (kit / name).write_text('# Original normal hook\n')
     (kit / 'pins.json').write_text('[]\n'); (kit / 'port_bind_pins.json').write_text('[]\n'); (kit / 'io.tcl').write_text('# Original ordinary pins remain here\n')
@@ -244,3 +244,26 @@ def test_complete_actual_json_census_controls(kit, change):
         n = next(n for n in bound['ports'] if n != 'ck_mesh'); bound['ports'][n]['bits'] = [bit]
     if change == 'wrapper_consumer': top['cells']['rogue'] = rogue
     with pytest.raises(ValueError): M.actual_native_mesh_inventory(kit, j)
+
+
+@pytest.mark.parametrize('line', [
+    'export VERILOG_DEFINES += -DOTHER',
+    'VERILOG_DEFINES = -DOTHER',
+    'override VERILOG_DEFINES = -DOTHER',
+    'export VERILOG_FILES += /work/rtl/rogue.sv',
+    'SYNTH_BLACKBOXES = qkd_kvs_pc_h_head_p',
+    'export DESIGN_NAME += other',
+    'export OT_PRIVATE_HHP_CLOCK_MESH += 1',
+    'export VERILOG_INCLUDE_DIRS += /evil',
+    'include extra.mk',
+    'export OTHER = $(eval VERILOG_DEFINES += -DOTHER)',
+    'export DESIGN_NAME := other',
+])
+def test_unsupported_effective_make_forms_fail_closed(kit, line):
+    p = kit / 'config.mk'; p.write_text(p.read_text() + '\n' + line + '\n')
+    with pytest.raises(ValueError): M.validate_private_request(kit)
+
+
+def test_variable_expansion_on_unique_source_assignment_fails(kit):
+    p = kit / 'config.mk'; p.write_text(p.read_text().replace('DESIGN_NAME = ' + M.TYPE, 'DESIGN_NAME = $(TOP)'))
+    with pytest.raises(ValueError, match='expansion'): M.validate_private_request(kit)
