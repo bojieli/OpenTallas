@@ -1,0 +1,22 @@
+{
+  "all68857_DFF_actual_LEF_area_um2": 20155.33368,
+  "actual_nonFF_standard_cell_area_um2": 10691.586900000002,
+  "nonFF_regional_placement": "UNRESERVED/UNQUALIFIED:10691.5869um2 mapped standard combinational area still requires whole-logic placement; FF-only geometry is not regional logic-capacity PASS",
+  "control_control_overlaps": 0,
+  "failed_conservative_row_fits": 0,
+  "local_occupancy_proposal": 0.5,
+  "scope": "NEW private finite placement intent ONLY; no GEN/CAD/source/endpoint/clock identity changes",
+  "native_unresolved_input": 38821,
+  "new_window_FFs": 28531,
+  "unallocated_FFs": 10290,
+  "new_regions": 296,
+  "unplaced_tiles": 59,
+  "unresolved_control_roles": 0,
+  "explicit_control_overlaps": 0,
+  "total_new_exact_FF_master_area_um2": 11392.986959999982,
+  "bank_window_area_um2": 20696.601599999958,
+  "max_bank_occupancy": 0.5000000000000004,
+  "endpoints_unchanged": 76,
+  "no_clock_assignment": true,
+  "status": "REVIEW ONLY; unallocated/overlap groups remain HOLD"
+}
