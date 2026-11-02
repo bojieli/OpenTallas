@@ -1,0 +1,6 @@
+# PRUNE-1101F epyc2 manifest 2026-11-01 18:53 PST: before delete; same checks as PRUNE-1101F-intel1.tsv (a-d). epyc2 has no source-follow and no wt/kit-wave-*; wt/ total 10 GB.
+host	path	size_GB	reason	checks
+epyc2	/srv/opentallas-scratch2/claude/wt/clk-tool-3	0.14	W-idle-worktree: no file <6h, clean, HEAD on origin	a,b,c,d PASS
+epyc2	/srv/opentallas-scratch2/claude/wt/hbm-hubmesh-7	1.7	W-idle-worktree: no file <6h, clean, HEAD on origin	a,b,c,d PASS
+epyc2	/srv/opentallas-scratch2/claude/wt/codex-s81-sta-1101	0.8	W-codex-idle: no file <12h, no process, clean (empty diff), HEAD on origin	a,b,c,d PASS
+# KEPT (blocked): die-ci/wt 44 GB (live die_ci.py nightly g2 part pid 8535, up 5d15h, ot-run client on intel2 pid 609588); wt/die-s81-47, die-s81-47g, codex-caprt/pslice-nativefix/pstore-proto (files <6-12h); wt/kv-tok-e (dirty); wt/tok-*, elem-s81-st405 excluded; broken-gitdir codex-* (no HEAD) skipped.
