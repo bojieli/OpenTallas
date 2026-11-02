@@ -1,0 +1,1728 @@
+{
+ "scope": "EXACT_FROZEN_TX3_GEN_REVIEW_ONLY",
+ "source": "622cfa83e9d2b7cb2b4df40e7156dbd2c108970b",
+ "outline_um": [
+  939.6,
+  760.32
+ ],
+ "pins": 2789,
+ "macros": [
+  {
+   "instance": "u_fcore.g_c\\[0\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    632.652,
+    109.99199999999999,
+    673.716
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[0\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    591.324,
+    109.99199999999999,
+    632.3879999999999
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[0\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    549.996,
+    109.99199999999999,
+    591.06
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[0\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    508.716,
+    109.99199999999999,
+    549.78
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[0\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    467.388,
+    109.99199999999999,
+    508.452
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[0\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    426.108,
+    109.99199999999999,
+    467.172
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[0\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    260.796,
+    109.99199999999999,
+    301.86
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    219.516,
+    109.99199999999999,
+    260.58
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    178.188,
+    109.99199999999999,
+    219.25199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    136.908,
+    109.99199999999999,
+    177.97199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    95.58,
+    109.99199999999999,
+    136.644
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[4\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    54.252,
+    109.99199999999999,
+    95.316
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[5\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    15.168,
+    12.972,
+    109.99199999999999,
+    54.036
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[6\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    632.652,
+    226.296,
+    673.716
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[7\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    591.324,
+    226.296,
+    632.3879999999999
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[8\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    549.996,
+    226.296,
+    591.06
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[9\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    508.716,
+    226.296,
+    549.78
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[10\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    467.388,
+    226.296,
+    508.452
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[11\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    426.108,
+    226.296,
+    467.172
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[12\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    260.796,
+    226.296,
+    301.86
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    219.516,
+    226.296,
+    260.58
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    178.188,
+    226.296,
+    219.25199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    136.908,
+    226.296,
+    177.97199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[1\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    95.58,
+    226.296,
+    136.644
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    54.252,
+    226.296,
+    95.316
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    131.472,
+    12.972,
+    226.296,
+    54.036
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    632.652,
+    342.6,
+    673.716
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    591.324,
+    342.6,
+    632.3879999999999
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[4\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    549.996,
+    342.6,
+    591.06
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[5\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    508.716,
+    342.6,
+    549.78
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[6\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    467.388,
+    342.6,
+    508.452
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[7\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    426.108,
+    342.6,
+    467.172
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[8\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    260.796,
+    342.6,
+    301.86
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[9\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    219.516,
+    342.6,
+    260.58
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[10\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    178.188,
+    342.6,
+    219.25199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[11\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    136.908,
+    342.6,
+    177.97199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[12\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    95.58,
+    342.6,
+    136.644
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    54.252,
+    342.6,
+    95.316
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    247.776,
+    12.972,
+    342.6,
+    54.036
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    632.652,
+    458.904,
+    673.716
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[2\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    591.324,
+    458.904,
+    632.3879999999999
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    549.996,
+    458.904,
+    591.06
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    508.716,
+    458.904,
+    549.78
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    467.388,
+    458.904,
+    508.452
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    426.108,
+    458.904,
+    467.172
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[4\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    260.796,
+    458.904,
+    301.86
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[5\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    219.516,
+    458.904,
+    260.58
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[6\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    178.188,
+    458.904,
+    219.25199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[7\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    136.908,
+    458.904,
+    177.97199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[8\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    95.58,
+    458.904,
+    136.644
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[9\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    54.252,
+    458.904,
+    95.316
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[10\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    364.08,
+    12.972,
+    458.904,
+    54.036
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[11\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    632.652,
+    575.208,
+    673.716
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[12\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    591.324,
+    575.208,
+    632.3879999999999
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    549.996,
+    575.208,
+    591.06
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    508.716,
+    575.208,
+    549.78
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    467.388,
+    575.208,
+    508.452
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    426.108,
+    575.208,
+    467.172
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[4\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    260.796,
+    575.208,
+    301.86
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[4\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    219.516,
+    575.208,
+    260.58
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[4\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    178.188,
+    575.208,
+    219.25199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[4\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    136.908,
+    575.208,
+    177.97199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[4\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    95.58,
+    575.208,
+    136.644
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[4\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    54.252,
+    575.208,
+    95.316
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[4\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    480.384,
+    12.972,
+    575.208,
+    54.036
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[5\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    632.652,
+    691.512,
+    673.716
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[5\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    591.324,
+    691.512,
+    632.3879999999999
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[5\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    549.996,
+    691.512,
+    591.06
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[5\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    508.716,
+    691.512,
+    549.78
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[5\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    467.388,
+    691.512,
+    508.452
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[5\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    426.108,
+    691.512,
+    467.172
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[5\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    260.796,
+    691.512,
+    301.86
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[6\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    219.516,
+    691.512,
+    260.58
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[6\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    178.188,
+    691.512,
+    219.25199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[6\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    136.908,
+    691.512,
+    177.97199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[6\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    95.58,
+    691.512,
+    136.644
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[6\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    54.252,
+    691.512,
+    95.316
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[6\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    596.688,
+    12.972,
+    691.512,
+    54.036
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[6\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    632.652,
+    807.8159999999999,
+    673.716
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[7\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    591.324,
+    807.8159999999999,
+    632.3879999999999
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[7\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    549.996,
+    807.8159999999999,
+    591.06
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[7\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    508.716,
+    807.8159999999999,
+    549.78
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[7\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    467.388,
+    807.8159999999999,
+    508.452
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[7\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    426.108,
+    807.8159999999999,
+    467.172
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[7\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    260.796,
+    807.8159999999999,
+    301.86
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[7\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    219.516,
+    807.8159999999999,
+    260.58
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[8\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    178.188,
+    807.8159999999999,
+    219.25199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[8\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    136.908,
+    807.8159999999999,
+    177.97199999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[8\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    95.58,
+    807.8159999999999,
+    136.644
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[8\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    54.252,
+    807.8159999999999,
+    95.316
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[8\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    712.992,
+    12.972,
+    807.8159999999999,
+    54.036
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[8\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    829.296,
+    632.652,
+    924.12,
+    673.716
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[8\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    829.296,
+    591.324,
+    924.12,
+    632.3879999999999
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[9\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    829.296,
+    549.996,
+    924.12,
+    591.06
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[9\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    829.296,
+    508.716,
+    924.12,
+    549.78
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[9\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    829.296,
+    467.388,
+    924.12,
+    508.452
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[9\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[0\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    829.296,
+    426.108,
+    924.12,
+    467.172
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[9\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[1\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    829.296,
+    260.796,
+    924.12,
+    301.86
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[9\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[2\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    829.296,
+    219.516,
+    924.12,
+    260.58
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_fcore.g_c\\[9\\].u_c.g_p.u_p.g_m4.ix\\[0\\].mem.g\\[3\\].mem",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "box": [
+    829.296,
+    178.188,
+    924.12,
+    219.25199999999998
+   ],
+   "orient": "R0"
+  }
+ ],
+ "guides": [
+  {
+   "name": "leaf0",
+   "box": [
+    21.5,
+    374.0,
+    91.5,
+    422.0
+   ]
+  },
+  {
+   "name": "oc0",
+   "box": [
+    21.5,
+    680.0,
+    91.5,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf1",
+   "box": [
+    116.9,
+    374.0,
+    186.9,
+    422.0
+   ]
+  },
+  {
+   "name": "oc1",
+   "box": [
+    116.9,
+    680.0,
+    186.9,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf2",
+   "box": [
+    212.3,
+    374.0,
+    282.3,
+    422.0
+   ]
+  },
+  {
+   "name": "oc2",
+   "box": [
+    212.3,
+    680.0,
+    282.3,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf3",
+   "box": [
+    307.7,
+    374.0,
+    377.7,
+    422.0
+   ]
+  },
+  {
+   "name": "oc3",
+   "box": [
+    307.7,
+    680.0,
+    377.7,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf4",
+   "box": [
+    403.1,
+    374.0,
+    473.1,
+    422.0
+   ]
+  },
+  {
+   "name": "oc4",
+   "box": [
+    403.1,
+    680.0,
+    473.1,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf5",
+   "box": [
+    498.5,
+    374.0,
+    568.5,
+    422.0
+   ]
+  },
+  {
+   "name": "oc5",
+   "box": [
+    498.5,
+    680.0,
+    568.5,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf6",
+   "box": [
+    593.9,
+    374.0,
+    663.9,
+    422.0
+   ]
+  },
+  {
+   "name": "oc6",
+   "box": [
+    593.9,
+    680.0,
+    663.9,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf7",
+   "box": [
+    689.3,
+    374.0,
+    759.3,
+    422.0
+   ]
+  },
+  {
+   "name": "oc7",
+   "box": [
+    689.3,
+    680.0,
+    759.3,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf8",
+   "box": [
+    784.7,
+    374.0,
+    854.7,
+    422.0
+   ]
+  },
+  {
+   "name": "oc8",
+   "box": [
+    784.7,
+    680.0,
+    854.7,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf9",
+   "box": [
+    870.4,
+    374.0,
+    926.261,
+    422.0
+   ]
+  },
+  {
+   "name": "oc9",
+   "box": [
+    870.4,
+    680.0,
+    926.261,
+    700.0
+   ]
+  },
+  {
+   "name": "sync0",
+   "box": [
+    7.0,
+    650.0,
+    14.0,
+    680.0
+   ]
+  },
+  {
+   "name": "ob",
+   "box": [
+    112.0,
+    150.0,
+    129.0,
+    170.0
+   ]
+  },
+  {
+   "name": "oe",
+   "box": [
+    928.5,
+    380.0,
+    934.5,
+    416.0
+   ]
+  },
+  {
+   "name": "ux",
+   "box": [
+    7.0,
+    362.0,
+    14.0,
+    418.0
+   ]
+  },
+  {
+   "name": "xs",
+   "box": [
+    113.0,
+    197.0,
+    127.0,
+    213.0
+   ]
+  },
+  {
+   "name": "reg0",
+   "box": [
+    182.0,
+    313.5,
+    218.0,
+    343.5
+   ]
+  },
+  {
+   "name": "reg1",
+   "box": [
+    517.0,
+    313.5,
+    553.0,
+    343.5
+   ]
+  },
+  {
+   "name": "reg2",
+   "box": [
+    782.0,
+    313.5,
+    818.0,
+    343.5
+   ]
+  },
+  {
+   "name": "fault",
+   "box": [
+    328.0,
+    307.0,
+    352.0,
+    327.0
+   ]
+  },
+  {
+   "name": "y0s0",
+   "box": [
+    32.667,
+    328.5,
+    48.667,
+    344.5
+   ]
+  },
+  {
+   "name": "y0s1",
+   "box": [
+    116.333,
+    328.5,
+    132.333,
+    344.5
+   ]
+  },
+  {
+   "name": "y1s0",
+   "box": [
+    144.333,
+    328.5,
+    160.333,
+    344.5
+   ]
+  },
+  {
+   "name": "y1s1",
+   "box": [
+    339.667,
+    328.5,
+    355.667,
+    344.5
+   ]
+  },
+  {
+   "name": "y2s0",
+   "box": [
+    232.667,
+    328.5,
+    248.667,
+    344.5
+   ]
+  },
+  {
+   "name": "y2s1",
+   "box": [
+    500.333,
+    328.5,
+    516.333,
+    344.5
+   ]
+  },
+  {
+   "name": "x0s0",
+   "box": [
+    116.0,
+    278.5,
+    124.0,
+    286.5
+   ]
+  },
+  {
+   "name": "x0s1",
+   "box": [
+    92.5,
+    332.5,
+    100.5,
+    340.5
+   ]
+  },
+  {
+   "name": "x1s0",
+   "box": [
+    116.0,
+    267.967,
+    124.0,
+    275.967
+   ]
+  },
+  {
+   "name": "x1s1",
+   "box": [
+    106.433,
+    332.5,
+    114.433,
+    340.5
+   ]
+  },
+  {
+   "name": "x2s0",
+   "box": [
+    116.0,
+    295.767,
+    124.0,
+    303.767
+   ]
+  },
+  {
+   "name": "x2s1",
+   "box": [
+    172.033,
+    332.5,
+    180.033,
+    340.5
+   ]
+  },
+  {
+   "name": "x3s0",
+   "box": [
+    116.0,
+    319.567,
+    124.0,
+    327.567
+   ]
+  },
+  {
+   "name": "x3s1",
+   "box": [
+    249.633,
+    332.5,
+    257.633,
+    340.5
+   ]
+  },
+  {
+   "name": "x4s0",
+   "box": [
+    134.867,
+    332.5,
+    142.867,
+    340.5
+   ]
+  },
+  {
+   "name": "x4s1",
+   "box": [
+    309.233,
+    332.5,
+    317.233,
+    340.5
+   ]
+  },
+  {
+   "name": "x5s0",
+   "box": [
+    178.667,
+    344.5,
+    186.667,
+    352.5
+   ]
+  },
+  {
+   "name": "x5s1",
+   "box": [
+    372.833,
+    332.5,
+    380.833,
+    340.5
+   ]
+  },
+  {
+   "name": "x6s0",
+   "box": [
+    218.467,
+    332.5,
+    226.467,
+    340.5
+   ]
+  },
+  {
+   "name": "x6s1",
+   "box": [
+    436.433,
+    332.5,
+    444.433,
+    340.5
+   ]
+  },
+  {
+   "name": "x7s0",
+   "box": [
+    242.267,
+    344.5,
+    250.267,
+    352.5
+   ]
+  },
+  {
+   "name": "x7s1",
+   "box": [
+    492.033,
+    332.5,
+    500.033,
+    340.5
+   ]
+  },
+  {
+   "name": "x8s0",
+   "box": [
+    274.067,
+    332.5,
+    282.067,
+    340.5
+   ]
+  },
+  {
+   "name": "x8s1",
+   "box": [
+    563.633,
+    332.5,
+    571.633,
+    340.5
+   ]
+  },
+  {
+   "name": "x9s0",
+   "box": [
+    300.277,
+    332.5,
+    308.277,
+    340.5
+   ]
+  },
+  {
+   "name": "x9s1",
+   "box": [
+    616.054,
+    332.5,
+    624.054,
+    340.5
+   ]
+  },
+  {
+   "name": "lf0",
+   "box": [
+    194.25,
+    344.5,
+    202.25,
+    352.5
+   ]
+  },
+  {
+   "name": "lf1",
+   "box": [
+    233.95,
+    344.5,
+    241.95,
+    352.5
+   ]
+  },
+  {
+   "name": "lf2",
+   "box": [
+    289.65,
+    344.5,
+    297.65,
+    352.5
+   ]
+  },
+  {
+   "name": "lf3",
+   "box": [
+    337.35,
+    344.5,
+    345.35,
+    352.5
+   ]
+  },
+  {
+   "name": "lf4",
+   "box": [
+    385.05,
+    344.5,
+    393.05,
+    352.5
+   ]
+  },
+  {
+   "name": "lf5",
+   "box": [
+    432.75,
+    344.5,
+    440.75,
+    352.5
+   ]
+  },
+  {
+   "name": "lf6",
+   "box": [
+    480.45,
+    344.5,
+    488.45,
+    352.5
+   ]
+  },
+  {
+   "name": "lf7",
+   "box": [
+    528.15,
+    344.5,
+    536.15,
+    352.5
+   ]
+  },
+  {
+   "name": "lf8",
+   "box": [
+    575.85,
+    344.5,
+    583.85,
+    352.5
+   ]
+  },
+  {
+   "name": "lf9",
+   "box": [
+    615.165,
+    344.5,
+    623.165,
+    352.5
+   ]
+  }
+ ],
+ "face_shell": {
+  "core": "ot_hbm_su_programme_pslice_c5__fcore",
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "face_flops": 2787,
+  "dropped": 0,
+  "unread_kept": 0,
+  "const_out_bits": 0,
+  "dup_out_bits": 0,
+  "plan_pins": 2789
+ },
+ "clock_entry": {
+  "file": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o_cm/clock_entries.json",
+  "sha256": "8883cf02258f00bdc55d48141ada022f436bf1d83699dd6f7a66b54328f8ce87",
+  "module": "ot_hbm_su_programme_pslice_c5",
+  "xy_um": [
+   470.88,
+   380.16
+  ],
+  "ports": [
+   "clk"
+  ],
+  "pins": 1,
+  "rule": "METHODOLOGY 12.8a plan clock entry (DIE-HBM-48)",
+  "moved": [
+   "clk"
+  ]
+ },
+ "failed_original": "exit126 before CAD due nonexecutable run_kit_hbm.sh",
+ "physical_adoption": false
+}
