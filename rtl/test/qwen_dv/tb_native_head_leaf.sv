@@ -1,11 +1,17 @@
-`timescale 1ns/1ps
+`timescale 1ns/1fs
 // Finite genuine tile0 PART1 component. No global dates, scales, or AMAX claim.
 module tb_native_head_leaf;
- reg clk=0,rst_n=0;always #1 clk=~clk;
+ reg clk=0,rst_n=0;always #0.416500 clk=~clk;
  reg [507:0]tap=0;wire[513:0]result;
  native_tile0_cut cut(.clk(clk),.rst_n(rst_n),.tap(tap),.t_out(result));
  reg[378:0]ib[0:3];reg[31:0]h[0:31],gold[0:3199];reg[23:0]rows[0:3199];
  integer outputs=0,reads=0,chunk=0,phase,k,g,l,r,goal,edges=0;reg[127:0]xl;
+ // Four native chunks issue1600 slots total.8000edges covers those slots,
+ // reset/face/IREG and four finite MUL8/ACC7/tree7/TX/result drains generously.
+ // This is a semantic component watchdog, not an external job wall-time cap.
+ localparam integer MAX_COMPONENT_EDGES=8000;
+ always @(posedge clk)if(edges>=MAX_COMPONENT_EDGES)
+  $fatal(1,"COMPONENT_WATCHDOG chunk=%0d outputs=%0d reads=%0d edges=%0d",chunk,outputs,reads,edges);
  `define LOGIC cut.native_tile0.u_g.u_tile.u_tile.u_logic
  `define ME `LOGIC.u_me
  `define ROM0 `LOGIC.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf
