@@ -1,0 +1,9 @@
+# Selected native CW→SRAM→RDOUT value path closes
+
+The exact current native s_0S_L0 leaf now stores and returns all16fresh released shared-down source words correctly at every word offset and both banks. Native/public RDOUT each returns the two exact256-bit payloads, allfault0/ready1; a payload-bit control fails. Source and receiver pins, clocks, reset sequence,16write enables and allother source files are unchanged. No cycles were added.
+
+Private override only: the qualified4ee600 native helper from G0C4034b8b18 (algorithm b02364758) replaces its flawed oversized-partselect SV representation. G0C owns the emitter/source proof and ROOT adoption; the exact native primitiveJSON, all34-bitB and undef SAT,2532strict4statecases,wrongshift/zerofill controls and Verilator four-offset gate remain separate. Original failed source/cache is preserved. No physical source changed or speculative re-sign is requested: the original Yosys primitive already implements the correct masks.
+
+Observed clock833ps events: first external CW129→registeredleafdn132→SRAM write134; subsequent first/lastword samples span134..141. Thus registeredCW→SRAM2edges on this selected profile. Registered RDOUT CV156→nativeLO161/162 (ages5/6), publicLO162/163 (ages6/7), unchanged. These are real standalone component timestamps, not whole-token arrival or lease dates. Fixture-value CW inputs do not prove actual frame-to-memory mission execution; production source epochs, interframe scheduling and global leases remain held.
+
+Intel1 `/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/native_cw_fixed_gate_1131`; unit3422939-1793580773 exit0,8GB2T. Candidate/old hashes and one-file-only assertion are in candidate_override.json. The original4GB frontend OOM and later value failure remain in prior directories. Native builder used copied completed objects and did not restart an advancing job.

@@ -1,0 +1,28 @@
+{
+  "status": "PASS_SELECTED_NATIVE_CW_SRAM_RDOUT",
+  "clock_ps": 833,
+  "source_words": 16,
+  "SRAM_write_events": 16,
+  "native_RDOUT_pairs": 2,
+  "public_RDOUT_pairs": 2,
+  "value_errors": 0,
+  "faults": 0,
+  "ready": 1,
+  "payload_control_caught": true,
+  "emitter_reference": "4034b8b18",
+  "emitter_algorithm": "b02364758",
+  "registered_CW_to_SRAM_edges": 2,
+  "external_packet_to_registered_leafdn_edges": 3,
+  "RDOUT_registered_CV_to_native_LO_edges": [
+    5,
+    6
+  ],
+  "RDOUT_registered_CV_to_public_LO_edges": [
+    6,
+    7
+  ],
+  "added_cycles": 0,
+  "actual_mission_source_epochs_qualified": false,
+  "global_leases_qualified": false,
+  "full_token": false
+}
