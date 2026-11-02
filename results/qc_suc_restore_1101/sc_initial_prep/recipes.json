@@ -1,0 +1,18 @@
+{
+ "qfd_dv_s5_sc2_leaf": {
+  "ref_tile": "results/qc_suc_restore_1101/sc_ref",
+  "plan_type": "sle_sc_v2",
+  "plan_pins_contract": true,
+  "pins_file": "/srv/opentallas-scratch2/claude/codex-qc-sc-initial-kit-1101/pins.json",
+  "suffix": "pin1center",
+  "insertion_ps": 250,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": "Common250/202.5 reference only; center structured tree is unqualified hypothesis until actual sink/NLDM/root-slew model",
+  "util": 0.45,
+  "max_layer": "M5",
+  "params": {
+   "HARD_PINREG": 1
+  },
+  "insertion_balance": false
+ }
+}

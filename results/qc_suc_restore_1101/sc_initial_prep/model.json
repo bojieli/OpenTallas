@@ -1,0 +1,182 @@
+{
+  "scope": "PREP ONLY; not a passing clock model or physical/source/native event adoption. No P&R launched.",
+  "HARD_PINREG": 1,
+  "native_parent_default": 0,
+  "source_candidate_commit": "2d761bce9b5",
+  "whole_source_EQ": "PENDING; new explicitdeclaration source versus existing mapped classic netlist",
+  "actual_standalone_mapped": {
+    "scope": "actualstandaloneHARD1 mappednetlist mastercounts and area, notparent subtraction; source2d wireorderrepair EQpending",
+    "stdcells": 336662,
+    "clock_sinks": 42665,
+    "area_um2": 42146.537220000006,
+    "netlist_sha256": "7f37de2121fe7d06188ca3b6c29c105f47999b7b5abfe4da5997095d7f72cd3d",
+    "masters": {
+      "INVx1_ASAP7_75t_R": 67455,
+      "BUFx2_ASAP7_75t_R": 1117,
+      "OR2x2_ASAP7_75t_R": 605,
+      "BUFx4f_ASAP7_75t_R": 2,
+      "NOR2x2_ASAP7_75t_R": 28,
+      "INVx4_ASAP7_75t_R": 5,
+      "INVx5_ASAP7_75t_R": 2,
+      "XNOR2x2_ASAP7_75t_R": 1185,
+      "AND2x2_ASAP7_75t_R": 15909,
+      "AND3x1_ASAP7_75t_R": 968,
+      "AND4x1_ASAP7_75t_R": 588,
+      "NAND2x1_ASAP7_75t_R": 674,
+      "AO21x1_ASAP7_75t_R": 642,
+      "XOR2x2_ASAP7_75t_R": 5042,
+      "BUFx3_ASAP7_75t_R": 31,
+      "AND5x1_ASAP7_75t_R": 169,
+      "NOR2x1_ASAP7_75t_R": 1118,
+      "OR3x1_ASAP7_75t_R": 615,
+      "OR4x1_ASAP7_75t_R": 2295,
+      "BUFx6f_ASAP7_75t_R": 4,
+      "INVx2_ASAP7_75t_R": 16,
+      "AND2x4_ASAP7_75t_R": 71017,
+      "OA21x2_ASAP7_75t_R": 221,
+      "OAI21x1_ASAP7_75t_R": 168,
+      "NOR3x1_ASAP7_75t_R": 57,
+      "AO22x1_ASAP7_75t_R": 1945,
+      "AND3x2_ASAP7_75t_R": 1,
+      "AOI21x1_ASAP7_75t_R": 85,
+      "OR5x1_ASAP7_75t_R": 810,
+      "AOI22x1_ASAP7_75t_R": 18,
+      "OA211x2_ASAP7_75t_R": 116,
+      "MAJx2_ASAP7_75t_R": 110,
+      "AO221x1_ASAP7_75t_R": 1221,
+      "AO211x2_ASAP7_75t_R": 5,
+      "NAND3x1_ASAP7_75t_R": 21,
+      "OAI22x1_ASAP7_75t_R": 4,
+      "OA222x2_ASAP7_75t_R": 12,
+      "OA22x2_ASAP7_75t_R": 5,
+      "AOI221x1_ASAP7_75t_R": 5,
+      "OA221x2_ASAP7_75t_R": 2,
+      "OA31x2_ASAP7_75t_R": 4,
+      "AO222x2_ASAP7_75t_R": 181,
+      "AO31x2_ASAP7_75t_R": 5,
+      "INVx3_ASAP7_75t_R": 44873,
+      "OR4x2_ASAP7_75t_R": 2,
+      "OR3x2_ASAP7_75t_R": 14,
+      "AO32x1_ASAP7_75t_R": 84,
+      "AOI211x1_ASAP7_75t_R": 7,
+      "OR2x4_ASAP7_75t_R": 1,
+      "AO21x2_ASAP7_75t_R": 53230,
+      "XNOR2x1_ASAP7_75t_R": 1,
+      "FAx1_ASAP7_75t_R": 4201,
+      "TIEHIx1_ASAP7_75t_R": 630,
+      "TIELOx1_ASAP7_75t_R": 1,
+      "DFFHQNx1_ASAP7_75t_R": 42036,
+      "XOR2x1_ASAP7_75t_R": 3969,
+      "DFFASRHQNx1_ASAP7_75t_R": 629,
+      "OR2x6_ASAP7_75t_R": 12501
+    }
+  },
+  "actual_ff_types": {
+    "DFFHQNx1_ASAP7_75t_R": 42036,
+    "DFFASRHQNx1_ASAP7_75t_R": 629
+  },
+  "actual_ff_clock_net": "ck for all42665 actual mapped FFs",
+  "source_ff_delta": "No added-FF count inferred from parent subtraction. Source specialization has4shared-reset captures/15flags and391redundant plain captures removed; actual whole mapped42665FFs is authoritative for this netlist. Native source event/whole-source correctness still held.",
+  "ABI": {
+    "ports": 27,
+    "bits": 572,
+    "input_bits": 357,
+    "output_bits": 215,
+    "clocks": [
+      "ck"
+    ],
+    "resets": [
+      "rst_n"
+    ],
+    "mapped_face_guard": "570/570PASS on retained actualnetlist; currentdeclaration source EQpending"
+  },
+  "clock_tree": {
+    "cells": 2389,
+    "masters": {
+      "BUFx24_ASAP7_75t_R": 2389
+    },
+    "clock_stages": 7,
+    "leaves": 1024,
+    "initial_leaf_count": [
+      41,
+      42
+    ],
+    "actual_sink_names": 42665,
+    "initial_assignment": "deterministic balanced-name partition only; actualgeometry exact_count rebind afterPLACE; NO claim of current geometric sink reach",
+    "center_entry_pin_um": [
+      122.268,
+      257.04
+    ],
+    "geometric_center_um": [
+      122.28,
+      257.04
+    ],
+    "actual_planned_root_center_um": [
+      122.04,
+      257.175
+    ],
+    "center_island_um": [
+      117.96000000000001,
+      252.72000000000003,
+      126.6,
+      261.36
+    ],
+    "PG_rule": "M5stripe rectangles cloned from same normal corePDN phase, .108um bodyguard; actualPG/sink/body geometry unqualified until own initialfloorplan/PLACE",
+    "max_geometric_row_site_PG_snap_um": 1.1250000000000142,
+    "cell_area_um2": 1044.9486,
+    "buffer_input_cap_fF": {
+      "TT": 5614.77114,
+      "FF": 6228.95915
+    },
+    "native_DFF_clock_cap_fF": {
+      "TT": 20247.165967,
+      "FF": 22259.694967999996
+    },
+    "added_buffer_cap_vs_DFF": {
+      "TT": 0.2773114592507059,
+      "FF": 0.27983128964501097
+    }
+  },
+  "source_plus_seed_std_cells": 339051,
+  "source_plus_seed_fill": 0.3622127856248533,
+  "physical_body_um": [
+    345.6,
+    648,
+    590.16,
+    1162.08
+  ],
+  "parent_scope": "Parentfold/CAread/R8actualanchors/reset+FTmoves/nativeprofile+globalclock/commonframe allHELD; no parentP&R.",
+  "existing_parent_plan_clock_entry_um": [
+    311.04,
+    673.92
+  ],
+  "new_child_clock_pin_global_um": [
+    467.86800000000005,
+    905.04
+  ],
+  "planned_parent_clock_entry_to_child_pin_L1_um": 387.94800000000004,
+  "clock_link_qualification": "Plan geometry only, <=405; actual source/tap wire, rootdriverload/slew/frame and parentclockrebuild stillHELD. No metadata budget compensation.",
+  "actual_added_boundary_capture_instances": [
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "u.g_sc_shared_rst_0.u_pin/Q$_DFF_P_/CLK",
+      "clock_net": "ck"
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "u.g_sc_shared_rst_1.u_pin/Q$_DFF_P_/CLK",
+      "clock_net": "ck"
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "u.g_sc_shared_rst_2.u_pin/Q$_DFF_P_/CLK",
+      "clock_net": "ck"
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "u.g_sc_shared_rst_3.u_pin/Q$_DFF_P_/CLK",
+      "clock_net": "ck"
+    }
+  ],
+  "actual_added_boundary_capture_count": 4
+}
