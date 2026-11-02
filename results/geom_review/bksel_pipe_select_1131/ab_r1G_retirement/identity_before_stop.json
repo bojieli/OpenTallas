@@ -1,0 +1,29 @@
+{
+  "stage": "RETIRE_OBSOLETE_INVALID_FRAME_DIAGNOSTIC",
+  "authorization": "ROOT via /root/s81/caprt: exact own obsolete R1G only, measured stable hold-stall; no normal timing-failure claim",
+  "host": "epyc2",
+  "unit": "oth-ubuntu-1549576-1793575698",
+  "container": "bksel-ab-r1G-grt-1520",
+  "container_id": "29e44d79e271cdc7491785159929b7e79e77f107301fb06281b9060d01183bf6",
+  "host_container_pid": 1550090,
+  "native_pid_inside_container": 126,
+  "native_command": "    126     125 openroad        /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/run/logs/asap7/kl_dsdv_bksel_c_pipe_ab_r1_1131/base/5_1_grt.json",
+  "work_mount": "/srv/opentallas-scratch2/claude/codex-bksel-r1-grt-1501/kits/dsdv_bksel_c_pipe_ab_r1G",
+  "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "driver_sha256": "8805aded4b2a6c5bea15c6642131505833ae6421b62f73cadd16ee1aa54a237a",
+  "before_checkpoint_sha256": {
+    "run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r1_1131/base/3_1_place_gp_skip_io.odb": "951ea44f7a9f09b43e103806f8f22fc46a530745d59838bc77b4431c92e9e3b0",
+    "run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r1_1131/base/3_2_place_iop.odb": "951ea44f7a9f09b43e103806f8f22fc46a530745d59838bc77b4431c92e9e3b0",
+    "run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r1_1131/base/3_3_place_gp.odb": "1eed91a858718f506419cf99fbdc7b077eda1cf170837e70137009a82779a796",
+    "run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r1_1131/base/3_4_place_resized.odb": "7b97e71678d71c79081bfb4bcf609b87fbb5ecd612a77ec52a0d91d4c79ab238",
+    "run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r1_1131/base/3_5_place_dp.odb": "0a5e63f09ba6a69ac20b7c8002c82d3df65e90cca080ed6751f8f25e30d8749f",
+    "run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r1_1131/base/3_place.odb": "9e083b125cb3b1ba8029c46f71b0510bf279b99fce05bf1232f539af9e2487da",
+    "run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r1_1131/base/4_1_cts.odb": "4ac2b4da238fbbc6e040f8c688072f4fc71e53e701e50300a6be1172c86d4ef5",
+    "run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r1_1131/base/4_cts.odb": "4ac2b4da238fbbc6e040f8c688072f4fc71e53e701e50300a6be1172c86d4ef5",
+    "run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r1_1131/base/4_cts.sdc": "ade272cad9cf803c1064a40a5b45e6b9e82a0ca7bf5c67c8250268ae73a35ce9",
+    "source_proof/lec.json": "739c492d0672fac4a5a0c4e8cb53504304232085f344a11687b3aa085acb87bc",
+    "source_proof_identity.json": "bbe0c0cb82fa324f64382d0b8850703d335cb24ff4396cb8db6db3d1a775ad6d",
+    "run_grt_only.sh": "8805aded4b2a6c5bea15c6642131505833ae6421b62f73cadd16ee1aa54a237a"
+  },
+  "policy": "SIGTERM exact owned native process; natural container/controller unwind; preserve all source/checkpoints/logs; normal R1Q waiter and foreign jobs untouched"
+}

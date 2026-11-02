@@ -1,0 +1,5 @@
+# Authorized obsolete R1G diagnostic retirement
+
+ROOT explicitly authorized only the exact identity-verified own invalid-frame stalled diagnostic. It was never a qualified normal timing run. Verified container29e44d79e271cdc7491785159929b7e79e77f107301fb06281b9060d01183bf6 (bksel-ab-r1G-grt-1520), nativePID126 running global_route.tcl, exact ownmount and unitoth-ubuntu-1549576-1793575698. SIGTERM went only to native OpenROAD PID126; normal make/container/controller unwind returned2 at17:43:03. Container removed, unitinactive.
+
+All12recorded source/checkpoint hashes before/after matched, including exact3place and4CTS; complete source/logs/checkpoints remain original epyc2:codex-bksel-r1-grt-1501. Prestoplog saved under retirement_1745; terminaltail and retirementreceipt committed here. Measured old stall WNS-132.249/TNS-192233.125 fromiteration4910 onward persisted while extra buffers grew. This is an authorized invalid-frame diagnostic retirement, not normal timing failure or candidate rejection. No foreign job, active fixed10 route or new normal16GB CTS controller was stopped.
