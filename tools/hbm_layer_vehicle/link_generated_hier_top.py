@@ -139,26 +139,56 @@ def apply_override(params, key, value):
     params[key] = typed(value, params[key]['type'])
 
 
-def cache_source_guard(stubs, source_path, preprocessed):
+def file_identity(path):
+    stat = path.stat()
+    return (stat.st_size, stat.st_ino, stat.st_mtime_ns // 10**9, stat.st_mtime_ns % 10**9,
+            stat.st_ctime_ns // 10**9, stat.st_ctime_ns % 10**9)
+
+
+def cache_source_guard(stubs, source_path, preprocessed, original, compiled):
     source_path = source_path.resolve()
     if source_path.read_text() != preprocessed:
         raise ValueError('cache source path does not contain the selected preprocessed bytes')
-    stat = source_path.stat()
-    actual = (stat.st_size, stat.st_ino, stat.st_mtime_ns // 10**9, stat.st_mtime_ns % 10**9,
-              stat.st_ctime_ns // 10**9, stat.st_ctime_ns % 10**9)
-    result = {}
+    actual = file_identity(source_path)
+    result, child_args_hashes = {}, {}
     for name, stub in stubs.items():
         metadata = Path(stub['path']).parent / ('V' + name + '__verFiles.dat')
-        rows = []
+        wrapper = Path(stub['path']).resolve()
+        child_args = wrapper.parent.parent / ('V' + name + '__hierMkArgs.f')
+        args_stat = child_args.stat()
+        if max(args_stat.st_ctime_ns, args_stat.st_mtime_ns) > metadata.stat().st_mtime_ns:
+            raise ValueError('child arguments changed after frontend: ' + name)
+        source_module, expected_params = compiled[name]
+        params = defaults(original[source_module])
+        for line in child_args.read_text().splitlines():
+            if line.strip().startswith('-G'):
+                key, sep, value = line.strip()[2:].partition('=')
+                if not sep:
+                    raise ValueError('unsupported child parameter override: ' + line)
+                apply_override(params, key, value)
+        if params != expected_params:
+            raise ValueError('parent variant disagrees with cached child arguments: ' + name)
+        rows, outputs, commands = [], [], []
         for line in metadata.read_text().splitlines():
             fields = line.split('"')
             if line.startswith('S ') and len(fields) >= 4 and Path(fields[3]).resolve() == source_path:
                 rows.append(tuple(map(int, fields[0].split()[1:])))
+            if line.startswith('T ') and len(fields) >= 4 and Path(fields[3]).resolve() == wrapper:
+                outputs.append(tuple(map(int, fields[0].split()[1:])))
+            if line.startswith('C ') and len(fields) >= 2:
+                commands.append(fields[1])
         if rows != [actual]:
             raise ValueError('cached child source epoch differs: ' + name)
+        if outputs != [file_identity(wrapper)]:
+            raise ValueError('generated DPI wrapper changed after frontend: ' + name)
+        if commands != ['-f ' + str(child_args)]:
+            raise ValueError('unsupported cached child command: ' + name)
         result[name] = digest(metadata.read_text())
+        child_args_hashes[name] = digest(child_args.read_text())
     return dict(status='PASS_EXACT_CACHED_SOURCE_PATH_AND_FILE_IDENTITY', source_path=str(source_path),
-                source_sha256=digest(preprocessed), source_stat=list(actual), child_metadata_sha256=result)
+                source_sha256=digest(preprocessed), source_stat=list(actual), child_metadata_sha256=result,
+                compiled_child_arguments_sha256=child_args_hashes,
+                dpi_outputs_and_compiled_parameters='EXACT_MATCH')
 
 
 def unescape(name):
@@ -177,6 +207,13 @@ def prepare(preprocessed, top_text, args_text, stub_root, output, *, source_path
         raise ValueError('top is not pure connectivity')
     if re.search(r'(?m)^\s*(?:input|output|inout|wire|logic|reg|bit)\b[^;]*=', top):
         raise ValueError('declaration initializers are unsupported')
+    top_head = re.match(r'module\s+\w+\s*\(', top)
+    if not top_head:
+        raise ValueError('parameterized or unsupported top header')
+    header_end = close(top, top_head.end() - 1)
+    if '=' in top[:header_end] or not re.match(r'\s*;', top[header_end + 1:]):
+        raise ValueError('unsupported top port declaration')
+    header_end = top.index(';', header_end)
     variants, stubs, rows = {}, {}, []
     for line in args_text.splitlines():
         if line.endswith('.sv') and not line.startswith('/'):
@@ -201,7 +238,15 @@ def prepare(preprocessed, top_text, args_text, stub_root, output, *, source_path
                     raise ValueError('unknown hierarchy parameter: ' + key)
                 apply_override(params, key, value)
             variants.setdefault(source, []).append((target, params))
-    edits = []
+    compiled = {}
+    for source, entries in variants.items():
+        for target, params in entries:
+            if target in compiled:
+                raise ValueError('duplicate hierarchy target: ' + target)
+            compiled[target] = (source, params)
+    if compiled.keys() != stubs.keys():
+        raise ValueError('generated wrapper and hierarchy variant inventories differ')
+    edits, instance_ranges = [], []
     instance_count = 0
     for match in re.finditer(r'^\s*(\w+)\s*(?=#|\w)', top, re.M):
         source = match[1]
@@ -224,6 +269,7 @@ def prepare(preprocessed, top_text, args_text, stub_root, output, *, source_path
         end = close(top, start)
         if not re.match(r'[ \t\r\n]*;[ \t\r]*(?:\n|$)', top[end + 1:]):
             raise ValueError('require exactly one instance per declaration and line: ' + instance)
+        instance_ranges.append((match.start(1), top.index(';', end) + 1))
         ports = named(top[start + 1:end])
         params = defaults(original[source])
         if not overrides.keys() <= params.keys():
@@ -247,6 +293,13 @@ def prepare(preprocessed, top_text, args_text, stub_root, output, *, source_path
     all_calls = [x for x in all_calls if x != 'module']
     if instance_count != len(all_calls):
         raise ValueError(f'unhandled top instances: linked {instance_count}, source {len(all_calls)}')
+    residue = top
+    for start, end in sorted(instance_ranges, reverse=True):
+        residue = residue[:start] + ' ' * (end - start) + residue[end:]
+    residue = residue[header_end + 1:residue.rfind('endmodule')]
+    residue = re.sub(r'\b(?:input|output|inout|wire)\b[^;]*;', '', residue)
+    if residue.strip():
+        raise ValueError('unsupported non-declaration/non-instance top body: ' + residue.strip()[:80])
     linked = top
     for start, end, replacement in sorted(edits, reverse=True):
         linked = linked[:start] + replacement + linked[end:]
@@ -265,7 +318,7 @@ def prepare(preprocessed, top_text, args_text, stub_root, output, *, source_path
     expected = {row['instance']: (row['dpi_module'], row['port_graph_sha256']) for row in rows}
     if reread != expected:
         raise ValueError('emitted connectivity graph differs from frozen top')
-    cache_guard = cache_source_guard(stubs, source_path, preprocessed)
+    cache_guard = cache_source_guard(stubs, source_path, preprocessed, original, compiled)
     output.mkdir(parents=True, exist_ok=False)
     output.joinpath('linked_top.sv').write_text('`timescale 1ns/1fs\n' + linked + '\n')
     used = sorted({row['dpi_module'] for row in rows})
