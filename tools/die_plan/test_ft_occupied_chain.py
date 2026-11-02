@@ -2,7 +2,8 @@ import unittest
 import sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from ft_reach_legalizer import ReachAllocator
+from ft_reach_legalizer import ReachAllocator, _weighted_distance
+import numpy as np
 class Chain(unittest.TestCase):
  def test_joint_path_uses_real_unoccupied_rows_around_wide_obstacle(self):
   a=ReachAllocator((0,0,14,12),blocked=[(3,0,10,8)],cell_size=(1,1),column_pitch=1,row_pitch=1,origin=(0,0))
@@ -17,4 +18,16 @@ class Chain(unittest.TestCase):
  def test_distinct_stage_bodies_are_reserved_once(self):
   a=ReachAllocator((0,0,12,2),cell_size=(1,1),column_pitch=1,row_pitch=1,origin=(0,0));pts,_=a.allocate_chain((.5,.5),(10.5,.5),[(3.5,.5),(7.5,.5)],reach=4)
   self.assertEqual(len(set(pts)),2);self.assertEqual(len(a.used),2)
+class WeightedDistance(unittest.TestCase):
+ def test_distances_match_exhaustive_weighted_manhattan_oracle(self):
+  rng=np.random.default_rng(730)
+  for shape in ((1,9),(9,1),(8,13)):
+   mask=rng.random(shape)<.2;mask[-1,-1]=True
+   actual=_weighted_distance(mask,(2.16,.27));grid=np.indices(shape).transpose(1,2,0)
+   expected=np.min(np.array([np.abs(grid-q)@[2.16,.27] for q in np.argwhere(mask)]),axis=0)
+   np.testing.assert_allclose(actual,expected,atol=1e-6,rtol=0)
+ def test_backward_only_seed_propagates_without_mutating_input(self):
+  mask=np.zeros((5,7),bool);mask[-1,-1]=True;saved=mask.copy()
+  actual=_weighted_distance(mask,(2.16,.27));self.assertAlmostEqual(actual[0,0],4*2.16+6*.27)
+  np.testing.assert_array_equal(mask,saved)
 if __name__=='__main__':unittest.main()

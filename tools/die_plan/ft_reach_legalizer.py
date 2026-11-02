@@ -47,12 +47,14 @@ def install_reach_slot(module, destination):
  return source
 
 def _weighted_distance(mask, pitches):
+ """Weighted L1 distance, with four in-place sweeps and no full-size temporaries."""
  d=np.where(mask,0.,1e9)
  for axis,pitch in enumerate(pitches):
   shape=[1]*d.ndim;shape[axis]=d.shape[axis];q=np.arange(d.shape[axis]).reshape(shape)*pitch
-  left=np.minimum.accumulate(d-q,axis=axis)+q
-  right=np.flip(np.minimum.accumulate(np.flip(d+q,axis=axis),axis=axis),axis=axis)-q
-  d=np.minimum(left,right)
+  d-=q;np.minimum.accumulate(d,axis=axis,out=d);d+=q
+  # The opposite sweep may reuse the first result: detours cannot lower L1 cost.
+  d+=q;reverse=np.flip(d,axis=axis)
+  np.minimum.accumulate(reverse,axis=axis,out=reverse);d-=q
  return d
 
 def _allocate_chain(self,start,goal,targets,reach=404.5):
