@@ -1,0 +1,29 @@
+{
+  "operation": "existing flop relocation only",
+  "source": "/work/after_repair_source.odb",
+  "model": "/work/hrq_growth_model.json",
+  "moved": [
+    {
+      "name": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.hr_q$_DFF_P_",
+      "old_origin_um": [
+        186.57,
+        181.17
+      ],
+      "new_origin_um": [
+        186.246,
+        181.17
+      ],
+      "requested_center_um": [
+        186.84,
+        181.305
+      ],
+      "orientation": "MX",
+      "master": "DFFHQNx3_ASAP7_75t_R",
+      "status": "FIRM",
+      "reserved_growth_width_um": 1.188,
+      "padding_per_side_um": 0.108
+    }
+  ],
+  "connectivity_changed": false,
+  "actual_geometry_gate": "PENDING after native legalization"
+}
