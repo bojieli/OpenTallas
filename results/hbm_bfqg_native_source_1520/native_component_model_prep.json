@@ -135,5 +135,17 @@
   "native clock-inclusive50GRT",
   "native DRT",
   "native timing/throughput closure"
- ]
+ ],
+ "unplaced_envelope_model": {
+  "outline_area_um2": 90139.39199999999,
+  "macro_area_um2": 31150.821888,
+  "standard_cell_area_um2": 1521.262332,
+  "free_area_um2": 58988.570111999994,
+  "std_free_fill": 0.025789103365476067,
+  "macro_area_fraction": 0.34558500115021856,
+  "projected_unoccupied_outline_fraction": 0.6375382228005265,
+  "actual_empty_bin_metric": "NOT_MEASURED_UNPLACED",
+  "same_resources_area_at_20pct_free_fill_um2": 38757.133548,
+  "conclusion": "MODEL_HOLD: std/free below15% low band and20%target, macroshare below50%exception. Concrete compact envelope, parent transformed declared pin contract and native tree model required before PNR. No source/pin/slot change authorized by this resource calculation."
+ }
 }
