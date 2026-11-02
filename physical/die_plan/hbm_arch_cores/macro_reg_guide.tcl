@@ -19,17 +19,32 @@ foreach i [$mrg_blk getInsts] {
   if {[$i getPlacementStatus] in {FIRM LOCKED}} continue
   lappend mrg_names [string map {"\\" ""} [$i getName]] $i
 }
-set mrg_n 0; set mrg_cells 0
+# DIE-S81-47 (tools/die_plan/place_guides.py, same spec): match by hash lookup of each name's prefixes, O(names x
+# distinct prefix lengths) instead of O(names x prefixes) (thousands of prefixes took ~1 h in Tcl).  A name joins the
+# box of its SHORTEST matching prefix; the spec writers refuse prefixes that nest across boxes, so this is the old
+# per-box scan result (a prefix repeated in two boxes joins the first box only).
+set mrg_pmap [dict create]; set mrg_k 0
+foreach {mrg_nm mrg_pf zx0 zy0 zx1 zy1} $ot_mrg_spec {
+  foreach pf $mrg_pf { if {![dict exists $mrg_pmap $pf]} { dict set mrg_pmap $pf $mrg_k } }
+  incr mrg_k
+}
+set mrg_lens [lsort -integer -unique [lmap pf [dict keys $mrg_pmap] {string length $pf}]]
+set mrg_hit [dict create]
+foreach {nm i} $mrg_names {
+  set nl [string length $nm]
+  foreach L $mrg_lens {
+    if {$L > $nl} break
+    set p [string range $nm 0 [expr {$L - 1}]]
+    if {[dict exists $mrg_pmap $p]} { dict lappend mrg_hit [dict get $mrg_pmap $p] $i; break }
+  }
+}
+set mrg_n 0; set mrg_cells 0; set mrg_k 0
 foreach {mrg_nm mrg_pf zx0 zy0 zx1 zy1} $ot_mrg_spec {
   set mrg_insts {}; set mrg_area 0.0
-  foreach {nm i} $mrg_names {
-    foreach pf $mrg_pf {
-      if {[string equal -length [string length $pf] $nm $pf]} {
-        lappend mrg_insts $i
-        set mrg_area [expr {$mrg_area + double([[$i getMaster] getWidth]) * [[$i getMaster] getHeight] / $mrg_u / $mrg_u}]
-        break
-      }
-    }
+  if {[dict exists $mrg_hit $mrg_k]} { set mrg_insts [dict get $mrg_hit $mrg_k] }
+  incr mrg_k
+  foreach i $mrg_insts {
+    set mrg_area [expr {$mrg_area + double([[$i getMaster] getWidth]) * [[$i getMaster] getHeight] / $mrg_u / $mrg_u}]
   }
   if {[llength $mrg_insts] == 0} { error "OT_MACRO_REG_GUIDE $mrg_nm: no unfixed instance under $mrg_pf" }
   set mrg_fixed 0.0
