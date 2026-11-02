@@ -237,3 +237,33 @@ def test_postroute_lec_uses_actual_capsule_and_fresh_receipt(tmp_path):
     assert E.run_lec(k, res, 8, 2, run=passed)
     assert res["lec"]["record"] != oldout
     assert json.loads((d / "lec/lec.json").read_text())["verdict"] == "EQUIVALENT"
+
+
+def test_required_lec_status_is_pending_and_final_failure_is_persisted(tmp_path, monkeypatch):
+    root = tmp_path / "pending"
+    root.mkdir()
+    res = {"root": str(root), "verdict": "PASS"}
+    def failed(*args):
+        assert json.loads((root / "eco_loop.json").read_text())["verdict"] == "LEC_PENDING"
+        E.write_result(res)  # even the inner proof writer must publish pending
+        return False
+    monkeypatch.setattr(E, "run_lec", failed)
+    assert not E.complete_lec("kit", res, 8, 2)
+    assert json.loads((root / "eco_loop.json").read_text())["verdict"] == "LEC_FAIL"
+    monkeypatch.setattr(E, "run_lec", lambda *a: True)
+    assert E.complete_lec("kit", res, 8, 2)
+    assert json.loads((root / "eco_loop.json").read_text())["verdict"] == "PASS"
+    def crashed(*a): raise OSError("proof executable missing")
+    monkeypatch.setattr(E, "run_lec", crashed)
+    assert not E.complete_lec("kit", res, 8, 2)
+    assert json.loads((root / "eco_loop.json").read_text())["verdict"] == "LEC_FAIL"
+    assert "executable missing" in res["lec"]["error"]
+
+
+def test_loop_never_publishes_pass_before_required_lec(tmp_path):
+    k = kit(tmp_path)
+    b = base_rec(k, rec(-4, -3))
+    result = E.run_loop(k, b, run=Fake([rec(1, 2)]), mem=8, cpus=2, require_lec=True)
+    assert result['physical_verdict'] == 'PASS'
+    assert result['verdict'] == 'LEC_PENDING'
+    assert json.loads((Path(result['root'])/'eco_loop.json').read_text())['verdict'] == 'LEC_PENDING'

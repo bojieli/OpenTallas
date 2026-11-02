@@ -294,8 +294,18 @@ def prune(it, intermediate_only=False):
 
 
 # ------------------------------------------------------------------------------------------------ the loop
+def write_result(res):
+    """Publish a complete status snapshot, never a partially written JSON."""
+    root = Path(res["root"])
+    if root.is_dir():
+        target = root / "eco_loop.json"
+        temp = root / (".eco_loop." + str(os.getpid()) + ".json")
+        temp.write_text(json.dumps(res, indent=1) + "\n")
+        os.replace(temp, target)
+
+
 def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
-             cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False):
+             cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, require_lec=False):
     """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE"""
     kit = Path(kit).resolve()
     t0 = time.time()
@@ -310,8 +320,9 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
 
     def done(verdict, reason):
         res.update(verdict=verdict, reason=reason, finished=time.time(), wall_s=round(time.time() - t0, 1))
-        if root.is_dir():
-            (root / "eco_loop.json").write_text(json.dumps(res, indent=1) + "\n")
+        if verdict == "PASS" and require_lec:
+            res.update(physical_verdict="PASS", verdict="LEC_PENDING", lec_required=True)
+        write_result(res)
         return res
 
     if not ok:
@@ -375,8 +386,22 @@ def run_lec(kit, res, mem, cpus, lec_tool=None, run=subprocess.call):
     lec = load(out / "lec.json") if rc == 0 else {}
     res["lec"] = dict(tool=str(tool), netlist=str(netlist), record=str(out / "lec.json"), exit=rc,
                       verdict=lec.get("verdict"), all_shown=(lec.get("superset_vec") or {}).get("all_shown"))
-    Path(res["root"], "eco_loop.json").write_text(json.dumps(res, indent=1) + "\n")
+    write_result(res)
     return rc == 0 and lec.get("verdict") == "EQUIVALENT"
+
+
+def complete_lec(kit, res, mem, cpus, lec_tool=None):
+    """A required proof is pending until its actual final status is persisted."""
+    res.update(physical_verdict="PASS", verdict="LEC_PENDING", lec_required=True)
+    write_result(res)
+    try:
+        passed = run_lec(kit, res, mem, cpus, lec_tool)
+    except Exception as error:
+        res["lec"] = dict(error=type(error).__name__ + ": " + str(error))
+        passed = False
+    res["verdict"] = "PASS" if passed else "LEC_FAIL"
+    write_result(res)
+    return passed
 
 
 def main():
@@ -405,9 +430,10 @@ def main():
     if not base:
         print("ECO_LOOP FAIL: no sign-off record in the kit")
         return 3
-    res = run_loop(a.kit, base, a.out, a.runner, a.max_iter, a.hold_margin, a.mem, a.cpus, keep=a.keep)
-    if res["verdict"] == "PASS" and a.lec and not run_lec(a.kit, res, a.mem, a.cpus, a.lec_tool):
-        res["verdict"] = "LEC_FAIL"
+    res = run_loop(a.kit, base, a.out, a.runner, a.max_iter, a.hold_margin, a.mem, a.cpus,
+                   keep=a.keep, require_lec=a.lec)
+    if res["verdict"] == "LEC_PENDING":
+        complete_lec(a.kit, res, a.mem, a.cpus, a.lec_tool)
     print("ECO_LOOP " + res["verdict"] + ": " + summary(res))
     print("ECO_LOOP record " + str(Path(res["root"]) / "eco_loop.json"))
     return 0 if res["verdict"] == "PASS" else 1
