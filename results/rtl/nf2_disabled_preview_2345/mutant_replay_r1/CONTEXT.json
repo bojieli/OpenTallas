@@ -1,0 +1,28 @@
+{
+ "classification": "MUTANT_ONLY_RETAINED_PROFILE_FAULT_DIAGNOSTIC",
+ "checker_commit": "0c84369b0",
+ "checker_sha256": "1826084c39be03a337c29d54ca703871d88243fc04e58dcd84010e0bfdd18b4b",
+ "prior_sha256": "a19a51d48ace12b67176667d69b83c6c65d82628f83ecfa723aeb4b60303066b",
+ "prior_count": 945,
+ "missing_prior": [],
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "kv",
+   "edges": 16,
+   "assert_edges": 20,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 16,
+  "debug_overrides": {}
+ },
+ "native_verdict_unchanged": {
+  "compare_points": 6355,
+  "proved": 6354,
+  "differs": 1,
+  "undecided": 0
+ },
+ "no_full_comparepoint_proof": true
+}
