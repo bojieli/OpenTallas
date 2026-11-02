@@ -1,14 +1,6 @@
 {
-  "status": "PASS_SELECTED_DATED_PRODUCER_AND_DISABLED_PARALLEL_TAG_RETIME",
-  "current_source_status": "FAIL_SILENT_NEXT_OPERATION_TAG_AT_GB_CONSUMER",
-  "expected_tags": [
-    0,
-    1
-  ],
-  "native_current_tags": [
-    1,
-    2
-  ],
+  "status": "PASS_RETIME_MECHANISM_NATIVE_TAG_AUTHORITY_UNQUALIFIED",
+  "current_source_status": "UNQUALIFIED_ARCHITECTURAL_TAG_ORACLE",
   "candidate_tags": [
     0,
     1
@@ -37,5 +29,16 @@
   "clock_ps": 833,
   "clock_scope": "controlled common phase/L3 forwarded-clock startup; production clock/reset phases unqualified",
   "production_enabled": false,
-  "scope": "one actual0L01/e0 producer/boundary cut; no whole-frame, legal Q-bank cadence, capture fold or global epoch qualification"
+  "scope": "one actual0L01/e0 producer/boundary cut; no whole-frame, legal Q-bank cadence, capture fold or global epoch qualification",
+  "assumed_preincrement_tags": [
+    0,
+    1
+  ],
+  "native_observed_tags": [
+    1,
+    2
+  ],
+  "architectural_bug_established": false,
+  "architectural_tag_authority": "Existing frame_return_plan.OPTAG=1 may require first consumed tag1; original directGB0 and actual CAP/return contract still need join",
+  "source_adoption": "HOLD: disabled counterfactual retime mechanism only"
 }

@@ -1,0 +1,41 @@
+{
+  "status": "PASS_SELECTED_DATED_PRODUCER_AND_DISABLED_PARALLEL_TAG_RETIME",
+  "current_source_status": "FAIL_SILENT_NEXT_OPERATION_TAG_AT_GB_CONSUMER",
+  "expected_tags": [
+    0,
+    1
+  ],
+  "native_current_tags": [
+    1,
+    2
+  ],
+  "candidate_tags": [
+    0,
+    1
+  ],
+  "expected_GO_edges": [
+    763,
+    1275
+  ],
+  "producer_stage_edges": 3,
+  "native_qbank_GO_edges": 2,
+  "GB_capture_edges": 1,
+  "parallel_tag_edges": 2,
+  "candidate_new_reset_free_FF": 4,
+  "candidate_new_clock_pin_loads": 4,
+  "candidate_new_reset_pin_loads": 0,
+  "added_GO_CFG_XS_cycles": 0,
+  "CFG_words": 50,
+  "XS_stream_words": 160,
+  "wrong_date_control_caught": true,
+  "wrong_tag_control_caught": true,
+  "source_programme_period": 512,
+  "under_TEST_guard_used": false,
+  "native_provider_qualified": false,
+  "arithmetic_core_exercised": false,
+  "EF_assumed_idle_free": true,
+  "clock_ps": 833,
+  "clock_scope": "controlled common phase/L3 forwarded-clock startup; production clock/reset phases unqualified",
+  "production_enabled": false,
+  "scope": "one actual0L01/e0 producer/boundary cut; no whole-frame, legal Q-bank cadence, capture fold or global epoch qualification"
+}

@@ -1,64 +1,67 @@
-# Selected native GO/TAG producer failure and disabled four-FF repair
+# Native GO/TAG retime mechanism; architectural oracle unresolved
 
-The actual selected0L01/e0 native wiring silently delivers the next operation's
-tag. CFG7 emits GO with tags0,1, then its tag output advances on the following
-edge. GO traverses the actual two-register qbank_S while tag connects directly
-to the Q input. The GB capture consequently sees tags1,2. All existing fault
-signals remain0. This result uses actual dates and an independent reset-zero,
-per-GO counter oracle; a shared-reference miter alone would hide the defect.
+**Superseding correction:** this packet establishes the measured producer and
+retime mechanics. It does **not** establish a native architectural tag bug.
+f85fce6c4's claimed expected sequence0/1 was the CFG7 port's pre-increment
+sequence, not a proven architectural CAP/return oracle. Existing
+`frame_return_plan.py` explicitly sets OPTAG=1 for its first bench operation,
+and CFG7 documents a counter advancing from0 on each broadcast. Original
+GB0 with its direct tag path may therefore intentionally consume1/2, exactly
+as current GB1/advance1 does. The proposed four-FF retime remains disabled;
+source/cohort/physical adoption is on HOLD until original directGB0 and the
+actual capture/return contract resolve that authority.
 
-The executable cut is actual XRT target2 CTL decoding, actual XS4/calendar and
-real current CAP-safe field0L01 phase0 replayed twice, current41-stage1104-bit
-bound input, CRS4(E2/LFACE0/LGATE0), actual station/relays, actual CFG7 with real
-C0 mask images, actual qbank_S, and the unchanged extracted GB/RSTP GO/tag
-capture logic. No direct is_v/is_d oracle drives XS4. The real producer matches
-all booked issuer words/dates with its measured3-edge XRT stage. The calendar
-selects the native one-edge-early Q launch; no under_TEST guard is invoked.
+No measured sample or native log has changed. The original check, including
+its erroneous architectural interpretation, is retained verbatim in
+check_preincrement_hypothesis_ORIGINAL.json. Current check.json supersedes
+its interpretation; cases.json retains the old preincrement-hypothesis status
+alongside an explicit unqualified native-semantic status. No provider,
+capture-fold, source-cohort or physical qualification is granted.
 
-At833ps, native advance1 produces sequencer GO at760/1272 with tags0/1,
-qbank GO at762/1274 with direct tags1/2, and GB capture at763/1275 with wrong
-tags1/2. The proposed parallel two-edge tag pipe captures correct0/1 at the
-same763/1275. A GB0/old-calendar reference has the same intended dates/tags.
-The old-calendar+GB1 control arrives one edge late764/1276; the tag mutation
-produces1/0. Both are rejected independently. All50 CFG words and160 XS stream
-words, including their dates, are identical across the five runs. XR, XS,
-CFIFO and CFG7 faults are0 in every run, including the original silent failure.
+The executable source cut is actual XRT target2 CTL decoding, actual XS4,
+current41-stage1104-bit input, CRS4(E2/LFACE0/LGATE0), actual station/relays,
+actual CFG7 with current0L01/C0 masks, actual two-stage qbank_S GO, and the
+unchanged extracted GB/RSTP capture logic. The real XRT producer matches all
+booked issuer words/dates with its3-edge local stage. No direct is_v/is_d
+oracle or under_TEST guard drives the producer.
 
-Intel/Epyc admission and build identity are retained in native_run_receipt.json;
-passing Epyc2 unit3270885-1793604621 exited0. Two source-intake build failures
-(wrapper port mismatch; incomplete readset) are preserved and diagnosed.
-There is no native rerun or duplicate whole build in this packet.
+At833ps, current advance1 emits CFG7 GO at760/1272 with port tags0/1;
+qbank GO is762/1274 while the direct tag is1/2; GB capture is763/1275 with1/2.
+A counterfactual parallel two-edge tag pipe instead captures0/1 at the same
+dates. The reference in this experiment is GB0 **with that proposed tag
+retime**, not unmodified original directGB0. That distinction invalidates the
+original native-bug assertion. All50 CFG words and160 XS stream words/dates
+are identical across the five experiments, and all observed faults are0.
+The date/tag mutations are detected against the preincrement hypothesis;
+they do not by themselves establish the architecture's intended first tag.
 
-The primary DISABLED source delta is exactly two2-bit pipeline registers,
-parallel to the actual two-stage GO path:4 reset-free FF,4 clock pin loads,
-0 reset pin loads. Only the selected consumer's tag connection changes. Tag
-availability moves2 edges (+1666ps) to meet its already-delayed GO; no GO, CFG,
-XS, issuer or data cycle is added. The tag pipe follows all clock samples, so
-it needs no inter-GO holding-spacing premise. The alternative two-FF GO-latched
-hold remains a separate conditional512-spacing experiment and is not the
-primary repair or a claim about legal native Q-bank spacing.
+Passing Epyc2 unit3270885-1793604621 exited0. native_run_receipt.json and all
+five original logs are retained. Two source-intake failures (wrong wrapper
+port and incomplete readset) were corrected without model/guard overrides.
+No native rerun was performed for this status correction.
 
-`disabled_native_e0_align2.diff` is an exact, unapplied emitted-source witness.
-The actual type has five replicas. The candidate specializes only fW0_p1_b0;
-the other four remain unchanged. Applying the change to the shared type would
-cost20 FF, not4. A hypothetical uniform864-pair extension would cost3456 FF,
-but each other native path still requires its own identity/depth/source join.
-The authoritative frame/source generator and four actual FF placement sites
-must be prepared before source-cohort or physical adoption. No canonical
-source, plan, active cohort, provider flag or capture-fold flag is changed.
+The DISABLED mechanism delta is precisely two2-bit pipeline registers:
+4 reset-free FF,4 clock pin loads,0 reset pin loads,2 tag-path edges, and
+0 additional GO/CFG/XS/issuer/data edges. It is a counterfactual source event,
+not an adopted repair. The two-FF GO-latched hold is a separate conditional
+512-spacing idea; no legal native Q-bank cadence is inferred from it.
 
-This is one producer/GO-tag capture boundary cut. Q arithmetic and its real
-walking/bank_free/sh_free feedback are not instantiated; EF is controlled
-idle/free. The selected source calendar spacing is512. Reset is asserted for
-15 initial cycles, all commands occur after reset settles, and forwarded
-clocks use the controlled L3 startup profile in the bench. The real die's
-regional phases, general reset/restart contract, legal minimum Q-bank cadence,
-whole frame/token, capture folds and source epochs are unqualified. The
-measured dates are experiment dates, not production epoch assignments.
+The exact unapplied diff specializes only fW0_p1_b0/e0. The shared original
+type has five replicas, so a type-wide patch would add20 FF rather than4.
+Other four replicas remain untouched. Any broader change requires actual
+per-path identity/depth and architectural tag authority; a uniform864-pair
+cost3456 is conditional arithmetic only. No canonical RTL, plan or active
+cohort is changed by this packet.
 
-Full untouched logs, input images and compiled binary remain at
+This is a producer/GO-tag boundary cut with controlled EF idle/free and a
+controlled common-phase/L3 forwarded-clock startup. Arithmetic Q cores and
+real walking/bank_free/sh_free feedback are absent. Calendar spacing512,
+regional startup, legal bank cadence, full frame/token, capture folds and
+production epochs remain unqualified. Experiment dates are not production
+epoch assignments. Smallest full-NB2-pair preparation will use real feedback,
+checkpoint row/data gold, and original directGB0 to resolve the tag oracle.
+
+Full original logs/images/binary remain at
 `epyc2:/srv/opentallas-scratch2/claude/codex-ds-native-go-2310/retry3`.
-Full disabled specialized source is private at
+Private disabled generated source remains at
 `intel1:/srv/opentallas-scratch2/claude/codex-ds-native-go-2310/candidate_part_DISABLED.sv`.
-ROOT authorized this selected-instance disabled+4FF event for review, with
-coherent source/clock/model preparation required before a cohort flip.
