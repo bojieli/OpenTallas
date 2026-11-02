@@ -1,0 +1,15 @@
+L1 DATA-only proposal for review. No ECO or CAD trial has run.
+
+Use the same frozen RTL, FF count/stage depth, actual clock cells/positions, clock source SDC, 833ps period, setup uncertainty0ps and hold uncertainty25ps. Preserve failed original snapshots. Improvement estimates below are not measured.
+
+EXP: exact falling nint[6]/D setup deficit14.64ps. Cell delay785.74ps versus wire18.50ps favors a data-driver candidate. First distinct candidate is fanout24569 BUFx2 to an existing legal BUFx4 class; current fanout17, cell arc51.22ps. Larger input capacitance can hurt its predecessor and other fanout paths; require measured joint TT/FF qualification. A second variant only if needed is native data-fanout splitting on that branch, without new sequential stages.
+
+HEAD: unique rising s1_rows[221]/D setup deficit0.67ps. Try one next-legal driver size on fanout35140 BUFx4f (fanout24,37.75ps arc,47.04ps output slew). Legal master availability and benefit require the actual retained library/cell restrictions. Do not invent a stronger logic master. Neighbor data drivers place21419 and place20208 are already BUFx6f.
+
+Hold: exact FF/BC pa.q[157] to c_va[29]/D deficit2.52ps. One minimum legal noninverting DATA hold buffer on this single sink branch after _145581_/Y preserves the inverter, both FFs and cycles. This spends setup slack on that cone, which has not been established here. Joint TT setup and FF hold must pass; no clock padding or source-latency adjustment.
+
+Prefer separate sequential variants rather than all edits at once: EXP first, HEAD only if still negative, then sink-local hold if still required. Scope is normal data resizing/buffering and legal placement/actual reroute, not RTL/profile/default adoption. Final actual all-corner timing, geometry, native CLOCK+SIGNAL coverage, and normal post-route equivalence remain required before qualification or DRT.
+
+Precise old posthook state mutation: grt_post_core.tcl sources post_grt_drv.tcl then grt_post.tcl. The former starts incremental route, repair_design -slew_margin40 -cap_margin20 (33 resized,678 inserted buffers/468nets), repair_timing -hold -hold_margin5 -max_buffer_percent100 (5 buffers), detailed placement (max6.4um displacement), end incremental route and actual GRT RC refresh. These operations follow the last MM summary and native setup vt_swap/reroute. The683 inserted buffers exactly explain the separate683 external SIGNAL guide names missing after the late mutation. No final joint slack guard followed in this old kit.
+
+Current shared generator already orders core_final_repair.tcl after all grt_post_extra and grt_post.tcl, including native placement-to-GRT estimator refresh and final TT/FF reports. KIT owns hard-stop review. Do not duplicate that class or call the older versus final timing discrepancy a parser bug.
