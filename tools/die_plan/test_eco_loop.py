@@ -211,3 +211,29 @@ def test_t_then_b_chain(tmp_path):
     assert (Path(mk[0][3]) / "config.mk").read_text() == (k / "config.mk").read_text()
     assert not (Path(mk[0][3]) / "run/results").exists() and (Path(it["dir"]) / "run/results").exists()
     assert set(it["rc"]) >= {"prd_mk_t", "prd_run_t", "prd_mk_b", "prd_run_b", "signoff"}
+
+
+def test_postroute_lec_uses_actual_capsule_and_fresh_receipt(tmp_path):
+    k = kit(tmp_path)
+    d = tmp_path / "eco"
+    (d / "base").mkdir(parents=True)
+    (d / "lec").mkdir()
+    (d / "lec/lec.json").write_text(json.dumps({"verdict": "EQUIVALENT"}))
+    res = {"root": str(d), "best": {"dir": str(d), "base": str(d / "base")}}
+    calls = []
+    def fail(cmd, **kw):
+        calls.append(cmd)
+        assert cmd[2] == str(d.resolve())
+        out = Path(cmd[cmd.index("--out") + 1])
+        assert out != d / "lec" and not (out / "lec.json").exists()
+        return 1
+    assert not E.run_lec(k, res, 8, 2, run=fail)
+    assert res["lec"]["verdict"] is None and res["lec"]["exit"] == 1
+    oldout = res["lec"]["record"]
+    def passed(cmd, **kw):
+        out = Path(cmd[cmd.index("--out") + 1])
+        (out / "lec.json").write_text(json.dumps({"verdict": "EQUIVALENT"}))
+        return 0
+    assert E.run_lec(k, res, 8, 2, run=passed)
+    assert res["lec"]["record"] != oldout
+    assert json.loads((d / "lec/lec.json").read_text())["verdict"] == "EQUIVALENT"
