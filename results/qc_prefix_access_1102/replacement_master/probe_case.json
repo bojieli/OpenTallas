@@ -1,0 +1,83 @@
+{
+ "clock": {
+  "location": [
+   17009460,
+   12463200
+  ],
+  "origin": [
+   17009460,
+   12463200
+  ],
+  "bbox": [
+   17009.46,
+   12463.2,
+   17011.08,
+   12463.47
+  ],
+  "grown": [
+   17009.21,
+   12462.95,
+   17011.33,
+   12463.72
+  ],
+  "master": "CKINVDCx16_ASAP7_75t_R",
+  "isBlock": false
+ },
+ "part": {
+  "name": "sl_E0_fw",
+  "origin": [
+   16390080,
+   11793600
+  ],
+  "location": [
+   16390080,
+   11793600
+  ],
+  "orient": "R0",
+  "master": "sle_fw_v1__clf58b4dfb",
+  "lib": "sle_fw_v1__clf58b4dfb",
+  "M1boxes": 694
+ },
+ "planned_origin": [
+  17009.46,
+  12463.2
+ ],
+ "single_site_correct_windows": [
+  {
+   "source": "case",
+   "xy_um": [
+    17010.27,
+    12463.335000000001
+   ],
+   "parts": [
+    {
+     "part": "sl_E0_fw",
+     "type": "sle_fw_v1__clf58b4dfb",
+     "rect": [
+      618.624,
+      668.52,
+      621.756,
+      670.95
+     ],
+     "in_core": []
+    }
+   ]
+  }
+ ],
+ "actual_M1_hits": [
+  {
+   "local": [
+    620.946,
+    668.52,
+    622.08,
+    670.68
+   ],
+   "physical": [
+    17011.026,
+    12462.12,
+    17012.16,
+    12464.28
+   ]
+  }
+ ]
+}
