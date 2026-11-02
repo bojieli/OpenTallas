@@ -30,7 +30,10 @@ proc ::ot_enc::master_pin_rect {master pin} {
 proc ::ot_enc::source_reconnect {it target} {
   set i [$it getInst];set protected [$i isDoNotTouch]
   if {$protected} {$i setDoNotTouch 0}
-  try {$it disconnect;$it connect $target} finally {if {$protected} {$i setDoNotTouch 1}}
+  try {
+    $it disconnect;$it connect $target
+    if {[$it getNet] ne $target} {error OT_ENC_CLOCK_CONNECT_NOT_EFFECTIVE}
+  } finally {if {$protected} {$i setDoNotTouch 1}}
 }
 proc ::ot_enc::apply {data_file birth_module} {
   if {![info exists ::env(OT_EXACT_NATIVE_CLOCK_PLAN)] || $::env(OT_EXACT_NATIVE_CLOCK_PLAN) ne "1"} {
@@ -183,6 +186,18 @@ proc ::ot_enc::apply {data_file birth_module} {
     dict for {it owner} $expected {
       # Log BEFORE disconnect so a failed connect is rolled back too.
       lappend reconnected $it;source_reconnect $it [lindex $nets $owner]
+    }
+    set expected_primary {};set local_members [dict create]
+    for {set j 0} {$j<[llength $born]} {incr j} {
+      set inst [lindex $born $j];set n [lindex $nets $j]
+      if {[[$inst findITerm A] getNet] ne $root || [[$inst findITerm Y] getNet] ne $n} {error OT_ENC_NATIVE_ROOT_CONNECT_NOT_EFFECTIVE}
+      lappend expected_primary [$inst findITerm A]
+      dict set local_members $j [list [$inst findITerm Y]]
+    }
+    dict for {it owner} $expected {dict lappend local_members $owner $it}
+    if {[lsort [$root getITerms]] ne [lsort $expected_primary]} {error OT_ENC_PRIMARY_MEMBERSHIP_AFTER_INSTALL}
+    dict for {owner members} $local_members {
+      if {[lsort [[lindex $nets $owner] getITerms]] ne [lsort $members]} {error "OT_ENC_LOCAL_MEMBERSHIP_AFTER_INSTALL $owner"}
     }
     # Recheck actual inserted Y full metal against actual target CLK metal.
     set limit [expr {$::ot_enc_radius_um*$units+1e-6*$units}]

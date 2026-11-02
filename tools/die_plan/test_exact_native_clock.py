@@ -87,9 +87,11 @@ proc fixture_inst {method args} {
 proc fixture_term {method args} {
   switch $method {
     getInst {return fixture_inst}
+    getNet {return $::net}
     disconnect {set ::net NULL}
     connect {
       if {[lindex $args 0] eq "bad"} {error "injected signal connect failure"}
+      if {[lindex $args 0] eq "silent"} {return}
       set ::net [lindex $args 0]
     }
     default {error "unexpected terminal method"}
@@ -97,6 +99,7 @@ proc fixture_term {method args} {
 }
 if {![catch {ot_enc::source_reconnect fixture_term bad}]} {error "failure not exercised"}
 if {$protected!=1} {error "source cell protection lost on exception"}
+if {![catch {ot_enc::source_reconnect fixture_term silent}]} {error "silent connect failure accepted"}
 ot_enc::source_reconnect fixture_term root
 if {$net ne "root" || $protected!=1} {error "caller signal rollback failed"}
 puts UNIT_SIGNAL_RECONNECT_PROTECTION_PASS
