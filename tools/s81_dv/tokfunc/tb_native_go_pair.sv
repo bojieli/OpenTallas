@@ -13,7 +13,7 @@ module tb_native_go_pair;
  reg[2:0]dgv=0;reg[20:0]dgi=0;reg[3071:0]dgd=0;
  reg rfv=0,rfs=0;reg[275:0]rfd=0;wire[2:0]rgv,rgfam;wire[20:0]rgi;wire[3071:0]rgd;wire ringfault;
  // Actual selected xg producer: native ring header/fragment decode generates gather family.
- ot_s81sl_rstop gather_ring(.clk(clk),.rst_n(rst_n),.sid(4'd0),.ri_w(1104'd0),.ri_e(1104'd0),.ro_e(),.ro_w(),
+ ot_s81sl_rstopt_xo gather_ring(.clk(clk),.rst_n(rst_n),.sid(4'd0),.ri_w(1104'd0),.ri_e(1104'd0),.ro_e(),.ro_w(),
  .vi(276'd0),.vo(),.xf_v({2'd0,rfv,2'd0}),.xf_s({2'd0,rfs,2'd0}),.xf({552'd0,rfd,552'd0}),
  .nx_wi(),.nx_ei(),.nx_eo(173'd0),.nx_wo(173'd0),.dl_ev(),.dl_e(),.dl_wv(),.dl_w(),.dl_vv(),.dl_vb(),
  .ci_dir(3'd0),.ci_b(1104'd0),.g_v(rgv),.g_fam(rgfam),.g_idx(rgi),.g_d(rgd),.fault(ringfault));
@@ -88,9 +88,10 @@ module tb_native_go_pair;
    ep=ep+1;
   end
  end
- integer cfgwords=0,goes=0,streams=0,lastcfg=-1,partials=0;reg[4:0]last_status=0;
+ integer cfgwords=0,goes=0,streams=0,lastcfg=-1,partials=0;reg[4:0]last_status=0;reg seen_xs_fault=0;
  always@(posedge clk)begin
   cyc=cyc+1;#1;
+  if(ring&&sf&&!seen_xs_fault)begin seen_xs_fault=1;$display("XS_FAULT_DETAIL %0d issuer=%b calendar=%b control=%b write=%b read=%b output=%b",cyc,xs.is_fault,xs.cal_fault,xs.ctl_fault,xs.wr_fault,xs.rd_fault,xs.lx_fault);end
   if(ring&&rgv[0])$display("RING_GATHER %0d family=%0d index=%0d data=%h",cyc,rgfam[0],rgi[6:0],rgd[1023:0]);
   if(iv)$display("ISSUER_PIN %0d %h",cyc,id);
   if(xv&&(xw[550]||xw[551]))$display("XS_CONTROL %0d cfg=%b go=%b",cyc,xw[551],xw[550]);

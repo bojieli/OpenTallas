@@ -45,7 +45,7 @@ def main():
         assert len(events)<1024 and len({(t,k)for t,k,v in events})==len(events)
         (d/'producer_DIRECT_GATHER_ORIGINAL.txt').write_bytes((d/'producer.txt').read_bytes())
         (d/'producer.txt').write_text(''.join(f'{t} {k} {v:x}\n'for t,k,v in sorted(events)))
-    report['native_ring_fixture']=dict(actual_producer='ot_s81sl_rstop own xf_v[2] four-fragment assembly',
+    report['native_ring_fixture']=dict(actual_producer='ot_s81sl_rstopt_xo own xf_v[2] four-fragment assembly',
         authoritative_family='native header kind K_XQ=1/K_XB=2, decoded by production rstop',
         Q_beats=80,BF_beats=64,Q_start=456,BF_start=900,BF_window_source_date=800,
         BF_payload='checkpoint norm-scale prefix4096, golden BF16 conversion; component fixture only',
