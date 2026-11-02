@@ -1,0 +1,9 @@
+CAUSAL_USER_PASS user0 native_residual4096 native_partials32 ROOTbits00000000 native_HEAD256 cfg_to_return13113
+CAUSAL_USER_PASS user1 native_residual4096 native_partials32 ROOTbits00000000 native_HEAD256 cfg_to_return13113
+CAUSAL_USER_PASS user2 native_residual4096 native_partials32 ROOTbits00000000 native_HEAD256 cfg_to_return13113
+CAUSAL_USER_PASS user3 native_residual4096 native_partials32 ROOTbits00000000 native_HEAD256 cfg_to_return13113
+NATIVE_CAUSAL_RES2_ROOT_HEAD_PASS users4 contexts48 residual16384 partials128 ROOT4 HEAD1024 period833ps component_wires_only
+- input/tb_causal.sv:432: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 51us; walltime 2060.232 s; speed 24.957 ns/s
+- Verilator: cpu 2015.874 s on 1 threads; allocated 219 MB

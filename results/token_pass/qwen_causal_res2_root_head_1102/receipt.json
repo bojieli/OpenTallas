@@ -1,0 +1,78 @@
+{
+  "status": "PASS_NATIVE_CAUSAL_COMPONENT_NOT_MISSION",
+  "source_commit": "8b930f3ea",
+  "host": "intel1",
+  "unit": "oth-ubuntu-270641-1793622914",
+  "normal_resources": {
+    "mem_gb": 16,
+    "threads": 1,
+    "disk_gb": 8,
+    "whole_scope_peak_gib": 10.3
+  },
+  "native_scope": {
+    "users": 4,
+    "actual_residual_kernels": 48,
+    "residual_words": 16384,
+    "native_RED_partial_words": 128,
+    "unique_global_partial_tags_per_user": 32,
+    "native_ROOT_returns": 4,
+    "native_HEAD_words": 1024,
+    "HEAD_context": "genuine final slice11 retained residual per user"
+  },
+  "data_path": "actual native SU/VM residual2 -> native k79 RED -> FDN/RP/CTL+native k79 SC ROOT -> hardCTL w1 -> real SUVM scalarwrite -> native HEAD",
+  "clock": {
+    "period_ps": 833,
+    "precision_fs": 1
+  },
+  "no_seeded_PSUM_or_RSTD": true,
+  "canonical_rstd_valid_event_assertions": [
+    "3cffffff",
+    "3c7fffff",
+    "3bffffff",
+    "3b7fffff"
+  ],
+  "golden_sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "golden": "unchanged hdc_golden: 3 separately rounded NR steps, HEAD mul(mul(X,RSTD),genuine gain)",
+  "controls": {
+    "MUT_OLD_CALLER": {
+      "caught": true,
+      "first_failure": "[372000000] %Fatal: tb_causal.sv:458: Assertion failed in tb_causal: CAUSAL_VALUE phase1 s0 u0 j0 got41c00000 expected42000000"
+    },
+    "MUT_DROP_PARTIAL": {
+      "caught": true,
+      "first_failure": "[12507000000] %Fatal: tb_causal.sv:422: Assertion failed in tb_causal: ROOT_COMPLETION user0 count0 busy0 fault0"
+    },
+    "MUT_DROP_RSTD": {
+      "caught": true,
+      "first_failure": "[12597000000] %Fatal: tb_causal.sv:458: Assertion failed in tb_causal: CAUSAL_VALUE phase2 s12 u0 j0 got00000000 expected4025ffff"
+    }
+  },
+  "build": {
+    "elapsed": "53:28.80",
+    "max_rss_kb": "9308032",
+    "exit_status": "0"
+  },
+  "baseline": {
+    "elapsed": "34:20.25",
+    "max_rss_kb": "219068",
+    "exit_status": "0"
+  },
+  "scope_limits": [
+    "Sequential reuse of one native component across actual slice profiles; no spatial/global-clock/transport qualification",
+    "Direct component command/config wires; no installed global calendar or source leases",
+    "HEAD only final slice11 here; independent earlier all12slice HEAD arithmetic proof is separate",
+    "ROOTbits00000000 in per-user summary samples idle bus long after publication; valid-write assertions check canonical bits and exact user RX addresses",
+    "cfg_to_return13113 includes serial12-context fixture production and is not a production ROOT latency/rate",
+    "No new RTL/port/cycle change, no native token/rate/parent qualification"
+  ],
+  "preserved_failure": "Epyc2 /srv/opentallas-scratch2/claude/codex-causal-res2-root-head-0310/failure_ideal_oracle; initial ideal-power rsqrt oracle rejected correct native3cffffff",
+  "logs_sha256": {
+    "base.time": "166fc49c51c6d0cc442b31233b1f3af472d382b605ccf5285b07c92724257181",
+    "status": "f77b521f7fa8c6c7d2145b02c5a19d2413932dad04d6aeba6b45478a4b1716ef",
+    "build.time": "10bb5d403ae937672a3d9eef983012314231d1e59849fc029d6823ea9b513a70",
+    "MUT_DROP_RSTD.log": "842832f1d0da24e08b2db9e0f38dd541965617a73599d533568198d02ef801e2",
+    "base.log": "8005114a8abe3087b2738b57ecc8d552c72a5718fc9e2b6ad9e2f74a1af4d955",
+    "MUT_DROP_PARTIAL.log": "664d94252af38ddf313110c90b1b4ac3d361c545a3d8953378d5ceaff9b4dcd5",
+    "MUT_OLD_CALLER.log": "334953f5c9606f9d7f8a83eba363eb5e0e8d0227662e4b1d036ab1cdeb444755"
+  }
+}
