@@ -156,10 +156,13 @@
   "L730_related_existing_XO_FF": 3202,
   "new_L730_upstream_FF": 2304,
   "existing_XO_FF_reused_by_L730_not_new": 1023,
-  "new_programme_transport_FF": "282*ingress_stages +6*status_stages per lane; minimum logical prototype2/2=576, physical stage counts null",
+  "new_programme_transport_FF": "280*ingress_stages +6*status_stages perlane, plus unpriced separate reset-delivery state; logical2/2=572, physicalcounts null",
   "programme_relocated_declared_soft_FF": 22922,
   "collar_relocated_soft_FF": "Not yet sized/mapped at exact PAGE_W3/NS2/NPR1/NREC0 profile",
   "programme_native_macro_clock_inputs": 44,
   "new_clock_obligations": "Actual XO locations, new upstreambanks, programme core clock/native tree, collar row sites, new transport source/destination/station clocks all unplaced/unqualified",
-  "layout_interpretation": "The nominal blank rectangle does not reserve rows or clockload; physical cells and clock contacts must be allocated jointly before adoption."
+  "layout_interpretation": "The nominal blank rectangle does not reserve rows or clockload; physical cells and clock contacts must be allocated jointly before adoption.",
+  "historical_failed_reset_as_data_transport_FF": "282*ingress_stages +6*status_stages per lane; minimum logical prototype2/2=576, physical stage counts null",
+  "actual_distinct_reset_routes": 2,
+  "new_reset_route_state_FF": null
 }

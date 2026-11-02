@@ -82,7 +82,13 @@ assign warm=(&old_hub.u_u_sfup_Q_q1.rb)&&old_hub.u_u_sfup_Q_q1.rbd1&&(&new_bod.u
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--source-dir',type=Path,required=True);p.add_argument('--event-dir',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+    p=argparse.ArgumentParser();p.add_argument('--source-dir',type=Path,required=True);p.add_argument('--event-dir',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+    event=json.loads((a.event_dir/'event.json').read_text())
+    if (event['prototype_ingress_stages'],event['prototype_status_stages'],event['new_ingress_payload_bits'])!=(2,2,279):raise ValueError('this minimum phase vehicle qualifies only the actual direct-reset2/2 event; top relays are outside this vehicle')
+    for row in event['source_inputs']:
+        source=a.source_dir/(row['module']+'.sv')
+        if __import__('hashlib').sha256(source.read_bytes()).hexdigest()!=row['sha256']:raise ValueError('actual event/input source mismatch '+row['module'])
+    a.out.mkdir(parents=True,exist_ok=True)
     text='\n'.join(prepare(region,a.source_dir,a.event_dir)for region in ['NW','NE']);(a.out/'phase_units.sv').write_text(text)
     ctl=[1,1<<511,1<<1022,1<<1741];io=[images.pack_io({'arithmetic_start':1,'scalar_enable':1}),images.pack_io({'drain_v':1,'drain_addr':37})]
     frames,need=images.collar_install(images.ctl_planes(ctl),images.io_planes(io));prm=images.prm_row(0,len(ctl),0,len(io))

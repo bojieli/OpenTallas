@@ -1,0 +1,64 @@
+{
+  "status": "PASS_CONDITIONAL_NATIVE_PROGRAMME_PHASE",
+  "source_commit": "51cf1d01c9b719ce4ee9199e3dda841f8e94fe33",
+  "native_source": "Exact selected SOURCE13 collar/r10/leaf/full512x256 model and ot_dp_st; no producer-body edits",
+  "old_new_regions": [
+    "NWtarget118/r10reset352",
+    "NEtarget119/r10reset350"
+  ],
+  "physical_new_ingress_cycles": null,
+  "logical_ingress_cycles": 2,
+  "logical_status_cycles": 2,
+  "actual_clock_fs": 833000,
+  "eligible_full_vector_checks": 74900,
+  "control_words_each_old_new_per_region": 12,
+  "IO_words_each_old_new_per_region": 6,
+  "native_SRAM_reads_each_old_new_per_region": 114,
+  "old_native_writes_each_region": 36883,
+  "new_native_writes_each_region": 36882,
+  "reset_abort": {
+    "input_CFG_words_inflight": 7,
+    "old_commits_at_assertion": 2,
+    "new_commits_at_assertion": 0,
+    "partial_tail_semantics": "Actual writes may commit different partial tails during abort; reset is not atomic memory rollback or CFG acknowledgement",
+    "native_after_reset": "READY cleared and retained-image launch rejected with fault04; full fresh reinstall recovered"
+  },
+  "warm_relaunch": {
+    "reinstall": false,
+    "additional_SRAM_writes": 0,
+    "actual_retained_programme_readback": true
+  },
+  "mutants": {
+    "early_capture": "CAUGHT STATUS_PHASE c18534",
+    "legacy_target116": "CAUGHT STATUS_PHASE c18535",
+    "reset_as_ordinary_data": "CAUGHT ASYNC_RESET_ASSERTION at in-flight reset c18807, between clock edges"
+  },
+  "resources": {
+    "compile_wall_s": 52.02,
+    "compile_peak_KB": 474168,
+    "runtime_wall_s": 24.1,
+    "runtime_peak_KB": 24756
+  },
+  "execution": {
+    "host": "intel2",
+    "unit": "oth-ubuntu-1341364-1793620541",
+    "controller": "codex-hbm-programme-phase-0350.service",
+    "path": "/srv/opentallas-scratch2/claude/codex-hbm-programme-phase-0350",
+    "terminal": 0
+  },
+  "needed_causal_contract": [
+    "CFG emission or collar metadata is not an individual SRAM commit ACK. The programme read/launch fence must account for the native write pipeline.",
+    "Warm re-launch may reuse resident SRAM only in an uninterrupted committed image epoch.",
+    "Reset during in-flight installation invalidates image and metadata; partial SRAM content cannot be treated as retained valid programme. Current protocol requires full reinstall before launch.",
+    "Actual new physical reset routes/FF count/cycles and current whole66/START remain unqualified; logical reset interface assertion is preserved by distinct direct ports, not data retiming.",
+    "Source/return issue, fault/observer and VM0/COPY calendars must price actual I/J. This test holds independent controller-fault input0; its full mission timing remains a separate obligation."
+  ],
+  "not_qualified": [
+    "physical/provider current views, source-lattice/clock/reset/PG/native ROWs",
+    "actual current17-type canonical plan adoption",
+    "independent-controller-fault and global VM0/COPY numerical mission",
+    "arithmetic numerical correctness or throughput/G5/rate",
+    "whole-parent reset66 qualification or old StoreA/B proof transfer"
+  ],
+  "first_method_failure": "Icarus0320 refused actual generate-indexed array connections, rc208 before runtime; preserved, unchanged RTL then compiled by Verilator5.050"
+}
