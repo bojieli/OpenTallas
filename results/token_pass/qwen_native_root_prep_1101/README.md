@@ -52,3 +52,21 @@ Coordinator authorized one normal-admission64GB/1-thread critical build with50GB
 A source check found that the calendar auto-BOOT already emits SETID0 at seal, while prep2 redundantly started stage0 after only16 cycles and could collide with that BOOT. Authorized fixture-only prep3 removes that restart, waits for the actual live SETID command with a finite512-cycle watchdog, then allows64 native transport-settling cycles before arithmetic. All35 native module hashes, source timescales, hierarchy and golden vectors are unchanged; only `tb_native_root` differs. Prep3 is23,809,869bytes and has the same36 modules.
 
 The unchanged-budget replacement uses `codex-qwen-root-native-build3-1101` through current intel2 ot-run, hosts localhost/intel1, stable class `run_qwen_native_root.sh`. It selected intel1 after normal disk eligibility improved; no floor override, duplicate or speculative second build was used. Runtime/build results remain pending, in `codex-qwen-root-native-1101/run1/` on the admitted host; launch log is intel2 `otrun_prep3.log`. Use prep3 for this request; earlier prep1/prep2 are superseded and uncompiled.
+
+Compiler-method correction (18:23 PST): the original admitted run remained in the
+GCC shared-PCH step after 4104 CPU seconds, with 3 objects and no runtime started.
+The coordinator authorized replacing that owned compilation. Its full partial
+cache, logs, command, process inventory and source hashes remain at intel1
+`codex-qwen-root-native-1101/run1/superseded_method`; run1 is superseded and does
+not establish completed capacity or arithmetic behavior. Only exact owned scope
+`oth-ubuntu-3825262-1793581860.scope` was stopped.
+
+The same prep3 packet is used by `run_qwen_native_root_inline.sh`, with only
+Verilator `-finline` after `-O0` and a distinct output `run_inline1`. Verilator
+5.050 disables the module-inlining pass under `-O0`; shared ID0 types did not
+remove 131751 retained primitive objects, and their Syms constructors/destructors
+accounted for 3081 of 4370 C++ units. No HDL, timing, hierarchy boundary, C++
+optimization, split limits, vectors or controls change. Both host packets contain
+42 identical files (aggregate SHA256 1a0aa450e61b0847574be988a70d9df4170a9d1c4b5da48d5a468246a7cc3c14).
+One replacement normal-admission 64GB/1T/crit/disk50 request was submitted from
+intel2 unit `codex-qwen-root-native-inline1-1101`; results remain pending.
