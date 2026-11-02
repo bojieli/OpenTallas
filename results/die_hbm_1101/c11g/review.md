@@ -28,8 +28,8 @@ Worst new station-to-station hop is 362.9 um (L730). Wire delay is 0.6315 ps/um 
 | type | S11 0-it | c11 0-it | c11 50-it |
 |---|---|---|---|
 | q_spu0 / pv1 | 16,964 | 0 / 0 (F) | 0 / 0 (F) |
-| q_b002 | 358,824 | 19,816 (F) | A-form pair 0; F running |
-| q_su11 / pv1 | DPL-0033, no result | 651,232 (E, first-ever placed) | G running |
+| q_b002 | 358,824 | 19,816 (F) | 0 (F) |
+| q_su11 / pv1 | DPL-0033, no result | 651,232 (E, first-ever placed) | 0 / 0 (G) |
 | q_b010 pv1 | 1,256,813 | 672,330 | running |
 | q_su00 / pv1 | 1,548,089 | 39,331 / 39,331 (H75) | running |
 | q_su31 pv1 | 11,068,380 | 10,088,098 | separate issue (open) |
