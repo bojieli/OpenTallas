@@ -75,6 +75,20 @@ def test_lib_checker_fails_closed(tmp_path):
     assert "no cell" in HP.check_lib(ok, "other")[0][0]
 
 
+def test_quoted_native_bus_types_and_unknown_width(tmp_path):
+    path = tmp_path / "native.lib"
+    text = lib_text(w=1024).replace("type (lf_rphy_b_t)", 'type ("lf_rphy_b_t")')
+    text = text.replace("bus_type : lf_rphy_b_t;", 'bus_type : "lf_rphy_b_t";')
+    path.write_text(text)
+    pins = HP.parse_lib(path)["lf_rphy"]
+    assert pins["i"]["width"] == pins["o"]["width"] == 1024
+    assert HP.check_lib(path, "lf_rphy", {"i": ("input", 1024), "o": ("output", 1024)})[0] == []
+    assert "!= lib" in HP.check_lib(path, "lf_rphy", {"i": ("input", 1023)})[0][0]
+    path.write_text(text.replace('bus_type : "lf_rphy_b_t";', 'bus_type : "missing_type";'))
+    assert HP.parse_lib(path)["lf_rphy"]["i"]["width"] is None
+    assert "!= lib" in HP.check_lib(path, "lf_rphy", {"i": ("input", 1024)})[0][0]
+
+
 def test_corner_siblings_and_declaration(tmp_path):
     (tmp_path / "lf_rphy_tt.lib").write_text(lib_text())
     (tmp_path / "lf_rphy_ff.lib").write_text(lib_text(hold=False))          # the FF view lacks hold: must fail

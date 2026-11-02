@@ -46,7 +46,7 @@ def parse_lib(path):
     txt = Path(path).read_text(errors="replace")
     txt = re.sub(r"/\*.*?\*/", "", txt, flags=re.S)
     widths = {m.group(1): int(re.search(r"bit_width\s*:\s*(\d+)", b).group(1))
-              for m in re.finditer(r"\btype\s*\(\s*(\w+)\s*\)", txt)
+              for m in re.finditer(r'\btype\s*\(\s*"?(\w+)"?\s*\)', txt)
               for b in [_block(txt, m.end())[0]] if re.search(r"bit_width\s*:\s*(\d+)", b)}
     cells = {}
     for m in re.finditer(r"\bcell\s*\(\s*\"?([\w$]+)\"?\s*\)", txt):
@@ -139,7 +139,7 @@ def check_lib(path, cell, ports=None, skip=()):
             d = pins.get(n)
             if d is None:
                 errs.append(f"{path}: as-built pin {cell}.{n} ({dr}, {w} b) is not in the lib")
-            elif d["dir"] != dr or (d["width"] is not None and d["width"] != w):
+            elif d["dir"] != dr or d["width"] != w:
                 errs.append(f"{path}: as-built pin {cell}.{n} {dr} {w} b != lib {d['dir']} {d['width']} b")
     return errs, dict(inputs=n_in, outputs=n_out, clocks=sorted(clocks))
 
