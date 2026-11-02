@@ -1,0 +1,7 @@
+# Actual frozen W5 native producer source cut
+
+SOURCE PREP, not a runnable or qualified vehicle. Five exact selected bound instances (CTL, SU-c, SU-l0, SU-l1, STREAM),492 original port connections preserved verbatim,339 typed unselected boundary signals,76 explicit real provider clock ports. Actual selected count straps, forwarded clock/START signals and bidirectional SU/VM control/data crossings are retained. Genuine76-stage ancestor START source connects selected sl_E0_fw reset output boundary, without guessing a root release date.
+
+Regenerate with prepare_bound_head_producer_cut.py --rtl the frozen bind_complete4/rtl directory --provider ../qwen_native_start_cone_source/start_cone.json --out aNewDirectory. Frozen source paths/sha256 and all typed boundaries are in producer_cut.json. Include ../qwen_native_start_cone_source/start_cone.sv and actual leaf RTL when building. The generator adds no state/pipeline edge, operands or clock aliases.
+
+The component boundary is the actual CTL's unselected FW/SC neighbors, not a fictitious direct SU command. External clocks preserve actual region/provider input names. Clock source/polarity mapping is now QC parent-owned; no single dummy clock may replace these interfaces. Native CTL source stimulus/BOOT/operand leases and full transitive source packet remain to be prepared before review/normal ot-run. No whole-QC job, no arithmetic/phase result, no R8 or physical adoption.
