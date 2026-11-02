@@ -1,0 +1,21 @@
+{
+  "status": "PREP_NOT_SIMULATED",
+  "scope": "real two-lane sender/receiver station and shared BTAB; eight sequential lane contexts; explicit REFERENCE L6 inputs; no executed full ME, global phase, AMAX or ROOT claim",
+  "clock": "nominal component833ps; selected distinct region providers not substituted or qualified",
+  "publication": "near inputs14component edges before corresponding far; same own-input schedule to sender and receiver; native sender output register and receiver PIN_IN establish neighbor lead, subject to exact native SRAM source review",
+  "count": {
+    "contexts": 16,
+    "reference_L6_vectors": 704,
+    "scaled_rows": 176
+  },
+  "inputs": {
+    "results/token_pass/qwen_native_head_post_prep_1102/genuine_btab_boot_records.json": "ad235133b3a99f770c9944edda675eb2d003ce3869f8271be831cdb519901f98",
+    "results/token_pass/qwen_native_head_post_reference_1102/L6_prefix_streams_REFERENCE.tsv": "7fcefd6cf683021bd9ff62fa39ba94dda2e1e42e0194852e865a188e8ccb1b85",
+    "results/token_pass/qwen_native_head_post_reference_1102/full512_scaled_REFERENCE.tsv": "b028a09270f4914ec15efcf1477ea78eb76bdb50c5c8d007afc1241bf0f95883"
+  },
+  "outputs": {
+    "genuine_btab.hex": "8b46afb9e1b98102495ec07a447405ad3b481d923f27d0287e4c92874eb7c762",
+    "l6_REFERENCE.hex": "664a8b5e05974fee13a08950bb5741b19658e0fc1145d4e59f64c8a62ee633db",
+    "scaled_REFERENCE.hex": "d30ff61ec386d96ef582d294e813983500432fbb0d795b65010425fab9d1435f"
+  }
+}
