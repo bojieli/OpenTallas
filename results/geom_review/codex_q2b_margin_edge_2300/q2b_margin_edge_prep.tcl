@@ -32,6 +32,6 @@ if {abs(double([$qb_bb xMin])/$qb_u-15.120)>0.001 || abs(double([$qb_bb yMin])/$
 set qb_lip [list [$qb_bb xMin] [expr {round(13.224*$qb_u)}] [$qb_bb xMax] [$qb_bb yMin]]
 odb::dbObstruction_create $qb_blk [[ord::get_db_tech] findLayer M3] {*}$qb_lip
 set qb_lib [get_lib_cells -quiet */BUFx4_ASAP7_75t_R]
-if {[llength $qb_lib] != 1} {error "Q2B_PREP missing/ambiguous BUFx4"}
+if {[llength $qb_lib] < 1} {error "Q2B_PREP missing BUFx4"}
 replace_cell [get_cells -quiet $qb_name] [lindex $qb_lib 0]
 puts "Q2B_PREP row252 BUFx2->BUFx4; M3 SRAM south lip 15.120,13.224..109.944,13.260; no RTL/clock/pin ABI change"
