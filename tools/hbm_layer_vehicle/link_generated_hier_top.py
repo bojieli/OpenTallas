@@ -201,6 +201,8 @@ def prepare(preprocessed, top_text, args_text, stub_root, output, *, source_path
     if len(topmods) != 1:
         raise ValueError('exactly one top required')
     topname, top = next(iter(topmods.items()))
+    if any('"' in body or '\\' in body for body in (top, original[topname])):
+        raise ValueError('quoted strings and escaped identifiers are unsupported in connectivity tops')
     if norm(top) != norm(original[topname]):
         raise ValueError('raw top differs from selected preprocessed top')
     if re.search(r'\b(always|initial|assign|function|task|generate|defparam|bind|specify|if|for|case)\b', top):
