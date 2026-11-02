@@ -2,10 +2,11 @@
 import gzip,json,sys,collections
 from pathlib import Path
 r=Path(sys.argv[1]);o=Path(sys.argv[2]);o.mkdir(exist_ok=True)
-g=json.load(gzip.open(r/'core_source_graph_v3.json.gz'));d=json.load(gzip.open(r/'core_reader_join_eio2/MACRO_READER_CONSTRAINTS.json.gz'));bounds={}
+g=json.load(gzip.open(r/'core_source_graph_v3.json.gz'));d=json.load(gzip.open(Path(sys.argv[3]) if len(sys.argv)>3 else r/'core_reader_join_eio2/MACRO_READER_CONSTRAINTS.json.gz'));bounds={}
 for ff,es in d['FF_macro_constraints'].items():
  u=[x['xy_um'][0]+x['xy_um'][1]for x in es];v=[x['xy_um'][0]-x['xy_um'][1]for x in es];bounds[ff]=[max(u)-402,min(u)+402,max(v)-402,min(v)+402]
-bounds={k:bounds.get(k,[0,1792.8,-1032.48,760.32])for k in g['ff_nodes']}
+W,H=json.load(open(sys.argv[4]))['actual_core_box_um'][2:] if len(sys.argv)>4 else (760.32,1032.48)
+bounds={k:bounds.get(k,[0,W+H,-H,W])for k in g['ff_nodes']}
 adj={k:set()for k in bounds};edges=set()
 for ff,terms in g['relevant_ff_input_sources'].items():
  if ff not in bounds:continue

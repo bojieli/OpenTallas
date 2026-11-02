@@ -2,7 +2,7 @@
 import gzip,json,sys,collections
 from pathlib import Path
 r=Path(sys.argv[1]);o=Path(sys.argv[2]);o.mkdir(exist_ok=True)
-g=json.load(gzip.open(r/'core_source_graph_v3.json.gz'));d=json.load(gzip.open(r/'core_reader_join_eio2/MACRO_READER_CONSTRAINTS.json.gz'));bounds={}
+g=json.load(gzip.open(r/'core_source_graph_v3.json.gz'));d=json.load(gzip.open(Path(sys.argv[3]) if len(sys.argv)>3 else r/'core_reader_join_eio2/MACRO_READER_CONSTRAINTS.json.gz'));bounds={}
 for ff,es in d['FF_macro_constraints'].items():
  u=[x['xy_um'][0]+x['xy_um'][1]for x in es];v=[x['xy_um'][0]-x['xy_um'][1]for x in es];bounds[ff]=[max(u)-402,min(u)+402,max(v)-402,min(v)+402]
 adj={k:set()for k in bounds};edges=set()

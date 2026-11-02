@@ -7,7 +7,7 @@ import gzip,json,math,sys
 from pathlib import Path
 import numpy as np
 d=json.load(gzip.open(sys.argv[1]));r=json.load(open(sys.argv[2]));g=json.load(gzip.open(sys.argv[3]));o=Path(sys.argv[4]);o.mkdir(exist_ok=True)
-px,py=2.592,.54;W,H=760.32,1032.48;xs=(np.arange(math.floor(W/px))+.5)*px;ys=(np.arange(math.floor(H/py))+.5)*py
+px,py=2.592,.54;W,H=r['actual_core_box_um'][2:];xs=(np.arange(math.floor(W/px))+.5)*px;ys=(np.arange(math.floor(H/py))+.5)*py
 free=np.ones((len(ys),len(xs)),dtype=bool)
 for h in r['macros']:
     x,y=h['origin_um'];w,z=h['outline_um'];a=h['halo_um'];xx=(xs+px/2>x-a+1e-8)&(xs-px/2<x+w+a-1e-8);yy=(ys+py/2>y-a+1e-8)&(ys-py/2<y+z+a-1e-8);free[np.ix_(yy,xx)]=False

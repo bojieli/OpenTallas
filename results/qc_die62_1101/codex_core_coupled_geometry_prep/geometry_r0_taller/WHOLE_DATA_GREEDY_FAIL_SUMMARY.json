@@ -1,0 +1,25 @@
+{
+  "tightened_FF_graph_bounds": true,
+  "status": "CONDITIONAL_SOURCE_ONLY_MACRO_READER_SITE_PROPOSAL",
+  "requested_existing_FFs": 63971,
+  "placed_existing_FFs": 62915,
+  "failed": 1056,
+  "site_pitch_um": [
+    2.592,
+    0.54
+  ],
+  "macro_endpoint_center_budget_um": 402,
+  "extra_pin_offset_reserve_um": 3,
+  "unique_nonoverlap_sites": true,
+  "macros_and_halos_avoided": true,
+  "max_macro_endpoint_center_distance_um": 402.0,
+  "new_FFs": 0,
+  "new_functional_edges": 0,
+  "unqualified": [
+    "ConditionalonUNQUALIFIEDuniformfoldcontrolpinpolicy",
+    "FF-to-FF/control predecessor and successor geometry notclosed",
+    "Only DATA graph considered, actual control/clock/reset/portlanding contracts notqualified",
+    "NativeinternalR90support absent",
+    "Clock/reset/PG/START/boot/model/programme/view/SIGNED notclosed"
+  ]
+}
