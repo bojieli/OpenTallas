@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.resign_qualification.v1",
+  "kind": "common_tool_measurement",
+  "verdict": "SIGNED",
+  "src_commit": "99172ad794660cbccae4104f662bb02115afcb7a",
+  "flow_tag": "flow-20261101-p-qc",
+  "routed_db": "/srv/opentallas-scratch2/claude/codex-s81-vsw-2302/eco/i1/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/6_final.odb",
+  "build_commit": "2dd7de17846fb48356ea963092dbe53ceb15e789",
+  "lec": "/srv/opentallas-scratch2/claude/codex-s81-vsw-2302/eco/i1/lec_current051/lec.json",
+  "lec_verdict": "EQUIVALENT",
+  "resign_signoff": "/srv/opentallas-scratch2/claude/codex-s81-vsw-2302/eco/i1/signoff/signoff.json",
+  "kit": "/srv/opentallas-scratch2/claude/codex-s81-vsw-2302/eco/i1",
+  "original_signoff": "/srv/opentallas-scratch2/claude/codex-s81-vsw-2302/eco/i1/signoff/signoff.json",
+  "name": "kl_ot_s81sl_vsw_cvB",
+  "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+  "writer": "tools/die_plan/resign.py",
+  "host": "dear-crayfish",
+  "created": "2026-11-02 01:51 PST",
+  "routed_db_sha256": "1b153a66d6971fdb5acb6d36cf6bdc2a1a0fe7a141160c20f3763a3f51b6ce75",
+  "tag_tools": {
+    "dir": "/srv/opentallas-scratch2/claude/codex-s81-vsw-2302/flow_051/tools/die_plan",
+    "sha256": {
+      "signoff.py": "fe1e114f1cd64bc587fefab09a3bd4dd44e3b894c662d2a0a85793eaa371319e",
+      "lec.py": "341f0a0bd8609bfc001cbd7f5f3c10d12d424ff02daa72d81b6adb7582eacd41"
+    },
+    "checked": "byte-identical to flow-20261101-p-qc"
+  },
+  "lane": "S81-CORES-KITS-13",
+  "as_run_note": "ROOT authorized common-tool measurement only; S81 per-die release/adoption HOLD. Same current051 signoff/lec/clock_family bytes as published p-qc. No new signoff/proof or count credit.",
+  "S81_RELEASE_HOLD": true,
+  "count_eligible": false,
+  "adoption_eligible": false,
+  "golden_source_commit": "051340895d95ea77b712fcc1fe80a5de9f6449be",
+  "common_tools_sha256": {
+    "signoff.py": "fe1e114f1cd64bc587fefab09a3bd4dd44e3b894c662d2a0a85793eaa371319e",
+    "lec.py": "341f0a0bd8609bfc001cbd7f5f3c10d12d424ff02daa72d81b6adb7582eacd41",
+    "clock_family.tcl": "4d035237e7a3b21187387463d91034f019e312e82c4cfaf135ec6830dd2d7c71"
+  },
+  "hold_reason": "Published matching tag is p-qc; S81 per-die release not yet available. No PROVENANCE.json written. Counter accepts cross-die tags, so kind=resign intentionally not emitted."
+}
