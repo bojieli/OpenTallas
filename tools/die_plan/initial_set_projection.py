@@ -56,6 +56,9 @@ def reset_image_miter(F, d, reset, cycles, slots, correlations, *, onto=False):
     sv = [lit >> 1 for lit in slots.values()]
     if len(set(sv)) != len(sv):
         raise ValueError('independent coordinates are not injective')
+    names = [name for name, _, _ in correlations]
+    if len(set(names)) != len(names) or set(names) & set(slots):
+        raise ValueError('projection semantic output names must be unique')
     loads = [lit >> 1 for _, lit, _ in correlations]
     if len(set(loads)) != len(loads) or set(loads) & set(sv):
         raise ValueError('load coordinates must be distinct from each other and slots')
@@ -141,7 +144,7 @@ class _Parity:
         self.parent[a], self.edge[a] = b, ia ^ ib ^ inversion
 
 
-def validate_native_bijection(L, fields, prior):
+def validate_native_bijection(L, fields, prior, *, initial_image=None):
     """Resolve typed logical names through native maps and reject prior conflicts.
 
     This does NOT validate source primitive metadata, prove an initial set, or
@@ -212,6 +215,26 @@ def validate_native_bijection(L, fields, prior):
     for r in resolved:
         uf.join(('gold', r['gold'] >> 1), ('gate', r['gate'] >> 1),
                 (r['gold'] & 1) ^ (r['gate'] & 1) ^ r['xor'])
+    # Separate reset-only compatibility phase. The caller may supply these
+    # facts ONLY after BOTH native upper and onto image proofs have passed.
+    # They never enter L.hyp, L.cons, or the transition miter.
+    if initial_image is not None:
+        for sd, constants in initial_image['native_constants'].items():
+            d = L.gold if sd == 'gold' else L.gate if sd == 'gate' else None
+            if d is None:
+                raise ValueError('unknown native reset side')
+            for v, value in constants.items():
+                if type(v) is not int or not 0 <= v <= d['I'] + d['L'] or value not in (0, 1):
+                    raise ValueError('non-atomic native reset fact')
+                uf.join(zero if v == 0 else (sd, v), zero, value)
+        for sd, key, reference, inversion in initial_image['correlations']:
+            if inversion not in (0, 1):
+                raise ValueError('nonboolean reset correlation')
+            a, ia = pair(sd, key)
+            b, ib = pair(sd, reference)
+            if a not in projection or b not in projection:
+                raise ValueError('reset correlation outside typed projection')
+            uf.join(a, b, ia ^ ib ^ inversion)
     projection_roots = {uf.find(v)[0] for v in projection}
     for references in predicates:
         if any(uf.find(v)[0] in projection_roots for v in references):
@@ -227,4 +250,5 @@ def validate_native_bijection(L, fields, prior):
         free_roots.add(root)
     return resolved, dict(native_fields=len(resolved), independent_slots=len(free_roots),
                           prior_count=len(prior), matched_count=len(L.matched),
+                          phase='RESET_IMAGE_COMPATIBILITY' if initial_image is not None else 'TRANSITION_COMPATIBILITY',
                           conflicts=0, base_accepted=False, gate_integration=False)

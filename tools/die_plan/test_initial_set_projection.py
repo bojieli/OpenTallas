@@ -133,3 +133,39 @@ def test_combinational_native_alias_is_not_an_independent_parity_atom():
     L=fixture();L.gp['comb']=8
     with pytest.raises(ValueError,match='combinational'):
         P.validate_native_bijection(L,fields(),{('gold','comb'):('eq','gold','s',0)})
+
+
+def test_duplicate_proof_output_names_cannot_collapse_status_coverage():
+    d=dict(I=1,L=3,A=0,ands=[],latches=[4,4,4])
+    with pytest.raises(ValueError,match='names'):
+        P.reset_image_miter(F,d,{1:0},2,{'slot':4},[('load',6,'slot'),('load',8,'slot')])
+
+
+def test_correlated_reset_image_cannot_collapse_two_free_slot_fields():
+    from types import SimpleNamespace
+    d=dict(I=1,L=3,A=0,ands=[],latches=[4,6,4])
+    L=SimpleNamespace(gold=d,gate=d,gp={'a':4,'b':6,'ld':8},tp={'a#':4,'b#':6,'ld#':8},matched=[])
+    fs=[{'gold':k,'gate':k+'#','kind':'load' if k=='ld' else 'slot','proposed_xor':0} for k in ['a','b','ld']]
+    prior={('gold','b'):('eq','gold','ld',0)}
+    P.validate_native_bijection(L,fs,prior)
+    with pytest.raises(ValueError,match='collapses'):
+        P.validate_native_bijection(L,fs,prior,initial_image={
+            'native_constants':{'gold':{1:0},'gate':{1:0}},
+            'correlations':[('gold','ld','a',0),('gate','ld#','a#',0)]})
+
+
+def test_reset_pi_is_known_only_in_reset_image_compatibility_phase():
+    L=fixture();L.gp['rst']=2;L.tp['rst']=2
+    prior={('gold','s'):('eq','gold','rst',0)}
+    P.validate_native_bijection(L,fields(),prior)
+    with pytest.raises(ValueError,match='collapses'):
+        P.validate_native_bijection(L,fields(),prior,initial_image={
+            'native_constants':{'gold':{1:0},'gate':{1:0}},
+            'correlations':[('gold','l','s',0),('gate','l#','s#',0)]})
+
+
+def test_valid_correlated_image_compatibility_still_does_not_accept_base():
+    _,r=P.validate_native_bijection(fixture(),fields(),{},initial_image={
+        'native_constants':{'gold':{1:0},'gate':{1:0}},
+        'correlations':[('gold','l','s',0),('gate','l#','s#',0)]})
+    assert r['phase']=='RESET_IMAGE_COMPATIBILITY' and not r['base_accepted']
