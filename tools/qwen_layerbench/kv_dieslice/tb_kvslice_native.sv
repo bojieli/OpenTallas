@@ -168,11 +168,27 @@ module tb_kvslice;
         hc_rx_cr <= hc_rx_v;                       // host consumes every die->host word at once (returns its credit)
         if (hc_rx_v) rx_words <= rx_words + 1;
     end
+    // W528 application credits are independent of the physical adapter's IBUF4.
+    // Return one HOST/CTRL/completion slot for every application word consumed.
+    // Credit-only frames may pass during image replay: they carry no loader data.
+    wire host_class_credit_v; wire [527:0] host_class_credit_d;
+    wire host_class_credit_ack = host_up && !host_drop_class_credits && host_class_credit_v && (credits + (hc_tx_cr ? 1 : 0) > 0);
+    reg host_drop_class_credits = 0;
+    integer host_class_credit_frames = 0;
+    initial host_drop_class_credits = $test$plusargs("HOST_DROP_CLASS_CREDITS");
+    qwen_kv_board_class_credit u_board_class_credit(
+        .ck(ck_host), .rst_n(host_up), .consume_v(hc_rx_v),
+        .consume_d(hc_rx_d), .credit_v(host_class_credit_v),
+        .credit_d(host_class_credit_d), .credit_ack(host_class_credit_ack));
     // credit-based host sender (IBUF 4 of the host CDC write face)
     always @(posedge ck_host) if (host_up) begin
         automatic integer c = credits + (hc_tx_cr ? 1 : 0);
         hc_tx_v <= 1'b0;
-        if (sent < nfr && c > 0 && !auth_pending && cyc_core >= hold_core && cyc_host >= next_issue_host) begin
+        if (!host_drop_class_credits && host_class_credit_v && c > 0) begin
+            hc_tx_v <= 1'b1; hc_tx_d <= host_class_credit_d;
+            host_class_credit_frames = host_class_credit_frames + 1;
+            c = c - 1;
+        end else if (sent < nfr && c > 0 && !auth_pending && cyc_core >= hold_core && cyc_host >= next_issue_host) begin
             next_issue_host = cyc_host + HOST_FRAME_GAP;
             hc_tx_v <= 1'b1; hc_tx_d <= frames[sent] ^ ((sent == mut_frame) ? (528'd1 << 19) : 528'd0);
             sent <= sent + 1; c = c - 1;
@@ -355,8 +371,34 @@ module tb_kvslice;
             $display("KVSLICE_POST cyc %0d events %0d fdi_tx_words %0d", cyc_core, po_n, ftx_n);
             if (far_en) u_far.report();
         end
+        $display("HOST_CLASS_CREDITS returned_frames %0d disabled %0d", host_class_credit_frames, host_drop_class_credits);
         $display("KVSLICE_FINALCAL dcal_fault %b cyc %0d", dut.sys_c.w_dcal_fault[0], cyc_core);
         if (dut.sys_c.w_dcal_fault[0]) $fatal(1, "KVSLICE_FINALCAL FAIL: calendar fault after POST");
         $finish;
+    end
+endmodule
+
+// Board endpoint W528 application-credit consumer. The die TX class windows
+// are HOST4/CTRL4/completion4; physical receive credits do not replenish them.
+// This module is shared verbatim with the smallest transport regression.
+module qwen_kv_board_class_credit(
+    input wire ck, rst_n, consume_v,
+    input wire [527:0] consume_d,
+    output wire credit_v, output wire [527:0] credit_d,
+    input wire credit_ack
+);
+    reg [7:0] pending_host, pending_ctrl, pending_done;
+    wire host_word = consume_v && consume_d[527:524] == 4'd0;
+    wire ctrl_word = consume_v && consume_d[527:524] == 4'd1;
+    wire done_word = consume_v && consume_d[527:524] == 4'd5;
+    assign credit_v = |{pending_host,pending_ctrl,pending_done};
+    assign credit_d = {4'd7,12'd0,488'd0,pending_done,pending_ctrl,pending_host};
+    always @(posedge ck or negedge rst_n) begin
+        if (!rst_n) begin pending_host<=0;pending_ctrl<=0;pending_done<=0;end
+        else begin
+            pending_host <= (credit_ack ? 8'd0 : pending_host) + 8'(host_word);
+            pending_ctrl <= (credit_ack ? 8'd0 : pending_ctrl) + 8'(ctrl_word);
+            pending_done <= (credit_ack ? 8'd0 : pending_done) + 8'(done_word);
+        end
     end
 endmodule
