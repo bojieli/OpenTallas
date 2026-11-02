@@ -1,0 +1,11 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-cl911-t28-0212
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-cl911-t28-0212
+ot-run: localhost      admits   240 GB (avail 367, reserve 0, fresh 0, peak 62.9, headroom 0, waiters 9/646 GB) load 217/112 running 57 disk 132 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3022137-1793614258 after 1 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-s81-cl911-t28-0212/model_native.py", line 6, in <module>
+    p=json.load(open(F/'src/physical/die_plan/s81/plan_source39_deadrefreshed_clk28.json'));P=S.Plan(p);tn='col_h10_r0_p1__t1__cl911743eb';d=json.load(open(R/'native_census.json'));typ=P.types[tn];oldtree=RT.for_type(P,tn);assert oldtree==d['reset_tree'];oldrt=oldtree['relays'];assert d['sinks'][-len(oldrt):]==[[float(r['xy'][0]),float(r['xy'][1]),1.] for r in oldrt]
+                                                                                                                                                                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+ot-run: RAN on localhost (unit oth-ubuntu-3022137-1793614258): exit 1

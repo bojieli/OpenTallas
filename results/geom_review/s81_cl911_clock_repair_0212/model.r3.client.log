@@ -1,0 +1,7 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-cl911-t28-0212
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-cl911-t28-0212
+ot-run: localhost      admits   246 GB (avail 373, reserve 0, fresh 0, peak 62.8, headroom 0, waiters 10/694 GB) load 212/112 running 57 disk 132 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3040024-1793614307 after 2 s
+{"type": "col_h10_r0_p1__t1__cl911743eb", "old_xy": [1126.44, 980.6], "new_xy": [1126.432, 958.496], "tap_count": 39, "obstacles": 87, "old_reset_relays": 178, "new_reset_relays": 178, "output_count": 44, "old_release": 7, "new_release": 7, "tap28_load_radius": [404.0, 198.41099999999994], "sink_count_old": 12397, "sink_count_new": 12397, "all_added_taps_pass": true, "added_reset_FF": 0, "bound_native_contract": false}
+ot-run: RAN on localhost (unit oth-ubuntu-3040024-1793614307): exit 0

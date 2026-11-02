@@ -1,0 +1,10 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-cl911-t28-0212
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-cl911-t28-0212
+ot-run: localhost      admits   150 GB (avail 368, reserve 0, fresh 93.6, peak 59.8, headroom 0, waiters 9/646 GB) load 188/112 running 57 disk 133 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2999275-1793614197 after 1 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-s81-cl911-t28-0212/model_native.py", line 4, in <module>
+    from placement_obstacles import placement_boxes
+ImportError: cannot import name 'placement_boxes' from 'placement_obstacles' (/srv/opentallas-scratch2/claude/codex-flow-s81-source-2055/src/tools/die_plan/placement_obstacles.py)
+ot-run: RAN on localhost (unit oth-ubuntu-2999275-1793614197): exit 1
