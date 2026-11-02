@@ -1,0 +1,17 @@
+{
+  "scope": "READ_ONLY_ACTUAL_P1_BASELINE_LOOK_NO_STA_REPAIR_OR_PNR",
+  "unit": "oth-ubuntu-3265786-1793585993",
+  "exit_code": 0,
+  "instances": 207518,
+  "kind": {
+    "logic": 75754,
+    "tap": 115825,
+    "ff": 15939
+  },
+  "statuses": {
+    "PLACED": 187144,
+    "LOCKED": 20374
+  },
+  "source_sha256": "11cd6c385333f566cd73a7ed57a75fec891ff5d218703f55e0a840fd054a4b6a",
+  "raw_retained": "intel2:/srv/opentallas-scratch2/claude/codex-pvj-p1-look-1830"
+}
