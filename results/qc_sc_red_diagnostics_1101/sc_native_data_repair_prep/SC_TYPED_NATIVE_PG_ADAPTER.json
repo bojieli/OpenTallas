@@ -1,0 +1,26 @@
+{
+  "scope": "CUSTOM_HONEST_PLACE_NATIVE_DATA_REPAIR_PG_V1_PREP_ONLY",
+  "source_pg": "5621983f56d82aa6e12536095be4b0c22ebf6d68",
+  "INPUT_STAGE": "fixed_clock_PLACE",
+  "cts_credit": false,
+  "dispatch_ready": false,
+  "source_rtl_changed": false,
+  "selected_input": "run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/fixed_clock_PLACE_input.odb",
+  "input_event": "current three-buffer actual unrouted geometry; NOT unlaunched49-buffer batch",
+  "runtime_prepare": "normal MM patch then sc_wrap_honest_place_runtime.py with unchanged canonical whole-body PG driver",
+  "initial_PG0_mandatory": true,
+  "root_physical_scope_pending": true,
+  "files": {
+    "nativepgbirth.so": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
+    "native_pg_binding.tcl": "e19c5fd9872e37f68d610e2dc46608359c9970b7c9e6de84f546f3b3c3ea3a2d",
+    "native_pg_birth_pre.tcl": "28720cda8dabefbe5f26a53178a6fe1b665bf7fc3c0f679e8c49788624a354bc",
+    "native_pg_birth_post.tcl": "70dffff6d40d5638ba1851456dc64b772230b665b7675d0df7c9f0ca5d52d38c",
+    "native_pg_birth_global_route.tcl": "e4f4afa5a91f9e8f6473efe6d91d5444ffb112607004ae9daa23b2906d58096b",
+    "sc_wrap_honest_place_runtime.py": "28a49f582bc6f8d37d9b2a72f0abe141eb1fa1c9600cbf19969749975cb6bf3c",
+    "sc_grt_pre_reviewed.tcl": "e8178e9793448259ea1052d79c6d3ad8b013e4388193ee243e22b8545bcde274",
+    "sc_grt_post_reviewed.tcl": "0b9cc7198a11599d812a4fae9e180c8a8bbef6cb74120a0396a95c2ff2c1670d",
+    "sc_ff_master_preserve.tcl": "dba7b7aeb690d41dc613672bb9aa385bebc7fecda017aa466c8967dde47c31d8",
+    "run_native_repair.sh": "13147f51648eb29f4c028707134c5f5fe879ee46e7dbceb795dc3f627305c6fb",
+    "run_native_readout.sh": "80da752e3a4065f5306cf69f37bd3e45af371fdf3899d1e537fa3adbbd878c92"
+  }
+}

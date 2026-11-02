@@ -1,0 +1,9 @@
+PREP ONLY: honest fixed-clock PLACE native DATA GRT repair option
+
+Fully staged epyc2:/srv/opentallas-scratch2/claude/codex-qc-sc-red-1101/sc_native_data_repair_pg1, proposed16GB2T/disk10, NOTRUN. Explicit fixed_clock_PLACE_input.odb/.sdc are the actual current3BUF unroutedgeometry/nativeSDC, NOT the unlaunched49BUFbatch and NOT a4CTS alias. Standardpost-MM GRTbody changes onlythat exactload_designline; otherwise byte-preserved undercanonicalPGwholebodycleanupdriver. All prior copiedbaseline readoutoutputs moved toprior_baseline_readout; no oldreadout.rc masquerades ascurrentrun.
+
+ExactPGsource5621983f56d82aa6e12536095be4b0c22ebf6d68/module8c9e1eef...0a93b; typedreceipt listsfilehashes anddispatch_readyfalse/cts_creditfalse. PGowner staticownership/orderreviewPASS: strict1/set-e, MM thentypedwrapper beforeordinarymake, callbackbegin beforeclockinventory/freeze andeveryoriginalPREaction, endafteroriginalPOST/guards, outerdrivercleansuponerrors. Rootactualphysicalmodel/deck/FFexclusions/holdpolicy/sourceintake/dispatchscope stillpending. NoCTS/GPL/DRT operation orglobalqualification.
+
+Guards: native2390clockinventorybeforeexpensivework, fixedclock/FFmasters/poses viafreeze+sequentialfamilynew-choiceexclusion, publicpinexactguard, sameM2-M5signal/M4-M5nonleafCLOCK/.25capacitydeck, normalDATAsetup+holdrepair, explicitfinalfullCLOCKSIGNAL50, retainedODB/guideBEFOREfinalclockdiff, PG0, finalactualGUIDE/fixedwirecoverage andpairedfreshglobalRC TTFF. StandardHOLD_SLACK_MARGIN10 proposed, uncertainty0/25ps/period833unchanged. Independent saved-ODB coverage/PG0 reader preparedseparatelyat sc_native_final_coverage (8GB1Tdisk2), noinput/job yet.
+
+IfROOTchooses49BUFimportfirst, create a NEW successor withthat actualreviewedsavedgeometry; do not silentlyreplacethisstagedinput. ExistingTT-388.81/FFhold-163.48/rawaspect2.102/proxy1.091 failures andsourceparentholdsremain. No predictedtimingPASS.
