@@ -89,7 +89,11 @@ def macro_edges(paths,masters):
 
 def source_alias_prefix(target):
     signal=target['source_identity'][0]
-    if '.u_cland_origin.' in signal:return signal.replace('.u_cland_origin.','.u_cland_origin/',1)
+    # The enabled generate arm is part of the actual retained native hierarchy.
+    # SF/S0 logical model identities intentionally retain their original names.
+    if signal in ('u_bound.u_cland_origin.sf','u_bound.u_cland_origin.s0'):
+        return signal.replace('.u_cland_origin.','.u_cland_origin.g_on.',1)
+    if re.fullmatch(r'u_bound\.u_cland_origin\.g_on\.g_region\[[0-3]\]\.(?:s1|s2|pd)',signal):return signal
     if signal.endswith('.u_raw_copy.q'):return signal[:-2]+'/q'
     raise ValueError('Source alias is outside the finite regional mechanism')
 
