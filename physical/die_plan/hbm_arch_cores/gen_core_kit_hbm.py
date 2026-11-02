@@ -2068,7 +2068,20 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # NOT EQUIVALENT 34 -> _c24r13 EQUIVALENT under the 64-edge contract).  Unlisted tops: kit unchanged.
     sys.path.insert(0, str(TOOL))
     import kit_reset_contract
-    reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"])
+    component_cycles = (source_profile or {}).get("component_proof_reset_cycles")
+    if component_cycles is not None:
+        # Component-source proof has no authority to inherit or replace a die reset contract.
+        if component_cycles != 4 or type(component_cycles) is not int or source_profile.get("release_eligible") is not False:
+            raise ValueError("component native4 requires an explicitly nonrelease source profile")
+        if (kd / "reset_contract.json").exists():
+            raise ValueError("component source proof cannot reuse a die reset receipt")
+        reset_contract = None
+        (kd / "component_proof_reset.json").write_text(json.dumps(dict(
+            schema="opentallas.component_proof_reset.v1", cycles=4,
+            scope="SOURCE_PROOF_ONLY", release_eligible=False,
+            physical_reset_qualification=False, die_contract_staged=False), indent=1) + "\n")
+    else:
+        reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"])
     write_boundary_context(kd, clks, rsts)   # before kit_hash: typed clock/reset declaration (COORD 10-30 15:27)
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
