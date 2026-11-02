@@ -1,0 +1,49 @@
+2026-11-02 02:43:37 PST AUTOPILOT: KIT-WAVE FAIL s81_head/hd_mesh_e PLAN: plan geometry / site @geom: AP_AUTO_GEOM AUTO-GEOM FAIL hd_mesh_e KIT-WAVE l48z 3_place aspect=FAIL(9.7) fill=FAIL(0.0073) empty=FAIL(0.9547) pin_reg_p90=FAIL(42.59) outline=ok(838.08x86.4) fill_hi=ok(0.0073) pin_reg_max=ok(119.24) pin_unreg=ok(0) r2r=ok(404.41) r2r_count=ok(0) pin_density=ok(1.3) partial_face=ok(0) relay_coll
+2026-11-02 02:43:41 PST AUTOPILOT: KIT-WAVE ENQUEUE s81_head/hd_spn_eshim_tx intel2:/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_spn_eshim_tx/gen/hd_spn_eshim_tx geom AP_AUTO_GEOM AUTO-GEOM FAIL hd_spn_eshim_tx KIT-WAVE l48z 3_place aspect=FAIL(10.909) fill=FAIL(0.0029) empty=FAIL(0.965
+2026-11-02 02:43:43 PST AUTOPILOT: KIT-WAVE ENQUEUE s81_head/hd_st_n3_transit intel2:/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_st_n3_transit/gen/hd_st_n3_transit geom AP_AUTO_GEOM AUTO-GEOM FAIL hd_st_n3_transit KIT-WAVE l48z 3_place aspect=FAIL(3.036) fill=FAIL(0.0101) empty=FAIL(0.948
+2026-11-02 02:43:47 PST AUTOPILOT: KIT-WAVE ENQUEUE s81_head/hd_st_n3_turn intel2:/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_st_n3_turn/gen/hd_st_n3_turn geom AP_AUTO_GEOM AUTO-GEOM FAIL hd_st_n3_turn KIT-WAVE l48z 3_place aspect=FAIL(2.157) fill=FAIL(0.0074) empty=FAIL(0.9568) 
+{
+ "apply": true,
+ "records": {
+  "s81_head|hd_mesh_e|b81c37a5bfe37": {
+   "status": "FAIL",
+   "stage": "geom",
+   "class": "PLAN",
+   "reason": "plan geometry / site @geom: AP_AUTO_GEOM AUTO-GEOM FAIL hd_mesh_e KIT-WAVE l48z 3_place aspect=FAIL(9.7) fill=FAIL(0.0073) empty=FAIL(0.9547) pin_reg_p90=FAIL(42.59) outline=ok(838.08x86.4) fill_hi=ok(0.0073) pin_reg_max=ok(119.24) pin_unreg=ok(0) r2r=ok(404.41) r2r_count=ok(0) pin_density=ok(1.3) partial_face=ok(0) relay_coll",
+   "geom_verdict": null,
+   "kit": "intel2:/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_mesh_e/gen/hd_mesh_e"
+  },
+  "s81_head|hd_spn_eshim_tx|b87b5bc565e37": {
+   "status": "ENQUEUED",
+   "stage": "geom",
+   "class": "",
+   "reason": "",
+   "geom_verdict": "PASS-COND",
+   "kit": "intel2:/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_spn_eshim_tx/gen/hd_spn_eshim_tx"
+  },
+  "s81_head|hd_st_n3_transit|ba47dc4624fb0": {
+   "status": "ENQUEUED",
+   "stage": "geom",
+   "class": "",
+   "reason": "",
+   "geom_verdict": "PASS-COND",
+   "kit": "intel2:/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_st_n3_transit/gen/hd_st_n3_transit"
+  },
+  "s81_head|hd_st_n3_turn|b52522f3006de": {
+   "status": "ENQUEUED",
+   "stage": "geom",
+   "class": "",
+   "reason": "",
+   "geom_verdict": "PASS-COND",
+   "kit": "intel2:/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_st_n3_turn/gen/hd_st_n3_turn"
+  }
+ },
+ "notices": {
+  "s81_head": [
+   "hd_mesh_e FAIL PLAN (plan geometry / site @geom: AP_AUTO_GEOM AUTO-GEOM FAIL hd_mesh_e KIT-WAVE l48z 3_place aspect=FAIL(9.7) fill=FAIL(0.0073) empty=FAIL(0.9547) pin_reg_p90=FAIL(4) evid intel2:/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_mesh_e/geom/auto_geom.json",
+   "hd_spn_eshim_tx AUTO-GEOM PASS GEOM-EXCEPTION empty,fill,aspect,pin_reg_p90: DIE-HEAD-53 CLASS TABLE H1 11-01 04:18; COORD approved adopted-slot exception; GEOM-104/GEOM-103 joint RECONCILE 2026-11-01 09:10: existing l48x shims PASS-COND parallel route; actual GRT0/r2r<=371/0collapse, single START163-179 and native link_o90 across95um strip; CTS clock_leaf_reach remains gated; DIE-HEAD-53 19:54 matching eshim_rx single START179.15 inclusion (<= 90); fill/empty = owner standing rule 10-30 00:45 -> enqueued (intel2:/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_spn_eshim_tx/gen/hd_spn_eshim_tx)",
+   "hd_st_n3_transit AUTO-GEOM PASS GEOM-EXCEPTION empty,fill,aspect: DIE-HEAD-53 CLASS TABLE H1 11-01 04:18; COORD approved adopted-slot exception; fill/empty = owner standing rule 10-30 00:45 -> enqueued (intel2:/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_st_n3_transit/gen/hd_st_n3_transit)",
+   "hd_st_n3_turn AUTO-GEOM PASS GEOM-EXCEPTION empty,fill,aspect: DIE-HEAD-53 CLASS TABLE H1 11-01 04:18; COORD approved adopted-slot exception; fill/empty = owner standing rule 10-30 00:45 -> enqueued (intel2:/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_st_n3_turn/gen/hd_st_n3_turn)"
+  ]
+ }
+}
