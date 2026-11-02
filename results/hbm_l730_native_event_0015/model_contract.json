@@ -1,0 +1,30 @@
+{
+  "enabled": false,
+  "actual_SOURCE13": {
+    "native_L730": 42,
+    "native_L730m": 42
+  },
+  "proposed_event": {
+    "downstream_extra_edges": 3,
+    "downstream_added_FF_per_lane": 4989,
+    "upstream_extra_edges": 2,
+    "upstream_added_data_FF_per_lane": 2302,
+    "upstream_added_epoch_FF_per_lane": 2,
+    "upstream_added_FF_per_lane": 2304,
+    "total_added_edges": 5,
+    "total_added_FF_per_lane": 7293,
+    "total_added_FF_paired": 14586,
+    "total_new_epoch_reset_loads_per_lane": 5,
+    "existing_XO_reused_FF_per_lane": 1023
+  },
+  "physical_exact_source_edges": null,
+  "NW_L5_event": "Separate authorized+1FTcycle/+2726FF; not generated or double-counted in this L730-only proposal",
+  "calendar": "No installed issue/fence/COPY dates invented. If selected, both paired consumers and all dependent issue/readiness/fence dates must join proposed5addededges, then actual route/provider count.",
+  "epoch_alternative": {
+    "second_stage_local_group_epochs_added_FF_per_lane": 2306,
+    "extra_FF_over_shared": 2,
+    "extra_reset_loads": 2,
+    "extra_cycles": 0,
+    "physical_route_qualification": "NOT_RUN"
+  }
+}

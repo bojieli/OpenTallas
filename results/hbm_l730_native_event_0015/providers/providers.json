@@ -1,0 +1,1213 @@
+[
+  {
+    "module": "ot_hgi_sfu_core_split3__ctl",
+    "source": "ot_hgi_sfu_core_split3__ctl.sv",
+    "source_sha256": "d8ce0deda2761ffcbdf5e87360cc42d45d81f3214251546c832a70edd43ff1cc",
+    "original_origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/external/6de52f51c482_b5ad1ef01e03939e80f6004861ef92c77b65776e539e61db0404fb0505fde9bd.sv\" 1",
+    "ports": [
+      {
+        "name": "clk",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "rst_n",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "u_core_procdff_66891__Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "u_core_procdff_66896__D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 8
+      },
+      {
+        "name": "u_core_procdff_66896__Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 8
+      },
+      {
+        "name": "u_core_procdff_66901__D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 8
+      },
+      {
+        "name": "u_core_procdff_66901__Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 8
+      },
+      {
+        "name": "u_core_procdff_66906__D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "u_core_procdff_66906__Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "u_core_procdff_66911__D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "u_core_procdff_66911__Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 256
+      },
+      {
+        "name": "u_core_procdff_66916__Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 136
+      },
+      {
+        "name": "u_core_procdff_66921__Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 2248
+      },
+      {
+        "name": "u_core_procdff_66926__D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2056
+      },
+      {
+        "name": "u_core_procdff_66931__D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 8
+      },
+      {
+        "name": "u_core_procdff_66936__D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 471
+      },
+      {
+        "name": "u_core_procdff_66936__Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 34
+      },
+      {
+        "name": "u_core_procdff_66941__D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1742
+      },
+      {
+        "name": "u_core_u_engine_logic_or_ot_hgi_sfu_static_engine_sp2_sv_72_8058__A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "u_core_u_engine_reduce_or_ot_hgi_sfu_static_engine_sp2_sv_72_8057__A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 16
+      },
+      {
+        "name": "u_core_u_engine_reduce_or_ot_hgi_sfu_static_engine_sp2_sv_72_8059__A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 16
+      },
+      {
+        "name": "u_core_u_engine_u_arithmetic_procdff_71639__Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 1022
+      },
+      {
+        "name": "u_core_u_rst__rst_n",
+        "direction": "output",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "u_core_u_vm__drain_data",
+        "direction": "input",
+        "is_vector": true,
+        "width": 512
+      },
+      {
+        "name": "u_core_u_vm__drain_result_v",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "u_core_u_vm__drain_v",
+        "direction": "output",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "u_core_u_vm__scalar_data",
+        "direction": "output",
+        "is_vector": true,
+        "width": 128
+      },
+      {
+        "name": "u_core_u_vm__scalar_load",
+        "direction": "output",
+        "is_vector": true,
+        "width": 4
+      },
+      {
+        "name": "u_core_u_vm__scalar_load_addr",
+        "direction": "output",
+        "is_vector": true,
+        "width": 96
+      },
+      {
+        "name": "u_core_u_vm__stage_addr",
+        "direction": "output",
+        "is_vector": true,
+        "width": 120
+      },
+      {
+        "name": "u_core_u_vm__stage_data",
+        "direction": "output",
+        "is_vector": true,
+        "width": 2048
+      },
+      {
+        "name": "u_core_u_vm__stage_group",
+        "direction": "output",
+        "is_vector": true,
+        "width": 16
+      },
+      {
+        "name": "u_core_u_vm__stage_mask",
+        "direction": "output",
+        "is_vector": true,
+        "width": 64
+      },
+      {
+        "name": "u_core_u_vm__stage_v",
+        "direction": "output",
+        "is_vector": true,
+        "width": 8
+      }
+    ],
+    "external_bits": 11810,
+    "planning_outline_um": [
+      669.6,
+      626.4
+    ],
+    "old_view_compatibility_credit": false,
+    "declared_direct_FF": 8933,
+    "required_native_export": {
+      "port": "u_core_u_engine_u_arithmetic_procdff_71639__Q",
+      "bits": [
+        0,
+        1021
+      ]
+    },
+    "START": {
+      "named_ports": [],
+      "opaque_command_contract": "Compiler control vectors remain exact; absence of a named START is not an absence-of-start claim. Native command/epoch/calendar joins required."
+    },
+    "status": "DISABLED_PROVIDER_SOURCE_EXPORT_NO_PHYSICAL_BUILD",
+    "source_model": {
+      "VM_READ_RETURN": 88,
+      "VM_WRITE_RETURN": 85,
+      "VM_bridge_declared_FF": 27301,
+      "reset_relay_FF": 6,
+      "total_declared_preopt_FF": 36240,
+      "native_SRAMs": 0,
+      "clock_fanout_status": "36240 source state bits on one exported clk; actual mapped sinks/tree unknown, clock decomposition/profile is a next gate"
+    },
+    "pin_capacity_model": {
+      "clock_and_reset_ports": [
+        {
+          "name": "clk",
+          "direction": "input",
+          "is_vector": true,
+          "width": 1
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "is_vector": true,
+          "width": 1
+        },
+        {
+          "name": "u_core_u_rst__rst_n",
+          "direction": "output",
+          "is_vector": true,
+          "width": 1
+        }
+      ],
+      "perimeter_um": 2592.0,
+      "at6pins_per_um_capacity": 15344,
+      "actual_pin_placement": "UNBUILT"
+    }
+  },
+  {
+    "module": "ot_hnx_sfu_store_a__da81d76763c9",
+    "source": "ot_hnx_sfu_store_a__da81d76763c9.sv",
+    "source_sha256": "f1eed9e84c43aed147d0e2a4a6ae58f10cdf13c09a3c3303c5a8c2c26b8e8461",
+    "original_origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/external/7872f1a435d1_41f332b9b527e9cd02450319e392029ae1e20df955cc847f0a1e71050fac3334.sv\" 1",
+    "ports": [
+      {
+        "name": "store0_clk",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "store0_flt",
+        "direction": "output",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "store0_rst_n",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "store0_sw_addr",
+        "direction": "input",
+        "is_vector": true,
+        "width": 120
+      },
+      {
+        "name": "store0_sw_d",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2048
+      },
+      {
+        "name": "store0_sw_mask",
+        "direction": "input",
+        "is_vector": true,
+        "width": 64
+      },
+      {
+        "name": "store1_flt",
+        "direction": "output",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "cmd0_Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 1024
+      },
+      {
+        "name": "cmd1_D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 768
+      },
+      {
+        "name": "cmd1_Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 768
+      },
+      {
+        "name": "cmd2_D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 64
+      },
+      {
+        "name": "cmd2_Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 64
+      },
+      {
+        "name": "cmd3_D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "cmd3_Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb32_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb33_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb34_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb35_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb36_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb37_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb38_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb39_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb48_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb48_S",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb49_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb50_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb51_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb52_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb53_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb54_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb55_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb56_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb57_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb58_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb59_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb60_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb61_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb62_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb63_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb64_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb64_S",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb65_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb66_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb67_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb68_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb69_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb70_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb71_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb72_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb73_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb74_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb75_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb76_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb77_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb78_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb79_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb80_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb81_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb82_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb83_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb84_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb85_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb86_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb87_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb128_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb144_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      }
+    ],
+    "external_bits": 6040,
+    "planning_outline_um": [
+      760.32,
+      483.84
+    ],
+    "old_view_compatibility_credit": false,
+    "declared_direct_FF": 1888,
+    "required_native_export": {
+      "port": "cmd0_Q",
+      "bits": [
+        576,
+        895
+      ]
+    },
+    "START": {
+      "named_ports": [],
+      "opaque_command_contract": "Compiler control vectors remain exact; absence of a named START is not an absence-of-start claim. Native command/epoch/calendar joins required."
+    },
+    "status": "DISABLED_PROVIDER_SOURCE_EXPORT_NO_PHYSICAL_BUILD",
+    "source_model": {
+      "lgroups": 2,
+      "lgroup_N": 16,
+      "lgroup_LWB": 15,
+      "lbank_RB": 11,
+      "native_SRAMs": 32,
+      "native_SRAM_master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "native_memory_bits": 2097152,
+      "lgroup_declared_soft_FF_including_bank_selectors": 643,
+      "declared_preopt_soft_FF": 3174,
+      "constant_LAT0_unused_declared_FF": 208,
+      "macro_physical_view_status": "Must use actual selected native master views; no generic memory substitution"
+    },
+    "pin_capacity_model": {
+      "clock_and_reset_ports": [
+        {
+          "name": "store0_clk",
+          "direction": "input",
+          "is_vector": true,
+          "width": 1
+        },
+        {
+          "name": "store0_rst_n",
+          "direction": "input",
+          "is_vector": true,
+          "width": 1
+        }
+      ],
+      "perimeter_um": 2488.32,
+      "at6pins_per_um_capacity": 14722,
+      "actual_pin_placement": "UNBUILT"
+    }
+  },
+  {
+    "module": "ot_hnx_sfu_store_b__1300886e9f18",
+    "source": "ot_hnx_sfu_store_b__1300886e9f18.sv",
+    "source_sha256": "b14fffb6256a187e4c62c23cd04df104f109ccab4d9683561e8ba41f9e3bc5d9",
+    "original_origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/external/b20a8bc6334a_d85ab5ff1b16252bcf120ddb39f48406da5b2d2922cc3d9c707e65e81b87822e.sv\" 1",
+    "ports": [
+      {
+        "name": "store0_clk",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "store0_flt",
+        "direction": "output",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "store0_rst_n",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "store0_sw_addr",
+        "direction": "input",
+        "is_vector": true,
+        "width": 120
+      },
+      {
+        "name": "store0_sw_d",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2048
+      },
+      {
+        "name": "store0_sw_mask",
+        "direction": "input",
+        "is_vector": true,
+        "width": 64
+      },
+      {
+        "name": "store1_flt",
+        "direction": "output",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "cmd0_Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 1024
+      },
+      {
+        "name": "cmd1_D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 768
+      },
+      {
+        "name": "cmd1_Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 768
+      },
+      {
+        "name": "cmd2_D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 64
+      },
+      {
+        "name": "cmd2_Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 64
+      },
+      {
+        "name": "cmd3_D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 384
+      },
+      {
+        "name": "cmd3_Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 384
+      },
+      {
+        "name": "cmd4_D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 512
+      },
+      {
+        "name": "cmd4_Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 512
+      },
+      {
+        "name": "cmd5_D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "cmd5_Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "cmd6_D",
+        "direction": "input",
+        "is_vector": true,
+        "width": 16
+      },
+      {
+        "name": "cmd6_Q",
+        "direction": "output",
+        "is_vector": true,
+        "width": 16
+      },
+      {
+        "name": "comb32_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb33_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb34_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb35_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb36_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb37_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb38_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb39_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb48_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb48_S",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb49_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb50_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb51_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb52_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb53_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb54_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb55_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb56_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb57_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb58_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb59_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb60_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb61_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb62_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb63_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb64_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb64_S",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb65_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb66_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb67_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb68_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb69_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb70_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb71_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb72_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb73_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb74_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb75_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb76_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb77_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb78_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb79_B",
+        "direction": "input",
+        "is_vector": true,
+        "width": 32
+      },
+      {
+        "name": "comb80_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb81_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb82_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb83_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb84_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb85_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb86_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb87_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 2
+      },
+      {
+        "name": "comb128_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "comb144_A",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      }
+    ],
+    "external_bits": 7864,
+    "planning_outline_um": [
+      760.32,
+      691.2
+    ],
+    "old_view_compatibility_credit": false,
+    "declared_direct_FF": 2800,
+    "required_native_export": {
+      "port": "cmd0_Q",
+      "bits": [
+        576,
+        895
+      ]
+    },
+    "START": {
+      "named_ports": [],
+      "opaque_command_contract": "Compiler control vectors remain exact; absence of a named START is not an absence-of-start claim. Native command/epoch/calendar joins required."
+    },
+    "status": "DISABLED_PROVIDER_SOURCE_EXPORT_NO_PHYSICAL_BUILD",
+    "source_model": {
+      "lgroups": 2,
+      "lgroup_N": 16,
+      "lgroup_LWB": 15,
+      "lbank_RB": 11,
+      "native_SRAMs": 32,
+      "native_SRAM_master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "native_memory_bits": 2097152,
+      "lgroup_declared_soft_FF_including_bank_selectors": 643,
+      "declared_preopt_soft_FF": 4086,
+      "constant_LAT0_unused_declared_FF": 208,
+      "macro_physical_view_status": "Must use actual selected native master views; no generic memory substitution"
+    },
+    "pin_capacity_model": {
+      "clock_and_reset_ports": [
+        {
+          "name": "store0_clk",
+          "direction": "input",
+          "is_vector": true,
+          "width": 1
+        },
+        {
+          "name": "store0_rst_n",
+          "direction": "input",
+          "is_vector": true,
+          "width": 1
+        }
+      ],
+      "perimeter_um": 2903.04,
+      "at6pins_per_um_capacity": 17210,
+      "actual_pin_placement": "UNBUILT"
+    }
+  }
+]

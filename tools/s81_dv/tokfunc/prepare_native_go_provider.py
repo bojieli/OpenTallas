@@ -7,6 +7,8 @@ def main():
  p=argparse.ArgumentParser()
  for name in ('source','field','fixture','out'):p.add_argument('--'+name,required=True,type=Path)
  p.add_argument('--gb-source',type=Path)
+ p.add_argument('--phases',type=int,default=2)
+ p.add_argument('--period',type=int,default=512)
  a=p.parse_args();assert not a.out.exists();a.out.mkdir(parents=True)
  sys.path[:0]=[str(a.source/'tools'),str(a.source/'tools/s81_dv'),str(a.source/'tools/s81_dv/layer_prog'),str(a.source/'tools/s81_static_control')]
  import lower_xs as L
@@ -24,7 +26,7 @@ def main():
  epoch=256;receipts={}
  for label,lead in [('old',0),('advance1',1)]:
   os.environ['OT_XS_Q_CPR']=str(lead)
-  c=X.compile_pipeline(P,S,[0,0],0,512,cfg_lead=63,acc_gap=20,retire_gap=30)
+  c=X.compile_pipeline(P,S,[0]*a.phases,0,a.period,cfg_lead=63,acc_gap=20,retire_gap=30)
   d=a.out/label;d.mkdir();L.xs_roms(raw,d)
   (d/'pq_calendar_action.viamap.hex').write_text(viamap([v&((1<<72)-1)for v in c['packed']]))
   (d/'pq_calendar_time.viamap.hex').write_text(viamap([v>>72 for v in c['packed']]))

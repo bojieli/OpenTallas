@@ -75,8 +75,11 @@ class Net:
                     pm = {}
                     for item in split_top(args):
                         port = re.fullmatch(r'\s*\.(\w+)\s*\((.*)\)\s*', item)
-                        if port and port.group(2).strip():
-                            pm[port.group(1)] = port.group(2).strip()
+                        if port:
+                            # An explicitly unconnected named port (.p()) has no graph endpoint,
+                            # matching the existing single-line instance parser.
+                            if port.group(2).strip():
+                                pm[port.group(1)] = port.group(2).strip()
                         elif item.strip():
                             raise ValueError(f"unparsed named port in {cur[0]}: {item!r}")
                     self.insts[cur[0]] = (cur[1], pm); cur = None

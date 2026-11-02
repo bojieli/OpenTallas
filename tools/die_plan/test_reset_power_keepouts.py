@@ -15,5 +15,5 @@ def test_reset_relay_sites_follow_type_clock_power_keepout():
 
 
 def test_unmodified_types_keep_their_macro_only_blockages():
-    t={'outline_um':[1000,1000], 'hard_cores':[{'origin_um':[100,100],'outline_um':[200,300]}]}
+    t={'outline_um':[1000,1000], 'hard_cores':[{'inst':'core','origin_um':[100,100],'outline_um':[200,300]}]}
     assert RT.blockages(t)==[(95.68,95.68,304.32,404.32)]
