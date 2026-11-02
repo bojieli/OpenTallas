@@ -8,7 +8,7 @@ class JoinContract(unittest.TestCase):
     def fixture(self):
         ports = ['clk'] + ['clk_t'+str(i) for i in range(1,63)]
         path = [dict(instance='gate',master='ICG',input_pin='CLK',output_pin='GCLK',kind='clock_gate',polarity=1)]
-        proposal = dict(clock_ports=ports,assignments=[dict(name='q'+str(i),parent_tap='clk_t1',nearest_parent_tap='clk') for i in range(51)],retained_other_cohorts=[])
+        proposal = dict(clock_ports=ports,reassociated_sinks=51,assignments=[dict(name='q'+str(i),parent_tap='clk_t1',nearest_parent_tap='clk') for i in range(51)],retained_other_cohorts=[])
         inv = dict(source_event='tt_regional_origin_13ff',stage='mapped_preCTS',source_sha256='source',netlist_sha256='mapped',
                    ports={p:dict(cohort='clk',period_ps=833,phase_ps=0,polarity=1) for p in ports},
                    sinks=[dict(model_name='q'+str(i),native_iterm='q'+str(i)+'/CLK',cohort='clk',root_port='clk',edge='negedge',path=copy.deepcopy(path)) for i in range(51)])

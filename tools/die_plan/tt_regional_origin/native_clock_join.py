@@ -98,8 +98,8 @@ def join(proposal, inventory):
     for a in proposal['retained_other_cohorts']:
         if by_name[a['name']]['root_port'] != a['logical_root']:
             raise ValueError('Other clock cohort changed: ' + a['name'])
-    if sum(r['capacity_override'] for r in output) != 51:
-        raise ValueError('Expected all 51 explicit capacity overrides')
+    if sum(r['capacity_override'] for r in output) != proposal['reassociated_sinks']:
+        raise ValueError('Explicit capacity overrides differ from this exact reviewed cohort')
     return dict(schema='opentallas.tt_native_clock_join.v1', status='JOINED_METADATA_ONLY',
                 tree_applied=False, physical_release='HELD',
                 source_sha256=inventory['source_sha256'], netlist_sha256=inventory['netlist_sha256'],

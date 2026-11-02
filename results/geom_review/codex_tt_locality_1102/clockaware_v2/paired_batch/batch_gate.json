@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.tt_paired_batch_prep.v1",
+ "enabled": false,
+ "selected_plan_sha256": "0343ef217f52cd15535747764ebd914ebeb73b7aad52810f4865fa36e62ddd43",
+ "selected_sidecar_sha256": "a8c1d00fb19e0494cdafc0456ba802e4409e337a5b26c594adde304182907c88",
+ "plan_delta": [
+  {
+   "instance": "u_bound.u_core.u_gi.u_cal.g_m[0].u_pm",
+   "old": [
+    17.28,
+    285.12
+   ],
+   "new": [
+    25.92,
+    285.12
+   ]
+  }
+ ],
+ "clock_configuration_unchanged_except_disabled_source_feature": true,
+ "global_sidecar": "BASELINE ONLY: not a new ClockLandings/global-reset receipt",
+ "source_event": "f46fd0964c31660911021559bbb27d7a45de316db9308c1f333a5fa680795c0b",
+ "native_clock_join_applied": false,
+ "required_join_terms": [
+  "Guarded ClockLandings optional source hook is implemented; keep default OFF until all remaining global consumers are joined.",
+  "ClockLandings.manifest reset_placements.tt_ctlm.count_origin must model four same-edge s1/s2/pd regions, 37 exact receiver associations and four depth3 raw leaves, while retaining SF/S0 and central raw leaf.",
+  "Reset-tree/global count alignment must rederive on the composed current parent plan with the exact frozen 63 tap names/coordinates; no cached sidecar promotion.",
+  "All 2978 old FF homes and 16 replacement/new homes require native-name/row legalization; no old checkpoint adoption.",
+  "Map every new mapped clock ITerm to the existing same-phase root and preserve edge/gate/inverter path via native_clock_join.py; expose all 51 capacity overrides.",
+  "G0C differential0new, strictbind0, count/KEEP/ABI join, actual LOOK and existing parent/physical/corner holds remain required."
+ ],
+ "next_stage": "Source GEN and paired model derivation only after coherent adapter join; no CAD/full LEC."
+}

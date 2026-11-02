@@ -17,7 +17,7 @@ def write_gzip(path, obj):
         f.write((json.dumps(obj, separators=(',', ':'))+'\n').encode())
 
 
-def build(plan_path, sidecar_path, final, event_path, out):
+def build(plan_path, sidecar_path, final, event_path, out, macro_path=None):
     plan = json.loads(plan_path.read_text())
     sidecar = json.loads(sidecar_path.read_text())
     event = json.loads(event_path.read_text())
@@ -28,7 +28,8 @@ def build(plan_path, sidecar_path, final, event_path, out):
     if event['padw'] != 1 or event['price']['added_state_ff'] != 13 or event['enabled']:
         raise ValueError('Unexpected source mechanism or enabled candidate')
     changed = []
-    for delta in json.loads((final/'macro_delta3_DISABLED.json').read_text()):
+    macro_path=macro_path or final/'macro_delta3_DISABLED.json'
+    for delta in json.loads(macro_path.read_text()):
         name = delta['name'].replace('\\', '')
         matches = [m for m in typ['hard_cores'] if m['inst'] == name]
         if len(matches) != 1:
@@ -53,11 +54,14 @@ def build(plan_path, sidecar_path, final, event_path, out):
                                         states=[r for r in origins if r['region']==i],
                                         receivers=[n for n,v in event['receiver_regions'].items() if v==i]) for i in range(4)],
                  price=event['price'], source_files=event['source_files'],
-                 clock_association='../composed_final/final_clock_association_DISABLED.json.gz',
+                 clock_association=str(final/'final_clock_association_DISABLED.json.gz'),
+                 ordinary_ff_homes=str(final/'final_composed_homes_DISABLED.json.gz'),
+                 macro_delta=str(macro_path),
                  physical_release='HELD', standard_global_derivation=False)
     (out/'regional_model_DISABLED.json').write_text(json.dumps(model, indent=1)+'\n')
+    model_relative=(out/'regional_model_DISABLED.json').resolve().relative_to(Path(__file__).resolve().parents[3])
     typ['clock']['landing_regional_origin'] = dict(enabled=False,
-        model_file=snapshot+'/results/geom_review/codex_tt_locality_1102/paired_batch/regional_model_DISABLED.json',
+        model_file=snapshot+'/'+str(model_relative),
         model_sha256=digest(out/'regional_model_DISABLED.json'))
     write_gzip(out/'plan_DISABLED.json.gz', plan)
     old_clock=original['partition_types']['tt_ctlm']['clock']
@@ -83,6 +87,7 @@ if __name__=='__main__':
     ap=argparse.ArgumentParser(description=__doc__)
     for name in ('plan','sidecar','final','event','out'):
         ap.add_argument('--'+name,type=Path,required=True)
+    ap.add_argument('--macro-delta',type=Path)
     a=ap.parse_args()
-    r=build(a.plan,a.sidecar,a.final,a.event,a.out)
+    r=build(a.plan,a.sidecar,a.final,a.event,a.out,a.macro_delta)
     print('TT_PAIRED_BATCH_DISABLED',len(r['plan_delta']),'macro changes; source/model joins remain HELD')
