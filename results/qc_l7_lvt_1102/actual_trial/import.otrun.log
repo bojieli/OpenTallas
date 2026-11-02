@@ -1,0 +1,5 @@
+ot-run: intel1         admits    -9 GB (avail 240, reserve 0, fresh 72, peak 113.3, headroom 0, waiters 33/1702 GB) load 151/112 running 67 disk 336 GB 
+ot-run: -> intel1 (will queue: admits -9 GB < 16 GB)
+ot-heavy: waiting for memory on key-cardinal: need 0.7 x 16 = 11 GB, admissible -8 GB: available 241 GB, growth charged 72 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 72 GB at x1), young 46 GB, floor 50 GB; invariant: committed 952 GB (in use 767, other 104, units max(now, peak) 776, + reserve 0 + fresh 72) vs physical - 64 = 943 GB -> headroom -8 GB
+ot-heavy: admitted on key-cardinal as oth-ubuntu-227461-1793622784 after 86 s
+ot-run: RAN on intel1 (unit oth-ubuntu-227461-1793622784): exit 0

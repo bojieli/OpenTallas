@@ -1,6 +1,6 @@
 # L7 finite four-LVT source/geometry proposal
 
-PREP only: no native master import, new GRT, DRT or signoff claim.
+Actual four-master import and paired GRT timing trial PASS. No new routing, DRT or signoff claim.
 
 The actual original final5_1 is Intel1 codex-qc-su-trials/l7_grt_cont1131/run/results/asap7/kq_qfd_qc_su_lane_w_l7_we89441/base/5_1_grt.odb. Exact retained copies are codex-qc-l7-readout-1102/{final_5_1_grt.odb,constraint.sdc} on Intel1/EPYC2. Released p-qc99172ad readout is TT−3.560152/FFhold+0.456857; fresh native guides1926CLOCK+276894SIGNAL/allguided and PG545100/open0. Source/parent/proof/DRT holds remain separate.
 
@@ -11,3 +11,7 @@ Actual SIMPLE TT/FF Liberty output functions, pin sets and areas match; entire1x
 Actual-box four-panel image personally viewed; independent GEOM concurs static geometry. Any next native import must preserve all instance poses/status/DNT, pins, incidence, clock graph/guides and PG0 with only four allowed master changes, followed by actual candidate LOOK before one matched TT/FF trial. No automatic closure or reuse of old source/proof credit.
 
 Failure preserved: initial census wrapper stopped Docker125 before OpenROAD because a new nested rw mount could not be created under/work:ro. Corrected census2 uses an isolated complete owned source copy, preserving the original and allowing only its own helper receipts. This also exposed and fixed the same layout trap in the separate disabled L1 repair preparation. No gate/SDC/tool semantics changed.
+
+Actual native import Intel1 unit227461-1793622784 exit0 and independent saved audit574172-1793623798 exit0 changed exactly these four masters. Every pose/status/DNT/ITerm incidence/public pin, all CLOCK/SIGNAL guides and regular/special PG wires remained identical; 272550 instances/279951 nets, PG545100/open0. Actual full/tail images personally and independently reviewed. The saved output is explicitly LVT_DATA_GEOMETRY_CHECKPOINT.odb.
+
+Paired read-only timing Intel1 unit1086720-1793625281 exit0 used released p-qc99172ad helper, exact original six TT/FF library hashes plus the explicit matching SIMPLE LVT library, original native SDC/RC, fresh global-routing parasitics and unchanged 1013 pin-register samples. TT setup +0.19ps, TT hold +9.09ps, FF setup +227.08ps, FF hold +0.46ps; pin-register means405.03/328.63ps and band verdicts remain PASS. The actual helper serializes two decimals; no higher precision is invented. Relative to original TT−3.560152 this resolves the measured negative endpoints for this finite trial. These narrow GRT margins are not a detailed-route/signoff result, total power claim, source proof or parent release. No DRT, CTS, new route, repair, source/cycle/clock change occurred.
