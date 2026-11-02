@@ -369,7 +369,8 @@ def summary(res):
     its = len(res.get("iterations") or [])
     if res.get("verdict") == "NOT_ELIGIBLE":
         return f"late-ECO not eligible: {res.get('reason')}"
-    tag = "late-ECO PASS" if res.get("verdict") == "PASS" else "late-ECO exhausted"
+    tag = {"PASS": "late-ECO PASS", "LEC_PENDING": "late-ECO proof pending",
+           "LEC_FAIL": "late-ECO proof failed"}.get(res.get("verdict"), "late-ECO exhausted")
     return (f"{tag} ({its} it, {res.get('wall_s')} s): TT {m0.get('tt')}->{b.get('tt')} FF {m0.get('ff')}->{b.get('ff')} "
             f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
 
@@ -400,6 +401,10 @@ def complete_lec(kit, res, mem, cpus, lec_tool=None):
         res["lec"] = dict(error=type(error).__name__ + ": " + str(error))
         passed = False
     res["verdict"] = "PASS" if passed else "LEC_FAIL"
+    res.setdefault("physical_reason", res.get("reason"))
+    res["reason"] = ("physical signoff and post-route equivalence passed" if passed else
+                     "post-route equivalence did not pass; physical signoff retained")
+    res["lec_finished"] = time.time()
     write_result(res)
     return passed
 
