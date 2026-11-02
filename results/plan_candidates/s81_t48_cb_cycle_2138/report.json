@@ -1546,5 +1546,9 @@
   "source_release_epochs_changed": false,
   "cb_payload_and_epoch_delivery_delta_cycles": 1,
   "boot_cb_epoch_fill_delta_cycles": 1,
-  "actual_bind_or_physical_qualification": false
+  "actual_bind_or_physical_qualification": false,
+  "added_async_reset_control_pins": 1,
+  "added_async_reset_sources": 0,
+  "packet_valid_is_inside_276_bit_bus": true,
+  "external_epoch_bit_index": 276
 }

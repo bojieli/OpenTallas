@@ -52,3 +52,11 @@ It writes a private full candidate and report, never runs CAD. The committed
 disabled_delta.json carries only the explicit three-field FT insertion, while
 report.json carries the exact277 new sites, budgets and failed attempts.
 The inspected picture/review is results/geom_review/s81_t48_cb_cycle_2138.
+
+Reset precision from actual native bind_cells.sv: ot_dp_st(W276) has
+276 packet flops on posedge clk only (including the in-band packet valid),
+and one external epoch eq flop on posedge clk or negedge existing rst_n.
+The proposal therefore adds one async-reset control-flop PIN load to the
+existing delivered reset. It adds no independent async source, synchronizer,
+reset tap or domain. Native recovery/removal and load still require the normal
+new kit; planner topology equality is not a zero-load or reset-timing claim.

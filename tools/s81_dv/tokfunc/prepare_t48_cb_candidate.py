@@ -88,6 +88,8 @@ def prepare(raw):
         part='s_4N_x06', type=TN, slot='ft1', old_stations=6, candidate_stations=7,
         inserted_internal_stage=2, added_payload_flops=276, added_epoch_flops=1,
         added_clock_sinks=277, added_epoch_reset_loads=1, added_clock_ports=0,
+        added_async_reset_control_pins=1, added_async_reset_sources=0,
+        packet_valid_is_inside_276_bit_bus=True, external_epoch_bit_index=276,
         old_clock=baseline_clock, candidate_clock=clock, reset_topology_unchanged=True,
         max_new_neighbor_hop_um=max(new_hops), new_bank_centre_um=centre,
         new_bit_sites_um=bank, attempts=attempts,
