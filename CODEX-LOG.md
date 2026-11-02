@@ -9794,3 +9794,7 @@ CODEX: 2026-11-01 20:40 PST MERGED+pushed98a8705cb78 (intel2merge.lock, HEAD==or
 OWNER? 2026-11-01 20:37 PST HCOL native shared-input repair requires explicit parent pin/window/lane-capacity event: additive regional master duplicates1113 query/key/valid input pins (1216→2329 total),0FF/0cycles, preserving each clk_pair capture. May this event be adopted after actual boundary/capacity checks? Existing master/parent remains unchanged; source proof work continues.
 
 CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measured DS source/read-readiness and default-off Qwenmonitor loader, selectedportfix cast exact1Mcontrol, S81repeateridentity, KVclock-masterECO protection, native reset/childclock helpers, HBMcontact/compact PREP/PSliceevidence, currentplanCI adapter + geometry/G0Cdiagnoses. Physical pilots pending; count50lastcollected.
+
+OWNER? Short-stage approved pool is <=8GB/<=2T. Actual default gen_lint reserves8+2=10GB, so remains outside;40GB signoffs and4Tplacement probes also remain normal. Keep original memory caps; a broader pool would need explicit scope decision. Continuing other work.
+
+CODEX: 2026-11-01 20:49 PST currentmain39f754dda07: future-kitLECsnapshot staging+exactXSROMprefix+KVheadkitrecipe+reviews published; Intel2reclaimed136.6GBgeneratedcanaryDBs/free224GB. FourplausibleLECretriesactive; distinctresidualsdiagnosedheld. FuturelegacyCItimerdisabled, liveforeignCIpreserved. L2B10olderflowSIGNED+6110EQ; current051sameDBgatequeued beforepublication/count.
