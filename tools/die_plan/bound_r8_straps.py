@@ -25,9 +25,13 @@ def declared(kit_rtl_json):
         audit = json.loads((root/'bind_r8pad_strap_audit.json').read_text())
         if audit.get('verdict') != 'PASS' or audit.get('errors') or audit.get('checked_bits', 0) < 4:
             raise ValueError(f'R8 count value audit not PASS: {name}')
-        values = [v[name] for v in manifest.get('instances', {}).values() if name in v]
-        if not values or any(v.get('kind') != 'r8pad_strap' or v.get('width') != 4 or type(v.get('value')) is not int or not 0 <= v['value'] < 16 for v in values):
-            raise ValueError(f'R8 count instance ties absent/invalid: {name}')
+        owners = kr.get('instances', [])
+        if (not isinstance(owners, list) or not owners or any(not isinstance(q, str) for q in owners)
+                or len(set(owners)) != len(owners)):
+            raise ValueError(f'R8 count lacks exact owning instances: {name}')
+        values = [manifest.get('instances', {}).get(q, {}).get(name, {}) for q in owners]
+        if any(v.get('kind') != 'r8pad_strap' or v.get('width') != 4 or type(v.get('value')) is not int or not 0 <= v['value'] < 16 for v in values):
+            raise ValueError(f'R8 count owning-instance ties absent/invalid: {name}')
         result.append({'name': name, 'width': 4})
     actual_r8 = {name for name in ports if name.startswith('strap_r8pad_')}
     if actual_r8 != {row['name'] for row in result}:
@@ -38,9 +42,14 @@ def declared(kit_rtl_json):
 def project(raw, kit_rtl):
     result = raw
     for tn, fl in (kit_rtl or {}).items():
-        additions = declared(Path(fl).with_name('kit_rtl.json'))
+        kit_json = Path(fl).with_name('kit_rtl.json')
+        additions = declared(kit_json)
         if not additions:
             continue
+        kr = json.loads(kit_json.read_text())
+        parts = {p['name']: p['type'] for p in raw.get('partitions', [])}
+        if kr.get('plan_type') != tn or any(parts.get(q) != tn for q in kr['instances']):
+            raise ValueError(f'type {tn}: R8 kit instances disagree with owning plan type')
         if result is raw:
             result = copy.deepcopy(raw)
         t = result['partition_types'][tn]
