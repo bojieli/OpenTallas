@@ -2990,3 +2990,5 @@ CODEX: 2026-11-01 20:52 PST L2B10 mSIGNED+EQ6110 collected; required051gates que
 CODEX: QC source child-remap/R8pin fixes c700cd088 pushed; strictbindqueued, coll_ucie3staticfailures corrected in held803.52width proposal, parent2peerrepack required; L1 TT−11.76/FF+5.85 actualFAIL passed sharedECO owner.
 
 CODEX: 2026-11-01 20:52 PST DS nativepricing5bdc9d371 READY;873currentboundcostjoinPASS,4tests,consumerstalecheck/defaultcurrentplan;rootmustpaircanonicaltable. No newRTLcycles/rate/G5.
+
+CODEX: 2026-11-01 20:58 PST KV host application-credit deadlock fixed READY9e4f17154, exact833psnative18payload+mutantgatePASS; onecorrectedfullvehicle PREP, no duplicate originalNOWAIT runs.
