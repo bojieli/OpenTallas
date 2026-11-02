@@ -1,0 +1,53 @@
+{
+ "scope": "ACTUAL_RETAINED_NATIVE_INDUCTION_CUT_BOOLEAN_WITNESS_NOT_REACHABLE_SEQUENCE",
+ "solver_or_native_job_called": false,
+ "aig_sha256": "dd83b6002f6a7d4942dc0b322b95d05833915a6e6f3d388d33d8f291557a7649",
+ "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.a_v",
+ "native_output_index": 8,
+ "native_output_literal": 2164864,
+ "native_inputs": 144687,
+ "reachable_cone_ands": 41,
+ "cone_input_count": 17,
+ "native_input_indices": {
+  "8645": 1,
+  "11109": 1,
+  "19962": 1,
+  "20635": 1,
+  "20637": 1,
+  "21400": 0,
+  "25917": 1,
+  "25918": 1,
+  "26477": 1,
+  "28157": 0,
+  "28458": 1,
+  "28459": 1,
+  "52727": 1,
+  "59070": 1,
+  "59071": 0,
+  "59673": 0,
+  "59674": 0
+ },
+ "matched_input_names": {
+  "ff:u_dut.u_bout_coll_oa.u_ep.eq": 1,
+  "ff:u_dut.u_core.u_la.rxen": 1,
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace_ok_r": 1,
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.rdy_k[2]": 1,
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.rep_ra[0]": 1,
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_rep_o.q": 0,
+  "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_group[0].group_r": 1,
+  "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[0].local_r": 1,
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ski.nz_r": 1,
+  "ff:u_dut.u_core.u_la.u_ln.u.up": 0,
+  "ff:u_dut.u_core.u_la.u_r0.u_rr.g_group[0].group_r": 1,
+  "ff:u_dut.u_core.u_la.u_r0.u_rr.g_local[0].local_r": 1,
+  "ff:u_dut.u_rrl_14.q": 1
+ },
+ "replica_indices": {
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.rep_ra[0]": 20637,
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_rep_o.q": 21400
+ },
+ "original_bad": 1,
+ "cofactor_only_rep_ra_equals_rep_o_bad": 0,
+ "all_other_native_inputs_default": 0,
+ "limits": "Full native prior/typed/hunt context is encoded by the retained miter. This demonstrates one actual Boolean cut witness and causal cofactor only; it is not a solver replay, all256 closure, BASE/STEP proof, or reachable DUT trace."
+}
