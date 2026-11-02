@@ -1,0 +1,72 @@
+{
+  "plan_digest": "d4710b2e4571100a",
+  "lanes": 2404,
+  "base_range": [
+    2,
+    106
+  ],
+  "folded_range": [
+    2,
+    121
+  ],
+  "folded": true,
+  "rule": "largest actual native member pad per plan lane",
+  "members": 6167,
+  "lanes_with_members": 2047,
+  "lanes_padded": 393,
+  "max_pad": 116,
+  "sum_lane_max_pads": 12844,
+  "not_plan_lanes": {},
+  "max_cycle_lanes": {
+    "L140": {
+      "base": 7,
+      "r8_pad": 114,
+      "cycles": 121
+    },
+    "L1860": {
+      "base": 5,
+      "r8_pad": 116,
+      "cycles": 121
+    },
+    "L1878": {
+      "base": 5,
+      "r8_pad": 116,
+      "cycles": 121
+    },
+    "L1896": {
+      "base": 5,
+      "r8_pad": 116,
+      "cycles": 121
+    },
+    "L1906": {
+      "base": 5,
+      "r8_pad": 116,
+      "cycles": 121
+    },
+    "L1972": {
+      "base": 5,
+      "r8_pad": 116,
+      "cycles": 121
+    },
+    "L1990": {
+      "base": 5,
+      "r8_pad": 116,
+      "cycles": 121
+    },
+    "L2008": {
+      "base": 5,
+      "r8_pad": 116,
+      "cycles": 121
+    },
+    "L2018": {
+      "base": 5,
+      "r8_pad": 116,
+      "cycles": 121
+    },
+    "L2217": {
+      "base": 8,
+      "r8_pad": 113,
+      "cycles": 121
+    }
+  }
+}
