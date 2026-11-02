@@ -1,0 +1,410 @@
+{
+  "dsfd_node_LLfu": {
+    "rows": 256,
+    "fixed_TAPs": 641,
+    "face_flops": 194,
+    "pg_unique": {
+      "M4": 4112,
+      "M5": 2072
+    },
+    "owned_bay_replaced": [
+      {
+        "id": "1",
+        "rect_um": [
+          20.532,
+          37.692,
+          22.692,
+          40.032
+        ],
+        "reason": "exact source-owned centre_clock_entry reservation replaced by preGPL fixed planned cells under existing12.2a1; normalFP source regeneration, NOT reuse"
+      }
+    ],
+    "legalization": {
+      "cells": 13,
+      "macro_halo_um": 4.32,
+      "cell_or_macro_overlaps": 0,
+      "max_displacement_um": 0.147,
+      "moved": 7,
+      "moves": [
+        {
+          "name": "qb_entry_0",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_1",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_2",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_3",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_4",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_5",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_root",
+          "dx_um": -0.012,
+          "dy_um": 0.123,
+          "displacement_um": 0.135
+        },
+        {
+          "name": "qb_S",
+          "dx_um": -0.012,
+          "dy_um": -0.135,
+          "displacement_um": 0.147
+        },
+        {
+          "name": "qb_N",
+          "dx_um": -0.012,
+          "dy_um": -0.135,
+          "displacement_um": 0.147
+        },
+        {
+          "name": "qb_SW",
+          "dx_um": 0.0,
+          "dy_um": -0.135,
+          "displacement_um": 0.135
+        },
+        {
+          "name": "qb_SE",
+          "dx_um": 0.0,
+          "dy_um": -0.135,
+          "displacement_um": 0.135
+        },
+        {
+          "name": "qb_NW",
+          "dx_um": 0.0,
+          "dy_um": -0.135,
+          "displacement_um": 0.135
+        },
+        {
+          "name": "qb_NE",
+          "dx_um": 0.0,
+          "dy_um": -0.135,
+          "displacement_um": 0.135
+        }
+      ]
+    },
+    "pg_trunk": {
+      "verdict": "PASS",
+      "layers": [
+        "M4",
+        "M5"
+      ],
+      "edges": 13,
+      "blocked_edges": 0,
+      "examples": []
+    },
+    "model": {
+      "TT": {
+        "min_ps": 239.8359068172466,
+        "mean_ps": 244.43856700291477,
+        "max_ps": 256.94153518858286,
+        "window_ps": 17.105628371336252,
+        "prediction": "VALID",
+        "out_of_calibration_leaves": []
+      },
+      "FF": {
+        "min_ps": 183.0784461168071,
+        "mean_ps": 187.1618651965213,
+        "max_ps": 198.04059027623543,
+        "window_ps": 14.962144159428334,
+        "prediction": "VALID",
+        "out_of_calibration_leaves": []
+      }
+    }
+  },
+  "dsfd_node_LLfd": {
+    "rows": 256,
+    "fixed_TAPs": 641,
+    "face_flops": 194,
+    "pg_unique": {
+      "M4": 4112,
+      "M5": 2072
+    },
+    "owned_bay_replaced": [
+      {
+        "id": "1",
+        "rect_um": [
+          20.532,
+          37.692,
+          22.692,
+          40.032
+        ],
+        "reason": "exact source-owned centre_clock_entry reservation replaced by preGPL fixed planned cells under existing12.2a1; normalFP source regeneration, NOT reuse"
+      }
+    ],
+    "legalization": {
+      "cells": 13,
+      "macro_halo_um": 4.32,
+      "cell_or_macro_overlaps": 0,
+      "max_displacement_um": 0.147,
+      "moved": 7,
+      "moves": [
+        {
+          "name": "qb_entry_0",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_1",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_2",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_3",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_4",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_5",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_root",
+          "dx_um": -0.012,
+          "dy_um": 0.123,
+          "displacement_um": 0.135
+        },
+        {
+          "name": "qb_S",
+          "dx_um": -0.012,
+          "dy_um": -0.135,
+          "displacement_um": 0.147
+        },
+        {
+          "name": "qb_N",
+          "dx_um": -0.012,
+          "dy_um": -0.135,
+          "displacement_um": 0.147
+        },
+        {
+          "name": "qb_SW",
+          "dx_um": 0.0,
+          "dy_um": -0.135,
+          "displacement_um": 0.135
+        },
+        {
+          "name": "qb_SE",
+          "dx_um": 0.0,
+          "dy_um": -0.135,
+          "displacement_um": 0.135
+        },
+        {
+          "name": "qb_NW",
+          "dx_um": 0.0,
+          "dy_um": -0.135,
+          "displacement_um": 0.135
+        },
+        {
+          "name": "qb_NE",
+          "dx_um": 0.0,
+          "dy_um": -0.135,
+          "displacement_um": 0.135
+        }
+      ]
+    },
+    "pg_trunk": {
+      "verdict": "PASS",
+      "layers": [
+        "M4",
+        "M5"
+      ],
+      "edges": 13,
+      "blocked_edges": 0,
+      "examples": []
+    },
+    "model": {
+      "TT": {
+        "min_ps": 239.86727518858282,
+        "mean_ps": 244.18098700291472,
+        "max_ps": 253.63193481724662,
+        "window_ps": 13.764659628663793,
+        "prediction": "VALID",
+        "out_of_calibration_leaves": []
+      },
+      "FF": {
+        "min_ps": 183.21094827623543,
+        "mean_ps": 186.95207519652126,
+        "max_ps": 195.1872441168071,
+        "window_ps": 11.97629584057168,
+        "prediction": "VALID",
+        "out_of_calibration_leaves": []
+      }
+    }
+  },
+  "dsfd_node_NNfu": {
+    "rows": 256,
+    "fixed_TAPs": 641,
+    "face_flops": 200,
+    "pg_unique": {
+      "M4": 4112,
+      "M5": 2072
+    },
+    "owned_bay_replaced": [
+      {
+        "id": "1",
+        "rect_um": [
+          20.532,
+          37.692,
+          22.692,
+          40.032
+        ],
+        "reason": "exact source-owned centre_clock_entry reservation replaced by preGPL fixed planned cells under existing12.2a1; normalFP source regeneration, NOT reuse"
+      }
+    ],
+    "legalization": {
+      "cells": 13,
+      "macro_halo_um": 4.32,
+      "cell_or_macro_overlaps": 0,
+      "max_displacement_um": 0.147,
+      "moved": 7,
+      "moves": [
+        {
+          "name": "qb_entry_0",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_1",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_2",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_3",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_4",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_entry_5",
+          "dx_um": 0.0,
+          "dy_um": 0.0,
+          "displacement_um": 0.0
+        },
+        {
+          "name": "qb_root",
+          "dx_um": -0.012,
+          "dy_um": 0.123,
+          "displacement_um": 0.135
+        },
+        {
+          "name": "qb_S",
+          "dx_um": -0.012,
+          "dy_um": -0.135,
+          "displacement_um": 0.147
+        },
+        {
+          "name": "qb_N",
+          "dx_um": -0.012,
+          "dy_um": -0.135,
+          "displacement_um": 0.147
+        },
+        {
+          "name": "qb_SW",
+          "dx_um": 0.0,
+          "dy_um": -0.135,
+          "displacement_um": 0.135
+        },
+        {
+          "name": "qb_SE",
+          "dx_um": 0.0,
+          "dy_um": -0.135,
+          "displacement_um": 0.135
+        },
+        {
+          "name": "qb_NW",
+          "dx_um": 0.0,
+          "dy_um": -0.135,
+          "displacement_um": 0.135
+        },
+        {
+          "name": "qb_NE",
+          "dx_um": 0.0,
+          "dy_um": -0.135,
+          "displacement_um": 0.135
+        }
+      ]
+    },
+    "pg_trunk": {
+      "verdict": "PASS",
+      "layers": [
+        "M4",
+        "M5"
+      ],
+      "edges": 13,
+      "blocked_edges": 0,
+      "examples": []
+    },
+    "model": {
+      "TT": {
+        "min_ps": 239.8359068172466,
+        "mean_ps": 244.64520398168116,
+        "max_ps": 257.43077518858286,
+        "window_ps": 17.594868371336247,
+        "prediction": "VALID",
+        "out_of_calibration_leaves": []
+      },
+      "FF": {
+        "min_ps": 183.0784461168071,
+        "mean_ps": 187.33016386790652,
+        "max_ps": 198.4493702762354,
+        "window_ps": 15.370924159428313,
+        "prediction": "VALID",
+        "out_of_calibration_leaves": []
+      }
+    }
+  }
+}
