@@ -1,0 +1,87 @@
+{
+  "status": "LEGAL_NATIVE_FF_SITE_MODEL_NOT_PLACE",
+  "FFs": 18768,
+  "target_master_resizes": 54,
+  "native_rows": 2008,
+  "native_taps": 7184,
+  "row_site_orientation_violations": [],
+  "FF_TAP_fixed_overlap": [],
+  "R2R": {
+    "r2r_memory_instances": 6,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 386.99,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 16868,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_leaf.u_dcfg.d_q\\[9\\]$_DFF_P_ -> o_hroot_ES\\[1088\\]$_DFF_PN0_"
+  },
+  "pins": {
+    "pins_registered": 6848,
+    "pins_to_macro": 0,
+    "pins_exempt": 1,
+    "pins_unregistered": 0,
+    "pins_land_ring": 0,
+    "unregistered_sample": [],
+    "pin_reg_p50": 17.06,
+    "pin_reg_p90": 25.9,
+    "pin_reg_max": 145.0,
+    "pin_reg_worst": [
+      "145.0 embgw__bw[238]",
+      "145.0 embgw__bw[233]",
+      "145.0 embgw__bw[218]",
+      "145.0 embgw__bw[213]",
+      "145.0 embgw__bw[198]"
+    ]
+  },
+  "FF_only_density": {
+    "outline": [
+      250.56,
+      285.12
+    ],
+    "aspect": 1.138,
+    "macros": 6,
+    "macro_area_pct": 17.55,
+    "std_cells": 18768,
+    "ff": 18768,
+    "fill_of_free": 0.1112,
+    "empty_area": 0.4127,
+    "band_share": 1.0,
+    "density_bin_um": 3.564,
+    "macro_list": [
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        51.84,
+        43.2
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        51.84,
+        120.96
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        51.84,
+        198.72
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        146.88,
+        43.2
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        146.88,
+        120.96
+      ],
+      [
+        "ctl_sram_1r1w_64x128_p192",
+        146.88,
+        198.72
+      ]
+    ]
+  },
+  "holds": [
+    "Ordinary combinational placement/model channels NOT qualified",
+    "No new source state, latency or parent profile adopted"
+  ]
+}

@@ -1,0 +1,644 @@
+{
+  "status": "PREP_ESTIMATE_NOT_PLACE_NOT_ROUTE",
+  "combinational_model": "Prior actual DPL scaled seed,60 source-net barycentric relaxations,macro halo projection; no detailed legalization or routing",
+  "moving_comb_cells": 46230,
+  "signal_net_edges": 141006,
+  "base_proxy": {
+    "channel_v_max": 6.246,
+    "channel_v_at": [
+      105.0,
+      115.0,
+      157.5
+    ],
+    "blocked_v": 0,
+    "detour_v": 0,
+    "detour_v_extension_max_um": 0.0,
+    "detour_v_extent_at": null,
+    "col_v_max": 6.395,
+    "col_v_at": [
+      110.0,
+      157.5
+    ],
+    "tracks_v_per_um": 36.46,
+    "channel_h_max": 6.819,
+    "channel_h_at": [
+      161.0,
+      171.0,
+      102.5
+    ],
+    "blocked_h": 0,
+    "detour_h": 7579,
+    "detour_h_extension_max_um": 79.0,
+    "detour_h_extent_at": {
+      "cut_um": 52.5,
+      "original_um": [
+        201.0,
+        207.0
+      ],
+      "allocated_um": [
+        161.0,
+        286.0
+      ]
+    },
+    "tracks_h_per_um": 36.46,
+    "demand_layers": "M2-M5"
+  },
+  "actual_track_PG_via_clipped_model": {
+    "channel_v_max": 32.299,
+    "channel_v_at": [
+      135.0,
+      145.0,
+      212.5
+    ],
+    "blocked_v": 0,
+    "detour_v": 79117,
+    "detour_v_extension_max_um": 244.0,
+    "detour_v_extent_at": {
+      "cut_um": 37.5,
+      "original_um": [
+        5.0,
+        7.0
+      ],
+      "allocated_um": [
+        0.0,
+        251.0
+      ]
+    },
+    "col_v_max": 50.302,
+    "col_v_at": [
+      0.0,
+      172.5
+    ],
+    "tracks_v_per_um": 36.46,
+    "channel_h_max": 8.855,
+    "channel_h_at": [
+      161.0,
+      171.0,
+      102.5
+    ],
+    "blocked_h": 0,
+    "detour_h": 7579,
+    "detour_h_extension_max_um": 79.0,
+    "detour_h_extent_at": {
+      "cut_um": 52.5,
+      "original_um": [
+        201.0,
+        207.0
+      ],
+      "allocated_um": [
+        161.0,
+        286.0
+      ]
+    },
+    "tracks_h_per_um": 36.46,
+    "demand_layers": "M2-M5"
+  },
+  "capacity_cuts": [
+    {
+      "direction": "V",
+      "cut_um": 2.5,
+      "remaining_derated_tracks": 9135.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 7.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 12.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 17.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 22.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 27.5,
+      "remaining_derated_tracks": 5143.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 32.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 37.5,
+      "remaining_derated_tracks": 312.75
+    },
+    {
+      "direction": "V",
+      "cut_um": 42.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 47.5,
+      "remaining_derated_tracks": 2082.75
+    },
+    {
+      "direction": "V",
+      "cut_um": 52.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 57.5,
+      "remaining_derated_tracks": 2081.25
+    },
+    {
+      "direction": "V",
+      "cut_um": 62.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 67.5,
+      "remaining_derated_tracks": 2082.75
+    },
+    {
+      "direction": "V",
+      "cut_um": 72.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 77.5,
+      "remaining_derated_tracks": 2081.25
+    },
+    {
+      "direction": "V",
+      "cut_um": 82.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 87.5,
+      "remaining_derated_tracks": 312.75
+    },
+    {
+      "direction": "V",
+      "cut_um": 92.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 97.5,
+      "remaining_derated_tracks": 312.75
+    },
+    {
+      "direction": "V",
+      "cut_um": 102.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 107.5,
+      "remaining_derated_tracks": 5143.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 112.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 117.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 122.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 127.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 132.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 137.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 142.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 147.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 152.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 157.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 162.5,
+      "remaining_derated_tracks": 6843.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 167.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 172.5,
+      "remaining_derated_tracks": 312.75
+    },
+    {
+      "direction": "V",
+      "cut_um": 177.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 182.5,
+      "remaining_derated_tracks": 312.75
+    },
+    {
+      "direction": "V",
+      "cut_um": 187.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 192.5,
+      "remaining_derated_tracks": 312.75
+    },
+    {
+      "direction": "V",
+      "cut_um": 197.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 202.5,
+      "remaining_derated_tracks": 2082.75
+    },
+    {
+      "direction": "V",
+      "cut_um": 207.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 212.5,
+      "remaining_derated_tracks": 2081.25
+    },
+    {
+      "direction": "V",
+      "cut_um": 217.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 222.5,
+      "remaining_derated_tracks": 2082.75
+    },
+    {
+      "direction": "V",
+      "cut_um": 227.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 232.5,
+      "remaining_derated_tracks": 2081.25
+    },
+    {
+      "direction": "V",
+      "cut_um": 237.5,
+      "remaining_derated_tracks": 6619.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 242.5,
+      "remaining_derated_tracks": 5143.5
+    },
+    {
+      "direction": "V",
+      "cut_um": 247.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 252.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 257.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 262.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 267.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 272.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 277.5,
+      "remaining_derated_tracks": 8799.0
+    },
+    {
+      "direction": "V",
+      "cut_um": 282.5,
+      "remaining_derated_tracks": 9135.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 2.5,
+      "remaining_derated_tracks": 9998.25
+    },
+    {
+      "direction": "H",
+      "cut_um": 7.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 12.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 17.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 22.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 27.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 32.5,
+      "remaining_derated_tracks": 7596.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 37.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 42.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 47.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 52.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 57.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 62.5,
+      "remaining_derated_tracks": 4533.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 67.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 72.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 77.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 82.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 87.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 92.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 97.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 102.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 107.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 112.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 117.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 122.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 127.5,
+      "remaining_derated_tracks": 7596.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 132.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 137.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 142.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 147.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 152.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 157.5,
+      "remaining_derated_tracks": 4533.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 162.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 167.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 172.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 177.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 182.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 187.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 192.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 197.5,
+      "remaining_derated_tracks": 4635.75
+    },
+    {
+      "direction": "H",
+      "cut_um": 202.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 207.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 212.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 217.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 222.5,
+      "remaining_derated_tracks": 7596.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 227.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 232.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 237.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 242.5,
+      "remaining_derated_tracks": 7788.0
+    },
+    {
+      "direction": "H",
+      "cut_um": 247.5,
+      "remaining_derated_tracks": 9998.25
+    }
+  ],
+  "obstacle_margin_dbu": {
+    "M2": 27,
+    "M3": 27,
+    "M4": 36,
+    "M5": 36
+  },
+  "limitations": [
+    "Net-box placement estimate only; no capacity PASS from unplaced native cells",
+    "Conservative PG via rectangles priced on both connected layers",
+    "Signal-signal via/pin access and detail-routing cost still unmeasured"
+  ]
+}
