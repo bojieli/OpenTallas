@@ -10,7 +10,14 @@ import hashlib
 import json
 import re
 from pathlib import Path
-from prepare_event import build
+try:
+    from .prepare_event import build
+except ImportError:
+    from prepare_event import build
+try:
+    from .native_clock_join import source_expectation
+except ImportError:
+    from native_clock_join import source_expectation
 
 
 def validate(wrapper, model):
@@ -62,6 +69,17 @@ def prepare(wrapper,outer,model_path,out):
                 clock='clk',source_sha256=event['candidate_sha256'],
                 global_derive_complete=False,
                 consumer_requirements=['count_origin regional consumer','land_slots and native placement paths','source verifier and KEEP/count ABI','global reset producer and 63clock name/phase join'])
+    aliases=[]
+    old_prefix='u_bound.u_cland_origin/'
+    names=[old_prefix+'sf$_DFF_N_',old_prefix+'s0$_SDFF_PN0_']
+    names += [old_prefix+f'g_on.g_region[{i}].{stage}' for i in range(4) for stage in ('s1','s2','pd')]
+    names += [f'u_bound.g_tt_raw_regions.g_region[{i}].u_raw_copy/q' for i in range(4)]
+    for name in names:
+        signal,edge,kind=source_expectation(name)
+        aliases.append(dict(model_name=name,rtl_signal=signal,rtl_edge=edge,join_kind=kind,
+                            native_iterm='REQUIRES_ACTUAL_NEW_MAPPED_SOURCE',proof_cut_alias=False))
+    record['source_name_joins']=aliases
+    (out/'source_name_joins_PREP.json').write_text(json.dumps(aliases,indent=1)+'\n')
     (out/'count_origin_regional_PREP.json').write_text(json.dumps(record,indent=1)+'\n')
     return record
 

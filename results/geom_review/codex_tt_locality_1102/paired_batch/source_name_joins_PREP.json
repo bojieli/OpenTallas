@@ -1,0 +1,146 @@
+[
+ {
+  "model_name": "u_bound.u_cland_origin/sf$_DFF_N_",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.sf",
+  "rtl_edge": "negedge",
+  "join_kind": "retained_namespace_only",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/s0$_SDFF_PN0_",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.s0",
+  "rtl_edge": "posedge",
+  "join_kind": "retained_namespace_only",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/g_on.g_region[0].s1",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[0].s1",
+  "rtl_edge": "posedge",
+  "join_kind": "regional_state",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/g_on.g_region[0].s2",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[0].s2",
+  "rtl_edge": "posedge",
+  "join_kind": "regional_state",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/g_on.g_region[0].pd",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[0].pd",
+  "rtl_edge": "posedge",
+  "join_kind": "regional_state",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/g_on.g_region[1].s1",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[1].s1",
+  "rtl_edge": "posedge",
+  "join_kind": "regional_state",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/g_on.g_region[1].s2",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[1].s2",
+  "rtl_edge": "posedge",
+  "join_kind": "regional_state",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/g_on.g_region[1].pd",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[1].pd",
+  "rtl_edge": "posedge",
+  "join_kind": "regional_state",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/g_on.g_region[2].s1",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[2].s1",
+  "rtl_edge": "posedge",
+  "join_kind": "regional_state",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/g_on.g_region[2].s2",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[2].s2",
+  "rtl_edge": "posedge",
+  "join_kind": "regional_state",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/g_on.g_region[2].pd",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[2].pd",
+  "rtl_edge": "posedge",
+  "join_kind": "regional_state",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/g_on.g_region[3].s1",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[3].s1",
+  "rtl_edge": "posedge",
+  "join_kind": "regional_state",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/g_on.g_region[3].s2",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[3].s2",
+  "rtl_edge": "posedge",
+  "join_kind": "regional_state",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.u_cland_origin/g_on.g_region[3].pd",
+  "rtl_signal": "u_bound.u_cland_origin.g_on.g_region[3].pd",
+  "rtl_edge": "posedge",
+  "join_kind": "regional_state",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.g_tt_raw_regions.g_region[0].u_raw_copy/q",
+  "rtl_signal": "u_bound.g_tt_raw_regions.g_region[0].u_raw_copy.q",
+  "rtl_edge": "posedge",
+  "join_kind": "raw_same_depth_copy",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.g_tt_raw_regions.g_region[1].u_raw_copy/q",
+  "rtl_signal": "u_bound.g_tt_raw_regions.g_region[1].u_raw_copy.q",
+  "rtl_edge": "posedge",
+  "join_kind": "raw_same_depth_copy",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.g_tt_raw_regions.g_region[2].u_raw_copy/q",
+  "rtl_signal": "u_bound.g_tt_raw_regions.g_region[2].u_raw_copy.q",
+  "rtl_edge": "posedge",
+  "join_kind": "raw_same_depth_copy",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ },
+ {
+  "model_name": "u_bound.g_tt_raw_regions.g_region[3].u_raw_copy/q",
+  "rtl_signal": "u_bound.g_tt_raw_regions.g_region[3].u_raw_copy.q",
+  "rtl_edge": "posedge",
+  "join_kind": "raw_same_depth_copy",
+  "native_iterm": "REQUIRES_ACTUAL_NEW_MAPPED_SOURCE",
+  "proof_cut_alias": false
+ }
+]

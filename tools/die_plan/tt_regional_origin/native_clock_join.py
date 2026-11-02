@@ -8,6 +8,7 @@ metadata only: a separate guarded preCTS consumer must preserve that path.
 import argparse
 import gzip
 import json
+import re
 from pathlib import Path
 
 
@@ -15,6 +16,23 @@ def read(path):
     opener = gzip.open if str(path).endswith('.gz') else open
     with opener(path, 'rt') as f:
         return json.load(f)
+
+
+
+def source_expectation(name):
+    """Finite generated-source identity map; never a guessed general RTL alias."""
+    prefix='u_bound.u_cland_origin/'
+    if name==prefix+'sf$_DFF_N_':
+        return 'u_bound.u_cland_origin.g_on.sf','negedge','retained_namespace_only'
+    if name==prefix+'s0$_SDFF_PN0_':
+        return 'u_bound.u_cland_origin.g_on.s0','posedge','retained_namespace_only'
+    match=re.fullmatch(re.escape(prefix)+r'g_on\.g_region\[([0-3])\]\.(s1|s2|pd)',name)
+    if match:
+        return 'u_bound.u_cland_origin.g_on.g_region['+match[1]+'].'+match[2],'posedge','regional_state'
+    match=re.fullmatch(r'u_bound\.g_tt_raw_regions\.g_region\[([0-3])\]\.u_raw_copy/q',name)
+    if match:
+        return 'u_bound.g_tt_raw_regions.g_region['+match[1]+'].u_raw_copy.q','posedge','raw_same_depth_copy'
+    return None
 
 
 def join(proposal, inventory):
@@ -59,9 +77,19 @@ def join(proposal, inventory):
                 raise ValueError('Incomplete path member: ' + a['name'])
             if cell['kind'] not in ('buffer', 'inverter', 'clock_gate'):
                 raise ValueError('Unclassified clock logic: ' + a['name'])
+        expected=source_expectation(a['name'])
+        if expected:
+            signal,rtl_edge,kind=expected
+            if r.get('rtl_signal')!=signal or r.get('rtl_edge')!=rtl_edge:
+                raise ValueError('Exact regional source signal/edge join failed: '+a['name'])
+            inversions=sum(c['kind']=='inverter' for c in r['path'])
+            native_negative=r['edge']=='negedge'
+            if (native_negative ^ bool(inversions%2)) != (rtl_edge=='negedge'):
+                raise ValueError('Regional clock inversion/edge path mismatch: '+a['name'])
         output.append(dict(model_name=a['name'], native_iterm=r['native_iterm'],
                            old_root_port=r['root_port'], target_root_port=a['parent_tap'],
                            edge=r['edge'], preserve_path=r['path'],
+                           source_identity=expected,
                            capacity_override='nearest_parent_tap' in a))
     for a in proposal['retained_other_cohorts']:
         if by_name[a['name']]['root_port'] != a['logical_root']:

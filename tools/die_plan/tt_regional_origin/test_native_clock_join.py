@@ -20,6 +20,26 @@ class JoinContract(unittest.TestCase):
         self.assertEqual(result['assignments'][0]['preserve_path'],i['sinks'][0]['path'])
         self.assertEqual(result['assignments'][0]['edge'],'negedge')
 
+    def regional_fixture(self):
+        p,i=self.fixture()
+        name='u_bound.u_cland_origin/sf$_DFF_N_'
+        p['assignments'][0]['name']=name
+        i['sinks'][0].update(model_name=name,rtl_signal='u_bound.u_cland_origin.g_on.sf',rtl_edge='negedge',edge='posedge')
+        i['sinks'][0]['path'].append(dict(instance='clock_inv',master='INV',input_pin='A',output_pin='Y',kind='inverter'))
+        return p,i
+
+    def test_retained_sf_namespace_and_inversion(self):
+        p,i=self.regional_fixture();out=join(p,i)
+        self.assertEqual(out['assignments'][0]['source_identity'][1],'negedge')
+
+    def test_retained_sf_wrong_alias_rejected(self):
+        p,i=self.regional_fixture();i['sinks'][0]['rtl_signal']='other.sf'
+        with self.assertRaisesRegex(ValueError,'source signal/edge'):join(p,i)
+
+    def test_retained_sf_missing_inverter_rejected(self):
+        p,i=self.regional_fixture();i['sinks'][0]['path'].pop()
+        with self.assertRaisesRegex(ValueError,'inversion/edge'):join(p,i)
+
     def test_wrong_phase_rejected(self):
         p,i=self.fixture();i['ports']['clk_t1']['phase_ps']=416.5
         with self.assertRaisesRegex(ValueError,'phase'):join(p,i)
