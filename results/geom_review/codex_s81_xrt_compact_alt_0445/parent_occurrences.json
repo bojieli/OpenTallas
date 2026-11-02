@@ -1,0 +1,2046 @@
+[
+  {
+    "type": "dsdv_slice_lepw_mus_C__t1",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_0S_C",
+        "type": "dsdv_slice_lepw_mus_C__t1",
+        "origin_um": [
+          10203.84,
+          9918.72
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        133.92
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      231.132
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mus_C__t1/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mus_C__t1/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mus_C__t1/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mus_C__t1/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mus_C__t1/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mus_C__t1/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mus_C__t1/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_0S_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          231.144
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          233.304
+        ],
+        "xy": [
+          704.16,
+          233.304
+        ],
+        "internal_depth": 1,
+        "tap": 46
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      231.0
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_lepw_mu_C__t1",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_0N_C",
+        "type": "dsdv_slice_lepw_mu_C__t1",
+        "origin_um": [
+          10203.84,
+          17280.0
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        133.92
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      231.132
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mu_C__t1/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mu_C__t1/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mu_C__t1/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mu_C__t1/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mu_C__t1/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mu_C__t1/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepw_mu_C__t1/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_0N_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          231.144
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          233.304
+        ],
+        "xy": [
+          704.16,
+          233.304
+        ],
+        "internal_depth": 1,
+        "tap": 46
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      231.0
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t1",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_1S_C",
+        "type": "dsdv_slice_c1x_C__t1",
+        "origin_um": [
+          11646.72,
+          9918.72
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        133.92
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      231.132
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t1/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t1/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t1/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t1/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t1/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t1/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t1/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_1S_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          231.144
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          233.304
+        ],
+        "xy": [
+          704.16,
+          233.304
+        ],
+        "internal_depth": 1,
+        "tap": 47
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      231.0
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t10",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        794.88
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_1N_C",
+        "type": "dsdv_slice_c1x_C__t10",
+        "origin_um": [
+          11646.72,
+          17280.0
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        894.24
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      991.476
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t10/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t10/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t10/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t10/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t10/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t10/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t10/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_1N_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          993.624
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          991.4639999999999
+        ],
+        "xy": [
+          704.16,
+          991.464
+        ],
+        "internal_depth": 1,
+        "tap": 18
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      991.608
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t3",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_2S_C",
+        "type": "dsdv_slice_c1x_C__t3",
+        "origin_um": [
+          13089.6,
+          9918.72
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        133.92
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      231.132
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t3/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t3/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t3/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t3/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t3/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t3/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t3/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_2S_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          231.144
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          233.304
+        ],
+        "xy": [
+          704.16,
+          233.304
+        ],
+        "internal_depth": 1,
+        "tap": 50
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      231.0
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t4",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        794.88
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_2N_C",
+        "type": "dsdv_slice_c1x_C__t4",
+        "origin_um": [
+          13089.6,
+          17280.0
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        894.24
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      991.476
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t4/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t4/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t4/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t4/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t4/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t4/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t4/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_2N_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          993.624
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          991.4639999999999
+        ],
+        "xy": [
+          704.16,
+          991.464
+        ],
+        "internal_depth": 1,
+        "tap": 17
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      991.608
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_kv512_C__t1",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        794.88
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_3N_C",
+        "type": "dsdv_slice_kv512_C__t1",
+        "origin_um": [
+          14532.48,
+          17280.0
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        894.24
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      991.476
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_kv512_C__t1/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_kv512_C__t1/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_kv512_C__t1/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_kv512_C__t1/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_kv512_C__t1/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_kv512_C__t1/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_kv512_C__t1/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_3N_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          993.624
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          991.4639999999999
+        ],
+        "xy": [
+          704.16,
+          991.464
+        ],
+        "internal_depth": 1,
+        "tap": 52
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      991.608
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t5",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_4N_C",
+        "type": "dsdv_slice_c1x_C__t5",
+        "origin_um": [
+          15975.36,
+          17280.0
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        133.92
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      231.132
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t5/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t5/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t5/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t5/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t5/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t5/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t5/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_4N_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          231.144
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          233.304
+        ],
+        "xy": [
+          704.16,
+          233.304
+        ],
+        "internal_depth": 1,
+        "tap": 17
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      231.0
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t6",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        794.88
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_5S_C",
+        "type": "dsdv_slice_c1x_C__t6",
+        "origin_um": [
+          17418.24,
+          9918.72
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        894.24
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      991.476
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t6/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t6/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t6/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t6/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t6/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t6/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t6/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_5S_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          993.624
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          991.4639999999999
+        ],
+        "xy": [
+          704.16,
+          991.464
+        ],
+        "internal_depth": 1,
+        "tap": 50
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      991.608
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t7",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_5N_C",
+        "type": "dsdv_slice_c1x_C__t7",
+        "origin_um": [
+          17418.24,
+          17280.0
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        133.92
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      231.132
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t7/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t7/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t7/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t7/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t7/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t7/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t7/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_5N_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          231.144
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          233.304
+        ],
+        "xy": [
+          704.16,
+          233.304
+        ],
+        "internal_depth": 1,
+        "tap": 18
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      231.0
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t8",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_6S_C",
+        "type": "dsdv_slice_c1x_C__t8",
+        "origin_um": [
+          18861.12,
+          9918.72
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        133.92
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      231.132
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t8/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t8/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t8/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t8/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t8/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t8/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t8/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_6S_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          231.144
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          233.304
+        ],
+        "xy": [
+          704.16,
+          233.304
+        ],
+        "internal_depth": 1,
+        "tap": 51
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      231.0
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t9",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_6N_C",
+        "type": "dsdv_slice_c1x_C__t9",
+        "origin_um": [
+          18861.12,
+          17280.0
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        133.92
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      231.132
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t9/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t9/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t9/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t9/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t9/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t9/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_c1x_C__t9/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_6N_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          231.144
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          233.304
+        ],
+        "xy": [
+          704.16,
+          233.304
+        ],
+        "internal_depth": 1,
+        "tap": 17
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      231.0
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_lepe_nh_mus_C__t1",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_7S_C",
+        "type": "dsdv_slice_lepe_nh_mus_C__t1",
+        "origin_um": [
+          20304.0,
+          9918.72
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        133.92
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      231.132
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_7S_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          231.144
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          233.304
+        ],
+        "xy": [
+          704.16,
+          233.304
+        ],
+        "internal_depth": 1,
+        "tap": 45
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      231.0
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  },
+  {
+    "type": "dsdv_slice_lepe_mu_C__t1",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        794.88
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_7N_C",
+        "type": "dsdv_slice_lepe_mu_C__t1",
+        "origin_um": [
+          20304.0,
+          17280.0
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        440.64,
+        894.24
+      ],
+      "outline_um": [
+        207.36,
+        194.4
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "old+[51.84,99.36]um, both4.32multiples; retain oldbox sidegaps51.84/51.84/99.36/101.52; orientation/track_offset unchanged",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      991.476
+    ],
+    "all_parent_type_references": [
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_mu_C__t1/clock/taps/1/name",
+        "value": "u_c.u_xr.clk"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_mu_C__t1/clock/landing_contract/collector_tree/core_resets/0/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_mu_C__t1/hard_cores/1/inst",
+        "value": "u_c.u_xr"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_mu_C__t1/hard_cores/1/module",
+        "value": "ot_s81sl_xrt1"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_mu_C__t1/hard_cores/1/lef",
+        "value": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_mu_C__t1/hard_cores/1/pins_file",
+        "value": "inputs/core_pins/ot_s81sl_xrt1.json"
+      },
+      {
+        "json_pointer": "/partition_types/dsdv_slice_lepe_mu_C__t1/hard_cores/1/lib",
+        "value": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+      }
+    ],
+    "plan_occurrence_child_paths": [
+      "s_7N_C/u_c.u_xr"
+    ],
+    "existing_parent_clock_taps": [
+      {
+        "name": "u_c.u_xr.clk",
+        "kind": "core",
+        "xy": [
+          699.906,
+          993.624
+        ],
+        "insertion_ps": 370.7,
+        "insertion_ff_ps": 305.5,
+        "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
+      }
+    ],
+    "existing_parent_reset_references": [
+      {
+        "inst": "u_c.u_xr",
+        "pin": "rst_n",
+        "pin_um": [
+          699.4385,
+          991.4639999999999
+        ],
+        "xy": [
+          704.16,
+          991.464
+        ],
+        "internal_depth": 1,
+        "tap": 18
+      }
+    ],
+    "disabled_reset_pin_target_parent_um": [
+      648.066,
+      991.608
+    ],
+    "new_parent_tap_insertion_ps": "UNKNOWN_REQUIRE_ACTUAL_NEW_CHILD_MEAN",
+    "new_parent_tap_placement": "MUST_RUN_EXISTING_NORMAL_POLICY_AGAINST_NEW_CHILD_VIEW_AFTER_SIGNED"
+  }
+]
