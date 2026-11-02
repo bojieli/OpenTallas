@@ -38,3 +38,19 @@ The runner uses explicit Verilator5.050, /usr/bin/g++ -O0 and one build thread.
 Resource proposal4GB/1thread/disk2 requires parent review and normal admission;
 no simulator, lint compilation, wholeQC build, RTL arithmetic or physical gate
 has run for this packet. Syntax/JSON/Python preparation only was checked.
+
+Packet3 is the current immutable preparation. Packet1 was not run because the
+source clock/watchdog guard rejected it; packet2 was not run because its exact
+frozen-source review found two stale files. Both packets remain unchanged.
+Packet3 has manifest0173eabd386340f4e9ce21c8d87479261eb7346d94667221c646c97751604da1,
+exact833ps clock with1fs precision,8000edge component watchdog, the selected
+REGROOT<8 generate-branch fix, and the preferred v2 ROM model (header-only model
+difference). Its current readset is packet3/preparation.json.
+
+Parent's independent read-only common-object lookup subsequently checked all11
+sparse-missing helper files against exact frozen commit
+bd55b15b452761be8ceefeae7b97abdf4a915bd4. Every hash matches packet3.
+packet3/bd55_helper_join.json is a companion receipt; it does not modify the
+immutable packet or supersede any source bytes. No build or simulator was
+launched while closing this source-cohort check. Numerical admission remains
+pending parent authorization.
