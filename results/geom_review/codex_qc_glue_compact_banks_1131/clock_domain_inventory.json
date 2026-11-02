@@ -1,0 +1,433 @@
+{
+  "status": "ACTUAL_PLACED_CLOCK_ROOT_CENSUS_NO_CAD",
+  "domains": [
+    {
+      "clock_input": "clk",
+      "actual_consumers": 18144,
+      "standard_ff": 18143,
+      "hard_macro": 1,
+      "inversion_parity_counts": {
+        "0": 18144
+      },
+      "minimum_groups_at1500_consumer_cap": 13,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "clk_d2d[0]",
+      "actual_consumers": 21782,
+      "standard_ff": 21777,
+      "hard_macro": 5,
+      "inversion_parity_counts": {
+        "0": 21782
+      },
+      "minimum_groups_at1500_consumer_cap": 15,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_cland_dn_0[0]",
+      "actual_consumers": 25,
+      "standard_ff": 25,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 25
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_coll_flt_i[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_coll_fltv_i[0]",
+      "actual_consumers": 310,
+      "standard_ff": 310,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 310
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_ctlm_flt_i[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_d2d_rom__native_tx_payload[0]",
+      "actual_consumers": 2222,
+      "standard_ff": 2222,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 2222
+      },
+      "minimum_groups_at1500_consumer_cap": 2,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_d2d_rom__native_tx_v[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_d2d_rom__obs_native[0]",
+      "actual_consumers": 270,
+      "standard_ff": 270,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 270
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_d2d_rom__x3[0]",
+      "actual_consumers": 2126,
+      "standard_ff": 2126,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 2126
+      },
+      "minimum_groups_at1500_consumer_cap": 2,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_d2d_rom__x3_generation[0]",
+      "actual_consumers": 38,
+      "standard_ff": 38,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 38
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_d2d_rom__x3_identity[0]",
+      "actual_consumers": 266,
+      "standard_ff": 266,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 266
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_embed_prov__core_start[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_embed_prov__core_token[0]",
+      "actual_consumers": 102,
+      "standard_ff": 102,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 102
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_embed_prov__embed_code_addr[0]",
+      "actual_consumers": 126,
+      "standard_ff": 126,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 126
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_embed_prov__embed_code_re[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_embed_prov__embed_scale_addr[0]",
+      "actual_consumers": 102,
+      "standard_ff": 102,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 102
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_embed_prov__embed_scale_re[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__head_descriptor_generation[0]",
+      "actual_consumers": 38,
+      "standard_ff": 38,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 38
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__head_descriptor_tag[0]",
+      "actual_consumers": 266,
+      "standard_ff": 266,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 266
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__head_descriptor_v[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__io_cmd_free[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__io_fault[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__native_fault[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__seq_cfg_image_ready[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__seq_dc[0]",
+      "actual_consumers": 254,
+      "standard_ff": 254,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 254
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__seq_descriptor_obs[0]",
+      "actual_consumers": 306,
+      "standard_ff": 306,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 306
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__seq_program_obs[0]",
+      "actual_consumers": 334,
+      "standard_ff": 334,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 334
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__tt_command_stage[0]",
+      "actual_consumers": 54,
+      "standard_ff": 54,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 54
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__tt_control_stores_ready[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__tt_layer_context_v[0]",
+      "actual_consumers": 34,
+      "standard_ff": 34,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 34
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__tt_native_pos[0]",
+      "actual_consumers": 102,
+      "standard_ff": 102,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 102
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__tt_native_tok[0]",
+      "actual_consumers": 102,
+      "standard_ff": 102,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 102
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    },
+    {
+      "clock_input": "fclk_in_sys_face__tt_program_obs[0]",
+      "actual_consumers": 334,
+      "standard_ff": 334,
+      "hard_macro": 0,
+      "inversion_parity_counts": {
+        "0": 334
+      },
+      "minimum_groups_at1500_consumer_cap": 1,
+      "scope": "Source-root identity preserved; this is planning consumer-count lower bound, not a CTS subtree/load/capacitance/arrival or new global-port requirement."
+    }
+  ],
+  "total_consumers": 47745,
+  "clock_domains": 34,
+  "unresolved": [],
+  "sum_of_domain_minimum_groups": 62,
+  "scope": "No merging distinct fclk phases or source roots. Same logical identity may later have qualified local distribution; no tree, source-port, cycle or ideal-arrival claim.",
+  "reverse_collector_clock": {
+    "source_partition": {
+      "name": "coll_f4",
+      "type": "coll_ftc",
+      "origin_um": [
+        777.6,
+        11491.2
+      ],
+      "orient": "R0"
+    },
+    "source_pin": "fclk_out_cland_up",
+    "source_clock_port": "clk",
+    "destination": "glue.fclk_in_cland_dn_0",
+    "edge": {
+      "src": "coll_f4",
+      "dst": "glue",
+      "dst_index": 0,
+      "seam": true,
+      "hop_um": 157.44000000000062,
+      "data_cycles_added": 0,
+      "boot_transport_extra_cycles": 3
+    },
+    "scope": "Exact frozen d90 sidecar collector edge. Compact parent changes must retain source/role/cycle/reset graph and qualify actual new seam, not reuse old hop/arrivals.",
+    "literal_export_contract": {
+      "name": "fclk_out_cland_up",
+      "dir": "out",
+      "kind": "clock",
+      "layer": "M7",
+      "xy_um": [
+        133.28,
+        2.656
+      ],
+      "epoch": false,
+      "source_clock_port": "clk",
+      "source_clock_tap": "clk_t7"
+    }
+  },
+  "macro_clock_roots": {
+    "clk": [
+      "u_bound.u_embed_prov.store.codes"
+    ],
+    "clk_d2d[0]": [
+      "all4 actual D2D SRAM instances",
+      "u_bound.u_sys_face.u_ot_pr_core.u_rom"
+    ]
+  },
+  "clock_parity_note": "Inversion parity describes only explicit upstream BUF/INV nets. Active FF clock edges remain encoded by the exact existing master/source roles; no edge-phase equivalence inferred.",
+  "physical_export_note": "This event uses compose forward_source=clk: source_clock_port=clk is the selected RTL/export source. source_clock_tap is retained nearest-tap diagnostic ONLY (not a consumed driver or permission to remap); reverse coll_f4 diagnostic is clk_t7. Do not infer physical equivalence or arrival from either field.",
+  "group_bound_condition": "62 applies when preserving these34 boundary-input identities as separate local distributions under the existing1500-consumer planning cap. It is not62 new global ports, measured electrical load, a new rule, or proof that a common-source merge is permitted."
+}
