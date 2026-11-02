@@ -4,7 +4,9 @@ Default OFF, bounded by an explicit data-path query limit. This emitter parses
 the exact golden SDC generated export source bindings and the actual compiled
 Verilog output widths; it never invents a single-owner rule. The enabled Tcl
 reuses the existing source-by-path resolver from pair_skew.tcl as a library,
-without calling its main or zero_unc. It writes the original constrained SDC
+in a private Tcl namespace without calling its main or zero_unc or overriding
+any native session pair functions. Existing library-only and method state are
+restored. It writes the original constrained SDC
 snapshot, then records every requested bit's actual FF/startpoint/endpoint,
 clock pin/master/source/edge, native data arrival and native vclk STD slack.
 Actual declared forwarded K uses its physical master-clock path/source and
@@ -19,9 +21,9 @@ or require one tap owner. Qualified receiver composition still needs explicit
 F for F/R phase or the existing complete conservative tap hull, separate from
 L/F data/K. No production coverage or routed qualification is asserted.
 
-Six tiny source/Tcl controls PASS: generated-source binding, mixed per-bit
+Seven tiny source/Tcl controls PASS: generated-source binding, mixed per-bit
 owners, foreign root, wrong physical F, NO_PATH/budget/missing-generated
-failure, and literal bit names. The source generator was run on the actual
+failure, literal bit names, and isolation from native session helper functions. The source generator was run on the actual
 Anear SDC and1_2_yosys.v ONLY (text processing), not on OpenROAD/OpenSTA.
 Actual request:8exports,4816bits,9632 max data-path queries. Clock lookups are
 fixed at4 per export plus source validation, with2 initial native timing

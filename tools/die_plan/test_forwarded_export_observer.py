@@ -114,6 +114,14 @@ class Observer(unittest.TestCase):
    self.assertNotIn(command,active)
   self.assertIn('ORIGINAL_CONSTRAINED_STD_BEFORE_ZERO_UNC',active)
   p,log,_=self.run_tcl();F.validate(REQ,p,log) # pool includes data0; exact data[0] must not alias it
+ def test_common_pair_library_does_not_override_native_session_functions(self):
+  body=F.emit(REQ,'/tmp/out',6,True)
+  setup=body[:body.index('# Optional observer only.')]
+  script='proc ot_ps_source_from_tag {args} {return NATIVE}\nset ::ot_ps_lib_only preserved\n'+setup+'\nputs [ot_ps_source_from_tag]\nputs $::ot_ps_lib_only\nputs [llength [info commands ::fx_pair::ot_ps_source_from_tag]]\n'
+  r=subprocess.run(['tclsh'],input=script,capture_output=True,text=True)
+  self.assertEqual(r.returncode,0,r.stderr)
+  self.assertEqual(r.stdout.splitlines(),['NATIVE','preserved','1'])
+
  def test_request_binds_actual_generated_source_and_compiled_width(self):
   with tempfile.TemporaryDirectory() as t:
    p=Path(t);s=p/'sdc';n=p/'net.v'

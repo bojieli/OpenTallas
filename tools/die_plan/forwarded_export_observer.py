@@ -47,7 +47,11 @@ def emit(req,out_dir,limit=0,enabled=False,helpers=True):
             seen.add(bit);literal(bit)
     setup=''
     if helpers:
-        setup='set ::ot_ps_lib_only 1\n'+(HERE/'pair_skew.tcl').read_text()+'\nunset ::ot_ps_lib_only\n'
+        setup=('set fx_had_libonly [info exists ::ot_ps_lib_only]\n'
+               'if {$fx_had_libonly} {set fx_saved_libonly $::ot_ps_lib_only}\n'
+               'set ::ot_ps_lib_only 1\nnamespace eval ::fx_pair {\n'
+               +(HERE/'pair_skew.tcl').read_text()
+               +'\n}\nif {$fx_had_libonly} {set ::ot_ps_lib_only $fx_saved_libonly} else {unset ::ot_ps_lib_only}\n')
     rows='[list '+' '.join('[list '+literal(e['export'])+' '+literal(e['source'])+' [list '+' '.join(literal(b) for b in e['bits'])+']]' for e in exports)+']'
     return setup+(r'''
 # Optional observer only. Caller supplies original loaded SDC/libs/ODB/RC.
@@ -71,7 +75,7 @@ proc fx_port {name {vector0 0}} {
 proc fx_root {tag which} {
   # Existing source-by-path resolver validates actual clock/source/edge membership.
   if {[lindex $tag 3] ne $::fx_clock} {error "foreign launch clock"}
-  set row [ot_ps_source_from_tag $tag $::fx_clock $which]
+  set row [@RESOLVER@ $tag $::fx_clock $which]
   if {[lindex $row 0] ni $::fx_roots} {error "foreign actual path root"}
   return $row
 }
@@ -178,7 +182,7 @@ if {$fx_had_method} {set ::ot_ps_method $fx_saved_method} else {unset -nocomplai
 '''.replace('@ROOTS@',' '.join(literal(r) for r in roots)).replace('@EXPORTS@',rows)
        .replace('@OUT@',literal(str(out_dir))).replace('@LIMIT@',str(limit))
        .replace('@CLOCK@',literal(req['master_clock'])).replace('@TARGET@',literal(req['native_output_clock']))
-       .replace('@HEADER@',' '.join(HEADER)))
+       .replace('@HEADER@',' '.join(HEADER)).replace('@RESOLVER@','::fx_pair::ot_ps_source_from_tag' if helpers else 'ot_ps_source_from_tag'))
 
 def validate(req,folder,log):
     folder=Path(folder);lines=Path(log).read_text().splitlines()
