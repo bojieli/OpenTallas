@@ -1,0 +1,14 @@
+--- 
+
++++ 
+
+@@ -47,6 +47,8 @@
+
+ set_input_delay -max 686.3600 -clock vclk [get_ports {cws1_i[*] x_fe_fw_i[*] x_fe_fw_p1_i[*] x_ctl_fw_p1_i[*] x_sc_fw_i[*] x_fw_fe_i[*] x_fw_fe_p1_i[*] x_fw_fe_p2_i[*] x_st_a_fe_i[*] x_fw_ctl_p1_i[*] x_fw_ctl_p2_i[*] x_su_c_ctl_i[*]}]
+ set_output_delay -max 66.6400 -clock vclk [get_ports {cws1_o[*] x_fe_fw_o[*] x_fe_fw_p1_o[*] x_ctl_fw_p1_o[*] x_sc_fw_o[*] x_fw_fe_o[*] x_fw_fe_p1_o[*] x_fw_fe_p2_o[*] x_st_a_fe_o[*] x_fw_ctl_p1_o[*] x_fw_ctl_p2_o[*] x_su_c_ctl_o[*]}]
+ set_input_delay -min -85.0000 -clock vclk $non_clk_in
++# Sole asynchronous die-root reset CDC (owner reset rule); forwarded reset remains timed.
++set_false_path -from [get_ports {arst_n}] -to [get_pins -hierarchical -regexp {^u_rst_root[./]p\[[01]\]\$_DFF_PN0_/RESETN$}]
+ set_output_delay -min 55.0000 -clock vclk $cland_data_outputs
+ # OWNER 10-25 option B: per-instance ID straps (plan id_straps), tied at the parent
+ set_false_path -from [get_ports {strap_ca_efall strap_ca_k_cws1_i strap_ca_k_flt_ctl_i strap_ca_k_x_ctl_fw_p1_i strap_ca_k_x_ctl_i strap_ca_k_x_fe_fw_i strap_ca_k_x_fe_fw_p1_i strap_ca_k_x_fe_i strap_ca_k_x_fe_p1_i strap_ca_k_x_sc_fw_i strap_ca_k_x_su_c_ctl_i strap_ca_k_x_su_l0_i strap_ca_k_x_su_l1_i strap_ca_pad}]

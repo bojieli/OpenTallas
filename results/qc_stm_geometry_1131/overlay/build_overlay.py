@@ -60,7 +60,7 @@ for e in ck.get('edge_clocks',[]):
  z=pinmap[e['port']];e['tap_um']=[z['x'],z['y']]
 for z in lc.get('collector_local_sources',[]):
  z['band']=copy.deepcopy(lc['bands'][z['name']]);win=windows[z['name']];p=xy(win['face'],win['center']);z['xy_um']=p;z['pin_xy_um']=p
-rt=Q['existing_collector_reset_geometry'];lc['collector_tree']['root']=rt['root'];pos={r['q']:r['xy'] for r in rt['relays']}
+rt=Q['existing_collector_reset_geometry'];lc['collector_tree']['root']=rt['root'];lc['collector_tree']['start_in']=[pinmap['start_i']['x'],pinmap['start_i']['y']];pos={r['q']:r['xy'] for r in rt['relays']}
 for r in lc['collector_tree']['relays']:r['xy']=pos[r['q']]
 N['reset']['tap_um']=rt['root']
 # Existing FT stage counts retained; only their planned coordinates/windows move.

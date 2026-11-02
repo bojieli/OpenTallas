@@ -5,11 +5,11 @@ F=Path('/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131');FP=F/'physical/
 # Explicit isolated boundary. SAME native ABI/window: no peer/channel commitment or latency replacement.
 for bus in T['buses']:
  n=bus['name'];inside={'part':'sl_W5_stm','bus':n};outside={'part':C.DIE_PART,'bus':'isolated_'+n};src,dst=(outside,inside) if bus['dir']=='in' else (inside,outside)
- raw['ports'].append({'id':'isolated_'+n,'src':src,'dst':dst,'width':bus['width'],'epoch':False})
+ raw['ports'].append({'id':'isolated_'+n,'src':src,'dst':dst,'width':bus['width'],'epoch':True})
 for slot in T.get('ft_slots',[]):
  for suffix,d in [('_i','in'),('_o','out')]:
   n=slot['name']+suffix;inside={'part':'sl_W5_stm','bus':n};outside={'part':C.DIE_PART,'bus':'isolated_'+n};src,dst=(outside,inside) if d=='in' else(inside,outside)
-  raw['ports'].append({'id':'isolated_'+n,'src':src,'dst':dst,'width':slot['width'],'epoch':False})
+  raw['ports'].append({'id':'isolated_'+n,'src':src,'dst':dst,'width':slot['width'],'epoch':True})
 raw['die']['channels']=[]
 raw.pop('latency',None);raw.pop('latency_groups',None)
 for key in ('clock','reset'):

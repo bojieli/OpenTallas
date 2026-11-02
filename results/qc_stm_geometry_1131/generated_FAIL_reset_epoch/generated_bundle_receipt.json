@@ -1,0 +1,47 @@
+{
+  "gates": [
+    {
+      "command": [
+        "python3",
+        "/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/private_gen_172/isolated_phys/slw_stm_v3/port_bind_gate.py",
+        "/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/phys/slw_stm_v3/run/results/asap7/dp_slw_stm_v3/base/1_2_yosys.v",
+        "/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/private_gen_172/isolated_phys/slw_stm_v3"
+      ],
+      "exit": 1
+    },
+    {
+      "command": [
+        "python3",
+        "/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/private_gen_172/isolated_phys/slw_stm_v3/face_guard.py",
+        "/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/phys/slw_stm_v3/run/results/asap7/dp_slw_stm_v3/base/1_2_yosys.v",
+        "--top",
+        "qfd_qc_slw_stm",
+        "--pins",
+        "/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/private_gen_172/isolated_phys/slw_stm_v3/pins.json",
+        "--out",
+        "/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/private_gen_172/generated_face_guard.json",
+        "--land",
+        "/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/private_gen_172/isolated_phys/slw_stm_v3/land_slots.json"
+      ],
+      "exit": 0
+    }
+  ],
+  "clock_binding_byte_equal": true,
+  "canonical_parent": "HELD17peerwindowmismatches",
+  "native_reset_join": "FAIL: isolated root/168relays vs native relayed167; source correction pending",
+  "source": "d90b109213c6949da87b330ef143d96bbe937934",
+  "tools": "fbd2f0625eb7969caea7647b6c46d8d1ec58ca02",
+  "CAD": "NOT RUN",
+  "fill": {
+    "core": [
+      4.32,
+      4.32,
+      306.72,
+      609.12
+    ],
+    "std": 30846.92058,
+    "macro": 30682.301184,
+    "free_core": 152209.218816,
+    "std_fill_free": 0.202661315917334
+  }
+}
