@@ -1,0 +1,121 @@
+{
+  "native_single_process": "always @(posedge WR_CLK[0]); all7 parentWR_CLK aliases clk",
+  "all_masks": "Every actual bound channel expands scalar enable into256ones or256zeros; preserve arbitrary native mask semantics if cut broadens",
+  "slots": [
+    {
+      "slot": 0,
+      "channel": "PC0",
+      "case": "tagtype0 window",
+      "addr": "tag[7:0]",
+      "range_native": [
+        0,
+        255
+      ],
+      "range_source_window": [
+        0,
+        127
+      ],
+      "bank": "tag[1:0]; live window row parity=wfirst[0]^0",
+      "data": "qr_data0[255:0]"
+    },
+    {
+      "slot": 1,
+      "channel": "PC0",
+      "case": "tagtype2, compressed row fits in first sector, beat0",
+      "addr": "(wcount + tag_rank10) mod1024",
+      "range_native": [
+        0,
+        1023
+      ],
+      "bank": "(wcount[1:0]+rank[1:0]) mod4",
+      "data": "zero112 + shifted144"
+    },
+    {
+      "slot": 2,
+      "channel": "PC0",
+      "case": "tagtype2, beat1",
+      "addr": "same slot as slot1",
+      "range_native": [
+        0,
+        1023
+      ],
+      "bank": "same as slot1",
+      "data": "zero112 + shifted{qr_data0,hold0}144"
+    },
+    {
+      "slot": 3,
+      "channel": "PC1",
+      "case": "tagtype0 window",
+      "addr": "tag[7:0]",
+      "range_native": [
+        0,
+        255
+      ],
+      "range_source_window": [
+        0,
+        127
+      ],
+      "bank": "tag[1:0]; live window row parity=wfirst[0]^1",
+      "data": "qr_data1[255:0]"
+    },
+    {
+      "slot": 4,
+      "channel": "PC1",
+      "case": "tagtype2, compressed row fits in first sector, beat0",
+      "addr": "(wcount + tag_rank10) mod1024",
+      "range_native": [
+        0,
+        1023
+      ],
+      "bank": "(wcount[1:0]+rank[1:0]) mod4",
+      "data": "zero112 + shifted144"
+    },
+    {
+      "slot": 5,
+      "channel": "PC1",
+      "case": "tagtype2, beat1",
+      "addr": "same slot as slot1",
+      "range_native": [
+        0,
+        1023
+      ],
+      "bank": "same as slot1",
+      "data": "zero112 + shifted{qr_data1,hold1}144"
+    },
+    {
+      "slot": 6,
+      "channel": "ROWS",
+      "case": "rows_mine || rk_v",
+      "addr": "(wcount + (rk_v?rk_rank:q_d[9:0])) mod1024",
+      "range_native": [
+        0,
+        1023
+      ],
+      "bank": "(wcount[1:0]+rank[1:0]) mod4",
+      "data": "zero112 +144rowbits"
+    }
+  ],
+  "mutual_exclusion": "Within each PC, tagtype0 and tagtype2 exclude; compressed beat0/beat1 exclude. No crossPC/ROWS exclusion exists in current source.",
+  "live_protocol_range": "Valid generated compressed/ROWS ranks<nsel with wcount<=128/nsel<=512 give slots0..639; native10bitport itself does NOT enforce this and out-of-range behavior must be preserved/rejected in proof, not assumed silently",
+  "same_bank_counterexample": {
+    "wcount": 128,
+    "nsel": 9,
+    "PC0_compressed_rank": 0,
+    "PC1_compressed_rank": 4,
+    "ROWS_rank": 8,
+    "addresses": [
+      128,
+      132,
+      136
+    ],
+    "banks": [
+      0,
+      0,
+      0
+    ],
+    "different_addresses": true,
+    "notes": "two actual PC response ports plus concurrent q ROWS input; no local mutual-exclusion condition"
+  },
+  "same_address_priority": "sourcefor-loop PC0 thenPC1 thenROWS; nativehelperordered7slot writes preservethis priority",
+  "direct_singlewrite_SRAM_mapping_legal": false
+}

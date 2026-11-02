@@ -1,0 +1,66 @@
+{
+  "status": "DISABLED_PLAN_ONLY_NOT_RTL_OR_NATIVE_PROOF",
+  "target": "actual pmem array + actual REPL2 firstcapture, with all original wp/rp/sk_n state preserved",
+  "macro": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+  "macro_count": 4,
+  "nominal_data_bits": 262144,
+  "native_data_bits": 262144,
+  "array_banks": {
+    "even": "row=(pr[8:1]+pr[0])mod256",
+    "odd": "row=pr[8:1]",
+    "write": "bank=pw[0], row=pw[8:1], two256bit slices; preserve all512maskbits",
+    "ordering": "capture pr parity with latestformat; odd511 reads oddrow255 then evenrow0"
+  },
+  "latest_format": {
+    "bits": 3,
+    "codes": {
+      "0": "owner0: all1024bitszero",
+      "1": "owned even-pr pair",
+      "2": "owned odd-pr pair",
+      "3": "owned even-pr tail (upper512ones)",
+      "4": "owned odd-pr tail (upper512ones)"
+    },
+    "capture": "resetfree on actualpush; pstep==2 selects pair, allothernativepstepvalues select tail"
+  },
+  "new_representation": {
+    "latest": "current SRAM read outputs + latestformat",
+    "older": "1024FF contains OLD FORMATTED latest when replacement changes logicalslot",
+    "latest_slot": "one resetfree bit updated to prepush wp",
+    "copy": "on push && wp!=latest_slot, older<=OLD formattedlatest; otherwise older holds",
+    "read": "rp==latest_slot ? formattedlatest : older; require equality even whenempty",
+    "reset": "only original sk_n/wp/rp reset; SRAMoutput/older/latest_slot/format hold unless actualpush. Payloadpush remains separate from controlreset exactly as native source"
+  },
+  "FF_price": {
+    "old_payload": 2048,
+    "new_payload": 1024,
+    "old_control": 4,
+    "new_control": 8,
+    "net_external_FF": -1020,
+    "new_control_fields": [
+      "original sk_n2/wp1/rp1 (4)",
+      "latest_slot1",
+      "latestformat3"
+    ],
+    "reset_load_delta": 0,
+    "added_real_macro_clock_pins": 4,
+    "macro_read_output_state_bits": 1024
+  },
+  "source_full_behavior": "n2 p_ready0 forbids push even with pop1; no new full-skid throughput",
+  "proof_outputs": [
+    "both reconstructed logical sk0/sk1 all1024bits on everycycle includingempty/reset",
+    "original p_ready/p_v_i/sk_n/wp/rp and selected p_w_i",
+    "array row/bit relation across even/odd/slices",
+    "unchanged native fault and externally visible consumer data/date"
+  ],
+  "proof_controls": [
+    "wrong bank/parity, odd511 wrap",
+    "sameedge read/write collision returning OLD source value",
+    "independent512bit write masks",
+    "owner0, pstep1/2/sentinel, rapid owner changes",
+    "simultaneous push/pop atn1; n2 pop and no push",
+    "warmresetwhen latestslot0 or1, with separate reset+push semantics",
+    "no data-valid dontcare rule; correlated initial native/macro/skid state relation"
+  ],
+  "macro_contract": "aligned-v2 functional model samples read before blocking write; physical read-during-write/CE/repair/timing contract still needs explicit qualification",
+  "qualification": false
+}
