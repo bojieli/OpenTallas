@@ -2,7 +2,7 @@
 # One admitted, nonhierarchical native ROOT build; all controls share its ELF.
 set -uo pipefail
 BASE=/srv/opentallas-scratch2/claude/codex-qwen-root-native-1101
-PACKET=$BASE/prep2
+PACKET=$BASE/prep3
 OUT=$BASE/run1
 VL=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
 mkdir -p "$OUT"

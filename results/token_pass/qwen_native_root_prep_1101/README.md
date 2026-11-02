@@ -44,3 +44,11 @@ verilator --binary --timing -O0 -j 1 \
 Run from prep2 so the literal PSUM/golden files resolve. The nominal binary and its `+COLLECT_CFG`/`+LATE_CFG` controls use the same build. Output splitting limits generated C++ translation-unit/function sizes without changing RTL hierarchy, timeprecision, arithmetic or scheduling. No separate1ps child elaboration/cache is proposed. Admission RAM is deliberately unset: the3.8MB XA gate's15.75GB peak does not size this23.8MB/131k-primitive ROOT workload. No compile or additional fleet job was submitted.
 
 Production TREQ, global ROOT leases, result visibility timing, actual final-residual PSUM arrivals, HEAD input/installation and physical/canonical adoption remain held. This packet is only the next minimum native arithmetic preparation.
+
+## First admission and fixture startup correction
+
+Coordinator authorized one normal-admission64GB/1-thread critical build with50GB disk requirement. This64GB hard cap is conservative and unmeasured, not a completed sizing result. The original prep2 request was positively unadmitted on both hosts and was retired with exact `ot-run --cancel .../prep2`; its terminal log explicitly says waiter cancelled/NOT RUN. It never compiled. The old packet and log remain preserved.
+
+A source check found that the calendar auto-BOOT already emits SETID0 at seal, while prep2 redundantly started stage0 after only16 cycles and could collide with that BOOT. Authorized fixture-only prep3 removes that restart, waits for the actual live SETID command with a finite512-cycle watchdog, then allows64 native transport-settling cycles before arithmetic. All35 native module hashes, source timescales, hierarchy and golden vectors are unchanged; only `tb_native_root` differs. Prep3 is23,809,869bytes and has the same36 modules.
+
+The unchanged-budget replacement uses `codex-qwen-root-native-build3-1101` through current intel2 ot-run, hosts localhost/intel1, stable class `run_qwen_native_root.sh`. It selected intel1 after normal disk eligibility improved; no floor override, duplicate or speculative second build was used. Runtime/build results remain pending, in `codex-qwen-root-native-1101/run1/` on the admitted host; launch log is intel2 `otrun_prep3.log`. Use prep3 for this request; earlier prep1/prep2 are superseded and uncompiled.

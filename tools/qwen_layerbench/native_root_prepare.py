@@ -54,7 +54,7 @@ module tb_native_root;
  wire[115:0]cmd;wire cf,ready;wire[5:0]fc;wire[1:0]issued_user;
  reg red_we=0;reg[23:0]red_addr=0;reg[31:0]red_data=0;
  wire[100:0]cfg;wire busy,fault,we;wire[23:0]wa;wire[31:0]wd;
- integer active=-1,seen=0,configs=0,cyc=0,cfg_edge=-1,outputs=0,hazard=0,late=0,collect=0,inject=0;
+ integer active=-1,seen=0,configs=0,cyc=0,cfg_edge=-1,outputs=0,hazard=0,late=0,collect=0,inject=0,boot_seen=0;
  reg[31:0]psum[0:127],gold[0:3];integer u,j,x,guard;reg[115:0]root_cmd;reg[127:0]entry;
  qfd_dv_cmd_cal_mu #(.NU(4),.UVM_STRIDE(4096),.PIDX_STRIDE(128),.TABLE_USER_RELOC(1),.BTAB_COMPACT(1),.UFOLD(1)) cal(
  .ck(ck),.rst_n(rst_n),.pw_v(pv),.pw_addr(pa),.pw_data(pd),.dw_v(dv),.dw_addr(da),.dw_data(dd),
@@ -91,6 +91,10 @@ module tb_native_root;
  endtask
  always @(negedge ck)if(rst_n)begin
   cyc=cyc+1;
+  if(cmd[0]&&cmd[3:1]==7)begin
+   if(cmd!==116'd15)$fatal(1,"ROOT_BOOT_SETID_WORD %h",cmd);
+   boot_seen=boot_seen+1;$display("ROOT_AUTOBOOT_SETID cyc%0d",cyc);
+  end
   if(cf)$fatal(1,"ROOT_CAL_FAULT %h",fc);
   if(fault)$fatal(1,"NATIVE_ROOT_FAULT active%0d busy%b hazard%0d",active,busy,hazard);
   if(cfg[100])begin
@@ -110,7 +114,8 @@ module tb_native_root;
  initial begin
   late=$test$plusargs("LATE_CFG");collect=$test$plusargs("COLLECT_CFG");inject=late||collect;$readmemh("psum.hex",psum);$readmemh("rstd.hex",gold);
   repeat(64)@(negedge ck);rst_n=1;repeat(64)@(negedge ck);loadcal();
-  stage=0;cs=1;cu=0;@(negedge ck);cs=0;repeat(64)@(negedge ck);stage=1; // live SETID0 before ROOT cases
+  guard=0;while(boot_seen==0)begin @(negedge ck);guard=guard+1;if(guard>512)$fatal(1,"NO_ROOT_AUTOBOOT_SETID");end
+  repeat(64)@(negedge ck); // actual autoBOOT SETID traverses native FDN/RP/CTL before arithmetic
   for(u=0;u<4;u=u+1)begin
    active=u;seen=0;configs=0;cu=2'(u);cs=1;@(negedge ck);cs=0;
    guard=0;while(configs==0)begin @(negedge ck);guard=guard+1;if(guard>512)$fatal(1,"NO_NATIVE_ROOT_CFG");end
@@ -186,6 +191,7 @@ def main():
  golden_sha256=hashlib.sha256((a.golden_tools/'hdc_golden.py').read_bytes()).hexdigest(),
  vectors_sha256={n:hashlib.sha256((a.out/n).read_bytes()).hexdigest() for n in ('psum.hex','rstd.hex')},
  hazard=['COLLECT_CFG clears shared partial slots before trig while busy may still be0','LATE_CFG changes RX while arithmetic busy; native source has no cfg&&busy fault guard'],
+ startup='Observe actual live-calendar autoBOOT SETID0 with512-cycle watchdog, then64 native transport settling cycles; no redundant explicit stage0 start',
  lease='Begins at ROOT cfg/firstPSUM and ends only after fused publication/drain; busy0 during collection does not release slots',
  held=['syntax/elaboration/runtime gate','native result timing measurement','production ROOT leases/TREQ','HEAD normalized input/installation','physical/canonical adoption'])
  (a.out/'preparation.json').write_text(json.dumps(packet,indent=2)+'\n')
