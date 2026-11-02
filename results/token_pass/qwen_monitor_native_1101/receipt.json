@@ -1,0 +1,39 @@
+{
+  "status": "PASS_NATIVE_MONITOR_XA_COMPONENT",
+  "host": "intel1",
+  "root": "/srv/opentallas-scratch2/claude/codex-monitor-native-1101/replay1",
+  "unit": "oth-ubuntu-2782697-1793579231",
+  "binary_sha256": "faf57c3743ad7d6385aec72c71b614040def6ee1d16aeb3d82264f7633c73c27",
+  "baseline_binary_sha256": "ddc6fb385860782a0efc8a8853d017f540948fbf4b35c457d6fefd9d7c6ca3af",
+  "clock_ps": 833,
+  "compiled_timeprecision_fs": 1,
+  "MONITOR_TAIL": 1,
+  "MEMORY_ALIGNMENT": 3,
+  "MIF": 0,
+  "TABLE_USER_RELOC": 1,
+  "stage": 1,
+  "slice": 0,
+  "users": 4,
+  "source_pidx": 11,
+  "executed_pidx": 14,
+  "words": 512,
+  "checks": 512,
+  "controls": [
+    "MUT_PAYLOAD",
+    "MUT_PIDX",
+    "MUT_TAIL"
+  ],
+  "build_wall_s": 2911.24,
+  "build_max_RSS_KiB": 15745656,
+  "runtime_wall_s": 109.935,
+  "composition": "live calendar/store/seal/FIFO plus nativeFDN/RP/CTL and actualSU/VM/eighthead/SFU datapath; fixture requests/cold input patterns",
+  "held": [
+    "ROOT/STN arithmetic: commands inert here",
+    "XS/SILU dedicated monitor execution",
+    "stage36 arithmetic execution",
+    "checkpoint token inputs and actual final normalized HEAD producer",
+    "production TREQ/global earliest ANY PROG",
+    "external peer/wholeQC or token qualification",
+    "mapped physical timing/profile adoption"
+  ]
+}
