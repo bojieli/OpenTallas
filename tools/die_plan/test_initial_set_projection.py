@@ -1,0 +1,60 @@
+import importlib.util
+from pathlib import Path
+import pytest
+import initial_set_projection as P
+import lec as F
+
+
+def design(reset_fixed_slot=False):
+    # PI1 reset; latch2 slot holds arbitrary startup; latch3 copies slot.
+    return dict(I=1,L=2,A=0,ands=[],latches=[0 if reset_fixed_slot else 4,4])
+
+
+def proved_exhaustively(m):
+    assert m.ni < 16
+    for bits in range(1 << m.ni):
+        val=[0]+[(bits >> i)&1 for i in range(m.ni)]
+        for k in range(len(m.ands)//2):
+            a,b=m.ands[2*k:2*k+2];val.append((val[a>>1]^(a&1))&(val[b>>1]^(b&1)))
+        if any(val[x>>1]^(x&1) for x in m.outs):return False
+    return True
+
+
+def test_correlated_image_is_two_fields_one_free_coordinate():
+    for onto in [False,True]:
+        m,r=P.reset_image_miter(F,design(),{1:0},2,{'slot':4},[('load',6,'slot')],onto=onto)
+        assert proved_exhaustively(m)
+        assert r['independent_coordinates']==1 and r['load_correlations']==1
+        assert r['no_hypotheses'] and r['no_constraints']
+
+
+def test_wrong_correlation_and_wrong_polarity_do_not_prove():
+    d=dict(I=1,L=3,A=0,ands=[],latches=[4,6,4])
+    for onto in [False,True]:
+        m,_=P.reset_image_miter(F,d,{1:0},2,{'a':4,'b':6},[('load',8,'b')],onto=onto)
+        assert not proved_exhaustively(m)
+        m,_=P.reset_image_miter(F,d,{1:0},2,{'a':4,'b':6},[('load',9,'a')],onto=onto)
+        assert not proved_exhaustively(m)
+
+
+def test_duplicate_or_reset_mixed_coordinate_refuses():
+    with pytest.raises(ValueError,match='injective'):
+        P.reset_image_miter(F,design(),{1:0},2,{'a':4,'alias':5},[])
+    with pytest.raises(ValueError,match='reset-fixed'):
+        P.reset_image_miter(F,design(True),{1:0},2,{'slot':4},[('load',6,'slot')])
+    with pytest.raises(ValueError,match='distinct'):
+        P.reset_image_miter(F,design(),{1:0},2,{'slot':4},[('load',4,'slot')])
+
+
+def test_prefixes_match_existing_native_ternary_reset():
+    d=dict(I=1,L=3,A=2,ands=[4,2,6,2],latches=[8,10,6])
+    g=P.reset_prefixes(d,{1:0})
+    assert next(g)=={}
+    for n in range(1,5):assert next(g)==F.reset_state(d,{1:0},n)[0]
+
+
+def test_inverted_native_literal_is_logical_seed_not_assumed_polarity():
+    d=dict(I=1,L=2,A=0,ands=[],latches=[4,5])
+    for onto in [False,True]:
+        m,_=P.reset_image_miter(F,d,{1:0},2,{'slot':5},[('load',6,'slot')],onto=onto)
+        assert proved_exhaustively(m)
