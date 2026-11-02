@@ -1,0 +1,345 @@
+{
+  "unit": "oth-ubuntu-2415638-1793599875",
+  "exit": 0,
+  "root": "/srv/opentallas-scratch2/claude/codex-ds-bf-ranktags-2230",
+  "binary": "/srv/opentallas-scratch2/claude/codex-ds-bf-1131/h10x_retry3_mem8/obj_static/Vtb_s81dv_frame",
+  "binary_sha256": "af85aa64158f108f27887dec81ca1956e396e0b9e0e322e70ead41d570c1036c",
+  "cases": {
+    "static110": {
+      "lines": [
+        "BFPV 321 tb_s81dv_frame.dut.u_f.u_r0.u_e1w.u_view.u_bfpv rows 0 seg 0 n 4",
+        "BFPV 321 tb_s81dv_frame.dut.u_f.u_r0.u_e1e.u_view.u_bfpv rows 1 seg 0 n 4",
+        "BFPV 330 tb_s81dv_frame.dut.u_f.u_r1.u_e5w.u_view.u_bfpv rows 2 seg 0 n 4",
+        "BFPV 330 tb_s81dv_frame.dut.u_f.u_r1.u_e5e.u_view.u_bfpv rows 3 seg 0 n 4",
+        "BFPV 339 tb_s81dv_frame.dut.u_f.u_r1.u_e10w.u_view.u_bfpv rows 4 seg 0 n 4",
+        "BFPV 339 tb_s81dv_frame.dut.u_f.u_r1.u_e10e.u_view.u_bfpv rows 5 seg 0 n 4",
+        "RET 412 1783787b800004009",
+        "RET 415 17a1f68a600000009",
+        "RET 424 179a0de9e0000c009",
+        "RET 427 1798ace8c00008009",
+        "RET 428 17917d09800014009",
+        "RET 436 178f2a2cc00010009",
+        "END edges=3063 ret_words=6 xo_checked=3061 fault=0 spine_fault=0"
+      ],
+      "overlay": null
+    },
+    "rank110": {
+      "lines": [
+        "BFPV 321 tb_s81dv_frame.dut.u_f.u_r0.u_e1w.u_view.u_bfpv rows 6 seg 0 n 4",
+        "BFPV 321 tb_s81dv_frame.dut.u_f.u_r0.u_e1e.u_view.u_bfpv rows 7 seg 0 n 4",
+        "BFPV 330 tb_s81dv_frame.dut.u_f.u_r1.u_e5w.u_view.u_bfpv rows 8 seg 0 n 4",
+        "BFPV 330 tb_s81dv_frame.dut.u_f.u_r1.u_e5e.u_view.u_bfpv rows 9 seg 0 n 4",
+        "BFPV 339 tb_s81dv_frame.dut.u_f.u_r1.u_e10w.u_view.u_bfpv rows 10 seg 0 n 4",
+        "BFPV 339 tb_s81dv_frame.dut.u_f.u_r1.u_e10e.u_view.u_bfpv rows 11 seg 0 n 4",
+        "RET 412 1783787b80001c009",
+        "RET 415 17a1f68a600018009",
+        "RET 424 179a0de9e00024009",
+        "RET 427 1798ace8c00020009",
+        "RET 428 17917d0980002c009",
+        "RET 436 178f2a2cc00028009",
+        "END edges=3063 ret_words=6 xo_checked=3061 fault=0 spine_fault=0"
+      ],
+      "overlay": {
+        "status": "DISABLED_BF_ROW_LABEL_EXPERIMENT",
+        "phase": 110,
+        "rows": [
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "changes": [
+          {
+            "image": "u_f_0L01_c1_0.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "u_f_0L01_c1_1.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "u_f_0L01_c1_2.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "u_f_0L01_c1_3.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "u_f_0L01_c1_3.viamap.hex",
+            "address": 442,
+            "local": 1,
+            "candidate": 7
+          },
+          {
+            "image": "u_f_0L01_c5_0.viamap.hex",
+            "address": 440,
+            "local": 2,
+            "candidate": 8
+          },
+          {
+            "image": "u_f_0L01_c5_1.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "u_f_0L01_c5_2.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "u_f_0L01_c5_3.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "u_f_0L01_c5_3.viamap.hex",
+            "address": 442,
+            "local": 3,
+            "candidate": 9
+          },
+          {
+            "image": "u_f_0L01_c10_0.viamap.hex",
+            "address": 440,
+            "local": 4,
+            "candidate": 10
+          },
+          {
+            "image": "u_f_0L01_c10_1.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "u_f_0L01_c10_2.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "u_f_0L01_c10_3.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "u_f_0L01_c10_3.viamap.hex",
+            "address": 442,
+            "local": 5,
+            "candidate": 11
+          },
+          {
+            "image": "f_c1_0.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "f_c1_1.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "f_c1_2.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "f_c1_3.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "f_c1_3.viamap.hex",
+            "address": 442,
+            "local": 1,
+            "candidate": 7
+          },
+          {
+            "image": "f_c5_0.viamap.hex",
+            "address": 440,
+            "local": 2,
+            "candidate": 8
+          },
+          {
+            "image": "f_c5_1.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "f_c5_2.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "f_c5_3.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "f_c5_3.viamap.hex",
+            "address": 442,
+            "local": 3,
+            "candidate": 9
+          },
+          {
+            "image": "f_c10_0.viamap.hex",
+            "address": 440,
+            "local": 4,
+            "candidate": 10
+          },
+          {
+            "image": "f_c10_1.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "f_c10_2.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "f_c10_3.viamap.hex",
+            "address": 440,
+            "local": 0,
+            "candidate": 6
+          },
+          {
+            "image": "f_c10_3.viamap.hex",
+            "address": 442,
+            "local": 5,
+            "candidate": 11
+          }
+        ],
+        "wrong_first_tag": false,
+        "descriptors_preserved": true,
+        "production_enabled": false,
+        "added_cycles": 0,
+        "scope": "BF-active/Q-idle source image label experiment; consuming mission contract unqualified"
+      }
+    },
+    "wrong110": {
+      "lines": [
+        "BFPV 321 tb_s81dv_frame.dut.u_f.u_r0.u_e1w.u_view.u_bfpv rows 0 seg 0 n 4",
+        "BFPV 321 tb_s81dv_frame.dut.u_f.u_r0.u_e1e.u_view.u_bfpv rows 7 seg 0 n 4",
+        "BFPV 330 tb_s81dv_frame.dut.u_f.u_r1.u_e5w.u_view.u_bfpv rows 8 seg 0 n 4",
+        "BFPV 330 tb_s81dv_frame.dut.u_f.u_r1.u_e5e.u_view.u_bfpv rows 9 seg 0 n 4",
+        "BFPV 339 tb_s81dv_frame.dut.u_f.u_r1.u_e10w.u_view.u_bfpv rows 10 seg 0 n 4",
+        "BFPV 339 tb_s81dv_frame.dut.u_f.u_r1.u_e10e.u_view.u_bfpv rows 11 seg 0 n 4",
+        "RET 412 1783787b80001c009",
+        "RET 415 17a1f68a600000009",
+        "RET 424 179a0de9e00024009",
+        "RET 427 1798ace8c00020009",
+        "RET 428 17917d0980002c009",
+        "RET 436 178f2a2cc00028009",
+        "END edges=3063 ret_words=6 xo_checked=3061 fault=0 spine_fault=0"
+      ],
+      "overlay": {
+        "status": "DISABLED_BF_ROW_LABEL_EXPERIMENT",
+        "phase": 110,
+        "rows": [
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "changes": [
+          {
+            "image": "u_f_0L01_c1_3.viamap.hex",
+            "address": 442,
+            "local": 1,
+            "candidate": 7
+          },
+          {
+            "image": "u_f_0L01_c5_0.viamap.hex",
+            "address": 440,
+            "local": 2,
+            "candidate": 8
+          },
+          {
+            "image": "u_f_0L01_c5_3.viamap.hex",
+            "address": 442,
+            "local": 3,
+            "candidate": 9
+          },
+          {
+            "image": "u_f_0L01_c10_0.viamap.hex",
+            "address": 440,
+            "local": 4,
+            "candidate": 10
+          },
+          {
+            "image": "u_f_0L01_c10_3.viamap.hex",
+            "address": 442,
+            "local": 5,
+            "candidate": 11
+          },
+          {
+            "image": "f_c1_3.viamap.hex",
+            "address": 442,
+            "local": 1,
+            "candidate": 7
+          },
+          {
+            "image": "f_c5_0.viamap.hex",
+            "address": 440,
+            "local": 2,
+            "candidate": 8
+          },
+          {
+            "image": "f_c5_3.viamap.hex",
+            "address": 442,
+            "local": 3,
+            "candidate": 9
+          },
+          {
+            "image": "f_c10_0.viamap.hex",
+            "address": 440,
+            "local": 4,
+            "candidate": 10
+          },
+          {
+            "image": "f_c10_3.viamap.hex",
+            "address": 442,
+            "local": 5,
+            "candidate": 11
+          }
+        ],
+        "wrong_first_tag": true,
+        "descriptors_preserved": true,
+        "production_enabled": false,
+        "added_cycles": 0,
+        "scope": "BF-active/Q-idle source image label experiment; consuming mission contract unqualified"
+      }
+    }
+  },
+  "explicit_experimental_flags": {
+    "OT_XS_GB_PROVIDER_UNDER_TEST": 1,
+    "OT_XS_Q_CPR": 1
+  },
+  "production_enabled": false,
+  "added_cycles": 0
+}
