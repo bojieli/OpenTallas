@@ -1,0 +1,17 @@
+{
+ "status": "PASS_STRICT_BIND_SOURCE_ONLY",
+ "producer": "epyc2 oth-ubuntu-2909983-1793602498",
+ "actual_exit": 0,
+ "partitions": 377,
+ "types": 119,
+ "crossing_bits": 790393,
+ "errors": [],
+ "n_errors": 0,
+ "canonical_plan_sha256": "913be9b7f5ee612824f323d3d476999a36e2f224f1c3139f163d1b6558cdaab7",
+ "rederive_idempotence": {
+  "changed": 0,
+  "errors": []
+ },
+ "actual_report": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/bind_report.json",
+ "scope": "Canonical base source fix only. Five-existing-type UCIe proposal stays compressed held artifact; no adoption, P&R/STA or view credit."
+}
