@@ -37,7 +37,13 @@
       "data_bits": 1742,
       "destination": "NW_b113.xi_u_sfucore_Q_ctl_u_core_procdff_66941_D",
       "native_input_capture": "ot_dp_st W1742",
-      "status": "UNPLANNED no physical lane"
+      "status": "UNPLANNED no physical lane",
+      "frozen_bind_stages": 2,
+      "frozen_binder_rows": [
+        570,
+        851
+      ],
+      "physical_plan_lane": null
     },
     {
       "output": "xo_u_sfup_Q_q1_io_word",
@@ -52,7 +58,8 @@
     "shape_match": "8controlstripes\u00d7222bits(last188),3IOstripes\u00d7222bits(last27),2048rows matchesexactselectedr10outputconcat",
     "r10_codec_target_needs_nativeNW118": true,
     "pslice_codec": "su_prog_codec.py isdifferent u_u_pgp_Q_q1.command, notcompiler_control1742 producer",
-    "no_new_codec": true
+    "no_new_codec": true,
+    "genuine_mission_semantics": "UNQUALIFIED: existingformatcodecfixture isnotactual full COPY/globalcalendar compiler"
   },
   "planning_context_only": {
     "current_parent": "coord/tmp/codex-hbm-su00-upper-clock-2335/composite_root_PENDING.json",
