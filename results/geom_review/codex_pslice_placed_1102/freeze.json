@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.hbm_arch.core_freeze.v1",
+ "view": "ot_hbm_su_programme_pslice_c5@25eff8011a12",
+ "module": "ot_hbm_su_programme_pslice_c5",
+ "design": "ot_hbm_su_programme_pslice_c5",
+ "rtl_top": "ot_hbm_su_programme_pslice_c5",
+ "recipe_key": "ot_hbm_su_programme_pslice_c5__trunk_x3",
+ "recipe_sha256": "47d9b33e03711100d7dbec8fc6f027738990a0307b94c2a033ab8ee16af1a20a",
+ "canonical_type": null,
+ "wrapper": null,
+ "outline_um": [
+  939.6,
+  760.32
+ ],
+ "plan": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o_cm/die_plan.json",
+ "plan_sha256": "243ff7d018ba5e47abaa719aff7f74223fe5c49980f75fceb68a5b7b4b4f86d9",
+ "pins_file": "plan_pins.json",
+ "pins_sha256": "652838207bf57e5aae93e957c8607f157b915a0584053d970fad186eb0aaeae3",
+ "pins_canon_sha256": "2e802d75e242ee7d16f3dc62dcad9f259f81f4b75ff4931c17d591a25c2edb5a",
+ "pins": 2789,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "period_ps": 833.0,
+ "common_latency_ps": 250.0,
+ "corner": "TC",
+ "plan_common_latency_ps": 250.0,
+ "core_clock_contract": null,
+ "orfs_var_overrides": [
+  "OT_KEEP_WIRES=sync_q"
+ ],
+ "sdc_lint": "PASS (gen)",
+ "macros": [
+  "ot_sram_1r1w_128x256_m1_r2c2"
+ ],
+ "face_shell": {
+  "core": "ot_hbm_su_programme_pslice_c5__fcore",
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "face_flops": 2787,
+  "dropped": 0,
+  "unread_kept": 0,
+  "const_out_bits": 0,
+  "dup_out_bits": 0,
+  "plan_pins": 2789
+ },
+ "kit_hash": "3cc9715537664521",
+ "plan_pins_source": "cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__canon__codex_g21.json",
+ "plan_pins_source_sha256": "25eff8011a12e66deef147ad5c8e1d5b7a3f323c99c5930f192587a69d6618e3",
+ "plan_pins_source_canon_sha256": "71b4f7dedebfbc3de2c57bfb32e7cd97e3263e94ec0ba5f581400e75de12c2b6",
+ "flow_defaults": {
+  "rc_cal": true,
+  "f1": {
+   "io_tt_ps": 250.0,
+   "io_ff_ps": 202.5,
+   "mechanism": "two-mode GRT (scene BC vclk_ff.sdc FF hold, scene tc TT setup) + gates",
+   "basis": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "f4": true,
+  "cts_setup_tt": {
+   "previous_post_cts": "/work/f4_chain_leaf.tcl",
+   "repair": "setup only (scene tc / vclk OT_VCLK_TT)",
+   "hold": "GRT step only"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold",
+   "tt": 250.0,
+   "ff": 202.5
+  },
+  "rule": "FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)"
+ },
+ "clock_entry_source": {
+  "file": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o_cm/clock_entries.json",
+  "sha256": "8883cf02258f00bdc55d48141ada022f436bf1d83699dd6f7a66b54328f8ce87",
+  "module": "ot_hbm_su_programme_pslice_c5",
+  "xy_um": [
+   470.88,
+   380.16
+  ],
+  "ports": [
+   "clk"
+  ],
+  "pins": 1,
+  "rule": "METHODOLOGY 12.8a plan clock entry (DIE-HBM-48)",
+  "moved": [
+   "clk"
+  ]
+ },
+ "reset_contract": {
+  "edges": 64,
+  "module": "ot_hbm_su_programme_pslice_c5",
+  "die": "hbm",
+  "contract": "/srv/opentallas-scratch2/claude/wt/die-hbm-57-pslice/physical/die_plan/hbm/reset_contract.json",
+  "contract_sha256": "df3508496db4614c7f07b7e13e9f557ab5263edbbbad7807e93ea9b2584c0418",
+  "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+ },
+ "source_commit": "622cfa83e9d2b7cb2b4df40e7156dbd2c108970b"
+}

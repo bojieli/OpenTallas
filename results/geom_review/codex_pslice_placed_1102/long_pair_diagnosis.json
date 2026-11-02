@@ -1,0 +1,3607 @@
+{
+  "scope": "EXISTING_EXPORTED_DATA_ONLY_NO_EDA",
+  "summary": {
+    "r2r_memory_instances": 100,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 561.26,
+    "r2r_captures_gt405": 3150,
+    "r2r_captures": 31705,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.wdat_r\\[1\\]\\[35\\]$_DFF_P_ -> u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[11\\].mem"
+  },
+  "worst_write_actual_fanout": {
+    "source": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][35]$_DFF_P_",
+    "connected_memory_bodies": [
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          12.972,
+          458.904,
+          54.036
+        ],
+        "xy": [
+          411.49199999999996,
+          33.504
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[12].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          591.324,
+          575.208,
+          632.388
+        ],
+        "xy": [
+          527.796,
+          611.856
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          219.516,
+          458.904,
+          260.58
+        ],
+        "xy": [
+          411.49199999999996,
+          240.048
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[6].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          178.188,
+          458.904,
+          219.252
+        ],
+        "xy": [
+          411.49199999999996,
+          198.72
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[7].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          136.908,
+          458.904,
+          177.972
+        ],
+        "xy": [
+          411.49199999999996,
+          157.44
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[8].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          95.58,
+          458.904,
+          136.644
+        ],
+        "xy": [
+          411.49199999999996,
+          116.112
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[9].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          54.252,
+          458.904,
+          95.316
+        ],
+        "xy": [
+          411.49199999999996,
+          74.784
+        ]
+      }
+    ],
+    "canonical_unrestricted_one_point_minimax_um": 435.93600000000004,
+    "meaning": "whole-body conservative bound, not exact connected port coordinates"
+  },
+  "guide_count": 65,
+  "guide_prefix_count": 150,
+  "counts": {
+    "S->M": 35,
+    "long_inside_guide": 2982,
+    "guide_best_possible_canonical_reach_still_gt405": 1799,
+    "M->S": 3115,
+    "long_outside_guide": 168
+  },
+  "guide_membership_stats": {
+    "leaf0": {
+      "matched_registers": 1542,
+      "final_centers_outside": 124
+    },
+    "sync0": {
+      "matched_registers": 2,
+      "final_centers_outside": 0
+    },
+    "leaf1": {
+      "matched_registers": 3152,
+      "final_centers_outside": 174
+    },
+    "leaf2": {
+      "matched_registers": 3152,
+      "final_centers_outside": 203
+    },
+    "leaf3": {
+      "matched_registers": 3152,
+      "final_centers_outside": 79
+    },
+    "leaf4": {
+      "matched_registers": 1539,
+      "final_centers_outside": 95
+    },
+    "leaf5": {
+      "matched_registers": 1539,
+      "final_centers_outside": 63
+    },
+    "leaf6": {
+      "matched_registers": 1539,
+      "final_centers_outside": 96
+    },
+    "leaf7": {
+      "matched_registers": 1539,
+      "final_centers_outside": 107
+    },
+    "leaf8": {
+      "matched_registers": 1539,
+      "final_centers_outside": 95
+    },
+    "leaf9": {
+      "matched_registers": 1278,
+      "final_centers_outside": 114
+    },
+    "oc0": {
+      "matched_registers": 256,
+      "final_centers_outside": 29
+    },
+    "oc1": {
+      "matched_registers": 256,
+      "final_centers_outside": 16
+    },
+    "oc2": {
+      "matched_registers": 256,
+      "final_centers_outside": 15
+    },
+    "oc3": {
+      "matched_registers": 256,
+      "final_centers_outside": 11
+    },
+    "oc4": {
+      "matched_registers": 256,
+      "final_centers_outside": 13
+    },
+    "oc5": {
+      "matched_registers": 256,
+      "final_centers_outside": 23
+    },
+    "oc6": {
+      "matched_registers": 256,
+      "final_centers_outside": 12
+    },
+    "oc7": {
+      "matched_registers": 256,
+      "final_centers_outside": 5
+    },
+    "oc8": {
+      "matched_registers": 256,
+      "final_centers_outside": 11
+    },
+    "oc9": {
+      "matched_registers": 166,
+      "final_centers_outside": 4
+    },
+    "x0s0": {
+      "matched_registers": 17,
+      "final_centers_outside": 0
+    },
+    "x0s1": {
+      "matched_registers": 17,
+      "final_centers_outside": 0
+    },
+    "x1s0": {
+      "matched_registers": 17,
+      "final_centers_outside": 2
+    },
+    "x1s1": {
+      "matched_registers": 17,
+      "final_centers_outside": 9
+    },
+    "x2s0": {
+      "matched_registers": 17,
+      "final_centers_outside": 13
+    },
+    "x2s1": {
+      "matched_registers": 17,
+      "final_centers_outside": 1
+    },
+    "x3s0": {
+      "matched_registers": 17,
+      "final_centers_outside": 10
+    },
+    "x3s1": {
+      "matched_registers": 17,
+      "final_centers_outside": 3
+    },
+    "x4s0": {
+      "matched_registers": 17,
+      "final_centers_outside": 15
+    },
+    "x4s1": {
+      "matched_registers": 17,
+      "final_centers_outside": 2
+    },
+    "x5s0": {
+      "matched_registers": 17,
+      "final_centers_outside": 0
+    },
+    "x5s1": {
+      "matched_registers": 17,
+      "final_centers_outside": 2
+    },
+    "x6s0": {
+      "matched_registers": 17,
+      "final_centers_outside": 14
+    },
+    "x6s1": {
+      "matched_registers": 17,
+      "final_centers_outside": 2
+    },
+    "x7s0": {
+      "matched_registers": 17,
+      "final_centers_outside": 8
+    },
+    "x7s1": {
+      "matched_registers": 17,
+      "final_centers_outside": 1
+    },
+    "x8s0": {
+      "matched_registers": 17,
+      "final_centers_outside": 13
+    },
+    "x8s1": {
+      "matched_registers": 17,
+      "final_centers_outside": 1
+    },
+    "x9s0": {
+      "matched_registers": 17,
+      "final_centers_outside": 1
+    },
+    "x9s1": {
+      "matched_registers": 17,
+      "final_centers_outside": 2
+    },
+    "fault": {
+      "matched_registers": 10,
+      "final_centers_outside": 3
+    },
+    "lf0": {
+      "matched_registers": 2,
+      "final_centers_outside": 0
+    },
+    "lf1": {
+      "matched_registers": 2,
+      "final_centers_outside": 0
+    },
+    "lf2": {
+      "matched_registers": 2,
+      "final_centers_outside": 0
+    },
+    "lf3": {
+      "matched_registers": 2,
+      "final_centers_outside": 0
+    },
+    "lf4": {
+      "matched_registers": 2,
+      "final_centers_outside": 1
+    },
+    "lf5": {
+      "matched_registers": 2,
+      "final_centers_outside": 1
+    },
+    "lf6": {
+      "matched_registers": 2,
+      "final_centers_outside": 0
+    },
+    "lf7": {
+      "matched_registers": 2,
+      "final_centers_outside": 1
+    },
+    "lf8": {
+      "matched_registers": 2,
+      "final_centers_outside": 0
+    },
+    "lf9": {
+      "matched_registers": 2,
+      "final_centers_outside": 0
+    },
+    "reg0": {
+      "matched_registers": 546,
+      "final_centers_outside": 5
+    },
+    "y0s0": {
+      "matched_registers": 280,
+      "final_centers_outside": 46
+    },
+    "y0s1": {
+      "matched_registers": 280,
+      "final_centers_outside": 9
+    },
+    "reg1": {
+      "matched_registers": 546,
+      "final_centers_outside": 25
+    },
+    "y1s0": {
+      "matched_registers": 280,
+      "final_centers_outside": 34
+    },
+    "y1s1": {
+      "matched_registers": 280,
+      "final_centers_outside": 13
+    },
+    "reg2": {
+      "matched_registers": 546,
+      "final_centers_outside": 20
+    },
+    "y2s0": {
+      "matched_registers": 280,
+      "final_centers_outside": 17
+    },
+    "y2s1": {
+      "matched_registers": 280,
+      "final_centers_outside": 12
+    },
+    "ux": {
+      "matched_registers": 280,
+      "final_centers_outside": 48
+    },
+    "ob": {
+      "matched_registers": 4,
+      "final_centers_outside": 0
+    },
+    "oe": {
+      "matched_registers": 16,
+      "final_centers_outside": 4
+    },
+    "xs": {
+      "matched_registers": 17,
+      "final_centers_outside": 1
+    }
+  },
+  "top20_memory_to_FF": [
+    {
+      "distance_um": 555.627,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][196]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          179.172,
+          403.92,
+          180.252,
+          404.19
+        ],
+        "xy": [
+          179.712,
+          404.055
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][196]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 419.064,
+      "FF_center_to_macro_bbox_min_um": 419.739
+    },
+    {
+      "distance_um": 553.863,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][14]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          312.066,
+          382.32,
+          313.146,
+          382.59
+        ],
+        "xy": [
+          312.606,
+          382.455
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][14]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 417.30000000000007,
+      "FF_center_to_macro_bbox_min_um": 417.9750000000001
+    },
+    {
+      "distance_um": 553.197,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][211]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          180.792,
+          399.87,
+          181.872,
+          400.14
+        ],
+        "xy": [
+          181.332,
+          400.005
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][211]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 416.634,
+      "FF_center_to_macro_bbox_min_um": 417.30899999999997
+    },
+    {
+      "distance_um": 553.035,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][201]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          177.39,
+          403.11,
+          178.47,
+          403.38
+        ],
+        "xy": [
+          177.93,
+          403.245
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][201]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 416.472,
+      "FF_center_to_macro_bbox_min_um": 417.147
+    },
+    {
+      "distance_um": 551.595,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][22]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          316.224,
+          380.43,
+          317.304,
+          380.7
+        ],
+        "xy": [
+          316.764,
+          380.565
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][22]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 415.0320000000001,
+      "FF_center_to_macro_bbox_min_um": 415.70700000000005
+    },
+    {
+      "distance_um": 549.795,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][247]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          173.61,
+          403.65,
+          174.69,
+          403.92
+        ],
+        "xy": [
+          174.15,
+          403.78499999999997
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][247]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 413.23199999999997,
+      "FF_center_to_macro_bbox_min_um": 413.907
+    },
+    {
+      "distance_um": 547.797,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][213]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          177.012,
+          398.25,
+          178.092,
+          398.52
+        ],
+        "xy": [
+          177.55200000000002,
+          398.385
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][213]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 411.234,
+      "FF_center_to_macro_bbox_min_um": 411.909
+    },
+    {
+      "distance_um": 547.437,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][0]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          321.462,
+          379.35,
+          322.542,
+          379.62
+        ],
+        "xy": [
+          322.00199999999995,
+          379.485
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][0]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 410.8740000000001,
+      "FF_center_to_macro_bbox_min_um": 411.5490000000001
+    },
+    {
+      "distance_um": 546.501,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][222]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          174.906,
+          399.06,
+          175.986,
+          399.33
+        ],
+        "xy": [
+          175.446,
+          399.195
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][222]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 409.938,
+      "FF_center_to_macro_bbox_min_um": 410.613
+    },
+    {
+      "distance_um": 545.853,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][249]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          163.728,
+          409.59,
+          164.808,
+          409.86
+        ],
+        "xy": [
+          164.268,
+          409.725
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][249]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 409.28999999999996,
+      "FF_center_to_macro_bbox_min_um": 409.96500000000003
+    },
+    {
+      "distance_um": 545.853,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][210]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          172.638,
+          400.68,
+          173.718,
+          400.95
+        ],
+        "xy": [
+          173.178,
+          400.815
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][210]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 409.29,
+      "FF_center_to_macro_bbox_min_um": 409.965
+    },
+    {
+      "distance_um": 545.493,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][205]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          326.646,
+          376.11,
+          327.726,
+          376.38
+        ],
+        "xy": [
+          327.18600000000004,
+          376.245
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][205]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 408.93000000000006,
+      "FF_center_to_macro_bbox_min_um": 409.605
+    },
+    {
+      "distance_um": 545.439,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][183]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          319.41,
+          383.4,
+          320.49,
+          383.67
+        ],
+        "xy": [
+          319.95000000000005,
+          383.53499999999997
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][183]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 408.87600000000003,
+      "FF_center_to_macro_bbox_min_um": 409.55100000000004
+    },
+    {
+      "distance_um": 544.791,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][153]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          323.838,
+          379.62,
+          324.918,
+          379.89
+        ],
+        "xy": [
+          324.37800000000004,
+          379.755
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][153]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 408.22800000000007,
+      "FF_center_to_macro_bbox_min_um": 408.903
+    },
+    {
+      "distance_um": 544.341,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][199]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          166.536,
+          405.27,
+          167.616,
+          405.54
+        ],
+        "xy": [
+          167.07600000000002,
+          405.405
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][199]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 407.77799999999996,
+      "FF_center_to_macro_bbox_min_um": 408.453
+    },
+    {
+      "distance_um": 544.023,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          12.972,
+          458.904,
+          54.036
+        ],
+        "xy": [
+          411.49199999999996,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][160]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          317.574,
+          416.07,
+          318.654,
+          416.34
+        ],
+        "xy": [
+          318.11400000000003,
+          416.205
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][160]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+          "guide_to_other_bbox_min_um": 319.964,
+          "guide_to_other_bbox_max_um": 560.232,
+          "guide_min_possible_canonical_macro_reach_um": 442.23199999999997
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 407.46,
+      "FF_center_to_macro_bbox_min_um": 408.13499999999993
+    },
+    {
+      "distance_um": 543.909,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][203]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          172.314,
+          399.06,
+          173.394,
+          399.33
+        ],
+        "xy": [
+          172.85399999999998,
+          399.195
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][203]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 407.346,
+      "FF_center_to_macro_bbox_min_um": 408.02099999999996
+    },
+    {
+      "distance_um": 543.537,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          12.972,
+          458.904,
+          54.036
+        ],
+        "xy": [
+          411.49199999999996,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][57]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          316.17,
+          414.18,
+          317.25,
+          414.45
+        ],
+        "xy": [
+          316.71000000000004,
+          414.315
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][57]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+          "guide_to_other_bbox_min_um": 319.964,
+          "guide_to_other_bbox_max_um": 560.232,
+          "guide_min_possible_canonical_macro_reach_um": 442.23199999999997
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 406.974,
+      "FF_center_to_macro_bbox_min_um": 407.64899999999994
+    },
+    {
+      "distance_um": 543.171,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][54]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          323.838,
+          381.24,
+          324.918,
+          381.51
+        ],
+        "xy": [
+          324.37800000000004,
+          381.375
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][54]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 406.60800000000006,
+      "FF_center_to_macro_bbox_min_um": 407.283
+    },
+    {
+      "distance_um": 543.117,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][202]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          325.242,
+          379.89,
+          326.322,
+          380.16
+        ],
+        "xy": [
+          325.78200000000004,
+          380.025
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][202]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 406.55400000000003,
+      "FF_center_to_macro_bbox_min_um": 407.22900000000004
+    }
+  ],
+  "top20_FF_to_memory": [
+    {
+      "distance_um": 561.261,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][35]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          308.178,
+          378.81,
+          309.258,
+          379.08
+        ],
+        "xy": [
+          308.71799999999996,
+          378.945
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][35]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 424.6980000000001,
+      "FF_center_to_macro_bbox_min_um": 425.3730000000001
+    },
+    {
+      "distance_um": 558.597,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.wdat_r[1][218]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          182.682,
+          403.38,
+          183.762,
+          403.65
+        ],
+        "xy": [
+          183.22199999999998,
+          403.515
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.wdat_r[1][218]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 422.034,
+      "FF_center_to_macro_bbox_min_um": 422.70899999999995
+    },
+    {
+      "distance_um": 556.821,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][96]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          308.556,
+          419.85,
+          309.636,
+          420.12
+        ],
+        "xy": [
+          309.096,
+          419.985
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          12.972,
+          458.904,
+          54.036
+        ],
+        "xy": [
+          411.49199999999996,
+          33.504
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][96]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+          "guide_to_other_bbox_min_um": 319.964,
+          "guide_to_other_bbox_max_um": 560.232,
+          "guide_min_possible_canonical_macro_reach_um": 442.23199999999997
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 420.258,
+      "FF_center_to_macro_bbox_min_um": 420.933
+    },
+    {
+      "distance_um": 551.589,
+      "launch": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][209]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          282.258,
+          413.1,
+          283.338,
+          413.37
+        ],
+        "xy": [
+          282.798,
+          413.235
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          131.472,
+          12.972,
+          226.296,
+          54.036
+        ],
+        "xy": [
+          178.88400000000001,
+          33.504
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][209]$_DFF_P_",
+          "guide": "leaf2",
+          "box": [
+            212.3,
+            374.0,
+            282.3,
+            422.0
+          ],
+          "final_center_inside": false,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+          "guide_to_other_bbox_min_um": 319.964,
+          "guide_to_other_bbox_max_um": 559.856,
+          "guide_min_possible_canonical_macro_reach_um": 441.856
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 415.026,
+      "FF_center_to_macro_bbox_min_um": 415.701
+    },
+    {
+      "distance_um": 543.795,
+      "launch": {
+        "name": "u_fcore.g_c[4].u_c.g_p.u_p.pc[7]$_DFFE_PP_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          402.516,
+          384.48,
+          403.596,
+          384.75
+        ],
+        "xy": [
+          403.05600000000004,
+          384.615
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[4].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          12.972,
+          575.208,
+          54.036
+        ],
+        "xy": [
+          527.796,
+          33.504
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[4].u_c.g_p.u_p.pc[7]$_DFFE_PP_",
+          "guide": "leaf4",
+          "box": [
+            403.1,
+            374.0,
+            473.1,
+            422.0
+          ],
+          "final_center_inside": false,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[4].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+          "guide_to_other_bbox_min_um": 327.248,
+          "guide_to_other_bbox_max_um": 581.136,
+          "guide_min_possible_canonical_macro_reach_um": 463.13599999999997
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 407.232,
+      "FF_center_to_macro_bbox_min_um": 407.907
+    },
+    {
+      "distance_um": 542.751,
+      "launch": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][102]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          212.544,
+          376.65,
+          213.624,
+          376.92
+        ],
+        "xy": [
+          213.084,
+          376.78499999999997
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          632.652,
+          458.904,
+          673.716
+        ],
+        "xy": [
+          411.49199999999996,
+          653.184
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][102]$_DFF_P_",
+          "guide": "leaf2",
+          "box": [
+            212.3,
+            374.0,
+            282.3,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+          "guide_to_other_bbox_min_um": 292.432,
+          "guide_to_other_bbox_max_um": 546.3199999999999,
+          "guide_min_possible_canonical_macro_reach_um": 428.3199999999999
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 406.188,
+      "FF_center_to_macro_bbox_min_um": 406.86300000000006
+    },
+    {
+      "distance_um": 542.199,
+      "launch": {
+        "name": "u_fcore.g_c[8].u_c.g_p.u_p.pc[8]$_DFFE_PP_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          854.388,
+          413.1,
+          855.468,
+          413.37
+        ],
+        "xy": [
+          854.928,
+          413.235
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[8].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          712.992,
+          12.972,
+          807.816,
+          54.036
+        ],
+        "xy": [
+          760.404,
+          33.504
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[8].u_c.g_p.u_p.pc[8]$_DFFE_PP_",
+          "guide": "leaf8",
+          "box": [
+            784.7,
+            374.0,
+            854.7,
+            422.0
+          ],
+          "final_center_inside": false,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[8].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+          "guide_to_other_bbox_min_um": 319.964,
+          "guide_to_other_bbox_max_um": 550.7360000000001,
+          "guide_min_possible_canonical_macro_reach_um": 432.73600000000005
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 405.636,
+      "FF_center_to_macro_bbox_min_um": 406.311
+    },
+    {
+      "distance_um": 536.259,
+      "launch": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][73]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          213.624,
+          420.66,
+          214.704,
+          420.93
+        ],
+        "xy": [
+          214.164,
+          420.795
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          247.776,
+          12.972,
+          342.6,
+          54.036
+        ],
+        "xy": [
+          295.188,
+          33.504
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][73]$_DFF_P_",
+          "guide": "leaf2",
+          "box": [
+            212.3,
+            374.0,
+            282.3,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.ix[0].mem.g[1].mem",
+          "guide_to_other_bbox_min_um": 319.964,
+          "guide_to_other_bbox_max_um": 539.328,
+          "guide_min_possible_canonical_macro_reach_um": 421.328
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 399.696,
+      "FF_center_to_macro_bbox_min_um": 400.37100000000004
+    },
+    {
+      "distance_um": 519.933,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][35]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          308.178,
+          378.81,
+          309.258,
+          379.08
+        ],
+        "xy": [
+          308.71799999999996,
+          378.945
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[12].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          591.324,
+          575.208,
+          632.388
+        ],
+        "xy": [
+          527.796,
+          611.856
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][35]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[12].mem",
+          "guide_to_other_bbox_min_um": 272.008,
+          "guide_to_other_bbox_max_um": 525.896,
+          "guide_min_possible_canonical_macro_reach_um": 407.8960000000001
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 383.37,
+      "FF_center_to_macro_bbox_min_um": 384.045
+    },
+    {
+      "distance_um": 516.939,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.genblk5.g_p2.vi_c$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx3_ASAP7_75t_R",
+        "bbox": [
+          180.09,
+          405.54,
+          181.278,
+          405.81
+        ],
+        "xy": [
+          180.684,
+          405.675
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[4].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          54.252,
+          109.992,
+          95.316
+        ],
+        "xy": [
+          62.58,
+          74.784
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.genblk5.g_p2.vi_c$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[4].mem",
+          "guide_to_other_bbox_min_um": 285.592,
+          "guide_to_other_bbox_max_um": 539.48,
+          "guide_min_possible_canonical_macro_reach_um": 421.48
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 380.32200000000006,
+      "FF_center_to_macro_bbox_min_um": 381.05100000000004
+    },
+    {
+      "distance_um": 515.541,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][96]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          308.556,
+          419.85,
+          309.636,
+          420.12
+        ],
+        "xy": [
+          309.096,
+          419.985
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[9].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          54.252,
+          458.904,
+          95.316
+        ],
+        "xy": [
+          411.49199999999996,
+          74.784
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][96]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[9].mem",
+          "guide_to_other_bbox_min_um": 278.68399999999997,
+          "guide_to_other_bbox_max_um": 518.952,
+          "guide_min_possible_canonical_macro_reach_um": 400.952
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 378.97799999999995,
+      "FF_center_to_macro_bbox_min_um": 379.65299999999996
+    },
+    {
+      "distance_um": 513.339,
+      "launch": {
+        "name": "u_fcore.g_c[6].u_c.g_p.u_p.g_m4.wdat_r[0][46]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          593.298,
+          374.22,
+          594.378,
+          374.49
+        ],
+        "xy": [
+          593.838,
+          374.355
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[6].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          712.992,
+          632.652,
+          807.816,
+          673.716
+        ],
+        "xy": [
+          760.404,
+          653.184
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[6].u_c.g_p.u_p.g_m4.wdat_r[0][46]$_DFF_P_",
+          "guide": "leaf6",
+          "box": [
+            593.9,
+            374.0,
+            663.9,
+            422.0
+          ],
+          "final_center_inside": false,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[6].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+          "guide_to_other_bbox_min_um": 259.744,
+          "guide_to_other_bbox_max_um": 513.6320000000001,
+          "guide_min_possible_canonical_macro_reach_um": 395.632
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 376.77599999999995,
+      "FF_center_to_macro_bbox_min_um": 377.451
+    },
+    {
+      "distance_um": 510.309,
+      "launch": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][209]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          282.258,
+          413.1,
+          283.338,
+          413.37
+        ],
+        "xy": [
+          282.798,
+          413.235
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          131.472,
+          54.252,
+          226.296,
+          95.316
+        ],
+        "xy": [
+          178.88400000000001,
+          74.784
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][209]$_DFF_P_",
+          "guide": "leaf2",
+          "box": [
+            212.3,
+            374.0,
+            282.3,
+            422.0
+          ],
+          "final_center_inside": false,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[0].mem",
+          "guide_to_other_bbox_min_um": 278.68399999999997,
+          "guide_to_other_bbox_max_um": 518.576,
+          "guide_min_possible_canonical_macro_reach_um": 400.576
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 373.746,
+      "FF_center_to_macro_bbox_min_um": 374.421
+    },
+    {
+      "distance_um": 502.515,
+      "launch": {
+        "name": "u_fcore.g_c[4].u_c.g_p.u_p.pc[7]$_DFFE_PP_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          402.516,
+          384.48,
+          403.596,
+          384.75
+        ],
+        "xy": [
+          403.05600000000004,
+          384.615
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[4].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          54.252,
+          575.208,
+          95.316
+        ],
+        "xy": [
+          527.796,
+          74.784
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[4].u_c.g_p.u_p.pc[7]$_DFFE_PP_",
+          "guide": "leaf4",
+          "box": [
+            403.1,
+            374.0,
+            473.1,
+            422.0
+          ],
+          "final_center_inside": false,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[4].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+          "guide_to_other_bbox_min_um": 285.96799999999996,
+          "guide_to_other_bbox_max_um": 539.856,
+          "guide_min_possible_canonical_macro_reach_um": 421.856
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 365.952,
+      "FF_center_to_macro_bbox_min_um": 366.62699999999995
+    },
+    {
+      "distance_um": 502.041,
+      "launch": {
+        "name": "u_fcore.g_c[6].u_c.g_p.u_p.g_m4.wdat_r[0][80]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          593.244,
+          417.15,
+          594.324,
+          417.42
+        ],
+        "xy": [
+          593.784,
+          417.28499999999997
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[6].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          596.688,
+          12.972,
+          691.512,
+          54.036
+        ],
+        "xy": [
+          644.0999999999999,
+          33.504
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[6].u_c.g_p.u_p.g_m4.wdat_r[0][80]$_DFF_P_",
+          "guide": "leaf6",
+          "box": [
+            593.9,
+            374.0,
+            663.9,
+            422.0
+          ],
+          "final_center_inside": false,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[6].u_c.g_p.u_p.g_m4.ix[0].mem.g[2].mem",
+          "guide_to_other_bbox_min_um": 319.964,
+          "guide_to_other_bbox_max_um": 506.64,
+          "guide_min_possible_canonical_macro_reach_um": 408.43999999999994
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 365.478,
+      "FF_center_to_macro_bbox_min_um": 366.15299999999996
+    },
+    {
+      "distance_um": 501.423,
+      "launch": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][102]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          212.544,
+          376.65,
+          213.624,
+          376.92
+        ],
+        "xy": [
+          213.084,
+          376.78499999999997
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          591.324,
+          458.904,
+          632.388
+        ],
+        "xy": [
+          411.49199999999996,
+          611.856
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][102]$_DFF_P_",
+          "guide": "leaf2",
+          "box": [
+            212.3,
+            374.0,
+            282.3,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.ix[0].mem.g[3].mem",
+          "guide_to_other_bbox_min_um": 251.10399999999993,
+          "guide_to_other_bbox_max_um": 504.992,
+          "guide_min_possible_canonical_macro_reach_um": 386.99199999999996
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 364.8599999999999,
+      "FF_center_to_macro_bbox_min_um": 365.53499999999997
+    },
+    {
+      "distance_um": 500.919,
+      "launch": {
+        "name": "u_fcore.g_c[8].u_c.g_p.u_p.pc[8]$_DFFE_PP_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          854.388,
+          413.1,
+          855.468,
+          413.37
+        ],
+        "xy": [
+          854.928,
+          413.235
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[8].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          712.992,
+          54.252,
+          807.816,
+          95.316
+        ],
+        "xy": [
+          760.404,
+          74.784
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[8].u_c.g_p.u_p.pc[8]$_DFFE_PP_",
+          "guide": "leaf8",
+          "box": [
+            784.7,
+            374.0,
+            854.7,
+            422.0
+          ],
+          "final_center_inside": false,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[8].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+          "guide_to_other_bbox_min_um": 278.68399999999997,
+          "guide_to_other_bbox_max_um": 509.4560000000001,
+          "guide_min_possible_canonical_macro_reach_um": 391.4560000000001
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 364.356,
+      "FF_center_to_macro_bbox_min_um": 365.03099999999995
+    },
+    {
+      "distance_um": 494.979,
+      "launch": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][73]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          213.624,
+          420.66,
+          214.704,
+          420.93
+        ],
+        "xy": [
+          214.164,
+          420.795
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          247.776,
+          54.252,
+          342.6,
+          95.316
+        ],
+        "xy": [
+          295.188,
+          74.784
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][73]$_DFF_P_",
+          "guide": "leaf2",
+          "box": [
+            212.3,
+            374.0,
+            282.3,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+          "guide_to_other_bbox_min_um": 278.68399999999997,
+          "guide_to_other_bbox_max_um": 498.048,
+          "guide_min_possible_canonical_macro_reach_um": 380.048
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 358.41600000000005,
+      "FF_center_to_macro_bbox_min_um": 359.09100000000007
+    },
+    {
+      "distance_um": 477.039,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[0][41]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          310.554,
+          378.0,
+          311.634,
+          378.27
+        ],
+        "xy": [
+          311.094,
+          378.135
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          549.996,
+          575.208,
+          591.06
+        ],
+        "xy": [
+          527.796,
+          570.528
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[0][41]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.ix[0].mem.g[0].mem",
+          "guide_to_other_bbox_min_um": 230.68,
+          "guide_to_other_bbox_max_um": 484.5679999999999,
+          "guide_min_possible_canonical_macro_reach_um": 366.56800000000004
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 340.476,
+      "FF_center_to_macro_bbox_min_um": 341.151
+    },
+    {
+      "distance_um": 475.611,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.genblk5.g_p2.vi_c$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx3_ASAP7_75t_R",
+        "bbox": [
+          180.09,
+          405.54,
+          181.278,
+          405.81
+        ],
+        "xy": [
+          180.684,
+          405.675
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[3].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          95.58,
+          109.992,
+          136.644
+        ],
+        "xy": [
+          62.58,
+          116.112
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.genblk5.g_p2.vi_c$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[3].mem",
+          "guide_to_other_bbox_min_um": 244.264,
+          "guide_to_other_bbox_max_um": 498.15200000000004,
+          "guide_min_possible_canonical_macro_reach_um": 380.15200000000004
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 338.994,
+      "FF_center_to_macro_bbox_min_um": 339.723
+    }
+  ],
+  "top20_all": [
+    {
+      "distance_um": 561.261,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][35]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          308.178,
+          378.81,
+          309.258,
+          379.08
+        ],
+        "xy": [
+          308.71799999999996,
+          378.945
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][35]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 424.6980000000001,
+      "FF_center_to_macro_bbox_min_um": 425.3730000000001
+    },
+    {
+      "distance_um": 558.597,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.wdat_r[1][218]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          182.682,
+          403.38,
+          183.762,
+          403.65
+        ],
+        "xy": [
+          183.22199999999998,
+          403.515
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.wdat_r[1][218]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 422.034,
+      "FF_center_to_macro_bbox_min_um": 422.70899999999995
+    },
+    {
+      "distance_um": 556.821,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][96]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          308.556,
+          419.85,
+          309.636,
+          420.12
+        ],
+        "xy": [
+          309.096,
+          419.985
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          12.972,
+          458.904,
+          54.036
+        ],
+        "xy": [
+          411.49199999999996,
+          33.504
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][96]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+          "guide_to_other_bbox_min_um": 319.964,
+          "guide_to_other_bbox_max_um": 560.232,
+          "guide_min_possible_canonical_macro_reach_um": 442.23199999999997
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 420.258,
+      "FF_center_to_macro_bbox_min_um": 420.933
+    },
+    {
+      "distance_um": 555.627,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][196]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          179.172,
+          403.92,
+          180.252,
+          404.19
+        ],
+        "xy": [
+          179.712,
+          404.055
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][196]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 419.064,
+      "FF_center_to_macro_bbox_min_um": 419.739
+    },
+    {
+      "distance_um": 553.863,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][14]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          312.066,
+          382.32,
+          313.146,
+          382.59
+        ],
+        "xy": [
+          312.606,
+          382.455
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][14]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 417.30000000000007,
+      "FF_center_to_macro_bbox_min_um": 417.9750000000001
+    },
+    {
+      "distance_um": 553.197,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][211]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          180.792,
+          399.87,
+          181.872,
+          400.14
+        ],
+        "xy": [
+          181.332,
+          400.005
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][211]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 416.634,
+      "FF_center_to_macro_bbox_min_um": 417.30899999999997
+    },
+    {
+      "distance_um": 553.035,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][201]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          177.39,
+          403.11,
+          178.47,
+          403.38
+        ],
+        "xy": [
+          177.93,
+          403.245
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][201]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 416.472,
+      "FF_center_to_macro_bbox_min_um": 417.147
+    },
+    {
+      "distance_um": 551.595,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][22]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          316.224,
+          380.43,
+          317.304,
+          380.7
+        ],
+        "xy": [
+          316.764,
+          380.565
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][22]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 415.0320000000001,
+      "FF_center_to_macro_bbox_min_um": 415.70700000000005
+    },
+    {
+      "distance_um": 551.589,
+      "launch": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][209]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          282.258,
+          413.1,
+          283.338,
+          413.37
+        ],
+        "xy": [
+          282.798,
+          413.235
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          131.472,
+          12.972,
+          226.296,
+          54.036
+        ],
+        "xy": [
+          178.88400000000001,
+          33.504
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.wdat_r[0][209]$_DFF_P_",
+          "guide": "leaf2",
+          "box": [
+            212.3,
+            374.0,
+            282.3,
+            422.0
+          ],
+          "final_center_inside": false,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[2].u_c.g_p.u_p.g_m4.dt[0].mem.g[1].mem",
+          "guide_to_other_bbox_min_um": 319.964,
+          "guide_to_other_bbox_max_um": 559.856,
+          "guide_min_possible_canonical_macro_reach_um": 441.856
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 415.026,
+      "FF_center_to_macro_bbox_min_um": 415.701
+    },
+    {
+      "distance_um": 549.795,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][247]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          173.61,
+          403.65,
+          174.69,
+          403.92
+        ],
+        "xy": [
+          174.15,
+          403.78499999999997
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][247]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 413.23199999999997,
+      "FF_center_to_macro_bbox_min_um": 413.907
+    },
+    {
+      "distance_um": 547.797,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][213]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          177.012,
+          398.25,
+          178.092,
+          398.52
+        ],
+        "xy": [
+          177.55200000000002,
+          398.385
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][213]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 411.234,
+      "FF_center_to_macro_bbox_min_um": 411.909
+    },
+    {
+      "distance_um": 547.437,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][0]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          321.462,
+          379.35,
+          322.542,
+          379.62
+        ],
+        "xy": [
+          322.00199999999995,
+          379.485
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][0]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 410.8740000000001,
+      "FF_center_to_macro_bbox_min_um": 411.5490000000001
+    },
+    {
+      "distance_um": 546.501,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][222]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          174.906,
+          399.06,
+          175.986,
+          399.33
+        ],
+        "xy": [
+          175.446,
+          399.195
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][222]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 409.938,
+      "FF_center_to_macro_bbox_min_um": 410.613
+    },
+    {
+      "distance_um": 545.853,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][249]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          163.728,
+          409.59,
+          164.808,
+          409.86
+        ],
+        "xy": [
+          164.268,
+          409.725
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][249]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 409.28999999999996,
+      "FF_center_to_macro_bbox_min_um": 409.96500000000003
+    },
+    {
+      "distance_um": 545.853,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][210]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          172.638,
+          400.68,
+          173.718,
+          400.95
+        ],
+        "xy": [
+          173.178,
+          400.815
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][210]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 409.29,
+      "FF_center_to_macro_bbox_min_um": 409.965
+    },
+    {
+      "distance_um": 545.493,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][205]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          326.646,
+          376.11,
+          327.726,
+          376.38
+        ],
+        "xy": [
+          327.18600000000004,
+          376.245
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][205]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 408.93000000000006,
+      "FF_center_to_macro_bbox_min_um": 409.605
+    },
+    {
+      "distance_um": 545.439,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][183]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          319.41,
+          383.4,
+          320.49,
+          383.67
+        ],
+        "xy": [
+          319.95000000000005,
+          383.53499999999997
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][183]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 408.87600000000003,
+      "FF_center_to_macro_bbox_min_um": 409.55100000000004
+    },
+    {
+      "distance_um": 544.791,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][153]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          323.838,
+          379.62,
+          324.918,
+          379.89
+        ],
+        "xy": [
+          324.37800000000004,
+          379.755
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][153]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+          "guide_to_other_bbox_min_um": 313.33600000000007,
+          "guide_to_other_bbox_max_um": 567.2239999999999,
+          "guide_min_possible_canonical_macro_reach_um": 449.224
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 408.22800000000007,
+      "FF_center_to_macro_bbox_min_um": 408.903
+    },
+    {
+      "distance_um": 544.341,
+      "launch": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          15.168,
+          12.972,
+          109.992,
+          54.036
+        ],
+        "xy": [
+          62.58,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][199]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          166.536,
+          405.27,
+          167.616,
+          405.54
+        ],
+        "xy": [
+          167.07600000000002,
+          405.405
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[2][199]$_DFF_P_",
+          "guide": "leaf1",
+          "box": [
+            116.9,
+            374.0,
+            186.9,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[1].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+          "guide_to_other_bbox_min_um": 326.872,
+          "guide_to_other_bbox_max_um": 580.76,
+          "guide_min_possible_canonical_macro_reach_um": 462.76
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 407.77799999999996,
+      "FF_center_to_macro_bbox_min_um": 408.453
+    },
+    {
+      "distance_um": 544.023,
+      "launch": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          12.972,
+          458.904,
+          54.036
+        ],
+        "xy": [
+          411.49199999999996,
+          33.504
+        ]
+      },
+      "capture": {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][160]$_DFF_P_",
+        "kind": "S",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "bbox": [
+          317.574,
+          416.07,
+          318.654,
+          416.34
+        ],
+        "xy": [
+          318.11400000000003,
+          416.205
+        ]
+      },
+      "guide_memberships": [
+        {
+          "reg": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.og_q[5][160]$_DFF_P_",
+          "guide": "leaf3",
+          "box": [
+            307.7,
+            374.0,
+            377.7,
+            422.0
+          ],
+          "final_center_inside": true,
+          "connected_other_kind": "M",
+          "connected_other_name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+          "guide_to_other_bbox_min_um": 319.964,
+          "guide_to_other_bbox_max_um": 560.232,
+          "guide_min_possible_canonical_macro_reach_um": 442.23199999999997
+        }
+      ],
+      "endpoint_bbox_min_distance_um": 407.46,
+      "FF_center_to_macro_bbox_min_um": 408.13499999999993
+    }
+  ],
+  "notes": [
+    "Distances are canonical typed-memory bbox-bound reach, not routed/SPEF delay.",
+    "No native regions persist in savedDPL DB: source explicitly releases temporary GPL guides before detailed placement.",
+    "Outside means final position outside intended GPL box, not a claim which resize/DPL operation moved it.",
+    "Active macro_reg_guide.tcl is authoritative; companion JSON still has pre-trunk u_c.u_p prefixes."
+  ],
+  "input_hashes": {
+    "macro_reg_guide.tcl": "308367131e5ce6753dea985f953f339ac9d3f705c4980e70f37a48a125b06780",
+    "macro_reg_guide_release.tcl": "956eec74bf3bbe47e2f01fd2174918ecbaddc1daaccd008367d1209d6595b045",
+    "geom.tsv": "102d9e8ccea6516e6db794c397343cdb91a02a6b9f81582aab93e94fd5c2056e"
+  }
+}

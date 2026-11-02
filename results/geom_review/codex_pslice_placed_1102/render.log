@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-pslice-placed-look-0910/input/render_core_placed.py", line 73, in <module>
+    main(*sys.argv[1:5])
+    ~~~~^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-pslice-placed-look-0910/input/render_core_placed.py", line 44, in main
+    st = dict(type=fz["type"], kit_hash=fz["kit_hash"], outline_um=[W, H], cells=len(std), ffs=sum(r["kind"] == "ff" for r in std),
+                   ~~^^^^^^^^
+KeyError: 'type'
