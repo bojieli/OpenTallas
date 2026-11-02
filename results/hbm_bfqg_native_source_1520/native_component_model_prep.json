@@ -27,7 +27,8 @@
   "operation": "Selected bank captures are bitwise OR-combined; no new one-hot assumption",
   "runtime_arbitration": false,
   "production_backpressure": false,
-  "qualification": "Source interface budget; sustained production schedule/throughput remains separate"
+  "qualification": "Source interface budget; sustained production schedule/throughput remains separate",
+  "write_expansion": "Each bank receives one128-bit cdq slice duplicated into both128-bit halves of its256-bit SRAM write word; high/low masks are independently captured. Eight banks consume1024 independent input bits in total; do not advertise256B of independent new write payload per edge."
  },
  "storage": {
   "macros": 8,
@@ -37,7 +38,8 @@
    94.824,
    41.064
   ],
-  "macro_area_um2": 31150.821888
+  "macro_area_um2": 31150.821888,
+  "capacity_note": "32KiB is physical SRAM storage. Duplication describes each write payload; independent high/low mask history can leave different data in the halves. No new logical-capacity or workload assumption is imposed."
  },
  "outline_um": [
   302.4,
