@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """Prepare disabled QUERY head5 carriers and private parent captures for regional HCOL565."""
 from pathlib import Path
-import hashlib,json,re
+import argparse,hashlib,json,re
 ROOT=Path(__file__).resolve().parents[2]
 BASE=ROOT/'results/hbm_query_native_event_0135'
-OUT=BASE/'coherent_event'
-OUT.mkdir(exist_ok=True)
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--inputs',type=Path,default=BASE/'full_proposed',help='14 already-head5 wrapper bodies; unrelated composed edits are preserved')
+parser.add_argument('--selected',type=Path,default=BASE/'selected',help='matching pre-QUERY bodies for source-port identity; use the same composition input before QUERY projection')
+parser.add_argument('--out',type=Path,default=BASE/'coherent_event')
+args=parser.parse_args()
+OUT=args.out
+OUT.mkdir(parents=True,exist_ok=True)
 sha=lambda s:hashlib.sha256(s.encode()).hexdigest()
 def ports(s):
     header=s[:s.index(');')]
@@ -15,8 +20,9 @@ def ports(s):
     assert out
     return out
 abi=[];parent=[]
-for f in sorted((BASE/'full_proposed').glob('*.sv')):
-    old=(BASE/'selected'/f.name).read_text();s=f.read_text();oldp,newp=ports(old),ports(s)
+for reference in sorted((BASE/'full_proposed').glob('*.sv')):
+    f=args.inputs/reference.name
+    old=(args.selected/f.name).read_text();s=f.read_text();oldp,newp=ports(old),ports(s)
     assert oldp.keys()==newp.keys()
     changes=[]
     for n,q in newp.items():
@@ -73,4 +79,5 @@ for h in [0,1]:
     scope='QUERY-touched two b102 definitions only; not all current128HCOL instances/globaldelta',
     other_inputs='hid4/cs/cf/reset own-face/constant/locality joins remain separate, not assumed qualified',
     holds=['Fullparent sourceEQ and actualnative565masters EQ/faceguard NOTRUN','Actual parent D reach/ownFF placement/clockload and2323/2290pin capacity require model+LOOK','XO physical source-to-consumer join missing from prospective cohort','No default/current clockbudget/parentactivation']),indent=1)+'\n')
+(OUT/'composition_inputs.json').write_text(json.dumps(dict(inputs=str(args.inputs),selected=str(args.selected),mode='EXPLICIT_SOURCE_BODY_COMPOSITION_PREP' if args.inputs != BASE/'full_proposed' or args.selected != BASE/'selected' else 'FROZEN_QUERY_SOURCE_PREP',source_proof_transfer=False,scope='only the14 QUERY wrappers are overlaid; caller retains all other native47/programme source files'),indent=1)+'\n')
 print('ABI modules',len(abi),'privateparentcalls',len(parent),'newdeclaredparentFF',sum(x['added_declared_private_parent_FF']for x in parent))
