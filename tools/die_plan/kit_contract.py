@@ -422,6 +422,22 @@ def clock_pin_geometry(kd):
                 xy = [_num(t.strip("{}")) for t in toks[2:]]
                 xy = [v for v in xy if v is not None][:2]
                 judge(f"{f.name}->{toks[0]}", n, lay, *(xy + [None, None])[:2], w, h)
+    # Native multiPORT entries use OpenDB boxes rather than place_pin. Reuse
+    # the emitted-metal check; pins.json alone must never establish placement.
+    pj = kd / "pins.json"
+    if pj.is_file() and (kd / "io.tcl").is_file():
+        rows = _kit_pins(json.loads(pj.read_text()))
+        native = {p["name"]: p for p in rows if "native_rects" in p}
+        for p in placed_pins(kd):
+            name = p["name"]
+            if name not in native or _base(name) in seen or not _is_clock(name, ports):
+                continue
+            boxes = [b for b in native[name]["native_rects"] if len(b) == 5 and b[0] == p["layer"]
+                     and abs((b[1] + b[3]) / 2 - p["x"]) < 1e-4
+                     and abs((b[2] + b[4]) / 2 - p["y"]) < 1e-4]
+            box = max(boxes, key=lambda b: (b[3] - b[1]) * (b[4] - b[2]))
+            judge("io.tcl native multiPORT", name, p["layer"], p["x"], p["y"],
+                  box[3] - box[1], box[4] - box[2])
     placed = {n for n in seen}
     # pins.json does not place pins; a clock entry it declares differently from the placing files is reported
     # (die pin match reads the pin file) but is not a placement FAIL here.
