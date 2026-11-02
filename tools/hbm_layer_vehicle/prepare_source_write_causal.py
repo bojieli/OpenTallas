@@ -31,6 +31,11 @@ if ./causal_obj/Vtb_source_write_causal_1101 +CASE=cases/{label} +SECTORS={s['se
  echo 'STALE MUTANT ESCAPED';exit 2
 fi
 grep 'CAUSAL_READBACK' causal_stale_mutant.log
+verilator --binary --timing -j 2 -CFLAGS "-O1 -fno-var-tracking" --output-split 10000 -Wno-fatal --top-module tb_source_write_causal_1101 -GSTK={stack} -GPHY_QUAD={quad} -GWB_MUT=1 -Mdir causal_early_ack_obj -f causal_files.f > causal_early_ack_build.log 2>&1
+if ./causal_early_ack_obj/Vtb_source_write_causal_1101 +CASE=cases/{label} +SECTORS={s['sectors']} +ROW={window['row']} +COL={window['col']} +HBM_IMG_DIR="$PWD/images" > causal_early_ack_mutant.log 2>&1;then
+ echo 'EARLY ACK MUTANT ESCAPED';exit 2
+fi
+grep 'CAUSAL_EARLY_ACK' causal_early_ack_mutant.log
 '''
     (prepared/'run_causal.sh').write_text(script);(prepared/'run_causal.sh').chmod(0o755)
     (prepared/'causal_scope.json').write_text(json.dumps(dict(status='PREP_ONLY',case=s,
