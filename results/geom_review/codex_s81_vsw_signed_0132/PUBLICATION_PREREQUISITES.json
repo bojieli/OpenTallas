@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.vsw_publication_prerequisites.v1",
+  "status": "SIGNED_AND_ROUTED_EQ_READY_FOR_ROOT_PUBLICATION_REVIEW",
+  "kit": "/srv/opentallas-scratch2/claude/codex-s81-vsw-2302/eco/i1",
+  "hosts": [
+    "ot-epyc9",
+    "ot-gold1"
+  ],
+  "original_build_commit": "2dd7de17846fb48356ea963092dbe53ceb15e789",
+  "original_build_basis": "original freeze.json repo_rev +lane2026-11-01 07:50 sourceGEN cohort2dd7de17846",
+  "current_source_commit": "051340895d95ea77b712fcc1fe80a5de9f6449be",
+  "clock": {
+    "actual_layer": "M5",
+    "actual_face": "C",
+    "xy_um": [
+      107.484,
+      117.18
+    ],
+    "contract": "interior hard-core entry; parentlatency appliesatparenttap",
+    "tt_ps": 250,
+    "ff_ps": 202.5,
+    "period_ps": 833,
+    "setup_unc_ps": 0,
+    "hold_unc_ps": 25
+  },
+  "reset": {
+    "used_edges": 64,
+    "assert_edges": 66,
+    "debug_overrides": {}
+  },
+  "proof": {
+    "producer_unit": "oth-ubuntu-4015058-1793609674",
+    "out": "lec_current051",
+    "verdict": "EQUIVALENT",
+    "proved": 15804,
+    "differs": 0,
+    "undecided": 0,
+    "actual_netlist": "/work/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/6_final.v"
+  },
+  "routed_files_sha256": {
+    "6_final.odb": "1b153a66d6971fdb5acb6d36cf6bdc2a1a0fe7a141160c20f3763a3f51b6ce75",
+    "6_final.v": "484e7b0ee014791aa810fffd8d1b0f1589217b4189cfc8d5e3cc1458b011b5d3",
+    "6_final.spef": "af5186818b9274557d053ddd928058a9c0c07fe0754c3fc601dd904b52e0869e",
+    "6_final.sdc": "90688d951e03f7a121073c8f8c6310909bfa7ed64ceee1befb1878039ebf7cf8"
+  },
+  "prior_failed_receipt": "originaleco exit1 containmentrefusal; inheritedlec/lec.json synth15804EQ NOT routedproof; preserved",
+  "publication_or_count_by_leaf": false
+}
