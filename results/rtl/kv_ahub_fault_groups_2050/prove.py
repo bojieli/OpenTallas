@@ -1,8 +1,13 @@
 from pathlib import Path
-import importlib.util, hashlib, json, subprocess, sys
-root=Path(__file__).resolve().parent
-spec=importlib.util.spec_from_file_location('fg',root/'ahub_fault_groups.py');fg=importlib.util.module_from_spec(spec);spec.loader.exec_module(fg)
-src=(root/'actual_nf2.sv').read_text(); out=fg.factor_fault_capture(src,'qkd_ahub_static_core_la_ck7');(root/'candidate.sv').write_text(out)
+import argparse, importlib.util, hashlib, json, subprocess, sys
+parser=argparse.ArgumentParser(description='Reproduce the same-edge fault coupon on an explicit actual AHUB source')
+parser.add_argument('--source',type=Path,required=True)
+parser.add_argument('--out',type=Path,required=True)
+parser.add_argument('--helper',type=Path,default=Path(__file__).resolve().parents[3]/'physical/die_plan/qwen_kvsys/cores/harden/ahub_fault_groups.py')
+a=parser.parse_args()
+root=a.out.resolve(); root.mkdir(parents=True,exist_ok=False)
+spec=importlib.util.spec_from_file_location('fg',a.helper);fg=importlib.util.module_from_spec(spec);spec.loader.exec_module(fg)
+src=a.source.read_text(); out=fg.factor_fault_capture(src,'qkd_ahub_static_core_la_ck7');(root/'candidate.sv').write_text(out)
 old=fg.OLD_CAPTURE.replace('gqv[2]','gq')
 new=fg.NEW_CAPTURE.replace('gqv[2]','cq[0]').replace('gqv[5+4*fg_a+fg_s]','cq[1+4*fg_a+fg_s]')
 base='''module m(input clk,rst_n,m_issue, input [15:0] lm_seen, input [3:0] issue,done_seen,input [255:0] zflat,input [63:0] zmask,input start_q,sq,act_q,other_fault, output eq);
