@@ -64,6 +64,8 @@ def reset_image_miter(F, d, reset, cycles, slots, correlations, *, onto=False):
             raise ValueError('projection must name native latch variables')
     if any(key not in slots for _, _, key in correlations):
         raise ValueError('unknown projection correlation')
+    if not slots or not correlations:
+        raise ValueError('nonempty independent slots and load correlations required')
     prefixes = reset_prefixes(d, reset)
     known = [next(prefixes) for _ in range(cycles+1)]
     # A slot known after native reset cannot be an independent onto coordinate.
@@ -147,6 +149,10 @@ def validate_native_bijection(L, fields, prior):
     Only equality/constant correspondence can touch projected fields; an
     unsupported predicate in that cone refuses rather than guessing a model.
     """
+    if not fields or any(f.get('kind') not in {'slot', 'load'} for f in fields):
+        raise ValueError('nonempty typed slot/load domain required')
+    if {f['kind'] for f in fields} != {'slot', 'load'}:
+        raise ValueError('both independent slots and correlated loads required')
     maps = {'gold': L.gp, 'gate': L.tp}
     zero = ('constant', 0)
     uf = _Parity()
@@ -173,7 +179,10 @@ def validate_native_bijection(L, fields, prior):
 
     def pair(side, key):
         lit = native(side, key)
-        return (side, lit >> 1), lit & 1
+        d = L.gold if side == 'gold' else L.gate
+        if type(lit) is not int or not 0 <= (lit >> 1) <= d['I'] + d['L']:
+            raise ValueError('combinational native correspondence requires semantic proof')
+        return (zero if lit <= 1 else (side, lit >> 1)), lit & 1
 
     # Same-name matched inputs are shared by the ORIGINAL native miter, even
     # when not listed in hyp.json. Preserve that full correspondence as well.
@@ -181,6 +190,7 @@ def validate_native_bijection(L, fields, prior):
         a, ia = pair('gold', key)
         b, ib = pair('gate', key)
         uf.join(a, b, ia ^ ib)
+    predicates = []
     for (side, key), h in prior.items():
         sides = ['gold', 'gate'] if side == 'both' else [side]
         for sd in sides:
@@ -191,14 +201,21 @@ def validate_native_bijection(L, fields, prior):
                 b, ib = pair(h[1], h[2])
                 uf.join(a, b, ia ^ ib ^ h[3])
             else:
-                touched = a in projection
+                references = [a]
                 if h[0] == 'cube':
-                    touched |= any(pair(h[1], k)[0] in projection for k in h[2])
-                if touched:
-                    raise ValueError('unsupported retained predicate touches projected state')
+                    references += [pair(h[1], k)[0] for k in h[2]]
+                elif h[0] == 'loaded':
+                    references += [pair('gold', k)[0] for cube in h[2] for k, _ in cube]
+                else:
+                    raise ValueError('unsupported retained predicate kind')
+                predicates.append(references)
     for r in resolved:
         uf.join(('gold', r['gold'] >> 1), ('gate', r['gate'] >> 1),
                 (r['gold'] & 1) ^ (r['gate'] & 1) ^ r['xor'])
+    projection_roots = {uf.find(v)[0] for v in projection}
+    for references in predicates:
+        if any(uf.find(v)[0] in projection_roots for v in references):
+            raise ValueError('unsupported retained predicate touches projected state closure')
     free_roots = set()
     constant_root = uf.find(zero)[0]
     for r in resolved:

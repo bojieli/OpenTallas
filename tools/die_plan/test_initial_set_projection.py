@@ -93,6 +93,43 @@ def test_existing_same_name_correspondence_cannot_be_silently_replaced():
     f[0]['gate']='l';f[1]['gate']='s'
     # Existing shared-state identity plus a swapped mapping collapses the two
     # slots if both are claimed independent. The caller cannot erase it.
-    f[1]['kind']='slot'
+    f.append({'gold':'extra','gate':'extra','kind':'slot','proposed_xor':0})
+    L.gold=dict(I=1,L=3,A=0,ands=[],latches=[4,6,8]);L.gate=dict(L.gold);L.gp['extra']=8;L.tp['extra']=8
+    L.matched.append('extra')
+    f[1]['kind']='slot';f[2]['kind']='load'
     with pytest.raises(ValueError,match='collapses'):
         P.validate_native_bijection(L,f,{})
+
+
+def test_native_constant_alias_is_global_zero_not_free_state():
+    L=fixture();L.gp['zero']=0;L.gp['one']=1
+    for constant in ['zero','one']:
+        with pytest.raises(ValueError,match='collapses'):
+            P.validate_native_bijection(L,fields(),{('gold','s'):('eq','gold',constant,0)})
+
+
+def test_predicate_rejection_follows_complete_equality_closure():
+    L=fixture();L.gold=dict(I=1,L=3,A=0,ands=[],latches=[4,6,8]);L.gate=dict(L.gold)
+    L.gp['alias']=8;L.tp['shadow']=8
+    # Distinct named alias is tied to the independent slot by a retained eq.
+    # Its cube cannot be silently dropped by direct-key-only membership.
+    prior={('gold','alias'):('eq','gold','s',0),
+           ('gate','shadow'):('cube','gold',['alias'],[1])}
+    with pytest.raises(ValueError,match='closure'):
+        P.validate_native_bijection(L,fields(),prior)
+
+
+def test_empty_or_unknown_typed_domains_refuse():
+    with pytest.raises(ValueError,match='nonempty'):
+        P.validate_native_bijection(fixture(),[],{})
+    f=fields();f[0]['kind']='arbitrary'
+    with pytest.raises(ValueError,match='typed'):
+        P.validate_native_bijection(fixture(),f,{})
+    with pytest.raises(ValueError,match='nonempty'):
+        P.reset_image_miter(F,design(),{1:0},2,{},[])
+
+
+def test_combinational_native_alias_is_not_an_independent_parity_atom():
+    L=fixture();L.gp['comb']=8
+    with pytest.raises(ValueError,match='combinational'):
+        P.validate_native_bijection(L,fields(),{('gold','comb'):('eq','gold','s',0)})
