@@ -364,7 +364,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
          landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None,
-         pad_clock_cdc=None):
+         pad_clock_cdc=None, root_reset_hier=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -388,6 +388,14 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     12.24b/c nominal 0 / 25, legacy 60 / 25 with OT_MARGIN_POLICY=legacy).
     -> [errors]"""
     err = []
+    root_exception = ROOT_RESET_FALSE_PATH
+    if root_reset_hier is not None:
+        if not root_async_reset or not re.fullmatch(r"(?:[A-Za-z_]\w*\.)*u_rst_root", root_reset_hier):
+            err.append("reset: explicit native root path requires a positive exact root hierarchy")
+        else:
+            prefix = "[./]".join(re.escape(x) for x in root_reset_hier.split("."))
+            root_exception = (r"set_false_path -from [get_ports {arst_n}] -to "
+                              r"[get_pins -hierarchical -regexp {^" + prefix + r"[./]p\[[01]\]\$_DFF_PN0_/RESETN$}]")
     pol_s, pol_h = policy_uncertainty()
     unc_setup_ps = pol_s if unc_setup_ps is None else unc_setup_ps
     unc_hold_ps = pol_h if unc_hold_ps is None else unc_hold_ps
@@ -501,7 +509,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                     cdc_ex[(kind, a_, b_)] = v
                     continue
             if c == "set_false_path" and root_async_reset:
-                if w == _words(ROOT_RESET_FALSE_PATH):
+                if w == _words(root_exception):
                     root_fp += 1
                     continue
             if c == "set_false_path" and pad_l and "-to" in w:
@@ -913,6 +921,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
 
 def kit_context(P, tn):
     """the lint inputs for partition type tn of plan P (port names exactly as gen_rtl declares them)."""
+    import reset_tree as RT
     import gen_phys
     import gen_rtl
     t = P.types[tn]
@@ -981,6 +990,8 @@ def kit_context(P, tn):
                 **({"tap_window_ps": gen_phys.tap_window_ps(P, tn)} if gen_phys.tap_window_ps(P, tn) else {}),
                 **({"ring_clock_ports": sorted(gen_phys.ring_writer_clocks(P, tn))} if gen_phys.ring_writer_clocks(P, tn) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),
+                **({"root_reset_hier": RT.bound_native_contract(P, tn)["entry_path"]}
+                   if RT.bound_native_contract(P, tn) and gen_phys.root_async_reset(P, tn) else {}),
                 **({"straps": ids} if ids else {}), **_landing_ctx(P, tn), **_edge_latency_ctx(P, tn))
 
 
