@@ -1,0 +1,301 @@
+{
+  "scope": "Conditional source-only native area/load pricing, no master selection, timing or legal placement claim; forwarded phase HOLD",
+  "new_ORs": [
+    {
+      "master": "OR3x2_ASAP7_75t_R",
+      "area_um2": 0.10205999999999699
+    },
+    {
+      "master": "OR3x4_ASAP7_75t_R",
+      "area_um2": 0.13121999999998846
+    },
+    {
+      "master": "OR3x4_ASAP7_75t_R",
+      "area_um2": 0.13121999999998846
+    },
+    {
+      "master": "OR3x4_ASAP7_75t_R",
+      "area_um2": 0.13121999999998846
+    },
+    {
+      "master": "OR3x4_ASAP7_75t_R",
+      "area_um2": 0.13121999999998846
+    }
+  ],
+  "new_OR_area_um2": 0.6269399999999508,
+  "existing_native_BUF_master_choices": {
+    "BUFx2_ASAP7_75t_R": {
+      "width_um": 0.27000000000001023,
+      "height_um": 0.2699999999999818,
+      "area_um2": 0.07289999999999786
+    },
+    "BUFx8_ASAP7_75t_R": {
+      "width_um": 0.6479999999999109,
+      "height_um": 0.2699999999999818,
+      "area_um2": 0.17495999999996414
+    },
+    "BUFx16f_ASAP7_75t_R": {
+      "width_um": 1.1879999999998745,
+      "height_um": 0.2699999999999818,
+      "area_um2": 0.3207599999999445
+    },
+    "BUFx24_ASAP7_75t_R": {
+      "width_um": 1.6200000000000045,
+      "height_um": 0.2699999999999818,
+      "area_um2": 0.43739999999997176
+    },
+    "BUFx10_ASAP7_75t_R": {
+      "width_um": 0.7559999999999718,
+      "height_um": 0.2699999999999818,
+      "area_um2": 0.20411999999997862
+    },
+    "BUFx12f_ASAP7_75t_R": {
+      "width_um": 0.97199999999998,
+      "height_um": 0.27000000000001023,
+      "area_um2": 0.26244000000000456
+    },
+    "BUFx6f_ASAP7_75t_R": {
+      "width_um": 0.5400000000000205,
+      "height_um": 0.2699999999999818,
+      "area_um2": 0.1457999999999957
+    },
+    "BUFx12_ASAP7_75t_R": {
+      "width_um": 0.8639999999999759,
+      "height_um": 0.2699999999999818,
+      "area_um2": 0.23327999999997778
+    },
+    "BUFx4f_ASAP7_75t_R": {
+      "width_um": 0.43199999999998795,
+      "height_um": 0.2700000000000955,
+      "area_um2": 0.116640000000038
+    },
+    "BUFx4_ASAP7_75t_R": {
+      "width_um": 0.3780000000000001,
+      "height_um": 0.2699999999999818,
+      "area_um2": 0.10205999999999316
+    }
+  },
+  "new_cells": 157,
+  "new_area_range_um2": [
+    11.707739999999625,
+    67.11173999999565
+  ],
+  "band": [
+    18,
+    566.46,
+    232,
+    580.5
+  ],
+  "band_area_um2": 3004.559999999992,
+  "known_functional_bodies_intersecting": 233,
+  "known_functional_union_area_um2": 30.399300000000018,
+  "known_functional_occupancy_percent": 1.0117721063982779,
+  "known_plus_new_density_percent_range": [
+    1.4014378145219184,
+    3.2454349388927466
+  ],
+  "nominal_rowheights": 52,
+  "actual_rows_and_TAP_absent": true,
+  "upstream_added_input_pins": 15,
+  "upstream_capacitance": {
+    "TT": {
+      "library_sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+      "rows": [
+        {
+          "original_root": "clone5713",
+          "master": "OR3x2_ASAP7_75t_R",
+          "pins": [
+            {
+              "pin": "A",
+              "capacitance_ff": 0.59146
+            },
+            {
+              "pin": "B",
+              "capacitance_ff": 0.551112
+            },
+            {
+              "pin": "C",
+              "capacitance_ff": 0.58047
+            }
+          ]
+        },
+        {
+          "original_root": "u_cland_u1_i/_09254_",
+          "master": "OR3x4_ASAP7_75t_R",
+          "pins": [
+            {
+              "pin": "A",
+              "capacitance_ff": 0.591085
+            },
+            {
+              "pin": "B",
+              "capacitance_ff": 0.550852
+            },
+            {
+              "pin": "C",
+              "capacitance_ff": 0.579274
+            }
+          ]
+        },
+        {
+          "original_root": "u_cland_u1_i/_09281_",
+          "master": "OR3x4_ASAP7_75t_R",
+          "pins": [
+            {
+              "pin": "A",
+              "capacitance_ff": 0.591085
+            },
+            {
+              "pin": "B",
+              "capacitance_ff": 0.550852
+            },
+            {
+              "pin": "C",
+              "capacitance_ff": 0.579274
+            }
+          ]
+        },
+        {
+          "original_root": "u_cland_u1_i/_09276_",
+          "master": "OR3x4_ASAP7_75t_R",
+          "pins": [
+            {
+              "pin": "A",
+              "capacitance_ff": 0.591085
+            },
+            {
+              "pin": "B",
+              "capacitance_ff": 0.550852
+            },
+            {
+              "pin": "C",
+              "capacitance_ff": 0.579274
+            }
+          ]
+        },
+        {
+          "original_root": "u_cland_u1_i/_09237_",
+          "master": "OR3x4_ASAP7_75t_R",
+          "pins": [
+            {
+              "pin": "A",
+              "capacitance_ff": 0.591085
+            },
+            {
+              "pin": "B",
+              "capacitance_ff": 0.550852
+            },
+            {
+              "pin": "C",
+              "capacitance_ff": 0.579274
+            }
+          ]
+        }
+      ],
+      "total_new_input_capacitance_ff": 8.607885999999999
+    },
+    "FF": {
+      "library_sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38",
+      "rows": [
+        {
+          "original_root": "clone5713",
+          "master": "OR3x2_ASAP7_75t_R",
+          "pins": [
+            {
+              "pin": "A",
+              "capacitance_ff": 0.654571
+            },
+            {
+              "pin": "B",
+              "capacitance_ff": 0.613134
+            },
+            {
+              "pin": "C",
+              "capacitance_ff": 0.643408
+            }
+          ]
+        },
+        {
+          "original_root": "u_cland_u1_i/_09254_",
+          "master": "OR3x4_ASAP7_75t_R",
+          "pins": [
+            {
+              "pin": "A",
+              "capacitance_ff": 0.654447
+            },
+            {
+              "pin": "B",
+              "capacitance_ff": 0.61331
+            },
+            {
+              "pin": "C",
+              "capacitance_ff": 0.642274
+            }
+          ]
+        },
+        {
+          "original_root": "u_cland_u1_i/_09281_",
+          "master": "OR3x4_ASAP7_75t_R",
+          "pins": [
+            {
+              "pin": "A",
+              "capacitance_ff": 0.654447
+            },
+            {
+              "pin": "B",
+              "capacitance_ff": 0.61331
+            },
+            {
+              "pin": "C",
+              "capacitance_ff": 0.642274
+            }
+          ]
+        },
+        {
+          "original_root": "u_cland_u1_i/_09276_",
+          "master": "OR3x4_ASAP7_75t_R",
+          "pins": [
+            {
+              "pin": "A",
+              "capacitance_ff": 0.654447
+            },
+            {
+              "pin": "B",
+              "capacitance_ff": 0.61331
+            },
+            {
+              "pin": "C",
+              "capacitance_ff": 0.642274
+            }
+          ]
+        },
+        {
+          "original_root": "u_cland_u1_i/_09237_",
+          "master": "OR3x4_ASAP7_75t_R",
+          "pins": [
+            {
+              "pin": "A",
+              "capacitance_ff": 0.654447
+            },
+            {
+              "pin": "B",
+              "capacitance_ff": 0.61331
+            },
+            {
+              "pin": "C",
+              "capacitance_ff": 0.642274
+            }
+          ]
+        }
+      ],
+      "total_new_input_capacitance_ff": 9.551237
+    }
+  },
+  "holds": [
+    "157 centers schematic, not row/TAP/PG-qualified",
+    "actual BUF strengths unselected; range spans only existing native noninverting BUF masters",
+    "functional bbox occupancy excludes TAP/fill/padding and is a lower bound",
+    "upstream15 loads affect counter/control analog delay; no timing benefit claimed",
+    "source/frame/proof/PG/clock/public interfaces remain held"
+  ]
+}
