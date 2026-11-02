@@ -78,9 +78,9 @@ module tb_source_write_causal_1101 #(parameter integer STK=3, PHY_QUAD=0, WB_MUT
  write_base=physical_write_count;completion_base=physical_completion_count;write_launch=1;tick();write_launch=0;
  while(done_seen==0)tick();repeat(16)tick();
  if(!store_quiet||store_busy)$fatal(1,"CAUSAL_STORE_NOT_QUIET");
- if(!mut_stale)begin release_v=1;tick();release_v=0;repeat(24)tick();epoch=8;cache_fill();end
+ if(mut_stale==0)begin release_v=1;tick();release_v=0;repeat(24)tick();epoch=8;cache_fill();end
  copy_to_vm();read_vm(261632,1);
- if(mut_stale)$fatal(1,"CAUSAL_STALE_MUTANT_ESCAPED");
+ if(mut_stale!=0)$fatal(1,"CAUSAL_STALE_MUTANT_ESCAPED");
  $display("CAUSAL_WRITE_REFILL PASS stack%0d q%0d words%0d sectors%0d writes%0d completed%0d reads%0d nativeACK%0d cycle%0d",STK,PHY_QUAD,words,sectors,physical_write_count-write_base,physical_completion_count-completion_base,physical_read_count,native_done,cyc);$finish;
  end
 endmodule

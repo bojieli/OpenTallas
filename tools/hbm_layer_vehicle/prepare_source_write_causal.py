@@ -11,7 +11,7 @@ from pathlib import Path
 def prepare(prepared,case):
     plan=json.loads((prepared/'vehicle_plan.json').read_text())
     selected=next(x for x in plan['cases'] if x['label']==case)
-    if selected['VM_SID'] != selected['STK']:
+    if selected['VM_SID'] != selected['STK'] or selected['VM_SID'] != 3:
         raise ValueError('DBK source SID is its STK strap; prepared scratch SID is incompatible. No alias allowed.')
     dest=prepared/'sources'/'tb_source_write_causal_1101.sv'
     if dest.exists():raise ValueError('Fresh prepared output required; preserve earlier run')
