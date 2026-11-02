@@ -29,7 +29,15 @@ def names_digest(names):
 
 def resume(L, work, conflicts, log, *args, **kwargs):
     work = Path(work)
-    lec.normalize_gold_elements(L, lec.slang_elements(work / 'gold.aliases.json'), log)
+    elements = lec.slang_elements(work / 'gold.aliases.json')
+    watched = []
+    for unit in range(3):
+        base = f'ff:u_dut.u_bound.u_core.u_dec.u_syn.g_bm[{unit}].u_bm'
+        watched += [base + '.th[5][50]', base + '.th[5][51]']
+        watched += [base + f'.d[2][{bit}]' for bit in range(130, 148)]
+    EVENTS['native_source_element_metadata'] = {key: elements.get(key) for key in watched}
+    save()
+    lec.normalize_gold_elements(L, elements, log)
     lec.json_alias_keys(L, log, work=work)
     lec.slang_element_keys(L, log, work=work)
     lec.alias_arrays(L, log, work=work)
@@ -53,6 +61,7 @@ def resume(L, work, conflicts, log, *args, **kwargs):
     save()
     if len(m.onames) != 59356 or len(baseline) != 59356:
         raise lec.LecError('original 59356 canonical points not reproduced')
+    (ROOT / 'baseline_point_names.json').write_text(json.dumps(sorted(baseline)) + '\n')
     del m
 
     hints = PACKET['all_hints']
@@ -130,6 +139,14 @@ def resume(L, work, conflicts, log, *args, **kwargs):
     save()
     if EVENTS['missing_baseline_points']:
         raise lec.LecError('original canonical comparison points were lost')
+    # Preserve the actual surviving profile for a later canonical continuation.
+    # These files confer no trust: the continuation must repeat native reset
+    # base checks and joint induction before using them, including cons base.
+    (ROOT / 'surviving_hyp.json').write_text(json.dumps([
+        [side, key, list(hint)] for (side, key), hint in sorted(L.hyp.items())]) + '\n')
+    (ROOT / 'surviving_cons.json').write_text(json.dumps([
+        ['cons', side, list(keys), list(allowed)]
+        for side, keys, allowed in L.cons]) + '\n')
     del m
     if os.environ.get('HEAD_FULL_COMPARE') != '1':
         EVENTS['verdict'] = 'NATIVE_GUARD_DIAGNOSTIC_COMPLETE_ONLY'
