@@ -8,12 +8,12 @@ mkdir -p run/results/asap7/kq_qfd_qc_su_lane_w_l1_w0e61bf/base run/reports/asap7
 set +e
 docker run --rm --cpus 4 --memory 32g --memory-swap 32g \
  -v /srv/opentallas-scratch2/claude/codex-qc-l1-lvt-route2-0015:/work:ro \
- -v "$PWD":/work/retained_repair -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock bash -lc '
+ -v "$PWD":/repair -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock bash -lc '
 set -euo pipefail
 source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
 python3 /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl
-python3 /work/retained_repair/input_adapter.py /OpenROAD-flow-scripts/flow/scripts
-make DESIGN_CONFIG=/work/retained_repair/config.mk WORK_HOME=/work/retained_repair/run FLOW_VARIANT=base NUM_CORES=4 do-5_2_route
+python3 /repair/input_adapter.py /OpenROAD-flow-scripts/flow/scripts
+make DESIGN_CONFIG=/repair/config.mk WORK_HOME=/repair/run FLOW_VARIANT=base NUM_CORES=4 do-5_2_route
 '
 native_status=$?
 set -e
@@ -22,11 +22,11 @@ if [ -s "$PWD/actual_after_route.odb" ]; then
  set +e
  docker run --rm --cpus 2 --memory 8g --memory-swap 8g \
   -v /srv/opentallas-scratch2/claude/codex-qc-l1-lvt-route2-0015:/work:ro \
-  -v "$PWD":/work/retained_repair -w /work/retained_repair \
+  -v "$PWD":/repair -w /repair \
   -e OT_RETAINED_A=/work/run/results/asap7/kq_qfd_qc_su_lane_w_l1_w0e61bf/base/5_2_route.odb \
-  -e OT_RETAINED_B=/work/retained_repair/actual_after_route.odb \
-  -e OT_RETAINED_RESULT=/work/retained_repair/retained_compare.json \
-  openroad/orfs:asap7lock bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -python -exit /work/retained_repair/compare_retained.py'
+  -e OT_RETAINED_B=/repair/actual_after_route.odb \
+  -e OT_RETAINED_RESULT=/repair/retained_compare.json \
+  openroad/orfs:asap7lock bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -python -exit /repair/compare_retained.py'
  compare_status=$?
  set -e
 fi
