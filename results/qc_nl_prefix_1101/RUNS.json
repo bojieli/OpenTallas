@@ -1,0 +1,40 @@
+{
+ "scope": "COORD Q12 approved diagnostics only; all actual results still pending memory admission",
+ "runtime_root": "intel1:/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101",
+ "logs_root": "intel2:/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101",
+ "jobs": {
+  "nl": {
+   "controller": 3912803,
+   "mem_gb": 12,
+   "threads": 2,
+   "log": "nl.otrun.log",
+   "result": "nl/kit/final_coverage.json",
+   "input": "retained15:02postMMGRT, same-byte4_ctsAPIalias, originalmargin10",
+   "no_extra_stages": "NoCTSidentity/DRT/extraSTA"
+  },
+  "prefix": {
+   "controller": 3960405,
+   "mem_gb": 64,
+   "threads": 8,
+   "log": "prefix.otrun.log",
+   "result": "prefix/native/census.json",
+   "input": "frozen d90tools/plan/66assets;51596homes/10929aliases;inputsBYTEIDENTICALcompletedKIT",
+   "no_extra_stages": "Import/accessonly; nolegalize/GRT/STA/PGqualification/provider/START"
+  },
+  "neighbors": {
+   "controller": 18181,
+   "mem_gb": 8,
+   "threads": 2,
+   "log": "neighbors.otrun.log",
+   "result": "neighbors/batch_results.json + count3.rc",
+   "types": [
+    "native59",
+    "coll_ftm",
+    "coll_ftc"
+   ],
+   "input": "exactd90factory/201preferredreadset;6pathmetadata relocations;673memoryassetsbyteexactd90",
+   "no_extra_stages": "COUNT/ABI/FACE only, noP&R/STA/LEC, nohistoricalviewreuse"
+  }
+ },
+ "owner_questions": []
+}

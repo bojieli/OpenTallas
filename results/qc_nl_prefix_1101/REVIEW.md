@@ -1,0 +1,5 @@
+# NL corrected final GRT50 diagnostic
+
+CODEX personally viewed GEOM99/qc58b/nl.png and its actual-placement metrics. The two/three macro columns retain horizontal streets and a central vertical channel; logic stays in those streets and on W/E boundary columns. No cells sit on macros; input/output pin registers are local (p90 8.06um/max15.39um), relay reach400.09um remains below405. The lower V-street at(260,267.5) is the specific channel-demand watch point. Existing approved aspect/partial-face conditions remain; this is a clock-inclusive capacity diagnostic, not DRT release.
+
+PASS-COND for exactly the Q12-authorized corrected GRT>=50 probe from the retained15:02 postMMGRT state. Correction uses identical4_cts.sdc API alias (not CTS identity), original10ps configured repair margin and matchedMM/PG hooks. Preserve old failed context result and foreign NL route. No geometry, clock, reset,RTL, cycle, constraint or physical view is adopted. No extra STA or DRT is authorized by this trial. TT setup/FF hold actual constraints remain unchanged.
