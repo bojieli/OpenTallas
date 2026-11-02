@@ -1,0 +1,143 @@
+{
+  "status": "PASS_PASSIVE_CURRENT_ELABORATION_CONTEXT",
+  "scope": "Actual Q6/native216 context only; original published archive compiler context UNKNOWN",
+  "canonical_sha256": "1d079d78fe5591017937ae0ab20c5ca3997fae97571b9cb69e399b4029776dcc",
+  "root": "ot_qkh_recip_leaf",
+  "defines": "-DSYNTHESIS",
+  "reached": [
+    {
+      "instance": "ot_qkh_recip_leaf.u_core.g_nr[0].m_m.u",
+      "type": "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000111",
+      "resolved_parameters": {
+        "LAT": "7",
+        "CUTS": "32's11111111111111111111111111111111",
+        "KCP": "1",
+        "DRST": "1"
+      },
+      "caller_parameters": {}
+    },
+    {
+      "instance": "ot_qkh_recip_leaf.u_core.g_nr[0].a_s.u",
+      "type": "$paramod\\ot_hdc_fp32_add_lat\\LAT=s32'00000000000000000000000000000111",
+      "resolved_parameters": {
+        "LAT": "7",
+        "CUTS": "32's11111111111111111111111111111111",
+        "DRST": "1"
+      },
+      "caller_parameters": {}
+    },
+    {
+      "instance": "ot_qkh_recip_leaf.u_core.g_nr[0].m_y.u",
+      "type": "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000111",
+      "resolved_parameters": {
+        "LAT": "7",
+        "CUTS": "32's11111111111111111111111111111111",
+        "KCP": "1",
+        "DRST": "1"
+      },
+      "caller_parameters": {}
+    },
+    {
+      "instance": "ot_qkh_recip_leaf.u_core.g_nr[1].m_m.u",
+      "type": "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000111",
+      "resolved_parameters": {
+        "LAT": "7",
+        "CUTS": "32's11111111111111111111111111111111",
+        "KCP": "1",
+        "DRST": "1"
+      },
+      "caller_parameters": {}
+    },
+    {
+      "instance": "ot_qkh_recip_leaf.u_core.g_nr[1].a_s.u",
+      "type": "$paramod\\ot_hdc_fp32_add_lat\\LAT=s32'00000000000000000000000000000111",
+      "resolved_parameters": {
+        "LAT": "7",
+        "CUTS": "32's11111111111111111111111111111111",
+        "DRST": "1"
+      },
+      "caller_parameters": {}
+    },
+    {
+      "instance": "ot_qkh_recip_leaf.u_core.g_nr[1].m_y.u",
+      "type": "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000111",
+      "resolved_parameters": {
+        "LAT": "7",
+        "CUTS": "32's11111111111111111111111111111111",
+        "KCP": "1",
+        "DRST": "1"
+      },
+      "caller_parameters": {}
+    },
+    {
+      "instance": "ot_qkh_recip_leaf.u_core.g_nr[2].m_m.u",
+      "type": "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000111",
+      "resolved_parameters": {
+        "LAT": "7",
+        "CUTS": "32's11111111111111111111111111111111",
+        "KCP": "1",
+        "DRST": "1"
+      },
+      "caller_parameters": {}
+    },
+    {
+      "instance": "ot_qkh_recip_leaf.u_core.g_nr[2].a_s.u",
+      "type": "$paramod\\ot_hdc_fp32_add_lat\\LAT=s32'00000000000000000000000000000111",
+      "resolved_parameters": {
+        "LAT": "7",
+        "CUTS": "32's11111111111111111111111111111111",
+        "DRST": "1"
+      },
+      "caller_parameters": {}
+    },
+    {
+      "instance": "ot_qkh_recip_leaf.u_core.g_nr[2].m_y.u",
+      "type": "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000111",
+      "resolved_parameters": {
+        "LAT": "7",
+        "CUTS": "32's11111111111111111111111111111111",
+        "KCP": "1",
+        "DRST": "1"
+      },
+      "caller_parameters": {}
+    }
+  ],
+  "primitive_types": [
+    "$_DFF_PN0_",
+    "$add",
+    "$adff",
+    "$and",
+    "$dff",
+    "$eq",
+    "$ge",
+    "$gt",
+    "$le",
+    "$logic_and",
+    "$logic_not",
+    "$logic_or",
+    "$lt",
+    "$mux",
+    "$ne",
+    "$neg",
+    "$not",
+    "$or",
+    "$reduce_bool",
+    "$reduce_or",
+    "$shl",
+    "$shr",
+    "$sub",
+    "$xor"
+  ],
+  "controls": {
+    "DRST0": "REJECTED",
+    "missing_DRST": "REJECTED"
+  },
+  "other_sources_byte_equal": 8,
+  "source_hashes": {
+    "old": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "Q6": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df"
+  },
+  "DRST1_exact_active_source_equal": true,
+  "native_u_cc_uses_s2_err": true,
+  "normal_EQ_or_old_archive_identity_claim": false
+}

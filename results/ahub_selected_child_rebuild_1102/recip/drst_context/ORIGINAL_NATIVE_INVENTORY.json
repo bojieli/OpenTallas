@@ -1,0 +1,42 @@
+{
+  "host": "intel2",
+  "original_native216": "/srv/opentallas-scratch2/claude/codex-kv-ahub-1131/kits/recip_native216",
+  "files": {
+    "1_1_yosys_canonicalize.rtlil": {
+      "exists": true,
+      "bytes": 1521231,
+      "sha256": "1d079d78fe5591017937ae0ab20c5ca3997fae97571b9cb69e399b4029776dcc"
+    },
+    "1_2_yosys.v": {
+      "exists": true,
+      "bytes": 13107934,
+      "sha256": "ebaffaeff0de02cd19b36ce216f644f43a319171467760e258f9042fd86815c6"
+    },
+    "1_synth.odb": {
+      "exists": true,
+      "bytes": 25276045,
+      "sha256": "7870f090f523e48c889cbc7701ff159973f1d3337eb09ed4817decf2f1c431db"
+    },
+    "1_synth.sdc": {
+      "exists": true,
+      "bytes": 20606,
+      "sha256": "19e5582c1234efaff179dcec5736577b188062dad321f71fbcc21d4b5616354f"
+    },
+    "4_cts.odb": {
+      "exists": true,
+      "bytes": 32672262,
+      "sha256": "b54439b801a2ea46303a08a9694b7404f1f58c3e366c2a05f92998ac9dc27ddf"
+    },
+    "4_1_cts.odb": {
+      "exists": true,
+      "bytes": 32672262,
+      "sha256": "b54439b801a2ea46303a08a9694b7404f1f58c3e366c2a05f92998ac9dc27ddf"
+    },
+    "4_cts.sdc": {
+      "exists": true,
+      "bytes": 20686,
+      "sha256": "39ae5356ec0e1da69d214f5ad0c0321ca09873c40b6688f891bc8081ab49f012"
+    }
+  },
+  "5_6_outputs": []
+}
