@@ -230,3 +230,22 @@ def test_standalone_isolated_python_finds_staged_signoff(tmp_path):
     script="import runpy,sys;from pathlib import Path;m=runpy.run_path(sys.argv[1],run_name='gate_test');k=Path(sys.argv[2]);m['policy_context'](k,k/'run/results/asap7/design/base',{'OT_VCLK_TT':'250','OT_VCLK_FF':'190'})"
     r=subprocess.run([sys.executable,'-I','-c',script,str(source),str(k)],capture_output=True,text=True)
     assert r.returncode==0,r.stderr
+
+@pytest.mark.parametrize('mutation,expected', [(None,0),('unverified',6),('mixed',6),('mode_mismatch',6)])
+def test_frozen_clock_mode_is_verified_and_recorded_honestly(tmp_path, mutation, expected):
+    k=kit(tmp_path)
+    def execute(args, **kwargs):
+        c=kwargs['env']['OT_CORNER']
+        frozen=not (mutation=='mixed' and c=='FF')
+        mode='global_routing_frozen_clock' if frozen else 'global_routing'
+        text=policy_log(c).replace('SO PARASITICS global_routing\n',f'SO PARASITICS {mode}\n')
+        if mutation!='unverified' and frozen:text+='SO FROZEN_CLOCK_RC_VERIFIED 1\n'
+        kwargs['stdout'].write(text)
+        (k/f'postcts_gate_{c.lower()}.libraries.json').write_text(json.dumps(dict(status='LOADED',libraries=[])))
+        d=passing(c);d['parasitics']='global_routing' if mutation=='mode_mismatch' else mode
+        (k/f'postcts_gate_{c.lower()}.json').write_text(json.dumps(d))
+        return SimpleNamespace(returncode=0)
+    assert gate.run(k,'grt',execute=execute)==expected
+    if expected==0:
+        rec=json.loads((k/'grt_policy.json').read_text())
+        assert rec['parasitics']=='global_routing_frozen_clock'

@@ -109,12 +109,14 @@ def policy_session(kit, corner, base, disc, ctx, policy):
     if target is not None:
         tail = tail.replace('/sdc/pair_targets.txt', str(target))
     return (f'source {{{kit / "postcts_gate.tcl"}}}\n'
-            'if {$ot_pg_mode ne "global_routing"} {error "G2 policy requires global-route RC"}\n'
+            'if {$ot_pg_mode ni {global_routing global_routing_frozen_clock}} {error "G2 policy requires global-route RC"}\n'
+            'if {$ot_pg_mode eq "global_routing_frozen_clock" && (![info exists ::ot_clock_rc_restore_verified] || !$::ot_clock_rc_restore_verified)} {error "G2 frozen clock restore is not verified"}\n'
             # session_tcl's uncertainty block precedes so DESIGN, so slicing
             # the tail above omits it. Apply the same canonical in-session
             # policy after the existing loader, without another SDC/RC load.
             + definitions + so.unc_policy_tcl()
-            + f'so CORNER {corner}\nso PARASITICS global_routing\n' + tail)
+            + f'so CORNER {corner}\nso PARASITICS $ot_pg_mode\n'
+            + 'if {$ot_pg_mode eq "global_routing_frozen_clock"} {so FROZEN_CLOCK_RC_VERIFIED $::ot_clock_rc_restore_verified}\n' + tail)
 
 
 def policy_record(corners, policy):
@@ -122,7 +124,8 @@ def policy_record(corners, policy):
     import signoff as so
     for c in ('tt', 'ff'):
         x = corners[c]
-        if not x.get('done') or x.get('parasitics') != 'global_routing':
+        if (not x.get('done') or x.get('parasitics') not in ('global_routing', 'global_routing_frozen_clock')
+                or (x.get('parasitics') == 'global_routing_frozen_clock' and x.get('frozen_clock_rc_verified') is not True)):
             raise ValueError(f'{c.upper()} G2 policy session incomplete or not global-route RC')
         if not x.get('periods') or any(not math.isfinite(float(v)) or abs(float(v)-so.PERIOD_PS)>1e-6
                                        for v in x['periods'].values()):
@@ -148,6 +151,10 @@ def policy_record(corners, policy):
                     raise ValueError(f'{c.upper()} G2 pair {k} {key} NOT RUN/nonfinite')
             if ck['n'] <= 0 or ck['worst_abs_ps'] < 0 or ck['verify_ps'] < 0:
                 raise ValueError(f'{c.upper()} G2 pair {k} malformed counts/skew')
+    modes = {x['parasitics'] for x in corners.values()}
+    if len(modes) != 1:
+        raise ValueError('G2 corner parasitic modes differ')
+    actual_mode = next(iter(modes))
     rec = dict(corners=corners, policy=policy)
     so.evaluate(rec)
     wanted = {k: rec['checks'][k] for k in ('setup_tt', 'hold_ff')}
@@ -158,7 +165,7 @@ def policy_record(corners, policy):
     wanted['clock'] = clock_rec['checks']['clock']
     # This is a G2 prototype receipt, never a SIGNED record: DRC/antenna and
     # routed sign-off are deliberately not claimed or required here.
-    return dict(schema='opentallas.grt_policy.v1', parasitics='global_routing',
+    return dict(schema='opentallas.grt_policy.v1', parasitics=actual_mode,
                 policy=dict(period_ps=so.PERIOD_PS, uncertainty_setup_ps=so.UNC_SETUP_PS,
                             uncertainty_hold_ps=so.UNC_HOLD_PS, pair_skew_max_ps=so.PAIR_SKEW_MAX_PS, **policy),
                 checks=wanted, verdict='PASS' if all(x['verdict']=='PASS' for x in wanted.values()) else 'FAIL')
@@ -240,15 +247,18 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
             if (not all(math.isfinite(v) for v in numeric) or not 0 <= d['dev_ps'] or not 0 <= d['tol_ps'] <= 20.0
                     or not (band_ok or band_info)
                     or result.returncode != 0 or d.get('verdict') != 'PASS' or d.get('corner') != corner
-                    or d.get('parasitics') != 'global_routing' or d.get('pinreg_n', 0) <= 0
+                    or d.get('parasitics') not in ('global_routing', 'global_routing_frozen_clock') or d.get('pinreg_n', 0) <= 0
                     or abs(float(d['bound_ps']) - float(settings[f'OT_VCLK_{corner}'])) > 1e-6):
                 raise ValueError(f'{corner} global-routing insertion gate failed: {d.get("verdict")} exit {result.returncode}')
             measured = so.parse_session(log.read_text(errors='replace'))
             parsed = so.corner_result(measured)
+            parsed['frozen_clock_rc_verified'] = measured['kv'].get('FROZEN_CLOCK_RC_VERIFIED') == '1'
+            if parsed.get('parasitics') != d.get('parasitics') or (d.get('parasitics') == 'global_routing_frozen_clock' and not parsed['frozen_clock_rc_verified']):
+                raise ValueError(f'{corner} G2 parasitic mode/verified restore disagrees with insertion gate')
             if measured['kv'].get('G2_REQUIRED_FAIL'):
                 key = measured['kv']['G2_REQUIRED_FAIL']
                 fail = dict(schema='opentallas.grt_policy.v1', verdict='FAIL',
-                            parasitics='global_routing', failed=key, corner=corner,
+                            parasitics=d['parasitics'], failed=key, corner=corner,
                             setup_wns_ps=parsed.get('std_wns_max'), hold_wns_ps=parsed.get('std_wns_min'),
                             clock='NOT RUN (data failure stopped redundant pair census)')
                 timing_receipt.write_text(json.dumps(fail, indent=1) + '\n')
