@@ -29,9 +29,9 @@ set f [open /work/drt_input_structure.tcldata {WRONLY CREAT EXCL}]
 puts $f $::ot_pg_drt_diag_input_structure
 close $f
 # No resizer/CTS/GPL/placement work in this DRT-only input consumer.
+proc tnode_drt_forbid_birth {args} {error TNODE_DRT_UNSUPPORTED_CELL_CREATION_PATH}
 foreach cmd {buffer_ports repair_clock_inverters clock_tree_synthesis repair_timing repair_design global_placement detailed_placement repair_tie_fanout} {
   if {[info commands $cmd] ne ""} {
-    rename $cmd ::tnode_drt_forbidden_$cmd
-    proc ::$cmd {args} {error TNODE_DRT_UNSUPPORTED_CELL_CREATION_PATH}
+    trace add execution ::$cmd enter ::tnode_drt_forbid_birth
   }
 }
