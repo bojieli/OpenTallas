@@ -1,0 +1,153 @@
+{
+ "classification": "UNTRUSTED_SINGLE_PREDICATE_LEMMA_ONLY",
+ "checker_commit": "0c84369b0",
+ "checker_sha256": "1826084c39be03a337c29d54ca703871d88243fc04e58dcd84010e0bfdd18b4b",
+ "prior_sha256": "a6ec3d739833839213481c527ac604e5dfbe9350a36acdf7ef7616593998ce1a",
+ "prior_count": 944,
+ "missing_prior": [],
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "kv",
+   "edges": 16,
+   "assert_edges": 20,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 16,
+  "debug_overrides": {}
+ },
+ "native_verdict_unchanged": {
+  "compare_points": 6370,
+  "proved": 6369,
+  "differs": 1,
+  "undecided": 0
+ },
+ "no_full_comparepoint_proof": true,
+ "hint": [
+  "gate",
+  "ff:u_dut.u_leaf.u_core.gqv[2]",
+  [
+   "cube",
+   "gold",
+   [
+    "ff:u_dut.u_leaf.u_core.gqv_groups[2]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[5]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[6]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[7]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[8]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[9]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[10]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[11]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[12]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[13]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[14]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[15]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[16]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[17]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[18]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[19]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[20]"
+   ],
+   [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   1
+  ]
+ ],
+ "pending_point_statuses": {
+  "ff:u_dut.u_leaf.u_core.fault": "proved"
+ },
+ "base": [
+  {
+   "covered": true,
+   "side": "gate",
+   "register": "ff:u_dut.u_leaf.u_core.gqv[2]",
+   "source_side": "gold",
+   "source_keys": [
+    "ff:u_dut.u_leaf.u_core.gqv_groups[2]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[5]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[6]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[7]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[8]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[9]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[10]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[11]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[12]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[13]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[14]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[15]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[16]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[17]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[18]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[19]",
+    "ff:u_dut.u_leaf.u_core.gqv_groups[20]"
+   ],
+   "source_values": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "reset_cycles": 16,
+   "actual": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "target": 0,
+   "predicate": 0
+  }
+ ],
+ "all_hypotheses_jointly_reproved": true,
+ "original_profile_unchanged": true,
+ "final_hypotheses": 945,
+ "original_hypotheses": 944,
+ "constraints": 0,
+ "elapsed_s": 63.55000329017639,
+ "no_comparepoint_reduction_claim": true
+}

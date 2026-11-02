@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS source geometry/clock-price PREVIEW only",
+  "picture": "nf2_disabled_geometry_clock_preview.png",
+  "personally_viewed": true,
+  "findings": [
+    "Five real original hard-child macro sites, orientations, outline and seven clock-pin coordinates are unchanged. Existing center/south channels remain open.",
+    "The actual native fault bank grows5->21 FF; native full mapped FF count3625->3641. All16 new clock sinks are on original ck[0]. Outside the bank every logical register clock role and master is unchanged.",
+    "This is unplaced SYNTH geometry. No16 new FF sites, clock buffers or latency values are invented. P&R requires its own scope/review and normal gates.",
+    "RAW+ODB boundary623/623, RTL/SDC/SELRANGE/adder checks passed. No floorplan/PLACE/CTS/GRT/DRT/STA was run.",
+    "Source composite6370/6370 closure is separate from mapped new-netlist/release qualification; canonical activation remains OFF."
+  ]
+}
