@@ -1,0 +1,3021 @@
+{
+  "schema": "opentallas.die_plan.r8_landing.v1",
+  "die": "qwen_compute",
+  "status": "SOURCE_PREP_NOT_ADOPTED",
+  "default_enabled": false,
+  "source_bus_groups_sha256": "fcd15f03c54fd5c3dc0002fafa8b8433e01d7d90a4f0f23da3710aa889163576",
+  "consumer_contract": "equal-phase eight-lane native SU writes must reach one STREAM beat assembler at equal phase; every we/address/data bit is kept together",
+  "qualification": "HOLD pending actual producer/selected-wrapper phase review; no selected failure inferred solely from landed depths",
+  "activation": "explicit future asbuilt.land_r8_extra selection only after review; never mutate frozen table or active jobs",
+  "members": [
+    {
+      "id": "dvs_E0.u_core.u_sub.u_stm.vm_waddr[0:23]<-dvs_E0.u_core.u_sub.u_lrly0.vm_waddr@0",
+      "sink": "dvs_E0.u_core.u_sub.u_stm",
+      "sink_part": "sl_E0_stm",
+      "src_part": "sl_E0_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          0,
+          23
+        ]
+      ],
+      "source": "dvs_E0.u_core.u_sub.u_lrly0.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E0",
+      "lane": "sl_E0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E0.u_core.u_sub.u_stm.vm_waddr[24:47]<-dvs_E0.u_core.u_sub.u_lrly1.vm_waddr@0",
+      "sink": "dvs_E0.u_core.u_sub.u_stm",
+      "sink_part": "sl_E0_stm",
+      "src_part": "sl_E0_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          24,
+          47
+        ]
+      ],
+      "source": "dvs_E0.u_core.u_sub.u_lrly1.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E0",
+      "lane": "sl_E0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E0.u_core.u_sub.u_stm.vm_waddr[48:71]<-dvs_E0.u_core.u_sub.u_lrly2.vm_waddr@0",
+      "sink": "dvs_E0.u_core.u_sub.u_stm",
+      "sink_part": "sl_E0_stm",
+      "src_part": "sl_E0_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          48,
+          71
+        ]
+      ],
+      "source": "dvs_E0.u_core.u_sub.u_lrly2.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E0",
+      "lane": "sl_E0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E0.u_core.u_sub.u_stm.vm_waddr[72:95]<-dvs_E0.u_core.u_sub.u_lrly3.vm_waddr@0",
+      "sink": "dvs_E0.u_core.u_sub.u_stm",
+      "sink_part": "sl_E0_stm",
+      "src_part": "sl_E0_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          72,
+          95
+        ]
+      ],
+      "source": "dvs_E0.u_core.u_sub.u_lrly3.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E0",
+      "lane": "sl_E0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E0.u_core.u_sub.u_stm.vm_wdata[0:31]<-dvs_E0.u_core.u_sub.u_lrly0.vm_wdata@0",
+      "sink": "dvs_E0.u_core.u_sub.u_stm",
+      "sink_part": "sl_E0_stm",
+      "src_part": "sl_E0_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          0,
+          31
+        ]
+      ],
+      "source": "dvs_E0.u_core.u_sub.u_lrly0.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E0",
+      "lane": "sl_E0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E0.u_core.u_sub.u_stm.vm_wdata[32:63]<-dvs_E0.u_core.u_sub.u_lrly1.vm_wdata@0",
+      "sink": "dvs_E0.u_core.u_sub.u_stm",
+      "sink_part": "sl_E0_stm",
+      "src_part": "sl_E0_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          32,
+          63
+        ]
+      ],
+      "source": "dvs_E0.u_core.u_sub.u_lrly1.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E0",
+      "lane": "sl_E0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E0.u_core.u_sub.u_stm.vm_wdata[64:95]<-dvs_E0.u_core.u_sub.u_lrly2.vm_wdata@0",
+      "sink": "dvs_E0.u_core.u_sub.u_stm",
+      "sink_part": "sl_E0_stm",
+      "src_part": "sl_E0_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          64,
+          95
+        ]
+      ],
+      "source": "dvs_E0.u_core.u_sub.u_lrly2.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E0",
+      "lane": "sl_E0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E0.u_core.u_sub.u_stm.vm_wdata[96:127]<-dvs_E0.u_core.u_sub.u_lrly3.vm_wdata@0",
+      "sink": "dvs_E0.u_core.u_sub.u_stm",
+      "sink_part": "sl_E0_stm",
+      "src_part": "sl_E0_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          96,
+          127
+        ]
+      ],
+      "source": "dvs_E0.u_core.u_sub.u_lrly3.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E0",
+      "lane": "sl_E0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E0.u_core.u_sub.u_stm.vm_we[0:0]<-dvs_E0.u_core.u_sub.u_lrly0.vm_we@0",
+      "sink": "dvs_E0.u_core.u_sub.u_stm",
+      "sink_part": "sl_E0_stm",
+      "src_part": "sl_E0_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "dvs_E0.u_core.u_sub.u_lrly0.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E0",
+      "lane": "sl_E0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E0.u_core.u_sub.u_stm.vm_we[1:1]<-dvs_E0.u_core.u_sub.u_lrly1.vm_we@0",
+      "sink": "dvs_E0.u_core.u_sub.u_stm",
+      "sink_part": "sl_E0_stm",
+      "src_part": "sl_E0_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          1,
+          1
+        ]
+      ],
+      "source": "dvs_E0.u_core.u_sub.u_lrly1.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E0",
+      "lane": "sl_E0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E0.u_core.u_sub.u_stm.vm_we[2:2]<-dvs_E0.u_core.u_sub.u_lrly2.vm_we@0",
+      "sink": "dvs_E0.u_core.u_sub.u_stm",
+      "sink_part": "sl_E0_stm",
+      "src_part": "sl_E0_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          2,
+          2
+        ]
+      ],
+      "source": "dvs_E0.u_core.u_sub.u_lrly2.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E0",
+      "lane": "sl_E0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E0.u_core.u_sub.u_stm.vm_we[3:3]<-dvs_E0.u_core.u_sub.u_lrly3.vm_we@0",
+      "sink": "dvs_E0.u_core.u_sub.u_stm",
+      "sink_part": "sl_E0_stm",
+      "src_part": "sl_E0_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "dvs_E0.u_core.u_sub.u_lrly3.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E0",
+      "lane": "sl_E0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E1.u_core.u_sub.u_stm.vm_waddr[0:23]<-dvs_E1.u_core.u_sub.u_lrly0.vm_waddr@0",
+      "sink": "dvs_E1.u_core.u_sub.u_stm",
+      "sink_part": "sl_E1_stm",
+      "src_part": "sl_E1_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          0,
+          23
+        ]
+      ],
+      "source": "dvs_E1.u_core.u_sub.u_lrly0.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E1",
+      "lane": "sl_E1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E1.u_core.u_sub.u_stm.vm_waddr[24:47]<-dvs_E1.u_core.u_sub.u_lrly1.vm_waddr@0",
+      "sink": "dvs_E1.u_core.u_sub.u_stm",
+      "sink_part": "sl_E1_stm",
+      "src_part": "sl_E1_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          24,
+          47
+        ]
+      ],
+      "source": "dvs_E1.u_core.u_sub.u_lrly1.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E1",
+      "lane": "sl_E1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E1.u_core.u_sub.u_stm.vm_waddr[48:71]<-dvs_E1.u_core.u_sub.u_lrly2.vm_waddr@0",
+      "sink": "dvs_E1.u_core.u_sub.u_stm",
+      "sink_part": "sl_E1_stm",
+      "src_part": "sl_E1_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          48,
+          71
+        ]
+      ],
+      "source": "dvs_E1.u_core.u_sub.u_lrly2.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E1",
+      "lane": "sl_E1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E1.u_core.u_sub.u_stm.vm_waddr[72:95]<-dvs_E1.u_core.u_sub.u_lrly3.vm_waddr@0",
+      "sink": "dvs_E1.u_core.u_sub.u_stm",
+      "sink_part": "sl_E1_stm",
+      "src_part": "sl_E1_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          72,
+          95
+        ]
+      ],
+      "source": "dvs_E1.u_core.u_sub.u_lrly3.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E1",
+      "lane": "sl_E1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E1.u_core.u_sub.u_stm.vm_wdata[0:31]<-dvs_E1.u_core.u_sub.u_lrly0.vm_wdata@0",
+      "sink": "dvs_E1.u_core.u_sub.u_stm",
+      "sink_part": "sl_E1_stm",
+      "src_part": "sl_E1_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          0,
+          31
+        ]
+      ],
+      "source": "dvs_E1.u_core.u_sub.u_lrly0.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E1",
+      "lane": "sl_E1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E1.u_core.u_sub.u_stm.vm_wdata[32:63]<-dvs_E1.u_core.u_sub.u_lrly1.vm_wdata@0",
+      "sink": "dvs_E1.u_core.u_sub.u_stm",
+      "sink_part": "sl_E1_stm",
+      "src_part": "sl_E1_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          32,
+          63
+        ]
+      ],
+      "source": "dvs_E1.u_core.u_sub.u_lrly1.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E1",
+      "lane": "sl_E1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E1.u_core.u_sub.u_stm.vm_wdata[64:95]<-dvs_E1.u_core.u_sub.u_lrly2.vm_wdata@0",
+      "sink": "dvs_E1.u_core.u_sub.u_stm",
+      "sink_part": "sl_E1_stm",
+      "src_part": "sl_E1_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          64,
+          95
+        ]
+      ],
+      "source": "dvs_E1.u_core.u_sub.u_lrly2.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E1",
+      "lane": "sl_E1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E1.u_core.u_sub.u_stm.vm_wdata[96:127]<-dvs_E1.u_core.u_sub.u_lrly3.vm_wdata@0",
+      "sink": "dvs_E1.u_core.u_sub.u_stm",
+      "sink_part": "sl_E1_stm",
+      "src_part": "sl_E1_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          96,
+          127
+        ]
+      ],
+      "source": "dvs_E1.u_core.u_sub.u_lrly3.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E1",
+      "lane": "sl_E1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E1.u_core.u_sub.u_stm.vm_we[0:0]<-dvs_E1.u_core.u_sub.u_lrly0.vm_we@0",
+      "sink": "dvs_E1.u_core.u_sub.u_stm",
+      "sink_part": "sl_E1_stm",
+      "src_part": "sl_E1_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "dvs_E1.u_core.u_sub.u_lrly0.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E1",
+      "lane": "sl_E1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E1.u_core.u_sub.u_stm.vm_we[1:1]<-dvs_E1.u_core.u_sub.u_lrly1.vm_we@0",
+      "sink": "dvs_E1.u_core.u_sub.u_stm",
+      "sink_part": "sl_E1_stm",
+      "src_part": "sl_E1_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          1,
+          1
+        ]
+      ],
+      "source": "dvs_E1.u_core.u_sub.u_lrly1.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E1",
+      "lane": "sl_E1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E1.u_core.u_sub.u_stm.vm_we[2:2]<-dvs_E1.u_core.u_sub.u_lrly2.vm_we@0",
+      "sink": "dvs_E1.u_core.u_sub.u_stm",
+      "sink_part": "sl_E1_stm",
+      "src_part": "sl_E1_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          2,
+          2
+        ]
+      ],
+      "source": "dvs_E1.u_core.u_sub.u_lrly2.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E1",
+      "lane": "sl_E1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E1.u_core.u_sub.u_stm.vm_we[3:3]<-dvs_E1.u_core.u_sub.u_lrly3.vm_we@0",
+      "sink": "dvs_E1.u_core.u_sub.u_stm",
+      "sink_part": "sl_E1_stm",
+      "src_part": "sl_E1_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "dvs_E1.u_core.u_sub.u_lrly3.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E1",
+      "lane": "sl_E1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E2.u_core.u_sub.u_stm.vm_waddr[0:23]<-dvs_E2.u_core.u_sub.u_lrly0.vm_waddr@0",
+      "sink": "dvs_E2.u_core.u_sub.u_stm",
+      "sink_part": "sl_E2_stm",
+      "src_part": "sl_E2_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          0,
+          23
+        ]
+      ],
+      "source": "dvs_E2.u_core.u_sub.u_lrly0.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E2",
+      "lane": "sl_E2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E2.u_core.u_sub.u_stm.vm_waddr[24:47]<-dvs_E2.u_core.u_sub.u_lrly1.vm_waddr@0",
+      "sink": "dvs_E2.u_core.u_sub.u_stm",
+      "sink_part": "sl_E2_stm",
+      "src_part": "sl_E2_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          24,
+          47
+        ]
+      ],
+      "source": "dvs_E2.u_core.u_sub.u_lrly1.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E2",
+      "lane": "sl_E2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E2.u_core.u_sub.u_stm.vm_waddr[48:71]<-dvs_E2.u_core.u_sub.u_lrly2.vm_waddr@0",
+      "sink": "dvs_E2.u_core.u_sub.u_stm",
+      "sink_part": "sl_E2_stm",
+      "src_part": "sl_E2_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          48,
+          71
+        ]
+      ],
+      "source": "dvs_E2.u_core.u_sub.u_lrly2.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E2",
+      "lane": "sl_E2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E2.u_core.u_sub.u_stm.vm_waddr[72:95]<-dvs_E2.u_core.u_sub.u_lrly3.vm_waddr@0",
+      "sink": "dvs_E2.u_core.u_sub.u_stm",
+      "sink_part": "sl_E2_stm",
+      "src_part": "sl_E2_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          72,
+          95
+        ]
+      ],
+      "source": "dvs_E2.u_core.u_sub.u_lrly3.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E2",
+      "lane": "sl_E2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E2.u_core.u_sub.u_stm.vm_wdata[0:31]<-dvs_E2.u_core.u_sub.u_lrly0.vm_wdata@0",
+      "sink": "dvs_E2.u_core.u_sub.u_stm",
+      "sink_part": "sl_E2_stm",
+      "src_part": "sl_E2_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          0,
+          31
+        ]
+      ],
+      "source": "dvs_E2.u_core.u_sub.u_lrly0.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E2",
+      "lane": "sl_E2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E2.u_core.u_sub.u_stm.vm_wdata[32:63]<-dvs_E2.u_core.u_sub.u_lrly1.vm_wdata@0",
+      "sink": "dvs_E2.u_core.u_sub.u_stm",
+      "sink_part": "sl_E2_stm",
+      "src_part": "sl_E2_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          32,
+          63
+        ]
+      ],
+      "source": "dvs_E2.u_core.u_sub.u_lrly1.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E2",
+      "lane": "sl_E2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E2.u_core.u_sub.u_stm.vm_wdata[64:95]<-dvs_E2.u_core.u_sub.u_lrly2.vm_wdata@0",
+      "sink": "dvs_E2.u_core.u_sub.u_stm",
+      "sink_part": "sl_E2_stm",
+      "src_part": "sl_E2_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          64,
+          95
+        ]
+      ],
+      "source": "dvs_E2.u_core.u_sub.u_lrly2.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E2",
+      "lane": "sl_E2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E2.u_core.u_sub.u_stm.vm_wdata[96:127]<-dvs_E2.u_core.u_sub.u_lrly3.vm_wdata@0",
+      "sink": "dvs_E2.u_core.u_sub.u_stm",
+      "sink_part": "sl_E2_stm",
+      "src_part": "sl_E2_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          96,
+          127
+        ]
+      ],
+      "source": "dvs_E2.u_core.u_sub.u_lrly3.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E2",
+      "lane": "sl_E2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E2.u_core.u_sub.u_stm.vm_we[0:0]<-dvs_E2.u_core.u_sub.u_lrly0.vm_we@0",
+      "sink": "dvs_E2.u_core.u_sub.u_stm",
+      "sink_part": "sl_E2_stm",
+      "src_part": "sl_E2_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "dvs_E2.u_core.u_sub.u_lrly0.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E2",
+      "lane": "sl_E2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E2.u_core.u_sub.u_stm.vm_we[1:1]<-dvs_E2.u_core.u_sub.u_lrly1.vm_we@0",
+      "sink": "dvs_E2.u_core.u_sub.u_stm",
+      "sink_part": "sl_E2_stm",
+      "src_part": "sl_E2_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          1,
+          1
+        ]
+      ],
+      "source": "dvs_E2.u_core.u_sub.u_lrly1.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E2",
+      "lane": "sl_E2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E2.u_core.u_sub.u_stm.vm_we[2:2]<-dvs_E2.u_core.u_sub.u_lrly2.vm_we@0",
+      "sink": "dvs_E2.u_core.u_sub.u_stm",
+      "sink_part": "sl_E2_stm",
+      "src_part": "sl_E2_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          2,
+          2
+        ]
+      ],
+      "source": "dvs_E2.u_core.u_sub.u_lrly2.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E2",
+      "lane": "sl_E2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E2.u_core.u_sub.u_stm.vm_we[3:3]<-dvs_E2.u_core.u_sub.u_lrly3.vm_we@0",
+      "sink": "dvs_E2.u_core.u_sub.u_stm",
+      "sink_part": "sl_E2_stm",
+      "src_part": "sl_E2_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "dvs_E2.u_core.u_sub.u_lrly3.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E2",
+      "lane": "sl_E2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E3.u_core.u_sub.u_stm.vm_waddr[0:23]<-dvs_E3.u_core.u_sub.u_lrly0.vm_waddr@0",
+      "sink": "dvs_E3.u_core.u_sub.u_stm",
+      "sink_part": "sl_E3_stm",
+      "src_part": "sl_E3_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          0,
+          23
+        ]
+      ],
+      "source": "dvs_E3.u_core.u_sub.u_lrly0.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E3",
+      "lane": "sl_E3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E3.u_core.u_sub.u_stm.vm_waddr[24:47]<-dvs_E3.u_core.u_sub.u_lrly1.vm_waddr@0",
+      "sink": "dvs_E3.u_core.u_sub.u_stm",
+      "sink_part": "sl_E3_stm",
+      "src_part": "sl_E3_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          24,
+          47
+        ]
+      ],
+      "source": "dvs_E3.u_core.u_sub.u_lrly1.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E3",
+      "lane": "sl_E3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E3.u_core.u_sub.u_stm.vm_waddr[48:71]<-dvs_E3.u_core.u_sub.u_lrly2.vm_waddr@0",
+      "sink": "dvs_E3.u_core.u_sub.u_stm",
+      "sink_part": "sl_E3_stm",
+      "src_part": "sl_E3_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          48,
+          71
+        ]
+      ],
+      "source": "dvs_E3.u_core.u_sub.u_lrly2.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E3",
+      "lane": "sl_E3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E3.u_core.u_sub.u_stm.vm_waddr[72:95]<-dvs_E3.u_core.u_sub.u_lrly3.vm_waddr@0",
+      "sink": "dvs_E3.u_core.u_sub.u_stm",
+      "sink_part": "sl_E3_stm",
+      "src_part": "sl_E3_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          72,
+          95
+        ]
+      ],
+      "source": "dvs_E3.u_core.u_sub.u_lrly3.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E3",
+      "lane": "sl_E3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E3.u_core.u_sub.u_stm.vm_wdata[0:31]<-dvs_E3.u_core.u_sub.u_lrly0.vm_wdata@0",
+      "sink": "dvs_E3.u_core.u_sub.u_stm",
+      "sink_part": "sl_E3_stm",
+      "src_part": "sl_E3_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          0,
+          31
+        ]
+      ],
+      "source": "dvs_E3.u_core.u_sub.u_lrly0.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E3",
+      "lane": "sl_E3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E3.u_core.u_sub.u_stm.vm_wdata[32:63]<-dvs_E3.u_core.u_sub.u_lrly1.vm_wdata@0",
+      "sink": "dvs_E3.u_core.u_sub.u_stm",
+      "sink_part": "sl_E3_stm",
+      "src_part": "sl_E3_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          32,
+          63
+        ]
+      ],
+      "source": "dvs_E3.u_core.u_sub.u_lrly1.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E3",
+      "lane": "sl_E3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E3.u_core.u_sub.u_stm.vm_wdata[64:95]<-dvs_E3.u_core.u_sub.u_lrly2.vm_wdata@0",
+      "sink": "dvs_E3.u_core.u_sub.u_stm",
+      "sink_part": "sl_E3_stm",
+      "src_part": "sl_E3_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          64,
+          95
+        ]
+      ],
+      "source": "dvs_E3.u_core.u_sub.u_lrly2.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E3",
+      "lane": "sl_E3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E3.u_core.u_sub.u_stm.vm_wdata[96:127]<-dvs_E3.u_core.u_sub.u_lrly3.vm_wdata@0",
+      "sink": "dvs_E3.u_core.u_sub.u_stm",
+      "sink_part": "sl_E3_stm",
+      "src_part": "sl_E3_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          96,
+          127
+        ]
+      ],
+      "source": "dvs_E3.u_core.u_sub.u_lrly3.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E3",
+      "lane": "sl_E3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E3.u_core.u_sub.u_stm.vm_we[0:0]<-dvs_E3.u_core.u_sub.u_lrly0.vm_we@0",
+      "sink": "dvs_E3.u_core.u_sub.u_stm",
+      "sink_part": "sl_E3_stm",
+      "src_part": "sl_E3_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "dvs_E3.u_core.u_sub.u_lrly0.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E3",
+      "lane": "sl_E3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E3.u_core.u_sub.u_stm.vm_we[1:1]<-dvs_E3.u_core.u_sub.u_lrly1.vm_we@0",
+      "sink": "dvs_E3.u_core.u_sub.u_stm",
+      "sink_part": "sl_E3_stm",
+      "src_part": "sl_E3_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          1,
+          1
+        ]
+      ],
+      "source": "dvs_E3.u_core.u_sub.u_lrly1.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E3",
+      "lane": "sl_E3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E3.u_core.u_sub.u_stm.vm_we[2:2]<-dvs_E3.u_core.u_sub.u_lrly2.vm_we@0",
+      "sink": "dvs_E3.u_core.u_sub.u_stm",
+      "sink_part": "sl_E3_stm",
+      "src_part": "sl_E3_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          2,
+          2
+        ]
+      ],
+      "source": "dvs_E3.u_core.u_sub.u_lrly2.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E3",
+      "lane": "sl_E3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E3.u_core.u_sub.u_stm.vm_we[3:3]<-dvs_E3.u_core.u_sub.u_lrly3.vm_we@0",
+      "sink": "dvs_E3.u_core.u_sub.u_stm",
+      "sink_part": "sl_E3_stm",
+      "src_part": "sl_E3_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "dvs_E3.u_core.u_sub.u_lrly3.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E3",
+      "lane": "sl_E3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E4.u_core.u_sub.u_stm.vm_waddr[0:23]<-dvs_E4.u_core.u_sub.u_lrly0.vm_waddr@0",
+      "sink": "dvs_E4.u_core.u_sub.u_stm",
+      "sink_part": "sl_E4_stm",
+      "src_part": "sl_E4_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          0,
+          23
+        ]
+      ],
+      "source": "dvs_E4.u_core.u_sub.u_lrly0.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E4",
+      "lane": "sl_E4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E4.u_core.u_sub.u_stm.vm_waddr[24:47]<-dvs_E4.u_core.u_sub.u_lrly1.vm_waddr@0",
+      "sink": "dvs_E4.u_core.u_sub.u_stm",
+      "sink_part": "sl_E4_stm",
+      "src_part": "sl_E4_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          24,
+          47
+        ]
+      ],
+      "source": "dvs_E4.u_core.u_sub.u_lrly1.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E4",
+      "lane": "sl_E4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E4.u_core.u_sub.u_stm.vm_waddr[48:71]<-dvs_E4.u_core.u_sub.u_lrly2.vm_waddr@0",
+      "sink": "dvs_E4.u_core.u_sub.u_stm",
+      "sink_part": "sl_E4_stm",
+      "src_part": "sl_E4_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          48,
+          71
+        ]
+      ],
+      "source": "dvs_E4.u_core.u_sub.u_lrly2.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E4",
+      "lane": "sl_E4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E4.u_core.u_sub.u_stm.vm_waddr[72:95]<-dvs_E4.u_core.u_sub.u_lrly3.vm_waddr@0",
+      "sink": "dvs_E4.u_core.u_sub.u_stm",
+      "sink_part": "sl_E4_stm",
+      "src_part": "sl_E4_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          72,
+          95
+        ]
+      ],
+      "source": "dvs_E4.u_core.u_sub.u_lrly3.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E4",
+      "lane": "sl_E4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E4.u_core.u_sub.u_stm.vm_wdata[0:31]<-dvs_E4.u_core.u_sub.u_lrly0.vm_wdata@0",
+      "sink": "dvs_E4.u_core.u_sub.u_stm",
+      "sink_part": "sl_E4_stm",
+      "src_part": "sl_E4_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          0,
+          31
+        ]
+      ],
+      "source": "dvs_E4.u_core.u_sub.u_lrly0.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E4",
+      "lane": "sl_E4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E4.u_core.u_sub.u_stm.vm_wdata[32:63]<-dvs_E4.u_core.u_sub.u_lrly1.vm_wdata@0",
+      "sink": "dvs_E4.u_core.u_sub.u_stm",
+      "sink_part": "sl_E4_stm",
+      "src_part": "sl_E4_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          32,
+          63
+        ]
+      ],
+      "source": "dvs_E4.u_core.u_sub.u_lrly1.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E4",
+      "lane": "sl_E4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E4.u_core.u_sub.u_stm.vm_wdata[64:95]<-dvs_E4.u_core.u_sub.u_lrly2.vm_wdata@0",
+      "sink": "dvs_E4.u_core.u_sub.u_stm",
+      "sink_part": "sl_E4_stm",
+      "src_part": "sl_E4_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          64,
+          95
+        ]
+      ],
+      "source": "dvs_E4.u_core.u_sub.u_lrly2.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E4",
+      "lane": "sl_E4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E4.u_core.u_sub.u_stm.vm_wdata[96:127]<-dvs_E4.u_core.u_sub.u_lrly3.vm_wdata@0",
+      "sink": "dvs_E4.u_core.u_sub.u_stm",
+      "sink_part": "sl_E4_stm",
+      "src_part": "sl_E4_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          96,
+          127
+        ]
+      ],
+      "source": "dvs_E4.u_core.u_sub.u_lrly3.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E4",
+      "lane": "sl_E4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E4.u_core.u_sub.u_stm.vm_we[0:0]<-dvs_E4.u_core.u_sub.u_lrly0.vm_we@0",
+      "sink": "dvs_E4.u_core.u_sub.u_stm",
+      "sink_part": "sl_E4_stm",
+      "src_part": "sl_E4_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "dvs_E4.u_core.u_sub.u_lrly0.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E4",
+      "lane": "sl_E4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E4.u_core.u_sub.u_stm.vm_we[1:1]<-dvs_E4.u_core.u_sub.u_lrly1.vm_we@0",
+      "sink": "dvs_E4.u_core.u_sub.u_stm",
+      "sink_part": "sl_E4_stm",
+      "src_part": "sl_E4_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          1,
+          1
+        ]
+      ],
+      "source": "dvs_E4.u_core.u_sub.u_lrly1.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E4",
+      "lane": "sl_E4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E4.u_core.u_sub.u_stm.vm_we[2:2]<-dvs_E4.u_core.u_sub.u_lrly2.vm_we@0",
+      "sink": "dvs_E4.u_core.u_sub.u_stm",
+      "sink_part": "sl_E4_stm",
+      "src_part": "sl_E4_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          2,
+          2
+        ]
+      ],
+      "source": "dvs_E4.u_core.u_sub.u_lrly2.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E4",
+      "lane": "sl_E4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E4.u_core.u_sub.u_stm.vm_we[3:3]<-dvs_E4.u_core.u_sub.u_lrly3.vm_we@0",
+      "sink": "dvs_E4.u_core.u_sub.u_stm",
+      "sink_part": "sl_E4_stm",
+      "src_part": "sl_E4_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "dvs_E4.u_core.u_sub.u_lrly3.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E4",
+      "lane": "sl_E4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E5.u_core.u_sub.u_stm.vm_waddr[0:23]<-dvs_E5.u_core.u_sub.u_lrly0.vm_waddr@0",
+      "sink": "dvs_E5.u_core.u_sub.u_stm",
+      "sink_part": "sl_E5_stm",
+      "src_part": "sl_E5_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          0,
+          23
+        ]
+      ],
+      "source": "dvs_E5.u_core.u_sub.u_lrly0.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E5",
+      "lane": "sl_E5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E5.u_core.u_sub.u_stm.vm_waddr[24:47]<-dvs_E5.u_core.u_sub.u_lrly1.vm_waddr@0",
+      "sink": "dvs_E5.u_core.u_sub.u_stm",
+      "sink_part": "sl_E5_stm",
+      "src_part": "sl_E5_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          24,
+          47
+        ]
+      ],
+      "source": "dvs_E5.u_core.u_sub.u_lrly1.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E5",
+      "lane": "sl_E5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E5.u_core.u_sub.u_stm.vm_waddr[48:71]<-dvs_E5.u_core.u_sub.u_lrly2.vm_waddr@0",
+      "sink": "dvs_E5.u_core.u_sub.u_stm",
+      "sink_part": "sl_E5_stm",
+      "src_part": "sl_E5_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          48,
+          71
+        ]
+      ],
+      "source": "dvs_E5.u_core.u_sub.u_lrly2.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E5",
+      "lane": "sl_E5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E5.u_core.u_sub.u_stm.vm_waddr[72:95]<-dvs_E5.u_core.u_sub.u_lrly3.vm_waddr@0",
+      "sink": "dvs_E5.u_core.u_sub.u_stm",
+      "sink_part": "sl_E5_stm",
+      "src_part": "sl_E5_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          72,
+          95
+        ]
+      ],
+      "source": "dvs_E5.u_core.u_sub.u_lrly3.vm_waddr",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E5",
+      "lane": "sl_E5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E5.u_core.u_sub.u_stm.vm_wdata[0:31]<-dvs_E5.u_core.u_sub.u_lrly0.vm_wdata@0",
+      "sink": "dvs_E5.u_core.u_sub.u_stm",
+      "sink_part": "sl_E5_stm",
+      "src_part": "sl_E5_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          0,
+          31
+        ]
+      ],
+      "source": "dvs_E5.u_core.u_sub.u_lrly0.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E5",
+      "lane": "sl_E5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E5.u_core.u_sub.u_stm.vm_wdata[32:63]<-dvs_E5.u_core.u_sub.u_lrly1.vm_wdata@0",
+      "sink": "dvs_E5.u_core.u_sub.u_stm",
+      "sink_part": "sl_E5_stm",
+      "src_part": "sl_E5_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          32,
+          63
+        ]
+      ],
+      "source": "dvs_E5.u_core.u_sub.u_lrly1.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E5",
+      "lane": "sl_E5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E5.u_core.u_sub.u_stm.vm_wdata[64:95]<-dvs_E5.u_core.u_sub.u_lrly2.vm_wdata@0",
+      "sink": "dvs_E5.u_core.u_sub.u_stm",
+      "sink_part": "sl_E5_stm",
+      "src_part": "sl_E5_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          64,
+          95
+        ]
+      ],
+      "source": "dvs_E5.u_core.u_sub.u_lrly2.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E5",
+      "lane": "sl_E5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E5.u_core.u_sub.u_stm.vm_wdata[96:127]<-dvs_E5.u_core.u_sub.u_lrly3.vm_wdata@0",
+      "sink": "dvs_E5.u_core.u_sub.u_stm",
+      "sink_part": "sl_E5_stm",
+      "src_part": "sl_E5_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          96,
+          127
+        ]
+      ],
+      "source": "dvs_E5.u_core.u_sub.u_lrly3.vm_wdata",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E5",
+      "lane": "sl_E5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E5.u_core.u_sub.u_stm.vm_we[0:0]<-dvs_E5.u_core.u_sub.u_lrly0.vm_we@0",
+      "sink": "dvs_E5.u_core.u_sub.u_stm",
+      "sink_part": "sl_E5_stm",
+      "src_part": "sl_E5_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "dvs_E5.u_core.u_sub.u_lrly0.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E5",
+      "lane": "sl_E5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E5.u_core.u_sub.u_stm.vm_we[1:1]<-dvs_E5.u_core.u_sub.u_lrly1.vm_we@0",
+      "sink": "dvs_E5.u_core.u_sub.u_stm",
+      "sink_part": "sl_E5_stm",
+      "src_part": "sl_E5_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          1,
+          1
+        ]
+      ],
+      "source": "dvs_E5.u_core.u_sub.u_lrly1.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E5",
+      "lane": "sl_E5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E5.u_core.u_sub.u_stm.vm_we[2:2]<-dvs_E5.u_core.u_sub.u_lrly2.vm_we@0",
+      "sink": "dvs_E5.u_core.u_sub.u_stm",
+      "sink_part": "sl_E5_stm",
+      "src_part": "sl_E5_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          2,
+          2
+        ]
+      ],
+      "source": "dvs_E5.u_core.u_sub.u_lrly2.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E5",
+      "lane": "sl_E5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_E5.u_core.u_sub.u_stm.vm_we[3:3]<-dvs_E5.u_core.u_sub.u_lrly3.vm_we@0",
+      "sink": "dvs_E5.u_core.u_sub.u_stm",
+      "sink_part": "sl_E5_stm",
+      "src_part": "sl_E5_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "dvs_E5.u_core.u_sub.u_lrly3.vm_we",
+      "asbuilt": 0,
+      "bound": 13,
+      "pad": 5,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_E5",
+      "lane": "sl_E5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_stm.vm_waddr[0:23]<-dvs_W0.u_core.u_sub.u_lrly0.vm_waddr@0",
+      "sink": "dvs_W0.u_core.u_sub.u_stm",
+      "sink_part": "sl_W0_stm",
+      "src_part": "sl_W0_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          0,
+          23
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_lrly0.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W0",
+      "lane": "sl_W0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_stm.vm_waddr[24:47]<-dvs_W0.u_core.u_sub.u_lrly1.vm_waddr@0",
+      "sink": "dvs_W0.u_core.u_sub.u_stm",
+      "sink_part": "sl_W0_stm",
+      "src_part": "sl_W0_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          24,
+          47
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_lrly1.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W0",
+      "lane": "sl_W0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_stm.vm_waddr[48:71]<-dvs_W0.u_core.u_sub.u_lrly2.vm_waddr@0",
+      "sink": "dvs_W0.u_core.u_sub.u_stm",
+      "sink_part": "sl_W0_stm",
+      "src_part": "sl_W0_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          48,
+          71
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_lrly2.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W0",
+      "lane": "sl_W0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_stm.vm_waddr[72:95]<-dvs_W0.u_core.u_sub.u_lrly3.vm_waddr@0",
+      "sink": "dvs_W0.u_core.u_sub.u_stm",
+      "sink_part": "sl_W0_stm",
+      "src_part": "sl_W0_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          72,
+          95
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_lrly3.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W0",
+      "lane": "sl_W0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_stm.vm_wdata[0:31]<-dvs_W0.u_core.u_sub.u_lrly0.vm_wdata@0",
+      "sink": "dvs_W0.u_core.u_sub.u_stm",
+      "sink_part": "sl_W0_stm",
+      "src_part": "sl_W0_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          0,
+          31
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_lrly0.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W0",
+      "lane": "sl_W0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_stm.vm_wdata[32:63]<-dvs_W0.u_core.u_sub.u_lrly1.vm_wdata@0",
+      "sink": "dvs_W0.u_core.u_sub.u_stm",
+      "sink_part": "sl_W0_stm",
+      "src_part": "sl_W0_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          32,
+          63
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_lrly1.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W0",
+      "lane": "sl_W0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_stm.vm_wdata[64:95]<-dvs_W0.u_core.u_sub.u_lrly2.vm_wdata@0",
+      "sink": "dvs_W0.u_core.u_sub.u_stm",
+      "sink_part": "sl_W0_stm",
+      "src_part": "sl_W0_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          64,
+          95
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_lrly2.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W0",
+      "lane": "sl_W0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_stm.vm_wdata[96:127]<-dvs_W0.u_core.u_sub.u_lrly3.vm_wdata@0",
+      "sink": "dvs_W0.u_core.u_sub.u_stm",
+      "sink_part": "sl_W0_stm",
+      "src_part": "sl_W0_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          96,
+          127
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_lrly3.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W0",
+      "lane": "sl_W0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_stm.vm_we[0:0]<-dvs_W0.u_core.u_sub.u_lrly0.vm_we@0",
+      "sink": "dvs_W0.u_core.u_sub.u_stm",
+      "sink_part": "sl_W0_stm",
+      "src_part": "sl_W0_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_lrly0.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W0",
+      "lane": "sl_W0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_stm.vm_we[1:1]<-dvs_W0.u_core.u_sub.u_lrly1.vm_we@0",
+      "sink": "dvs_W0.u_core.u_sub.u_stm",
+      "sink_part": "sl_W0_stm",
+      "src_part": "sl_W0_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          1,
+          1
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_lrly1.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W0",
+      "lane": "sl_W0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_stm.vm_we[2:2]<-dvs_W0.u_core.u_sub.u_lrly2.vm_we@0",
+      "sink": "dvs_W0.u_core.u_sub.u_stm",
+      "sink_part": "sl_W0_stm",
+      "src_part": "sl_W0_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          2,
+          2
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_lrly2.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W0",
+      "lane": "sl_W0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_stm.vm_we[3:3]<-dvs_W0.u_core.u_sub.u_lrly3.vm_we@0",
+      "sink": "dvs_W0.u_core.u_sub.u_stm",
+      "sink_part": "sl_W0_stm",
+      "src_part": "sl_W0_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_lrly3.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W0",
+      "lane": "sl_W0_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_stm.vm_waddr[0:23]<-dvs_W1.u_core.u_sub.u_lrly0.vm_waddr@0",
+      "sink": "dvs_W1.u_core.u_sub.u_stm",
+      "sink_part": "sl_W1_stm",
+      "src_part": "sl_W1_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          0,
+          23
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_lrly0.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W1",
+      "lane": "sl_W1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_stm.vm_waddr[24:47]<-dvs_W1.u_core.u_sub.u_lrly1.vm_waddr@0",
+      "sink": "dvs_W1.u_core.u_sub.u_stm",
+      "sink_part": "sl_W1_stm",
+      "src_part": "sl_W1_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          24,
+          47
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_lrly1.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W1",
+      "lane": "sl_W1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_stm.vm_waddr[48:71]<-dvs_W1.u_core.u_sub.u_lrly2.vm_waddr@0",
+      "sink": "dvs_W1.u_core.u_sub.u_stm",
+      "sink_part": "sl_W1_stm",
+      "src_part": "sl_W1_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          48,
+          71
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_lrly2.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W1",
+      "lane": "sl_W1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_stm.vm_waddr[72:95]<-dvs_W1.u_core.u_sub.u_lrly3.vm_waddr@0",
+      "sink": "dvs_W1.u_core.u_sub.u_stm",
+      "sink_part": "sl_W1_stm",
+      "src_part": "sl_W1_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          72,
+          95
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_lrly3.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W1",
+      "lane": "sl_W1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_stm.vm_wdata[0:31]<-dvs_W1.u_core.u_sub.u_lrly0.vm_wdata@0",
+      "sink": "dvs_W1.u_core.u_sub.u_stm",
+      "sink_part": "sl_W1_stm",
+      "src_part": "sl_W1_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          0,
+          31
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_lrly0.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W1",
+      "lane": "sl_W1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_stm.vm_wdata[32:63]<-dvs_W1.u_core.u_sub.u_lrly1.vm_wdata@0",
+      "sink": "dvs_W1.u_core.u_sub.u_stm",
+      "sink_part": "sl_W1_stm",
+      "src_part": "sl_W1_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          32,
+          63
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_lrly1.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W1",
+      "lane": "sl_W1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_stm.vm_wdata[64:95]<-dvs_W1.u_core.u_sub.u_lrly2.vm_wdata@0",
+      "sink": "dvs_W1.u_core.u_sub.u_stm",
+      "sink_part": "sl_W1_stm",
+      "src_part": "sl_W1_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          64,
+          95
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_lrly2.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W1",
+      "lane": "sl_W1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_stm.vm_wdata[96:127]<-dvs_W1.u_core.u_sub.u_lrly3.vm_wdata@0",
+      "sink": "dvs_W1.u_core.u_sub.u_stm",
+      "sink_part": "sl_W1_stm",
+      "src_part": "sl_W1_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          96,
+          127
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_lrly3.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W1",
+      "lane": "sl_W1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_stm.vm_we[0:0]<-dvs_W1.u_core.u_sub.u_lrly0.vm_we@0",
+      "sink": "dvs_W1.u_core.u_sub.u_stm",
+      "sink_part": "sl_W1_stm",
+      "src_part": "sl_W1_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_lrly0.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W1",
+      "lane": "sl_W1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_stm.vm_we[1:1]<-dvs_W1.u_core.u_sub.u_lrly1.vm_we@0",
+      "sink": "dvs_W1.u_core.u_sub.u_stm",
+      "sink_part": "sl_W1_stm",
+      "src_part": "sl_W1_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          1,
+          1
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_lrly1.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W1",
+      "lane": "sl_W1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_stm.vm_we[2:2]<-dvs_W1.u_core.u_sub.u_lrly2.vm_we@0",
+      "sink": "dvs_W1.u_core.u_sub.u_stm",
+      "sink_part": "sl_W1_stm",
+      "src_part": "sl_W1_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          2,
+          2
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_lrly2.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W1",
+      "lane": "sl_W1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_stm.vm_we[3:3]<-dvs_W1.u_core.u_sub.u_lrly3.vm_we@0",
+      "sink": "dvs_W1.u_core.u_sub.u_stm",
+      "sink_part": "sl_W1_stm",
+      "src_part": "sl_W1_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_lrly3.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W1",
+      "lane": "sl_W1_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_stm.vm_waddr[0:23]<-dvs_W2.u_core.u_sub.u_lrly0.vm_waddr@0",
+      "sink": "dvs_W2.u_core.u_sub.u_stm",
+      "sink_part": "sl_W2_stm",
+      "src_part": "sl_W2_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          0,
+          23
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_lrly0.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W2",
+      "lane": "sl_W2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_stm.vm_waddr[24:47]<-dvs_W2.u_core.u_sub.u_lrly1.vm_waddr@0",
+      "sink": "dvs_W2.u_core.u_sub.u_stm",
+      "sink_part": "sl_W2_stm",
+      "src_part": "sl_W2_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          24,
+          47
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_lrly1.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W2",
+      "lane": "sl_W2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_stm.vm_waddr[48:71]<-dvs_W2.u_core.u_sub.u_lrly2.vm_waddr@0",
+      "sink": "dvs_W2.u_core.u_sub.u_stm",
+      "sink_part": "sl_W2_stm",
+      "src_part": "sl_W2_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          48,
+          71
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_lrly2.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W2",
+      "lane": "sl_W2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_stm.vm_waddr[72:95]<-dvs_W2.u_core.u_sub.u_lrly3.vm_waddr@0",
+      "sink": "dvs_W2.u_core.u_sub.u_stm",
+      "sink_part": "sl_W2_stm",
+      "src_part": "sl_W2_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          72,
+          95
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_lrly3.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W2",
+      "lane": "sl_W2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_stm.vm_wdata[0:31]<-dvs_W2.u_core.u_sub.u_lrly0.vm_wdata@0",
+      "sink": "dvs_W2.u_core.u_sub.u_stm",
+      "sink_part": "sl_W2_stm",
+      "src_part": "sl_W2_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          0,
+          31
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_lrly0.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W2",
+      "lane": "sl_W2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_stm.vm_wdata[32:63]<-dvs_W2.u_core.u_sub.u_lrly1.vm_wdata@0",
+      "sink": "dvs_W2.u_core.u_sub.u_stm",
+      "sink_part": "sl_W2_stm",
+      "src_part": "sl_W2_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          32,
+          63
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_lrly1.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W2",
+      "lane": "sl_W2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_stm.vm_wdata[64:95]<-dvs_W2.u_core.u_sub.u_lrly2.vm_wdata@0",
+      "sink": "dvs_W2.u_core.u_sub.u_stm",
+      "sink_part": "sl_W2_stm",
+      "src_part": "sl_W2_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          64,
+          95
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_lrly2.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W2",
+      "lane": "sl_W2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_stm.vm_wdata[96:127]<-dvs_W2.u_core.u_sub.u_lrly3.vm_wdata@0",
+      "sink": "dvs_W2.u_core.u_sub.u_stm",
+      "sink_part": "sl_W2_stm",
+      "src_part": "sl_W2_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          96,
+          127
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_lrly3.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W2",
+      "lane": "sl_W2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_stm.vm_we[0:0]<-dvs_W2.u_core.u_sub.u_lrly0.vm_we@0",
+      "sink": "dvs_W2.u_core.u_sub.u_stm",
+      "sink_part": "sl_W2_stm",
+      "src_part": "sl_W2_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_lrly0.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W2",
+      "lane": "sl_W2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_stm.vm_we[1:1]<-dvs_W2.u_core.u_sub.u_lrly1.vm_we@0",
+      "sink": "dvs_W2.u_core.u_sub.u_stm",
+      "sink_part": "sl_W2_stm",
+      "src_part": "sl_W2_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          1,
+          1
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_lrly1.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W2",
+      "lane": "sl_W2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_stm.vm_we[2:2]<-dvs_W2.u_core.u_sub.u_lrly2.vm_we@0",
+      "sink": "dvs_W2.u_core.u_sub.u_stm",
+      "sink_part": "sl_W2_stm",
+      "src_part": "sl_W2_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          2,
+          2
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_lrly2.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W2",
+      "lane": "sl_W2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_stm.vm_we[3:3]<-dvs_W2.u_core.u_sub.u_lrly3.vm_we@0",
+      "sink": "dvs_W2.u_core.u_sub.u_stm",
+      "sink_part": "sl_W2_stm",
+      "src_part": "sl_W2_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_lrly3.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W2",
+      "lane": "sl_W2_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_stm.vm_waddr[0:23]<-dvs_W3.u_core.u_sub.u_lrly0.vm_waddr@0",
+      "sink": "dvs_W3.u_core.u_sub.u_stm",
+      "sink_part": "sl_W3_stm",
+      "src_part": "sl_W3_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          0,
+          23
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_lrly0.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W3",
+      "lane": "sl_W3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_stm.vm_waddr[24:47]<-dvs_W3.u_core.u_sub.u_lrly1.vm_waddr@0",
+      "sink": "dvs_W3.u_core.u_sub.u_stm",
+      "sink_part": "sl_W3_stm",
+      "src_part": "sl_W3_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          24,
+          47
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_lrly1.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W3",
+      "lane": "sl_W3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_stm.vm_waddr[48:71]<-dvs_W3.u_core.u_sub.u_lrly2.vm_waddr@0",
+      "sink": "dvs_W3.u_core.u_sub.u_stm",
+      "sink_part": "sl_W3_stm",
+      "src_part": "sl_W3_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          48,
+          71
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_lrly2.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W3",
+      "lane": "sl_W3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_stm.vm_waddr[72:95]<-dvs_W3.u_core.u_sub.u_lrly3.vm_waddr@0",
+      "sink": "dvs_W3.u_core.u_sub.u_stm",
+      "sink_part": "sl_W3_stm",
+      "src_part": "sl_W3_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          72,
+          95
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_lrly3.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W3",
+      "lane": "sl_W3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_stm.vm_wdata[0:31]<-dvs_W3.u_core.u_sub.u_lrly0.vm_wdata@0",
+      "sink": "dvs_W3.u_core.u_sub.u_stm",
+      "sink_part": "sl_W3_stm",
+      "src_part": "sl_W3_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          0,
+          31
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_lrly0.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W3",
+      "lane": "sl_W3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_stm.vm_wdata[32:63]<-dvs_W3.u_core.u_sub.u_lrly1.vm_wdata@0",
+      "sink": "dvs_W3.u_core.u_sub.u_stm",
+      "sink_part": "sl_W3_stm",
+      "src_part": "sl_W3_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          32,
+          63
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_lrly1.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W3",
+      "lane": "sl_W3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_stm.vm_wdata[64:95]<-dvs_W3.u_core.u_sub.u_lrly2.vm_wdata@0",
+      "sink": "dvs_W3.u_core.u_sub.u_stm",
+      "sink_part": "sl_W3_stm",
+      "src_part": "sl_W3_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          64,
+          95
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_lrly2.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W3",
+      "lane": "sl_W3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_stm.vm_wdata[96:127]<-dvs_W3.u_core.u_sub.u_lrly3.vm_wdata@0",
+      "sink": "dvs_W3.u_core.u_sub.u_stm",
+      "sink_part": "sl_W3_stm",
+      "src_part": "sl_W3_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          96,
+          127
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_lrly3.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W3",
+      "lane": "sl_W3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_stm.vm_we[0:0]<-dvs_W3.u_core.u_sub.u_lrly0.vm_we@0",
+      "sink": "dvs_W3.u_core.u_sub.u_stm",
+      "sink_part": "sl_W3_stm",
+      "src_part": "sl_W3_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_lrly0.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W3",
+      "lane": "sl_W3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_stm.vm_we[1:1]<-dvs_W3.u_core.u_sub.u_lrly1.vm_we@0",
+      "sink": "dvs_W3.u_core.u_sub.u_stm",
+      "sink_part": "sl_W3_stm",
+      "src_part": "sl_W3_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          1,
+          1
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_lrly1.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W3",
+      "lane": "sl_W3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_stm.vm_we[2:2]<-dvs_W3.u_core.u_sub.u_lrly2.vm_we@0",
+      "sink": "dvs_W3.u_core.u_sub.u_stm",
+      "sink_part": "sl_W3_stm",
+      "src_part": "sl_W3_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          2,
+          2
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_lrly2.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W3",
+      "lane": "sl_W3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_stm.vm_we[3:3]<-dvs_W3.u_core.u_sub.u_lrly3.vm_we@0",
+      "sink": "dvs_W3.u_core.u_sub.u_stm",
+      "sink_part": "sl_W3_stm",
+      "src_part": "sl_W3_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_lrly3.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W3",
+      "lane": "sl_W3_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_stm.vm_waddr[0:23]<-dvs_W4.u_core.u_sub.u_lrly0.vm_waddr@0",
+      "sink": "dvs_W4.u_core.u_sub.u_stm",
+      "sink_part": "sl_W4_stm",
+      "src_part": "sl_W4_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          0,
+          23
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_lrly0.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W4",
+      "lane": "sl_W4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_stm.vm_waddr[24:47]<-dvs_W4.u_core.u_sub.u_lrly1.vm_waddr@0",
+      "sink": "dvs_W4.u_core.u_sub.u_stm",
+      "sink_part": "sl_W4_stm",
+      "src_part": "sl_W4_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          24,
+          47
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_lrly1.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W4",
+      "lane": "sl_W4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_stm.vm_waddr[48:71]<-dvs_W4.u_core.u_sub.u_lrly2.vm_waddr@0",
+      "sink": "dvs_W4.u_core.u_sub.u_stm",
+      "sink_part": "sl_W4_stm",
+      "src_part": "sl_W4_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          48,
+          71
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_lrly2.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W4",
+      "lane": "sl_W4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_stm.vm_waddr[72:95]<-dvs_W4.u_core.u_sub.u_lrly3.vm_waddr@0",
+      "sink": "dvs_W4.u_core.u_sub.u_stm",
+      "sink_part": "sl_W4_stm",
+      "src_part": "sl_W4_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          72,
+          95
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_lrly3.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W4",
+      "lane": "sl_W4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_stm.vm_wdata[0:31]<-dvs_W4.u_core.u_sub.u_lrly0.vm_wdata@0",
+      "sink": "dvs_W4.u_core.u_sub.u_stm",
+      "sink_part": "sl_W4_stm",
+      "src_part": "sl_W4_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          0,
+          31
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_lrly0.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W4",
+      "lane": "sl_W4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_stm.vm_wdata[32:63]<-dvs_W4.u_core.u_sub.u_lrly1.vm_wdata@0",
+      "sink": "dvs_W4.u_core.u_sub.u_stm",
+      "sink_part": "sl_W4_stm",
+      "src_part": "sl_W4_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          32,
+          63
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_lrly1.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W4",
+      "lane": "sl_W4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_stm.vm_wdata[64:95]<-dvs_W4.u_core.u_sub.u_lrly2.vm_wdata@0",
+      "sink": "dvs_W4.u_core.u_sub.u_stm",
+      "sink_part": "sl_W4_stm",
+      "src_part": "sl_W4_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          64,
+          95
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_lrly2.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W4",
+      "lane": "sl_W4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_stm.vm_wdata[96:127]<-dvs_W4.u_core.u_sub.u_lrly3.vm_wdata@0",
+      "sink": "dvs_W4.u_core.u_sub.u_stm",
+      "sink_part": "sl_W4_stm",
+      "src_part": "sl_W4_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          96,
+          127
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_lrly3.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W4",
+      "lane": "sl_W4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_stm.vm_we[0:0]<-dvs_W4.u_core.u_sub.u_lrly0.vm_we@0",
+      "sink": "dvs_W4.u_core.u_sub.u_stm",
+      "sink_part": "sl_W4_stm",
+      "src_part": "sl_W4_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_lrly0.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W4",
+      "lane": "sl_W4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_stm.vm_we[1:1]<-dvs_W4.u_core.u_sub.u_lrly1.vm_we@0",
+      "sink": "dvs_W4.u_core.u_sub.u_stm",
+      "sink_part": "sl_W4_stm",
+      "src_part": "sl_W4_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          1,
+          1
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_lrly1.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W4",
+      "lane": "sl_W4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_stm.vm_we[2:2]<-dvs_W4.u_core.u_sub.u_lrly2.vm_we@0",
+      "sink": "dvs_W4.u_core.u_sub.u_stm",
+      "sink_part": "sl_W4_stm",
+      "src_part": "sl_W4_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          2,
+          2
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_lrly2.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W4",
+      "lane": "sl_W4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_stm.vm_we[3:3]<-dvs_W4.u_core.u_sub.u_lrly3.vm_we@0",
+      "sink": "dvs_W4.u_core.u_sub.u_stm",
+      "sink_part": "sl_W4_stm",
+      "src_part": "sl_W4_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_lrly3.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W4",
+      "lane": "sl_W4_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_stm.vm_waddr[0:23]<-dvs_W5.u_core.u_sub.u_lrly0.vm_waddr@0",
+      "sink": "dvs_W5.u_core.u_sub.u_stm",
+      "sink_part": "sl_W5_stm",
+      "src_part": "sl_W5_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          0,
+          23
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_lrly0.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W5",
+      "lane": "sl_W5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_stm.vm_waddr[24:47]<-dvs_W5.u_core.u_sub.u_lrly1.vm_waddr@0",
+      "sink": "dvs_W5.u_core.u_sub.u_stm",
+      "sink_part": "sl_W5_stm",
+      "src_part": "sl_W5_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          24,
+          47
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_lrly1.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W5",
+      "lane": "sl_W5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_stm.vm_waddr[48:71]<-dvs_W5.u_core.u_sub.u_lrly2.vm_waddr@0",
+      "sink": "dvs_W5.u_core.u_sub.u_stm",
+      "sink_part": "sl_W5_stm",
+      "src_part": "sl_W5_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          48,
+          71
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_lrly2.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W5",
+      "lane": "sl_W5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_stm.vm_waddr[72:95]<-dvs_W5.u_core.u_sub.u_lrly3.vm_waddr@0",
+      "sink": "dvs_W5.u_core.u_sub.u_stm",
+      "sink_part": "sl_W5_stm",
+      "src_part": "sl_W5_su_l0",
+      "sink_port": "vm_waddr",
+      "sink_bits": [
+        [
+          72,
+          95
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_lrly3.vm_waddr",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W5",
+      "lane": "sl_W5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_stm.vm_wdata[0:31]<-dvs_W5.u_core.u_sub.u_lrly0.vm_wdata@0",
+      "sink": "dvs_W5.u_core.u_sub.u_stm",
+      "sink_part": "sl_W5_stm",
+      "src_part": "sl_W5_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          0,
+          31
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_lrly0.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W5",
+      "lane": "sl_W5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_stm.vm_wdata[32:63]<-dvs_W5.u_core.u_sub.u_lrly1.vm_wdata@0",
+      "sink": "dvs_W5.u_core.u_sub.u_stm",
+      "sink_part": "sl_W5_stm",
+      "src_part": "sl_W5_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          32,
+          63
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_lrly1.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W5",
+      "lane": "sl_W5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_stm.vm_wdata[64:95]<-dvs_W5.u_core.u_sub.u_lrly2.vm_wdata@0",
+      "sink": "dvs_W5.u_core.u_sub.u_stm",
+      "sink_part": "sl_W5_stm",
+      "src_part": "sl_W5_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          64,
+          95
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_lrly2.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W5",
+      "lane": "sl_W5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_stm.vm_wdata[96:127]<-dvs_W5.u_core.u_sub.u_lrly3.vm_wdata@0",
+      "sink": "dvs_W5.u_core.u_sub.u_stm",
+      "sink_part": "sl_W5_stm",
+      "src_part": "sl_W5_su_l0",
+      "sink_port": "vm_wdata",
+      "sink_bits": [
+        [
+          96,
+          127
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_lrly3.vm_wdata",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W5",
+      "lane": "sl_W5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_stm.vm_we[0:0]<-dvs_W5.u_core.u_sub.u_lrly0.vm_we@0",
+      "sink": "dvs_W5.u_core.u_sub.u_stm",
+      "sink_part": "sl_W5_stm",
+      "src_part": "sl_W5_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_lrly0.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W5",
+      "lane": "sl_W5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_stm.vm_we[1:1]<-dvs_W5.u_core.u_sub.u_lrly1.vm_we@0",
+      "sink": "dvs_W5.u_core.u_sub.u_stm",
+      "sink_part": "sl_W5_stm",
+      "src_part": "sl_W5_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          1,
+          1
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_lrly1.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W5",
+      "lane": "sl_W5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_stm.vm_we[2:2]<-dvs_W5.u_core.u_sub.u_lrly2.vm_we@0",
+      "sink": "dvs_W5.u_core.u_sub.u_stm",
+      "sink_part": "sl_W5_stm",
+      "src_part": "sl_W5_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          2,
+          2
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_lrly2.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W5",
+      "lane": "sl_W5_su_l0__x_su_l0_stm"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_stm.vm_we[3:3]<-dvs_W5.u_core.u_sub.u_lrly3.vm_we@0",
+      "sink": "dvs_W5.u_core.u_sub.u_stm",
+      "sink_part": "sl_W5_stm",
+      "src_part": "sl_W5_su_l0",
+      "sink_port": "vm_we",
+      "sink_bits": [
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_lrly3.vm_we",
+      "asbuilt": 0,
+      "bound": 12,
+      "pad": 6,
+      "landed": 18,
+      "cls": "NATIVE_SU_STREAM_TUPLE_dvs_W5",
+      "lane": "sl_W5_su_l0__x_su_l0_stm"
+    }
+  ],
+  "summary": {
+    "consumers": 12,
+    "members": 144,
+    "added_FF_bits": 2736,
+    "added_maximum_path_edges": 0,
+    "arithmetic_changes": 0,
+    "rows": [
+      {
+        "node": "dvs_E0",
+        "old_group_landed": [
+          17,
+          18
+        ],
+        "candidate_landed": 18,
+        "added_FF_bits": 228,
+        "added_maximum_path_edges": 0
+      },
+      {
+        "node": "dvs_E1",
+        "old_group_landed": [
+          17,
+          18
+        ],
+        "candidate_landed": 18,
+        "added_FF_bits": 228,
+        "added_maximum_path_edges": 0
+      },
+      {
+        "node": "dvs_E2",
+        "old_group_landed": [
+          17,
+          18
+        ],
+        "candidate_landed": 18,
+        "added_FF_bits": 228,
+        "added_maximum_path_edges": 0
+      },
+      {
+        "node": "dvs_E3",
+        "old_group_landed": [
+          17,
+          18
+        ],
+        "candidate_landed": 18,
+        "added_FF_bits": 228,
+        "added_maximum_path_edges": 0
+      },
+      {
+        "node": "dvs_E4",
+        "old_group_landed": [
+          17,
+          18
+        ],
+        "candidate_landed": 18,
+        "added_FF_bits": 228,
+        "added_maximum_path_edges": 0
+      },
+      {
+        "node": "dvs_E5",
+        "old_group_landed": [
+          17,
+          18
+        ],
+        "candidate_landed": 18,
+        "added_FF_bits": 228,
+        "added_maximum_path_edges": 0
+      },
+      {
+        "node": "dvs_W0",
+        "old_group_landed": [
+          17,
+          18
+        ],
+        "candidate_landed": 18,
+        "added_FF_bits": 228,
+        "added_maximum_path_edges": 0
+      },
+      {
+        "node": "dvs_W1",
+        "old_group_landed": [
+          17,
+          18
+        ],
+        "candidate_landed": 18,
+        "added_FF_bits": 228,
+        "added_maximum_path_edges": 0
+      },
+      {
+        "node": "dvs_W2",
+        "old_group_landed": [
+          17,
+          18
+        ],
+        "candidate_landed": 18,
+        "added_FF_bits": 228,
+        "added_maximum_path_edges": 0
+      },
+      {
+        "node": "dvs_W3",
+        "old_group_landed": [
+          17,
+          18
+        ],
+        "candidate_landed": 18,
+        "added_FF_bits": 228,
+        "added_maximum_path_edges": 0
+      },
+      {
+        "node": "dvs_W4",
+        "old_group_landed": [
+          17,
+          18
+        ],
+        "candidate_landed": 18,
+        "added_FF_bits": 228,
+        "added_maximum_path_edges": 0
+      },
+      {
+        "node": "dvs_W5",
+        "old_group_landed": [
+          17,
+          18
+        ],
+        "candidate_landed": 18,
+        "added_FF_bits": 228,
+        "added_maximum_path_edges": 0
+      }
+    ]
+  }
+}
