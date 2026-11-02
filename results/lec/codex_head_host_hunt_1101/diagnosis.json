@@ -1,0 +1,43 @@
+{
+  "verdict": "NATIVE_COMPONENT_EQUIVALENT",
+  "host": "epyc2",
+  "root": "/srv/opentallas-scratch2/claude/codex-head-lec-hunt-1101",
+  "subject": "dh53-hostlec/kit old native ot_s81hd_host_ep; dp_hd_host/1_2_yosys.v",
+  "counts": {
+    "compare_points": 136216,
+    "proved": 136216,
+    "differs": 0,
+    "undecided": 0
+  },
+  "keep": {
+    "declared": 17929,
+    "present": 17929,
+    "constant_removed": 0,
+    "missing": 0
+  },
+  "reset": "Existing owner HEAD boot contract64edges/66known-low assertion receipt; no debug override; unchanged between paired runs. No new contract/extension.",
+  "generic_reuse_sibling": {
+    "path": "epyc2:/srv/opentallas-scratch2/claude/codex-head-lec-reuse-1101",
+    "verdict": "UNPROVEN",
+    "compare_points": 135528,
+    "proved": 135372,
+    "differs": 156,
+    "undecided": 0,
+    "first_class": "gearbox f_rx_v/hc hs fields"
+  },
+  "specific_paired_run_delta": "Six added native hints, no removals: two source-proved three-state hunt cons and4 lane1 beat_tx bit aliases. Delta applies these paired runs only; earlier historical428hint run already had hunt cons and is not explained by their absence.",
+  "source_basis": "Frozen ot_s81ph_link_gbx_safe3 resets hunt0 and updates only0/1/2; states/aliases proved inductively through existing checker, never assumed.",
+  "limitations": [
+    "Original canonical PROVENANCE invalid/missing remains visible; raw subject/source/checker hashes separately supplied, no git identity fabricated.",
+    "This is an older native component, not current b2 routed repair. No timing, source-plan activation, released combined tag, or current routed EQ credit.",
+    "Current b2 remains FF/DRV/DRC/parent-held and future repaired netlists require their own formal comparison."
+  ],
+  "artifact_files": [
+    "native_equivalent.json",
+    "hunt_delta.json",
+    "reuse_hunt.sh",
+    "reset_contract.json",
+    "reset_receipt.txt",
+    "subject_hashes.json"
+  ]
+}
