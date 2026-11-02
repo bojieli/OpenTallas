@@ -1,0 +1,68 @@
+{
+  "schema": "opentallas.kv.clock_branch_moves.v1",
+  "operation": "existing two noninverting clockbuffers, same cells/nets/root/constraints",
+  "mode": "equal",
+  "source_snapshot": "best fMXcenter tree12/noDummy/d80 actual pre-repair ODB",
+  "source_clock": "clk, positive BUF-only ancestry to ck[0]; no ICG/INV/FT domain",
+  "corner": "actual FF library/calibratedRC, full TT+FF evaluation required",
+  "target_branch_FFs": 60,
+  "direct_late_input_captures": 58,
+  "other_real_FFs": [
+    "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.ko[30]$_DFF_P_",
+    "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.ko[32]$_DFF_P_"
+  ],
+  "upstream_output_net": "clknet_6_53_0_ck[0]",
+  "coupled_upstream_subtree_FFs": 731,
+  "global_FFs_required": 43752,
+  "old_actual_pin_legs_um": [
+    38.05850000000001,
+    125.81,
+    113.552,
+    118.358,
+    122.84,
+    127.16000000000001,
+    130.832
+  ],
+  "proposed_pin_legs_um": [
+    95.13650000000001,
+    95.84,
+    86.444,
+    91.25,
+    95.732,
+    100.05199999999999,
+    103.724
+  ],
+  "proposal": [
+    {
+      "name": "clkbuf_10_848__f_ck[0]",
+      "master": "BUFx24_ASAP7_75t_R",
+      "old_origin_um": [
+        157.14,
+        117.18
+      ],
+      "old_orientation": "R0",
+      "input_net": "clknet_6_53_0_ck[0]",
+      "output_net": "clknet_10_848__leaf_ck[0]",
+      "new_center_um": [
+        123.822,
+        94.365
+      ]
+    },
+    {
+      "name": "wire27530",
+      "master": "BUFx24_ASAP7_75t_R",
+      "old_origin_um": [
+        90.828,
+        58.59
+      ],
+      "old_orientation": "MX",
+      "input_net": "clknet_10_848__leaf_ck[0]",
+      "output_net": "net27529",
+      "new_center_um": [
+        72.9,
+        50.355
+      ]
+    }
+  ],
+  "status": "MODEL ONLY; no STA/placement pass assumed; exact legal-site selection, native placementcheck/globalSTA/root gates mandatory"
+}

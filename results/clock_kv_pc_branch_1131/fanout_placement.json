@@ -1,0 +1,55 @@
+{
+  "operation": "two existing noninverting clock buffers moved only",
+  "moved": [
+    {
+      "name": "clkbuf_10_848__f_ck[0]",
+      "master": "BUFx24_ASAP7_75t_R",
+      "old_origin_um": [
+        157.14,
+        117.18
+      ],
+      "actual_origin_um": [
+        115.452,
+        88.29
+      ],
+      "requested_center_um": [
+        116.262,
+        88.425
+      ],
+      "actual_orientation": "MX",
+      "connections": {
+        "A": "clknet_6_53_0_ck[0]",
+        "VDD": null,
+        "VSS": null,
+        "Y": "clknet_10_848__leaf_ck[0]"
+      }
+    },
+    {
+      "name": "wire27530",
+      "master": "BUFx24_ASAP7_75t_R",
+      "old_origin_um": [
+        90.828,
+        58.59
+      ],
+      "actual_origin_um": [
+        54.432,
+        34.29
+      ],
+      "requested_center_um": [
+        54.378,
+        34.425
+      ],
+      "actual_orientation": "MX",
+      "connections": {
+        "A": "clknet_10_848__leaf_ck[0]",
+        "VDD": null,
+        "VSS": null,
+        "Y": "net27529"
+      }
+    }
+  ],
+  "other_instance_state_sha256": "dcb86be3417d66ae31f7096a1e8bce92de7384651cb43b8b8a2f08cad8acfd08",
+  "target_connections_unchanged": true,
+  "clock_identity_constraints_cycles_unchanged": true,
+  "native_placement_TT_FF_DRV_root_checks": "PENDING"
+}

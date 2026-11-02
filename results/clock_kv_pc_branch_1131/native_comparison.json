@@ -1,0 +1,46 @@
+{
+  "scope": "Actual same-two-cell placement canary and manual reproducibility tool; no generator/default/RTL/clock identity/net/topology/cycle change, no SIGNED/released-view claim.",
+  "source_pre_repair_odb_sha256": "a96b3c656f3c49511aa9f71f0480a5dd7a700be2d256f0a6f4b121c9032c4926",
+  "source_path": "intel1:/srv/opentallas-scratch2/claude/codex-kv-pc-cores-1101/fmxClockGraph1131/input/diag/cts_before_repair.odb",
+  "native_calibrated_RC_evaluation": {
+    "baseline_full_FF_hold_ps": -162.677969,
+    "equal_full_FF_hold_ps": -151.27,
+    "equal_verdict": "FAIL unchanged -150ps structural stop",
+    "fanout_full_FF_hold_ps": -145.66,
+    "fanout_verdict": "inside unchanged -150ps structural stop; still negative, normal data repair REQUIRED",
+    "fanout_60_capture_clock_gain_ps_min": 17.16,
+    "fanout_60_capture_clock_gain_ps_max": 17.54,
+    "full_rooted_FFs": 43752,
+    "unrooted": 0,
+    "TT_only_slew_pin": "_212287_/A",
+    "TT_slew_ps_baseline_and_candidate": 340.0381,
+    "TT_slew_limit_ps": 320,
+    "TT_slew_baseline_candidate_identical": true
+  },
+  "ordinary_native_canary": {
+    "path": "intel1:codex-kv-pc-cores-1101/fmxFanoutRepair1131_v2/qkd_kvs_pc__397.44x362.88",
+    "period_ps": 833,
+    "setup_uncertainty_ps": 0,
+    "hold_uncertainty_ps": 25,
+    "hold_repair_goal_ps": 10,
+    "after_CTS_repair_TT_setup_ps": 0.11,
+    "after_CTS_repair_FF_hold_ps": 10,
+    "HB4_after_CTS": 11196,
+    "native_CTS_and_DPL_exit": 0,
+    "postCTS_geometry": {
+      "r2r_max_um": 383.67,
+      "r2r_violations": 0,
+      "pin_reg_max_um": 146.47,
+      "clock_rooted": 43752,
+      "col_v_proxy": 0.661,
+      "col_v_proxy_verdict": "FAIL retained"
+    },
+    "configured_GRT_iterations": 50,
+    "actual_initial_GRT_total_overflow": 0,
+    "post_GRT_repair_FF_hold_ps": 10.01,
+    "new_HB4_postGRT": 88,
+    "final_GRT_metrics": "IN PROGRESS at packet preparation; no final GRT qualification implied",
+    "final_DRT_signoff_EQ": "PENDING"
+  },
+  "units_note": "Only native UI-ps values used. Earlier diagnostic raw-seconds stats mislabeled ps remain excluded. Placement RC estimates and normal native MM after-repair frames remain separate."
+}
