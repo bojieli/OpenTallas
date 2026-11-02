@@ -600,14 +600,14 @@
   },
   "s81_head": {
    "enabled": true,
-   "event": "l48x",
+   "event": "l48z",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
-    "evidence": "KIT-WAVE-9 20:0x (COORD 19:03 (1)+(3)): HEAD plan of record l48x = l48w + 51 rst_start_raw pin moves (DIE-HEAD-52 a146f75cad3, G0C l48x = l48w 0 new, strict bind PASS); 12.25 gate on l48x variant h + --ca-write-fall TT +252.75 contract 0 BLOCKED(kits); hold_gate contract-relative limit FLOW-19 5751e5a949c merged (main f3e4659f554) | COORD 04:4x (4) + 05:4x: HEAD plan l47k (= l47 plan b87c81920f4c + K re-plan strap ties / sidecar dfe1fd228189; G0C l47k = l47: 1 ERROR reset-wavefront PENDING + 49 WARN, identical, main results/die_head_47_1031/l47k CHECKED); gate code l47k cb8aa342d07 merged main 1904e23afd2 (ROOT-MERGE-AI 05:46). Parent l47: COORD RULING 10-31 01:43: DIE-HEAD-47 l47 (l46a + value-only insertion_ff_ps 380 -> 342 on 21 types; G0C 0 new/0 gone, ot_clk kit byte-identical = l46 die clock, strict bind l46a PASS stands) APPROVED; merged main 1a34525e751 (ROOT-MERGE-AH); gate l47 = kit-wave-3 87dda5f5fce (main 8ce125d6a98)"
+    "evidence": "KIT-WAVE-9 20:0x (COORD 19:03 (1)+(3)): HEAD plan of record l48x = l48w + 51 rst_start_raw pin moves (DIE-HEAD-52 a146f75cad3, G0C l48x = l48w 0 new, strict bind PASS); 12.25 gate on l48x variant h + --ca-write-fall TT +252.75 contract 0 BLOCKED(kits); hold_gate contract-relative limit FLOW-19 5751e5a949c merged (main f3e4659f554) | COORD 04:4x (4) + 05:4x: HEAD plan l47k (= l47 plan b87c81920f4c + K re-plan strap ties / sidecar dfe1fd228189; G0C l47k = l47: 1 ERROR reset-wavefront PENDING + 49 WARN, identical, main results/die_head_47_1031/l47k CHECKED); gate code l47k cb8aa342d07 merged main 1904e23afd2 (ROOT-MERGE-AI 05:46). Parent l47: COORD RULING 10-31 01:43: DIE-HEAD-47 l47 (l46a + value-only insertion_ff_ps 380 -> 342 on 21 types; G0C 0 new/0 gone, ot_clk kit byte-identical = l46 die clock, strict bind l46a PASS stands) APPROVED; merged main 1a34525e751 (ROOT-MERGE-AH); gate l47 = kit-wave-3 87dda5f5fce (main 8ce125d6a98) | COORD 11-01 09:2x/14:0x approved l48z event; gate b3cb024e493 merged main a0f8f0ad6; prepared plan 0c98a23000ad / sidecar dfe1fd228189; DIE-HEAD-53 export PASS n3_turn,mesh_e,hd_spn"
    },
-   "plan": "/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/prepared_v3b/source_plan.json",
+   "plan": "/srv/opentallas-scratch2/claude/die-head-48/dh53/prepared_l48z/source_plan.json",
    "gen_host": "intel2",
    "src": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/src",
    "src_sha": "703c07481fa0bc4eedf4dc79cbdce6784dd2011e",
@@ -618,7 +618,7 @@
    },
    "gen_args": [
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/prepared_v3b/source_sidecar.json",
+    "/srv/opentallas-scratch2/claude/die-head-48/dh53/prepared_l48z/source_sidecar.json",
     "--hold-ff-margin",
     "10"
    ],
@@ -682,9 +682,10 @@
      "items": [
       "hd_spn_eshim_tx",
       "hd_spn_wshim_tx",
-      "hd_spn_wshim_rx"
+      "hd_spn_wshim_rx",
+      "hd_spn_eshim_rx"
      ],
-     "ref": "GEOM-104/GEOM-103 joint RECONCILE 2026-11-01 09:10: existing l48x shims PASS-COND parallel route; actual GRT0/r2r<=371/0collapse, single START163-179 and native link_o90 across95um strip; CTS clock_leaf_reach remains gated"
+     "ref": "GEOM-104/GEOM-103 joint RECONCILE 2026-11-01 09:10: existing l48x shims PASS-COND parallel route; actual GRT0/r2r<=371/0collapse, single START163-179 and native link_o90 across95um strip; CTS clock_leaf_reach remains gated; DIE-HEAD-53 19:54 matching eshim_rx single START179.15 inclusion"
     },
     {
      "rules": [
@@ -702,6 +703,15 @@
       "hd_spn_*shim*"
      ],
      "ref": "DIE-HEAD-53 CLASS TABLE H1 11-01 04:18; COORD approved adopted-slot exception"
+    },
+    {
+     "rules": [
+      "aspect"
+     ],
+     "items": [
+      "hd_*"
+     ],
+     "ref": "COORD 11-01 09:2x: aspect = plan slot shape, granted by exception (12.28b), no reshape; DIE-HEAD-53"
     }
    ],
    "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave"
