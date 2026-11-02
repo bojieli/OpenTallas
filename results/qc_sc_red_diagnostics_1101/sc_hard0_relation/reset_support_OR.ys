@@ -1,0 +1,10 @@
+read_verilog -sv -noautowire actual_helpers.sv gold.v reset_support_OR.v tb_hard0.v
+hierarchy -top tb
+setattr -unset keep_hierarchy
+setattr -mod -unset keep_hierarchy
+setattr -unset keep
+proc
+flatten
+async2sync
+opt
+sat -seq 4 -set-init-undef -set-def-inputs -prove-x bad 0 -show-inputs -show-outputs -dump_vcd reset_support_OR.vcd

@@ -1,0 +1,9 @@
+Exact HARD0 source relation diagnostic PASS
+
+Native selectedcapture coupon Intel1 unit3617760-1793620208 exit0,4GB1T/disk1, runtime /srv/opentallas-scratch2/claude/codex-qc-sc-red-1101/sc_hard0_relation. Correct literalHARD_PINREG0 PASS; all3ACTIVEmutants produce realbad=1 VCDcounterexamples: wrongplainDATA, independentreset-supportOR, sc_cfgcontrolforced1.107arbitrarydefinedDATAinputs,5independentdefinedreset supports,509observedQs, afterfirstcapture/fourSATsteps. Usesactualunchangedprimitivehelper source, no protocol assumptions orrelated/universalinvalidinitial-state/reset/parent credit. InitialEPYC2attempt wasNOTRUN at48GB<50diskfloor, nooverride/noCAD; identicalsource reroutedIntel1.
+
+Static exactsource comparison old051340895d9 vsnew98bbbbd8184 selectsall498 literalHARD0generatebranches, resolves15reset-D+15reset-maskternaries, folds onlyzero-delayaliases. Both have131751identicalprimitiveinstances/types/IDs/allports, noadded/missing/changed;96676remainingnontrivialassignmentsidentical. Declared43058FF on BOTH sides. This is staticliteralelaboration, notobservednative/mappedcount. Every509gold/gatefixtureprimitive independently matchesitsactualselectedsource; all509oldQs observedexactlyonce. Sourcepins/hashes and reproduciblecomparison code included; fullsourceblobs regenerablefromgitrefs.
+
+Existing41612e22eac fixturedefaultedHARD_PINREG1 anditsmutants wereHARD1 branches; existingwhole0eb23b82700 proofwasHARD1candidate versusitsmappednetlist. This newcoupon explicitlyselects0 andusesmutationsactiveat0; it doesnotextend eitheroldproofsilently.
+
+See SOURCE_EVENT_SCOPE_CORRECTION.md: old receiptincorrectlysays−387appliesbothmodes. ActualHARD0 retainsoriginal391duplicateFFs and15reset-dataFFbehavior, no4newsharedFFs; HARD1alone hasdeclared43058→42671. Defaultsource/native/physical/parentadoption remainsheld; noobservedmappedcount, fullboot64, sourceclockcount1364730change, CEvariantcredit, orphysicalviewreuse inferred.
