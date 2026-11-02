@@ -142,6 +142,16 @@ class Fingerprint(unittest.TestCase):
         dec, _, d = self.start(lambda f: f.__setitem__("extra_hook.tcl", "puts hi\n"))
         self.assertEqual(dec, "full", d)
 
+    def test_strap_declaration_reuses_physics_but_sdc_change_does_not(self):
+        edit = lambda f: f.__setitem__("straps.json", '{"straps":["strap_r8[0]"]}\n')
+        dec, start, d = self.start(edit)
+        self.assertEqual((dec, start), ("resume", "route"), d)
+        self.assertEqual(d["reuse"], list(KR.STEPS[:KR.IDX["route"]]))
+        def changed_sdc(files):
+            edit(files)
+            files["top.sdc"] += "set_case_analysis 0 [get_ports {strap_r8[0]}]\n"
+        self.assertEqual(self.start(changed_sdc)[0], "full")
+
     def test_nochange_refused_unless_infra(self):
         new = self.new_kit()
         self.assertEqual(KR.decide(new, man(self.oK))["decision"], "nochange")
