@@ -1,0 +1,110 @@
+{
+  "status": "PREP_ONLY_NOT_ADOPTED",
+  "native_pairs_checked": 1728,
+  "patched_calls": [
+    {
+      "index": 430,
+      "segment_relative_issue_edge": 5264,
+      "dst": 8,
+      "old_pidx": 1,
+      "new_pidx": 2
+    },
+    {
+      "index": 433,
+      "segment_relative_issue_edge": 5271,
+      "dst": 9,
+      "old_pidx": 1,
+      "new_pidx": 2
+    },
+    {
+      "index": 435,
+      "segment_relative_issue_edge": 5278,
+      "dst": 10,
+      "old_pidx": 1,
+      "new_pidx": 2
+    },
+    {
+      "index": 436,
+      "segment_relative_issue_edge": 5285,
+      "dst": 11,
+      "old_pidx": 1,
+      "new_pidx": 2
+    },
+    {
+      "index": 442,
+      "segment_relative_issue_edge": 5304,
+      "dst": 0,
+      "old_pidx": 1,
+      "new_pidx": 2
+    },
+    {
+      "index": 445,
+      "segment_relative_issue_edge": 5311,
+      "dst": 1,
+      "old_pidx": 1,
+      "new_pidx": 2
+    },
+    {
+      "index": 448,
+      "segment_relative_issue_edge": 5318,
+      "dst": 2,
+      "old_pidx": 1,
+      "new_pidx": 2
+    },
+    {
+      "index": 451,
+      "segment_relative_issue_edge": 5325,
+      "dst": 3,
+      "old_pidx": 1,
+      "new_pidx": 2
+    },
+    {
+      "index": 454,
+      "segment_relative_issue_edge": 5332,
+      "dst": 4,
+      "old_pidx": 1,
+      "new_pidx": 2
+    },
+    {
+      "index": 457,
+      "segment_relative_issue_edge": 5339,
+      "dst": 5,
+      "old_pidx": 1,
+      "new_pidx": 2
+    },
+    {
+      "index": 459,
+      "segment_relative_issue_edge": 5346,
+      "dst": 6,
+      "old_pidx": 1,
+      "new_pidx": 2
+    },
+    {
+      "index": 460,
+      "segment_relative_issue_edge": 5353,
+      "dst": 7,
+      "old_pidx": 1,
+      "new_pidx": 2
+    }
+  ],
+  "native_cmd_field": "cmd[12:4] -> su_cmd[8:0] -> p_idx[8:1] row / p_idx[0] half",
+  "residual1_crom_element_base": 0,
+  "residual2_crom_element_base": 384,
+  "timing_delta_edges": 0,
+  "added_issue_slots": 0,
+  "user_rule": "native calendar applies128*user to pidx after this local1->2 fix",
+  "head_native_su_calls": 0,
+  "old_calendar_sha256": {
+    "dw.hex": "85529b1c37800d8a5719e2e4f72a21932ff5c0189339e9aeebf493be3b54afbd",
+    "calendar_m0.viamap.hex": "7dee758ab8fbc189c91330b2ef5a72a89fdd0dc7659496417fc35858e852b917",
+    "calendar_m1.viamap.hex": "db189eb816d21f02e08d882e6700d5f01f3ce57386b9a912b979adeb68573005"
+  },
+  "candidate_sha256": {
+    "dw.hex": "85529b1c37800d8a5719e2e4f72a21932ff5c0189339e9aeebf493be3b54afbd",
+    "calendar_m0.viamap.hex": "a8f0f90bb6f70fcb0b79efe4172061aeecd926d2353519c8bc1a950384c1b9eb",
+    "calendar_m1.viamap.hex": "1ff2605dcd6f97c111d4dbd2a153c1383e63639766340f938167fbf2856177e8"
+  },
+  "manifest_sha256": "b674e4106deddd93680f1c2736d864c9cfa885e10e5ae72abe0b7d7a3fbfbaba",
+  "numeric_scope": "Corrected source dispatch only; native residual2 arithmetic/current full-layer gate NOT_RUN",
+  "rstd_source_join": "Historical last-residual PSUM/RSTD claims cannot transfer until this native caller/source mismatch is qualified"
+}
