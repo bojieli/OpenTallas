@@ -75,6 +75,66 @@ proc get_ports {args} {return ck}
         script.write_text(setup+body.replace('/out/',str(self.out)+'/'))
         subprocess.run(['tclsh',str(script)],capture_output=True,text=True,check=True)
 
+    def parent_request(self, limit=0):
+        self.export['parent_boundary_request']={'instances':['ff[0]'],'std_query_limit':limit}
+        for c in ['tt','ff']:
+            (self.out/f'child_clock_{c}_parent_targets.tsv').write_text('instance\nff[0]\n')
+            (self.out/f'child_clock_{c}_parent_relations.tsv').write_text('launch_data_pin\tcapture_data_pin\tlaunch_clock_ref\tsetup_capture_clock_ref\thold_capture_clock_ref\nff[0]/Q\tff1/D\tff[0]\tff1\tff1\n')
+
+    def test_parent_relation_is_clock_identity_only_without_std_request(self):
+        self.parent_request()
+        self.record()
+        doc=json.loads((self.out/'child_clock_witness.json').read_text())
+        info=doc['corners']['tt']['parent_boundary_relations']
+        self.assertEqual(info['relations'],1)
+        self.assertEqual(info['std_slack'],'NOT_ASSERTED_BY_CLOCK_RELATIONS')
+        self.assertNotIn('std_path_evidence',info)
+
+    def test_requested_std_cannot_reuse_a_clock_only_relation(self):
+        self.parent_request(10)
+        with self.assertRaisesRegex(ValueError,'incomplete original-STD'):
+            self.record()
+
+    def make_exact_parent_std(self):
+        self.parent_request(10)
+        header='launch_data_pin capture_data_pin delay status actual_startpoint actual_endpoint check_role native_std_slack_ps launch_clock_pin launch_clock launch_pin_edge launch_source_pin launch_source_edge launch_source_insertion_ps capture_clock_pin capture_clock capture_pin_edge capture_source_pin capture_source_edge capture_source_insertion_ps launch_clock_pin_arrival_ps capture_clock_pin_arrival_ps'.split()
+        for c in ['tt','ff']:
+            rows=[]
+            for delay,role,slack,la,ca in [('max','setup','7.5','240','230'),('min','hold','3.25','225','245')]:
+                rows.append(['ff[0]/Q','ff1/D',delay,'EXACT_STD_PATH','ff[0]/Q','ff1/D',role,slack,'ff[0]/CLK','clk','rise','ck','rise','0','ff1/CLK','clk','rise','ck','rise','0',la,ca])
+            (self.out/f'parent_boundary_std_{c}.tsv').write_text('\t'.join(header)+'\n'+''.join('\t'.join(row)+'\n' for row in rows))
+            (self.out/f'parent_boundary_std_{c}_counts.tsv').write_text('phase\tORIGINAL_STD_BEFORE_ZERO_UNCERTAINTY\nrelations\t1\nqueries\t2\nerrors\t0\nmissing_paths\t0\nlimited_paths\t0\nnative_engine_cppr_enabled\t0\nadditional_clock_or_cppr_credit\tNONE\n')
+            with (self.out/f'export_{c}.log').open('a') as stream:stream.write(f'PARENT_BOUNDARY_STD {c} COMPLETE\n')
+
+    def test_complete_std_evidence_is_not_a_new_qualification(self):
+        self.make_exact_parent_std();self.record()
+        doc=json.loads((self.out/'child_clock_witness.json').read_text())
+        info=doc['corners']['tt']['parent_boundary_relations']['std_path_evidence']
+        self.assertEqual(info['paths'],2)
+        self.assertEqual(info['additional_clock_or_cppr_credit'],'NONE')
+        self.assertEqual(doc['qualification'],'NOT_ASSERTED')
+
+    def test_wrong_std_clock_pin_cannot_join_correct_data_bits(self):
+        self.make_exact_parent_std()
+        path=self.out/'parent_boundary_std_tt.tsv'
+        path.write_text(path.read_text().replace('ff[0]/CLK','wrong/CLK'))
+        with self.assertRaisesRegex(ValueError,'clock identities do not match'):
+            self.record()
+
+    def test_std_source_must_belong_to_its_actual_clock(self):
+        self.make_exact_parent_std()
+        path=self.out/'parent_boundary_std_tt.tsv'
+        path.write_text(path.read_text().replace('\tck\trise', '\tforeign_root\trise'))
+        with self.assertRaisesRegex(ValueError, 'actual source of its clock'):
+            self.record()
+
+    def test_unrequested_stale_parent_files_are_ignored(self):
+        self.parent_request()
+        del self.export['parent_boundary_request']
+        self.record()
+        doc=json.loads((self.out/'child_clock_witness.json').read_text())
+        self.assertNotIn('parent_boundary_relations',doc['corners']['tt'])
+
     def test_missing_corner_marker_fails(self):
         (self.out / 'export_ff.log').write_text('Tcl Error\n')
         with self.assertRaisesRegex(ValueError, 'incomplete native witness'):

@@ -1,0 +1,392 @@
+{
+ "normal_pdn_unit": "intel2:oth-ubuntu-2367645-1793576012",
+ "normal_pdn_rc": 0,
+ "normal_pdn_seconds": 34.23,
+ "normal_pdn_peak_mb": 676,
+ "contacts_unit": "intel2:oth-ubuntu-2495230-1793576194",
+ "contact_rc": 0,
+ "macro_count": 32,
+ "pg_terms": 64,
+ "pg_rectangles": 2700,
+ "native_hist_pg_rectangles": 416,
+ "native_hist_contacts_per_rectangle": [
+  10,
+  11
+ ],
+ "m6_special_wires": 296,
+ "via_counts": {
+  "VDD": 368094,
+  "VSS": 369465
+ },
+ "errors": [],
+ "rows": [
+  {
+   "inst": "u_q.u_mem.g_b\\[0\\].g_w\\[0\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "origin_um": [
+    388.8,
+    43.2
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 209,
+   "minimum_matching_net_via_contacts": 22
+  },
+  {
+   "inst": "u_q.u_mem.g_b\\[0\\].g_w\\[1\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "origin_um": [
+    388.8,
+    172.8
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 209,
+   "minimum_matching_net_via_contacts": 22
+  },
+  {
+   "inst": "u_q.u_mem.g_b\\[0\\].g_w\\[2\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "origin_um": [
+    388.8,
+    388.8
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 209,
+   "minimum_matching_net_via_contacts": 22
+  },
+  {
+   "inst": "u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "origin_um": [
+    518.4,
+    43.2
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 209,
+   "minimum_matching_net_via_contacts": 22
+  },
+  {
+   "inst": "u_q.u_mem.g_b\\[1\\].g_w\\[1\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "origin_um": [
+    518.4,
+    172.8
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 209,
+   "minimum_matching_net_via_contacts": 22
+  },
+  {
+   "inst": "u_q.u_mem.g_b\\[1\\].g_w\\[2\\].u_m",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "origin_um": [
+    518.4,
+    388.8
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 209,
+   "minimum_matching_net_via_contacts": 22
+  },
+  {
+   "inst": "u_q.u_s.u_fq.g_bank\\[0\\].u_m",
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "origin_um": [
+    43.2,
+    388.8
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 103,
+   "minimum_matching_net_via_contacts": 12
+  },
+  {
+   "inst": "u_q.u_s.u_fq.g_bank\\[1\\].u_m",
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "origin_um": [
+    129.6,
+    388.8
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 103,
+   "minimum_matching_net_via_contacts": 12
+  },
+  {
+   "inst": "u_q.u_s.u_fq.g_bank\\[2\\].u_m",
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "origin_um": [
+    216.0,
+    388.8
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 103,
+   "minimum_matching_net_via_contacts": 12
+  },
+  {
+   "inst": "u_q.u_s.u_fq.g_bank\\[3\\].u_m",
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "origin_um": [
+    302.4,
+    388.8
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 103,
+   "minimum_matching_net_via_contacts": 12
+  },
+  {
+   "inst": "u_q.u_s.u_fq.g_bank\\[4\\].u_m",
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "origin_um": [
+    475.2,
+    518.4
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 103,
+   "minimum_matching_net_via_contacts": 12
+  },
+  {
+   "inst": "u_q.u_s.u_hc.g_bank\\[0\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    43.2,
+    43.2
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hc.g_bank\\[1\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    129.6,
+    43.2
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hc.g_bank\\[2\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    216.0,
+    43.2
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hc.g_bank\\[3\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    302.4,
+    43.2
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hc.g_bank\\[4\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    43.2,
+    129.6
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hc.g_bank\\[5\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    129.6,
+    129.6
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hc.g_bank\\[6\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    216.0,
+    129.6
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hc.g_bank\\[7\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    302.4,
+    129.6
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hf.g_bank\\[0\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    43.2,
+    475.2
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hf.g_bank\\[1\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    129.6,
+    475.2
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hf.g_bank\\[2\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    216.0,
+    475.2
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hf.g_bank\\[3\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    302.4,
+    475.2
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hf.g_bank\\[4\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    43.2,
+    561.6
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hf.g_bank\\[5\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    129.6,
+    561.6
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hf.g_bank\\[6\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    216.0,
+    561.6
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_hf.g_bank\\[7\\].u_bank",
+   "master": "ot_s81ph_native_sel_hist_bank",
+   "origin_um": [
+    302.4,
+    561.6
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 26,
+   "minimum_matching_net_via_contacts": 10
+  },
+  {
+   "inst": "u_q.u_s.u_ofq.g_bank\\[0\\].u_m",
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "origin_um": [
+    43.2,
+    216.0
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 103,
+   "minimum_matching_net_via_contacts": 12
+  },
+  {
+   "inst": "u_q.u_s.u_ofq.g_bank\\[1\\].u_m",
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "origin_um": [
+    129.6,
+    216.0
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 103,
+   "minimum_matching_net_via_contacts": 12
+  },
+  {
+   "inst": "u_q.u_s.u_ofq.g_bank\\[2\\].u_m",
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "origin_um": [
+    216.0,
+    216.0
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 103,
+   "minimum_matching_net_via_contacts": 12
+  },
+  {
+   "inst": "u_q.u_s.u_ofq.g_bank\\[3\\].u_m",
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "origin_um": [
+    302.4,
+    216.0
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 103,
+   "minimum_matching_net_via_contacts": 12
+  },
+  {
+   "inst": "u_q.u_s.u_ofq.g_bank\\[4\\].u_m",
+   "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "origin_um": [
+    388.8,
+    518.4
+   ],
+   "pg_terms": 2,
+   "pg_rectangles": 103,
+   "minimum_matching_net_via_contacts": 12
+  }
+ ],
+ "raw_root": "intel2:/srv/opentallas-scratch2/claude/codex-s81-native-pg-1528",
+ "whole_grid_topology": {
+  "odb": "intel2:/srv/opentallas-scratch2/claude/codex-s81-native-pg-1528/kit/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/2_4_floorplan_pdn.odb",
+  "VDD": {
+   "unit": "oth-ubuntu-2975279-1793576920",
+   "verdict": "PSM-0040 all shapes on net VDD connected",
+   "later_process_result": "RESOURCE OOM137 while checking second net"
+  },
+  "VSS": {
+   "unit": "oth-ubuntu-3553491-1793577917",
+   "verdict": "PSM-0040 all shapes on net VSS connected; PG_TOPOLOGY_VSS_PASS",
+   "process_exit": 0,
+   "oom_killed": false
+  },
+  "scope": "independent per-net global continuity on same immutable DB, not IR/timing/SIGNED"
+ }
+}

@@ -1,0 +1,15 @@
+{
+ "type": "ot_s81sl_kv_leaf__t4",
+ "baseline_failure": "macro ot_s81sl_ve_m is instantiated with parameters but no RTL header was found for its blackbox (searched 26 files)",
+ "staged_files": 62,
+ "actual_header_source": "/srv/opentallas-scratch2/claude/codex-s81-wave-1131/src/rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv",
+ "generated": "/srv/opentallas-scratch2/claude/codex-s81-macro-header-1600/actual_bb/ot_s81sl_ve_m_bb.v",
+ "header_exact": true,
+ "actual_overrides": {
+  "LA": 4,
+  "LM": 5,
+  "MUT": 0
+ },
+ "readset_or_rtl_source_changes": 0,
+ "full_GEN_or_PNR_retry": false
+}

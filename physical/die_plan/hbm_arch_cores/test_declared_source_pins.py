@@ -4,6 +4,7 @@ import json
 import sys
 import tempfile
 import unittest
+import importlib.util
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -55,6 +56,16 @@ class DeclaredSourcePins(unittest.TestCase):
         (self.kit / "io.tcl").write_text(io)
         (self.kit / "pins.json").write_text(json.dumps(rows))
         self.assertEqual(K.placed_pins(self.kit), [self.pins[0]])
+
+    def test_staged_audit_consumes_native_interior_and_scalar_pins(self):
+        G.stage_pin_audit(self.kit)
+        spec = importlib.util.spec_from_file_location("staged_native_pin_audit", self.kit / "pin_audit_core.py")
+        audit = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(audit)
+        p = dict(bus="clk", bit=None, layer="M5", x=30.012, y=50, face="I")
+        self.assertEqual(audit.pin_key(p), "clk")
+        self.assertTrue(audit.box_ok(p, (29.988, 49.76, 30.036, 50.24), 100, 100))
+        self.assertFalse(audit.box_ok(p, (30.036, 49.76, 30.084, 50.24), 100, 100))
 
 
 if __name__ == "__main__":

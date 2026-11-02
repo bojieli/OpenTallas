@@ -296,6 +296,7 @@ proc ot_ps_regs {} {
   return $::ot_ps_R
 }
 proc ot_ps_related {R} {
+  if {[info exists ::ot_ps_parent_targets]} {set ::ot_ps_parent_relations {}}
   set async {};foreach p [all_registers -async_pins] {dict set async [get_full_name $p] 1}
   set P {};set nx 0;set nd 0
   foreach d [all_registers -data_pins] {
@@ -320,6 +321,16 @@ proc ot_ps_related {R} {
       set l [ot_ps_add_clock {*}$launch]
       if {$l eq ""} continue
       lassign [dict get $::ot_ps_R $l] - lclk llate learly
+      if {[info exists ::ot_ps_parent_targets]} {
+        set sp [get_full_name $s]
+        foreach target $::ot_ps_parent_targets {
+          if {[string first "$target/" $sp] == 0 || [string first "$target/" $dn] == 0} {
+            set relation [list $sp $dn $l $cs $ch]
+            dict set ::ot_ps_parent_relations $relation $relation
+            break
+          }
+        }
+      }
       if {$lclk ne $cclk || $lclk ne $hclk} {incr nx;continue}
       set ds [expr {$llate-$cearly}];set dh [expr {$clate-$learly}]
       set k [list $l $cs $ch]

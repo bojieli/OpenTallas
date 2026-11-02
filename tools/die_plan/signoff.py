@@ -252,7 +252,7 @@ def macro_libs(kit, corner):
 
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
                   "kit_modes.py", "data_droop.py", "core_io_reference.py")
-OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py",)
+OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py")
 
 
 def signoff_bundle_sources(source=HERE):
@@ -822,7 +822,7 @@ def ft_fill_model(decl, model, corners):
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
                 ft_decl=None, tap_window=None, droop=None, pair_targets=False, fwd_ring=None, margin_policy=None,
-                fwd_ring_min=None, retain_child_clock_witness=False):
+                fwd_ring_min=None, retain_child_clock_witness=False, parent_boundary_instances=(), parent_boundary_std_limit=0):
     """pair_targets: True = the corner's planned core clock-pin earliness file is mounted at /sdc/pair_targets.txt
     (pair_target_file): the related pair skew is then also measured target-relative (pair_skew.tcl ot_ps_load_targets)
     and the gate reads that; False = no target lines (session byte-identical).  tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
@@ -896,6 +896,20 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@PAIR_TGT_SO@", PAIR_TGT_SO_TCL if pair_targets else ""),
                  ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
         t = t.replace(k, v)
+    if parent_boundary_instances:
+        if not retain_child_clock_witness:
+            raise ValueError("parent boundary observation requires native clock retention")
+        import parent_boundary as PB
+        targets = PB.targets_tcl(parent_boundary_instances)
+        observer = PB.std_tcl(parent_boundary_instances, parent_boundary_std_limit, corner)
+        if observer:
+            guarded = ("if {[catch {\n" + observer + "\n} pb_failure]} {\n"
+                       "  puts \"PARENT_BOUNDARY_STD " + corner + " FAILED $pb_failure\"\n}\n")
+            anchor = "unset ::ot_ps_lib_only\n"
+            if t.count(anchor) != 1:
+                raise ValueError("parent STD observer insertion point is ambiguous")
+            t = t.replace(anchor, anchor + guarded, 1)
+        t = t.replace("set so_pm [ot_ps_measure ", "set ::ot_ps_parent_targets " + targets + "\nset so_pm [ot_ps_measure ", 1)
     if retain_child_clock_witness:
         import child_clock_witness as CW
         # Capture the graph already measured above, without another STA update,
@@ -910,7 +924,7 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
         witness = CW.tcl(HERE, corner, [], inputs, reuse_graph=True, library_variable="so_witness_libs")
         capture = ("if {[catch {\n" + witness + "\n} so_witness_error]} {\n"
                    "  puts \"CHILD_CLOCK_WITNESS_FAILED $so_witness_error\"\n}\n"
-                   "unset -nocomplain ::ot_ps_retained_pairs ::ot_ps_retained_counts ::ot_ps_retain_graph\n")
+                   "unset -nocomplain ::ot_ps_retained_pairs ::ot_ps_retained_counts ::ot_ps_retain_graph ::ot_ps_parent_targets ::ot_ps_parent_relations\n")
         t = t.replace("so PAIR_DONE 1\n", "so PAIR_DONE 1\n" + capture, 1)
     return t
 
@@ -1288,7 +1302,7 @@ def pair_skew_result(kv):
 
 
 def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, ff_vclk="sdc", droop=None,
-               margin_policy=None, retain_child_clock_witness=False):
+               margin_policy=None, retain_child_clock_witness=False, parent_boundary_instances=(), parent_boundary_std_limit=0):
     od = Path(out) / corner
     od.mkdir(parents=True, exist_ok=True)
     mlibs, mmiss = macro_libs(disc["kit"], corner)
@@ -1320,7 +1334,9 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 fwd_ring=fwd_ring_inputs(Path(disc["sdc"]).read_text()),
                                                 fwd_ring_min=fwd_ring_min(Path(disc["sdc"]).read_text()),
                                                 margin_policy=margin_policy,
-                                                retain_child_clock_witness=retain_child_clock_witness))
+                                                retain_child_clock_witness=retain_child_clock_witness,
+                                                parent_boundary_instances=parent_boundary_instances,
+                                                parent_boundary_std_limit=parent_boundary_std_limit))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
@@ -1906,6 +1922,17 @@ def cmd_run(a):
         raise SystemExit("signoff: no SDC (kit constraint.sdc / 6_final.sdc / --sdc)")
     require_signoff_bundle()
     retain_clock = getattr(a, "retain_child_clock_witness", False)
+    parent_targets = tuple(getattr(a, "parent_boundary_instance", ()) or ())
+    parent_std_limit = getattr(a, "parent_boundary_std_query_limit", 0)
+    if parent_targets:
+        if not retain_clock:
+            raise SystemExit("parent boundary observer requires --retain-child-clock-witness")
+        import parent_boundary as PB
+        PB.targets_tcl(parent_targets)
+        if parent_std_limit < 0:
+            raise SystemExit("parent boundary STD query budget must be nonnegative")
+    elif parent_std_limit:
+        raise SystemExit("parent boundary STD budget needs exact --parent-boundary-instance")
     if retain_clock:
         if set(a.corners.split(",")) != {"tt", "ff"}:
             raise SystemExit("child-clock witness retention requires exactly TT,FF")
@@ -1974,11 +2001,13 @@ def cmd_run(a):
                                        f"{mrec['uncertainty_hold_ps']:g} ps ({mpol}) / related pair skew CPPR INFO (target 80); "
                                        "spread INFO; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a; OWNER 12.24b)"),
                tool_commit=_git_head())
+    if parent_targets:
+        rec["parent_boundary_request"] = {"instances": list(parent_targets), "std_query_limit": parent_std_limit}
     droop, dinfo = None, None
     if getattr(a, "droop_check", False):
         droop, dinfo = droop_check_tcl(disc)
     with cf.ThreadPoolExecutor(len(corners)) as ex:
-        futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry, a.ff_vclk, droop, mpol, retain_clock) for c in corners}
+        futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry, a.ff_vclk, droop, mpol, retain_clock, parent_targets, parent_std_limit) for c in corners}
         rec["corners"] = {c: f.result() for c, f in futs.items()}
     if dinfo is not None and "tt" in rec["corners"]:
         tt = rec["corners"]["tt"]
@@ -2083,6 +2112,10 @@ def main(argv=None):
     r.add_argument("--ff-bound-ps", type=float,
                    help="bound-ff: declared FF IO insertion (ps) for an already-routed core kit whose sdc_lint ctx has no "
                         "insertion_ff_ps; requires --ff-vclk bound-ff and --ff-vclk-contract naming its source")
+    r.add_argument("--parent-boundary-instance", action="append", default=[],
+                   help="Exact actual histogram instance to retain before clock-reference dedup; no wildcards")
+    r.add_argument("--parent-boundary-std-query-limit", type=int, default=0,
+                   help="Opt-in bounded original-STD path queries for selected histogram interfaces;0 records no slack")
     r.add_argument("--retain-child-clock-witness", action="store_true",
                    help="Passively retain native TT/FF clock graph in these existing sessions; no coverage waiver")
     r.add_argument("--dry", action="store_true")

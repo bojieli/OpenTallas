@@ -325,6 +325,8 @@ def write_partition_freeze(P, tn, kd, recs):
         (kd / "lec_hints.json").write_text(body)
         fz["lec_hints"] = dict(file="lec_hints.json", count=len(hints),
                                sha256=hashlib.sha256(body.encode()).hexdigest())
+    if (kd / "signed_parent_source.json").is_file():
+        fz["signed_parent_source"] = json.loads((kd / "signed_parent_source.json").read_text())
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     return fz
 
@@ -2151,6 +2153,43 @@ def _corner_libs(mlib, kd, corner):
         out.append(str(Path(f).parent / name))
     return out
 
+
+def macro_ff_repair_stage(kd, macros, mlib):
+    """Separate the requested FF repair stage from the original macro/CTS config."""
+    import gzip
+    ff = _corner_libs(mlib, kd, "ff")
+    expected = {}
+    for name in ff:
+        path = kd / "macros" / Path(name).name
+        text = gzip.open(path, "rt").read() if path.suffix == ".gz" else path.read_text()
+        library = re.search(r'\blibrary\s*\(\s*"?([^\s")]+)', text)
+        if not library:
+            raise ValueError(f"FF repair: no Liberty library in {path}")
+        for master in {m[1] for m in macros}:
+            if re.search(r'\bcell\s*\(\s*"?' + re.escape(master) + r'"?\s*\)', text):
+                if master in expected:
+                    raise ValueError(f"FF repair: duplicate timing master {master}")
+                expected[master] = f"{library[1]}/{master}"
+    missing = {m[1] for m in macros} - expected.keys()
+    if missing:
+        raise ValueError(f"FF repair: missing actual FF macro cells {sorted(missing)}")
+    (kd / "macro_ff_repair.mk").write_text(
+        "include /work/config.mk\n"
+        "export OT_MACRO_FF_BASE_PRE_GRT := $(PRE_GLOBAL_ROUTE_TCL)\n"
+        "override export CORNER = BC\noverride export CORNERS = bc\n"
+        "override export LIB_FILES = $(BC_LIB_FILES)\n"
+        "override export ADDITIONAL_LIBS = $(filter /work/macros/%,$(BC_LIB_FILES))\n"
+        "override export PRE_GLOBAL_ROUTE_TCL = /work/macro_ff_pre_grt.tcl\n"
+        "override export OT_VCLK_CORNER = ff\n")
+    guard = ['if {$::env(CORNER) ne "BC" || $::env(CORNERS) ne "bc"} {error "MACRO_FF wrong repair mode"}']
+    for master, cell in sorted(expected.items()):
+        guard += [f"set cells [get_lib_cells -quiet */{master}]",
+                  f'if {{[llength $cells] != 1 || [get_full_name [lindex $cells 0]] ne "{cell}"}} {{error "MACRO_FF wrong or ambiguous cell {master}"}}']
+    guard += ['puts "MACRO_FF actual FF master inventory PASS"',
+              'source $::env(OT_MACRO_FF_BASE_PRE_GRT)']
+    (kd / "macro_ff_pre_grt.tcl").write_text("\n".join(guard) + "\n")
+    return expected
+
 KEEP_REGS_HOOK = ("ot_keep_regs.tcl", "ot_pin_regs.tcl", "pin_reg_split.tcl", "ot_rst_copies.tcl", "ot_rst_copies.py")
 
 
@@ -2325,7 +2364,7 @@ def _module_header(text, mod):
 
 def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
     """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
-    and that has no _bb view yet; header copied from the module's own RTL (dirs of rtl_files first, then
+    and that has no _bb view yet; header copied from the module's own RTL (exact staged files, their dirs, then
     <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits)."""
     rtl_dir = Path(rtl_dir)
     staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files
@@ -2338,7 +2377,12 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
         if not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
             continue
         dirs = list(dict.fromkeys(Path(f).parent for f in rtl_files))
-        cands = [d / n for d in dirs for n in (f"{mod}.sv", f"{mod}.v")]
+        # Multi-module HDL sources need not be named after this physical master
+        # (S81 ot_s81sl_ve.sv declares both ot_s81sl_ve_m and ot_s81sl_ve_s).
+        # Prefer the exact ordered readset before the established basename fallback.
+        cands = list(dict.fromkeys(Path(f) for f in rtl_files
+                                   if Path(f).suffix in (".sv", ".v") and Path(f).is_file()))
+        cands += [d / n for d in dirs for n in (f"{mod}.sv", f"{mod}.v")]
         if root:
             cands += sorted((Path(root) / "rtl").rglob(f"{mod}.sv")) + sorted((Path(root) / "rtl").rglob(f"{mod}.v"))
         hdr = next((h for h in (_module_header(c.read_text(errors="replace"), mod) for c in cands if c.is_file())
@@ -2608,7 +2652,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # combined repair is skipped; run_kit.sh runs GRT + repair at CORNERS=bc with this hold margin, then
            # route / finish / abstract on the native corners; TT setup is checked unchanged by signoff.py.
            *(["export SKIP_CTS_REPAIR_TIMING = 1", f"export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}"]
-             if hold_ff_margin is not None and not macros else []),
+             if hold_ff_margin is not None else []),
            # pin registers FIRM at their faces through GPL, released for DPL (CP1 10-23: GPL left them ~1 mm inside)
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
@@ -2708,6 +2752,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     import pad_clock as PC
     PC.write_contract(P, tn, kd)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
+    if macros and hold_ff_margin is not None:
+        macro_ff_repair_stage(kd, macros, mlib)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
@@ -2967,8 +3013,20 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # The physical audit also checks all other non-exempt declared ABI pins.
     audit_pins = audit_pin_records(json.loads((kd / "pins.json").read_text()), planned_pins)
     (kd / "audit_pins.json").write_text(json.dumps(audit_pins, indent=1) + "\n")
+    prepare_signed_parent_source(P, tn, kd, macros, root)
     write_partition_freeze(P, tn, kd, planned_pins)
     return kd
+
+
+def prepare_signed_parent_source(P, tn, kd, macros, root=None):
+    # Immutable ordinary helper bundles need no new dependency by default.
+    if P.types[tn].get('signed_parent_source') is None:
+        return None
+    try:
+        import signed_parent_adapter
+    except ImportError as exc:
+        raise ValueError('signed_parent_source opt-in requires staged signed_parent_adapter.py') from exc
+    return signed_parent_adapter.prepare_generated_type(P, tn, kd, macros, root)
 
 
 def type_verilog_defines(t, kit_defines=None):
@@ -2997,6 +3055,14 @@ RUN_KIT = r"""#!/bin/bash
 # loads on the Yosys netlist = replicas merged by Yosys); other non-zero = sdc_lint / face_guard / flow step rc.
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
+if [ -f "$K/signed_parent_source.json" ]; then
+  if [ "$GOAL" = synth ] && [ "${OT_SIGNED_PARENT_PREP_SYNTH:-0}" = 1 ]; then
+    [ -f "$K/signed_parent_synth_prep.sh" ] || { echo 'HELD: missing explicit SYNTH-only PREP helper'; exit 78; }
+    exec bash "$K/signed_parent_synth_prep.sh" "$K" "$MEM" "$CPUS"
+  fi
+  echo 'HELD: signed parent source PREP; native-parent expanded-child EQ and actual flattened parent/die census required'
+  exit 78
+fi
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 NAME=dpkit-$(basename "$K")-$$
 # Preserve existing gate verdicts when a corrected kit reuses a run directory.
@@ -3073,7 +3139,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
       if [ \$rc != 0 ]; then { grep -h 'OT_HOLD_GATE FAIL' /work/hold_gate.log || echo 'NOT RUN (no OT_HOLD_GATE verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
   HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk | tail -1); \
-  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then OT_VCLK_CORNER=ff \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; OT_VCLK_CORNER=ff \$MF grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
     for c in TT FF; do OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
       grep -h OT_POSTCTS_GATE /work/postcts_gate_\$c.log || echo \"OT_POSTCTS_GATE \$c no result FAIL\" | tee -a /work/postcts_gate_\$c.log; done; \
