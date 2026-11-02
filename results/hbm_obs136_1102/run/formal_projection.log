@@ -1,0 +1,1505 @@
+
+-- Running command `read_verilog -formal -sv inputs/ot_rst_relay.sv generated/gold_view.sv generated/candidate_view.sv generated/projection_miter.sv; prep -top projection_miter; flatten; memory_map; opt; async2sync; dffunmap; opt_clean; sat -seq 8 -tempinduct -maxsteps 20 -set-def-inputs -prove mismatch 0 -verify' --
+
+1. Executing Verilog-2005 frontend: inputs/ot_rst_relay.sv
+Parsing formal SystemVerilog input from `inputs/ot_rst_relay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:42
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: generated/gold_view.sv
+Parsing formal SystemVerilog input from `generated/gold_view.sv' to AST representation.
+Generating RTLIL representation for module `\obs_gold_view'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: generated/candidate_view.sv
+Parsing formal SystemVerilog input from `generated/candidate_view.sv' to AST representation.
+Generating RTLIL representation for module `\obs_candidate_view'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: generated/projection_miter.sv
+Parsing formal SystemVerilog input from `generated/projection_miter.sv' to AST representation.
+Generating RTLIL representation for module `\projection_miter'.
+Successfully finished Verilog frontend.
+
+5. Executing PREP pass.
+
+5.1. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1.1. Analyzing design hierarchy..
+Top module:  \projection_miter
+Used module:     \obs_candidate_view
+Used module:         \ot_rst_relay
+Used module:     \obs_gold_view
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+
+5.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Generating RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:42
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Found cached RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Parameter \LID = 0
+Parameter \SYNC_MASK = 512'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+5.1.3. Executing AST frontend in derive mode using pre-parsed AST for module `\obs_candidate_view'.
+Parameter \LID = 0
+Parameter \SYNC_MASK = 512'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+Generating RTLIL representation for module `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Parameter \N = 144
+Parameter \LID = 0
+Parameter \SYNC_MASK = 512'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+Parameter \MUT = 0
+
+5.1.4. Executing AST frontend in derive mode using pre-parsed AST for module `\obs_gold_view'.
+Parameter \N = 144
+Parameter \LID = 0
+Parameter \SYNC_MASK = 512'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+
+5.1.5. Analyzing design hierarchy..
+Top module:  \projection_miter
+Used module:     $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view
+Used module:         \ot_rst_relay
+Used module:     $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Found cached RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Found cached RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+
+5.1.6. Analyzing design hierarchy..
+Top module:  \projection_miter
+Used module:     $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view
+Used module:         $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+Used module:     $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view
+
+5.1.7. Analyzing design hierarchy..
+Top module:  \projection_miter
+Used module:     $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view
+Used module:         $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+Used module:     $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view
+Removing unused module `\obs_candidate_view'.
+Removing unused module `\obs_gold_view'.
+Removing unused module `\ot_rst_relay'.
+Removed 3 unused modules.
+
+5.2. Executing PROC pass (convert processes to netlists).
+
+5.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 3 empty switches in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:54$741'.
+Removing empty process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:54$741'.
+Found and cleaned up 1 empty switch in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:40$739'.
+Cleaned up 4 empty switches.
+
+5.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$generated/projection_miter.sv:13$726 in module projection_miter.
+Marked 1 switch rules as full_case in process $proc$generated/gold_view.sv:70$1900 in module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+Marked 1 switch rules as full_case in process $proc$generated/gold_view.sv:59$1397 in module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+Marked 1 switch rules as full_case in process $proc$generated/gold_view.sv:44$1334 in module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+Marked 1 switch rules as full_case in process $proc$generated/gold_view.sv:35$1329 in module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+Marked 1 switch rules as full_case in process $proc$generated/candidate_view.sv:77$1319 in module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+Marked 1 switch rules as full_case in process $proc$generated/candidate_view.sv:66$816 in module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+Marked 1 switch rules as full_case in process $proc$generated/candidate_view.sv:51$753 in module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+Marked 1 switch rules as full_case in process $proc$generated/candidate_view.sv:42$748 in module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:40$739 in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:28$737 in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Removed a total of 0 dead cases.
+
+5.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 16 redundant assignments.
+Promoted 26 assignments to connections.
+
+5.2.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\projection_miter.$proc$generated/projection_miter.sv:12$736'.
+  Set init value: \qualified = 1'0
+Found init rule in `\projection_miter.$proc$generated/projection_miter.sv:12$735'.
+  Set init value: \reset_edges = 3'000
+
+5.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \lrst_n in `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:70$1900'.
+Found async reset \lrst_n in `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:59$1397'.
+Found async reset \lrst_n in `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:44$1334'.
+Found async reset \lrst_n in `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:35$1329'.
+Found async reset \lrst_n in `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:77$1319'.
+Found async reset \lrst_n in `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:66$816'.
+Found async reset \lrst_n in `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:51$753'.
+Found async reset \lrst_n in `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:42$748'.
+Found async reset \rst_n_in in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:40$739'.
+Found async reset \rst_n_in in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:28$737'.
+
+5.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~3 debug messages>
+
+5.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\projection_miter.$proc$generated/projection_miter.sv:12$736'.
+Creating decoders for process `\projection_miter.$proc$generated/projection_miter.sv:12$735'.
+Creating decoders for process `\projection_miter.$proc$generated/projection_miter.sv:13$726'.
+     1/2: $0\qualified[0:0]
+     2/2: $0\reset_edges[2:0]
+Creating decoders for process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:72$1902'.
+Creating decoders for process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:70$1900'.
+     1/1: $0\r_v[0:0]
+Creating decoders for process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:65$1879'.
+Creating decoders for process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:59$1397'.
+     1/161: $1\k[31:0]
+     2/161: $0\sticky[159:0] [159]
+     3/161: $0\sticky[159:0] [158]
+     4/161: $0\sticky[159:0] [157]
+     5/161: $0\sticky[159:0] [156]
+     6/161: $0\sticky[159:0] [155]
+     7/161: $0\sticky[159:0] [154]
+     8/161: $0\sticky[159:0] [153]
+     9/161: $0\sticky[159:0] [152]
+    10/161: $0\sticky[159:0] [151]
+    11/161: $0\sticky[159:0] [150]
+    12/161: $0\sticky[159:0] [149]
+    13/161: $0\sticky[159:0] [148]
+    14/161: $0\sticky[159:0] [147]
+    15/161: $0\sticky[159:0] [146]
+    16/161: $0\sticky[159:0] [145]
+    17/161: $0\sticky[159:0] [144]
+    18/161: $0\sticky[159:0] [143]
+    19/161: $0\sticky[159:0] [142]
+    20/161: $0\sticky[159:0] [141]
+    21/161: $0\sticky[159:0] [140]
+    22/161: $0\sticky[159:0] [139]
+    23/161: $0\sticky[159:0] [138]
+    24/161: $0\sticky[159:0] [137]
+    25/161: $0\sticky[159:0] [136]
+    26/161: $0\sticky[159:0] [135]
+    27/161: $0\sticky[159:0] [134]
+    28/161: $0\sticky[159:0] [133]
+    29/161: $0\sticky[159:0] [132]
+    30/161: $0\sticky[159:0] [131]
+    31/161: $0\sticky[159:0] [130]
+    32/161: $0\sticky[159:0] [129]
+    33/161: $0\sticky[159:0] [128]
+    34/161: $0\sticky[159:0] [127]
+    35/161: $0\sticky[159:0] [126]
+    36/161: $0\sticky[159:0] [125]
+    37/161: $0\sticky[159:0] [124]
+    38/161: $0\sticky[159:0] [123]
+    39/161: $0\sticky[159:0] [122]
+    40/161: $0\sticky[159:0] [121]
+    41/161: $0\sticky[159:0] [120]
+    42/161: $0\sticky[159:0] [119]
+    43/161: $0\sticky[159:0] [118]
+    44/161: $0\sticky[159:0] [117]
+    45/161: $0\sticky[159:0] [116]
+    46/161: $0\sticky[159:0] [115]
+    47/161: $0\sticky[159:0] [114]
+    48/161: $0\sticky[159:0] [113]
+    49/161: $0\sticky[159:0] [112]
+    50/161: $0\sticky[159:0] [111]
+    51/161: $0\sticky[159:0] [110]
+    52/161: $0\sticky[159:0] [109]
+    53/161: $0\sticky[159:0] [108]
+    54/161: $0\sticky[159:0] [107]
+    55/161: $0\sticky[159:0] [106]
+    56/161: $0\sticky[159:0] [105]
+    57/161: $0\sticky[159:0] [104]
+    58/161: $0\sticky[159:0] [103]
+    59/161: $0\sticky[159:0] [102]
+    60/161: $0\sticky[159:0] [101]
+    61/161: $0\sticky[159:0] [100]
+    62/161: $0\sticky[159:0] [99]
+    63/161: $0\sticky[159:0] [98]
+    64/161: $0\sticky[159:0] [97]
+    65/161: $0\sticky[159:0] [96]
+    66/161: $0\sticky[159:0] [95]
+    67/161: $0\sticky[159:0] [94]
+    68/161: $0\sticky[159:0] [93]
+    69/161: $0\sticky[159:0] [92]
+    70/161: $0\sticky[159:0] [91]
+    71/161: $0\sticky[159:0] [90]
+    72/161: $0\sticky[159:0] [89]
+    73/161: $0\sticky[159:0] [88]
+    74/161: $0\sticky[159:0] [87]
+    75/161: $0\sticky[159:0] [86]
+    76/161: $0\sticky[159:0] [85]
+    77/161: $0\sticky[159:0] [84]
+    78/161: $0\sticky[159:0] [83]
+    79/161: $0\sticky[159:0] [82]
+    80/161: $0\sticky[159:0] [81]
+    81/161: $0\sticky[159:0] [80]
+    82/161: $0\sticky[159:0] [79]
+    83/161: $0\sticky[159:0] [78]
+    84/161: $0\sticky[159:0] [77]
+    85/161: $0\sticky[159:0] [76]
+    86/161: $0\sticky[159:0] [75]
+    87/161: $0\sticky[159:0] [74]
+    88/161: $0\sticky[159:0] [73]
+    89/161: $0\sticky[159:0] [72]
+    90/161: $0\sticky[159:0] [71]
+    91/161: $0\sticky[159:0] [70]
+    92/161: $0\sticky[159:0] [69]
+    93/161: $0\sticky[159:0] [68]
+    94/161: $0\sticky[159:0] [67]
+    95/161: $0\sticky[159:0] [66]
+    96/161: $0\sticky[159:0] [65]
+    97/161: $0\sticky[159:0] [64]
+    98/161: $0\sticky[159:0] [63]
+    99/161: $0\sticky[159:0] [62]
+   100/161: $0\sticky[159:0] [61]
+   101/161: $0\sticky[159:0] [60]
+   102/161: $0\sticky[159:0] [59]
+   103/161: $0\sticky[159:0] [58]
+   104/161: $0\sticky[159:0] [57]
+   105/161: $0\sticky[159:0] [56]
+   106/161: $0\sticky[159:0] [55]
+   107/161: $0\sticky[159:0] [54]
+   108/161: $0\sticky[159:0] [53]
+   109/161: $0\sticky[159:0] [52]
+   110/161: $0\sticky[159:0] [51]
+   111/161: $0\sticky[159:0] [50]
+   112/161: $0\sticky[159:0] [49]
+   113/161: $0\sticky[159:0] [48]
+   114/161: $0\sticky[159:0] [47]
+   115/161: $0\sticky[159:0] [46]
+   116/161: $0\sticky[159:0] [45]
+   117/161: $0\sticky[159:0] [44]
+   118/161: $0\sticky[159:0] [43]
+   119/161: $0\sticky[159:0] [42]
+   120/161: $0\sticky[159:0] [41]
+   121/161: $0\sticky[159:0] [40]
+   122/161: $0\sticky[159:0] [39]
+   123/161: $0\sticky[159:0] [38]
+   124/161: $0\sticky[159:0] [37]
+   125/161: $0\sticky[159:0] [36]
+   126/161: $0\sticky[159:0] [35]
+   127/161: $0\sticky[159:0] [34]
+   128/161: $0\sticky[159:0] [33]
+   129/161: $0\sticky[159:0] [32]
+   130/161: $0\sticky[159:0] [31]
+   131/161: $0\sticky[159:0] [30]
+   132/161: $0\sticky[159:0] [29]
+   133/161: $0\sticky[159:0] [28]
+   134/161: $0\sticky[159:0] [27]
+   135/161: $0\sticky[159:0] [26]
+   136/161: $0\sticky[159:0] [25]
+   137/161: $0\sticky[159:0] [24]
+   138/161: $0\sticky[159:0] [23]
+   139/161: $0\sticky[159:0] [22]
+   140/161: $0\sticky[159:0] [21]
+   141/161: $0\sticky[159:0] [20]
+   142/161: $0\sticky[159:0] [19]
+   143/161: $0\sticky[159:0] [18]
+   144/161: $0\sticky[159:0] [17]
+   145/161: $0\sticky[159:0] [16]
+   146/161: $0\sticky[159:0] [15]
+   147/161: $0\sticky[159:0] [14]
+   148/161: $0\sticky[159:0] [13]
+   149/161: $0\sticky[159:0] [12]
+   150/161: $0\sticky[159:0] [11]
+   151/161: $0\sticky[159:0] [10]
+   152/161: $0\sticky[159:0] [9]
+   153/161: $0\sticky[159:0] [8]
+   154/161: $0\sticky[159:0] [7]
+   155/161: $0\sticky[159:0] [6]
+   156/161: $0\sticky[159:0] [5]
+   157/161: $0\sticky[159:0] [4]
+   158/161: $0\sticky[159:0] [3]
+   159/161: $0\sticky[159:0] [2]
+   160/161: $0\sticky[159:0] [1]
+   161/161: $0\sticky[159:0] [0]
+Creating decoders for process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:54$1396'.
+Creating decoders for process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:44$1334'.
+     1/17: $1\w[31:0]
+     2/17: $0\clr[4:0] [4]
+     3/17: $0\oh1[4:0] [4]
+     4/17: $0\oh0[4:0] [4]
+     5/17: $0\clr[4:0] [3]
+     6/17: $0\oh1[4:0] [3]
+     7/17: $0\oh0[4:0] [3]
+     8/17: $0\clr[4:0] [2]
+     9/17: $0\oh1[4:0] [2]
+    10/17: $0\oh0[4:0] [2]
+    11/17: $0\clr[4:0] [1]
+    12/17: $0\oh1[4:0] [1]
+    13/17: $0\oh0[4:0] [1]
+    14/17: $0\clr[4:0] [0]
+    15/17: $0\oh1[4:0] [0]
+    16/17: $0\oh0[4:0] [0]
+    17/17: $0\b_v[0:0]
+Creating decoders for process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:37$1331'.
+Creating decoders for process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:35$1329'.
+     1/1: $0\a_v[0:0]
+Creating decoders for process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:24$1323'.
+Creating decoders for process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:79$1321'.
+Creating decoders for process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:77$1319'.
+     1/1: $0\r_v[0:0]
+Creating decoders for process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:72$1298'.
+Creating decoders for process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:66$816'.
+     1/161: $1\k[31:0]
+     2/161: $0\sticky[159:0] [159]
+     3/161: $0\sticky[159:0] [158]
+     4/161: $0\sticky[159:0] [157]
+     5/161: $0\sticky[159:0] [156]
+     6/161: $0\sticky[159:0] [155]
+     7/161: $0\sticky[159:0] [154]
+     8/161: $0\sticky[159:0] [153]
+     9/161: $0\sticky[159:0] [152]
+    10/161: $0\sticky[159:0] [151]
+    11/161: $0\sticky[159:0] [150]
+    12/161: $0\sticky[159:0] [149]
+    13/161: $0\sticky[159:0] [148]
+    14/161: $0\sticky[159:0] [147]
+    15/161: $0\sticky[159:0] [146]
+    16/161: $0\sticky[159:0] [145]
+    17/161: $0\sticky[159:0] [144]
+    18/161: $0\sticky[159:0] [143]
+    19/161: $0\sticky[159:0] [142]
+    20/161: $0\sticky[159:0] [141]
+    21/161: $0\sticky[159:0] [140]
+    22/161: $0\sticky[159:0] [139]
+    23/161: $0\sticky[159:0] [138]
+    24/161: $0\sticky[159:0] [137]
+    25/161: $0\sticky[159:0] [136]
+    26/161: $0\sticky[159:0] [135]
+    27/161: $0\sticky[159:0] [134]
+    28/161: $0\sticky[159:0] [133]
+    29/161: $0\sticky[159:0] [132]
+    30/161: $0\sticky[159:0] [131]
+    31/161: $0\sticky[159:0] [130]
+    32/161: $0\sticky[159:0] [129]
+    33/161: $0\sticky[159:0] [128]
+    34/161: $0\sticky[159:0] [127]
+    35/161: $0\sticky[159:0] [126]
+    36/161: $0\sticky[159:0] [125]
+    37/161: $0\sticky[159:0] [124]
+    38/161: $0\sticky[159:0] [123]
+    39/161: $0\sticky[159:0] [122]
+    40/161: $0\sticky[159:0] [121]
+    41/161: $0\sticky[159:0] [120]
+    42/161: $0\sticky[159:0] [119]
+    43/161: $0\sticky[159:0] [118]
+    44/161: $0\sticky[159:0] [117]
+    45/161: $0\sticky[159:0] [116]
+    46/161: $0\sticky[159:0] [115]
+    47/161: $0\sticky[159:0] [114]
+    48/161: $0\sticky[159:0] [113]
+    49/161: $0\sticky[159:0] [112]
+    50/161: $0\sticky[159:0] [111]
+    51/161: $0\sticky[159:0] [110]
+    52/161: $0\sticky[159:0] [109]
+    53/161: $0\sticky[159:0] [108]
+    54/161: $0\sticky[159:0] [107]
+    55/161: $0\sticky[159:0] [106]
+    56/161: $0\sticky[159:0] [105]
+    57/161: $0\sticky[159:0] [104]
+    58/161: $0\sticky[159:0] [103]
+    59/161: $0\sticky[159:0] [102]
+    60/161: $0\sticky[159:0] [101]
+    61/161: $0\sticky[159:0] [100]
+    62/161: $0\sticky[159:0] [99]
+    63/161: $0\sticky[159:0] [98]
+    64/161: $0\sticky[159:0] [97]
+    65/161: $0\sticky[159:0] [96]
+    66/161: $0\sticky[159:0] [95]
+    67/161: $0\sticky[159:0] [94]
+    68/161: $0\sticky[159:0] [93]
+    69/161: $0\sticky[159:0] [92]
+    70/161: $0\sticky[159:0] [91]
+    71/161: $0\sticky[159:0] [90]
+    72/161: $0\sticky[159:0] [89]
+    73/161: $0\sticky[159:0] [88]
+    74/161: $0\sticky[159:0] [87]
+    75/161: $0\sticky[159:0] [86]
+    76/161: $0\sticky[159:0] [85]
+    77/161: $0\sticky[159:0] [84]
+    78/161: $0\sticky[159:0] [83]
+    79/161: $0\sticky[159:0] [82]
+    80/161: $0\sticky[159:0] [81]
+    81/161: $0\sticky[159:0] [80]
+    82/161: $0\sticky[159:0] [79]
+    83/161: $0\sticky[159:0] [78]
+    84/161: $0\sticky[159:0] [77]
+    85/161: $0\sticky[159:0] [76]
+    86/161: $0\sticky[159:0] [75]
+    87/161: $0\sticky[159:0] [74]
+    88/161: $0\sticky[159:0] [73]
+    89/161: $0\sticky[159:0] [72]
+    90/161: $0\sticky[159:0] [71]
+    91/161: $0\sticky[159:0] [70]
+    92/161: $0\sticky[159:0] [69]
+    93/161: $0\sticky[159:0] [68]
+    94/161: $0\sticky[159:0] [67]
+    95/161: $0\sticky[159:0] [66]
+    96/161: $0\sticky[159:0] [65]
+    97/161: $0\sticky[159:0] [64]
+    98/161: $0\sticky[159:0] [63]
+    99/161: $0\sticky[159:0] [62]
+   100/161: $0\sticky[159:0] [61]
+   101/161: $0\sticky[159:0] [60]
+   102/161: $0\sticky[159:0] [59]
+   103/161: $0\sticky[159:0] [58]
+   104/161: $0\sticky[159:0] [57]
+   105/161: $0\sticky[159:0] [56]
+   106/161: $0\sticky[159:0] [55]
+   107/161: $0\sticky[159:0] [54]
+   108/161: $0\sticky[159:0] [53]
+   109/161: $0\sticky[159:0] [52]
+   110/161: $0\sticky[159:0] [51]
+   111/161: $0\sticky[159:0] [50]
+   112/161: $0\sticky[159:0] [49]
+   113/161: $0\sticky[159:0] [48]
+   114/161: $0\sticky[159:0] [47]
+   115/161: $0\sticky[159:0] [46]
+   116/161: $0\sticky[159:0] [45]
+   117/161: $0\sticky[159:0] [44]
+   118/161: $0\sticky[159:0] [43]
+   119/161: $0\sticky[159:0] [42]
+   120/161: $0\sticky[159:0] [41]
+   121/161: $0\sticky[159:0] [40]
+   122/161: $0\sticky[159:0] [39]
+   123/161: $0\sticky[159:0] [38]
+   124/161: $0\sticky[159:0] [37]
+   125/161: $0\sticky[159:0] [36]
+   126/161: $0\sticky[159:0] [35]
+   127/161: $0\sticky[159:0] [34]
+   128/161: $0\sticky[159:0] [33]
+   129/161: $0\sticky[159:0] [32]
+   130/161: $0\sticky[159:0] [31]
+   131/161: $0\sticky[159:0] [30]
+   132/161: $0\sticky[159:0] [29]
+   133/161: $0\sticky[159:0] [28]
+   134/161: $0\sticky[159:0] [27]
+   135/161: $0\sticky[159:0] [26]
+   136/161: $0\sticky[159:0] [25]
+   137/161: $0\sticky[159:0] [24]
+   138/161: $0\sticky[159:0] [23]
+   139/161: $0\sticky[159:0] [22]
+   140/161: $0\sticky[159:0] [21]
+   141/161: $0\sticky[159:0] [20]
+   142/161: $0\sticky[159:0] [19]
+   143/161: $0\sticky[159:0] [18]
+   144/161: $0\sticky[159:0] [17]
+   145/161: $0\sticky[159:0] [16]
+   146/161: $0\sticky[159:0] [15]
+   147/161: $0\sticky[159:0] [14]
+   148/161: $0\sticky[159:0] [13]
+   149/161: $0\sticky[159:0] [12]
+   150/161: $0\sticky[159:0] [11]
+   151/161: $0\sticky[159:0] [10]
+   152/161: $0\sticky[159:0] [9]
+   153/161: $0\sticky[159:0] [8]
+   154/161: $0\sticky[159:0] [7]
+   155/161: $0\sticky[159:0] [6]
+   156/161: $0\sticky[159:0] [5]
+   157/161: $0\sticky[159:0] [4]
+   158/161: $0\sticky[159:0] [3]
+   159/161: $0\sticky[159:0] [2]
+   160/161: $0\sticky[159:0] [1]
+   161/161: $0\sticky[159:0] [0]
+Creating decoders for process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:61$815'.
+Creating decoders for process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:51$753'.
+     1/17: $1\w[31:0]
+     2/17: $0\clr[4:0] [4]
+     3/17: $0\oh1[4:0] [4]
+     4/17: $0\oh0[4:0] [4]
+     5/17: $0\clr[4:0] [3]
+     6/17: $0\oh1[4:0] [3]
+     7/17: $0\oh0[4:0] [3]
+     8/17: $0\clr[4:0] [2]
+     9/17: $0\oh1[4:0] [2]
+    10/17: $0\oh0[4:0] [2]
+    11/17: $0\clr[4:0] [1]
+    12/17: $0\oh1[4:0] [1]
+    13/17: $0\oh0[4:0] [1]
+    14/17: $0\clr[4:0] [0]
+    15/17: $0\oh1[4:0] [0]
+    16/17: $0\oh0[4:0] [0]
+    17/17: $0\b_v[0:0]
+Creating decoders for process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:44$750'.
+Creating decoders for process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:42$748'.
+     1/1: $0\a_v[0:0]
+Creating decoders for process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:29$742'.
+Creating decoders for process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:40$739'.
+     1/1: $0\relay_q[0][0:0]
+Creating decoders for process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:28$737'.
+     1/1: $0\sync_q[1:0]
+
+5.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\word' from process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:65$1879'.
+No latch inferred for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\j' from process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:65$1879'.
+No latch inferred for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\word' from process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:72$1298'.
+No latch inferred for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\j' from process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:72$1298'.
+
+5.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\projection_miter.\reset_edges' using process `\projection_miter.$proc$generated/projection_miter.sv:13$726'.
+  created $dff cell `$procdff$1920' with positive edge clock.
+Creating register for signal `\projection_miter.\qualified' using process `\projection_miter.$proc$generated/projection_miter.sv:13$726'.
+  created $dff cell `$procdff$1921' with positive edge clock.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\r_idx' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:72$1902'.
+  created $dff cell `$procdff$1922' with positive edge clock.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\r_d' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:72$1902'.
+  created $dff cell `$procdff$1923' with positive edge clock.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\r_v' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:70$1900'.
+  created $adff cell `$procdff$1928' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\sticky' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:59$1397'.
+  created $adff cell `$procdff$1933' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\k' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:59$1397'.
+  created $dff cell `$procdff$1940' with positive edge clock.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\b_idx' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:54$1396'.
+  created $dff cell `$procdff$1941' with positive edge clock.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\b_d' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:54$1396'.
+  created $dff cell `$procdff$1942' with positive edge clock.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\oh0' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:44$1334'.
+  created $adff cell `$procdff$1947' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\oh1' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:44$1334'.
+  created $adff cell `$procdff$1952' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\clr' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:44$1334'.
+  created $adff cell `$procdff$1957' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\b_v' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:44$1334'.
+  created $adff cell `$procdff$1962' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\w' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:44$1334'.
+  created $dff cell `$procdff$1969' with positive edge clock.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\a_idx' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:37$1331'.
+  created $dff cell `$procdff$1970' with positive edge clock.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\a_d' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:37$1331'.
+  created $dff cell `$procdff$1971' with positive edge clock.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\a_v' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:35$1329'.
+  created $adff cell `$procdff$1976' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\p1' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:24$1323'.
+  created $dff cell `$procdff$1977' with positive edge clock.
+Creating register for signal `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.\p2' using process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:24$1323'.
+  created $dff cell `$procdff$1978' with positive edge clock.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\r_idx' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:79$1321'.
+  created $dff cell `$procdff$1979' with positive edge clock.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\r_d' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:79$1321'.
+  created $dff cell `$procdff$1980' with positive edge clock.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\r_v' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:77$1319'.
+  created $adff cell `$procdff$1985' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\sticky' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:66$816'.
+  created $adff cell `$procdff$1990' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\k' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:66$816'.
+  created $dff cell `$procdff$1997' with positive edge clock.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\b_idx' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:61$815'.
+  created $dff cell `$procdff$1998' with positive edge clock.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\b_d' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:61$815'.
+  created $dff cell `$procdff$1999' with positive edge clock.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\oh0' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:51$753'.
+  created $adff cell `$procdff$2004' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\oh1' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:51$753'.
+  created $adff cell `$procdff$2009' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\clr' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:51$753'.
+  created $adff cell `$procdff$2014' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\b_v' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:51$753'.
+  created $adff cell `$procdff$2019' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\w' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:51$753'.
+  created $dff cell `$procdff$2026' with positive edge clock.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\a_idx' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:44$750'.
+  created $dff cell `$procdff$2027' with positive edge clock.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\a_d' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:44$750'.
+  created $dff cell `$procdff$2028' with positive edge clock.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\a_v' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:42$748'.
+  created $adff cell `$procdff$2033' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\p1' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:29$742'.
+  created $dff cell `$procdff$2034' with positive edge clock.
+Creating register for signal `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.\p2' using process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:29$742'.
+  created $dff cell `$procdff$2035' with positive edge clock.
+Creating register for signal `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.\relay_q[0]' using process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:40$739'.
+  created $adff cell `$procdff$2040' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.\sync_q' using process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:28$737'.
+  created $adff cell `$procdff$2045' with positive edge clock and positive level reset.
+
+5.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `projection_miter.$proc$generated/projection_miter.sv:12$736'.
+Removing empty process `projection_miter.$proc$generated/projection_miter.sv:12$735'.
+Found and cleaned up 3 empty switches in `\projection_miter.$proc$generated/projection_miter.sv:13$726'.
+Removing empty process `projection_miter.$proc$generated/projection_miter.sv:13$726'.
+Removing empty process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:72$1902'.
+Removing empty process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:70$1900'.
+Removing empty process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:65$1879'.
+Removing empty process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:59$1397'.
+Removing empty process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:54$1396'.
+Removing empty process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:44$1334'.
+Removing empty process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:37$1331'.
+Removing empty process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:35$1329'.
+Removing empty process `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$proc$generated/gold_view.sv:24$1323'.
+Removing empty process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:79$1321'.
+Removing empty process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:77$1319'.
+Removing empty process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:72$1298'.
+Removing empty process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:66$816'.
+Removing empty process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:61$815'.
+Removing empty process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:51$753'.
+Removing empty process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:44$750'.
+Removing empty process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:42$748'.
+Removing empty process `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$proc$generated/candidate_view.sv:29$742'.
+Removing empty process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:40$739'.
+Removing empty process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:28$737'.
+Cleaned up 3 empty switches.
+
+5.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module projection_miter.
+<suppressed ~4 debug messages>
+Optimizing module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+<suppressed ~59 debug messages>
+Optimizing module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+<suppressed ~67 debug messages>
+Optimizing module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+<suppressed ~4 debug messages>
+
+5.3. Executing FUTURE pass.
+
+5.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module projection_miter.
+Optimizing module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+Optimizing module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+Optimizing module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+
+5.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \projection_miter..
+Finding unused cells or wires in module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view..
+Finding unused cells or wires in module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view..
+Finding unused cells or wires in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay..
+Removed 40 unused cells and 533 unused wires.
+<suppressed ~48 debug messages>
+
+5.6. Executing CHECK pass (checking for obvious problems).
+Checking module projection_miter...
+Checking module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view...
+Checking module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view...
+Checking module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay...
+Found and reported 0 problems.
+
+5.7. Executing OPT pass (performing simple optimizations).
+
+5.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module projection_miter.
+Optimizing module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+Optimizing module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+Optimizing module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+
+5.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\projection_miter'.
+Computing hashes of 16 cells of `\projection_miter'.
+Finding duplicate cells in `\projection_miter'.
+Finding identical cells in module `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Computing hashes of 552 cells of `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Finding duplicate cells in `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Computing hashes of 374 cells of `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Finding duplicate cells in `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Computing hashes of 365 cells of `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Finding duplicate cells in `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+<suppressed ~561 debug messages>
+Finding identical cells in module `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Computing hashes of 544 cells of `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Finding duplicate cells in `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Computing hashes of 366 cells of `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Finding duplicate cells in `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Computing hashes of 357 cells of `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Finding duplicate cells in `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+<suppressed ~561 debug messages>
+Finding identical cells in module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Computing hashes of 2 cells of `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Finding duplicate cells in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Removed a total of 374 cells.
+
+5.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \projection_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port B of cell $procmux$1910: \qualified -> 1'1
+      Replacing known input bits on port B of cell $procmux$1908: \qualified -> 1'0
+      Replacing known input bits on port A of cell $procmux$1906: \qualified -> 1'0
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+5.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \projection_miter.
+  Optimizing cells in module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+  Optimizing cells in module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+  Optimizing cells in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Performed a total of 0 changes.
+
+5.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\projection_miter'.
+Computing hashes of 16 cells of `\projection_miter'.
+Finding duplicate cells in `\projection_miter'.
+Finding identical cells in module `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Computing hashes of 365 cells of `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Finding duplicate cells in `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Finding identical cells in module `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Computing hashes of 357 cells of `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Finding duplicate cells in `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Finding identical cells in module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Computing hashes of 2 cells of `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Finding duplicate cells in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Removed a total of 0 cells.
+
+5.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \projection_miter..
+Finding unused cells or wires in module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view..
+Finding unused cells or wires in module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view..
+Finding unused cells or wires in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay..
+Removed 0 unused cells and 366 unused wires.
+<suppressed ~2 debug messages>
+
+5.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module projection_miter.
+Optimizing module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+Optimizing module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+Optimizing module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+
+5.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \projection_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+5.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \projection_miter.
+  Optimizing cells in module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+  Optimizing cells in module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+  Optimizing cells in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Performed a total of 0 changes.
+
+5.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\projection_miter'.
+Computing hashes of 16 cells of `\projection_miter'.
+Finding duplicate cells in `\projection_miter'.
+Finding identical cells in module `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Computing hashes of 365 cells of `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Finding duplicate cells in `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Finding identical cells in module `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Computing hashes of 357 cells of `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Finding duplicate cells in `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Finding identical cells in module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Computing hashes of 2 cells of `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Finding duplicate cells in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Removed a total of 0 cells.
+
+5.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \projection_miter..
+Finding unused cells or wires in module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view..
+Finding unused cells or wires in module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view..
+Finding unused cells or wires in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay..
+
+5.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module projection_miter.
+Optimizing module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+Optimizing module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+Optimizing module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+
+5.7.14. Finished fast OPT passes. (There is nothing left to do.)
+
+5.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 3) from port B of cell projection_miter.$eq$generated/projection_miter.sv:14$729 ($eq).
+Removed top 3 bits (of 4) from port B of cell $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$eq$generated/gold_view.sv:51$1357 ($eq).
+Removed top 2 bits (of 4) from port B of cell $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$eq$generated/gold_view.sv:51$1369 ($eq).
+Removed top 2 bits (of 4) from port B of cell $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$eq$generated/gold_view.sv:51$1381 ($eq).
+Removed top 1 bits (of 4) from port B of cell $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$eq$generated/gold_view.sv:51$1393 ($eq).
+Removed top 16 bits (of 32) from port B of cell $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.$and$generated/gold_view.sv:68$1896 ($and).
+Removed top 3 bits (of 4) from port B of cell $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$eq$generated/candidate_view.sv:58$776 ($eq).
+Removed top 2 bits (of 4) from port B of cell $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$eq$generated/candidate_view.sv:58$788 ($eq).
+Removed top 2 bits (of 4) from port B of cell $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$eq$generated/candidate_view.sv:58$800 ($eq).
+Removed top 1 bits (of 4) from port B of cell $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$eq$generated/candidate_view.sv:58$812 ($eq).
+Removed top 16 bits (of 32) from port B of cell $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.$and$generated/candidate_view.sv:75$1315 ($and).
+
+5.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \projection_miter..
+Finding unused cells or wires in module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view..
+Finding unused cells or wires in module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view..
+Finding unused cells or wires in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay..
+
+5.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.11. Executing OPT pass (performing simple optimizations).
+
+5.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module projection_miter.
+Optimizing module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+Optimizing module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+Optimizing module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+
+5.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\projection_miter'.
+Computing hashes of 16 cells of `\projection_miter'.
+Finding duplicate cells in `\projection_miter'.
+Finding identical cells in module `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Computing hashes of 365 cells of `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Finding duplicate cells in `$paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view'.
+Finding identical cells in module `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Computing hashes of 357 cells of `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Finding duplicate cells in `$paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view'.
+Finding identical cells in module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Computing hashes of 2 cells of `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Finding duplicate cells in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Removed a total of 0 cells.
+
+5.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \projection_miter..
+Finding unused cells or wires in module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view..
+Finding unused cells or wires in module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view..
+Finding unused cells or wires in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay..
+
+5.11.4. Finished fast OPT passes.
+
+5.12. Executing SORT pass.
+
+5.13. Printing statistics.
+
+=== $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      203 wires
+     3066 wire bits
+       31 public wires
+     2138 public wire bits
+       10 ports
+      807 port bits
+      356 cells
+        7   $adff
+      170   $and
+        8   $dff
+        4   $eq
+       13   $logic_and
+        2   $logic_not
+        6   $not
+      146   $or
+        1 submodules
+        1   $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+
+=== $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      209 wires
+     2810 wire bits
+       29 public wires
+     1874 public wire bits
+       10 ports
+      815 port bits
+      364 cells
+        7   $adff
+      170   $and
+        8   $dff
+        4   $eq
+       13   $logic_and
+        2   $logic_not
+        6   $not
+      154   $or
+        1 submodules
+        1   $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+
+=== $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+        6 wire bits
+        5 public wires
+        6 public wire bits
+        3 ports
+        3 port bits
+        2 cells
+        2   $adff
+
+=== projection_miter ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       29 wires
+     1603 wire bits
+       18 public wires
+     1584 public wire bits
+        7 ports
+      180 port bits
+       14 cells
+        1   $add
+        2   $dff
+        1   $eq
+        1   $logic_and
+        1   $logic_or
+        6   $mux
+        2   $ne
+        2 submodules
+        1   $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view
+        1   $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+      738 projection_miter
+      356 $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view
+        2   $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+      364 $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view
+        2   $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+
+        +----------Count including submodules.
+        | 
+      451 wires
+     7491 wire bits
+       88 public wires
+     5608 public wire bits
+       33 ports
+     1808 port bits
+        - memories
+        - memory bits
+        - processes
+      738 cells
+        1   $add
+       18   $adff
+      340   $and
+       18   $dff
+        9   $eq
+       27   $logic_and
+        4   $logic_not
+        1   $logic_or
+        6   $mux
+        2   $ne
+       12   $not
+      300   $or
+        2 submodules
+        1   $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view
+        1   $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view
+
+5.14. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view...
+Checking module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view...
+Checking module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay...
+Checking module projection_miter...
+Found and reported 0 problems.
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$33bcc71012f79504c0468ae97faaf25f97985ff0\obs_candidate_view.
+Deleting now unused module $paramod$9d5a222fe32d77955d362b5783f190e0b4974e29\obs_gold_view.
+Deleting now unused module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+<suppressed ~4 debug messages>
+
+7. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module projection_miter.
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\projection_miter'.
+Computing hashes of 742 cells of `\projection_miter'.
+Finding duplicate cells in `\projection_miter'.
+Computing hashes of 738 cells of `\projection_miter'.
+Finding duplicate cells in `\projection_miter'.
+Computing hashes of 729 cells of `\projection_miter'.
+Finding duplicate cells in `\projection_miter'.
+Computing hashes of 728 cells of `\projection_miter'.
+Finding duplicate cells in `\projection_miter'.
+<suppressed ~42 debug messages>
+Removed a total of 14 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \projection_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \projection_miter.
+Performed a total of 0 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\projection_miter'.
+Computing hashes of 728 cells of `\projection_miter'.
+Finding duplicate cells in `\projection_miter'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $procdff$1921 ($dff) from module projection_miter (D = $procmux$1908_Y, Q = \qualified, rval = 1'1).
+Adding EN signal on $procdff$1920 ($dff) from module projection_miter (D = $procmux$1916_Y, Q = \reset_edges).
+Adding SRST signal on $auto$ff.cc:337:slice$2051 ($dffe) from module projection_miter (D = $procmux$1914_Y, Q = \reset_edges, rval = 3'000).
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \projection_miter..
+Removed 3 unused cells and 10 unused wires.
+<suppressed ~4 debug messages>
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module projection_miter.
+
+8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \projection_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~5 debug messages>
+
+8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \projection_miter.
+Performed a total of 0 changes.
+
+8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\projection_miter'.
+Computing hashes of 728 cells of `\projection_miter'.
+Finding duplicate cells in `\projection_miter'.
+Removed a total of 0 cells.
+
+8.13. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 16 on $flatten\g.$procdff$1977 ($dff) from module projection_miter.
+Setting constant 0-bit at position 17 on $flatten\g.$procdff$1977 ($dff) from module projection_miter.
+Setting constant 0-bit at position 29 on $flatten\g.$procdff$1977 ($dff) from module projection_miter.
+Setting constant 0-bit at position 30 on $flatten\g.$procdff$1977 ($dff) from module projection_miter.
+Setting constant 0-bit at position 42 on $flatten\g.$procdff$1977 ($dff) from module projection_miter.
+Setting constant 0-bit at position 43 on $flatten\g.$procdff$1977 ($dff) from module projection_miter.
+Setting constant 0-bit at position 55 on $flatten\g.$procdff$1977 ($dff) from module projection_miter.
+Setting constant 0-bit at position 56 on $flatten\g.$procdff$1977 ($dff) from module projection_miter.
+
+8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \projection_miter..
+Removed 2 unused cells and 2 unused wires.
+<suppressed ~4 debug messages>
+
+8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module projection_miter.
+<suppressed ~8 debug messages>
+
+8.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \projection_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~5 debug messages>
+
+8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \projection_miter.
+Performed a total of 0 changes.
+
+8.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\projection_miter'.
+Computing hashes of 718 cells of `\projection_miter'.
+Finding duplicate cells in `\projection_miter'.
+Removed a total of 0 cells.
+
+8.20. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 16 on $flatten\g.$procdff$1978 ($dff) from module projection_miter.
+Setting constant 0-bit at position 17 on $flatten\g.$procdff$1978 ($dff) from module projection_miter.
+Setting constant 0-bit at position 29 on $flatten\g.$procdff$1978 ($dff) from module projection_miter.
+Setting constant 0-bit at position 30 on $flatten\g.$procdff$1978 ($dff) from module projection_miter.
+Setting constant 0-bit at position 42 on $flatten\g.$procdff$1978 ($dff) from module projection_miter.
+Setting constant 0-bit at position 43 on $flatten\g.$procdff$1978 ($dff) from module projection_miter.
+Setting constant 0-bit at position 55 on $flatten\g.$procdff$1978 ($dff) from module projection_miter.
+Setting constant 0-bit at position 56 on $flatten\g.$procdff$1978 ($dff) from module projection_miter.
+
+8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \projection_miter..
+Removed 0 unused cells and 8 unused wires.
+<suppressed ~1 debug messages>
+
+8.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module projection_miter.
+
+8.23. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.24. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \projection_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~5 debug messages>
+
+8.25. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \projection_miter.
+Performed a total of 0 changes.
+
+8.26. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\projection_miter'.
+Computing hashes of 718 cells of `\projection_miter'.
+Finding duplicate cells in `\projection_miter'.
+Removed a total of 0 cells.
+
+8.27. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \projection_miter..
+
+8.29. Executing OPT_EXPR pass (perform const folding).
+Optimizing module projection_miter.
+
+8.30. Finished fast OPT passes. (There is nothing left to do.)
+
+9. Executing ASYNC2SYNC pass.
+Replacing projection_miter.$flatten\c.\u_rst.$procdff$2040 ($adff): ARST=\rst_n, D=\c.u_rst.sync_q [1], Q=\c.u_rst.relay_q[0]
+Replacing projection_miter.$flatten\g.$procdff$1976 ($adff): ARST=\g.u_rst.relay_q[0], D=\q_v, Q=\g.a_v
+Replacing projection_miter.$flatten\g.$procdff$1962 ($adff): ARST=\g.u_rst.relay_q[0], D=\g.a_v, Q=\g.b_v
+Replacing projection_miter.$flatten\g.$procdff$1957 ($adff): ARST=\g.u_rst.relay_q[0], D=$flatten\g.$0\clr[4:0], Q=\g.clr
+Replacing projection_miter.$flatten\c.$procdff$2033 ($adff): ARST=\c.u_rst.relay_q[0], D=\q_v, Q=\c.a_v
+Replacing projection_miter.$flatten\g.$procdff$1947 ($adff): ARST=\g.u_rst.relay_q[0], D=$flatten\g.$0\oh0[4:0], Q=\g.oh0
+Replacing projection_miter.$flatten\g.$procdff$1933 ($adff): ARST=\g.u_rst.relay_q[0], D=$flatten\g.$0\sticky[159:0], Q=\g.sticky
+Replacing projection_miter.$flatten\g.$procdff$1928 ($adff): ARST=\g.u_rst.relay_q[0], D=\g.b_v, Q=\g.r_v
+Replacing projection_miter.$flatten\c.$procdff$1985 ($adff): ARST=\c.u_rst.relay_q[0], D=\c.b_v, Q=\c.r_v
+Replacing projection_miter.$flatten\c.$procdff$2019 ($adff): ARST=\c.u_rst.relay_q[0], D=\c.a_v, Q=\c.b_v
+Replacing projection_miter.$flatten\c.$procdff$2014 ($adff): ARST=\c.u_rst.relay_q[0], D=$flatten\c.$0\clr[4:0], Q=\c.clr
+Replacing projection_miter.$flatten\c.$procdff$2004 ($adff): ARST=\c.u_rst.relay_q[0], D=$flatten\c.$0\oh0[4:0], Q=\c.oh0
+Replacing projection_miter.$flatten\c.$procdff$1990 ($adff): ARST=\c.u_rst.relay_q[0], D=$flatten\c.$0\sticky[159:0], Q=\c.sticky
+Replacing projection_miter.$flatten\g.\u_rst.$procdff$2040 ($adff): ARST=\rst_n, D=\g.u_rst.sync_q [1], Q=\g.u_rst.relay_q[0]
+Replacing projection_miter.$flatten\c.\u_rst.$procdff$2045 ($adff): ARST=\rst_n, D={ \c.u_rst.sync_q [0] 1'1 }, Q=\c.u_rst.sync_q
+Replacing projection_miter.$flatten\g.\u_rst.$procdff$2045 ($adff): ARST=\rst_n, D={ \g.u_rst.sync_q [0] 1'1 }, Q=\g.u_rst.sync_q
+
+10. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \projection_miter..
+
+12. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+Import set-constraint from init attribute: \qualified = 1'0
+Import set-constraint from init attribute: \reset_edges = 3'000
+Final init constraint equation: { \reset_edges \qualified } = 4'0000
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+Import proof-constraint: \mismatch = 1'0
+Final proof equation: \mismatch = 1'0
+
+** Trying induction with length 1 **
+
+Setting up time step 9:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+Import proof-constraint: \mismatch = 1'0
+Final proof equation: \mismatch = 1'0
+
+[base case 1] Solving problem with 609518 variables and 1640823 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+Import proof-constraint: \mismatch = 1'0
+Final proof equation: \mismatch = 1'0
+
+[induction step 1] Solving problem with 126594 variables and 338062 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                       Dec       Hex                                                                                                                                                                 Bin
+  ---- ----------------------------------------- ----------- --------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  init $auto$async2sync.cc:253:execute$2061               --        --                                                                                                                                                                   x
+  init $auto$async2sync.cc:253:execute$2063                1         1                                                                                                                                                                   1
+  init $auto$async2sync.cc:253:execute$2065                1         1                                                                                                                                                                   1
+  init $auto$async2sync.cc:253:execute$2067               --        --                                                                                                                                                               010x0
+  init $auto$async2sync.cc:253:execute$2069                0         0                                                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2071               --        --                                                                                                                                                               111x0
+  init $auto$async2sync.cc:253:execute$2073               --        --    000000000000000000000000000000000000000000000000000000000000000x00000010000000000000000000000000000000000000000000000000x000x0x000000000x000000000x0x00000000000
+  init $auto$async2sync.cc:253:execute$2075                0         0                                                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2077                0         0                                                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2079                0         0                                                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2081               28        1c                                                                                                                                                               11100
+  init $auto$async2sync.cc:253:execute$2083               --        --                                                                                                                                                               x0010
+  init $auto$async2sync.cc:253:execute$2085               --        --    00000000000000000000x000000000000000x00000000000000000000000000000001000000001000000000000001000000000000000x000x00000010000x0x000000000000000000010000000000000
+  init $auto$async2sync.cc:253:execute$2087               --        --                                                                                                                                                                   x
+  init $auto$async2sync.cc:253:execute$2089                0         0                                                                                                                                                                  00
+  init $auto$async2sync.cc:253:execute$2091                0         0                                                                                                                                                                  00
+  init \c.a_d                                              0         0                                                                                                                                    00000000000000000000000000000000
+  init \c.a_idx                                           19        13                                                                                                                                                            00010011
+  init \c.b_d                                             --        --                                                                                                                                    xx0x0xxxx00011xxxx0100xx0x0x111x
+  init \c.p1                                              --        --                            1x10110x0x0000100101x0100000000100110001000000000000x000000001000100100x011011x10x00x00000000000000x100000x000x0x0001001xx1xxxxxxxx110x0
+  init \c.p2                                              --        --                            0000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000
+  init \c.r_d                                              0         0                                                                                                                                    00000000000000000000000000000000
+  init \g.p1 [143:57]                                     --        --                                                                             xxxxxxxx01x0xxxxxx0x0x1x00xxxx0xx0xx0xxxxxxxxxxx000000x000000x0xx0xxxxxx0xx0xx0xx10x0x0
+  init \g.p1 [15:0]                                       --        --                                                                                                                                                    00x1111111111010
+  init \g.p1 [28:18]                                      --        --                                                                                                                                                         0101xx010xx
+  init \g.p1 [41:31]                                      --        --                                                                                                                                                         xxxxxxxx0x0
+  init \g.p1 [54:44]                                      --        --                                                                                                                                                         xxxxxxxx000
+  init \g.p2 [143:57]                                     --        --                                                                             000000000000000000000000000000000000000000000000000000000000000000000000000000000000100
+  init \g.p2 [15:0]                                        0         0                                                                                                                                                    0000000000000000
+  init \g.p2 [28:18]                                       0         0                                                                                                                                                         00000000000
+  init \g.p2 [41:31]                                       0         0                                                                                                                                                         00000000000
+  init \g.p2 [54:44]                                       0         0                                                                                                                                                         00000000000
+  init \g.r_d                                              0         0                                                                                                                                    00000000000000000000000000000000
+  init \qualified                                          0         0                                                                                                                                                                   0
+  init \reset_edges                                        3         3                                                                                                                                                                 011
+  ---- ----------------------------------------- ----------- --------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     1 \mismatch                                           0         0                                                                                                                                                                   0
+     1 \obs136                                            --        --                            0100000011010000000001000001010100100001110101010101010100000110110000101100100010000000000100000010100000100001101110000010001001111011
+     1 \q_d                                                0         0                                                                                                                                    00000000000000000000000000000000
+     1 \q_idx                                              0         0                                                                                                                                                            00000000
+     1 \q_v                                                1         1                                                                                                                                                                   1
+     1 \rst_n                                              0         0                                                                                                                                                                   0
+  ---- ----------------------------------------- ----------- --------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     2 \mismatch                                           1         1                                                                                                                                                                   1
+     2 \obs136                                            --        --                            0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+     2 \q_d                                                0         0                                                                                                                                    00000000000000000000000000000000
+     2 \q_idx                                              0         0                                                                                                                                                            00000000
+     2 \q_v                                                0         0                                                                                                                                                                   0
+     2 \rst_n                                              1         1                                                                                                                                                                   1
+
+** Trying induction with length 2 **
+
+Setting up time step 10:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+Import proof-constraint: \mismatch = 1'0
+Final proof equation: \mismatch = 1'0
+
+[base case 2] Solving problem with 687827 variables and 1855927 clauses..
+Base case for induction length 2 proven.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+Import proof-constraint: \mismatch = 1'0
+Final proof equation: \mismatch = 1'0
+
+[induction step 2] Solving problem with 213189 variables and 579059 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                       Dec       Hex                                                                                                                                                                 Bin
+  ---- ----------------------------------------- ----------- --------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  init $auto$async2sync.cc:253:execute$2061                1         1                                                                                                                                                                   1
+  init $auto$async2sync.cc:253:execute$2063                0         0                                                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2065                0         0                                                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2067               --        --                                                                                                                                                               x10xx
+  init $auto$async2sync.cc:253:execute$2069                0         0                                                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2071               --        --                                                                                                                                                               0x1xx
+  init $auto$async2sync.cc:253:execute$2073               --        --    0000000000000000001xx00000000x000xx0x00x00000000x000xxx000x0x0x0x0x0x0x01x00000x00xxxx0x000000x00x000xx000x0x0x000xx00000xxxx00x00000x00xx00x000xxx0x1xx00x01x00
+  init $auto$async2sync.cc:253:execute$2075                0         0                                                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2077                0         0                                                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2079                0         0                                                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2081               --        --                                                                                                                                                               xx00x
+  init $auto$async2sync.cc:253:execute$2083               --        --                                                                                                                                                               x00xx
+  init $auto$async2sync.cc:253:execute$2085               --        --    00000000000000000000000x000000001010100x000000000000x1000000x000100010000100000000x011000010001000000x100010x000000000000x0x100x00000x0000000000x0x0110100001110
+  init $auto$async2sync.cc:253:execute$2087                0         0                                                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2089               --        --                                                                                                                                                                  x0
+  init $auto$async2sync.cc:253:execute$2091                3         3                                                                                                                                                                  11
+  init \c.a_d                                             --        --                                                                                                                                    110xx101x1x1x0000x10x00x1xxx11xx
+  init \c.a_idx                                           --        --                                                                                                                                                            00010xxx
+  init \c.b_d                                             -1  ffffffff                                                                                                                                    11111111111111111111111111111111
+  init \c.p1                                              --        --                            0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  init \c.p2                                              --        --                            0111001101111001000111110110111110110001110111010101010010111111110100100111010110011000010100110111011011x01100111110101010001100101110
+  init \c.r_d                                      545657344  20861200                                                                                                                                    00100000100001100001001000000000
+  init \g.p1 [143:57]                                     --        --                                                                             000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  init \g.p1 [15:0]                                        0         0                                                                                                                                                    0000000000000000
+  init \g.p1 [28:18]                                       0         0                                                                                                                                                         00000000000
+  init \g.p1 [41:31]                                       0         0                                                                                                                                                         00000000000
+  init \g.p1 [54:44]                                       0         0                                                                                                                                                         00000000000
+  init \g.p2 [143:57]                                     --        --                                                                             01110011011110x100011111011011111011000111011101010101001011111111010010011101011001100
+  init \g.p2 [15:0]                                       --        --                                                                                                                                                    10100011001011x0
+  init \g.p2 [28:18]                                    1274       4fa                                                                                                                                                         10011111010
+  init \g.p2 [41:31]                                      --        --                                                                                                                                                         110110110x1
+  init \g.p2 [54:44]                                     333       14d                                                                                                                                                         00101001101
+  init \g.r_d                                      545657344  20861200                                                                                                                                    00100000100001100001001000000000
+  init \qualified                                          0         0                                                                                                                                                                   0
+  init \reset_edges                                       --        --                                                                                                                                                                 01x
+  ---- ----------------------------------------- ----------- --------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     1 \mismatch                                           0         0                                                                                                                                                                   0
+     1 \obs136                                            --        --                            1010110010000101111010011000000011001110001010101010101111000000001011011001101001100111101011001000100100110011011011010101110011010001
+     1 \q_d                                       1069547390  3fbfff7e                                                                                                                                    00111111101111111111111101111110
+     1 \q_idx                                            145        91                                                                                                                                                            10010001
+     1 \q_v                                                0         0                                                                                                                                                                   0
+     1 \rst_n                                              0         0                                                                                                                                                                   0
+  ---- ----------------------------------------- ----------- --------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     2 \mismatch                                           0         0                                                                                                                                                                   0
+     2 \obs136                                            --        --                            1001100100010110010001000001001011010010111100010100011110100001110100000011100000010001111100111110011011000110110100110110101010111101
+     2 \q_d                                      -1073741695  c0000081                                                                                                                                    11000000000000000000000010000001
+     2 \q_idx                                             60        3c                                                                                                                                                            00111100
+     2 \q_v                                                0         0                                                                                                                                                                   0
+     2 \rst_n                                              1         1                                                                                                                                                                   1
+  ---- ----------------------------------------- ----------- --------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     3 \mismatch                                          --        --                                                                                                                                                                   x
+     3 \obs136                                            --        --                            0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+     3 \q_d                                                0         0                                                                                                                                    00000000000000000000000000000000
+     3 \q_idx                                              0         0                                                                                                                                                            00000000
+     3 \q_v                                                0         0                                                                                                                                                                   0
+     3 \rst_n                                              1         1                                                                                                                                                                   1
+
+** Trying induction with length 3 **
+
+Setting up time step 11:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+Import proof-constraint: \mismatch = 1'0
+Final proof equation: \mismatch = 1'0
+
+[base case 3] Solving problem with 774421 variables and 2096921 clauses..
+Base case for induction length 3 proven.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \q_v
+Import def constraint for this timestep: \q_idx
+Import def constraint for this timestep: \q_d
+Import def constraint for this timestep: \obs136
+Imported 753 cells to SAT database.
+Import proof-constraint: \mismatch = 1'0
+Final proof equation: \mismatch = 1'0
+
+[induction step 3] Solving problem with 307037 variables and 842850 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+

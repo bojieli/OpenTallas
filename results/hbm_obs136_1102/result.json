@@ -1,0 +1,31 @@
+{
+  "status": "PASS_FINITE_OBS_PROJECTION_ONLY",
+  "job": "intel1:oth-ubuntu-1610218-1793627079",
+  "admission_GB": 2,
+  "threads": 1,
+  "exit": 0,
+  "new_master": "ot_hbm_obs_leaf_fc136",
+  "physical_input_bits": 136,
+  "old_logical_indices": 144,
+  "removed_logical_bits": [16,17,29,30,42,43,55,56],
+  "unbounded_induction_length": 3,
+  "comparison_qualification": "four consecutive native reset edges; only proof monitor initializes; DUT initial state unconstrained",
+  "retained_input_domain": "arbitrary Boolean values each edge; source producer validity/constant lemmas are separate",
+  "lockstep_checked_cycles": 3356,
+  "wrong_retained_bit_mutant": {
+    "formal": "COUNTEREXAMPLE_FOUND",
+    "lockstep": "r_d mismatch cycle11"
+  },
+  "source_capture_widths_old": {"p1":144,"p2":144},
+  "source_capture_widths_new": {"p1":136,"p2":136},
+  "declared_capture_bit_delta": -16,
+  "mapped_FF_delta": null,
+  "added_q_r_cycles": 0,
+  "producer_constant_semantics_proved_by_this_packet": false,
+  "original_module_or_defaults_changed": false,
+  "existing_callers_or_global_selectors_changed": false,
+  "root_carrier_proposal_applied": false,
+  "other_OBS_constant_inputs_pruned": false,
+  "full_R2_closed": false,
+  "physical_qualified": false
+}
