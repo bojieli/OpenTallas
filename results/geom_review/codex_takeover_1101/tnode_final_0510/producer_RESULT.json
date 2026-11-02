@@ -1,0 +1,63 @@
+{
+ "scope": "POSTREPAIR finalPG0 fullCLOCK+SIGNAL50 no-birth diagnostic; no DRT/SIGNED/parent release",
+ "raw_overflow": 0,
+ "clock_signal_route": true,
+ "iterations": 50,
+ "repair": false,
+ "new_cells": false,
+ "structural_guard_equal": true,
+ "PG": {
+  "before_pg": {
+   "status": "PASS",
+   "checked": 31224,
+   "failure_count": 0
+  },
+  "after_pg": {
+   "status": "PASS",
+   "checked": 31224,
+   "failure_count": 0
+  },
+  "saved_pg": {
+   "status": "PASS",
+   "checked": 31224,
+   "failure_count": 0
+  }
+ },
+ "corners": {
+  "tt": {
+   "corner": "TT",
+   "pinreg_n": 1343,
+   "pinreg_mean_ps": 251.97,
+   "pinreg_min_ps": 231.1,
+   "pinreg_max_ps": 278.42,
+   "bound_ps": 250.0,
+   "dev_ps": 1.97,
+   "tol_ps": 20.0,
+   "setup_wns_est_ps": 90.47,
+   "hold_wns_est_ps": 25.09,
+   "rc": "/work/setRC_rcx.tcl",
+   "parasitics": "global_routing",
+   "verdict": "PASS",
+   "band_policy": "gate",
+   "band_verdict": "PASS"
+  },
+  "ff": {
+   "corner": "FF",
+   "pinreg_n": 1343,
+   "pinreg_mean_ps": 199.44,
+   "pinreg_min_ps": 179.66,
+   "pinreg_max_ps": 223.96,
+   "bound_ps": 202.5,
+   "dev_ps": 3.06,
+   "tol_ps": 20.0,
+   "setup_wns_est_ps": 295.84,
+   "hold_wns_est_ps": 4.79,
+   "rc": "/work/setRC_rcx.tcl",
+   "parasitics": "global_routing",
+   "verdict": "PASS",
+   "band_policy": "gate",
+   "band_verdict": "PASS"
+  }
+ },
+ "SIGNED": false
+}
