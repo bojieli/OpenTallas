@@ -43,7 +43,7 @@
 `ifdef SYNTHESIS
 `define OT_S81SL_XS4_ROM(n) ot_rom_4096x72_m8
 `else
-`define OT_S81SL_XS4_ROM(n) ot_rom_4096x72_m8 #(.INSTANCE(n))
+`define OT_S81SL_XS4_ROM(n) ot_rom_4096x72_m8 #(.INSTANCE(INSTANCE == "" ? n : {INSTANCE, ".", n}))
 `endif
 
 // ===================================================================================================================== reset
@@ -606,7 +606,8 @@ module ot_s81sl_xs4_ctl (
 endmodule
 
 // ===================================================================================================================== top
-module ot_s81sl_xs4 (
+// INSTANCE selects simulation images only; empty preserves the historical ROM names.
+module ot_s81sl_xs4 #(parameter INSTANCE = "") (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [2:0]    g_v,
