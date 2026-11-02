@@ -1,0 +1,316 @@
+{
+  "status": "PROSPECTIVE_GEOMETRIC_REGIONALIZATION_BOUNDS_ONLY",
+  "source_odb_sha256": "ffb41fab627528c195fe699437b7ae3bfd9d901bd46a7922e5f1a1adb1a30410",
+  "macro_variant": "capture_gutter_v1",
+  "variable_source_ABI_bits": 2192,
+  "constant_mask_bits": 64,
+  "scope": "existing source terminal FF private-copy placement necessary bounds only; no new RTL/cycles or D/clock/reset reach proof",
+  "optimism": [
+    "FF source access anywhere in full1.404x0.27 body, not actualQ/inverter pins",
+    "BothR0/MX allowed everyrow; no other stdcell occupancy or simultaneous copy capacity",
+    "SourceD upstream locations/reach and clock/reset physical domains remain unqualified",
+    "No region count is selected; point or independent-row success is not physical PASS"
+  ],
+  "schemes": {
+    "memory_halves_16": {
+      "regions": {
+        "m0": [
+          "m0.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m1": [
+          "m1.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ]
+      },
+      "ABI_region_checks": 4384,
+      "point_bound_failures": 4256,
+      "optimistic_legal_body_failures": 4256,
+      "max_continuous_source_point_minimax_um": 457.1159999950336,
+      "source_FF_state_cost_per_complete_region": 2200,
+      "cost_basis": "2048registered data +120address +16group +16expect/scalar FF bits;8stage_v ANDs and64constantmask outputs not independent state"
+    },
+    "vertical_halves_16": {
+      "regions": {
+        "c0": [
+          "m0.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "c1": [
+          "m0.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ]
+      },
+      "ABI_region_checks": 4384,
+      "point_bound_failures": 0,
+      "optimistic_legal_body_failures": 4256,
+      "max_continuous_source_point_minimax_um": 379.37999999502154,
+      "source_FF_state_cost_per_complete_region": 2200,
+      "cost_basis": "2048registered data +120address +16group +16expect/scalar FF bits;8stage_v ANDs and64constantmask outputs not independent state"
+    },
+    "memory_column_quadrants_8": {
+      "regions": {
+        "m0c0": [
+          "m0.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m0c1": [
+          "m0.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m1c0": [
+          "m1.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m1c1": [
+          "m1.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ]
+      },
+      "ABI_region_checks": 8768,
+      "point_bound_failures": 0,
+      "optimistic_legal_body_failures": 0,
+      "max_continuous_source_point_minimax_um": 275.6519999950341,
+      "source_FF_state_cost_per_complete_region": 2200,
+      "cost_basis": "2048registered data +120address +16group +16expect/scalar FF bits;8stage_v ANDs and64constantmask outputs not independent state"
+    },
+    "memory_row_quadrants_8": {
+      "regions": {
+        "m0r0": [
+          "m0.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m0r1": [
+          "m0.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m1r0": [
+          "m1.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m1r1": [
+          "m1.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ]
+      },
+      "ABI_region_checks": 8768,
+      "point_bound_failures": 0,
+      "optimistic_legal_body_failures": 8512,
+      "max_continuous_source_point_minimax_um": 403.09199999501834,
+      "source_FF_state_cost_per_complete_region": 2200,
+      "cost_basis": "2048registered data +120address +16group +16expect/scalar FF bits;8stage_v ANDs and64constantmask outputs not independent state"
+    },
+    "vertical_columns_8": {
+      "regions": {
+        "c0": [
+          "m0.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "c2": [
+          "m0.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "c3": [
+          "m0.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "c1": [
+          "m0.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ]
+      },
+      "ABI_region_checks": 8768,
+      "point_bound_failures": 0,
+      "optimistic_legal_body_failures": 0,
+      "max_continuous_source_point_minimax_um": 288.6479999950217,
+      "source_FF_state_cost_per_complete_region": 2200,
+      "cost_basis": "2048registered data +120address +16group +16expect/scalar FF bits;8stage_v ANDs and64constantmask outputs not independent state"
+    },
+    "compact_blocks_4": {
+      "regions": {
+        "m0r0c0": [
+          "m0.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m0r1c1": [
+          "m0.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m0r1c0": [
+          "m0.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m0r0c1": [
+          "m0.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m0.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m1r0c0": [
+          "m1.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m1r1c1": [
+          "m1.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m1r1c0": [
+          "m1.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ],
+        "m1r0c1": [
+          "m1.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+          "m1.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m"
+        ]
+      },
+      "ABI_region_checks": 17536,
+      "point_bound_failures": 0,
+      "optimistic_legal_body_failures": 0,
+      "max_continuous_source_point_minimax_um": 221.62799999501863,
+      "source_FF_state_cost_per_complete_region": 2200,
+      "cost_basis": "2048registered data +120address +16group +16expect/scalar FF bits;8stage_v ANDs and64constantmask outputs not independent state"
+    }
+  }
+}
