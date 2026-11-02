@@ -47,7 +47,8 @@ import time
 from pathlib import Path
 
 HOME = Path.home()
-DEFAULT_ROOTS = ["/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch/claude", str(HOME / "wt")]
+DEFAULT_ROOTS = ["/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch/claude", str(HOME / "wt"),
+                 "/srv/opentallas-scratch3/claude"]   # ROOTSCR_1101: epyc2 second scratch root (root disk bind mount)
 PROTECT_SUBSTR = ["root-merge", "merge-hub", "closed_archive", "die-ci"]
 PROTECT_PATHS = [str(HOME / "OpenTallas"), str(HOME / "coord")]
 STATE = HOME / ".local/state/wt-reaper"
