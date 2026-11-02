@@ -183,6 +183,16 @@ PYPHASE
 }
 cmd=$1; shift
 case $cmd in
+import-finished-proof)
+  ORIGINAL=$1; K=$2
+  exec 9> "$K/lec_async.lock"; flock 9
+  python3 "$(dirname "$0")/lec_completed_transfer.py" --finished-proof "$ORIGINAL" "$K" || exit $?
+  identity "$K" source > "$K/lec_async.source_identity"
+  identity "$K" > "$K/lec_async.identity"
+  echo finished-proof-transfer > "$K/lec_async.owner"
+  touch "$K/lec_async.on" "$K/lec_async.done"
+  exit 0
+  ;;
 import-official)
   # Explicit intake of a genuine completed separate-output component proof.
   # No active lease is transferred and the original failed scope is untouched.

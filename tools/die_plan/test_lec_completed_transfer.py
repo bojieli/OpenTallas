@@ -37,3 +37,42 @@ def test_changed_copy_and_non_eq_are_rejected(tmp_path):
 def test_original_input_newer_than_proof_is_rejected(tmp_path):
     k,c=fixture(tmp_path);time.sleep(.005);(k/'rtl/top.v').write_text('changed');shutil.copy2(k/'rtl/top.v',c/'rtl/top.v')
     with pytest.raises(ValueError,match='newer'):transfer(k,c)
+
+
+def finished_fixture(tmp_path):
+    k,c=fixture(tmp_path)
+    for root in (k,c):
+        (root/'lec_async.ready').write_text('1\npython3 -I /work/lec.py /work --netlist /work/net.v --out /work/lec > /work/lec_run.log 2>&1\n')
+        (root/'PROVENANCE.json').write_text(json.dumps({'provenance':{'commit':'a'*40,'dirty':False},'files':{}}))
+        (root/'image.txt').unlink()
+    (k/'lec_async.done').touch()
+    time.sleep(.005)
+    (k/'lec/lec.json').write_text(json.dumps({'verdict':'EQUIVALENT','netlist':'/work/net.v',
+        'counts':{'compare_points':123,'proved':123,'differs':0,'undecided':0},
+        'provenance':{'commit':'a'*40,'dirty':False,'source':'validated kit PROVENANCE.json'},
+        'kept_registers':{'missing':{'n':0}},'reset_contract':{'used':4,'requested':None,'contract':None,'debug_overrides':{}}}))
+    return k,c
+
+
+def test_finished_proof_can_transfer_when_physical_scope_failed(tmp_path):
+    k,c=finished_fixture(tmp_path)
+    old=(c/'lec/lec.json').read_bytes();r=transfer(k,c,finished_proof=True)
+    assert not r['physical_success_claimed'] and not r['historical_async_lease']
+    assert (c/'lec_before_finished_import/lec.json').read_bytes()==old
+    assert (c/'lec/lec.json').read_bytes()==(k/'lec/lec.json').read_bytes()
+    assert transfer(k,c,finished_proof=True)==r
+
+
+@pytest.mark.parametrize('mutant',['pending','unclean','pid','reset_added','input_changed','incomplete'])
+def test_finished_proof_refuses_incomplete_or_changed_context(tmp_path,mutant):
+    k,c=finished_fixture(tmp_path)
+    if mutant=='pending':(k/'lec_async.done').unlink()
+    elif mutant=='unclean':
+        p=json.loads((k/'PROVENANCE.json').read_text());p['provenance']['dirty']=True;(k/'PROVENANCE.json').write_text(json.dumps(p))
+    elif mutant=='pid':(c/'lec_async.pid').write_text('123')
+    elif mutant=='reset_added':(c/'reset_contract.json').write_text('{}')
+    elif mutant=='input_changed':(c/'net.v').write_text('mutant')
+    else:
+        p=json.loads((k/'lec/lec.json').read_text());p['counts']['undecided']=1;(k/'lec/lec.json').write_text(json.dumps(p))
+    with pytest.raises(ValueError):transfer(k,c,finished_proof=True)
+    assert not (c/'lec_before_finished_import').exists()
