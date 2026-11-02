@@ -1,0 +1,54 @@
+{
+ "status": "PASS",
+ "scope": "actual native BC library load and declared FF vclk only; no repair/signoff claim",
+ "base_identity": {
+  "base_kit": "/srv/opentallas-scratch2/claude/codex-kv-phy-D-1131/gen2_kv3_phy_v1/kv3_phy_v1",
+  "config_sha256": "1cd2773912e7113ef4d64b1c92a1e9383bba09662c4002431ff2279d3a56cc32",
+  "sdc_sha256": "8babe5885607062119b350aa9b7afe1d705c506b75a121b167894e5a8aab6f52",
+  "masters": [
+   "qkd_hbm3e_phy_pc4"
+  ],
+  "scope": "library/mode probe only; no base RTL/config/checkpoint mutation, no GRT/route before audit PASS"
+ },
+ "native_corner": "BC",
+ "native_corners": "bc",
+ "loaded_files": [
+  [
+   "bc",
+   "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz"
+  ],
+  [
+   "bc",
+   "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz"
+  ],
+  [
+   "bc",
+   "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz"
+  ],
+  [
+   "bc",
+   "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  [
+   "bc",
+   "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib"
+  ],
+  [
+   "bc",
+   "/work/macros/qkd_hbm3e_phy_pc4_ff.lib"
+  ]
+ ],
+ "declared_TT_macro_files": [
+  "/work/macros/qkd_hbm3e_phy_pc4_tt.lib"
+ ],
+ "declared_FF_macro_files": [
+  "/work/macros/qkd_hbm3e_phy_pc4_ff.lib"
+ ],
+ "actual_macro_cells": [
+  [
+   "qkd_hbm3e_phy_pc4",
+   "qkd_hbm3e_phy_pc4_ff/qkd_hbm3e_phy_pc4"
+  ]
+ ],
+ "FF_vclk_ps": 202.5
+}
