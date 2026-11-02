@@ -9,7 +9,7 @@ spec.loader.exec_module(P)
 
 def test_explicit_retirements_preserve_every_other_row(tmp_path):
     cache, retired = tmp_path/'extra.tsv', tmp_path/'retired.tsv'
-    keep = '# keep comment\nintel2\t/old/b_fx\tother host\nintel1\t/old/b_fx/child\tchild evidence\nintel1\t/current\tcurrent missing still protected\n'
+    keep = '# keep comment\nintel1 /legacy/space_row preserve verbatim\nintel2\t/old/b_fx\tother host\nintel1\t/old/b_fx/child\tchild evidence\nintel1\t/current\tcurrent missing still protected\n'
     cache.write_text('intel1\t/old/b_fx\tretired build\n' + keep)
     retired.write_text('intel1\t/old/b_fx\ta04cee8bc\towner retired superseded build\n')
     assert P.reconcile(cache, retired, write=True) == keep

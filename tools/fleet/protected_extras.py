@@ -14,19 +14,21 @@ import shlex
 import tempfile
 
 
-def key(line):
+def key(line, strict=False):
     if not line.strip() or line.lstrip().startswith('#'):
         return None
     cols = line.rstrip('\n').split('\t')
     if len(cols) < 2 or not cols[1].startswith('/'):
-        raise ValueError('invalid protection row: expected host<TAB>absolute path')
+        if strict:
+            raise ValueError('invalid protection row: expected host<TAB>absolute path')
+        return None  # retain legacy/manual annotations verbatim; do not broaden a retirement
     return cols[0], cols[1].rstrip('/')
 
 
 def retired_keys(receipts):
     out = set()
     for line in Path(receipts).read_text().splitlines():
-        k = key(line)
+        k = key(line, strict=True)
         if k is None:
             continue
         cols = line.split('\t')
