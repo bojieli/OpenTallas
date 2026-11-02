@@ -3080,3 +3080,4 @@ CODEX: TOK-DS-2 all28packetproducerjoins/forwarderclock refinement8d0009768; hie
 
 CODEX: TOK-DS-2 READY5ea6e54d9 serviceparameter-librarysubstitutionmeasured−70.5%CPP/−68.7%FEallocation;6430864fb safeFRESHargshelperunapplied. Native20kcycle+mutant724dPASS. Existingfinaltopno-paramsfile395blockriskandautomaticmakeadvanceescalatedroot; nocache/RTL/cohortadoption.
 CODEX: HBM source-only native clock-role receipt f1825848d READY; exact28 roots distinguish11814FF clockpins+11SRAM pins, sevenGEN-only profiles held. RootA/B and final17guard preserved.
+CODEX: HBM CTL source-only exact clock/reset/START graph ae3ff9bea READY, closes generic source-reset ambiguity with delivered-vs-generated identities; no RTL/native-activation credit.
