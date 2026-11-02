@@ -1,0 +1,204 @@
+{
+  "status": "PREP_ONLY_GEOMETRIC_LOWER_BOUNDS_NOT_PLACEMENT_OR_ROUTE",
+  "input_plan": "/home/ubuntu/coord/tmp/codex-hbm-d44r-2039/entryC.json",
+  "input_sha256": "4acd9f41f8a3887bfac0363e488b37d32318037f9d6471de4301fd4e1e9c52c5",
+  "all_slots": [
+    {
+      "type": "q_su31",
+      "slot": "L48x10",
+      "bits": 635,
+      "FF_stages": 8,
+      "minimum_pin_distance_um": 1831.68,
+      "maximum_pin_distance_um": 1831.68,
+      "minimum_405um_legs": 5,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31",
+      "slot": "L53x2",
+      "bits": 613,
+      "FF_stages": 8,
+      "minimum_pin_distance_um": 1831.68,
+      "maximum_pin_distance_um": 1831.68,
+      "minimum_405um_legs": 5,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31",
+      "slot": "L117x7",
+      "bits": 12,
+      "FF_stages": 6,
+      "minimum_pin_distance_um": 1831.68,
+      "maximum_pin_distance_um": 1831.68,
+      "minimum_405um_legs": 5,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31",
+      "slot": "L138x7",
+      "bits": 3,
+      "FF_stages": 6,
+      "minimum_pin_distance_um": 1831.68,
+      "maximum_pin_distance_um": 1831.68,
+      "minimum_405um_legs": 5,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31",
+      "slot": "L5r0_1",
+      "bits": 2726,
+      "FF_stages": 7,
+      "minimum_pin_distance_um": 2543.7439999999997,
+      "maximum_pin_distance_um": 2545.2160000000003,
+      "minimum_405um_legs": 7,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31",
+      "slot": "L34r0_1",
+      "bits": 1616,
+      "FF_stages": 6,
+      "minimum_pin_distance_um": 1638.976,
+      "maximum_pin_distance_um": 2177.2799999999997,
+      "minimum_405um_legs": 6,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31",
+      "slot": "L35r0_1",
+      "bits": 1616,
+      "FF_stages": 6,
+      "minimum_pin_distance_um": 1639.104,
+      "maximum_pin_distance_um": 2177.0879999999997,
+      "minimum_405um_legs": 6,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31",
+      "slot": "L6br0_1",
+      "bits": 829,
+      "FF_stages": 4,
+      "minimum_pin_distance_um": 1100.992,
+      "maximum_pin_distance_um": 1102.4640000000002,
+      "minimum_405um_legs": 3,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31__physical_v1",
+      "slot": "L48x10",
+      "bits": 635,
+      "FF_stages": 8,
+      "minimum_pin_distance_um": 1831.68,
+      "maximum_pin_distance_um": 1831.68,
+      "minimum_405um_legs": 5,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31__physical_v1",
+      "slot": "L53x2",
+      "bits": 613,
+      "FF_stages": 8,
+      "minimum_pin_distance_um": 1831.68,
+      "maximum_pin_distance_um": 1831.68,
+      "minimum_405um_legs": 5,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31__physical_v1",
+      "slot": "L117x7",
+      "bits": 12,
+      "FF_stages": 6,
+      "minimum_pin_distance_um": 1831.68,
+      "maximum_pin_distance_um": 1831.68,
+      "minimum_405um_legs": 5,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31__physical_v1",
+      "slot": "L138x7",
+      "bits": 3,
+      "FF_stages": 6,
+      "minimum_pin_distance_um": 1831.68,
+      "maximum_pin_distance_um": 1831.68,
+      "minimum_405um_legs": 5,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31__physical_v1",
+      "slot": "L5r0_1",
+      "bits": 2726,
+      "FF_stages": 7,
+      "minimum_pin_distance_um": 2090.496,
+      "maximum_pin_distance_um": 2998.512,
+      "minimum_405um_legs": 8,
+      "over_405um_stage_capacity": 491
+    },
+    {
+      "type": "q_su31__physical_v1",
+      "slot": "L34r0_1",
+      "bits": 1616,
+      "FF_stages": 6,
+      "minimum_pin_distance_um": 1906.944,
+      "maximum_pin_distance_um": 1908.8,
+      "minimum_405um_legs": 5,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31__physical_v1",
+      "slot": "L35r0_1",
+      "bits": 1616,
+      "FF_stages": 6,
+      "minimum_pin_distance_um": 1907.328,
+      "maximum_pin_distance_um": 1908.8000000000002,
+      "minimum_405um_legs": 5,
+      "over_405um_stage_capacity": 0
+    },
+    {
+      "type": "q_su31__physical_v1",
+      "slot": "L6br0_1",
+      "bits": 829,
+      "FF_stages": 4,
+      "minimum_pin_distance_um": 963.9360000000001,
+      "maximum_pin_distance_um": 1239.4560000000001,
+      "minimum_405um_legs": 4,
+      "over_405um_stage_capacity": 0
+    }
+  ],
+  "proposed_event": {
+    "changes": [
+      {
+        "type": "q_su31__physical_v1",
+        "slot": "L5r0_1",
+        "field": "out_order",
+        "old": "lsb_low",
+        "new": "lsb_high"
+      },
+      {
+        "type": "q_b110",
+        "bus": "L5_i",
+        "field": "order",
+        "old": "lsb_low",
+        "new": "lsb_high"
+      }
+    ],
+    "instances": [
+      "NW_su31",
+      "NW_b110"
+    ],
+    "unchanged_NE": true,
+    "matching_same_bit_same_layer_contacts": 2726,
+    "seam_gap_um": 0,
+    "maximum_pin_distance_um": 2545.2160000000003,
+    "minimum_pin_distance_um": 2543.808,
+    "minimum_405um_legs": 7,
+    "added_cycles": 0,
+    "added_flops": 0,
+    "RTL_bit_permutation": false,
+    "conditions": [
+      "Seven native FF stages have six internal r2r legs plus output leg to neighboring input capture; FT_o has no additional mandatory output boundary FF.",
+      "Need obstacle-aware stations and actual neighboring capture coordinates/reach census, current source/profile join, GEN/LOOK/GRT and timing before release.",
+      "Pin order changes two unsigned physical types; regenerate their physical views together. Existing seven-stage logical bit mapping remains unchanged.",
+      "Neighbor internal consumer reach cannot be qualified from old native frozen frontend: its L5_i width128 differs from this legacy plan width2725. Do not use that mismatched body as backing."
+    ]
+  }
+}

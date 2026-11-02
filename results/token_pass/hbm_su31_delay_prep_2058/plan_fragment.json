@@ -1,0 +1,77 @@
+{
+  "status": "PREP_COUNT_EVENT_PLACEMENT_NOT_RUN",
+  "type": "q_su31__physical_v1",
+  "slot": "L5r0_1",
+  "old_stations": 7,
+  "new_stations": 8,
+  "width": 2725,
+  "epoch_bits": 1,
+  "added_FF": 2726,
+  "added_mission_cycles": 1,
+  "pin_orders_unchanged": true,
+  "affected_instance": "NW_su31",
+  "NE_unchanged": true,
+  "old_lane_latency": {
+    "cycles": 9,
+    "stations": 7,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 9,
+    "pad": 0,
+    "param": "LAT_L5"
+  },
+  "new_lane_latency": {
+    "cycles": 10,
+    "stations": 8,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 10,
+    "pad": 0
+  },
+  "old_regs_um": [
+    [
+      574.56,
+      1537.92
+    ],
+    [
+      829.44,
+      1429.92
+    ],
+    [
+      846.72,
+      1084.32
+    ],
+    [
+      920.16,
+      794.88
+    ],
+    [
+      1265.76,
+      781.92
+    ],
+    [
+      1620.0,
+      773.28
+    ],
+    [
+      1823.04,
+      613.44
+    ]
+  ],
+  "new_regs_um": "PENDING_OBSTACLE_AWARE_SITING",
+  "R8_groups": [],
+  "source_delay_proof": "native ot_dp_st chain8 equals old7 delayed1; common delivered reset input, data unreset and epoch reset semantics retained",
+  "reset_scope": "No added reset relay; new epoch flop must bind actual planned local reset after siting. Current production reset/profile joins remain held.",
+  "model_price": {
+    "clock_ps": 833,
+    "NW_L5_added_cycles_per_traversal": 1,
+    "NW_L5_added_ps_per_traversal": 833,
+    "NE_L5M_added_cycles": 0,
+    "per_token_traversals": null,
+    "global_token_rate": null,
+    "token_schedule_adoption": "HOLD until matching source/profile and actual programme dates",
+    "formula": "added single-user time = actual NW L5 traversals * 833ps, before overlap/composition"
+  }
+}
