@@ -1,0 +1,618 @@
+{
+  "status": "PASS_DISABLED_CONSERVATIVE_FF_ROWS_ONLY",
+  "mapped_sha256": "03aca987895b2a03d1b3ea8023252843eac2c13436da16773013ad75ca12d891",
+  "source_snapshot": "63eef4b8a5f43cf69152650bbb2c80a0f437387d",
+  "outline_um": [
+    604.8,
+    803.52
+  ],
+  "macro_streets_um": 17.28,
+  "macros": [
+    {
+      "name": "g_leaf[0].u_leaf.g_page[0].u_program",
+      "leaf": 0,
+      "rect_um": [
+        17.28,
+        17.28,
+        113.83200000000001,
+        86.94
+      ]
+    },
+    {
+      "name": "g_leaf[0].u_leaf.g_page[1].u_program",
+      "leaf": 0,
+      "rect_um": [
+        131.112,
+        17.28,
+        227.664,
+        86.94
+      ]
+    },
+    {
+      "name": "g_leaf[0].u_leaf.g_page[2].u_program",
+      "leaf": 0,
+      "rect_um": [
+        244.944,
+        17.28,
+        341.496,
+        86.94
+      ]
+    },
+    {
+      "name": "g_leaf[0].u_leaf.g_page[3].u_program",
+      "leaf": 0,
+      "rect_um": [
+        358.77599999999995,
+        17.28,
+        455.328,
+        86.94
+      ]
+    },
+    {
+      "name": "g_leaf[1].u_leaf.g_page[0].u_program",
+      "leaf": 1,
+      "rect_um": [
+        472.60799999999995,
+        17.28,
+        569.16,
+        86.94
+      ]
+    },
+    {
+      "name": "g_leaf[1].u_leaf.g_page[1].u_program",
+      "leaf": 1,
+      "rect_um": [
+        17.28,
+        104.22,
+        113.83200000000001,
+        173.88
+      ]
+    },
+    {
+      "name": "g_leaf[1].u_leaf.g_page[2].u_program",
+      "leaf": 1,
+      "rect_um": [
+        131.112,
+        104.22,
+        227.664,
+        173.88
+      ]
+    },
+    {
+      "name": "g_leaf[1].u_leaf.g_page[3].u_program",
+      "leaf": 1,
+      "rect_um": [
+        244.944,
+        104.22,
+        341.496,
+        173.88
+      ]
+    },
+    {
+      "name": "g_leaf[2].u_leaf.g_page[0].u_program",
+      "leaf": 2,
+      "rect_um": [
+        358.77599999999995,
+        104.22,
+        455.328,
+        173.88
+      ]
+    },
+    {
+      "name": "g_leaf[2].u_leaf.g_page[1].u_program",
+      "leaf": 2,
+      "rect_um": [
+        472.60799999999995,
+        104.22,
+        569.16,
+        173.88
+      ]
+    },
+    {
+      "name": "g_leaf[2].u_leaf.g_page[2].u_program",
+      "leaf": 2,
+      "rect_um": [
+        17.28,
+        191.16,
+        113.83200000000001,
+        260.82
+      ]
+    },
+    {
+      "name": "g_leaf[2].u_leaf.g_page[3].u_program",
+      "leaf": 2,
+      "rect_um": [
+        131.112,
+        191.16,
+        227.664,
+        260.82
+      ]
+    },
+    {
+      "name": "g_leaf[3].u_leaf.g_page[0].u_program",
+      "leaf": 3,
+      "rect_um": [
+        244.944,
+        191.16,
+        341.496,
+        260.82
+      ]
+    },
+    {
+      "name": "g_leaf[3].u_leaf.g_page[1].u_program",
+      "leaf": 3,
+      "rect_um": [
+        358.77599999999995,
+        191.16,
+        455.328,
+        260.82
+      ]
+    },
+    {
+      "name": "g_leaf[3].u_leaf.g_page[2].u_program",
+      "leaf": 3,
+      "rect_um": [
+        472.60799999999995,
+        191.16,
+        569.16,
+        260.82
+      ]
+    },
+    {
+      "name": "g_leaf[3].u_leaf.g_page[3].u_program",
+      "leaf": 3,
+      "rect_um": [
+        17.28,
+        278.1,
+        113.83200000000001,
+        347.76
+      ]
+    },
+    {
+      "name": "g_leaf[4].u_leaf.g_page[0].u_program",
+      "leaf": 4,
+      "rect_um": [
+        131.112,
+        278.1,
+        227.664,
+        347.76
+      ]
+    },
+    {
+      "name": "g_leaf[4].u_leaf.g_page[1].u_program",
+      "leaf": 4,
+      "rect_um": [
+        244.944,
+        278.1,
+        341.496,
+        347.76
+      ]
+    },
+    {
+      "name": "g_leaf[4].u_leaf.g_page[2].u_program",
+      "leaf": 4,
+      "rect_um": [
+        358.77599999999995,
+        278.1,
+        455.328,
+        347.76
+      ]
+    },
+    {
+      "name": "g_leaf[4].u_leaf.g_page[3].u_program",
+      "leaf": 4,
+      "rect_um": [
+        472.60799999999995,
+        278.1,
+        569.16,
+        347.76
+      ]
+    },
+    {
+      "name": "g_leaf[5].u_leaf.g_page[0].u_program",
+      "leaf": 5,
+      "rect_um": [
+        17.28,
+        365.03999999999996,
+        113.83200000000001,
+        434.69999999999993
+      ]
+    },
+    {
+      "name": "g_leaf[5].u_leaf.g_page[1].u_program",
+      "leaf": 5,
+      "rect_um": [
+        131.112,
+        365.03999999999996,
+        227.664,
+        434.69999999999993
+      ]
+    },
+    {
+      "name": "g_leaf[5].u_leaf.g_page[2].u_program",
+      "leaf": 5,
+      "rect_um": [
+        244.944,
+        365.03999999999996,
+        341.496,
+        434.69999999999993
+      ]
+    },
+    {
+      "name": "g_leaf[5].u_leaf.g_page[3].u_program",
+      "leaf": 5,
+      "rect_um": [
+        358.77599999999995,
+        365.03999999999996,
+        455.328,
+        434.69999999999993
+      ]
+    },
+    {
+      "name": "g_leaf[6].u_leaf.g_page[0].u_program",
+      "leaf": 6,
+      "rect_um": [
+        472.60799999999995,
+        365.03999999999996,
+        569.16,
+        434.69999999999993
+      ]
+    },
+    {
+      "name": "g_leaf[6].u_leaf.g_page[1].u_program",
+      "leaf": 6,
+      "rect_um": [
+        17.28,
+        451.98,
+        113.83200000000001,
+        521.64
+      ]
+    },
+    {
+      "name": "g_leaf[6].u_leaf.g_page[2].u_program",
+      "leaf": 6,
+      "rect_um": [
+        131.112,
+        451.98,
+        227.664,
+        521.64
+      ]
+    },
+    {
+      "name": "g_leaf[6].u_leaf.g_page[3].u_program",
+      "leaf": 6,
+      "rect_um": [
+        244.944,
+        451.98,
+        341.496,
+        521.64
+      ]
+    },
+    {
+      "name": "g_leaf[7].u_leaf.g_page[0].u_program",
+      "leaf": 7,
+      "rect_um": [
+        358.77599999999995,
+        451.98,
+        455.328,
+        521.64
+      ]
+    },
+    {
+      "name": "g_leaf[7].u_leaf.g_page[1].u_program",
+      "leaf": 7,
+      "rect_um": [
+        472.60799999999995,
+        451.98,
+        569.16,
+        521.64
+      ]
+    },
+    {
+      "name": "g_leaf[7].u_leaf.g_page[2].u_program",
+      "leaf": 7,
+      "rect_um": [
+        17.28,
+        538.92,
+        113.83200000000001,
+        608.5799999999999
+      ]
+    },
+    {
+      "name": "g_leaf[7].u_leaf.g_page[3].u_program",
+      "leaf": 7,
+      "rect_um": [
+        131.112,
+        538.92,
+        227.664,
+        608.5799999999999
+      ]
+    },
+    {
+      "name": "g_leaf[8].u_leaf.g_page[0].u_program",
+      "leaf": 8,
+      "rect_um": [
+        244.944,
+        538.92,
+        341.496,
+        608.5799999999999
+      ]
+    },
+    {
+      "name": "g_leaf[8].u_leaf.g_page[1].u_program",
+      "leaf": 8,
+      "rect_um": [
+        358.77599999999995,
+        538.92,
+        455.328,
+        608.5799999999999
+      ]
+    },
+    {
+      "name": "g_leaf[8].u_leaf.g_page[2].u_program",
+      "leaf": 8,
+      "rect_um": [
+        472.60799999999995,
+        538.92,
+        569.16,
+        608.5799999999999
+      ]
+    },
+    {
+      "name": "g_leaf[8].u_leaf.g_page[3].u_program",
+      "leaf": 8,
+      "rect_um": [
+        17.28,
+        625.8599999999999,
+        113.83200000000001,
+        695.5199999999999
+      ]
+    },
+    {
+      "name": "g_leaf[9].u_leaf.g_page[0].u_program",
+      "leaf": 9,
+      "rect_um": [
+        131.112,
+        625.8599999999999,
+        227.664,
+        695.5199999999999
+      ]
+    },
+    {
+      "name": "g_leaf[9].u_leaf.g_page[1].u_program",
+      "leaf": 9,
+      "rect_um": [
+        244.944,
+        625.8599999999999,
+        341.496,
+        695.5199999999999
+      ]
+    },
+    {
+      "name": "g_leaf[9].u_leaf.g_page[2].u_program",
+      "leaf": 9,
+      "rect_um": [
+        358.77599999999995,
+        625.8599999999999,
+        455.328,
+        695.5199999999999
+      ]
+    },
+    {
+      "name": "g_leaf[9].u_leaf.g_page[3].u_program",
+      "leaf": 9,
+      "rect_um": [
+        472.60799999999995,
+        625.8599999999999,
+        569.16,
+        695.5199999999999
+      ]
+    },
+    {
+      "name": "g_leaf[10].u_leaf.g_page[0].u_program",
+      "leaf": 10,
+      "rect_um": [
+        17.28,
+        712.8,
+        113.83200000000001,
+        782.4599999999999
+      ]
+    },
+    {
+      "name": "g_leaf[10].u_leaf.g_page[1].u_program",
+      "leaf": 10,
+      "rect_um": [
+        131.112,
+        712.8,
+        227.664,
+        782.4599999999999
+      ]
+    },
+    {
+      "name": "g_leaf[10].u_leaf.g_page[2].u_program",
+      "leaf": 10,
+      "rect_um": [
+        244.944,
+        712.8,
+        341.496,
+        782.4599999999999
+      ]
+    },
+    {
+      "name": "g_leaf[10].u_leaf.g_page[3].u_program",
+      "leaf": 10,
+      "rect_um": [
+        358.77599999999995,
+        712.8,
+        455.328,
+        782.4599999999999
+      ]
+    }
+  ],
+  "soft_FF": 21930,
+  "output_capture_FF": 2282,
+  "other_FF_groups": {
+    "leaf0": {
+      "target_um": [
+        236.30399999999997,
+        52.11
+      ],
+      "count": 1680,
+      "max_distance_um": 55.91699999999995,
+      "span_um": [
+        31.64399999999998,
+        103.41000000000001
+      ]
+    },
+    "leaf1": {
+      "target_um": [
+        293.21999999999997,
+        95.58
+      ],
+      "count": 1680,
+      "max_distance_um": 65.36700000000009,
+      "span_um": [
+        113.72400000000002,
+        20.52
+      ]
+    },
+    "leaf10": {
+      "target_um": [
+        236.30399999999997,
+        747.6299999999999
+      ],
+      "count": 1138,
+      "max_distance_um": 48.03299999999993,
+      "span_um": [
+        16.524000000000004,
+        95.58000000000006
+      ]
+    },
+    "leaf2": {
+      "target_um": [
+        293.21999999999997,
+        182.51999999999998
+      ],
+      "count": 1723,
+      "max_distance_um": 59.96700000000004,
+      "span_um": [
+        120.20400000000001,
+        10.260000000000009
+      ]
+    },
+    "leaf3": {
+      "target_um": [
+        293.21999999999997,
+        269.46
+      ],
+      "count": 1680,
+      "max_distance_um": 58.833,
+      "span_um": [
+        115.88399999999999,
+        8.639999999999947
+      ]
+    },
+    "leaf4": {
+      "target_um": [
+        350.13599999999997,
+        312.93
+      ],
+      "count": 1680,
+      "max_distance_um": 57.59100000000001,
+      "span_um": [
+        35.964,
+        113.94000000000001
+      ]
+    },
+    "leaf5": {
+      "target_um": [
+        236.30399999999997,
+        399.86999999999995
+      ],
+      "count": 1723,
+      "max_distance_um": 55.59299999999996,
+      "span_um": [
+        31.64399999999998,
+        110.7
+      ]
+    },
+    "leaf6": {
+      "target_um": [
+        293.21999999999997,
+        443.34
+      ],
+      "count": 1722,
+      "max_distance_um": 66.17700000000013,
+      "span_um": [
+        122.36399999999998,
+        22.409999999999986
+      ]
+    },
+    "leaf7": {
+      "target_um": [
+        293.21999999999997,
+        530.28
+      ],
+      "count": 1621,
+      "max_distance_um": 56.9429999999999,
+      "span_um": [
+        111.56400000000002,
+        8.640000000000004
+      ]
+    },
+    "leaf8": {
+      "target_um": [
+        293.21999999999997,
+        617.2199999999999
+      ],
+      "count": 1680,
+      "max_distance_um": 58.833000000000055,
+      "span_um": [
+        115.88399999999999,
+        8.640000000000004
+      ]
+    },
+    "leaf9": {
+      "target_um": [
+        350.13599999999997,
+        660.6899999999998
+      ],
+      "count": 1680,
+      "max_distance_um": 57.59099999999984,
+      "span_um": [
+        35.964,
+        114.21000000000005
+      ]
+    },
+    "top_other": {
+      "target_um": [
+        8.64,
+        401.76
+      ],
+      "count": 1641,
+      "max_distance_um": 52.407000000000025,
+      "span_um": [
+        18.684,
+        103.40999999999998
+      ]
+    }
+  },
+  "conservative_FF_footprint_um": [
+    1.404,
+    0.27
+  ],
+  "column_pitch_um": 2.16,
+  "row_pitch_um": 0.27,
+  "macro_halo_um": 4.32,
+  "unique_nonoverlap_row_sites": true,
+  "max_output_FF_to_proposed_pin_um": 5.888999999999903,
+  "held": [
+    "No physical placement/CTS/route/STA performed",
+    "Combinational logic rows unplaced",
+    "Actual macro-pin\u2192FF and internal FF\u2192FF timing/reach notqualified",
+    "Actual clock/reset/START66 contacts and programme collar rows unplaced",
+    "Parent existing5106XO/new2304upstream and preserved4434wrappercapture FF rows/pricing unjoined",
+    "No native source-view/physical/current-parent adoption"
+  ],
+  "release_eligible": false
+}
