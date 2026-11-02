@@ -3,9 +3,12 @@
   "clock_ps": 833,
   "source_clock": "store0_clk[0] <- wrapper clk",
   "source_reset": "store0_rst_n[0] <- exact ctl u_core_u_rst__rst_n[0]",
-  "upstream_ctl_reset": "rst_n -> native ot_rst_relay(SYNC2,TREE1), releases3edges",
+  "upstream_ctl_reset": "actual wrapper rst_n_t22 -> ctl provider rst_n -> native ot_rst_relay(SYNC2,TREE1) -> u_core_u_rst__rst_n -> store0_rst_n; current66START phase still unjoined",
   "relay_event_reset": "new2304FF epoch-only reset uses delivered partition rst_n, no added reset synchronizer/latency",
   "START": "Opaque compiler_control1742 unplanned source must join actual release/programme; no dummy START/reset alias or proof4 label",
   "physical_inputs": "Exact native memory master256x256 v2 LEF/TT/FF views, not generic replacement",
-  "frozen_view_compatibility": false
+  "frozen_view_compatibility": false,
+  "new_provider_native_source_EQ": "NOT_RUN",
+  "new_provider_reset_phase_receipt": "NOT_RUN",
+  "GEN_dispatch_prerequisite": "Explicit actual selected-source native EQ/reset preflight or a scoped GEN-only authorization; no old provider/proof alias"
 }
