@@ -1,0 +1,2613 @@
+{
+  "status": "GEOMETRY_PREP_ONLY",
+  "store_macros": [
+    {
+      "bank": 0,
+      "word": 0,
+      "old": [
+        2453.76,
+        1149.108
+      ],
+      "proposed": [
+        0.0,
+        0.0
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[0].u_m"
+    },
+    {
+      "bank": 0,
+      "word": 1,
+      "old": [
+        2496.552,
+        1149.108
+      ],
+      "proposed": [
+        42.792,
+        0.0
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[1].u_m"
+    },
+    {
+      "bank": 0,
+      "word": 2,
+      "old": [
+        2539.344,
+        1149.108
+      ],
+      "proposed": [
+        85.584,
+        0.0
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[2].u_m"
+    },
+    {
+      "bank": 0,
+      "word": 3,
+      "old": [
+        2582.136,
+        1149.108
+      ],
+      "proposed": [
+        0.0,
+        34.56
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[3].u_m"
+    },
+    {
+      "bank": 0,
+      "word": 4,
+      "old": [
+        2453.76,
+        1114.548
+      ],
+      "proposed": [
+        42.792,
+        34.56
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[4].u_m"
+    },
+    {
+      "bank": 0,
+      "word": 5,
+      "old": [
+        2496.552,
+        1114.548
+      ],
+      "proposed": [
+        85.584,
+        34.56
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[5].u_m"
+    },
+    {
+      "bank": 0,
+      "word": 6,
+      "old": [
+        2539.344,
+        1114.548
+      ],
+      "proposed": [
+        0.0,
+        69.12
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[6].u_m"
+    },
+    {
+      "bank": 0,
+      "word": 7,
+      "old": [
+        2582.136,
+        1114.548
+      ],
+      "proposed": [
+        42.792,
+        69.12
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[7].u_m"
+    },
+    {
+      "bank": 4,
+      "word": 4,
+      "old": [
+        2453.76,
+        1079.988
+      ],
+      "proposed": [
+        42.792,
+        138.24
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[4].u_m"
+    },
+    {
+      "bank": 4,
+      "word": 5,
+      "old": [
+        2496.552,
+        1079.988
+      ],
+      "proposed": [
+        85.584,
+        138.24
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[5].u_m"
+    },
+    {
+      "bank": 4,
+      "word": 6,
+      "old": [
+        2539.344,
+        1079.988
+      ],
+      "proposed": [
+        0.0,
+        172.8
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[6].u_m"
+    },
+    {
+      "bank": 4,
+      "word": 7,
+      "old": [
+        2582.136,
+        1079.988
+      ],
+      "proposed": [
+        42.792,
+        172.8
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[7].u_m"
+    },
+    {
+      "bank": 4,
+      "word": 8,
+      "old": [
+        2453.76,
+        1045.428
+      ],
+      "proposed": [
+        85.584,
+        172.8
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[8].u_m"
+    },
+    {
+      "bank": 5,
+      "word": 0,
+      "old": [
+        2496.552,
+        1045.428
+      ],
+      "proposed": [
+        128.376,
+        103.68
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[0].u_m"
+    },
+    {
+      "bank": 5,
+      "word": 1,
+      "old": [
+        2539.344,
+        1045.428
+      ],
+      "proposed": [
+        171.168,
+        103.68
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[1].u_m"
+    },
+    {
+      "bank": 5,
+      "word": 2,
+      "old": [
+        2582.136,
+        1045.428
+      ],
+      "proposed": [
+        213.96,
+        103.68
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[2].u_m"
+    },
+    {
+      "bank": 5,
+      "word": 3,
+      "old": [
+        2453.76,
+        1010.868
+      ],
+      "proposed": [
+        128.376,
+        138.24
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[3].u_m"
+    },
+    {
+      "bank": 5,
+      "word": 4,
+      "old": [
+        2496.552,
+        1010.868
+      ],
+      "proposed": [
+        171.168,
+        138.24
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[4].u_m"
+    },
+    {
+      "bank": 5,
+      "word": 5,
+      "old": [
+        2539.344,
+        1010.868
+      ],
+      "proposed": [
+        213.96,
+        138.24
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[5].u_m"
+    },
+    {
+      "bank": 5,
+      "word": 6,
+      "old": [
+        2582.136,
+        1010.868
+      ],
+      "proposed": [
+        128.376,
+        172.8
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[6].u_m"
+    },
+    {
+      "bank": 5,
+      "word": 7,
+      "old": [
+        2453.76,
+        976.308
+      ],
+      "proposed": [
+        171.168,
+        172.8
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[7].u_m"
+    },
+    {
+      "bank": 5,
+      "word": 8,
+      "old": [
+        2496.552,
+        976.308
+      ],
+      "proposed": [
+        213.96,
+        172.8
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[8].u_m"
+    },
+    {
+      "bank": 6,
+      "word": 0,
+      "old": [
+        2539.344,
+        976.308
+      ],
+      "proposed": [
+        256.752,
+        103.68
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[0].u_m"
+    },
+    {
+      "bank": 6,
+      "word": 1,
+      "old": [
+        2582.136,
+        976.308
+      ],
+      "proposed": [
+        299.544,
+        103.68
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[1].u_m"
+    },
+    {
+      "bank": 6,
+      "word": 2,
+      "old": [
+        2453.76,
+        941.748
+      ],
+      "proposed": [
+        342.336,
+        103.68
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[2].u_m"
+    },
+    {
+      "bank": 6,
+      "word": 3,
+      "old": [
+        2496.552,
+        941.748
+      ],
+      "proposed": [
+        256.752,
+        138.24
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[3].u_m"
+    },
+    {
+      "bank": 6,
+      "word": 4,
+      "old": [
+        2539.344,
+        941.748
+      ],
+      "proposed": [
+        299.544,
+        138.24
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[4].u_m"
+    },
+    {
+      "bank": 6,
+      "word": 5,
+      "old": [
+        2582.136,
+        941.748
+      ],
+      "proposed": [
+        342.336,
+        138.24
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[5].u_m"
+    },
+    {
+      "bank": 6,
+      "word": 6,
+      "old": [
+        2453.76,
+        907.188
+      ],
+      "proposed": [
+        256.752,
+        172.8
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[6].u_m"
+    },
+    {
+      "bank": 6,
+      "word": 7,
+      "old": [
+        2496.552,
+        907.188
+      ],
+      "proposed": [
+        299.544,
+        172.8
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[7].u_m"
+    },
+    {
+      "bank": 6,
+      "word": 8,
+      "old": [
+        2539.344,
+        907.188
+      ],
+      "proposed": [
+        342.336,
+        172.8
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[8].u_m"
+    },
+    {
+      "bank": 7,
+      "word": 0,
+      "old": [
+        2582.136,
+        907.188
+      ],
+      "proposed": [
+        385.128,
+        103.68
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[0].u_m"
+    },
+    {
+      "bank": 7,
+      "word": 1,
+      "old": [
+        2453.76,
+        872.628
+      ],
+      "proposed": [
+        427.92,
+        103.68
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[1].u_m"
+    },
+    {
+      "bank": 7,
+      "word": 2,
+      "old": [
+        2496.552,
+        872.628
+      ],
+      "proposed": [
+        470.712,
+        103.68
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[2].u_m"
+    },
+    {
+      "bank": 7,
+      "word": 3,
+      "old": [
+        2539.344,
+        872.628
+      ],
+      "proposed": [
+        385.128,
+        138.24
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[3].u_m"
+    },
+    {
+      "bank": 7,
+      "word": 4,
+      "old": [
+        2582.136,
+        872.628
+      ],
+      "proposed": [
+        427.92,
+        138.24
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[4].u_m"
+    },
+    {
+      "bank": 7,
+      "word": 5,
+      "old": [
+        2453.76,
+        838.068
+      ],
+      "proposed": [
+        470.712,
+        138.24
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[5].u_m"
+    },
+    {
+      "bank": 7,
+      "word": 6,
+      "old": [
+        2496.552,
+        838.068
+      ],
+      "proposed": [
+        385.128,
+        172.8
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[6].u_m"
+    },
+    {
+      "bank": 7,
+      "word": 7,
+      "old": [
+        2539.344,
+        838.068
+      ],
+      "proposed": [
+        427.92,
+        172.8
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[7].u_m"
+    },
+    {
+      "bank": 7,
+      "word": 8,
+      "old": [
+        2582.136,
+        838.068
+      ],
+      "proposed": [
+        470.712,
+        172.8
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[8].u_m"
+    },
+    {
+      "bank": 8,
+      "word": 0,
+      "old": [
+        2453.76,
+        803.508
+      ],
+      "proposed": [
+        0.0,
+        207.36
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[0].u_m"
+    },
+    {
+      "bank": 8,
+      "word": 1,
+      "old": [
+        2496.552,
+        803.508
+      ],
+      "proposed": [
+        42.792,
+        207.36
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[1].u_m"
+    },
+    {
+      "bank": 8,
+      "word": 2,
+      "old": [
+        2539.344,
+        803.508
+      ],
+      "proposed": [
+        85.584,
+        207.36
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[2].u_m"
+    },
+    {
+      "bank": 8,
+      "word": 3,
+      "old": [
+        2582.136,
+        803.508
+      ],
+      "proposed": [
+        0.0,
+        241.92
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[3].u_m"
+    },
+    {
+      "bank": 8,
+      "word": 4,
+      "old": [
+        2453.76,
+        768.948
+      ],
+      "proposed": [
+        42.792,
+        241.92
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[4].u_m"
+    },
+    {
+      "bank": 8,
+      "word": 5,
+      "old": [
+        2496.552,
+        768.948
+      ],
+      "proposed": [
+        85.584,
+        241.92
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[5].u_m"
+    },
+    {
+      "bank": 8,
+      "word": 6,
+      "old": [
+        2539.344,
+        768.948
+      ],
+      "proposed": [
+        0.0,
+        276.48
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[6].u_m"
+    },
+    {
+      "bank": 8,
+      "word": 7,
+      "old": [
+        2582.136,
+        768.948
+      ],
+      "proposed": [
+        42.792,
+        276.48
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[7].u_m"
+    },
+    {
+      "bank": 0,
+      "word": 8,
+      "old": [
+        2453.76,
+        734.388
+      ],
+      "proposed": [
+        85.584,
+        69.12
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[8].u_m"
+    },
+    {
+      "bank": 1,
+      "word": 0,
+      "old": [
+        2496.552,
+        734.388
+      ],
+      "proposed": [
+        128.376,
+        0.0
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[0].u_m"
+    },
+    {
+      "bank": 1,
+      "word": 1,
+      "old": [
+        2539.344,
+        734.388
+      ],
+      "proposed": [
+        171.168,
+        0.0
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[1].u_m"
+    },
+    {
+      "bank": 1,
+      "word": 2,
+      "old": [
+        2582.136,
+        734.388
+      ],
+      "proposed": [
+        213.96,
+        0.0
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[2].u_m"
+    },
+    {
+      "bank": 8,
+      "word": 8,
+      "old": [
+        2453.76,
+        699.828
+      ],
+      "proposed": [
+        85.584,
+        276.48
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[8].u_m"
+    },
+    {
+      "bank": 9,
+      "word": 0,
+      "old": [
+        2496.552,
+        699.828
+      ],
+      "proposed": [
+        128.376,
+        207.36
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[0].u_m"
+    },
+    {
+      "bank": 9,
+      "word": 1,
+      "old": [
+        2539.344,
+        699.828
+      ],
+      "proposed": [
+        171.168,
+        207.36
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[1].u_m"
+    },
+    {
+      "bank": 9,
+      "word": 2,
+      "old": [
+        2582.136,
+        699.828
+      ],
+      "proposed": [
+        213.96,
+        207.36
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[2].u_m"
+    },
+    {
+      "bank": 9,
+      "word": 3,
+      "old": [
+        2453.76,
+        665.268
+      ],
+      "proposed": [
+        128.376,
+        241.92
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[3].u_m"
+    },
+    {
+      "bank": 9,
+      "word": 4,
+      "old": [
+        2496.552,
+        665.268
+      ],
+      "proposed": [
+        171.168,
+        241.92
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[4].u_m"
+    },
+    {
+      "bank": 9,
+      "word": 5,
+      "old": [
+        2539.344,
+        665.268
+      ],
+      "proposed": [
+        213.96,
+        241.92
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[5].u_m"
+    },
+    {
+      "bank": 9,
+      "word": 6,
+      "old": [
+        2582.136,
+        665.268
+      ],
+      "proposed": [
+        128.376,
+        276.48
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[6].u_m"
+    },
+    {
+      "bank": 9,
+      "word": 7,
+      "old": [
+        2453.76,
+        630.708
+      ],
+      "proposed": [
+        171.168,
+        276.48
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[7].u_m"
+    },
+    {
+      "bank": 9,
+      "word": 8,
+      "old": [
+        2496.552,
+        630.708
+      ],
+      "proposed": [
+        213.96,
+        276.48
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[8].u_m"
+    },
+    {
+      "bank": 10,
+      "word": 0,
+      "old": [
+        2539.344,
+        630.708
+      ],
+      "proposed": [
+        256.752,
+        207.36
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[0].u_m"
+    },
+    {
+      "bank": 10,
+      "word": 1,
+      "old": [
+        2582.136,
+        630.708
+      ],
+      "proposed": [
+        299.544,
+        207.36
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[1].u_m"
+    },
+    {
+      "bank": 10,
+      "word": 2,
+      "old": [
+        2453.76,
+        596.148
+      ],
+      "proposed": [
+        342.336,
+        207.36
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[2].u_m"
+    },
+    {
+      "bank": 10,
+      "word": 3,
+      "old": [
+        2496.552,
+        596.148
+      ],
+      "proposed": [
+        256.752,
+        241.92
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[3].u_m"
+    },
+    {
+      "bank": 10,
+      "word": 4,
+      "old": [
+        2539.344,
+        596.148
+      ],
+      "proposed": [
+        299.544,
+        241.92
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[4].u_m"
+    },
+    {
+      "bank": 10,
+      "word": 5,
+      "old": [
+        2582.136,
+        596.148
+      ],
+      "proposed": [
+        342.336,
+        241.92
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[5].u_m"
+    },
+    {
+      "bank": 10,
+      "word": 6,
+      "old": [
+        2453.76,
+        561.588
+      ],
+      "proposed": [
+        256.752,
+        276.48
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[6].u_m"
+    },
+    {
+      "bank": 10,
+      "word": 7,
+      "old": [
+        2496.552,
+        561.588
+      ],
+      "proposed": [
+        299.544,
+        276.48
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[7].u_m"
+    },
+    {
+      "bank": 10,
+      "word": 8,
+      "old": [
+        2539.344,
+        561.588
+      ],
+      "proposed": [
+        342.336,
+        276.48
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[8].u_m"
+    },
+    {
+      "bank": 11,
+      "word": 0,
+      "old": [
+        2582.136,
+        561.588
+      ],
+      "proposed": [
+        385.128,
+        207.36
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[0].u_m"
+    },
+    {
+      "bank": 11,
+      "word": 1,
+      "old": [
+        2453.76,
+        527.028
+      ],
+      "proposed": [
+        427.92,
+        207.36
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[1].u_m"
+    },
+    {
+      "bank": 11,
+      "word": 2,
+      "old": [
+        2496.552,
+        527.028
+      ],
+      "proposed": [
+        470.712,
+        207.36
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[2].u_m"
+    },
+    {
+      "bank": 11,
+      "word": 3,
+      "old": [
+        2539.344,
+        527.028
+      ],
+      "proposed": [
+        385.128,
+        241.92
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[3].u_m"
+    },
+    {
+      "bank": 11,
+      "word": 4,
+      "old": [
+        2582.136,
+        527.028
+      ],
+      "proposed": [
+        427.92,
+        241.92
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[4].u_m"
+    },
+    {
+      "bank": 11,
+      "word": 5,
+      "old": [
+        2453.76,
+        492.468
+      ],
+      "proposed": [
+        470.712,
+        241.92
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[5].u_m"
+    },
+    {
+      "bank": 11,
+      "word": 6,
+      "old": [
+        2496.552,
+        492.468
+      ],
+      "proposed": [
+        385.128,
+        276.48
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[6].u_m"
+    },
+    {
+      "bank": 11,
+      "word": 7,
+      "old": [
+        2539.344,
+        492.468
+      ],
+      "proposed": [
+        427.92,
+        276.48
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[7].u_m"
+    },
+    {
+      "bank": 11,
+      "word": 8,
+      "old": [
+        2582.136,
+        492.468
+      ],
+      "proposed": [
+        470.712,
+        276.48
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[8].u_m"
+    },
+    {
+      "bank": 12,
+      "word": 0,
+      "old": [
+        2453.76,
+        457.908
+      ],
+      "proposed": [
+        0.0,
+        311.04
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[0].u_m"
+    },
+    {
+      "bank": 12,
+      "word": 1,
+      "old": [
+        2496.552,
+        457.908
+      ],
+      "proposed": [
+        42.792,
+        311.04
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[1].u_m"
+    },
+    {
+      "bank": 12,
+      "word": 2,
+      "old": [
+        2539.344,
+        457.908
+      ],
+      "proposed": [
+        85.584,
+        311.04
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[2].u_m"
+    },
+    {
+      "bank": 12,
+      "word": 3,
+      "old": [
+        2582.136,
+        457.908
+      ],
+      "proposed": [
+        0.0,
+        345.6
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[3].u_m"
+    },
+    {
+      "bank": 12,
+      "word": 4,
+      "old": [
+        2453.76,
+        423.348
+      ],
+      "proposed": [
+        42.792,
+        345.6
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[4].u_m"
+    },
+    {
+      "bank": 12,
+      "word": 5,
+      "old": [
+        2496.552,
+        423.348
+      ],
+      "proposed": [
+        85.584,
+        345.6
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[5].u_m"
+    },
+    {
+      "bank": 12,
+      "word": 6,
+      "old": [
+        2539.344,
+        423.348
+      ],
+      "proposed": [
+        0.0,
+        380.16
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[6].u_m"
+    },
+    {
+      "bank": 12,
+      "word": 7,
+      "old": [
+        2582.136,
+        423.348
+      ],
+      "proposed": [
+        42.792,
+        380.16
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[7].u_m"
+    },
+    {
+      "bank": 12,
+      "word": 8,
+      "old": [
+        2453.76,
+        388.788
+      ],
+      "proposed": [
+        85.584,
+        380.16
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[8].u_m"
+    },
+    {
+      "bank": 13,
+      "word": 0,
+      "old": [
+        2496.552,
+        388.788
+      ],
+      "proposed": [
+        128.376,
+        311.04
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[0].u_m"
+    },
+    {
+      "bank": 13,
+      "word": 1,
+      "old": [
+        2539.344,
+        388.788
+      ],
+      "proposed": [
+        171.168,
+        311.04
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[1].u_m"
+    },
+    {
+      "bank": 13,
+      "word": 2,
+      "old": [
+        2582.136,
+        388.788
+      ],
+      "proposed": [
+        213.96,
+        311.04
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[2].u_m"
+    },
+    {
+      "bank": 1,
+      "word": 3,
+      "old": [
+        2453.76,
+        354.228
+      ],
+      "proposed": [
+        128.376,
+        34.56
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[3].u_m"
+    },
+    {
+      "bank": 1,
+      "word": 4,
+      "old": [
+        2496.552,
+        354.228
+      ],
+      "proposed": [
+        171.168,
+        34.56
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[4].u_m"
+    },
+    {
+      "bank": 1,
+      "word": 5,
+      "old": [
+        2539.344,
+        354.228
+      ],
+      "proposed": [
+        213.96,
+        34.56
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[5].u_m"
+    },
+    {
+      "bank": 1,
+      "word": 6,
+      "old": [
+        2582.136,
+        354.228
+      ],
+      "proposed": [
+        128.376,
+        69.12
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[6].u_m"
+    },
+    {
+      "bank": 13,
+      "word": 3,
+      "old": [
+        2453.76,
+        319.668
+      ],
+      "proposed": [
+        128.376,
+        345.6
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[3].u_m"
+    },
+    {
+      "bank": 13,
+      "word": 4,
+      "old": [
+        2496.552,
+        319.668
+      ],
+      "proposed": [
+        171.168,
+        345.6
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[4].u_m"
+    },
+    {
+      "bank": 13,
+      "word": 5,
+      "old": [
+        2539.344,
+        319.668
+      ],
+      "proposed": [
+        213.96,
+        345.6
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[5].u_m"
+    },
+    {
+      "bank": 13,
+      "word": 6,
+      "old": [
+        2582.136,
+        319.668
+      ],
+      "proposed": [
+        128.376,
+        380.16
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[6].u_m"
+    },
+    {
+      "bank": 13,
+      "word": 7,
+      "old": [
+        2453.76,
+        285.108
+      ],
+      "proposed": [
+        171.168,
+        380.16
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[7].u_m"
+    },
+    {
+      "bank": 13,
+      "word": 8,
+      "old": [
+        2496.552,
+        285.108
+      ],
+      "proposed": [
+        213.96,
+        380.16
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[8].u_m"
+    },
+    {
+      "bank": 14,
+      "word": 0,
+      "old": [
+        2539.344,
+        285.108
+      ],
+      "proposed": [
+        256.752,
+        311.04
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[0].u_m"
+    },
+    {
+      "bank": 14,
+      "word": 1,
+      "old": [
+        2582.136,
+        285.108
+      ],
+      "proposed": [
+        299.544,
+        311.04
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[1].u_m"
+    },
+    {
+      "bank": 14,
+      "word": 2,
+      "old": [
+        2453.76,
+        250.548
+      ],
+      "proposed": [
+        342.336,
+        311.04
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[2].u_m"
+    },
+    {
+      "bank": 14,
+      "word": 3,
+      "old": [
+        2496.552,
+        250.548
+      ],
+      "proposed": [
+        256.752,
+        345.6
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[3].u_m"
+    },
+    {
+      "bank": 14,
+      "word": 4,
+      "old": [
+        2539.344,
+        250.548
+      ],
+      "proposed": [
+        299.544,
+        345.6
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[4].u_m"
+    },
+    {
+      "bank": 14,
+      "word": 5,
+      "old": [
+        2582.136,
+        250.548
+      ],
+      "proposed": [
+        342.336,
+        345.6
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[5].u_m"
+    },
+    {
+      "bank": 14,
+      "word": 6,
+      "old": [
+        2453.76,
+        215.988
+      ],
+      "proposed": [
+        256.752,
+        380.16
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[6].u_m"
+    },
+    {
+      "bank": 14,
+      "word": 7,
+      "old": [
+        2496.552,
+        215.988
+      ],
+      "proposed": [
+        299.544,
+        380.16
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[7].u_m"
+    },
+    {
+      "bank": 14,
+      "word": 8,
+      "old": [
+        2539.344,
+        215.988
+      ],
+      "proposed": [
+        342.336,
+        380.16
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[8].u_m"
+    },
+    {
+      "bank": 15,
+      "word": 0,
+      "old": [
+        2582.136,
+        215.988
+      ],
+      "proposed": [
+        385.128,
+        311.04
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[0].u_m"
+    },
+    {
+      "bank": 15,
+      "word": 1,
+      "old": [
+        2453.76,
+        181.428
+      ],
+      "proposed": [
+        427.92,
+        311.04
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[1].u_m"
+    },
+    {
+      "bank": 15,
+      "word": 2,
+      "old": [
+        2496.552,
+        181.428
+      ],
+      "proposed": [
+        470.712,
+        311.04
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[2].u_m"
+    },
+    {
+      "bank": 15,
+      "word": 3,
+      "old": [
+        2539.344,
+        181.428
+      ],
+      "proposed": [
+        385.128,
+        345.6
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[3].u_m"
+    },
+    {
+      "bank": 15,
+      "word": 4,
+      "old": [
+        2582.136,
+        181.428
+      ],
+      "proposed": [
+        427.92,
+        345.6
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[4].u_m"
+    },
+    {
+      "bank": 15,
+      "word": 5,
+      "old": [
+        2453.76,
+        146.868
+      ],
+      "proposed": [
+        470.712,
+        345.6
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[5].u_m"
+    },
+    {
+      "bank": 15,
+      "word": 6,
+      "old": [
+        2496.552,
+        146.868
+      ],
+      "proposed": [
+        385.128,
+        380.16
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[6].u_m"
+    },
+    {
+      "bank": 15,
+      "word": 7,
+      "old": [
+        2539.344,
+        146.868
+      ],
+      "proposed": [
+        427.92,
+        380.16
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[7].u_m"
+    },
+    {
+      "bank": 15,
+      "word": 8,
+      "old": [
+        2582.136,
+        146.868
+      ],
+      "proposed": [
+        470.712,
+        380.16
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[8].u_m"
+    },
+    {
+      "bank": 1,
+      "word": 7,
+      "old": [
+        2453.76,
+        112.308
+      ],
+      "proposed": [
+        171.168,
+        69.12
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[7].u_m"
+    },
+    {
+      "bank": 1,
+      "word": 8,
+      "old": [
+        2496.552,
+        112.308
+      ],
+      "proposed": [
+        213.96,
+        69.12
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[8].u_m"
+    },
+    {
+      "bank": 2,
+      "word": 0,
+      "old": [
+        2539.344,
+        112.308
+      ],
+      "proposed": [
+        256.752,
+        0.0
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[0].u_m"
+    },
+    {
+      "bank": 2,
+      "word": 1,
+      "old": [
+        2582.136,
+        112.308
+      ],
+      "proposed": [
+        299.544,
+        0.0
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[1].u_m"
+    },
+    {
+      "bank": 2,
+      "word": 2,
+      "old": [
+        2453.76,
+        77.748
+      ],
+      "proposed": [
+        342.336,
+        0.0
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[2].u_m"
+    },
+    {
+      "bank": 2,
+      "word": 3,
+      "old": [
+        2496.552,
+        77.748
+      ],
+      "proposed": [
+        256.752,
+        34.56
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[3].u_m"
+    },
+    {
+      "bank": 2,
+      "word": 4,
+      "old": [
+        2539.344,
+        77.748
+      ],
+      "proposed": [
+        299.544,
+        34.56
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[4].u_m"
+    },
+    {
+      "bank": 2,
+      "word": 5,
+      "old": [
+        2582.136,
+        77.748
+      ],
+      "proposed": [
+        342.336,
+        34.56
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[5].u_m"
+    },
+    {
+      "bank": 2,
+      "word": 6,
+      "old": [
+        2643.84,
+        1166.388
+      ],
+      "proposed": [
+        256.752,
+        69.12
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[6].u_m"
+    },
+    {
+      "bank": 2,
+      "word": 7,
+      "old": [
+        2686.632,
+        1166.388
+      ],
+      "proposed": [
+        299.544,
+        69.12
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[7].u_m"
+    },
+    {
+      "bank": 2,
+      "word": 8,
+      "old": [
+        2729.424,
+        1166.388
+      ],
+      "proposed": [
+        342.336,
+        69.12
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[8].u_m"
+    },
+    {
+      "bank": 3,
+      "word": 0,
+      "old": [
+        2772.216,
+        1166.388
+      ],
+      "proposed": [
+        385.128,
+        0.0
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[0].u_m"
+    },
+    {
+      "bank": 3,
+      "word": 1,
+      "old": [
+        2643.84,
+        1131.828
+      ],
+      "proposed": [
+        427.92,
+        0.0
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[1].u_m"
+    },
+    {
+      "bank": 3,
+      "word": 2,
+      "old": [
+        2686.632,
+        1131.828
+      ],
+      "proposed": [
+        470.712,
+        0.0
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[2].u_m"
+    },
+    {
+      "bank": 3,
+      "word": 3,
+      "old": [
+        2729.424,
+        1131.828
+      ],
+      "proposed": [
+        385.128,
+        34.56
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[3].u_m"
+    },
+    {
+      "bank": 3,
+      "word": 4,
+      "old": [
+        2772.216,
+        1131.828
+      ],
+      "proposed": [
+        427.92,
+        34.56
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[4].u_m"
+    },
+    {
+      "bank": 3,
+      "word": 5,
+      "old": [
+        2643.84,
+        1097.268
+      ],
+      "proposed": [
+        470.712,
+        34.56
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[5].u_m"
+    },
+    {
+      "bank": 3,
+      "word": 6,
+      "old": [
+        2686.632,
+        1097.268
+      ],
+      "proposed": [
+        385.128,
+        69.12
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[6].u_m"
+    },
+    {
+      "bank": 3,
+      "word": 7,
+      "old": [
+        2729.424,
+        1097.268
+      ],
+      "proposed": [
+        427.92,
+        69.12
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[7].u_m"
+    },
+    {
+      "bank": 3,
+      "word": 8,
+      "old": [
+        2772.216,
+        1097.268
+      ],
+      "proposed": [
+        470.712,
+        69.12
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[8].u_m"
+    },
+    {
+      "bank": 4,
+      "word": 0,
+      "old": [
+        2643.84,
+        1028.148
+      ],
+      "proposed": [
+        0.0,
+        103.68
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[0].u_m"
+    },
+    {
+      "bank": 4,
+      "word": 1,
+      "old": [
+        2686.632,
+        1028.148
+      ],
+      "proposed": [
+        42.792,
+        103.68
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[1].u_m"
+    },
+    {
+      "bank": 4,
+      "word": 2,
+      "old": [
+        2729.424,
+        1028.148
+      ],
+      "proposed": [
+        85.584,
+        103.68
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[2].u_m"
+    },
+    {
+      "bank": 4,
+      "word": 3,
+      "old": [
+        2772.216,
+        1028.148
+      ],
+      "proposed": [
+        0.0,
+        138.24
+      ],
+      "size": [
+        31.992,
+        17.304
+      ],
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[3].u_m"
+    }
+  ],
+  "per_word_read_source_radius": {
+    "0": {
+      "actual_origin_geometry": {
+        "radius_um": 643.4759999999999,
+        "center_um": [
+          2580.486,
+          714.6419999999998
+        ]
+      },
+      "proposed_origin_geometry": {
+        "radius_um": 348.084,
+        "center_um": [
+          192.564,
+          155.52
+        ]
+      }
+    },
+    "1": {
+      "actual_origin_geometry": {
+        "radius_um": 570.24,
+        "center_um": [
+          2557.032,
+          648.396
+        ]
+      },
+      "proposed_origin_geometry": {
+        "radius_um": 348.08400000000006,
+        "center_um": [
+          235.356,
+          155.52000000000004
+        ]
+      }
+    },
+    "2": {
+      "actual_origin_geometry": {
+        "radius_um": 643.4759999999999,
+        "center_um": [
+          2529.054,
+          645.9300000000001
+        ]
+      },
+      "proposed_origin_geometry": {
+        "radius_um": 348.084,
+        "center_um": [
+          278.148,
+          155.52
+        ]
+      }
+    },
+    "3": {
+      "actual_origin_geometry": {
+        "radius_um": 643.4759999999999,
+        "center_um": [
+          2571.846,
+          645.9299999999998
+        ]
+      },
+      "proposed_origin_geometry": {
+        "radius_um": 348.08400000000006,
+        "center_um": [
+          192.564,
+          190.08
+        ]
+      }
+    },
+    "4": {
+      "actual_origin_geometry": {
+        "radius_um": 643.4759999999999,
+        "center_um": [
+          2580.486,
+          680.0820000000001
+        ]
+      },
+      "proposed_origin_geometry": {
+        "radius_um": 348.084,
+        "center_um": [
+          235.356,
+          190.07999999999998
+        ]
+      }
+    },
+    "5": {
+      "actual_origin_geometry": {
+        "radius_um": 570.24,
+        "center_um": [
+          2557.032,
+          613.8360000000002
+        ]
+      },
+      "proposed_origin_geometry": {
+        "radius_um": 348.084,
+        "center_um": [
+          278.148,
+          190.08
+        ]
+      }
+    },
+    "6": {
+      "actual_origin_geometry": {
+        "radius_um": 583.404,
+        "center_um": [
+          2557.032,
+          669.7919999999999
+        ]
+      },
+      "proposed_origin_geometry": {
+        "radius_um": 348.084,
+        "center_um": [
+          192.564,
+          224.64000000000001
+        ]
+      }
+    },
+    "7": {
+      "actual_origin_geometry": {
+        "radius_um": 643.4759999999999,
+        "center_um": [
+          2569.788,
+          639.7559999999999
+        ]
+      },
+      "proposed_origin_geometry": {
+        "radius_um": 348.08400000000006,
+        "center_um": [
+          235.356,
+          224.64000000000004
+        ]
+      }
+    },
+    "8": {
+      "actual_origin_geometry": {
+        "radius_um": 643.4759999999999,
+        "center_um": [
+          2587.068,
+          665.268
+        ]
+      },
+      "proposed_origin_geometry": {
+        "radius_um": 348.08400000000006,
+        "center_um": [
+          278.148,
+          224.64000000000001
+        ]
+      }
+    }
+  },
+  "note": "All macros R0 and identical LEF: each given rd_out bit has identical per-macro offset; exact minimum-L1 source radius is invariant under that offset. Centers listed are macro-origin based; add the actual bit pin offset for a physical capture target. Capture mux/FF placement and timing are unmeasured.",
+  "packing_outline_um": [
+    502.704,
+    397.464
+  ],
+  "pitches_um": [
+    42.792,
+    34.56
+  ],
+  "added_cycles": 0,
+  "halo_pitch_gaps_um": [
+    10.8,
+    17.256
+  ]
+}

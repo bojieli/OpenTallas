@@ -1,0 +1,2318 @@
+{
+  "status": "DISABLED_GEOMETRY_PREP_NO_PARENT_OR_ROUTE_RELEASE",
+  "cut_logical_path": "u_lf.g_kv.u_kv",
+  "bound_instance": "u_g_kv_u_kv",
+  "functional_boundary_bits": 707,
+  "clock_reset_ports": 2,
+  "outline_um": [
+    777.6,
+    1209.6
+  ],
+  "macro_count": 176,
+  "macro_area_um2": 506067.8031360001,
+  "macro_fraction": 0.5380351851851853,
+  "free_area_um2": 434517.15686399984,
+  "parent_origin_um": null,
+  "rtl_added_cycles": 0,
+  "proposed_macros": [
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        10.8,
+        775.464
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        53.592,
+        775.464
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        96.384,
+        775.464
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        10.8,
+        810.024
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        53.592,
+        810.024
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        96.384,
+        810.024
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        10.8,
+        844.584
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        53.592,
+        844.584
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        53.592,
+        913.704
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        96.384,
+        913.704
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        10.8,
+        948.264
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        53.592,
+        948.264
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        96.384,
+        948.264
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        139.176,
+        879.144
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        181.968,
+        879.144
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        224.76,
+        879.144
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        139.176,
+        913.704
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        181.968,
+        913.704
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        224.76,
+        913.704
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        139.176,
+        948.264
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        181.968,
+        948.264
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[5].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        224.76,
+        948.264
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        267.552,
+        879.144
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        310.344,
+        879.144
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        353.136,
+        879.144
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        267.552,
+        913.704
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        310.344,
+        913.704
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        353.136,
+        913.704
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        267.552,
+        948.264
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        310.344,
+        948.264
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[6].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        353.136,
+        948.264
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        395.928,
+        879.144
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        438.72,
+        879.144
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        481.512,
+        879.144
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        395.928,
+        913.704
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        438.72,
+        913.704
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        481.512,
+        913.704
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        395.928,
+        948.264
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        438.72,
+        948.264
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[7].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        481.512,
+        948.264
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        10.8,
+        982.824
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        53.592,
+        982.824
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        96.384,
+        982.824
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        10.8,
+        1017.384
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        53.592,
+        1017.384
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        96.384,
+        1017.384
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        10.8,
+        1051.944
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        53.592,
+        1051.944
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[0].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        96.384,
+        844.584
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        139.176,
+        775.464
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        181.968,
+        775.464
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        224.76,
+        775.464
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[8].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        96.384,
+        1051.944
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        139.176,
+        982.824
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        181.968,
+        982.824
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        224.76,
+        982.824
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        139.176,
+        1017.384
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        181.968,
+        1017.384
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        224.76,
+        1017.384
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        139.176,
+        1051.944
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        181.968,
+        1051.944
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[9].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        224.76,
+        1051.944
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        267.552,
+        982.824
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        310.344,
+        982.824
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        353.136,
+        982.824
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        267.552,
+        1017.384
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        310.344,
+        1017.384
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        353.136,
+        1017.384
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        267.552,
+        1051.944
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        310.344,
+        1051.944
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[10].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        353.136,
+        1051.944
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        395.928,
+        982.824
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        438.72,
+        982.824
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        481.512,
+        982.824
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        395.928,
+        1017.384
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        438.72,
+        1017.384
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        481.512,
+        1017.384
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        395.928,
+        1051.944
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        438.72,
+        1051.944
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[11].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        481.512,
+        1051.944
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        10.8,
+        1086.504
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        53.592,
+        1086.504
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        96.384,
+        1086.504
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        10.8,
+        1121.064
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        53.592,
+        1121.064
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        96.384,
+        1121.064
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        10.8,
+        1155.624
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        53.592,
+        1155.624
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[12].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        96.384,
+        1155.624
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        139.176,
+        1086.504
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        181.968,
+        1086.504
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        224.76,
+        1086.504
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        139.176,
+        810.024
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        181.968,
+        810.024
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        224.76,
+        810.024
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        139.176,
+        844.584
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        139.176,
+        1121.064
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        181.968,
+        1121.064
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        224.76,
+        1121.064
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        139.176,
+        1155.624
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        181.968,
+        1155.624
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[13].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        224.76,
+        1155.624
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        267.552,
+        1086.504
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        310.344,
+        1086.504
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        353.136,
+        1086.504
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        267.552,
+        1121.064
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        310.344,
+        1121.064
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        353.136,
+        1121.064
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        267.552,
+        1155.624
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        310.344,
+        1155.624
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[14].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        353.136,
+        1155.624
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        395.928,
+        1086.504
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        438.72,
+        1086.504
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        481.512,
+        1086.504
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        395.928,
+        1121.064
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        438.72,
+        1121.064
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        481.512,
+        1121.064
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        395.928,
+        1155.624
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        438.72,
+        1155.624
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[15].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        481.512,
+        1155.624
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        181.968,
+        844.584
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[1].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        224.76,
+        844.584
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        267.552,
+        775.464
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        310.344,
+        775.464
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        353.136,
+        775.464
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        267.552,
+        810.024
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        310.344,
+        810.024
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        353.136,
+        810.024
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        267.552,
+        844.584
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        310.344,
+        844.584
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[2].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        353.136,
+        844.584
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        395.928,
+        775.464
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        438.72,
+        775.464
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        481.512,
+        775.464
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        395.928,
+        810.024
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[4].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        438.72,
+        810.024
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[5].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        481.512,
+        810.024
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[6].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        395.928,
+        844.584
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[7].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        438.72,
+        844.584
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[3].g_word[8].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        481.512,
+        844.584
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[0].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        10.8,
+        879.144
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[1].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        53.592,
+        879.144
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[2].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        96.384,
+        879.144
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.g_store[4].g_word[3].u_m",
+      "module": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        10.8,
+        913.704
+      ],
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[0].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        10.8,
+        10.8
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[0].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        10.8,
+        105.84
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[1].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        200.88,
+        10.8
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[1].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        200.88,
+        105.84
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[2].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        390.96,
+        10.8
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[2].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        390.96,
+        105.84
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[3].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        581.04,
+        10.8
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[3].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        581.04,
+        105.84
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[4].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        10.8,
+        200.88
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[4].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        10.8,
+        295.92
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[5].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        200.88,
+        200.88
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[5].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        200.88,
+        295.92
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[6].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        390.96,
+        200.88
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[6].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        390.96,
+        295.92
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[7].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        581.04,
+        200.88
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[7].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        581.04,
+        295.92
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[8].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        10.8,
+        390.96
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[8].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        10.8,
+        486.0
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[9].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        200.88,
+        390.96
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[9].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        200.88,
+        486.0
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[10].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        390.96,
+        390.96
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[10].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        390.96,
+        486.0
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[11].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        581.04,
+        390.96
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[11].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        581.04,
+        486.0
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[12].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        10.8,
+        581.04
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[12].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        10.8,
+        676.08
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[13].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        200.88,
+        581.04
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[13].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        200.88,
+        676.08
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[14].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        390.96,
+        581.04
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[14].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        390.96,
+        676.08
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[15].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[0].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        581.04,
+        581.04
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    },
+    {
+      "inst": "u_bound.u_g_kv_u_kv.u_bank.g_kvq[15].g_rtl.u_kvq.u_aq.g_xs.u_x.g_m[1].u_m",
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin_um": [
+        581.04,
+        676.08
+      ],
+      "outline_um": [
+        171.288,
+        77.784
+      ],
+      "orient": "R0"
+    }
+  ],
+  "store_base_um": [
+    10.8,
+    775.4639999999999
+  ],
+  "required_next": [
+    "Actual selected-source mapped cell/area census including CNIK1 CP1",
+    "Common-child source/profile/current physical view joins",
+    "Parent FT/landing/clock/reset model and clearance census for any absolute hard-core site",
+    "All native r2r/memory legs, balanced clock, fill and route gates"
+  ],
+  "macro_only_overlap_count": 0
+}
