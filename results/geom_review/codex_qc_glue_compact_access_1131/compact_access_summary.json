@@ -1,0 +1,876 @@
+{
+  "status": "ACTUAL_LEF_ACCESS_CENSUS_ONLY_NO_CAD",
+  "actual_macro_orientation": "R0 for all six per completed kit macro_place.tcl",
+  "actual_boundary_pins": {
+    "total": 4545,
+    "face_layer_counts": {
+      "S/M7": 588,
+      "S/M5": 588,
+      "N/M7": 1659,
+      "N/M5": 1633,
+      "E/M6": 39,
+      "E/M4": 38
+    }
+  },
+  "ca_buses": [
+    {
+      "bus": "coll_flt_i",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "E/M6": 1,
+        "E/M4": 1
+      }
+    },
+    {
+      "bus": "coll_fltv_i",
+      "D": 4,
+      "pins": 71,
+      "face_layer_counts": {
+        "E/M6": 36,
+        "E/M4": 35
+      }
+    },
+    {
+      "bus": "ctlm_flt_i",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "N/M7": 1,
+        "N/M5": 1
+      }
+    },
+    {
+      "bus": "d2d_rom__native_tx_payload",
+      "D": 4,
+      "pins": 549,
+      "face_layer_counts": {
+        "N/M7": 275,
+        "N/M5": 274
+      }
+    },
+    {
+      "bus": "d2d_rom__native_tx_v",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "N/M7": 1,
+        "N/M5": 1
+      }
+    },
+    {
+      "bus": "d2d_rom__obs_native",
+      "D": 4,
+      "pins": 61,
+      "face_layer_counts": {
+        "N/M7": 31,
+        "N/M5": 30
+      }
+    },
+    {
+      "bus": "d2d_rom__x3",
+      "D": 4,
+      "pins": 525,
+      "face_layer_counts": {
+        "N/M7": 263,
+        "N/M5": 262
+      }
+    },
+    {
+      "bus": "d2d_rom__x3_generation",
+      "D": 4,
+      "pins": 3,
+      "face_layer_counts": {
+        "N/M7": 2,
+        "N/M5": 1
+      }
+    },
+    {
+      "bus": "d2d_rom__x3_identity",
+      "D": 4,
+      "pins": 60,
+      "face_layer_counts": {
+        "N/M7": 30,
+        "N/M5": 30
+      }
+    },
+    {
+      "bus": "embed_prov__core_start",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "N/M7": 1,
+        "N/M5": 1
+      }
+    },
+    {
+      "bus": "embed_prov__core_token",
+      "D": 4,
+      "pins": 19,
+      "face_layer_counts": {
+        "N/M7": 10,
+        "N/M5": 9
+      }
+    },
+    {
+      "bus": "embed_prov__embed_code_addr",
+      "D": 4,
+      "pins": 25,
+      "face_layer_counts": {
+        "N/M7": 13,
+        "N/M5": 12
+      }
+    },
+    {
+      "bus": "embed_prov__embed_code_re",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "N/M7": 1,
+        "N/M5": 1
+      }
+    },
+    {
+      "bus": "embed_prov__embed_scale_addr",
+      "D": 4,
+      "pins": 19,
+      "face_layer_counts": {
+        "N/M7": 10,
+        "N/M5": 9
+      }
+    },
+    {
+      "bus": "embed_prov__embed_scale_re",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "N/M7": 1,
+        "N/M5": 1
+      }
+    },
+    {
+      "bus": "sys_face__head_descriptor_generation",
+      "D": 4,
+      "pins": 3,
+      "face_layer_counts": {
+        "N/M7": 2,
+        "N/M5": 1
+      }
+    },
+    {
+      "bus": "sys_face__head_descriptor_tag",
+      "D": 4,
+      "pins": 60,
+      "face_layer_counts": {
+        "N/M7": 30,
+        "N/M5": 30
+      }
+    },
+    {
+      "bus": "sys_face__head_descriptor_v",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "N/M7": 1,
+        "N/M5": 1
+      }
+    },
+    {
+      "bus": "sys_face__io_cmd_free",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "E/M6": 1,
+        "E/M4": 1
+      }
+    },
+    {
+      "bus": "sys_face__io_fault",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "E/M6": 1,
+        "E/M4": 1
+      }
+    },
+    {
+      "bus": "sys_face__native_fault",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "N/M7": 1,
+        "N/M5": 1
+      }
+    },
+    {
+      "bus": "sys_face__seq_cfg_image_ready",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "N/M7": 1,
+        "N/M5": 1
+      }
+    },
+    {
+      "bus": "sys_face__seq_dc",
+      "D": 4,
+      "pins": 57,
+      "face_layer_counts": {
+        "N/M7": 29,
+        "N/M5": 28
+      }
+    },
+    {
+      "bus": "sys_face__seq_descriptor_obs",
+      "D": 4,
+      "pins": 70,
+      "face_layer_counts": {
+        "N/M7": 35,
+        "N/M5": 35
+      }
+    },
+    {
+      "bus": "sys_face__seq_program_obs",
+      "D": 4,
+      "pins": 77,
+      "face_layer_counts": {
+        "N/M7": 39,
+        "N/M5": 38
+      }
+    },
+    {
+      "bus": "sys_face__tt_command_stage",
+      "D": 4,
+      "pins": 7,
+      "face_layer_counts": {
+        "N/M7": 4,
+        "N/M5": 3
+      }
+    },
+    {
+      "bus": "sys_face__tt_control_stores_ready",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "N/M7": 1,
+        "N/M5": 1
+      }
+    },
+    {
+      "bus": "sys_face__tt_layer_context_v",
+      "D": 4,
+      "pins": 2,
+      "face_layer_counts": {
+        "N/M7": 1,
+        "N/M5": 1
+      }
+    },
+    {
+      "bus": "sys_face__tt_native_pos",
+      "D": 4,
+      "pins": 19,
+      "face_layer_counts": {
+        "N/M7": 10,
+        "N/M5": 9
+      }
+    },
+    {
+      "bus": "sys_face__tt_native_tok",
+      "D": 4,
+      "pins": 19,
+      "face_layer_counts": {
+        "N/M7": 10,
+        "N/M5": 9
+      }
+    },
+    {
+      "bus": "sys_face__tt_program_obs",
+      "D": 4,
+      "pins": 77,
+      "face_layer_counts": {
+        "N/M7": 39,
+        "N/M5": 38
+      }
+    },
+    {
+      "bus": "cland_dn_fault_0",
+      "D": 4,
+      "pins": 0,
+      "face_layer_counts": {}
+    },
+    {
+      "bus": "cland_dn_ready_0",
+      "D": 4,
+      "pins": 0,
+      "face_layer_counts": {}
+    }
+  ],
+  "ca_bus_count": 33,
+  "ca_data_contact_count": 1747,
+  "actual_cell_area_groups": {
+    "other_native": {
+      "cells": 119834,
+      "area_um2": 18936.635219992586,
+      "ff_cells": 32085,
+      "ff_area_um2": 9730.16711999803
+    },
+    "u_bin_": {
+      "cells": 7067,
+      "area_um2": 1544.5323000001401,
+      "ff_cells": 2335,
+      "ff_area_um2": 700.3065600000168
+    },
+    "u_bout_": {
+      "cells": 6376,
+      "area_um2": 1364.8046400000965,
+      "ff_cells": 2210,
+      "ff_area_um2": 647.4978000000115
+    },
+    "u_cland_": {
+      "cells": 50686,
+      "area_um2": 6718.9743000018625,
+      "ff_cells": 11109,
+      "ff_area_um2": 3239.5010400002334
+    }
+  },
+  "face_access": [
+    {
+      "master": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+      "face": "W",
+      "layer": "M4",
+      "signal_clock_contacts": 229,
+      "y_span_um": [
+        0.78,
+        44.556
+      ],
+      "peak_contacts_in10um": 53,
+      "peak_contacts_per_um": 5.3,
+      "gross_M4_horizontal_tracks_at0p048": 951,
+      "contacts_per_gross_track": 0.24079915878023134,
+      "scope": "Direct face escape necessary count only. Distinct nets, vias, tracks reserved for PG/clock and actual selected access points not qualified."
+    },
+    {
+      "master": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+      "face": "E",
+      "layer": "M4",
+      "signal_clock_contacts": 229,
+      "y_span_um": [
+        0.78,
+        44.556
+      ],
+      "peak_contacts_in10um": 53,
+      "peak_contacts_per_um": 5.3,
+      "gross_M4_horizontal_tracks_at0p048": 951,
+      "contacts_per_gross_track": 0.24079915878023134,
+      "scope": "Direct face escape necessary count only. Distinct nets, vias, tracks reserved for PG/clock and actual selected access points not qualified."
+    },
+    {
+      "master": "ot_rom_4096x72_m8",
+      "face": "W",
+      "layer": "M4",
+      "signal_clock_contacts": 43,
+      "y_span_um": [
+        0.78,
+        4.811999999999999
+      ],
+      "peak_contacts_in10um": 43,
+      "peak_contacts_per_um": 4.3,
+      "gross_M4_horizontal_tracks_at0p048": 1311,
+      "contacts_per_gross_track": 0.03279938977879481,
+      "scope": "Direct face escape necessary count only. Distinct nets, vias, tracks reserved for PG/clock and actual selected access points not qualified."
+    },
+    {
+      "master": "ot_rom_4096x72_m8",
+      "face": "E",
+      "layer": "M4",
+      "signal_clock_contacts": 43,
+      "y_span_um": [
+        0.78,
+        4.811999999999999
+      ],
+      "peak_contacts_in10um": 43,
+      "peak_contacts_per_um": 4.3,
+      "gross_M4_horizontal_tracks_at0p048": 1311,
+      "contacts_per_gross_track": 0.03279938977879481,
+      "scope": "Direct face escape necessary count only. Distinct nets, vias, tracks reserved for PG/clock and actual selected access points not qualified."
+    },
+    {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "face": "W",
+      "layer": "M4",
+      "signal_clock_contacts": 793,
+      "y_span_um": [
+        0.78,
+        76.812
+      ],
+      "peak_contacts_in10um": 105,
+      "peak_contacts_per_um": 10.5,
+      "gross_M4_horizontal_tracks_at0p048": 1620,
+      "contacts_per_gross_track": 0.48950617283950615,
+      "scope": "Direct face escape necessary count only. Distinct nets, vias, tracks reserved for PG/clock and actual selected access points not qualified."
+    },
+    {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "face": "E",
+      "layer": "M4",
+      "signal_clock_contacts": 792,
+      "y_span_um": [
+        0.78,
+        76.716
+      ],
+      "peak_contacts_in10um": 105,
+      "peak_contacts_per_um": 10.5,
+      "gross_M4_horizontal_tracks_at0p048": 1620,
+      "contacts_per_gross_track": 0.4888888888888889,
+      "scope": "Direct face escape necessary count only. Distinct nets, vias, tracks reserved for PG/clock and actual selected access points not qualified."
+    }
+  ],
+  "actual_ff_totals": {
+    "cells": 47739,
+    "area_um2": 14317.472519998293,
+    "note": "Actual standard-cell FF inventory; six macro clock consumers are separate."
+  },
+  "facing_channels": [
+    {
+      "pair": "D2D adjacent banks (three identical gaps)",
+      "body_gap_um": 11.208,
+      "free_width_after_two4p32_placement_halos_um": 2.568,
+      "facing_M4_contacts": 458,
+      "full_face_height_um": 45.672,
+      "gross_horizontal_M4_tracks": 951,
+      "combined_contacts_fraction_of_gross_M4_tracks": 0.4815983175604627,
+      "macro_obstructed_layers": [
+        "M1-M3 full body",
+        "M4 interior, 0.072um edge strips excluded"
+      ],
+      "higher_escape_layers_not_obstructed_by_macro": [
+        "M5",
+        "M6",
+        "M7",
+        "M8",
+        "M9"
+      ]
+    },
+    {
+      "pair": "code SRAM E / sys ROM W",
+      "body_gap_um": 10.152,
+      "free_width_after_two4p32_placement_halos_um": 1.512,
+      "code_E_contacts": 792,
+      "sysROM_W_contacts": 43,
+      "shared_y_span_um": [
+        259.212,
+        322.164
+      ],
+      "scope": "Need only actual overlapping code E contacts for local facing channel; full code-side count is conservative, not mandatory north/south mincut."
+    }
+  ],
+  "ca_contact_scope": "33 actual hold-mux buses/1747 data boundary contacts; ring starts and other controls are separate. Current north3292/south1176/east77 include all boundary pins, not only these buses. West has no current contacts. Proposed N/W/E bays therefore require explicit physical bus reassignment; no individual bay load claimed.",
+  "verdict": "UNPROVEN_ACCESS_NOT_PACKING_PASS: all signal/clock macro contacts lie on M4 W/E faces, so the three D2D gaps and code/sys gap are required escape zones. Body fit and free area cannot waive them. M5+ over-macro escape is not blocked by these LEF body OBS, but via, PG, signal cuts and bank packing need explicit assignment.",
+  "cut_accounting": {
+    "scope": "Necessary face-contact census and gross preferred-layer slot budgets only; no routed cut assignment. Opposing faces cannot be summed into a mandatory full-gap M4 mincut because each can turn on a via before the midline. Upper-layer escape may cross macro bodies above M4.",
+    "face_contact_counts_required": true,
+    "local_pin_access": "Every actual M4 pin rectangle needs a legal chosen access/via or direct local connection; macro M4 interior obstruction leaves only a 0.072um edge strip. Neither placement halo nor body gap proves that access.",
+    "at55pct_face_cut_M4_contacts_per_um_budget": 11.458333333333334,
+    "code_M4_peak_contacts_per_um": 10.5,
+    "code_existing6pin_budget": "WARN: 10.5>6 pins/um/layer/face; not waived by compaction.",
+    "M5_plus": "No body OBS above M4 in the selected three LEFs. Actual M4-M5 and higher cuts, PG rectangles and neighboring net ownership are unassigned; do not infer a routing PASS."
+  },
+  "boundary_gross_cut_lower_bounds": [
+    {
+      "face": "N",
+      "layer": "M5",
+      "actual_current_contacts": 1633,
+      "proposed_core_face_span_um": 423.36,
+      "preferred_pitch_um": 0.048,
+      "gross_tracks": 8820,
+      "contacts_over_gross_tracks": 0.18514739229024943,
+      "scope": "Source face/layer counts carried only; pin locations, CA bank ownership, PG reservations, parent alignment and actual crossing cut remain unassigned."
+    },
+    {
+      "face": "N",
+      "layer": "M7",
+      "actual_current_contacts": 1659,
+      "proposed_core_face_span_um": 423.36,
+      "preferred_pitch_um": 0.064,
+      "gross_tracks": 6615,
+      "contacts_over_gross_tracks": 0.2507936507936508,
+      "scope": "Source face/layer counts carried only; pin locations, CA bank ownership, PG reservations, parent alignment and actual crossing cut remain unassigned."
+    },
+    {
+      "face": "S",
+      "layer": "M5",
+      "actual_current_contacts": 588,
+      "proposed_core_face_span_um": 423.36,
+      "preferred_pitch_um": 0.048,
+      "gross_tracks": 8820,
+      "contacts_over_gross_tracks": 0.06666666666666667,
+      "scope": "Source face/layer counts carried only; pin locations, CA bank ownership, PG reservations, parent alignment and actual crossing cut remain unassigned."
+    },
+    {
+      "face": "S",
+      "layer": "M7",
+      "actual_current_contacts": 588,
+      "proposed_core_face_span_um": 423.36,
+      "preferred_pitch_um": 0.064,
+      "gross_tracks": 6615,
+      "contacts_over_gross_tracks": 0.08888888888888889,
+      "scope": "Source face/layer counts carried only; pin locations, CA bank ownership, PG reservations, parent alignment and actual crossing cut remain unassigned."
+    },
+    {
+      "face": "E",
+      "layer": "M4",
+      "actual_current_contacts": 38,
+      "proposed_core_face_span_um": 371.52,
+      "preferred_pitch_um": 0.048,
+      "gross_tracks": 7739,
+      "contacts_over_gross_tracks": 0.004910195115648016,
+      "scope": "Source face/layer counts carried only; pin locations, CA bank ownership, PG reservations, parent alignment and actual crossing cut remain unassigned."
+    },
+    {
+      "face": "E",
+      "layer": "M6",
+      "actual_current_contacts": 39,
+      "proposed_core_face_span_um": 371.52,
+      "preferred_pitch_um": 0.064,
+      "gross_tracks": 5805,
+      "contacts_over_gross_tracks": 0.006718346253229974,
+      "scope": "Source face/layer counts carried only; pin locations, CA bank ownership, PG reservations, parent alignment and actual crossing cut remain unassigned."
+    }
+  ],
+  "native_constant_termination_note": {
+    "D2D_each": {
+      "incoming_unique_signal_nets": 320,
+      "direct_tie_nets": 170,
+      "other_incoming_signal_nets": 150,
+      "output_signal_nets": 137
+    },
+    "code": {
+      "incoming_unique_signal_nets": 1072,
+      "direct_tie_nets": 546,
+      "other_incoming_signal_nets": 526,
+      "output_signal_nets": 512
+    },
+    "sysROM": {
+      "incoming_unique_signal_nets": 13,
+      "direct_tie_nets": 0,
+      "other_incoming_signal_nets": 13,
+      "output_signal_nets": 72
+    },
+    "scope": "Actual baseline geom nets, excludes separate clock nets; no per-port labels in this dump, no assertion each listed unique net equals one pin. Constant/tie access is still required, but these contacts must not all be priced as long-distance signal demand."
+  },
+  "ca_declaration_correction": "33 declared hold-mux buses;31 have boundary data contacts (1747 total),2 internal cland ready/fault declarations have no physical data boundary contact. Ring starts/control pins are separate.",
+  "ca_current_face_layer_counts": {
+    "N/M5": 828,
+    "N/M7": 842,
+    "E/M4": 38,
+    "E/M6": 39
+  },
+  "bay_load_status": {
+    "north_area_um2": 18289.152,
+    "west_area_um2": 11421.3888,
+    "east_area_um2": 9853.7472,
+    "actual_cland_allcells_area_um2": 6718.9743,
+    "actual_cland_FF_area_um2": 3239.50104,
+    "actual_bin_bout_allcells_area_um2": 2909.33694,
+    "scope": "No allocation or packing credit: current external CA data contacts are N1670/E77/W0, so the proposed west reserve has no assigned current bus. All31 contacted buses need explicit registered bank and parent-face assignments before physical event."
+  },
+  "models": {
+    "d2d_sram_1r1w_64x137_m1_r2c2_p192": {
+      "size_um": [
+        57.912,
+        45.672
+      ],
+      "sha256": "da305511bdf202c31a026264c9e1c69ef879a1f6c5e18e8df476294d29cf8046",
+      "pin_count": 460,
+      "signal_clock_pin_count": 458,
+      "rect_census": [
+        {
+          "use": "CLOCK",
+          "layer": "M4",
+          "face": "W",
+          "rectangles": 1
+        },
+        {
+          "use": "GROUND",
+          "layer": "M4",
+          "face": "N",
+          "rectangles": 30
+        },
+        {
+          "use": "GROUND",
+          "layer": "M4",
+          "face": "S",
+          "rectangles": 29
+        },
+        {
+          "use": "POWER",
+          "layer": "M4",
+          "face": "N",
+          "rectangles": 29
+        },
+        {
+          "use": "POWER",
+          "layer": "M4",
+          "face": "S",
+          "rectangles": 30
+        },
+        {
+          "use": "SIGNAL",
+          "layer": "M4",
+          "face": "E",
+          "rectangles": 229
+        },
+        {
+          "use": "SIGNAL",
+          "layer": "M4",
+          "face": "W",
+          "rectangles": 228
+        }
+      ],
+      "signal_clock_faces": {
+        "M4/E": 229,
+        "M4/W": 229
+      },
+      "obs": [
+        {
+          "layer": "M1",
+          "rect_um": [
+            0.0,
+            0.0,
+            57.912,
+            45.672
+          ]
+        },
+        {
+          "layer": "M2",
+          "rect_um": [
+            0.0,
+            0.0,
+            57.912,
+            45.672
+          ]
+        },
+        {
+          "layer": "M3",
+          "rect_um": [
+            0.0,
+            0.0,
+            57.912,
+            45.672
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.072,
+            0.0,
+            57.84,
+            45.672
+          ]
+        }
+      ]
+    },
+    "ot_rom_4096x72_m8": {
+      "size_um": [
+        38.04,
+        62.952
+      ],
+      "sha256": "894c15540462d7b5e015f7e9df654f6436b483e7744eaa84dcfcfdac01bb9f05",
+      "pin_count": 88,
+      "signal_clock_pin_count": 86,
+      "rect_census": [
+        {
+          "use": "CLOCK",
+          "layer": "M4",
+          "face": "W",
+          "rectangles": 1
+        },
+        {
+          "use": "GROUND",
+          "layer": "M4",
+          "face": "N",
+          "rectangles": 24
+        },
+        {
+          "use": "GROUND",
+          "layer": "M4",
+          "face": "S",
+          "rectangles": 24
+        },
+        {
+          "use": "GROUND",
+          "layer": "M4",
+          "face": "W",
+          "rectangles": 33
+        },
+        {
+          "use": "POWER",
+          "layer": "M4",
+          "face": "N",
+          "rectangles": 25
+        },
+        {
+          "use": "POWER",
+          "layer": "M4",
+          "face": "S",
+          "rectangles": 25
+        },
+        {
+          "use": "POWER",
+          "layer": "M4",
+          "face": "W",
+          "rectangles": 32
+        },
+        {
+          "use": "SIGNAL",
+          "layer": "M4",
+          "face": "E",
+          "rectangles": 43
+        },
+        {
+          "use": "SIGNAL",
+          "layer": "M4",
+          "face": "W",
+          "rectangles": 42
+        }
+      ],
+      "signal_clock_faces": {
+        "M4/E": 43,
+        "M4/W": 43
+      },
+      "obs": [
+        {
+          "layer": "M1",
+          "rect_um": [
+            0.0,
+            0.0,
+            38.04,
+            62.952
+          ]
+        },
+        {
+          "layer": "M2",
+          "rect_um": [
+            0.0,
+            0.0,
+            38.04,
+            62.952
+          ]
+        },
+        {
+          "layer": "M3",
+          "rect_um": [
+            0.0,
+            0.0,
+            38.04,
+            62.952
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.072,
+            0.0,
+            37.968,
+            62.952
+          ]
+        }
+      ]
+    },
+    "ot_sram_1r1w_64x512_m1_r2c2": {
+      "size_um": [
+        171.288,
+        77.784
+      ],
+      "sha256": "ec986c5e711849ec8e10f7d74549a525819ef73e792779a6a921e0a279facb28",
+      "pin_count": 1587,
+      "signal_clock_pin_count": 1585,
+      "rect_census": [
+        {
+          "use": "CLOCK",
+          "layer": "M4",
+          "face": "W",
+          "rectangles": 1
+        },
+        {
+          "use": "GROUND",
+          "layer": "M4",
+          "face": "N",
+          "rectangles": 51
+        },
+        {
+          "use": "GROUND",
+          "layer": "M4",
+          "face": "S",
+          "rectangles": 50
+        },
+        {
+          "use": "POWER",
+          "layer": "M4",
+          "face": "N",
+          "rectangles": 50
+        },
+        {
+          "use": "POWER",
+          "layer": "M4",
+          "face": "S",
+          "rectangles": 51
+        },
+        {
+          "use": "SIGNAL",
+          "layer": "M4",
+          "face": "E",
+          "rectangles": 792
+        },
+        {
+          "use": "SIGNAL",
+          "layer": "M4",
+          "face": "W",
+          "rectangles": 792
+        }
+      ],
+      "signal_clock_faces": {
+        "M4/E": 792,
+        "M4/W": 793
+      },
+      "obs": [
+        {
+          "layer": "M1",
+          "rect_um": [
+            0.0,
+            0.0,
+            171.288,
+            77.784
+          ]
+        },
+        {
+          "layer": "M2",
+          "rect_um": [
+            0.0,
+            0.0,
+            171.288,
+            77.784
+          ]
+        },
+        {
+          "layer": "M3",
+          "rect_um": [
+            0.0,
+            0.0,
+            171.288,
+            77.784
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_um": [
+            0.072,
+            0.0,
+            171.216,
+            77.784
+          ]
+        }
+      ]
+    }
+  }
+}
