@@ -1,13 +1,13 @@
 # HEAD native wave and inherited terminal collection
 
-The existing l48z batch94510 has three completed PASS-COND geometry results, a live mesh_e producer, and a stale central collection ledger. The raw geometry exit1 of the three completed items is handled by their existing scoped exceptions; all three unit result.json files say verdict PASS/geom PASS-COND/AP_RC0. No new placement or redesign is needed for them. The images in this packet were personally viewed and independently reviewed by geometry.
+The existing l48z batch94510 has three completed PASS-COND geometry results, a completed old-plan mesh_e geometry failure, and a stale central collection ledger. The raw geometry exit1 of the three completed items is handled by their existing scoped exceptions; all three unit result.json files say verdict PASS/geom PASS-COND/AP_RC0. No new placement or redesign is needed for them. The images in this packet were personally viewed and independently reviewed by geometry.
 
 | Current wave item | Actual data geometry | Existing scope / next action |
 |---|---|---|
 | hd_st_n3_transit | p90pin28.75/max137.07; r2r381.29/0; native M2–M7 adj.25,50 budget GRT0 | Adopted-slot aspect plus standing fill/empty exceptions; normal KIT result collection/enqueue |
 | hd_st_n3_turn | p90pin27.66/max134.67; r2r379.62/0; same native GRT0 | Same existing exception scope; normal collection/enqueue |
 | hd_spn_eshim_tx | p90pin89.75/max90.60; r2r363.69/0; same native GRT0 | Existing GEOM104/103 four-shim limits90/180/371 explicitly allow native link_o across95um strip; normal collection/enqueue |
-| hd_mesh_e | Existing batch unit kw-s81hea-hdmeshe-1-94510 remains active | Preserve producer and resolved Y8.64 source/checkpoint join; no duplicate PLACE |
+| hd_mesh_e | Batch94510 terminal AP_RC1 at geom, old0c98-plan keyb81c37: p90pin42.59/max119.24, r2r404.41/0, GRT0 | Same known old-band pickup failure; preserve FAIL and use already resolved paired Y8.64 source/checkpoint join. No duplicate PLACE. |
 
 Runtime is Intel2 `/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/<item>/geom`. Current grants are in Intel2 `/home/ubuntu/coord/autopilot/kit_wave.json`, dies.s81_head.geom_exceptions[0..2]; standing fill/empty handling is geom_verdict in kit_wave.py. All three have zero clock cells: real CTS/clock-leaf/latency/source/PG/intake qualification remains required. No new waiver, full CLOCK-route, timing, DRT or source equivalence credit follows from these geometry results. No broad tick, direct ledger mutation, route launch or foreign cancellation was performed.
 
@@ -47,3 +47,5 @@ The new raw column proxy is1.168 at x90,y1982.5; old.606/GRT0 evidence cannot tr
 Existing tileA native legal/pin-buffer steps passed; actual GRT0, r2r397.93/0, p90pin29.27/max144.32. Its actual image is included and was viewed. The outline NA is a missing --outline argument (measured708.48x1036.8). The real leaf gate is224.883um: BUFx16f u_rrl_118/wire11650 at(360.18,138.645)→u_rrl_118/q at(450.873,4.455).
 
 `leaf_move_preview.json` is offline only: moving that one buffer−8.64umY gives216.243um leaf and130.788um upstream leg (was122.148), with zero overlaps against dumped cells/macros. This is a proposed same-graph/grid-compatible clock placement correction, not an actual legal/timing pass. It requires ROOT scope, native legal/PG checks, actual LOOK and clock qualification before routing. No native TileA mutation or STA was performed.
+
+Latest mesh terminal image was personally viewed. It is still the old0c98 source-plan wave record; current config stages the approved ad1 paired Y8.64 event. The old raw590.42um leaf is pre-CTS information with zero clock cells, not a new failure of the existing162-cell combined-GRT tree. The existing Y8.64 source/checkpoint proof and all parent/legacy-MM/source holds remain unchanged. No mesh repair or rerun was launched.
