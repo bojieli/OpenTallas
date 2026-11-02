@@ -19,8 +19,14 @@ set pc_fresh_code [catch {source /work/native_pg_entry_body.tcl} pc_fresh_result
 set pc_fresh_end_code [catch {ot_pg_native_birth_end} pc_fresh_end_result pc_fresh_end_options]
 if {$pc_fresh_end_code} {
   puts stderr "PC_FRESH_BODY_COMPLETION code=$pc_fresh_code result=$pc_fresh_result"
+  puts stderr "PC_FRESH_CLEANUP_FAILURE code=$pc_fresh_end_code result=$pc_fresh_end_result"
+  # Retain the original primary ordinary body error when cleanup also fails.
+  if {$pc_fresh_code == 1} {return -options $pc_fresh_options $pc_fresh_result}
   if {$pc_fresh_end_code == 1} {return -options $pc_fresh_end_options $pc_fresh_end_result}
   error "PC_FRESH_NONLOCAL_CLEANUP_REFUSED $pc_fresh_end_code"
+}
+foreach k {creates swaps bound} {
+  if {![dict exists $pc_fresh_end_result $k] || [dict get $pc_fresh_end_result $k] != 0} {error "PC_FRESH_UNEXPECTED_NATIVE_MUTATION $k receipt=$pc_fresh_end_result"}
 }
 set pc_fresh_status [ot_native_pg_status]
 if {![dict exists $pc_fresh_status active] || [dict get $pc_fresh_status active]} {error PC_FRESH_CALLBACK_STILL_ACTIVE}
