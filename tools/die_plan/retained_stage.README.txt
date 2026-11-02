@@ -77,3 +77,37 @@ with no stage4+ artifacts. The receipt is retained_cts_shallow_smoke.json;
 protected native evidence is epyc2 codex-retained-cts-api/r1q_shallow_smoke1.
 A fresh actual CTS consumer still requires ROOT review/authorization; the smoke
 alone is not a physical stage or sign-off result.
+
+Explicit historical R2 adapter (requires ROOT review before use)
+--------------------------------------------------------------
+The frozen R2 SOURCE_EQ_GATE uses official_counts and omits the R1 gate digest
+and corrected_odb fields. It is not rewritten. The adapter still independently
+joins the actual completed receipt, identity.receipt_sha256,
+closure.official_eq_sha256 and source_proof copy, then requires exact full
+EQ/KEEP/counts/source/raw+mapped/SDC/helper hashes as above. A present gate digest
+must match; conflicting count fields or unsupported shapes refuse.
+
+R2's gate checkpoint_sha256=4eb3dd9aec4bf623d190841baa89d67aed3e419cab2ea81da0c0bc649c5c3924
+is an earlier3_3 checkpoint. It MUST NOT be equated to the later old3_place in the
+accepted frozen census. That separately ROOT-accepted c9103e4ca census records:
+  old3_place: 969fdb3e7d0f6b3aa58152d20eeb87706ee3d04d424af1e9588a6c0b34eb04df
+  new3_place: a3db31fecf1ec367b28e69ad84ef3a885f391f5b9afe2023b2412b1475d77840
+  native receipt: /srv/opentallas-scratch2/claude/codex-bksel-r2-census-1620/output/census_receipt.json
+  receipt SHA: 1899878ff5a46e7cda1c5103e9d71247f52c4b3bfdaa61bfd27d294b761ef462
+  stage SDC: c91e8364c89169a644c3960d659419d037f2419e12f557c23bef3ae114faaa7f
+
+The historical adapter therefore requires three additional explicit arguments:
+  --geometry-attestation /path/to/the/accepted/census_receipt.json
+  --geometry-attestation-sha256 1899878ff5a46e7cda1c5103e9d71247f52c4b3bfdaa61bfd27d294b761ef462
+  --geometry-before-sha256 969fdb3e7d0f6b3aa58152d20eeb87706ee3d04d424af1e9588a6c0b34eb04df
+The existing --place-sha256 must be the reviewed new3_place a3db31... and match
+closure.reviewed_3_place_sha256; --place-sdc-sha256 remains mandatory.
+
+The receipt must be PASS for the exact caller old/new hashes, nine complete
+frozen graph/clock/port/row/other-cell digest fields, unchanged mover identity
+and master/status/orientation except XY, and complete positive native census
+counts/outline. Missing, unsupported or tampered attestations refuse. The fresh
+capsule copies geometry_attestation.json and binds its exact SHA at runtime.
+standalone_proof_join.json records both the older gate checkpoint and the
+separate physical census transition, without inventing corrected_odb fields in
+any original file or upgrading source/native/timing qualification.

@@ -220,3 +220,95 @@ def test_bootstrap_prefix_is_exact_normal_runtime_without_make():
     prefix=R.runtime_bootstrap_script(8)
     assert R.runtime_script(8)==prefix+'make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=8 do-cts\n'
     assert '\nmake ' not in prefix and 'orfs_hold_mm.py' in prefix and '--step cts' in prefix
+
+def test_inert_normal_async_helper_is_bound_but_every_controller_marker_refuses(packet):
+    k=packet[0]
+    write(k/'lec_async.sh','#!/bin/bash\n# normal inert helper, never invoked by this consumer\n')
+    d=valid(packet)
+    assert d['files_sha256']['lec_async.sh']==R.digest(k/'lec_async.sh')
+    for marker in ('lec_async.ready','lec_async.rc','lec_async.identity','lec_async.on','lec_async.done','lec_async.pid','lec_async.sh.lock'):
+        write(k/marker,'retained controller state')
+        with pytest.raises(R.Refuse,match='async controller state'):valid(packet)
+        (k/marker).unlink()
+
+
+def historical_gate(packet):
+    k=packet[0];gate=R.read(k/'SOURCE_EQ_GATE.json')
+    gate['official_counts']=gate.pop('counts');gate.pop('official_receipt_sha256')
+    gate.pop('corrected_odb_sha256');gate['checkpoint_sha256']='2'*64
+    write(k/'SOURCE_EQ_GATE.json',gate)
+    identity=R.read(k/'source_proof_identity.json');identity.pop('corrected_odb_sha256')
+    write(k/'source_proof_identity.json',identity)
+    mover=dict(name='existing-reset-FF',xy=[0,0],orientation='MX',master='DFF',
+               master_dimensions=[2,1],placement_status='PLACED',dont_touch=False)
+    doc=dict(verdict='PASS',scope='exact one existing reset FF XY change only; native frozen census',
+             old_odb_sha256='3'*64,new_odb_sha256=packet[2],old_mover=mover,new_mover=dict(mover,xy=[10,10]),
+             equal_digests={key:'a'*64 for key in ('all_inst_master_dimensions','all_other_inst_pose_status_donttouch',
+               'net_headers','full_iterm_membership','full_bterm_membership','full_net_graph','typed_clock_graph',
+               'all_ports_boxes_net_io_sigtype','all_rows')},
+             counts={key:1 for key in ('instances','nets','iterms','net_bterms','ports','port_boxes','rows','typed_clock_nets')},
+             outline_dbu=dict(die=[0,0,100,100],core=[1,1,99,99]))
+    path=k.parent/'accepted-census.json';write(path,doc)
+    return dict(geometry_attestation=path,geometry_attestation_sha=R.digest(path),geometry_before_sha='3'*64)
+
+
+def test_historical_official_counts_joins_only_independent_exact_receipts(packet):
+    geometry=historical_gate(packet)
+    d=valid(packet,**geometry)
+    assert d['source_gate_schema']=='historical-official-counts'
+    assert 'official_receipt_sha256' not in R.read(packet[0]/'SOURCE_EQ_GATE.json')
+
+
+@pytest.mark.parametrize('where',['identity','closure','copy','gate-counts','optional-gate-digest'])
+def test_historical_counts_cannot_relax_any_digest_or_count_join(packet,where):
+    geometry=historical_gate(packet);k=packet[0]
+    if where=='identity':
+        p=k/'source_proof_identity.json';d=R.read(p);d['receipt_sha256']='0'*64;write(p,d)
+    elif where=='closure':
+        p=k/'prepared_input_closure.json';d=R.read(p);d['official_eq_sha256']='0'*64;write(p,d)
+    elif where=='copy':
+        write(k/'source_proof/lec.json',{'verdict':'EQUIVALENT','forged':True})
+    elif where=='gate-counts':
+        p=k/'SOURCE_EQ_GATE.json';d=R.read(p);d['official_counts']['proved']-=1;write(p,d)
+    else:
+        p=k/'SOURCE_EQ_GATE.json';d=R.read(p);d['official_receipt_sha256']='0'*64;write(p,d)
+    with pytest.raises(R.Refuse):valid(packet,**geometry)
+
+
+def test_historical_geometry_is_explicit_and_keeps_prior_stage_distinct(packet):
+    geometry=historical_gate(packet)
+    with pytest.raises(R.Refuse,match='explicit attestation'):valid(packet)
+    d=valid(packet,**geometry);g=d['geometry_evidence']
+    assert g['historical_gate_checkpoint_sha256']=='2'*64
+    assert g['expected_before_3_place_sha256']=='3'*64
+    assert g['reviewed_after_3_place_sha256']==packet[2]
+    assert 'corrected_odb_sha256' not in R.read(packet[0]/'source_proof_identity.json')
+    assert 'corrected_odb_sha256' not in R.read(packet[0]/'SOURCE_EQ_GATE.json')
+
+
+@pytest.mark.parametrize('tamper',['bytes','before','after','verdict','graph','count','mover'])
+def test_historical_attestation_cannot_be_missing_or_tampered(packet,tamper):
+    geometry=historical_gate(packet);path=geometry['geometry_attestation'];doc=R.read(path)
+    if tamper=='bytes':path.write_text(path.read_text()+' ')
+    else:
+        if tamper=='before':doc['old_odb_sha256']='0'*64
+        elif tamper=='after':doc['new_odb_sha256']='0'*64
+        elif tamper=='verdict':doc['verdict']='FAIL'
+        elif tamper=='graph':doc['equal_digests'].pop('full_net_graph')
+        elif tamper=='count':doc['counts']['instances']=0
+        else:doc['new_mover']['master']='different-cell'
+        write(path,doc);geometry['geometry_attestation_sha']=R.digest(path)
+    with pytest.raises(R.Refuse,match='attestation'):valid(packet,**geometry)
+
+
+def test_prepared_historical_capsule_copies_and_binds_attestation(packet,tmp_path,monkeypatch):
+    geometry=historical_gate(packet)
+    monkeypatch.setattr(R.subprocess,'run',lambda *a,**kw:subprocess.CompletedProcess(a[0],0,'sha256:'+'b'*64+'\n',''))
+    out=tmp_path/'historical-out'
+    d=R.prepare(*packet[:2],out,*packet[2:],enabled=True,lease_probe=lambda roots:[],**geometry)
+    assert R.digest(out/'geometry_attestation.json')==geometry['geometry_attestation_sha']
+    assert d['source_qualified'] is False
+    monkeypatch.setattr(R,'admitted_memory',lambda memory:None)
+    (out/'geometry_attestation.json').write_text('{}')
+    with pytest.raises(R.Refuse,match='attestation changed'):
+        R.run(out,16,enabled=True,lease_probe=lambda roots:[])
