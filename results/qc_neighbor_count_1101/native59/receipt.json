@@ -1,0 +1,56 @@
+{
+  "type": "native59",
+  "source_sha": "d90b109213c6949da87b330ef143d96bbe937934",
+  "profile": {
+    "OT_S6_SIM": false,
+    "CAPTURE_STAGE": 0,
+    "LOCAL_JOIN": 0,
+    "TABLE_USER_RELOC": "default unchanged"
+  },
+  "stage": "TERMINAL",
+  "status": "PASS_COUNT_ABI_FACE_ONLY",
+  "start": 1793597245.2857163,
+  "PPA_view_credit": false,
+  "representative_alias": false,
+  "native_export": {
+    "module": "qfd_qc_native59_part",
+    "defines": [
+      "OT_QFD_UP4_CK_ENTRIES",
+      "OT_S8_CROM_ALIGN"
+    ],
+    "params": "",
+    "files": {
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/items/native59/rtl-kit/qfd_qc_native59_part.sv": "a1b878db063c0ac9ecd71be318718719ae143482ec7edb3d4a68bd1af3ddd468",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/items/native59/rtl-kit/qfd_qc_native59_part_bound.sv": "69b51043c045dd0df68e7f3c2d3d3b64214953c73c086af9a71a7a9fd8758124",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/bind/rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv": "753bffe8888761da5941309bc40dc3efa19cfe782710bf3285324e1704e6d6e8",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/qwen_split/qfd_native59_svc_obs1.sv": "2fbfc36fdb90a852bb4cb603f2d7f8b1b436b956e8ff8aa19fcc1c38749253a5",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/qwen_split/qfd_native59_static_service_obs1.sv": "a7c00bf61b3840fbde07d7c93a9d14be7fe2a3c39af5ae6f3b774f245453fb82",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/qwen_split/mu/qfd_status_obs_hold_chunk.sv": "2decb61fd0f67cb1d58828e41fa090fb9822bf5db8d30dbf5ff9bbd6bc9844cf",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/qwen_split/qfd_native59_record_endpoint.sv": "5a524a230d3605cd5d1c88488a002954c8e7ec2a9aa198ccd8e362d51bfe09ce",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "ca8dceffb315d2f0d91760f87cf9fb1477f200739b4dd28703b8877278fb1393",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/qwen_split/qfd_native59_q_export_control.sv": "8d13fcf0ee24972c9c0c823330b005baddf76c87f67898f1ff8034a0f0fd091d",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/qwen_split/qfd_native59_mctx_helpers.sv": "9815d406f5d5f073bd1e1a8db45e4727a0d1a4c90f87d6f9fa7ba2d9dc9b7857",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/qwen_split/qfd_native59_command_context.sv": "33b133a4828cfaf47ad35ebbb9472c03fb04d87044eb89e13b559298e8a86c20",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/qwen_split/qfd_kvn_static_transport.sv": "a1276d4a8d2534e3df6cd408a67c8468042681ebcfd17955771b85a1c9d1bab7",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "36b8405ebade2d26580a28034a40cf6b65f422507d795e7500827daf69f36c38",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/qwen_split/qfd_native59_qbank.sv": "98b96c5428b4ba364c6873ce0e2780b9b0de30771c4d114f1907c6c39906dbb8",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_bb.v": "e4ac8fc1b23432e7b48ef051c152989cf028ca29a78bef8dabcaa9a35a6c5d25",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/common/ot_dp_clk_landing_ca.sv": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/common/ot_dp_clk_landing.sv": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/common/ot_meso_fifo.sv": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2"
+    },
+    "bound_module": "qfd_qc_native59_part_bound"
+  },
+  "kit": "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/items/native59/phys/native59",
+  "synth_rc": 0,
+  "native_total_leaves": 254747,
+  "stat": "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/items/native59/phys/native59/run/reports/asap7/dp_native59/base/synth_stat.txt",
+  "stat_sha256": "504f5522e69843ff5029f9ad9fdb58ba5a22127b642c5ebb2c85c53994d21039",
+  "count_semantics": "hierarchy-expanded native count including hardROM leaves; no physical count/view claim",
+  "port_bind_rc": 0,
+  "land_slots_sha256": "51d6f87e8b3d816600e629d4c11b514ba6fcd2a6881768db9bb3b5e7802037ed",
+  "face_guard_rc": 0,
+  "end": 1793599187.8318057
+}

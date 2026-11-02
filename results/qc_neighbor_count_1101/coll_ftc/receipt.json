@@ -1,0 +1,43 @@
+{
+  "type": "coll_ftc",
+  "source_sha": "d90b109213c6949da87b330ef143d96bbe937934",
+  "profile": {
+    "OT_S6_SIM": false,
+    "CAPTURE_STAGE": 0,
+    "LOCAL_JOIN": 0,
+    "TABLE_USER_RELOC": "default unchanged"
+  },
+  "stage": "TERMINAL",
+  "status": "PASS_COUNT_ABI_FACE_ONLY",
+  "start": 1793599861.5495083,
+  "PPA_view_credit": false,
+  "representative_alias": false,
+  "native_export": {
+    "module": "qfd_qc_coll_ftc_part",
+    "defines": [
+      "OT_QFD_UP4_CK_ENTRIES",
+      "OT_S8_CROM_ALIGN"
+    ],
+    "params": "",
+    "files": {
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/items/coll_ftc/rtl-kit/qfd_qc_coll_ftc_part.sv": "d700b299c9f2de3d638148c79fe4571912dee87c8ccfb7267096e72d9a01592f",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/items/coll_ftc/rtl-kit/qfd_qc_coll_ftc_part_bound.sv": "3e198a6e4cdab370beae49fec7f164f37605058255a546e6a7cbe36458af1646",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/bind/rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/common/ot_dp_clk_landing_ca.sv": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/common/ot_dp_clk_landing.sv": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+      "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/src/rtl/common/ot_meso_fifo.sv": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2"
+    },
+    "bound_module": "qfd_qc_coll_ftc_part_bound"
+  },
+  "kit": "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/items/coll_ftc/phys/coll_ftc",
+  "synth_rc": 0,
+  "native_total_leaves": 158904,
+  "stat": "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/items/coll_ftc/phys/coll_ftc/run/reports/asap7/dp_coll_ftc/base/synth_stat.txt",
+  "stat_sha256": "3f533b060f5a42f021436a5f2722ef2f4c949a17d4e84ab755fc7f5e5d6c27f6",
+  "count_semantics": "hierarchy-expanded native count including hardROM leaves; no physical count/view claim",
+  "port_bind_rc": 0,
+  "land_slots_sha256": "22fad99c3fd3b429d6775e3a705f697b02bdc3bba8904c35c7e472de87d05f8a",
+  "face_guard_rc": 0,
+  "end": 1793600677.5723104
+}

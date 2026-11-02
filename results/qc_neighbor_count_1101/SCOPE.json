@@ -1,0 +1,12 @@
+{
+ "source_sha": "d90b109213c6949da87b330ef143d96bbe937934",
+ "readset": "PRE-D13 event1131_fixed preferred201 files; OT_QFD_UP4_CK_ENTRIES and OT_S8_CROM_ALIGN",
+ "verdict": "PASS_COUNT_ABI_FACE_ONLY",
+ "native_run": "intel1 oth-ubuntu-4158701-1793596626 exit0",
+ "semantics": "Full expanded hierarchy counts, macros separated; areas are native synthesis library sums before physical-only cells or placement",
+ "source_changes": false,
+ "added_cycles": 0,
+ "qualification": "No PPA view, route, STA, die, clock or historical-mapped-view credit",
+ "historical_reuse": "Old native59 source28/29 leaf match rejected, fresh actual source run replaces no original verdict",
+ "next": "Use exact d90 native footprints for coupled parent/interface planning; physical qualification requires normal reviewed actual placement and real views"
+}
