@@ -1,0 +1,499 @@
+{
+  "prior_hot_cut_before": {
+    "weighted_crossings": 1079.4591926355909,
+    "capacity": 481.77083333333337,
+    "util": 2.240607189038199,
+    "DATA_touched_weight": 1079.1794918621663,
+    "without_DATA_weight": 0.27970077342462285
+  },
+  "prior_hot_cut_after": {
+    "weighted_crossings": 111.20182943857058,
+    "capacity": 481.77083333333337,
+    "util": 0.23081893245627622,
+    "DATA_touched_weight": 110.92212866514595,
+    "without_DATA_weight": 0.27970077342462285
+  },
+  "prior_hot_cut_DATA_driver_count": 1434,
+  "prior_hot_cut_top_DATA_driver_witnesses": [
+    {
+      "name": "u_bound.u_cland_ft2_i/_09707_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "weighted_before": 1.0,
+      "weighted_after": 0.0,
+      "reduction": 1.0,
+      "old_xy_um": [
+        60.156,
+        966.465
+      ],
+      "new_xy_um": [
+        69.012,
+        1134.405
+      ],
+      "geom_net_indices": [
+        61311
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/_09711_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "weighted_before": 1.0,
+      "weighted_after": 0.0,
+      "reduction": 1.0,
+      "old_xy_um": [
+        60.21,
+        966.195
+      ],
+      "new_xy_um": [
+        75.546,
+        1140.615
+      ],
+      "geom_net_indices": [
+        61313
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/_09719_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "weighted_before": 1.0,
+      "weighted_after": 0.0,
+      "reduction": 1.0,
+      "old_xy_um": [
+        61.182,
+        962.145
+      ],
+      "new_xy_um": [
+        73.494,
+        1138.725
+      ],
+      "geom_net_indices": [
+        61316
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/_09721_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "weighted_before": 1.0,
+      "weighted_after": 0.0,
+      "reduction": 1.0,
+      "old_xy_um": [
+        61.344,
+        967.275
+      ],
+      "new_xy_um": [
+        68.58,
+        1133.595
+      ],
+      "geom_net_indices": [
+        61317
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/_09723_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "weighted_before": 1.0,
+      "weighted_after": 0.0,
+      "reduction": 1.0,
+      "old_xy_um": [
+        60.804,
+        964.575
+      ],
+      "new_xy_um": [
+        66.096,
+        1131.435
+      ],
+      "geom_net_indices": [
+        61318
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/_09725_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "weighted_before": 1.0,
+      "weighted_after": 0.0,
+      "reduction": 1.0,
+      "old_xy_um": [
+        61.56,
+        965.115
+      ],
+      "new_xy_um": [
+        64.476,
+        1132.515
+      ],
+      "geom_net_indices": [
+        61319
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/_09727_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "weighted_before": 1.0,
+      "weighted_after": 0.0,
+      "reduction": 1.0,
+      "old_xy_um": [
+        61.452,
+        953.775
+      ],
+      "new_xy_um": [
+        63.774,
+        1133.055
+      ],
+      "geom_net_indices": [
+        61320
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/_09729_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "weighted_before": 1.0,
+      "weighted_after": 0.0,
+      "reduction": 1.0,
+      "old_xy_um": [
+        61.398,
+        953.235
+      ],
+      "new_xy_um": [
+        69.714,
+        1134.675
+      ],
+      "geom_net_indices": [
+        61321
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/_09731_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "weighted_before": 1.0,
+      "weighted_after": 0.0,
+      "reduction": 1.0,
+      "old_xy_um": [
+        62.262,
+        961.875
+      ],
+      "new_xy_um": [
+        70.254,
+        1135.215
+      ],
+      "geom_net_indices": [
+        61322
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/_09733_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "weighted_before": 1.0,
+      "weighted_after": 0.0,
+      "reduction": 1.0,
+      "old_xy_um": [
+        61.884,
+        963.225
+      ],
+      "new_xy_um": [
+        67.446,
+        1132.785
+      ],
+      "geom_net_indices": [
+        61323
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/_09735_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "weighted_before": 1.0,
+      "weighted_after": 0.0,
+      "reduction": 1.0,
+      "old_xy_um": [
+        62.586,
+        964.305
+      ],
+      "new_xy_um": [
+        65.88,
+        1132.245
+      ],
+      "geom_net_indices": [
+        61324
+      ]
+    },
+    {
+      "name": "u_bound.u_cland_ft2_i/_09738_",
+      "master": "AO21x1_ASAP7_75t_R",
+      "weighted_before": 1.0,
+      "weighted_after": 0.0,
+      "reduction": 1.0,
+      "old_xy_um": [
+        62.316,
+        954.045
+      ],
+      "new_xy_um": [
+        64.53,
+        1131.705
+      ],
+      "geom_net_indices": [
+        61325
+      ]
+    }
+  ],
+  "other_actual_declared_band_rectangles_preserved": 52,
+  "other_band_hits": [],
+  "scope": "DISABLED single concrete exact-owned ft2 DATA-comb placement; unchanged native graph/master/count/allFFtargets/publicpins/clock-reset-START infrastructure; no DB/CAD",
+  "owned_eligible": 9288,
+  "allocated": 9288,
+  "failed": 0,
+  "failures": [],
+  "owned_area_um2": 849.3141600000528,
+  "all_native_cells": 323283,
+  "allFF52044_poses_unchanged_from_previous_MODEL": true,
+  "all_other_native_cells_fixed": 313995,
+  "TAP137673_fixed": true,
+  "clock_reset_START_shared_FIRM_DNT_nodes_held": true,
+  "master_orientation_dimension_failures": [],
+  "row_site_failures": [],
+  "overlaps": [],
+  "max_site_jog_um": 28.225911963139644,
+  "projected_M2M7_demand": {
+    "channel_v_max": null,
+    "channel_v_at": null,
+    "blocked_v": 0,
+    "detour_v": 0,
+    "detour_v_extension_max_um": 0.0,
+    "detour_v_extent_at": null,
+    "col_v_max": 2.703,
+    "col_v_at": [
+      60.0,
+      1137.5
+    ],
+    "tracks_v_per_um": 48.18,
+    "channel_h_max": null,
+    "channel_h_at": null,
+    "blocked_h": 0,
+    "detour_h": 0,
+    "detour_h_extension_max_um": 0.0,
+    "detour_h_extent_at": null,
+    "tracks_h_per_um": 48.18,
+    "demand_layers": "M2-M7"
+  },
+  "r2r": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 402.33,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 47511,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_bound.u_ft_ft5_o_0/q\\[505\\]$_DFF_P_ -> u_bound.u_ft_ft5_o_1/q\\[505\\]$_DFF_P_"
+  },
+  "remaining_R2R": [],
+  "pin_metrics": {
+    "pins_registered": 15164,
+    "pins_to_macro": 0,
+    "pins_exempt": 93,
+    "pins_unregistered": 0,
+    "pins_land_ring": 3042,
+    "unregistered_sample": [],
+    "pin_reg_p50": 7.1,
+    "pin_reg_p90": 25.89,
+    "pin_reg_max": 149.81,
+    "pin_reg_worst": [
+      "149.8 ft3_i[490]",
+      "149.2 ft3_i[491]",
+      "148.1 ft3_i[492]",
+      "147.4 ft3_i[493]",
+      "146.4 ft3_i[494]"
+    ]
+  },
+  "classification": {
+    "scope": "DISABLED exact native DATA-cone classification, no placement/DB/GEN/CAD. Names are report labels only, never ownership proof.",
+    "native_nonPG_nets": 193278,
+    "native_cells": 323283,
+    "native_FF": 52044,
+    "data_source_ports": 515,
+    "local_ring_FF": 2677,
+    "stage0_capture_FF": 515,
+    "typed_reset_FF": 264,
+    "Liberty_FF_roles": {
+      "DFFASRHQNx1_ASAP7_75t_R": {
+        "clock": [
+          "CLK"
+        ],
+        "data": [
+          "D"
+        ],
+        "reset": [
+          "RESETN",
+          "SETN"
+        ],
+        "native_inputs": [
+          "CLK",
+          "D",
+          "RESETN",
+          "SETN"
+        ]
+      },
+      "DFFHQNx1_ASAP7_75t_R": {
+        "clock": [
+          "CLK"
+        ],
+        "data": [
+          "D"
+        ],
+        "reset": [],
+        "native_inputs": [
+          "CLK",
+          "D"
+        ]
+      },
+      "DFFHQNx2_ASAP7_75t_R": {
+        "clock": [
+          "CLK"
+        ],
+        "data": [
+          "D"
+        ],
+        "reset": [],
+        "native_inputs": [
+          "CLK",
+          "D"
+        ]
+      },
+      "DFFLQNx1_ASAP7_75t_R": {
+        "clock": [
+          "CLK"
+        ],
+        "data": [
+          "D"
+        ],
+        "reset": [],
+        "native_inputs": [
+          "CLK",
+          "D"
+        ]
+      },
+      "DFFLQNx3_ASAP7_75t_R": {
+        "clock": [
+          "CLK"
+        ],
+        "data": [
+          "D"
+        ],
+        "reset": [],
+        "native_inputs": [
+          "CLK",
+          "D"
+        ]
+      }
+    },
+    "combinational_nodes": 133566,
+    "resolved_reverse_topology": 133566,
+    "cycles": 0,
+    "reachable_data_cone": 9297,
+    "eligible_owned_DATA_cells": 9288,
+    "eligible_area_um2": 849.3141600000521,
+    "eligible_actual_ft2_namespace": 8773,
+    "held_reason_counts": {
+      "shared_or_clock_reset_public_frontier": 9,
+      "no_owned_first_capture": 5
+    },
+    "held_examples": {
+      "shared_or_clock_reset_public_frontier": [
+        {
+          "name": "u_bound.u_cland_ft2_i/_13996_",
+          "master": "INVx1_ASAP7_75t_R",
+          "mask": 5,
+          "witnesses": {
+            "1": "u_bound.u_cland_ft2_i/fault_state$_SDFF_PN0_.D",
+            "4": "u_bound.u_cland_ft2_i/u_fault_port/q$_SDFF_PN0_.D"
+          }
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_13997_",
+          "master": "AND3x1_ASAP7_75t_R",
+          "mask": 4,
+          "witnesses": {
+            "4": "u_bound.u_cland_ft2_i/ready$_SDFF_PN0_.D"
+          }
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_14004_",
+          "master": "OR4x1_ASAP7_75t_R",
+          "mask": 5,
+          "witnesses": {
+            "1": "u_bound.u_cland_ft2_i/fault_state$_SDFF_PN0_.D",
+            "4": "u_bound.u_cland_ft2_i/u_fault_port/q$_SDFF_PN0_.D"
+          }
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_14005_",
+          "master": "INVx1_ASAP7_75t_R",
+          "mask": 5,
+          "witnesses": {
+            "1": "u_bound.u_cland_ft2_i/fault_state$_SDFF_PN0_.D",
+            "4": "u_bound.u_cland_ft2_i/u_fault_port/q$_SDFF_PN0_.D"
+          }
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_14006_",
+          "master": "AO21x1_ASAP7_75t_R",
+          "mask": 5,
+          "witnesses": {
+            "1": "u_bound.u_cland_ft2_i/fault_state$_SDFF_PN0_.D",
+            "4": "u_bound.u_cland_ft2_i/u_fault_port/q$_SDFF_PN0_.D"
+          }
+        }
+      ],
+      "no_owned_first_capture": [
+        {
+          "name": "u_bound.u_cland_ft2_i/_13997_",
+          "master": "AND3x1_ASAP7_75t_R",
+          "mask": 4,
+          "witnesses": {
+            "4": "u_bound.u_cland_ft2_i/ready$_SDFF_PN0_.D"
+          }
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_fault_port/_3_",
+          "master": "AND2x4_ASAP7_75t_R",
+          "mask": 4,
+          "witnesses": {
+            "4": "u_bound.u_cland_ft2_i/u_fault_port/q$_SDFF_PN0_.D"
+          }
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/u_fault_port/place125817",
+          "master": "BUFx3_ASAP7_75t_R",
+          "mask": 4,
+          "witnesses": {
+            "4": "u_bound.u_cland_ft2_i/u_fault_port/q$_SDFF_PN0_.D"
+          }
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/place126070",
+          "master": "BUFx3_ASAP7_75t_R",
+          "mask": 4,
+          "witnesses": {
+            "4": "u_bound.u_cland_ft2_i/ready$_SDFF_PN0_.D"
+          }
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/place126069",
+          "master": "BUFx3_ASAP7_75t_R",
+          "mask": 4,
+          "witnesses": {
+            "4": "u_bound.u_cland_ft2_i/ready$_SDFF_PN0_.D"
+          }
+        }
+      ]
+    },
+    "clock_infrastructure_cells": 0,
+    "reset_START_infrastructure_cells": 447,
+    "ownership_rule": "reachable from exact declared ft2 data ports or selected ring FF outputs; exclusively local-ring/stage0 first-D-pin capture frontier; no clock/reset/START/FIRM/DNT/multidriver/unknown/shared node eligible",
+    "holds": [
+      "all52044FFposes and stages/cycles/source/pins remain fixed in subsequentcombPREP",
+      "native95696bufferPGnull/sourcephase/actualGRT/partialface/fill holds unchanged",
+      "any shared/clock/reset/START infrastructure remains held; no name-prefix sweep"
+    ]
+  },
+  "holds": [
+    "no actualrouting/clock/source qualification; original GRT4843/fill/partial-face/PG95696bufferopens retained",
+    "PGshapes/nets/sourceclockphase remain unchanged/held; exactPGlanding before physicalstage",
+    "only actual data-owned exclusive-frontier nonFIRM nonDNT cells eligible; no name-prefix sweep or generic GPL assumption",
+    "any remaining capacity/legality failure remains explicit; no additional variants or target relaxation"
+  ]
+}

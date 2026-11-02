@@ -1,0 +1,191 @@
+{
+  "scope": "DISABLED exact native DATA-cone classification, no placement/DB/GEN/CAD. Names are report labels only, never ownership proof.",
+  "native_nonPG_nets": 193278,
+  "native_cells": 323283,
+  "native_FF": 52044,
+  "data_source_ports": 515,
+  "local_ring_FF": 2677,
+  "stage0_capture_FF": 515,
+  "typed_reset_FF": 264,
+  "Liberty_FF_roles": {
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "clock": [
+        "CLK"
+      ],
+      "data": [
+        "D"
+      ],
+      "reset": [
+        "RESETN",
+        "SETN"
+      ],
+      "native_inputs": [
+        "CLK",
+        "D",
+        "RESETN",
+        "SETN"
+      ]
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+      "clock": [
+        "CLK"
+      ],
+      "data": [
+        "D"
+      ],
+      "reset": [],
+      "native_inputs": [
+        "CLK",
+        "D"
+      ]
+    },
+    "DFFHQNx2_ASAP7_75t_R": {
+      "clock": [
+        "CLK"
+      ],
+      "data": [
+        "D"
+      ],
+      "reset": [],
+      "native_inputs": [
+        "CLK",
+        "D"
+      ]
+    },
+    "DFFLQNx1_ASAP7_75t_R": {
+      "clock": [
+        "CLK"
+      ],
+      "data": [
+        "D"
+      ],
+      "reset": [],
+      "native_inputs": [
+        "CLK",
+        "D"
+      ]
+    },
+    "DFFLQNx3_ASAP7_75t_R": {
+      "clock": [
+        "CLK"
+      ],
+      "data": [
+        "D"
+      ],
+      "reset": [],
+      "native_inputs": [
+        "CLK",
+        "D"
+      ]
+    }
+  },
+  "combinational_nodes": 133566,
+  "resolved_reverse_topology": 133566,
+  "cycles": 0,
+  "reachable_data_cone": 9297,
+  "eligible_owned_DATA_cells": 9288,
+  "eligible_area_um2": 849.3141600000521,
+  "eligible_actual_ft2_namespace": 8773,
+  "held_reason_counts": {
+    "shared_or_clock_reset_public_frontier": 9,
+    "no_owned_first_capture": 5
+  },
+  "held_examples": {
+    "shared_or_clock_reset_public_frontier": [
+      {
+        "name": "u_bound.u_cland_ft2_i/_13996_",
+        "master": "INVx1_ASAP7_75t_R",
+        "mask": 5,
+        "witnesses": {
+          "1": "u_bound.u_cland_ft2_i/fault_state$_SDFF_PN0_.D",
+          "4": "u_bound.u_cland_ft2_i/u_fault_port/q$_SDFF_PN0_.D"
+        }
+      },
+      {
+        "name": "u_bound.u_cland_ft2_i/_13997_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "mask": 4,
+        "witnesses": {
+          "4": "u_bound.u_cland_ft2_i/ready$_SDFF_PN0_.D"
+        }
+      },
+      {
+        "name": "u_bound.u_cland_ft2_i/_14004_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "mask": 5,
+        "witnesses": {
+          "1": "u_bound.u_cland_ft2_i/fault_state$_SDFF_PN0_.D",
+          "4": "u_bound.u_cland_ft2_i/u_fault_port/q$_SDFF_PN0_.D"
+        }
+      },
+      {
+        "name": "u_bound.u_cland_ft2_i/_14005_",
+        "master": "INVx1_ASAP7_75t_R",
+        "mask": 5,
+        "witnesses": {
+          "1": "u_bound.u_cland_ft2_i/fault_state$_SDFF_PN0_.D",
+          "4": "u_bound.u_cland_ft2_i/u_fault_port/q$_SDFF_PN0_.D"
+        }
+      },
+      {
+        "name": "u_bound.u_cland_ft2_i/_14006_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "mask": 5,
+        "witnesses": {
+          "1": "u_bound.u_cland_ft2_i/fault_state$_SDFF_PN0_.D",
+          "4": "u_bound.u_cland_ft2_i/u_fault_port/q$_SDFF_PN0_.D"
+        }
+      }
+    ],
+    "no_owned_first_capture": [
+      {
+        "name": "u_bound.u_cland_ft2_i/_13997_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "mask": 4,
+        "witnesses": {
+          "4": "u_bound.u_cland_ft2_i/ready$_SDFF_PN0_.D"
+        }
+      },
+      {
+        "name": "u_bound.u_cland_ft2_i/u_fault_port/_3_",
+        "master": "AND2x4_ASAP7_75t_R",
+        "mask": 4,
+        "witnesses": {
+          "4": "u_bound.u_cland_ft2_i/u_fault_port/q$_SDFF_PN0_.D"
+        }
+      },
+      {
+        "name": "u_bound.u_cland_ft2_i/u_fault_port/place125817",
+        "master": "BUFx3_ASAP7_75t_R",
+        "mask": 4,
+        "witnesses": {
+          "4": "u_bound.u_cland_ft2_i/u_fault_port/q$_SDFF_PN0_.D"
+        }
+      },
+      {
+        "name": "u_bound.u_cland_ft2_i/place126070",
+        "master": "BUFx3_ASAP7_75t_R",
+        "mask": 4,
+        "witnesses": {
+          "4": "u_bound.u_cland_ft2_i/ready$_SDFF_PN0_.D"
+        }
+      },
+      {
+        "name": "u_bound.u_cland_ft2_i/place126069",
+        "master": "BUFx3_ASAP7_75t_R",
+        "mask": 4,
+        "witnesses": {
+          "4": "u_bound.u_cland_ft2_i/ready$_SDFF_PN0_.D"
+        }
+      }
+    ]
+  },
+  "clock_infrastructure_cells": 0,
+  "reset_START_infrastructure_cells": 447,
+  "ownership_rule": "reachable from exact declared ft2 data ports or selected ring FF outputs; exclusively local-ring/stage0 first-D-pin capture frontier; no clock/reset/START/FIRM/DNT/multidriver/unknown/shared node eligible",
+  "holds": [
+    "all52044FFposes and stages/cycles/source/pins remain fixed in subsequentcombPREP",
+    "native95696bufferPGnull/sourcephase/actualGRT/partialface/fill holds unchanged",
+    "any shared/clock/reset/START infrastructure remains held; no name-prefix sweep"
+  ]
+}

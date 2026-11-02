@@ -1,0 +1,29 @@
+{
+  "utc": "2026-11-02T14:34:25.243954+00:00",
+  "authorization": "parent exactOWN pure-classifier performance replacement",
+  "old_unit": "oth-ubuntu-2027712-1793628735",
+  "old_host": "intel1",
+  "python_pid": 2028616,
+  "container": "22a27b6156bb",
+  "elapsed_before_stop": "21m40s",
+  "CPU_percent": 99.5,
+  "RSS_KiB": 526520,
+  "no_role_eligible_or_cut_outputs": true,
+  "log_bytes": 0,
+  "source_sha256": "911136a74f1a8f6f11a94a93e834eceaac0c9c6027c03f224aa723daefc933a2",
+  "immutable_inputs": {
+    "FF_targets.json": "03c8d06a1c7e80640f4da3bcb06e125a334f62d71bc141be2852ed50072c25fd",
+    "SEQ_RVT_TT.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "cells.jsonl.gz": "9cd1f5c628f06e83210f442f75f737be949da92cfacda2330ecd40b84b81f5d7",
+    "connectivity_index.json": "f4628b1127661611f81be17a2160f979deb77f55c426aada66f8402e997c5bf2",
+    "native_masters.json": "45158816f1d652d87a1f2b23230a6a428e964e08739c2eeb2fb6ede153630c8e",
+    "nonPG_connectivity.jsonl.gz": "a6428dd1e3f29523bf5581e7c5487c8a97097ef8eaf235c26dd47176ead68659",
+    "reset_tree.tcl": "c3b341c230fa360451e93221f386956a4e0d0413929b3e1d8ea5b9ea83389c26",
+    "rows.json": "5a095a473dfe1e20a2a5d9b82fbbd590f6f60442148d771afb239cd2a29ba217"
+  },
+  "reason": "13.7million glob membership calls; replace only equivalent validated literal-pattern implementation, no policy/model/cut change",
+  "old_terminal_exit": 143,
+  "old_python_and_container_absent_after_stop": true,
+  "stopped_only_own_container": "22a27b6156bb",
+  "replacement_utc": "2026-11-02T14:35:36.242445+00:00"
+}

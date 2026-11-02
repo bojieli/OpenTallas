@@ -1,0 +1,179 @@
+{
+  "scope": "DISABLED exact perFF pin150/fixed-stage405 feasibility/free-native-row capacity; no chosennewlayout/model/cut/DB/CAD",
+  "actual_T51_rows": 4512,
+  "actual_T51_TAP": 137673,
+  "held_other_band_rectangles": 52,
+  "freed_for_joint_design": {
+    "FF3192": 3192,
+    "owned_DATA9288": 9288
+  },
+  "fixed_native_population": 310803,
+  "free_footprint_area_um2": 1709150.83128,
+  "type_summaries": {
+    "t51": {
+      "movable_FF": 3192,
+      "first_capture_FF": 2060,
+      "stage0_FF": 515,
+      "pin_diamond_empty_fixed_cases": 0,
+      "fixed_endpoint_minmax_radius_max_um": 79.812,
+      "actual_clock_FF": 52044,
+      "full_native_ROW_TAP_inventory_available": true,
+      "notes": "all relations between3192movableFFs remain explicit coupled405constraints; no freezing them at old poses in fixed-endpoint bounds"
+    },
+    "t41": {
+      "movable_FF": 3192,
+      "first_capture_FF": 2060,
+      "stage0_FF": 515,
+      "pin_diamond_empty_fixed_cases": 0,
+      "fixed_endpoint_minmax_radius_max_um": 99.846,
+      "actual_clock_FF": 52678,
+      "full_native_ROW_TAP_inventory_available": false,
+      "notes": "all relations between3192movableFFs remain explicit coupled405constraints; no freezing them at old poses in fixed-endpoint bounds"
+    }
+  },
+  "unique_T51_region_classes": 1554,
+  "zero_legal_area_classes": [],
+  "first_capture_common_UV_bounds_dbu": [
+    1193640,
+    1383000,
+    -1259928,
+    -1070568
+  ],
+  "first_capture_common_region_capacity": {
+    "whole_common_region": {
+      "R0": {
+        "demand": 1013,
+        "max_master_width_dbu": 1080,
+        "inventory": {
+          "legal_origin_start_sites": 161398,
+          "legal_origin_configuration_area_um2": 2353.18284,
+          "maximum_same_width_nonoverlap_slots": 8363,
+          "legal_center_bbox_dbu": [
+            4968,
+            1132515,
+            151578,
+            1222155
+          ]
+        }
+      },
+      "MX": {
+        "demand": 1047,
+        "max_master_width_dbu": 1080,
+        "inventory": {
+          "legal_origin_start_sites": 164847,
+          "legal_origin_configuration_area_um2": 2403.46926,
+          "maximum_same_width_nonoverlap_slots": 8526,
+          "legal_center_bbox_dbu": [
+            4968,
+            1132245,
+            151848,
+            1222425
+          ]
+        }
+      }
+    },
+    "above_other_bands": {
+      "R0": {
+        "demand": 1013,
+        "max_master_width_dbu": 1080,
+        "inventory": {
+          "legal_origin_start_sites": 51036,
+          "legal_origin_configuration_area_um2": 744.10488,
+          "maximum_same_width_nonoverlap_slots": 2614,
+          "legal_center_bbox_dbu": [
+            4968,
+            1211895,
+            151578,
+            1222155
+          ]
+        }
+      },
+      "MX": {
+        "demand": 1047,
+        "max_master_width_dbu": 1080,
+        "inventory": {
+          "legal_origin_start_sites": 51571,
+          "legal_origin_configuration_area_um2": 751.90518,
+          "maximum_same_width_nonoverlap_slots": 2629,
+          "legal_center_bbox_dbu": [
+            4968,
+            1212165,
+            151848,
+            1222425
+          ]
+        }
+      }
+    },
+    "right_of_left_bands": {
+      "R0": {
+        "demand": 1013,
+        "max_master_width_dbu": 1080,
+        "inventory": {
+          "legal_origin_start_sites": 64535,
+          "legal_origin_configuration_area_um2": 940.9203,
+          "maximum_same_width_nonoverlap_slots": 3333,
+          "legal_center_bbox_dbu": [
+            78084,
+            1148715,
+            140778,
+            1211355
+          ]
+        }
+      },
+      "MX": {
+        "demand": 1047,
+        "max_master_width_dbu": 1080,
+        "inventory": {
+          "legal_origin_start_sites": 66235,
+          "legal_origin_configuration_area_um2": 965.7063,
+          "maximum_same_width_nonoverlap_slots": 3408,
+          "legal_center_bbox_dbu": [
+            78084,
+            1148985,
+            141048,
+            1211625
+          ]
+        }
+      }
+    },
+    "previous_compressed_bbox": {
+      "R0": {
+        "demand": 1013,
+        "max_master_width_dbu": 1080,
+        "inventory": {
+          "legal_origin_start_sites": 22232,
+          "legal_origin_configuration_area_um2": 324.14256,
+          "maximum_same_width_nonoverlap_slots": 1154,
+          "legal_center_bbox_dbu": [
+            61020,
+            1134675,
+            97578,
+            1168155
+          ]
+        }
+      },
+      "MX": {
+        "demand": 1047,
+        "max_master_width_dbu": 1080,
+        "inventory": {
+          "legal_origin_start_sites": 23155,
+          "legal_origin_configuration_area_um2": 337.5999,
+          "maximum_same_width_nonoverlap_slots": 1199,
+          "legal_center_bbox_dbu": [
+            61020,
+            1134945,
+            97848,
+            1168425
+          ]
+        }
+      }
+    }
+  },
+  "capacity_interpretation": "legal starts are configuration-space alternatives, not simultaneous placements; same-width pack counts are exact1D free-row capacities for a common region. Coupled mover405 constraints/read-control layout/demand remain unresolved.",
+  "holds": [
+    "no intrinsic infeasibility inferred by freezing coupled movers",
+    "T41 has exact graph/pin bounds only; no imported T51ROW/TAP authority",
+    "clock/source/PG/actualGRT/fill/partialface holds persist; optionalFCLK geometric bounds not silently adopted",
+    "existing9288DATAmodel newcut2.703 remains FAIL, unchanged"
+  ]
+}

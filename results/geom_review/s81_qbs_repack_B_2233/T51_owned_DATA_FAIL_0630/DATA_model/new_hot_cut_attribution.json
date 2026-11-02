@@ -1,0 +1,902 @@
+{
+  "scope": "exact attribution of already-computed single DATA model new hotcut; no secondplacement/capacitysweep/CAD",
+  "x_window_um": [
+    60,
+    70
+  ],
+  "cut_y_um": 1137.5,
+  "weighted_crossings": 1302.2027974046682,
+  "capacity": 481.77083333333337,
+  "util": 2.7029506713696896,
+  "net_count": 1930,
+  "weighted_driver_roles": {
+    "fixedPIO": 0.13932644187382065,
+    "other_held_comb": 0.5703703703703704,
+    "fixed_ft2_ring_band_FFs": 536.5100797894921,
+    "owned_DATA": 764.9830208029305
+  },
+  "top_driver_cells": [
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[1\\]\\[514\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[327\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[354\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[359\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[366\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[377\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[378\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[382\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[383\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[399\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[406\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[407\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[408\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[409\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[410\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[411\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[416\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[420\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[421\\]$_DFFE_NP_",
+      1.0
+    ],
+    [
+      "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[422\\]$_DFFE_NP_",
+      1.0
+    ]
+  ],
+  "top_native_endpoint_witnesses": [
+    {
+      "geom_net_index": 58981,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[1\\]\\[514\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          65.34,
+          1141.155
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[1\\]\\[514\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            65.34,
+            1141.155
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07037_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            65.36699999999999,
+            1133.595
+          ]
+        }
+      ],
+      "bbox": [
+        65.34,
+        1133.595,
+        65.36699999999999,
+        1141.155
+      ]
+    },
+    {
+      "geom_net_index": 59317,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[327\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          69.98400000000001,
+          1155.465
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[327\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            69.98400000000001,
+            1155.465
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07371_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            63.801,
+            1134.135
+          ]
+        }
+      ],
+      "bbox": [
+        63.801,
+        1134.135,
+        69.98400000000001,
+        1155.465
+      ]
+    },
+    {
+      "geom_net_index": 59344,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[354\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          68.58000000000001,
+          1152.765
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[354\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            68.58000000000001,
+            1152.765
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07398_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            63.206999999999994,
+            1133.055
+          ]
+        }
+      ],
+      "bbox": [
+        63.206999999999994,
+        1133.055,
+        68.58000000000001,
+        1152.765
+      ]
+    },
+    {
+      "geom_net_index": 59349,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[359\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          67.608,
+          1151.685
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[359\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            67.608,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07403_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            65.907,
+            1133.595
+          ]
+        }
+      ],
+      "bbox": [
+        65.907,
+        1133.595,
+        67.608,
+        1151.685
+      ]
+    },
+    {
+      "geom_net_index": 59356,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[366\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          68.58000000000001,
+          1156.275
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[366\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            68.58000000000001,
+            1156.275
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07410_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            63.045,
+            1134.405
+          ]
+        }
+      ],
+      "bbox": [
+        63.045,
+        1134.405,
+        68.58000000000001,
+        1156.275
+      ]
+    },
+    {
+      "geom_net_index": 59367,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[377\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          63.18,
+          1146.825
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[377\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            63.18,
+            1146.825
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07421_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            64.557,
+            1132.785
+          ]
+        }
+      ],
+      "bbox": [
+        63.18,
+        1132.785,
+        64.557,
+        1146.825
+      ]
+    },
+    {
+      "geom_net_index": 59368,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[378\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          64.25999999999999,
+          1147.905
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[378\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            64.25999999999999,
+            1147.905
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07422_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            61.317,
+            1134.135
+          ]
+        }
+      ],
+      "bbox": [
+        61.317,
+        1134.135,
+        64.25999999999999,
+        1147.905
+      ]
+    },
+    {
+      "geom_net_index": 59372,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[382\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          65.34,
+          1148.985
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[382\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            65.34,
+            1148.985
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07426_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            61.748999999999995,
+            1133.595
+          ]
+        }
+      ],
+      "bbox": [
+        61.748999999999995,
+        1133.595,
+        65.34,
+        1148.985
+      ]
+    },
+    {
+      "geom_net_index": 59373,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[383\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          66.41999999999999,
+          1150.065
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[383\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            66.41999999999999,
+            1150.065
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07427_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            65.637,
+            1133.055
+          ]
+        }
+      ],
+      "bbox": [
+        65.637,
+        1133.055,
+        66.41999999999999,
+        1150.065
+      ]
+    },
+    {
+      "geom_net_index": 59389,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[399\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          69.66,
+          1156.815
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[399\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            69.66,
+            1156.815
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07443_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            66.17699999999999,
+            1133.055
+          ]
+        }
+      ],
+      "bbox": [
+        66.17699999999999,
+        1133.055,
+        69.66,
+        1156.815
+      ]
+    },
+    {
+      "geom_net_index": 59396,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[406\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          64.25999999999999,
+          1147.365
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[406\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            64.25999999999999,
+            1147.365
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07450_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            67.041,
+            1133.595
+          ]
+        }
+      ],
+      "bbox": [
+        64.25999999999999,
+        1133.595,
+        67.041,
+        1147.365
+      ]
+    },
+    {
+      "geom_net_index": 59397,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[407\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          65.34,
+          1148.445
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[407\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            65.34,
+            1148.445
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07451_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            66.069,
+            1131.975
+          ]
+        }
+      ],
+      "bbox": [
+        65.34,
+        1131.975,
+        66.069,
+        1148.445
+      ]
+    },
+    {
+      "geom_net_index": 59398,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[408\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          66.41999999999999,
+          1149.525
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[408\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            66.41999999999999,
+            1149.525
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07452_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            68.715,
+            1134.135
+          ]
+        }
+      ],
+      "bbox": [
+        66.41999999999999,
+        1134.135,
+        68.715,
+        1149.525
+      ]
+    },
+    {
+      "geom_net_index": 59399,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[409\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          67.5,
+          1150.605
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[409\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            67.5,
+            1150.605
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07453_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            66.93299999999999,
+            1133.325
+          ]
+        }
+      ],
+      "bbox": [
+        66.93299999999999,
+        1133.325,
+        67.5,
+        1150.605
+      ]
+    },
+    {
+      "geom_net_index": 59400,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[410\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          69.66,
+          1152.765
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[410\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            69.66,
+            1152.765
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07454_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            66.069,
+            1131.705
+          ]
+        }
+      ],
+      "bbox": [
+        66.069,
+        1131.705,
+        69.66,
+        1152.765
+      ]
+    },
+    {
+      "geom_net_index": 59401,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[411\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          68.68799999999999,
+          1151.685
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[411\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            68.68799999999999,
+            1151.685
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07455_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            65.259,
+            1130.895
+          ]
+        }
+      ],
+      "bbox": [
+        65.259,
+        1130.895,
+        68.68799999999999,
+        1151.685
+      ]
+    },
+    {
+      "geom_net_index": 59406,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[416\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          69.66,
+          1157.355
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[416\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            69.66,
+            1157.355
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07460_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            62.126999999999995,
+            1134.405
+          ]
+        }
+      ],
+      "bbox": [
+        62.126999999999995,
+        1134.405,
+        69.66,
+        1157.355
+      ]
+    },
+    {
+      "geom_net_index": 59410,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[420\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          63.18,
+          1145.745
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[420\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            63.18,
+            1145.745
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07464_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            65.42099999999999,
+            1131.165
+          ]
+        }
+      ],
+      "bbox": [
+        63.18,
+        1131.165,
+        65.42099999999999,
+        1145.745
+      ]
+    },
+    {
+      "geom_net_index": 59411,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[421\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          64.25999999999999,
+          1146.825
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[421\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            64.25999999999999,
+            1146.825
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07465_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            62.82899999999999,
+            1132.245
+          ]
+        }
+      ],
+      "bbox": [
+        62.82899999999999,
+        1132.245,
+        64.25999999999999,
+        1146.825
+      ]
+    },
+    {
+      "geom_net_index": 59412,
+      "column_crossing_weight": 1.0,
+      "driver": {
+        "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[422\\]$_DFFE_NP_",
+        "master": "DFFLQNx1_ASAP7_75t_R",
+        "role": "fixed_ft2_ring_band_FFs",
+        "xy": [
+          65.34,
+          1147.905
+        ]
+      },
+      "endpoint_classes": "fixed_ft2_ring_band_FFs,owned_DATA",
+      "endpoints": [
+        {
+          "name": "u_bound.u_cland_ft2_i/u_ring.s_d\\[0\\]\\[422\\]$_DFFE_NP_",
+          "master": "DFFLQNx1_ASAP7_75t_R",
+          "role": "fixed_ft2_ring_band_FFs",
+          "xy": [
+            65.34,
+            1147.905
+          ]
+        },
+        {
+          "name": "u_bound.u_cland_ft2_i/_07466_",
+          "master": "INVx1_ASAP7_75t_R",
+          "role": "owned_DATA",
+          "xy": [
+            64.935,
+            1130.355
+          ]
+        }
+      ],
+      "bbox": [
+        64.935,
+        1130.355,
+        65.34,
+        1147.905
+      ]
+    }
+  ]
+}
