@@ -1,0 +1,32 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/die_trial.py", line 5847, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/die_trial.py", line 5806, in main
+    m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
+                  a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
+    ...<16 lines>...
+                  region_dme_snake=(a.region_dme_snake if a.region_dme_snake == "all" else
+                                    set(r for r in a.region_dme_snake.split(",") if r)) if a.region_dme_snake else None)
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/die_trial.py", line 4772, in write_kit
+    landing = landing_route.network(P)
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/landing_route.py", line 24, in network
+    report = LC.check(P)
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/landing_contract.py", line 53, in check
+    st_sum,opened=_start_tree_check(P,st,pinmap,uses,errors,sidecar)
+                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/landing_contract.py", line 174, in _start_tree_check
+    reset_summary=RR.check_provider_root(P,st["reset_source"],st.get("provider"))
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/reset_route.py", line 78, in check_provider_root
+    net=network(P)
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/reset_route.py", line 21, in network
+    W=RT.wf_plan(P)
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/reset_tree.py", line 1465, in wf_plan
+    T = for_type(P, tn)
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/reset_tree.py", line 829, in for_type
+    T = _wf_type_tree(P, tn)
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/reset_tree.py", line 1438, in _wf_type_tree
+    core_rst = core_reset_targets(P, tn)
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/reset_tree.py", line 1400, in core_reset_targets
+    raise ResetError(f"type {tn}: cannot uniquely resolve hard-core pin table {c['pins_file']} from {lef}")
+reset_tree.ResetError: type cbf_q00__cl1b5a6458: cannot uniquely resolve hard-core pin table cores/a0_nk_pins.json from /srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101

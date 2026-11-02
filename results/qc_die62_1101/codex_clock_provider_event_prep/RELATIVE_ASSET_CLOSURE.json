@@ -1,0 +1,519 @@
+{
+  "status": "SOURCE_READSET_CLOSURE_ONLY",
+  "files": [
+    {
+      "key": "lef",
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+      "bytes": 69991,
+      "sha256": "eaeda6a04d73124db159a54e0160ad4f5f72cc35375732b9b7d7a4c2bf42cbc9",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lef",
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.lef",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.lef",
+      "bytes": 185209,
+      "sha256": "4356890ac882b3ff22ce1244386931bd161c93ade9342921b25b4f577d3ada68",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lef",
+      "path": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.lef",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.lef",
+      "bytes": 83176,
+      "sha256": "da305511bdf202c31a026264c9e1c69ef879a1f6c5e18e8df476294d29cf8046",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lef",
+      "path": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+      "bytes": 55006,
+      "sha256": "a68219dc931e84a62185b8ac8d330fb775c11437b4cf4adec5dd41b41a76fbcf",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lef",
+      "path": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+      "bytes": 21650,
+      "sha256": "894c15540462d7b5e015f7e9df654f6436b483e7744eaa84dcfcfdac01bb9f05",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lef",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+      "bytes": 293918,
+      "sha256": "ee8c6e5560e5b0741370cdca2a15dca10df25fe0b45cb3e2b2d18fc175f305a4",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lef",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+      "bytes": 144458,
+      "sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lef",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "bytes": 293406,
+      "sha256": "d6e37f1b4ee5d9a3aa208940491ed5095b646fae19a8f29f0cd2341a2035f1a6",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lef",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+      "bytes": 36883,
+      "sha256": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lef",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+      "bytes": 78248,
+      "sha256": "bf018f2d8886b98a4a9644a788c8d26231d2d10eeb333c2b732cc5556233eca1",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lef",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "bytes": 281577,
+      "sha256": "ec986c5e711849ec8e10f7d74549a525819ef73e792779a6a921e0a279facb28",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lef",
+      "path": "physical/qwen_missing_phy/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/qwen_missing_phy/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef",
+      "bytes": 397768,
+      "sha256": "acfc4e722cca604ec03edd3dff87a9cc4db5ffada62124b0daa472bfc93b3c56",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+      "bytes": 19475,
+      "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_tt.lib",
+      "bytes": 19514,
+      "sha256": "301a96e90885249af4cf7f0f9c23ec3ef5d3d84a9b747c0e76f4bec9031b655a",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192_tt.lib",
+      "bytes": 29528,
+      "sha256": "b4ca6b8161fe48a12cbd283e26d0400b8afcbc303a1570eae2b1c363b916caa8",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+      "bytes": 9853,
+      "sha256": "f8427fe040891cbed7d8f05b0dd7ccd5a9aa2ef86185a350798657e3a7c02516",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+      "bytes": 9842,
+      "sha256": "37a56b32f239ec2c943bf640131f67d0d2fd152a73a32da608e0551a12647336",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+      "bytes": 20119,
+      "sha256": "0e6668f4417a0a449784d60e1ec8545cb9eb750d92591e9639523795b796a058",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+      "bytes": 29419,
+      "sha256": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "bytes": 19477,
+      "sha256": "6fd25b08829e040b4089f00701d64711ed6b3bf331fd37328bbafc58d003cf1c",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+      "bytes": 19446,
+      "sha256": "89e8a678c954a540f86a2c2571edfa312f8ff1ac3171a08556a7eeaa23670672",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+      "bytes": 29419,
+      "sha256": "559775f07579bf289f40ca98841b0f3b1f39019ad7e4af4769dd863652d1d8b1",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "bytes": 29398,
+      "sha256": "bcd68206a8602806e80881a7c2067076cca9dbcbd21611fae97ab49f3a930879",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib",
+      "bytes": 17474,
+      "sha256": "537f8ff84c45c96ac72b3080080fa955505636f96a9016061b9860155f1b52cb",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+      "bytes": 16562,
+      "sha256": "b32b5383483b0bb6b0c825f50697f179731d7b27863d7f010c35ce04b0388c2e",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "lib",
+      "path": "physical/qwen_missing_phy/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_tt.lib",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/qwen_missing_phy/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_tt.lib",
+      "bytes": 16459,
+      "sha256": "9a05a43d70ea5e37022c83761580e4cee909dbc0451446ae3aaa2c033aaa0816",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/a0_nk_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/a0_nk_pins.json",
+      "bytes": 169902,
+      "sha256": "b6f25c2e0bb71fa60eebad65fa40e3b63844968128d81d3982ab0791b32abeea",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/a0_nl_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/a0_nl_pins.json",
+      "bytes": 69853,
+      "sha256": "fcc2af74a28778196a2dacfc77e68e4e77bfb4ec53aa5d95acd9a5e589fad836",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/qfd_dv_s8x_btab_pins_p8eco.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/qfd_dv_s8x_btab_pins_p8eco.json",
+      "bytes": 153649,
+      "sha256": "5158d63b5cb1ed085a5cb09cd3fc6a2cf43431ce6419783106a6ddf6d6773ed6",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/signed/qfd_dv_s5_su8_rst3_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/signed/qfd_dv_s5_su8_rst3_pins.json",
+      "bytes": 126495,
+      "sha256": "1ae49cd468b78cbcd8906789a1a9133ae3a14fafcc7cfc5c80d57f2cd49b721c",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/signed/qfd_dv_s8_crh_rp1_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/signed/qfd_dv_s8_crh_rp1_pins.json",
+      "bytes": 81827,
+      "sha256": "99a80b2aa31c66e5f5e62522e613bbf69c135f183923c66552fb6f815a72ae20",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/signed/qfd_dv_s8x_prog_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/signed/qfd_dv_s8x_prog_pins.json",
+      "bytes": 115675,
+      "sha256": "34f4cc9c7da65fa08d0a119b1017d5b4cff8b5b0a92236da002139463ffa2b4e",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/signed/qfd_dv_s8x_vmr_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/signed/qfd_dv_s8x_vmr_pins.json",
+      "bytes": 126993,
+      "sha256": "72a3bbb92567bddd8a8b1e66924a661dd3afe35886fb7acfcc8e76bfc89b4346",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/slw_su_l0_u_lane0_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/slw_su_l0_u_lane0_pins.json",
+      "bytes": 103210,
+      "sha256": "e96f11f38b2c80f017b29627793e8efa251a113227fbecce7fca418bee70c76c",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/slw_su_l0_u_lane1_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/slw_su_l0_u_lane1_pins.json",
+      "bytes": 98003,
+      "sha256": "0e61bf6aa3ecd8648903a107e6527f97450acf81b94f154191fc119455f4da55",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/slw_su_l0_u_lane2_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/slw_su_l0_u_lane2_pins.json",
+      "bytes": 98147,
+      "sha256": "3e1dda7133732d4550abaf2dbea02d5126779455a8aeb4918c39ff9dfd5a8915",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/slw_su_l0_u_lane3_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/slw_su_l0_u_lane3_pins.json",
+      "bytes": 98090,
+      "sha256": "3a64f4c48e5133158262b276aa532d9a03b06d8a08d5626e0da63d3b4b265b7a",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/slw_su_l1_u_lane4_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/slw_su_l1_u_lane4_pins.json",
+      "bytes": 99850,
+      "sha256": "d7e00fa40a9d1e2bf704b751a1fdc6a0d284170db5718d2fcf4d62dbfc042bc4",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/slw_su_l1_u_lane5_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/slw_su_l1_u_lane5_pins.json",
+      "bytes": 99850,
+      "sha256": "c62a94014cf2cc4069b668d5004e64d80506161d5c8594359dfed0b80ae74c91",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/slw_su_l1_u_lane6_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/slw_su_l1_u_lane6_pins.json",
+      "bytes": 98147,
+      "sha256": "3b7dc599a135ee7954465501878ec557f101922b281bcbf39dffe5ab2749160c",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "cores/su/slw_su_l1_u_lane7_pins.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/cores/su/slw_su_l1_u_lane7_pins.json",
+      "bytes": 98147,
+      "sha256": "e89441e293a246da768ac60d1af66aeff9f426f5f81b567149ae23e26c8017cc",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "macro_pins/d2d_sram_1r1w_64x137_m1_r2c2_p192.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/macro_pins/d2d_sram_1r1w_64x137_m1_r2c2_p192.json",
+      "bytes": 37534,
+      "sha256": "1571e406c48b99c0ec3ee6feca509c6dbc243530f09142bfb28c6eb33c4a31f6",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "macro_pins/ot_rom_4096x266_m8.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/macro_pins/ot_rom_4096x266_m8.json",
+      "bytes": 23176,
+      "sha256": "064b71f5a03e35b67da92ce4a012af38f35ec5361b6912b1a3fc0565256efb4f",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "macro_pins/ot_rom_4096x72_m8.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/macro_pins/ot_rom_4096x72_m8.json",
+      "bytes": 7018,
+      "sha256": "36960b7ee36c4190201189c8b114c05707b9a3185504bf5fd494d9f65e1582fb",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/macro_pins/ot_sram_1r1w2c_64x546_m1.json",
+      "bytes": 138325,
+      "sha256": "8167da96a892bf0ce93fe864d951a63680f1c9e672e56c52f5ab3c60248c0e50",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
+      "bytes": 68188,
+      "sha256": "e4a0c9ee22cba16868d7242d5d100afc65fc246213f0e62d977aaa02395a5556",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "macro_pins/ot_sram_1r1w_32x128_m1.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/macro_pins/ot_sram_1r1w_32x128_m1.json",
+      "bytes": 32833,
+      "sha256": "5498379f4e0b29246a15311fdc7386fa977888e4be83cad747a4b062282c6c25",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/macro_pins/ot_sram_1r1w_32x546_m1.json",
+      "bytes": 138902,
+      "sha256": "ffc6f4e0e1282316c03e04b9ec0213aeee58105c3627134010548ad5f16ec4ae",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "macro_pins/ot_sram_1r1w_32x64_m1.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/macro_pins/ot_sram_1r1w_32x64_m1.json",
+      "bytes": 16826,
+      "sha256": "1781dc4613da1144ce7c252e5af9b98ed0dfb7d7dc6680b78cf7b73dcdc722a2",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "macro_pins/ot_sram_1r1w_512x128_m4_r2c2.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/macro_pins/ot_sram_1r1w_512x128_m4_r2c2.json",
+      "bytes": 36351,
+      "sha256": "a92a31dbe581206e5429f76d5aad7536da45d2175ce2a155a0a4dd2299c9f707",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "pins_file",
+      "path": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+      "bytes": 133264,
+      "sha256": "891567174f0ba70a97bfbd8eeda3a33fed0eb3dd1a5603982f23c3c83e24eda0",
+      "mode": "copied_plan_relative"
+    },
+    {
+      "key": "sink_bins_file",
+      "path": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/sle_stm_v1__cl27746664.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/sink_bins/sle_stm_v1__cl27746664.json",
+      "bytes": 51301,
+      "sha256": "4cb95dd9a4e6587aa2a16ffb527c839902969078c4f6fedfe5577b91fbcf9fcd",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "sink_bins_file",
+      "path": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/sle_stm_v1__clbe630b9c.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/sink_bins/sle_stm_v1__clbe630b9c.json",
+      "bytes": 51533,
+      "sha256": "90c1cb5fa4543e8bb00082b9070f91ce01c88bf9091dfff21559e588d7475d05",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "sink_bins_file",
+      "path": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/sle_stm_v2__cl55be2264.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/sink_bins/sle_stm_v2__cl55be2264.json",
+      "bytes": 48982,
+      "sha256": "9fa954bcc783732f42859e662b479b15dce8390230cc6062737e7f87ba0f08c3",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "sink_bins_file",
+      "path": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/sle_stm_v2__cl7b3062fa.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/sink_bins/sle_stm_v2__cl7b3062fa.json",
+      "bytes": 48259,
+      "sha256": "1c60ebc88ccbea1b145a4a3838f47e30392c93ae6ba1efbffe9dd49ece9b5639",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "sink_bins_file",
+      "path": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/sle_stm_v3.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/sink_bins/sle_stm_v3.json",
+      "bytes": 37784,
+      "sha256": "6754817f7098a89b76b4c0099008c51a6aea6164eba42b0a38a6288fc700f44c",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "sink_bins_file",
+      "path": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/slw_stm_v1__cl05fc43f7__cl2086fa2c.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/sink_bins/slw_stm_v1__cl05fc43f7__cl2086fa2c.json",
+      "bytes": 52174,
+      "sha256": "98924a9a56c409265cd4f5c91e67fd22b928b650d482ad208e3aba834e172f40",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "sink_bins_file",
+      "path": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/slw_stm_v1__cl05fc43f7__cl389df4e9.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/sink_bins/slw_stm_v1__cl05fc43f7__cl389df4e9.json",
+      "bytes": 52339,
+      "sha256": "fab13da4540101225f46357e0dc625e823296c3c27ea12ba10b516638751e589",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "sink_bins_file",
+      "path": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/slw_stm_v1__cle34a73c3.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/sink_bins/slw_stm_v1__cle34a73c3.json",
+      "bytes": 52162,
+      "sha256": "eacba7d9dd3d62ab62880fe0b96081d95e2bbff48ed8cc8c566f708eea351750",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "sink_bins_file",
+      "path": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/slw_stm_v2__cl1ca9c415.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/sink_bins/slw_stm_v2__cl1ca9c415.json",
+      "bytes": 49064,
+      "sha256": "21a5103fff3b45c87c5dad9ec0da406da8862f1b3f3543c3cdb2a42abaab9e48",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "sink_bins_file",
+      "path": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/slw_stm_v2__cl9beb65e6.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/sink_bins/slw_stm_v2__cl9beb65e6.json",
+      "bytes": 48762,
+      "sha256": "b793f36c48bd3fd0aef8491d61f9c813ab251c523d93b000544cfd6ff6a595b1",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "sink_bins_file",
+      "path": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/slw_stm_v3.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/sink_bins/slw_stm_v3.json",
+      "bytes": 47911,
+      "sha256": "1aeae95e982669b0212a86734a920feb87fe15e83fb0c0a9734e621ffef135c3",
+      "mode": "repo_root_reference_present"
+    },
+    {
+      "key": "sink_bins_file",
+      "path": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/tt_ctlm.json",
+      "source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/die_plan/qwen_compute/plan_of_record/sink_bins/tt_ctlm.json",
+      "bytes": 29137,
+      "sha256": "b29e6747d8cc66fae1ae24c2d0a81477dd7767e0e5a961041de3d2d07044f660",
+      "mode": "repo_root_reference_present"
+    }
+  ],
+  "missing": [],
+  "literal_keys": [
+    "clock_entries_file",
+    "lef",
+    "lib",
+    "pins_file",
+    "sink_bins_file",
+    "source_file"
+  ],
+  "plan_sha256": "913be9b7f5ee612824f323d3d476999a36e2f224f1c3139f163d1b6558cdaab7"
+}

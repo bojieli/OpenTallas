@@ -1,0 +1,25 @@
+{
+  "status": "ACTUAL_SOURCE_ATTEMPT1_FAIL_READSET_FIXED_ATTEMPT2_ADMITTED",
+  "attempt1": {
+    "unit": "oth-ubuntu-2195209-1793623121",
+    "rc": 1,
+    "failure": "Relocatedfrozenplanmissingrelativecores/a0_nk_pins.json duringLC/resetprovidercheck; no clocktree emitted"
+  },
+  "fix": {
+    "copied_exact_frozen_bd55_plan_relative_assets": 25,
+    "all_literal_refs_resolve": 63,
+    "missing_refs": 0,
+    "plan_bytes_unchanged": true,
+    "tool_cal_config_unchanged": true
+  },
+  "attempt2": {
+    "unit": "oth-ubuntu-2223879-1793623442",
+    "host": "epyc2",
+    "runtime": "/srv/opentallas-scratch2/claude/codex-qc62-clock-frozen-source-1102",
+    "output": "emitted2",
+    "resource": "normal48GB2T/disk8",
+    "scope": "sourcekitonly; doesnotexecuteemittedphysicalscripts"
+  },
+  "unadmitted_Intel1_old_waiter": "otrun-ubuntu-1483935-621348153 clientcancelled, exactremotePID3947210 verifiedabsentbeforeEpyc2launch; noIntel1generatororoutput",
+  "physical_phase_sourcecredit": false
+}
