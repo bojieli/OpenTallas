@@ -1,0 +1,14 @@
+{
+  "status": "STOPPED_BEFORE_REQUESTED_PRD_NO_NATIVE_BIRTH_CREDIT",
+  "scope": "intel2:oth-ubuntu-3352862-1793628244",
+  "case": "/srv/opentallas-scratch2/claude/codex-pc-geo80-1102",
+  "exit_code": 137,
+  "reason": "Owner stopped exact own Docker after discovering native PG birth was not installed; not an OOM or route crash",
+  "requested_PRD_repair_reached": false,
+  "original_PRE_already_ran": true,
+  "earlier_birth_audit": "NOT RUN; no blanket zero-birth claim",
+  "checkpoint_or_physical_qualification": false,
+  "remote_exact_script_processes_after_stop": [],
+  "old_case_source_and_logs_preserved": true,
+  "next": "Fresh owned copy; canonical native helper/module begin after load_design and before entire PRE body; whole-body cleanup; typed checkpoint error only succeeds after native end/audits"
+}
