@@ -19,7 +19,9 @@ def fixture(tmp_path, orient='R0'):
     inst=NS(getName=lambda:'native_tail',getMaster=lambda:master,getOrigin=lambda:(950400,5512320),getOrient=lambda:orient)
     it=NS(getInst=lambda:inst,getMTerm=lambda:term,getNet=lambda:NS(getName=lambda:'mesh'))
     contract=dict(master='native',clock_pins=['clk'],outline_um=[218.592,187.488],
-                  source_identity='exact-current-component',scope='free-interface component source')
+                  source_identity='exact-current-component',scope='free-interface component source',
+                  pin_contract_identity='exact-current-pin-profile',
+                  clock_pin_rects_um={'clk':[107.952,94.8,108.,95.28]})
     return it,libraries,contract
 
 
@@ -81,3 +83,18 @@ def test_emitter_rejects_invented_pin_point_and_missing_actual_source_libs(tmp_p
     del d['libraries']
     with pytest.raises(ValueError,match='actual typed clock'):
         N.validate_descriptor(d)
+
+
+def test_same_source_master_outline_does_not_alias_distinct_native_pin_profiles(tmp_path):
+    it,libs,contract=fixture(tmp_path)
+    # Current VMS profiles differ by .336 um despite the same RTL/master/outline.
+    wrong=copy.deepcopy(contract)
+    wrong['clock_pin_rects_um']['clk']=[108.288,94.8,108.336,95.28]
+    with pytest.raises(ValueError,match='differs from current source/plan pin profile'):
+        N.descriptor(it,libs,wrong)
+    d=contact(tmp_path);d['source_contract']=wrong
+    with pytest.raises(ValueError,match='differs from current source/plan pin profile'):
+        N.validate_descriptor(d)
+    del contract['pin_contract_identity']
+    with pytest.raises(ValueError,match='explicit current source/plan pin-profile contract'):
+        N.descriptor(it,libs,contract)

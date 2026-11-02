@@ -9,6 +9,19 @@ import sys
 import clock_routed as C
 
 
+def _check_pin_profile(contract, pin, raw_dbu, dbu=C.DBU):
+    """One source/master can have several physically distinct pin profiles."""
+    profiles=contract.get('clock_pin_rects_um')
+    expected=profiles.get(pin)if isinstance(profiles,dict)else None
+    identity=contract.get('pin_contract_identity')
+    if (not isinstance(identity,str) or not identity or not isinstance(expected,(list,tuple))
+            or len(expected)!=4 or not all(isinstance(v,(int,float)) and math.isfinite(v)for v in expected)
+            or expected[0]>=expected[2] or expected[1]>=expected[3]):
+        raise ValueError('native contact lacks explicit current source/plan pin-profile contract')
+    if any(abs(actual/dbu-wanted)>1e-6 for actual,wanted in zip(raw_dbu,expected)):
+        raise ValueError('native actual pin geometry differs from current source/plan pin profile')
+
+
 def descriptor(iterm, libraries, source_contract, dbu=1000):
     from face_guard import clock_pins_from_liberties
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'clk'))
@@ -35,12 +48,15 @@ def descriptor(iterm, libraries, source_contract, dbu=1000):
     if not expected or len(expected)!=2 or any(abs(a-b)>1e-6 for a,b in zip(expected,actual)):
         raise ValueError('native actual master outline differs from current source/plan contract')
     if not iterm.getNet():raise ValueError('native actual clock input is not connected to a net')
-    shape=shapes[0];rect=[v/dbu for v in physical_rect(inst,shape)]
+    shape=shapes[0]
+    raw=[shape.xMin(),shape.yMin(),shape.xMax(),shape.yMax()]
+    _check_pin_profile(source_contract,pin,raw,dbu)
+    rect=[v/dbu for v in physical_rect(inst,shape)]
     if rect[2]-rect[0]<.032 or rect[3]-rect[1]<.224:
         raise ValueError('native M5 pin does not enclose the measured access stack')
     return dict(inst=inst.getName(),pin=pin,master=master,layer='M5',net=iterm.getNet().getName(),
                 xy=[(rect[0]+rect[2])/2,(rect[1]+rect[3])/2],rect=rect,
-                master_rect_dbu=[shape.xMin(),shape.yMin(),shape.xMax(),shape.yMax()],
+                master_rect_dbu=raw,
                 origin_dbu=list(inst.getOrigin()),orient=str(inst.getOrient()),
                 source_contract=dict(source_contract),libraries={c:str(p)for c,p in libraries.items()})
 
@@ -59,6 +75,7 @@ def validate_descriptor(contact):
     sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'clk'))
     from native_clock_source import physical_rect
     a,b,c,d=contact['master_rect_dbu']
+    _check_pin_profile(contract,contact['pin'],[a,b,c,d])
     inst=NS(getOrigin=lambda:contact['origin_dbu'],getOrient=lambda:contact['orient'])
     shape=NS(xMin=lambda:a,yMin=lambda:b,xMax=lambda:c,yMax=lambda:d)
     rect=[v/C.DBU for v in physical_rect(inst,shape)]
