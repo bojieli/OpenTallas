@@ -1,0 +1,9 @@
+# Native HEAD CALR machine-code object
+
+Status RELOCATABLE_NOT_EXECUTABLE. This is actual native source emission: one exact residual2 ROOT amnb0→6 patch at selected index361, twelve real `SU pidx16,dst0..11` machine commands, the308 retained HEAD machine commands, and one real stage37 LOCAL4 operation at aligned first1012/count1. The twelve redundant HEAD CFG sites are retired. Layout remains320 HEAD entries at476 and becomes nent1013, leaving10 representable entries. Existing four-user OPSEG dispatch reuses the singleton LOCAL4 range; no new user-walking RTL is required.
+
+The assembler checks every retired HEAD CFG against the corresponding final-residual CFG, proves the sole difference is ROOT.amnb6, and checks the selected BASE has no AMAX commands or AMAX STN. It verifies all36 actual existing LOCAL4 ranges and the two alignment slots. This object preserves actual machine words and replacement identities while leaving actual issue times as explicit linker relocations. It does not emit an unsafe executable mask with guessed dates.
+
+Native H stream offsets and ROOT prearm/AMAX controls are currently measured by the parent-owned admitted component gates. Even after those pass, the native H fixture's direct SU command adapter omits the real FDN/RP/CTL command path; that fixed front latency must be included in global use times. Likewise actual headtap/Xfill consumer timing and the final-residual peruser ROOT publication lease must be supplied by the composed source programme. Isolated external-PSUM and external-RSTD fixtures do not establish a full QC token or a paired compiled instruction trace.
+
+The default-off distinct CTLM37 successor is at `rtl/qwen_dv/headprep37/qfd_dv_cmd_cal_mu_head37.sv`. Source readiness and object capacity do not activate it or requalify any old token rate. Frozen selected sources and active job inputs remain untouched.
