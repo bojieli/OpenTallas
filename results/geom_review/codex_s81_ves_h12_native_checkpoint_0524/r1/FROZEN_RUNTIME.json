@@ -1,0 +1,12 @@
+{
+  "schema": "opentallas.owned_ves_prd_routed_pg_runtime.v1",
+  "stock_post_mm_sha256": "aeeb5c3aa3bdef64ba569cb650fd119c3389d0f0bf7478a7e440dca3f6b50447",
+  "routed_body_sha256": "974e9b6a48f9768dd9ad7c8c2fbd9038994222f3459b172e82552e4b0838f9ef",
+  "wrapper_sha256": "e4f4afa5a91f9e8f6473efe6d91d5444ffb112607004ae9daa23b2906d58096b",
+  "source_stage": "actual routed6_final, not CTS",
+  "actual_input": "/work/baseline/6_final.odb",
+  "SDC": "genuine retained4_cts.sdc",
+  "cts_credit": false,
+  "scope": "GRT/resizer only; no DRT/fill/finish admission",
+  "input_only_diff": "--- post_mm_global_route\n+++ owned_routed_global_route\n@@ -1,7 +1,7 @@\n utl::set_metrics_stage \"globalroute__{}\"\n source $::env(SCRIPTS_DIR)/load.tcl\n erase_non_stage_variables grt\n-load_design 4_cts.odb 4_cts.sdc\n+load_design INPUT_ROUTED/6_final.odb 4_cts.sdc\n \n # This proc is here to allow us to use 'return' to return early from this\n # file which is sourced\n"
+}

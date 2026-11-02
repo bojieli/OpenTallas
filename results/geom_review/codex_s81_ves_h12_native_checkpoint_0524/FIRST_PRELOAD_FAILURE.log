@@ -1,0 +1,26 @@
+KIT_MODES ok step grt tt 250.0 ff 202.5 mm True session ['tc', 'bc'] vclk_corner  hold_repair True
+{"schema": "opentallas.owned_ves_prd_routed_pg_runtime.v1", "stock_post_mm_sha256": "aeeb5c3aa3bdef64ba569cb650fd119c3389d0f0bf7478a7e440dca3f6b50447", "routed_body_sha256": "b84b349bc416f677db199980151bba9628821f24263c261e38d3f804a8af5455", "wrapper_sha256": "e4f4afa5a91f9e8f6473efe6d91d5444ffb112607004ae9daa23b2906d58096b", "source_stage": "actual routed6_final, not CTS", "actual_input": "/work/baseline/6_final.odb", "SDC": "genuine retained4_cts.sdc", "cts_credit": false, "scope": "GRT/resizer only; no DRT/fill/finish admission", "input_only_diff": "--- post_mm_global_route\n+++ owned_routed_global_route\n@@ -1,7 +1,7 @@\n utl::set_metrics_stage \"globalroute__{}\"\n source $::env(SCRIPTS_DIR)/load.tcl\n erase_non_stage_variables grt\n-load_design 4_cts.odb 4_cts.sdc\n+load_design /work/baseline/6_final.odb 4_cts.sdc\n \n # This proc is here to allow us to use 'return' to return early from this\n # file which is sourced\n"}
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+mkdir -p /work/run/objects/asap7/kl_ot_s81sl_ve_s_cw1728/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
+Running global_route.tcl, stage 5_1_grt
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/kl_ot_s81sl_ve_s_cw1728/base//work/baseline/6_final.odb
+[ERROR ORD-0007] /work/run/results/asap7/kl_ot_s81sl_ve_s_cw1728/base/work/baseline/6_final.odb does not exist.
+Error: global_route.tcl, 15 ORD-0007
+Elapsed time: 0:08.06[h:]min:sec. CPU time: user 7.73 sys 0.33 (99%). Peak memory: 290360KB.
+make: *** [Makefile:585: do-5_1_grt] Error 1
