@@ -5193,7 +5193,7 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
     # in the reset state (ghost = 1 where it already is c, else 0 = X, which is its RTL value there).  A read while
     # unfilled is an RTL X (don't care, the tool's X rule); a read after filling is compared against c.
     # Opt-in enabled load/hold form (default OFF): ['fill', c, pred, guard], where
-    # guard is the actual source enable as an OR of cubes over gold FFs. The ghost
+    # guard is the actual source enable as an OR of cubes over gold FFs/ports. The ghost
     # recurrence is filled' = guard ? filled(pred) : filled. The same base and BOTH
     # known/X induction obligations apply; no compare point is removed or masked
     # while the actual RTL value is known. OT_LEC_ENABLE_FILL_GUARD=1 is required.
@@ -5203,6 +5203,8 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
                 and e[2][0] == "fill":
             fills[e[1] if isinstance(e[1], str) else repr(e[1])] = e
     rec["fill"], rec["fill_refused"] = [], []
+    fill_guard_key = lambda key: (isinstance(key, str) and key.startswith(("ff:", "pi:"))
+                                  and "__" not in key and key in L.gp)
     if any(len(e[2]) == 4 for e in fills.values()):
         rec["enable_fill_guard_enabled"] = os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1"
     for e in hints:
@@ -5220,7 +5222,7 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
                     ok = (ok and os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1"
                           and isinstance(guard, (list, tuple)) and bool(guard)
                           and all(isinstance(cube, (list, tuple)) and cube
-                                  and all(gk(x) and v in (0, 1) and x not in fills for x, v in cube)
+                                  and all(fill_guard_key(x) and v in (0, 1) and x not in fills for x, v in cube)
                                   for cube in guard))
             except (TypeError, ValueError):
                 ok = False
