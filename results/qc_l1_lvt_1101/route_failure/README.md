@@ -1,0 +1,9 @@
+# Native L1 route failure and finite successor PREP
+
+Ordinary route diagnostic EPYC2 codex-qc-l1-lvt-route2-0015 unit3747083-1793607615 saved genuine5_2_route.odb after native DRT. Native2 persistent DRC shorts concern one data net, not the two LVT tail cells. Original source/CLOCK guards and PG545838/open0 passed; no final6, RCX, pairedSTA or signoff was produced.
+
+Read-only saved-ODB audit unit1603071-1793617718 and guide census1631975-1793617837 establish actual M4 segment222.192..223.848/Y162.384..162.408 crosses the SRAMbank1 VDDM4 pin (Y162.336..162.432) AND original M4OBS(190.152,138.144)-(223.728,165.720). Obstruction and PG binding are present. Exact driver is _196818_.Y at185.49/164.43; capture line270.D at228.528/164.43. Actual image personally viewed. Two earlier read-only audit failures were escaped-name/SWIG API fixture errors, not design results, and remain in remote logs.
+
+Original guide topstreet is correctly above macro atY165.87..166.44; however right M3 descent223.44..224.01 overlaps actual macro body toX223.8, and left coarse corner overlaps its opposite top edge. A finite guide-only proposal moves descent columns outside full macro body: left188.67..189.24/right224.01..224.58, joins topM2Y165.87..166.44 and actual terminal guides. This is unrun/unqualified PREP requiring exact native incremental route support, rendered LOOK and preserved source/CLOCK/other routes. No hand-drawn metal/DRC waiver or repeat full DRT authorized here.
+
+Native fill failed DPL-0050 No fillers found for LVTN because original FILL_CELLS only selects RVT. Selected explicit LVT LEF contains matching FILLERxp5/FILLER/DECAP1,2,4,6,10_L. Correct family selection plus strict PG-v1 physical-only filler birth qualification is separate next work owned with PG lane. No skip/fake filler or finish adoption. Current reviewed PG process admission is only resizer; PG owner preparing real filler qualification before finish-only continuation scope.
