@@ -61,4 +61,22 @@ class SelectedAsbuiltTest(unittest.TestCase):
             with patch.dict(os.environ,{'OT_S81_SELECTED_ASBUILT_MANIFEST':str(path),'OT_S81_SELECTED_DEFINES':'ACTUAL'}):
                 with self.assertRaisesRegex(ValueError,'input absent'):resolve(SimpleNamespace(inst={}), 's',root)
 
+    def test_current_xs4_image_prefix_preserves_capture_contract_and_guard(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d);path,spec=self.fixture(root)
+            children=root/'rtl/children.sv'
+            children.write_text(children.read_text().replace('ot_s81sl_xs u_s()', 'ot_s81sl_xs4 u_s()'))
+            actual=Path(__file__).resolve().parents[2]/'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv'
+            selected=root/'rtl/xs4.sv';selected.write_bytes(actual.read_bytes())
+            spec['files'].append('rtl/xs4.sv');path.write_text(json.dumps(spec))
+            die=SimpleNamespace(inst={'s':dict(master='ot_s81sl_slice',params='')})
+            env={'OT_S81_SELECTED_ASBUILT_MANIFEST':str(path),'OT_S81_SELECTED_DEFINES':'ACTUAL'}
+            with patch.dict(os.environ,env):
+                result=resolve(die,'s',root)
+                self.assertEqual(result['streamer'],'ot_s81sl_xs4')
+                self.assertEqual(result['streamer_added_capture_edges'],1)
+                selected.write_text(selected.read_text()+'\n// unqualified source mutation\n')
+                with self.assertRaisesRegex(ValueError,'no matching capture-stage receipt'):
+                    resolve(die,'s',root)
+
 if __name__=='__main__':unittest.main()
