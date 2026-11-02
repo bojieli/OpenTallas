@@ -103,3 +103,15 @@ def test_runtime_wrapper_wrong_anchor_refuses_without_mutation(tmp_path):
     driver=tmp_path/'driver.tcl';driver.write_text(DRIVER)
     with pytest.raises(ValueError,match='anchor'):wrap(tmp_path,driver)
     assert stock.read_text()=='unknown_stage_body\n' and not (tmp_path/'global_route.native_pg_original.tcl').exists()
+
+
+def test_fill_runtime_wrapper_preserves_exact_genuine_route_input(tmp_path):
+    from wrap_runtime import wrap
+    root=Path(__file__).parents[2]
+    before=(root/'results/flow/native_pg_fill_1102_PREP/pinned_fillcell.tcl').read_bytes()
+    body=(root/'results/flow/native_pg_fill_1102_PREP/fillcell_driver.tcl').read_bytes()
+    stock=tmp_path/'fillcell.tcl';stock.write_bytes(before)
+    driver=tmp_path/'driver.tcl';driver.write_bytes(body)
+    original=wrap(tmp_path,driver,'fillcell')
+    assert original.read_bytes()==before and stock.read_bytes()==body
+    assert b'load_design 5_2_route.odb 5_1_grt.sdc' in original.read_bytes()
