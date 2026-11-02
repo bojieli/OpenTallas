@@ -1,8 +1,8 @@
 `timescale 1ps/1ps
-// Native dated producer/control cut. Arithmetic core/EF residency is outside this vehicle.
+// Native dated producer/control and selected NB2 arithmetic/EF feedback, controlled common clock/reset.
 module tb_native_go_pair;
  reg clk=0; always begin #416 clk=1; #417 clk=0; end
- reg rst_n=0; integer cyc=0,T=2000,gb=1,fix_tag=0,bad_tag=0;
+ reg rst_n=0; integer cyc=0,T=2000,gb=1,fix_tag=0,bad_tag=0,ring=0;
  reg cv=0; reg[275:0] cb=0;
  wire iv,xf; wire[159:0] id;
  ot_s81sl_xrt1 xr(.clk(clk),.rst_n(rst_n),.sid(4'd0),
@@ -10,9 +10,16 @@ module tb_native_go_pair;
    .lo_v(5'd0),.lo_d('0),.p_v(5'd0),.p_d('0),.e_v(5'd0),.e_c('0),.e_d('0),
    .eg_v(1'b0),.eg_c(2'd0),.eg_d(32'd0),.x_rbv(1'b0),.x_rbd(32'd0),
    .is_v(iv),.is_d(id),.fault(xf));
- reg[2:0]gv=0;reg[20:0]gi=0;reg[3071:0]gd=0;
+ reg[2:0]dgv=0;reg[20:0]dgi=0;reg[3071:0]dgd=0;
+ reg rfv=0,rfs=0;reg[275:0]rfd=0;wire[2:0]rgv,rgfam;wire[20:0]rgi;wire[3071:0]rgd;wire ringfault;
+ // Actual selected xg producer: native ring header/fragment decode generates gather family.
+ ot_s81sl_rstop gather_ring(.clk(clk),.rst_n(rst_n),.sid(4'd0),.ri_w(1104'd0),.ri_e(1104'd0),.ro_e(),.ro_w(),
+ .vi(276'd0),.vo(),.xf_v({2'd0,rfv,2'd0}),.xf_s({2'd0,rfs,2'd0}),.xf({552'd0,rfd,552'd0}),
+ .nx_wi(),.nx_ei(),.nx_eo(173'd0),.nx_wo(173'd0),.dl_ev(),.dl_e(),.dl_wv(),.dl_w(),.dl_vv(),.dl_vb(),
+ .ci_dir(3'd0),.ci_b(1104'd0),.g_v(rgv),.g_fam(rgfam),.g_idx(rgi),.g_d(rgd),.fault(ringfault));
+ wire[2:0]gv=ring?rgv:dgv,gfam=ring?rgfam:3'd0;wire[20:0]gi=ring?rgi:dgi;wire[3071:0]gd=ring?rgd:dgd;
  wire xv,sf;wire[1100:0]xw;
- ot_s81sl_xs4 xs(.clk(clk),.rst_n(rst_n),.g_v(gv),.g_fam(3'd0),.g_idx(gi),.g_d(gd),
+ ot_s81sl_xs4 xs(.clk(clk),.rst_n(rst_n),.g_v(gv),.g_fam(gfam),.g_idx(gi),.g_d(gd),
    .is_v(iv),.is_d(id),.xw_v(xv),.xw_d(xw),.fault(sf));
  reg[1:0]mk=0;always@(posedge clk)if(!rst_n)mk<=0;else mk<={mk[0],1'b1};
  wire[1103:0]word0={xw[1100:565],xw[0],mk[1],xw[564:0],mk[1]};
@@ -68,21 +75,23 @@ module tb_native_go_pair;
  wire qfault=gb?qf1:qf0,walking=gb?wk1:wk0,qbusy=gb?busy1:busy0;
  reg[8191:0]dir;integer fd,rc,n=0,ep=0,ti,ki,j,et[0:1023],ek[0:1023];reg[1030:0]ev[0:1023],v;
  initial begin
-  void'($value$plusargs("T=%d",T));void'($value$plusargs("gb=%d",gb));void'($value$plusargs("fix_tag=%d",fix_tag));void'($value$plusargs("bad_tag=%d",bad_tag));
+  void'($value$plusargs("T=%d",T));void'($value$plusargs("gb=%d",gb));void'($value$plusargs("fix_tag=%d",fix_tag));void'($value$plusargs("bad_tag=%d",bad_tag));void'($value$plusargs("ring=%d",ring));
   if(!$value$plusargs("OT_ROM_DIR=%s",dir))$fatal(1,"missing images");fd=$fopen({dir,"/producer.txt"},"r");if(!fd)$fatal(1,"missing programme");
   while(!$feof(fd))begin rc=$fscanf(fd,"%d %d %h\n",ti,ki,v);if(rc==3)begin et[n]=ti;ek[n]=ki;ev[n]=v;n=n+1;end end $fclose(fd);
  end
  always@(negedge clk)begin
-  cv=0;cb=0;gv=0;gi=0;gd=0;if(cyc==15)rst_n=1;
+  cv=0;cb=0;dgv=0;dgi=0;dgd=0;rfv=0;rfs=0;rfd=0;if(cyc==15)rst_n=1;
   while(ep<n&&et[ep]==cyc)begin
    if(ek[ep]==0)begin cv=1;cb=ev[ep][275:0];$display("SOURCE_CTL %0d %h",cyc,cb);end
-   else begin gv[0]=1;gi[6:0]=ev[ep][1030:1024];gd[1023:0]=ev[ep][1023:0];end
+   else if(ek[ep]==1)begin dgv[0]=1;dgi[6:0]=ev[ep][1030:1024];dgd[1023:0]=ev[ep][1023:0];end
+   else if(ek[ep]==2)begin rfv=1;rfs=ev[ep][276];rfd=ev[ep][275:0];end
    ep=ep+1;
   end
  end
  integer cfgwords=0,goes=0,streams=0,lastcfg=-1,partials=0;reg[4:0]last_status=0;
  always@(posedge clk)begin
   cyc=cyc+1;#1;
+  if(ring&&rgv[0])$display("RING_GATHER %0d family=%0d index=%0d data=%h",cyc,rgfam[0],rgi[6:0],rgd[1023:0]);
   if(iv)$display("ISSUER_PIN %0d %h",cyc,id);
   if(xv&&(xw[550]||xw[551]))$display("XS_CONTROL %0d cfg=%b go=%b",cyc,xw[551],xw[550]);
   if(cfg[53])begin cfgwords=cfgwords+1;lastcfg=cyc;$display("CFG_WORD %0d %h",cyc,cfg);end
@@ -94,6 +103,6 @@ module tb_native_go_pair;
    partials=partials+1;$display("PAIR_RET %0d mb=%0d row=%0d seg=%0d n=%0d pos=%0d val=%08h err=%b",cyc,mb,prow[16*mb+:16],pseg[5*mb+:5],pnseg[5*mb+:5],ppos[3*mb+:3],pval[32*mb+:32],perr[mb]);
   end
   if({qfault,qbusy,walking,ef}!=last_status)begin last_status={qfault,qbusy,walking,ef};$display("Q_FEEDBACK %0d fault=%b busy=%b walk=%b bank_free=%b sh_free=%b",cyc,qfault,qbusy,walking,ef[1],ef[0]);end
-  if(cyc==T)begin $display("PAIR_END partials=%0d q_fault=%b busy=%b walking=%b bank_free=%b sh_free=%b",partials,qfault,qbusy,walking,ef[1],ef[0]); $display("NATIVE_GO_END events=%0d consumed=%0d gos=%0d cfg_words=%0d streams=%0d xr_fault=%b xs_fault=%b cf_fault=%b seq_fault=%b",n,ep,goes,cfgwords,streams,xf,sf,rd[69],st[1]);$finish;end
+  if(cyc==T)begin $display("RING_END enabled=%0d fault=%b",ring,ringfault);$display("PAIR_END partials=%0d q_fault=%b busy=%b walking=%b bank_free=%b sh_free=%b",partials,qfault,qbusy,walking,ef[1],ef[0]); $display("NATIVE_GO_END events=%0d consumed=%0d gos=%0d cfg_words=%0d streams=%0d xr_fault=%b xs_fault=%b cf_fault=%b seq_fault=%b",n,ep,goes,cfgwords,streams,xf,sf,rd[69],st[1]);$finish;end
  end
 endmodule

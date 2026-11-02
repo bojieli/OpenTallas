@@ -35,6 +35,22 @@ def main():
         c['broadcast_edges']=broadcasts
         if len(broadcasts)!=3: c['errors'].append('not three actual XS broadcast GOs')
         if [v[0] for v in c['core']]!=expected_edges: c['errors'].append('Q capture count/date violates native class-filtered calendar')
+        if 'native_ring_fixture' in programme:
+            c['native_ring_terminal']=re.search(r'^RING_END enabled=1 fault=0$',text,re.M) is not None
+            path=a.root/('wrong_class_programme' if n=='wrong_class' else 'programme')/('old' if n in ['original_direct','wrong_date'] else 'advance1')/'producer.txt'
+            fragments=[(int(t),int(v,16))for t,k,v in (line.split()for line in path.read_text().splitlines())if int(k)==2]
+            expected=[]
+            for j in range(0,len(fragments),4):
+                group=fragments[j:j+4]; assert len(group)==4
+                assert [v>>276 for t,v in group]==[1,0,0,0]
+                assert [t for t,v in group]==list(range(group[0][0],group[0][0]+4))
+                beat=sum((v&((1<<276)-1))<<(276*i)for i,(t,v)in enumerate(group))
+                assert beat&1 and (beat>>1)&7 in [1,2]
+                expected.append((group[0][0]+6,((beat>>1)&7)-1,(beat>>13)&127,(beat>>21)&((1<<1024)-1)))
+            actual=[(int(t),int(f),int(i),int(v,16))for t,f,i,v in re.findall(r'^RING_GATHER (\d+) family=(\d+) index=(\d+) data=([0-9a-f]+)$',text,re.M)]
+            c['native_fragment_header_gather_exact']=actual==expected
+            c['native_fragment_gather_beats']=len(actual)
+            if not c['native_ring_terminal'] or actual!=expected:c['errors'].append('actual native rstop header/fragment/gather mismatch or fault')
         if c['errors']: c['status']='FAIL'
     eq={k:cases['original_direct'][k]==cases['current_direct'][k] for k in ['core','partial_words','feedback','cfg','stream']}
     controls={n:cases[n]['status']=='FAIL' for n in names[2:]}
