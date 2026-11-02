@@ -1,0 +1,6 @@
+Approved Q5 selects signed head-kit PORT_REGS/STRAP_SAMPLE/LT_COPY/S3_COPY/STRAP_DIRECT specialization.
+Recipe utility changes only compose in a fresh copy; existing wave snapshots/jobs remain unchanged.
+Actual native fault chain: head_EN_0_0__u_kt.g_f -> head_EN_0_0__u_score.gf_i -> u_rof -> qkh_head_sstage hst_EN_0_0_s1 -> head_EN_0_1__u_fts -> ectl_EN_0.s0[33] -> qkd_ectl_c_st.ts0_gf -> ot_qkd_ectl_part.u_tsp0/u_tsm -> t_gf -> gfault_any -> mac_fault -> fault.
+Source g_f itself is NOT sticky: ot_qkh_subtiles.sv assigns g_f <= (|gf_r)||kf. Score4 also registers the pulse without sticky accumulation.
+The downstream ot_qkd_ectl_part fault is sticky and checks mac_fault every non-start cycle independently of sc_valid; reset/start clear it. Accepted PORT_REGS diagnostic detection latency is +1 edge; score/data/valid schedule adds 0 cycles. Thus mission fault accumulation has no score-valid gate; arbitrary reset/start-boundary waveforms are NOT claimed cycle-exact by this finding. Parent functional qualification still owns those boundaries.
+Original strict bind of the headkit spec already reported errors0 and unchanged latency/sinks/tied/param_regen; e0 wrapper equivalence passed against selected signed source. No new physical run or full token pass is claimed.

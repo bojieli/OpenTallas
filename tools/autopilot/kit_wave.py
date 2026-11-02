@@ -1168,6 +1168,24 @@ def run_item(spec_path):
         rc, _ = run("gen_kit", idempotent=True, argv=remote(f"test -f {q(K)}/config.mk || test -f {q(K)}/freeze.json"))
         if rc:
             return fail("gen", txt + "\nGEN_NO_KIT: gen.py exit 0 but wrote no kit for this type (hard type? see gen --hard-wrappers)")
+    # New-attempt tool update only, before any physical/proof work or resume copy.
+    # The generator source stays pinned; record the independent scheduler LEC snapshot.
+    lt = sp.get("future_lec")
+    if lt:
+        staged = f"{W}/future_lec"
+        rc, txt = run("lec_tools_dir", remote(f"mkdir -p {q(staged)}"), idempotent=True)
+        if rc:
+            return fail("lec_tools", txt)
+        dest = staged + "/" if G in ("localhost", hub) else f"{G}:{staged}/"
+        rc, txt = run("lec_tools_copy", ["rsync", "-a", "-e", "ssh -o BatchMode=yes -o ControlPath=none",
+            str(out / "future_lec") + "/", dest], idempotent=True)
+        if rc:
+            return fail("lec_tools", txt)
+        rc, txt = run("lec_tools", remote(f"python3 {q(staged)}/future_kit_lec.py {q(K)} "
+            f"{q(staged)}/lec.py {q(staged)}/TOOL.json"))
+        if rc:
+            return fail("lec_tools", txt)
+        res["future_lec"] = lt
     # KW-RESUME-1: record the kit's gen-time inputs (K/.kw_inputs.json) before any gate writes into K; a later
     # relaunch fingerprints against this record.  Advisory: a failure only means the next relaunch uses the mtime rule.
     run("resume_inputs", remote(kr_cmd(f"inputs {q(K)}")), idempotent=True)
@@ -1588,6 +1606,24 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         AP.log(f"KIT-WAVE would launch {die}/{r['item']} unit {unit}: gen {sp['gen_host']}:{sp['work']} plan {sp['plan']}")
         return None
     jd.mkdir(parents=True, exist_ok=True)
+    # Snapshot current approved tool bytes into this new attempt, never another lane's kit.
+    if opt(cfg, die, "future_lec") is not False:
+        import hashlib
+        snapshot = jd / "future_lec"
+        snapshot.mkdir()
+        source = Path(__file__).resolve().parents[1] / "die_plan" / "lec.py"
+        payload = source.read_bytes()
+        commit = subprocess.run(["git", "-C", str(source.parent), "rev-parse", "HEAD"],
+            check=True, capture_output=True, text=True).stdout.strip()
+        tracked = subprocess.run(["git", "-C", str(source.parent), "show", f"{commit}:tools/die_plan/lec.py"],
+            check=True, capture_output=True).stdout
+        if payload != tracked:
+            raise ValueError("future LEC scheduler file differs from committed main tool")
+        meta = dict(commit=commit, sha256=hashlib.sha256(payload).hexdigest())
+        (snapshot / "lec.py").write_bytes(payload)
+        (snapshot / "TOOL.json").write_text(json.dumps(meta) + "\n")
+        (snapshot / "future_kit_lec.py").write_bytes(Path(__file__).with_name("future_kit_lec.py").read_bytes())
+        sp["future_lec"] = meta
     (jd / "spec.json").write_text(json.dumps(sp, indent=1))
     ok = AP.launch_unit(unit, jd / "unit.log", ["python3", str(Path(__file__).resolve()), "run-item", str(jd / "spec.json")])
     rec = {"die": die, "item": r["item"], "parent_item": r.get("parent_item") or prev.get("parent_item"), "kind": r["kind"], "event": sp["event"], "attempt": attempt,

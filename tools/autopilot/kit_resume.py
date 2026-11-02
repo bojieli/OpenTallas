@@ -67,7 +67,7 @@ RUNNER_ROOTS = {"orfs_hold_mm.py": "synth", "native_bb.py": "synth", "partition_
                 "adder_map_dontuse.py": "synth", "signed_parent_source.json": "synth",
                 "signed_parent_synth_prep.sh": "synth", "tapbal_grt.tcl": "cts", "macro_ff_repair.mk": "grt"}
 # Gates / proofs / sign-off: re-run by run_kit.sh on every invocation (their verdicts are never reused).
-GATE_ROOTS = {"kit_preflight.py", "sdc_lint.py", "rtl_lint.py", "rtl_lint.ys", "selrange_gate.py", "port_bind_gate.py",
+GATE_ROOTS = {"PROVENANCE.json", "PROVENANCE.generated.json", "LEC_TOOL.json", "kit_preflight.py", "sdc_lint.py", "rtl_lint.py", "rtl_lint.ys", "selrange_gate.py", "port_bind_gate.py",
               "face_guard.py", "reg_fanout_gate.py", "hold_gate.tcl", "postcts_gate.tcl", "legacy_gate.py",
               "grt_policy.json", "pin_audit.py", "audit_pins.json", "lec.py", "lec_async.sh", "lec_options.json",
               "lec_async.on", "lec_async.identity", "signoff.py", "lec_options.json"}
