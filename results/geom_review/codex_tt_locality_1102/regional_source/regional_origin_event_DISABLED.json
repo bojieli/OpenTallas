@@ -307,11 +307,11 @@
  ],
  "source_files": {
   "replace": {
-   "/home/ubuntu/coord/tmp/codex_tt_locality_1102/frozen_bound.sv": "results/geom_review/codex_tt_locality_1102/regional_source/qfd_qc_tt_ctlm_part_bound_DISABLED.sv",
-   "/home/ubuntu/coord/tmp/codex_tt_locality_1102/frozen_outer.sv": "results/geom_review/codex_tt_locality_1102/regional_source/qfd_qc_tt_ctlm_part_DISABLED.sv"
+   "qfd_qc_tt_ctlm_part_bound.sv": "results/geom_review/codex_tt_locality_1102/regional_source/qfd_qc_tt_ctlm_part_bound_DISABLED.sv",
+   "qfd_qc_tt_ctlm_part.sv": "results/geom_review/codex_tt_locality_1102/regional_source/qfd_qc_tt_ctlm_part_DISABLED.sv"
   },
   "append": [
-   "/srv/opentallas-scratch/claude/wt/codex-tt-locality-prep-1102/tools/die_plan/tt_regional_origin/ot_dp_landing_origin_s_regional.sv"
+   "tools/die_plan/tt_regional_origin/ot_dp_landing_origin_s_regional.sv"
   ]
  },
  "top_parameter": "qfd_qc_tt_ctlm_part.OT_TT_REGIONAL_ORIGIN (default0; explicit1 only in reviewed disabled source-event snapshot)",
@@ -319,5 +319,10 @@
  "ordinary_ff_homes": "../composed_final/final_composed_homes_DISABLED.json.gz",
  "macro_delta": "../composed_final/macro_delta3_DISABLED.json",
  "clock_application": "mandatory explicit phase-preserving51sink reassociation among existing63ports; actual-name join before CTS; no old999/timing credit",
- "current_other_die_gates": "HELD as recorded in composed_final/source_event_gate.json"
+ "current_other_die_gates": "HELD as recorded in composed_final/source_event_gate.json",
+ "source_reference": {
+  "host": "intel2",
+  "kit": "/srv/opentallas-scratch2/claude/die-qc-61/tt_ctlm_C/gen/tt_ctlm",
+  "plan_pair": "exact original 63-tap TT_C freeze; current global plan/sidecar must be rederived for adoption"
+ }
 }
