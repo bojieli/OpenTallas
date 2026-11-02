@@ -7,8 +7,13 @@ from pathlib import Path
 
 def declared(kit_rtl_json):
     kr = json.loads(Path(kit_rtl_json).read_text())
-    root = Path(kr['bind_out'])
     ports = {r['port']: (r['dir'], r['width']) for r in kr.get('bound_only_pins', [])}
+    if not kr.get('bind_out'):
+        if any(name.startswith('strap_r8pad_') for name in ports):
+            raise ValueError('R8 count ports lack their bind authority')
+        # Native station/source manifests have no binder metadata to project.
+        return []
+    root = Path(kr['bind_out'])
     mf = root/'bind_parent_id_straps.json'
     if not mf.exists():
         if any(name.startswith('strap_r8pad_') for name in ports):
@@ -43,6 +48,9 @@ def project(raw, kit_rtl):
     result = raw
     for tn, fl in (kit_rtl or {}).items():
         kit_json = Path(fl).with_name('kit_rtl.json')
+        if not kit_json.is_file():
+            # A plain native filelist carries no bound metadata to promote.
+            continue
         additions = declared(kit_json)
         if not additions:
             continue
