@@ -1,0 +1,209 @@
+{
+ "status": "PREP_ACTUAL_NAMES_ONLY",
+ "declared_sources": 18,
+ "mapped_live_sources": 17,
+ "missing_dead_source": [
+  "u_bound.u_cland_origin/g_on.g_region[3].pd"
+ ],
+ "rows": [
+  {
+   "model_name": "u_bound.u_cland_origin/s0$_SDFF_PN0_",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.s0",
+    "posedge",
+    "retained_namespace_only"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.s0$_SDFF_PN0_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/sf$_DFF_N_",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.sf",
+    "negedge",
+    "retained_namespace_only"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.sf$_DFF_N_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/g_on.g_region[0].s1",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.g_region[0].s1",
+    "posedge",
+    "regional_state"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.g_region\\[0\\].s1$_SDFF_PN0_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/g_on.g_region[0].s2",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.g_region[0].s2",
+    "posedge",
+    "regional_state"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.g_region\\[0\\].s2$_SDFF_PN0_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/g_on.g_region[0].pd",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.g_region[0].pd",
+    "posedge",
+    "regional_state"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.g_region\\[0\\].pd$_SDFF_PN0_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/g_on.g_region[1].s1",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.g_region[1].s1",
+    "posedge",
+    "regional_state"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.g_region\\[1\\].s1$_SDFF_PN0_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/g_on.g_region[1].s2",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.g_region[1].s2",
+    "posedge",
+    "regional_state"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.g_region\\[1\\].s2$_SDFF_PN0_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/g_on.g_region[1].pd",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.g_region[1].pd",
+    "posedge",
+    "regional_state"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.g_region\\[1\\].pd$_SDFF_PN0_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/g_on.g_region[2].s1",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.g_region[2].s1",
+    "posedge",
+    "regional_state"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.g_region\\[2\\].s1$_SDFF_PN0_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/g_on.g_region[2].s2",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.g_region[2].s2",
+    "posedge",
+    "regional_state"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.g_region\\[2\\].s2$_SDFF_PN0_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/g_on.g_region[2].pd",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.g_region[2].pd",
+    "posedge",
+    "regional_state"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.g_region\\[2\\].pd$_SDFF_PN0_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/g_on.g_region[3].s1",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.g_region[3].s1",
+    "posedge",
+    "regional_state"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.g_region\\[3\\].s1$_SDFF_PN0_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/g_on.g_region[3].s2",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.g_region[3].s2",
+    "posedge",
+    "regional_state"
+   ],
+   "actual_candidates": [
+    "u_bound.u_cland_origin.g_on.g_region\\[3\\].s2$_SDFF_PN0_"
+   ]
+  },
+  {
+   "model_name": "u_bound.u_cland_origin/g_on.g_region[3].pd",
+   "rtl_identity": [
+    "u_bound.u_cland_origin.g_on.g_region[3].pd",
+    "posedge",
+    "regional_state"
+   ],
+   "actual_candidates": []
+  },
+  {
+   "model_name": "u_bound.g_tt_raw_regions.g_region[0].u_raw_copy/q",
+   "rtl_identity": [
+    "u_bound.g_tt_raw_regions.g_region[0].u_raw_copy.q",
+    "posedge",
+    "raw_same_depth_copy"
+   ],
+   "actual_candidates": [
+    "u_bound.g_tt_raw_regions.g_region\\[0\\].u_raw_copy/q$_DFF_P_"
+   ]
+  },
+  {
+   "model_name": "u_bound.g_tt_raw_regions.g_region[1].u_raw_copy/q",
+   "rtl_identity": [
+    "u_bound.g_tt_raw_regions.g_region[1].u_raw_copy.q",
+    "posedge",
+    "raw_same_depth_copy"
+   ],
+   "actual_candidates": [
+    "u_bound.g_tt_raw_regions.g_region\\[1\\].u_raw_copy/q$_DFF_P_"
+   ]
+  },
+  {
+   "model_name": "u_bound.g_tt_raw_regions.g_region[2].u_raw_copy/q",
+   "rtl_identity": [
+    "u_bound.g_tt_raw_regions.g_region[2].u_raw_copy.q",
+    "posedge",
+    "raw_same_depth_copy"
+   ],
+   "actual_candidates": [
+    "u_bound.g_tt_raw_regions.g_region\\[2\\].u_raw_copy/q$_DFF_P_"
+   ]
+  },
+  {
+   "model_name": "u_bound.g_tt_raw_regions.g_region[3].u_raw_copy/q",
+   "rtl_identity": [
+    "u_bound.g_tt_raw_regions.g_region[3].u_raw_copy.q",
+    "posedge",
+    "raw_same_depth_copy"
+   ],
+   "actual_candidates": [
+    "u_bound.g_tt_raw_regions.g_region\\[3\\].u_raw_copy/q$_DFF_P_"
+   ]
+  }
+ ],
+ "accepted_alias": false,
+ "clock_edge_native_join": "HELD: coherent live-phase model and full mapped inventory required",
+ "physical_release": false
+}

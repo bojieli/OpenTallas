@@ -61,6 +61,13 @@ for on,nn in sorted(proposed.items()):
    return (x[0],*[subst(z) for z in x[1:]])
   return canonical(subst(L.parse_function(model['ff']['next_state'])))
  oe=transition(om,on,op,og);ne=transition(nm,nn,np,ng);clk_o=op[on][om['ff']['clocked_on']]['net'];clk_n=np[nn][nm['ff']['clocked_on']]['net']
+ if oe!=ne:
+  def leaves(e):
+   if e[0] in ('ff_output','macro_output','port','const','internal_state'):return {repr(e)}
+   if e[0] in ('and','or'):return set().union(*(leaves(x) for x in e[1]))
+   return set().union(*(leaves(x) for x in e[1:]))
+  ol,nl=leaves(oe),leaves(ne)
+  (P/'residual_anonymous_cone.json').write_text(json.dumps(dict(old=on,new=nn,old_ast=oe,new_ast=ne,old_leaf_count=len(ol),new_leaf_count=len(nl),old_only_leaves=sorted(ol-nl),new_only_leaves=sorted(nl-ol),same_leaf_interface=ol==nl,accepted_alias=False),indent=1)+'\n')
  rows.append(dict(old=on,new=nn,transition_ast_equal=oe==ne,clock_net_equal=clk_o==clk_n,clock_old=clk_o,clock_new=clk_n,ff_function_equal=om['ff']==nm['ff'],old_ast_sha256=hashlib.sha256(repr(oe).encode()).hexdigest(),new_ast_sha256=hashlib.sha256(repr(ne).encode()).hexdigest()))
 result=dict(status='FINITE_TRANSITION_DIAGNOSIS_ONLY',rows=rows,proposed_correspondence=proposed,all_step_ast_equal=all(r['transition_ast_equal'] and r['clock_net_equal'] and r['ff_function_equal'] for r in rows),actual_old_leaf_ff=len(ou),actual_new_leaf_ff=len(nu),accepted_alias=False,native_base_proved=False,full_source_lec_credit=False,physical_release=False)
 (P/'anonymous_transition_diagnosis.json').write_text(json.dumps(result,indent=1)+'\n');print('ANONYMOUS_TRANSITION_DIAGNOSIS',sum(r['transition_ast_equal'] for r in rows),'/23 AST identical;',result['all_step_ast_equal'],'no accepted alias/base/fullproof',flush=True)
