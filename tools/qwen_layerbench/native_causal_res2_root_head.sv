@@ -71,7 +71,7 @@ always @(negedge ck)if(rst_n)begin
   tags[tag]=1;partials=partials+1;
  end
  if(rwe)begin
-  expected=32'h3d000000-32'(u*8388608);
+  expected=ROOT_GOLD_BASE-32'(u*8388608);
   if(rwa!==24'(400+4096*u)||rwd!==expected)$fatal(1,"NATIVE_ROOT_RETURN u%0d addr%h got%h expected%h",u,rwa,rwd,expected);
   gotroot=gotroot+1;rootcyc=cyc;
  end
