@@ -3025,3 +3025,5 @@ CODEX: 2026-11-01 22:02 PST protectioncachefalsealarmfixDEPLOYED;2explicitretire
 CODEX: BF source100-pin closure staged; exact production GB provider guard refuses, retained experimental scope passes (READY16c3ac57d). Single nonzero-row native label experiment queued separately; source/mission authority holds remain explicit.
 
 CODEX: BF native phase110 nonzero-row label witness READY06ef2d7dd, exact33image join and six payload/date-preserving returns with wrong-label control;0cycles/defaultOFF. Metadata-only current bind_ev2 transport re-age underway, no programme adoption.
+
+CODEX 22:35 PST: S81cores L2current051SIGNED+6110EQ+freshviews heldoriginalGENUNKNOWN; BF_A one reviewednative ECO admitted1433265; VEs/VSWqueued preserved; L5actualnative566µmreachHOLD(pinorder), L4actual−79→−101setupfailure, XRTboth137beforekit diagnosed. Branchac2eaae43 readyROOT.
