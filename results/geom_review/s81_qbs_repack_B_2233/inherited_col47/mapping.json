@@ -1,0 +1,770 @@
+{
+  "scope": "diagnostic mapping only; no mutation or hierarchy claim without native elaboration",
+  "total": 76,
+  "uniquely_mapped": 76,
+  "missing": [],
+  "entries": [
+    {
+      "planned": "u_r0.u_bn0",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_bn0",
+          "master": "dsfd_qbank_N",
+          "actual": "u_bound.u_u_r0_u_bn0"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_bn1",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_bn1",
+          "master": "dsfd_qbank_N",
+          "actual": "u_bound.u_u_r0_u_bn1"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_bn2",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_bn2",
+          "master": "dsfd_qbank_N",
+          "actual": "u_bound.u_u_r0_u_bn2"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_bn3",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_bn3",
+          "master": "dsfd_qbank_N",
+          "actual": "u_bound.u_u_r0_u_bn3"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_bs0",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_bs0",
+          "master": "dsfd_qbank_S",
+          "actual": "u_bound.u_u_r0_u_bs0"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_bs1",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_bs1",
+          "master": "dsfd_qbank_S",
+          "actual": "u_bound.u_u_r0_u_bs1"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_bs2",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_bs2",
+          "master": "dsfd_qbank_S",
+          "actual": "u_bound.u_u_r0_u_bs2"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_bs3",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_bs3",
+          "master": "dsfd_qbank_S",
+          "actual": "u_bound.u_u_r0_u_bs3"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_cf",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_cf",
+          "master": "dsfd_cfifo_crs4",
+          "actual": "u_bound.u_u_r0_u_cf"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_e0",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_e0",
+          "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+          "actual": "u_bound.u_u_r0_u_e0"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_e1",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_e1",
+          "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+          "actual": "u_bound.u_u_r0_u_e1"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_e2",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_e2",
+          "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+          "actual": "u_bound.u_u_r0_u_e2"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_e3",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_e3",
+          "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+          "actual": "u_bound.u_u_r0_u_e3"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_e4",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_e4",
+          "master": "dsfd_bf_front_roots",
+          "actual": "u_bound.u_u_r0_u_e4"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_e4e.u_view",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_e4e",
+          "master": "ot_v41_bf_col",
+          "actual": "u_bound.u_u_r0_u_e4e.u_view",
+          "source_basis": "dsfd_bf_col.sv889 unconditional u_view; INSTANCE/MB simulation only"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_e4w.u_view",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_e4w",
+          "master": "ot_v41_bf_col",
+          "actual": "u_bound.u_u_r0_u_e4w.u_view",
+          "source_basis": "dsfd_bf_col.sv889 unconditional u_view; INSTANCE/MB simulation only"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_n0",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_n0",
+          "master": "dsfd_node_LLfu",
+          "actual": "u_bound.u_u_r0_u_n0"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_n1",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_n1",
+          "master": "dsfd_node_NNfu",
+          "actual": "u_bound.u_u_r0_u_n1"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_n10",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_n10",
+          "master": "dsfd_node_LLfd",
+          "actual": "u_bound.u_u_r0_u_n10"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_n11",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_n11",
+          "master": "dsfd_node_NNfd",
+          "actual": "u_bound.u_u_r0_u_n11"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_n2",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_n2",
+          "master": "dsfd_node_LLfd",
+          "actual": "u_bound.u_u_r0_u_n2"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_n3",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_n3",
+          "master": "dsfd_node_NNfu",
+          "actual": "u_bound.u_u_r0_u_n3"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_n4",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_n4",
+          "master": "dsfd_node_LLfu",
+          "actual": "u_bound.u_u_r0_u_n4"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_n5",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_n5",
+          "master": "dsfd_node_NNfd",
+          "actual": "u_bound.u_u_r0_u_n5"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_n6",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_n6",
+          "master": "dsfd_node_LLfd",
+          "actual": "u_bound.u_u_r0_u_n6"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_n7",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_n7",
+          "master": "dsfd_node_NNfu",
+          "actual": "u_bound.u_u_r0_u_n7"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_n8",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_n8",
+          "master": "dsfd_node_LLfu",
+          "actual": "u_bound.u_u_r0_u_n8"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_n9",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_n9",
+          "master": "dsfd_node_NNfu",
+          "actual": "u_bound.u_u_r0_u_n9"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_rg1",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_rg1",
+          "master": "dsfd_rstg",
+          "actual": "u_bound.u_u_r0_u_rg1"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_rg2",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_rg2",
+          "master": "dsfd_rstg",
+          "actual": "u_bound.u_u_r0_u_rg2"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_s0",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_s0",
+          "master": "ot_s81_cfg7_seq",
+          "actual": "u_bound.u_u_r0_u_s0"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_s1",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_s1",
+          "master": "ot_s81_cfg7_seq",
+          "actual": "u_bound.u_u_r0_u_s1"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_s2",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_s2",
+          "master": "ot_s81_cfg7_seq",
+          "actual": "u_bound.u_u_r0_u_s2"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_s3",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_s3",
+          "master": "ot_s81_cfg7_seq",
+          "actual": "u_bound.u_u_r0_u_s3"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_s4",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_s4",
+          "master": "ot_s81_cfg7_seq_bfp",
+          "actual": "u_bound.u_u_r0_u_s4"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_t0",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_t0",
+          "master": "ot_s81_sstn_base566",
+          "actual": "u_bound.u_u_r0_u_t0"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_t0__payload",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_t0__payload",
+          "master": "ot_s81_sstn_payload536",
+          "actual": "u_bound.u_u_r0_u_t0_payload"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_t1",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_t1",
+          "master": "ot_s81_sstn_base566",
+          "actual": "u_bound.u_u_r0_u_t1"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_t1__payload",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_t1__payload",
+          "master": "ot_s81_sstn_payload536",
+          "actual": "u_bound.u_u_r0_u_t1_payload"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_t2",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_t2",
+          "master": "ot_s81_sstn_base566",
+          "actual": "u_bound.u_u_r0_u_t2"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_t2__payload",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_t2__payload",
+          "master": "ot_s81_sstn_payload536",
+          "actual": "u_bound.u_u_r0_u_t2_payload"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c0_0",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c0_0",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c0_0"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c0_1",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c0_1",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c0_1"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c0_2",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c0_2",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c0_2"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c0_3",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c0_3",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c0_3"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c0_4",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c0_4",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c0_4"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c0_5",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c0_5",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c0_5"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c0_6",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c0_6",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c0_6"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c1_0",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c1_0",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c1_0"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c1_1",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c1_1",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c1_1"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c1_2",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c1_2",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c1_2"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c1_3",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c1_3",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c1_3"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c1_4",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c1_4",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c1_4"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c1_5",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c1_5",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c1_5"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c1_6",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c1_6",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c1_6"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c2_0",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c2_0",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c2_0"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c2_1",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c2_1",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c2_1"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c2_2",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c2_2",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c2_2"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c2_3",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c2_3",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c2_3"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c2_4",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c2_4",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c2_4"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c2_5",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c2_5",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c2_5"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c2_6",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c2_6",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c2_6"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c3_0",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c3_0",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c3_0"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c3_1",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c3_1",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c3_1"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c3_2",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c3_2",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c3_2"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c3_3",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c3_3",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c3_3"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c3_4",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c3_4",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c3_4"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c3_5",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c3_5",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c3_5"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c3_6",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c3_6",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c3_6"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c4_0",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c4_0",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c4_0"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c4_1",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c4_1",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c4_1"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c4_2",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c4_2",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c4_2"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c4_3",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c4_3",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c4_3"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c4_4",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c4_4",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c4_4"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c4_5",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c4_5",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c4_5"
+        }
+      ]
+    },
+    {
+      "planned": "u_r0.u_c4_6",
+      "matches": [
+        {
+          "asbuilt": "u_f_0L02.u_r0.u_c4_6",
+          "master": "ot_rom_4096x72_m8",
+          "actual": "u_bound.u_u_r0_u_c4_6"
+        }
+      ]
+    }
+  ]
+}

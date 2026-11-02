@@ -1,0 +1,733 @@
+{
+ "schema": "opentallas.kit_preflight.v2",
+ "kit": "/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/col_h9_r0_p2__t1__cl9f71e63d/attempt_3/gen/col_h9_r0_p2__t1__cl9f71e63d",
+ "contract": [
+  "corner_modes",
+  "ff_binding",
+  "clock_pin_geometry",
+  "rc_calibration",
+  "duplicate_modules",
+  "keep_hook",
+  "pins_canonical",
+  "mesh_vias",
+  "macro_channels",
+  "clock_entry_clear",
+  "island_macro_clear",
+  "macro_pin_grid",
+  "macro_instances"
+ ],
+ "contract_binding": true,
+ "contract_advisory": {},
+ "verdict": "FAIL",
+ "checks": {
+  "staged_tools": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "staged_inputs": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "sdc_and_ff_binding": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "yosys_cast_forms": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "module_closure": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "corner_modes": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "corners": [],
+    "per_mode": false,
+    "hooks": [
+     "clock_taps.tcl",
+     "constraint.sdc",
+     "cts_post.tcl",
+     "cts_repair_protect.tcl",
+     "face_flops.tcl",
+     "face_flops_release.tcl",
+     "face_keep.tcl",
+     "face_keep_release.tcl",
+     "ft_bit_sites.tcl",
+     "grt_maxwire.tcl",
+     "grt_post.tcl",
+     "grt_pre.tcl",
+     "hold_pad_hb4.tcl",
+     "hold_repair_pre.tcl",
+     "landing_exports.tcl",
+     "landing_placement.tcl",
+     "leaf_affinity.tcl",
+     "macro_place.tcl",
+     "native_cell_cap.tcl",
+     "ot_keep_regs.tcl",
+     "ot_pin_regs.tcl",
+     "ot_rst_copies.tcl",
+     "pdn.tcl",
+     "pg_connect.tcl",
+     "pre_cts.tcl",
+     "pre_floorplan_type.tcl",
+     "prects_estimate.tcl",
+     "relay_mid.tcl",
+     "reset_taps.tcl",
+     "reset_tree.tcl",
+     "setRC_rcx.tcl",
+     "tap_balance.tcl",
+     "vclk_corner.tcl"
+    ]
+   }
+  },
+  "ff_binding": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "values": {
+     "OT_VCLK_TT": 250.0,
+     "OT_VCLK_FF": 202.5,
+     "sdc_lint_insertion_ps": 250.0,
+     "sdc_lint_insertion_ff_ps": 202.5,
+     "clock_binding_tt": 250.0,
+     "clock_binding_ff": 202.5
+    }
+   }
+  },
+  "clock_pin_geometry": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "kind": "partition",
+    "clock_ports": [
+     "clk",
+     "clk_c0",
+     "clk_c1",
+     "clk_c2",
+     "clk_c3",
+     "clk_c4",
+     "clk_c5",
+     "clk_t1",
+     "clk_t10",
+     "clk_t11",
+     "clk_t12",
+     "clk_t13",
+     "clk_t14",
+     "clk_t15",
+     "clk_t16",
+     "clk_t17",
+     "clk_t18",
+     "clk_t19",
+     "clk_t2",
+     "clk_t20",
+     "clk_t21",
+     "clk_t22",
+     "clk_t23",
+     "clk_t24",
+     "clk_t25",
+     "clk_t26",
+     "clk_t27",
+     "clk_t28",
+     "clk_t29",
+     "clk_t3",
+     "clk_t30",
+     "clk_t31",
+     "clk_t32",
+     "clk_t33",
+     "clk_t34",
+     "clk_t35",
+     "clk_t36",
+     "clk_t37",
+     "clk_t38",
+     "clk_t4",
+     "clk_t5",
+     "clk_t6",
+     "clk_t7",
+     "clk_t8",
+     "clk_t9",
+     "fclk_in_ft1_i",
+     "fclk_in_ft2_i",
+     "fclk_in_ft3_i",
+     "fclk_in_ft4_i"
+    ],
+    "placements": {
+     "clk": 1,
+     "clk_t1": 1,
+     "clk_t2": 1,
+     "clk_t3": 1,
+     "clk_t4": 1,
+     "clk_t5": 1,
+     "clk_t6": 1,
+     "clk_t7": 1,
+     "clk_t8": 1,
+     "clk_t9": 1,
+     "clk_t10": 1,
+     "clk_t11": 1,
+     "clk_t12": 1,
+     "clk_t13": 1,
+     "clk_t14": 1,
+     "clk_t15": 1,
+     "clk_t16": 1,
+     "clk_t17": 1,
+     "clk_t18": 1,
+     "clk_t19": 1,
+     "clk_t20": 1,
+     "clk_t21": 1,
+     "clk_t22": 1,
+     "clk_t23": 1,
+     "clk_t24": 1,
+     "clk_t25": 1,
+     "clk_t26": 1,
+     "clk_t27": 1,
+     "clk_t28": 1,
+     "clk_t29": 1,
+     "clk_t30": 1,
+     "clk_t31": 1,
+     "clk_t32": 1,
+     "clk_t33": 1,
+     "clk_t34": 1,
+     "clk_t35": 1,
+     "clk_t36": 1,
+     "clk_t37": 1,
+     "clk_t38": 1,
+     "clk_c0": 1,
+     "clk_c1": 1,
+     "clk_c2": 1,
+     "clk_c3": 1,
+     "clk_c4": 1,
+     "clk_c5": 1,
+     "fclk_in_ft1_i": 1,
+     "fclk_in_ft2_i": 1,
+     "fclk_in_ft3_i": 1,
+     "fclk_in_ft4_i": 1
+    },
+    "entries": [
+     [
+      "io.tcl",
+      "clk",
+      180.384,
+      177.12
+     ],
+     [
+      "io.tcl",
+      "clk_t1",
+      541.088,
+      152.864
+     ],
+     [
+      "io.tcl",
+      "clk_t2",
+      901.792,
+      177.12
+     ],
+     [
+      "io.tcl",
+      "clk_t3",
+      1262.496,
+      152.864
+     ],
+     [
+      "io.tcl",
+      "clk_t4",
+      180.384,
+      460.576
+     ],
+     [
+      "io.tcl",
+      "clk_t5",
+      541.088,
+      460.576
+     ],
+     [
+      "io.tcl",
+      "clk_t6",
+      901.792,
+      460.576
+     ],
+     [
+      "io.tcl",
+      "clk_t7",
+      1262.496,
+      460.576
+     ],
+     [
+      "io.tcl",
+      "clk_t8",
+      180.384,
+      835.424
+     ],
+     [
+      "io.tcl",
+      "clk_t9",
+      564.832,
+      766.304
+     ],
+     [
+      "io.tcl",
+      "clk_t10",
+      901.792,
+      835.424
+     ],
+     [
+      "io.tcl",
+      "clk_t11",
+      1262.496,
+      780.256
+     ],
+     [
+      "io.tcl",
+      "clk_t12",
+      180.384,
+      1160.416
+     ],
+     [
+      "io.tcl",
+      "clk_t13",
+      508.704,
+      1074.016
+     ],
+     [
+      "io.tcl",
+      "clk_t14",
+      901.792,
+      1160.416
+     ],
+     [
+      "io.tcl",
+      "clk_t15",
+      1262.496,
+      1071.392
+     ],
+     [
+      "io.tcl",
+      "clk_t16",
+      1425.12,
+      1209.632
+     ],
+     [
+      "io.tcl",
+      "clk_t17",
+      1425.12,
+      17.312
+     ],
+     [
+      "io.tcl",
+      "clk_t18",
+      1425.12,
+      925.856
+     ],
+     [
+      "io.tcl",
+      "clk_t19",
+      17.76,
+      17.312
+     ],
+     [
+      "io.tcl",
+      "clk_t20",
+      17.76,
+      979.36
+     ],
+     [
+      "io.tcl",
+      "clk_t21",
+      1126.432,
+      306.656
+     ],
+     [
+      "io.tcl",
+      "clk_t22",
+      1417.44,
+      596.128
+     ],
+     [
+      "io.tcl",
+      "clk_t23",
+      17.76,
+      739.808
+     ],
+     [
+      "io.tcl",
+      "clk_t24",
+      1386.208,
+      305.056
+     ],
+     [
+      "io.tcl",
+      "clk_t25",
+      288.032,
+      17.312
+     ],
+     [
+      "io.tcl",
+      "clk_t26",
+      1154.08,
+      17.312
+     ],
+     [
+      "io.tcl",
+      "clk_t27",
+      17.76,
+      1209.632
+     ],
+     [
+      "io.tcl",
+      "clk_t28",
+      257.76,
+      596.128
+     ],
+     [
+      "io.tcl",
+      "clk_t29",
+      1126.432,
+      695.456
+     ],
+     [
+      "io.tcl",
+      "clk_t30",
+      980.128,
+      596.128
+     ],
+     [
+      "io.tcl",
+      "clk_t31",
+      681.952,
+      1101.92
+     ],
+     [
+      "io.tcl",
+      "clk_t32",
+      639.84,
+      894.24
+     ],
+     [
+      "io.tcl",
+      "clk_t33",
+      595.68,
+      600.48
+     ],
+     [
+      "io.tcl",
+      "clk_t34",
+      314.848,
+      1209.632
+     ],
+     [
+      "io.tcl",
+      "clk_t35",
+      864.48,
+      17.312
+     ],
+     [
+      "io.tcl",
+      "clk_t36",
+      392.608,
+      907.168
+     ],
+     [
+      "io.tcl",
+      "clk_t37",
+      246.816,
+      1158.496
+     ],
+     [
+      "io.tcl",
+      "clk_t38",
+      1425.12,
+      833.952
+     ],
+     [
+      "io.tcl",
+      "clk_c0",
+      298.592,
+      207.392
+     ],
+     [
+      "io.tcl",
+      "clk_c1",
+      860.192,
+      207.392
+     ],
+     [
+      "io.tcl",
+      "clk_c2",
+      298.592,
+      596.128
+     ],
+     [
+      "io.tcl",
+      "clk_c3",
+      860.192,
+      596.128
+     ],
+     [
+      "io.tcl",
+      "clk_c4",
+      916.32,
+      941.728
+     ],
+     [
+      "io.tcl",
+      "clk_c5",
+      268.32,
+      941.728
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft1_i",
+      2.144,
+      14.496
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft2_i",
+      2.144,
+      33.056
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft3_i",
+      2.144,
+      51.168
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft4_i",
+      2.144,
+      69.344
+     ]
+    ],
+    "rule": "12.7 M7 on-ramp at plan tap"
+   }
+  },
+  "rc_calibration": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "files": [
+     "setRC_rcx.tcl"
+    ],
+    "records": {
+     "setRC_rcx.tcl": {
+      "signal": "set_wire_rc -signal = RCX unit R/C fit on SIGNAL nets >= 5 um, 4 designs (FLOW-RC-1 2026-10-27); GRT basis shares the per-layer table",
+      "clock": "set_layer_rc per layer = clock-sink arrival fit (FLOW 2026-10-25, rc_calib.json); set_wire_rc -clock unchanged"
+     }
+    }
+   }
+  },
+  "duplicate_modules": {
+   "verdict": "FAIL",
+   "errors": [
+    "module dsfd_bf_front_roots defined 2 times (dsfd_bf_front_roots.sv, dsfd_bf_front_roots_bb.v)",
+    "module dsfd_cfifo_crs4 defined 2 times (dsfd_cfifo_crs4.sv, dsfd_cfifo_crs4_bb.v)",
+    "module ot_s81_cfg7_seq defined 2 times (ot_s81_cfg7_seq.sv, ot_s81_cfg7_seq_bb.v)",
+    "module ot_s81_cfg7_seq_bfp defined 2 times (ot_s81_cfg7_seq_bfp.sv, ot_s81_cfg7_seq_bfp_bb.v)",
+    "module ot_v41_bf_col defined 2 times (ot_v41_bf_col.sv, ot_v41_bf_col_bb.v)",
+    "module ot_v41_rom_elem_q_qxpq_w10_gb defined 2 times (ot_v41_rom_elem_q_qxpq_w10_gb.sv, ot_v41_rom_elem_q_qxpq_w10_gb_bb.v)"
+   ],
+   "n_errors": 6,
+   "info": {
+    "applies": true,
+    "modules": 159,
+    "files": 82
+   }
+  },
+  "keep_hook": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "keep_attrs": 187,
+    "named_keep_modules": [],
+    "paramod_renamed": []
+   }
+  },
+  "pins_canonical": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "kit_canon": "8535f85ebe071a787da5696d2e267303587a5df298c1022a711914829f731ff1",
+    "recorded": "8535f85ebe071a787da5696d2e267303587a5df298c1022a711914829f731ff1",
+    "plan_file": "/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/col_h9_r0_p2__t1__cl9f71e63d/attempt_3/gen/col_h9_r0_p2__t1__cl9f71e63d/plan_pins.json",
+    "plan_canon": "8535f85ebe071a787da5696d2e267303587a5df298c1022a711914829f731ff1",
+    "slice": false,
+    "plan_place_canon": "8535f85ebe071a787da5696d2e267303587a5df298c1022a711914829f731ff1"
+   }
+  },
+  "mesh_vias": {
+   "verdict": "NA",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": false,
+    "reason": "no clock-mesh inputs in the kit"
+   }
+  },
+  "macro_channels": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "macros": 76,
+    "columns": 1,
+    "min_channel_um": 10.8,
+    "min_channel_note": "10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling"
+   }
+  },
+  "clock_entry_clear": {
+   "verdict": "FAIL",
+   "errors": [
+    "io.tcl: clock entry clk_c2 (298.592, 596.128) over macro dsfd_qbank_S#6 [267.948, 570.252, 328.428, 596.172]"
+   ],
+   "n_errors": 1,
+   "info": {
+    "applies": true,
+    "entries": 49,
+    "macros": 76
+   }
+  },
+  "island_macro_clear": {
+   "verdict": "NA",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": false,
+    "reason": "no island reservations"
+   }
+  },
+  "macro_pin_grid": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "macros": 76,
+    "pins": 30961,
+    "tracks": "make_tracks.tcl",
+    "worst_off_nm": 0.0
+   }
+  },
+  "macro_instances": {
+   "verdict": "FAIL",
+   "errors": [
+    "placed macro u_r0.u_bn0: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_bn1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_bn2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_bn3: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_bs0: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_bs1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_bs2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_bs3: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_cf: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_e0: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_e1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_e2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_e3: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_e4: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_e4e.u_view: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_e4w.u_view: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_n0: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_n1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_n10: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_n11: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_n2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_n3: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_n4: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_n5: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_n6: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_n7: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_n8: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_n9: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_rg1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_rg2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_s0: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_s1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_s2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_s3: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_s4: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_t0: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_t0__payload: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_t1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_t1__payload: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+    "placed macro u_r0.u_t2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)"
+   ],
+   "n_errors": 76,
+   "info": {
+    "applies": true,
+    "placed": 76,
+    "resolved": 0
+   }
+  }
+ },
+ "issues": [
+  "duplicate_modules: module dsfd_bf_front_roots defined 2 times (dsfd_bf_front_roots.sv, dsfd_bf_front_roots_bb.v)",
+  "duplicate_modules: module dsfd_cfifo_crs4 defined 2 times (dsfd_cfifo_crs4.sv, dsfd_cfifo_crs4_bb.v)",
+  "duplicate_modules: module ot_s81_cfg7_seq defined 2 times (ot_s81_cfg7_seq.sv, ot_s81_cfg7_seq_bb.v)",
+  "duplicate_modules: module ot_s81_cfg7_seq_bfp defined 2 times (ot_s81_cfg7_seq_bfp.sv, ot_s81_cfg7_seq_bfp_bb.v)",
+  "duplicate_modules: module ot_v41_bf_col defined 2 times (ot_v41_bf_col.sv, ot_v41_bf_col_bb.v)",
+  "duplicate_modules: module ot_v41_rom_elem_q_qxpq_w10_gb defined 2 times (ot_v41_rom_elem_q_qxpq_w10_gb.sv, ot_v41_rom_elem_q_qxpq_w10_gb_bb.v)",
+  "clock_entry_clear: io.tcl: clock entry clk_c2 (298.592, 596.128) over macro dsfd_qbank_S#6 [267.948, 570.252, 328.428, 596.172]",
+  "macro_instances: placed macro u_r0.u_bn0: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_bn1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_bn2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_bn3: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_bs0: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_bs1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_bs2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_bs3: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_cf: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_e0: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_e1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_e2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_e3: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_e4: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_e4e.u_view: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_e4w.u_view: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_n0: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_n1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_n10: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_n11: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_n2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_n3: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_n4: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_n5: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_n6: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_n7: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_n8: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_n9: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_rg1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_rg2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_s0: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_s1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_s2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_s3: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_s4: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_t0: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_t0__payload: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_t1: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_t1__payload: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)",
+  "macro_instances: placed macro u_r0.u_t2: component 'u_r0' is neither an instance nor a generate block of module col_h9_r0_p2__t1__cl9f71e63d (path from col_h9_r0_p2__t1__cl9f71e63d)"
+ ],
+ "deferred": [
+  "RTL elaboration/SELRANGE",
+  "synthesis face/fanout/port binding/LEC",
+  "placed and routed PG",
+  "TT setup / FF hold",
+  "routed LEC"
+ ]
+}
