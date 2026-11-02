@@ -10,7 +10,7 @@ from pathlib import Path
 DRIVER = '''# Run this driver with the normal GRT make target's loaded environment.
 # PRE installs after load_design; this outer body also cleans up failed hooks.
 set ot_pg_grt_code [catch {
-  source $::env(SCRIPTS_DIR)/global_route.tcl
+  source $::env(SCRIPTS_DIR)/global_route.native_pg_original.tcl
 } ot_pg_grt_result ot_pg_grt_options]
 set ot_pg_grt_cleanup_code 0
 if {[info commands ot_native_pg_status] ne ""} {
@@ -38,9 +38,9 @@ def hook(text, key, kit):
         stripped=line.strip()
         if re.match(r'^(ifeq|ifneq|ifdef|ifndef)\b', stripped): conditional += 1
         if re.match(r'^endif\b', stripped): conditional -= 1
-        match=re.match(rf'^(override\s+)?export\s+{key}\s*(\?=|:=|=)\s*(.*)$',line)
+        match=re.match(rf'^(override\s+)?export\s+{key}\s*(\?=|:=|=)\s*(.*)$',stripped)
         if not match:
-            if re.match(rf'^(?:override\s+)?(?:export\s+)?{key}\s*[:?+!]?=',line):
+            if re.match(rf'^(?:override\s+)?(?:export\s+)?{key}\s*[:?+!]?=',stripped):
                 raise ValueError('unsupported hook assignment: '+line)
             continue
         if conditional: raise ValueError('conditional hook assignment: '+key)
@@ -66,7 +66,7 @@ def stage(kit, module, helper):
     hooks = {k: hook(before.decode(), k, kit) for k in ('PRE_GLOBAL_ROUTE_TCL', 'POST_GLOBAL_ROUTE_TCL')}
     names = ['nativepgbirth.so', 'native_pg_birth_pre.tcl', 'native_pg_birth_post.tcl',
              'NATIVE_PG_BIRTH_ADAPTER.json', 'native_pg_binding.before_birth.tcl']
-    names += ['native_pg_birth_global_route.tcl']
+    names += ['native_pg_birth_global_route.tcl', 'native_pg_birth_wrap_runtime.py']
     if any((kit/n).exists() for n in names):
         raise ValueError('refuse existing PG callback adapter/output')
     if not module.is_file() or not helper.is_file():
@@ -89,14 +89,16 @@ def stage(kit, module, helper):
     (kit/'native_pg_birth_pre.tcl').write_text(pre)
     (kit/'native_pg_birth_post.tcl').write_text(post)
     (kit/'native_pg_birth_global_route.tcl').write_text(DRIVER)
+    shutil.copy2(Path(__file__).with_name('wrap_runtime.py'), kit/'native_pg_birth_wrap_runtime.py')
     config.write_bytes(before + b'\n# Explicit native PG birth callback adapter; original hook bodies retained.\n'
         b'override export PRE_GLOBAL_ROUTE_TCL = /work/native_pg_birth_pre.tcl\n'
         b'override export POST_GLOBAL_ROUTE_TCL = /work/native_pg_birth_post.tcl\n')
     receipt = dict(schema='opentallas.native-pg-grt-adapter.v1', status='STAGED_NOT_RUN',
         config_before_sha256=hashlib.sha256(before).hexdigest(), config_after_sha256=sha(config),
         original_hooks=hooks, original_helper_sha256=old_helper_sha,
-        files={n:sha(kit/n) for n in names[:3] + ['native_pg_binding.tcl', 'native_pg_birth_global_route.tcl']},
+        files={n:sha(kit/n) for n in names[:3] + ['native_pg_binding.tcl', 'native_pg_birth_global_route.tcl', 'native_pg_birth_wrap_runtime.py']},
         required_driver='/work/native_pg_birth_global_route.tcl', required_env={'OT_PG_STRICT':'1'},
+        runtime_prepare='After MM patch, inside own container: python3 -I /work/native_pg_birth_wrap_runtime.py /OpenROAD-flow-scripts/flow/scripts --driver /work/native_pg_birth_global_route.tcl',
         dispatch_ready=False,
         scope='Opt-in fresh-copy GRT/MM process only; no CTS/detail-route/child-process coverage claim',
         source_rtl_changed=False, original_provenance_overwritten=False, physical_release=False)

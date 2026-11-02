@@ -51,6 +51,18 @@ on an intervening error. The generated driver cleans up on failure and preserves
 the original body error if cleanup also fails. Staging records this required
 driver and remains `dispatch_ready=false` until the actual owner launcher is
 reviewed; it does not rewrite a make target or dispatch a job.
+To retain ordinary `make do-5_1_grt`, the staged runtime preparer wraps that
+new container's stock entry point after the normal MM patch, preserving the
+entire original stage byte-for-byte in an adjacent file. Inside the owned
+container, before the ordinary make command, run:
+
+```
+python3 -I /work/native_pg_birth_wrap_runtime.py /OpenROAD-flow-scripts/flow/scripts --driver /work/native_pg_birth_global_route.tcl
+```
+
+It requires the exact single loaded-4CTS anchor, refuses rewrapping, and then
+ordinary make runs the cleanup driver which sources the preserved stock body.
+Never apply this preparer to a host or another job's runtime.
 A separate process needs its own installation. Database/library/supply reloads
 inside an active transaction refuse.
 
