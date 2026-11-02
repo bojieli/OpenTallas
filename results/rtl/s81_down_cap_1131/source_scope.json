@@ -1,0 +1,254 @@
+[
+  {
+    "family": 0,
+    "frame": "u_f_0L01",
+    "source_rows": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "cfg": {
+      "obase": 896,
+      "ops": 0,
+      "np": 0,
+      "fmt": 2,
+      "rbase": 0,
+      "rcnt": 104,
+      "rsplit": 0,
+      "lo32": 0,
+      "hi32": 0
+    },
+    "source_gold": "fresh all4rank source K-segment witnesses; exact canonical FP32 and BF16",
+    "inputs": [
+      {
+        "edge": 500,
+        "tag": 1093,
+        "data": 981836768
+      },
+      {
+        "edge": 501,
+        "tag": 9285,
+        "data": 1017886456
+      },
+      {
+        "edge": 504,
+        "tag": 17477,
+        "data": 998417996
+      },
+      {
+        "edge": 505,
+        "tag": 25669,
+        "data": 1024755758
+      },
+      {
+        "edge": 522,
+        "tag": 549,
+        "data": 993928064
+      },
+      {
+        "edge": 523,
+        "tag": 8741,
+        "data": 3174713300
+      },
+      {
+        "edge": 525,
+        "tag": 16933,
+        "data": 1032177564
+      },
+      {
+        "edge": 526,
+        "tag": 25125,
+        "data": 3183062582
+      },
+      {
+        "edge": 534,
+        "tag": 37,
+        "data": 3162757393
+      },
+      {
+        "edge": 535,
+        "tag": 8229,
+        "data": 992321200
+      },
+      {
+        "edge": 538,
+        "tag": 16421,
+        "data": 1017852215
+      },
+      {
+        "edge": 539,
+        "tag": 24613,
+        "data": 3171154886
+      }
+    ]
+  },
+  {
+    "family": 1,
+    "frame": "u_f_1L03",
+    "source_rows": [
+      246,
+      247,
+      248,
+      249
+    ],
+    "cfg": {
+      "obase": 896,
+      "ops": 0,
+      "np": 0,
+      "fmt": 2,
+      "rbase": 208,
+      "rcnt": 56,
+      "rsplit": 0,
+      "lo32": 0,
+      "hi32": 0
+    },
+    "source_gold": "fresh all4rank source K-segment witnesses; exact canonical FP32 and BF16",
+    "inputs": [
+      {
+        "edge": 500,
+        "tag": 2015269,
+        "data": 3148331352
+      },
+      {
+        "edge": 501,
+        "tag": 2023461,
+        "data": 3176208114
+      },
+      {
+        "edge": 507,
+        "tag": 2016325,
+        "data": 1008449452
+      },
+      {
+        "edge": 508,
+        "tag": 2024517,
+        "data": 3160904528
+      },
+      {
+        "edge": 510,
+        "tag": 2031653,
+        "data": 3184960776
+      },
+      {
+        "edge": 511,
+        "tag": 2039845,
+        "data": 992381036
+      },
+      {
+        "edge": 518,
+        "tag": 2032165,
+        "data": 1027932993
+      },
+      {
+        "edge": 519,
+        "tag": 2040357,
+        "data": 3173239578
+      },
+      {
+        "edge": 522,
+        "tag": 2032709,
+        "data": 3140069376
+      },
+      {
+        "edge": 523,
+        "tag": 2040901,
+        "data": 1011696940
+      },
+      {
+        "edge": 530,
+        "tag": 2015781,
+        "data": 1020832808
+      },
+      {
+        "edge": 531,
+        "tag": 2023973,
+        "data": 3176969088
+      }
+    ]
+  },
+  {
+    "family": 2,
+    "frame": "u_f_3L01",
+    "source_rows": [
+      528,
+      529,
+      530,
+      531
+    ],
+    "cfg": {
+      "obase": 896,
+      "ops": 0,
+      "np": 0,
+      "fmt": 2,
+      "rbase": 528,
+      "rcnt": 56,
+      "rsplit": 0,
+      "lo32": 0,
+      "hi32": 0
+    },
+    "source_gold": "fresh all4rank source K-segment witnesses; exact canonical FP32 and BF16",
+    "inputs": [
+      {
+        "edge": 500,
+        "tag": 4326469,
+        "data": 1001213796
+      },
+      {
+        "edge": 501,
+        "tag": 4334661,
+        "data": 999802820
+      },
+      {
+        "edge": 504,
+        "tag": 4342853,
+        "data": 1016160908
+      },
+      {
+        "edge": 505,
+        "tag": 4351045,
+        "data": 3179638868
+      },
+      {
+        "edge": 522,
+        "tag": 4325925,
+        "data": 3180199889
+      },
+      {
+        "edge": 523,
+        "tag": 4334117,
+        "data": 1033333050
+      },
+      {
+        "edge": 525,
+        "tag": 4342309,
+        "data": 3168776972
+      },
+      {
+        "edge": 526,
+        "tag": 4350501,
+        "data": 3154799916
+      },
+      {
+        "edge": 534,
+        "tag": 4325413,
+        "data": 3167496168
+      },
+      {
+        "edge": 535,
+        "tag": 4333605,
+        "data": 3173990655
+      },
+      {
+        "edge": 538,
+        "tag": 4341797,
+        "data": 3177125074
+      },
+      {
+        "edge": 539,
+        "tag": 4349989,
+        "data": 1025440434
+      }
+    ]
+  }
+]

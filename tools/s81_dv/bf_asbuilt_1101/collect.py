@@ -4,16 +4,25 @@ from pathlib import Path
 import collections
 import hashlib
 import json
+import re
 import sys
 
 
-def collect(run):
+def collect(run,extra_positive=()):
     run=Path(run);manifest=json.loads((run/'manifest.json').read_text());source=Path(manifest['source'])
+    if any(not re.fullmatch(r'[a-z0-9_]+',name) for name in extra_positive):raise ValueError('invalid extra replay name')
+    positive_names=('full','tail','router',*extra_positive)
     checks={}
-    for name in ('full','tail','router','descriptor_fault','payload_fault'):
+    shapes={}
+    for name in (*positive_names,'descriptor_fault','payload_fault'):
         path=run/'replay'/name/'check.json'
         checks[name]=json.loads(path.read_text()) if path.exists() else dict(pass_=False,errors=['missing completed checker'])
-    positives=all(checks[n].get('pass') for n in ('full','tail','router'))
+        if name in positive_names:
+            meta=json.loads((run/'replay'/name/'meta.json').read_text())
+            if meta['shape'].split('|')[0]!=manifest['master']+'_'+manifest['variant']:
+                raise ValueError('replay is not the selected source frame class')
+            shapes[name]={k:meta[k] for k in ('op','nrows','seg','nseg','field_phase','die_frame')}
+    positives=all(checks[n].get('pass') for n in positive_names)
     controls=all(checks[n].get('pass') is False and checks[n].get('errors') and checks[n].get('summary',{}).get('end')
                  for n in ('descriptor_fault','payload_fault'))
     def trace(path):
@@ -27,6 +36,7 @@ def collect(run):
                 clock_ps=833,static_replay=positives,controls_caught=bool(controls),trace_lockstep=lockstep,
                 native_family_hold=bool(family),payload_skew_edges=manifest['payload_skew_edges'],
                 xo_forwarding_qualification=manifest.get('xo_forwarding_qualification','CHECKED'),
+                tested_shapes=shapes,
                 cases={n:dict(passed=c.get('pass'),errors=c.get('errors',[])[:12],end=c.get('summary',{}).get('end')) for n,c in checks.items()},
                 production_enabled=False,added_cycles=0)
     (run/'check.json').write_text(json.dumps(result,indent=2)+'\n')
@@ -49,7 +59,7 @@ def collect(run):
         rec['asbuilt_source_qualification']=dict(status='PASS_STATIC_REPLAY',clock_ps=833,
             payload_control_caught=not checks['payload_fault']['pass'],one_edge_control_caught=not checks['descriptor_fault']['pass'],
             source_sha256=hashes,schedule_sha256=hashlib.sha256(Path(manifest['schedule']).read_bytes()).hexdigest(),
-            scope=result['scope'],trace_lockstep=True,cases=['six-row segment0','five-row tail segment3','one-row router segment4'],
+            scope=result['scope'],trace_lockstep=True,cases=shapes,
             binding=manifest['hard_cfg_parameters'],idle_q_assumption=manifest['idle_q_assumption'],native_family_hold=True,
             payload_skew_edges=manifest['payload_skew_edges'],validated_ops=['attn.wo_a','ffn.router'],
             xo_forwarding_qualification=result['xo_forwarding_qualification'])
@@ -57,4 +67,4 @@ def collect(run):
     return 0
 
 
-if __name__=='__main__':sys.exit(collect(sys.argv[1]))
+if __name__=='__main__':sys.exit(collect(sys.argv[1],sys.argv[2:]))

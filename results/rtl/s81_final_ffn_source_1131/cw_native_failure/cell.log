@@ -1,0 +1,9 @@
+CELL k0 B000000000 shift000000000000000000000000ffffffff slice000000000000000000000000ffffffff want000000000000000000000000ffffffff
+CELL k1 B3ffffffe0 shift0000000000000000ffffffff00000000 slice000000000000000000000000ffffffff want0000000000000000ffffffff00000000
+CELL k2 B3ffffffc0 shift00000000ffffffff0000000000000000 slice000000000000000000000000ffffffff want00000000ffffffff0000000000000000
+CELL k3 B3ffffffa0 shiftffffffff000000000000000000000000 slice000000000000000000000000ffffffff wantffffffff000000000000000000000000
+CELL_ERRORS 3
+- tb.sv:12: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4ns; walltime 0.000 s; speed 42.873 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

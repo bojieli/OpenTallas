@@ -1,0 +1,986 @@
+{
+  "issue_31": {
+    "issue": 31,
+    "cwext": 153,
+    "cwreg": 156,
+    "firstwrite": 158,
+    "lastwrite": 189,
+    "writes": 64,
+    "rdext": 184,
+    "rdreg": 187,
+    "firstread": 190,
+    "lastread": 197,
+    "reads": 16,
+    "native": 8,
+    "public": 8,
+    "collisions": 0,
+    "stale": 0,
+    "errors": 0,
+    "returncode": 0,
+    "qualified": true,
+    "read_events": [
+      {
+        "bank": 0,
+        "edge": 190,
+        "row": 112
+      },
+      {
+        "bank": 1,
+        "edge": 190,
+        "row": 112
+      },
+      {
+        "bank": 0,
+        "edge": 191,
+        "row": 113
+      },
+      {
+        "bank": 1,
+        "edge": 191,
+        "row": 113
+      },
+      {
+        "bank": 0,
+        "edge": 192,
+        "row": 114
+      },
+      {
+        "bank": 1,
+        "edge": 192,
+        "row": 114
+      },
+      {
+        "bank": 0,
+        "edge": 193,
+        "row": 115
+      },
+      {
+        "bank": 1,
+        "edge": 193,
+        "row": 115
+      },
+      {
+        "bank": 0,
+        "edge": 194,
+        "row": 116
+      },
+      {
+        "bank": 1,
+        "edge": 194,
+        "row": 116
+      },
+      {
+        "bank": 0,
+        "edge": 195,
+        "row": 117
+      },
+      {
+        "bank": 1,
+        "edge": 195,
+        "row": 117
+      },
+      {
+        "bank": 0,
+        "edge": 196,
+        "row": 118
+      },
+      {
+        "bank": 1,
+        "edge": 196,
+        "row": 118
+      },
+      {
+        "bank": 0,
+        "edge": 197,
+        "row": 119
+      },
+      {
+        "bank": 1,
+        "edge": 197,
+        "row": 119
+      }
+    ],
+    "native_publication_edges": [
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199
+    ],
+    "public_publication_edges": [
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199,
+      200
+    ],
+    "physical_same_address_read_write_qualified": false
+  },
+  "issue_0": {
+    "issue": 0,
+    "cwext": 153,
+    "cwreg": 156,
+    "firstwrite": 158,
+    "lastwrite": 189,
+    "writes": 64,
+    "rdext": 153,
+    "rdreg": 156,
+    "firstread": 159,
+    "lastread": 166,
+    "reads": 16,
+    "native": 8,
+    "public": 8,
+    "collisions": 2,
+    "stale": 62,
+    "errors": 16,
+    "returncode": 0,
+    "qualified": false,
+    "read_events": [
+      {
+        "bank": 0,
+        "edge": 159,
+        "row": 112
+      },
+      {
+        "bank": 1,
+        "edge": 159,
+        "row": 112
+      },
+      {
+        "bank": 0,
+        "edge": 160,
+        "row": 113
+      },
+      {
+        "bank": 1,
+        "edge": 160,
+        "row": 113
+      },
+      {
+        "bank": 0,
+        "edge": 161,
+        "row": 114
+      },
+      {
+        "bank": 1,
+        "edge": 161,
+        "row": 114
+      },
+      {
+        "bank": 0,
+        "edge": 162,
+        "row": 115
+      },
+      {
+        "bank": 1,
+        "edge": 162,
+        "row": 115
+      },
+      {
+        "bank": 0,
+        "edge": 163,
+        "row": 116
+      },
+      {
+        "bank": 1,
+        "edge": 163,
+        "row": 116
+      },
+      {
+        "bank": 0,
+        "edge": 164,
+        "row": 117
+      },
+      {
+        "bank": 1,
+        "edge": 164,
+        "row": 117
+      },
+      {
+        "bank": 0,
+        "edge": 165,
+        "row": 118
+      },
+      {
+        "bank": 1,
+        "edge": 165,
+        "row": 118
+      },
+      {
+        "bank": 0,
+        "edge": 166,
+        "row": 119
+      },
+      {
+        "bank": 1,
+        "edge": 166,
+        "row": 119
+      }
+    ],
+    "native_publication_edges": [
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168
+    ],
+    "public_publication_edges": [
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169
+    ],
+    "physical_same_address_read_write_qualified": false
+  },
+  "issue_15": {
+    "issue": 15,
+    "cwext": 153,
+    "cwreg": 156,
+    "firstwrite": 158,
+    "lastwrite": 189,
+    "writes": 64,
+    "rdext": 168,
+    "rdreg": 171,
+    "firstread": 174,
+    "lastread": 181,
+    "reads": 16,
+    "native": 8,
+    "public": 8,
+    "collisions": 2,
+    "stale": 22,
+    "errors": 6,
+    "returncode": 0,
+    "qualified": false,
+    "read_events": [
+      {
+        "bank": 0,
+        "edge": 174,
+        "row": 112
+      },
+      {
+        "bank": 1,
+        "edge": 174,
+        "row": 112
+      },
+      {
+        "bank": 0,
+        "edge": 175,
+        "row": 113
+      },
+      {
+        "bank": 1,
+        "edge": 175,
+        "row": 113
+      },
+      {
+        "bank": 0,
+        "edge": 176,
+        "row": 114
+      },
+      {
+        "bank": 1,
+        "edge": 176,
+        "row": 114
+      },
+      {
+        "bank": 0,
+        "edge": 177,
+        "row": 115
+      },
+      {
+        "bank": 1,
+        "edge": 177,
+        "row": 115
+      },
+      {
+        "bank": 0,
+        "edge": 178,
+        "row": 116
+      },
+      {
+        "bank": 1,
+        "edge": 178,
+        "row": 116
+      },
+      {
+        "bank": 0,
+        "edge": 179,
+        "row": 117
+      },
+      {
+        "bank": 1,
+        "edge": 179,
+        "row": 117
+      },
+      {
+        "bank": 0,
+        "edge": 180,
+        "row": 118
+      },
+      {
+        "bank": 1,
+        "edge": 180,
+        "row": 118
+      },
+      {
+        "bank": 0,
+        "edge": 181,
+        "row": 119
+      },
+      {
+        "bank": 1,
+        "edge": 181,
+        "row": 119
+      }
+    ],
+    "native_publication_edges": [
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183
+    ],
+    "public_publication_edges": [
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184
+    ],
+    "physical_same_address_read_write_qualified": false
+  },
+  "issue_23": {
+    "issue": 23,
+    "cwext": 153,
+    "cwreg": 156,
+    "firstwrite": 158,
+    "lastwrite": 189,
+    "writes": 64,
+    "rdext": 176,
+    "rdreg": 179,
+    "firstread": 182,
+    "lastread": 189,
+    "reads": 16,
+    "native": 8,
+    "public": 8,
+    "collisions": 2,
+    "stale": 2,
+    "errors": 2,
+    "returncode": 0,
+    "qualified": false,
+    "read_events": [
+      {
+        "bank": 0,
+        "edge": 182,
+        "row": 112
+      },
+      {
+        "bank": 1,
+        "edge": 182,
+        "row": 112
+      },
+      {
+        "bank": 0,
+        "edge": 183,
+        "row": 113
+      },
+      {
+        "bank": 1,
+        "edge": 183,
+        "row": 113
+      },
+      {
+        "bank": 0,
+        "edge": 184,
+        "row": 114
+      },
+      {
+        "bank": 1,
+        "edge": 184,
+        "row": 114
+      },
+      {
+        "bank": 0,
+        "edge": 185,
+        "row": 115
+      },
+      {
+        "bank": 1,
+        "edge": 185,
+        "row": 115
+      },
+      {
+        "bank": 0,
+        "edge": 186,
+        "row": 116
+      },
+      {
+        "bank": 1,
+        "edge": 186,
+        "row": 116
+      },
+      {
+        "bank": 0,
+        "edge": 187,
+        "row": 117
+      },
+      {
+        "bank": 1,
+        "edge": 187,
+        "row": 117
+      },
+      {
+        "bank": 0,
+        "edge": 188,
+        "row": 118
+      },
+      {
+        "bank": 1,
+        "edge": 188,
+        "row": 118
+      },
+      {
+        "bank": 0,
+        "edge": 189,
+        "row": 119
+      },
+      {
+        "bank": 1,
+        "edge": 189,
+        "row": 119
+      }
+    ],
+    "native_publication_edges": [
+      184,
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191
+    ],
+    "public_publication_edges": [
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192
+    ],
+    "physical_same_address_read_write_qualified": false
+  },
+  "issue_27": {
+    "issue": 27,
+    "cwext": 153,
+    "cwreg": 156,
+    "firstwrite": 158,
+    "lastwrite": 189,
+    "writes": 64,
+    "rdext": 180,
+    "rdreg": 183,
+    "firstread": 186,
+    "lastread": 193,
+    "reads": 16,
+    "native": 8,
+    "public": 8,
+    "collisions": 0,
+    "stale": 0,
+    "errors": 0,
+    "returncode": 0,
+    "qualified": true,
+    "read_events": [
+      {
+        "bank": 0,
+        "edge": 186,
+        "row": 112
+      },
+      {
+        "bank": 1,
+        "edge": 186,
+        "row": 112
+      },
+      {
+        "bank": 0,
+        "edge": 187,
+        "row": 113
+      },
+      {
+        "bank": 1,
+        "edge": 187,
+        "row": 113
+      },
+      {
+        "bank": 0,
+        "edge": 188,
+        "row": 114
+      },
+      {
+        "bank": 1,
+        "edge": 188,
+        "row": 114
+      },
+      {
+        "bank": 0,
+        "edge": 189,
+        "row": 115
+      },
+      {
+        "bank": 1,
+        "edge": 189,
+        "row": 115
+      },
+      {
+        "bank": 0,
+        "edge": 190,
+        "row": 116
+      },
+      {
+        "bank": 1,
+        "edge": 190,
+        "row": 116
+      },
+      {
+        "bank": 0,
+        "edge": 191,
+        "row": 117
+      },
+      {
+        "bank": 1,
+        "edge": 191,
+        "row": 117
+      },
+      {
+        "bank": 0,
+        "edge": 192,
+        "row": 118
+      },
+      {
+        "bank": 1,
+        "edge": 192,
+        "row": 118
+      },
+      {
+        "bank": 0,
+        "edge": 193,
+        "row": 119
+      },
+      {
+        "bank": 1,
+        "edge": 193,
+        "row": 119
+      }
+    ],
+    "native_publication_edges": [
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195
+    ],
+    "public_publication_edges": [
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196
+    ],
+    "physical_same_address_read_write_qualified": false
+  },
+  "issue_25": {
+    "issue": 25,
+    "cwext": 153,
+    "cwreg": 156,
+    "firstwrite": 158,
+    "lastwrite": 189,
+    "writes": 64,
+    "rdext": 178,
+    "rdreg": 181,
+    "firstread": 184,
+    "lastread": 191,
+    "reads": 16,
+    "native": 8,
+    "public": 8,
+    "collisions": 0,
+    "stale": 0,
+    "errors": 0,
+    "returncode": 0,
+    "qualified": true,
+    "read_events": [
+      {
+        "bank": 0,
+        "edge": 184,
+        "row": 112
+      },
+      {
+        "bank": 1,
+        "edge": 184,
+        "row": 112
+      },
+      {
+        "bank": 0,
+        "edge": 185,
+        "row": 113
+      },
+      {
+        "bank": 1,
+        "edge": 185,
+        "row": 113
+      },
+      {
+        "bank": 0,
+        "edge": 186,
+        "row": 114
+      },
+      {
+        "bank": 1,
+        "edge": 186,
+        "row": 114
+      },
+      {
+        "bank": 0,
+        "edge": 187,
+        "row": 115
+      },
+      {
+        "bank": 1,
+        "edge": 187,
+        "row": 115
+      },
+      {
+        "bank": 0,
+        "edge": 188,
+        "row": 116
+      },
+      {
+        "bank": 1,
+        "edge": 188,
+        "row": 116
+      },
+      {
+        "bank": 0,
+        "edge": 189,
+        "row": 117
+      },
+      {
+        "bank": 1,
+        "edge": 189,
+        "row": 117
+      },
+      {
+        "bank": 0,
+        "edge": 190,
+        "row": 118
+      },
+      {
+        "bank": 1,
+        "edge": 190,
+        "row": 118
+      },
+      {
+        "bank": 0,
+        "edge": 191,
+        "row": 119
+      },
+      {
+        "bank": 1,
+        "edge": 191,
+        "row": 119
+      }
+    ],
+    "native_publication_edges": [
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193
+    ],
+    "public_publication_edges": [
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194
+    ],
+    "physical_same_address_read_write_qualified": false
+  },
+  "issue_24": {
+    "issue": 24,
+    "cwext": 153,
+    "cwreg": 156,
+    "firstwrite": 158,
+    "lastwrite": 189,
+    "writes": 64,
+    "rdext": 177,
+    "rdreg": 180,
+    "firstread": 183,
+    "lastread": 190,
+    "reads": 16,
+    "native": 8,
+    "public": 8,
+    "collisions": 0,
+    "stale": 0,
+    "errors": 0,
+    "returncode": 0,
+    "qualified": true,
+    "read_events": [
+      {
+        "bank": 0,
+        "edge": 183,
+        "row": 112
+      },
+      {
+        "bank": 1,
+        "edge": 183,
+        "row": 112
+      },
+      {
+        "bank": 0,
+        "edge": 184,
+        "row": 113
+      },
+      {
+        "bank": 1,
+        "edge": 184,
+        "row": 113
+      },
+      {
+        "bank": 0,
+        "edge": 185,
+        "row": 114
+      },
+      {
+        "bank": 1,
+        "edge": 185,
+        "row": 114
+      },
+      {
+        "bank": 0,
+        "edge": 186,
+        "row": 115
+      },
+      {
+        "bank": 1,
+        "edge": 186,
+        "row": 115
+      },
+      {
+        "bank": 0,
+        "edge": 187,
+        "row": 116
+      },
+      {
+        "bank": 1,
+        "edge": 187,
+        "row": 116
+      },
+      {
+        "bank": 0,
+        "edge": 188,
+        "row": 117
+      },
+      {
+        "bank": 1,
+        "edge": 188,
+        "row": 117
+      },
+      {
+        "bank": 0,
+        "edge": 189,
+        "row": 118
+      },
+      {
+        "bank": 1,
+        "edge": 189,
+        "row": 118
+      },
+      {
+        "bank": 0,
+        "edge": 190,
+        "row": 119
+      },
+      {
+        "bank": 1,
+        "edge": 190,
+        "row": 119
+      }
+    ],
+    "native_publication_edges": [
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192
+    ],
+    "public_publication_edges": [
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193
+    ],
+    "physical_same_address_read_write_qualified": false
+  },
+  "mut_payload_31": {
+    "issue": 31,
+    "cwext": 153,
+    "cwreg": 156,
+    "firstwrite": 158,
+    "lastwrite": 189,
+    "writes": 64,
+    "rdext": 184,
+    "rdreg": 187,
+    "firstread": 190,
+    "lastread": 197,
+    "reads": 16,
+    "native": 8,
+    "public": 8,
+    "collisions": 0,
+    "stale": 0,
+    "errors": 2,
+    "returncode": 0,
+    "qualified": false,
+    "read_events": [
+      {
+        "bank": 0,
+        "edge": 190,
+        "row": 112
+      },
+      {
+        "bank": 1,
+        "edge": 190,
+        "row": 112
+      },
+      {
+        "bank": 0,
+        "edge": 191,
+        "row": 113
+      },
+      {
+        "bank": 1,
+        "edge": 191,
+        "row": 113
+      },
+      {
+        "bank": 0,
+        "edge": 192,
+        "row": 114
+      },
+      {
+        "bank": 1,
+        "edge": 192,
+        "row": 114
+      },
+      {
+        "bank": 0,
+        "edge": 193,
+        "row": 115
+      },
+      {
+        "bank": 1,
+        "edge": 193,
+        "row": 115
+      },
+      {
+        "bank": 0,
+        "edge": 194,
+        "row": 116
+      },
+      {
+        "bank": 1,
+        "edge": 194,
+        "row": 116
+      },
+      {
+        "bank": 0,
+        "edge": 195,
+        "row": 117
+      },
+      {
+        "bank": 1,
+        "edge": 195,
+        "row": 117
+      },
+      {
+        "bank": 0,
+        "edge": 196,
+        "row": 118
+      },
+      {
+        "bank": 1,
+        "edge": 196,
+        "row": 118
+      },
+      {
+        "bank": 0,
+        "edge": 197,
+        "row": 119
+      },
+      {
+        "bank": 1,
+        "edge": 197,
+        "row": 119
+      }
+    ],
+    "native_publication_edges": [
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199
+    ],
+    "public_publication_edges": [
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199,
+      200
+    ],
+    "physical_same_address_read_write_qualified": false
+  }
+}

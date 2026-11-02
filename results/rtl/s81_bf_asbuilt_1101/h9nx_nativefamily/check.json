@@ -1,0 +1,98 @@
+{
+  "status": "PASS",
+  "scope": "BF-active as-built frame return composition; Q outputs held quiescent",
+  "clock_ps": 833,
+  "static_replay": true,
+  "controls_caught": true,
+  "trace_lockstep": true,
+  "native_family_hold": true,
+  "payload_skew_edges": 4,
+  "xo_forwarding_qualification": "NOT_APPLICABLE_NO_XO_PORT",
+  "tested_shapes": {
+    "full": {
+      "op": "attn.wo_a",
+      "nrows": 6,
+      "seg": 0,
+      "nseg": 4,
+      "field_phase": 106,
+      "die_frame": "u_f_1L03"
+    },
+    "tail": {
+      "op": "attn.wo_a",
+      "nrows": 4,
+      "seg": 3,
+      "nseg": 4,
+      "field_phase": 125,
+      "die_frame": "u_f_1L03"
+    },
+    "router": {
+      "op": "ffn.router",
+      "nrows": 2,
+      "seg": 4,
+      "nseg": 5,
+      "field_phase": 130,
+      "die_frame": "u_f_1L03"
+    },
+    "woa5": {
+      "op": "attn.wo_a",
+      "nrows": 5,
+      "seg": 3,
+      "nseg": 4,
+      "field_phase": 125,
+      "die_frame": "u_f_7L13"
+    },
+    "router1": {
+      "op": "ffn.router",
+      "nrows": 1,
+      "seg": 4,
+      "nseg": 5,
+      "field_phase": 130,
+      "die_frame": "u_f_7L13"
+    }
+  },
+  "cases": {
+    "full": {
+      "passed": true,
+      "errors": [],
+      "end": "END edges=3063 ret_words=6 xo_checked=0 fault=0"
+    },
+    "tail": {
+      "passed": true,
+      "errors": [],
+      "end": "END edges=3063 ret_words=4 xo_checked=0 fault=0"
+    },
+    "router": {
+      "passed": true,
+      "errors": [],
+      "end": "END edges=3063 ret_words=2 xo_checked=0 fault=0"
+    },
+    "woa5": {
+      "passed": true,
+      "errors": [],
+      "end": "END edges=3063 ret_words=5 xo_checked=0 fault=0"
+    },
+    "router1": {
+      "passed": true,
+      "errors": [],
+      "end": "END edges=3063 ret_words=1 xo_checked=0 fault=0"
+    },
+    "descriptor_fault": {
+      "passed": false,
+      "errors": [
+        "PLAN_MISMATCH predicted 6 words, got 6; first diff ((414, 1, (0, 0, 4), 1027219379, 0), (415, 1, (0, 0, 4), 1027219379, 0))"
+      ],
+      "end": "END edges=3063 ret_words=6 xo_checked=0 fault=0"
+    },
+    "payload_fault": {
+      "passed": false,
+      "errors": [
+        "MISMATCH edge 414 row 1 lo 0 k 0 got bcd1fe86/0 want 3d3a1fb3/0",
+        "MISMATCH edge 417 row 0 lo 0 k 0 got 3d3a1fb3/0 want bcd1fe86/0",
+        "PLAN_MISMATCH predicted 6 words, got 6; first diff ((414, 1, (0, 0, 4), 1027219379, 0), (414, 1, (0, 0, 4), 3167878790, 0))"
+      ],
+      "end": "END edges=3063 ret_words=6 xo_checked=0 fault=0"
+    }
+  },
+  "production_enabled": false,
+  "added_cycles": 0
+}

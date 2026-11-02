@@ -1,0 +1,7 @@
+# Reuse only unchanged non-down source placement plans
+
+The ordinary compiler rebuilt0L01 from the same fixture, reused70signature-checked non-down FP placement plans, and freshly solved all35down phases with the CAP score. Its actual176native mask files are byte-identical to the fresh full-field2b8caf13b canary, including weights, controls and source streams;126down source rows also pass released gold. Phase0 and BF generation still execute through their ordinary paths. No historical down ownership, assignment or CAP schedule is reused. No solver iteration count changes.
+
+The reuse context restores the original compiler function even on failure; callers use separate processes. It verifies source master/LK, matrix name/format/K/nseg/rows and legalised plan class; ordinary add_planned also checks that the freshly generated fixture stream equals the plan's stream. Pair-local/whole-field slot conversion occurs exactly once.
+
+Run: intel1 down_cap_reuse_canary_1131, unit3017618-1793579777. Hash gate then started separate down_cap_safe_fields_1131, unit3333930-1793580595,8GB4T,--crit,--disk50. One actual BoundDie/fixture load is shared through fork-isolated workers. Every field gets fresh native images, canonical down gold, zero single-frame FIN score and literal CFG tags. The batch is advancing, not a completed72-field claim. Scope remains rank0/BF_UNQUALIFIED, no simultaneous-frame/CW-storage/lease/mission admission.

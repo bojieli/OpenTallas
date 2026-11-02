@@ -1,0 +1,134 @@
+{
+  "status": "PASS_SOURCE_CAPTURE_ABI",
+  "scope": "source capture configuration, literal image tag and SRAM-address/format map only",
+  "actual_topology": {
+    "enabled": true,
+    "frames_per_slice": [
+      6,
+      6,
+      3,
+      3,
+      6,
+      6,
+      3,
+      3,
+      3,
+      3,
+      6,
+      6,
+      3,
+      3,
+      6,
+      6
+    ],
+    "die_sha": "a5778b981be90b3b95e1ad6179f5cee40f956f861382d6f711d55ef22e23056e"
+  },
+  "selected_CAP_family_by_sid": {
+    "0": "capc5r_e6",
+    "1": "capc5r_e6",
+    "2": "capc5r_w3",
+    "3": "capc5r_w3",
+    "4": "capc5r_e6",
+    "5": "capc5r_e6",
+    "6": "capc2_w3",
+    "7": "capc2_w3",
+    "8": "capc5r_w3",
+    "9": "capc5r_w3",
+    "10": "capc5r_e6",
+    "11": "capc5r_e6",
+    "12": "capc5r_w3",
+    "13": "capc5r_w3",
+    "14": "capc5r_e6",
+    "15": "capc5r_e6"
+  },
+  "CAP_timing_imported": false,
+  "arrival_qualified": false,
+  "production_enabled": false,
+  "ranks": [
+    {
+      "rank": 0,
+      "source_words": 8960,
+      "configs": 560,
+      "potential_pairing_slot_collisions": []
+    },
+    {
+      "rank": 1,
+      "source_words": 8960,
+      "configs": 560,
+      "potential_pairing_slot_collisions": []
+    },
+    {
+      "rank": 2,
+      "source_words": 8960,
+      "configs": 560,
+      "potential_pairing_slot_collisions": []
+    },
+    {
+      "rank": 3,
+      "source_words": 8960,
+      "configs": 560,
+      "potential_pairing_slot_collisions": []
+    }
+  ],
+  "images": [
+    {
+      "frame": "u_f_0L01",
+      "literal_CFG_tags": 630
+    },
+    {
+      "frame": "u_f_0L03",
+      "literal_CFG_tags": 595
+    },
+    {
+      "frame": "u_f_0R02",
+      "literal_CFG_tags": 595
+    },
+    {
+      "frame": "u_f_0L02",
+      "literal_CFG_tags": 630
+    },
+    {
+      "frame": "u_f_0R01",
+      "literal_CFG_tags": 595
+    },
+    {
+      "frame": "u_f_0R03",
+      "literal_CFG_tags": 595
+    },
+    {
+      "frame": "u_f_0L12",
+      "literal_CFG_tags": 630
+    },
+    {
+      "frame": "u_f_0L10",
+      "literal_CFG_tags": 630
+    },
+    {
+      "frame": "u_f_0L13",
+      "literal_CFG_tags": 595
+    },
+    {
+      "frame": "u_f_0R10",
+      "literal_CFG_tags": 595
+    },
+    {
+      "frame": "u_f_0R12",
+      "literal_CFG_tags": 595
+    },
+    {
+      "frame": "u_f_1L03",
+      "literal_CFG_tags": 630
+    },
+    {
+      "frame": "u_f_0R13",
+      "literal_CFG_tags": 595
+    },
+    {
+      "frame": "u_f_1L01",
+      "literal_CFG_tags": 665
+    }
+  ],
+  "source_words": 35840,
+  "literal_CFG_tags": 8575,
+  "potential_pairing_slot_collision_count": 0
+}
