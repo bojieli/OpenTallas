@@ -1,0 +1,9 @@
+# Independent new ret_score source-forest arithmetic check
+
+Three repaired source plans from the compiler owner: rank0 shared.w2 phase71, source rows0..3,246..249,528..531. The independent checker imports neither producer finish()/canonical() nor the producer static-return evaluator. It decodes each tag's original aligned sibling interval, recomputes that exact padded binary subtree from the newly released-weight Ksegment witness, requires each Ksegment once and one consistent source row, and finishes the actual returned subtrees in canonical association. All partial FP32 words,12 final FP32 values and12 BF16 values match fresh witnesses.
+
+Controls: flip one partial payload LSB, then independently swap two same-size sibling subtree tags while preserving the complete payload multiset. Both are rejected by partial ownership/value checks. The latter can preserve a commutative final root, so endpoint-only comparison is insufficient. This check concerns arithmetic association and membership, not observed chronological arrival order.
+
+Witness inputs: Intel1 /srv/opentallas-scratch2/claude/codex-ds-compiler-1101/down_allrank_inputs_1131/result/{down_source_kseg5.u32,down_source_bf16_in_fp32.u32}. Their exact hashes are recorded in check.json. Original new plans are down_cap_plan_retry2_1131/{u_f_0L01,u_f_1L03}.json and down_cap_native_gate_1131/u_f_3L01.json under the same compiler root. Copies here preserve the exact consumed source plans.
+
+Only these12 newly placed rank0 rows are checked here, not all35840 rows after new placement. No old80 normalization partial file is read. The compiler owner separately owns actual native CAP fault-free timing and CW→registered leaf/SRAM/RD leases; this independent source-arithmetic receipt grants no runtime/arrival/residency/physical/global START authority. No RTL, plan default or hardware adoption changes.

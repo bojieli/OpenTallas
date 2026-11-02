@@ -1,0 +1,1739 @@
+{
+ "frame": "u_f_0L01",
+ "phase": 71,
+ "old_single_cap_score": 4,
+ "new_single_cap_score": 0,
+ "source_rows": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "cfg": {
+  "obase": 896,
+  "ops": 0,
+  "np": 0,
+  "fmt": 2,
+  "rbase": 0,
+  "rcnt": 104,
+  "rsplit": 0,
+  "lo32": 0,
+  "hi32": 0
+ },
+ "elapsed": 7.408422470092773,
+ "plan": {
+  "schema": "opentallas.s81_dv.frame_return_plan.v1",
+  "master": "col_h10",
+  "win": 2,
+  "rst": 1,
+  "cf": 2,
+  "K": 2304,
+  "nseg": 5,
+  "super_rows": 2,
+  "rows": 4,
+  "topology": {
+   "nodes": {
+    "n0": {
+     "a": "e0.r0",
+     "link_a": 7,
+     "evidence_a": {
+      "source": "e0.r0",
+      "flat_link_edges": 6,
+      "added_edges": 1,
+      "link_edges": 7,
+      "lp_link_edges": 6,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e0.r1",
+     "link_b": 8,
+     "evidence_b": {
+      "source": "e0.r1",
+      "flat_link_edges": 7,
+      "added_edges": 1,
+      "link_edges": 8,
+      "lp_link_edges": 7,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n1": {
+     "a": "n0",
+     "link_a": 0,
+     "evidence_a": {
+      "source": "n0",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n2",
+     "link_b": 0,
+     "evidence_b": {
+      "source": "n2",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n10": {
+     "a": "e5w.r",
+     "link_a": 8,
+     "evidence_a": {
+      "source": "e5w.r",
+      "flat_link_edges": 5,
+      "added_edges": 3,
+      "link_edges": 8,
+      "lp_link_edges": 8,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e5e.r",
+     "link_b": 5,
+     "evidence_b": {
+      "source": "e5e.r",
+      "flat_link_edges": 2,
+      "added_edges": 3,
+      "link_edges": 5,
+      "lp_link_edges": 5,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n11": {
+     "a": "n9",
+     "link_a": 0,
+     "evidence_a": {
+      "source": "n9",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n13",
+     "link_b": 3,
+     "evidence_b": {
+      "source": "n13",
+      "flat_link_edges": 0,
+      "added_edges": 3,
+      "link_edges": 3,
+      "lp_link_edges": 3,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n12": {
+     "a": "e6.r0",
+     "link_a": 8,
+     "evidence_a": {
+      "source": "e6.r0",
+      "flat_link_edges": 7,
+      "added_edges": 1,
+      "link_edges": 8,
+      "lp_link_edges": 7,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e6.r1",
+     "link_b": 9,
+     "evidence_b": {
+      "source": "e6.r1",
+      "flat_link_edges": 8,
+      "added_edges": 1,
+      "link_edges": 9,
+      "lp_link_edges": 8,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n13": {
+     "a": "n12",
+     "link_a": 0,
+     "evidence_a": {
+      "source": "n12",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n14",
+     "link_b": 0,
+     "evidence_b": {
+      "source": "n14",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n14": {
+     "a": "e7.r0",
+     "link_a": 5,
+     "evidence_a": {
+      "source": "e7.r0",
+      "flat_link_edges": 4,
+      "added_edges": 1,
+      "link_edges": 5,
+      "lp_link_edges": 4,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e7.r1",
+     "link_b": 6,
+     "evidence_b": {
+      "source": "e7.r1",
+      "flat_link_edges": 5,
+      "added_edges": 1,
+      "link_edges": 6,
+      "lp_link_edges": 5,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n15": {
+     "a": "n7",
+     "link_a": 5,
+     "evidence_a": {
+      "source": "n7",
+      "flat_link_edges": 2,
+      "added_edges": 3,
+      "link_edges": 5,
+      "lp_link_edges": 5,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n23",
+     "link_b": 2,
+     "evidence_b": {
+      "source": "n23",
+      "flat_link_edges": 2,
+      "added_edges": 0,
+      "link_edges": 2,
+      "lp_link_edges": 2,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n16": {
+     "a": "e8.r0",
+     "link_a": 8,
+     "evidence_a": {
+      "source": "e8.r0",
+      "flat_link_edges": 7,
+      "added_edges": 1,
+      "link_edges": 8,
+      "lp_link_edges": 7,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e8.r1",
+     "link_b": 9,
+     "evidence_b": {
+      "source": "e8.r1",
+      "flat_link_edges": 8,
+      "added_edges": 1,
+      "link_edges": 9,
+      "lp_link_edges": 8,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n17": {
+     "a": "n16",
+     "link_a": 0,
+     "evidence_a": {
+      "source": "n16",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n18",
+     "link_b": 0,
+     "evidence_b": {
+      "source": "n18",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n18": {
+     "a": "e9.r0",
+     "link_a": 5,
+     "evidence_a": {
+      "source": "e9.r0",
+      "flat_link_edges": 4,
+      "added_edges": 1,
+      "link_edges": 5,
+      "lp_link_edges": 4,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e9.r1",
+     "link_b": 6,
+     "evidence_b": {
+      "source": "e9.r1",
+      "flat_link_edges": 5,
+      "added_edges": 1,
+      "link_edges": 6,
+      "lp_link_edges": 5,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n19": {
+     "a": "n17",
+     "link_a": 0,
+     "evidence_a": {
+      "source": "n17",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n21",
+     "link_b": 0,
+     "evidence_b": {
+      "source": "n21",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n2": {
+     "a": "e1w.r",
+     "link_a": 5,
+     "evidence_a": {
+      "source": "e1w.r",
+      "flat_link_edges": 5,
+      "added_edges": 0,
+      "link_edges": 5,
+      "lp_link_edges": 5,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e1e.r",
+     "link_b": 2,
+     "evidence_b": {
+      "source": "e1e.r",
+      "flat_link_edges": 2,
+      "added_edges": 0,
+      "link_edges": 2,
+      "lp_link_edges": 2,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n20": {
+     "a": "e10w.r",
+     "link_a": 11,
+     "evidence_a": {
+      "source": "e10w.r",
+      "flat_link_edges": 5,
+      "added_edges": 6,
+      "link_edges": 11,
+      "lp_link_edges": 11,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e10e.r",
+     "link_b": 3,
+     "evidence_b": {
+      "source": "e10e.r",
+      "flat_link_edges": 3,
+      "added_edges": 0,
+      "link_edges": 3,
+      "lp_link_edges": 3,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n21": {
+     "a": "n20",
+     "link_a": 0,
+     "evidence_a": {
+      "source": "n20",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n22",
+     "link_b": 0,
+     "evidence_b": {
+      "source": "n22",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n22": {
+     "a": "e11.r0",
+     "link_a": 12,
+     "evidence_a": {
+      "source": "e11.r0",
+      "flat_link_edges": 8,
+      "added_edges": 4,
+      "link_edges": 12,
+      "lp_link_edges": 11,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e11.r1",
+     "link_b": 13,
+     "evidence_b": {
+      "source": "e11.r1",
+      "flat_link_edges": 9,
+      "added_edges": 4,
+      "link_edges": 13,
+      "lp_link_edges": 12,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n23": {
+     "a": "n19",
+     "link_a": 1,
+     "evidence_a": {
+      "source": "n19",
+      "flat_link_edges": 1,
+      "added_edges": 0,
+      "link_edges": 1,
+      "lp_link_edges": 1,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n27",
+     "link_b": 5,
+     "evidence_b": {
+      "source": "n27",
+      "flat_link_edges": 1,
+      "added_edges": 4,
+      "link_edges": 5,
+      "lp_link_edges": 4,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n24": {
+     "a": "e12.r0",
+     "link_a": 9,
+     "evidence_a": {
+      "source": "e12.r0",
+      "flat_link_edges": 5,
+      "added_edges": 4,
+      "link_edges": 9,
+      "lp_link_edges": 8,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e12.r1",
+     "link_b": 10,
+     "evidence_b": {
+      "source": "e12.r1",
+      "flat_link_edges": 6,
+      "added_edges": 4,
+      "link_edges": 10,
+      "lp_link_edges": 9,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n25": {
+     "a": "n24",
+     "link_a": 4,
+     "evidence_a": {
+      "source": "n24",
+      "flat_link_edges": 0,
+      "added_edges": 4,
+      "link_edges": 4,
+      "lp_link_edges": 3,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n26",
+     "link_b": 0,
+     "evidence_b": {
+      "source": "n26",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n26": {
+     "a": "e13.r0",
+     "link_a": 9,
+     "evidence_a": {
+      "source": "e13.r0",
+      "flat_link_edges": 8,
+      "added_edges": 1,
+      "link_edges": 9,
+      "lp_link_edges": 8,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e13.r1",
+     "link_b": 10,
+     "evidence_b": {
+      "source": "e13.r1",
+      "flat_link_edges": 9,
+      "added_edges": 1,
+      "link_edges": 10,
+      "lp_link_edges": 9,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n27": {
+     "a": "n25",
+     "link_a": 0,
+     "evidence_a": {
+      "source": "n25",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n29",
+     "link_b": 0,
+     "evidence_b": {
+      "source": "n29",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n28": {
+     "a": "e14.r0",
+     "link_a": 6,
+     "evidence_a": {
+      "source": "e14.r0",
+      "flat_link_edges": 5,
+      "added_edges": 1,
+      "link_edges": 6,
+      "lp_link_edges": 5,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e14.r1",
+     "link_b": 7,
+     "evidence_b": {
+      "source": "e14.r1",
+      "flat_link_edges": 6,
+      "added_edges": 1,
+      "link_edges": 7,
+      "lp_link_edges": 6,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n29": {
+     "a": "n28",
+     "link_a": 0,
+     "evidence_a": {
+      "source": "n28",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n30",
+     "link_b": 0,
+     "evidence_b": {
+      "source": "n30",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n3": {
+     "a": "n1",
+     "link_a": 0,
+     "evidence_a": {
+      "source": "n1",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n5",
+     "link_b": 0,
+     "evidence_b": {
+      "source": "n5",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n30": {
+     "a": "e15w.r",
+     "link_a": 6,
+     "evidence_a": {
+      "source": "e15w.r",
+      "flat_link_edges": 6,
+      "added_edges": 0,
+      "link_edges": 6,
+      "lp_link_edges": 6,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e15e.r",
+     "link_b": 3,
+     "evidence_b": {
+      "source": "e15e.r",
+      "flat_link_edges": 3,
+      "added_edges": 0,
+      "link_edges": 3,
+      "lp_link_edges": 3,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n4": {
+     "a": "e2.r0",
+     "link_a": 4,
+     "evidence_a": {
+      "source": "e2.r0",
+      "flat_link_edges": 3,
+      "added_edges": 1,
+      "link_edges": 4,
+      "lp_link_edges": 3,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e2.r1",
+     "link_b": 5,
+     "evidence_b": {
+      "source": "e2.r1",
+      "flat_link_edges": 4,
+      "added_edges": 1,
+      "link_edges": 5,
+      "lp_link_edges": 4,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n5": {
+     "a": "n4",
+     "link_a": 0,
+     "evidence_a": {
+      "source": "n4",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n6",
+     "link_b": 0,
+     "evidence_b": {
+      "source": "n6",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n6": {
+     "a": "e3.r0",
+     "link_a": 8,
+     "evidence_a": {
+      "source": "e3.r0",
+      "flat_link_edges": 7,
+      "added_edges": 1,
+      "link_edges": 8,
+      "lp_link_edges": 7,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e3.r1",
+     "link_b": 9,
+     "evidence_b": {
+      "source": "e3.r1",
+      "flat_link_edges": 8,
+      "added_edges": 1,
+      "link_edges": 9,
+      "lp_link_edges": 8,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n7": {
+     "a": "n3",
+     "link_a": 1,
+     "evidence_a": {
+      "source": "n3",
+      "flat_link_edges": 1,
+      "added_edges": 0,
+      "link_edges": 1,
+      "lp_link_edges": 1,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n11",
+     "link_b": 1,
+     "evidence_b": {
+      "source": "n11",
+      "flat_link_edges": 1,
+      "added_edges": 0,
+      "link_edges": 1,
+      "lp_link_edges": 1,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n8": {
+     "a": "e4.r0",
+     "link_a": 4,
+     "evidence_a": {
+      "source": "e4.r0",
+      "flat_link_edges": 3,
+      "added_edges": 1,
+      "link_edges": 4,
+      "lp_link_edges": 3,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "e4.r1",
+     "link_b": 5,
+     "evidence_b": {
+      "source": "e4.r1",
+      "flat_link_edges": 4,
+      "added_edges": 1,
+      "link_edges": 5,
+      "lp_link_edges": 4,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    },
+    "n9": {
+     "a": "n8",
+     "link_a": 0,
+     "evidence_a": {
+      "source": "n8",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     },
+     "b": "n10",
+     "link_b": 0,
+     "evidence_b": {
+      "source": "n10",
+      "flat_link_edges": 0,
+      "added_edges": 0,
+      "link_edges": 0,
+      "lp_link_edges": 0,
+      "basis": "as-built RTL trace: measured endpoint-to-endpoint flop depth"
+     }
+    }
+   },
+   "root": "n15",
+   "root_link": 16,
+   "r1_skew": true
+  },
+  "frame_schedule": "/srv/opentallas-scratch2/claude/tok-ds-2/l0prog/fs/col_h10_l4_lp_asb_x_schedule.json",
+  "emission": {
+   "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+   "e0": 209,
+   "off": {
+    "0": 0,
+    "2": 0,
+    "3": 8,
+    "4": 8,
+    "6": 17,
+    "7": 17,
+    "8": 20,
+    "9": 20,
+    "11": 29,
+    "12": 29,
+    "13": 32,
+    "14": 32
+   },
+   "seg_extra": [
+    0,
+    0,
+    0,
+    0,
+    -14
+   ],
+   "cfifo": "dsfd_cfifo_crs4",
+   "land_e": 2,
+   "x_shift": -4,
+   "last_beat": [
+    56,
+    57,
+    59,
+    60,
+    62
+   ],
+   "edges": {
+    "e3": 265,
+    "e4": 265,
+    "e6": 285,
+    "e7": 285,
+    "e8": 289,
+    "e9": 289,
+    "e11": 294,
+    "e12": 295,
+    "e13": 297,
+    "e14": 298
+   },
+   "elem_extra": [
+    0,
+    0,
+    0,
+    0,
+    -14
+   ]
+  },
+  "placement": [
+   {
+    "pair": 3,
+    "field_slot": 0,
+    "super_row": 1,
+    "seg": 4,
+    "nseg": 5,
+    "rows": [
+     2,
+     3
+    ]
+   },
+   {
+    "pair": 4,
+    "field_slot": 1,
+    "super_row": 0,
+    "seg": 4,
+    "nseg": 5,
+    "rows": [
+     0,
+     1
+    ]
+   },
+   {
+    "pair": 6,
+    "field_slot": 2,
+    "super_row": 1,
+    "seg": 2,
+    "nseg": 5,
+    "rows": [
+     2,
+     3
+    ]
+   },
+   {
+    "pair": 7,
+    "field_slot": 3,
+    "super_row": 0,
+    "seg": 2,
+    "nseg": 5,
+    "rows": [
+     0,
+     1
+    ]
+   },
+   {
+    "pair": 8,
+    "field_slot": 4,
+    "super_row": 1,
+    "seg": 3,
+    "nseg": 5,
+    "rows": [
+     2,
+     3
+    ]
+   },
+   {
+    "pair": 9,
+    "field_slot": 5,
+    "super_row": 0,
+    "seg": 3,
+    "nseg": 5,
+    "rows": [
+     0,
+     1
+    ]
+   },
+   {
+    "pair": 11,
+    "field_slot": 6,
+    "super_row": 0,
+    "seg": 0,
+    "nseg": 5,
+    "rows": [
+     0,
+     1
+    ]
+   },
+   {
+    "pair": 12,
+    "field_slot": 7,
+    "super_row": 1,
+    "seg": 1,
+    "nseg": 5,
+    "rows": [
+     2,
+     3
+    ]
+   },
+   {
+    "pair": 13,
+    "field_slot": 8,
+    "super_row": 1,
+    "seg": 0,
+    "nseg": 5,
+    "rows": [
+     2,
+     3
+    ]
+   },
+   {
+    "pair": 14,
+    "field_slot": 9,
+    "super_row": 0,
+    "seg": 1,
+    "nseg": 5,
+    "rows": [
+     0,
+     1
+    ]
+   }
+  ],
+  "assign_slots": [
+   [
+    0,
+    1,
+    4
+   ],
+   [
+    1,
+    0,
+    4
+   ],
+   [
+    2,
+    1,
+    2
+   ],
+   [
+    3,
+    0,
+    2
+   ],
+   [
+    4,
+    1,
+    3
+   ],
+   [
+    5,
+    0,
+    3
+   ],
+   [
+    6,
+    0,
+    0
+   ],
+   [
+    7,
+    1,
+    1
+   ],
+   [
+    8,
+    1,
+    0
+   ],
+   [
+    9,
+    0,
+    1
+   ]
+  ],
+  "nodes": {
+   "n0": {
+    "a": "e0.r0",
+    "b": "e0.r1",
+    "link_a": 7,
+    "link_b": 8,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n10": {
+    "a": "e5w.r",
+    "b": "e5e.r",
+    "link_a": 8,
+    "link_b": 5,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n12": {
+    "a": "e6.r0",
+    "b": "e6.r1",
+    "link_a": 8,
+    "link_b": 9,
+    "arrive_a": [
+     293
+    ],
+    "arrive_b": [
+     294
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     306,
+     307
+    ],
+    "faults": []
+   },
+   "n14": {
+    "a": "e7.r0",
+    "b": "e7.r1",
+    "link_a": 5,
+    "link_b": 6,
+    "arrive_a": [
+     290
+    ],
+    "arrive_b": [
+     291
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     303,
+     304
+    ],
+    "faults": []
+   },
+   "n13": {
+    "a": "n12",
+    "b": "n14",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     306,
+     307
+    ],
+    "arrive_b": [
+     303,
+     304
+    ],
+    "merges": 0,
+    "forwards": 4,
+    "exits": [
+     316,
+     317,
+     319,
+     320
+    ],
+    "faults": []
+   },
+   "n16": {
+    "a": "e8.r0",
+    "b": "e8.r1",
+    "link_a": 8,
+    "link_b": 9,
+    "arrive_a": [
+     297
+    ],
+    "arrive_b": [
+     298
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     310,
+     311
+    ],
+    "faults": []
+   },
+   "n18": {
+    "a": "e9.r0",
+    "b": "e9.r1",
+    "link_a": 5,
+    "link_b": 6,
+    "arrive_a": [
+     294
+    ],
+    "arrive_b": [
+     295
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     307,
+     308
+    ],
+    "faults": []
+   },
+   "n17": {
+    "a": "n16",
+    "b": "n18",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     310,
+     311
+    ],
+    "arrive_b": [
+     307,
+     308
+    ],
+    "merges": 0,
+    "forwards": 4,
+    "exits": [
+     320,
+     321,
+     323,
+     324
+    ],
+    "faults": []
+   },
+   "n2": {
+    "a": "e1w.r",
+    "b": "e1e.r",
+    "link_a": 5,
+    "link_b": 2,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n1": {
+    "a": "n0",
+    "b": "n2",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n20": {
+    "a": "e10w.r",
+    "b": "e10e.r",
+    "link_a": 11,
+    "link_b": 3,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n22": {
+    "a": "e11.r0",
+    "b": "e11.r1",
+    "link_a": 12,
+    "link_b": 13,
+    "arrive_a": [
+     306
+    ],
+    "arrive_b": [
+     307
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     319,
+     320
+    ],
+    "faults": []
+   },
+   "n21": {
+    "a": "n20",
+    "b": "n22",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [],
+    "arrive_b": [
+     319,
+     320
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     332,
+     333
+    ],
+    "faults": []
+   },
+   "n19": {
+    "a": "n17",
+    "b": "n21",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     320,
+     321,
+     323,
+     324
+    ],
+    "arrive_b": [
+     332,
+     333
+    ],
+    "merges": 0,
+    "forwards": 6,
+    "exits": [
+     333,
+     334,
+     336,
+     337,
+     345,
+     346
+    ],
+    "faults": []
+   },
+   "n24": {
+    "a": "e12.r0",
+    "b": "e12.r1",
+    "link_a": 9,
+    "link_b": 10,
+    "arrive_a": [
+     304
+    ],
+    "arrive_b": [
+     305
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     317,
+     318
+    ],
+    "faults": []
+   },
+   "n26": {
+    "a": "e13.r0",
+    "b": "e13.r1",
+    "link_a": 9,
+    "link_b": 10,
+    "arrive_a": [
+     306
+    ],
+    "arrive_b": [
+     307
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     319,
+     320
+    ],
+    "faults": []
+   },
+   "n25": {
+    "a": "n24",
+    "b": "n26",
+    "link_a": 4,
+    "link_b": 0,
+    "arrive_a": [
+     321,
+     322
+    ],
+    "arrive_b": [
+     319,
+     320
+    ],
+    "merges": 2,
+    "forwards": 0,
+    "exits": [
+     332,
+     333
+    ],
+    "faults": []
+   },
+   "n28": {
+    "a": "e14.r0",
+    "b": "e14.r1",
+    "link_a": 6,
+    "link_b": 7,
+    "arrive_a": [
+     304
+    ],
+    "arrive_b": [
+     305
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     317,
+     318
+    ],
+    "faults": []
+   },
+   "n30": {
+    "a": "e15w.r",
+    "b": "e15e.r",
+    "link_a": 6,
+    "link_b": 3,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n29": {
+    "a": "n28",
+    "b": "n30",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     317,
+     318
+    ],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     330,
+     331
+    ],
+    "faults": []
+   },
+   "n27": {
+    "a": "n25",
+    "b": "n29",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     332,
+     333
+    ],
+    "arrive_b": [
+     330,
+     331
+    ],
+    "merges": 0,
+    "forwards": 4,
+    "exits": [
+     343,
+     344,
+     345,
+     346
+    ],
+    "faults": []
+   },
+   "n23": {
+    "a": "n19",
+    "b": "n27",
+    "link_a": 1,
+    "link_b": 5,
+    "arrive_a": [
+     334,
+     335,
+     337,
+     338,
+     346,
+     347
+    ],
+    "arrive_b": [
+     348,
+     349,
+     350,
+     351
+    ],
+    "merges": 2,
+    "forwards": 6,
+    "exits": [
+     347,
+     348,
+     350,
+     351,
+     359,
+     360,
+     363,
+     364
+    ],
+    "faults": []
+   },
+   "n4": {
+    "a": "e2.r0",
+    "b": "e2.r1",
+    "link_a": 4,
+    "link_b": 5,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n6": {
+    "a": "e3.r0",
+    "b": "e3.r1",
+    "link_a": 8,
+    "link_b": 9,
+    "arrive_a": [
+     273
+    ],
+    "arrive_b": [
+     274
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     286,
+     287
+    ],
+    "faults": []
+   },
+   "n5": {
+    "a": "n4",
+    "b": "n6",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [],
+    "arrive_b": [
+     286,
+     287
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     299,
+     300
+    ],
+    "faults": []
+   },
+   "n3": {
+    "a": "n1",
+    "b": "n5",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [],
+    "arrive_b": [
+     299,
+     300
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     312,
+     313
+    ],
+    "faults": []
+   },
+   "n8": {
+    "a": "e4.r0",
+    "b": "e4.r1",
+    "link_a": 4,
+    "link_b": 5,
+    "arrive_a": [
+     269
+    ],
+    "arrive_b": [
+     270
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     282,
+     283
+    ],
+    "faults": []
+   },
+   "n9": {
+    "a": "n8",
+    "b": "n10",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     282,
+     283
+    ],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     295,
+     296
+    ],
+    "faults": []
+   },
+   "n11": {
+    "a": "n9",
+    "b": "n13",
+    "link_a": 0,
+    "link_b": 3,
+    "arrive_a": [
+     295,
+     296
+    ],
+    "arrive_b": [
+     319,
+     320,
+     322,
+     323
+    ],
+    "merges": 0,
+    "forwards": 6,
+    "exits": [
+     308,
+     309,
+     332,
+     333,
+     335,
+     336
+    ],
+    "faults": []
+   },
+   "n7": {
+    "a": "n3",
+    "b": "n11",
+    "link_a": 1,
+    "link_b": 1,
+    "arrive_a": [
+     313,
+     314
+    ],
+    "arrive_b": [
+     309,
+     310,
+     333,
+     334,
+     336,
+     337
+    ],
+    "merges": 0,
+    "forwards": 8,
+    "exits": [
+     322,
+     323,
+     326,
+     327,
+     346,
+     347,
+     349,
+     350
+    ],
+    "faults": []
+   },
+   "n15": {
+    "a": "n7",
+    "b": "n23",
+    "link_a": 5,
+    "link_b": 2,
+    "arrive_a": [
+     327,
+     328,
+     331,
+     332,
+     351,
+     352,
+     354,
+     355
+    ],
+    "arrive_b": [
+     349,
+     350,
+     352,
+     353,
+     361,
+     362,
+     365,
+     366
+    ],
+    "merges": 4,
+    "forwards": 8,
+    "exits": [
+     340,
+     341,
+     344,
+     345,
+     362,
+     363,
+     365,
+     366,
+     374,
+     375,
+     378,
+     379
+    ],
+    "faults": []
+   }
+  },
+  "faults": 0,
+  "ret": [
+   [
+    358,
+    134218821,
+    981836768,
+    0
+   ],
+   [
+    359,
+    134227013,
+    1017886456,
+    0
+   ],
+   [
+    362,
+    134235205,
+    998417996,
+    0
+   ],
+   [
+    363,
+    134243397,
+    1024755758,
+    0
+   ],
+   [
+    380,
+    134218277,
+    993928064,
+    0
+   ],
+   [
+    381,
+    134226469,
+    3174713300,
+    0
+   ],
+   [
+    383,
+    134234661,
+    1032177564,
+    0
+   ],
+   [
+    384,
+    134242853,
+    3183062582,
+    0
+   ],
+   [
+    392,
+    134217765,
+    3162757393,
+    0
+   ],
+   [
+    393,
+    134225957,
+    992321200,
+    0
+   ],
+   [
+    396,
+    134234149,
+    1017852215,
+    0
+   ],
+   [
+    397,
+    134242341,
+    3171154886,
+    0
+   ]
+  ],
+  "ret_words": 12,
+  "merges": 8,
+  "rows_vals": {
+   "0": [
+    3162213170,
+    3124915968,
+    1007470104,
+    3149560432,
+    981836768
+   ],
+   "1": [
+    3152766820,
+    1008671582,
+    3162238762,
+    3170277396,
+    1017886456
+   ],
+   "2": [
+    1005100924,
+    1013060272,
+    1034715814,
+    3164269610,
+    998417996
+   ],
+   "3": [
+    3160248092,
+    3164155902,
+    3178874496,
+    3170053082,
+    1024755758
+   ]
+  },
+  "stream": [
+   12289,
+   12291,
+   0,
+   12293,
+   12295,
+   0,
+   4105,
+   0,
+   12801,
+   12803,
+   0,
+   12805,
+   12807,
+   0,
+   4617,
+   0,
+   13313,
+   13315,
+   0,
+   13317,
+   13319,
+   0,
+   5129,
+   0,
+   13825,
+   13827,
+   0,
+   13829,
+   13831,
+   0,
+   5641,
+   0,
+   14337,
+   14339,
+   0,
+   14341,
+   14343,
+   0,
+   6153,
+   0,
+   14849,
+   14851,
+   0,
+   14853,
+   14855,
+   0,
+   6665,
+   0,
+   15361,
+   15363,
+   0,
+   15365,
+   15367,
+   0,
+   7177,
+   0,
+   15873,
+   15875,
+   0,
+   15877,
+   15879,
+   0,
+   7689,
+   0
+  ],
+  "elem_class": [
+   "fp8",
+   1,
+   2
+  ],
+  "calendar": "measured_class"
+ }
+}

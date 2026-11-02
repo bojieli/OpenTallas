@@ -1,0 +1,1 @@
+The80-unicast prelude is a valid optional source-only expansion, but its176-row merged capacity issue is NOT inherent. Preferred head_norm_gain_bridge.py uses the existing lower_head two-tier GAIN broadcasts:2+96=98 fits128. No HOST reload is required solely due to GAIN capacity. All producer/readiness/source/physical/START holds remain.

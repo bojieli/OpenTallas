@@ -10,7 +10,8 @@ module qfd_dv_table_rom_loader #(
     parameter integer LOCAL_CTRL=0, // opt-in kept stage copies per address nibble, edge-identical
     parameter integer CAPTURE_MUT=0, // bench causal: 1 metadata bypass;2 early done
     parameter integer CAPTURE_STAGE=0, // private structural ROM-capture successor (+1 write edge)
-    parameter integer WE_COPIES=1       // QW-F16PROG4: >1 = kept copies of tw_we for the VM-join select (<=32 loads each)
+    parameter integer WE_COPIES=1,      // QW-F16PROG4: >1 = kept copies of tw_we for the VM-join select (<=32 loads each)
+    parameter integer MONITOR_TAIL=0   // candidate only: two invariant PROG pairs after the88-read prefix (+2 edges)
 ) (
     input wire ck, rst_n,
     input wire start,
@@ -26,6 +27,11 @@ module qfd_dv_table_rom_loader #(
     output reg done,
     output reg fault
 );
+    localparam integer LAST_SLOT = (MONITOR_TAIL!=0) ? 89 : 87;
+    generate if (MONITOR_TAIL!=0 && (MONITOR_TAIL!=1 || BTAB_COMPACT!=1 ||
+                  CAPTURE_STAGE!=0 || LOCAL_CTRL!=0 || WE_COPIES!=34)) begin:g_monitor_profile_bad
+        initial $fatal(1,"MONITOR_TAIL requires native compact C0/LOCAL0/WE34 profile");
+    end endgenerate
     // Two-stage reset landing; wide payload registers need no reset.
     reg r1,r2;
     always @(posedge ck or negedge rst_n)
@@ -49,7 +55,9 @@ module qfd_dv_table_rom_loader #(
         reg [1:0] pu;
         begin
             pu=(MUT==4)?(u+2'd1):u;
-            row_addr=b+((k<6)?(6*pu+k):(24+k-6));
+            if (MONITOR_TAIL!=0 && k>=88)
+                row_addr=12'd3816+2*pu+(k-7'd88);
+            else row_addr=b+((k<6)?(6*pu+k):(24+k-6));
         end
     endfunction
     wire [1063:0] data, rom_data;
@@ -178,10 +186,10 @@ module qfd_dv_table_rom_loader #(
         end else begin
             done<=(CAPTURE_MUT==2)?(cap_v&&cap_last):(data_valid&&data_last);
             tw_we<=we_d;
-            cap_v<=active;cap_last<=active&&slot==87;
+            cap_v<=active;cap_last<=active&&slot==LAST_SLOT;
             if(data_valid&&data[1024]&&(invalid||data_other))fault<=1;
             if(active)begin
-                if(slot==87)active<=0;
+                if(slot==LAST_SLOT)active<=0;
                 else slot<=slot+1;
             end
             if(p_start)begin
@@ -195,7 +203,7 @@ module qfd_dv_table_rom_loader #(
     always @(posedge ck or negedge addr_reset)begin
         if(!addr_reset)begin base_hi<=0;rom_addr<=0;owner<=0;end
         else if(r2)begin
-            if(active&&slot!=87)rom_addr<=row_addr(base,owner,slot+1);
+            if(active&&slot!=LAST_SLOT)rom_addr<=row_addr(base,owner,slot+1);
             if(p_start&&!busy&&p_stage!=0&&p_stage<=36)begin
                 base_hi<=go_base[11:1];owner<=p_user;rom_addr<=row_addr(go_base,p_user,0);
             end

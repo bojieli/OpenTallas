@@ -1,0 +1,7 @@
+# Independent complete CAP-aware source-field arithmetic
+
+Fresh u_f_0L01 field from compiler source packet2b8caf13b: all35 down phases,126 rank0 rows across the six routed experts and shared expert,630 original Ksegments and396 actual emitted returned subtrees. Every partial is independently checked against its canonical fresh released-weight subtree, every row's membership is exact-once, and final FP32/BF16 agree. The checker imports only our independent interval/tree checker, not the producer's finish/canonical or root-only verdict. A payload corruption in the last down phase is caught, so this is not a first-phase-only check.
+
+Exact input Intel1:/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/down_cap_fullfield_retry2_1131/u_f_0L01/field.json; full SHA recorded in check.json. Fresh Ksegment/BF16 input witnesses are down_allrank_inputs_1131/result/{down_source_kseg5.u32,down_source_bf16_in_fp32.u32} under the same compiler root. Source rows are direct global row indices for rank0; expert slots61,69,112,170,299,357,shared. No old80 norm partials or fixtures are substituted for these witnesses.
+
+Source arithmetic only. This does not qualify other fields/ranks after new placement, physical input epochs, CW word1..3 payload seam, SRAM commit, actual RD leases or global START. The separate native CAP receipt remains owned by the compiler lane. No RTL/default/plan or extra cycle change and no native job repeat.
