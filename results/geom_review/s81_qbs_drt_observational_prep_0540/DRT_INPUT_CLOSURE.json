@@ -1,0 +1,41 @@
+{
+ "scope": "PRIVATE_ZERO_DIODE_OBSERVATIONAL_DRT_ONLY",
+ "dispatch_ready": false,
+ "physical_release": false,
+ "genuine_GRT_source": "gen10_allpgdriver LLfu nativePG+TTFF PASS and actualsavedLOOK",
+ "files": {
+  "run/results/asap7/kl_dsfd_node_LLfu_c/base/5_1_grt.odb": "736f5da4a1708cc811fbed0de26f5ced788ab00b6095e8d958887d31291e0fe4",
+  "run/results/asap7/kl_dsfd_node_LLfu_c/base/5_1_grt.sdc": "6f715629a42b143b5c99044be01488c6b0b9ee9103c94ff53bc0b99545785c3a",
+  "config.mk": "7d50f0b00baf3d9ffa0a6a4a6a5770869a27100e28ec3cef24eba4ff943fee42",
+  "grt_policy.json": "b01fd6e787d37cd4b8d0f8f2b17ffe3b4d1b543d7d98107dfee90d2def3625b2",
+  "native_pg_binding.tcl": "e19c5fd9872e37f68d610e2dc46608359c9970b7c9e6de84f546f3b3c3ea3a2d",
+  "nativepgbirth.so": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
+  "pg_drt_diag_library_guard.tcl": "09e06585d7e526c51316dd66f54b9754f816d16d94fc554dfd9dcb12508112e2",
+  "patch_private_drt.py": "bc5e46d700921e805af0306bb72b5cc64e07524786b5cc217cc483111f44e3a3",
+  "pg_drt_diag_init.tcl": "503815f4b7a1cca98e1dcf1d3c9d72ba723325a2069bafbc71ae576a57a25887"
+ },
+ "native_module_sha256": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
+ "original_antenna_policy": {
+  "SKIP_ANTENNA_REPAIR_POST_DRT": 0,
+  "MAX_REPAIR_ANTENNAS_ITER_DRT": 5
+ },
+ "required_native_preconditions": "all loaded physical master inventory has zero CORE ANTENNACELL; known types only; no DRT hooks; inputPG0; frozen libraries",
+ "before_save": "creates/swaps/bound0; same allinstances/master/pose/status/DNT/source and library inventory; PG0",
+ "omitted_targets": [
+  "filler",
+  "finish",
+  "RCX",
+  "STA",
+  "GEN",
+  "CTS",
+  "PLACE"
+ ],
+ "limits": "observes and rejects unexpected births before normal save; not atomic constructor rejection or generic DRT/filler admission",
+ "runtime_policy_asserts": {
+  "SKIP_DETAILED_ROUTE": false,
+  "SKIP_ANTENNA_REPAIR_POST_DRT": false,
+  "MAX_REPAIR_ANTENNAS_ITER_DRT": 5,
+  "PRE_DETAIL_ROUTE_TCL": "unset/empty",
+  "POST_DETAIL_ROUTE_TCL": "unset/empty"
+ }
+}
