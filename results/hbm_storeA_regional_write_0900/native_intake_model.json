@@ -1,0 +1,48 @@
+{
+ "status": "SOURCE_ONLY_GEN_PREP_NOT_DISPATCHED",
+ "macro_count": 32,
+ "ABI": 5986,
+ "outline_um": [
+  760.32,
+  483.84
+ ],
+ "new_capture_declared_FF": 8800,
+ "old_native_mapped_FF_context": 2914,
+ "new_expected_clock_FF_context": 11714,
+ "all_clockloads_unmeasured": true,
+ "physical_reset_inputs": [
+  "store0_rst_n",
+  "capture_ctl_reset_n",
+  "capture_meta_reset_n"
+ ],
+ "raw_M4_pin_array": "actual shapes clear centralmacro bodies; halo/access/upstream source join NOTqualified",
+ "capture_capacity": {
+  "model_cell": [
+   1.404,
+   0.27
+  ],
+  "cells": 8800,
+  "simultaneous_overlap": 0,
+  "macro_halo4_32_hits": 0,
+  "native_mapped_cells": false,
+  "original_logic_readcapture_unplaced": true
+ },
+ "logical_input_bits_per_cycle": 2048,
+ "max_noncolliding_StoreA_write_bytes_per_cycle": 128,
+ "throughput_qualification": "unchanged selected write topology, no new runtime/production pass or gain",
+ "resource_proposal": {
+  "memory_GB": 16,
+  "threads": 2,
+  "disk_GB": 5,
+  "basis": "originalStoreA actual12GB sourceproof class +8800sameedgeFF; normal admission, no arbitrary timeout"
+ },
+ "clock_reference_ps": {
+  "TT": 250,
+  "FF": 202.5
+ },
+ "uncertainty_ps": {
+  "setup": 0,
+  "hold": 25
+ },
+ "physical_release": false
+}

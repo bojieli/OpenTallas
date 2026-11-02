@@ -1,0 +1,363 @@
+{
+ "schema": "opentallas.core_macros.v1",
+ "cores": {
+  "ot_hnx_sfu_store_a_regional4_captured": {
+   "status": "KNOWN",
+   "basis": "EXPLICIT_SOURCE_ONLY_REFERENCE_FROM_ACTUAL_PRIOR_GUTTER_RECTS_NOT_NEWMAPPED_NAMES_OR_PLACEMENT",
+   "macros": [
+    {
+     "name": "u_store.m0.g_bank[0].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      17.28,
+      17.292,
+      190.104,
+      58.356
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[1].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      198.744,
+      17.292,
+      371.568,
+      58.356
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[2].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      380.208,
+      17.292,
+      553.032,
+      58.356
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[3].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      561.672,
+      17.292,
+      734.4960000000001,
+      58.356
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[4].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      17.28,
+      66.972,
+      190.104,
+      108.036
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[5].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      198.744,
+      66.972,
+      371.568,
+      108.036
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[6].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      380.208,
+      66.972,
+      553.032,
+      108.036
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[7].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      561.672,
+      66.972,
+      734.4960000000001,
+      108.036
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[8].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      17.28,
+      125.34,
+      190.104,
+      166.404
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[9].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      198.744,
+      125.34,
+      371.568,
+      166.404
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[10].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      380.208,
+      125.34,
+      553.032,
+      166.404
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[11].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      561.672,
+      125.34,
+      734.4960000000001,
+      166.404
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[12].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      17.28,
+      175.02,
+      190.104,
+      216.084
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[13].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      198.744,
+      175.02,
+      371.568,
+      216.084
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[14].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      380.208,
+      175.02,
+      553.032,
+      216.084
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m0.g_bank[15].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      561.672,
+      175.02,
+      734.4960000000001,
+      216.084
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[0].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      17.28,
+      224.748,
+      190.104,
+      265.812
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[1].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      198.744,
+      224.748,
+      371.568,
+      265.812
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[2].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      380.208,
+      224.748,
+      553.032,
+      265.812
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[3].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      561.672,
+      224.748,
+      734.4960000000001,
+      265.812
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[4].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      17.28,
+      274.428,
+      190.104,
+      315.492
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[5].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      198.744,
+      274.428,
+      371.568,
+      315.492
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[6].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      380.208,
+      274.428,
+      553.032,
+      315.492
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[7].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      561.672,
+      274.428,
+      734.4960000000001,
+      315.492
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[8].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      17.28,
+      332.796,
+      190.104,
+      373.86
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[9].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      198.744,
+      332.796,
+      371.568,
+      373.86
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[10].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      380.208,
+      332.796,
+      553.032,
+      373.86
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[11].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      561.672,
+      332.796,
+      734.4960000000001,
+      373.86
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[12].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      17.28,
+      382.476,
+      190.104,
+      423.54
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[13].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      198.744,
+      382.476,
+      371.568,
+      423.54
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[14].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      380.208,
+      382.476,
+      553.032,
+      423.54
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_store.m1.g_bank[15].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "rect_um": [
+      561.672,
+      382.476,
+      734.4960000000001,
+      423.54
+     ],
+     "orient": "R0"
+    }
+   ]
+  }
+ }
+}

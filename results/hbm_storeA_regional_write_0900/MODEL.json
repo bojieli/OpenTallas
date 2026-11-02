@@ -1,0 +1,81 @@
+{
+ "status": "DEFAULT_OFF_SOURCE_PROPOSAL_NO_PHYSICAL_RELEASE",
+ "source_macro_count": 32,
+ "regional_macro_count": [
+  8,
+  8,
+  8,
+  8
+ ],
+ "memory_bits": 2097152,
+ "producer_data_bits_per_cycle": 2048,
+ "producer_addr_bits_per_cycle": 120,
+ "producer_group_bits_per_cycle": 16,
+ "producer_expect_scalar_bits_per_cycle": 16,
+ "regional_capture_FF": 8800,
+ "regional_capture_fields": {
+  "data": 2048,
+  "addr": 120,
+  "group": 16,
+  "expect": 8,
+  "scalar": 8
+ },
+ "added_logical_cycles": 0,
+ "source_mask": "actualSOURCE13 constant64ones, not unconstrained standaloneABI equivalence",
+ "write_priority": "exact ascending ws/word last-writer wins, collision sticky fault preserved",
+ "regional_capture_cost": "8800strict FF copies; existing originals remain unless separate caller proof permits deletion; no global delta claimed",
+ "routing": "4 independent2192variablebit regional input sets; necessary405 body-bound passed earlier, actual cell/pin/localglobalD/clockPG unmeasured",
+ "holds": [
+  "parent producerDpaths/VMdates/resetSTART/currentnativeview not joined",
+  "sourceoffdefault only",
+  "nativeG0C/proof/GEN/physical intakes separate"
+ ],
+ "physical_master": "ot_hnx_sfu_store_a_regional4_captured",
+ "physical_ABI_bits": 5986,
+ "internal_region_ABI_bits": 12552,
+ "capture_location": "same-edge8800copies inside native32macro capsule; extra source resetinputs explicit; originalCTL originals retained",
+ "clockload": "oldnative mapped2914FF+8800strictnewcopyFF+32SRAM, finalnewmapping UNMEASURED",
+ "bank_ownership": {
+  "m0_columns0": [
+   0,
+   1,
+   4,
+   5,
+   8,
+   9,
+   12,
+   13
+  ],
+  "m0_columns1": [
+   2,
+   3,
+   6,
+   7,
+   10,
+   11,
+   14,
+   15
+  ],
+  "m1_columns0": [
+   0,
+   1,
+   4,
+   5,
+   8,
+   9,
+   12,
+   13
+  ],
+  "m1_columns1": [
+   2,
+   3,
+   6,
+   7,
+   10,
+   11,
+   14,
+   15
+  ]
+ },
+ "ownership_reason": "Actual4column grid split by bankindexbit1; no numerical low/high8 geometry credit"
+}

@@ -1,0 +1,22 @@
+{
+ "status": "SOURCE_PROPOSAL_NOT_ADOPTED",
+ "capture_proof": {
+  "status": "UNBOUNDED_INDUCTION_PASS",
+  "unit": "intel2:oth-ubuntu-1159308-1793635993",
+  "producer_exit": 0,
+  "wrong_copy_mutant": "DIFFERS",
+  "scope": "same-edge packed2048payload+152metadata projection, arbitrary separate reset inputs; observed afterone actual clock edge, no equalinitialstate assumption",
+  "source_sha256": "69a74acfda9fda6738dcdbccfff43c8fc42f7c51bdd009902ce233e42d43caa9"
+ },
+ "writer_proof": {
+  "status": "RUNNING",
+  "root": "intel2:/srv/opentallas-scratch2/claude/codex-storeA-regional-write-columns-0920",
+  "unit": "oth-ubuntu-1212924-1793636182",
+  "mapped_SAT_variables": 1925307,
+  "clause_count": 5269362,
+  "original_consecutive_bank_diagnostic": "intel2:/srv/opentallas-scratch2/claude/codex-storeA-regional-write-0900, preserve ongoing original proof; no column-geometry credit"
+ },
+ "official_native_source_EQ": "NOT_RUN_NEW_CAPSULE",
+ "physical_intake": "NOT_RUN",
+ "canonical_activation": false
+}

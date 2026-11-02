@@ -1,0 +1,82 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+
+-- Running command `read_verilog -sv writer_cones.sv writer_miter.sv; prep -top writer_miter -flatten; opt; check -assert; sat -verify -prove mismatch 0 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: writer_cones.sv
+Parsing SystemVerilog input from `writer_cones.sv' to AST representation.
+Generating RTLIL representation for module `\writer_gold'.
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+make 1
+Warning: Replacing memory \b_wd with list of registers. See writer_cones.sv:13
+Warning: Replacing memory \b_wa with list of registers. See writer_cones.sv:13
+Generating RTLIL representation for module `\writer_regional'.
+writer_cones.sv:53: ERROR: Can't resolve task name `$fatal'.

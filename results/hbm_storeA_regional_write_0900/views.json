@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.hbm_arch.views.v1",
+ "plan": "GEN_plan.json",
+ "plan_sha256": "2f791468baadb9e7145422575131ed13978319836af7721363d0eeeafc59aa99",
+ "view_list": [
+  {
+   "view": "ot_hnx_sfu_store_a_regional4_captured@4ca014c4e4e4",
+   "module": "ot_hnx_sfu_store_a_regional4_captured",
+   "outline_um": [
+    760.32,
+    483.84
+   ],
+   "pins_file": "native_pins.json",
+   "pins_sha256": "4ca014c4e4e4dd42c0489d7cc8ee96d4d9d3542f212fda20d4d5f1cd5dab954d",
+   "pins": 5986,
+   "recipe_keys": [
+    "ot_hnx_sfu_store_a_regional4_captured"
+   ],
+   "family": "SOURCE13_REGIONAL_STOREA_PROPOSAL",
+   "canonical_type": null,
+   "instances": [
+    "UNADOPTED_B113_SOURCE_EVENT"
+   ],
+   "placed": 0
+  }
+ ]
+}
