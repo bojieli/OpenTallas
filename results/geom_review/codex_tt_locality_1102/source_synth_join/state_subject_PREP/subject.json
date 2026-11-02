@@ -1,0 +1,902 @@
+{
+ "status": "PREP_EXACT_COMPOSITIONAL_STATE_SUBJECT_ONLY",
+ "module_bodies": {
+  "qfd_dv_typed_witness_control": {
+   "body_equal": true,
+   "body_sha256": "529582db093d1781d617c68fcb5a98a0addeda44dff7f2d37aa3c635cf7bffab",
+   "declared_parameters": {
+    "ENABLE": "0",
+    "SAFE_COMPARE": "0",
+    "SAFE_SELECT": "0",
+    "SAFE_PHYS": "0",
+    "GROUPS": "13",
+    "TEMPLATE_BITS": "134",
+    "PROFILE_DIGEST": "64'h198f7708b478a667",
+    "PROFILE_EPOCH": "16'd7\n"
+   }
+  },
+  "qfd_wtn_kept_select": {
+   "body_equal": true,
+   "body_sha256": "c30822b7d23d350bb721ebaf2d3d679a55e2914f84d4a2ccbf5b40b332147ae7",
+   "declared_parameters": {
+    "W": "1",
+    "ID": "0",
+    "RST": "1"
+   }
+  },
+  "qfd_tt_ctlm_dv_wtn": {
+   "body_equal": true,
+   "body_sha256": "7270b5999746ec13f26bce2a867b2e57e930a3a785d04523bc43abf4655263ea",
+   "declared_parameters": {
+    "MUT": "0\n"
+   }
+  },
+  "qfd_bmath_dff_p": {
+   "body_equal": true,
+   "body_sha256": "f80625cf866b007c4f9416065a35229e571f958bf61ff8d82d834591d194411a",
+   "declared_parameters": {
+    "ID": "0"
+   }
+  }
+ },
+ "resolved_control_parameters": {
+  "ENABLE": "1",
+  "SAFE_COMPARE": "1",
+  "SAFE_SELECT": "1",
+  "SAFE_PHYS": "1",
+  "GROUPS": "13",
+  "TEMPLATE_BITS": "134",
+  "PROFILE_DIGEST": "64'h198f7708b478a667",
+  "PROFILE_EPOCH": "16'd7"
+ },
+ "resolved_wrapper_parameters": {
+  "MUT": 0
+ },
+ "derived_NC": 6,
+ "actual_wrapper_to_control_callsite": {
+  "text": "qfd_dv_typed_witness_control #(.ENABLE(1), .SAFE_COMPARE(1), .SAFE_SELECT(1), .SAFE_PHYS(1)) u_ctl (\n        .ck(ck), .rst_n(rst_n), .pw_v(pw[74]), .pw_addr(pw[73:64]), .pw_data(pw[63:0]),\n        .all_copies_authenticated(a_all), .fusedcap(auth[80]), .installed_digest(auth[79:16]), .installed_epoch(a_epoch),\n        .start_v(start[24]), .start_user(start[23:22]), .start_stage(start[21:16]),\n        .start_epoch((MUT == 2) ? a_epoch : start[15:0]),\n        .retire_v(retire[3]), .retire_user(r_user), .ME_XPF_retired(retire[0]),\n        .observation(obs[37:22]), .event_stage(obs[21:16]), .event_epoch(obs[15:0]),\n        .template_ready(tr), .context_active(ca), .all_witnesses_complete(awc),\n        .group_complete(gc), .complete_user(cu), .complete_group(cg), .fault(fl));",
+  "parameters": {
+   "ENABLE": "1",
+   "SAFE_COMPARE": "1",
+   "SAFE_SELECT": "1",
+   "SAFE_PHYS": "1"
+  },
+  "ports": {
+   "ck": "ck",
+   "rst_n": "rst_n",
+   "pw_v": "pw[74]",
+   "pw_addr": "pw[73:64]",
+   "pw_data": "pw[63:0]",
+   "all_copies_authenticated": "a_all",
+   "fusedcap": "auth[80]",
+   "installed_digest": "auth[79:16]",
+   "installed_epoch": "a_epoch",
+   "start_v": "start[24]",
+   "start_user": "start[23:22]",
+   "start_stage": "start[21:16]",
+   "start_epoch": "(MUT==2)?a_epoch:start[15:0]",
+   "retire_v": "retire[3]",
+   "retire_user": "r_user",
+   "ME_XPF_retired": "retire[0]",
+   "observation": "obs[37:22]",
+   "event_stage": "obs[21:16]",
+   "event_epoch": "obs[15:0]",
+   "template_ready": "tr",
+   "context_active": "ca",
+   "all_witnesses_complete": "awc",
+   "group_complete": "gc",
+   "complete_user": "cu",
+   "complete_group": "cg",
+   "fault": "fl"
+  }
+ },
+ "actual_core_to_wrapper_callsite": "qfd_tt_ctlm_dv_wtn \\u_gi.g_wtn.u_wtn (.auth({n_69796,n_69795,n_69794,n_69793,n_69792,n_69791,n_69790,n_69789,n_69788,n_69787,n_69786,n_69785,n_69784,n_69783,n_69782,n_69781,n_69780,n_69779,n_69778,n_69777,n_69776,n_69775,n_69774,n_69773,n_69772,n_69771,n_69770,n_69769,n_69768,n_69767,n_69766,n_69765,n_69764,n_69763,n_69762,n_69761,n_69760,n_69759,n_69758,n_69757,n_69756,n_69755,n_69754,n_69753,n_69752,n_69751,n_69750,n_69749,n_69748,n_69747,n_69746,n_69745,n_69744,n_69743,n_69742,n_69741,n_69740,n_69739,n_69738,n_69737,n_69736,n_69735,n_69734,n_69733,n_69732,n_69731,n_69730,n_69729,n_69728,n_69727,n_69726,n_69725,n_69724,n_69723,n_69722,n_69721,n_69720,n_69719,n_69718,n_69717,n_69716,n_69715,n_69714}),.ck(n_3159),.obs({n_69834,n_69833,n_69832,n_69831,n_69830,n_69829,n_69828,n_69827,n_69826,n_69825,n_69824,n_69823,n_69822,n_69821,n_69820,n_69819,n_69818,n_69817,n_69816,n_69815,n_69814,n_69813,n_69812,n_69811,n_69810,n_69809,n_69808,n_69807,n_69806,n_69805,n_69804,n_69803,n_69802,n_69801,n_69800,n_69799,n_69798,n_69797}),.pw({n_77,n_76,n_75,n_74,n_73,n_72,n_71,n_70,n_69,n_68,n_67,n_66,n_65,n_64,n_63,n_62,n_61,n_60,n_59,n_58,n_57,n_56,n_55,n_54,n_53,n_52,n_51,n_50,n_49,n_48,n_47,n_46,n_45,n_44,n_43,n_42,n_41,n_40,n_39,n_38,n_37,n_36,n_35,n_34,n_33,n_32,n_31,n_30,n_29,n_28,n_27,n_26,n_25,n_24,n_23,n_22,n_21,n_20,n_19,n_18,n_17,n_16,n_15,n_14,n_13,n_12,n_11,n_10,n_9,n_8,n_7,n_6,n_5,n_4,n_3}),.retire({n_19740,n_7320,n_7318,n_65410}),.rst_n(n_96145),.st({n_53842,n_69850,n_69849,n_69848,n_69847,n_69846,n_69845,n_69844,n_69843,n_69842,n_69841,n_69840,n_69839,n_69838,n_69837,n_69836,n_69835}),.start({n_59038,n_66431,n_66430,n_28639,n_24976,n_24978,n_28637,n_24980,n_28634,n_69517,n_69515,n_69513,n_69511,n_69509,n_69507,n_69505,n_69503,n_69501,n_69499,n_69497,n_69495,n_69493,n_69491,n_69489,n_69487}));",
+ "actual_parent_to_core_callsite": {
+  "text": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1 u_core (\n        .ag5(ag5_q[9:0]),\n        .cal_descriptor_obs(w_core_cal_descriptor_obs),\n        .cal_image_ready(w_core_cal_image_ready),\n        .cal_program_obs(w_core_cal_program_obs),\n        .cf(w_core_cf),\n        .ck_core(clk),\n        .ck_hr(clk),\n        .cmd(w_core_cmd),\n        .command_stage(w_core_command_stage),\n        .control_stores_ready(w_core_control_stores_ready),\n        .ctx_x({pd5_ctx_x_128[0], pd5_ctx_x_127[0], pd5_ctx_x_126[0], pd5_ctx_x_125[0], pd5_ctx_x_124[0], pd5_ctx_x_123[0], pd5_ctx_x_122[0], pd5_ctx_x_121[0], pd5_ctx_x_120[0], pd5_ctx_x_119[0], pd5_ctx_x_118[0], pd5_ctx_x_117[0], pd5_ctx_x_116[0], pd5_ctx_x_115[0], pd5_ctx_x_114[0], pd5_ctx_x_113[0], pd5_ctx_x_112[0], pd5_ctx_x_111[0], pd5_ctx_x_110[0], pd5_ctx_x_109[0], pd5_ctx_x_108[0], pd5_ctx_x_107[0], pd5_ctx_x_106[0], pd5_ctx_x_105[0], pd5_ctx_x_104[0], pd5_ctx_x_103[0], pd5_ctx_x_102[0], pd5_ctx_x_101[0], pd5_ctx_x_100[0], pd5_ctx_x_99[0], pd5_ctx_x_98[0], pd5_ctx_x_97[0], pd5_ctx_x_96[0], pd5_ctx_x_95[0], pd5_ctx_x_94[0], pd5_ctx_x_93[0], pd5_ctx_x_92[0], pd5_ctx_x_91[0], pd5_ctx_x_90[0], pd5_ctx_x_89[0], pd5_ctx_x_88[0], pd5_ctx_x_87[0], pd5_ctx_x_86[0], pd5_ctx_x_85[0], pd5_ctx_x_84[0], pd5_ctx_x_83[0], pd5_ctx_x_82[0], pd5_ctx_x_81[0], pd5_ctx_x_80[0], pd5_ctx_x_79[0], pd5_ctx_x_78[0], pd5_ctx_x_77[0], pd5_ctx_x_76[0], pd5_ctx_x_75[0], pd5_ctx_x_74[0], pd5_ctx_x_73[0], pd5_ctx_x_72[0], pd5_ctx_x_71[0], pd5_ctx_x_70[0], pd5_ctx_x_69[0], pd5_ctx_x_68[0], pd5_ctx_x_67[0], pd5_ctx_x_66[0], pd5_ctx_x_65[0], pd5_ctx_x_64[0], pd5_ctx_x_63[0], pd5_ctx_x_62[0], pd5_ctx_x_61[0], pd5_ctx_x_60[0], pd5_ctx_x_59[0], pd5_ctx_x_58[0], pd5_ctx_x_57[0], pd5_ctx_x_56[0], pd5_ctx_x_55[0], pd5_ctx_x_54[0], pd5_ctx_x_53[0], pd5_ctx_x_52[0], pd5_ctx_x_51[0], pd5_ctx_x_50[0], pd5_ctx_x_49[0], pd5_ctx_x_48[0], pd5_ctx_x_47[0], pd5_ctx_x_46[0], pd5_ctx_x_45[0], pd5_ctx_x_44[0], pd5_ctx_x_43[0], pd5_ctx_x_42[0], pd5_ctx_x_41[0], pd5_ctx_x_40[0], pd5_ctx_x_39[0], pd5_ctx_x_38[0], pd5_ctx_x_37[0], pd5_ctx_x_36[0], pd5_ctx_x_35[0], pd5_ctx_x_34[0], pd5_ctx_x_33[0], pd5_ctx_x_32[0], pd5_ctx_x_31[0], pd5_ctx_x_30[0], pd5_ctx_x_29[0], pd5_ctx_x_28[0], pd5_ctx_x_27[0], pd5_ctx_x_26[0], pd5_ctx_x_25[0], pd5_ctx_x_24[0], pd5_ctx_x_23[0], pd5_ctx_x_22[0], pd5_ctx_x_21[0], pd5_ctx_x_20[0], pd5_ctx_x_19[0], pd5_ctx_x_18[0], pd5_ctx_x_17[0], pd5_ctx_x_16[0], pd5_ctx_x_15[0], pd5_ctx_x_14[0], pd5_ctx_x_13[0], pd5_ctx_x_12[0], pd5_ctx_x_11[0], pd5_ctx_x_10[0], pd5_ctx_x_9[0], pd5_ctx_x_8[0], pd5_ctx_x_7[0], pd5_ctx_x_6[0], pd5_ctx_x_5[0], pd5_ctx_x_4[0], pd5_ctx_x_3[0], pd5_ctx_x_2[0], pd5_ctx_x_1[0], pd5_ctx_x_0[0]}),\n        .dc(w_core_dc),\n        .dh({pd3_dh_186[0], pd3_dh_185[0], pd3_dh_184[0], pd3_dh_183[0], pd3_dh_182[0], pd3_dh_181[0], pd3_dh_180[0], pd3_dh_179[0], pd3_dh_178[0], pd3_dh_177[0], pd3_dh_176[0], pd3_dh_175[0], pd3_dh_174[0], pd3_dh_173[0], pd3_dh_172[0], pd3_dh_171[0], pd3_dh_170[0], pd3_dh_169[0], pd3_dh_168[0], pd3_dh_167[0], pd3_dh_166[0], pd3_dh_165[0], pd3_dh_164[0], pd3_dh_163[0], pd3_dh_162[0], pd3_dh_161[0], pd3_dh_160[0], pd3_dh_159[0], pd3_dh_158[0], pd3_dh_157[0], pd3_dh_156[0], pd3_dh_155[0], pd3_dh_154[0], pd3_dh_153[0], pd3_dh_152[0], pd3_dh_151[0], pd3_dh_150[0], pd3_dh_149[0], pd3_dh_148[0], pd3_dh_147[0], pd3_dh_146[0], pd3_dh_145[0], pd3_dh_144[0], pd3_dh_143[0], pd3_dh_142[0], pd3_dh_141[0], pd3_dh_140[0], pd3_dh_139[0], pd3_dh_138[0], pd3_dh_137[0], pd3_dh_136[0], pd3_dh_135[0], pd3_dh_134[0], pd3_dh_133[0], pd3_dh_132[0], pd3_dh_131[0], pd3_dh_130[0], pd3_dh_129[0], pd3_dh_128[0], pd3_dh_127[0], pd3_dh_126[0], pd3_dh_125[0], pd3_dh_124[0], pd3_dh_123[0], pd3_dh_122[0], pd3_dh_121[0], pd3_dh_120[0], pd3_dh_119[0], pd3_dh_118[0], pd3_dh_117[0], pd3_dh_116[0], pd3_dh_115[0], pd3_dh_114[0], pd3_dh_113[0], pd3_dh_112[0], pd3_dh_111[0], pd3_dh_110[0], pd3_dh_109[0], pd3_dh_108[0], pd3_dh_107[0], pd3_dh_106[0], pd3_dh_105[0], pd3_dh_104[0], pd3_dh_103[0], pd3_dh_102[0], pd3_dh_101[0], pd3_dh_100[0], pd3_dh_99[0], pd3_dh_98[0], pd3_dh_97[0], pd3_dh_96[0], pd3_dh_95[0], pd3_dh_94[0], pd3_dh_93[0], pd3_dh_92[0], pd3_dh_91[0], pd3_dh_90[0], pd3_dh_89[0], pd3_dh_88[0], pd3_dh_87[0], pd3_dh_86[0], pd3_dh_85[0], pd3_dh_84[0], pd3_dh_83[0], pd3_dh_82[0], pd3_dh_81[0], pd3_dh_80[0], pd3_dh_79[0], pd3_dh_78[0], pd3_dh_77[0], pd3_dh_76[0], pd3_dh_75[0], pd3_dh_74[0], pd3_dh_73[0], pd3_dh_72[0], pd3_dh_71[0], pd3_dh_70[0], pd3_dh_69[0], pd3_dh_68[0], pd3_dh_67[0], pd3_dh_66[0], pd3_dh_65[0], pd3_dh_64[0], pd3_dh_63[0], pd3_dh_62[0], pd3_dh_61[0], pd3_dh_60[0], pd3_dh_59[0], pd3_dh_58[0], pd3_dh_57[0], pd3_dh_56[0], pd3_dh_55[0], pd3_dh_54[0], pd3_dh_53[0], pd3_dh_52[0], pd3_dh_51[0], pd3_dh_50[0], pd3_dh_49[0], pd3_dh_48[0], pd3_dh_47[0], pd3_dh_46[0], pd3_dh_45[0], pd3_dh_44[0], pd3_dh_43[0], pd3_dh_42[0], pd3_dh_41[0], pd3_dh_40[0], pd3_dh_39[0], pd3_dh_38[0], pd3_dh_37[0], pd3_dh_36[0], pd3_dh_35[0], pd3_dh_34[0], pd3_dh_33[0], pd3_dh_32[0], pd3_dh_31[0], pd3_dh_30[0], pd3_dh_29[0], pd3_dh_28[0], pd3_dh_27[0], pd3_dh_26[0], pd3_dh_25[0], pd3_dh_24[0], pd3_dh_23[0], pd3_dh_22[0], pd3_dh_21[0], pd3_dh_20[0], pd3_dh_19[0], pd3_dh_18[0], pd3_dh_17[0], pd3_dh_16[0], pd3_dh_15[0], pd3_dh_14[0], pd3_dh_13[0], pd3_dh_12[0], pd3_dh_11[0], pd3_dh_10[0], pd3_dh_9[0], pd3_dh_8[0], pd3_dh_7[0], pd3_dh_6[0], pd3_dh_5[0], pd3_dh_4[0], pd3_dh_3[0], pd3_dh_2[0], pd3_dh_1[0], pd3_dh_0[0]}),\n        .dh_user(dh_user_q[1:0]),\n        .emb_position(w_core_emb_position),\n        .emb_start(w_core_emb_start),\n        .emb_token(w_core_emb_token),\n        .emb_user(w_core_emb_user),\n        .fab(pd4_fab_0[0]),\n        .hr(w_core_hr),\n        .kok(pd3_kok_0[0]),\n        .kwd(pd3_kwd_0[0]),\n        .layer_context_v(w_core_layer_context_v),\n        .mu_fault(or_0),\n        .native_cmd(w_core_native_cmd),\n        .native_pos(w_core_native_pos),\n        .native_ret(native_ret_q[94:0]),\n        .native_tok(w_core_native_tok),\n        .program_obs(w_core_program_obs),\n        .pw({pd4_pw_74[0], pd4_pw_73[0], pd4_pw_72[0], pd4_pw_71[0], pd4_pw_70[0], pd4_pw_69[0], pd4_pw_68[0], pd4_pw_67[0], pd4_pw_66[0], pd4_pw_65[0], pd4_pw_64[0], pd4_pw_63[0], pd4_pw_62[0], pd4_pw_61[0], pd4_pw_60[0], pd4_pw_59[0], pd4_pw_58[0], pd4_pw_57[0], pd4_pw_56[0], pd4_pw_55[0], pd4_pw_54[0], pd4_pw_53[0], pd4_pw_52[0], pd4_pw_51[0], pd4_pw_50[0], pd4_pw_49[0], pd4_pw_48[0], pd4_pw_47[0], pd4_pw_46[0], pd4_pw_45[0], pd4_pw_44[0], pd4_pw_43[0], pd4_pw_42[0], pd4_pw_41[0], pd4_pw_40[0], pd4_pw_39[0], pd4_pw_38[0], pd4_pw_37[0], pd4_pw_36[0], pd4_pw_35[0], pd4_pw_34[0], pd4_pw_33[0], pd4_pw_32[0], pd4_pw_31[0], pd4_pw_30[0], pd4_pw_29[0], pd4_pw_28[0], pd4_pw_27[0], pd4_pw_26[0], pd4_pw_25[0], pd4_pw_24[0], pd4_pw_23[0], pd4_pw_22[0], pd4_pw_21[0], pd4_pw_20[0], pd4_pw_19[0], pd4_pw_18[0], pd4_pw_17[0], pd4_pw_16[0], pd4_pw_15[0], pd4_pw_14[0], pd4_pw_13[0], pd4_pw_12[0], pd4_pw_11[0], pd4_pw_10[0], pd4_pw_9[0], pd4_pw_8[0], pd4_pw_7[0], pd4_pw_6[0], pd4_pw_5[0], pd4_pw_4[0], pd4_pw_3[0], pd4_pw_2[0], pd4_pw_1[0], pd4_pw_0[0]}),\n        .rst_n(rst_n),\n        .ss5(ss5_q[106:0]),\n        .table_req(w_core_table_req),\n        .tl(w_core_tl)\n    );",
+  "parameters": {},
+  "ports": {
+   "ag5": "ag5_q[9:0]",
+   "cal_descriptor_obs": "w_core_cal_descriptor_obs",
+   "cal_image_ready": "w_core_cal_image_ready",
+   "cal_program_obs": "w_core_cal_program_obs",
+   "cf": "w_core_cf",
+   "ck_core": "clk",
+   "ck_hr": "clk",
+   "cmd": "w_core_cmd",
+   "command_stage": "w_core_command_stage",
+   "control_stores_ready": "w_core_control_stores_ready",
+   "ctx_x": "{pd5_ctx_x_128[0],pd5_ctx_x_127[0],pd5_ctx_x_126[0],pd5_ctx_x_125[0],pd5_ctx_x_124[0],pd5_ctx_x_123[0],pd5_ctx_x_122[0],pd5_ctx_x_121[0],pd5_ctx_x_120[0],pd5_ctx_x_119[0],pd5_ctx_x_118[0],pd5_ctx_x_117[0],pd5_ctx_x_116[0],pd5_ctx_x_115[0],pd5_ctx_x_114[0],pd5_ctx_x_113[0],pd5_ctx_x_112[0],pd5_ctx_x_111[0],pd5_ctx_x_110[0],pd5_ctx_x_109[0],pd5_ctx_x_108[0],pd5_ctx_x_107[0],pd5_ctx_x_106[0],pd5_ctx_x_105[0],pd5_ctx_x_104[0],pd5_ctx_x_103[0],pd5_ctx_x_102[0],pd5_ctx_x_101[0],pd5_ctx_x_100[0],pd5_ctx_x_99[0],pd5_ctx_x_98[0],pd5_ctx_x_97[0],pd5_ctx_x_96[0],pd5_ctx_x_95[0],pd5_ctx_x_94[0],pd5_ctx_x_93[0],pd5_ctx_x_92[0],pd5_ctx_x_91[0],pd5_ctx_x_90[0],pd5_ctx_x_89[0],pd5_ctx_x_88[0],pd5_ctx_x_87[0],pd5_ctx_x_86[0],pd5_ctx_x_85[0],pd5_ctx_x_84[0],pd5_ctx_x_83[0],pd5_ctx_x_82[0],pd5_ctx_x_81[0],pd5_ctx_x_80[0],pd5_ctx_x_79[0],pd5_ctx_x_78[0],pd5_ctx_x_77[0],pd5_ctx_x_76[0],pd5_ctx_x_75[0],pd5_ctx_x_74[0],pd5_ctx_x_73[0],pd5_ctx_x_72[0],pd5_ctx_x_71[0],pd5_ctx_x_70[0],pd5_ctx_x_69[0],pd5_ctx_x_68[0],pd5_ctx_x_67[0],pd5_ctx_x_66[0],pd5_ctx_x_65[0],pd5_ctx_x_64[0],pd5_ctx_x_63[0],pd5_ctx_x_62[0],pd5_ctx_x_61[0],pd5_ctx_x_60[0],pd5_ctx_x_59[0],pd5_ctx_x_58[0],pd5_ctx_x_57[0],pd5_ctx_x_56[0],pd5_ctx_x_55[0],pd5_ctx_x_54[0],pd5_ctx_x_53[0],pd5_ctx_x_52[0],pd5_ctx_x_51[0],pd5_ctx_x_50[0],pd5_ctx_x_49[0],pd5_ctx_x_48[0],pd5_ctx_x_47[0],pd5_ctx_x_46[0],pd5_ctx_x_45[0],pd5_ctx_x_44[0],pd5_ctx_x_43[0],pd5_ctx_x_42[0],pd5_ctx_x_41[0],pd5_ctx_x_40[0],pd5_ctx_x_39[0],pd5_ctx_x_38[0],pd5_ctx_x_37[0],pd5_ctx_x_36[0],pd5_ctx_x_35[0],pd5_ctx_x_34[0],pd5_ctx_x_33[0],pd5_ctx_x_32[0],pd5_ctx_x_31[0],pd5_ctx_x_30[0],pd5_ctx_x_29[0],pd5_ctx_x_28[0],pd5_ctx_x_27[0],pd5_ctx_x_26[0],pd5_ctx_x_25[0],pd5_ctx_x_24[0],pd5_ctx_x_23[0],pd5_ctx_x_22[0],pd5_ctx_x_21[0],pd5_ctx_x_20[0],pd5_ctx_x_19[0],pd5_ctx_x_18[0],pd5_ctx_x_17[0],pd5_ctx_x_16[0],pd5_ctx_x_15[0],pd5_ctx_x_14[0],pd5_ctx_x_13[0],pd5_ctx_x_12[0],pd5_ctx_x_11[0],pd5_ctx_x_10[0],pd5_ctx_x_9[0],pd5_ctx_x_8[0],pd5_ctx_x_7[0],pd5_ctx_x_6[0],pd5_ctx_x_5[0],pd5_ctx_x_4[0],pd5_ctx_x_3[0],pd5_ctx_x_2[0],pd5_ctx_x_1[0],pd5_ctx_x_0[0]}",
+   "dc": "w_core_dc",
+   "dh": "{pd3_dh_186[0],pd3_dh_185[0],pd3_dh_184[0],pd3_dh_183[0],pd3_dh_182[0],pd3_dh_181[0],pd3_dh_180[0],pd3_dh_179[0],pd3_dh_178[0],pd3_dh_177[0],pd3_dh_176[0],pd3_dh_175[0],pd3_dh_174[0],pd3_dh_173[0],pd3_dh_172[0],pd3_dh_171[0],pd3_dh_170[0],pd3_dh_169[0],pd3_dh_168[0],pd3_dh_167[0],pd3_dh_166[0],pd3_dh_165[0],pd3_dh_164[0],pd3_dh_163[0],pd3_dh_162[0],pd3_dh_161[0],pd3_dh_160[0],pd3_dh_159[0],pd3_dh_158[0],pd3_dh_157[0],pd3_dh_156[0],pd3_dh_155[0],pd3_dh_154[0],pd3_dh_153[0],pd3_dh_152[0],pd3_dh_151[0],pd3_dh_150[0],pd3_dh_149[0],pd3_dh_148[0],pd3_dh_147[0],pd3_dh_146[0],pd3_dh_145[0],pd3_dh_144[0],pd3_dh_143[0],pd3_dh_142[0],pd3_dh_141[0],pd3_dh_140[0],pd3_dh_139[0],pd3_dh_138[0],pd3_dh_137[0],pd3_dh_136[0],pd3_dh_135[0],pd3_dh_134[0],pd3_dh_133[0],pd3_dh_132[0],pd3_dh_131[0],pd3_dh_130[0],pd3_dh_129[0],pd3_dh_128[0],pd3_dh_127[0],pd3_dh_126[0],pd3_dh_125[0],pd3_dh_124[0],pd3_dh_123[0],pd3_dh_122[0],pd3_dh_121[0],pd3_dh_120[0],pd3_dh_119[0],pd3_dh_118[0],pd3_dh_117[0],pd3_dh_116[0],pd3_dh_115[0],pd3_dh_114[0],pd3_dh_113[0],pd3_dh_112[0],pd3_dh_111[0],pd3_dh_110[0],pd3_dh_109[0],pd3_dh_108[0],pd3_dh_107[0],pd3_dh_106[0],pd3_dh_105[0],pd3_dh_104[0],pd3_dh_103[0],pd3_dh_102[0],pd3_dh_101[0],pd3_dh_100[0],pd3_dh_99[0],pd3_dh_98[0],pd3_dh_97[0],pd3_dh_96[0],pd3_dh_95[0],pd3_dh_94[0],pd3_dh_93[0],pd3_dh_92[0],pd3_dh_91[0],pd3_dh_90[0],pd3_dh_89[0],pd3_dh_88[0],pd3_dh_87[0],pd3_dh_86[0],pd3_dh_85[0],pd3_dh_84[0],pd3_dh_83[0],pd3_dh_82[0],pd3_dh_81[0],pd3_dh_80[0],pd3_dh_79[0],pd3_dh_78[0],pd3_dh_77[0],pd3_dh_76[0],pd3_dh_75[0],pd3_dh_74[0],pd3_dh_73[0],pd3_dh_72[0],pd3_dh_71[0],pd3_dh_70[0],pd3_dh_69[0],pd3_dh_68[0],pd3_dh_67[0],pd3_dh_66[0],pd3_dh_65[0],pd3_dh_64[0],pd3_dh_63[0],pd3_dh_62[0],pd3_dh_61[0],pd3_dh_60[0],pd3_dh_59[0],pd3_dh_58[0],pd3_dh_57[0],pd3_dh_56[0],pd3_dh_55[0],pd3_dh_54[0],pd3_dh_53[0],pd3_dh_52[0],pd3_dh_51[0],pd3_dh_50[0],pd3_dh_49[0],pd3_dh_48[0],pd3_dh_47[0],pd3_dh_46[0],pd3_dh_45[0],pd3_dh_44[0],pd3_dh_43[0],pd3_dh_42[0],pd3_dh_41[0],pd3_dh_40[0],pd3_dh_39[0],pd3_dh_38[0],pd3_dh_37[0],pd3_dh_36[0],pd3_dh_35[0],pd3_dh_34[0],pd3_dh_33[0],pd3_dh_32[0],pd3_dh_31[0],pd3_dh_30[0],pd3_dh_29[0],pd3_dh_28[0],pd3_dh_27[0],pd3_dh_26[0],pd3_dh_25[0],pd3_dh_24[0],pd3_dh_23[0],pd3_dh_22[0],pd3_dh_21[0],pd3_dh_20[0],pd3_dh_19[0],pd3_dh_18[0],pd3_dh_17[0],pd3_dh_16[0],pd3_dh_15[0],pd3_dh_14[0],pd3_dh_13[0],pd3_dh_12[0],pd3_dh_11[0],pd3_dh_10[0],pd3_dh_9[0],pd3_dh_8[0],pd3_dh_7[0],pd3_dh_6[0],pd3_dh_5[0],pd3_dh_4[0],pd3_dh_3[0],pd3_dh_2[0],pd3_dh_1[0],pd3_dh_0[0]}",
+   "dh_user": "dh_user_q[1:0]",
+   "emb_position": "w_core_emb_position",
+   "emb_start": "w_core_emb_start",
+   "emb_token": "w_core_emb_token",
+   "emb_user": "w_core_emb_user",
+   "fab": "pd4_fab_0[0]",
+   "hr": "w_core_hr",
+   "kok": "pd3_kok_0[0]",
+   "kwd": "pd3_kwd_0[0]",
+   "layer_context_v": "w_core_layer_context_v",
+   "mu_fault": "or_0",
+   "native_cmd": "w_core_native_cmd",
+   "native_pos": "w_core_native_pos",
+   "native_ret": "native_ret_q[94:0]",
+   "native_tok": "w_core_native_tok",
+   "program_obs": "w_core_program_obs",
+   "pw": "{pd4_pw_74[0],pd4_pw_73[0],pd4_pw_72[0],pd4_pw_71[0],pd4_pw_70[0],pd4_pw_69[0],pd4_pw_68[0],pd4_pw_67[0],pd4_pw_66[0],pd4_pw_65[0],pd4_pw_64[0],pd4_pw_63[0],pd4_pw_62[0],pd4_pw_61[0],pd4_pw_60[0],pd4_pw_59[0],pd4_pw_58[0],pd4_pw_57[0],pd4_pw_56[0],pd4_pw_55[0],pd4_pw_54[0],pd4_pw_53[0],pd4_pw_52[0],pd4_pw_51[0],pd4_pw_50[0],pd4_pw_49[0],pd4_pw_48[0],pd4_pw_47[0],pd4_pw_46[0],pd4_pw_45[0],pd4_pw_44[0],pd4_pw_43[0],pd4_pw_42[0],pd4_pw_41[0],pd4_pw_40[0],pd4_pw_39[0],pd4_pw_38[0],pd4_pw_37[0],pd4_pw_36[0],pd4_pw_35[0],pd4_pw_34[0],pd4_pw_33[0],pd4_pw_32[0],pd4_pw_31[0],pd4_pw_30[0],pd4_pw_29[0],pd4_pw_28[0],pd4_pw_27[0],pd4_pw_26[0],pd4_pw_25[0],pd4_pw_24[0],pd4_pw_23[0],pd4_pw_22[0],pd4_pw_21[0],pd4_pw_20[0],pd4_pw_19[0],pd4_pw_18[0],pd4_pw_17[0],pd4_pw_16[0],pd4_pw_15[0],pd4_pw_14[0],pd4_pw_13[0],pd4_pw_12[0],pd4_pw_11[0],pd4_pw_10[0],pd4_pw_9[0],pd4_pw_8[0],pd4_pw_7[0],pd4_pw_6[0],pd4_pw_5[0],pd4_pw_4[0],pd4_pw_3[0],pd4_pw_2[0],pd4_pw_1[0],pd4_pw_0[0]}",
+   "rst_n": "rst_n",
+   "ss5": "ss5_q[106:0]",
+   "table_req": "w_core_table_req",
+   "tl": "w_core_tl"
+  }
+ },
+ "actual_selected_control_inputs": {
+  "ck": {
+   "wrapper_expression": "ck",
+   "actual_core_expression": "n_3159"
+  },
+  "rst_n": {
+   "wrapper_expression": "rst_n",
+   "actual_core_expression": "n_96145"
+  },
+  "pw_v": {
+   "wrapper_expression": "pw[74]",
+   "actual_core_bits_msb_first": [
+    "n_77"
+   ]
+  },
+  "pw_addr": {
+   "wrapper_expression": "pw[73:64]",
+   "actual_core_bits_msb_first": [
+    "n_76",
+    "n_75",
+    "n_74",
+    "n_73",
+    "n_72",
+    "n_71",
+    "n_70",
+    "n_69",
+    "n_68",
+    "n_67"
+   ]
+  },
+  "pw_data": {
+   "wrapper_expression": "pw[63:0]",
+   "actual_core_bits_msb_first": [
+    "n_66",
+    "n_65",
+    "n_64",
+    "n_63",
+    "n_62",
+    "n_61",
+    "n_60",
+    "n_59",
+    "n_58",
+    "n_57",
+    "n_56",
+    "n_55",
+    "n_54",
+    "n_53",
+    "n_52",
+    "n_51",
+    "n_50",
+    "n_49",
+    "n_48",
+    "n_47",
+    "n_46",
+    "n_45",
+    "n_44",
+    "n_43",
+    "n_42",
+    "n_41",
+    "n_40",
+    "n_39",
+    "n_38",
+    "n_37",
+    "n_36",
+    "n_35",
+    "n_34",
+    "n_33",
+    "n_32",
+    "n_31",
+    "n_30",
+    "n_29",
+    "n_28",
+    "n_27",
+    "n_26",
+    "n_25",
+    "n_24",
+    "n_23",
+    "n_22",
+    "n_21",
+    "n_20",
+    "n_19",
+    "n_18",
+    "n_17",
+    "n_16",
+    "n_15",
+    "n_14",
+    "n_13",
+    "n_12",
+    "n_11",
+    "n_10",
+    "n_9",
+    "n_8",
+    "n_7",
+    "n_6",
+    "n_5",
+    "n_4",
+    "n_3"
+   ]
+  },
+  "all_copies_authenticated": {
+   "wrapper_expression": "auth[81]&&!auth[82]",
+   "actual_core_expression": {
+    "and_inputs": [
+     "n_69795",
+     {
+      "not_input": "n_69796"
+     }
+    ]
+   }
+  },
+  "fusedcap": {
+   "wrapper_expression": "auth[80]",
+   "actual_core_bits_msb_first": [
+    "n_69794"
+   ]
+  },
+  "installed_digest": {
+   "wrapper_expression": "auth[79:16]",
+   "actual_core_bits_msb_first": [
+    "n_69793",
+    "n_69792",
+    "n_69791",
+    "n_69790",
+    "n_69789",
+    "n_69788",
+    "n_69787",
+    "n_69786",
+    "n_69785",
+    "n_69784",
+    "n_69783",
+    "n_69782",
+    "n_69781",
+    "n_69780",
+    "n_69779",
+    "n_69778",
+    "n_69777",
+    "n_69776",
+    "n_69775",
+    "n_69774",
+    "n_69773",
+    "n_69772",
+    "n_69771",
+    "n_69770",
+    "n_69769",
+    "n_69768",
+    "n_69767",
+    "n_69766",
+    "n_69765",
+    "n_69764",
+    "n_69763",
+    "n_69762",
+    "n_69761",
+    "n_69760",
+    "n_69759",
+    "n_69758",
+    "n_69757",
+    "n_69756",
+    "n_69755",
+    "n_69754",
+    "n_69753",
+    "n_69752",
+    "n_69751",
+    "n_69750",
+    "n_69749",
+    "n_69748",
+    "n_69747",
+    "n_69746",
+    "n_69745",
+    "n_69744",
+    "n_69743",
+    "n_69742",
+    "n_69741",
+    "n_69740",
+    "n_69739",
+    "n_69738",
+    "n_69737",
+    "n_69736",
+    "n_69735",
+    "n_69734",
+    "n_69733",
+    "n_69732",
+    "n_69731",
+    "n_69730"
+   ]
+  },
+  "installed_epoch": {
+   "wrapper_expression": "auth[15:0]",
+   "actual_core_bits_msb_first": [
+    "n_69729",
+    "n_69728",
+    "n_69727",
+    "n_69726",
+    "n_69725",
+    "n_69724",
+    "n_69723",
+    "n_69722",
+    "n_69721",
+    "n_69720",
+    "n_69719",
+    "n_69718",
+    "n_69717",
+    "n_69716",
+    "n_69715",
+    "n_69714"
+   ]
+  },
+  "start_v": {
+   "wrapper_expression": "start[24]",
+   "actual_core_bits_msb_first": [
+    "n_59038"
+   ]
+  },
+  "start_user": {
+   "wrapper_expression": "start[23:22]",
+   "actual_core_bits_msb_first": [
+    "n_66431",
+    "n_66430"
+   ]
+  },
+  "start_stage": {
+   "wrapper_expression": "start[21:16]",
+   "actual_core_bits_msb_first": [
+    "n_28639",
+    "n_24976",
+    "n_24978",
+    "n_28637",
+    "n_24980",
+    "n_28634"
+   ]
+  },
+  "start_epoch": {
+   "wrapper_expression": "start[15:0]",
+   "actual_core_bits_msb_first": [
+    "n_69517",
+    "n_69515",
+    "n_69513",
+    "n_69511",
+    "n_69509",
+    "n_69507",
+    "n_69505",
+    "n_69503",
+    "n_69501",
+    "n_69499",
+    "n_69497",
+    "n_69495",
+    "n_69493",
+    "n_69491",
+    "n_69489",
+    "n_69487"
+   ]
+  },
+  "retire_v": {
+   "wrapper_expression": "retire[3]",
+   "actual_core_bits_msb_first": [
+    "n_19740"
+   ]
+  },
+  "retire_user": {
+   "wrapper_expression": "retire[2:1]",
+   "actual_core_bits_msb_first": [
+    "n_7320",
+    "n_7318"
+   ]
+  },
+  "ME_XPF_retired": {
+   "wrapper_expression": "retire[0]",
+   "actual_core_bits_msb_first": [
+    "n_65410"
+   ]
+  },
+  "observation": {
+   "wrapper_expression": "obs[37:22]",
+   "actual_core_bits_msb_first": [
+    "n_69834",
+    "n_69833",
+    "n_69832",
+    "n_69831",
+    "n_69830",
+    "n_69829",
+    "n_69828",
+    "n_69827",
+    "n_69826",
+    "n_69825",
+    "n_69824",
+    "n_69823",
+    "n_69822",
+    "n_69821",
+    "n_69820",
+    "n_69819"
+   ]
+  },
+  "event_stage": {
+   "wrapper_expression": "obs[21:16]",
+   "actual_core_bits_msb_first": [
+    "n_69818",
+    "n_69817",
+    "n_69816",
+    "n_69815",
+    "n_69814",
+    "n_69813"
+   ]
+  },
+  "event_epoch": {
+   "wrapper_expression": "obs[15:0]",
+   "actual_core_bits_msb_first": [
+    "n_69812",
+    "n_69811",
+    "n_69810",
+    "n_69809",
+    "n_69808",
+    "n_69807",
+    "n_69806",
+    "n_69805",
+    "n_69804",
+    "n_69803",
+    "n_69802",
+    "n_69801",
+    "n_69800",
+    "n_69799",
+    "n_69798",
+    "n_69797"
+   ]
+  }
+ },
+ "old_new_callsite_input_identity": true,
+ "actual_clock_alias": {
+  "kind": "assign",
+  "rhs": "ck_core",
+  "text": "assign n_3159 = ck_core;"
+ },
+ "actual_reset_trace": [
+  {
+   "net": "n_96145",
+   "kind": "qfd_bmath_dff_p",
+   "params": ".ID(0)",
+   "instance": "u_75372",
+   "ports": {
+    "C": "n_3159",
+    "D": "n_96268",
+    "Q": "n_96145"
+   },
+   "text": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_p #(.ID(0)) u_75372(.C(n_3159),.D(n_96268),.Q(n_96145));"
+  },
+  {
+   "net": "n_96268",
+   "kind": "qfd_bmath_dff_p",
+   "params": ".ID(0)",
+   "instance": "u_75495",
+   "ports": {
+    "C": "n_3159",
+    "D": "n_17658",
+    "Q": "n_96268"
+   },
+   "text": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_p #(.ID(0)) u_75495(.C(n_3159),.D(n_17658),.Q(n_96268));"
+  },
+  {
+   "net": "n_17658",
+   "kind": "qfd_bmath_dff_p",
+   "params": ".ID(0)",
+   "instance": "u_7255",
+   "ports": {
+    "C": "n_3159",
+    "D": "n_17654",
+    "Q": "n_17658"
+   },
+   "text": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_p #(.ID(0)) u_7255(.C(n_3159),.D(n_17654),.Q(n_17658));"
+  },
+  {
+   "net": "n_17654",
+   "kind": "qfd_bmath_dff_p",
+   "params": ".ID(0)",
+   "instance": "u_7250",
+   "ports": {
+    "C": "n_3159",
+    "D": "n_17653",
+    "Q": "n_17654"
+   },
+   "text": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_p #(.ID(0)) u_7250(.C(n_3159),.D(n_17653),.Q(n_17654));"
+  },
+  {
+   "net": "n_17653",
+   "kind": "qfd_bmath_dff_p",
+   "params": ".ID(0)",
+   "instance": "u_7249",
+   "ports": {
+    "C": "n_3159",
+    "D": "n_17652",
+    "Q": "n_17653"
+   },
+   "text": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_p #(.ID(0)) u_7249(.C(n_3159),.D(n_17652),.Q(n_17653));"
+  },
+  {
+   "net": "n_17652",
+   "kind": "qfd_bmath_dff_p",
+   "params": ".ID(0)",
+   "instance": "u_7248",
+   "ports": {
+    "C": "n_3159",
+    "D": "n_2",
+    "Q": "n_17652"
+   },
+   "text": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_p #(.ID(0)) u_7248(.C(n_3159),.D(n_2),.Q(n_17652));"
+  },
+  {
+   "net": "n_2",
+   "kind": "assign",
+   "rhs": "rst_n",
+   "text": "assign n_2 = rst_n;"
+  }
+ ],
+ "reset_trace_terminal": "rst_n",
+ "upstream_registered_reset_edges": 6,
+ "internal_reset_context": "same source rs1/rs2 and rli/rlr/rlo; actual context included, no protocol/initial assumption added",
+ "capture_abi": [
+  {
+   "old_native": "_50814_",
+   "fresh_native_candidate": "_50936_",
+   "source_D_identity": "gp.f_start_stage[0]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50815_",
+   "fresh_native_candidate": "_50937_",
+   "source_D_identity": "gp.f_start_stage[1]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50816_",
+   "fresh_native_candidate": "_50938_",
+   "source_D_identity": "gp.f_start_stage[2]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50817_",
+   "fresh_native_candidate": "_50939_",
+   "source_D_identity": "gp.f_start_stage[3]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50818_",
+   "fresh_native_candidate": "_50940_",
+   "source_D_identity": "gp.f_start_stage[4]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50819_",
+   "fresh_native_candidate": "_50941_",
+   "source_D_identity": "gp.f_start_stage[5]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50820_",
+   "fresh_native_candidate": "_50942_",
+   "source_D_identity": "actual133-leaf comparator D function, universal proof unit3390831",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50821_",
+   "fresh_native_candidate": "_50943_",
+   "source_D_identity": "gp.f_start_epoch[0]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50822_",
+   "fresh_native_candidate": "_50944_",
+   "source_D_identity": "gp.f_start_epoch[1]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50823_",
+   "fresh_native_candidate": "_50945_",
+   "source_D_identity": "gp.f_start_epoch[2]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50824_",
+   "fresh_native_candidate": "_50946_",
+   "source_D_identity": "gp.f_start_epoch[3]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50825_",
+   "fresh_native_candidate": "_50947_",
+   "source_D_identity": "gp.f_start_epoch[4]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50826_",
+   "fresh_native_candidate": "_50948_",
+   "source_D_identity": "gp.f_start_epoch[5]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50827_",
+   "fresh_native_candidate": "_50949_",
+   "source_D_identity": "gp.f_start_epoch[6]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50828_",
+   "fresh_native_candidate": "_50950_",
+   "source_D_identity": "gp.f_start_epoch[7]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50829_",
+   "fresh_native_candidate": "_50951_",
+   "source_D_identity": "gp.f_start_epoch[8]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50830_",
+   "fresh_native_candidate": "_50952_",
+   "source_D_identity": "gp.f_start_epoch[9]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50831_",
+   "fresh_native_candidate": "_50953_",
+   "source_D_identity": "gp.f_start_epoch[10]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50832_",
+   "fresh_native_candidate": "_50954_",
+   "source_D_identity": "gp.f_start_epoch[11]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50833_",
+   "fresh_native_candidate": "_50955_",
+   "source_D_identity": "gp.f_start_epoch[12]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50834_",
+   "fresh_native_candidate": "_50956_",
+   "source_D_identity": "gp.f_start_epoch[13]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50835_",
+   "fresh_native_candidate": "_50957_",
+   "source_D_identity": "gp.f_start_epoch[14]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  },
+  {
+   "old_native": "_50836_",
+   "fresh_native_candidate": "_50958_",
+   "source_D_identity": "gp.f_start_epoch[15]",
+   "actual_clock": "clk",
+   "clock_edge": "posedge",
+   "primitive": "DFFHQNx1_ASAP7_75t_R",
+   "primitive_next_state": "!D",
+   "primitive_output_function": "IQN",
+   "external_output_capture": "QN(t+1)=D(t)",
+   "async_reset_pin": null,
+   "enable_pin": null,
+   "initial_relation": "UNPROVED",
+   "alias_accepted": false
+  }
+ ],
+ "source_event_declared_netff": 13,
+ "source_event_actual_netff": 12,
+ "cycles_added": 0,
+ "comparison_policy": "Unconditional actual23 state relation; retain invalid-cycle comparison and all reset transitions. None/None is not proof.",
+ "native_base_proved": false,
+ "native_step_relation_accepted": false,
+ "physical_release": false,
+ "full_source_credit": false
+}
