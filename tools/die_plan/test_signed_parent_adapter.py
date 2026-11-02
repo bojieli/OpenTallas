@@ -120,7 +120,8 @@ def test_formal_materializer_requires_both_actual_readsets_and_expands_gate(tmp_
                 views={f'views/child/child{x}':A.digest(view/f'child{x}') for x in ('.lef','_tt.lib','_ff.lib')})
     qp=tmp_path/'qualified.json';qp.write_text(json.dumps(packet))
     parent_f=tmp_path/'actual_parent_lefs.f';parent_f.write_text(str(view/'child.lef')+'\n')
-    desc=dict(native_kit=str(parent),parent_gate_netlist=str(gate),parent_lef_readset=str(parent_f),
+    engine=Path(__file__).with_name('lec.py')
+    desc=dict(native_kit=str(parent),parent_gate_netlist=str(gate),parent_lef_readset=str(parent_f),standard_lec_engine=str(engine),standard_lec_engine_sha256=A.digest(engine),
               children=[dict(view_signoff=str(view/'signoff.json'),qualified_packet=str(qp),final_netlist=str(child))])
     with pytest.raises(ValueError,match='missing actual flattened LEF readset'):
         A.materialize_formal(desc,tmp_path/'missing')
@@ -144,9 +145,14 @@ def test_formal_materializer_requires_both_actual_readsets_and_expands_gate(tmp_
     out=tmp_path/'formal';r=A.materialize_formal(desc,out)
     assert 'NOT RUN' in r['status']
     assert (out/'native_gold/native.sv').read_bytes()==source.read_bytes()
+    assert (out/'lec.py').read_bytes()==engine.read_bytes()
     assert 'module child' in (out/'expanded_parent_gate.v').read_text()
     assert '/work/native_gold/native.sv' in (out/'config.mk').read_text()
     assert 'child_tt.lib' not in (out/'config.mk').read_text()
+    desc['standard_lec_engine_sha256']='0'*64
+    with pytest.raises(ValueError,match='standard LEC engine hash'):
+        A.materialize_formal(desc,tmp_path/'stale_engine')
+    desc['standard_lec_engine_sha256']=A.digest(engine)
     child.write_text(child.read_text()+'\n// altered netlist\n')
     with pytest.raises(ValueError,match='differs from qualified actual final netlist'):
         A.materialize_formal(desc,tmp_path/'mutated')

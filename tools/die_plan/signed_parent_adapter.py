@@ -326,6 +326,9 @@ def formal_inputs(descriptor):
     native = Path(native).resolve()
     env = lec.parse_config(native)
     parent = required(d.get('parent_gate_netlist'), 'physical parent mapped netlist producer')
+    engine = required(d.get('standard_lec_engine'), 'reviewed standard lec.py producer')
+    if digest(engine) != d.get('standard_lec_engine_sha256'):
+        raise ValueError('reviewed standard LEC engine hash missing or different')
     files = [required(lec.kpath(native, f), 'native parent gold readset source') for f in env['VERILOG_FILES'].split()]
     selected, children, joined = {}, [], {}
     for child in d.get('children', []):
@@ -393,7 +396,7 @@ def formal_inputs(descriptor):
     if len({f.name for f in files}) != len(set(files)):
         raise ValueError('native gold source basename collision')
     joined.update({str(p): digest(p) for p in files + [parent, native / 'config.mk']})
-    return native, env, files, parent, children, dict(inputs=joined, actual_flattened=census, actual_mode_libraries=mode_census)
+    return native, env, files, parent, children, dict(inputs=joined, actual_flattened=census, actual_mode_libraries=mode_census, standard_lec_engine=dict(source=str(engine),sha256=digest(engine)))
 
 
 def materialize_formal(descriptor, out):
@@ -405,8 +408,9 @@ def materialize_formal(descriptor, out):
         raise ValueError('refuse existing formal KIT')
     out.mkdir(parents=True)
     for p in native.iterdir():
-        if p.is_file() and p.name != 'config.mk' and not p.name.startswith('run_'):
+        if p.is_file() and p.name not in ('config.mk', 'lec.py') and not p.name.startswith('run_'):
             shutil.copyfile(p, out / p.name)
+    shutil.copyfile(record['standard_lec_engine']['source'], out / 'lec.py')
     for dirname in ('rtl', 'macros'):
         if (native / dirname).is_dir():
             shutil.copytree(native / dirname, out / dirname)
