@@ -1,0 +1,902 @@
+{
+  "status": "CURRENT_CLOCK_GRAPH_MISMATCH",
+  "qualified": false,
+  "whole_boundary_applied": false,
+  "default_off": {
+    "status": "DISABLED",
+    "qualified": false
+  },
+  "current_clock_form": "link_htree",
+  "current_clock_cell": "inv",
+  "current_taps": 2114,
+  "current_physical_cells": 15938,
+  "current_meta": {
+    "leaf_um": 200.0,
+    "rep_um": 150.0,
+    "tree_form": "link_htree",
+    "spine_dme": null,
+    "link_feed": {
+      "root": "hub_C",
+      "regions": 128,
+      "local": "htree",
+      "leaf_um": 200.0,
+      "dme_regions": [
+        "pv_S_6",
+        "pv_S_7",
+        "sys_SE",
+        "sys_SW"
+      ],
+      "feed_edges": 127,
+      "feed_wire_um": 195347.4
+    },
+    "region_trees": 128,
+    "buffer": "BUFx24_ASAP7_75t_R",
+    "clock_cell": "inv",
+    "wire_r_kohm_um": 0.0043358024999999994,
+    "wire_c_ff_um": 0.10824363000000001,
+    "tap_load_ff": 3.0,
+    "nodes": 8799,
+    "leaves": 2104,
+    "repeaters": 6055,
+    "taps": 2114,
+    "wire_um": 1762169.9,
+    "levels": 51,
+    "tap_pad": {
+      "taps": 32,
+      "cells": 89,
+      "max_per_tap": 4,
+      "cell": "BUFx24_ASAP7_75t_R"
+    },
+    "site_legal": {
+      "mode": "slide",
+      "slide_fallbacks": 0,
+      "cells": 15938,
+      "illegal": {},
+      "forbidden_rects": 1630,
+      "moved_nodes": 2668,
+      "balance": {
+        "nodes": 8370,
+        "moved": 2446,
+        "unbalanced": 0,
+        "worst_imbalance_um": 0.0,
+        "region_dme": {
+          "pv_S_7": {
+            "merges": 23,
+            "imbalanced": 2,
+            "spread": 5.1
+          },
+          "pv_S_6": {
+            "merges": 23,
+            "imbalanced": 2,
+            "spread": 5.1
+          },
+          "sys_SE": {
+            "merges": 4,
+            "imbalanced": 1,
+            "spread": 3.4
+          },
+          "sys_SW": {
+            "merges": 4,
+            "imbalanced": 1,
+            "spread": 3.4
+          }
+        }
+      },
+      "detoured_legs": 163,
+      "detour_added_um": 1873.7
+    }
+  },
+  "graphs": [
+    {
+      "file": "tree_ctree.v",
+      "sha256": "054eee9a63a20501192f1766e3d910f9e846364aafdf1030596cb124c897c0c8",
+      "ck_mesh_references": 0,
+      "old_premesh_nodes": 0,
+      "output_taps": 2114,
+      "part_cuts": [
+        {
+          "part": "pc_EN_0",
+          "expected_boundary_nets": [
+            "ck_mesh",
+            "ckm_w_ckm_n10_h1111111000",
+            "ckm_w_ckm_n10_h1111111001",
+            "ckm_w_ckm_n10_h1111111100",
+            "ckm_w_ckm_n10_h1111111101"
+          ],
+          "missing_boundary_nets": [
+            "ck_mesh",
+            "ckm_w_ckm_n10_h1111111000",
+            "ckm_w_ckm_n10_h1111111001",
+            "ckm_w_ckm_n10_h1111111100",
+            "ckm_w_ckm_n10_h1111111101"
+          ],
+          "expected_source_cells": [
+            "ckm_d_28_121_0",
+            "ckm_d_28_121_1",
+            "ckm_d_28_122_0",
+            "ckm_d_28_122_1",
+            "ckm_d_28_125_0",
+            "ckm_d_28_125_1",
+            "ckm_d_28_126_0",
+            "ckm_d_28_126_1",
+            "ckm_d_29_121_0",
+            "ckm_d_29_121_1",
+            "ckm_d_29_122_0",
+            "ckm_d_29_122_1",
+            "ckm_d_29_125_0",
+            "ckm_d_29_125_1",
+            "ckm_d_29_126_0",
+            "ckm_d_29_126_1",
+            "ckm_n10_h1111111000",
+            "ckm_n10_h1111111001",
+            "ckm_n10_h1111111100",
+            "ckm_n10_h1111111101"
+          ],
+          "missing_source_cells": [
+            "ckm_d_28_121_0",
+            "ckm_d_28_121_1",
+            "ckm_d_28_122_0",
+            "ckm_d_28_122_1",
+            "ckm_d_28_125_0",
+            "ckm_d_28_125_1",
+            "ckm_d_28_126_0",
+            "ckm_d_28_126_1",
+            "ckm_d_29_121_0",
+            "ckm_d_29_121_1",
+            "ckm_d_29_122_0",
+            "ckm_d_29_122_1",
+            "ckm_d_29_125_0",
+            "ckm_d_29_125_1",
+            "ckm_d_29_126_0",
+            "ckm_d_29_126_1",
+            "ckm_n10_h1111111000",
+            "ckm_n10_h1111111001",
+            "ckm_n10_h1111111100",
+            "ckm_n10_h1111111101"
+          ]
+        },
+        {
+          "part": "pc_WN_0",
+          "expected_boundary_nets": [
+            "ck_mesh",
+            "ckm_w_ckm_n10_h1101010010",
+            "ckm_w_ckm_n10_h1101010011",
+            "ckm_w_ckm_n10_h1101010110",
+            "ckm_w_ckm_n10_h1101010111"
+          ],
+          "missing_boundary_nets": [
+            "ck_mesh",
+            "ckm_w_ckm_n10_h1101010010",
+            "ckm_w_ckm_n10_h1101010011",
+            "ckm_w_ckm_n10_h1101010110",
+            "ckm_w_ckm_n10_h1101010111"
+          ],
+          "expected_source_cells": [
+            "ckm_d_2_121_0",
+            "ckm_d_2_121_1",
+            "ckm_d_2_122_0",
+            "ckm_d_2_122_1",
+            "ckm_d_2_125_0",
+            "ckm_d_2_125_1",
+            "ckm_d_2_126_0",
+            "ckm_d_2_126_1",
+            "ckm_d_3_121_0",
+            "ckm_d_3_121_1",
+            "ckm_d_3_122_0",
+            "ckm_d_3_122_1",
+            "ckm_d_3_125_0",
+            "ckm_d_3_125_1",
+            "ckm_d_3_126_0",
+            "ckm_d_3_126_1",
+            "ckm_n10_h1101010010",
+            "ckm_n10_h1101010011",
+            "ckm_n10_h1101010110",
+            "ckm_n10_h1101010111"
+          ],
+          "missing_source_cells": [
+            "ckm_d_2_121_0",
+            "ckm_d_2_121_1",
+            "ckm_d_2_122_0",
+            "ckm_d_2_122_1",
+            "ckm_d_2_125_0",
+            "ckm_d_2_125_1",
+            "ckm_d_2_126_0",
+            "ckm_d_2_126_1",
+            "ckm_d_3_121_0",
+            "ckm_d_3_121_1",
+            "ckm_d_3_122_0",
+            "ckm_d_3_122_1",
+            "ckm_d_3_125_0",
+            "ckm_d_3_125_1",
+            "ckm_d_3_126_0",
+            "ckm_d_3_126_1",
+            "ckm_n10_h1101010010",
+            "ckm_n10_h1101010011",
+            "ckm_n10_h1101010110",
+            "ckm_n10_h1101010111"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "loaded_ctree.v",
+      "sha256": "73d0fd7d90f1c5885bfce31d4d5981dd01d50e6dcbcf802cd9b99e7682c55145",
+      "ck_mesh_references": 0,
+      "old_premesh_nodes": 0,
+      "output_taps": 3642,
+      "part_cuts": [
+        {
+          "part": "pc_EN_0",
+          "expected_boundary_nets": [
+            "ck_mesh",
+            "ckm_w_ckm_n10_h1111111000",
+            "ckm_w_ckm_n10_h1111111001",
+            "ckm_w_ckm_n10_h1111111100",
+            "ckm_w_ckm_n10_h1111111101"
+          ],
+          "missing_boundary_nets": [
+            "ck_mesh",
+            "ckm_w_ckm_n10_h1111111000",
+            "ckm_w_ckm_n10_h1111111001",
+            "ckm_w_ckm_n10_h1111111100",
+            "ckm_w_ckm_n10_h1111111101"
+          ],
+          "expected_source_cells": [
+            "ckm_d_28_121_0",
+            "ckm_d_28_121_1",
+            "ckm_d_28_122_0",
+            "ckm_d_28_122_1",
+            "ckm_d_28_125_0",
+            "ckm_d_28_125_1",
+            "ckm_d_28_126_0",
+            "ckm_d_28_126_1",
+            "ckm_d_29_121_0",
+            "ckm_d_29_121_1",
+            "ckm_d_29_122_0",
+            "ckm_d_29_122_1",
+            "ckm_d_29_125_0",
+            "ckm_d_29_125_1",
+            "ckm_d_29_126_0",
+            "ckm_d_29_126_1",
+            "ckm_n10_h1111111000",
+            "ckm_n10_h1111111001",
+            "ckm_n10_h1111111100",
+            "ckm_n10_h1111111101"
+          ],
+          "missing_source_cells": [
+            "ckm_d_28_121_0",
+            "ckm_d_28_121_1",
+            "ckm_d_28_122_0",
+            "ckm_d_28_122_1",
+            "ckm_d_28_125_0",
+            "ckm_d_28_125_1",
+            "ckm_d_28_126_0",
+            "ckm_d_28_126_1",
+            "ckm_d_29_121_0",
+            "ckm_d_29_121_1",
+            "ckm_d_29_122_0",
+            "ckm_d_29_122_1",
+            "ckm_d_29_125_0",
+            "ckm_d_29_125_1",
+            "ckm_d_29_126_0",
+            "ckm_d_29_126_1",
+            "ckm_n10_h1111111000",
+            "ckm_n10_h1111111001",
+            "ckm_n10_h1111111100",
+            "ckm_n10_h1111111101"
+          ]
+        },
+        {
+          "part": "pc_WN_0",
+          "expected_boundary_nets": [
+            "ck_mesh",
+            "ckm_w_ckm_n10_h1101010010",
+            "ckm_w_ckm_n10_h1101010011",
+            "ckm_w_ckm_n10_h1101010110",
+            "ckm_w_ckm_n10_h1101010111"
+          ],
+          "missing_boundary_nets": [
+            "ck_mesh",
+            "ckm_w_ckm_n10_h1101010010",
+            "ckm_w_ckm_n10_h1101010011",
+            "ckm_w_ckm_n10_h1101010110",
+            "ckm_w_ckm_n10_h1101010111"
+          ],
+          "expected_source_cells": [
+            "ckm_d_2_121_0",
+            "ckm_d_2_121_1",
+            "ckm_d_2_122_0",
+            "ckm_d_2_122_1",
+            "ckm_d_2_125_0",
+            "ckm_d_2_125_1",
+            "ckm_d_2_126_0",
+            "ckm_d_2_126_1",
+            "ckm_d_3_121_0",
+            "ckm_d_3_121_1",
+            "ckm_d_3_122_0",
+            "ckm_d_3_122_1",
+            "ckm_d_3_125_0",
+            "ckm_d_3_125_1",
+            "ckm_d_3_126_0",
+            "ckm_d_3_126_1",
+            "ckm_n10_h1101010010",
+            "ckm_n10_h1101010011",
+            "ckm_n10_h1101010110",
+            "ckm_n10_h1101010111"
+          ],
+          "missing_source_cells": [
+            "ckm_d_2_121_0",
+            "ckm_d_2_121_1",
+            "ckm_d_2_122_0",
+            "ckm_d_2_122_1",
+            "ckm_d_2_125_0",
+            "ckm_d_2_125_1",
+            "ckm_d_2_126_0",
+            "ckm_d_2_126_1",
+            "ckm_d_3_121_0",
+            "ckm_d_3_121_1",
+            "ckm_d_3_122_0",
+            "ckm_d_3_122_1",
+            "ckm_d_3_125_0",
+            "ckm_d_3_125_1",
+            "ckm_d_3_126_0",
+            "ckm_d_3_126_1",
+            "ckm_n10_h1101010010",
+            "ckm_n10_h1101010011",
+            "ckm_n10_h1101010110",
+            "ckm_n10_h1101010111"
+          ]
+        }
+      ]
+    }
+  ],
+  "old_island_nearest_current_cells": [
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc0",
+      "historical_cell": "ckm_d_29_126_0",
+      "historical_origin": [
+        9852.99,
+        25721.01
+      ],
+      "nearest_current_cell": "r5413_1",
+      "nearest_current_origin": [
+        9837.525,
+        25810.44
+      ],
+      "manhattan_um": 104.895
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc0",
+      "historical_cell": "ckm_d_29_126_1",
+      "historical_origin": [
+        9854.61,
+        25721.01
+      ],
+      "nearest_current_cell": "r5413_1",
+      "nearest_current_origin": [
+        9837.525,
+        25810.44
+      ],
+      "manhattan_um": 106.515
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc0",
+      "historical_cell": "ckm_d_29_125_0",
+      "historical_origin": [
+        9852.99,
+        25530.93
+      ],
+      "nearest_current_cell": "r5406_1",
+      "nearest_current_origin": [
+        9838.08,
+        25442.04
+      ],
+      "manhattan_um": 103.8
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc0",
+      "historical_cell": "ckm_d_29_125_1",
+      "historical_origin": [
+        9854.61,
+        25530.93
+      ],
+      "nearest_current_cell": "r5406_1",
+      "nearest_current_origin": [
+        9838.08,
+        25442.04
+      ],
+      "manhattan_um": 105.42
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc1",
+      "historical_cell": "ckm_d_28_126_1",
+      "historical_origin": [
+        9534.894,
+        25721.01
+      ],
+      "nearest_current_cell": "b5416",
+      "nearest_current_origin": [
+        9710.28,
+        25721.28
+      ],
+      "manhattan_um": 175.656
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc1",
+      "historical_cell": "ckm_d_28_126_0",
+      "historical_origin": [
+        9533.274,
+        25721.01
+      ],
+      "nearest_current_cell": "b5416",
+      "nearest_current_origin": [
+        9710.28,
+        25721.28
+      ],
+      "manhattan_um": 177.276
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc1",
+      "historical_cell": "ckm_d_28_125_1",
+      "historical_origin": [
+        9534.894,
+        25531.2
+      ],
+      "nearest_current_cell": "b5395",
+      "nearest_current_origin": [
+        9508.32,
+        25442.64
+      ],
+      "manhattan_um": 115.134
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc1",
+      "historical_cell": "ckm_d_28_125_0",
+      "historical_origin": [
+        9533.274,
+        25531.2
+      ],
+      "nearest_current_cell": "b5395",
+      "nearest_current_origin": [
+        9508.32,
+        25442.64
+      ],
+      "manhattan_um": 113.514
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc2",
+      "historical_cell": "ckm_d_28_122_1",
+      "historical_origin": [
+        9534.894,
+        24960.69
+      ],
+      "nearest_current_cell": "r5370_0",
+      "nearest_current_origin": [
+        9664.32,
+        24936.936
+      ],
+      "manhattan_um": 153.18
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc2",
+      "historical_cell": "ckm_d_28_122_0",
+      "historical_origin": [
+        9533.274,
+        24960.69
+      ],
+      "nearest_current_cell": "r5370_0",
+      "nearest_current_origin": [
+        9664.32,
+        24936.936
+      ],
+      "manhattan_um": 154.8
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc2",
+      "historical_cell": "ckm_d_28_121_1",
+      "historical_origin": [
+        9534.894,
+        24770.88
+      ],
+      "nearest_current_cell": "b5370",
+      "nearest_current_origin": [
+        9508.32,
+        24682.32
+      ],
+      "manhattan_um": 115.134
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc2",
+      "historical_cell": "ckm_d_28_121_0",
+      "historical_origin": [
+        9533.274,
+        24770.88
+      ],
+      "nearest_current_cell": "b5370",
+      "nearest_current_origin": [
+        9508.32,
+        24682.32
+      ],
+      "manhattan_um": 113.514
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc3",
+      "historical_cell": "ckm_d_29_122_0",
+      "historical_origin": [
+        9852.99,
+        24960.69
+      ],
+      "nearest_current_cell": "r5388_1",
+      "nearest_current_origin": [
+        9838.4,
+        25050.12
+      ],
+      "manhattan_um": 104.02
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc3",
+      "historical_cell": "ckm_d_29_122_1",
+      "historical_origin": [
+        9854.61,
+        24960.69
+      ],
+      "nearest_current_cell": "r5388_1",
+      "nearest_current_origin": [
+        9838.4,
+        25050.12
+      ],
+      "manhattan_um": 105.64
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc3",
+      "historical_cell": "ckm_d_29_121_0",
+      "historical_origin": [
+        9852.99,
+        24770.88
+      ],
+      "nearest_current_cell": "r5381_1",
+      "nearest_current_origin": [
+        9838.08,
+        24681.72
+      ],
+      "manhattan_um": 104.07
+    },
+    {
+      "part": "pc_EN_0",
+      "child": "kvpc3",
+      "historical_cell": "ckm_d_29_121_1",
+      "historical_origin": [
+        9854.61,
+        24770.88
+      ],
+      "nearest_current_cell": "r5381_1",
+      "nearest_current_origin": [
+        9838.08,
+        24681.72
+      ],
+      "manhattan_um": 105.69
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc0",
+      "historical_cell": "ckm_d_2_126_1",
+      "historical_origin": [
+        1221.87,
+        25721.01
+      ],
+      "nearest_current_cell": "r6339_1",
+      "nearest_current_origin": [
+        1239.315,
+        25810.44
+      ],
+      "manhattan_um": 106.875
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc0",
+      "historical_cell": "ckm_d_2_126_0",
+      "historical_origin": [
+        1220.25,
+        25721.01
+      ],
+      "nearest_current_cell": "r6339_1",
+      "nearest_current_origin": [
+        1239.315,
+        25810.44
+      ],
+      "manhattan_um": 108.495
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc0",
+      "historical_cell": "ckm_d_2_125_1",
+      "historical_origin": [
+        1221.87,
+        25530.93
+      ],
+      "nearest_current_cell": "r6332_1",
+      "nearest_current_origin": [
+        1238.76,
+        25442.04
+      ],
+      "manhattan_um": 105.78
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc0",
+      "historical_cell": "ckm_d_2_125_0",
+      "historical_origin": [
+        1220.25,
+        25530.93
+      ],
+      "nearest_current_cell": "r6332_1",
+      "nearest_current_origin": [
+        1238.76,
+        25442.04
+      ],
+      "manhattan_um": 107.4
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc1",
+      "historical_cell": "ckm_d_3_126_0",
+      "historical_origin": [
+        1539.966,
+        25721.01
+      ],
+      "nearest_current_cell": "b6345",
+      "nearest_current_origin": [
+        1366.2,
+        25721.28
+      ],
+      "manhattan_um": 174.036
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc1",
+      "historical_cell": "ckm_d_3_126_1",
+      "historical_origin": [
+        1541.586,
+        25721.01
+      ],
+      "nearest_current_cell": "b6345",
+      "nearest_current_origin": [
+        1366.2,
+        25721.28
+      ],
+      "manhattan_um": 175.656
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc1",
+      "historical_cell": "ckm_d_3_125_0",
+      "historical_origin": [
+        1539.966,
+        25531.2
+      ],
+      "nearest_current_cell": "b6330",
+      "nearest_current_origin": [
+        1569.24,
+        25442.64
+      ],
+      "manhattan_um": 117.834
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc1",
+      "historical_cell": "ckm_d_3_125_1",
+      "historical_origin": [
+        1541.586,
+        25531.2
+      ],
+      "nearest_current_cell": "b6330",
+      "nearest_current_origin": [
+        1569.24,
+        25442.64
+      ],
+      "manhattan_um": 116.214
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc2",
+      "historical_cell": "ckm_d_3_122_0",
+      "historical_origin": [
+        1539.966,
+        24960.69
+      ],
+      "nearest_current_cell": "r6305_0",
+      "nearest_current_origin": [
+        1414.2,
+        24935.166
+      ],
+      "manhattan_um": 151.29
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc2",
+      "historical_cell": "ckm_d_3_122_1",
+      "historical_origin": [
+        1541.586,
+        24960.69
+      ],
+      "nearest_current_cell": "r6305_0",
+      "nearest_current_origin": [
+        1414.2,
+        24935.166
+      ],
+      "manhattan_um": 152.91
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc2",
+      "historical_cell": "ckm_d_3_121_0",
+      "historical_origin": [
+        1539.966,
+        24770.88
+      ],
+      "nearest_current_cell": "b6305",
+      "nearest_current_origin": [
+        1569.24,
+        24682.32
+      ],
+      "manhattan_um": 117.834
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc2",
+      "historical_cell": "ckm_d_3_121_1",
+      "historical_origin": [
+        1541.586,
+        24770.88
+      ],
+      "nearest_current_cell": "b6305",
+      "nearest_current_origin": [
+        1569.24,
+        24682.32
+      ],
+      "manhattan_um": 116.214
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc3",
+      "historical_cell": "ckm_d_2_122_1",
+      "historical_origin": [
+        1221.87,
+        24960.69
+      ],
+      "nearest_current_cell": "r6314_1",
+      "nearest_current_origin": [
+        1238.44,
+        25050.12
+      ],
+      "manhattan_um": 106.0
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc3",
+      "historical_cell": "ckm_d_2_122_0",
+      "historical_origin": [
+        1220.25,
+        24960.69
+      ],
+      "nearest_current_cell": "r6314_1",
+      "nearest_current_origin": [
+        1238.44,
+        25050.12
+      ],
+      "manhattan_um": 107.62
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc3",
+      "historical_cell": "ckm_d_2_121_1",
+      "historical_origin": [
+        1221.87,
+        24770.88
+      ],
+      "nearest_current_cell": "r6307_1",
+      "nearest_current_origin": [
+        1238.76,
+        24681.72
+      ],
+      "manhattan_um": 106.05
+    },
+    {
+      "part": "pc_WN_0",
+      "child": "kvpc3",
+      "historical_cell": "ckm_d_2_121_0",
+      "historical_origin": [
+        1220.25,
+        24770.88
+      ],
+      "nearest_current_cell": "r6307_1",
+      "nearest_current_origin": [
+        1238.76,
+        24681.72
+      ],
+      "manhattan_um": 107.67
+    }
+  ],
+  "HEAD_normal_producer": {
+    "module": "qkd_kvs_pc_h_head_p",
+    "fixture": "BEFORE_FULL_SOURCE_OVERLAY",
+    "producer": "gen_core_kit_kv.island_ft_arcs/island_ft_rtl/island_ft_tcl",
+    "producer_sha256": "f16a279ea38f453e4d95eda2269a45f73d2721415d4ecf91b38b3a1de658f045",
+    "raw_body_exact_after_removing_only_normal_FT_text": true,
+    "cells": 4,
+    "arcs": [
+      {
+        "k": 0,
+        "source": "ft_ck_i_0",
+        "sink": "ft_ck_o_0",
+        "kind": "clock",
+        "role": "mesh_driver",
+        "master": "BUFx24_ASAP7_75t_R",
+        "rect_um": [
+          123.39,
+          86.4,
+          126.63,
+          86.67
+        ],
+        "cells": [
+          {
+            "name": "mp_isl0_ck0",
+            "x_um": 123.39,
+            "y_um": 86.4
+          },
+          {
+            "name": "mp_isl0_ck1",
+            "x_um": 125.01,
+            "y_um": 86.4
+          }
+        ]
+      },
+      {
+        "k": 1,
+        "source": "ft_ck_i_1",
+        "sink": "ft_ck_o_1",
+        "kind": "clock",
+        "role": "mesh_driver",
+        "master": "BUFx24_ASAP7_75t_R",
+        "rect_um": [
+          123.39,
+          276.48,
+          126.63,
+          276.75
+        ],
+        "cells": [
+          {
+            "name": "mp_isl1_ck0",
+            "x_um": 123.39,
+            "y_um": 276.48
+          },
+          {
+            "name": "mp_isl1_ck1",
+            "x_um": 125.01,
+            "y_um": 276.48
+          }
+        ]
+      }
+    ],
+    "source_default_changed": false,
+    "active_implementation": false,
+    "physical_hook_scope": "Normal Tcl is child-top: mp_isl* names and top BTerms; not a hierarchical soft-child parent hook. No fabricated prefixed variant emitted."
+  },
+  "minimal_repair": "Canonical infrastructure event must either provide actual current network membership for the existing BUFx24 islands OR create a separately qualified PC/HEAD physical ABI variant removing obsolete mesh-only FT infrastructure. Neither can be inferred by renaming INV tree nodes, tying to clk/clk_tN, or treating historical m25 as current. No existing producer option maps these legacy islands into current link_htree.",
+  "no_CAD_or_GEN": true
+}
