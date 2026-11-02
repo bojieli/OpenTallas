@@ -1,0 +1,11 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-t51-clocktap-feas-0850
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-t51-clocktap-feas-0850
+ot-run: localhost      admits   334 GB (avail 457, reserve 0, fresh 4, peak 54.6, headroom 0, waiters 1/360 GB) load 86/112 running 48 disk 105 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1650068-1793637909 after 1 s
+/srv/opentallas-scratch2/claude/codex-s81-t51-clocktap-feas-0850/census.py:27: SyntaxWarning: invalid decimal literal
+  tx,ty=[q*1000for q in t["xy"]];u0,v0=tx+ty,tx-ty
+/srv/opentallas-scratch2/claude/codex-s81-t51-clocktap-feas-0850/census.py:36: SyntaxWarning: invalid decimal literal
+  out=dict(scope="READ ONLY fixed-membership clock-node feasibility on actual missionFFs, centres AND native locations, combined149342075+173repairs+explicitq496t32. No targets/site/PG/track/clock/reset/source event or native qualification.",members=39655,taps=73,radius_um=150,cap=1500,maximum_fixed_member_load=max(q["members"]for q in records),current_either_centre_or_location_bad_FFs=len(badFF),empty_fixed_membership_intersections=sum(not q["feasible_at150"]for q in records),node_movement_only_geometrically_feasible=sum(q["feasible_at150"]and q["current_max_radius_um"]>150+1e-9for q in records),records=records,holds=["Some groups may need allowed reassignment or existing FF geometry changes; no150widening.","NonemptyUV is only a mathematical intersection, not a legal node site or activatedclockevent.","Nativeclockdomain remainsclk; actual Tcl binding/sourcephase and all other model/PG/NW holds remain."])
+{'scope': 'READ ONLY fixed-membership clock-node feasibility on actual missionFFs, centres AND native locations, combined149342075+173repairs+explicitq496t32. No targets/site/PG/track/clock/reset/source event or native qualification.', 'members': 39655, 'taps': 73, 'radius_um': 150, 'cap': 1500, 'maximum_fixed_member_load': 1318, 'current_either_centre_or_location_bad_FFs': 915, 'empty_fixed_membership_intersections': 1, 'node_movement_only_geometrically_feasible': 10}
+ot-run: RAN on localhost (unit oth-ubuntu-1650068-1793637909): exit 0

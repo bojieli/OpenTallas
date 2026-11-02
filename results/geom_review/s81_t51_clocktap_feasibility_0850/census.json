@@ -1,0 +1,4398 @@
+{
+ "scope": "READ ONLY fixed-membership clock-node feasibility on actual missionFFs, centres AND native locations, combined149342075+173repairs+explicitq496t32. No targets/site/PG/track/clock/reset/source event or native qualification.",
+ "members": 39655,
+ "taps": 73,
+ "radius_um": 150,
+ "cap": 1500,
+ "maximum_fixed_member_load": 1318,
+ "current_either_centre_or_location_bad_FFs": 915,
+ "empty_fixed_membership_intersections": 1,
+ "node_movement_only_geometrically_feasible": 10,
+ "records": [
+  {
+   "tap": "clk",
+   "members": 496,
+   "current_xy_um": [
+    725.04,
+    613.44
+   ],
+   "current_max_radius_um": 69.75,
+   "fixed_membership_minimum_radius_um": 40.7295,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1200135.0,
+    1418730.0,
+    -2391.0,
+    216150.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft5_o_1/q\\[8\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      667440,
+      601290
+     ],
+     "u": 1268730,
+     "v": 66150
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft7_o_1/q\\[98\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      746010.0,
+      604125.0
+     ],
+     "u": 1350135.0,
+     "v": 141885.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft5_o_1/q\\[8\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      667440,
+      601290
+     ],
+     "u": 1268730,
+     "v": 66150
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft7_o_1/q\\[86\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      745794.0,
+      598185.0
+     ],
+     "u": 1343979.0,
+     "v": 147609.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t1",
+   "members": 516,
+   "current_xy_um": [
+    237.96,
+    17.28
+   ],
+   "current_max_radius_um": 77.04,
+   "fixed_membership_minimum_radius_um": 67.1895,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    162579.0,
+    328200.0,
+    145515.0,
+    319560.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft8_o_0/q\\[1\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      173880,
+      4320
+     ],
+     "u": 178200,
+     "v": 169560
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_253/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      303804.0,
+      8775.0
+     ],
+     "u": 312579.0,
+     "v": 295029.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft8_o_0/q\\[1\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      173880,
+      4320
+     ],
+     "u": 178200,
+     "v": 169560
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft8_o_0/q\\[509\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      300780.0,
+      5265.0
+     ],
+     "u": 306045.0,
+     "v": 295515.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t2",
+   "members": 681,
+   "current_xy_um": [
+    549.0,
+    17.28
+   ],
+   "current_max_radius_um": 116.253,
+   "fixed_membership_minimum_radius_um": 85.2795,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    510177.0,
+    639618.0,
+    497973.0,
+    630438.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft9_o_0/q\\[1\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      485028,
+      4590
+     ],
+     "u": 489618,
+     "v": 480438
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft4_o_3/q\\[88\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      652482.0,
+      7695.0
+     ],
+     "u": 660177.0,
+     "v": 644787.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft9_o_0/q\\[1\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      485028,
+      4590
+     ],
+     "u": 489618,
+     "v": 480438
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft4_o_3/q\\[111\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      652428.0,
+      4455.0
+     ],
+     "u": 656883.0,
+     "v": 647973.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t3",
+   "members": 1190,
+   "current_xy_um": [
+    756.696,
+    17.28
+   ],
+   "current_max_radius_um": 159.279,
+   "fixed_membership_minimum_radius_um": 126.1575,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    758955.0,
+    807936.0,
+    748695.0,
+    796380.0
+   ],
+   "minimum_L1_node_jog_um": 9.279,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft4_o_3/q\\[106\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      653346,
+      4590
+     ],
+     "u": 657936,
+     "v": 648756
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft5_o_3/q\\[293\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      903150.0,
+      5805.0
+     ],
+     "u": 908955.0,
+     "v": 897345.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft4_o_3/q\\[83\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      652320,
+      5940
+     ],
+     "u": 658260,
+     "v": 646380
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft5_o_3/q\\[254\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      903150.0,
+      4455.0
+     ],
+     "u": 907605.0,
+     "v": 898695.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t4",
+   "members": 1001,
+   "current_xy_um": [
+    1050.12,
+    17.28
+   ],
+   "current_max_radius_um": 159.012,
+   "fixed_membership_minimum_radius_um": 114.858,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    988104.0,
+    1058388.0,
+    957945.0,
+    1046670.0
+   ],
+   "minimum_L1_node_jog_um": 9.012,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft5_o_3/q\\[262\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      904068,
+      4320
+     ],
+     "u": 908388,
+     "v": 899748
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft0_o_1/q\\[884\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1083969.0,
+      54135.0
+     ],
+     "u": 1138104.0,
+     "v": 1029834.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft5_o_3/q\\[323\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      902880,
+      6210
+     ],
+     "u": 909090,
+     "v": 896670
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft11_o_0/q\\[508\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1112940.0,
+      4995.0
+     ],
+     "u": 1117935.0,
+     "v": 1107945.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t5",
+   "members": 473,
+   "current_xy_um": [
+    1356.36,
+    17.28
+   ],
+   "current_max_radius_um": 91.572,
+   "fixed_membership_minimum_radius_um": 68.04,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1268148.0,
+    1432068.0,
+    1257402.0,
+    1422888.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft6_o_4/q\\[513\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1277478,
+      4590
+     ],
+     "u": 1282068,
+     "v": 1272888
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft12_o_0/q\\[468\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1412073.0,
+      6075.0
+     ],
+     "u": 1418148.0,
+     "v": 1405998.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft6_o_4/q\\[513\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1277478,
+      4590
+     ],
+     "u": 1282068,
+     "v": 1272888
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft12_o_0/q\\[463\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1411857.0,
+      4455.0
+     ],
+     "u": 1416312.0,
+     "v": 1407402.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t6",
+   "members": 595,
+   "current_xy_um": [
+    1425.6,
+    60.264
+   ],
+   "current_max_radius_um": 74.223,
+   "fixed_membership_minimum_radius_um": 71.4555,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1410087.0,
+    1567176.0,
+    1281567.0,
+    1463712.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft12_o_0/q\\[464\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1412316,
+      4860
+     ],
+     "u": 1417176,
+     "v": 1407456
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft0_o_0/q\\[569\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1437912.0,
+      122175.0
+     ],
+     "u": 1560087.0,
+     "v": 1315737.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft0_o_0/q\\[568\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1436022,
+      122310
+     ],
+     "u": 1558332,
+     "v": 1313712
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft0_o_0/q\\[1103\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1436832.0,
+      5265.0
+     ],
+     "u": 1442097.0,
+     "v": 1431567.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t7",
+   "members": 1013,
+   "current_xy_um": [
+    8.64,
+    125.479
+   ],
+   "current_max_radius_um": 122.219,
+   "fixed_membership_minimum_radius_um": 103.9905,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    100425.0,
+    192930.0,
+    -181077.0,
+    -89058.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft0_o_4/q\\[957\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      5400,
+      37530
+     ],
+     "u": 42930,
+     "v": -32130
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft0_o_4/q\\[7\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      6210.0,
+      244215.0
+     ],
+     "u": 250425.0,
+     "v": -238005.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft0_o_4/q\\[11\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      4752,
+      243810
+     ],
+     "u": 248562,
+     "v": -239058
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft0_o_4/q\\[956\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      6318.0,
+      37395.0
+     ],
+     "u": 43713.0,
+     "v": -31077.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t8",
+   "members": 866,
+   "current_xy_um": [
+    361.0408,
+    125.8257
+   ],
+   "current_max_radius_um": 121.30850000000001,
+   "fixed_membership_minimum_radius_um": 95.3775,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    458175.0,
+    567420.0,
+    152481.0,
+    263940.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft0_o_3/q\\[856\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      357480,
+      59940
+     ],
+     "u": 417420,
+     "v": 297540
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft0_o_3/q\\[0\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      362340.0,
+      245835.0
+     ],
+     "u": 608175.0,
+     "v": 116505.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft0_o_3/q\\[8\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      358020,
+      244080
+     ],
+     "u": 602100,
+     "v": 113940
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft0_o_3/q\\[863\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      360936.0,
+      58455.0
+     ],
+     "u": 419391.0,
+     "v": 302481.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t9",
+   "members": 1267,
+   "current_xy_um": [
+    1081.652,
+    126.1346
+   ],
+   "current_max_radius_um": 169.67239999999998,
+   "fixed_membership_minimum_radius_um": 120.1365,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1227459.0,
+    1287186.0,
+    877944.0,
+    982950.0
+   ],
+   "minimum_L1_node_jog_um": 19.672399999999907,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft0_o_1/q\\[868\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1079676,
+      57510
+     ],
+     "u": 1137186,
+     "v": 1022166
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft6_o_3/q\\[468\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1137564.0,
+      239895.0
+     ],
+     "u": 1377459.0,
+     "v": 897669.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft6_o_3/q\\[119\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1073790,
+      240840
+     ],
+     "u": 1314630,
+     "v": 832950
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft0_o_1/q\\[875\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1083969.0,
+      56025.0
+     ],
+     "u": 1139994.0,
+     "v": 1027944.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t10",
+   "members": 880,
+   "current_xy_um": [
+    721.4461,
+    126.1461
+   ],
+   "current_max_radius_um": 120.96399999999997,
+   "fixed_membership_minimum_radius_um": 96.4575,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    815601.0,
+    923280.0,
+    517251.0,
+    624336.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft0_o_2/q\\[883\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      719280,
+      54000
+     ],
+     "u": 773280,
+     "v": 665280
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft0_o_2/q\\[11\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      721656.0,
+      243945.0
+     ],
+     "u": 965601.0,
+     "v": 477711.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft0_o_2/q\\[8\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      718146,
+      243810
+     ],
+     "u": 961956,
+     "v": 474336
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft0_o_2/q\\[878\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      722196.0,
+      54945.0
+     ],
+     "u": 777141.0,
+     "v": 667251.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t11",
+   "members": 575,
+   "current_xy_um": [
+    1425.6,
+    185.12
+   ],
+   "current_max_radius_um": 73.367,
+   "fixed_membership_minimum_radius_um": 62.8425,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1533585.0,
+    1707900.0,
+    1163847.0,
+    1340160.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft0_o_0/q\\[562\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1434240,
+      123660
+     ],
+     "u": 1557900,
+     "v": 1310580
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft0_o_0/q\\[2\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1437210.0,
+      246375.0
+     ],
+     "u": 1683585.0,
+     "v": 1190835.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft0_o_0/q\\[9\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1434240,
+      244080
+     ],
+     "u": 1678320,
+     "v": 1190160
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft0_o_0/q\\[565\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1436832.0,
+      122985.0
+     ],
+     "u": 1559817.0,
+     "v": 1313847.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t12",
+   "members": 567,
+   "current_xy_um": [
+    1425.6,
+    308.376
+   ],
+   "current_max_radius_um": 72.477,
+   "fixed_membership_minimum_radius_um": 61.4655,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1655517.0,
+    1832640.0,
+    1039701.0,
+    1216770.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft1_o_0/eq$_DFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1435860,
+      246780
+     ],
+     "u": 1682640,
+     "v": 1189080
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft1_o_0/q\\[549\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1437912.0,
+      367605.0
+     ],
+     "u": 1805517.0,
+     "v": 1070307.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft1_o_0/q\\[551\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1434240,
+      367470
+     ],
+     "u": 1801710,
+     "v": 1066770
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft1_o_0/q\\[1103\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1436886.0,
+      247185.0
+     ],
+     "u": 1684071.0,
+     "v": 1189701.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t13",
+   "members": 667,
+   "current_xy_um": [
+    57.192,
+    314.532
+   ],
+   "current_max_radius_um": 122.946,
+   "fixed_membership_minimum_radius_um": 83.2815,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    220305.0,
+    398778.0,
+    -294909.0,
+    -161472.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft0_o_4/q\\[8\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      4428,
+      244350
+     ],
+     "u": 248778,
+     "v": -239922
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_174/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      56160.0,
+      314145.0
+     ],
+     "u": 370305.0,
+     "v": -257985.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft1_o_4/q\\[784\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      4428,
+      315900
+     ],
+     "u": 320328,
+     "v": -311472
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft2_o_2/q\\[354\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      92556.0,
+      237465.0
+     ],
+     "u": 330021.0,
+     "v": -144909.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t14",
+   "members": 575,
+   "current_xy_um": [
+    237.9862,
+    319.6113
+   ],
+   "current_max_radius_um": 107.14010000000006,
+   "fixed_membership_minimum_radius_um": 85.0365,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    468570.0,
+    646854.0,
+    -124485.0,
+    5442.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft8_o_1/q\\[1\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      177444,
+      319410
+     ],
+     "u": 496854,
+     "v": -141966
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft8_o_1/q\\[510\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      299835.0,
+      318735.0
+     ],
+     "u": 618570.0,
+     "v": -18900.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft8_o_1/q\\[11\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      177822,
+      322380
+     ],
+     "u": 500202,
+     "v": -144558
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft3_o_2/q\\[48\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      317250.0,
+      291735.0
+     ],
+     "u": 608985.0,
+     "v": 25515.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t15",
+   "members": 1318,
+   "current_xy_um": [
+    756.6474,
+    326.9627
+   ],
+   "current_max_radius_um": 122.76230000000011,
+   "fixed_membership_minimum_radius_um": 107.6355,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1028955.0,
+    1113684.0,
+    402447.0,
+    540690.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft0_o_2/q\\[2\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      718524,
+      245160
+     ],
+     "u": 963684,
+     "v": 473364
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_84/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      830520.0,
+      348435.0
+     ],
+     "u": 1178955.0,
+     "v": 482085.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft1_o_2/q\\[732\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      719280,
+      328590
+     ],
+     "u": 1047870,
+     "v": 390690
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft5_o_2/q\\[435\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      852012.0,
+      299565.0
+     ],
+     "u": 1151577.0,
+     "v": 552447.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t16",
+   "members": 209,
+   "current_xy_um": [
+    114.168,
+    328.306
+   ],
+   "current_max_radius_um": 165.104,
+   "fixed_membership_minimum_radius_um": 131.6655,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    439653.0,
+    479346.0,
+    -265911.0,
+    -229242.0
+   ],
+   "minimum_L1_node_jog_um": 15.104,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft2_o_2/q\\[394\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      93096,
+      236250
+     ],
+     "u": 329346,
+     "v": -143154
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft2_o_1/q\\[420\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      111078.0,
+      478575.0
+     ],
+     "u": 589653.0,
+     "v": -367497.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft2_o_1/q\\[329\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      98118,
+      477360
+     ],
+     "u": 575478,
+     "v": -379242
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft2_o_2/q\\[512\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      123174.0,
+      239085.0
+     ],
+     "u": 362259.0,
+     "v": -115911.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t17",
+   "members": 571,
+   "current_xy_um": [
+    1050.1631,
+    339.1913
+   ],
+   "current_max_radius_um": 122.2211999999999,
+   "fixed_membership_minimum_radius_um": 91.8135,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1269120.0,
+    1439250.0,
+    683193.0,
+    799566.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft6_o_3/q\\[1\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1048680,
+      240570
+     ],
+     "u": 1289250,
+     "v": 808110
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft11_o_1/q\\[383\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1077435.0,
+      341685.0
+     ],
+     "u": 1419120.0,
+     "v": 735750.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft11_o_1/q\\[9\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      988146,
+      338580
+     ],
+     "u": 1326726,
+     "v": 649566
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft6_o_3/q\\[101\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1073898.0,
+      240705.0
+     ],
+     "u": 1314603.0,
+     "v": 833193.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t18",
+   "members": 630,
+   "current_xy_um": [
+    549.0094,
+    344.4376
+   ],
+   "current_max_radius_um": 102.82319999999996,
+   "fixed_membership_minimum_radius_um": 82.2285,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    801804.0,
+    978360.0,
+    157395.0,
+    292938.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft9_o_1/q\\[0\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      487080,
+      341280
+     ],
+     "u": 828360,
+     "v": 145800
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft9_o_1/q\\[493\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      605529.0,
+      346275.0
+     ],
+     "u": 951804.0,
+     "v": 259254.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft9_o_1/q\\[10\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      487188,
+      344250
+     ],
+     "u": 831438,
+     "v": 142938
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft4_o_2/q\\[166\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      606690.0,
+      299295.0
+     ],
+     "u": 905985.0,
+     "v": 307395.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t19",
+   "members": 209,
+   "current_xy_um": [
+    662.664,
+    347.604
+   ],
+   "current_max_radius_um": 103.23,
+   "fixed_membership_minimum_radius_um": 70.6725,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    857883.0,
+    1057038.0,
+    249519.0,
+    408174.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft4_o_2/q\\[133\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      607068,
+      299970
+     ],
+     "u": 907038,
+     "v": 307098
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_240/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      662418.0,
+      345465.0
+     ],
+     "u": 1007883.0,
+     "v": 316953.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft9_o_1/q\\[494\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      604854,
+      346680
+     ],
+     "u": 951534,
+     "v": 258174
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft7_o_2/q\\[248\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      698544.0,
+      299025.0
+     ],
+     "u": 997569.0,
+     "v": 399519.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t20",
+   "members": 43,
+   "current_xy_um": [
+    1200.024,
+    347.9504
+   ],
+   "current_max_radius_um": 170.70440000000002,
+   "fixed_membership_minimum_radius_um": 86.7915,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1400853.0,
+    1527270.0,
+    756255.0,
+    993480.0
+   ],
+   "minimum_L1_node_jog_um": 20.704399999999907,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft6_o_3/q\\[469\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1137240,
+      240030
+     ],
+     "u": 1377270,
+     "v": 897210
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_35/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1203228.0,
+      347625.0
+     ],
+     "u": 1550853.0,
+     "v": 855603.0
+    },
+    "vmin": {
+     "name": "u_bound.u_rrl_36/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1191240,
+      347760
+     ],
+     "u": 1539000,
+     "v": 843480
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft6_o_3/q\\[501\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1146690.0,
+      240435.0
+     ],
+     "u": 1387125.0,
+     "v": 906255.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t21",
+   "members": 786,
+   "current_xy_um": [
+    8.64,
+    366.643
+   ],
+   "current_max_radius_um": 125.351,
+   "fixed_membership_minimum_radius_um": 86.9535,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    343695.0,
+    471408.0,
+    -459447.0,
+    -333354.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft1_o_4/q\\[779\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      4428,
+      316980
+     ],
+     "u": 321408,
+     "v": -312552
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft1_o_4/q\\[1\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      5940.0,
+      487755.0
+     ],
+     "u": 493695.0,
+     "v": -481815.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft1_o_4/q\\[0\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      4536,
+      487890
+     ],
+     "u": 492426,
+     "v": -483354
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft1_o_4/q\\[783\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      7398.0,
+      316845.0
+     ],
+     "u": 324243.0,
+     "v": -309447.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t22",
+   "members": 55,
+   "current_xy_um": [
+    17.28,
+    366.643
+   ],
+   "current_max_radius_um": 149.246,
+   "fixed_membership_minimum_radius_um": 75.8565,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    383169.0,
+    531456.0,
+    -499245.0,
+    -285888.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_rrl_156/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      15336,
+      366120
+     ],
+     "u": 381456,
+     "v": -350784
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft2_o_1/q\\[364\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      55134.0,
+      478035.0
+     ],
+     "u": 533169.0,
+     "v": -422901.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft2_o_1/q\\[80\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      41742,
+      477630
+     ],
+     "u": 519372,
+     "v": -435888
+    },
+    "vmax": {
+     "name": "u_bound.u_rrl_155/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      16740.0,
+      365985.0
+     ],
+     "u": 382725.0,
+     "v": -349245.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t23",
+   "members": 204,
+   "current_xy_um": [
+    352.3891,
+    366.9585
+   ],
+   "current_max_radius_um": 108.17559999999997,
+   "fixed_membership_minimum_radius_um": 54.2565,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    569685.0,
+    761172.0,
+    -86739.0,
+    135150.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft3_o_2/q\\[43\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      318762,
+      292410
+     ],
+     "u": 611172,
+     "v": 26352
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_186/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      352620.0,
+      367065.0
+     ],
+     "u": 719685.0,
+     "v": -14445.0
+    },
+    "vmin": {
+     "name": "u_bound.u_rrl_186/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      352080,
+      366930
+     ],
+     "u": 719010,
+     "v": -14850
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft3_o_2/q\\[277\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      356076.0,
+      292815.0
+     ],
+     "u": 648891.0,
+     "v": 63261.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t24",
+   "members": 1244,
+   "current_xy_um": [
+    361.0291,
+    366.9585
+   ],
+   "current_max_radius_um": 121.78060000000004,
+   "fixed_membership_minimum_radius_um": 121.1895,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    699015.0,
+    756636.0,
+    -35493.0,
+    22290.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft1_o_3/q\\[1095\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      357966,
+      248670
+     ],
+     "u": 606636,
+     "v": 109296
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft1_o_3/q\\[4\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      362340.0,
+      486675.0
+     ],
+     "u": 849015.0,
+     "v": -124335.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft1_o_3/q\\[1\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      359640,
+      487350
+     ],
+     "u": 846990,
+     "v": -127710
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft1_o_3/eq$_DFF_PN0_",
+     "kind": "centre",
+     "xy_dbu": [
+      361422.0,
+      246915.0
+     ],
+     "u": 608337.0,
+     "v": 114507.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t25",
+   "members": 121,
+   "current_xy_um": [
+    399.144,
+    366.9585
+   ],
+   "current_max_radius_um": 93.1005,
+   "fixed_membership_minimum_radius_um": 45.6705,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    614343.0,
+    823002.0,
+    -39651.0,
+    179808.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft3_o_2/q\\[442\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      380322,
+      292680
+     ],
+     "u": 673002,
+     "v": 87642
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_188/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      397278.0,
+      367065.0
+     ],
+     "u": 764343.0,
+     "v": 30213.0
+    },
+    "vmin": {
+     "name": "u_bound.u_rrl_188/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      396738,
+      366930
+     ],
+     "u": 763668,
+     "v": 29808
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft3_o_2/q\\[506\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      405324.0,
+      294975.0
+     ],
+     "u": 700299.0,
+     "v": 110349.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t26",
+   "members": 1151,
+   "current_xy_um": [
+    1081.6501,
+    367.2773
+   ],
+   "current_max_radius_um": 121.83080000000005,
+   "fixed_membership_minimum_radius_um": 121.392,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1420050.0,
+    1477266.0,
+    685272.0,
+    742542.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft1_o_1/q\\[1103\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1079406,
+      247860
+     ],
+     "u": 1327266,
+     "v": 831546
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft1_o_1/q\\[3\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1083645.0,
+      486405.0
+     ],
+     "u": 1570050.0,
+     "v": 597240.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft1_o_1/q\\[0\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1079352,
+      486810
+     ],
+     "u": 1566162,
+     "v": 592542
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft1_o_1/q\\[1098\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1084077.0,
+      248805.0
+     ],
+     "u": 1332882.0,
+     "v": 835272.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t27",
+   "members": 733,
+   "current_xy_um": [
+    721.4402,
+    367.2969
+   ],
+   "current_max_radius_um": 121.13329999999999,
+   "fixed_membership_minimum_radius_um": 80.7435,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1059789.0,
+    1198302.0,
+    241311.0,
+    383010.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft1_o_2/q\\[726\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      718902,
+      329400
+     ],
+     "u": 1048302,
+     "v": 389502
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft1_o_2/q\\[1\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      722304.0,
+      487485.0
+     ],
+     "u": 1209789.0,
+     "v": 234819.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft1_o_2/q\\[3\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      720360,
+      487350
+     ],
+     "u": 1207710,
+     "v": 233010
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft1_o_2/q\\[719\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      722466.0,
+      331155.0
+     ],
+     "u": 1053621.0,
+     "v": 391311.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t28",
+   "members": 116,
+   "current_xy_um": [
+    888.984,
+    385.452
+   ],
+   "current_max_radius_um": 149.949,
+   "fixed_membership_minimum_radius_um": 136.2285,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1274385.0,
+    1301928.0,
+    425667.0,
+    626010.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft5_o_2/q\\[419\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      852228,
+      299700
+     ],
+     "u": 1151928,
+     "v": 552528
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft6_o_2/q\\[0\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      952290.0,
+      472095.0
+     ],
+     "u": 1424385.0,
+     "v": 480195.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft6_o_2/q\\[5\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      949860,
+      473850
+     ],
+     "u": 1423710,
+     "v": 476010
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft5_o_2/q\\[510\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      876312.0,
+      300645.0
+     ],
+     "u": 1176957.0,
+     "v": 575667.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t29",
+   "members": 470,
+   "current_xy_um": [
+    1361.1736,
+    388.7971
+   ],
+   "current_max_radius_um": 65.27870000000007,
+   "fixed_membership_minimum_radius_um": 58.482,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1651656.0,
+    1834692.0,
+    873192.0,
+    1061358.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft12_o_1/q\\[0\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1299132,
+      385560
+     ],
+     "u": 1684692,
+     "v": 913572
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft12_o_1/q\\[466\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1411371.0,
+      390285.0
+     ],
+     "u": 1801656.0,
+     "v": 1021086.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft12_o_1/q\\[10\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1299888,
+      388530
+     ],
+     "u": 1688418,
+     "v": 911358
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft12_o_1/q\\[470\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1412127.0,
+      388935.0
+     ],
+     "u": 1801062.0,
+     "v": 1023192.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t30",
+   "members": 595,
+   "current_xy_um": [
+    1425.6,
+    428.0
+   ],
+   "current_max_radius_um": 71.527,
+   "fixed_membership_minimum_radius_um": 66.5685,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1775127.0,
+    1941990.0,
+    918849.0,
+    1099266.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_cland_collect_rst_rl_205/fault_o$_SDFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1423440,
+      368550
+     ],
+     "u": 1791990,
+     "v": 1054890
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft1_o_0/q\\[1\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1437912.0,
+      487215.0
+     ],
+     "u": 1925127.0,
+     "v": 950697.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft1_o_0/q\\[2\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1436616,
+      487350
+     ],
+     "u": 1923966,
+     "v": 949266
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft1_o_0/q\\[545\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1437264.0,
+      368415.0
+     ],
+     "u": 1805679.0,
+     "v": 1068849.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t31",
+   "members": 534,
+   "current_xy_um": [
+    796.0109,
+    613.4376
+   ],
+   "current_max_radius_um": 200.2645,
+   "fixed_membership_minimum_radius_um": 114.0075,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1459713.0,
+    1531698.0,
+    61869.0,
+    281652.0
+   ],
+   "minimum_L1_node_jog_um": 50.2645,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft5_o_1/q\\[472\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      781758,
+      599940
+     ],
+     "u": 1381698,
+     "v": 181818
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft6_o_1/q\\[296\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      890568.0,
+      719145.0
+     ],
+     "u": 1609713.0,
+     "v": 171423.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft6_o_1/q\\[502\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      853632,
+      721980
+     ],
+     "u": 1575612,
+     "v": 131652
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft10_o_2/q\\[272\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      824634.0,
+      612765.0
+     ],
+     "u": 1437399.0,
+     "v": 211869.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t32",
+   "members": 1030,
+   "current_xy_um": [
+    986.2136,
+    613.4382
+   ],
+   "current_max_radius_um": 199.97540000000004,
+   "fixed_membership_minimum_radius_um": 174.9735,
+   "feasible_at150": false,
+   "feasible_uv_bounds_dbu": [
+    1509015.0,
+    1599684.0,
+    372747.0,
+    322800.0
+   ],
+   "minimum_L1_node_jog_um": null,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft6_o_2/q\\[12\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      963954,
+      485730
+     ],
+     "u": 1449684,
+     "v": 478224
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft11_o_2/q\\[509\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1044900.0,
+      614115.0
+     ],
+     "u": 1659015.0,
+     "v": 430785.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft6_o_1/q\\[7\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      891000,
+      718200
+     ],
+     "u": 1609200,
+     "v": 172800
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft6_o_2/q\\[377\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1004832.0,
+      482085.0
+     ],
+     "u": 1486917.0,
+     "v": 522747.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t33",
+   "members": 300,
+   "current_xy_um": [
+    262.8199,
+    613.4397
+   ],
+   "current_max_radius_um": 59.50960000000009,
+   "fixed_membership_minimum_radius_um": 34.6005,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    735951.0,
+    966750.0,
+    -490551.0,
+    -259158.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft8_o_2/q\\[4\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      204390,
+      612360
+     ],
+     "u": 816750,
+     "v": -407970
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft8_o_2/q\\[294\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      271836.0,
+      614115.0
+     ],
+     "u": 885951.0,
+     "v": -342279.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft8_o_2/q\\[12\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      205362,
+      614520
+     ],
+     "u": 819882,
+     "v": -409158
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft8_o_2/q\\[296\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      271674.0,
+      612225.0
+     ],
+     "u": 883899.0,
+     "v": -340551.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t34",
+   "members": 465,
+   "current_xy_um": [
+    474.6094,
+    613.4397
+   ],
+   "current_max_radius_um": 60.375699999999895,
+   "fixed_membership_minimum_radius_um": 53.7435,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    985647.0,
+    1178160.0,
+    -242205.0,
+    -49206.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_rrl_63/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      414720,
+      613440
+     ],
+     "u": 1028160,
+     "v": -198720
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft9_o_2/q\\[463\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      521262.0,
+      614385.0
+     ],
+     "u": 1135647.0,
+     "v": -93123.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft9_o_2/q\\[13\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      415854,
+      615060
+     ],
+     "u": 1030914,
+     "v": -199206
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft9_o_2/q\\[456\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      520020.0,
+      612225.0
+     ],
+     "u": 1132245.0,
+     "v": -92205.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t35",
+   "members": 425,
+   "current_xy_um": [
+    1198.0494,
+    613.4397
+   ],
+   "current_max_radius_um": 59.96129999999993,
+   "fixed_membership_minimum_radius_um": 48.9915,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1721397.0,
+    1923414.0,
+    494571.0,
+    697398.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft12_o_2/q\\[88\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1161054,
+      612360
+     ],
+     "u": 1773414,
+     "v": 548694
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft12_o_2/q\\[511\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1256742.0,
+      614655.0
+     ],
+     "u": 1871397.0,
+     "v": 642087.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft12_o_2/q\\[106\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1162188,
+      614790
+     ],
+     "u": 1776978,
+     "v": 547398
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft12_o_2/q\\[504\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1256796.0,
+      612225.0
+     ],
+     "u": 1869021.0,
+     "v": 644571.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t36",
+   "members": 436,
+   "current_xy_um": [
+    69.236,
+    613.44
+   ],
+   "current_max_radius_um": 164.773,
+   "fixed_membership_minimum_radius_um": 83.6055,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    537933.0,
+    682926.0,
+    -529431.0,
+    -396642.0
+   ],
+   "minimum_L1_node_jog_um": 14.773,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft2_o_1/q\\[55\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      53136,
+      479790
+     ],
+     "u": 532926,
+     "v": -426654
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_65/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      70848.0,
+      617085.0
+     ],
+     "u": 687933.0,
+     "v": -546237.0
+    },
+    "vmin": {
+     "name": "u_bound.u_rrl_65/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      70308,
+      616950
+     ],
+     "u": 687258,
+     "v": -546642
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft2_o_1/q\\[450\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      96714.0,
+      476145.0
+     ],
+     "u": 572859.0,
+     "v": -379431.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t37",
+   "members": 736,
+   "current_xy_um": [
+    280.916,
+    613.44
+   ],
+   "current_max_radius_um": 99.325,
+   "fixed_membership_minimum_radius_um": 54.4995,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    795351.0,
+    1021722.0,
+    -383199.0,
+    -192198.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft3_o_1/q\\[0\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      286362,
+      585360
+     ],
+     "u": 871722,
+     "v": -298998
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft3_o_1/q\\[503\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      356076.0,
+      589275.0
+     ],
+     "u": 945351.0,
+     "v": -233199.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft8_o_2/q\\[303\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      272322,
+      614520
+     ],
+     "u": 886842,
+     "v": -342198
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft3_o_1/q\\[503\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      356076.0,
+      589275.0
+     ],
+     "u": 945351.0,
+     "v": -233199.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t38",
+   "members": 331,
+   "current_xy_um": [
+    569.448,
+    613.44
+   ],
+   "current_max_radius_um": 120.168,
+   "fixed_membership_minimum_radius_um": 67.9995,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1048719.0,
+    1212720.0,
+    -120975.0,
+    57552.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_rrl_190/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      545670,
+      517050
+     ],
+     "u": 1062720,
+     "v": 28620
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft4_o_1/q\\[6\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      597834.0,
+      600885.0
+     ],
+     "u": 1198719.0,
+     "v": -3051.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft9_o_2/q\\[461\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      521802,
+      614250
+     ],
+     "u": 1136052,
+     "v": -92448
+    },
+    "vmax": {
+     "name": "u_bound.u_rrl_190/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      546210.0,
+      517185.0
+     ],
+     "u": 1063395.0,
+     "v": 29025.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t39",
+   "members": 332,
+   "current_xy_um": [
+    767.7456,
+    613.44
+   ],
+   "current_max_radius_um": 37.50359999999998,
+   "fixed_membership_minimum_radius_um": 26.1225,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1245927.0,
+    1493682.0,
+    32385.0,
+    292236.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft7_o_1/q\\[92\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      746172,
+      597510
+     ],
+     "u": 1343682,
+     "v": 148662
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft10_o_2/q\\[75\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      781272.0,
+      614655.0
+     ],
+     "u": 1395927.0,
+     "v": 166617.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft7_o_1/q\\[84\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      745956,
+      603720
+     ],
+     "u": 1349676,
+     "v": 142236
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft5_o_1/q\\[467\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      781380.0,
+      598995.0
+     ],
+     "u": 1380375.0,
+     "v": 182385.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t40",
+   "members": 7,
+   "current_xy_um": [
+    1110.3248,
+    613.44
+   ],
+   "current_max_radius_um": 10.310199999999954,
+   "fixed_membership_minimum_radius_um": 6.6825,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1584075.0,
+    1870710.0,
+    351255.0,
+    643668.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_rrl_75/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1110240,
+      610470
+     ],
+     "u": 1720710,
+     "v": 499770
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_77/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1117530.0,
+      616545.0
+     ],
+     "u": 1734075.0,
+     "v": 500985.0
+    },
+    "vmin": {
+     "name": "u_bound.u_rrl_74/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1109538,
+      615870
+     ],
+     "u": 1725408,
+     "v": 493668
+    },
+    "vmax": {
+     "name": "u_bound.u_rrl_71/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1112130.0,
+      610875.0
+     ],
+     "u": 1723005.0,
+     "v": 501255.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t41",
+   "members": 96,
+   "current_xy_um": [
+    1124.8464,
+    613.44
+   ],
+   "current_max_radius_um": 36.828600000000094,
+   "fixed_membership_minimum_radius_um": 23.0445,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1625115.0,
+    1885452.0,
+    398181.0,
+    652092.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_rrl_78/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1118772,
+      616680
+     ],
+     "u": 1735452,
+     "v": 502092
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft12_o_2/q\\[95\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1160460.0,
+      614655.0
+     ],
+     "u": 1775115.0,
+     "v": 545805.0
+    },
+    "vmin": {
+     "name": "u_bound.u_rrl_78/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1118772,
+      616680
+     ],
+     "u": 1735452,
+     "v": 502092
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft12_o_2/q\\[91\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1161216.0,
+      613035.0
+     ],
+     "u": 1774251.0,
+     "v": 548181.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t42",
+   "members": 520,
+   "current_xy_um": [
+    1034.9083,
+    838.0882
+   ],
+   "current_max_radius_um": 113.00490000000002,
+   "fixed_membership_minimum_radius_um": 84.9825,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1778259.0,
+    1940262.0,
+    159825.0,
+    289860.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_rrl_231/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1048842,
+      741420
+     ],
+     "u": 1790262,
+     "v": 307422
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft12_o_3/q\\[511\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1090314.0,
+      837945.0
+     ],
+     "u": 1928259.0,
+     "v": 252369.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft12_o_3/q\\[13\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      980640,
+      840780
+     ],
+     "u": 1821420,
+     "v": 139860
+    },
+    "vmax": {
+     "name": "u_bound.u_rrl_232/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1051110.0,
+      741285.0
+     ],
+     "u": 1792395.0,
+     "v": 309825.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t43",
+   "members": 279,
+   "current_xy_um": [
+    546.144,
+    842.16
+   ],
+   "current_max_radius_um": 113.412,
+   "fixed_membership_minimum_radius_um": 56.4705,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1308054.0,
+    1538988.0,
+    -446487.0,
+    -259428.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_rrl_191/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      546048,
+      842940
+     ],
+     "u": 1388988,
+     "v": -296892
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft4_o_0/q\\[46\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      555849.0,
+      902205.0
+     ],
+     "u": 1458054.0,
+     "v": -346356.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft4_o_0/q\\[270\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      493182,
+      902610
+     ],
+     "u": 1395792,
+     "v": -409428
+    },
+    "vmax": {
+     "name": "u_bound.u_rrl_191/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      546588.0,
+      843075.0
+     ],
+     "u": 1389663.0,
+     "v": -296487.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t44",
+   "members": 187,
+   "current_xy_um": [
+    146.912,
+    852.314
+   ],
+   "current_max_radius_um": 137.602,
+   "fixed_membership_minimum_radius_um": 70.7805,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    853185.0,
+    1011624.0,
+    -826971.0,
+    -559182.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft2_o_0/q\\[206\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      78084,
+      783540
+     ],
+     "u": 861624,
+     "v": -705456
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_163/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      150930.0,
+      852255.0
+     ],
+     "u": 1003185.0,
+     "v": -701325.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft2_o_0/q\\[142\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      77598,
+      786780
+     ],
+     "u": 864378,
+     "v": -709182
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft2_o_0/q\\[69\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      108594.0,
+      785565.0
+     ],
+     "u": 894159.0,
+     "v": -676971.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t45",
+   "members": 390,
+   "current_xy_um": [
+    656.928,
+    866.2704
+   ],
+   "current_max_radius_um": 101.31959999999998,
+   "fixed_membership_minimum_radius_um": 52.5285,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1437708.0,
+    1643478.0,
+    -355605.0,
+    -160662.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft5_o_0/q\\[9\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      591408,
+      902070
+     ],
+     "u": 1493478,
+     "v": -310662
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft5_o_0/q\\[381\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      686043.0,
+      901665.0
+     ],
+     "u": 1587708.0,
+     "v": -215622.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft5_o_0/q\\[9\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      591408,
+      902070
+     ],
+     "u": 1493478,
+     "v": -310662
+    },
+    "vmax": {
+     "name": "u_bound.u_rrl_56/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      660420.0,
+      866025.0
+     ],
+     "u": 1526445.0,
+     "v": -205605.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t46",
+   "members": 15,
+   "current_xy_um": [
+    201.824,
+    881.45
+   ],
+   "current_max_radius_um": 55.721,
+   "fixed_membership_minimum_radius_um": 29.7675,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    988995.0,
+    1229460.0,
+    -777696.0,
+    -529860.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_cland_collect_rst_rl_165/fault_o$_SDFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      199800,
+      879660
+     ],
+     "u": 1079460,
+     "v": -679860
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft8_o_3/q\\[6\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      233820.0,
+      905175.0
+     ],
+     "u": 1138995.0,
+     "v": -671355.0
+    },
+    "vmin": {
+     "name": "u_bound.u_cland_collect_rst_rl_165/fault_o$_SDFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      199800,
+      879660
+     ],
+     "u": 1079460,
+     "v": -679860
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft3_o_0/q\\[82\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      255609.0,
+      883305.0
+     ],
+     "u": 1138914.0,
+     "v": -627696.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t47",
+   "members": 517,
+   "current_xy_um": [
+    400.1588,
+    882.4513
+   ],
+   "current_max_radius_um": 112.42590000000008,
+   "fixed_membership_minimum_radius_um": 83.808,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1245036.0,
+    1377420.0,
+    -559914.0,
+    -390540.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft9_o_3/q\\[1\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      343440,
+      883980
+     ],
+     "u": 1227420,
+     "v": -540540
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft4_o_0/q\\[263\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      492561.0,
+      902475.0
+     ],
+     "u": 1395036.0,
+     "v": -409914.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft9_o_3/q\\[1\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      343440,
+      883980
+     ],
+     "u": 1227420,
+     "v": -540540
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft4_o_0/q\\[263\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      492561.0,
+      902475.0
+     ],
+     "u": 1395036.0,
+     "v": -409914.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t48",
+   "members": 719,
+   "current_xy_um": [
+    922.3062,
+    887.6887
+   ],
+   "current_max_radius_um": 200.84890000000001,
+   "fixed_membership_minimum_radius_um": 127.9665,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1715079.0,
+    1759146.0,
+    49503.0,
+    134934.0
+   ],
+   "minimum_L1_node_jog_um": 50.84889999999991,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft6_o_1/q\\[207\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      886356,
+      722790
+     ],
+     "u": 1609146,
+     "v": 163566
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft11_o_3/q\\[511\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      977994.0,
+      887085.0
+     ],
+     "u": 1865079.0,
+     "v": 90909.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft11_o_3/q\\[29\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      873774,
+      888840
+     ],
+     "u": 1762614,
+     "v": -15066
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft6_o_1/q\\[78\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      920808.0,
+      721305.0
+     ],
+     "u": 1642113.0,
+     "v": 199503.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t49",
+   "members": 499,
+   "current_xy_um": [
+    835.4523,
+    899.929
+   ],
+   "current_max_radius_um": 104.86730000000004,
+   "fixed_membership_minimum_radius_um": 84.7395,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1638561.0,
+    1822110.0,
+    -149865.0,
+    -19344.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_rrl_103/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      835920,
+      836190
+     ],
+     "u": 1672110,
+     "v": -270
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft6_o_0/q\\[91\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      825876.0,
+      962685.0
+     ],
+     "u": 1788561.0,
+     "v": -136809.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft6_o_0/q\\[202\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      794286,
+      963630
+     ],
+     "u": 1757916,
+     "v": -169344
+    },
+    "vmax": {
+     "name": "u_bound.u_rrl_102/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      836730.0,
+      836595.0
+     ],
+     "u": 1673325.0,
+     "v": 135.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t50",
+   "members": 736,
+   "current_xy_um": [
+    749.6,
+    902.896
+   ],
+   "current_max_radius_um": 105.231,
+   "fixed_membership_minimum_radius_um": 85.1445,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1607727.0,
+    1737438.0,
+    -268368.0,
+    -72426.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft5_o_0/q\\[368\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      684828,
+      902610
+     ],
+     "u": 1587438,
+     "v": -217782
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft6_o_0/q\\[229\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      793692.0,
+      964035.0
+     ],
+     "u": 1757727.0,
+     "v": -170343.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft6_o_0/q\\[513\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      740124,
+      962550
+     ],
+     "u": 1702674,
+     "v": -222426
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft7_o_0/q\\[15\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      782487.0,
+      900855.0
+     ],
+     "u": 1683342.0,
+     "v": -118368.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t51",
+   "members": 331,
+   "current_xy_um": [
+    61.608,
+    905.52
+   ],
+   "current_max_radius_um": 150.648,
+   "fixed_membership_minimum_radius_um": 74.9385,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    816357.0,
+    966480.0,
+    -856131.0,
+    -694398.0
+   ],
+   "minimum_L1_node_jog_um": 0.648,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft2_o_0/q\\[496\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      31320,
+      785160
+     ],
+     "u": 816480,
+     "v": -753840
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_261/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      61182.0,
+      905175.0
+     ],
+     "u": 966357.0,
+     "v": -843993.0
+    },
+    "vmin": {
+     "name": "u_bound.u_rrl_261/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      60642,
+      905040
+     ],
+     "u": 965682,
+     "v": -844398
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft2_o_0/q\\[194\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      77544.0,
+      783675.0
+     ],
+     "u": 861219.0,
+     "v": -706131.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t52",
+   "members": 1019,
+   "current_xy_um": [
+    287.6494,
+    907.2545
+   ],
+   "current_max_radius_um": 57.54509999999998,
+   "fixed_membership_minimum_radius_um": 56.9565,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1102449.0,
+    1288536.0,
+    -715461.0,
+    -524730.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft8_o_3/q\\[8\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      232416,
+      906120
+     ],
+     "u": 1138536,
+     "v": -673704
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft8_o_3/eq$_DFF_PN0_",
+     "kind": "centre",
+     "xy_dbu": [
+      343494.0,
+      908955.0
+     ],
+     "u": 1252449.0,
+     "v": -565461.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft8_o_3/q\\[14\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      232200,
+      906930
+     ],
+     "u": 1139130,
+     "v": -674730
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft8_o_3/eq$_DFF_PN0_",
+     "kind": "centre",
+     "xy_dbu": [
+      343494.0,
+      908955.0
+     ],
+     "u": 1252449.0,
+     "v": -565461.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t53",
+   "members": 258,
+   "current_xy_um": [
+    721.44,
+    1143.912
+   ],
+   "current_max_radius_um": 77.304,
+   "fixed_membership_minimum_radius_um": 62.7885,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1763625.0,
+    1938048.0,
+    -526191.0,
+    -296040.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_rrl_227/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      675648,
+      1112400
+     ],
+     "u": 1788048,
+     "v": -436752
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft16_o_1/q\\[32\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      737100.0,
+      1176525.0
+     ],
+     "u": 1913625.0,
+     "v": -439425.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft16_o_1/q\\[33\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      730080,
+      1176120
+     ],
+     "u": 1906200,
+     "v": -446040
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft13_o_1/q\\[66\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      737424.0,
+      1113615.0
+     ],
+     "u": 1851039.0,
+     "v": -376191.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t54",
+   "members": 291,
+   "current_xy_um": [
+    360.72,
+    1157.484
+   ],
+   "current_max_radius_um": 65.766,
+   "fixed_membership_minimum_radius_um": 43.605,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1413894.0,
+    1636026.0,
+    -880998.0,
+    -668208.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft13_o_0/q\\[67\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      372546,
+      1113480
+     ],
+     "u": 1486026,
+     "v": -740934
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft17_o_0/q\\[51\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      373059.0,
+      1190835.0
+     ],
+     "u": 1563894.0,
+     "v": -817776.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft17_o_0/q\\[51\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      372492,
+      1190700
+     ],
+     "u": 1563192,
+     "v": -818208
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft13_o_0/q\\[66\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      382887.0,
+      1113885.0
+     ],
+     "u": 1496772.0,
+     "v": -730998.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t55",
+   "members": 415,
+   "current_xy_um": [
+    1082.16,
+    1159.392
+   ],
+   "current_max_radius_um": 80.796,
+   "fixed_membership_minimum_radius_um": 73.8585,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    2158473.0,
+    2310756.0,
+    -173085.0,
+    34170.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_rrl_226/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1048626,
+      1112130
+     ],
+     "u": 2160756,
+     "v": -63504
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft18_o_2/q\\[13\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1101168.0,
+      1207305.0
+     ],
+     "u": 2308473.0,
+     "v": -106137.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft17_o_2/q\\[9\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1084320,
+      1200150
+     ],
+     "u": 2284470,
+     "v": -115830
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft13_o_2/q\\[65\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1090260.0,
+      1113345.0
+     ],
+     "u": 2203605.0,
+     "v": -23085.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t56",
+   "members": 672,
+   "current_xy_um": [
+    17.28,
+    1183.512
+   ],
+   "current_max_radius_um": 109.317,
+   "fixed_membership_minimum_radius_um": 74.3985,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1092405.0,
+    1273308.0,
+    -1206915.0,
+    -1055712.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_cland_ft13_i/ready$_SDFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      4428,
+      1118880
+     ],
+     "u": 1123308,
+     "v": -1114452
+    },
+    "umax": {
+     "name": "u_bound.u_cland_ft18_i/u_ring.oh\\[4\\]$_DFFE_PP_",
+     "kind": "centre",
+     "xy_dbu": [
+      61020.0,
+      1181385.0
+     ],
+     "u": 1242405.0,
+     "v": -1120365.0
+    },
+    "vmin": {
+     "name": "u_bound.u_cland_ft18_i/ready$_SDFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      4428,
+      1210140
+     ],
+     "u": 1214568,
+     "v": -1205712
+    },
+    "vmax": {
+     "name": "u_bound.u_cland_ft13_i/rv$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      55620.0,
+      1112535.0
+     ],
+     "u": 1168155.0,
+     "v": -1056915.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t57",
+   "members": 455,
+   "current_xy_um": [
+    81.184,
+    1209.6
+   ],
+   "current_max_radius_um": 139.109,
+   "fixed_membership_minimum_radius_um": 84.7395,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1140141.0,
+    1330494.0,
+    -1139307.0,
+    -1008786.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_cland_ft2_i/arm\\[0\\]$_SDFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      79434,
+      1101060
+     ],
+     "u": 1180494,
+     "v": -1021626
+    },
+    "umax": {
+     "name": "u_bound.u_cland_collect_rst_n_t57/ready_o$_SDFF_PN0_",
+     "kind": "centre",
+     "xy_dbu": [
+      82296.0,
+      1207845.0
+     ],
+     "u": 1290141.0,
+     "v": -1125549.0
+    },
+    "vmin": {
+     "name": "u_bound.u_cland_ft2_i/ready$_SDFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      59454,
+      1218240
+     ],
+     "u": 1277694,
+     "v": -1158786
+    },
+    "vmax": {
+     "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[3\\].u_dsel/y\\[52\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      129708.0,
+      1119015.0
+     ],
+     "u": 1248723.0,
+     "v": -989307.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t58",
+   "members": 441,
+   "current_xy_um": [
+    179.016,
+    1209.6
+   ],
+   "current_max_radius_um": 160.617,
+   "fixed_membership_minimum_radius_um": 102.1275,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1304085.0,
+    1399830.0,
+    -1019967.0,
+    -896466.0
+   ],
+   "minimum_L1_node_jog_um": 10.617,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_cland_ft2_i/u_ring.dch\\[3\\].u_dsel/y\\[48\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      129870,
+      1119960
+     ],
+     "u": 1249830,
+     "v": -990090
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft8_o_4/q\\[2\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      231660.0,
+      1222425.0
+     ],
+     "u": 1454085.0,
+     "v": -990765.0
+    },
+    "vmin": {
+     "name": "u_bound.u_cland_ft3_i/ready$_SDFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      171774,
+      1218240
+     ],
+     "u": 1390014,
+     "v": -1046466
+    },
+    "vmax": {
+     "name": "u_bound.u_cland_ft3_i/arm\\[0\\]$_SDFF_PN0_",
+     "kind": "centre",
+     "xy_dbu": [
+      229608.0,
+      1099575.0
+     ],
+     "u": 1329183.0,
+     "v": -869967.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t59",
+   "members": 940,
+   "current_xy_um": [
+    288.1715,
+    1209.6
+   ],
+   "current_max_radius_um": 88.3715,
+   "fixed_membership_minimum_radius_um": 78.3675,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1416135.0,
+    1559400.0,
+    -1026393.0,
+    -839010.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_cland_ft3_i/u_ring.dch\\[6\\].u_dsel/y\\[9\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      233820,
+      1175580
+     ],
+     "u": 1409400,
+     "v": -941760
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft8_o_4/q\\[511\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      343980.0,
+      1222155.0
+     ],
+     "u": 1566135.0,
+     "v": -878175.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft8_o_4/q\\[13\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      233280,
+      1222290
+     ],
+     "u": 1455570,
+     "v": -989010
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft8_o_4/eq$_DFF_PN0_",
+     "kind": "centre",
+     "xy_dbu": [
+      344142.0,
+      1220535.0
+     ],
+     "u": 1564677.0,
+     "v": -876393.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t60",
+   "members": 679,
+   "current_xy_um": [
+    400.7357,
+    1209.6
+   ],
+   "current_max_radius_um": 82.59129999999999,
+   "fixed_membership_minimum_radius_um": 75.2085,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1528185.0,
+    1714056.0,
+    -876273.0,
+    -726690.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft17_o_0/q\\[65\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      376866,
+      1187190
+     ],
+     "u": 1564056,
+     "v": -810324
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft9_o_4/q\\[509\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      456300.0,
+      1221885.0
+     ],
+     "u": 1678185.0,
+     "v": -765585.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft9_o_4/q\\[10\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      345600,
+      1222290
+     ],
+     "u": 1567890,
+     "v": -876690
+    },
+    "vmax": {
+     "name": "u_bound.u_cland_ft4_i/arm\\[0\\]$_SDFF_PN0_",
+     "kind": "centre",
+     "xy_dbu": [
+      457542.0,
+      1183815.0
+     ],
+     "u": 1641357.0,
+     "v": -726273.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t61",
+   "members": 624,
+   "current_xy_um": [
+    514.632,
+    1209.6
+   ],
+   "current_max_radius_um": 82.36199999999994,
+   "fixed_membership_minimum_radius_um": 66.231,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1624332.0,
+    1791870.0,
+    -781098.0,
+    -595200.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_cland_ft4_i/u_ring.g2\\[1\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      458190,
+      1183680
+     ],
+     "u": 1641870,
+     "v": -725490
+    },
+    "umax": {
+     "name": "u_bound.u_cland_ft5_i/u_ring.dch\\[3\\].u_dsel/y\\[38\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      571077.0,
+      1203255.0
+     ],
+     "u": 1774332.0,
+     "v": -632178.0
+    },
+    "vmin": {
+     "name": "u_bound.u_cland_ft4_i/u_ring.dch\\[4\\].u_dsel/y\\[15\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      458190,
+      1203390
+     ],
+     "u": 1661580,
+     "v": -745200
+    },
+    "vmax": {
+     "name": "u_bound.u_cland_ft5_i/u_ring.dch\\[3\\].u_dsel/y\\[53\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      571077.0,
+      1202175.0
+     ],
+     "u": 1773252.0,
+     "v": -631098.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t62",
+   "members": 572,
+   "current_xy_um": [
+    629.256,
+    1209.6
+   ],
+   "current_max_radius_um": 65.982,
+   "fixed_membership_minimum_radius_um": 59.3865,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1728147.0,
+    1924008.0,
+    -677553.0,
+    -496326.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_cland_ft5_i/u_ring.dch\\[3\\].u_dsel/y\\[47\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      571698,
+      1202310
+     ],
+     "u": 1774008,
+     "v": -630612
+    },
+    "umax": {
+     "name": "u_bound.u_cland_ft6_i/u_ring.dch\\[5\\].u_dsel/y\\[3\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      674622.0,
+      1203525.0
+     ],
+     "u": 1878147.0,
+     "v": -528903.0
+    },
+    "vmin": {
+     "name": "u_bound.u_cland_ft5_i/ready$_SDFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      571914,
+      1218240
+     ],
+     "u": 1790154,
+     "v": -646326
+    },
+    "vmax": {
+     "name": "u_bound.u_cland_ft6_i/u_ring.dch\\[4\\].u_dsel/y\\[56\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      674622.0,
+      1202175.0
+     ],
+     "u": 1876797.0,
+     "v": -527553.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t63",
+   "members": 746,
+   "current_xy_um": [
+    721.44,
+    1209.6
+   ],
+   "current_max_radius_um": 64.827,
+   "fixed_membership_minimum_radius_um": 57.0105,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1841601.0,
+    2027580.0,
+    -573333.0,
+    -383250.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_cland_ft6_i/u_ring.dch\\[4\\].u_dsel/y\\[57\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      675270,
+      1202310
+     ],
+     "u": 1877580,
+     "v": -527040
+    },
+    "umax": {
+     "name": "u_bound.u_cland_ft7_i/u_fault_port/q$_SDFF_PN0_",
+     "kind": "centre",
+     "xy_dbu": [
+      773226.0,
+      1218375.0
+     ],
+     "u": 1991601.0,
+     "v": -445149.0
+    },
+    "vmin": {
+     "name": "u_bound.u_cland_ft6_i/ready$_SDFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      684990,
+      1218240
+     ],
+     "u": 1903230,
+     "v": -533250
+    },
+    "vmax": {
+     "name": "u_bound.u_cland_ft7_i/u_ring.dch\\[1\\].u_dsel/y\\[38\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      778032.0,
+      1201365.0
+     ],
+     "u": 1979397.0,
+     "v": -423333.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t64",
+   "members": 450,
+   "current_xy_um": [
+    836.0138,
+    1209.6
+   ],
+   "current_max_radius_um": 65.43379999999993,
+   "fixed_membership_minimum_radius_um": 59.9265,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1950033.0,
+    2130180.0,
+    -490389.0,
+    -274170.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_cland_ft7_i/u_ring.dch\\[1\\].u_dsel/y\\[39\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      778680,
+      1201500
+     ],
+     "u": 1980180,
+     "v": -422820
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft11_o_4/q\\[52\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      878418.0,
+      1221615.0
+     ],
+     "u": 2100033.0,
+     "v": -343197.0
+    },
+    "vmin": {
+     "name": "u_bound.u_cland_ft7_i/u_ring.dch\\[1\\].u_dsel/y\\[49\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      778680,
+      1202850
+     ],
+     "u": 1981530,
+     "v": -424170
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft11_o_4/q\\[53\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      879336.0,
+      1219725.0
+     ],
+     "u": 2099061.0,
+     "v": -340389.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t65",
+   "members": 462,
+   "current_xy_um": [
+    922.8746,
+    1209.6
+   ],
+   "current_max_radius_um": 68.48440000000002,
+   "fixed_membership_minimum_radius_um": 50.9085,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    2050959.0,
+    2249142.0,
+    -391947.0,
+    -193170.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft11_o_4/q\\[54\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      879012,
+      1220130
+     ],
+     "u": 2099142,
+     "v": -341118
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft11_o_4/q\\[511\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      978804.0,
+      1222155.0
+     ],
+     "u": 2200959.0,
+     "v": -243351.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft11_o_4/q\\[62\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      879120,
+      1222290
+     ],
+     "u": 2101410,
+     "v": -343170
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft12_o_4/q\\[1\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      979128.0,
+      1221075.0
+     ],
+     "u": 2200203.0,
+     "v": -241947.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t66",
+   "members": 529,
+   "current_xy_um": [
+    1035.4304,
+    1209.6
+   ],
+   "current_max_radius_um": 68.5603999999999,
+   "fixed_membership_minimum_radius_um": 67.2975,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    2163225.0,
+    2349690.0,
+    -258135.0,
+    -92730.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft11_o_4/eq$_DFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      978480,
+      1221210
+     ],
+     "u": 2199690,
+     "v": -242730
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft12_o_4/q\\[509\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1091340.0,
+      1221885.0
+     ],
+     "u": 2313225.0,
+     "v": -130545.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft11_o_4/eq$_DFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      978480,
+      1221210
+     ],
+     "u": 2199690,
+     "v": -242730
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft18_o_2/q\\[52\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1100250.0,
+      1208385.0
+     ],
+     "u": 2308635.0,
+     "v": -108135.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t67",
+   "members": 527,
+   "current_xy_um": [
+    1199.4227,
+    17.28
+   ],
+   "current_max_radius_um": 89.85429999999981,
+   "fixed_membership_minimum_radius_um": 74.1825,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1132527.0,
+    1284162.0,
+    1121997.0,
+    1275522.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft6_o_4/q\\[7\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1129842,
+      4320
+     ],
+     "u": 1134162,
+     "v": 1125522
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft6_o_4/eq$_DFF_PN0_",
+     "kind": "centre",
+     "xy_dbu": [
+      1277262.0,
+      5265.0
+     ],
+     "u": 1282527.0,
+     "v": 1271997.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft6_o_4/q\\[7\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1129842,
+      4320
+     ],
+     "u": 1134162,
+     "v": 1125522
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft6_o_4/eq$_DFF_PN0_",
+     "kind": "centre",
+     "xy_dbu": [
+      1277262.0,
+      5265.0
+     ],
+     "u": 1282527.0,
+     "v": 1271997.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t68",
+   "members": 1,
+   "current_xy_um": [
+    721.44,
+    764.9637
+   ],
+   "current_max_radius_um": 1.1067000000000697,
+   "fixed_membership_minimum_radius_um": 0.3375,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    1337133.0,
+    1636458.0,
+    -192417.0,
+    107178.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_rrl_194/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      721818,
+      764640
+     ],
+     "u": 1486458,
+     "v": -42822
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_194/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      722358.0,
+      764775.0
+     ],
+     "u": 1487133.0,
+     "v": -42417.0
+    },
+    "vmin": {
+     "name": "u_bound.u_rrl_194/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      721818,
+      764640
+     ],
+     "u": 1486458,
+     "v": -42822
+    },
+    "vmax": {
+     "name": "u_bound.u_rrl_194/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      722358.0,
+      764775.0
+     ],
+     "u": 1487133.0,
+     "v": -42417.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t69",
+   "members": 666,
+   "current_xy_um": [
+    76.824,
+    17.28
+   ],
+   "current_max_radius_um": 92.106,
+   "fixed_membership_minimum_radius_um": 91.4625,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    9273.0,
+    159018.0,
+    363.0,
+    117438.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft0_o_4/q\\[1101\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      4428,
+      4590
+     ],
+     "u": 9018,
+     "v": -162
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft2_o_3/q\\[513\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      154818.0,
+      4455.0
+     ],
+     "u": 159273.0,
+     "v": 150363.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft0_o_4/q\\[958\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      4428,
+      36990
+     ],
+     "u": 41418,
+     "v": -32562
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft2_o_3/q\\[513\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      154818.0,
+      4455.0
+     ],
+     "u": 159273.0,
+     "v": 150363.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t70",
+   "members": 765,
+   "current_xy_um": [
+    387.864,
+    17.28
+   ],
+   "current_max_radius_um": 90.981,
+   "fixed_membership_minimum_radius_um": 80.2575,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    320475.0,
+    471246.0,
+    311565.0,
+    451050.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_ft_ft3_o_3/q\\[7\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      316926,
+      4320
+     ],
+     "u": 321246,
+     "v": 312606
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft3_o_3/q\\[513\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      466020.0,
+      4455.0
+     ],
+     "u": 470475.0,
+     "v": 461565.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft0_o_3/q\\[870\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      357480,
+      56430
+     ],
+     "u": 413910,
+     "v": 301050
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft3_o_3/q\\[513\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      466020.0,
+      4455.0
+     ],
+     "u": 470475.0,
+     "v": 461565.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t71",
+   "members": 433,
+   "current_xy_um": [
+    1425.6,
+    1112.256
+   ],
+   "current_max_radius_um": 119.511,
+   "fixed_membership_minimum_radius_um": 61.7085,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    2507367.0,
+    2683950.0,
+    174297.0,
+    363192.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_cland_collect_rst_rl_212/fault_o$_SDFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1423440,
+      1110510
+     ],
+     "u": 2533950,
+     "v": 312930
+    },
+    "umax": {
+     "name": "u_bound.u_ft_ft18_o_3/q\\[1\\]$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1437102.0,
+      1220265.0
+     ],
+     "u": 2657367.0,
+     "v": 216837.0
+    },
+    "vmin": {
+     "name": "u_bound.u_ft_ft18_o_3/q\\[3\\]$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1433052,
+      1219860
+     ],
+     "u": 2652912,
+     "v": 213192
+    },
+    "vmax": {
+     "name": "u_bound.u_ft_ft13_o_3/eq$_DFF_PN0_",
+     "kind": "centre",
+     "xy_dbu": [
+      1437102.0,
+      1112805.0
+     ],
+     "u": 2549907.0,
+     "v": 324297.0
+    }
+   }
+  },
+  {
+   "tap": "clk_t72",
+   "members": 8,
+   "current_xy_um": [
+    1425.6,
+    741.3333
+   ],
+   "current_max_radius_um": 3.9633000000000465,
+   "fixed_membership_minimum_radius_um": 2.7405,
+   "feasible_at150": true,
+   "feasible_uv_bounds_dbu": [
+    2018451.0,
+    2312970.0,
+    537015.0,
+    832776.0
+   ],
+   "minimum_L1_node_jog_um": 0.0,
+   "extreme_witnesses": {
+    "umin": {
+     "name": "u_bound.u_cland_collect_rst_rl_206/fault_o$_SDFF_PN0_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1423440,
+      739530
+     ],
+     "u": 2162970,
+     "v": 683910
+    },
+    "umax": {
+     "name": "u_bound.u_rrl_210/q$_DFF_P_",
+     "kind": "centre",
+     "xy_dbu": [
+      1425816.0,
+      742635.0
+     ],
+     "u": 2168451.0,
+     "v": 683181.0
+    },
+    "vmin": {
+     "name": "u_bound.u_rrl_210/q$_DFF_P_",
+     "kind": "native_location",
+     "xy_dbu": [
+      1425276,
+      742500
+     ],
+     "u": 2167776,
+     "v": 682776
+    },
+    "vmax": {
+     "name": "u_bound.u_cland_collect_rst_rl_206/ready_o$_SDFF_PN0_",
+     "kind": "centre",
+     "xy_dbu": [
+      1426680.0,
+      739665.0
+     ],
+     "u": 2166345.0,
+     "v": 687015.0
+    }
+   }
+  }
+ ],
+ "holds": [
+  "Some groups may need allowed reassignment or existing FF geometry changes; no150widening.",
+  "NonemptyUV is only a mathematical intersection, not a legal node site or activatedclockevent.",
+  "Nativeclockdomain remainsclk; actual Tcl binding/sourcephase and all other model/PG/NW holds remain."
+ ]
+}
