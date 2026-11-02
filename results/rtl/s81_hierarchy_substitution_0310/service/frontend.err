@@ -1,0 +1,472 @@
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v:6:8: Duplicate declaration of module: 'ot_sram_1r1w_256x256_m2_r2c2'
+    6 | module ot_sram_1r1w_256x256_m2_r2c2 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v:6:8: ... Location of original declaration
+    6 | module ot_sram_1r1w_256x256_m2_r2c2 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:2:33: Duplicate declaration of module: 'dsdv_eng_tap_slot'
+    2 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_slot (
+      |                                 ^~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:181:33: ... Location of original declaration
+  181 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_slot (
+      |                                 ^~~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:14:33: Duplicate declaration of module: 'dsdv_eng_tap_take'
+   14 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_take (
+      |                                 ^~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:187:33: ... Location of original declaration
+  187 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_take (
+      |                                 ^~~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:20:33: Duplicate declaration of module: 'dsdv_eng_tap_we'
+   20 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_we (
+      |                                 ^~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:193:33: ... Location of original declaration
+  193 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_we (
+      |                                 ^~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:26:33: Duplicate declaration of module: 'dsdv_eng_tap_hit'
+   26 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_hit #(parameter integer P = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:199:33: ... Location of original declaration
+  199 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_hit #(parameter integer P = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:32:33: Duplicate declaration of module: 'dsdv_eng_tap_eng'
+   32 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_eng #(parameter integer MUT = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:205:33: ... Location of original declaration
+  205 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_eng #(parameter integer MUT = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:42:33: Duplicate declaration of module: 'dsdv_eng_tap_hs'
+   42 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_hs #(parameter integer MUT = 0, parameter integer W = 22) (
+      |                                 ^~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:212:33: ... Location of original declaration
+  212 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_hs #(parameter integer MUT = 0, parameter integer W = 22) (
+      |                                 ^~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:98:33: Duplicate declaration of module: 'dsdv_eng_tap_rqd'
+   98 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rqd #(parameter integer P = 0, parameter integer W = 22) (
+      |                                 ^~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:269:33: ... Location of original declaration
+  269 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rqd #(parameter integer P = 0, parameter integer W = 22) (
+      |                                 ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:109:33: Duplicate declaration of module: 'dsdv_eng_tap_ofb'
+  109 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_ofb #(parameter integer P = 0, parameter integer B = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:281:33: ... Location of original declaration
+  281 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_ofb #(parameter integer P = 0, parameter integer B = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:131:33: Duplicate declaration of module: 'dsdv_eng_tap_rqc'
+  131 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rqc #(parameter integer P = 0, parameter integer RFD = 24,
+      |                                 ^~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:304:33: ... Location of original declaration
+  304 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rqc #(parameter integer P = 0, parameter integer RFD = 24,
+      |                                 ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:165:33: Duplicate declaration of module: 'dsdv_eng_tap_rsc'
+  165 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rsc #(parameter integer MUT = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:339:33: ... Location of original declaration
+  339 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rsc #(parameter integer MUT = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:199:33: Duplicate declaration of module: 'dsdv_eng_tap_sid4'
+  199 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_sid4(input wire ck,input wire[3:0] d,output reg[3:0] q);
+      |                                 ^~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:375:33: ... Location of original declaration
+  375 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_sid4(input wire ck,input wire[3:0] d,output reg[3:0] q);
+      |                                 ^~~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:211:8: Duplicate declaration of module: 'dsdv_eng_tap_c'
+  211 | module dsdv_eng_tap_c #(
+      |        ^~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:379:8: ... Location of original declaration
+  379 | module dsdv_eng_tap_c #(
+      |        ^~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:316:8: Duplicate declaration of module: 'dsdv_eng_tap'
+  316 | module dsdv_eng_tap (
+      |        ^~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:474:8: ... Location of original declaration
+  474 | module dsdv_eng_tap (
+      |        ^~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/frozen_tap_modules.sv:325:8: Duplicate declaration of module: 'dsdv_eng_tap_w'
+  325 | module dsdv_eng_tap_w (
+      |        ^~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:482:8: ... Location of original declaration
+  482 | module dsdv_eng_tap_w (
+      |        ^~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:46:8: Duplicate declaration of module: 'ot_s81eng_win'
+   46 | module ot_s81eng_win #(
+      |        ^~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:46:8: ... Location of original declaration
+   46 | module ot_s81eng_win #(
+      |        ^~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:96:8: Duplicate declaration of module: 'ot_s81eng_head'
+   96 | module ot_s81eng_head #(
+      |        ^~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:96:8: ... Location of original declaration
+   96 | module ot_s81eng_head #(
+      |        ^~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:181:33: Duplicate declaration of module: 'dsdv_eng_tap_slot'
+  181 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_slot (
+      |                                 ^~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:181:33: ... Location of original declaration
+  181 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_slot (
+      |                                 ^~~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:187:33: Duplicate declaration of module: 'dsdv_eng_tap_take'
+  187 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_take (
+      |                                 ^~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:187:33: ... Location of original declaration
+  187 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_take (
+      |                                 ^~~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:193:33: Duplicate declaration of module: 'dsdv_eng_tap_we'
+  193 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_we (
+      |                                 ^~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:193:33: ... Location of original declaration
+  193 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_we (
+      |                                 ^~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:199:33: Duplicate declaration of module: 'dsdv_eng_tap_hit'
+  199 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_hit #(parameter integer P = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:199:33: ... Location of original declaration
+  199 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_hit #(parameter integer P = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:205:33: Duplicate declaration of module: 'dsdv_eng_tap_eng'
+  205 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_eng #(parameter integer MUT = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:205:33: ... Location of original declaration
+  205 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_eng #(parameter integer MUT = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:212:33: Duplicate declaration of module: 'dsdv_eng_tap_hs'
+  212 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_hs #(parameter integer MUT = 0, parameter integer W = 22) (
+      |                                 ^~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:212:33: ... Location of original declaration
+  212 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_hs #(parameter integer MUT = 0, parameter integer W = 22) (
+      |                                 ^~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:269:33: Duplicate declaration of module: 'dsdv_eng_tap_rqd'
+  269 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rqd #(parameter integer P = 0, parameter integer W = 22) (
+      |                                 ^~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:269:33: ... Location of original declaration
+  269 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rqd #(parameter integer P = 0, parameter integer W = 22) (
+      |                                 ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:281:33: Duplicate declaration of module: 'dsdv_eng_tap_ofb'
+  281 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_ofb #(parameter integer P = 0, parameter integer B = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:281:33: ... Location of original declaration
+  281 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_ofb #(parameter integer P = 0, parameter integer B = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:304:33: Duplicate declaration of module: 'dsdv_eng_tap_rqc'
+  304 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rqc #(parameter integer P = 0, parameter integer RFD = 24,
+      |                                 ^~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:304:33: ... Location of original declaration
+  304 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rqc #(parameter integer P = 0, parameter integer RFD = 24,
+      |                                 ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:339:33: Duplicate declaration of module: 'dsdv_eng_tap_rsc'
+  339 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rsc #(parameter integer MUT = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:339:33: ... Location of original declaration
+  339 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_rsc #(parameter integer MUT = 0) (
+      |                                 ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:375:33: Duplicate declaration of module: 'dsdv_eng_tap_sid4'
+  375 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_sid4(input wire ck,input wire[3:0] d,output reg[3:0] q);
+      |                                 ^~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:375:33: ... Location of original declaration
+  375 | (* keep_hierarchy = 1 *) module dsdv_eng_tap_sid4(input wire ck,input wire[3:0] d,output reg[3:0] q);
+      |                                 ^~~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:379:8: Duplicate declaration of module: 'dsdv_eng_tap_c'
+  379 | module dsdv_eng_tap_c #(
+      |        ^~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:379:8: ... Location of original declaration
+  379 | module dsdv_eng_tap_c #(
+      |        ^~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:474:8: Duplicate declaration of module: 'dsdv_eng_tap'
+  474 | module dsdv_eng_tap (
+      |        ^~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:474:8: ... Location of original declaration
+  474 | module dsdv_eng_tap (
+      |        ^~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:482:8: Duplicate declaration of module: 'dsdv_eng_tap_w'
+  482 | module dsdv_eng_tap_w (
+      |        ^~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:482:8: ... Location of original declaration
+  482 | module dsdv_eng_tap_w (
+      |        ^~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:505:8: Duplicate declaration of module: 'ot_s81eng_xq'
+  505 | module ot_s81eng_xq #(
+      |        ^~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:505:8: ... Location of original declaration
+  505 | module ot_s81eng_xq #(
+      |        ^~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:626:8: Duplicate declaration of module: 'dsdv_eng_rr_c'
+  626 | module dsdv_eng_rr_c #(
+      |        ^~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:628:8: ... Location of original declaration
+  628 | module dsdv_eng_rr_c #(
+      |        ^~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv:722:8: Duplicate declaration of module: 'dsdv_eng_rr'
+  722 | module dsdv_eng_rr (
+      |        ^~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:800:8: ... Location of original declaration
+  800 | module dsdv_eng_rr #(
+      |        ^~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/frame_lp/kit/dsfd_bf_col_kit.sv:8:8: Duplicate declaration of module: 'dsfd_bf_col'
+    8 | module dsfd_bf_col #(parameter INSTANCE = "", parameter integer MB = 0) (
+      |        ^~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv:7:8: ... Location of original declaration
+    7 | module dsfd_bf_col #(parameter INSTANCE = "", parameter integer MB = 0) (
+      |        ^~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/test/host_peer_main_fixture_1020/primitive32/models/comb_models.v:2663:8: Duplicate declaration of module: 'BUFx8_ASAP7_75t_R'
+ 2663 | module BUFx8_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/models/cells_used.v:2:8: ... Location of original declaration
+    2 | module BUFx8_ASAP7_75t_R (input A, output Y); assign Y = A; endmodule
+      |        ^~~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/test/host_peer_main_fixture_1020/primitive32/models/comb_models.v:2953:8: Duplicate declaration of module: 'INVx2_ASAP7_75t_R'
+ 2953 | module INVx2_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/models/cells_used.v:3:8: ... Location of original declaration
+    3 | module INVx2_ASAP7_75t_R (input A, output Y); assign Y = ~A; endmodule
+      |        ^~~~~~~~~~~~~~~~~
+%Warning-MODDUP: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/test/tb_v41_rom_elem_pg.sv:225:8: Duplicate declaration of module: 'ot_rom_4096x274_m8'
+  225 | module ot_rom_4096x274_m8 #(parameter INSTANCE="")(input wire clk,ce_in,input wire [11:0] addr_in,output reg [273:0] rd_out);
+      |        ^~~~~~~~~~~~~~~~~~
+                 /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v:6:8: ... Location of original declaration
+    6 | module ot_rom_4096x274_m8 #(parameter string VIAMAP = "", parameter string INSTANCE = "") (
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-SELRANGE: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/native_glue/ot_bind_native_9dac3ec6a10d5c1fa30ab0cf.sv:11:17: Extracting 1024 bits from only 256 bit number
+                                                                                                                                                                                                : ... note: In instance 's81p_svc_lo_dsdv_svc_rs_w___05Ft1.g_u_rsv_00_u_u_att_877'
+   11 |   assign Y = _0_[$signed(B) +: 1024];
+      |                 ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-SELRANGE: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/native_glue/ot_bind_native_9b4fb12e1e10c18fd5ac186c.sv:11:17: Extracting 2132 bits from only 32 bit number
+                                                                                                                                                                                                : ... note: In instance 's81p_svc_lo_dsdv_svc_rs_w___05Ft1.g_u_rsv_00_u_342'
+   11 |   assign Y = _0_[$signed(B) +: 2132];
+      |                 ^
+%Warning-SELRANGE: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/native_glue/ot_bind_native_15eceba1215313fce255258d.sv:9:17: Extracting 512 bits from only 32 bit number
+                                                                                                                                                                                               : ... note: In instance 's81p_svc_lo_dsdv_svc_rs_w___05Ft1.g_u_rsv_00_u_151'
+    9 |   assign Y = _0_[$signed(B) +: 512];
+      |                 ^
+%Warning-SELRANGE: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/native_glue/ot_bind_native_94fb3121d89a024ad3313eef.sv:11:17: Extracting 512 bits from only 32 bit number
+                                                                                                                                                                                                : ... note: In instance 's81p_svc_lo_dsdv_svc_rs_w___05Ft1.g_u_rsv_00_u_92'
+   11 |   assign Y = _0_[$signed(B) +: 512];
+      |                 ^
+%Warning-ALWNEVER: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv:70:9: 'always @*' will never execute as expression list is empty (no variables read)
+                                                                                                                                                                     : ... note: In instance 's81p_svc_lo_dsdv_svc_rs_w___05Ft1.u_u_rsv_00_u_u_sms.u_smh.g_q[3].u_q.g_p[1].g_hard.u_smd.u_d.g_dv[1].u_d'
+                                                                                                                                                                     : ... Suggest use 'always_comb'
+   70 |         always @* begin z_a = 32'd0; z_b = 32'd0; z_pa = 5'd0; z_pb = 5'd0; end
+      |         ^~~~~~
+                   ... For warning description see https://verilator.org/warn/ALWNEVER?v=5.050
+                   ... Use "/* verilator lint_off ALWNEVER */" and lint_on around source to disable this message.
+%Warning-ALWNEVER: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv:88:9: 'always @*' will never execute as expression list is empty (no variables read)
+                                                                                                                                                                     : ... note: In instance 's81p_svc_lo_dsdv_svc_rs_w___05Ft1.u_u_rsv_00_u_u_sms.u_smh.g_q[3].u_q.g_p[1].g_hard.u_smd.u_d.g_dv[1].u_d'
+                                                                                                                                                                     : ... Suggest use 'always_comb'
+   88 |         always @* begin zz_ma = 24'd0; zz_mb = 24'd0; zz_sa = 3'd0; zz_sb = 3'd0; zz_ea = 10'd0; zz_eb = 10'd0; zz_sign = 1'b0; zz_zero = 1'b0; zz_bad = 1'b0; end
+      |         ^~~~~~
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/s81p_svc_lo_dsdv_svc_rs_w__t1.sv:14177:20: Replication of more that --replication-limit 8192 is suspect: 8528
+14177 |         .gi_d({8528{1'b0}}),
+      |                    ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:140:17: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.soi'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:1154:26: ... Location of first driving block
+ 1154 |     always @(posedge ck) soi[275:1] <= sr[275:1] | hb_r[275:1] | ins0[275:1] | ins1[275:1];
+      |                          ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:1153:42: ... Location of other driving block
+ 1153 |         if (!rl[0]) soi[0] <= 1'b0; else soi[0] <= sr[0] | hb_r[0] | ins0[0] | ins1[0];
+      |                                          ^~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:106:22: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.rrr'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:129:9: ... Location of first driving block
+  129 |         rrr[0][271:2] <= rrh[271:2]; rrr[1][271:2] <= rrh[543:274]; rrr[2][271:2] <= rrh[815:546]; rrr[3][271:2] <= rrh[1087:818];
+      |         ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:125:13: ... Location of other driving block
+  125 |             rrr[0][1:0] <= rrh[1:0]; rrr[1][1:0] <= rrh[273:272]; rrr[2][1:0] <= rrh[545:544]; rrr[3][1:0] <= rrh[817:816];
+      |             ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:139:17: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.qoi'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:283:26: ... Location of first driving block
+  283 |     always @(posedge ck) qoi[512:1] <= qr[512:1];
+      |                          ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:281:13: ... Location of other driving block
+  281 |             qoi[0] <= qr[0];
+      |             ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:319:25: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.jr_n'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:391:92: ... Location of first driving block
+  391 |                         jkk[gu] <= 4'd0; jz[gu] <= 1'b1; kos[gu] <= 6'd0; kcl[gu] <= 4'd0; jr_n[gu] <= jr_n[gu] + 4'd1;
+      |                                                                                            ^~~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:391:92: ... Location of other driving block
+  391 |                         jkk[gu] <= 4'd0; jz[gu] <= 1'b1; kos[gu] <= 6'd0; kcl[gu] <= 4'd0; jr_n[gu] <= jr_n[gu] + 4'd1;
+      |                                                                                            ^~~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:321:25: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.jz'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:391:42: ... Location of first driving block
+  391 |                         jkk[gu] <= 4'd0; jz[gu] <= 1'b1; kos[gu] <= 6'd0; kcl[gu] <= 4'd0; jr_n[gu] <= jr_n[gu] + 4'd1;
+      |                                          ^~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:391:42: ... Location of other driving block
+  391 |                         jkk[gu] <= 4'd0; jz[gu] <= 1'b1; kos[gu] <= 6'd0; kcl[gu] <= 4'd0; jr_n[gu] <= jr_n[gu] + 4'd1;
+      |                                          ^~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:322:25: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.kos'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:391:58: ... Location of first driving block
+  391 |                         jkk[gu] <= 4'd0; jz[gu] <= 1'b1; kos[gu] <= 6'd0; kcl[gu] <= 4'd0; jr_n[gu] <= jr_n[gu] + 4'd1;
+      |                                                          ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:391:58: ... Location of other driving block
+  391 |                         jkk[gu] <= 4'd0; jz[gu] <= 1'b1; kos[gu] <= 6'd0; kcl[gu] <= 4'd0; jr_n[gu] <= jr_n[gu] + 4'd1;
+      |                                                          ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:323:25: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.kcl'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:391:75: ... Location of first driving block
+  391 |                         jkk[gu] <= 4'd0; jz[gu] <= 1'b1; kos[gu] <= 6'd0; kcl[gu] <= 4'd0; jr_n[gu] <= jr_n[gu] + 4'd1;
+      |                                                                           ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:391:75: ... Location of other driving block
+  391 |                         jkk[gu] <= 4'd0; jz[gu] <= 1'b1; kos[gu] <= 6'd0; kcl[gu] <= 4'd0; jr_n[gu] <= jr_n[gu] + 4'd1;
+      |                                                                           ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:318:44: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.jra'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:402:17: ... Location of first driving block
+  402 |                 jra[gu] <= {jra[gu][RQD-2:0], jra[gu][RQD-1]}; jrb[gu] <= {jrb[gu][RQD-2:0], jrb[gu][RQD-1]};
+      |                 ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:402:17: ... Location of other driving block
+  402 |                 jra[gu] <= {jra[gu][RQD-2:0], jra[gu][RQD-1]}; jrb[gu] <= {jrb[gu][RQD-2:0], jrb[gu][RQD-1]};
+      |                 ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:318:49: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.jrb'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:402:64: ... Location of first driving block
+  402 |                 jra[gu] <= {jra[gu][RQD-2:0], jra[gu][RQD-1]}; jrb[gu] <= {jrb[gu][RQD-2:0], jrb[gu][RQD-1]};
+      |                                                                ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:402:64: ... Location of other driving block
+  402 |                 jra[gu] <= {jra[gu][RQD-2:0], jra[gu][RQD-1]}; jrb[gu] <= {jrb[gu][RQD-2:0], jrb[gu][RQD-1]};
+      |                                                                ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:329:25: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.own_n'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:408:18: ... Location of first driving block
+  408 |             else own_n[gu] <= own_n[gu] + (is0[gu] ? OW'(1) : OW'(0)) - (rkc[gu] ? OW'(1) : OW'(0));
+      |                  ^~~~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:408:18: ... Location of other driving block
+  408 |             else own_n[gu] <= own_n[gu] + (is0[gu] ? OW'(1) : OW'(0)) - (rkc[gu] ? OW'(1) : OW'(0));
+      |                  ^~~~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:325:35: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.cnk0'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:414:17: ... Location of first driving block
+  414 |                 cnk0[gu] <= nx < OW'(DQR); cnk3[gu] <= nx < OW'(DQR); cnk4[gu] <= nx < OW'(DQR);
+      |                 ^~~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:414:17: ... Location of other driving block
+  414 |                 cnk0[gu] <= nx < OW'(DQR); cnk3[gu] <= nx < OW'(DQR); cnk4[gu] <= nx < OW'(DQR);
+      |                 ^~~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:325:41: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.cnk3'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:414:44: ... Location of first driving block
+  414 |                 cnk0[gu] <= nx < OW'(DQR); cnk3[gu] <= nx < OW'(DQR); cnk4[gu] <= nx < OW'(DQR);
+      |                                            ^~~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:414:44: ... Location of other driving block
+  414 |                 cnk0[gu] <= nx < OW'(DQR); cnk3[gu] <= nx < OW'(DQR); cnk4[gu] <= nx < OW'(DQR);
+      |                                            ^~~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:325:47: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.cnk4'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:414:71: ... Location of first driving block
+  414 |                 cnk0[gu] <= nx < OW'(DQR); cnk3[gu] <= nx < OW'(DQR); cnk4[gu] <= nx < OW'(DQR);
+      |                                                                       ^~~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:414:71: ... Location of other driving block
+  414 |                 cnk0[gu] <= nx < OW'(DQR); cnk3[gu] <= nx < OW'(DQR); cnk4[gu] <= nx < OW'(DQR);
+      |                                                                       ^~~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/s81p_svc_lo_dsdv_svc_rs_w__t1.sv:415:18: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.w_u_irg_00_rqo'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:426:9: ... Location of first driving block
+  426 |         rqo[46 * u + 1] <= slk[u];
+      |         ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:424:20: ... Location of other driving block
+  424 |         else begin rqo[0] <= is0[0]; rqo[46] <= is0[1]; rqo[92] <= is0[2]; rqo[138] <= is0[3]; end
+      |                    ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:434:27: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.sb'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:686:49: ... Location of first driving block
+  686 |                     if (alb && saoh[0][gu][s2]) sb[gu][s2] <= 1'b1;
+      |                                                 ^~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:686:49: ... Location of other driving block
+  686 |                     if (alb && saoh[0][gu][s2]) sb[gu][s2] <= 1'b1;
+      |                                                 ^~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:441:28: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.sopen'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:682:45: ... Location of first driving block
+  682 |                 if (al0) begin if (u_gt[0]) sopen[gu] <= 1'b1; end
+      |                                             ^~~~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:682:45: ... Location of other driving block
+  682 |                 if (al0) begin if (u_gt[0]) sopen[gu] <= 1'b1; end
+      |                                             ^~~~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:434:37: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_irg_00.scl'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:700:75: ... Location of first driving block
+  700 |                         if (xgt[1 + gu] && sopen[gu] && sopoh[0][gu][s4]) scl[gu][s4] <= 1'b1;
+      |                                                                           ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv:700:75: ... Location of other driving block
+  700 |                         if (xgt[1 + gu] && sopen[gu] && sopoh[0][gu][s4]) scl[gu][s4] <= 1'b1;
+      |                                                                           ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/s81p_svc_lo_dsdv_svc_rs_w__t1.sv:409:17: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.w_u_etap_01_rco'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:415:26: ... Location of first driving block
+  415 |     always @(posedge ck) rco[42:1] <= rci[42:1];
+      |                          ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:414:76: ... Location of other driving block
+  414 |     always @(posedge ck or negedge rl[0]) if (!rl[0]) rco[0] <= 1'b0; else rco[0] <= rci[0];
+      |                                                                            ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/s81p_svc_lo_dsdv_svc_rs_w__t1.sv:402:18: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.w_u_ctrl_01_rrd'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:218:31: ... Location of first driving block
+  218 |         always @(posedge clk) rrd[272 * p + 2 +: 270] <= {rdat, rtag[14:5], rbeat};
+      |                               ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:217:24: ... Location of other driving block
+  217 |             else begin rrd[272 * p] <= rv_w && rtr; rrd[272 * p + 1] <= mv[2 * NRC + 1]; end
+      |                        ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:113:47: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_ctrl_01.g_pc[0].rpc'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:166:63: ... Location of first driving block
+  166 |                     if (mv[2 * gy + (x2 >= RFD / 2 ? 1 : 0)]) rpc[RFD * gy + x2] <= rpc[RFD * gy + (x2 + RFD - 1) % RFD];
+      |                                                               ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:166:63: ... Location of other driving block
+  166 |                     if (mv[2 * gy + (x2 >= RFD / 2 ? 1 : 0)]) rpc[RFD * gy + x2] <= rpc[RFD * gy + (x2 + RFD - 1) % RFD];
+      |                                                               ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:113:47: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_ctrl_01.g_pc[1].rpc'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:166:63: ... Location of first driving block
+  166 |                     if (mv[2 * gy + (x2 >= RFD / 2 ? 1 : 0)]) rpc[RFD * gy + x2] <= rpc[RFD * gy + (x2 + RFD - 1) % RFD];
+      |                                                               ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:166:63: ... Location of other driving block
+  166 |                     if (mv[2 * gy + (x2 >= RFD / 2 ? 1 : 0)]) rpc[RFD * gy + x2] <= rpc[RFD * gy + (x2 + RFD - 1) % RFD];
+      |                                                               ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/s81p_svc_lo_dsdv_svc_rs_w__t1.sv:391:18: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.w_u_ctrl_00_rrd'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:218:31: ... Location of first driving block
+  218 |         always @(posedge clk) rrd[272 * p + 2 +: 270] <= {rdat, rtag[14:5], rbeat};
+      |                               ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:217:24: ... Location of other driving block
+  217 |             else begin rrd[272 * p] <= rv_w && rtr; rrd[272 * p + 1] <= mv[2 * NRC + 1]; end
+      |                        ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:113:47: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_ctrl_00.g_pc[0].rpc'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:166:63: ... Location of first driving block
+  166 |                     if (mv[2 * gy + (x2 >= RFD / 2 ? 1 : 0)]) rpc[RFD * gy + x2] <= rpc[RFD * gy + (x2 + RFD - 1) % RFD];
+      |                                                               ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:166:63: ... Location of other driving block
+  166 |                     if (mv[2 * gy + (x2 >= RFD / 2 ? 1 : 0)]) rpc[RFD * gy + x2] <= rpc[RFD * gy + (x2 + RFD - 1) % RFD];
+      |                                                               ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:113:47: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.u_u_ctrl_00.g_pc[1].rpc'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:166:63: ... Location of first driving block
+  166 |                     if (mv[2 * gy + (x2 >= RFD / 2 ? 1 : 0)]) rpc[RFD * gy + x2] <= rpc[RFD * gy + (x2 + RFD - 1) % RFD];
+      |                                                               ^~~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv:166:63: ... Location of other driving block
+  166 |                     if (mv[2 * gy + (x2 >= RFD / 2 ? 1 : 0)]) rpc[RFD * gy + x2] <= rpc[RFD * gy + (x2 + RFD - 1) % RFD];
+      |                                                               ^~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/s81p_svc_lo_dsdv_svc_rs_w__t1.sv:1294:18: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.w_u_rsv_00_u_g_pc_1_u_pc_rq'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:44:9: ... Location of first driving block
+   44 |         rq[340:1] <= qrq[340:1];
+      |         ^~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:36:13: ... Location of other driving block
+   36 |             rq[0] <= qrq[0]; qrk <= rk; qwd <= wd;
+      |             ^~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/s81p_svc_lo_dsdv_svc_rs_w__t1.sv:1287:18: Signal has multiple driving blocks with different clocking: 's81p_svc_lo_dsdv_svc_rs_w__t1_9.w_u_rsv_00_u_g_pc_0_u_pc_rq'
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:44:9: ... Location of first driving block
+   44 |         rq[340:1] <= qrq[340:1];
+      |         ^~
+                      /srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:36:13: ... Location of other driving block
+   36 |             rq[0] <= qrq[0]; qrk <= rk; qwd <= wd;
+      |             ^~
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f candidate_args.f"
+	User time (seconds): 370.80
+	System time (seconds): 31.62
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 6:42.77
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 11818032
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 7647668
+	Voluntary context switches: 39
+	Involuntary context switches: 1917
+	Swaps: 0
+	File system inputs: 1528
+	File system outputs: 1276320
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
