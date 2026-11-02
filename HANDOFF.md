@@ -3009,3 +3009,9 @@ CODEX 2026-11-01 21:20 PST: canonicalTXDPsourcejoin READYd2cb15c48 PUSHED. geom2
 CODEX: 2026-11-01 21:23 PST DS nativeca/cbwitnessb6ce71c32 PASS4cases identifiescross-streamslotcollision;DISABLEDT48CB+1candidate d4632680a READY277exactsites/clk8cap+radiusPASS/LOOKmodelonly;rootadoptionheld,0CAD.
 
 CODEX: 2026-11-01 21:28 PST HBM native compactTnodeGEN PASS EPYC2unit1835739; actual1341pins/2SRAMLEFs imageVIEWED+independentPASS-COND PLACEonly, evidence1ae55cccb. StandardPLACE+native4LEC queuedEPYC2viaIntel2client290279; noCTS/routes yet. Tailmain-sourcea340 andmu1frontier59011 alreadyREADY; highrowproduceradoptionheld.
+
+CODEX: KV physical21:35 HHP GEN/lint/preflightPASS0 andonePLACEadmittedEpyc2; PC4routesfinished, missingclock_family bundlefixed, actualr27cNOTSIGNED TT-20.74/FF-0.81/DRV320-332/DRC0/CLOCKPASS; corrected9bFFlibrary ECOguardnativequeued, fullNF2source+mutant/censusqueued, alloriginaljobs preserved.
+
+CODEX: 2026-11-01 three actual retained TYPE resume runners PASS m49s/EQ1858,n4400s/EQ22399,k5274s/EQ14026, all SYNTH/FP/PLACE reused and originalhardlinksunchanged; recordedhistoricalstagesbypassed83.5min(no freshfullrebuildcontrol/no routebenefitclaim). Shared330adapter+618clockbundle and nativeHEAD37/HBMcausal gates intakerootnextbatch. ActualcurrentL2SIGNED+6110EQ/freshviews ready; originalbuildUNKNOWNpublicationOWNER?logged, count50lastcollected.
+
+CODEX: QC GLUE coherent compact+oneFT parent architecture089621373 READYsource-only;59lanes/3292bits/+8cycles/direction/390.816umsitebound, noCAD/adoption. OriginalGLUEproof actualFAIL1124diff+2undecided collected; narrowFSMdiagnosis FLOW, sourcegateheld.
