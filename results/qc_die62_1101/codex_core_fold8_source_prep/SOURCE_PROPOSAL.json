@@ -1,0 +1,210 @@
+{
+  "status": "SOURCE_CUT_PREP_NOT_RELEASED",
+  "source_context": "Frozen candidate9/D762 native count; no627c projections mixed",
+  "actual_native_total": 671634,
+  "actual_hard_macros": {
+    "ot_sram_1r1w2c_64x546_m1": 4,
+    "ot_sram_1r1w_32x546_m1": 4,
+    "ot_sram_1r1w_512x128_m4_r2c2": 5,
+    "ot_sram_1r1w_64x512_m1_r2c2": 8
+  },
+  "actual_hard_macro_count": 21,
+  "actual_standard_cells": 671613,
+  "soft_cap": 400000,
+  "cap_failure": true,
+  "fold_module": "ot_coll_fold_slice",
+  "fold_count_each": 57002,
+  "fold_instances": [
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[0].u_fs",
+      "ports": {
+        "clk": "clk",
+        "e_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.ps_e[0]",
+        "red_in": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.red_q",
+        "rst_n": "\\u_bound.rst_n",
+        "v_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.ps_v[0]"
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[1].u_fs",
+      "ports": {
+        "clk": "clk",
+        "e_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.ps_e[1]",
+        "red_in": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.red_q",
+        "rst_n": "\\u_bound.rst_n",
+        "v_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.ps_v[1]"
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[2].u_fs",
+      "ports": {
+        "clk": "clk",
+        "e_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.ps_e[2]",
+        "red_in": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.red_q",
+        "rst_n": "\\u_bound.rst_n",
+        "v_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.ps_v[2]"
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[3].u_fs",
+      "ports": {
+        "clk": "clk",
+        "e_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.ps_e[3]",
+        "red_in": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.red_q",
+        "rst_n": "\\u_bound.rst_n",
+        "v_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.ps_v[3]"
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[0].u_fs",
+      "ports": {
+        "clk": "clk",
+        "e_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.xs_e[0]",
+        "red_in": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.red2",
+        "rst_n": "\\u_bound.rst_n",
+        "v_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.xs_v[0]"
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[1].u_fs",
+      "ports": {
+        "clk": "clk",
+        "e_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.xs_e[1]",
+        "red_in": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.red2",
+        "rst_n": "\\u_bound.rst_n",
+        "v_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.xs_v[1]"
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[2].u_fs",
+      "ports": {
+        "clk": "clk",
+        "e_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.xs_e[2]",
+        "red_in": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.red2",
+        "rst_n": "\\u_bound.rst_n",
+        "v_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.xs_v[2]"
+      }
+    },
+    {
+      "instance": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[3].u_fs",
+      "ports": {
+        "clk": "clk",
+        "e_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.xs_e[3]",
+        "red_in": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.red2",
+        "rst_n": "\\u_bound.rst_n",
+        "v_out": "\\u_bound.u_io_collective_u_io_u_collective.u_coll.xs_v[3]"
+      }
+    }
+  ],
+  "fold_source": "/srv/opentallas-scratch2/claude/wt/codex-qc62-proposal8-bind-1101/rtl/rom/ot_coll_fold_slice.sv",
+  "fold_source_sha256": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+  "fold_mapped_snapshot_modules": [
+    "ot_coll_fold_slice",
+    "ot_coll_rst_leaf"
+  ],
+  "native_mapped_top_area_um2": 338176.69524,
+  "native_hard_macro_lib_area_um2": 247949.4879,
+  "native_standard_lib_area_um2": 90227.20733999996,
+  "actual_macro_views": {
+    "ot_sram_1r1w2c_64x546_m1": {
+      "native_instances": 4,
+      "lef": "/srv/opentallas-scratch2/claude/wt/codex-qc62-proposal8-bind-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+      "lef_size_um": [
+        178.632,
+        81.0
+      ],
+      "tt_lib": "/srv/opentallas-scratch2/claude/wt/codex-qc62-proposal8-bind-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+      "tt_lib_area_um2": 14469.192
+    },
+    "ot_sram_1r1w_32x546_m1": {
+      "native_instances": 4,
+      "lef": "/srv/opentallas-scratch2/claude/wt/codex-qc62-proposal8-bind-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+      "lef_size_um": [
+        177.768,
+        81.0
+      ],
+      "tt_lib": "/srv/opentallas-scratch2/claude/wt/codex-qc62-proposal8-bind-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+      "tt_lib_area_um2": 14399.208
+    },
+    "ot_sram_1r1w_512x128_m4_r2c2": {
+      "native_instances": 5,
+      "lef": "/srv/opentallas-scratch2/claude/wt/codex-qc62-proposal8-bind-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+      "lef_size_um": [
+        174.12,
+        29.736
+      ],
+      "tt_lib": "/srv/opentallas-scratch2/claude/wt/codex-qc62-proposal8-bind-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+      "tt_lib_area_um2": 5177.6323
+    },
+    "ot_sram_1r1w_64x512_m1_r2c2": {
+      "native_instances": 8,
+      "lef": "/srv/opentallas-scratch2/claude/wt/codex-qc62-proposal8-bind-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "lef_size_um": [
+        171.288,
+        77.784
+      ],
+      "tt_lib": "/srv/opentallas-scratch2/claude/wt/codex-qc62-proposal8-bind-1101/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "tt_lib_area_um2": 13323.4658
+    }
+  },
+  "proposal": {
+    "harden_once_reuse": 8,
+    "new_partition_types": 0,
+    "new_hardcore_view_types": 1,
+    "clock": "same existing clk",
+    "reset": "same existing u_bound.rst_n; keep internal two-flop ot_coll_rst_leaf",
+    "parameters": {
+      "N": 4,
+      "ADD_LAT": 7,
+      "SEAM": 1
+    },
+    "existing_red_to_valid_edges": 23,
+    "added_functional_pipeline_edges": 0,
+    "remaining_soft_before_new_physical_infrastructure": 215597,
+    "parent_macro_instances_after": 29,
+    "parent_hierarchy_leaves_after_cut": 215626,
+    "planning_leaf_outline_um": [
+      180,
+      180
+    ],
+    "planning_leaf_area_for_eight_um2": 259200,
+    "footprint_reference": "Existing10-11 routed180square view is planning reference only, NOT a currentSIGNED or source-equivalence claim",
+    "source_action": "Harden eight already-real retained folds as one current matched view; leave parent soft wrapper/transport; no extra seam flops",
+    "preserved": [
+      "both shared FT replicas",
+      "all external ports/stations/calendars",
+      "die edge",
+      "native data/reset/clock connectivity"
+    ],
+    "required_before_plan_adoption": [
+      "complete CORE macro/dataflow repack and <=405 stage reach",
+      "canonical627c clock/reset/PG projection and priced boot release",
+      "current leaf geometry review then genuine SIGNED view, never silently use old10-11 view",
+      "fresh parent-source census after physical infrastructure changes"
+    ],
+    "placement": "UNRESOLVED; no hard-macro origins fabricated",
+    "fixed_hardmaster_parameter_policy": {
+      "required_resolved_parameters": {
+        "N": 4,
+        "ADD_LAT": 7,
+        "SEAM": 1
+      },
+      "accept_only_after": "Resolve every parameter override/default in actual elaborated instance context; record exact resolved values and ABI widths before replacing with fixed hardmaster.",
+      "reject": "Any unresolved or differing parameter, any src width other than512, any sum width other than128, or mismatched clock/reset identity.",
+      "rewrite": "Only exact matching instances may canonicalize to parameter-free hardmaster; never silently discard parameter overrides.",
+      "current_evidence": "All eight actual mapped instances retain the same parameter-free ot_coll_fold_slice definition; original current calls use defaults N4/ADD_LAT7/SEAM1.",
+      "implementation_status": "POLICY_PREP_ONLY; no native_bb or canonical source substitution implemented"
+    }
+  },
+  "held": [
+    "GEN",
+    "P&R",
+    "STA",
+    "canonical adoption",
+    "old-view timing reuse"
+  ],
+  "actual_native_runtime": "epyc2:/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/native_pair_retry1",
+  "mapped_extraction_runtime": "epyc2:/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/core_fold8_prep2",
+  "mapped_leaf_sha256": "518e542ec811d9854ccc71f6904f1dca009dc82d0b7536d88491392a673df9c3",
+  "mapped_leaf_bytes": 11955554
+}
