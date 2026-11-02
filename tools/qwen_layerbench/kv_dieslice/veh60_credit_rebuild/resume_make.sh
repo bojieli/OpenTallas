@@ -16,7 +16,8 @@ text=original.read_text()
 block=re.search(r'VM_HIER_LIBS := \\\n(.*?)(?=\nhier_build:)',text,re.S).group(1)
 old=re.findall(r'\bV[^\s\\]+\.a\b',block)
 libs=json.loads((d/'child_libs.json').read_text())
-assert old==libs and len(libs)==51,(len(old),len(libs))
+assert sorted(old)==sorted(libs) and len(libs)==51,(len(old),len(libs))
+libs=old  # Preserve original hierarchy archive order.
 assert all((o/f).is_file() for f in libs)
 include='# Private cache-only hierarchy: no regeneration or child recipes.\nVM_HIER_LIBS := '+' '.join(libs)+'\n'
 (o/'Vtb_kvslice_hier.mk').write_text(include)
