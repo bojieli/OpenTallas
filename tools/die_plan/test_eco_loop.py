@@ -40,7 +40,7 @@ class Fake:
     def __init__(self, results):
         self.results = list(results)
         self.calls = []
-        self.n = 0
+        self.n = 0          # sign-offs done = iterations finished
 
     def __call__(self, cmd, **kw):
         self.calls.append((cmd, kw.get("env") or {}))
@@ -50,15 +50,15 @@ class Fake:
             (d / "run/objects").mkdir(parents=True)
             (d / "config.mk").write_text("eco overrides\n")
             (d / "signoff.py").write_text("# kit sign-off\n")
-            self.n += 1
             return 0
         if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh"):
-            return 9 if self.results[self.n - 1] is None else 0
+            return 9 if self.results[self.n] is None else 0
         if "run" in cmd and "--out" in cmd:
             out = Path(cmd[cmd.index("--out") + 1])
             out.mkdir(parents=True)
             d = Path(cmd[cmd.index("--kit") + 1])
-            r = self.results[self.n - 1]
+            r = self.results[self.n]
+            self.n += 1
             r["inputs"] = {"base": str(d / "run/results/asap7/n/base")}
             (out / "signoff.json").write_text(json.dumps(r))
             return 0 if r["verdict"] == "SIGNED" else 1
@@ -122,7 +122,7 @@ def test_no_improvement_stops_and_keeps_best(tmp_path):
     r = E.run_loop(k, b, run=f, mem=8, cpus=2)
     assert r["verdict"] == "EXHAUSTED" and len(r["iterations"]) == 2 and "no improvement" in r["reason"]
     assert r["best"]["n"] == 2                                                 # -2.6 is better than -3
-    assert r["iterations"][0]["variant"] == "b10"
+    assert r["iterations"][0]["variant"] == "t10+b10"                        # TT slew + FF hold: both passes
     s = E.summary(r)
     assert s.startswith("late-ECO exhausted (2 it") and "FF -8->-2.6" in s
 
@@ -176,3 +176,38 @@ def test_post_runner_used_when_kit_has_one(tmp_path):
     assert r["verdict"] == "PASS"
     post = [c for c in calls if c[1].endswith("run_kit_hbm.sh")][0]
     assert post[3] == "post" and not any("abstract" in " ".join(map(str, c)) for c in calls)
+
+
+def test_single_mode_passes():
+    m = lambda **k: dict(dict(tt=5, ff=5, drv_tt=0, drv_ff=0, drc=0), **k)  # noqa: E731
+    k = Path("/nonexistent")
+    assert E.passes(k, m(tt=-3), 10) == ["t10"]                               # TT setup only
+    assert E.passes(k, m(drv_tt=4), 10) == ["t10"]                            # TT slew only
+    assert E.passes(k, m(ff=-2), 10) == ["b10"]
+    assert E.passes(k, m(tt=-1, drv_ff=3), 10) == ["t10", "b10"]
+    assert E.passes(k, m(drc=3), 10) == ["b10"]
+    assert E.passes(k, m(), 10) == ["b10"]
+    assert E.metrics(rec(-1, 5, slew=7))["drv_tt"] == 7
+
+
+def test_mm_kit_single_m_pass(tmp_path):
+    k = kit(tmp_path)
+    assert E.passes(k, dict(tt=-3, ff=-3, drv_tt=5, drv_ff=5, drc=0), 10) == ["m10"]
+
+
+def test_t_then_b_chain(tmp_path):
+    k = kit(tmp_path, mm=False)
+    b = base_rec(k, rec(-6, -2, slew=0))
+    f = Fake([rec(2, 3)])
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2)
+    assert r["verdict"] == "PASS"
+    it = r["iterations"][0]
+    mk = [c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_mk.sh")]
+    assert [c[4] for c in mk] == ["t10", "b10"]
+    assert mk[0][3].endswith("/i1t") and mk[1][2] == mk[0][3] and mk[1][3] == it["dir"]
+    envs = [e for c, e in f.calls if c[0] == "bash" and c[1].endswith("prd_run.sh")]
+    assert envs[1]["OT_PRD_FROM"] == "route"
+    # the b pass and the sign-off start from the kit's own config; the t pass dir is pruned, the final dir kept
+    assert (Path(mk[0][3]) / "config.mk").read_text() == (k / "config.mk").read_text()
+    assert not (Path(mk[0][3]) / "run/results").exists() and (Path(it["dir"]) / "run/results").exists()
+    assert set(it["rc"]) >= {"prd_mk_t", "prd_run_t", "prd_mk_b", "prd_run_b", "signoff"}

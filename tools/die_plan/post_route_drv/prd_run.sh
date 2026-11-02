@@ -51,7 +51,7 @@ while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
   $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work \
     -e HUID=$(id -u) -e HGID=$(id -g) -e OT_PRD_PASS=$P -e OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} -e OT_MAX_FANOUT=$OT_MAX_FANOUT -e OT_SLEW_MARGIN=$OT_SLEW_MARGIN \
     -e OT_SETUP_MARGIN=$OT_SETUP_MARGIN -e OT_HOLD_MARGIN=$OT_HOLD_MARGIN -e OT_HOLD_ALLOW_SETUP=$OT_HOLD_ALLOW_SETUP \
-    -e OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} -e "OT_PRD_PROTECT_NETS=${OT_PRD_PROTECT_NETS:-}" -e OT_PRD_FROM=${OT_PRD_FROM:-grt} -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -e "OT_PAD_MASTERS=${OT_PAD_MASTERS:-}" -e OT_VCLK_CORNER=${OT_VCLK_CORNER:-} \
+    -e OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} -e "OT_PRD_PROTECT_NETS=${OT_PRD_PROTECT_NETS:-}" -e OT_PRD_FROM=${OT_PRD_FROM:-grt} -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -e "OT_PAD_MASTERS=${OT_PAD_MASTERS:-}" -e OT_VCLK_CORNER=${OT_VCLK_CORNER:-} -e OT_PRD_NO_HOLD=${OT_PRD_NO_HOLD:-0} \
     -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $PATCH; \
     make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS do-route $ROUTE_CORNERS SKIP_INCREMENTAL_REPAIR=1; rc=\$?; \
     chown -R \$HUID:\$HGID /work; exit \$rc" > "$D/run_prd.log" 2>&1

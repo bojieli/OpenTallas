@@ -8,6 +8,7 @@
 # KIT     a ROUTED core kit (run/results/asap7/<nick>/base/5_1_grt.odb + the routed 6_final.spef), or a pass dir of this tool
 # OUT     new dir (never relaunched into)
 # VARIANT m<N>: tc+bc two-mode (kit OT_HOLD_MM=1), setup margin 10, hold margin N ps | b<N>: FF-only (kit without MM)
+#         | t<N>: TT-only setup + DRV, no hold repair (kit without MM; KW-ECO-1)
 # SO_DIR  repo checkout whose tools/ supply signoff.py bundle, clk_freeze*, orfs_hold_mm.*
 # SPEF    parasitics the repair reads (default KIT's routed 6_final.spef; pass 2 = pass 1's re-extracted RCX)
 # env OT_PRD_FROM=grt (default) | route  (FLOW-12 10-30, COORD 20:13 opt-in; DIE-QC-50 P6/P8eco recipe, BTAB SIGNED):
@@ -29,7 +30,7 @@ test -f $RS/$SRC -a -f "$SPEF" || { echo "prd_mk: $RS lacks $SRC / $SPEF"; exit 
 # Stage policies distinguish GRT from CTS by the ORIGINAL CTS checkpoint.
 # Preserve that checkpoint through every PRD pass; never manufacture it from GRT.
 test -f "$RS/4_1_cts.odb" || { echo "prd_mk: $RS lacks original 4_1_cts.odb (GRT stage identity)"; exit 2; }
-HM=${V:1}; [[ "$HM" =~ ^[0-9]+$ && ${V:0:1} =~ ^[bm]$ ]] || { echo "prd_mk: variant $V: want b<hold margin ps> or m<hold margin ps>"; exit 2; }
+HM=${V:1}; [[ "$HM" =~ ^[0-9]+$ && ${V:0:1} =~ ^[bmt]$ ]] || { echo "prd_mk: variant $V: want b<hold margin ps>, m<hold margin ps> or t<N>"; exit 2; }
 mkdir -p $OUT
 rsync -a --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' \
   --exclude '/run_*.log' --exclude /rc.txt --exclude '/pass[0-9]*' --exclude '/prd_*.json' --exclude '/prd_*.log' \
@@ -98,6 +99,10 @@ fi
 if [[ ${V:0:1} = b ]] && ! grep -q '^override export CORNERS = bc' $OUT/config.mk; then
   printf 'override export OT_HOLD_MM = 0\noverride export CORNERS = bc\n' >> $OUT/config.mk
 fi
+# KW-ECO-1 11-01: t<N> = TT-only setup + DRV pass of a single-mode kit (no hold repair; the b<N> pass repairs FF hold)
+if [[ ${V:0:1} = t ]] && ! grep -q '^override export CORNERS = tc' $OUT/config.mk; then
+  printf 'override export OT_HOLD_MM = 0\noverride export CORNERS = tc\n' >> $OUT/config.mk
+fi
 # FLOW-CLOCK-R8: no fanout limit by default.  Sign-off limits are liberty max_transition/max_capacitance; fanout is
 # WARN-only there (64) and ASAP7 liberty has no max_fanout.  The R7 KV-recipe basis 24 split bdring's 56-load bs[*]
 # nets with BUFx2 fanout buffers: TT setup -22.43 -> -39.69 ps (10 -> 100 endpoints).  OT_PRD_MAX_FANOUT=<n> opts in.
@@ -105,6 +110,7 @@ FO=${OT_PRD_MAX_FANOUT:-0}; [[ "$FO" =~ ^[0-9]+$ ]] || { echo "prd_mk: OT_PRD_MA
 case ${V:0:1} in
   b) printf "OT_MAX_FANOUT=$FO\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=\nOT_HOLD_MARGIN=$HM\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=BC CORNERS=bc'\n" ;;
   m) printf "OT_MAX_FANOUT=$FO\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=10\nOT_HOLD_MARGIN=$HM\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=TC CORNERS=\"tc bc\"'\n" ;;
+  t) printf "OT_MAX_FANOUT=$FO\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=10\nOT_HOLD_MARGIN=$HM\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nOT_PRD_NO_HOLD=1\nROUTE_CORNERS='CORNER=TC CORNERS=tc'\n" ;;
 esac > $OUT/variant.env
 # Explicit repair settings stay pinned when prd_run creates the next pass.
 # Keep an explicitly empty setup margin (FF-only) distinct from an unset one.

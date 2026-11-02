@@ -8,7 +8,8 @@ to stop.  Sign-off and LEC are unchanged (no gate, corner, derate or margin is t
 sign-off of a new routed DB.
 
 One iteration (at most MAX_ITER = 3), from the previous iteration's routed DB (iteration 1: the kit's):
-  1. prd_mk.sh SRC D <m|b><hold margin> SO   (tools/die_plan/post_route_drv; OT_PRD_FROM=route when the DB has no DRC,
+  1. prd_mk.sh SRC D <m|b|t><hold margin> SO   (tools/die_plan/post_route_drv; two-mode kit: m<N>; single-mode kit:
+     t<N> (TT setup + DRV, no hold) when TT fails, then b<N> (FF hold + DRV) from it when FF fails; OT_PRD_FROM=route when the DB has no DRC,
      else grt = one full detailed route from the pre-DRT GRT DB, the FLOW-SHARED-10 form that clears small DRC counts)
   2. prd_run.sh D CPUS MEM 1 with OT_PRD_POST=0: the ECO hook prd_hook.tcl on the routed RCX SPEF (= measured arrivals)
        repair_design (slew/cap) -> repair_timing -setup (two-mode kits) -> repair_timing -hold, hold margin 10 ps
@@ -70,16 +71,30 @@ def load(p):
 def metrics(rec):
     """sign-off record -> {verdict, signed, tt, ff, drv, drc, fails}"""
     c = rec.get("checks") or {}
-    drv = 0.0
-    for v in ((c.get("drv") or {}).get("by_corner") or {}).values():
+    by = {}
+    for k, v in ((c.get("drv") or {}).get("by_corner") or {}).items():
         if isinstance(v, dict):
-            drv += sum(float(x or 0) for x in v.values())
+            by[str(k).lower()] = sum(float(x or 0) for x in v.values())
+    drv = sum(by.values())
     fails = sorted(k for k, v in c.items() if isinstance(v, dict) and v.get("verdict") == "FAIL")
     verdict = rec.get("verdict")
     signed = verdict == "SIGNED" or (verdict == "LOCAL_PASS_NEEDS_PARENT" and rec.get("local_verdict") == "SIGNED")
     return dict(verdict=verdict, signed=bool(signed), tt=(c.get("setup_tt") or {}).get("wns_ps"),
                 ff=(c.get("hold_ff") or {}).get("wns_ps"), drv=int(drv), drc=int((c.get("drc") or {}).get("count") or 0),
-                fails=fails)
+                drv_tt=int(by.get("tt", 0)), drv_ff=int(by.get("ff", 0)), fails=fails)
+
+
+def passes(kit, prev, hm):
+    """ECO passes of one iteration.  Two-mode kit (OT_HOLD_MM=1): one m<N> pass (TT setup + BC hold in one session).
+    Single-mode kit: the session holds one corner (kit_modes_eco.tcl), so TT setup / TT DRV is a t<N> pass and FF hold /
+    FF DRV a b<N> pass started from it; each runs only when its corner fails (neither: b<N>, the DRC / fanout form)."""
+    if hold_mm(kit):
+        return ["m" + str(hm)]
+    tt, ff = prev.get("tt"), prev.get("ff")
+    need_t = (tt is not None and tt < 0) or prev.get("drv_tt", 0) > 0
+    need_b = (ff is not None and ff < 0) or prev.get("drv_ff", 0) > 0 or prev.get("drc", 0) > 0
+    out = (["t" + str(hm)] if need_t else []) + (["b" + str(hm)] if need_b or not need_t else [])
+    return out
 
 
 def eligible(rec):
@@ -206,13 +221,14 @@ exit $rc
 
 
 # ------------------------------------------------------------------------------------------------ one iteration
-def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE):
-    """one ECO pass from routed dir src into root/i<n>; -> iteration record (metrics None when no sign-off)"""
+def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE, prev=None):
+    """one ECO iteration from routed dir src into root/i<n> (a single-mode kit's t<N> pass first into root/i<n>t);
+    -> iteration record (metrics None when no sign-off)"""
     d = Path(root) / f"i{n}"
     t0 = time.time()
-    variant = ("m" if hold_mm(kit) else "b") + str(hm)
-    env = dict(os.environ, OT_PRD_FROM=mode, OT_PRD_POST="0", OT_PRD_FINISH="1")
-    it = dict(n=n, dir=str(d), source=str(src), mode=mode, variant=variant, started=t0, commands=[], rc={})
+    vs = passes(kit, prev or {}, hm)
+    it = dict(n=n, dir=str(d), source=str(src), mode=mode, variant="+".join(vs), started=t0, commands=[], rc={},
+              pass_dirs=[])
 
     def step(name, cmd, **kw):
         it["commands"].append(" ".join(shlex.quote(str(c)) for c in cmd))
@@ -224,14 +240,22 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         it.update(status=status, reason=reason, finished=time.time(), wall_s=round(time.time() - t0, 1))
         return it
 
-    if step("prd_mk", ["bash", PRD / "prd_mk.sh", src, d, variant, so], env=env):
-        return end("ERROR", "prd_mk.sh failed (pass dir not staged)")
-    if step("prd_run", ["bash", PRD / "prd_run.sh", d, cpus, mem, 1], env=env):
-        return end("ERROR", "ECO route / clock-freeze check / finish failed (prd_result.json)")
-    # the ECO overrides steer only the ECO route: sign off on the kit's own config
-    if (d / "config.mk").is_file():
-        shutil.copy2(d / "config.mk", d / "config_eco.mk")
-    shutil.copy2(Path(kit) / "config.mk", d / "config.mk")
+    s = src
+    for i, v in enumerate(vs):
+        pd = d if i == len(vs) - 1 else Path(root) / f"i{n}{v[0]}"
+        it["pass_dirs"].append(str(pd))
+        # the first pass of the iteration keeps / re-routes per the DRC count; a later one starts from a fresh ECO route
+        env = dict(os.environ, OT_PRD_FROM=mode if i == 0 else "route", OT_PRD_POST="0", OT_PRD_FINISH="1")
+        tag = "" if len(vs) == 1 else "_" + v[0]
+        if step("prd_mk" + tag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
+            return end("ERROR", f"prd_mk.sh {v} failed (pass dir not staged)")
+        if step("prd_run" + tag, ["bash", PRD / "prd_run.sh", pd, cpus, mem, 1], env=env):
+            return end("ERROR", f"ECO {v} route / clock-freeze check / finish failed (prd_result.json)")
+        # the ECO overrides steer only the ECO route: the next pass and the sign-off start from the kit's own config
+        if (pd / "config.mk").is_file():
+            shutil.copy2(pd / "config.mk", pd / "config_eco.mk")
+        shutil.copy2(Path(kit) / "config.mk", pd / "config.mk")
+        s = pd
     ts = time.time()
     pr = post_runner(d, runner)
     if pr:
@@ -253,14 +277,19 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
     return end("SIGNED" if it["metrics"]["signed"] else "NOT_SIGNED")
 
 
-def prune(it):
-    """drop the heavy ORFS run data of a superseded iteration (json / logs / sign-off stay as evidence)"""
-    d = Path(it["dir"])
-    for sub in ("run/results", "run/objects"):
-        p = d / sub
-        if p.is_dir() and str(p.resolve()).startswith(str(d.resolve()) + os.sep):
-            shutil.rmtree(p, ignore_errors=True)
-    it["pruned"] = True
+def prune(it, intermediate_only=False):
+    """drop the heavy ORFS run data of a superseded iteration (json / logs / sign-off stay as evidence); the best
+    iteration keeps its final dir and drops only its intermediate t<N> pass"""
+    dirs = [Path(p) for p in it.get("pass_dirs") or [] if p != it["dir"]]
+    if not intermediate_only:
+        dirs.append(Path(it["dir"]))
+    for d in dirs:
+        for sub in ("run/results", "run/objects"):
+            p = d / sub
+            if p.is_dir() and str(p.resolve()).startswith(str(d.resolve()) + os.sep):
+                shutil.rmtree(p, ignore_errors=True)
+    if not intermediate_only:
+        it["pruned"] = True
 
 
 # ------------------------------------------------------------------------------------------------ the loop
@@ -293,7 +322,7 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     verdict, stop = "EXHAUSTED", f"{max_iter} iterations, still not signed"
     for n in range(1, max_iter + 1):
         mode = "route" if prev["drc"] == 0 else "grt"
-        it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image)
+        it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev)
         res["iterations"].append(it)
         m = it.get("metrics")
         if not m:
@@ -315,8 +344,7 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
                            metrics=best["metrics"])
     if not keep:
         for it in res["iterations"]:
-            if it is not best:
-                prune(it)
+            prune(it, intermediate_only=it is best)
     return done(verdict, stop)
 
 
