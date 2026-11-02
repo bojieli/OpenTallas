@@ -1,0 +1,47 @@
+{
+  "status": "PASS_DISABLED_COMPONENT_ONLY",
+  "positive": {
+    "edges": 4096,
+    "reads": 3504,
+    "headers": 699,
+    "writes": 3724,
+    "collisions": 1325,
+    "resets": 63,
+    "held": 592
+  },
+  "controls": [
+    {
+      "mutant": 1,
+      "kind": "actual model write-first instead of read-old",
+      "caught_edge": 9
+    },
+    {
+      "mutant": 2,
+      "kind": "provenance captured at WRITE instead of READ, warm reset header",
+      "caught_edge": 40
+    },
+    {
+      "mutant": 3,
+      "kind": "read-enable one edge late",
+      "caught_edge": 8
+    }
+  ],
+  "resource": {
+    "host": "intel2",
+    "directory": "/srv/opentallas-scratch2/claude/codex-ds-t7-pvq-native-1020",
+    "unit": "oth-ubuntu-1960672-1793639139",
+    "request_gib": 4,
+    "threads": 2,
+    "build_jobs": 1,
+    "frontend_allocated_mb": 645.645,
+    "wall_seconds": 135.65,
+    "max_rss_kib": 1049876,
+    "terminal_exit": 0
+  },
+  "production_adopted": false,
+  "provider_qualified": false,
+  "physical_qualified": false,
+  "all_initial_states_proved": false,
+  "clock_ps": 833,
+  "queue_control_integrated": false
+}
