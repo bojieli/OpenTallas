@@ -8,7 +8,7 @@
       "results/hbm_storeB_native_capsule_0136/native/ot_hnx_sfu_store_b__1300886e9f18.sv",
       "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
     ],
-    "source_commit": "38138c569166ad00e5c05ef46b73249af443aa26",
+    "source_commit": "7fb4ddfadc1727c98677f776cb857f1cdf25b003",
     "read_at_commit": false,
     "defines": [],
     "macros": [
@@ -307,7 +307,7 @@
     "source": "Exact selected SOURCE13 native StoreB and two native generic children; real same-name32SRAM binding, no provider alias"
   },
   "profile": {
-    "source_commit": "38138c569166ad00e5c05ef46b73249af443aa26",
+    "source_commit": "7fb4ddfadc1727c98677f776cb857f1cdf25b003",
     "family": "SOURCE13_CURRENT_NATIVE_STOREB",
     "release_eligible": false,
     "qualification": "NATIVE_SOURCEPROOF_INTAKE_UNROUTED",
@@ -708,5 +708,6 @@
     "conditional_formal_reset_edges": 4,
     "physical_reset_phase": "NOT_QUALIFIED: actual wrappert22\u2192native3edge\u2192store; no inherited64/native4physicalreceipt",
     "START": "Opaque native command1742 producer join remainsheld; no dummySTART"
-  }
+  },
+  "scope": "PREP_ONLY source files exist in source commit7fb4ddfad; actual normalGEN adapter recomputes full cleanHEAD at dispatch, no kit/proof generated"
 }
