@@ -9,7 +9,15 @@ proc sc_restore_and_lock {} {
  dict for {name st} $::sc_expected_cells {
   set i [$::scb findInst $name];if {$i eq "NULL"} {error "SC_PLACE_MISSING $name"}
   set flag [$i isDoNotTouch];if {$flag} {$i setDoNotTouch 0}
-  if {[sc_endpoint $name $st]} {$i setOrient [lindex $st 2];$i setLocation {*}[lindex $st 1];$i setPlacementStatus FIRM}
+  if {[sc_endpoint $name $st]} {
+   if {[$i getOrient] ne [lindex $st 2] || [$i getLocation] ne [lindex $st 1]} {
+    # OpenDB rejects pose setters on FIRM even when the requested orientation matches.
+    # Release only a face hook's changed endpoint, restore the exact reviewed pose, and lock again.
+    if {[$i getPlacementStatus] in {FIRM LOCKED COVER}} {$i setPlacementStatus PLACED}
+    $i setOrient [lindex $st 2];$i setLocation {*}[lindex $st 1]
+   }
+   $i setPlacementStatus FIRM
+  }
   $i setDoNotTouch [lindex $st 4]
  }
  dict for {name st} $::sc_expected_nets {set n [$::scb findNet $name];if {$n eq "NULL"} {error "SC_PLACE_NET_MISSING $name"};$n setDoNotTouch [lindex $st 2]}
