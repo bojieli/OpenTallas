@@ -1,0 +1,25 @@
+{
+ "source": "released checkpoint tensor, direct byte-range extraction; no head ROM/image regeneration",
+ "checkpoint": "/srv/opentallas-scratch2/claude/ref/DeepSeek-V4.1-Flash-dba1be0a-partial",
+ "tensor": "norm.weight",
+ "shard": "/srv/opentallas-scratch2/claude/ref/DeepSeek-V4.1-Flash-dba1be0a-partial/model-00043-of-00048.safetensors",
+ "dtype": "BF16",
+ "shape": [
+  5120
+ ],
+ "data_offsets": [
+  1323827200,
+  1323837440
+ ],
+ "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+ "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+ "BF16_tensor_sha256": "9cd3b57cd9513541b9771bf66c9b356bf1a7b20ff050ed69f7e97cff9fedd428",
+ "FP32_gain_sha256": "aa8c04c15c0ddbf38955fa17af68fb632229ddc01d25fd76d9d9d222eb9b88d1",
+ "conversion": "exact BF16 bits shiftedleft16 intoFP32; no rounding",
+ "HEADG_rows": [
+  480,
+  495
+ ],
+ "boot_residency_qualified": false,
+ "final_POST_input_authority": false
+}

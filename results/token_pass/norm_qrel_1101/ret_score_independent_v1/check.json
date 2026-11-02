@@ -1,0 +1,117 @@
+{
+ "status": "PASS_INDEPENDENT_FRESH_SOURCE_RETURN_FOREST_ORDER",
+ "fields": [
+  {
+   "frame": "u_f_0L01",
+   "phase": 71,
+   "rows": [
+    {
+     "global_row": 0,
+     "returned_subtrees": 3,
+     "FP32": "bc4774c6",
+     "BF16_in_FP32": "bc470000"
+    },
+    {
+     "global_row": 1,
+     "returned_subtrees": 3,
+     "FP32": "bcb424da",
+     "BF16_in_FP32": "bcb40000"
+    },
+    {
+     "global_row": 2,
+     "returned_subtrees": 3,
+     "FP32": "3db8be4f",
+     "BF16_in_FP32": "3db90000"
+    },
+    {
+     "global_row": 3,
+     "returned_subtrees": 3,
+     "FP32": "bdb16802",
+     "BF16_in_FP32": "bdb10000"
+    }
+   ],
+   "canonical_Ksegment_order": true
+  },
+  {
+   "frame": "u_f_1L03",
+   "phase": 71,
+   "rows": [
+    {
+     "global_row": 246,
+     "returned_subtrees": 3,
+     "FP32": "3cfc99a8",
+     "BF16_in_FP32": "3cfd0000"
+    },
+    {
+     "global_row": 247,
+     "returned_subtrees": 3,
+     "FP32": "bdf3d7a3",
+     "BF16_in_FP32": "bdf40000"
+    },
+    {
+     "global_row": 248,
+     "returned_subtrees": 3,
+     "FP32": "bd72e14f",
+     "BF16_in_FP32": "bd730000"
+    },
+    {
+     "global_row": 249,
+     "returned_subtrees": 3,
+     "FP32": "bccc2290",
+     "BF16_in_FP32": "bccc0000"
+    }
+   ],
+   "canonical_Ksegment_order": true
+  },
+  {
+   "frame": "u_f_3L01",
+   "phase": 71,
+   "rows": [
+    {
+     "global_row": 528,
+     "returned_subtrees": 3,
+     "FP32": "bdb634d5",
+     "BF16_in_FP32": "bdb60000"
+    },
+    {
+     "global_row": 529,
+     "returned_subtrees": 3,
+     "FP32": "3d128a6e",
+     "BF16_in_FP32": "3d130000"
+    },
+    {
+     "global_row": 530,
+     "returned_subtrees": 3,
+     "FP32": "bd831e89",
+     "BF16_in_FP32": "bd830000"
+    },
+    {
+     "global_row": 531,
+     "returned_subtrees": 3,
+     "FP32": "bd0e8141",
+     "BF16_in_FP32": "bd0f0000"
+    }
+   ],
+   "canonical_Ksegment_order": true
+  }
+ ],
+ "checked_rows": 12,
+ "controls_caught": {
+  "payload_lsb": "partial FP32 ownership/order mismatch row0 lo4 span4",
+  "tag_ownership_swap_preserves_payload_multiset": "partial FP32 ownership/order mismatch row0 lo0 span2"
+ },
+ "fresh_Kseg_sha256": "9aafc6b4a2a1f990f476821b648fc6771ac492ea416c071726bf8c9c10033bd0",
+ "fresh_BF16_sha256": "fe9fc2cc568534925485f669cea2356c700c473bffaede4d18009f8200fd42ab",
+ "source_plan_sha256": {
+  "/home/ubuntu/coord/tmp/codex-ds-norm-1101/ret_score_independent_v1/u_f_0L01.json": "2417283eb4d79a1cb96af9a86fbc5c7a25d504cc3c73cd090a57fb02fa395901",
+  "/home/ubuntu/coord/tmp/codex-ds-norm-1101/ret_score_independent_v1/u_f_1L03.json": "dd188ddb287d82b1513d639ba054b667c7f8d1a17fab1b304479a182124f554c",
+  "/home/ubuntu/coord/tmp/codex-ds-norm-1101/ret_score_independent_v1/u_f_3L01.json": "04b1813651a431729194e4a5c217a33dfc3e0e8756e2ac3c3492d15fa3417466"
+ },
+ "producer_evaluator_imported": false,
+ "old_norm_partial_files_read": false,
+ "numeric_source_only": true,
+ "actual_CAP_runtime_qualified": false,
+ "actual_CW_RD_arrival_leases_qualified": false,
+ "physical_phase_qualified": false,
+ "HOST_START_authority": false
+}

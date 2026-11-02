@@ -1,0 +1,10 @@
+read_verilog -sv -DSYNTHESIS rtl/qwen_dv/qfd_dv_table_rom_loader.sv
+chparam -set MONITOR_TAIL 1 -set BTAB_COMPACT 1 -set WE_COPIES 34 -set CAPTURE_STAGE 0 -set LOCAL_CTRL 0 qfd_dv_table_rom_loader
+hierarchy -top qfd_dv_table_rom_loader
+proc
+flatten
+opt
+techmap
+opt
+write_json <output>/mode1.json
+stat

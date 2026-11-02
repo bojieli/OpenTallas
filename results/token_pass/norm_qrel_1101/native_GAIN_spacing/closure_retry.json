@@ -1,0 +1,9 @@
+{
+ "reason": "actual Verilator found conditional/helper instances omitted by lightweight closure parser",
+ "additional_sources": {
+  "rtl/common/ot_meso_fifo.sv": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv": "4c4e5c42b1363b5cdb737d168ae48300be4caba140ce45f0b784b2b60abceee0"
+ },
+ "original_failure": "native_leaf_ece_v2/build.log",
+ "RTL_modified": false
+}

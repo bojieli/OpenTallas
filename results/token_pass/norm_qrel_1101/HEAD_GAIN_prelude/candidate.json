@@ -1,0 +1,3818 @@
+{
+ "schema": "opentallas.s81.head_norm_gain_prelude.v1",
+ "status": "UNSEALED_SEPARATE_NATIVE_GAIN_PRELUDE",
+ "source_top_sha256": "7dcc944c1d951d28fba997d4cdd5ee88175b8f2d84c1bbf947eb60a40e63c176",
+ "gain_source": {
+  "source": "released checkpoint tensor, direct byte-range extraction; no head ROM/image regeneration",
+  "checkpoint": "/srv/opentallas-scratch2/claude/ref/DeepSeek-V4.1-Flash-dba1be0a-partial",
+  "tensor": "norm.weight",
+  "shard": "/srv/opentallas-scratch2/claude/ref/DeepSeek-V4.1-Flash-dba1be0a-partial/model-00043-of-00048.safetensors",
+  "dtype": "BF16",
+  "shape": [
+   5120
+  ],
+  "data_offsets": [
+   1323827200,
+   1323837440
+  ],
+  "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "header_sha256": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+  "BF16_tensor_sha256": "9cd3b57cd9513541b9771bf66c9b356bf1a7b20ff050ed69f7e97cff9fedd428",
+  "FP32_gain_sha256": "aa8c04c15c0ddbf38955fa17af68fb632229ddc01d25fd76d9d9d222eb9b88d1",
+  "conversion": "exact BF16 bits shiftedleft16 intoFP32; no rounding",
+  "HEADG_rows": [
+   480,
+   495
+  ],
+  "boot_residency_qualified": false,
+  "final_POST_input_authority": false
+ },
+ "rows": [
+  {
+   "issue": 0,
+   "done": 5,
+   "eng": 0,
+   "arg": 5,
+   "tix": 5,
+   "row76": "0000050000000000005"
+  },
+  {
+   "issue": 0,
+   "done": 5,
+   "eng": 1,
+   "arg": 0,
+   "tix": 0,
+   "row76": "0000050000001000000"
+  },
+  {
+   "issue": 1,
+   "done": 6,
+   "eng": 0,
+   "arg": 6,
+   "tix": 6,
+   "row76": "0000060000010000006"
+  },
+  {
+   "issue": 1,
+   "done": 6,
+   "eng": 1,
+   "arg": 1,
+   "tix": 1,
+   "row76": "0000060000011000001"
+  },
+  {
+   "issue": 2,
+   "done": 7,
+   "eng": 0,
+   "arg": 7,
+   "tix": 7,
+   "row76": "0000070000020000007"
+  },
+  {
+   "issue": 2,
+   "done": 7,
+   "eng": 1,
+   "arg": 2,
+   "tix": 2,
+   "row76": "0000070000021000002"
+  },
+  {
+   "issue": 3,
+   "done": 8,
+   "eng": 0,
+   "arg": 8,
+   "tix": 8,
+   "row76": "0000080000030000008"
+  },
+  {
+   "issue": 3,
+   "done": 8,
+   "eng": 1,
+   "arg": 3,
+   "tix": 3,
+   "row76": "0000080000031000003"
+  },
+  {
+   "issue": 4,
+   "done": 9,
+   "eng": 0,
+   "arg": 9,
+   "tix": 9,
+   "row76": "0000090000040000009"
+  },
+  {
+   "issue": 4,
+   "done": 9,
+   "eng": 1,
+   "arg": 4,
+   "tix": 4,
+   "row76": "0000090000041000004"
+  },
+  {
+   "issue": 5,
+   "done": 10,
+   "eng": 0,
+   "arg": 15,
+   "tix": 15,
+   "row76": "00000a000005000000f"
+  },
+  {
+   "issue": 5,
+   "done": 10,
+   "eng": 1,
+   "arg": 10,
+   "tix": 10,
+   "row76": "00000a000005100000a"
+  },
+  {
+   "issue": 6,
+   "done": 11,
+   "eng": 0,
+   "arg": 16,
+   "tix": 16,
+   "row76": "00000b0000060000010"
+  },
+  {
+   "issue": 6,
+   "done": 11,
+   "eng": 1,
+   "arg": 11,
+   "tix": 11,
+   "row76": "00000b000006100000b"
+  },
+  {
+   "issue": 7,
+   "done": 12,
+   "eng": 0,
+   "arg": 17,
+   "tix": 17,
+   "row76": "00000c0000070000011"
+  },
+  {
+   "issue": 7,
+   "done": 12,
+   "eng": 1,
+   "arg": 12,
+   "tix": 12,
+   "row76": "00000c000007100000c"
+  },
+  {
+   "issue": 8,
+   "done": 13,
+   "eng": 0,
+   "arg": 18,
+   "tix": 18,
+   "row76": "00000d0000080000012"
+  },
+  {
+   "issue": 8,
+   "done": 13,
+   "eng": 1,
+   "arg": 13,
+   "tix": 13,
+   "row76": "00000d000008100000d"
+  },
+  {
+   "issue": 9,
+   "done": 14,
+   "eng": 0,
+   "arg": 19,
+   "tix": 19,
+   "row76": "00000e0000090000013"
+  },
+  {
+   "issue": 9,
+   "done": 14,
+   "eng": 1,
+   "arg": 14,
+   "tix": 14,
+   "row76": "00000e000009100000e"
+  },
+  {
+   "issue": 10,
+   "done": 15,
+   "eng": 0,
+   "arg": 25,
+   "tix": 25,
+   "row76": "00000f00000a0000019"
+  },
+  {
+   "issue": 10,
+   "done": 15,
+   "eng": 1,
+   "arg": 20,
+   "tix": 20,
+   "row76": "00000f00000a1000014"
+  },
+  {
+   "issue": 11,
+   "done": 16,
+   "eng": 0,
+   "arg": 26,
+   "tix": 26,
+   "row76": "00001000000b000001a"
+  },
+  {
+   "issue": 11,
+   "done": 16,
+   "eng": 1,
+   "arg": 21,
+   "tix": 21,
+   "row76": "00001000000b1000015"
+  },
+  {
+   "issue": 12,
+   "done": 17,
+   "eng": 0,
+   "arg": 27,
+   "tix": 27,
+   "row76": "00001100000c000001b"
+  },
+  {
+   "issue": 12,
+   "done": 17,
+   "eng": 1,
+   "arg": 22,
+   "tix": 22,
+   "row76": "00001100000c1000016"
+  },
+  {
+   "issue": 13,
+   "done": 18,
+   "eng": 0,
+   "arg": 28,
+   "tix": 28,
+   "row76": "00001200000d000001c"
+  },
+  {
+   "issue": 13,
+   "done": 18,
+   "eng": 1,
+   "arg": 23,
+   "tix": 23,
+   "row76": "00001200000d1000017"
+  },
+  {
+   "issue": 14,
+   "done": 19,
+   "eng": 0,
+   "arg": 29,
+   "tix": 29,
+   "row76": "00001300000e000001d"
+  },
+  {
+   "issue": 14,
+   "done": 19,
+   "eng": 1,
+   "arg": 24,
+   "tix": 24,
+   "row76": "00001300000e1000018"
+  },
+  {
+   "issue": 15,
+   "done": 20,
+   "eng": 0,
+   "arg": 35,
+   "tix": 35,
+   "row76": "00001400000f0000023"
+  },
+  {
+   "issue": 15,
+   "done": 20,
+   "eng": 1,
+   "arg": 30,
+   "tix": 30,
+   "row76": "00001400000f100001e"
+  },
+  {
+   "issue": 16,
+   "done": 21,
+   "eng": 0,
+   "arg": 36,
+   "tix": 36,
+   "row76": "0000150000100000024"
+  },
+  {
+   "issue": 16,
+   "done": 21,
+   "eng": 1,
+   "arg": 31,
+   "tix": 31,
+   "row76": "000015000010100001f"
+  },
+  {
+   "issue": 17,
+   "done": 22,
+   "eng": 0,
+   "arg": 37,
+   "tix": 37,
+   "row76": "0000160000110000025"
+  },
+  {
+   "issue": 17,
+   "done": 22,
+   "eng": 1,
+   "arg": 32,
+   "tix": 32,
+   "row76": "0000160000111000020"
+  },
+  {
+   "issue": 18,
+   "done": 23,
+   "eng": 0,
+   "arg": 38,
+   "tix": 38,
+   "row76": "0000170000120000026"
+  },
+  {
+   "issue": 18,
+   "done": 23,
+   "eng": 1,
+   "arg": 33,
+   "tix": 33,
+   "row76": "0000170000121000021"
+  },
+  {
+   "issue": 19,
+   "done": 24,
+   "eng": 0,
+   "arg": 39,
+   "tix": 39,
+   "row76": "0000180000130000027"
+  },
+  {
+   "issue": 19,
+   "done": 24,
+   "eng": 1,
+   "arg": 34,
+   "tix": 34,
+   "row76": "0000180000131000022"
+  },
+  {
+   "issue": 20,
+   "done": 25,
+   "eng": 0,
+   "arg": 45,
+   "tix": 45,
+   "row76": "000019000014000002d"
+  },
+  {
+   "issue": 20,
+   "done": 25,
+   "eng": 1,
+   "arg": 40,
+   "tix": 40,
+   "row76": "0000190000141000028"
+  },
+  {
+   "issue": 21,
+   "done": 26,
+   "eng": 0,
+   "arg": 46,
+   "tix": 46,
+   "row76": "00001a000015000002e"
+  },
+  {
+   "issue": 21,
+   "done": 26,
+   "eng": 1,
+   "arg": 41,
+   "tix": 41,
+   "row76": "00001a0000151000029"
+  },
+  {
+   "issue": 22,
+   "done": 27,
+   "eng": 0,
+   "arg": 47,
+   "tix": 47,
+   "row76": "00001b000016000002f"
+  },
+  {
+   "issue": 22,
+   "done": 27,
+   "eng": 1,
+   "arg": 42,
+   "tix": 42,
+   "row76": "00001b000016100002a"
+  },
+  {
+   "issue": 23,
+   "done": 28,
+   "eng": 0,
+   "arg": 48,
+   "tix": 48,
+   "row76": "00001c0000170000030"
+  },
+  {
+   "issue": 23,
+   "done": 28,
+   "eng": 1,
+   "arg": 43,
+   "tix": 43,
+   "row76": "00001c000017100002b"
+  },
+  {
+   "issue": 24,
+   "done": 29,
+   "eng": 0,
+   "arg": 49,
+   "tix": 49,
+   "row76": "00001d0000180000031"
+  },
+  {
+   "issue": 24,
+   "done": 29,
+   "eng": 1,
+   "arg": 44,
+   "tix": 44,
+   "row76": "00001d000018100002c"
+  },
+  {
+   "issue": 25,
+   "done": 30,
+   "eng": 0,
+   "arg": 55,
+   "tix": 55,
+   "row76": "00001e0000190000037"
+  },
+  {
+   "issue": 25,
+   "done": 30,
+   "eng": 1,
+   "arg": 50,
+   "tix": 50,
+   "row76": "00001e0000191000032"
+  },
+  {
+   "issue": 26,
+   "done": 31,
+   "eng": 0,
+   "arg": 56,
+   "tix": 56,
+   "row76": "00001f00001a0000038"
+  },
+  {
+   "issue": 26,
+   "done": 31,
+   "eng": 1,
+   "arg": 51,
+   "tix": 51,
+   "row76": "00001f00001a1000033"
+  },
+  {
+   "issue": 27,
+   "done": 32,
+   "eng": 0,
+   "arg": 57,
+   "tix": 57,
+   "row76": "00002000001b0000039"
+  },
+  {
+   "issue": 27,
+   "done": 32,
+   "eng": 1,
+   "arg": 52,
+   "tix": 52,
+   "row76": "00002000001b1000034"
+  },
+  {
+   "issue": 28,
+   "done": 33,
+   "eng": 0,
+   "arg": 58,
+   "tix": 58,
+   "row76": "00002100001c000003a"
+  },
+  {
+   "issue": 28,
+   "done": 33,
+   "eng": 1,
+   "arg": 53,
+   "tix": 53,
+   "row76": "00002100001c1000035"
+  },
+  {
+   "issue": 29,
+   "done": 34,
+   "eng": 0,
+   "arg": 59,
+   "tix": 59,
+   "row76": "00002200001d000003b"
+  },
+  {
+   "issue": 29,
+   "done": 34,
+   "eng": 1,
+   "arg": 54,
+   "tix": 54,
+   "row76": "00002200001d1000036"
+  },
+  {
+   "issue": 30,
+   "done": 35,
+   "eng": 0,
+   "arg": 65,
+   "tix": 65,
+   "row76": "00002300001e0000041"
+  },
+  {
+   "issue": 30,
+   "done": 35,
+   "eng": 1,
+   "arg": 60,
+   "tix": 60,
+   "row76": "00002300001e100003c"
+  },
+  {
+   "issue": 31,
+   "done": 36,
+   "eng": 0,
+   "arg": 66,
+   "tix": 66,
+   "row76": "00002400001f0000042"
+  },
+  {
+   "issue": 31,
+   "done": 36,
+   "eng": 1,
+   "arg": 61,
+   "tix": 61,
+   "row76": "00002400001f100003d"
+  },
+  {
+   "issue": 32,
+   "done": 37,
+   "eng": 0,
+   "arg": 67,
+   "tix": 67,
+   "row76": "0000250000200000043"
+  },
+  {
+   "issue": 32,
+   "done": 37,
+   "eng": 1,
+   "arg": 62,
+   "tix": 62,
+   "row76": "000025000020100003e"
+  },
+  {
+   "issue": 33,
+   "done": 38,
+   "eng": 0,
+   "arg": 68,
+   "tix": 68,
+   "row76": "0000260000210000044"
+  },
+  {
+   "issue": 33,
+   "done": 38,
+   "eng": 1,
+   "arg": 63,
+   "tix": 63,
+   "row76": "000026000021100003f"
+  },
+  {
+   "issue": 34,
+   "done": 39,
+   "eng": 0,
+   "arg": 69,
+   "tix": 69,
+   "row76": "0000270000220000045"
+  },
+  {
+   "issue": 34,
+   "done": 39,
+   "eng": 1,
+   "arg": 64,
+   "tix": 64,
+   "row76": "0000270000221000040"
+  },
+  {
+   "issue": 35,
+   "done": 40,
+   "eng": 0,
+   "arg": 75,
+   "tix": 75,
+   "row76": "000028000023000004b"
+  },
+  {
+   "issue": 35,
+   "done": 40,
+   "eng": 1,
+   "arg": 70,
+   "tix": 70,
+   "row76": "0000280000231000046"
+  },
+  {
+   "issue": 36,
+   "done": 41,
+   "eng": 0,
+   "arg": 76,
+   "tix": 76,
+   "row76": "000029000024000004c"
+  },
+  {
+   "issue": 36,
+   "done": 41,
+   "eng": 1,
+   "arg": 71,
+   "tix": 71,
+   "row76": "0000290000241000047"
+  },
+  {
+   "issue": 37,
+   "done": 42,
+   "eng": 0,
+   "arg": 77,
+   "tix": 77,
+   "row76": "00002a000025000004d"
+  },
+  {
+   "issue": 37,
+   "done": 42,
+   "eng": 1,
+   "arg": 72,
+   "tix": 72,
+   "row76": "00002a0000251000048"
+  },
+  {
+   "issue": 38,
+   "done": 43,
+   "eng": 0,
+   "arg": 78,
+   "tix": 78,
+   "row76": "00002b000026000004e"
+  },
+  {
+   "issue": 38,
+   "done": 43,
+   "eng": 1,
+   "arg": 73,
+   "tix": 73,
+   "row76": "00002b0000261000049"
+  },
+  {
+   "issue": 39,
+   "done": 44,
+   "eng": 0,
+   "arg": 79,
+   "tix": 79,
+   "row76": "00002c000027000004f"
+  },
+  {
+   "issue": 39,
+   "done": 44,
+   "eng": 1,
+   "arg": 74,
+   "tix": 74,
+   "row76": "00002c000027100004a"
+  }
+ ],
+ "templates": [
+  {
+   "i": 0,
+   "name": "head.gain.0.0",
+   "payload186": "00000000000000000000000000000000000007804200001"
+  },
+  {
+   "i": 1,
+   "name": "head.gain.0.1",
+   "payload186": "00000000000000000000000000000000000007804400001"
+  },
+  {
+   "i": 2,
+   "name": "head.gain.0.2",
+   "payload186": "00000000000000000000000000000000000007804800001"
+  },
+  {
+   "i": 3,
+   "name": "head.gain.0.3",
+   "payload186": "00000000000000000000000000000000000007805000001"
+  },
+  {
+   "i": 4,
+   "name": "head.gain.0.4",
+   "payload186": "00000000000000000000000000000000000007806000001"
+  },
+  {
+   "i": 5,
+   "name": "head.gain.1.0",
+   "payload186": "00000000000000000000000000000000000007804200002"
+  },
+  {
+   "i": 6,
+   "name": "head.gain.1.1",
+   "payload186": "00000000000000000000000000000000000007804400002"
+  },
+  {
+   "i": 7,
+   "name": "head.gain.1.2",
+   "payload186": "00000000000000000000000000000000000007804800002"
+  },
+  {
+   "i": 8,
+   "name": "head.gain.1.3",
+   "payload186": "00000000000000000000000000000000000007805000002"
+  },
+  {
+   "i": 9,
+   "name": "head.gain.1.4",
+   "payload186": "00000000000000000000000000000000000007806000002"
+  },
+  {
+   "i": 10,
+   "name": "head.gain.2.0",
+   "payload186": "00000000000000000000000000000000000007804200004"
+  },
+  {
+   "i": 11,
+   "name": "head.gain.2.1",
+   "payload186": "00000000000000000000000000000000000007804400004"
+  },
+  {
+   "i": 12,
+   "name": "head.gain.2.2",
+   "payload186": "00000000000000000000000000000000000007804800004"
+  },
+  {
+   "i": 13,
+   "name": "head.gain.2.3",
+   "payload186": "00000000000000000000000000000000000007805000004"
+  },
+  {
+   "i": 14,
+   "name": "head.gain.2.4",
+   "payload186": "00000000000000000000000000000000000007806000004"
+  },
+  {
+   "i": 15,
+   "name": "head.gain.3.0",
+   "payload186": "00000000000000000000000000000000000007804200008"
+  },
+  {
+   "i": 16,
+   "name": "head.gain.3.1",
+   "payload186": "00000000000000000000000000000000000007804400008"
+  },
+  {
+   "i": 17,
+   "name": "head.gain.3.2",
+   "payload186": "00000000000000000000000000000000000007804800008"
+  },
+  {
+   "i": 18,
+   "name": "head.gain.3.3",
+   "payload186": "00000000000000000000000000000000000007805000008"
+  },
+  {
+   "i": 19,
+   "name": "head.gain.3.4",
+   "payload186": "00000000000000000000000000000000000007806000008"
+  },
+  {
+   "i": 20,
+   "name": "head.gain.4.0",
+   "payload186": "00000000000000000000000000000000000007804200010"
+  },
+  {
+   "i": 21,
+   "name": "head.gain.4.1",
+   "payload186": "00000000000000000000000000000000000007804400010"
+  },
+  {
+   "i": 22,
+   "name": "head.gain.4.2",
+   "payload186": "00000000000000000000000000000000000007804800010"
+  },
+  {
+   "i": 23,
+   "name": "head.gain.4.3",
+   "payload186": "00000000000000000000000000000000000007805000010"
+  },
+  {
+   "i": 24,
+   "name": "head.gain.4.4",
+   "payload186": "00000000000000000000000000000000000007806000010"
+  },
+  {
+   "i": 25,
+   "name": "head.gain.5.0",
+   "payload186": "00000000000000000000000000000000000007804200020"
+  },
+  {
+   "i": 26,
+   "name": "head.gain.5.1",
+   "payload186": "00000000000000000000000000000000000007804400020"
+  },
+  {
+   "i": 27,
+   "name": "head.gain.5.2",
+   "payload186": "00000000000000000000000000000000000007804800020"
+  },
+  {
+   "i": 28,
+   "name": "head.gain.5.3",
+   "payload186": "00000000000000000000000000000000000007805000020"
+  },
+  {
+   "i": 29,
+   "name": "head.gain.5.4",
+   "payload186": "00000000000000000000000000000000000007806000020"
+  },
+  {
+   "i": 30,
+   "name": "head.gain.6.0",
+   "payload186": "00000000000000000000000000000000000007804200040"
+  },
+  {
+   "i": 31,
+   "name": "head.gain.6.1",
+   "payload186": "00000000000000000000000000000000000007804400040"
+  },
+  {
+   "i": 32,
+   "name": "head.gain.6.2",
+   "payload186": "00000000000000000000000000000000000007804800040"
+  },
+  {
+   "i": 33,
+   "name": "head.gain.6.3",
+   "payload186": "00000000000000000000000000000000000007805000040"
+  },
+  {
+   "i": 34,
+   "name": "head.gain.6.4",
+   "payload186": "00000000000000000000000000000000000007806000040"
+  },
+  {
+   "i": 35,
+   "name": "head.gain.7.0",
+   "payload186": "00000000000000000000000000000000000007804200080"
+  },
+  {
+   "i": 36,
+   "name": "head.gain.7.1",
+   "payload186": "00000000000000000000000000000000000007804400080"
+  },
+  {
+   "i": 37,
+   "name": "head.gain.7.2",
+   "payload186": "00000000000000000000000000000000000007804800080"
+  },
+  {
+   "i": 38,
+   "name": "head.gain.7.3",
+   "payload186": "00000000000000000000000000000000000007805000080"
+  },
+  {
+   "i": 39,
+   "name": "head.gain.7.4",
+   "payload186": "00000000000000000000000000000000000007806000080"
+  },
+  {
+   "i": 40,
+   "name": "head.gain.8.0",
+   "payload186": "00000000000000000000000000000000000007804200100"
+  },
+  {
+   "i": 41,
+   "name": "head.gain.8.1",
+   "payload186": "00000000000000000000000000000000000007804400100"
+  },
+  {
+   "i": 42,
+   "name": "head.gain.8.2",
+   "payload186": "00000000000000000000000000000000000007804800100"
+  },
+  {
+   "i": 43,
+   "name": "head.gain.8.3",
+   "payload186": "00000000000000000000000000000000000007805000100"
+  },
+  {
+   "i": 44,
+   "name": "head.gain.8.4",
+   "payload186": "00000000000000000000000000000000000007806000100"
+  },
+  {
+   "i": 45,
+   "name": "head.gain.9.0",
+   "payload186": "00000000000000000000000000000000000007804200200"
+  },
+  {
+   "i": 46,
+   "name": "head.gain.9.1",
+   "payload186": "00000000000000000000000000000000000007804400200"
+  },
+  {
+   "i": 47,
+   "name": "head.gain.9.2",
+   "payload186": "00000000000000000000000000000000000007804800200"
+  },
+  {
+   "i": 48,
+   "name": "head.gain.9.3",
+   "payload186": "00000000000000000000000000000000000007805000200"
+  },
+  {
+   "i": 49,
+   "name": "head.gain.9.4",
+   "payload186": "00000000000000000000000000000000000007806000200"
+  },
+  {
+   "i": 50,
+   "name": "head.gain.10.0",
+   "payload186": "00000000000000000000000000000000000007804200400"
+  },
+  {
+   "i": 51,
+   "name": "head.gain.10.1",
+   "payload186": "00000000000000000000000000000000000007804400400"
+  },
+  {
+   "i": 52,
+   "name": "head.gain.10.2",
+   "payload186": "00000000000000000000000000000000000007804800400"
+  },
+  {
+   "i": 53,
+   "name": "head.gain.10.3",
+   "payload186": "00000000000000000000000000000000000007805000400"
+  },
+  {
+   "i": 54,
+   "name": "head.gain.10.4",
+   "payload186": "00000000000000000000000000000000000007806000400"
+  },
+  {
+   "i": 55,
+   "name": "head.gain.11.0",
+   "payload186": "00000000000000000000000000000000000007804200800"
+  },
+  {
+   "i": 56,
+   "name": "head.gain.11.1",
+   "payload186": "00000000000000000000000000000000000007804400800"
+  },
+  {
+   "i": 57,
+   "name": "head.gain.11.2",
+   "payload186": "00000000000000000000000000000000000007804800800"
+  },
+  {
+   "i": 58,
+   "name": "head.gain.11.3",
+   "payload186": "00000000000000000000000000000000000007805000800"
+  },
+  {
+   "i": 59,
+   "name": "head.gain.11.4",
+   "payload186": "00000000000000000000000000000000000007806000800"
+  },
+  {
+   "i": 60,
+   "name": "head.gain.12.0",
+   "payload186": "00000000000000000000000000000000000007804201000"
+  },
+  {
+   "i": 61,
+   "name": "head.gain.12.1",
+   "payload186": "00000000000000000000000000000000000007804401000"
+  },
+  {
+   "i": 62,
+   "name": "head.gain.12.2",
+   "payload186": "00000000000000000000000000000000000007804801000"
+  },
+  {
+   "i": 63,
+   "name": "head.gain.12.3",
+   "payload186": "00000000000000000000000000000000000007805001000"
+  },
+  {
+   "i": 64,
+   "name": "head.gain.12.4",
+   "payload186": "00000000000000000000000000000000000007806001000"
+  },
+  {
+   "i": 65,
+   "name": "head.gain.13.0",
+   "payload186": "00000000000000000000000000000000000007804202000"
+  },
+  {
+   "i": 66,
+   "name": "head.gain.13.1",
+   "payload186": "00000000000000000000000000000000000007804402000"
+  },
+  {
+   "i": 67,
+   "name": "head.gain.13.2",
+   "payload186": "00000000000000000000000000000000000007804802000"
+  },
+  {
+   "i": 68,
+   "name": "head.gain.13.3",
+   "payload186": "00000000000000000000000000000000000007805002000"
+  },
+  {
+   "i": 69,
+   "name": "head.gain.13.4",
+   "payload186": "00000000000000000000000000000000000007806002000"
+  },
+  {
+   "i": 70,
+   "name": "head.gain.14.0",
+   "payload186": "00000000000000000000000000000000000007804204000"
+  },
+  {
+   "i": 71,
+   "name": "head.gain.14.1",
+   "payload186": "00000000000000000000000000000000000007804404000"
+  },
+  {
+   "i": 72,
+   "name": "head.gain.14.2",
+   "payload186": "00000000000000000000000000000000000007804804000"
+  },
+  {
+   "i": 73,
+   "name": "head.gain.14.3",
+   "payload186": "00000000000000000000000000000000000007805004000"
+  },
+  {
+   "i": 74,
+   "name": "head.gain.14.4",
+   "payload186": "00000000000000000000000000000000000007806004000"
+  },
+  {
+   "i": 75,
+   "name": "head.gain.15.0",
+   "payload186": "00000000000000000000000000000000000007804208000"
+  },
+  {
+   "i": 76,
+   "name": "head.gain.15.1",
+   "payload186": "00000000000000000000000000000000000007804408000"
+  },
+  {
+   "i": 77,
+   "name": "head.gain.15.2",
+   "payload186": "00000000000000000000000000000000000007804808000"
+  },
+  {
+   "i": 78,
+   "name": "head.gain.15.3",
+   "payload186": "00000000000000000000000000000000000007805008000"
+  },
+  {
+   "i": 79,
+   "name": "head.gain.15.4",
+   "payload186": "00000000000000000000000000000000000007806008000"
+  }
+ ],
+ "commands": [
+  {
+   "kind": "GAIN",
+   "slice": "u_s_0S",
+   "sid": 0,
+   "leaf": 0,
+   "issue": 0,
+   "template": 0,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_0S",
+   "sid": 0,
+   "leaf": 1,
+   "issue": 1,
+   "template": 1,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_0S",
+   "sid": 0,
+   "leaf": 2,
+   "issue": 2,
+   "template": 2,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_0S",
+   "sid": 0,
+   "leaf": 3,
+   "issue": 3,
+   "template": 3,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_0S",
+   "sid": 0,
+   "leaf": 4,
+   "issue": 4,
+   "template": 4,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_0N",
+   "sid": 1,
+   "leaf": 0,
+   "issue": 0,
+   "template": 5,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_0N",
+   "sid": 1,
+   "leaf": 1,
+   "issue": 1,
+   "template": 6,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_0N",
+   "sid": 1,
+   "leaf": 2,
+   "issue": 2,
+   "template": 7,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_0N",
+   "sid": 1,
+   "leaf": 3,
+   "issue": 3,
+   "template": 8,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_0N",
+   "sid": 1,
+   "leaf": 4,
+   "issue": 4,
+   "template": 9,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_1S",
+   "sid": 2,
+   "leaf": 0,
+   "issue": 5,
+   "template": 10,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_1S",
+   "sid": 2,
+   "leaf": 1,
+   "issue": 6,
+   "template": 11,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_1S",
+   "sid": 2,
+   "leaf": 2,
+   "issue": 7,
+   "template": 12,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_1S",
+   "sid": 2,
+   "leaf": 3,
+   "issue": 8,
+   "template": 13,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_1S",
+   "sid": 2,
+   "leaf": 4,
+   "issue": 9,
+   "template": 14,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_1N",
+   "sid": 3,
+   "leaf": 0,
+   "issue": 5,
+   "template": 15,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_1N",
+   "sid": 3,
+   "leaf": 1,
+   "issue": 6,
+   "template": 16,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_1N",
+   "sid": 3,
+   "leaf": 2,
+   "issue": 7,
+   "template": 17,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_1N",
+   "sid": 3,
+   "leaf": 3,
+   "issue": 8,
+   "template": 18,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_1N",
+   "sid": 3,
+   "leaf": 4,
+   "issue": 9,
+   "template": 19,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_2S",
+   "sid": 4,
+   "leaf": 0,
+   "issue": 10,
+   "template": 20,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_2S",
+   "sid": 4,
+   "leaf": 1,
+   "issue": 11,
+   "template": 21,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_2S",
+   "sid": 4,
+   "leaf": 2,
+   "issue": 12,
+   "template": 22,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_2S",
+   "sid": 4,
+   "leaf": 3,
+   "issue": 13,
+   "template": 23,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_2S",
+   "sid": 4,
+   "leaf": 4,
+   "issue": 14,
+   "template": 24,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_2N",
+   "sid": 5,
+   "leaf": 0,
+   "issue": 10,
+   "template": 25,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_2N",
+   "sid": 5,
+   "leaf": 1,
+   "issue": 11,
+   "template": 26,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_2N",
+   "sid": 5,
+   "leaf": 2,
+   "issue": 12,
+   "template": 27,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_2N",
+   "sid": 5,
+   "leaf": 3,
+   "issue": 13,
+   "template": 28,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_2N",
+   "sid": 5,
+   "leaf": 4,
+   "issue": 14,
+   "template": 29,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_3S",
+   "sid": 6,
+   "leaf": 0,
+   "issue": 15,
+   "template": 30,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_3S",
+   "sid": 6,
+   "leaf": 1,
+   "issue": 16,
+   "template": 31,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_3S",
+   "sid": 6,
+   "leaf": 2,
+   "issue": 17,
+   "template": 32,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_3S",
+   "sid": 6,
+   "leaf": 3,
+   "issue": 18,
+   "template": 33,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_3S",
+   "sid": 6,
+   "leaf": 4,
+   "issue": 19,
+   "template": 34,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_3N",
+   "sid": 7,
+   "leaf": 0,
+   "issue": 15,
+   "template": 35,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_3N",
+   "sid": 7,
+   "leaf": 1,
+   "issue": 16,
+   "template": 36,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_3N",
+   "sid": 7,
+   "leaf": 2,
+   "issue": 17,
+   "template": 37,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_3N",
+   "sid": 7,
+   "leaf": 3,
+   "issue": 18,
+   "template": 38,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_3N",
+   "sid": 7,
+   "leaf": 4,
+   "issue": 19,
+   "template": 39,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_4S",
+   "sid": 8,
+   "leaf": 0,
+   "issue": 20,
+   "template": 40,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_4S",
+   "sid": 8,
+   "leaf": 1,
+   "issue": 21,
+   "template": 41,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_4S",
+   "sid": 8,
+   "leaf": 2,
+   "issue": 22,
+   "template": 42,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_4S",
+   "sid": 8,
+   "leaf": 3,
+   "issue": 23,
+   "template": 43,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_4S",
+   "sid": 8,
+   "leaf": 4,
+   "issue": 24,
+   "template": 44,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_4N",
+   "sid": 9,
+   "leaf": 0,
+   "issue": 20,
+   "template": 45,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_4N",
+   "sid": 9,
+   "leaf": 1,
+   "issue": 21,
+   "template": 46,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_4N",
+   "sid": 9,
+   "leaf": 2,
+   "issue": 22,
+   "template": 47,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_4N",
+   "sid": 9,
+   "leaf": 3,
+   "issue": 23,
+   "template": 48,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_4N",
+   "sid": 9,
+   "leaf": 4,
+   "issue": 24,
+   "template": 49,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_5S",
+   "sid": 10,
+   "leaf": 0,
+   "issue": 25,
+   "template": 50,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_5S",
+   "sid": 10,
+   "leaf": 1,
+   "issue": 26,
+   "template": 51,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_5S",
+   "sid": 10,
+   "leaf": 2,
+   "issue": 27,
+   "template": 52,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_5S",
+   "sid": 10,
+   "leaf": 3,
+   "issue": 28,
+   "template": 53,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_5S",
+   "sid": 10,
+   "leaf": 4,
+   "issue": 29,
+   "template": 54,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_5N",
+   "sid": 11,
+   "leaf": 0,
+   "issue": 25,
+   "template": 55,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_5N",
+   "sid": 11,
+   "leaf": 1,
+   "issue": 26,
+   "template": 56,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_5N",
+   "sid": 11,
+   "leaf": 2,
+   "issue": 27,
+   "template": 57,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_5N",
+   "sid": 11,
+   "leaf": 3,
+   "issue": 28,
+   "template": 58,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_5N",
+   "sid": 11,
+   "leaf": 4,
+   "issue": 29,
+   "template": 59,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_6S",
+   "sid": 12,
+   "leaf": 0,
+   "issue": 30,
+   "template": 60,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_6S",
+   "sid": 12,
+   "leaf": 1,
+   "issue": 31,
+   "template": 61,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_6S",
+   "sid": 12,
+   "leaf": 2,
+   "issue": 32,
+   "template": 62,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_6S",
+   "sid": 12,
+   "leaf": 3,
+   "issue": 33,
+   "template": 63,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_6S",
+   "sid": 12,
+   "leaf": 4,
+   "issue": 34,
+   "template": 64,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_6N",
+   "sid": 13,
+   "leaf": 0,
+   "issue": 30,
+   "template": 65,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_6N",
+   "sid": 13,
+   "leaf": 1,
+   "issue": 31,
+   "template": 66,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_6N",
+   "sid": 13,
+   "leaf": 2,
+   "issue": 32,
+   "template": 67,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_6N",
+   "sid": 13,
+   "leaf": 3,
+   "issue": 33,
+   "template": 68,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_6N",
+   "sid": 13,
+   "leaf": 4,
+   "issue": 34,
+   "template": 69,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_7S",
+   "sid": 14,
+   "leaf": 0,
+   "issue": 35,
+   "template": 70,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_7S",
+   "sid": 14,
+   "leaf": 1,
+   "issue": 36,
+   "template": 71,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_7S",
+   "sid": 14,
+   "leaf": 2,
+   "issue": 37,
+   "template": 72,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_7S",
+   "sid": 14,
+   "leaf": 3,
+   "issue": 38,
+   "template": 73,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_7S",
+   "sid": 14,
+   "leaf": 4,
+   "issue": 39,
+   "template": 74,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_7N",
+   "sid": 15,
+   "leaf": 0,
+   "issue": 35,
+   "template": 75,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_7N",
+   "sid": 15,
+   "leaf": 1,
+   "issue": 36,
+   "template": 76,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_7N",
+   "sid": 15,
+   "leaf": 2,
+   "issue": 37,
+   "template": 77,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_7N",
+   "sid": 15,
+   "leaf": 3,
+   "issue": 38,
+   "template": 78,
+   "gain_row": 480
+  },
+  {
+   "kind": "GAIN",
+   "slice": "u_s_7N",
+   "sid": 15,
+   "leaf": 4,
+   "issue": 39,
+   "template": 79,
+   "gain_row": 480
+  }
+ ],
+ "linked_norm_rows": 96,
+ "combined_rows_without_reload": 176,
+ "native_capacity": 128,
+ "same_job_merge_admissible": false,
+ "cross_job_leases": [
+  {
+   "sid": 0,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 0,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 0,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 0,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 0,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 1,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 1,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 1,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 1,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 1,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 2,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 2,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 2,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 2,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 2,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 3,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 3,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 3,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 3,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 3,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 4,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 4,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 4,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 4,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 4,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 5,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 5,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 5,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 5,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 5,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 6,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 6,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 6,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 6,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 6,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 7,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 7,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 7,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 7,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 7,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 8,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 8,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 8,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 8,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 8,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 9,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 9,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 9,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 9,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 9,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 10,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 10,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 10,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 10,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 10,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 11,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 11,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 11,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 11,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 11,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 12,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 12,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 12,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 12,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 12,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 13,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 13,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 13,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 13,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 13,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 14,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 14,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 14,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 14,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 14,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 15,
+   "leaf": 0,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 15,
+   "leaf": 1,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 15,
+   "leaf": 2,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 15,
+   "leaf": 3,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  },
+  {
+   "sid": 15,
+   "leaf": 4,
+   "gain_rows": [
+    480,
+    495
+   ],
+   "GAIN_input_rows_resident_before": "actual registered GAIN command; upstream boot authority absent",
+   "GAIN_to_NORMR_registered_CV_minimum_edges": 9,
+   "actual_cross_job_counter_epoch": null,
+   "POST_payload160": "0000000000000000000000000000000000703f12",
+   "POST_calendar_row_emitted": false,
+   "POST_required_inputs": [
+    "same-token combined448..463",
+    "HC post/comb1009..1013",
+    "same-token residual h"
+   ],
+   "NORMR_required_inputs": [
+    "same-token POST h resident",
+    "same-token pre1008",
+    "loaded HEAD gains"
+   ],
+   "gain_state_live_through": "actual last scaled-Y weight read; not established by posted ACK",
+   "no_reset_or_overwrite_before_norm_and_publication": true
+  }
+ ],
+ "local_minimum_spacing_directly_tested_part": "s_0S_L0",
+ "all80_native_profiles_qualified": false,
+ "issue_epoch": "prelude-local issuer counter only; no mapping to norm book counter or physical clock epoch",
+ "posted_ACK_edges": 5,
+ "posted_ACK_means_GAIN_complete": false,
+ "holds": [
+  "actual target5 HEAD gain image commit/residency",
+  "actual POST producer arrivals and per-leaf h-ready ages",
+  "actual prelude retirement, HOST calendar reload and counter/START mapping",
+  "per-leaf gain/VQ/pre1008 state leases across jobs",
+  "candidate K/PDSK/QDELAYS/BK6 source and physical adoption remain separate"
+ ],
+ "native_job_sealed": false,
+ "host_boot_complete": false,
+ "full_token": false,
+ "canonical_adopted": false
+}
