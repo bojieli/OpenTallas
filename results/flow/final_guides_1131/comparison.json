@@ -1,0 +1,39 @@
+{
+  "db_nets": 69010,
+  "class_counts": {
+    "SIGNAL": 67826,
+    "CLOCK": 1184
+  },
+  "old_missing_count": 937,
+  "old_missing_first": [
+    "net30347",
+    "net30348",
+    "net30349",
+    "net30350",
+    "net30351",
+    "net30352",
+    "net30353",
+    "net30354",
+    "net30355",
+    "net30356"
+  ],
+  "new_missing": [],
+  "new_extra": [],
+  "new_boxes_differ": [],
+  "guide_rectangles": 652230,
+  "pg_unchanged": true,
+  "pg": {
+    "VSS": [
+      "GROUND",
+      "1",
+      "1"
+    ],
+    "VDD": [
+      "POWER",
+      "1",
+      "1"
+    ]
+  },
+  "input_sha256": "b19fc9eaa0167eaff16c50f36c59d6e93ad274999ff73c0731a6f0277f928c68",
+  "drt_consumer": "Pinned detail_route.tcl load_design reads 5_1_grt.odb; no route.guide read. Export/coverage defect, no demonstrated DRT defect."
+}

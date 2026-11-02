@@ -309,7 +309,23 @@ def patch_grt_budget(scripts: Path) -> str:
     return "patched"
 
 
+FINAL_GUIDE_ANCHOR = "  source_step_tcl POST GLOBAL_ROUTE\n  orfs_write_db $::env(RESULTS_DIR)/5_1_grt.odb"
+FINAL_GUIDE_REPLACEMENT = "  source_step_tcl POST GLOBAL_ROUTE\n  # OT_FINAL_ROUTE_GUIDES: serialize the final post-hook DB guides.\n  write_guides $::env(RESULTS_DIR)/route.guide\n  orfs_write_db $::env(RESULTS_DIR)/5_1_grt.odb"
+
+
+def patch_final_guides(scripts):
+    target = Path(scripts) / "global_route.tcl"
+    text = target.read_text()
+    if "OT_FINAL_ROUTE_GUIDES" in text:
+        return "already patched"
+    if text.count(FINAL_GUIDE_ANCHOR) != 1:
+        return "unrecognized post-global-route guide anchor; unchanged"
+    target.write_text(text.replace(FINAL_GUIDE_ANCHOR, FINAL_GUIDE_REPLACEMENT, 1))
+    return "patched"
+
+
 if __name__ == "__main__":
+    print("orfs_hold_mm: final guides", patch_final_guides(Path(sys.argv[1])))
     print("orfs_hold_mm: GRT budget", patch_grt_budget(Path(sys.argv[1])))
     if len(sys.argv) > 2 and sys.argv[2] == "--metrics-only":
         print("orfs_hold_mm: intermediate power", patch_intermediate_power(Path(sys.argv[1])))
