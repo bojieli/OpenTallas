@@ -46,5 +46,20 @@
   "runtime": "NOT_RUN",
   "numeric_mission": "OPEN",
   "source_epoch": "frozen SOURCE13 downstream42; not current disabled47 event",
-  "rate_qualified": false
+  "rate_qualified": false,
+  "typed_guard_replay": {
+    "instances": 90,
+    "source_modules": 83,
+    "formal_declarations": 685,
+    "effective_assignments": 1083,
+    "linked_top_bytes": "IDENTICAL_TO_ACTUAL_FRONTEND_PASS",
+    "fixed_formal_grammar": [
+      "packed literal numeric range",
+      "signed integer",
+      "inherited prior fixed type"
+    ],
+    "untyped_or_other_formals": "REFUSED",
+    "child_source_epoch_guard": "PASS_EXACT_CACHED_SOURCE_PATH_AND_FILE_IDENTITY",
+    "native_child_source_records": 86
+  }
 }

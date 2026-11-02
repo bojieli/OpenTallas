@@ -51,14 +51,23 @@ def split(text):
 def literal(text):
     text = norm(text).replace("\\'", "'").replace('_', '')
     if re.fullmatch(r'-?\d+', text):
-        return int(text)
+        value = int(text)
+        if not -(1 << 31) <= value < (1 << 31):
+            raise ValueError('explicit width required for large unsized decimal')
+        return value
     match = re.fullmatch(r"(\d*)'([sS]?)([bBoOdDhH])([0-9a-fA-F]+)", text)
     if not match:
         raise ValueError('nonliteral parameter: ' + text)
     width, signed, radix, digits = match.groups()
     value = int(digits, {'b': 2, 'o': 8, 'd': 10, 'h': 16}[radix.lower()])
-    if signed and width and value >= 1 << (int(width) - 1):
-        raise ValueError('signed negative parameter requires typed resolution: ' + text)
+    if not width and value >= 1 << 32:
+        raise ValueError('explicit width required for large unsized based literal')
+    width = int(width) if width else 32
+    if not 1 <= width <= 4096:
+        raise ValueError('unsupported literal width')
+    value &= (1 << width) - 1
+    if signed and value >= 1 << (width - 1):
+        value -= 1 << width
     return value
 
 
@@ -86,27 +95,77 @@ def modules(text):
     return result
 
 
+def typed(value, formal):
+    text = norm(value)
+    if text in ("'0", "'1"):
+        bits = 0 if text == "'0" else (1 << formal['width']) - 1
+    else:
+        bits = literal(text) & ((1 << formal['width']) - 1)
+    return dict(type=formal, bits=bits)
+
+
 def defaults(body):
     head = re.match(r'module\s+\w+\s*', body)
     at = head.end()
     if body[at] != '#':
         return {}
     start = body.index('(', at)
-    params = {}
+    params, formal = {}, None
     for item in split(body[start + 1:close(body, start)]):
         left, sep, value = item.partition('=')
         name = re.search(r'(\w+)\s*$', left)
         if not sep or not name:
             raise ValueError('nondefault parameter declaration ' + item[:100])
-        params[name[1]] = literal(value)
+        prefix = left[:name.start()].strip()
+        if prefix:
+            prefix = re.sub(r'^parameter\s*', '', prefix).strip()
+            if prefix == 'integer':
+                formal = dict(kind='integer', width=32, signed=True)
+            else:
+                packed = re.fullmatch(r'\[\s*(\d+)\s*:\s*(\d+)\s*\]', prefix)
+                if not packed:
+                    raise ValueError('unsupported formal type; require fixed packed range or integer: ' + item[:100])
+                msb, lsb = map(int, packed.groups())
+                formal = dict(kind='packed', width=abs(msb - lsb) + 1, signed=False, msb=msb, lsb=lsb)
+        if formal is None:
+            raise ValueError('untyped parameter is unsupported: ' + item[:100])
+        params[name[1]] = typed(value, formal)
     return params
+
+
+def apply_override(params, key, value):
+    if key not in params:
+        raise ValueError('unknown parameter: ' + key)
+    params[key] = typed(value, params[key]['type'])
+
+
+def cache_source_guard(stubs, source_path, preprocessed):
+    source_path = source_path.resolve()
+    if source_path.read_text() != preprocessed:
+        raise ValueError('cache source path does not contain the selected preprocessed bytes')
+    stat = source_path.stat()
+    actual = (stat.st_size, stat.st_ino, stat.st_mtime_ns // 10**9, stat.st_mtime_ns % 10**9,
+              stat.st_ctime_ns // 10**9, stat.st_ctime_ns % 10**9)
+    result = {}
+    for name, stub in stubs.items():
+        metadata = Path(stub['path']).parent / ('V' + name + '__verFiles.dat')
+        rows = []
+        for line in metadata.read_text().splitlines():
+            fields = line.split('"')
+            if line.startswith('S ') and len(fields) >= 4 and Path(fields[3]).resolve() == source_path:
+                rows.append(tuple(map(int, fields[0].split()[1:])))
+        if rows != [actual]:
+            raise ValueError('cached child source epoch differs: ' + name)
+        result[name] = digest(metadata.read_text())
+    return dict(status='PASS_EXACT_CACHED_SOURCE_PATH_AND_FILE_IDENTITY', source_path=str(source_path),
+                source_sha256=digest(preprocessed), source_stat=list(actual), child_metadata_sha256=result)
 
 
 def unescape(name):
     return re.sub(r'__0([0-9A-Fa-f]{2})', lambda m: chr(int(m[1], 16)), name)
 
 
-def prepare(preprocessed, top_text, args_text, stub_root, output):
+def prepare(preprocessed, top_text, args_text, stub_root, output, *, source_path):
     original = modules(preprocessed)
     topmods = modules(top_text)
     if len(topmods) != 1:
@@ -114,8 +173,10 @@ def prepare(preprocessed, top_text, args_text, stub_root, output):
     topname, top = next(iter(topmods.items()))
     if norm(top) != norm(original[topname]):
         raise ValueError('raw top differs from selected preprocessed top')
-    if re.search(r'\b(always|initial|assign|function|task|generate)\b', top):
+    if re.search(r'\b(always|initial|assign|function|task|generate|defparam|bind|specify|if|for|case)\b', top):
         raise ValueError('top is not pure connectivity')
+    if re.search(r'(?m)^\s*(?:input|output|inout|wire|logic|reg|bit)\b[^;]*=', top):
+        raise ValueError('declaration initializers are unsupported')
     variants, stubs, rows = {}, {}, []
     for line in args_text.splitlines():
         if line.endswith('.sv') and not line.startswith('/'):
@@ -125,6 +186,8 @@ def prepare(preprocessed, top_text, args_text, stub_root, output):
             if len(declarations) != 1 or 'Wrapper module for DPI protected library' not in text:
                 raise ValueError('not a generated DPI wrapper: ' + str(path))
             name, body = next(iter(declarations.items()))
+            if name in stubs:
+                raise ValueError('duplicate generated DPI module: ' + name)
             ports = set(re.findall(r'\b(?:input|output|inout)\s+(?:logic|wire|reg)?\s*(?:\[[^]]+\])?\s*(\w+)', body))
             stubs[name] = dict(path=str(path), sha256=digest(text), ports=ports)
         if line.startswith('--hierarchical-block '):
@@ -136,7 +199,7 @@ def prepare(preprocessed, top_text, args_text, stub_root, output):
             for key, value in zip(fields[2::2], fields[3::2]):
                 if key not in params:
                     raise ValueError('unknown hierarchy parameter: ' + key)
-                params[key] = literal(value)
+                apply_override(params, key, value)
             variants.setdefault(source, []).append((target, params))
     edits = []
     instance_count = 0
@@ -151,7 +214,7 @@ def prepare(preprocessed, top_text, args_text, stub_root, output):
             parameter_start = at
             start = top.index('(', at)
             parameter_end = close(top, start) + 1
-            overrides = {k: literal(v) for k, v in named(top[start + 1:parameter_end - 1]).items()}
+            overrides = named(top[start + 1:parameter_end - 1])
             at = parameter_end
         tail = re.match(r'\s*(\w+)\s*\(', top[at:])
         if not tail:
@@ -159,11 +222,14 @@ def prepare(preprocessed, top_text, args_text, stub_root, output):
         instance = tail[1]
         start = at + tail.end() - 1
         end = close(top, start)
+        if not re.match(r'[ \t\r\n]*;[ \t\r]*(?:\n|$)', top[end + 1:]):
+            raise ValueError('require exactly one instance per declaration and line: ' + instance)
         ports = named(top[start + 1:end])
         params = defaults(original[source])
         if not overrides.keys() <= params.keys():
             raise ValueError('unknown instance override ' + instance)
-        params.update(overrides)
+        for key, value in overrides.items():
+            apply_override(params, key, value)
         candidates = [(target, p) for target, p in variants[source] if p == params]
         if len(candidates) != 1:
             raise ValueError(f'{instance}: expected one exact parameter variant, found {len(candidates)}')
@@ -199,6 +265,7 @@ def prepare(preprocessed, top_text, args_text, stub_root, output):
     expected = {row['instance']: (row['dpi_module'], row['port_graph_sha256']) for row in rows}
     if reread != expected:
         raise ValueError('emitted connectivity graph differs from frozen top')
+    cache_guard = cache_source_guard(stubs, source_path, preprocessed)
     output.mkdir(parents=True, exist_ok=False)
     output.joinpath('linked_top.sv').write_text('`timescale 1ns/1fs\n' + linked + '\n')
     used = sorted({row['dpi_module'] for row in rows})
@@ -206,6 +273,7 @@ def prepare(preprocessed, top_text, args_text, stub_root, output):
     receipt = dict(status='PREP_STRUCTURAL_PARAMETER_AND_PORT_JOIN_ONLY', native_child_bodies_changed=0,
                    top=topname, instances=rows, instance_count=instance_count, used_dpi_modules=len(used),
                    emitted_connectivity_reread='EXACT_MATCH',
+                   cache_source_guard=cache_guard,
                    original_top_sha256=digest(top_text), preprocessed_sha256=digest(preprocessed),
                    original_args_sha256=digest(args_text), linked_top_sha256=digest(output.joinpath('linked_top.sv').read_text()),
                    wrapper_sha256={x: stubs[x]['sha256'] for x in used})
@@ -221,5 +289,6 @@ if __name__ == '__main__':
     ap.add_argument('--stub-root', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
-    result = prepare(a.preprocessed.read_text(), a.top.read_text(), a.args.read_text(), a.stub_root, a.out)
+    result = prepare(a.preprocessed.read_text(), a.top.read_text(), a.args.read_text(), a.stub_root, a.out,
+                     source_path=a.preprocessed)
     print(json.dumps({k: result[k] for k in ('status', 'instance_count', 'used_dpi_modules')}))
