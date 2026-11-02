@@ -1,0 +1,11 @@
+# Transit terminal collected; source/clock frame holds retained
+
+Normal queue4ee813c26cde is now DONE-STRUCTURAL/toolclass post-cts-hold, native unit659885-1793617907 exit6. The actual GRT producer completed7068s/peak9461MB and preserved its checkpoint. It stopped before detailed routing; no ordinary retry, source rewrite, route, rejudge or new diagnostic job was launched by this collection.
+
+Native TT pinreg mean406.63 versus450, deviation43.37 with default20; setup estimate−326.99, hold information+19.73. FF mean314.11 versus342, deviation27.89, setup information−114.55, hold+10.09. Declared source tolerance40 would fit FF but still not TT. No such arithmetic reclassification changes the preserved native result, and band authority remains a separate ROOT/FLOW decision.
+
+The frozen postCTS helper SHAba2fcc93263971237cc9b11058363a27613a1e4220e6bace67bc3f42d4d0a6b1 is identical in eshim/turn/transit and propagates only primaryclk. Thus its known forwarded-clock modeling gap applies to this consumer too; the exact current transit worst path has not been queried and is **not** aliased to Turn's path or corrected values. The real preliminary negative estimates are preserved without labeling them qualified physical DUT failures.
+
+Actual4CTS image/clock geometry was already independently reviewed in head_wave_4cts_1102:632clock cells, ownleaf137.92/treeleg153.52µm, rooted, no trace errors, r2r381.13/0over405, unregistered0 with exact native land-slot/face contracts. That4CTS result cannot substitute for a fresh saved5GRT LOOK before a future timing query or physical action. No current full CLOCK-route, PG contact, clock-window, SOURCE, real-parent or signoff credit transfers.
+
+The exact prepared plan connects u2 forwarded clock/FSTART from nst2/hd_st_str, and d2 from nst4/hd_st_n4. Edge metadata supplies period/geometry; a qualified upstream forwarded-driver/FSTART phase receipt still must join the receiver frame. Existing KITledger hd_st_str l48x is a failed postCTS-hold run, not a current signed sender view; no historical signature or n4 alternate is silently reused. Future source-profile diagnosis may reuse the reviewed default-OFF all-real propagation method, but requires its own scope/current5GRTLOOK/readset/Lib/SDC/RC join. This collector starts none and invents no source latency.
