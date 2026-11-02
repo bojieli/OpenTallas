@@ -85,9 +85,9 @@ def test_emitter_rejects_invented_pin_point_and_missing_actual_source_libs(tmp_p
         N.validate_descriptor(d)
 
 
-def test_same_source_master_outline_does_not_alias_distinct_native_pin_profiles(tmp_path):
+def test_same_source_master_outline_does_not_alias_virtual_entry_as_native_pin(tmp_path):
     it,libs,contract=fixture(tmp_path)
-    # Current VMS profiles differ by .336 um despite the same RTL/master/outline.
+    # The current VMS virtual entry differs from its declared native pin by .336 um.
     wrong=copy.deepcopy(contract)
     wrong['clock_pin_rects_um']['clk']=[108.288,94.8,108.336,95.28]
     with pytest.raises(ValueError,match='differs from current source/plan pin profile'):
