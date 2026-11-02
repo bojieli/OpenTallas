@@ -42,6 +42,15 @@ first PRE_GLOBAL_ROUTE action, before the original PRE hook can insert cells;
 these wrappers in an owned fresh kit copy, preserving existing AP/ECO hook
 chains, old helper bytes, and original provenance. It records the tool/config
 delta without asserting sign-off or changing RTL. Never run it on a live kit.
+The production GRT adapter requires `OT_PG_STRICT=1`; begin installs the strict
+command guards itself. The caller must run the generated
+`/work/native_pg_birth_global_route.tcl` with the normal GRT target environment,
+or use an independently reviewed equivalent whole-body cleanup wrapper. Running
+only stock `global_route.tcl` with PRE/POST fragments does not provide cleanup
+on an intervening error. The generated driver cleans up on failure and preserves
+the original body error if cleanup also fails. Staging records this required
+driver and remains `dispatch_ready=false` until the actual owner launcher is
+reviewed; it does not rewrite a make target or dispatch a job.
 A separate process needs its own installation. Database/library/supply reloads
 inside an active transaction refuse.
 

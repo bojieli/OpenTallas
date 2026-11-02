@@ -421,9 +421,20 @@ proc ot_pg_require_cts_placement_or_empty_context {} {
 # their refusal. This checks the actual attached callback, not a caller flag.
 proc ot_pg_native_birth_supported {command} {
   if {$command ni {repair_design repair_timing}} {return 0}
+  # Tcl coroutines, ensembles and objects are commands without being procs or
+  # aliases. Refuse these stand-ins too; this pinned Tcl introspector must exist.
+  if {[info commands ::tcl::unsupported::corotype] eq ""} {return 0}
   foreach api {ot_native_pg_status ot_native_pg_audit} {
     if {[info commands ::$api] eq "" || [info procs ::$api] ne "" || [interp alias {} ::$api] ne ""} {return 0}
+    if {![catch {::tcl::unsupported::corotype ::$api}]} {return 0}
+    if {[namespace ensemble exists ::$api] || [info object isa object ::$api]} {return 0}
   }
+  if {![info exists ::ot_pg_birth_module]} {return 0}
+  set loaded 0
+  foreach library [info loaded] {
+    if {[lindex $library 0] eq $::ot_pg_birth_module && [lindex $library 1] eq "Nativepgbirth"} {set loaded 1}
+  }
+  if {!$loaded} {return 0}
   if {[catch {ot_native_pg_status} status]} {return 0}
   foreach field {contract active database_id block_id} {if {![dict exists $status $field]} {return 0}}
   if {[dict get $status contract] ne "native_pg_birth.flat_literal.v1" || ![dict get $status active]} {return 0}
@@ -436,37 +447,61 @@ proc ot_pg_native_birth_supported {command} {
   return 1
 }
 proc ot_pg_native_birth_begin {module} {
+  # A standalone caller must receive the same strict command refusals as the
+  # existing protection hooks. Normal diagnostic mode remains explicit.
+  ot_pg_install_unsupported_birth_guards
   set block [ord::get_db_block]
   if {$block eq "NULL" || $block eq ""} {error OT_PG_BIRTH_REQUIRES_LOADED_BLOCK}
   ot_pg_assert_all_native $block [ot_pg_prepare $block]
   load [file normalize $module] Nativepgbirth
   set db [$block getDataBase]
   ot_native_pg_install [$db getId] [$block getId]
+  set ::ot_pg_birth_module [file normalize $module]
   # Replacing the database or supply/library context inside the transaction is
   # unsupported. A new process/stage must load and audit its own inputs first.
   set ::ot_pg_birth_traced {}
-  foreach command {read_db read_def read_lef read_liberty add_global_connection} {
-    if {[info commands ::$command] ne ""} {
-      trace add execution ::$command enter ot_pg_native_birth_no_reload
-      lappend ::ot_pg_birth_traced ::$command
+  set code [catch {
+    foreach command {read_db read_def read_lef read_liberty add_global_connection} {
+      if {[info commands ::$command] ne ""} {
+        trace add execution ::$command enter ot_pg_native_birth_no_reload
+        lappend ::ot_pg_birth_traced ::$command
+      }
     }
+  } result options]
+  if {$code} {
+    if {[catch {ot_pg_native_birth_cleanup} cleanup]} {puts stderr "OT_PG_BIRTH_CLEANUP_REFUSED $cleanup"}
+    return -options $options $result
   }
 }
 proc ot_pg_native_birth_no_reload {command op} {
   error "OT_PG_BIRTH_CONTEXT_FROZEN command=[lindex $command 0]"
 }
+proc ot_pg_native_birth_cleanup {} {
+  set failures {}
+  unset -nocomplain ::ot_pg_birth_module
+  if {[info exists ::ot_pg_birth_traced]} {
+    foreach command $::ot_pg_birth_traced {
+      if {[catch {trace remove execution $command enter ot_pg_native_birth_no_reload} why]} {lappend failures $why}
+    }
+    unset ::ot_pg_birth_traced
+  }
+  if {[catch {ot_native_pg_uninstall} why]} {lappend failures $why}
+  if {[llength $failures]} {error "OT_PG_BIRTH_CLEANUP_FAILED $failures"}
+}
 proc ot_pg_native_birth_end {} {
-  try {
+  set code [catch {
     set receipt [ot_native_pg_audit]
     set block [ord::get_db_block]
     ot_pg_assert_all_native $block [ot_pg_prepare $block]
     puts "OT_PG_NATIVE_BIRTH_PASS $receipt"
-    return $receipt
-  } finally {
-    foreach command $::ot_pg_birth_traced {trace remove execution $command enter ot_pg_native_birth_no_reload}
-    unset ::ot_pg_birth_traced
-    ot_native_pg_uninstall
+  } result options]
+  set cleanup_code [catch {ot_pg_native_birth_cleanup} cleanup cleanup_options]
+  if {$code} {
+    if {$cleanup_code} {puts stderr "OT_PG_BIRTH_CLEANUP_REFUSED $cleanup"}
+    return -options $options $result
   }
+  if {$cleanup_code} {return -options $cleanup_options $cleanup}
+  return $receipt
 }
 proc ot_pg_native_birth_eval {module body} {
   ot_pg_native_birth_begin $module
