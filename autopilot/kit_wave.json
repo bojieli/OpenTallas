@@ -733,7 +733,8 @@
     "sle_hc2__cl9c4c4509__cl3edce1b8": "CORE_CAP 971939/400000 (conservative analytic outline estimate; includes macro-area caveat): CORE_CAP: no declared hard cores, actual sizing/count refinement required",
     "sle_hc2__cl9c4c4509__clf60c5152": "CORE_CAP 971939/400000 (conservative analytic outline estimate; includes macro-area caveat): CORE_CAP: no declared hard cores, actual sizing/count refinement required",
     "slw_hc2__cla3497502__cl16607c7a": "CORE_CAP 971179/400000 (conservative analytic outline estimate; includes macro-area caveat): CORE_CAP: no declared hard cores, actual sizing/count refinement required",
-    "slw_hc2__cla3497502__cldc737267": "CORE_CAP 971179/400000 (conservative analytic outline estimate; includes macro-area caveat): CORE_CAP: no declared hard cores, actual sizing/count refinement required"
+    "slw_hc2__cla3497502__cldc737267": "CORE_CAP 971179/400000 (conservative analytic outline estimate; includes macro-area caveat): CORE_CAP: no declared hard cores, actual sizing/count refinement required",
+    "tt_ctlm": "DIE-QC-61 16:3x: GEOM-107 FAIL PLAN (r2r 955.8 reset relays unpinned, E/S face regs far, 4 taps/38k FF); same plan block on d90 -> doomed. plan_qc52 tt_ctlm delta (density taps + relay sites + face homes) in progress; release on its merge."
    },
    "work_root": "/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
