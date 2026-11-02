@@ -1,0 +1,21 @@
+{
+ "passes": [
+  {
+   "pass": "1",
+   "dir": "/srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10",
+   "route_rc": "0",
+   "clk_check_rc": "0",
+   "tc_slew": "6",
+   "tc_cap": "0",
+   "bc_slew": "2",
+   "bc_cap": "0",
+   "sink_masters_restored": "0"
+  }
+ ],
+ "final": {
+  "final": "1",
+  "dir": "/srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10",
+  "finish_post_rc": "1",
+  "post_runner": "run_kit_kv.sh"
+ }
+}
