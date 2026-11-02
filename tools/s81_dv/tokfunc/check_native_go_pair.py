@@ -4,7 +4,7 @@ from pathlib import Path
 import argparse,json,re
 from collections import defaultdict
 
-def inspect(root,name,gold,operations):
+def inspect(root,name,gold,operations,expected_tags=None):
  text=(root/(name+'.log')).read_text();errors=[]
  end=re.search(r'PAIR_END partials=(\d+) q_fault=(\d) busy=(\d) walking=(\d) bank_free=(\d) sh_free=(\d)',text)
  if not end:errors.append('missing actual pair terminal')
@@ -12,7 +12,7 @@ def inspect(root,name,gold,operations):
  ctl=re.search(r'NATIVE_GO_END events=(\d+) consumed=(\d+) gos=(\d+) cfg_words=(\d+) streams=(\d+) xr_fault=(\d) xs_fault=(\d) cf_fault=(\d) seq_fault=(\d)',text)
  if not ctl or ctl[1]!=ctl[2] or any(map(int,ctl.groups()[5:])):errors.append('producer/landing/sequencer fault')
  core=[(int(t),int(tag))for t,tag in re.findall(r'^CORE_GO (\d+) tag=(\d+)',text,re.M)]
- tags=[(gold['first_operation_tag']+i)%4 for i in range(operations)]
+ tags=expected_tags if expected_tags is not None else [(gold['first_operation_tag']+i)%4 for i in range(operations)]
  if [tag for t,tag in core]!=tags:errors.append('actual GO tag sequence differs from original OPTAG1 contract')
  got=defaultdict(list);raw=[]
  for fields in re.findall(r'^PAIR_RET (\d+) mb=(\d+) row=(\d+) seg=(\d+) n=(\d+) pos=(\d+) val=([0-9a-f]+) err=(\d)$',text,re.M):
@@ -40,7 +40,7 @@ def main():
  caught={n:cases[n]['status']=='FAIL' or any(control_differences[n].values())for n in names[2:]}
  passed=original['status']==current['status']=='PASS'and all(eq.values())and all(caught.values())
  report=dict(status='PASS_FULL_SELECTED_NB2_NATIVE_GO_PROVIDER_COMPONENT'if passed else 'FAIL_FULL_SELECTED_NB2_NATIVE_GO_PROVIDER_COMPONENT',operations=operations,
-  independent_first_tag=gold['first_operation_tag'],independent_operation_tags=[(gold['first_operation_tag']+i)%4 for i in range(operations)],
+  independent_first_tag=gold['first_operation_tag'],independent_operation_tags=expected_tags if expected_tags is not None else [(gold['first_operation_tag']+i)%4 for i in range(operations)],
   original_status=original['status'],current_status=current['status'],original_errors=original['errors'],current_errors=current['errors'],
   exact_original_current=eq,controls_caught=caught,control_differences=control_differences,wrong_date_arithmetic_changed=control_differences['wrong_date']['partial_words'],wrong_date_GO_capture_changed=control_differences['wrong_date']['core'],arithmetic_core_exercised=True,real_walking_bank_shadow_feedback=True,
   constant_checkpoint_activation=True,fresh_version_or_production_epoch_qualified=False,
