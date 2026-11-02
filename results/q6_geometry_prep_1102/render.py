@@ -3,7 +3,7 @@ import re,json,matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-root=Path('/home/ubuntu/coord/tmp/codex-q6-geometry-0215')
+root=Path(__file__).resolve().parent
 def parse(p):
  shapes={};current=None
  for line in p.read_text().splitlines():
@@ -19,7 +19,7 @@ for n in ['recip','zh']:
  a=parse(root/(n+'_corrected')/'io.tcl');b=json.load(open(root/(n+'_corrected')/'actual_generated_shapes.json'));assert a==b
 fig,axs=plt.subplots(2,2,figsize=(13,10))
 for col,(n,title,h) in enumerate([('recip','RECIP actual old compact IO: stale secondary outside',138.24),('recip_corrected','RECIP corrected generated IO: all native access retained',138.24)]):
- ax=axs[0,col];sh=parse(root/n/'io.tcl');ax.add_patch(Rectangle((0,0),216,h,fill=False,color='black',lw=1.2))
+ ax=axs[0,col];sh=parse(root/('input_'+n if n in ('recip','zh') else n)/'io.tcl');ax.add_patch(Rectangle((0,0),216,h,fill=False,color='black',lw=1.2))
  for name,v in sh.items():
   for x0,y0,x1,y1 in v['rectangles']:
    ax.plot([(x0+x1)/2],[(y0+y1)/2],marker='|' if v['layer']=='M5' else '_',ms=6,color='crimson' if y1>h else 'tab:blue')
@@ -29,7 +29,7 @@ for col,(n,title,h) in enumerate([('recip','RECIP actual old compact IO: stale s
   ax.text(20,180,'x[31] north-relative access:\nprimary138.156..138.240\nsecondary138.085..138.192\noverlap0.036 μm; same physical pin',fontsize=9)
   ax.annotate('69 signal pins, zero macros',xy=(13.4,138.2),xytext=(50,150),arrowprops={'arrowstyle':'->'},fontsize=9)
 for col,n in enumerate(['zh','zh_corrected']):
- ax=axs[1,col];sh=parse(root/n/'io.tcl');ax.add_patch(Rectangle((0,0),151.2,151.2,fill=False,color='black'))
+ ax=axs[1,col];sh=parse(root/('input_'+n if n in ('recip','zh') else n)/'io.tcl');ax.add_patch(Rectangle((0,0),151.2,151.2,fill=False,color='black'))
  for name,v in sh.items():
   r=v['rectangles'][0];x,y=(r[0]+r[2])/2,(r[1]+r[3])/2
   ax.plot(x,y,marker='|' if v['layer']=='M5' else '_',ms=7,color='tab:green' if y<1 else 'tab:orange' if name in ('clk','rst_n') else 'tab:blue')
