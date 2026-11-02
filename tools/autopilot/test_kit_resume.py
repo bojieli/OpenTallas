@@ -60,6 +60,7 @@ def make_kit(root, name, runner=RUNNER, files=None, upto="grt", t0=None):
         (K / LOGS).mkdir(parents=True)
         (K / "run/reports/asap7/top/base").mkdir(parents=True)
         (K / "run/reports/asap7/top/base/synth_stat.txt").write_text("Number of cells: 10\n")
+        os.utime(K / "run/reports/asap7/top/base/synth_stat.txt", (t + 100, t + 100))
         for i, s in enumerate(KR.STEPS[:KR.IDX[upto] + 1]):
             ts = t + 100 * (i + 1)
             for n in STEP_FILES[s]:

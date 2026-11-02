@@ -145,7 +145,7 @@ def input_files(K, cutoff=None):
     rec = os.path.join(K, INPUTS_FILE)
     if os.path.isfile(rec):
         try:
-            d = json.load(open(rec))
+            d = _load(rec)
             return sorted(d["files"]), "recorded"
         except (OSError, ValueError, KeyError):
             pass
@@ -574,9 +574,14 @@ def apply(newK, src, dec, source_meta):
     return rec
 
 
+def _load(p):
+    with open(p) as f:
+        return json.load(f)
+
+
 def verify(newK, src=None):
     """-> [problems]: a linked source file whose size/mtime changed (a write through a hardlink)"""
-    rec = json.load(open(os.path.join(newK, RESUME_FILE)))
+    rec = _load(os.path.join(newK, RESUME_FILE))
     src = src or rec["source"]["kit"]
     bad = []
     for x in rec["links"]:
@@ -595,7 +600,7 @@ def verify(newK, src=None):
 def release(newK):
     """remove the source .keep this attempt created"""
     try:
-        rec = json.load(open(os.path.join(newK, RESUME_FILE)))
+        rec = _load(os.path.join(newK, RESUME_FILE))
     except (OSError, ValueError):
         return False
     p = rec.get("keep_path")
