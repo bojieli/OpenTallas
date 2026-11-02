@@ -1,0 +1,10 @@
+OT_MACRO_CTS unavailable: /home/ubuntu/coord/tmp/physical/common_flow/macro_cts_cluster.tcl missing
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /home/ubuntu/coord/tmp/qc-nl-mmcontext-1715/final_grt.sdc
+CASE final_grt.sdc stage=final_grt.sdc ff_hold_disabled=1 synced=0 rc= scenes={tc -mode ss -liberty fixture_TT} {BC -mode ff -liberty fixture_FF}
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /home/ubuntu/coord/tmp/qc-nl-mmcontext-1715/4_cts.sdc
+OT_HOLD_MM sync: SS setup ws 0.00 / FF hold ws 0.00 ps
+CASE 4_cts.sdc stage=4_cts.sdc ff_hold_disabled=0 synced=1 rc=-global_routing -global_routing scenes={tc -mode ss -liberty fixture_TT} {BC -mode ff -liberty fixture_FF}
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /home/ubuntu/coord/tmp/qc-nl-mmcontext-1715/3_place.sdc
+OT_HOLD_MM sync: SS setup ws 0.00 / FF hold ws 0.00 ps
+CASE 3_place.sdc stage=3_place.sdc ff_hold_disabled=0 synced=1 rc=-placement -placement scenes={tc -mode ss -liberty fixture_TT} {BC -mode ff -liberty fixture_FF}
+DISPATCH_FIXTURE_PASS failure_reproduced normalGRT_alias_recognized wrongPlacementRole_control_detected

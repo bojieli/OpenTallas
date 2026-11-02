@@ -1,0 +1,10 @@
+{
+  "scope": "pure Tcl stage-dispatch fixture; not STA/corner timing proof; 4_cts name is normalGRT API alias only, true artifact remains postMM GRT",
+  "source_sha256": "70adc4066bfb874e684837a86b34c0ce90cf3ee90545077a708348c66aa37d78",
+  "alias_sha256": "70adc4066bfb874e684837a86b34c0ce90cf3ee90545077a708348c66aa37d78",
+  "same_bytes": true,
+  "actual_helper_sha256": "a219307319202693641ed80699a30756b8a348e12612f6f02edbf78adbf96ecc",
+  "parsed_clocks_exceptions_identical": true,
+  "parsed_directives_sha256": "8804a55d445f97024402ba54ed56b95a353b2526338f126842a1c612a8f2064c",
+  "parse_log": "PARSED_SDC_IDENTITY_PASS commands=3149 timing_directives=2105 counts=create_clock 2 set_clock_uncertainty 20 set_clock_latency 1 set_input_delay 1050 set_output_delay 1032"
+}
