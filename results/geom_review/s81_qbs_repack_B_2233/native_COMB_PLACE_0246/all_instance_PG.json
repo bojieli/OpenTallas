@@ -1,0 +1,506 @@
+{
+  "scope": "READ_ONLY_NATIVE_WHOLE_INSTANCE_PG",
+  "odb": "/work/actual3_place.odb",
+  "dbu_per_um": 1000,
+  "counts": {
+    "std|POWER|terms": 118625,
+    "std|POWER|connected": 109609,
+    "std|GROUND|terms": 118625,
+    "std|GROUND|connected": 109609,
+    "std|POWER|unbound_or_wrong_type": 9016,
+    "std|GROUND|unbound_or_wrong_type": 9016,
+    "tap|POWER|terms": 36809,
+    "tap|POWER|connected": 36809,
+    "tap|GROUND|terms": 36809,
+    "tap|GROUND|connected": 36809,
+    "macro|POWER|terms": 32,
+    "macro|POWER|connected": 32,
+    "macro|GROUND|terms": 32,
+    "macro|GROUND|connected": 32
+  },
+  "new_instance_counts": {
+    "std": 8998
+  },
+  "guard": {
+    "cells": {
+      "count": 155466,
+      "sha256": "b1e29af6f289cb7e677ba85f3f44139970055a19ad6e22f027c79a5165a461fb"
+    },
+    "rows": {
+      "count": 9866,
+      "sha256": "e31b7471e612bb5477cac0a4b670a653ccf9c80257ee93bb15005d2b90930d98"
+    },
+    "pins": {
+      "count": 1805,
+      "sha256": "c683bba2bfdae6f35235651c483dd87b14ae8a14da89e0c656642c85a98e4a5b"
+    },
+    "nonPG_nets": {
+      "count": 128996,
+      "sha256": "770ac76f4fbbf22355ec9ad5885f92e06728d1ac5bcc02ac1806eac9ab12a291"
+    },
+    "PG_shapes": {
+      "count": 973501,
+      "sha256": "9d4010652890ccb1e3bcc070d99740bb1c251e9f7130bffe1206ff84770a55ad"
+    }
+  },
+  "expected_PG_nets": {
+    "POWER": "VDD",
+    "GROUND": "VSS"
+  },
+  "wrong_domain_terms": 0,
+  "wrong_domain_witnesses": [],
+  "bad_terms": 18032,
+  "bad_new_terms": 17996,
+  "witnesses": [
+    {
+      "inst": "place26564",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        200070,
+        377190,
+        200394,
+        377460
+      ]
+    },
+    {
+      "inst": "place26564",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        200070,
+        377190,
+        200394,
+        377460
+      ]
+    },
+    {
+      "inst": "place26562",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        199692,
+        376650,
+        200016,
+        376920
+      ]
+    },
+    {
+      "inst": "place26562",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        199692,
+        376650,
+        200016,
+        376920
+      ]
+    },
+    {
+      "inst": "place27413",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        229284,
+        556740,
+        229608,
+        557010
+      ]
+    },
+    {
+      "inst": "place27413",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        229284,
+        556740,
+        229608,
+        557010
+      ]
+    },
+    {
+      "inst": "place26563",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        197586,
+        377190,
+        197910,
+        377460
+      ]
+    },
+    {
+      "inst": "place26563",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        197586,
+        377190,
+        197910,
+        377460
+      ]
+    },
+    {
+      "inst": "place27411",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        229770,
+        556740,
+        230094,
+        557010
+      ]
+    },
+    {
+      "inst": "place27411",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        229770,
+        556740,
+        230094,
+        557010
+      ]
+    },
+    {
+      "inst": "place26580",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        199800,
+        370170,
+        200124,
+        370440
+      ]
+    },
+    {
+      "inst": "place26580",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        199800,
+        370170,
+        200124,
+        370440
+      ]
+    },
+    {
+      "inst": "place26581",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        199422,
+        370710,
+        199746,
+        370980
+      ]
+    },
+    {
+      "inst": "place26581",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        199422,
+        370710,
+        199746,
+        370980
+      ]
+    },
+    {
+      "inst": "place26582",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        200178,
+        370980,
+        200502,
+        371250
+      ]
+    },
+    {
+      "inst": "place26582",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        200178,
+        370980,
+        200502,
+        371250
+      ]
+    },
+    {
+      "inst": "place27405",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        115938,
+        416880,
+        116262,
+        417150
+      ]
+    },
+    {
+      "inst": "place27405",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        115938,
+        416880,
+        116262,
+        417150
+      ]
+    },
+    {
+      "inst": "place26583",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        201258,
+        372330,
+        201582,
+        372600
+      ]
+    },
+    {
+      "inst": "place26583",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        201258,
+        372330,
+        201582,
+        372600
+      ]
+    },
+    {
+      "inst": "place27403",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        116370,
+        420390,
+        116694,
+        420660
+      ]
+    },
+    {
+      "inst": "place27403",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        116370,
+        420390,
+        116694,
+        420660
+      ]
+    },
+    {
+      "inst": "place27401",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        114912,
+        415260,
+        115236,
+        415530
+      ]
+    },
+    {
+      "inst": "place27401",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        114912,
+        415260,
+        115236,
+        415530
+      ]
+    },
+    {
+      "inst": "place26584",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        203094,
+        369630,
+        203418,
+        369900
+      ]
+    },
+    {
+      "inst": "place26584",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        203094,
+        369630,
+        203418,
+        369900
+      ]
+    },
+    {
+      "inst": "place27399",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        125550,
+        430650,
+        125874,
+        430920
+      ]
+    },
+    {
+      "inst": "place27399",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        125550,
+        430650,
+        125874,
+        430920
+      ]
+    },
+    {
+      "inst": "place27397",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VDD",
+      "sigtype": "POWER",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        114048,
+        422820,
+        114372,
+        423090
+      ]
+    },
+    {
+      "inst": "place27397",
+      "master": "BUFx3_ASAP7_75t_R",
+      "pin": "VSS",
+      "sigtype": "GROUND",
+      "net": null,
+      "net_type": null,
+      "new_instance": true,
+      "bbox_dbu": [
+        114048,
+        422820,
+        114372,
+        423090
+      ]
+    }
+  ]
+}

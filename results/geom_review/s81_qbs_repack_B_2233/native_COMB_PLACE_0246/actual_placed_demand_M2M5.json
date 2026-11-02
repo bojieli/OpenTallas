@@ -1,0 +1,50 @@
+{
+  "channel_v_max": 1.185,
+  "channel_v_at": [
+    288.0,
+    298.0,
+    287.5
+  ],
+  "blocked_v": 0,
+  "detour_v": 10098,
+  "detour_v_extension_max_um": 345.0,
+  "detour_v_extent_at": {
+    "cut_um": 197.5,
+    "original_um": [
+      302.0,
+      303.0
+    ],
+    "allocated_um": [
+      281.0,
+      648.0
+    ]
+  },
+  "col_v_max": 1.51,
+  "col_v_at": [
+    290.0,
+    272.5
+  ],
+  "tracks_v_per_um": 36.46,
+  "channel_h_max": 1.739,
+  "channel_h_at": [
+    343.0,
+    353.0,
+    352.5
+  ],
+  "blocked_h": 0,
+  "detour_h": 55010,
+  "detour_h_extension_max_um": 277.0,
+  "detour_h_extent_at": {
+    "cut_um": 97.5,
+    "original_um": [
+      528.0,
+      529.0
+    ],
+    "allocated_um": [
+      251.0,
+      561.0
+    ]
+  },
+  "tracks_h_per_um": 36.46,
+  "demand_layers": "M2-M5"
+}

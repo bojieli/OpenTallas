@@ -1,0 +1,11 @@
+ot-run: epyc2          admits    41 GB (avail 232, reserve 0, fresh 22.8, peak 104.1, headroom 0, waiters 0/0 GB) load 97/128 running 44 disk 55 GB 
+ot-run: intel1         admits    -4 GB (avail 196, reserve 0, fresh 35.9, peak 100.3, headroom 0, waiters 43/2194 GB) load 172/112 running 73 disk 367 GB 
+ot-run: localhost      admits   200 GB (avail 324, reserve 0, fresh 0, peak 60.1, headroom 0, waiters 1/360 GB) load 199/112 running 60 disk 145 GB 
+ot-run: localhost skipped for this die job: DISK 145 GB free - 180 GB running/queued die reservations < 1 GB
+ot-run: -> epyc2
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-1463127-1793616474 after 1 s
+Unable to find image 'openroad/orfs:asap7' locally
+docker: Error response from daemon: failed to resolve reference "docker.io/openroad/orfs:asap7": docker.io/openroad/orfs:asap7: not found
+
+Run 'docker run --help' for more information
+ot-run: RAN on epyc2 (unit oth-ubuntu-1463127-1793616474): exit 125
