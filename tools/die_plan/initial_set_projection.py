@@ -114,3 +114,100 @@ def reset_image_miter(F, d, reset, cycles, slots, correlations, *, onto=False):
                    initial_non_slot_witness='native reset-known value, else zero' if onto else 'arbitrary',
                    nonreset_pi_witness=0 if onto else 'arbitrary_per_edge',
                    no_hypotheses=True, no_constraints=True, no_gate_integration=True)
+
+
+class _Parity:
+    def __init__(self):
+        self.parent, self.edge = {}, {}
+
+    def find(self, x):
+        if x not in self.parent:
+            self.parent[x], self.edge[x] = x, 0
+        p = self.parent[x]
+        if p != x:
+            r, e = self.find(p)
+            self.parent[x], self.edge[x] = r, self.edge[x] ^ e
+        return self.parent[x], self.edge[x]
+
+    def join(self, x, y, inversion):
+        a, ia = self.find(x)
+        b, ib = self.find(y)
+        if a == b:
+            if ia ^ ib != inversion:
+                raise ValueError('relation conflicts with retained state correspondence')
+            return
+        self.parent[a], self.edge[a] = b, ia ^ ib ^ inversion
+
+
+def validate_native_bijection(L, fields, prior):
+    """Resolve typed logical names through native maps and reject prior conflicts.
+
+    This does NOT validate source primitive metadata, prove an initial set, or
+    grant BASE acceptance. The caller must independently join that evidence.
+    Only equality/constant correspondence can touch projected fields; an
+    unsupported predicate in that cone refuses rather than guessing a model.
+    """
+    maps = {'gold': L.gp, 'gate': L.tp}
+    zero = ('constant', 0)
+    uf = _Parity()
+    resolved, used = [], {'gold': set(), 'gate': set()}
+
+    def native(side, key):
+        if side not in maps or key not in maps[side]:
+            raise ValueError('missing retained native key: ' + str((side, key)))
+        return maps[side][key]
+
+    for f in fields:
+        if f.get('proposed_xor') not in (0, 1):
+            raise ValueError('explicit logical polarity required')
+        r = {'field': f, 'xor': f['proposed_xor']}
+        for side, d in [('gold', L.gold), ('gate', L.gate)]:
+            lit = native(side, f[side])
+            v = lit >> 1
+            if not d['I'] < v <= d['I'] + d['L'] or v in used[side]:
+                raise ValueError('state mapping is nonbijective or is not a native latch')
+            used[side].add(v)
+            r[side] = lit
+        resolved.append(r)
+    projection = {(side, v) for side, variables in used.items() for v in variables}
+
+    def pair(side, key):
+        lit = native(side, key)
+        return (side, lit >> 1), lit & 1
+
+    # Same-name matched inputs are shared by the ORIGINAL native miter, even
+    # when not listed in hyp.json. Preserve that full correspondence as well.
+    for key in L.matched:
+        a, ia = pair('gold', key)
+        b, ib = pair('gate', key)
+        uf.join(a, b, ia ^ ib)
+    for (side, key), h in prior.items():
+        sides = ['gold', 'gate'] if side == 'both' else [side]
+        for sd in sides:
+            a, ia = pair(sd, key)
+            if h[0] == 'const':
+                uf.join(a, zero, ia ^ h[1])
+            elif h[0] == 'eq':
+                b, ib = pair(h[1], h[2])
+                uf.join(a, b, ia ^ ib ^ h[3])
+            else:
+                touched = a in projection
+                if h[0] == 'cube':
+                    touched |= any(pair(h[1], k)[0] in projection for k in h[2])
+                if touched:
+                    raise ValueError('unsupported retained predicate touches projected state')
+    for r in resolved:
+        uf.join(('gold', r['gold'] >> 1), ('gate', r['gate'] >> 1),
+                (r['gold'] & 1) ^ (r['gate'] & 1) ^ r['xor'])
+    free_roots = set()
+    constant_root = uf.find(zero)[0]
+    for r in resolved:
+        if r['field']['kind'] != 'slot':
+            continue
+        root, _ = uf.find(('gold', r['gold'] >> 1))
+        if root == constant_root or root in free_roots:
+            raise ValueError('retained prior collapses claimed independent initial coordinates')
+        free_roots.add(root)
+    return resolved, dict(native_fields=len(resolved), independent_slots=len(free_roots),
+                          prior_count=len(prior), matched_count=len(L.matched),
+                          conflicts=0, base_accepted=False, gate_integration=False)

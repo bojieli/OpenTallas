@@ -1,4 +1,6 @@
-# HEAD native bounded lemma diagnosis
+> Correction 2026-11-02: R3 used the current checker common-shape default, introducing s_d/n_f alias maps absent from the original checker. Restoring all12732 retained hypothesis names did not by itself restore the original matched-state context. Therefore its STEP results are conditional diagnostic results and must not be promoted as exact-original-context lemmas. Reset BASE is a separate native computation. R4 disables the new common-shape feature, requires original matched count58437, and reruns only the already authorized bounded obligations. No accepted hints/full comparison/source credit were issued from R3. Original result/log files remain unchanged.
+
+# HEAD native bounded lemma diagnosis — R3 context correction
 
 Exact retained original native AIGs/maps and 12732-hypothesis profile, reset contract64; no source change, comparepoint reduction, accepted hint, or full equivalence replay. Original469 differing/172 unproven classification and four missing KEEP records remain unchanged.
 

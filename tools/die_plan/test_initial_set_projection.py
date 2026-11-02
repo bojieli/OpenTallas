@@ -58,3 +58,41 @@ def test_inverted_native_literal_is_logical_seed_not_assumed_polarity():
     for onto in [False,True]:
         m,_=P.reset_image_miter(F,d,{1:0},2,{'slot':5},[('load',6,'slot')],onto=onto)
         assert proved_exhaustively(m)
+
+
+def fixture():
+    from types import SimpleNamespace
+    return SimpleNamespace(gold=design(),gate=design(),gp={'s':4,'l':6},tp={'s#':4,'l#':6},matched=[])
+
+
+def fields():
+    return [{'gold':'s','gate':'s#','kind':'slot','proposed_xor':0},
+            {'gold':'l','gate':'l#','kind':'load','proposed_xor':0}]
+
+
+def test_bijection_prior_compatibility_is_not_base_acceptance():
+    r,receipt=P.validate_native_bijection(fixture(),fields(),{('gate','s#'):('eq','gold','s',0)})
+    assert len(r)==2 and not receipt['base_accepted']
+    with pytest.raises(ValueError,match='conflicts'):
+        P.validate_native_bijection(fixture(),fields(),{('gate','s#'):('eq','gold','s',1)})
+    with pytest.raises(ValueError,match='collapses'):
+        P.validate_native_bijection(fixture(),fields(),{('gold','s'):('const',0)})
+
+
+def test_nonbijective_native_alias_and_unknown_key_refuse():
+    f=fields();f[1]['gate']='s#'
+    with pytest.raises(ValueError,match='nonbijective'):
+        P.validate_native_bijection(fixture(),f,{})
+    f=fields();f[1]['gate']='unknown'
+    with pytest.raises(ValueError,match='missing'):
+        P.validate_native_bijection(fixture(),f,{})
+
+
+def test_existing_same_name_correspondence_cannot_be_silently_replaced():
+    L=fixture();L.tp={'s':4,'l':6};L.matched=['s','l'];f=fields()
+    f[0]['gate']='l';f[1]['gate']='s'
+    # Existing shared-state identity plus a swapped mapping collapses the two
+    # slots if both are claimed independent. The caller cannot erase it.
+    f[1]['kind']='slot'
+    with pytest.raises(ValueError,match='collapses'):
+        P.validate_native_bijection(L,f,{})
