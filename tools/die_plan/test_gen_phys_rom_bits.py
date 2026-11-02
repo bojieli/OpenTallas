@@ -25,8 +25,9 @@ def test_largest_declared_table_wins(tmp_path):
 
 def test_elab_width_covers_pre_opt_lint_width(tmp_path):
     """DIE-KV-57: nearhbm_exp_p is 256 x 61 after opt (rom_infer_gate) but 256 x 64 in the gen lint elaboration"""
-    (tmp_path / "a.sv").write_text("module ot_qwen_nearhbm_exp_p; endmodule\n")
-    assert gen_phys.declared_rom_bits(tmp_path) == 256 * 64
+    for module in ("ot_qwen_nearhbm_exp_p", "ot_hdc_v41x_exp"):
+        (tmp_path / "a.sv").write_text(f"module {module}; endmodule\n")
+        assert gen_phys.declared_rom_bits(tmp_path) == 256 * 64
 
 
 def test_declared_flop_fifo_sets_exact_size(tmp_path):

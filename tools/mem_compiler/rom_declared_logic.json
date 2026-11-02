@@ -13,7 +13,7 @@
    "users": "HBM ot_hbm_hc_root_static tail{0,1}_sk_{step0,steady} u_seed.u_sq",
    "reason": "Sinkhorn seed square term: fixed math function; std-cell 31 um2 vs macro 161 um2 + 1 cycle"},
   {"id": "exp_ln2_nk", "module": "ot_hdc_v41x_exp", "table": "case (nk) 2^(-k/256) range table",
-   "src": "ot_hdc_v41x_sfu.sv", "words": 256, "width": 61,
+   "src": "ot_hdc_v41x_sfu.sv", "words": 256, "width": 61, "elab_width": 64,
    "sha256": "1f7ee858b70781e6daf1ea86bf91fca8244cba94d326c7910cb1b4856f849d37",
    "users": "S81 ot_s81sl_vsw u_l.u_exp, ot_s81sl_eg u_g.sigmoid.exp; HBM SU lanes (pgslice side_rest/side_softplus, pg_lane_full_master)",
    "reason": "exp range-reduction table: fixed math function, identical in every SFU; macro form = +1 cycle per exp"},
