@@ -10,6 +10,7 @@ def prepare(repo):
  r=repo/PACKET;readset=json.loads((r/'readset.json').read_text());V=json.loads((r/'views.json').read_text());cap=json.loads((r/'storeA_GEN_capsule.json').read_text())
  for row in readset['files']:
   if digest(repo/row['file'])!=row['sha256']:raise ValueError('selected native input changed:'+row['file'])
+ if readset['planned_core_macros_sha256']!=digest(r/'core_macros.json'):raise ValueError('reviewed native macro plan changed')
  if V['plan_sha256']!=digest(r/'GEN_plan.json')or readset['pins_sha256']!=digest(r/'StoreA_pins.json'):raise ValueError('native plan/pins changed')
  if len(json.loads((r/'StoreA_pins.json').read_text()))!=6040:raise ValueError('native6040ABI required')
  commit=subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD'],text=True).strip()
