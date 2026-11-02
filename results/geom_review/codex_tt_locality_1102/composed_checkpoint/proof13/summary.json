@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.tt_origin_raw_local_bounded_proof.v1",
+ "scope": "actual frozen origin PADW1/FWD_COPY0 versus defaultOFF and four-regionON, plus existing parent raw relay versus all4 copies",
+ "native": "openroad/orfs:asap7lock Yosys0.68+post, ot-run epyc2 unit935315",
+ "steps": 284,
+ "comparison_skip": 130,
+ "upstream_reset_edges_cold": 65,
+ "qualified_raw_reset_edges_cold": 64,
+ "qualified_raw_reset_edges_warm": 64,
+ "initial_dut_state": "all undef",
+ "other_inputs": "arbitrary defined each step including both strap values",
+ "output_checks": [
+  "all4start",
+  "all4start_d",
+  "all4rawreset outputs",
+  "defaultOFF oldoutputs"
+ ],
+ "production": "PROVED_BOUNDED",
+ "one_cycle_late_mutant": "CAUGHT",
+ "missing_regional_reset_mutant": "CAUGHT",
+ "full_tt_ctlm_lec_credit": false
+}
