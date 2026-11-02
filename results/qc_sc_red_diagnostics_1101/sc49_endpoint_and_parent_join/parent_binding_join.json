@@ -1,0 +1,51 @@
+{
+  "scope": "READ_ONLY_CURRENT_PARENT_JOIN_NO_ADOPTION",
+  "live_event": "d90b109213c6949da87b330ef143d96bbe937934",
+  "live_src": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131",
+  "live_plan": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+  "live_kinds": [
+    "type"
+  ],
+  "live_core_kit": null,
+  "source_candidate": "089003f7a5e+98bbbbd8184",
+  "standalone_recipe": "sc_place/recipes.json",
+  "standalone_HARD_PINREG": 1,
+  "standalone_core_json": {
+    "module": "qfd_dv_s5_sc2_leaf",
+    "plan_type": "sle_sc_v2",
+    "boundary_role": {
+      "ck": "clk",
+      "rst_n": "reset"
+    }
+  },
+  "standalone_clock_contract": null,
+  "current_plan_SC_types": 9,
+  "current_plan_SC_replicas": 12,
+  "excluded_CE_types": [
+    "slw_sc_v3",
+    "sle_sc_v3"
+  ],
+  "base_types": 7,
+  "base_replicas": 10,
+  "SC_plan_hard_cores": 0,
+  "SC_contents_have_LEF_LIB": false,
+  "SC_logical_contents": [
+    "slice s8 u_sc",
+    "slice s6b u_sc"
+  ],
+  "live_d90_leaf_has_HARD_PINREG_parameter": false,
+  "live_d90_base_parent_callsite": "qfd_dv_s5_sc2_leaf u_core (...) without parameter override",
+  "candidate_default_HARD_PINREG": 0,
+  "candidate_default_declared_delta": 0,
+  "native_parent_delta": null,
+  "physical_HARD1_binding": "MISSING_UNADOPTED",
+  "canonical_qc_core_wave_recipe_family": "SU lanes only; SC returns no recipe family",
+  "needed_binding_vehicle": [
+    "Explicit plan hard_cores/content view identity for exact HARD1 implementation and parent u_sc path; current placeholders do not bind a view.",
+    "Exact parameter/source/ABI functional relation between logical default behavior and selected HARD1 implementation, including retained first-capture/reset/control proof limits.",
+    "Current native mapped source/count and sink census sidecar with parent instance multiplicity; declared -387 is not a native parent count.",
+    "Count-aligned qualified hard-core clock/IO latency contract and current parent view timing; standalone core.json lacks typed clock_contract.",
+    "Fresh immutable source/recipe/plan/bind event choosing the qualified physical view; no original job or count receipt mutation."
+  ],
+  "endpoint_geometry_scope": "Native local PI-to-first-FF and all combinational FF-to-FF endpoint geometry only; no external parent FF-to-public-PI reach or parent timing credit."
+}
