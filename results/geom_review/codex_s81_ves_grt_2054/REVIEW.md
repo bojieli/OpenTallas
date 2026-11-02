@@ -29,7 +29,7 @@ Current native connected geometry dump queued4GB2T (Intel2client3622256); curren
 r2r census and review disposition are required before resubmitting DRT. Original
 review text preserved, its DRT release verdict is superseded by HOLD here.
 
-CURRENT CONNECTED CENSUS / RELEASE 2026-11-01 21:0x PST: actual current5_1_grt
+CURRENT CONNECTED CENSUS / RELEASE 2026-11-01 21:10 PST: actual current5_1_grt
 native geometry/connectivity dump completed exit0, Intel1 unit3742694-1793595352.
 Current main geom_rules.Design+r2r_metrics over that exact dump gives full
 Manhattan r2r385.51um, 30425captures, 0captures>405, 0combloops, no missing macro
