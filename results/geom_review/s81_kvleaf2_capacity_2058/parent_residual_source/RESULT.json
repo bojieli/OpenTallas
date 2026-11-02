@@ -1,0 +1,25 @@
+{
+  "status": "YOSYS_MAPPED_SOURCE_COUNT_COLLECTED; OUTER_ORFS_SYNTH_FAILED_PHYSICAL_LINK",
+  "native_job": "epyc2 oth-ubuntu-1063615-1793613514",
+  "runtime": "/srv/opentallas-scratch2/claude/codex-s81-parent-residual-0148",
+  "RTL_LINT": "PASS",
+  "outer_exit": 2,
+  "failure_stage": "synth_odb.tcl ORD-2013 missing LEF for source-only alias cut",
+  "mapped_std_cells": 500877,
+  "abstract_boundaries": 24,
+  "remaining_memories": 4,
+  "unknown_leaf_types": {},
+  "native_peak_GiB": 4.37,
+  "peak_scope": "failed outer job/lower-bound record; Yosys mapping completed; not completed physical SYNTH peak",
+  "declared_GB": 16,
+  "threads": 4,
+  "elapsed_sec": 1080,
+  "held": [
+    "Old native GEN wrapper/cohort, not canonical G0C adoption",
+    "No source-only alias LEFs/timing/physical views; no placeholders invented",
+    "Current define/body/reset/port/source joins before hardcut adoption",
+    "Older VN_b source same primary hash but CONST_ZERO define differs; no proof transfer",
+    "No full pipeline/SIGNED/physical/equivalence credit"
+  ],
+  "collector_correction": "ASAP7 standard-cell masters are terminal physical leaves even when native metadata includes behavioral library bodies. Initial recursive-library-model receipt retained remotely; fixed collection requires no SYNTH rerun."
+}
