@@ -1,0 +1,48 @@
+{
+  "status": "PASS_COMPONENT",
+  "host": "epyc2/dear-crayfish",
+  "unit_main_pid": 3108695,
+  "remote": "/srv/opentallas-scratch2/claude/codex-head-apply-native-1101/gate1",
+  "admission": {
+    "mem_gb": 16,
+    "threads": 1,
+    "disk_gb": 20,
+    "critical": true
+  },
+  "build": {
+    "exit": 0,
+    "seconds": 1117.17,
+    "peak_rss_kb": 5203204
+  },
+  "nominal": {
+    "exit": 0,
+    "seconds": 326.88,
+    "peak_rss_kb": 143964,
+    "cases": 48,
+    "FP32_words": 16384,
+    "checkpoint_gain_elements": 4096,
+    "actual_BF16_beats": 256
+  },
+  "controls": {
+    "MUT_GAIN": {
+      "exit": 1,
+      "assertion": "[508000000] %Fatal: tb_mu_native.sv:4518: Assertion failed in tb_mu_native: HEAD_NATIVE_VALUE slice0 user1 local0 got40000000 expected40880000"
+    },
+    "MUT_RAW_X": {
+      "exit": 1,
+      "assertion": "[225000000] %Fatal: tb_mu_native.sv:4518: Assertion failed in tb_mu_native: HEAD_NATIVE_VALUE slice0 user0 local0 got40000000 expected40080000"
+    },
+    "MUT_USER": {
+      "exit": 1,
+      "assertion": "[508000000] %Fatal: tb_mu_native.sv:4518: Assertion failed in tb_mu_native: HEAD_NATIVE_VALUE slice0 user1 local0 got40080000 expected40880000"
+    }
+  },
+  "source_packet_sha256": "4e95f3e4ded44854c9bf745a2a027a339cd70c1c3102032ebf7ea663f3b94cd5",
+  "emission_profile_sha256": "83f0bc858a2c730cebb5f24396b558ec82e7b0a21eb552414bc26e9de39c35c9",
+  "clock": {
+    "period_ps": 833,
+    "testbench_timescale": "1ns/1fs"
+  },
+  "scope": "actual SU/VM/eight arithmetic heads and production BF16 stream tile; no ROOT/CTL globallease or paired token",
+  "canonical_activation": false
+}
