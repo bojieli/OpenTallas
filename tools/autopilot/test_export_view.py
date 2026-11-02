@@ -84,6 +84,26 @@ class TestExportView(unittest.TestCase):
         self.assertIn("m_tt.lib", prov["export"]["lib_basis"])
         self.assertEqual((out / "m" / "m_ff.lib").read_text(), LIB)
 
+    def test_canonical_superset_coverage_and_legacy_fallback(self):
+        cases = [({"superset_vec": {"all_shown": True}}, True),
+                 ({"superset_vec": {"all_shown": False}, "all_shown": True}, False),
+                 ({"superset_vec": {"all_shown": None}, "all_shown": True}, None),
+                 ({"all_shown": True}, True),
+                 ({"all_shown": False}, False),
+                 ({}, None)]
+        kit, _ = mk_run(self.tmp.name)
+        lec = kit / "lec.json"
+        for i, (fields, expected) in enumerate(cases):
+            with self.subTest(fields=fields):
+                lec.write_text(json.dumps(dict(verdict="EQUIVALENT", **fields)))
+                out = Path(self.tmp.name) / f"coverage_{i}"
+                res = EV.export(str(kit), str(kit / "signoff" / "signoff.json"),
+                                str(out), "kv", lec=str(lec))
+                gates = json.loads((out / "m" / "gates.json").read_text())
+                self.assertIs(gates["routed_lec_all_shown"], expected)
+                self.assertEqual(gates["routed_lec"], "EQUIVALENT")
+                self.assertTrue(res["complete"], res["problems"])
+
     def test_stale_signoff_record_is_incomplete(self):
         kit, _ = mk_run(self.tmp.name, generated="2000-01-01T00:00:00-07:00")
         res = EV.export(str(kit), str(kit / "signoff" / "signoff.json"), str(Path(self.tmp.name) / "v"), "s81")
