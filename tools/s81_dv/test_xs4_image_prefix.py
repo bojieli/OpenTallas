@@ -22,6 +22,8 @@ def main():
     xs = (S / 'ot_s81sl_xs4.sv').read_text()
     parent = (S / 'ot_s81sl_xgt_xo.sv').read_text()
     assert 'ot_s81sl_xs4 #(.INSTANCE(INSTANCE)) u_s' in parent
+    selected_parent = (ROOT / 'physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv').read_text()
+    assert 'ot_s81sl_xs4 #(.INSTANCE(INSTANCE)) u_s' in selected_parent
     names = re.findall(r'`OT_S81SL_XS4_ROM\("([^"]+)"\)', xs)
     assert len(names) == 7 and len(set(names)) == 7
     definition = re.search(r'^`define OT_S81SL_XS4_ROM\(n\) (ot_rom_4096x72_m8 #.*)$', xs, re.M)[1]
