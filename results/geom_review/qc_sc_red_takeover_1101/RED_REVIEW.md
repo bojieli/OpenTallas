@@ -1,0 +1,7 @@
+# RED actual fixed-node clock rebind import diagnostic
+
+Personally viewed red_rebind_plan.png. The original assignments contain conspicuous diagonal75um fanout branches, including the dense south-center bundle; the cap16 planner uses only nearby existing leaves, eliminating these outliers. All8269 BUFx8 fixed nodes and all34225 actual native DFF CLK pin coordinates come from the current placed DB. The planned maximum native Y-to-CLK leg is15.77um. Every3452 leaf has1..16sinks. A static graph walk of the actual node input/output TSV shows every selected leaf is eight noninverting BUFx8 stages from the same ck input; no logical clock or cycle is added.
+
+PASS-COND for import and exact DFF-clock rebind in a private ODB only. The script must keep every original cell master/location/orientation/status and every non-DFF-CLK connection, BTerm, net name/class/special flag unchanged; reject missing/duplicate DFFs or cap/radius overflow. No placement, CTS, STA, extraction or route is authorized by this step. The existing conditional model mean296.37TT/231.92FF does not qualify the250/202.5 absolute source frame. Parent source/latency and root waveform qualifications remain open.
+
+Q12 COORD2026-11-01 18:50 approved the diagnostic/source event. Native source census previously ran4GB1T; this guarded import proposes8GB1T to retain full original-cell/connection invariants. No rule or clock relaxation, and no canonical parent/source adoption.
