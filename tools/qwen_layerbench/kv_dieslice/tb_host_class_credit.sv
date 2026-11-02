@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1fs
 module tb_host_class_credit;
     reg ck=0; always #0.4165 ck=~ck;
     reg rst_n=0, issue=0, enable_return=0;
