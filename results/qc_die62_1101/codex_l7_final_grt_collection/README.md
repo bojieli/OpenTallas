@@ -1,0 +1,11 @@
+# Actual L7 final GRT collection and near-miss source PREP
+
+The inherited native GRT completed with rc0; final PG545100/open0. Outer combined receipt rc1 was stale `route.guide` after post-GRT incremental repair, missing590SIGNAL names. Read-only actual finalODB→write_guides serialized all1926CLOCK+276894SIGNAL nets; existing verify_guides passes with zero missing/no SPECIAL. Original failed guide/receipt remains untouched. The pinned old hold helper predates the shared final-guide serialization fix. No reroute or clock/guide exclusion was used.
+
+Actual final geometry was rendered and viewed before read-only timing.414.72x267.84, two small central SRAMs; no macro wall. The raw CSV count kind `clockbuf` means any CLOCK-connected non-FF/non-macro instance,3509 total; it is not a count of3509 single-output clock buffers.39444FF,90738 other BUF/INV,138857 other standard instances. Clock-network-specific buffer inventory requires its own typed connectivity classification.
+
+Normal released p-qc99172ad paired final-GRT readout, EPYC2unit1386798, uses actual5_1_grt ODB/SDC and exact macros/RC with canonical0/25, globalrouting parasitics: TTsetup−3.560152ps/FFhold+0.456857ps. Pin-spread diagnostic passes1013pinregs in each corner. JSON `verdict:PASS` is the pin-band readout result, not overall timing SIGNED. Formal source qualification remains false; no DRT/SIGNED/full-die credit.
+
+Finite actual critical DATA cones in unit1438642 isolate five negative TT paths. Worst rsqrt line445→rsqrtm_y.s1_rows221 is−3.560152ps. Three middle paths share _249548_ AND5x1_R and _292848_ AND4x1_R; _284962_ AND5x1_R covers remaining worst/fifth paths. A same-function/geometry R→L three-cell source-compatible near-miss candidate is PREP owned by parent qc_head_signoff, including actual Liberty/function/geometry review before any scope release. No automatic ECO/timing variant/ordinary route was dispatched by this child.
+
+Source runtimes retained: Intel1 `/srv/opentallas-scratch2/claude/codex-qc-su-trials/l7_grt_cont1131` actual final5_1_grt; guide recovery `/srv/opentallas-scratch2/claude/codex-qc-l7-finalguide-1102`; paired readout and critical paths on EPYC2 `/srv/opentallas-scratch2/claude/codex-qc-l7-readout-1102` and `codex-qc-l7-critical-1102`. Inputs are actual native files; no `5_route`/CTS aliases were created.

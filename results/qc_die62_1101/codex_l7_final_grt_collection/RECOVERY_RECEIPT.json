@@ -1,0 +1,17 @@
+{
+  "status": "PASS_NATIVE_FINAL_DB_GUIDE_SERIALIZATION_ONLY",
+  "original_outer_rc": 1,
+  "native_grt_rc": 0,
+  "combined_post_rc": 0,
+  "old_missing_signal_names": 590,
+  "new_missing": {
+    "CLOCK": 0,
+    "SIGNAL": 0
+  },
+  "connected_clock": 1926,
+  "connected_signal": 276894,
+  "new_guide_bytes": 68793789,
+  "method": "Native OpenROAD read_db(final5_1_grt.odb); verify existing guide objects and write_guides freshout. Originalkit mountedread-only, no routing/STA/flags/source changes. Existing consumer runs on exactoriginalcensus+freshnativeguide. Oldfailedreceipt unchanged.",
+  "source_qualified": false,
+  "TT_FF_DRT_EQ_credit": false
+}

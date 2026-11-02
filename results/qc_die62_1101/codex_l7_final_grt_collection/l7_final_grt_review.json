@@ -1,0 +1,14 @@
+{
+  "verdict": "PROCEED_SCOPED_READONLY_PAIRED_STA_ONLY",
+  "image": "l7_final_grt_look.png",
+  "source": "Intel1 l7_grt_cont1131 actualfinal5_1_grt.odb",
+  "looked": true,
+  "findings": [
+    "Actual414.72x267.84 outline,2smallcentralSRAM macros; no macro wall or isolated corridor seen",
+    "39444existingFFs/3509CLOCK-connected nonFF/nonmacro instances distributed across logicdominion; boundaryFFbandvisibleS, signalpinsnotinvented",
+    "Native545100PGterms/open0;1926CLOCK+276894SIGNALconnectednets allnativeguided/noneSPECIAL fromactualfinalODB",
+    "Density/pin/clockplots derived solely fromactualfinalODB; no FF/source relocation orclockwaiver",
+    "Formal/sourcequalification and fullpin/r2r/relatedskew closure remain independent; no ordinaryroute/DRT/SIGNED credit"
+  ],
+  "classification_correction": "Rawclockbufkind selectsanyCLOCK-connectednonFF/nonmacroinstance; not3509single-outputbuffers. Originalnativecensusunchanged."
+}

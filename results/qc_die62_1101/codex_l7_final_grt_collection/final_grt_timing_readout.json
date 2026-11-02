@@ -1,0 +1,43 @@
+{
+  "scope": "READONLY_ACTUAL_FINAL_5_1_GRT_TT_FF_DIAGNOSTIC",
+  "tool_family": "p-qc99172ad",
+  "source_qualified": false,
+  "signed_credit": false,
+  "DRT_credit": false,
+  "corners": {
+    "tt": {
+      "corner": "TT",
+      "pinreg_n": 1013,
+      "pinreg_mean_ps": 405.03,
+      "pinreg_min_ps": 394.4,
+      "pinreg_max_ps": 411.85,
+      "bound_ps": 392.5,
+      "dev_ps": 12.53,
+      "tol_ps": 20.0,
+      "setup_wns_est_ps": -3.56,
+      "hold_wns_est_ps": 9.09,
+      "rc": "/work/setRC_rcx.tcl",
+      "parasitics": "global_routing",
+      "verdict": "PASS",
+      "band_policy": "gate",
+      "band_verdict": "PASS"
+    },
+    "ff": {
+      "corner": "FF",
+      "pinreg_n": 1013,
+      "pinreg_mean_ps": 328.63,
+      "pinreg_min_ps": 318.08,
+      "pinreg_max_ps": 334.73,
+      "bound_ps": 321.0,
+      "dev_ps": 7.63,
+      "tol_ps": 20.0,
+      "setup_wns_est_ps": 227.08,
+      "hold_wns_est_ps": 0.46,
+      "rc": "/work/setRC_rcx.tcl",
+      "parasitics": "global_routing",
+      "verdict": "PASS",
+      "band_policy": "gate",
+      "band_verdict": "PASS"
+    }
+  }
+}
