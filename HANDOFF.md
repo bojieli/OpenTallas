@@ -2947,3 +2947,4 @@ CODEX: S81 PARKED at explicitUSERhandback. Fullpacket handoff/codex_s81_20261101
 - 2026-11-01 19:11 PST GEOM-106: PARKED reviewer B (15:18-19:1x). Results + collect chain in lanes/GEOM-106.md; open: KV hroot g2/hroot3 count+countb GRT50 (intel1), QC l7 GRT50 probe, HBM TAPS re-cut spot-checks. No jobs of mine running.
 2026-11-01 19:29 PST COORD hourly: count 49 flat; approved kv-pvpair 3479263c; stale-FAIL sweep + LEC class -> KIT-WAVE-16; GEOM-108 live (GEOM-106 successor); PRUNE-1101G localhost root 90%; owner: keep 1.2 GHz.
 2026-11-01 19:47 PST COORD: OWNER asked why relaunch restarts the whole kit pipeline -> KW-RESUME-1 started: stage fingerprints + resume from first changed stage, full rebuild fallback.
+2026-11-01 19:49 PST COORD: PRUNE-1101G DONE localhost root 90%->84% (179 GB; manifest lanes/PRUNE-1101G.md); release_tree_plan /tmp leak -> FLOW-21.
