@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-hhp-model-projection-0315/fixture_r1.py", line 20, in <module>
+    lines,spans=K.inst_blocks(B.text,{'u_head0'});assert 'u_head0' in spans;a,z=spans['u_head0'];head='\n'.join(lines[a:z+1]);assert head in r['split']
+                                                         ^^^^^^^^^^^^^^^^^^
+AssertionError

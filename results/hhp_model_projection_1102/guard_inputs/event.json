@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.kv.pc_full_parent_event.v1",
+  "status": "PREP_NOT_ADOPTED",
+  "enabled": true,
+  "enabled_by_default": false,
+  "public_native_headers": "UNCHANGED; extraction/dead_drop ABI closure still required",
+  "qualified": false,
+  "files": [
+    {
+      "file": "qkd_ctrl_pc_nc.sv",
+      "before_sha256": "e5e34261eba800bc618a58d2352333b3be141bfe0d343d8e87b6f55a5db5ac63",
+      "after_sha256": "8b2ba9264849ad77644c6f08c94cbac4dd0cf10927d1ef96dc000c61e66aeb8e"
+    },
+    {
+      "file": "qkd_static_kv_pc_path_nc.sv",
+      "before_sha256": "fbbc938cee0cb1ce7c3e658cb0ba1fb09d199535c6e4a453a3ee27c8be789941",
+      "after_sha256": "8af6a269f7324570b9e72eef10ebfec7393eebae89fdd27e8a91a8355685b7de"
+    },
+    {
+      "file": "qkd_kv_pc_chain_station_b.sv",
+      "before_sha256": "48a79c1749349f5770224996c07dfae6d7685eff6f51e3a60b2eb7458ad62eb4",
+      "after_sha256": "b78617a65c0b83c907c9ca010897178e3a1c2d4e25fbd5bca2570d5c98063749"
+    },
+    {
+      "file": "qkd_kv_pc_chain_station_b_p.sv",
+      "before_sha256": "47755f7d74935d7ea8740138ca70ccca5ebd817545797ae2f0994c7926262cd3",
+      "after_sha256": "355573479b55f4b57ee1588170d0a1d1f2df4dd25223425c99e518af6725033b"
+    },
+    {
+      "file": "qkd_static_kv_pc_path_fan_nc_b.sv",
+      "before_sha256": "de4f16218945f60750fbd64bc5e16b9835fa75f81ea0839a82727f7836599d79",
+      "after_sha256": "31ca88dad084b0851c314238193c6f631cc75698bfb45c32513bb5504149e8fe"
+    },
+    {
+      "file": "qkd_static_kv_pc_path_fan_nc_b_head_p.sv",
+      "before_sha256": "a7d864162ed1c406fd4da97778abd6b9f09defc8ff49cb7b6cddc75c131d6e21",
+      "after_sha256": "b930e98dac3ec96851c9a2b12409d8c5c026efe31880b94d61b8964fe26e8f43"
+    },
+    {
+      "file": "qkd_embedding_static_return_head.sv",
+      "before_sha256": "ff824c5232e654f5af107c54416778a79481c30e420d8934801c3800033e61ea",
+      "after_sha256": "36d7943b7b7ec005b3b3378a95f9bf433cdd2d440080a74fd333967058262268"
+    },
+    {
+      "file": "qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+      "before_sha256": "e38a80024ea26b60f8bdbc2619a202dc689bfd8881f028ca711021d0275c8497",
+      "after_sha256": "2fab4ca52ed74e7588c2ccb33cc9dc4fb3d34f1229c14e07b2178ac260ebcab2"
+    },
+    {
+      "file": "qkd_kvs_pc_h_head_p.sv",
+      "before_sha256": "ba00ac889056a2efb7990d523d569b4c8f0b83ab73bb102602fbd041cfa5f8cf",
+      "after_sha256": "9974c16a4399311e9f626ce2dbcd0096002f0bd4ae6190124aebcda39256d01c"
+    },
+    {
+      "file": "ot_kvpc_pin_ff.sv",
+      "before_sha256": null,
+      "after_sha256": "37ad509adf7b3d5bbd2676cd8df7d1e9e143985878b945d2cc7fcd885cf2bc67"
+    }
+  ],
+  "helpers": {
+    "kvspc_face_ports.py": "d6bf4500df4bce8998a44f34faa7d3ce747dc0fcae0df8032f1310ca9cb19bad",
+    "kvspc_private_ports.py": "a759a1cffa7a5a524400e832a4881a8ff1687b619aa298b92f2f6253f9cbf7cd"
+  },
+  "source_dates": {
+    "ko": "+1 core edge per KC station; local command decode unchanged",
+    "upstream_fi": "+1 observation edge per traversed PC; local faults unchanged",
+    "P3": "+1 on seven selected fault observations",
+    "P4": "+1 per non-head forward hop; local decode unchanged",
+    "P1_P2_P3b_P5_P7": "0 cycles",
+    "P6": "+1 strap settle edge after change; real die straps constant"
+  },
+  "actual_hhp_four_pc_dates": {
+    "basis": "Actual bound ki chain external->pc3->pc2->pc1->head0; fi chain head0->pc1->pc2->pc3",
+    "command_extra_edges_from_same_parent_boundary": {
+      "head0": 3,
+      "pc1": 2,
+      "pc2": 1,
+      "pc3": 0
+    },
+    "return_forward_extra_edges_to_head0": 3,
+    "upstream_head_fault_extra_edges_at_pc3_fo": 3,
+    "warning": "These are cumulative relative dates, not a regenerated full programme. Extend through real cross-partition hops before fixed calendar adoption."
+  },
+  "adoption": "HOLD: complete derived source/clock/port/parameter closure, fixed programme/ownership date join and full-variant proof still required. Do not apply physical helper bodies a second time after extraction of this source. No r27c view substitution or signed-parent claim."
+}
