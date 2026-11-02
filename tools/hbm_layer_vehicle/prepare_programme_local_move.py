@@ -20,8 +20,7 @@ STATUS=['w_u_col_sfu_Q_active','w_u_col_sfu_Q_ready','w_u_col_sfu_Q_fault',
         'w_u_sfup_Q_q1_programme_done','w_u_sfup_Q_q1_fault']
 FORWARD=[('cfg_v',1,'w_u_hleaf_Q_b_cfg_v[0]'),('cfg_target',8,'w_u_hleaf_Q_b_cfg_target[7:0]'),
          ('cfg_addr',12,'w_u_hleaf_Q_b_cfg_addr[11:0]'),('cfg_data',256,'w_u_hleaf_Q_b_cfg_data[255:0]'),
-         ('desc_v',1,'w_u_hleaf_Q_b_desc_v[0]'),('launch_v',1,'w_u_hleaf_Q_b_launch_v[0]'),
-         ('old_hub_rst_n',1,'rst_n'),('old_r10_rst_n',1,'rst_n_t352')]
+         ('desc_v',1,'w_u_hleaf_Q_b_desc_v[0]'),('launch_v',1,'w_u_hleaf_Q_b_launch_v[0]')]
 
 
 def close_at(s, pos):
@@ -119,7 +118,7 @@ def move_pair(hub, bod, region):
     for n,w,x in FORWARD[:6]:
         if cp[n]!=x:raise ValueError('selected collar ingress changed '+n)
     target=118 if region=='NW' else 119
-    forward=FORWARD[:-1]+[('old_r10_rst_n',1,rp['rst_n'])]
+    forward=FORWARD
     if not re.search(r'S_u_col_sfu_Q_tgt\s*=\s*8\x27b'+format(target,'08b'),hub):raise ValueError('frozen target default changed')
     if 'w_u_col_sfu_Q_' in bod or 'w_u_sfup_Q_q1_' in bod:raise ValueError('destination already contains programme producers')
     decls=re.findall(r'^\s*wire\s+\[[^\]]+\]\s+(?:w_u_col_sfu_Q_\w+|w_u_sfup_Q_q1_\w+)\s*;',hub,re.M)
@@ -142,14 +141,14 @@ def move_pair(hub, bod, region):
         _,_,binface=call(bod,'u_bin_'+old)
         if expression_ports(binface).get('W')!=str(w):raise ValueError('actual command/IO capture width changed')
         binface=port(binface,'d',out+f'[{w-1}:0]');binface=port(binface,'ea',out+f'[{w}]');bod=replace_call(bod,'u_bin_'+old,binface)
-    hub=change_header(hub,OUTS+[HFAULT],['output wire [281:0] prog_move_ingress_o','input wire [5:0] prog_move_status_i'])
-    bod=change_header(bod,[CTRL,IO,FAULT],['input wire [281:0] prog_move_ingress_i','output wire [5:0] prog_move_status_o'])
+    hub=change_header(hub,OUTS+[HFAULT],['output wire [279:0] prog_move_ingress_o','input wire [5:0] prog_move_status_i','output wire [1:0] prog_move_resets_o'])
+    bod=change_header(bod,[CTRL,IO,FAULT],['input wire [279:0] prog_move_ingress_i','output wire [5:0] prog_move_status_o','input wire [1:0] prog_move_resets_i'])
     # Existing source identities become local wires only in the explicit changed ABI.
     local=['    wire [1742:0] '+OUTS[0]+';','    wire [471:0] '+OUTS[1]+';','    wire [1:0] '+FAULT+';']+decls+qdecls
-    local+=['    wire [280:0] prog_ingress_q;','    wire prog_ingress_eq;',
-            '    wire prog_old_hub_rst_n = prog_ingress_eq && prog_ingress_q[279];',
-            '    wire prog_old_r10_rst_n = prog_ingress_eq && prog_ingress_q[280];',
-            st('u_prog_move_ingress_i',281,'prog_move_ingress_i[280:0]','prog_move_ingress_i[281]','prog_ingress_q','prog_ingress_eq')]
+    local+=['    wire [278:0] prog_ingress_q;','    wire prog_ingress_eq;',
+            '    wire prog_old_hub_rst_n = prog_move_resets_i[0];',
+            '    wire prog_old_r10_rst_n = prog_move_resets_i[1];',
+            st('u_prog_move_ingress_i',279,'prog_move_ingress_i[278:0]','prog_move_ingress_i[279]','prog_ingress_q','prog_ingress_eq')]
     shift=0;mapping=[]
     for name,width,expr in forward:
         sel=f'prog_ingress_q[{shift+width-1}:{shift}]';mapping.append(dict(field=name,lsb=shift,width=width,actual_source=expr))
@@ -157,7 +156,7 @@ def move_pair(hub, bod, region):
             if name in ('cfg_v','desc_v','launch_v'):sel='(prog_ingress_eq && '+sel+')'
             collar=port(collar,name,sel)
         shift+=width
-    assert shift==281
+    assert shift==279
     collar=port(collar,'rst_n','prog_old_hub_rst_n');collar=port(collar,'tgt',f"8'd{target}")
     r10=port(r10,'rst_n','prog_old_r10_rst_n')
     local+=[collar,r10,*moved,faultbin,
@@ -166,7 +165,8 @@ def move_pair(hub, bod, region):
     # Only actual used status wires remain driven in the old hub. Unused declarations are harmless and unobserved.
     hb=['    wire [4:0] prog_status_q;','    wire prog_status_eq;',
         st('u_prog_move_status_i',5,'prog_move_status_i[4:0]','prog_move_status_i[5]','prog_status_q','prog_status_eq'),
-        st('u_prog_move_ingress_o',281,'{'+', '.join(x for _,_,x in reversed(forward))+'}','rst_n','prog_move_ingress_o[280:0]','prog_move_ingress_o[281]')]
+        st('u_prog_move_ingress_o',279,'{'+', '.join(x for _,_,x in reversed(forward))+'}','rst_n','prog_move_ingress_o[278:0]','prog_move_ingress_o[279]')]
+    hb+=['    assign prog_move_resets_o = {'+rp['rst_n']+', rst_n};']
     hb+=['    assign '+name+f' = prog_status_q[{i}];' for i,name in enumerate(STATUS)]
     hub=add_body(hub,'\n'.join(hb))
     return hub,bod,dict(region=region,target=target,forward_fields=mapping,return_status=STATUS,old_control_IO_faces_preserved=4,old_fault_faces_preserved=2)
@@ -189,9 +189,10 @@ def top_pair(top,region,stages,status_stages):
         for i in range(1,n-1):
             lines.append(st(f'u_prog_move_{region}_{tag}_{i}',width,names[i-1]+f'[{width-1}:0]',names[i-1]+f'[{width}]',names[i]+f'[{width-1}:0]',names[i]+f'[{width}]',rst='rst_n',clk=hp['clk']))
         return names[0],names[-1]
-    a,b=path('ingress',281,stages);c,d=path('status',5,status_stages)
-    hub=append_ports(hub,{'prog_move_ingress_o':a,'prog_move_status_i':d})
-    bod=append_ports(bod,{'prog_move_ingress_i':b,'prog_move_status_o':c})
+    a,b=path('ingress',279,stages);c,d=path('status',5,status_stages)
+    reset_wire=f'prog_move_{region}_resets';lines.append(f'    wire [1:0] {reset_wire};')
+    hub=append_ports(hub,{'prog_move_ingress_o':a,'prog_move_status_i':d,'prog_move_resets_o':reset_wire})
+    bod=append_ports(bod,{'prog_move_ingress_i':b,'prog_move_status_o':c,'prog_move_resets_i':reset_wire})
     top=replace_call(top,region+'_hub',hub);top=replace_call(top,region+'_b113',bod)
     return add_body(top,'\n'.join(lines))
 
@@ -249,7 +250,7 @@ def main():
     guards=connection_guard(top,texts)
     (a.out/(topname+'.sv')).write_text(top)
     (a.out/'connection_guard.json').write_text(json.dumps(guards,indent=2)+'\n')
-    result=dict(status='DISABLED_SOURCE_EVENT_NOT_PHYSICALLY_QUALIFIED',enabled=False,SOURCE13_mutated=False,physical_ingress_stages=None,prototype_ingress_stages=a.ingress_stages,prototype_status_stages=a.status_stages,added_native_FF_per_lane=282*a.ingress_stages+6*a.status_stages,added_native_FF_paired=2*(282*a.ingress_stages+6*a.status_stages),added_ingress_edges=a.ingress_stages,added_observer_return_edges=a.status_stages,clock_ps=833,exact_physical_latency=None,new_ingress_payload_bits=281,real_CFG_desc_launch_bits=279,actual_distinct_reset_identity_bits=2,status_bits=5,source_inputs=inputs,records=receipts,cost_baseline='Versus exact SOURCE13: producer state and old wide/fault face banks move, not recreated. Existing absolute parent FF/pin/clock budgets remain unjoined.',launch_latency_note='Ingress I is configuration/descriptor/launch arrival latency. It does not add I to every L730 traversal or every resident programme opcode; actual VM0/COPY/observer issue and fence dates still need model qualification.',physical_new_banks='UNPLACED; source/clock/reset/START/PG/model and parent child views required',native_delay_primitive='ot_dp_st exact selected unchanged',native_delay_sha256=primitive_sha,regional_reset_note='Actual hub and B113 arst_n differ; original native faces retain their respective delivered resets. Two actual hub reset identities are retimed as ingress bits. Any prototype top relay uses the actual top rst_n; physical regional reset/66/START joins remain unqualified.',qualification='No whole-move miter or native programme proof claimed. Actual reset delivery is retimed, epoch gates strobe and reset release; genuine66/START and reset-pending-transaction controls still required.',service_calendar='Actual VM0/COPY/observer/fault and completion dates must account for new ingress/status edges; no programme dates invented',generator='prepare_programme_local_move.py')
+    result=dict(status='DISABLED_SOURCE_EVENT_NOT_PHYSICALLY_QUALIFIED',enabled=False,SOURCE13_mutated=False,physical_ingress_stages=None,prototype_ingress_stages=a.ingress_stages,prototype_status_stages=a.status_stages,added_native_FF_per_lane=280*a.ingress_stages+6*a.status_stages,added_native_FF_paired=2*(280*a.ingress_stages+6*a.status_stages),added_ingress_edges=a.ingress_stages,added_observer_return_edges=a.status_stages,clock_ps=833,exact_physical_latency=None,new_ingress_payload_bits=279,real_CFG_desc_launch_bits=279,actual_distinct_reset_identity_bits=2,new_reset_distribution_FF=None,reset_distribution_physical_cycles=None,status_bits=5,source_inputs=inputs,records=receipts,cost_baseline='Versus exact SOURCE13: producer state and old wide/fault face banks move, not recreated. Existing absolute parent FF/pin/clock budgets remain unjoined.',launch_latency_note='Ingress I is configuration/descriptor/launch arrival latency. It does not add I to every L730 traversal or every resident programme opcode; actual VM0/COPY/observer issue and fence dates still need model qualification.',physical_new_banks='UNPLACED; source/clock/reset/START/PG/model and parent child views required',native_delay_primitive='ot_dp_st exact selected unchanged',native_delay_sha256=primitive_sha,regional_reset_note='Actual hub and B113 arst_n differ; original native faces retain their respective delivered resets. Two actual hub reset identities use distinct explicit delivery ports, never ordinary data capture; their new physical R8 routes remain open. Any prototype top relay uses the actual top rst_n; physical regional reset/66/START joins remain unqualified.',qualification='No whole-move miter or native programme proof claimed. Actual reset assertion identities stay direct and distinct; epoch gates command strobes; genuine66/START and reset-pending-transaction controls still required.',service_calendar='Actual VM0/COPY/observer/fault and completion dates must account for new ingress/status edges; no programme dates invented',generator='prepare_programme_local_move.py')
     (a.out/'event.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:v for k,v in result.items()if k not in ('source_inputs','records')}))
 
 if __name__=='__main__':main()
