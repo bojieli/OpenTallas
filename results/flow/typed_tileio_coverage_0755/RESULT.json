@@ -1,0 +1,198 @@
+{
+ "schema": "opentallas.typed_static_coverage_diagnostic.v1",
+ "status": "DECLARED_STRAP_ONLY_NATIVE_CONES",
+ "input_manifest_sha256": "9cb41a0c418c6b0655e98d52b1ce694f7d9717917d76f2d1fcc88d29fc9584fd",
+ "inputs_sha256": {
+  "6_final.v": "84faebec6157ab4bb45dca2ec6723844227f636ca247aac5b2c73f29389a50d2",
+  "constraint.sdc": "b93aa71ec2a9ae01b6b7a5c674df5489bc6218efb353b055d7cf2abb56d8fed1",
+  "straps.json": "ef65415522a0237b4bb9aaab6a6e11c13977aac306983a27c5ecf9fa422b27a9",
+  "freeze.json": "7ce71461ea1fb0316c2f7dda1b2f69b497fb17c425a9ebc962c753e2bb22b12e",
+  "pins.json": "8d8871ec635f7643ede013019546b98d3214b926df943add4a6470cd2d79abc0",
+  "plan_pins.json": "4d8cf461a9f8013dbfb38be05db5b4be198cec9f1dd33c14da4b211460a15f96",
+  "budget.json": "eb03515f13e26e5657bda574804d18e06c94b897b77a6ad49489842d58d4ead0",
+  "config.mk": "f13df0e9057de70d27d0551099def259cae366dd5861ddb1cca484b96b9f504c",
+  "current_terminal.json": "b638e7b599d943a3c92f4e8ddcd6b940db10826d1293b655a971271a0425afe6",
+  "raw_coverage_tt.log": "492d5ea70b9e2e0b6257f96c9b27eac4decdb2758077fbc62560005734003a2c",
+  "raw_coverage_ff.log": "3ad3965ad6e2d46b40c82951096b6d0a1793cfd0d8f027791255407ddbd4f22c"
+ },
+ "traces": [
+  {
+   "capture": "u_core.b_en$_DFF_P_/D",
+   "launch": "strap_ten[0]",
+   "buffer_path": [
+    "wire37953",
+    "wire37954",
+    "place11566",
+    "wire37956",
+    "place11567",
+    "place11568",
+    "wire37969",
+    "wire7380"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[0]$_DFF_P_/D",
+   "launch": "strap_row0[0]",
+   "buffer_path": [
+    "place11543",
+    "wire7420",
+    "wire37970"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[1]$_DFF_P_/D",
+   "launch": "strap_row0[1]",
+   "buffer_path": [
+    "place11556",
+    "wire37962",
+    "wire7399"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[2]$_DFF_P_/D",
+   "launch": "strap_row0[2]",
+   "buffer_path": [
+    "place11557",
+    "wire7397"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[3]$_DFF_P_/D",
+   "launch": "strap_row0[3]",
+   "buffer_path": [
+    "place11558",
+    "wire37963",
+    "wire7395"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[4]$_DFF_P_/D",
+   "launch": "strap_row0[4]",
+   "buffer_path": [
+    "place11559",
+    "wire7393"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[5]$_DFF_P_/D",
+   "launch": "strap_row0[5]",
+   "buffer_path": [
+    "place11560",
+    "wire37964",
+    "wire7391"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[6]$_DFF_P_/D",
+   "launch": "strap_row0[6]",
+   "buffer_path": [
+    "place11561",
+    "wire37965",
+    "wire7389"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[7]$_DFF_P_/D",
+   "launch": "strap_row0[7]",
+   "buffer_path": [
+    "place11562",
+    "wire37966",
+    "wire7387"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[8]$_DFF_P_/D",
+   "launch": "strap_row0[8]",
+   "buffer_path": [
+    "place11563",
+    "wire37967",
+    "wire7385"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[9]$_DFF_P_/D",
+   "launch": "strap_row0[9]",
+   "buffer_path": [
+    "place11564",
+    "place11565",
+    "wire37968",
+    "wire7383"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[10]$_DFF_P_/D",
+   "launch": "strap_row0[10]",
+   "buffer_path": [
+    "place11544",
+    "place11545",
+    "wire37957",
+    "wire7418"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[11]$_DFF_P_/D",
+   "launch": "strap_row0[11]",
+   "buffer_path": [
+    "place11546",
+    "place11547",
+    "wire37958",
+    "wire7415"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[12]$_DFF_P_/D",
+   "launch": "strap_row0[12]",
+   "buffer_path": [
+    "place11548",
+    "place11549",
+    "wire37959",
+    "wire7412"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[13]$_DFF_P_/D",
+   "launch": "strap_row0[13]",
+   "buffer_path": [
+    "place11550",
+    "place11551",
+    "wire37960",
+    "wire7409"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[14]$_DFF_P_/D",
+   "launch": "strap_row0[14]",
+   "buffer_path": [
+    "place11552",
+    "place11553",
+    "wire37961",
+    "wire7406"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[15]$_DFF_P_/D",
+   "launch": "strap_row0[15]",
+   "buffer_path": [
+    "place11554",
+    "wire7403"
+   ]
+  },
+  {
+   "capture": "u_core.row0_q[16]$_DFF_P_/D",
+   "launch": "strap_row0[16]",
+   "buffer_path": [
+    "place11555",
+    "wire7401"
+   ]
+  }
+ ],
+ "raw_unconstrained": {
+  "tt": 18,
+  "ff": 18
+ },
+ "raw_verdict_unchanged": true,
+ "coverage_gate_changed": false,
+ "parent_tie_qualified": false,
+ "source_qualified": false,
+ "limitation": "Classification only. No parent tie proof, count subtraction, waiver or TT/FF timing pass."
+}
