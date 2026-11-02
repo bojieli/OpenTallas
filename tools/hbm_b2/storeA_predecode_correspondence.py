@@ -17,6 +17,7 @@ def main():
     ap.add_argument('--mapped', type=Path, required=True)
     ap.add_argument('--native', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--prior-verdict', choices=['UNPROVEN','RUNNING'], default='UNPROVEN')
     a = ap.parse_args()
     s, native = a.mapped.read_text(), a.native.read_text()
     cells, drivers = {}, {}
@@ -29,8 +30,11 @@ def main():
                 drivers[ports[q].strip()] = (typ, ports)
     records, hints, assertions, declarations = [], [], [], []
     captured = set()
-    for i in range(287018, 287050):
-        name = f'_{i}_'
+    candidates = sorted(name for name,(typ,_) in cells.items()
+                        if typ.startswith('DFF') and re.fullmatch(r'_\d+_',name))
+    assert len(candidates) == 32, ('expected exact32 unnamed mapped bank predecoders',len(candidates))
+    for name in candidates:
+        i=int(name.strip('_'))
         typ, ports = cells[name]
         assert typ == 'DFFHQNx1_ASAP7_75t_R' and ports['CLK'] == 'store0_clk'
         leaves = set()
@@ -104,7 +108,7 @@ def main():
     receipt = dict(status='EXTRACTED_NOT_SOURCE_EQ', mapped_sha256=hashlib.sha256(s.encode()).hexdigest(),
                    native_sha256=hashlib.sha256(native.encode()).hexdigest(), records=records,
                    native_captures=captures, base='after first actual capture; arbitrary initial states and input D',
-                   original_official_verdict='UNPROVEN', whole_proof_rerun=False)
+                   original_official_verdict=a.prior_verdict, whole_proof_rerun=False)
     (a.out/'correspondence.json').write_text(json.dumps(receipt, indent=2)+'\n')
     print(f'EXTRACTED {len(records)} exact predecoder cubes and {len(captures)} native captures')
 

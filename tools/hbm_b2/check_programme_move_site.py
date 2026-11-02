@@ -20,8 +20,8 @@ def pointbox(p):return [p[0]-CELL[0]/2,p[1]-CELL[1]/2,p[0]+CELL[0]/2,p[1]+CELL[1
 
 def contact_distance(p,b):return max(b[0]-p[0],0,p[0]-b[2])+max(b[1]-p[1],0,p[1]-b[3])
 
-def check(t,xy):
-    x,y=xy;b=[x,y,x+574.56,y+738.72];grown=expand(b,4.32);obstacles=placement_boxes(t)
+def check(t,xy,outline=(574.56,738.72)):
+    x,y=xy;b=[x,y,x+outline[0],y+outline[1]];grown=expand(b,4.32);obstacles=placement_boxes(t)
     body=[dict(name=n,box=list(q))for n,q in obstacles.items()if overlap(grown,list(q))]
     fts=[];nominal=[]
     for s in t.get('ft_slots',[]):
@@ -42,7 +42,7 @@ def check(t,xy):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--plan',type=Path,required=True);p.add_argument('--x',type=float,default=17.28);p.add_argument('--y',type=float,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();plan=json.loads(a.plan.read_text());r=dict(plan=str(a.plan),plan_sha256=hashlib.sha256(a.plan.read_bytes()).hexdigest(),candidate_origin_um=[a.x,a.y],types={name:check(plan['partition_types'][name],[a.x,a.y])for name in ['q_b113','q_b113__physical_v1']},scope='Disabled programme placement planning; no P&R or current-plan mutation')
+    p=argparse.ArgumentParser();p.add_argument('--plan',type=Path,required=True);p.add_argument('--x',type=float,default=17.28);p.add_argument('--y',type=float,required=True);p.add_argument('--width',type=float,default=574.56);p.add_argument('--height',type=float,default=738.72);p.add_argument('--out',type=Path,required=True);a=p.parse_args();plan=json.loads(a.plan.read_text());r=dict(plan=str(a.plan),plan_sha256=hashlib.sha256(a.plan.read_bytes()).hexdigest(),candidate_origin_um=[a.x,a.y],candidate_outline_um=[a.width,a.height],types={name:check(plan['partition_types'][name],[a.x,a.y],[a.width,a.height])for name in ['q_b113','q_b113__physical_v1']},scope='Disabled programme placement planning; no P&R or current-plan mutation')
     a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(r,indent=2)+'\n');print(json.dumps({name:{k:v for k,v in q.items()if k in ['status','canonical_obstacle_count','existing_clock_contact_count','clock_contact_failures']}for name,q in r['types'].items()}))
     return 0 if all(q['status']=='PASS_PLANNING_CONTACTS_ONLY'for q in r['types'].values())else 1
 

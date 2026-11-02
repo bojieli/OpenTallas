@@ -1,0 +1,38 @@
+{
+  "status": "ACTUAL_NATIVE_SYNTH_PASS_SOURCE_EQ_PENDING",
+  "source_commit": "63eef4b8a5f43cf69152650bbb2c80a0f437387d",
+  "actualkit": "intel2:/srv/opentallas-scratch2/claude/codex-programme-native-0448/kits/ot_hgi_sfu_programme_store_r10_6a471c27f403-source_eq",
+  "unit": "oth-ubuntu-2185725-1793623608",
+  "mapped_sha256": "03aca987895b2a03d1b3ea8023252843eac2c13436da16773013ad75ca12d891",
+  "native_SRAM": 44,
+  "stdcells": 69135,
+  "soft_FF": 21930,
+  "soft_FF_master": "DFFHQNx1_ASAP7_75t_R",
+  "FF_source_ownership": {
+    "top": 3923,
+    "leaf0": 1680,
+    "leaf10": 1138,
+    "leaf1": 1680,
+    "leaf2": 1723,
+    "leaf3": 1680,
+    "leaf4": 1680,
+    "leaf5": 1723,
+    "leaf6": 1722,
+    "leaf7": 1621,
+    "leaf8": 1680,
+    "leaf9": 1680
+  },
+  "synth_area_um2": 305809.14224,
+  "native_macro_body_area_um2": 295935.74208,
+  "soft_area_um2": 9873.40016,
+  "face_guard": "PASS rc0",
+  "port_bind": {
+    "missing": 0,
+    "extra": 0
+  },
+  "yosys_runtime_s": 100.5,
+  "yosys_peak_memory_KB": 357868,
+  "openroad_post_synth_peak_memory_KB": 511096,
+  "PNR": false,
+  "parent_area_or_clock_reservation": false
+}
