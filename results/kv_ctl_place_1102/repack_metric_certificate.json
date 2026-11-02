@@ -1,0 +1,40 @@
+{
+  "pin": {
+    "pins_registered": 6848,
+    "pins_to_macro": 0,
+    "pins_exempt": 1,
+    "pins_unregistered": 0,
+    "pins_land_ring": 0,
+    "unregistered_sample": [],
+    "pin_reg_p50": 7.58,
+    "pin_reg_p90": 15.62,
+    "pin_reg_max": 149.32,
+    "pin_reg_worst": [
+      "149.3 por_n",
+      "146.7 o_attn[77]",
+      "146.0 o_attn[78]",
+      "145.8 o_attn[96]",
+      "145.3 o_attn[97]"
+    ]
+  },
+  "clock": {
+    "clock_sinks": 18774,
+    "unrooted_sinks": 0
+  },
+  "macro": {
+    "cells_on_macros": 0,
+    "cells_on_macros_sample": [],
+    "macro_off_grid": 0,
+    "macro_off_lattice": 0,
+    "macro_lattice_resid_max": 0.0
+  },
+  "reach": {
+    "r2r_memory_instances": 6,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 391.61,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 16868,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_leaf.u_lprg.pos_ok_q$_DFF_P_ -> o_attn\\[67\\]$_DFF_PN0_"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "scope": "all actual FFs jointly movable; every reachable incoming/outgoing sequential edge included; current other sequential endpoints fixed; public150/corebounds; minimum weighted public+internal displacement; macro keepouts, overlap, row grid and global pin-p90 are checked after LP, not assumed",
+  "success": true,
+  "status": 0,
+  "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "FFs": 18768,
+  "edges": 405700,
+  "constraints": 1756291,
+  "reach_target": 385.0,
+  "public_target": 145.0,
+  "keepout_planes": 147,
+  "public_FFs_over30": 581,
+  "public_pins_over30": 581,
+  "macro_halo_hits": 589
+}

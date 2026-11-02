@@ -1,0 +1,29 @@
+{
+  "public_edges": 34583,
+  "over705": 0,
+  "worst": {
+    "port_L1_um": 626.9759999999999,
+    "minimum_FF_L1_lower_bound_um": 326.9759999999999,
+    "source_FF": "u_leaf.u_fanr.bw_p_reg\\[0\\]$_DFF_PN0_",
+    "capture_FF": "o_hroot_ES\\[540\\]$_DFF_PN0_",
+    "source_pin": {
+      "k": 1229,
+      "name": "embgw__bw[0]",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M5",
+      "x": 60.12,
+      "y": 371.424
+    },
+    "capture_pin": {
+      "k": 4087,
+      "name": "o_hroot_ES[540]",
+      "io": "OUTPUT",
+      "sig": "SIGNAL",
+      "layer": "M4",
+      "x": 371.424,
+      "y": 55.752
+    }
+  },
+  "witnesses": []
+}
