@@ -1,0 +1,9 @@
+# Remaining T51 NW source ownership: FT3 DATA cone
+
+Normal4GB/1CPU Intel2 classification-only unitoth-ubuntu-1337328-1793636672 terminal0. No FF or comb pose changed; no new geometry/capacity model, GEN or CAD. The original source pin-role/Liberty ff semantics, exact264reset-binding grammar and native positive/negative comparison remain unchanged.
+
+Exact selected source scope:515ft3_i input ports,2679existing FT3 ring FFs and515existing station0 FFs. The2679source scope includes two existing status FFs atY1218.24LL (ready and u_fault_port/q); they are functional first-register boundaries for ownership, not a motion proposal, and future geometry must keep those two fixed as for FT2.
+
+9289reachable native combinational cells produce9285exclusive DATA-owned cells,752.94036um². The set contains8770cells inside the private FT3 hierarchy and515anonymous source-data buffers; hierarchy alone is not the ownership rule. Four shared/nonowned-frontier cells remain held: twoFIRM collector AND2x4 and the twoFT3 INV drivers of external collector ready/fault state. All447reset/START infrastructure cells and the full actual backward clock cone remain held. No unresolved/combinational-cycle frontier.
+
+The prior single joint FT2 model149342075's unchanged NWcut at240/1207.5 has436.605weighted crossings from FT3 drivers,46.5fromft8stage4 and0movedFT2/DATA drivers. This packet establishes narrow ownership before another design step. The current FT3 FF field spansX171.774..252.72/Y1099.44..1218.51; private DATA spansX136.998..280.044/Y964.17..1222.56. A physical proposal must jointly preserve actual per-port bit mapping, sourceclock root/radius/load, stages/cycles, all public pin/all-slot150 semantics and fixed body/TAP/PG/other-band contracts. No broad prefix sweep, source/PG/clock qualification transfer or physical release.

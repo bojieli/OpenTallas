@@ -1,0 +1,9 @@
+{
+  "patterns": 264,
+  "grammar": "all source patterns exactly *ASCII_literal[./]*; glob membership equals literal[./] regex search",
+  "native_positive_count": 264,
+  "all_native_positives_compared": true,
+  "native_negative_samples_compared": 132,
+  "source_FF": 52044,
+  "policy_changed": false
+}
