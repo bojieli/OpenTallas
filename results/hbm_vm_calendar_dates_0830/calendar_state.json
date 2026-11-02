@@ -1,0 +1,43 @@
+{
+ "baseline": {
+  "read": 88,
+  "write": 85,
+  "lwb": 15,
+  "fields": {
+   "scalar_addr_pipe": 8544,
+   "four_region_meta": 15664,
+   "four_write_expected": 696,
+   "write_q": 2248,
+   "drain_expected": 8,
+   "drain_sector_q": 128,
+   "drain_round_q": 8,
+   "fault_state": 5
+  },
+  "VM_FF": 27301,
+  "CTL_direct_FF": 8933,
+  "CTL_relay_FF": 6,
+  "CTL_total_FF": 36240
+ },
+ "candidate": {
+  "read": 88,
+  "write": 85,
+  "lwb": 15,
+  "fields": {
+   "scalar_addr_pipe": 8544,
+   "four_region_meta": 15664,
+   "four_write_expected": 696,
+   "write_q": 2248,
+   "drain_expected": 8,
+   "drain_sector_q": 128,
+   "drain_round_q": 8,
+   "fault_state": 5
+  },
+  "VM_FF": 27301,
+  "CTL_direct_FF": 8933,
+  "CTL_relay_FF": 6,
+  "CTL_total_FF": 36240
+ },
+ "VM_delta_FF_per_CTL": 0,
+ "paired_CTL_delta_FF": 0,
+ "qualification": "Exact selected declarations, not mapped cells. Candidate dates are caller supplied and unadopted. No blind addition of physical distance minima to existing88/85 calendar."
+}
