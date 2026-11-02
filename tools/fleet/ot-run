@@ -909,6 +909,15 @@ def crit_job():
     return os.environ.get("OT_RUN_CRIT", "") not in ("", "0")
 
 
+# FLOW-21 SSHRETRY 11-01 (COORD 09:2x (3)): sshd resets new connections under load (intel2 load 380: "kex_exchange_
+# identification: read: Connection reset by peer"); the request never reached ot-heavy, yet ot-run ended NOT RUN 255 and
+# canary clients died.  A connection that failed before any remote output is retried with backoff, then fails as before.
+SSH_CONNFAIL = ("kex_exchange_identification", "Connection reset by", "Connection timed out", "Connection refused",
+                "Connection closed by", "banner exchange", "ssh_exchange_identification")
+SSH_RETRY_BACKOFF_S = tuple(int(x) for x in os.environ.get("OT_RUN_SSH_BACKOFF", "5,15,45").split(",") if x)
+LAST_RUN = dict(connfail=False)
+
+
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None, disk=None):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
@@ -926,7 +935,8 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         + (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
         + inner + f'; rc=$?; echo "OT_RUN_EXIT {tag} $rc" >&2; exit $rc'
     p = subprocess.Popen(["ssh", "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=6", host, remote], stderr=subprocess.PIPE)
-    state = dict(started=False, rc=None, nocd=False, unit="?", refused=None)
+    state = dict(started=False, rc=None, nocd=False, unit="?", refused=None, connfail=False)
+    LAST_RUN["connfail"] = False
     unblock = lambda: signal.pthread_sigmask(signal.SIG_UNBLOCK, SIGS)
 
     def stop(sig, who):
@@ -967,6 +977,8 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
             state["refused"] = ("root fs above %d%% (DISK GUARD)" % ROOTFS_MAX_PCT if "ROOTFULL" in ln
                                 else "scratch disk below its floor / new run dir could not be placed on it (root fs never used)")
             continue
+        if not state["started"] and any(k in ln for k in SSH_CONNFAIL):
+            state["connfail"] = True
         if "OT_RUN_START" in ln and tag in ln:
             state["started"] = True
             state["unit"] = next((w for w in ln.split() if w.startswith("oth-")), "?")
@@ -989,6 +1001,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         return (ssh_rc or 255), False
     why = state["refused"] if state["refused"] else f"cannot cd to {d}" if state["nocd"] else f"ot-heavy exit {state['rc']}" if state["rc"] is not None \
         else f"ssh ended with status {ssh_rc} before the command was admitted"
+    LAST_RUN["connfail"] = state["connfail"] and ssh_rc == 255 and state["rc"] is None
     if not (quiet_notrun and state["rc"] == 75):
         say(f"ot-run: NOT RUN on {host}: {why}")
     return (state["rc"] or ssh_rc or 255), False
@@ -1081,6 +1094,7 @@ def main():
         trigger_sweep()
     t0 = time.time()
     first = True
+    conn_tries = 0
     previously_qualified = set()
     pinned = hosts is not HOSTS
     die = "OT_HEAVY_PRIO=die" in os.environ.get("OT_RUN_PRIO_ENV", "")
@@ -1171,6 +1185,14 @@ def main():
         if len(ok) > 1 or (spill and d) or not pinned:
             wait = REQUEUE_S if left is None else min(REQUEUE_S, left)
         rc, ran = run(best, mem, cmd, d, wait, quiet_notrun=(wait != left), disk=disk)
+        if not ran and LAST_RUN["connfail"] and conn_tries < len(SSH_RETRY_BACKOFF_S):
+            b = SSH_RETRY_BACKOFF_S[conn_tries]
+            conn_tries += 1
+            print(f"ot-run: RETRY {conn_tries}/{len(SSH_RETRY_BACKOFF_S)}: ssh to {best} failed before admission; "
+                  f"placing again in {b} s", file=sys.stderr)
+            time.sleep(b)
+            first = False
+            continue
         if ran or rc != 75 or wait == left:
             sys.exit(rc if ran else (rc or 255))
         print(f"ot-run: REBALANCE: not admitted on {best} within {wait} s; placing again", file=sys.stderr)

@@ -68,9 +68,34 @@ def live_dies(root, now=None):
         m = json.loads(Path(d).read_text())
         if is_ab_candidate(m) or mutable_source(m):
             continue
+        if m.get("client_unit") and client_never_started(run, m["client_unit"]):
+            continue
         if m.get("client_unit") or now - run.stat().st_mtime < LIVE_S:
             out.add(m["spec"]["die"])
     return out
+
+
+NEVER_STARTED = "ot-run: NOT RUN"
+MAY_RUN = ("ot-run: RAN on", "ot-run: NOT COMPLETED", "STILL RUNNING", "CANARY_FLOW_RC")
+
+
+def unit_active(unit):
+    r = subprocess.run(["systemctl", "--user", "is-active", unit], capture_output=True, text=True)
+    return r.stdout.strip() in ("active", "activating", "reloading", "deactivating")
+
+
+def client_never_started(run, unit):
+    """FLOW-21 CANSTALL 11-01: a client whose ot-run ended NOT RUN (e.g. sshd kex reset under load 380: "ssh ended
+    with status 255 before the command was admitted") left no worker anywhere and never writes canary.json; counting
+    it live blocked that die's canaries on every later main (qwen_compute/s81_head none after 12:07 for 3.5 h).
+    Positive evidence only: the client unit is gone AND its log shows NOT RUN and no started/completed work."""
+    log = run / "otrun.log"
+    if not log.is_file():
+        return False
+    text = log.read_text(errors="replace")
+    if NEVER_STARTED not in text or any(k in text for k in MAY_RUN):
+        return False
+    return not unit_active(unit)
 
 
 def source_lock_file(source):
