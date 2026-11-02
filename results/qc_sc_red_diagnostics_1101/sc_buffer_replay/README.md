@@ -1,0 +1,7 @@
+Fresh route and TT/FF replay after actual three-existing-buffer geometry repair
+
+Unit1138584-1793613938 native route finished fullCLOCK+SIGNAL50,2390nativeCLOCK,370320routednets,52s,overflow0/0/0, allmaster/pose/graph/sourcepin guardsPASS. Observer then failed on omitted clk_freeze.tcl dependency. The honest routed retained ODB was saved BEFORE the observer. Failure log/rc preserved. Observer-only recovery unit1175631-1793614158 read that retained ODB (NO reroute/repair) and completed coverage370320connected/allGUIDEd including2390CLOCK/missing0/SPECIAL0,PG751910/open0. Subsequent fresh standardpairedTTFF diagnostic exit0.
+
+TT setup-388.81ps/hold-166.20ps/mean335.32ps versus baseline setup-411.17: +22.36ps. FFsetup-221.23ps/hold-163.48ps/mean287.28ps versus baseline hold-160.53: -2.95ps. Positive572pinregs and actualglobalroutingRC eachcorner. Raw mean-band flags remain, canonicalMETH defines them asplanningtargets; no newabsolute gate orcontractchange. No CTS/DRT/signoff/parentadoption. Static threeBUF placement improves hop bound but does not close timing; no prediction upgraded to measuredPASS.
+
+Fresh readonly worstpathdiagnostic1230831-1793614575 active at this checkpoint. Initial two admission attempts NOTRUN atEPYC2 scratch<50floor, noCAD/no waiter. Ownterminal exact-identical ODB dedup reclaimed10.86GB preservingallpaths/content, restoredfloor62GB; nooverride/foreignactivefiles. Native runtime output at /srv/opentallas-scratch2/claude/codex-qc-sc-red-1101/sc_buffer_replay.
