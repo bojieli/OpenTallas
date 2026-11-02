@@ -1,0 +1,29 @@
+{
+  "status": "PREPARED_NOT_DISPATCHED",
+  "utc": "2026-11-02T06:40:02.086597+00:00",
+  "source": "/srv/opentallas-scratch2/claude/die-s81-47-hist-lec-1101/rb2/kits/dsdv_bksel_q_signed_source",
+  "exact_files_compared": 28,
+  "mismatches": [],
+  "lec051_sha256": "341f0a0bd8609bfc001cbd7f5f3c10d12d424ff02daa72d81b6adb7582eacd41",
+  "legacy_engine_sha256": "2d45c7d81e77b24362dd5f535b46131e806ce0cce2aa402c3262e1bd879924e6",
+  "reset_contract_gate": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/srv/opentallas-scratch2/claude/codex-hist051-2245/kit/reset_contract.json",
+      "die": "s81",
+      "edges": 64,
+      "assert_edges": 66,
+      "receipt": "/srv/opentallas-scratch2/claude/codex-hist051-2245/kit/reset_contract/receipt.txt"
+    },
+    "used": 64,
+    "debug_overrides": {
+      "OT_LEC_RAW_BASE_STEPS": "2"
+    }
+  },
+  "missing_PROVENANCE": true,
+  "native_stub_metadata_present": false,
+  "scope": "Exact same RTL/netlist parent hist checker continuation only; no new geometry/childbody qualification",
+  "dispatch": "HOLD ROOT authorization AND both legacyrb2/rb4 terminal; no callback dispatched",
+  "rawbase2": "DEBUG finite-prefix proof, not source assumption or contract rewrite"
+}
