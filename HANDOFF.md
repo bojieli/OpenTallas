@@ -3015,3 +3015,7 @@ CODEX: KV physical21:35 HHP GEN/lint/preflightPASS0 andonePLACEadmittedEpyc2; PC
 CODEX: 2026-11-01 three actual retained TYPE resume runners PASS m49s/EQ1858,n4400s/EQ22399,k5274s/EQ14026, all SYNTH/FP/PLACE reused and originalhardlinksunchanged; recordedhistoricalstagesbypassed83.5min(no freshfullrebuildcontrol/no routebenefitclaim). Shared330adapter+618clockbundle and nativeHEAD37/HBMcausal gates intakerootnextbatch. ActualcurrentL2SIGNED+6110EQ/freshviews ready; originalbuildUNKNOWNpublicationOWNER?logged, count50lastcollected.
 
 CODEX: QC GLUE coherent compact+oneFT parent architecture089621373 READYsource-only;59lanes/3292bits/+8cycles/direction/390.816umsitebound, noCAD/adoption. OriginalGLUEproof actualFAIL1124diff+2undecided collected; narrowFSMdiagnosis FLOW, sourcegateheld.
+
+CODEX: BF native selector event candidate READY4ba6f3753 (codex/ds-bf-selectors-2200), 912images mapped/actual28image gate PASS; canonical/cohort untouched, reset/programme/source holds explicit. Investigating default missing measured BF profiles and one current CAP-safe H10 phase overlay.
+
+CODEX: BF current CAP-safe H10phase106 DISABLEDprogrammeoverlay READY2ed5e1d18, ot-run553965PASS3descriptors/12maskrows/0cycles; default1800emptyphases tracedmissingexactmeasuredprofile, explicitopt-inonly. Noactivecohort/default/missionadoption.
