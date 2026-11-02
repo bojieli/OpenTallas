@@ -245,15 +245,13 @@ def _lpath(a, b, n):
 
 
 def blockages(t, clear=CLEAR_UM):
-    """hard cores and macro leaves (contents with a lef) of a type, grown by `clear`: [(x0, y0, x1, y1)]."""
-    out = []
-    for c in list(t.get("hard_cores", []) or []) + [c for c in t.get("contents", []) or [] if c.get("lef")]:
-        if "origin_um" not in c or "outline_um" not in c:
-            continue
-        (ox, oy), (cw, ch) = c["origin_um"], c["outline_um"]
-        if c.get("orient") in ("R90", "R270", "MXR90", "MYR90"):
-            cw, ch = ch, cw
-        out.append((ox - clear, oy - clear, ox + cw + clear, oy + ch + clear))
+    """Canonical placed obstacle union with the unchanged reset clearance.
+
+    Match clock / G0 / physical placement: apply core track offsets once,
+    retain reuse leaves without LEFs, and keep split-container streets open.
+    """
+    from placement_obstacles import placement_boxes
+    out = list(placement_boxes(t, halo=clear).values())
     # Analog/isolated-PG keepouts are uniform per type, shared with the clock
     # planner. Reset relay cells and wavefront port sites must not reoccupy a
     # domain from which the plan has removed clock taps.
