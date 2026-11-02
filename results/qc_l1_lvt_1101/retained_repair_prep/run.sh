@@ -4,6 +4,7 @@ set -euo pipefail
 echo 'NOT RUN: retained-route capsule awaits ROOT review and explicit scope' >&2
 exit 70
 # Planned native body below, unreachable while PREP-only.
+mkdir -p run/results/asap7/kq_qfd_qc_su_lane_w_l1_w0e61bf/base run/reports/asap7/kq_qfd_qc_su_lane_w_l1_w0e61bf/base
 set +e
 docker run --rm --cpus 4 --memory 32g --memory-swap 32g \
  -v /srv/opentallas-scratch2/claude/codex-qc-l1-lvt-route2-0015:/work:ro \
