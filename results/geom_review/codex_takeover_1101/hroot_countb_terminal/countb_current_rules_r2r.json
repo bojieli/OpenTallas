@@ -1,0 +1,39 @@
+{
+ "metrics": {
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 575.64,
+  "r2r_captures_gt405": 2,
+  "r2r_captures": 22408,
+  "comb_loop_cells": 0,
+  "r2r_worst": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_ -> u_bound.u_u_efault.fault$_DFF_PN0_"
+ },
+ "bad": [
+  {
+   "distance_um": 575.64,
+   "launch": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_",
+   "capture": "u_bound.u_u_efault.fault$_DFF_PN0_",
+   "launch_xy": [
+    1649.862,
+    612.765
+   ],
+   "capture_xy": [
+    1357.182,
+    329.805
+   ]
+  },
+  {
+   "distance_um": 440.316,
+   "launch": "u_bound.u_cland_i_fch_pc_Q_N_q/u_ring.dch\\[0\\].u_dsel/y\\[0\\]$_DFF_P_",
+   "capture": "u_bound.u_bin_i_fch_pc_Q_N_q/q$_DFF_P_",
+   "launch_xy": [
+    870.912,
+    27.674999999999997
+   ],
+   "capture_xy": [
+    1243.998,
+    94.905
+   ]
+  }
+ ]
+}
