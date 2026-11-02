@@ -1,6 +1,6 @@
 from pathlib import Path
 import re,json,hashlib,argparse
-p=argparse.ArgumentParser();p.add_argument('--inputs',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--full',action='store_true');p.add_argument('--inputs',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
 rows=[]
 def sha(s):return hashlib.sha256(s.encode()).hexdigest()
 def prune(s,bus,hi,lo):
@@ -16,6 +16,27 @@ def prune(s,bus,hi,lo):
  return s
 for f in sorted(a.inputs.glob('hbm*.sv')):
  old=f.read_text();s=old;carriers=[]
+ if not ('hub__' in f.name or 'b000' in f.name or 'b100' in f.name):
+  if not a.full:continue
+  if 'b001' in f.name:
+   for bus in ['L14_i','L14_i_q']:s=prune(s,bus,37,35)
+   s=s.replace('#(.W(4127)) u_bin_L14_i','#(.W(4124)) u_bin_L14_i').replace('L14_i_q[34:30]',"{3'b000,L14_i_q[34:30]}")
+  elif 'b102' in f.name:
+   bus='xi_gc_0_leaf_procdff_71558_D__0'
+   for v in [bus,bus+'_q']:s=prune(s,v,7,5)
+   s=s.replace('#(.W(8)) u_bin_'+bus,'#(.W(5)) u_bin_'+bus)
+   s=s.replace('{'+bus+'_q[4:0],',"{3'b000,"+bus+'_q[4:0],')
+  elif 'b010' in f.name or f.name in ['hbm_arch_q_su31.sv','hbm_arch_q_b110__physical_v1.sv']:
+   prefix='L14x1' if 'b010' in f.name else 'L6br0_1' if 'su31' in f.name else 'L6br0_2';w=4127 if 'b010' in f.name else 828;hi,lo=(37,35)if w==4127 else(519,517)
+   for bus in set(re.findall(r'\b'+prefix+r'_\w+',s)):s=prune(s,bus,hi,lo)
+   lines=[]
+   for line in s.splitlines(keepends=True):
+    if 'u_ft_'+prefix+'_o_' in line:line=line.replace('#(.W('+str(w)+'))','#(.W('+str(w-3)+'))')
+    lines.append(line)
+   s=''.join(lines)
+  else:continue
+  assert s!=old,f.name
+  (a.out/f.name).write_text(s);rows.append(dict(module=f.stem,input_sha256=sha(old),output_sha256=sha(s),carriers=[],kind='actual paired consumer or existing relay projection'));continue
  if 'hub__' in f.name:
   nw='_nw' in f.name; ls=[('L160' if nw else 'L160m',4986,0),('L6' if nw else 'L6b',828,1)]
   for lane,w,q in ls:
@@ -39,5 +60,5 @@ for f in sorted(a.inputs.glob('hbm*.sv')):
    line=next(x for x in s.splitlines() if 'u_bout_xo_procdff_71764_Q ' in x);s=s.replace(line,line.replace(alias+'[7:0]',alias+'[4:0]'))
    carriers.append(dict(name=x,old_data=8,new_data=5,dropped=[7,5],epoch=[8,5]))
  (a.out/f.name).write_text(s);rows.append(dict(module=f.stem,input_sha256=sha(old),output_sha256=sha(s),carriers=carriers))
-assert len(rows)==6 and sum(len(r['carriers']) for r in rows)==8
+assert len(rows)==(14 if a.full else 6) and sum(len(r['carriers']) for r in rows)==8
 (a.out/'event.json').write_text(json.dumps(dict(status='DISABLED_SOURCE_PREP_NO_BIND_OR_PHYSICAL_CREDIT',selected_source='frozen SOURCE13 selected_preprocessed.sv',rows=rows,new_cycles=0,added_ff=0,removed_boundary_data_bits=24,removed_ff='not counted until actual mapped synthesis; intermediate capture high3 projections also shrink',holds=['Producer native295a8 full7-source versus frozen SOURCE13 closure join must be exact before activation','Six wrapper re-GEN and full typed ABI/carrier lane pin-plan updates required','Upstream/downstream outside six selected wrappers must consume compact physical vectors before logical zero restore','Clock budgets 311.5/262.6 UNSELECTED; no adopted parent/as-built','New canonical wrapper proofs, pin/clock/PG/native geometry gates NOTRUN']),indent=2)+'\n')

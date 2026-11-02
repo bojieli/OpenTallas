@@ -76,7 +76,10 @@
     "Actual native clock event/budget not adopted: currentG311.5/262.6 versus GEN250/202.5 UNSELECTED",
     "Two q1 contacts need real .504um bridge; two q0 contacts inside proposedBPin",
     "Eight observed parent carriers require explicit3-bit prune and typedG0C event",
-    "No ordinary physical spacing/PG/fill/reach/route/clock gates measured on proposed entry"
+    "No ordinary physical spacing/PG/fill/reach/route/clock gates measured on proposed entry",
+    "Fourteen selectedmodules plusnativeHCOL565 event required; restoredlogical8 must not drive constant pins into separateHCOLmaster",
+    "ActualSOURCE13 logicalendpoints match prospectivefullphysical L6bmSU31/b110 +L14b010 chains; firstedgealiasconcern resolved",
+    "XO71764 actualconsumerb102 proven from901bind; physicaldirect/station pinjoin stillheld"
   ],
   "parent": "Eightobservedcarrierpruningshift higherindices-3/keepdataidentitysites; restorelogical8 onlyafterphysicalcuts, no beforepackzeroexemption",
   "active_clock_entry_um": [
@@ -258,5 +261,19 @@
       "New canonical wrapper proofs, pin/clock/PG/native geometry gates NOTRUN"
     ]
   },
-  "source_origin": "frozen SOURCE13 selected8module extraction joined to actual295a8 head5 via exactreverse/comment-whitespace normalization"
+  "source_origin": "frozen SOURCE13 selected8module extraction joined to actual295a8 head5 via exactreverse/comment-whitespace normalization",
+  "expanded_source_scope": {
+    "selected_modules": 14,
+    "producer_wrapper_count": 6,
+    "paired_consumers": 4,
+    "L14_relay_partitions": 2,
+    "NE_L6bm_relay_partitions": 2,
+    "NW_su31_L5": "unchanged/separate disabled proposal not overwritten",
+    "packing_identity": "8 actualold/newexpression sourcebit projections PASS with retainedbit mutants",
+    "selected_primitive": "4fullwidth cuts \u00d72472edge/stage comparisons=9888 PASS; eachwrongretainedbit mutant9888 differences; selectedot_dp_st data/epoch reset unchanged",
+    "formal": "NOT canonical wholewrapper/nativeHCOL EQ",
+    "nested_physical_boundary": "HCOL q_b567:565 stillconstant in14module logical8consumer reconstruction: explicitlyHELD untiltrue565nativeABI/pins/source qualification",
+    "stage_change": 0,
+    "physical_release": false
+  }
 }

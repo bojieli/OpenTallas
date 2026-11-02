@@ -1,0 +1,38 @@
+[
+  {
+    "module": "hbm_arch_q_b110",
+    "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/bound/hbm_arch_q_b110.sv\" 1",
+    "sha256": "7f122b4e0799ff81ac46e52256a81f12ddeac210a4a8f1ea1f955b2cb1e73158",
+    "relay_ports": [
+      "L6br0_2_i",
+      "L6br0_2_o"
+    ]
+  },
+  {
+    "module": "hbm_arch_q_b110__physical_v1",
+    "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/bound/hbm_arch_q_b110__physical_v1.sv\" 1",
+    "sha256": "67503f370eb879413402fe0494cabd7e4220ea3ab96b0ddd90ddb659957aaaa8",
+    "relay_ports": [
+      "L6br0_2_i",
+      "L6br0_2_o"
+    ]
+  },
+  {
+    "module": "hbm_arch_q_su31",
+    "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/bound/hbm_arch_q_su31.sv\" 1",
+    "sha256": "9b539cb64338c0b76cc6ed06f976050e8ba7649d9bc5119e174a8e5c60ad1310",
+    "relay_ports": [
+      "L6br0_1_i",
+      "L6br0_1_o"
+    ]
+  },
+  {
+    "module": "hbm_arch_q_su31__physical_v1",
+    "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/bound/hbm_arch_q_su31__physical_v1.sv\" 1",
+    "sha256": "568df12fbeb8d46abdade420604f12b40a182799f7b521a41ef02ca6dee1b55e",
+    "relay_ports": [
+      "L6br0_1_i",
+      "L6br0_1_o"
+    ]
+  }
+]
