@@ -1,0 +1,78 @@
+{
+  "status": "DISABLED_NATIVE_INTERNAL_CLOCK_GEOMETRY_PREP",
+  "source": "Exact0525 scalar clk graph; frozen candidate8 native rows and actual GEN-snapped macro geometry",
+  "outline_um": [
+    604.8,
+    803.52
+  ],
+  "public_clock_inputs": 1,
+  "entry": {
+    "clk": {
+      "rect_um": [
+        350.112,
+        401.52,
+        350.16,
+        402.0
+      ],
+      "macro_halo_um": 4.32,
+      "pg_spacing_guard_um": 0.072,
+      "source_role": "Actual scalar source clock"
+    },
+    "rst_n": {
+      "rect_um": [
+        350.304,
+        401.52,
+        350.352,
+        402.0
+      ],
+      "macro_halo_um": 4.32,
+      "pg_spacing_guard_um": 0.072,
+      "source_role": "Actual delivered programme reset input; no reset/START alias"
+    }
+  },
+  "entry_island_um": [
+    345.816,
+    397.44,
+    354.456,
+    406.08
+  ],
+  "native_sinks": {
+    "FF": 20842,
+    "SRAM": 44,
+    "total": 20886
+  },
+  "regional_root_count": 32,
+  "max_regional_load": 653,
+  "max_full_pin_L1_um": 219.9989999999999,
+  "regional_design_target": 1200,
+  "regional_hard_planning_cap": 1500,
+  "regional_radius_um": 220,
+  "root_reservation": "One real BUFx24 landing per region; downstream CTS cells/PG and electrical fanout unqualified, not a single1500-sink driver claim",
+  "structured_topology": "Single primary clk -> balanced native CTS branching -> these regional local CTS subtrees. No new public ports or source clock splitting. CTS must balance root-to-region street routes; these are placement reserves, not inserted cells.",
+  "budget_ps": {
+    "TT": 250,
+    "FF": 202.5,
+    "setup_uncertainty": 0,
+    "hold_uncertainty": 25,
+    "cross_boundary_hold_uncertainty_each": 12.5
+  },
+  "reset": "Actual r10 rst_n\u2192rs1\u2192rs2\u2192ra_top/ra_leaf; no SRAM reset. Source reset is distinct from collar and B113 parent identities.",
+  "held": [
+    "Actual CTS topology, cell count, root-to-region routing and arrival/skew are not measured",
+    "Exact regenerated kit geometry/PDN and actual PG connectivity",
+    "Current native reset/START source/parent joins",
+    "No PLACE/CTS/GRT/STA authorization from this PREP"
+  ],
+  "fanout_area_model": {
+    "local_leaf_design_target": 32,
+    "local_leaf_buffer_count": 672,
+    "regional_root_buffer_count": 32,
+    "upper_branch_fanout_design_target": 8,
+    "upper_branch_buffer_count": 4,
+    "primary_entry_buffer_count": 1,
+    "reserved_regional_buffer_area_um2": 13.996800000000002,
+    "basis": "Prospective four-tier fanout model: primary -> up to8 regional-root branches -> local32-sink leaf buffers -> FF/SRAM clocks. Count targets are architecture-sizing assumptions, not electrically qualified max fanouts. Exact repeaters/leaf sites and measured delays require normal native CTS.",
+    "prospective_buffer_count_before_wire_repeaters": 709,
+    "all_BUFx24_area_before_wire_repeaters_um2": 310.11660000000006
+  }
+}

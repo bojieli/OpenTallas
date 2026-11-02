@@ -1,0 +1,48 @@
+{
+  "status": "FAIL_ACTUAL_OUTPUT_PIN_220_SCOPE",
+  "max_actual_Y_to_CLK_full_corner_um": 220.8989999999999,
+  "failing_roots": [
+    {
+      "root": "regional_0",
+      "actual_Y_to_CLK_full_corner_um": 220.03499999999985,
+      "centre_metric_um": 219.13499999999988
+    },
+    {
+      "root": "regional_4",
+      "actual_Y_to_CLK_full_corner_um": 220.70899999999975,
+      "centre_metric_um": 219.80899999999974
+    },
+    {
+      "root": "regional_10",
+      "actual_Y_to_CLK_full_corner_um": 220.8989999999999,
+      "centre_metric_um": 219.9989999999999
+    },
+    {
+      "root": "regional_11",
+      "actual_Y_to_CLK_full_corner_um": 220.6059999999997,
+      "centre_metric_um": 219.9979999999997
+    },
+    {
+      "root": "regional_15",
+      "actual_Y_to_CLK_full_corner_um": 220.70900000000046,
+      "centre_metric_um": 219.80900000000048
+    },
+    {
+      "root": "regional_16",
+      "actual_Y_to_CLK_full_corner_um": 220.7090000000007,
+      "centre_metric_um": 219.8090000000007
+    },
+    {
+      "root": "regional_20",
+      "actual_Y_to_CLK_full_corner_um": 220.70900000000088,
+      "centre_metric_um": 219.80900000000094
+    },
+    {
+      "root": "regional_27",
+      "actual_Y_to_CLK_full_corner_um": 220.43899999999917,
+      "centre_metric_um": 219.53899999999925
+    }
+  ],
+  "original_scope": "Centre-to-fullCLK metric remains true; cannottransferit to actualY",
+  "repair": "Isolatedpin0810 sourceY-aware root-siting, same frozen candidate8 sinks"
+}
