@@ -7,11 +7,12 @@ module tb_qwen_native_head_amax_mu;
  reg[1:0] stn_user=0,am_user=0;
  reg[23:0] r_addr=0;reg[511:0] r_d=0;
  reg[8:0] stn_left=0,next_words=0;
+ reg[23:0] stn_dbase=0,next_dbase=0;
  wire stn_pend=(stn_left!=0)&&!(stn_left==1&&r_v);
  // Exact selected logical ctl pending rule; sender mode is never used here.
  always @(posedge ck or negedge rst)
   if(!rst)stn_left<=0;
-  else if(c_stn)stn_left<=next_words;
+  else if(c_stn)begin stn_left<=next_words;stn_dbase<=next_dbase;end
   else if(r_v&&stn_left!=0)stn_left<=stn_left-1;
  wire[3:0] av,empty,fault;
  wire[23:0] ai[0:3];wire[31:0] ax[0:3];wire[1:0] au[0:3];
@@ -40,13 +41,22 @@ module tb_qwen_native_head_amax_mu;
   @(negedge ck);c_stn=0;r_v=0;c_am=1;am_clr=1;am_emit_cmd=0;am_user=2'(u);tick();
  endtask
  task automatic issue(input integer u,input integer words);
-  @(negedge ck);c_am=0;am_clr=0;am_emit_cmd=0;r_v=0;c_stn=1;stn_amax_bit=1;stn_user=2'(u);next_words=9'(words);tick();
+  @(negedge ck);c_am=0;am_clr=0;am_emit_cmd=0;r_v=0;c_stn=1;stn_amax_bit=1;stn_user=2'(u);next_words=9'(words);next_dbase=0;tick();
  endtask
  task automatic beat(input integer vi,input bit change,input integer nu,input integer words,input bit armed);
   @(negedge ck);c_am=0;am_clr=0;am_emit_cmd=0;r_v=1;r_d=rows[vi];
   r_addr=vi<8?24'(16*vi):24'(18944+16*(vi-8));
-  c_stn=change;if(change)begin stn_user=2'(nu);next_words=9'(words);stn_amax_bit=armed;end
-  if(change&&stn_pend)$fatal(1,"illegal STN overlap");
+  c_stn=change;if(change)begin
+   stn_user=2'(nu);next_words=9'(words);stn_amax_bit=armed;
+   case(vi)
+    0:next_dbase=64;4:next_dbase=18944;8:next_dbase=16;
+    1:next_dbase=80;5:next_dbase=18960;9:next_dbase=32;
+    2:next_dbase=96;6:next_dbase=18976;10:next_dbase=48;
+    3:next_dbase=112;7:next_dbase=0;
+   endcase
+  end
+  if(r_addr!==stn_dbase||stn_left!=1)$fatal(1,"illegal one-word STN result address got=%0d descriptor=%0d left=%0d",r_addr,stn_dbase,stn_left);
+  if(change&&!(stn_left==1&&r_v))$fatal(1,"illegal STN overlap");
   inputs=inputs+1;tick();
  endtask
  task automatic emit_user(input integer u);
@@ -64,13 +74,13 @@ module tb_qwen_native_head_amax_mu;
   if(!$value$plusargs("INPUT=%s",dir))$fatal(1,"INPUT required");
   $readmemh({dir,"/checked_scaled_rows.hex"},rows);$readmemh({dir,"/expected_candidates.hex"},gold);
   repeat(6)tick();@(negedge ck);rst=1;quiet(2);
-  clear_user(0);clear_user(1);issue(0,3);
-  beat(0,0,0,0,1);beat(4,0,0,0,1);beat(8,1,1,3,1);
-  beat(1,0,0,0,1);beat(5,0,0,0,1);beat(9,1,2,3,1);
+  clear_user(0);clear_user(1);issue(0,1);
+  beat(0,1,0,1,1);beat(4,1,0,1,1);beat(8,1,1,1,1);
+  beat(1,1,1,1,1);beat(5,1,1,1,1);beat(9,1,2,1,1);
   quiet(6);clear_user(2);
-  beat(2,0,0,0,1);beat(6,0,0,0,1);beat(10,1,3,2,1);
+  beat(2,1,2,1,1);beat(6,1,2,1,1);beat(10,1,3,1,1);
   quiet(6);clear_user(3);
-  beat(3,0,0,0,1);beat(7,1,2,0,0);
+  beat(3,1,3,1,1);beat(7,1,2,1,0);
   quiet(6);
   emit_user(0);emit_user(1);emit_user(2);emit_user(3);quiet(2);
   if(inputs!=11||emits!=4||detected!==3'b111)$fatal(1,"AMAX counts/control causal coverage inputs=%0d emits=%0d detected=%b",inputs,emits,detected);

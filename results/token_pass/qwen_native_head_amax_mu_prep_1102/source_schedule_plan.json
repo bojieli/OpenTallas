@@ -71,7 +71,7 @@
     "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
     "new finite testbench only; module has no instantiated RTL dependencies or floating-point arithmetic helpers"
   ],
-  "edge_convention": "edge numbers are component clock rising edges, drive before edge/sample after NBA; clock833ps with1fsbench precision. Other fields return zero peredge; rst remains asserted/released as scheduled. STN nwords is component metadata; actual MU only sees c_stn/amax/user/pend.",
+  "edge_convention": "EachAMAXdescriptorisoneword;oldlastresultacceptedwitholddbase/user, sameedgec_stncapturesnextdbase/user;6quietedges afteruser1/user2/user3last beforeclear/emit. No targetproductiondate.",
   "actual_user_fields": {
     "STN_user": "cmd[52:51]",
     "STN_amax": "cmd[50]",
@@ -81,307 +81,136 @@
   },
   "events": [
     {
-      "edge": 0,
-      "rst": 0
-    },
-    {
-      "edge": 1,
-      "rst": 0
-    },
-    {
-      "edge": 2,
-      "rst": 1
-    },
-    {
-      "edge": 4,
-      "c_am": 1,
-      "am_clr": 1,
-      "am_user": 0
-    },
-    {
-      "edge": 5,
-      "c_am": 1,
-      "am_clr": 1,
-      "am_user": 1
-    },
-    {
-      "edge": 10,
-      "c_stn": 1,
-      "stn_user": 0,
-      "stn_amax_bit": 1,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
-    },
-    {
-      "edge": 11,
-      "r_v": 1,
-      "result_user_from_preedge_STN": 0,
+      "AMAX_STN_ordinal": 0,
+      "user": 0,
+      "amax": 1,
+      "nwords": 1,
+      "dbase": 0,
       "fixture_vector": 0,
       "r_addr": 0,
-      "source_rows": [
-        0,
-        16
-      ],
-      "c_stn": 1,
-      "stn_user": 0,
-      "stn_amax_bit": true,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
+      "r_idx": 0,
+      "issue": "beforefirstresult",
+      "result": "exact16genuinequalifiedscalars"
     },
     {
-      "edge": 12,
-      "r_v": 1,
-      "result_user_from_preedge_STN": 0,
+      "AMAX_STN_ordinal": 1,
+      "user": 0,
+      "amax": 1,
+      "nwords": 1,
+      "dbase": 64,
       "fixture_vector": 4,
       "r_addr": 64,
-      "source_rows": [
-        64,
-        80
-      ],
-      "c_stn": 1,
-      "stn_user": 0,
-      "stn_amax_bit": true,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
+      "r_idx": 0,
+      "issue": "oldonewordlastresultedge",
+      "result": "exact16genuinequalifiedscalars"
     },
     {
-      "edge": 13,
-      "r_v": 1,
-      "result_user_from_preedge_STN": 0,
+      "AMAX_STN_ordinal": 2,
+      "user": 0,
+      "amax": 1,
+      "nwords": 1,
+      "dbase": 18944,
       "fixture_vector": 8,
       "r_addr": 18944,
-      "source_rows": [
-        18944,
-        18960
-      ],
-      "c_stn": 1,
-      "stn_user": 1,
-      "stn_amax_bit": true,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
+      "r_idx": 0,
+      "issue": "oldonewordlastresultedge",
+      "result": "exact16genuinequalifiedscalars"
     },
     {
-      "edge": 14,
-      "r_v": 1,
-      "result_user_from_preedge_STN": 1,
+      "AMAX_STN_ordinal": 3,
+      "user": 1,
+      "amax": 1,
+      "nwords": 1,
+      "dbase": 16,
       "fixture_vector": 1,
       "r_addr": 16,
-      "source_rows": [
-        16,
-        32
-      ],
-      "c_stn": 1,
-      "stn_user": 1,
-      "stn_amax_bit": true,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
+      "r_idx": 0,
+      "issue": "oldonewordlastresultedge",
+      "result": "exact16genuinequalifiedscalars"
     },
     {
-      "edge": 15,
-      "r_v": 1,
-      "result_user_from_preedge_STN": 1,
+      "AMAX_STN_ordinal": 4,
+      "user": 1,
+      "amax": 1,
+      "nwords": 1,
+      "dbase": 80,
       "fixture_vector": 5,
       "r_addr": 80,
-      "source_rows": [
-        80,
-        96
-      ],
-      "c_stn": 1,
-      "stn_user": 1,
-      "stn_amax_bit": true,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
+      "r_idx": 0,
+      "issue": "oldonewordlastresultedge",
+      "result": "exact16genuinequalifiedscalars"
     },
     {
-      "edge": 16,
-      "r_v": 1,
-      "result_user_from_preedge_STN": 1,
+      "AMAX_STN_ordinal": 5,
+      "user": 1,
+      "amax": 1,
+      "nwords": 1,
+      "dbase": 18960,
       "fixture_vector": 9,
       "r_addr": 18960,
-      "source_rows": [
-        18960,
-        18976
-      ],
-      "c_stn": 1,
-      "stn_user": 2,
-      "stn_amax_bit": false,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
+      "r_idx": 0,
+      "issue": "oldonewordlastresultedge",
+      "result": "exact16genuinequalifiedscalars"
     },
     {
-      "edge": 23,
-      "c_am": 1,
-      "am_clr": 1,
-      "am_user": 2
-    },
-    {
-      "edge": 24,
-      "c_stn": 1,
-      "stn_user": 2,
-      "stn_amax_bit": 1,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
-    },
-    {
-      "edge": 25,
-      "r_v": 1,
-      "result_user_from_preedge_STN": 2,
+      "AMAX_STN_ordinal": 6,
+      "user": 2,
+      "amax": 1,
+      "nwords": 1,
+      "dbase": 32,
       "fixture_vector": 2,
       "r_addr": 32,
-      "source_rows": [
-        32,
-        48
-      ],
-      "c_stn": 1,
-      "stn_user": 2,
-      "stn_amax_bit": true,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
+      "r_idx": 0,
+      "issue": "oldonewordlastresultedge",
+      "result": "exact16genuinequalifiedscalars"
     },
     {
-      "edge": 26,
-      "r_v": 1,
-      "result_user_from_preedge_STN": 2,
+      "AMAX_STN_ordinal": 7,
+      "user": 2,
+      "amax": 1,
+      "nwords": 1,
+      "dbase": 96,
       "fixture_vector": 6,
       "r_addr": 96,
-      "source_rows": [
-        96,
-        112
-      ],
-      "c_stn": 1,
-      "stn_user": 2,
-      "stn_amax_bit": true,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
+      "r_idx": 0,
+      "issue": "oldonewordlastresultedge",
+      "result": "exact16genuinequalifiedscalars"
     },
     {
-      "edge": 27,
-      "r_v": 1,
-      "result_user_from_preedge_STN": 2,
+      "AMAX_STN_ordinal": 8,
+      "user": 2,
+      "amax": 1,
+      "nwords": 1,
+      "dbase": 18976,
       "fixture_vector": 10,
       "r_addr": 18976,
-      "source_rows": [
-        18976,
-        18992
-      ],
-      "c_stn": 1,
-      "stn_user": 3,
-      "stn_amax_bit": false,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
+      "r_idx": 0,
+      "issue": "oldonewordlastresultedge",
+      "result": "exact16genuinequalifiedscalars"
     },
     {
-      "edge": 34,
-      "c_am": 1,
-      "am_clr": 1,
-      "am_user": 3
-    },
-    {
-      "edge": 35,
-      "c_stn": 1,
-      "stn_user": 3,
-      "stn_amax_bit": 1,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
-    },
-    {
-      "edge": 36,
-      "r_v": 1,
-      "result_user_from_preedge_STN": 3,
+      "AMAX_STN_ordinal": 9,
+      "user": 3,
+      "amax": 1,
+      "nwords": 1,
+      "dbase": 48,
       "fixture_vector": 3,
       "r_addr": 48,
-      "source_rows": [
-        48,
-        64
-      ],
-      "c_stn": 1,
-      "stn_user": 3,
-      "stn_amax_bit": true,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
+      "r_idx": 0,
+      "issue": "oldonewordlastresultedge",
+      "result": "exact16genuinequalifiedscalars"
     },
     {
-      "edge": 37,
-      "r_v": 1,
-      "result_user_from_preedge_STN": 3,
+      "AMAX_STN_ordinal": 10,
+      "user": 3,
+      "amax": 1,
+      "nwords": 1,
+      "dbase": 112,
       "fixture_vector": 7,
       "r_addr": 112,
-      "source_rows": [
-        112,
-        128
-      ],
-      "c_stn": 1,
-      "stn_user": 2,
-      "stn_amax_bit": false,
-      "stn_pend": 0,
-      "component_STN_nwords": 1
-    },
-    {
-      "edge": 44,
-      "c_am": 1,
-      "am_emit_cmd": 1,
-      "am_user": 0,
-      "expected_candidate": {
-        "user": 0,
-        "vectors": [
-          0,
-          4,
-          8
-        ],
-        "scalar_count": 48,
-        "expected_idx": 11,
-        "expected_val_hex": "410d3210"
-      }
-    },
-    {
-      "edge": 45,
-      "c_am": 1,
-      "am_emit_cmd": 1,
-      "am_user": 1,
-      "expected_candidate": {
-        "user": 1,
-        "vectors": [
-          1,
-          5,
-          9
-        ],
-        "scalar_count": 48,
-        "expected_idx": 30,
-        "expected_val_hex": "41078928"
-      }
-    },
-    {
-      "edge": 46,
-      "c_am": 1,
-      "am_emit_cmd": 1,
-      "am_user": 2,
-      "expected_candidate": {
-        "user": 2,
-        "vectors": [
-          2,
-          6,
-          10
-        ],
-        "scalar_count": 48,
-        "expected_idx": 36,
-        "expected_val_hex": "4119bef9"
-      }
-    },
-    {
-      "edge": 47,
-      "c_am": 1,
-      "am_emit_cmd": 1,
-      "am_user": 3,
-      "expected_candidate": {
-        "user": 3,
-        "vectors": [
-          3,
-          7
-        ],
-        "scalar_count": 32,
-        "expected_idx": 63,
-        "expected_val_hex": "40dd051a"
-      }
+      "r_idx": 0,
+      "issue": "oldonewordlastresultedge",
+      "result": "exact16genuinequalifiedscalars"
     }
   ],
   "expected_candidates": [
@@ -451,5 +280,13 @@
     "MUT5_overlap_fault_caution": "Legal baseline uses stn_pend0 at last edge so does not kill dropped-overlap-fault mutant. Separate invalid overlap control needed."
   },
   "originalbench_caution": "results/rtl/mu_qwen_1018/head/tb_amax_mu.sv has original MUT1..5 intent and sixedge emit guard, but its2nsclock and all-tied stn_pend0 are historical, not new fixture authority. Preserve source module timescale; use exact833ps bench.",
-  "watchdog": "Finite schedule through edge49; bench can source-bound watchdog64edges (>=schedule + reset/drain margin), fatal with user/emits/edge. No host walltime cap."
+  "watchdog": "Finite schedule through edge49; bench can source-bound watchdog64edges (>=schedule + reset/drain margin), fatal with user/emits/edge. No host walltime cap.",
+  "post_data_context": {
+    "user": 2,
+    "amax": 0,
+    "nwords": 1,
+    "dbase": 0,
+    "issue": "oldlastresultedgeofvector7",
+    "result": "outsideAMAXstimulus; usedonlytoconfirmemitusesAMAXuser, notcurrentSTNuser; no stationcompletionclaim"
+  }
 }

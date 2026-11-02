@@ -34,3 +34,12 @@ Final currentSTNuser2/nonamax differs from firstAMAXemituser0, exposing MUT4.
 The clock is an explicit nominal833ps with1fs precision, and the whole finite
 bench has a200cycle watchdog. No production phase/calendar or physical timing
 claim is made. No RTL compilation, elaboration or simulation has run in PREP.
+
+Packet2 corrects descriptor legality: each of the11vectors has its own one-word
+STN with exact original dbase and r_idx0. Same-user replacements are included
+on every disjoint-vector boundary. The bench asserts r_addr equals the latched
+old descriptor base and stn_left equals1 before each result. Same-edge capture
+of the next descriptor leaves the old result attribution unchanged. The final
+nonamax user2 context is a one-word dbase0 command; it produces no AMAX input
+in this boundary fixture, so no station completion is claimed for that context.
+Packet1 remains immutable NOT_RUN_SOURCE_DESCRIPTOR_CORRECTION.

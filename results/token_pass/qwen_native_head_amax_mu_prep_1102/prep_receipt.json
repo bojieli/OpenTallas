@@ -67,5 +67,6 @@
   "user_control": "new STN on old last result edge is legal per actual ctl am_stn_pend = busy&&!sender&&!(left==1&&r_v); nativeMUT2 currentSTN merge differs from carrieduser",
   "emit_control": "finalcurrentSTNuser2 nonamax; emitAMAXuser0 first, nativeMUT4 emitswrongtag",
   "drain": "al0..al4 plusrun merge, lastwordE\u2192mergeE+5;6quietedges beforeemit/clear",
-  "clock": "explicit nominal833ps/1fs component clock; no productionphase claim"
+  "clock": "explicit nominal833ps/1fs component clock; no productionphase claim",
+  "descriptor_legality": "elevenonewordAMAXSTNs, exactdbases0,64,18944,16,80,18960,32,96,18976,48,112; eachr_addr==latcheddbase,stn_left==1;finalnonamaxcontextuser2/dbase0/words1 has noAMAXresult/completionclaim"
 }
