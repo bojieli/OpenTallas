@@ -3452,6 +3452,7 @@ def noreset_classify(L):
                 rst_val[(side, k)] = (None if v not in st else st[v] ^ (lit & 1), first.get(v))
     L.rst_val, L.rst_ports = rst_val, rst_ports
     L.rst_asserted, L._rst_state = rst_asserted, rst_state
+    L.__dict__.pop("_release_states", None)  # derived from the previous native base
     L._rst_stamp = stamp
 
 

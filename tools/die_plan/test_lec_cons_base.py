@@ -160,9 +160,10 @@ def test_changed_reset_pi_projection_cannot_reuse_cached_base(tmp_path,monkeypat
     assert lec.cons_base_check(L,'gold',['ff:u_dut.s0'],[[0]])['covered']
     reset=next(k for k in L.gp if k.startswith('pi:') and 'rn' in k)
     L.gp[reset]^=1
+    L._release_states={'stale': 'old native base'}
     result=lec.cons_base_check(L,'gold',['ff:u_dut.s0'],[[0]])
     assert not result['covered'] and result['values']==[1]
-    assert result['reset_cycles']==1
+    assert result['reset_cycles']==1 and not hasattr(L,'_release_states')
 
 
 def test_failed_refresh_never_publishes_partial_or_old_stamp(tmp_path,monkeypatch):
