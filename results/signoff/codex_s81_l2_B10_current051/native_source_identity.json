@@ -1,0 +1,31 @@
+{
+  "original_build_commit": "UNKNOWN",
+  "finite_recovery_pass": {
+    "paths_read": [
+      "intel2:codex-s81-cohort-1101/logs/gen_dsdv_gunit_l2_A.log",
+      "intel2:codex-s81-cohort-1101/logs/gen_dsdv_gunit_l2.log",
+      "original generation manifest/provenance/source filenames",
+      "current freeze.json/core.json/continuation_source.json/ECO_SOURCE.json/SLEW6_FINISH_SOURCE.json"
+    ],
+    "result": "GEN logs contain kit_hash010bddc740e20d0c/5e25a1869fada727, no git commit; original manifests absent; helper_commit ae6333f75 is later continuation helper only, not original generation. No further archaeology."
+  },
+  "source_comparison": {
+    "comparison_commit": "051340895",
+    "status": "four selected RTL sources byte-identical",
+    "files": {
+      "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv": "1347e8825b1b15439f62e52b03c9cb3f094169854709cf8a8208efaf5310ddb1",
+      "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l2.sv": "3a4024a213feeb618df43226c56a77c69227a8789bf6477f21d64e6aad4169a3",
+      "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv": "5ef19b8bf58472be345bce5e2a6edda0f3bb2514acf1c39defbc9cd0d5524e11",
+      "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    }
+  },
+  "native_hashes": {
+    "6_final.odb": "afaba7beabdd1d1005d7a6591ca44db15d9fc1a5ba1b2185258ef51de352e546",
+    "6_final.spef": "2115a89d613c4c9e49fa6f69b3bcdd16b88e65994775d6e80bddece8f80768e4",
+    "6_final.v": "f84d06702c94cc46fe27b583d892c6ba6940b8875e5731d5177f50ab4f0f9d56",
+    "constraint.sdc": "c49747f35d9745b98a0fdddfff0e4f9e47137b09467a2324a5495b2a6298f338"
+  },
+  "current_status": "SIGNED current051 + ownEQ6110",
+  "counted": false,
+  "publication_authority": "ROOT/OWNER decides reconstructed-current-source kind; original_build_commit stays UNKNOWN"
+}
