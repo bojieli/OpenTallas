@@ -5,6 +5,7 @@ module ot_hbm_hc_tail_static_rest_ce #(
     parameter integer ITERS=20,
     parameter [31:0] HC_EPS=32'h358637bd,
     parameter integer MUT_PRE=0,
+    parameter integer PREDECODE_INDEX=0,
     parameter integer NSTA=0          // die stations on the sk_en hop (plan: 0, hop < 405 um)
 )(
     input wire clk,rst_n,
@@ -36,8 +37,33 @@ module ot_hbm_hc_tail_static_rest_ce #(
     wire p5=active&&age>=P5&&age<P5+8;
     wire p6=active&&age>=P6&&age<P6+8;
     wire p7=active&&age>=P7&&age<P7+8;
-    wire [4:0] i=p1?5'(age-P1):p2?5'(age-P2):p3?5'(age-P3+8):
+    wire [4:0] i_comb=p1?5'(age-P1):p2?5'(age-P2):p3?5'(age-P3+8):
         p4?5'(age-P4):p5?5'(age-P5):p6?5'(age-P6):5'(age-P7);
+    wire [4:0] i;
+    generate if (PREDECODE_INDEX != 0) begin:g_predecode_index
+        // Match the control block's exact nonblocking priority, including
+        // launch+capture and held/inactive ages. The invalid-cycle address
+        // is preserved too, so all unchanged arithmetic sees identical bits.
+        wire [8:0] age_next=launch?9'd1:
+            (active&&age<EREADY+1)?age+9'd1:age;
+        wire active_next=sink_capture?1'b0:launch?1'b1:active;
+        function automatic [4:0] address(input [8:0] a,input act);
+            if(act&&a>=P1&&a<P1+24)address=5'(a-P1);
+            else if(act&&a>=P2&&a<P2+24)address=5'(a-P2);
+            else if(act&&a>=P3&&a<P3+16)address=5'(a-P3+8);
+            else if(act&&a>=P4&&a<P4+24)address=5'(a-P4);
+            else if(act&&a>=P5&&a<P5+8)address=5'(a-P5);
+            else if(act&&a>=P6&&a<P6+8)address=5'(a-P6);
+            else address=5'(a-P7);
+        endfunction
+        reg [4:0] i_q;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)i_q<=5'(0-P7);
+            else i_q<=address(age_next,active_next);
+        assign i=i_q;
+    end else begin:g_comb_index
+        assign i=i_comb;
+    end endgenerate
     wire mv=p1||(p7&&i>=4), av=p2||p3||p5||(p7&&i<4);
     wire [31:0] ma=t[i],mb=p1?s[(i<4)?0:(i<8)?1:2]:32'h40000000;
     wire [31:0] aa=t[i],ab=p2?b[i]:p3?(mx[(i-8)>>2]^32'h80000000):
@@ -115,6 +141,7 @@ module ot_hbm_hc_tail_rest_core_ce #(
     parameter integer SMUT = 0,
     parameter integer CAP  = 289 + ((SMUT == 1) ? 0 : SDIV),   // split Sinkhorn: +1 sink edge
     parameter integer MUT_PRE = 0,
+    parameter integer PREDECODE_INDEX = 0,
     parameter integer NSTA = 0,       // stations on the rest -> sk sk_en hop
     parameter integer MUT_EN = 0,     // bench only: 1 = sk_en one cycle early (must FAIL)
     parameter integer L = 198 + SDIV + CAP + 2
@@ -146,7 +173,7 @@ module ot_hbm_hc_tail_rest_core_ce #(
     reg active, sl, armed; reg [9:0] age, sage;
     wire tv; wire tf;
     reg capture_q;
-    ot_hbm_hc_tail_static_rest_ce #(.MUT_PRE(MUT_PRE), .NSTA(NSTA)) u_tail (.clk(clk), .sk_en(sclk), .sk_en_sk(sk_en_o), .rst_n(rst_n), .launch(launch),
+    ot_hbm_hc_tail_static_rest_ce #(.MUT_PRE(MUT_PRE), .NSTA(NSTA), .PREDECODE_INDEX(PREDECODE_INDEX)) u_tail (.clk(clk), .sk_en(sclk), .sk_en_sk(sk_en_o), .rst_n(rst_n), .launch(launch),
         .mixes(mixes), .bases(bases), .scales(scales), .sink_launch(sl), .sink_capture(capture_q),
         .e_ready(), .result_v(tv), .result(result), .fault(tf),
         .sk_in_e(sk_in_e), .sk_in_ready(sk_in_ready), .sk_out_valid(sk_out_valid), .sk_fault(sk_fault), .sk_y(sk_y));

@@ -1,0 +1,18 @@
+{
+  "source_sha256": "e935ae0390d2887af6a43aabb9c1e4422232ea2afc06537b3fc65258e5d1257c",
+  "scope": "exact production control+address slice; no arithmetic retime",
+  "added_cycles": 0,
+  "added_flops_optin": 5,
+  "parent_activated": false,
+  "physical_qualification": "NOT RUN",
+  "results": {
+    "positive": {
+      "rc": 0,
+      "log": "TAIL_INDEX checks=19928 errors=0 visitedages=199\nTAIL_INDEX PASS\n"
+    },
+    "mutant": {
+      "rc": 1,
+      "log": "DIFF age1 index0/1\nDIFF age2 index1/2\nTAIL_INDEX checks=19928 errors=19928 visitedages=199\nFATAL: /srv/opentallas-scratch/claude/wt/codex-hbm-tail-index-main-1101/results/hbm_tail_index_1101/tb.sv:26: TAIL_INDEX FAIL\n       Time: 201451 Scope: tb\n"
+    }
+  }
+}

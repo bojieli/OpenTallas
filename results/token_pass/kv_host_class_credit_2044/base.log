@@ -1,0 +1,6 @@
+PHYSICAL_ONLY_STALL host=4 ctrl=4 done=4
+PASS_CLASS_CREDIT host=6 ctrl=6 done=6 exact_payload=18 physical_only_stall=12
+- tb_host_class_credit.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 157ns; walltime 0.000 s; speed 429.698 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

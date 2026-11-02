@@ -1222,6 +1222,38 @@ def boot_time():
     return int(m[1]) if m else 0
 
 
+def reservation_ineligible(cmd, cwd, env):
+    """Reservation eligibility only; queued/running job admission and priority are unchanged."""
+    import shlex
+    # Recognize the exact retired nightly dispatcher and inspect its actual defaults.
+    # A pinned ordinary job, or CI with explicit --plan, stays eligible.
+    if len(cmd) >= 3 and os.path.basename(cmd[0]) == "bash" and cmd[1] in ("-lc", "-c"):
+        try:
+            words = shlex.split(cmd[2])
+        except ValueError:
+            words = []
+        for i in range(len(words) - 5):
+            if (words[i] == "cd" and words[i + 1].endswith("/claude/die-ci/wt")
+                    and words[i + 2] == "&&" and os.path.basename(words[i + 3]) in ("python3", "python")
+                    and words[i + 4:i + 6] == ["tools/die_plan/die_ci.py", "run"]):
+                args = words[i + 6:]
+                if (not any(a == "--plan" or a.startswith("--plan=") for a in args) and "--mode" in args and args[args.index("--mode") + 1:] [:1] == ["nightly"]
+                        and "--g2" in args and args[args.index("--g2") + 1:] [:1] == ["all"]):
+                    body = rd(os.path.join(words[i + 1], "tools/die_plan/die_ci.py"))
+                    if ("physical/die_plan/hbm_arch/B2l/die_plan.json" in body
+                            and "physical/die_plan/s81/die_plan.json" in body and "DIES = [" in body):
+                        return "retired nightly dispatcher still selects legacy default plans"
+    try:
+        disk = int(env.get("OT_HEAVY_DISK_GB", "60"))
+        stat = os.statvfs(cwd)
+        free = stat.f_bavail * stat.f_frsize / 1073741824
+        if disk > free:
+            return f"declared scratch {disk} GB exceeds actual free {free:.1f} GB"
+    except (OSError, ValueError):
+        pass  # Unknown disk feasibility never changes existing job admission.
+    return None
+
+
 def die_waiter_rows(table):
     """every waiting --priority die ot-heavy on this host: id (ot-run tag prefix 'otrun-<host>-<pid>-', stable across
     REBALANCE re-tries, else 'pid:<pid>'), since (OT_HEAVY_WAIT_SINCE from ot-run, else the waiter's own start), charge"""
@@ -1252,7 +1284,9 @@ def die_waiter_rows(table):
         tag = a[a.index("--tag") + 1] if "--tag" in a[:a.index("--")] else ""
         rid = tag.rsplit("-", 1)[0] + "-" if tag.startswith("otrun-") and tag.count("-") >= 3 else f"pid:{p}"
         m = int(a[a.index("--mem") + 1])
+        ineligible = reservation_ineligible(cmd, cwd, env)
         out.append(dict(id=rid, pid=int(p), since=round(since), mem=m,
+                        reserve_eligible=ineligible is None, reserve_reason=ineligible,
                         charge=(admit_size(m, classify(cmd), table) or [m])[0], cmd=" ".join(cmd)[:160]))
     return sorted(out, key=lambda r: r["since"])
 
@@ -1279,8 +1313,12 @@ def reserve_active(table, now=None):
     why = None
     if now - float(r.get("at", 0)) > RESERVE_MAX_S:
         why = f"expired after {RESERVE_MAX_S // 3600} h"
-    elif not any(w["id"] == r["id"] for w in die_waiter_rows(table)):
-        why = "die waiter admitted or gone"
+    else:
+        waiter = next((w for w in die_waiter_rows(table) if w["id"] == r["id"]), None)
+        if waiter is None:
+            why = "die waiter admitted or gone"
+        elif waiter.get("reserve_eligible") is False:
+            why = "reservation ineligible: " + str(waiter.get("reserve_reason"))
     if why:
         try:
             os.unlink(RESERVE_FILE)
@@ -1294,8 +1332,8 @@ def reserve_active(table, now=None):
 def reserve_set(rid, table):
     """hub tick: reserve this host for the die waiter rid (must be waiting here)"""
     w = next((w for w in die_waiter_rows(table) if w["id"] == rid), None)
-    if not w:
-        print(f"NO die waiter {rid} on {os.uname().nodename}")
+    if not w or w.get("reserve_eligible") is False:
+        print(f"NO eligible die waiter {rid} on {os.uname().nodename}")
         return 1
     r = dict(id=rid, at=round(time.time()), since=w["since"], charge=w["charge"], cmd=w["cmd"])
     tmp = RESERVE_FILE + ".tmp"

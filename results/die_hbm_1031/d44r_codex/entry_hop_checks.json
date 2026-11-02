@@ -1,0 +1,45 @@
+{
+ "latA.json": {
+  "findings": [
+   {
+    "level": "ERROR",
+    "check": "hops",
+    "msg": "lane L730: normal FT NW_su00.L730x1 real input bit 1662 S0->S1 is 755 um > reach 405; regs_um[0] is not a native placement",
+    "lane": "L730"
+   },
+   {
+    "level": "ERROR",
+    "check": "hops",
+    "msg": "lane L730m: normal FT NE_su00.L730x1 real input bit 1662 S0->S1 is 755 um > reach 405; regs_um[0] is not a native placement",
+    "lane": "L730m"
+   },
+   {
+    "level": "ERROR",
+    "check": "stations",
+    "msg": "type q_su00__physical_v1 slot L730x1: real normal input S0->S1 = 755 um > ft_station_max_um 405",
+    "type": "q_su00__physical_v1"
+   },
+   {
+    "level": "ERROR",
+    "check": "stations",
+    "msg": "type q_b001__physical_v1 slot L730x2: real normal input S0->S1 = 556 um > ft_station_max_um 405",
+    "type": "q_b001__physical_v1"
+   },
+   {
+    "level": "ERROR",
+    "check": "stations",
+    "msg": "type q_su00 slot L730x1: real normal input S0->S1 = 755 um > ft_station_max_um 405",
+    "type": "q_su00"
+   },
+   {
+    "level": "ERROR",
+    "check": "stations",
+    "msg": "type q_b001 slot L730x2: real normal input S0->S1 = 556 um > ft_station_max_um 405",
+    "type": "q_b001"
+   }
+  ]
+ },
+ "entryC.json": {
+  "findings": []
+ }
+}
