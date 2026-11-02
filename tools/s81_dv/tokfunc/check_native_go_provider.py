@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the dated native producer/boundary cut, retaining silent-current failure."""
+"""Check a counterfactual retime mechanism; native architectural tag authority is unresolved."""
 from pathlib import Path
 import argparse,json,re
 
@@ -24,7 +24,7 @@ def check(root,out):
   cfg=[(int(t),int(v,16))for t,v in re.findall(r'^CFG_WORD (\d+) ([0-9a-f]+)$',text,re.M)]
   stream=[(int(t),v)for t,v in re.findall(r'^STREAM (\d+) ([0-9a-f]+)$',text,re.M)]
   assert len(core)==len(seq)==len(raw)==2 and len(cfg)==50 and len(stream)==160,name
-  assert [v for t,v in seq]==[0,1], 'independent native reset-zero counter oracle'
+  assert [v for t,v in seq]==[0,1], 'sequencer-port preincrement hypothesis only; not architectural oracle'
   assert [b[0]-a[0]for a,b in zip(seq,raw)]==[2,2]
   cases[name]=dict(core=core,sequencer=seq,raw_Q=raw,issuer=issuer,cfg_words=cfg,streams=stream,faults=0,producer_stage_edges=3)
  reference=cases['reference'];candidate=cases['candidate'];current=cases['current']
@@ -37,10 +37,11 @@ def check(root,out):
  for name,row in cases.items():
   assert row['cfg_words']==reference['cfg_words'],(name,'CFG timing/data changed')
   assert row['streams']==reference['streams'],(name,'XS timing/data changed')
-  row['semantic_status']='PASS'if row['core']==reference['core']else 'FAIL_INDEPENDENT_GO_TAG_ORACLE'
- summary=dict(status='PASS_SELECTED_DATED_PRODUCER_AND_DISABLED_PARALLEL_TAG_RETIME',
-  current_source_status='FAIL_SILENT_NEXT_OPERATION_TAG_AT_GB_CONSUMER',
-  expected_tags=[0,1],native_current_tags=[1,2],candidate_tags=[0,1],
+  row['preincrement_hypothesis_status']='PASS'if row['core']==reference['core']else 'FAIL_PREINCREMENT_HYPOTHESIS_ONLY'
+  row['native_semantic_status']='UNQUALIFIED_ARCHITECTURAL_TAG_ORACLE'
+ summary=dict(status='PASS_RETIME_MECHANISM_NATIVE_TAG_AUTHORITY_UNQUALIFIED',
+  current_source_status='UNQUALIFIED_ARCHITECTURAL_TAG_ORACLE',architectural_bug_established=False,
+  assumed_preincrement_tags=[0,1],native_observed_tags=[1,2],candidate_tags=[0,1],
   expected_GO_edges=[t for t,v in reference['core']],producer_stage_edges=3,
   native_qbank_GO_edges=2,GB_capture_edges=1,parallel_tag_edges=2,
   candidate_new_reset_free_FF=4,candidate_new_clock_pin_loads=4,candidate_new_reset_pin_loads=0,

@@ -1,12 +1,25 @@
 {
- "status":"DISABLED_ROOT_REVIEW_CANDIDATE_ONLY",
- "part":"fW0_p1_b0",
- "original_leaf":"u_f_0L01.u_r0.u_e0",
- "original_type":"col_h10_r0_p1__t1__cl574cc59d",
- "candidate_type":"col_h10_r0_p1__t1__cl574cc59d__CODEX_E0_TAG2_DISABLED",
- "other_four_type_replicas_untouched":true,
- "added_soft_FF":4,"added_clock_pin_loads":4,"added_reset_pin_loads":0,
- "tag_path_added_edges":2,"GO_CFG_XS_added_edges":0,
- "source_cohort_adopted":false,"native_provider_qualified":false,"capture_fold_qualified":false,
- "requires_before_adoption":["authoritative source generator translation","exact four FF placement and clock/model event","root source review","targeted full-Q provider witness if requested"]
+  "status": "DISABLED_COUNTERFACTUAL_RETIME_ARCHITECTURAL_ORACLE_HOLD",
+  "part": "fW0_p1_b0",
+  "original_leaf": "u_f_0L01.u_r0.u_e0",
+  "original_type": "col_h10_r0_p1__t1__cl574cc59d",
+  "candidate_type": "col_h10_r0_p1__t1__cl574cc59d__CODEX_E0_TAG2_DISABLED",
+  "other_four_type_replicas_untouched": true,
+  "added_soft_FF": 4,
+  "added_clock_pin_loads": 4,
+  "added_reset_pin_loads": 0,
+  "tag_path_added_edges": 2,
+  "GO_CFG_XS_added_edges": 0,
+  "source_cohort_adopted": false,
+  "native_provider_qualified": false,
+  "capture_fold_qualified": false,
+  "requires_before_adoption": [
+    "resolve native architectural first-operation tag; no 0/1 preincrement assumption",
+    "authoritative source generator translation",
+    "exact four FF placement and clock/model event",
+    "root source review",
+    "targeted full-Q provider witness if requested"
+  ],
+  "architectural_bug_established": false,
+  "source_adoption": "HOLD pending original directGB0 and native CAP/return tag authority"
 }
