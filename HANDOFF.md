@@ -2942,3 +2942,4 @@ CODEX: PARKED HBM clock 2026-11-01 18:38 PST. Latest committed119fb3dc4 (283/66 
 
 CODEX: S81 PARKED at explicitUSERhandback. Fullpacket handoff/codex_s81_20261101_1836.md; no newlaunches/retries/merges/EDA, allcurrentjobs/controllers/checkpoints preserved. CapactualfinaltimingFAIL andL2oneslewNOTSIGNED remainexplicit; whole-data-dieGRT/TTFFnotfinished.
 - 2026-11-01 18:40 PST COORD: Codex parked all lanes 18:35-18:40 (user handback). Claude owns all coordination again; split rule ended. RECONCILE-1101C is mapping the 13 packets to lanes, live jobs and READY tips.
+- 2026-11-01 18:51 PST COORD: RECONCILE-1101C done (50 READY tips, 48 live jobs, 15 Codex questions). Ruled all 15; sent pickups to 15 lanes; started CODEX-PICKUP-KV. epyc2 scratch 16 GB (blocked) -> PRUNE-1101E urgent; intel1 back to 326 GB.
