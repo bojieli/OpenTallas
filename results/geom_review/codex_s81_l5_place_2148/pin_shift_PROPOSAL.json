@@ -1,0 +1,9 @@
+{
+  "kind": "PROPOSAL_ONLY_NOT_ADOPTED",
+  "change": "all vi_n N pins x +=149.568um; all other pins unchanged",
+  "preserves": "RTL,cycles,outline,macropositions unchanged",
+  "parent_change_required": "actual parent s_3N connection pin coordinates and contract/view bindings must follow child change",
+  "pin_pair_manhattan_max_um": 362.22,
+  "pin_point_collisions": 0,
+  "native_replacement_still_required": "Fresh child placement full typed connected reach census incl moved wa/wd and clockcensus; pin numbers below are planned pin distances, not actual register reach; no route release"
+}
