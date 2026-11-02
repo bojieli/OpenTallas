@@ -220,5 +220,269 @@
  "shared_existing_FFs": 786,
  "guide_semantics": "Inclusive region proposal, not fixed sites; real placement legality/occupancy to be checked. Macro west halo2.16um respected by right edge; each guide8.64x41.064um. No command consumes this proposal.",
  "clock_model_hold": "All20inputs kept literal. clk2568 FF spread over bank-local cap/rp_sel plus shared OR4; clk_n1024 split bank-wise; separate clk_ctrl/clk_s/local-mask/SRAM roots must retain exact same-source root ownership and common-domain alignment. Actual tree insertion delay/cap and postCTS measured leaf reach are unmeasured.",
- "review_hold": "Owner/root model acceptance and native kit image review required before PNR. Old wrapped4+4 route result is a topology clue only, never current native gate credit."
+ "review_hold": "Owner/root model acceptance and native kit image review required before PNR. Old wrapped4+4 route result is a topology clue only, never current native gate credit.",
+ "unrouted_entry_distance_model": {
+  "scope": "Declared root to proposed bank-region geometry only; not actual routed length, sink placement, delay or clock reach gate; shared786FFs and SRAM clock pin offsets excluded",
+  "roots": {
+   "clk": {
+    "region_center_weighted_mean_L1_um": 138.684,
+    "worst_region_corner_L1_um": 269.004,
+    "banks": [
+     {
+      "bank": 0,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 244.152,
+      "pin_to_region_farthest_corner_L1_um": 269.004
+     },
+     {
+      "bank": 1,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 173.208,
+      "pin_to_region_farthest_corner_L1_um": 198.06
+     },
+     {
+      "bank": 2,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 168.024,
+      "pin_to_region_farthest_corner_L1_um": 192.876
+     },
+     {
+      "bank": 3,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 238.968,
+      "pin_to_region_farthest_corner_L1_um": 263.82
+     },
+     {
+      "bank": 4,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 109.344,
+      "pin_to_region_farthest_corner_L1_um": 134.196
+     },
+     {
+      "bank": 5,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 38.4,
+      "pin_to_region_farthest_corner_L1_um": 63.252
+     },
+     {
+      "bank": 6,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 33.216,
+      "pin_to_region_farthest_corner_L1_um": 58.068
+     },
+     {
+      "bank": 7,
+      "FFs": 257,
+      "pin_to_region_center_L1_um": 104.16,
+      "pin_to_region_farthest_corner_L1_um": 129.012
+     }
+    ]
+   },
+   "clk_n": {
+    "region_center_weighted_mean_L1_um": 213.516,
+    "worst_region_corner_L1_um": 412.188,
+    "banks": [
+     {
+      "bank": 0,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 174.504,
+      "pin_to_region_farthest_corner_L1_um": 199.356
+     },
+     {
+      "bank": 1,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 245.448,
+      "pin_to_region_farthest_corner_L1_um": 270.3
+     },
+     {
+      "bank": 2,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 316.392,
+      "pin_to_region_farthest_corner_L1_um": 341.244
+     },
+     {
+      "bank": 3,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 387.336,
+      "pin_to_region_farthest_corner_L1_um": 412.188
+     },
+     {
+      "bank": 4,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 39.696,
+      "pin_to_region_farthest_corner_L1_um": 64.548
+     },
+     {
+      "bank": 5,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 110.64,
+      "pin_to_region_farthest_corner_L1_um": 135.492
+     },
+     {
+      "bank": 6,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 181.584,
+      "pin_to_region_farthest_corner_L1_um": 206.436
+     },
+     {
+      "bank": 7,
+      "FFs": 128,
+      "pin_to_region_center_L1_um": 252.528,
+      "pin_to_region_farthest_corner_L1_um": 277.38
+     }
+    ]
+   },
+   "clk_ctrl": {
+    "region_center_weighted_mean_L1_um": 211.884,
+    "worst_region_corner_L1_um": 410.556,
+    "banks": [
+     {
+      "bank": 0,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 172.872,
+      "pin_to_region_farthest_corner_L1_um": 197.724
+     },
+     {
+      "bank": 1,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 243.816,
+      "pin_to_region_farthest_corner_L1_um": 268.668
+     },
+     {
+      "bank": 2,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 314.76,
+      "pin_to_region_farthest_corner_L1_um": 339.612
+     },
+     {
+      "bank": 3,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 385.704,
+      "pin_to_region_farthest_corner_L1_um": 410.556
+     },
+     {
+      "bank": 4,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 38.064,
+      "pin_to_region_farthest_corner_L1_um": 62.916
+     },
+     {
+      "bank": 5,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 109.008,
+      "pin_to_region_farthest_corner_L1_um": 133.86
+     },
+     {
+      "bank": 6,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 179.952,
+      "pin_to_region_farthest_corner_L1_um": 204.804
+     },
+     {
+      "bank": 7,
+      "FFs": 1,
+      "pin_to_region_center_L1_um": 250.896,
+      "pin_to_region_farthest_corner_L1_um": 275.748
+     }
+    ]
+   },
+   "clk_l0": {
+    "region_center_weighted_mean_L1_um": 174.792,
+    "worst_region_corner_L1_um": 199.644,
+    "banks": [
+     {
+      "bank": 0,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 174.792,
+      "pin_to_region_farthest_corner_L1_um": 199.644
+     }
+    ]
+   },
+   "clk_l1": {
+    "region_center_weighted_mean_L1_um": 246.024,
+    "worst_region_corner_L1_um": 270.876,
+    "banks": [
+     {
+      "bank": 1,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 246.024,
+      "pin_to_region_farthest_corner_L1_um": 270.876
+     }
+    ]
+   },
+   "clk_l2": {
+    "region_center_weighted_mean_L1_um": 317.16,
+    "worst_region_corner_L1_um": 342.012,
+    "banks": [
+     {
+      "bank": 2,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 317.16,
+      "pin_to_region_farthest_corner_L1_um": 342.012
+     }
+    ]
+   },
+   "clk_l3": {
+    "region_center_weighted_mean_L1_um": 388.2,
+    "worst_region_corner_L1_um": 413.052,
+    "banks": [
+     {
+      "bank": 3,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 388.2,
+      "pin_to_region_farthest_corner_L1_um": 413.052
+     }
+    ]
+   },
+   "clk_l4": {
+    "region_center_weighted_mean_L1_um": 40.752,
+    "worst_region_corner_L1_um": 65.604,
+    "banks": [
+     {
+      "bank": 4,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 40.752,
+      "pin_to_region_farthest_corner_L1_um": 65.604
+     }
+    ]
+   },
+   "clk_l5": {
+    "region_center_weighted_mean_L1_um": 111.984,
+    "worst_region_corner_L1_um": 136.836,
+    "banks": [
+     {
+      "bank": 5,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 111.984,
+      "pin_to_region_farthest_corner_L1_um": 136.836
+     }
+    ]
+   },
+   "clk_l6": {
+    "region_center_weighted_mean_L1_um": 183.216,
+    "worst_region_corner_L1_um": 208.068,
+    "banks": [
+     {
+      "bank": 6,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 183.216,
+      "pin_to_region_farthest_corner_L1_um": 208.068
+     }
+    ]
+   },
+   "clk_l7": {
+    "region_center_weighted_mean_L1_um": 254.448,
+    "worst_region_corner_L1_um": 279.3,
+    "banks": [
+     {
+      "bank": 7,
+      "FFs": 2,
+      "pin_to_region_center_L1_um": 254.448,
+      "pin_to_region_farthest_corner_L1_um": 279.3
+     }
+    ]
+   }
+  },
+  "finding": "clk_n bottom entry to upper left bank region exceeds400um L1; clock entry/tree model is a material hold, not solved by native shell removal or data-bank affinity."
+ }
 }
