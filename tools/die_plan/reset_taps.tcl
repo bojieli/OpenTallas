@@ -118,6 +118,33 @@ if {[llength $rt_unnamed] == 1 && [llength $rt_zero_aliases] == 1} {
   dict set rt_named_nets [lindex $rt_unnamed 0] [lindex $rt_zero_aliases 0]
   puts "OT_RESET_TAPS leaf alias [[lindex $rt_zero_aliases 0] getName] -> tap [lindex $rt_unnamed 0]"
 }
+# DIE-QC-61 11-01 (GEOM-107 tt_ctlm, sle_sc_v1, slw_sc_v1): Yosys may keep a LOAD port's name for the leaf tap net
+# (u_bound.u_core.rst_n[0] = rst_n_t0 via `wire rst_n = rst_n_t0`), so neither rst_n_t<i> nor a unique rst_n alias
+# survives.  That one unnamed tap made every FIRM face/epoch flop on it unmovable: 0 re-pointed, r2r 955.8 um from
+# the leaf relay to the far face.  reset_tree.tcl (sourced just before) recorded each placed relay's actual output
+# net under its generated identity (::rtr_qnets rst_n_t<i>, polarity ::rtr_qpol): bind every tap still unnamed to
+# it.  A QN relay output (ASAP7 DFFHQN) is the inverse, so the terminal is its single-inverter output net.
+if {[info exists ::rtr_qnets]} {
+  foreach rt_k [dict keys $::rtr_qnets] {
+    if {![regexp {^rst_n_t([0-9]+)$} $rt_k -> rt_i] || [dict exists $rt_named_nets $rt_i]} continue
+    set rt_qn [dict get $::rtr_qnets $rt_k]
+    set rt_pol [expr {[info exists ::rtr_qpol] && [dict exists $::rtr_qpol $rt_k] ? [dict get $::rtr_qpol $rt_k] : "q"}]
+    if {$rt_pol eq "qn"} {
+      set rt_term "NULL"
+      foreach it [$rt_qn getITerms] {
+        if {[[$it getMTerm] getIoType] ne "INPUT" || ![string match "INV*" [[[$it getInst] getMaster] getName]]} continue
+        foreach o [[$it getInst] getITerms] {
+          if {[[$o getMTerm] getIoType] eq "OUTPUT" && [$o getNet] ne "NULL"} { set rt_term [$o getNet]; break }
+        }
+        if {$rt_term ne "NULL"} break
+      }
+      if {$rt_term eq "NULL"} continue
+      set rt_qn $rt_term
+    }
+    dict set rt_named_nets $rt_i $rt_qn
+    puts "OT_RESET_TAPS relay identity $rt_k -> [$rt_qn getName] (tap $rt_i)"
+  }
+}
 proc rt_tapnet {blk i} {
   global rt_named_nets
   if {[dict exists $rt_named_nets $i]} { return [dict get $rt_named_nets $i] }
