@@ -6,7 +6,7 @@ event:
     No source/phase credit until exact join.
 inputs:
   plan: FROZEN_PLAN.json
-  region_map: part_region_FROZEN.json
+  region_map: part_region_FROZEN_wrapped.json
   feed: feed_rt2_FROZEN.json
   landing_infra: true
   reset_infra: true

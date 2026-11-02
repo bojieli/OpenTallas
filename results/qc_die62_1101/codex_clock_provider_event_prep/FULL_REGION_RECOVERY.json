@@ -1,0 +1,16 @@
+{
+  "status": "SEMANTIC_REGION_INPUT_RECOVERY_FROM_ACTUAL_SOURCE_NOT_PHASE_CREDIT",
+  "actual_producer_unit": "oth-ubuntu-1364730-1793567323",
+  "source_tree_sha256": "c729b2312e21613067fe55d7aea63bf62a472deb4bef410c8598f778a267f59f",
+  "recovered_clocked_partitions": 377,
+  "regions": 313,
+  "functional373_sidecar_map_mismatches": {},
+  "four_external_PHY_clock_region_assignments": {
+    "io_serdes": "coll_n",
+    "io_serdes_1": "coll_s",
+    "io_serdes_2": "c_W5_bf_01",
+    "ucie_kv": "glue"
+  },
+  "method": "Actual10929taprows\u2192nearesttyped dme/rib/region_root marker. Alltapregionsunique foreachpart,0missing/0ambiguous. Do not use shared_feed ancestor (may be upstream parent region).",
+  "qualification": "Originalpart_regionfilebytesmissing; actualproducersemanticmaprecovered. FourPHYclockregionassignmentonly; no PHYfunctional/phase/ABI/fullQCqualification."
+}

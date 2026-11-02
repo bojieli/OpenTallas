@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/die_trial.py", line 5847, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/die_trial.py", line 5806, in main
+    m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
+                  a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
+    ...<16 lines>...
+                  region_dme_snake=(a.region_dme_snake if a.region_dme_snake == "all" else
+                                    set(r for r in a.region_dme_snake.split(",") if r)) if a.region_dme_snake else None)
+  File "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/tools/die_plan/die_trial.py", line 4843, in write_kit
+    json.loads(Path(regions).read_text())["part_region"] if regions else None,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'part_region'
