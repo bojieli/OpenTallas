@@ -1,0 +1,688 @@
+{
+  "status": "PASS_UNIQUE_NATIVE32_PLANNED32_NAMES_ONLY",
+  "source_odb_sha256": "ffb41fab627528c195fe699437b7ae3bfd9d901bd46a7922e5f1a1adb1a30410",
+  "original_macro_placement_sha256": "fe37ddc5999621fe8ecd0f57df9bb8df082dcf0f86b09e9b08b66dd1e5ef3871",
+  "corrected_macro_placement_sha256": "234d8a341b7c896c6215771ee75c604cf921e37fc36e8546a642a5072a8ff51c",
+  "actual_native_macros": 32,
+  "planned_macros": 32,
+  "unique_bijection": true,
+  "all_masters_match": true,
+  "all_xy_orient_preserved": true,
+  "only_name_tokens_changed": true,
+  "canonical_rule": "exact .u_b.genblk1.genblk1.g_m11.u_m -> .u_b.g_m11.u_m after actual native ODB enumeration; rejects all other shapes/duplicates/incomplete sets",
+  "rows": [
+    {
+      "planned_name": "m0.g_bank\\[0\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        17.28,
+        17.292
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[1\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        198.744,
+        17.292
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[2\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        380.208,
+        17.292
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[3\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        561.672,
+        17.292
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[4\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        17.28,
+        66.972
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[5\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        198.744,
+        66.972
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[6\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        380.208,
+        66.972
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[7\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        561.672,
+        66.972
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[8\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        17.28,
+        116.7
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[9\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        198.744,
+        116.7
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[10\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        380.208,
+        116.7
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[11\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        561.672,
+        116.7
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[12\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        17.28,
+        166.38
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[13\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        198.744,
+        166.38
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[14\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        380.208,
+        166.38
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m0.g_bank\\[15\\].u_b.g_m11.u_m",
+      "actual_native_name": "m0.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        561.672,
+        166.38
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[0\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[0\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        17.28,
+        216.108
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[1\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[1\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        198.744,
+        216.108
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[2\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[2\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        380.208,
+        216.108
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[3\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[3\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        561.672,
+        216.108
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[4\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[4\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        17.28,
+        265.788
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[5\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[5\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        198.744,
+        265.788
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[6\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[6\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        380.208,
+        265.788
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[7\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[7\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        561.672,
+        265.788
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[8\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[8\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        17.28,
+        315.516
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[9\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[9\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        198.744,
+        315.516
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[10\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[10\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        380.208,
+        315.516
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[11\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[11\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        561.672,
+        315.516
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[12\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[12\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        17.28,
+        365.196
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[13\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[13\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        198.744,
+        365.196
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[14\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[14\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        380.208,
+        365.196
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    },
+    {
+      "planned_name": "m1.g_bank\\[15\\].u_b.g_m11.u_m",
+      "actual_native_name": "m1.g_bank\\[15\\].u_b.genblk1.genblk1.g_m11.u_m",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "planned_xy_um": [
+        561.672,
+        365.196
+      ],
+      "planned_orient": "R0",
+      "source_native_placement": "NONE",
+      "source_native_xy_dbu": [
+        0,
+        0
+      ],
+      "native_clock": {
+        "pin": "clk",
+        "net": "store0_clk[0]",
+        "io": "INPUT",
+        "root_input_bterm": "store0_clk[0]"
+      }
+    }
+  ],
+  "scope": "read-only saved native synth ODB and names-only proposed macro placement; no PLACE or source change"
+}
