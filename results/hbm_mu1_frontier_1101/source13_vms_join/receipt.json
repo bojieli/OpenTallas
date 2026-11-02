@@ -1,0 +1,44 @@
+{
+  "status": "PASS_SELECTED_FUNCTIONAL_RESET_JOIN_ONLY",
+  "frozen_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/selected_preprocessed.sv",
+  "frozen_source_sha256": "35dc1d315284413f68328464ebf9bb167aa3d02255f7db285edfe191f28f5e3d",
+  "modules": {
+    "hfd_vms_bank_native_q0_faces": {
+      "selected_definition_sha256": "47b73b38bf4fdf1f1b1616f0cd43fc4bf309c4c4649dd6da34fed15cbb9139d6",
+      "source_line_directives": [],
+      "excerpt": "/srv/opentallas-scratch2/claude/codex-kv-hostcredit-2044/source13_vms_join/hfd_vms_bank_native_q0_faces.sv"
+    },
+    "ot_vms_bank_q0_faces_core": {
+      "selected_definition_sha256": "62a524a6c8a8fef116ddb9c5dc848842bcf463e8edca3903c75c548d45938a6a",
+      "source_line_directives": [
+        "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv"
+      ],
+      "excerpt": "/srv/opentallas-scratch2/claude/codex-kv-hostcredit-2044/source13_vms_join/ot_vms_bank_q0_faces_core.sv"
+    },
+    "ot_vms_bank_q0_faces_body": {
+      "selected_definition_sha256": "d95a65b7eb8f4d658b3b6fc5cda1b7e6b6c8b76c9da9bb5dc62a7a97f35c9308",
+      "source_line_directives": [
+        "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+      ],
+      "excerpt": "/srv/opentallas-scratch2/claude/codex-kv-hostcredit-2044/source13_vms_join/ot_vms_bank_q0_faces_body.sv"
+    }
+  },
+  "selected_parameters": {
+    "RG": 5,
+    "WG": 2,
+    "EG_WIDE": 1,
+    "MUT": 0
+  },
+  "reset_mode_parameter": "NONE",
+  "reset_cone": "rst_n async clears rst_s1/rst_s2/rst_rl; release s1<=1,s2<=s1,rl<=s2; rn=rst_rl",
+  "release_edges_from_input": 3,
+  "clock": "clk",
+  "macro_clocks": [
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2"
+  ],
+  "macro_count": "not_inferred_from_clock_port_count",
+  "current_C11E4_physical_bind_qualification": "NOT_CLAIMED",
+  "new_eda_jobs": 0
+}
