@@ -1,0 +1,5 @@
+Token intake e1974e8617b composes without conflicts on current train da8b81029a6f1c010cde744fa2079a0150d25e91 (including DS4f and98a). Remaining delta is84files: prior DS source work is already present.
+
+Eight focused monitor-tail and programme-store tests pass; changed Python modules compile; diff whitespace check passes. The only RTL delta is two trailing/default-zero MONITOR_TAIL parameters and the conditional two-read loader tail. Existing positional parameter use is preserved. Only fixture generators enable it; no production caller does. Component receipts retain their original scope: native1424 loader writes and native512 XA monitor words/fourusers plus caught controls. Enabling the candidate adds2reads/1666ps; physical/model/calendar/global lease activation remains held. No native runtime or physical gate was repeated for this merge.
+
+The remaining S81 gain/prelude/producer tools and receipts are unsealed source preparation with explicit missing source dates; they do not activate a canonical programme or replace failed storage evidence. No failed receipt was changed or removed.
