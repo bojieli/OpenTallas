@@ -129,7 +129,57 @@ def no_later_stage(kit):
         raise Refuse('fresh CTS input has later-stage outputs: ' + ', '.join(later[:3]))
 
 
-def validate(kit, proof, place_sha, place_sdc_sha, stage='cts', lease_probe=native_leases):
+def geometry_join(identity, gate, closure, place_sha, gate_schema,
+                  attestation=None, attestation_sha=None, expected_before=None):
+    """Formal source identity and physical correction lineage are distinct joins."""
+    if closure.get('reviewed_3_place_sha256') != place_sha:
+        raise Refuse('placement closure identity differs')
+    if gate_schema == 'receipt-and-counts':
+        if identity.get('corrected_odb_sha256') != place_sha or gate.get('corrected_odb_sha256') != place_sha:
+            raise Refuse('placement review identity differs')
+        if any(x is not None for x in (attestation, attestation_sha, expected_before)):
+            raise Refuse('unexpected historical geometry adapter on current gate')
+        return dict(kind='current-gate-corrected-placement', reviewed_3_place_sha256=place_sha)
+    if ('corrected_odb_sha256' in identity or 'corrected_odb_sha256' in gate or
+            not re.fullmatch('[0-9a-f]{64}', str(gate.get('checkpoint_sha256')))):
+        raise Refuse('unsupported historical physical gate shape')
+    if (not attestation or not re.fullmatch('[0-9a-f]{64}', str(attestation_sha)) or
+            not re.fullmatch('[0-9a-f]{64}', str(expected_before))):
+        raise Refuse('historical geometry requires explicit attestation path/SHA and expected-before SHA')
+    attestation = Path(attestation)
+    if not attestation.is_file() or digest(attestation) != attestation_sha:
+        raise Refuse('geometry attestation digest differs')
+    doc = read(attestation)
+    fields = {'all_inst_master_dimensions', 'all_other_inst_pose_status_donttouch', 'net_headers',
+              'full_iterm_membership', 'full_bterm_membership', 'full_net_graph',
+              'typed_clock_graph', 'all_ports_boxes_net_io_sigtype', 'all_rows'}
+    before, after = doc.get('old_mover', {}), doc.get('new_mover', {})
+    census_counts = {'instances', 'nets', 'iterms', 'net_bterms', 'ports', 'port_boxes', 'rows', 'typed_clock_nets'}
+    mover_fields = {'name', 'xy', 'orientation', 'master', 'master_dimensions', 'placement_status', 'dont_touch'}
+    if (doc.get('verdict') != 'PASS' or doc.get('old_odb_sha256') != expected_before or
+            doc.get('new_odb_sha256') != place_sha or expected_before == place_sha or
+            not doc.get('scope', '').startswith('exact one existing reset FF XY change only;') or
+            not fields <= set(doc.get('equal_digests', {})) or
+            any(not re.fullmatch('[0-9a-f]{64}', str(doc['equal_digests'][k])) for k in fields) or
+            not census_counts <= set(doc.get('counts', {})) or
+            any(type(doc['counts'][k]) is not int or doc['counts'][k] <= 0 for k in census_counts) or
+            any(len(doc.get('outline_dbu', {}).get(k, [])) != 4 for k in ('die', 'core')) or
+            not mover_fields <= set(before) or not mover_fields <= set(after) or
+            any(len(m.get('xy', [])) != 2 or any(type(v) is not int for v in m['xy']) for m in (before, after)) or
+            not before.get('name') or before.get('xy') == after.get('xy') or
+            {k:v for k,v in before.items() if k != 'xy'} != {k:v for k,v in after.items() if k != 'xy'}):
+        raise Refuse('unsupported/tampered frozen geometry transition attestation')
+    return dict(kind='explicit-historical-frozen-census', attestation_path=str(attestation.resolve()),
+                attestation_sha256=attestation_sha, expected_before_3_place_sha256=expected_before,
+                reviewed_after_3_place_sha256=place_sha,
+                historical_gate_checkpoint_sha256=gate['checkpoint_sha256'],
+                distinction='Historical gate checkpoint is the earlier3_3 stage; it is NOT the census old3_place. '
+                            'Formal source proof is joined independently; this exact caller-bound census joins '
+                            'the reviewed old/new placement only, without timing or source qualification.')
+
+
+def validate(kit, proof, place_sha, place_sdc_sha, stage='cts', lease_probe=native_leases, *,
+             geometry_attestation=None, geometry_attestation_sha=None, geometry_before_sha=None):
     if stage != 'cts':
         raise Refuse('only CTS_ONLY_CONTINUATION is supported')
     kit, proof = Path(kit).resolve(), Path(proof).resolve()
@@ -179,9 +229,27 @@ def validate(kit, proof, place_sha, place_sdc_sha, stage='cts', lease_probe=nati
     rp = local(proof, 'lec/lec.json')
     report = read(rp)
     receipt_sha = digest(rp)
-    if any(x != receipt_sha for x in (identity.get('receipt_sha256'), gate.get('official_receipt_sha256'),
-                                      closure.get('official_eq_sha256'), digest(local(kit, 'source_proof/lec.json')))):
+    if any(x != receipt_sha for x in (identity.get('receipt_sha256'), closure.get('official_eq_sha256'),
+                                      digest(local(kit, 'source_proof/lec.json')))):
         raise Refuse('standalone EQ receipt hash differs')
+    if 'counts' in gate:
+        gate_schema = 'receipt-and-counts'
+        gate_counts = gate['counts']
+        if gate.get('official_receipt_sha256') != receipt_sha:
+            raise Refuse('SOURCE_EQ_GATE receipt hash differs')
+        if 'official_counts' in gate and gate['official_counts'] != gate_counts:
+            raise Refuse('conflicting SOURCE_EQ_GATE count fields')
+    elif 'official_counts' in gate:
+        # Historical R2 gate: no digest is invented or inserted into that file.
+        # The completed receipt has already joined independently to identity,
+        # closure, and the retained source_proof copy above.
+        gate_schema = 'historical-official-counts'
+        gate_counts = gate['official_counts']
+        if ('official_receipt_sha256' in gate and
+                gate['official_receipt_sha256'] != receipt_sha):
+            raise Refuse('historical SOURCE_EQ_GATE receipt hash differs')
+    else:
+        raise Refuse('unsupported SOURCE_EQ_GATE proof-count schema')
     status = (proof / 'official_lec.status').read_text()
     if not re.search(r'(^|\s)official_lec_exit=0(\s|$)', status):
         raise Refuse('official standalone proof did not complete exit 0')
@@ -191,7 +259,7 @@ def validate(kit, proof, place_sha, place_sdc_sha, stage='cts', lease_probe=nati
     if (report.get('verdict') != 'EQUIVALENT' or not counts.get('compare_points') or
             counts.get('proved') != counts.get('compare_points') or counts.get('differs') != 0 or
             counts.get('undecided') != 0 or report.get('failing') or report.get('unproven_points') or
-            report.get('top') != variables.get('DESIGN_NAME') or gate.get('counts') != counts):
+            report.get('top') != variables.get('DESIGN_NAME') or gate_counts != counts):
         raise Refuse('completed EQ/all-point result missing')
     if report.get('hints', {}).get('sha256') != rows['lec_hints.json']:
         raise Refuse('official proof used different hints')
@@ -220,9 +288,8 @@ def validate(kit, proof, place_sha, place_sdc_sha, stage='cts', lease_probe=nati
     if len(places) != 1:
         raise Refuse('one reviewed 3_place checkpoint required')
     place = str(places[0].relative_to(kit));sdc = str(places[0].with_suffix('.sdc').relative_to(kit))
-    if (place_sha != identity.get('corrected_odb_sha256') or place_sha != gate.get('corrected_odb_sha256') or
-            place_sha != closure.get('reviewed_3_place_sha256')):
-        raise Refuse('placement review identity differs')
+    geometry = geometry_join(identity, gate, closure, place_sha, gate_schema,
+                             geometry_attestation, geometry_attestation_sha, geometry_before_sha)
     binding = {**rows, **helpers, place: place_sha, sdc: place_sdc_sha}
     for name in ('sdc_lint.json', 'clock_binding.json', 'freeze.json', 'source_proof/lec.json',
                  'source_proof/official_lec.status', 'source_proof_identity.json',
@@ -238,6 +305,7 @@ def validate(kit, proof, place_sha, place_sdc_sha, stage='cts', lease_probe=nati
     return dict(schema=SCHEMA, stage='CTS_ONLY_CONTINUATION', kit=str(kit), proof_kit=str(proof),
                 proof_receipt_sha256=receipt_sha, files_sha256=binding, placement=place, placement_sdc=sdc,
                 counts=counts, kept_registers=keep, reset_contract=rc, historical_provenance=report.get('provenance'),
+                source_gate_schema=gate_schema, geometry_evidence=geometry,
                 modes=modes, source_qualified=False, limitation=LIMIT)
 
 
@@ -265,10 +333,13 @@ def runtime_script(threads):
 
 
 def prepare(kit, proof, output, place_sha, place_sdc_sha, *, enabled=False, stage='cts',
-            threads=8, image='openroad/orfs:asap7lock', lease_probe=native_leases):
+            threads=8, image='openroad/orfs:asap7lock', lease_probe=native_leases,
+            geometry_attestation=None, geometry_attestation_sha=None, geometry_before_sha=None):
     if not enabled:
         raise Refuse('retained CTS is default-OFF; explicit --enable-retained-cts required')
-    desc = validate(kit, proof, place_sha, place_sdc_sha, stage, lease_probe)
+    desc = validate(kit, proof, place_sha, place_sdc_sha, stage, lease_probe,
+                    geometry_attestation=geometry_attestation, geometry_attestation_sha=geometry_attestation_sha,
+                    geometry_before_sha=geometry_before_sha)
     output = Path(output).absolute()
     if output.exists() or output.is_symlink() or Path(kit).resolve() in output.parents:
         raise Refuse('fresh separate owned output required')
@@ -281,6 +352,10 @@ def prepare(kit, proof, output, place_sha, place_sdc_sha, *, enabled=False, stag
     shutil.copytree(kit, output / 'kit', symlinks=False)
     # Re-validate after the snapshot: a changing input cannot become a joined proof.
     verify(output / 'kit', desc['files_sha256'])
+    if geometry_attestation:
+        shutil.copy2(geometry_attestation, output / 'geometry_attestation.json')
+        if digest(output / 'geometry_attestation.json') != geometry_attestation_sha:
+            raise Refuse('geometry attestation changed during snapshot')
     api = output / 'api';api.mkdir()
     for name in ('retained_stage.py', 'core_flow.py', 'kit_modes.py'):
         shutil.copy2(Path(__file__).parent / name, api / name)
@@ -327,6 +402,10 @@ def run(output, memory, *, enabled=False, stage='cts', lease_probe=native_leases
     if lease_probe([kit]):
         raise Refuse('active native lease on continuation')
     verify(kit, desc['files_sha256']);verify(output / 'api', desc['api_sha256'])
+    geometry = desc.get('geometry_evidence', {})
+    if geometry.get('kind') == 'explicit-historical-frozen-census':
+        if digest(local(output, 'geometry_attestation.json')) != geometry['attestation_sha256']:
+            raise Refuse('sealed geometry attestation changed')
     if digest(output / 'cts_runtime.sh') != desc['script_sha256']:
         raise Refuse('common CTS runtime changed')
     no_later_stage(kit)
@@ -371,6 +450,7 @@ def main():
     v = sub.add_parser('prepare');v.add_argument('--kit', required=True);v.add_argument('--proof-kit', required=True)
     v.add_argument('--out', required=True);v.add_argument('--place-sha256', required=True);v.add_argument('--place-sdc-sha256', required=True)
     v.add_argument('--threads', type=int, default=8);v.add_argument('--image', default='openroad/orfs:asap7lock')
+    v.add_argument('--geometry-attestation');v.add_argument('--geometry-attestation-sha256');v.add_argument('--geometry-before-sha256')
     r = sub.add_parser('run');r.add_argument('output');r.add_argument('--mem', type=int, required=True)
     for a in (v, r):
         a.add_argument('--enable-retained-cts', action='store_true');a.add_argument('--stage', default='cts')
@@ -381,7 +461,9 @@ def main():
             makefile_contract(a.path);return 0
         if a.cmd == 'prepare':
             result = prepare(a.kit, a.proof_kit, a.out, a.place_sha256, a.place_sdc_sha256,
-                             enabled=a.enable_retained_cts, stage=a.stage, threads=a.threads, image=a.image)
+                             enabled=a.enable_retained_cts, stage=a.stage, threads=a.threads, image=a.image,
+                             geometry_attestation=a.geometry_attestation, geometry_attestation_sha=a.geometry_attestation_sha256,
+                             geometry_before_sha=a.geometry_before_sha256)
         else:
             result = run(a.output, a.mem, enabled=a.enable_retained_cts, stage=a.stage)
         print(json.dumps(result, indent=1))
