@@ -1,7 +1,7 @@
 182:             sel_v    <= ready;
 183:             o_rv     <= sel_v;
 184:         end
-185: 
+185:
 186:     // ---------------- max under the ot_rom_argmax_rows key ----------------------------------------------------------
 187:     function automatic [31:0] okey(input [31:0] x);        // order-preserving key; -0 as +0
 188:         reg [31:0] c;
