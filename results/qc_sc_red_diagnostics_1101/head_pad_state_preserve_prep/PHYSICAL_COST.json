@@ -1,0 +1,62 @@
+{
+  "source": "/srv/opentallas-scratch/claude/codex-sc-buffer-actual-review-0158/geom.tsv",
+  "source_sha256": "132e289dac9c30af6047738de85337023a892be6538bd31e7bed67a7056dfe69",
+  "observed_native_bodies": {
+    "NOR2x1_ASAP7_75t_R": {
+      "width_um": 0.324,
+      "height_um": 0.27,
+      "area_um2": 0.08748,
+      "example": "_62335_"
+    },
+    "INVx1_ASAP7_75t_R": {
+      "width_um": 0.162,
+      "height_um": 0.27,
+      "area_um2": 0.04374,
+      "example": "u.u_35102/_2_"
+    },
+    "AND2x2_ASAP7_75t_R": {
+      "width_um": 0.324,
+      "height_um": 0.27,
+      "area_um2": 0.08748,
+      "example": "_72161_"
+    },
+    "NAND2x1_ASAP7_75t_R": {
+      "width_um": 0.324,
+      "height_um": 0.27,
+      "area_um2": 0.08748,
+      "example": "_64816_"
+    },
+    "AO21x1_ASAP7_75t_R": {
+      "width_um": 0.324,
+      "height_um": 0.27,
+      "area_um2": 0.08748,
+      "example": "_72094_"
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+      "width_um": 1.08,
+      "height_um": 0.27,
+      "area_um2": 0.2916,
+      "example": "u.u_9999/Q$_DFF_P_"
+    },
+    "OR2x2_ASAP7_75t_R": {
+      "width_um": 0.324,
+      "height_um": 0.27,
+      "area_um2": 0.08748,
+      "example": "_22973_"
+    }
+  },
+  "ff_delta": 14,
+  "clock_pin_delta": 14,
+  "reset_pin_delta": 0,
+  "cycle_delta": 0,
+  "status": "STATIC_COST_NOT_MAPPED_OR_PLACED",
+  "constructive_gate_delta": {
+    "DFFHQNx1_ASAP7_75t_R": 14,
+    "NOR2x1_ASAP7_75t_R": 14,
+    "NAND2x1_ASAP7_75t_R": 28,
+    "OR2x2_ASAP7_75t_R": 14,
+    "AND2x2_ASAP7_75t_R": -14
+  },
+  "constructive_delta_body_um2": 7.75656,
+  "mapping_status": "not executed; native QN absorbed into mux, additional share/resize/clock/PG/routing excluded"
+}
