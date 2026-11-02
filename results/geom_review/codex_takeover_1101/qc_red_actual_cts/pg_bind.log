@@ -1,0 +1,10 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+RED_OPEN_PG_BEFORE 976
+RED_OPEN_PG_MASTER BUFx2_ASAP7_75t_R 706
+RED_OPEN_PG_MASTER BUFx3_ASAP7_75t_R 270
+OT_PG_CONNECT red_actual_cts_pg rules=2 protected_rebound=0
+OT_PG_BOUND red_actual_cts_pg pg_terms=465238 open=0
+RED_PG_SOURCE_GUARD_PASS all masters poses statuses DATA CLOCK BTerms netflags
