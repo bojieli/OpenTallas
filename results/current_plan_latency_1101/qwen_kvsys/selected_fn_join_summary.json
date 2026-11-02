@@ -1,0 +1,1293 @@
+{
+ "selected_bind_source": "/srv/opentallas-scratch2/claude/die-kv-60/geom2/bind_merged/bind_latency.json",
+ "bind_plan_digest": null,
+ "candidate_plan_digest": "d4710b2e4571100a",
+ "native_bus_rows": 2545,
+ "current_plan_lanes": 2404,
+ "row_status_counts": {
+  "same_identity": 2404,
+  "lane_absent": 141
+ },
+ "same_identity_distinct_lanes": 2404,
+ "same_identity_cycle_delta_hist": {
+  "0": 2404
+ },
+ "scope": "compare only; selected native binding is not assumed the same source-plan cohort",
+ "landing_pad_groups": 2226,
+ "max_landing_pad": 116,
+ "non_plan_buses": [
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__1",
+   "bind_dst": "hg_EN_0.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__5",
+   "bind_dst": "hg_EN_1.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__9",
+   "bind_dst": "hg_EN_2.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__13",
+   "bind_dst": "hg_EN_3.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__17",
+   "bind_dst": "hg_EN_4.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__21",
+   "bind_dst": "hg_EN_5.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__25",
+   "bind_dst": "hg_EN_6.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__29",
+   "bind_dst": "hg_EN_7.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__2",
+   "bind_dst": "hg_ES_0.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__6",
+   "bind_dst": "hg_ES_1.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__10",
+   "bind_dst": "hg_ES_2.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__14",
+   "bind_dst": "hg_ES_3.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__18",
+   "bind_dst": "hg_ES_4.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__22",
+   "bind_dst": "hg_ES_5.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__26",
+   "bind_dst": "hg_ES_6.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__30",
+   "bind_dst": "hg_ES_7.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__3",
+   "bind_dst": "hg_WN_0.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__7",
+   "bind_dst": "hg_WN_1.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__11",
+   "bind_dst": "hg_WN_2.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__15",
+   "bind_dst": "hg_WN_3.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__19",
+   "bind_dst": "hg_WN_4.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__23",
+   "bind_dst": "hg_WN_5.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__27",
+   "bind_dst": "hg_WN_6.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__31",
+   "bind_dst": "hg_WN_7.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__4",
+   "bind_dst": "hg_WS_0.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__8",
+   "bind_dst": "hg_WS_1.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__12",
+   "bind_dst": "hg_WS_2.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__16",
+   "bind_dst": "hg_WS_3.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__20",
+   "bind_dst": "hg_WS_4.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__24",
+   "bind_dst": "hg_WS_5.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__28",
+   "bind_dst": "hg_WS_6.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__32",
+   "bind_dst": "hg_WS_7.ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__49",
+   "bind_dst": "hgi_EN_0.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__50",
+   "bind_dst": "hgi_EN_1.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__51",
+   "bind_dst": "hgi_EN_2.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__52",
+   "bind_dst": "hgi_EN_3.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__53",
+   "bind_dst": "hgi_EN_4.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__54",
+   "bind_dst": "hgi_EN_5.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__55",
+   "bind_dst": "hgi_EN_6.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__56",
+   "bind_dst": "hgi_EN_7.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__33",
+   "bind_dst": "hgi_ES_0.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__41",
+   "bind_dst": "hgi_ES_1.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__42",
+   "bind_dst": "hgi_ES_2.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__43",
+   "bind_dst": "hgi_ES_3.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__44",
+   "bind_dst": "hgi_ES_4.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__45",
+   "bind_dst": "hgi_ES_5.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__46",
+   "bind_dst": "hgi_ES_6.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__47",
+   "bind_dst": "hgi_ES_7.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__57",
+   "bind_dst": "hgi_WN_0.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__58",
+   "bind_dst": "hgi_WN_1.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__59",
+   "bind_dst": "hgi_WN_2.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__60",
+   "bind_dst": "hgi_WN_3.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__61",
+   "bind_dst": "hgi_WN_4.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__62",
+   "bind_dst": "hgi_WN_5.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__63",
+   "bind_dst": "hgi_WN_6.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__64",
+   "bind_dst": "hgi_WN_7.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__34",
+   "bind_dst": "hgi_WS_0.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__35",
+   "bind_dst": "hgi_WS_1.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__36",
+   "bind_dst": "hgi_WS_2.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__37",
+   "bind_dst": "hgi_WS_3.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__38",
+   "bind_dst": "hgi_WS_4.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__39",
+   "bind_dst": "hgi_WS_5.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__40",
+   "bind_dst": "hgi_WS_6.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__48",
+   "bind_dst": "hgi_WS_7.ri_head2_u_score_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__0",
+   "bind_dst": "hub_C.ri_ahub_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__83",
+   "bind_dst": "pc_EN_0.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__85",
+   "bind_dst": "pc_EN_1.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__97",
+   "bind_dst": "pc_EN_2.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__98",
+   "bind_dst": "pc_EN_3.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__99",
+   "bind_dst": "pc_EN_4.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__89",
+   "bind_dst": "pc_EN_5.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__90",
+   "bind_dst": "pc_EN_6.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__109",
+   "bind_dst": "pc_EN_7.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__81",
+   "bind_dst": "pc_ES_0.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__86",
+   "bind_dst": "pc_ES_1.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__100",
+   "bind_dst": "pc_ES_2.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__101",
+   "bind_dst": "pc_ES_3.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__102",
+   "bind_dst": "pc_ES_4.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__91",
+   "bind_dst": "pc_ES_5.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__92",
+   "bind_dst": "pc_ES_6.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__110",
+   "bind_dst": "pc_ES_7.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__84",
+   "bind_dst": "pc_WN_0.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__87",
+   "bind_dst": "pc_WN_1.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__103",
+   "bind_dst": "pc_WN_2.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__104",
+   "bind_dst": "pc_WN_3.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__105",
+   "bind_dst": "pc_WN_4.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__93",
+   "bind_dst": "pc_WN_5.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__94",
+   "bind_dst": "pc_WN_6.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__111",
+   "bind_dst": "pc_WN_7.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__82",
+   "bind_dst": "pc_WS_0.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__88",
+   "bind_dst": "pc_WS_1.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__106",
+   "bind_dst": "pc_WS_2.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__107",
+   "bind_dst": "pc_WS_3.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__108",
+   "bind_dst": "pc_WS_4.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__95",
+   "bind_dst": "pc_WS_5.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__96",
+   "bind_dst": "pc_WS_6.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__112",
+   "bind_dst": "pc_WS_7.ri_slg_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__0",
+   "bind_dst": "phy_EN_1.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__1",
+   "bind_dst": "phy_EN_2.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__2",
+   "bind_dst": "phy_EN_3.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__3",
+   "bind_dst": "phy_EN_4.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__4",
+   "bind_dst": "phy_EN_5.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__5",
+   "bind_dst": "phy_EN_6.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__6",
+   "bind_dst": "phy_EN_7.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__7",
+   "bind_dst": "phy_ES_1.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__8",
+   "bind_dst": "phy_ES_2.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__9",
+   "bind_dst": "phy_ES_3.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__10",
+   "bind_dst": "phy_ES_4.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__11",
+   "bind_dst": "phy_ES_5.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__12",
+   "bind_dst": "phy_ES_6.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__13",
+   "bind_dst": "phy_ES_7.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__14",
+   "bind_dst": "phy_WN_1.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__15",
+   "bind_dst": "phy_WN_2.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__16",
+   "bind_dst": "phy_WN_3.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__17",
+   "bind_dst": "phy_WN_4.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__18",
+   "bind_dst": "phy_WN_5.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__19",
+   "bind_dst": "phy_WN_6.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__20",
+   "bind_dst": "phy_WN_7.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__21",
+   "bind_dst": "phy_WS_1.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__22",
+   "bind_dst": "phy_WS_2.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__23",
+   "bind_dst": "phy_WS_3.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__24",
+   "bind_dst": "phy_WS_4.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__25",
+   "bind_dst": "phy_WS_5.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__26",
+   "bind_dst": "phy_WS_6.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_hbm_rst_n__27",
+   "bind_dst": "phy_WS_7.ri_core_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__80",
+   "bind_dst": "pv_N_0.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__68",
+   "bind_dst": "pv_N_1.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__70",
+   "bind_dst": "pv_N_2.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__72",
+   "bind_dst": "pv_N_3.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__74",
+   "bind_dst": "pv_N_4.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__76",
+   "bind_dst": "pv_N_5.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__78",
+   "bind_dst": "pv_N_6.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__67",
+   "bind_dst": "pv_N_7.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__65",
+   "bind_dst": "pv_S_0.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__66",
+   "bind_dst": "pv_S_1.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__69",
+   "bind_dst": "pv_S_2.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__71",
+   "bind_dst": "pv_S_3.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__73",
+   "bind_dst": "pv_S_4.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__75",
+   "bind_dst": "pv_S_5.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__77",
+   "bind_dst": "pv_S_6.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  },
+  {
+   "lane": null,
+   "status": "lane_absent",
+   "bind_src": "hub_Wi.rs_host_die_rst_n__79",
+   "bind_dst": "pv_S_7.ri_pv_u_g0_b0_rst_n",
+   "bind_width": null,
+   "bound_stages": 2,
+   "old_plan_cycles": 2
+  }
+ ],
+ "non_plan_bus_lane_keys": {
+  "None": 141
+ },
+ "native_bind_reduced_rows_sha256": "1e02ded3fd7670090107237201f1c7bece32b5e563ca9cd2e4a6e695f67ed5ac"
+}
