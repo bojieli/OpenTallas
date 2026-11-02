@@ -7,6 +7,7 @@
 #   otherwise pass p+1 = prd_mk.sh from pass p's 5_1_grt.odb + its RCX SPEF in D_p<p+1>.
 #   prd_run.sh D [CPUS=8] [MEM_GB=32] [MAX_PASS=2]          (heavy: through ot-run --mem MEM_GB --dir D)
 #   OT_PRD_FROM (from D/variant.env, prd_mk.sh): route = route-keeping ECO (pass p+1 again starts from pass p's routed DB)
+#   OT_PRD_POST=0: skip the kit runner's GOAL=post sign-off after do-finish (default 1 = unchanged)
 # Result: D/prd_result.json (per pass: rc, clk check, TC/BC slew + cap counts, sink masters restored; final dir).
 set -uo pipefail
 D0=$(cd "$1" && pwd); CPUS=${2:-8}; MEM=${3:-32}; MAXP=${4:-2}
@@ -48,9 +49,9 @@ while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
   NAME=prd-$(basename $(dirname $D) | cut -c1-30)-$(basename $D)-$$
   PATCH=true; [ "${OT_HOLD_MM_KIT:-0}" = 1 ] && PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
   $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work \
-    -e HUID=$(id -u) -e HGID=$(id -g) -e OT_PRD_PASS=$P -e OT_MAX_FANOUT=$OT_MAX_FANOUT -e OT_SLEW_MARGIN=$OT_SLEW_MARGIN \
+    -e HUID=$(id -u) -e HGID=$(id -g) -e OT_PRD_PASS=$P -e OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} -e OT_MAX_FANOUT=$OT_MAX_FANOUT -e OT_SLEW_MARGIN=$OT_SLEW_MARGIN \
     -e OT_SETUP_MARGIN=$OT_SETUP_MARGIN -e OT_HOLD_MARGIN=$OT_HOLD_MARGIN -e OT_HOLD_ALLOW_SETUP=$OT_HOLD_ALLOW_SETUP \
-    -e OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} -e "OT_PRD_PROTECT_NETS=${OT_PRD_PROTECT_NETS:-}" -e OT_PRD_FROM=${OT_PRD_FROM:-grt} -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -e "OT_PAD_MASTERS=${OT_PAD_MASTERS:-}" -e OT_VCLK_CORNER=${OT_VCLK_CORNER:-} \
+    -e OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} -e "OT_PRD_PROTECT_NETS=${OT_PRD_PROTECT_NETS:-}" -e OT_PRD_FROM=${OT_PRD_FROM:-grt} -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -e "OT_PAD_MASTERS=${OT_PAD_MASTERS:-}" -e OT_VCLK_CORNER=${OT_VCLK_CORNER:-} -e OT_PRD_NO_HOLD=${OT_PRD_NO_HOLD:-0} \
     -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $PATCH; \
     make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS do-route $ROUTE_CORNERS SKIP_INCREMENTAL_REPAIR=1; rc=\$?; \
     chown -R \$HUID:\$HGID /work; exit \$rc" > "$D/run_prd.log" 2>&1
@@ -71,7 +72,8 @@ while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
   if [ "$st$sc$bt$bc" = 0000 ] || [ $P -ge $MAXP ]; then FINAL=$D; break; fi
   B=$(ls -d $D/run/results/asap7/*/base)
   N=${D0}_p$((P + 1))
-  OT_PRD_FROM=${OT_PRD_FROM:-grt} OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} OT_PRD_PROTECT_NETS="${OT_PRD_PROTECT_NETS:-}" bash $HERE/prd_mk.sh $D $N $V $SO $B/5_2_route_rcx.spef || { rc=7; break; }
+  OT_SLEW_MARGIN="$OT_SLEW_MARGIN" OT_SETUP_MARGIN="$OT_SETUP_MARGIN" OT_HOLD_ALLOW_SETUP="$OT_HOLD_ALLOW_SETUP" OT_HOLD_MAXBUF="$OT_HOLD_MAXBUF" \
+  OT_PRD_HOOK="$D/prd_hook.tcl" OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} OT_PRD_FROM=${OT_PRD_FROM:-grt} OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} OT_PRD_PROTECT_NETS="${OT_PRD_PROTECT_NETS:-}" bash $HERE/prd_mk.sh $D $N $V $SO $B/5_2_route_rcx.spef || { rc=7; break; }
   D=$N; P=$((P + 1))
 done
 if [ -n "$FINAL" ] && [ "${OT_PRD_FINISH:-1}" = 1 ]; then
@@ -81,7 +83,8 @@ if [ -n "$FINAL" ] && [ "${OT_PRD_FINISH:-1}" = 1 ]; then
   rc=$?
   $DK run --rm -v "$FINAL":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
   POST=-
-  if [ $rc = 0 ]; then
+  # OT_PRD_POST=0 (KW-ECO-1 eco_loop.py): finish only; the caller restores the kit config.mk and signs off itself
+  if [ $rc = 0 ] && [ "${OT_PRD_POST:-1}" = 1 ]; then
     for r in run_kit_hbm.sh run_kit_kv.sh run_kit.sh; do
       # only runners with a sign-off-only GOAL=post (KV / HBM); others: the die owner signs off FINAL
       if [ -f $FINAL/$r ] && grep -qE 'GOAL ?!= ?post|GOAL=post' $FINAL/$r; then POST=$r; bash $FINAL/$r $FINAL post $MEM $CPUS > $FINAL/run_prd_post.log 2>&1; rc=$?; break; fi

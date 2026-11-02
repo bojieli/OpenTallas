@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.ahub.child_clock_evidence_gap.v1",
+  "scope": "read-only exact retained-view inventory; no CAD, signoff edits or waiver",
+  "host": "intel1",
+  "retained_root": "/srv/opentallas-scratch2/claude/signed-keep/wt/s81-r25-lec/physical/ref_tile",
+  "children": [
+    {
+      "directory": "ot_nhb_zh_m5",
+      "master": "ot_nhb_zh",
+      "copies": 4,
+      "files": 27,
+      "symlinks": 0,
+      "all_clock_ff_count": 8342,
+      "retained_raw_db": false,
+      "retained_spef": false,
+      "retained_gate_netlist": false,
+      "retained_ilm": false,
+      "per_endpoint_clock_arrivals": false
+    },
+    {
+      "directory": "qkh_recip_ref",
+      "master": "ot_qkh_recip_leaf",
+      "copies": 1,
+      "files": 31,
+      "symlinks": 0,
+      "all_clock_ff_count": 8994,
+      "retained_raw_db": false,
+      "retained_spef": false,
+      "retained_gate_netlist": false,
+      "retained_ilm": false,
+      "per_endpoint_clock_arrivals": false
+    }
+  ],
+  "current_api": "tools/die_plan/signoff.py:clock_model_coverage detects is_macro_cell + nonzero clock_tree_path; no child expansion or sidecar input",
+  "status": "PHYSICAL_DATA_AND_API_GAP",
+  "child_signed_passes": "PRESERVED"
+}

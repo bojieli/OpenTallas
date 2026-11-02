@@ -1,0 +1,20 @@
+{
+ "function": "ln2_nk",
+ "implementation": "balanced_onehot_and_or",
+ "binary_indices": 256,
+ "explicit_rows": 254,
+ "default_zero_rows": [
+  128,
+  129
+ ],
+ "table_sha256": "9ef6554ac93c5214fa124532ecdcd88908e6c8e8cb6aac7dc6be4708ab5dee14",
+ "added_cycles": 0,
+ "source_sha256": "83bf857ea996607b4881dd7a5b438b6a7b665538928c1089b5c6130b2b1c68df",
+ "result_sha256": "91a1de322cd6368e1e5d5f1ddd8bad82c3c0ef53d4330f86d5979d7b60623991",
+ "results": {
+  "nominal": 0,
+  "mutant": 1
+ },
+ "nominal_indices": 256,
+ "mutant_caught": true
+}

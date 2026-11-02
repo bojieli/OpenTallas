@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS",
+  "logical_bits": 65536,
+  "old_mux": 4,
+  "new_mux": 1,
+  "old_unique_bits": 65536,
+  "new_unique_bits": 65536,
+  "repair": "rr_en=0,cr_en=0 as in native caller",
+  "capacity_bits": 65536,
+  "cycles_added": 0,
+  "old_to_new": "(address//4, bit*4+address%4) -> (address,bit)"
+}

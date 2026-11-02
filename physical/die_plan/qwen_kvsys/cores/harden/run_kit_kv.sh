@@ -14,6 +14,8 @@ set -uo pipefail
 # FLOW-CANARY 10-25 21:10: MCMM kits (config CORNERS = tc bc) run that GRT step in the kit corners (FF vclk frame), not
 # CORNERS=bc: an FF-only GRT never repairs TT setup after GRT parasitics (KV core canary c51 TT -57.66; A/B from the c51
 # 4_cts checkpoint with tc+bc at GRT: TT -5.91/5 EP, FF hold -1.20/3, DRV 0). Non-MCMM kits keep CORNERS=bc.
+# DIE-KV-60 ctlin 11-01: a kit staged with OT_SYNTH_KEEPDC=1 (gen --synth-keepdc / recipe synth_keepdc) patches the
+# disposable container synth.tcl with synth_keepdc.py before synth (opt_dff/wreduce -keepdc; fails closed).
 # KV-KITS-15 (SIGNOFF-MODES-2, HBM-CORES-R11 form): a kit staged two-mode (gen --two-mode-grt: OT_HOLD_MM=1) patches the
 # disposable container with orfs_hold_mm.py first and runs the GRT hold repair in its own two-mode session (scene tc
 # TT setup vclk OT_VCLK_TT / scene BC FF hold vclk OT_VCLK_FF, no OT_VCLK_CORNER), checked by kit_modes.py (rc 9).
@@ -34,7 +36,7 @@ fi
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
-  rc=0; MM=\$(grep -c '^override export OT_HOLD_MM = 1' /work/config.mk); \
+  rc=0; if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; MM=\$(grep -c '^override export OT_HOLD_MM = 1' /work/config.mk); \
   if [ \$MM != 0 ]; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 \
     || { cat /work/orfs_hold_mm.log; echo 'KIT_MODES FAIL orfs_hold_mm patch'; rc=9; }; fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/rtl_lint.py ]; then python3 -I /work/rtl_lint.py /work > /work/rtl_lint.log 2>&1; rc=\$?; tail -3 /work/rtl_lint.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR lint (implicit / undriven nets, missing module or port; or NOT RUN), see rtl_lint.json' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; fi; \
@@ -42,6 +44,8 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   if [ \$rc = 0 ] && [ $GOAL != post ]; then python3 -I /work/selrange_gate.py /work --out /work/selrange.json > /work/selrange.log 2>&1; src=\$?; tail -3 /work/selrange.log; if [ \$src = 1 ]; then rc=1; elif [ \$src != 0 ]; then echo \"SELRANGE NOT RUN (frontend cannot elaborate; see selrange.log)\"; fi; fi; \
   PD=/OpenROAD-flow-scripts/flow/platforms/asap7; \
   if [ \$rc = 0 ] && [ $GOAL != post ] && grep -q '^export ADDER_MAP_FILE = /work/adder_map_dontuse.v' /work/config.mk; then python3 -I /work/adder_map_dontuse.py gen --platform-dir \$PD --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ $GOAL != post ] && grep -q '^override export OT_SYNTH_KEEPDC = 1' /work/config.mk; then python3 -I /work/synth_keepdc.py /OpenROAD-flow-scripts/flow/scripts/synth.tcl > /work/synth_keepdc.log 2>&1 \
+    || { cat /work/synth_keepdc.log; echo 'FAIL_PREFLOOR synth_keepdc patch (unrecognised ORFS synth.tcl)'; rc=9; }; fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then \$M synth; rc=\$?; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py check --platform-dir \$PD --netlist \$N --report /work/dont_use_check.json; rc=\$?; fi; \

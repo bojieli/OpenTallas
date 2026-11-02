@@ -7,6 +7,7 @@ Normal POST/report/database writing, tapcell, PDN and placement stages remain.
 import json
 import re
 from pathlib import Path
+import cores  # noqa: E402  (view path resolver: DIE-KV-60/adp 11-01)
 
 
 VALIDATOR = r'''
@@ -77,7 +78,7 @@ def install(t,kd,macros,core_area,root):
         inst=re.sub(r'(?<!\\)([\[\]])',r'\\\1',inst)
         if inst in seen:raise ValueError('duplicate fully fixed macro instance '+inst)
         seen.add(inst)
-        text=(Path(root)/lef).read_text()
+        text=cores.resolve(lef,root).read_text()  # sparse/pruned source: git store (DIE-KV-60/adp)
         found=re.search(r'\bMACRO\s+'+re.escape(master)+r'\s+(.*?)\bEND\s+'+re.escape(master)+r'\b',text,re.S)
         size=re.search(r'\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)',found[1]) if found else None
         if size is None:raise ValueError('fully fixed macro lacks exact LEF master size '+master)

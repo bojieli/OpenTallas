@@ -138,3 +138,17 @@ def test_g5_prerepair_screen_keeps_existing_gate_receipts():
         rule = H.RULE_COMMITS[sha]
         assert rule["kind"] == "neutral"
         assert rule["paths"] == ("tools/orfs_hold_mm.tcl",)
+
+
+def test_explicit_grt_budget_preserves_saved_gate_receipts():
+    import helper_overlay as H
+    rule = H.RULE_COMMITS["f234e2a733c0013608bfa78334aa6450413a3b2b"]
+    assert rule["kind"] == "neutral"
+    assert rule["paths"] == ("tools/orfs_hold_mm.py",)
+
+
+def test_optional_native_clock_retention_preserves_existing_view_gates():
+    import helper_overlay as H
+    rule = H.RULE_COMMITS["9cd35448c0540069af487f8afbe78ac9bcdc63fd"]
+    assert rule["kind"] == "neutral"
+    assert rule["paths"] == ("tools/tt_views/view_export.py",)

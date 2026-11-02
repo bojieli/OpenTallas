@@ -1,0 +1,8 @@
+MISMATCH cycle=6 bit=0 ref=0 cand=x
+MISMATCH cycle=414 bit=0 ref=1 cand=0
+MISMATCH cycle=547 bit=0 ref=0 cand=1
+MISMATCH cycle=706 bit=0 ref=1 cand=0
+MISMATCH cycle=852 bit=0 ref=0 cand=1
+RESULT MUT=1 cycles=1139 mismatches=5 known=2583362 unknown=15836 ctl=64 io=112 fault_rise=2 fault_clear=2 hold=277 transition_bad=4 writes=849 starts=4 warm=2
+FAIL
+tb.sv:70: $finish called at 949926 (1ps)

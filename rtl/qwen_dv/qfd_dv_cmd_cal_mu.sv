@@ -74,6 +74,8 @@ module qfd_dv_cmd_cal_mu #(
     parameter integer UB = (NU > 1) ? $clog2(NU) : 1,
     parameter integer UVM_STRIDE = 0,               // per-user VM / landing base stride (address-field units)
     parameter integer PIDX_STRIDE = 0,              // per-user SU program-index stride
+    parameter integer TABLE_USER_RELOC = 0,         // opt-in: ROOT VM, STN BTAB and ROPE_ARM private CROM banks
+    parameter integer BTAB_COMPACT = 1,             // match native slice_tload: 272 shared/user0 + three72-word banks
     parameter integer UTAG_LSB = 6,                 // XC tag bit of the user field
     parameter integer UFOLD = 0,                    // 1: user into STN cmd[52:51] / AMAX cmd[9:8] (NU > 1, UB <= 2)
     parameter integer CTX_DW = 0                    // 1: DW5 / DW6 = the MU context record (ctx_dw / ctx_load)
@@ -283,6 +285,16 @@ module qfd_dv_cmd_cal_mu #(
     wire [24:0]   r_ar = {1'b0, ic[27:4]} + ub, r_dd = {1'b0, ic[51:28]} + ub, r_em = {1'b0, ic[77:54]} + ub,
                   r_db = {1'b0, ic[49:26]} + ub;
     wire [9:0]    r_px = {1'b0, ic[12:4]} + up;
+    wire [24:0]   r_ss = {1'b0, ic[34:11]} + ub, r_rx = {1'b0, ic[59:36]} + ub;
+    wire [8:0]    table_bbase = (MUT==12 || ru==0)?9'd0:(ru==1)?9'd272:(ru==2)?9'd344:9'd416;
+    // Compact sbase72..271 is the common read-only HEAD table, retained when
+    // layer tables0..71 reload. Other users' layer tables occupy272..487.
+    wire [9:0]    table_boffset = (BTAB_COMPACT!=0) ?
+                  ((ic[23:15]<72)?{1'b0,table_bbase}:10'd0) : ((MUT==12)?10'd0:(10'(ru)*10'd128));
+    wire [9:0]    r_sb = {1'b0, ic[23:15]} + table_boffset;
+    // Native RP1 consumes eight 512-bit beats as two banks of four CROM rows.
+    // Its row base has no hidden user selector; match the loader's128-row stride.
+    wire [10:0]   r_rope = {1'b0, ic[15:6]} + ((MUT==12)?11'd0:(11'(ru)*11'd128));
     reg  [115:0]  rc; reg r_bad;
     always @* begin
         rc = ic; r_bad = 1'b0;
@@ -290,11 +302,25 @@ module qfd_dv_cmd_cal_mu #(
             case (i_kind)
                 3'd4: begin rc[27:4] = r_ar[23:0]; rc[51:28] = r_dd[23:0]; rc[77:54] = r_em[23:0];
                             r_bad = r_ar[24] | r_dd[24] | r_em[24]; end
-                3'd2: if (ic[24]) begin rc[49:26] = r_db[23:0]; r_bad = r_db[24]; end
+                3'd2: begin
+                    if (ic[24]) begin rc[49:26] = r_db[23:0]; r_bad = r_db[24]; end
+                    if (TABLE_USER_RELOC != 0) begin
+                        rc[23:15] = r_sb[8:0];
+                        r_bad = r_bad | r_sb[9] | ((BTAB_COMPACT!=0)?(ic[23:15]>=272):(ic[23:15]>=128));
+                    end
+                end
+                3'd3: if (TABLE_USER_RELOC != 0) begin
+                    rc[34:11] = r_ss[23:0]; rc[59:36] = r_rx[23:0];
+                    r_bad = r_ss[24] | r_rx[24] | (ic[34:11]>=UVM_STRIDE) | (ic[59:36]>=UVM_STRIDE);
+                end
                 3'd1: begin rc[12:4] = r_px[8:0]; r_bad = r_px[9]; end
                 3'd0: if (ic[5:4] == 2'd0) begin
                           if (ic[23 + UTAG_LSB +: UB] != {UB{1'b0}}) r_bad = 1'b1;
                           rc[23 + UTAG_LSB +: UB] = ru;
+                      end else if (TABLE_USER_RELOC != 0 && ic[5:4] == 2'd1) begin
+                          rc[15:6] = r_rope[9:0];
+                          // The complete four-row write must stay in this user's bank.
+                          r_bad = r_rope[10] | (ic[15:6] > 10'd124);
                       end
                 3'd6: if (UFOLD != 0) begin
                           if (ic[9:8] != 2'd0) r_bad = 1'b1;
@@ -309,6 +335,10 @@ module qfd_dv_cmd_cal_mu #(
             end
         end
     end
+    generate if (TABLE_USER_RELOC!=0 && (TABLE_USER_RELOC!=1 || NU<2 || NU>4 ||
+                 UVM_STRIDE!=4096 || PIDX_STRIDE!=128 || (BTAB_COMPACT!=0 && BTAB_COMPACT!=1))) begin:g_table_abi_bad
+        initial $error("qfd_dv_cmd_cal_mu: table relocation needs exact native four-user bank ABI");
+    end endgenerate
     generate if (UFOLD != 0 && (NU < 2 || UB > 2)) begin : g_ufold_bad
         initial $error("qfd_dv_cmd_cal_mu: UFOLD needs 2 <= NU <= 4");
     end endgenerate

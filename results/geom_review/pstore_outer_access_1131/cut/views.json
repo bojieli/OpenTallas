@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.hbm_arch.core_views.v1",
+  "plan": "die_plan.json",
+  "views": 1,
+  "modules": 1,
+  "placed": 1,
+  "no_pins_table": [],
+  "by_family": {
+    "SU": 1
+  },
+  "view_list": [
+    {
+      "view": "ot_hgi_sfu_programme_store_r10@17784bf3df1b",
+      "module": "ot_hgi_sfu_programme_store_r10",
+      "outline_um": [
+        673.92,
+        803.52
+      ],
+      "pins_file": "cores/pstore.json",
+      "pins_sha256": "17784bf3df1b4032ab23a253ea04c62990d95516642fd2b8a88de0caa0e975a5",
+      "pins": 2904,
+      "family": "SU",
+      "instances": [
+        "isolated_pstore_trial.u_pstore"
+      ],
+      "placed": 1,
+      "tables_for_module": 1,
+      "canonical_type": null,
+      "recipe_keys": [
+        "ot_hgi_sfu_programme_store_r10"
+      ],
+      "blockers": []
+    }
+  ]
+}

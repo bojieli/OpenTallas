@@ -1,0 +1,75 @@
+{
+ "type": "iqf__t1",
+ "variant": "v2 relay u_rrl_109 one site east",
+ "band_idx_i0": [
+  1399.68,
+  598.272,
+  1425.6,
+  708.644
+ ],
+ "sites_before": [
+  [
+   "u_cland_collect_rst_n_t21",
+   [
+    1423.44,
+    611.352,
+    1427.76,
+    615.672
+   ],
+   "collector:rst_n_t21"
+  ],
+  [
+   "u_cland_rst_idx_i0",
+   [
+    1423.44,
+    611.352,
+    1427.76,
+    615.672
+   ],
+   "raw-copy-optional"
+  ],
+  [
+   "u_cland_reset_rst_n_t21",
+   [
+    1423.44,
+    611.352,
+    1427.76,
+    615.672
+   ],
+   "raw-copy-optional"
+  ]
+ ],
+ "sites_after": [
+  [
+   "u_cland_collect_rst_n_t21",
+   [
+    1425.6,
+    611.352,
+    1429.92,
+    615.672
+   ],
+   "collector:rst_n_t21"
+  ],
+  [
+   "u_cland_rst_idx_i0",
+   [
+    1425.6,
+    611.352,
+    1429.92,
+    615.672
+   ],
+   "raw-copy-optional"
+  ],
+  [
+   "u_cland_reset_rst_n_t21",
+   [
+    1425.6,
+    611.352,
+    1429.92,
+    615.672
+   ],
+   "raw-copy-optional"
+  ]
+ ],
+ "straddling_after": []
+}

@@ -179,6 +179,7 @@ module ot_hbm_su_programme #(
   parameter integer MACROS=INDEX_GROUPS*INDEX_BANKS+COLS,
   parameter integer PIPE=0, MUT=0,
   parameter integer IOG=4, IGRP=4, DOG=2, RS=4, CFGR=4,  // PIPE 2 only
+  parameter integer PIN_EXPORT=0,
   parameter integer FADV=0                               // PIPE 2: fault reported FADV edges earlier (pgcol leaf: 1)
 )(input logic clk, rst_n, input logic [MACROS-1:0] clk_macro,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row,
@@ -186,7 +187,7 @@ module ot_hbm_su_programme #(
   input logic start, input logic [15:0] length,
   output logic busy, valid, done, fault,
   output logic [15:0] edge_index,
-  output logic [LINE_BITS-1:0] command);
+  output logic [LINE_BITS-1:0] command, output wire valid_pin, output wire [15:0] edge_index_pin);
   function automatic integer dict_base(input integer c);
     integer v,k;
     begin
@@ -365,6 +366,22 @@ module ot_hbm_su_programme #(
       end
     end
   end
+  generate if(PIN_EXPORT!=0) begin:g_pin_export
+    logic pin_valid_d; logic [15:0] pin_edge_d;
+    always_comb begin
+      if(!rst_n) begin pin_valid_d=0; pin_edge_d=0; end
+      else begin
+        pin_valid_d=c_v;
+        if(c_v) pin_edge_d=c_e; else pin_edge_d=edge_index;
+      end
+    end
+    // The private retained capture isolates the OUTPUT copy from internal state;
+    // opt_merge may merge equal flops across a flat scope despite wire keep tags.
+    (* keep = 1, keep_hierarchy = 1 *) ot_hbm_su_native_pin_reg #(.W(17)) u_pin
+      (.clk(clk),.d({pin_valid_d,pin_edge_d}),.q({valid_pin,edge_index_pin}));
+  end else begin:g_no_pin_export
+    assign valid_pin=valid; assign edge_index_pin=edge_index;
+  end endgenerate
   // command register: PIPE 0 synchronous reset (unchanged); PIPE 1 no reset (clears the edge after the valid chain
   // resets)
   generate if(PIPE==0) begin:g_cmd0
@@ -377,4 +394,12 @@ module ot_hbm_su_programme #(
       always_ff @(posedge clk) command[cb] <= c_v_c[(cb/256)*RS+(cb%256)/(256/RS)] & templates[cb];
     end
   end endgenerate
+endmodule
+
+// An existing state edge captured in a separate retained scope; NOT an added
+// input/output shell. Its d input is the native observable's actual NEXTSTATE.
+(* keep_hierarchy = 1, keep = 1 *)
+module ot_hbm_su_native_pin_reg #(parameter integer W=1)
+ (input wire clk,input wire [W-1:0] d,output logic [W-1:0] q);
+  always_ff @(posedge clk) q<=d;
 endmodule

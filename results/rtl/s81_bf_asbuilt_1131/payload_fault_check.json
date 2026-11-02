@@ -1,0 +1,21 @@
+{
+ "summary": {
+  "words": 6,
+  "rows": 6,
+  "complete_rows_at_root": 0,
+  "partial_words": 6,
+  "plan_exact": false,
+  "end": "END edges=3063 ret_words=6 xo_checked=3061 fault=0"
+ },
+ "fixture_rows": 6,
+ "errors": [
+  "MISMATCH edge 414 row 1 lo 0 k 0 got bd01c569/0 want bc51fb4e/0",
+  "MISMATCH edge 417 row 0 lo 0 k 0 got bc51fb4e/0 want bd01c569/0",
+  "PLAN_MISMATCH predicted 6 words, got 6; first diff ((414, 1, (0, 0, 4), 3159489358, 0), (414, 1, (0, 0, 4), 3171009897, 0))"
+ ],
+ "frame": "u_f_7L10",
+ "op": "attn.wo_a",
+ "field_phase": 106,
+ "mutant": "swap",
+ "pass": false
+}

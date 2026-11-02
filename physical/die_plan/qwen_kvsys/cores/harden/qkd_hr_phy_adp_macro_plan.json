@@ -1,0 +1,29 @@
+{
+ "source": "DIE-KV-60/adp 11-01 MACRO-FIT V1: native SRAM ot_sram_1r1w_512x128_m4_r2c2 174.12 x 29.736 R270 on the core E edge (rotated footprint 29.736 x 174.12); pins (macro short ends) face the N / S logic gutters, W logic band 9.13 um holds the W-face pins; x = 0.012 mod 0.048 (M5 pin phase), y on the 8.64 lattice; PG M4 stripes vertical -> M6 straps + M4-M6 connect",
+ "module": "qkd_hr_phy_adp",
+ "outline_um": [
+  51.84,
+  207.36
+ ],
+ "halo_um": 4.32,
+ "added_cycles": 0,
+ "children": {
+  "ot_sram_1r1w_512x128_m4_r2c2": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+ },
+ "blocks": [
+  {
+   "inst": "u_slice.u_body.g_grp[0].u_rb.g_sram.g_t[0].u_m",
+   "master": "ot_sram_1r1w_512x128_m4_r2c2",
+   "x": 17.772,
+   "y": 17.28,
+   "orient": "R270"
+  }
+ ],
+ "pg_pin_layer": "M4",
+ "grid_um": 8.64,
+ "static_rows": true,
+ "track_offset_um": [
+  0.012,
+  0
+ ]
+}

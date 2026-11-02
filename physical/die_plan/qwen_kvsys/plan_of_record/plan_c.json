@@ -657647,7 +657647,7 @@
       0.0
      ],
      "pins_file": "pins/kvs_ctl_pins.json",
-     "note": "qkd_kvs_ctl leaf core; REUSE-CLOSED qkd_kvs_ctl_mu2-mu2-9105d74ed (record d20111be0, TT +24.38 / FF +8.88 ps); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | KV-PLAN3 v3.9e: re-outlined 475.2^2 -> 371.52^2, x-centred on the type (GEOM-REVIEW-2 05:45 FAIL: S half ~70 % empty)"
+     "note": "qkd_kvs_ctl current-source candidate; historical d20111be0 views are not current after the 7076-pin refresh; exact rebuilt boundary/physical signoff required; retained origin + [0.108, 0.012] platform-track basis | KV-PLAN3 v3.9e: re-outlined 475.2^2 -> 371.52^2, x-centred on the type (GEOM-REVIEW-2 05:45 FAIL: S half ~70 % empty)"
     }
    ],
    "face_pins_per_um": 12.1,
@@ -969874,89 +969874,89 @@
       "name": "host__qkd_hr_phy_adp_0.ck[0]",
       "kind": "core",
       "xy": [
-       232.968,
-       215.904
+       198.552,
+       328.224
       ],
       "insertion_ps": 250.0,
       "budget_owner": "qkd_hr_phy_adp",
-      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [232.968, 216.0] -> [232.968, 215.904] (pin moved)"
+      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [232.968, 216.0] -> [232.968, 215.904] (pin moved) | DIE-KV-60/adp 11-01 MACRO-FIT V1: xy [232.968, 215.904] -> [198.552, 328.224] (core re-placed)"
      },
      {
       "name": "host__qkd_hr_phy_adp_1.ck[0]",
       "kind": "core",
       "xy": [
-       353.928,
-       215.904
+       319.512,
+       328.224
       ],
       "insertion_ps": 250.0,
       "budget_owner": "qkd_hr_phy_adp",
-      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [353.928, 216.0] -> [353.928, 215.904] (pin moved)"
+      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [353.928, 216.0] -> [353.928, 215.904] (pin moved) | DIE-KV-60/adp 11-01 MACRO-FIT V1: xy [353.928, 215.904] -> [319.512, 328.224] (core re-placed)"
      },
      {
       "name": "host__qkd_hr_phy_adp_2.ck[0]",
       "kind": "core",
       "xy": [
-       474.888,
+       440.472,
        121.056
       ],
       "insertion_ps": 250.0,
       "budget_owner": "qkd_hr_phy_adp",
-      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [474.888, 120.96] -> [474.888, 121.056] (pin moved)"
+      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [474.888, 120.96] -> [474.888, 121.056] (pin moved) | DIE-KV-60/adp 11-01 MACRO-FIT V1: xy [474.888, 121.056] -> [440.472, 121.056] (core re-placed)"
      },
      {
       "name": "host__qkd_hr_phy_adp_3.ck[0]",
       "kind": "core",
       "xy": [
-       595.848,
-       215.904
+       561.432,
+       328.224
       ],
       "insertion_ps": 250.0,
       "budget_owner": "qkd_hr_phy_adp",
-      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [595.848, 216.0] -> [595.848, 215.904] (pin moved)"
+      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [595.848, 216.0] -> [595.848, 215.904] (pin moved) | DIE-KV-60/adp 11-01 MACRO-FIT V1: xy [595.848, 215.904] -> [561.432, 328.224] (core re-placed)"
      },
      {
       "name": "host__qkd_hr_phy_adp_4.ck[0]",
       "kind": "core",
       "xy": [
-       232.968,
+       259.032,
        328.224
       ],
       "insertion_ps": 250.0,
       "budget_owner": "qkd_hr_phy_adp",
-      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [232.968, 328.32] -> [232.968, 328.224] (pin moved)"
+      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [232.968, 328.32] -> [232.968, 328.224] (pin moved) | DIE-KV-60/adp 11-01 MACRO-FIT V1: xy [232.968, 328.224] -> [259.032, 328.224] (core re-placed)"
      },
      {
       "name": "host__qkd_hr_phy_adp_5.ck[0]",
       "kind": "core",
       "xy": [
-       353.928,
+       379.992,
        328.224
       ],
       "insertion_ps": 250.0,
       "budget_owner": "qkd_hr_phy_adp",
-      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [353.928, 328.32] -> [353.928, 328.224] (pin moved)"
+      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [353.928, 328.32] -> [353.928, 328.224] (pin moved) | DIE-KV-60/adp 11-01 MACRO-FIT V1: xy [353.928, 328.224] -> [379.992, 328.224] (core re-placed)"
      },
      {
       "name": "host__qkd_hr_phy_adp_6.ck[0]",
       "kind": "core",
       "xy": [
-       474.888,
+       500.952,
        328.224
       ],
       "insertion_ps": 250.0,
       "budget_owner": "qkd_hr_phy_adp",
-      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [474.888, 328.32] -> [474.888, 328.224] (pin moved)"
+      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [474.888, 328.32] -> [474.888, 328.224] (pin moved) | DIE-KV-60/adp 11-01 MACRO-FIT V1: xy [474.888, 328.224] -> [500.952, 328.224] (core re-placed)"
      },
      {
       "name": "host__qkd_hr_phy_adp_7.ck[0]",
       "kind": "core",
       "xy": [
-       595.848,
+       621.912,
        328.224
       ],
       "insertion_ps": 250.0,
       "budget_owner": "qkd_hr_phy_adp",
-      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [595.848, 328.32] -> [595.848, 328.224] (pin moved)"
+      "note": "KV-PLAN-DELTA-9: KV-HOST-REGEN-1 b3 bind (single core clock) -> RTL ck[0] at the old ck_phy[0] xy is a die-clock core sink (was landed/forwarded ck_phy) | CLOCK-KV-R19: landed crossing, PHY forwarded clock on the native pin; not a die-clock sink (no die tap, no die latency) | hm_r26q5 D-KV-HR-PIN-FORM: xy [595.848, 328.32] -> [595.848, 328.224] (pin moved) | DIE-KV-60/adp 11-01 MACRO-FIT V1: xy [595.848, 328.224] -> [621.912, 328.224] (core re-placed)"
      }
     ],
     "core_taps": "internal",
@@ -980763,153 +980763,153 @@
      "inst": "host__qkd_hr_phy_adp_0",
      "module": "qkd_hr_phy_adp",
      "origin_um": [
-      181.44,
+      172.8,
       120.96
      ],
      "outline_um": [
-      103.68,
-      95.04
+      51.84,
+      207.36
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record)",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record) | DIE-KV-60/adp 11-01 MACRO-FIT V1: native SRAM 174.12 x 29.736 R270 on the core E edge; one row of 8 cores in the old two-row lot; was [181.44, 120.96] [103.68, 95.04]",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+     "pins_file": "pins/qkd_hr_phy_adp_pins_mfv1.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_1",
      "module": "qkd_hr_phy_adp",
      "origin_um": [
-      302.4,
+      293.76,
       120.96
      ],
      "outline_um": [
-      103.68,
-      95.04
+      51.84,
+      207.36
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record)",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record) | DIE-KV-60/adp 11-01 MACRO-FIT V1: native SRAM 174.12 x 29.736 R270 on the core E edge; one row of 8 cores in the old two-row lot; was [302.4, 120.96] [103.68, 95.04]",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+     "pins_file": "pins/qkd_hr_phy_adp_pins_mfv1.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_2",
      "module": "qkd_hr_phy_adp",
      "origin_um": [
-      423.36,
+      414.72,
       120.96
      ],
      "outline_um": [
-      103.68,
-      95.04
+      51.84,
+      207.36
      ],
      "orient": "MX",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record)",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record) | DIE-KV-60/adp 11-01 MACRO-FIT V1: native SRAM 174.12 x 29.736 R270 on the core E edge; one row of 8 cores in the old two-row lot; was [423.36, 120.96] [103.68, 95.04]",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+     "pins_file": "pins/qkd_hr_phy_adp_pins_mfv1.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_3",
      "module": "qkd_hr_phy_adp",
      "origin_um": [
-      544.32,
+      535.68,
       120.96
      ],
      "outline_um": [
-      103.68,
-      95.04
+      51.84,
+      207.36
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record)",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record) | DIE-KV-60/adp 11-01 MACRO-FIT V1: native SRAM 174.12 x 29.736 R270 on the core E edge; one row of 8 cores in the old two-row lot; was [544.32, 120.96] [103.68, 95.04]",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+     "pins_file": "pins/qkd_hr_phy_adp_pins_mfv1.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_4",
      "module": "qkd_hr_phy_adp",
      "origin_um": [
-      181.44,
-      233.28
+      233.28,
+      120.96
      ],
      "outline_um": [
-      103.68,
-      95.04
+      51.84,
+      207.36
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record)",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record) | DIE-KV-60/adp 11-01 MACRO-FIT V1: native SRAM 174.12 x 29.736 R270 on the core E edge; one row of 8 cores in the old two-row lot; was [181.44, 233.28] [103.68, 95.04]",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+     "pins_file": "pins/qkd_hr_phy_adp_pins_mfv1.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_5",
      "module": "qkd_hr_phy_adp",
      "origin_um": [
-      302.4,
-      233.28
+      354.24,
+      120.96
      ],
      "outline_um": [
-      103.68,
-      95.04
+      51.84,
+      207.36
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record)",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record) | DIE-KV-60/adp 11-01 MACRO-FIT V1: native SRAM 174.12 x 29.736 R270 on the core E edge; one row of 8 cores in the old two-row lot; was [302.4, 233.28] [103.68, 95.04]",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+     "pins_file": "pins/qkd_hr_phy_adp_pins_mfv1.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_6",
      "module": "qkd_hr_phy_adp",
      "origin_um": [
-      423.36,
-      233.28
+      475.2,
+      120.96
      ],
      "outline_um": [
-      103.68,
-      95.04
+      51.84,
+      207.36
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record)",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record) | DIE-KV-60/adp 11-01 MACRO-FIT V1: native SRAM 174.12 x 29.736 R270 on the core E edge; one row of 8 cores in the old two-row lot; was [423.36, 233.28] [103.68, 95.04]",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+     "pins_file": "pins/qkd_hr_phy_adp_pins_mfv1.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_7",
      "module": "qkd_hr_phy_adp",
      "origin_um": [
-      544.32,
-      233.28
+      596.16,
+      120.96
      ],
      "outline_um": [
-      103.68,
-      95.04
+      51.84,
+      207.36
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record)",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record) | DIE-KV-60/adp 11-01 MACRO-FIT V1: native SRAM 174.12 x 29.736 R270 on the core E edge; one row of 8 cores in the old two-row lot; was [544.32, 233.28] [103.68, 95.04]",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_phy_adp_pins_r26q9.json"
+     "pins_file": "pins/qkd_hr_phy_adp_pins_mfv1.json"
     }
    ],
    "face_pins_per_um": 12.2,
@@ -1235038,6 +1235038,13 @@
        432.0,
        1110.0
       ]
+     },
+     {
+      "name": "clk_t7",
+      "xy": [
+       320.0,
+       515.0
+      ]
      }
     ],
     "sink_sites_um": [
@@ -1235056,6 +1235063,10 @@
      [
       432.0,
       1440.0
+     ],
+     [
+      306.5,
+      514.9
      ]
     ]
    },
@@ -1235960,6 +1235971,13 @@
        440.16,
        200.0
       ]
+     },
+     {
+      "name": "clk_t8",
+      "xy": [
+       320.0,
+       515.0
+      ]
      }
     ],
     "sink_sites_um": [
@@ -1235987,6 +1236005,10 @@
      [
       440.16,
       4.0
+     ],
+     [
+      306.5,
+      514.9
      ]
     ]
    },
@@ -2167743,7 +2167765,7 @@
     1520.64
    ],
    "hard": false,
-   "note": "KV plan v3.1 pc; representative pc_WS_0 (R0); L1 est. 0.79 M std cells flattened (0.00 M in replicated datapath leaves);clock landing cohort fromkv3_pc (exact local monitor children)",
+   "note": "KV plan v3.1 pc; representative pc_WS_0 (R0); L1 est. 0.79 M std cells flattened (0.00 M in replicated datapath leaves);clock landing cohort fromkv3_pc (exact local monitor children) | CODEX-PICKUP-KV 11-01 HHP joint event (COORD Q3/12.28b): relay_sites = existing SLG EST chain ring dch0 y0 -> bin -> xe0 -> xe1 (upper PC2/3) + NEW same-edge copy u_slg.xe1b (lower HHP head/PC1, group_r2c_native.sv + kv_hhp_est_netlist.py), C3 legal-pin model max 396.63 um <=405; HSL hsl0 cmp_v/cmp_we/ctrl_er[0] south band (same 3 FF, her0 row 179.685)",
    "buses": [
     {
      "name": "i_ectl_Q_N_kf",
@@ -2172079,7 +2172101,41 @@
      "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ],
-   "core_pg_connect": true
+   "core_pg_connect": true,
+   "relay_sites": {
+    "u_bin_i_embgw_est/q[0]": [
+     509.761,
+     1234.981
+    ],
+    "u_cland_i_embgw_est/u_ring.dch[0].u_dsel/y[0]": [
+     619.921,
+     1501.741
+    ],
+    "u_hsl0.cmp_v_q": [
+     349.921,
+     180.091
+    ],
+    "u_hsl0.cmp_we_q": [
+     349.921,
+     180.361
+    ],
+    "u_hsl0.ctrl_er_q[0]": [
+     347.761,
+     179.551
+    ],
+    "u_slg.xe0[0]": [
+     509.761,
+     970.111
+    ],
+    "u_slg.xe1[0]": [
+     509.761,
+     1309.771
+    ],
+    "u_slg.xe1b": [
+     434.161,
+     649.891
+    ]
+   }
   },
   "kv3_pc__cl254f2e73": {
    "module": "kv3_pc__cl254f2e73",
@@ -2172088,7 +2172144,7 @@
     1520.64
    ],
    "hard": false,
-   "note": "KV plan v3.1 pc; representative pc_WS_0 (R0); L1 est. 0.79 M std cells flattened (0.00 M in replicated datapath leaves);clock landing cohort fromkv3_pc (exact local monitor children)",
+   "note": "KV plan v3.1 pc; representative pc_WS_0 (R0); L1 est. 0.79 M std cells flattened (0.00 M in replicated datapath leaves);clock landing cohort fromkv3_pc (exact local monitor children) | CODEX-PICKUP-KV 11-01 HHP joint event (COORD Q3/12.28b): relay_sites = existing SLG EST chain ring dch0 y0 -> bin -> xe0 -> xe1 (upper PC2/3) + NEW same-edge copy u_slg.xe1b (lower HHP head/PC1, group_r2c_native.sv + kv_hhp_est_netlist.py), C3 legal-pin model max 396.63 um <=405; HSL hsl0 cmp_v/cmp_we/ctrl_er[0] south band (same 3 FF, her0 row 179.685)",
    "buses": [
     {
      "name": "i_ectl_Q_N_kf",
@@ -2176272,7 +2176328,41 @@
      "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ],
-   "core_pg_connect": true
+   "core_pg_connect": true,
+   "relay_sites": {
+    "u_bin_i_embgw_est/q[0]": [
+     509.761,
+     1234.981
+    ],
+    "u_cland_i_embgw_est/u_ring.dch[0].u_dsel/y[0]": [
+     619.921,
+     1501.741
+    ],
+    "u_hsl0.cmp_v_q": [
+     349.921,
+     180.091
+    ],
+    "u_hsl0.cmp_we_q": [
+     349.921,
+     180.361
+    ],
+    "u_hsl0.ctrl_er_q[0]": [
+     347.761,
+     179.551
+    ],
+    "u_slg.xe0[0]": [
+     509.761,
+     970.111
+    ],
+    "u_slg.xe1[0]": [
+     509.761,
+     1309.771
+    ],
+    "u_slg.xe1b": [
+     434.161,
+     649.891
+    ]
+   }
   },
   "kv3_pc_v1__cl23f6a148": {
    "module": "kv3_pc_v1__cl23f6a148",

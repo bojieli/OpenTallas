@@ -14,6 +14,8 @@ import re
 import shutil
 from pathlib import Path
 
+import cores
+
 LOGICAL = "ot_qfd_serdes_112g_x6_phy"
 WRAPPER = LOGICAL + "_c45"
 
@@ -179,9 +181,9 @@ def specialize_plan(kit, partition_type, source_root):
     master = c["physical_master"]
     if master not in (LOGICAL + "_w521", LOGICAL + "_w522") or not c.get("lef"):
         raise ValueError("SD kit plan has an unsupported physical PHY declaration")
-    lef = Path(c["lef"])
-    if not lef.is_absolute():
-        lef = Path(source_root) / lef
+    # DIE-KV-60/adp 11-01: repo-relative (or stale absolute) view read through cores.resolve, so a sparse / pruned
+    # kit-wave source checkout without results/ still finds the declared view (git store of the checkout)
+    lef = cores.resolve(c["lef"], source_root)
     record = specialize(kit, lef.parent.parent)
     if (record["physical_master"] != master
             or record["expected_physical_instance"] != c.get("physical_inst")):

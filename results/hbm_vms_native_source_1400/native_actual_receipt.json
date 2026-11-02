@@ -1,0 +1,103 @@
+{
+ "scope": "Native source/SYNTH/boundary preparation only; no physical or token qualification",
+ "source_commit": "a3bb67ce9e91c35940c527dcc9e4d7851fcae5dd",
+ "top": "hfd_vms_bank_native_q0_faces",
+ "params": {},
+ "face_shell": null,
+ "clocks": [
+  "clk",
+  "clk_n",
+  "clk_s",
+  "clk_e",
+  "clk_macro0",
+  "clk_macro1",
+  "clk_macro2",
+  "clk_w"
+ ],
+ "signal_bits": 3910,
+ "source_model": "results/hbm_vms_native_source_1400/native_component_model_prep.json",
+ "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/r4/gen/hnx_vms_bank_q0_faces__vecd4ae_114e9076fa98",
+ "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+ "pins_sha256": "114e9076fa98bef95b37be0d1c50c469382d5b80723a816dd94482825e5099e4",
+ "pins_canon_sha256": "dc9eea7ea2bc3b67bbf950d71bb841bc11a3252bcea7143a088aa7078d936362",
+ "source_profile_policy": "DECLARED_CLOCK_RESET_POINTS",
+ "source_profile_clock_stage": "HOLD_CTS: common-domain multi-port stage required",
+ "gen": 0,
+ "lint": 0,
+ "preflight": 0,
+ "synth_rc": 0,
+ "face_guard": "FACE_GUARD PASS top hnx_vms_bank_q0_faces__vecd4ae checked 3910 ok 3910 fails {}",
+ "port_bind": "port_bind PASS {'missing': 0, 'extra': 0}",
+ "lec_verdict": "EQUIVALENT",
+ "lec_counts": {
+  "compare_points": 11560,
+  "proved": 11560,
+  "differs": 0,
+  "undecided": 0
+ },
+ "lec_reset": {
+  "default": 4,
+  "requested": 4,
+  "used": 4
+ },
+ "lec_log_last": "LEC EQUIVALENT: hnx_vms_bank_q0_faces__vecd4ae cp=11560 proved=11560 differs=0 undecided=0 11560 compare points proved; 10755 key points matched by name, 63 register pairs / merges and 8 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 21 of them reach an RTL X (don't care: equal wherever the RTL is not X) (186.8 s)",
+ "native_pin_views": [
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@114e9076fa98",
+   "gen": 0,
+   "preflight": 0,
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/r4/gen/hnx_vms_bank_q0_faces__vecd4ae_114e9076fa98"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@0bb6804dab59",
+   "gen": 0,
+   "preflight": 0,
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/0bb6804dab59/gen/hnx_vms_bank_q0_faces__vecd4ae_0bb6804dab59"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@5a03758c3d07",
+   "gen": 0,
+   "preflight": 0,
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/5a03758c3d07/gen/hnx_vms_bank_q0_faces__vecd4ae_5a03758c3d07"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@88b84f19c25b",
+   "gen": 0,
+   "preflight": 0,
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/88b84f19c25b/gen/hnx_vms_bank_q0_faces__vecd4ae_88b84f19c25b"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@d6532bde006e",
+   "gen": 0,
+   "preflight": 0,
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/d6532bde006e/gen/hnx_vms_bank_q0_faces__vecd4ae_d6532bde006e"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@def761e36c82",
+   "gen": 0,
+   "preflight": 0,
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/def761e36c82/gen/hnx_vms_bank_q0_faces__vecd4ae_def761e36c82"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@ed4cba8a8b2a",
+   "gen": 0,
+   "preflight": 0,
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/ed4cba8a8b2a/gen/hnx_vms_bank_q0_faces__vecd4ae_ed4cba8a8b2a"
+  },
+  {
+   "view": "hnx_vms_bank_q0_faces__vecd4ae@f9c1bd05a046",
+   "gen": 0,
+   "preflight": 0,
+   "kit": "/srv/opentallas-scratch2/claude/codex-vms-native-1400/pin_batch/f9c1bd05a046/gen/hnx_vms_bank_q0_faces__vecd4ae_f9c1bd05a046"
+  }
+ ],
+ "not_run": [
+  "native PLACE",
+  "native CTS",
+  "native clock-inclusive GRT50",
+  "native DRT",
+  "native timing closure",
+  "whole-token qualification"
+ ],
+ "source_plan_hold": "vec6293/r2048 remains prospective; all current C Q and_mu1 callers are3SRAM"
+}

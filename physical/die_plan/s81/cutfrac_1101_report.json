@@ -1,0 +1,529 @@
+{
+ "rule": "S81-007 cuts class: per-type ft_track_frac budget declaration (kit GRT/DRT = measured gate)",
+ "base_frac": 0.25,
+ "cut_ratio_max": 0.6,
+ "target": 0.58,
+ "iterations": 5,
+ "errors_per_iteration": [
+  12,
+  11,
+  7,
+  3,
+  0
+ ],
+ "types": {
+  "ot_s81sl_kv_leaf__t3": {
+   "ft_track_frac": 0.27,
+   "parts": [
+    "s_3N_L1"
+   ],
+   "segments": [
+    {
+     "iter": 3,
+     "cut": "19000",
+     "part": "s_3N_L1",
+     "bits": 3626,
+     "tracks_at_prev_frac": 5965.0,
+     "prev_frac": 0.25,
+     "ratio": 0.608
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t1": {
+   "ft_track_frac": 0.27,
+   "parts": [
+    "s_0S_L2"
+   ],
+   "segments": [
+    {
+     "iter": 2,
+     "cut": "8500",
+     "part": "s_0S_L2",
+     "bits": 3199,
+     "tracks_at_prev_frac": 5178.0,
+     "prev_frac": 0.25,
+     "ratio": 0.618
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t17": {
+   "ft_track_frac": 0.36,
+   "parts": [
+    "s_1N_L0"
+   ],
+   "segments": [
+    {
+     "iter": 0,
+     "cut": "17000",
+     "part": "s_1N_L0",
+     "bits": 3263,
+     "tracks_at_prev_frac": 3985.0,
+     "prev_frac": 0.25,
+     "ratio": 0.819
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t2": {
+   "ft_track_frac": 0.33,
+   "parts": [
+    "s_0S_L0"
+   ],
+   "segments": [
+    {
+     "iter": 0,
+     "cut": "9500",
+     "part": "s_0S_L0",
+     "bits": 4464,
+     "tracks_at_prev_frac": 5965.0,
+     "prev_frac": 0.25,
+     "ratio": 0.748
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t22": {
+   "ft_track_frac": 0.29,
+   "parts": [
+    "s_2S_L0"
+   ],
+   "segments": [
+    {
+     "iter": 1,
+     "cut": "9500",
+     "part": "s_2S_L0",
+     "bits": 3893,
+     "tracks_at_prev_frac": 5965.0,
+     "prev_frac": 0.25,
+     "ratio": 0.653
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t23": {
+   "ft_track_frac": 0.27,
+   "parts": [
+    "s_2S_L1"
+   ],
+   "segments": [
+    {
+     "iter": 2,
+     "cut": "11500",
+     "part": "s_2S_L1",
+     "bits": 3358,
+     "tracks_at_prev_frac": 5560.0,
+     "prev_frac": 0.25,
+     "ratio": 0.604
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t28": {
+   "ft_track_frac": 0.34,
+   "parts": [
+    "s_2N_L1"
+   ],
+   "segments": [
+    {
+     "iter": 0,
+     "cut": "13500",
+     "part": "s_2N_L1",
+     "bits": 4169,
+     "tracks_at_prev_frac": 6626.0,
+     "prev_frac": 0.25,
+     "ratio": 0.629
+    },
+    {
+     "iter": 3,
+     "cut": "18750",
+     "part": "s_2N_L1",
+     "bits": 4330,
+     "tracks_at_prev_frac": 6228.0,
+     "prev_frac": 0.28,
+     "ratio": 0.695
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t31": {
+   "ft_track_frac": 0.31,
+   "parts": [
+    "s_3S_L2"
+   ],
+   "segments": [
+    {
+     "iter": 0,
+     "cut": "8500",
+     "part": "s_3S_L2",
+     "bits": 2408,
+     "tracks_at_prev_frac": 3389.0,
+     "prev_frac": 0.25,
+     "ratio": 0.711
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t32": {
+   "ft_track_frac": 0.27,
+   "parts": [
+    "s_3S_L0"
+   ],
+   "segments": [
+    {
+     "iter": 2,
+     "cut": "9500",
+     "part": "s_3S_L0",
+     "bits": 3673,
+     "tracks_at_prev_frac": 5965.0,
+     "prev_frac": 0.25,
+     "ratio": 0.616
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t33": {
+   "ft_track_frac": 0.39,
+   "parts": [
+    "s_3S_L1"
+   ],
+   "segments": [
+    {
+     "iter": 1,
+     "cut": "11250",
+     "part": "s_3S_L1",
+     "bits": 4939,
+     "tracks_at_prev_frac": 5560.0,
+     "prev_frac": 0.25,
+     "ratio": 0.888
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t44__clf6cf8492": {
+   "ft_track_frac": 0.27,
+   "parts": [
+    "s_4N_L3"
+   ],
+   "segments": [
+    {
+     "iter": 3,
+     "cut": "20000",
+     "part": "s_4N_L3",
+     "bits": 3082,
+     "tracks_at_prev_frac": 4964.0,
+     "prev_frac": 0.25,
+     "ratio": 0.621
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t45": {
+   "ft_track_frac": 0.3,
+   "parts": [
+    "s_5S_L2"
+   ],
+   "segments": [
+    {
+     "iter": 1,
+     "cut": "8500",
+     "part": "s_5S_L2",
+     "bits": 2721,
+     "tracks_at_prev_frac": 3985.0,
+     "prev_frac": 0.25,
+     "ratio": 0.683
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t46": {
+   "ft_track_frac": 0.31,
+   "parts": [
+    "s_5S_L0"
+   ],
+   "segments": [
+    {
+     "iter": 0,
+     "cut": "9750",
+     "part": "s_5S_L0",
+     "bits": 4406,
+     "tracks_at_prev_frac": 6157.0,
+     "prev_frac": 0.25,
+     "ratio": 0.716
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t47": {
+   "ft_track_frac": 0.4,
+   "parts": [
+    "s_5S_L1"
+   ],
+   "segments": [
+    {
+     "iter": 0,
+     "cut": "11250",
+     "part": "s_5S_L1",
+     "bits": 3082,
+     "tracks_at_prev_frac": 3389.0,
+     "prev_frac": 0.25,
+     "ratio": 0.909
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t53__clb66fa5cb": {
+   "ft_track_frac": 0.28,
+   "parts": [
+    "s_1N_L3"
+   ],
+   "segments": [
+    {
+     "iter": 2,
+     "cut": "20000",
+     "part": "s_1N_L3",
+     "bits": 2530,
+     "tracks_at_prev_frac": 3985.0,
+     "prev_frac": 0.25,
+     "ratio": 0.635
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t57": {
+   "ft_track_frac": 0.3,
+   "parts": [
+    "s_6S_L0"
+   ],
+   "segments": [
+    {
+     "iter": 1,
+     "cut": "9750",
+     "part": "s_6S_L0",
+     "bits": 4186,
+     "tracks_at_prev_frac": 6157.0,
+     "prev_frac": 0.25,
+     "ratio": 0.68
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t58": {
+   "ft_track_frac": 0.29,
+   "parts": [
+    "s_6S_L1"
+   ],
+   "segments": [
+    {
+     "iter": 0,
+     "cut": "11500",
+     "part": "s_6S_L1",
+     "bits": 3683,
+     "tracks_at_prev_frac": 5560.0,
+     "prev_frac": 0.25,
+     "ratio": 0.662
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t61": {
+   "ft_track_frac": 0.29,
+   "parts": [
+    "s_6N_L0"
+   ],
+   "segments": [
+    {
+     "iter": 1,
+     "cut": "17000",
+     "part": "s_6N_L0",
+     "bits": 3683,
+     "tracks_at_prev_frac": 5560.0,
+     "prev_frac": 0.25,
+     "ratio": 0.662
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t66": {
+   "ft_track_frac": 0.3,
+   "parts": [
+    "s_7S_L0"
+   ],
+   "segments": [
+    {
+     "iter": 2,
+     "cut": "9750",
+     "part": "s_7S_L0",
+     "bits": 4169,
+     "tracks_at_prev_frac": 6157.0,
+     "prev_frac": 0.25,
+     "ratio": 0.677
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t67": {
+   "ft_track_frac": 0.27,
+   "parts": [
+    "s_7S_L1"
+   ],
+   "segments": [
+    {
+     "iter": 1,
+     "cut": "11500",
+     "part": "s_7S_L1",
+     "bits": 3359,
+     "tracks_at_prev_frac": 5560.0,
+     "prev_frac": 0.25,
+     "ratio": 0.604
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t72": {
+   "ft_track_frac": 0.47,
+   "parts": [
+    "s_7N_L1"
+   ],
+   "segments": [
+    {
+     "iter": 1,
+     "cut": "18750",
+     "part": "s_7N_L1",
+     "bits": 5158,
+     "tracks_at_prev_frac": 5560.0,
+     "prev_frac": 0.25,
+     "ratio": 0.928
+    },
+    {
+     "iter": 1,
+     "cut": "19000",
+     "part": "s_7N_L1",
+     "bits": 5158,
+     "tracks_at_prev_frac": 7639.0,
+     "prev_frac": 0.4,
+     "ratio": 0.675
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t73": {
+   "ft_track_frac": 0.35,
+   "parts": [
+    "s_7N_L3"
+   ],
+   "segments": [
+    {
+     "iter": 1,
+     "cut": "20000",
+     "part": "s_7N_L3",
+     "bits": 3893,
+     "tracks_at_prev_frac": 5560.0,
+     "prev_frac": 0.25,
+     "ratio": 0.7
+    },
+    {
+     "iter": 1,
+     "cut": "20250",
+     "part": "s_7N_L3",
+     "bits": 3893,
+     "tracks_at_prev_frac": 5965.0,
+     "prev_frac": 0.31,
+     "ratio": 0.653
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t75": {
+   "ft_track_frac": 0.6,
+   "parts": [
+    "s_1N_L1"
+   ],
+   "segments": [
+    {
+     "iter": 0,
+     "cut": "18750",
+     "part": "s_1N_L1",
+     "bits": 3795,
+     "tracks_at_prev_frac": 3389.0,
+     "prev_frac": 0.25,
+     "ratio": 1.12
+    },
+    {
+     "iter": 0,
+     "cut": "19000",
+     "part": "s_1N_L1",
+     "bits": 3795,
+     "tracks_at_prev_frac": 5369.0,
+     "prev_frac": 0.49,
+     "ratio": 0.707
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t8": {
+   "ft_track_frac": 0.47,
+   "parts": [
+    "s_0N_L1"
+   ],
+   "segments": [
+    {
+     "iter": 2,
+     "cut": "18750",
+     "part": "s_0N_L1",
+     "bits": 5158,
+     "tracks_at_prev_frac": 5560.0,
+     "prev_frac": 0.25,
+     "ratio": 0.928
+    },
+    {
+     "iter": 2,
+     "cut": "19000",
+     "part": "s_0N_L1",
+     "bits": 5158,
+     "tracks_at_prev_frac": 7639.0,
+     "prev_frac": 0.4,
+     "ratio": 0.675
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t9": {
+   "ft_track_frac": 0.35,
+   "parts": [
+    "s_0N_L3"
+   ],
+   "segments": [
+    {
+     "iter": 0,
+     "cut": "20000",
+     "part": "s_0N_L3",
+     "bits": 3893,
+     "tracks_at_prev_frac": 5560.0,
+     "prev_frac": 0.25,
+     "ratio": 0.7
+    },
+    {
+     "iter": 0,
+     "cut": "20250",
+     "part": "s_0N_L3",
+     "bits": 3893,
+     "tracks_at_prev_frac": 5965.0,
+     "prev_frac": 0.31,
+     "ratio": 0.653
+    }
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t1": {
+   "ft_track_frac": 0.45,
+   "parts": [
+    "svc_1"
+   ],
+   "segments": [
+    {
+     "iter": 0,
+     "cut": "5000",
+     "part": "svc_1",
+     "bits": 3142,
+     "tracks_at_prev_frac": 3071.0,
+     "prev_frac": 0.25,
+     "ratio": 1.023
+    }
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t6": {
+   "ft_track_frac": 0.42,
+   "parts": [
+    "svc_15"
+   ],
+   "segments": [
+    {
+     "iter": 1,
+     "cut": "5000",
+     "part": "svc_15",
+     "bits": 2957,
+     "tracks_at_prev_frac": 3071.0,
+     "prev_frac": 0.25,
+     "ratio": 0.963
+    }
+   ]
+  }
+ }
+}

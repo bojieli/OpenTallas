@@ -48,3 +48,54 @@ def test_original_leaf_identity_keeps_real_group_hierarchy():
     assert G.scope_for_member(t,'u_other')==''
     t['hard_cores'].append(dict(inst='u_othergroup',bound_group=dict(members=[dict(inst='u_head0')])))
     with pytest.raises(G.BoundGroupError,match='multiple'):G.scope_for_member(t,'u_head0')
+
+
+def test_planned_reset_materialization_lockstep_and_wrong_tap_mutant(tmp_path):
+    import shutil
+    import subprocess
+    import qc_su_lane_cut as C
+    from test_qc_su_lane_cut import fixture
+    if not shutil.which('iverilog'):
+        pytest.skip('iverilog unavailable')
+    # The source-of-truth vehicle contains the already planned registered reset
+    # and START delivery. The cut must connect the actual core reset pin to it.
+    source=fixture().replace('module original(input wire clk, input wire rst_n,',
+                             'module original(input wire clk, input wire rst_n,')
+    source=source.replace('    wire [7:0] x_q;', '''    reg [9:0] reset_pipe=0;
+    always @(posedge clk) reset_pipe<={reset_pipe[8:0],rst_n};
+    wire rst_n_t9=reset_pipe[8];
+    wire rst_n_t10=reset_pipe[9];
+    reg start_q=0;
+    always @(posedge clk) start_q<=rst_n_t10;
+    wire [7:0] x_q;''').replace('.rst_n(rst_n)', '.rst_n(rst_n_t10)')
+    core,frame,receipt=C.cut(source,0)
+    assert receipt['reset_source']=='rst_n_t10'
+    assert '.rst_n(rst_n_t10)' in frame
+    leaf='''module leaf(input clk,rst_n,input [7:0] x,output reg [7:0] y=0);
+    always @(posedge clk) if(!rst_n) y<=0; else y<={x[6:0],x[7]}^8'h49;
+    endmodule
+    '''
+    tb='''module tb;
+    reg clk=0,rst_n=0;reg[7:0] x=0;wire[7:0] a,b;
+    original ref0(clk,rst_n,x,a);grouped dut(clk,rst_n,x,b);
+    always #5 clk=~clk;
+    integer i;
+    initial begin
+      repeat(3) @(negedge clk);rst_n=1;
+      for(i=0;i<128;i=i+1) begin
+        x=i;@(negedge clk);
+        if(a!==b) $fatal(1,"planned reset cut differs at %0d",i);
+        if(ref0.start_q!==dut.start_q) $fatal(1,"START delivery differs");
+      end
+      $display("RESET LOCKSTEP PASS128");$finish;
+    end endmodule
+    '''
+    def run(body,name):
+        p=tmp_path/(name+'.sv');exe=tmp_path/name
+        p.write_text(leaf+source+body.replace('module original(', 'module grouped(')+core+tb)
+        subprocess.run(['iverilog','-g2012','-s','tb','-o',str(exe),str(p)],check=True,capture_output=True,text=True)
+        return subprocess.run(['vvp',str(exe)],capture_output=True,text=True)
+    good=run(frame,'planned')
+    assert good.returncode==0 and 'RESET LOCKSTEP PASS128' in good.stdout
+    bad=run(frame.replace('.rst_n(rst_n_t10)', '.rst_n(rst_n_t9)'), 'wrongtap')
+    assert bad.returncode!=0 and 'planned reset cut differs' in bad.stdout

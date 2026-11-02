@@ -1,0 +1,125 @@
+{
+ "before": {
+  "summary": {
+   "domains": 14,
+   "serdes_windows": 14,
+   "covered": 14
+  },
+  "errors": [
+   {
+    "level": "ERROR",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES0: rect [23339.76, 342.44, 26075.52, 1330.56] does not cover io window io_lk_ES0_u_phy [23189.76, 103.68, 26075.52, 1330.56]"
+   },
+   {
+    "level": "ERROR",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES0: bump rect outside the domain rect"
+   },
+   {
+    "level": "ERROR",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES1: rect [26225.52, 342.44, 28961.28, 1330.56] does not cover io window io_lk_ES1_u_phy [26289.16, 103.68, 28897.64, 1028.16]"
+   },
+   {
+    "level": "ERROR",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES1: bump rect outside the domain rect"
+   },
+   {
+    "level": "ERROR",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES1: phy_macro_um [26289.16, 103.68, 28897.64, 1028.16] outside the domain rect [26225.52, 342.44, 28961.28, 1330.56]"
+   },
+   {
+    "level": "ERROR",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES1: core strip [26075.52, 1091.8, 28961.28, 1330.56] overlaps the domain rect"
+   }
+  ],
+  "warnings": [
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WS0: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WS1: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WN0: PHY macro 1.85 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WN3: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_EN0: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_EN1: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_EN2: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   }
+  ]
+ },
+ "after": {
+  "summary": {
+   "domains": 14,
+   "serdes_windows": 14,
+   "covered": 14
+  },
+  "errors": [],
+  "warnings": [
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WS0: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WS1: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WN0: PHY macro 1.85 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WN3: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_EN0: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_EN1: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_EN2: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   }
+  ]
+ },
+ "plan_sha256": "6bf7074c43458462955d814330c0b878f2c4db05f4828ab8ece1aaad291cd077",
+ "new_cycles": 0
+}

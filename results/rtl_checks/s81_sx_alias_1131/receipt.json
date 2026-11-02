@@ -1,0 +1,15 @@
+{
+ "verdict":"PASS",
+ "source_commit":"3aba14440",
+ "baseline":"b1a212543",
+ "change":"Module-local aliases select the same NR+1 gather/scatter relay endpoints instead of cross-generate hierarchical unpacked-array references.",
+ "registers_added":0,"cycles_added":0,"clock_or_pin_changes":0,
+ "lockstep":{"configs":9,"NR":[0,1,2],"face_masks":[0,5,15],"checked_cycles_per_config":251,"outputs":"all","result":"PASS"},
+ "mutant":{"change":"NR endpoint instead of NR+1","result":"CAUGHT","exit":134,"first_mismatch":"case0 cycle9"},
+ "yosys":{"command":"read_verilog -sv new.sv stubs.sv; hierarchy -check -top sx_new; proc; check","result":"PASS","problems":0},
+ "scope":"Actual old/new score-exchange wiring source; unchanged arithmetic leaf and relay masters represented by source-matched interfaces and deterministic driving stubs. No full arithmetic proof claimed.",
+ "raw":"intel2:/srv/opentallas-scratch2/claude/codex-s81-sx-parser-1131",
+ "unit":"oth-ubuntu-1106405-1793566893",
+ "unit_exit":0,
+ "actual_hi1_full_rtl_lint":"Still running independently in hi1_sx_diagnostic; original failed kit preserved."
+}

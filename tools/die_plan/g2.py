@@ -35,6 +35,7 @@ import check  # noqa: E402
 import gen_phys  # noqa: E402
 import ft_bit_sites  # noqa: E402
 import schema as S  # noqa: E402
+from placement_obstacles import probe_blockages  # noqa: E402
 
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
@@ -232,34 +233,6 @@ def worst_types(P, summ, n):
     return [(tn, score[tn], dens[tn]) for tn in cands[:n]]
 
 
-def probe_blockages(t, top="M7"):
-    """Leaf obstructions of a partition probe.  A content leaf that the plan splits into planned hard cores
-    (hard_cores[].inst == leaf inst, '<leaf inst>_*' or '<leaf inst>.<cut>', e.g. an over-cap bankq leaf -> 3 cores) is represented by
-    those cores, not by the whole leaf outline: the space between the cores is glue / routing area of the partition.
-    Every other content leaf with an outline is blocked as before."""
-    cores = [h for h in t.get("hard_cores", []) if "origin_um" in h and "outline_um" in h]
-    out, covered = [], set()
-    for c in t.get("contents", []):
-        if "origin_um" not in c or "outline_um" not in c:
-            continue
-        # split-core cuts are named '<leaf inst>_*' or '<leaf inst>.<cut>' (HBM u_hcb_Q7.<cut>, DIE-HBM-36 10-30)
-        sub = [h for h in cores if h["inst"] == c["inst"] or h["inst"].startswith((c["inst"] + "_", c["inst"] + "."))]
-        if sub:
-            covered.update(h["inst"] for h in sub)
-            out += [dict(h, obs_max=max(
-                [L for L in (c.get("obs_max"), h.get("obs_max")) if L] or ["M5"],
-                key=lambda L: int(L[1:]))) for h in sub]
-        else:
-            out.append(c)
-    # KV-PLAN 10-25: a planned hard core that no content leaf names (e.g. KV head_eighth cores built from several
-    # leaves) is still a hard obstruction of the partition; it used to be silently dropped (0 blockages -> optimistic
-    # G2).  Its routing obstruction reaches the partition signal ceiling unless the core declares obs_max.
-    for h in cores:
-        if h["inst"] not in covered:
-            out.append(dict(h, obs_max=h.get("obs_max", top)))
-    return out
-
-
 STATION_CORE_MARGIN_UM = 2.0
 
 
@@ -398,10 +371,12 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
                 nets.append(f"nq_{c}") if buses[bus]["dir"] == "in" else None
                 place.append((c, *inset(x, y, f)))
     # ft slots: station chain per bit (data + epoch bit are all pin bits), sites from regs_um or along the route
+    from die_hop_scan import input_site, normal_slot
     for sn, s in sorted(slots.items()):
         ib, ob = by_bus.get(sn + "_i", []), by_bus.get(sn + "_o", [])
         k = int(s.get("stations", 1))
         ft_bit_sites.validate_slot(s)
+        normal_s0 = normal_slot(P, tn, sn, full={})
         pi = {bit: (x, y, f) for bit, x, y, f in ib}
         po = {bit: (x, y, f) for bit, x, y, f in ob}
         for bit in sorted(set(pi) | set(po)):
@@ -421,7 +396,11 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
                 if q.startswith("nq_"):
                     nets.append(q)
                 cells.append(f"  {FLOP} {c} (.D({prev}), .QN({q}));")
-                if s.get("bit_sites_um") and j > 0:
+                if j == 0 and normal_s0:
+                    # Native face_flops places normal S0 at its actual input
+                    # pin; unused regs_um[0] must not shorten a probe hop.
+                    site = input_site((x, y, f))
+                elif s.get("bit_sites_um") and j > 0:
                     # Same convention as face_flops.tcl: explicit internal
                     # stages start at1; metadata stores allocation-envelope LL.
                     xy = s["bit_sites_um"][j - 1][bit]

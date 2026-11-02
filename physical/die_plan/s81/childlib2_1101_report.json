@@ -1,0 +1,177 @@
+{
+ "dsdv_bk_g": {
+  "entries": 1,
+  "types": 1,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "dsdv_bksel_c": {
+  "entries": 1,
+  "types": 1,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "dsdv_eng_rr_e": {
+  "entries": 1,
+  "types": 1,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "dsdv_gunit_l0": {
+  "entries": 1,
+  "types": 1,
+  "tried": [
+   {
+    "lib": "physical/die_plan/s81/cores/views/dsdv_gunit_l0_prov_1101/dsdv_gunit_l0_tt.lib",
+    "result": "MATCH",
+    "lib_bits": 3499,
+    "plan_bits": 3499,
+    "extra": 0,
+    "missing": 0,
+    "extra_eg": [],
+    "missing_eg": []
+   }
+  ],
+  "verdict": "LIB physical/die_plan/s81/cores/views/dsdv_gunit_l0_prov_1101/dsdv_gunit_l0_tt.lib"
+ },
+ "dsdv_gunit_l1": {
+  "entries": 1,
+  "types": 1,
+  "tried": [
+   {
+    "lib": "physical/die_plan/s81/cores/views/dsdv_gunit_l1_prov_1101/dsdv_gunit_l1_tt.lib",
+    "result": "MATCH",
+    "lib_bits": 3521,
+    "plan_bits": 3521,
+    "extra": 0,
+    "missing": 0,
+    "extra_eg": [],
+    "missing_eg": []
+   }
+  ],
+  "verdict": "LIB physical/die_plan/s81/cores/views/dsdv_gunit_l1_prov_1101/dsdv_gunit_l1_tt.lib"
+ },
+ "dsdv_gunit_l1c": {
+  "entries": 1,
+  "types": 1,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "dsdv_gunit_l2": {
+  "entries": 1,
+  "types": 1,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "dsdv_gunit_l4": {
+  "entries": 1,
+  "types": 1,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "dsdv_gunit_l5": {
+  "entries": 1,
+  "types": 1,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "dsfd_coll_lane_e_safe8_ntf": {
+  "entries": 6,
+  "types": 2,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "dsfd_coll_lane_w_safe8_ntf": {
+  "entries": 8,
+  "types": 2,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "ot_s81_mu72_lnland": {
+  "entries": 2,
+  "types": 1,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "ot_s81_mu72_lnland_nst": {
+  "entries": 12,
+  "types": 4,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "ot_s81dv_xfin": {
+  "entries": 16,
+  "types": 16,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "ot_s81sl_xrt1": {
+  "entries": 14,
+  "types": 14,
+  "tried": [
+   {
+    "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+    "result": "MATCH",
+    "lib_bits": 7563,
+    "plan_bits": 7563,
+    "extra": 0,
+    "missing": 0,
+    "extra_eg": [],
+    "missing_eg": []
+   }
+  ],
+  "verdict": "LIB physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+ },
+ "ot_s81sl_xrt3": {
+  "entries": 2,
+  "types": 2,
+  "tried": [],
+  "verdict": "NO MATCHING LIB (stays WAIT-DEP)"
+ },
+ "_summary": {
+  "modules": 16,
+  "libbed": 3,
+  "types_changed": 15,
+  "types_still_waitdep": 23,
+  "still_waitdep": [
+   "bk_sel__t2",
+   "dsdv_slice_c1x_C__t1",
+   "dsdv_slice_c1x_C__t10",
+   "dsdv_slice_c1x_C__t3",
+   "dsdv_slice_c1x_C__t4",
+   "dsdv_slice_c1x_C__t5",
+   "dsdv_slice_c1x_C__t6",
+   "dsdv_slice_c1x_C__t7",
+   "dsdv_slice_c1x_C__t8",
+   "dsdv_slice_c1x_C__t9",
+   "dsdv_slice_c3x_C__t1",
+   "dsdv_slice_iq_C__t1",
+   "dsdv_slice_kv512_C__t1",
+   "dsdv_slice_lepe_mu_C__t1",
+   "dsdv_slice_lepe_mu_LP__t2",
+   "dsdv_slice_lepe_nh_mus_C__t1",
+   "dsdv_slice_lepe_nh_mus_LP__t1",
+   "dsdv_slice_lepw_mu_C__t1",
+   "dsdv_slice_lepw_mu_LP__t2",
+   "dsdv_slice_lepw_mus_C__t1",
+   "dsdv_slice_lepw_mus_LP__t2",
+   "eng__t1",
+   "gunit__t1"
+  ],
+  "modules_unmatched": [
+   "dsdv_bk_g",
+   "dsdv_bksel_c",
+   "dsdv_eng_rr_e",
+   "dsdv_gunit_l1c",
+   "dsdv_gunit_l2",
+   "dsdv_gunit_l4",
+   "dsdv_gunit_l5",
+   "dsfd_coll_lane_e_safe8_ntf",
+   "dsfd_coll_lane_w_safe8_ntf",
+   "ot_s81_mu72_lnland",
+   "ot_s81_mu72_lnland_nst",
+   "ot_s81dv_xfin",
+   "ot_s81sl_xrt3"
+  ]
+ }
+}

@@ -1,0 +1,46 @@
+{
+  "ot_sram_1r1w_512x128_m1_r2c2": {
+    "kind": "sram",
+    "width_um": 57.912,
+    "height_um": 69.672,
+    "area_um2": 4034.845,
+    "delta": {
+      "width_nm": 24,
+      "height_nm": 12,
+      "area_um2": 2.3668,
+      "area_pct": 0.0587
+    },
+    "row_grid_alternative": {
+      "height_um": 70.2,
+      "area_um2_delta": 32.944,
+      "note": "H on the 0.270 row grid AND 0.024 mod 0.048 (k = 4 mod 8 rows); not emitted, priced only"
+    },
+    "symmetry": [
+      "X",
+      "Y"
+    ],
+    "pin_layers": [
+      "M4"
+    ],
+    "m5_crossing_at_origin_0": {
+      "R0": {
+        "L": true,
+        "R": true
+      },
+      "MY": {
+        "L": true,
+        "R": true
+      }
+    },
+    "views": {
+      "ot_sram_1r1w_512x128_m1_r2c2.json": "2da02f9b0b327b8740dbf214c384d6183dd527992636373cc854fa1354cc7480",
+      "ot_sram_1r1w_512x128_m1_r2c2.lef": "54bb9d472260295615c7faeee771a8dfae1ca1fc78f522bf57f93bf92b9a1fec",
+      "ot_sram_1r1w_512x128_m1_r2c2.v": "7d443cb45e7221330491e4400b66bc653f3c098ac6e5499c5c30ce6fac7ef4cc",
+      "ot_sram_1r1w_512x128_m1_r2c2_bb.v": "469bc6a7f0627e83f0a6e7b496fa13f579ba1ba992877c480dc087b134f32800",
+      "ot_sram_1r1w_512x128_m1_r2c2_ff.lib": "5e0f77c11fdd393d7da534d015f8bc32cfe4c74ed3fcc8e4829adfe635b45bfc",
+      "ot_sram_1r1w_512x128_m1_r2c2_ss.lib": "e95144b07e89b1b09eb9a379871d201b683adea997f9718e0a249482ac9a4e30",
+      "ot_sram_1r1w_512x128_m1_r2c2_tt.lib": "a46d2573ea376c2e695501963b95714280ce02783f77eeb736798c095fdb6097"
+    },
+    "v1_dir": "physical/asap7_v41x_pdie_macros/ot_sram_1r1w_512x128_m1_r2c2"
+  }
+}

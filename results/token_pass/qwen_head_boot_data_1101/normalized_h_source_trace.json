@@ -1,0 +1,290 @@
+{
+  "status": "HEAD_NORMALIZED_INPUT_PRODUCER_NOT_PRESENT_IN_SELECTED_59P_IMAGE",
+  "scope": "Source/control-image diagnosis; no activation or execution claim",
+  "actual_source": {
+    "host": "intel1",
+    "directory": "/srv/opentallas-scratch2/claude/die-qc-59p/qc_prog_roms/compile/ctlm",
+    "program_sha256": "5a5ce77758dcf90fce1026a5a4d7fefee813c46a5e5d28d386d80ed1e3c5078a",
+    "metadata_sha256": "02915061871f18aa7f8e4625cf0c0d3152a495cee141077ad48fa7cbfeebf09e",
+    "sys_face_cfg_sha256": "fcfada5dfc8cdebe133061f174d60e5ba12a3c84237976b8ba8cfe5b96d240ce"
+  },
+  "installed": {
+    "lm_head": null,
+    "PW0_1023_match_program_memh": true,
+    "DW_differences": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+    ],
+    "programme_rows": 25,
+    "metadata_stage": 1,
+    "HEAD_G_PW984_1003_all_zero": true,
+    "base_xpf_records": [
+      {
+        "record": 0,
+        "xb": 4096,
+        "xcs": 8,
+        "xks": 1,
+        "split": 9,
+        "k": 8,
+        "round": 1,
+        "producer_pc": 23,
+        "unit": 2,
+        "stage": 1,
+        "arm": 5848,
+        "issue": 5844,
+        "first": 5878
+      },
+      {
+        "record": 1,
+        "xb": 50672,
+        "xcs": 2,
+        "xks": 1,
+        "split": 8,
+        "k": 2,
+        "round": 1,
+        "producer_pc": 11,
+        "unit": 1,
+        "stage": 1,
+        "arm": 2180,
+        "issue": 553,
+        "first": 2210
+      },
+      {
+        "record": 2,
+        "xb": 4096,
+        "xcs": 32,
+        "xks": 1,
+        "split": 7,
+        "k": 32,
+        "round": 1,
+        "producer_pc": 15,
+        "unit": 2,
+        "stage": 1,
+        "arm": 3774,
+        "issue": 3770,
+        "first": 3804
+      },
+      {
+        "record": 3,
+        "xb": 55280,
+        "xcs": 6,
+        "xks": 1,
+        "split": 8,
+        "k": 6,
+        "round": 1,
+        "producer_pc": 19,
+        "unit": 2,
+        "stage": 1,
+        "arm": 4485,
+        "issue": 4481,
+        "first": 4515
+      }
+    ],
+    "not_compiled": [
+      "G-C4 DV slice lowering: slice PROG image (the 457-b SU words of the SU commands' pidx = ISA PC), STN / ROOT / STREAM / PORTS / AMAX command fields (need the DV row->slice ownership and slice-local VM address maps)",
+      "stage-0 slice commands beyond the LOCAL EMB start (E calendar / embedding landing not compiled)",
+      "LM-head (stage 37) ME programme: not compiled (run with --lm-head; RTL needs qfd_tt_ctlm_dv SEG_CAL 1)",
+      "per-layer ROM relocation needs qfd_tt_ctlm_dv STAGE_ME 1 (command_stage = running stage)"
+    ]
+  },
+  "candidate": {
+    "command": "python3 tools/qwen_layerbench/ctlm_image.py --lm-head --out OUT",
+    "source_tree": "7855f0c6a",
+    "status": "SOURCE_ONLY_LEGACY_ISA_NOT_NATIVE_INSTALLABLE",
+    "head_base": 25,
+    "ops": [
+      {
+        "pc": 25,
+        "unit": 2,
+        "su_nin": 4096,
+        "su_nout": 1,
+        "a_base": 4096,
+        "b_base": 0,
+        "c_base": 0,
+        "d_base": 0,
+        "r_base": 14240,
+        "b_src": 0,
+        "c_src": 0,
+        "ma": 0,
+        "mc": 0,
+        "red": 1,
+        "red_sq": 1,
+        "sfu": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "me_xbase": 0,
+        "me_nout": 0,
+        "me_split": 0
+      },
+      {
+        "pc": 26,
+        "unit": 2,
+        "su_nin": 1,
+        "su_nout": 1,
+        "a_base": 14240,
+        "b_base": 0,
+        "c_base": 0,
+        "d_base": 14256,
+        "r_base": 0,
+        "b_src": 0,
+        "c_src": 0,
+        "ma": 3,
+        "mc": 0,
+        "red": 0,
+        "red_sq": 0,
+        "sfu": 3,
+        "imm1": 964689920,
+        "imm2": 897988541,
+        "me_xbase": 0,
+        "me_nout": 0,
+        "me_split": 0
+      },
+      {
+        "pc": 27,
+        "unit": 2,
+        "su_nin": 4096,
+        "su_nout": 1,
+        "a_base": 4096,
+        "b_base": 14256,
+        "c_base": 0,
+        "d_base": 8192,
+        "r_base": 0,
+        "b_src": 0,
+        "c_src": 1,
+        "ma": 1,
+        "mc": 1,
+        "red": 0,
+        "red_sq": 0,
+        "sfu": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "me_xbase": 0,
+        "me_nout": 0,
+        "me_split": 0
+      },
+      {
+        "pc": 28,
+        "unit": 1,
+        "su_nin": 0,
+        "su_nout": 0,
+        "a_base": 0,
+        "b_base": 0,
+        "c_base": 0,
+        "d_base": 0,
+        "r_base": 0,
+        "b_src": 0,
+        "c_src": 0,
+        "ma": 0,
+        "mc": 0,
+        "red": 0,
+        "red_sq": 0,
+        "sfu": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "me_xbase": 8192,
+        "me_nout": 18992,
+        "me_split": 9
+      },
+      {
+        "pc": 29,
+        "unit": 0,
+        "su_nin": 0,
+        "su_nout": 0,
+        "a_base": 0,
+        "b_base": 0,
+        "c_base": 0,
+        "d_base": 0,
+        "r_base": 0,
+        "b_src": 0,
+        "c_src": 0,
+        "ma": 0,
+        "mc": 0,
+        "red": 0,
+        "red_sq": 0,
+        "sfu": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "me_xbase": 0,
+        "me_nout": 0,
+        "me_split": 0
+      }
+    ],
+    "expected": {
+      "cmd_at_tt_ctlm": [
+        {
+          "edge": 12,
+          "cmd": "f0000000000000000000000000193",
+          "label": "SU PC25"
+        },
+        {
+          "edge": 79,
+          "cmd": "f00000000000000000000000001a3",
+          "label": "SU PC26"
+        },
+        {
+          "edge": 104,
+          "cmd": "f00000000000000000000000001b3",
+          "label": "SU PC27"
+        }
+      ],
+      "local_at_tt_ctlm": [
+        {
+          "edge": 5,
+          "kind": "SEG",
+          "base": 25,
+          "label": "SEG base 25"
+        }
+      ],
+      "me_issue": [
+        {
+          "head_cycle": 219,
+          "edge": 227,
+          "pc": 28,
+          "unit": 1
+        },
+        {
+          "head_cycle": 3138,
+          "edge": 3146,
+          "pc": 29,
+          "unit": 0
+        }
+      ],
+      "xpf_arm_at_tt_ctlm": [
+        {
+          "edge": 112,
+          "xpf72": "800112002010004001",
+          "consumer_pc": 28
+        }
+      ],
+      "rom_go_at_tt_ctlm": [
+        {
+          "edge": 229,
+          "pc": 28
+        }
+      ]
+    },
+    "xpf_records": [
+      {
+        "consumer_pc": 28,
+        "producer_pc": 27,
+        "producer_unit": 2,
+        "arm_cycle": 102,
+        "issue_cycle": 98,
+        "first_write_cycle": 132,
+        "xpf72": "800112002010004001"
+      }
+    ],
+    "missing": [
+      "native457bit per-slice/per-user HEAD operand/instruction mapping",
+      "actual normalized-H producer and issue/visibility dates",
+      "genuine normgain CROM installation if selected consumer needs it",
+      "current s8 private CALR HEAD segment and its matching ME/XPF splice",
+      "actual shared BTAB installation",
+      "native arithmetic/transport execution gate"
+    ]
+  }
+}

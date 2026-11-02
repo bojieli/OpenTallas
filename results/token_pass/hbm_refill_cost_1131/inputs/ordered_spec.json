@@ -1,0 +1,22 @@
+{
+ "scope": "Real SOURCE0 body DMA transport only; not arithmetic/full G5 or production schedule adoption",
+ "mode": "volume",
+ "descriptors": 3715,
+ "packets": 150276,
+ "words": 1198848,
+ "windows": 3035,
+ "physical_windows": 32,
+ "source_stack": 0,
+ "source_aliases": false,
+ "clock_ps": 833,
+ "external_read_edges": 29,
+ "fixture_refresh_straps": [
+  127,
+  126
+ ],
+ "production_target_allocation": false,
+ "grouped_window_order": false,
+ "original_source_order": true,
+ "BODY_barriers_encoded": true,
+ "source_sha256": "1d447a55c12dbeeb43c9f7244c9b00449504a5da33425db6a23bdfe1ea5e92c7"
+}

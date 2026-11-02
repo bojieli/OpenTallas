@@ -103,3 +103,31 @@ def test_rst_n_base_needs_hard_wrapper_delivered_reset():
                 consumers=["fstart:o"])]
     with pytest.raises(RawBranchError, match="exactly one same-clk plain relay"):
         RawBranches("t", cfg, "    wire rst_n;\n", [10.0, 10.0])
+
+
+def test_index_matches_legacy_driver_uniqueness_and_clock_checks():
+    import re
+    def legacy(text, net):
+        matches=[]
+        for m in re.finditer(r"\bot_dp_rrelay\s+(\w+)\s*\(([^;]*?)\);", text, re.S):
+            pins=dict(re.findall(r"\.(clk|d|q)\(\s*(\w+)\s*\)",m.group(2)))
+            if pins.get('q')==net: matches.append((m.group(1),pins))
+        if len(matches)!=1 or matches[0][1].get('clk')!='clk' or not matches[0][1].get('d'):
+            raise RawBranchError('invalid')
+        return matches[0]
+    for text in [BODY, BODY+BODY, BODY.replace('.clk(clk)', '.clk(other)'),
+                 BODY+'ot_dp_rrelay no_d (.clk(clk), .q(no_d));']:
+        index=RawBranches.driver_index(text)
+        for net in ['r0','r1','r2','missing','no_d']:
+            try: expected=legacy(text,net)
+            except RawBranchError:
+                with pytest.raises(RawBranchError): RawBranches.driver(None,net,index)
+            else: assert RawBranches.driver(None,net,index)==expected
+
+
+def test_indices_are_rebuilt_for_each_validation_epoch():
+    g,_=graph(['r1'])
+    g.validate(emitted(g))
+    # A later baseline addition must not be hidden by a cached first-epoch index.
+    g.baseline_relay('ot_dp_rrelay u_duplicate (.clk(clk), .d(r0), .q(r1));')
+    with pytest.raises(RawBranchError): g.validate(emitted(g))

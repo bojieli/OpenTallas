@@ -19,6 +19,20 @@ def pair(second_clear):
 
 
 class BoundaryControls(unittest.TestCase):
+    def test_all_private_outputs_leave_kept_native_alias_internal(self):
+        j = pair(5)
+        m = j['modules']['top']
+        for port in ('qa', 'qb'):
+            m['ports'][port] = dict(direction='output', bits=[4])
+            m['netnames'][port] = dict(bits=[4], attributes={})
+        m['netnames']['native_alias'] = dict(bits=[4], attributes=dict(keep=H.ONE))
+        out, _ = H.transform(j, 'top', preserve_port_shape=True, all_private_out=True)
+        m = out['modules']['top']
+        qa, qb = (m['ports'][p]['bits'][0] for p in ('qa', 'qb'))
+        self.assertEqual(len({4, qa, qb}), 3)
+        self.assertEqual(m['netnames']['native_alias']['bits'], [4])
+        self.assertNotIn('single_bit_vector', m['netnames']['qa']['attributes'])
+
     def test_different_async_clear_must_not_merge(self):
         _, r = H.transform(pair(7), 'top')
         self.assertEqual(r['merged_in'], [])

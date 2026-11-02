@@ -130,6 +130,8 @@ usage: ot-heavy-reconcile [--dry-run] [--verbose]     one pass
        ot-heavy-reconcile --units                      table: request, charge, growth, now, peak, class peak, age per unit
        ot-heavy-reconcile --gate MEM -- CMD...         "OK|NO <charged GB> <class> | <arithmetic>" (ot-heavy, under its lock)
        ot-heavy-reconcile --selftest                   the charge and admission rules on synthetic units
+       ot-heavy-reconcile --die-waiters               JSON: die waiters + the valid DIE_RESERVE_1101 reservation (ot-reserve)
+       ot-heavy-reconcile --reserve-set ID | --reserve-clear [WHY]   set / drop this host's die reservation (ot-reserve)
        ot-heavy-reconcile --free [DIR]                 JSON: memory free after reservations, waiters, disk (for ot-run)
        ot-heavy-reconcile --sizes                      print the learned table
        ot-heavy-reconcile --exit-report UNIT T0 RC PIDFILE [CG]   EARLYOOM / MEMCG-OOM lines for a finished job (v17)
@@ -390,7 +392,7 @@ def sizes():
         except (OSError, ValueError):
             continue
         for c, e in d.items():
-            o = t.setdefault(c, dict(n=0, live=0, proved=0, peak_gb=0.0, req_gb=0))
+            o = t.setdefault(c, dict(n=0, live=0, proved=0, partial=0, peak_gb=0.0, req_gb=0))
             for k in o:
                 o[k] = max(o[k], e.get(k, 0))
     for e in t.values():
@@ -398,10 +400,20 @@ def sizes():
     return t
 
 
+def completion_only_class(cls):
+    return (cls or "").split(":", 1)[0] == "elab_hbm_whole_hierarchy.sh"
+
+
+def capacity_sample_count(cls, entry):
+    # A serial all-hierarchy request can enter another frontend after a quiet
+    # phase. Only completion establishes its whole-workload peak.
+    return entry.get("n", 0) + (0 if completion_only_class(cls) else entry.get("proved", 0))
+
+
 def admit_size(mem, cls, table=None):
     """(GB charged, why) when a request is over 2x the measured peak of its class, else None"""
     e = (sizes() if table is None else table).get(cls)
-    if cls not in ("?", "cd") and (not e or e["n"] + e.get("proved", 0) < 1):
+    if cls not in ("?", "cd") and (not e or capacity_sample_count(cls, e) < 1):
         for pre, gb in SEED.items():
             if cls.startswith(pre):
                 fam, why = family_seed(cls, pre, table if table is not None else sizes())
@@ -409,7 +421,7 @@ def admit_size(mem, cls, table=None):
                 if gb < mem:
                     return gb, f"family '{pre}*' seed {gb:g}G ({why}; class '{cls}' not measured yet)"
                 return None
-    if cls in ("?", "cd") or not e or e["n"] + e.get("proved", 0) < 1 or mem <= 2 * e["peak_gb"]:
+    if cls in ("?", "cd") or not e or capacity_sample_count(cls, e) < 1 or mem <= 2 * e["peak_gb"]:
         return None
     res = math.ceil(max(1.5 * e["peak_gb"], e["peak_gb"] + 8))
     if res >= mem:
@@ -449,15 +461,40 @@ def growth_phase(procs_all):
     return "", False
 
 
+def completion_status(unit):
+    """Legacy unknown remains explicit; new wrappers provide real exit status."""
+    path = f"{D}/completions/{unit}"
+    try:
+        fields = open(path).read().rstrip("\n").split("\t")
+    except FileNotFoundError:
+        return "legacy"
+    except OSError:
+        return "unknown"
+    if len(fields) != 4 or fields[0] != unit:
+        return "unknown"
+    value = fields[3]
+    return value if value.isdigit() and 0 <= int(value) <= 255 else "unknown"
+
+
+def completed_peak_qualified(row):
+    """Failed/partial observations remain raw lower bounds, never upper-bound samples."""
+    status = row[6] if len(row) > 6 else "legacy"
+    if status == "legacy":
+        # New explicit all-hierarchy work must complete; it cannot inherit an
+        # unqualified generic elab#.sh observation or an unknown wrapper exit.
+        return not completion_only_class(row[2])
+    return status == "0"
+
+
 def rebuild_sizes(st):
     t = {}
     rows = [ln.split("\t") for ln in rd(PEAKS).splitlines()]
-    rows = [(r[2], float(r[4]), int(r[3]), "done") for r in rows if len(r) >= 5]
+    rows = [(r[2], float(r[4]), int(r[3]), "done" if completed_peak_qualified(r) else "partial") for r in rows if len(r) >= 5]
     rows += [(s["cls"], s["peak"], s["launch"], "live") for s in st.values() if s.get("cls") and s.get("age", 0) > 1800]
-    rows += [(s["cls"], s["peak"], s["launch"], "proved") for s in st.values() if s.get("cls") and s.get("past_peak")]
+    rows += [(s["cls"], s["peak"], s["launch"], "proved") for s in st.values() if s.get("cls") and s.get("past_peak") and not completion_only_class(s["cls"])]
     for cls, peak, req, kind in rows:
         peak = min(peak, req) if req > 0 else peak     # a unit cannot have held more than its MemoryMax (v6)
-        e = t.setdefault(cls, dict(n=0, live=0, proved=0, peak_gb=0.0, req_gb=0))
+        e = t.setdefault(cls, dict(n=0, live=0, proved=0, partial=0, peak_gb=0.0, req_gb=0))
         e["n" if kind == "done" else kind] += 1
         e["peak_gb"] = round(max(e["peak_gb"], peak), 1)
         e["req_gb"] = max(e["req_gb"], req)
@@ -566,7 +603,10 @@ def main():
         s["growing"] = rose
         kind, peak, why = None, max(hwm, max(vals)), f"procs {comms}"
         fast = bool(FAST.match(s["cls"] or ""))
-        if fast:                                           # v4: gate families, lowered whatever runs inside
+        if completion_only_class(s["cls"]):
+            s["past_peak"] = False
+            why = "all-hierarchy request still running; individual quiet phases are not whole-workload completion"
+        elif fast:                                           # v4: gate families, lowered whatever runs inside
             peak = max(peak, cgpeak)
             if len(vals) >= 2 and span >= FAST_S and flat:
                 kind, why = "fast", f"RSS flat {min(vals)/GB:.2f}..{max(vals)/GB:.2f} GiB over {span/60:.0f} min, procs {comms}"
@@ -627,7 +667,7 @@ def main():
     for u in [u for u in st if u not in seen]:
         s = st.pop(u)
         if s.get("cls") and s.get("age", 0) >= 240:       # finished: one row of history
-            open(PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{s['launch']}\t{s['peak']}\t{int(s['age'])}\n")
+            open(PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{s['launch']}\t{s['peak']}\t{int(s['age'])}\t{completion_status(u)}\n")
         try:
             os.unlink(f"{D}/use.{u}")
         except OSError:
@@ -648,7 +688,7 @@ def meminfo():
     return d["MemTotal"], d["MemAvailable"]
 
 
-def scope_cgroup_snapshot(units):
+def scope_cgroup_snapshot(units, ages=None):
     """One read-only systemd lookup, including scopes outside the usual app slice.
 
     Return None on unavailable/empty bus output so callers preserve the old
@@ -657,7 +697,7 @@ def scope_cgroup_snapshot(units):
     if not units:
         return {}
     try:
-        result = subprocess.run(["systemctl", "--user", "show", "--property=Id", "--property=ControlGroup",
+        result = subprocess.run(["systemctl", "--user", "show", "--property=Id", "--property=ControlGroup", "--property=ActiveEnterTimestampMonotonic",
                                  *[f"{u}.scope" for u in units]],
                                 capture_output=True, text=True, timeout=5)
         raw = result.stdout.strip()
@@ -678,6 +718,11 @@ def scope_cgroup_snapshot(units):
             continue
         path = f"/sys/fs/cgroup{cg}" if cg.startswith("/") else None
         out[name[:-6]] = path if path and os.path.isdir(path) else None
+        # cgroupfs inode mtimes can reset together after inode eviction.  Systemd
+        # records the actual admission/start on the host monotonic clock.
+        entered = fields.get("ActiveEnterTimestampMonotonic", "")
+        if ages is not None and entered.isdigit() and int(entered) > 0:
+            ages[name[:-6]] = max(0.0, time.monotonic() - int(entered) / 1e6)
     return out or None
 
 
@@ -710,7 +755,8 @@ def read_units():
         fields = rd(f).split()
         if len(fields) == 2:
             units.add(fields[0])
-    cg_snapshot = scope_cgroup_snapshot(sorted(units))
+    scope_ages = {}
+    cg_snapshot = scope_cgroup_snapshot(sorted(units), scope_ages)
     for f in files:
         try:
             unit, m = rd(f).split()
@@ -733,7 +779,7 @@ def read_units():
         mx = rd(cg + "/memory.max").strip()
         req = int(mx) / GB if mx.isdigit() else float(max(m, s.get("launch", 0), int(meta[0]) if meta[:1] and meta[0].isdigit() else 0))
         try:
-            age = NOW - os.path.getmtime(cg)           # a scope's cgroup directory is created when it starts
+            age = scope_ages.get(unit, NOW - os.path.getmtime(cg))
         except OSError:
             age = 0.0
         rows.append(dict(unit=unit, res=m, active=True, file=f, req=req, now=cur, age=max(0.0, age),
@@ -777,7 +823,7 @@ def conf(key):
 
 def class_peak(cls, table):
     e = table.get(cls) if cls and cls not in ("?", "cd") else None
-    return e["peak_gb"] if e and e["n"] + e.get("proved", 0) >= 1 and e["peak_gb"] > 0 else None
+    return e["peak_gb"] if e and capacity_sample_count(cls, e) >= 1 and e["peak_gb"] > 0 else None
 
 
 def books(rows, total, avail, table, gf=None):
@@ -914,7 +960,7 @@ def class_late(cls, table):
         runs = {}
         for ln in rd(PEAKS).splitlines():
             f = ln.split("\t")
-            if len(f) >= 5:
+            if len(f) >= 5 and completed_peak_qualified(f):
                 try:
                     runs.setdefault(f[2], []).append(float(f[4]))
                 except ValueError:
@@ -1061,6 +1107,11 @@ def gate_locked(mem, argv):
     held = die_hold(total, can_die, floor, table, need) if ok and not me_die else 0
     if held and can - res < held:
         ok, note = False, (note + "; " if note else "") + f"DIE-FIRST: {held:.0f} GB held for a waiting die trial"
+    rsv = reserve_active(table) if ok and not me_die else None
+    if rsv:
+        ok, note = False, (note + "; " if note else "") + (
+            f"DIE-RESERVE: host reserved for die waiter {rsv['id']} ({rsv.get('charge')} GB, since "
+            f"{time.strftime('%H:%M', time.localtime(rsv.get('at', 0)))}); new non-die jobs wait (max {RESERVE_MAX_S // 3600} h)")
     print(f"{'OK' if ok else 'NO'} {res} {cls} | need {need:g} x {res} = {need * res:.0f} GB, admissible {can:.0f} GB: "
           f"available {avail:.0f} GB, growth charged {charged_growth(b, total):.0f} GB ({('v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap ' + format(100 * conf('GROWTH_CAP_AVAIL_FRAC'), 'g') + ' % of available') if conf('MEASURED_RESERVE') else 'v13 rate rule, uncapped sum'}, settled floor {b.get('settled_floor', 0.0):.0f} GB; pending {b.get('pending', 0.0):.0f} GB at x{conf('GROWING_FACTOR'):g}), young {b['young']:.0f} GB, "
           f"floor {floor:.0f} GB; {inv_text(inv)}" + (f"; {note}" if note else ""))
@@ -1088,6 +1139,37 @@ def die_like(argv, cwd="", environ=()):
     return False
 
 
+def die_waiter_cpu_blocked(environ, load1, ncpu, factor):
+    """Positive LOADCAP rejection only; unknown state keeps DIE-FIRST conservative."""
+    if not isinstance(environ, dict) or environ.get("OT_HEAVY_CPU", "") not in ("", "normal"):
+        return False
+    if "OMP_NUM_THREADS" in environ or "OMP_THREAD_LIMIT" in environ:
+        return False  # nproc has environment-dependent semantics: do not guess
+    try:
+        if not all(math.isfinite(float(v)) for v in (load1, ncpu, factor)) or ncpu <= 0 or factor <= 0:
+            return False
+        cap = int(factor * ncpu)
+        return cap > 0 and int(load1) >= cap
+    except (TypeError, ValueError, OverflowError):
+        return False
+
+
+def waiter_load_cap_factor(environ):
+    """ot-heavy sources /etc after inheriting its environment; invalid syntax is unknown."""
+    try:
+        text = open("/etc/ot-heavy.conf").read()
+    except FileNotFoundError:
+        text = ""
+    except OSError:
+        return None
+    assignments = re.findall(r"^LOAD_CAP_FACTOR=(.*)$", text, re.M)
+    value = assignments[-1].split("#", 1)[0].strip() if assignments else environ.get("LOAD_CAP_FACTOR", "1.5")
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
 def prio_waiters(table, skip=()):
     """DIE-FIRST (owner 2026-10-15 23:50: die-level trials iterate back to back and get admission priority on the
     large-memory hosts): waiting ot-heavy processes started with OT_HEAVY_PRIO=die (ot-run --priority die), as
@@ -1103,8 +1185,20 @@ def prio_waiters(table, skip=()):
             cwd = os.readlink(f"/proc/{p}/cwd")
         except OSError:
             cwd = ""
-        if not die_like(a[a.index("--") + 1:], cwd, rd(f"/proc/{p}/environ").split("\0")):
+        environment = rd(f"/proc/{p}/environ")
+        if not die_like(a[a.index("--") + 1:], cwd, environment.split("\0")):
             continue
+        # A CPU-blocked normal die cannot consume its reserved memory NOW.
+        # Critical/unknown waiters retain their reservation; RAM guards are unchanged.
+        if environment:
+            env = dict(x.split("=", 1) for x in environment.split("\0") if "=" in x)
+            try:
+                load = float(rd("/proc/loadavg").split()[0])
+                ncpu = len(os.sched_getaffinity(int(p)))
+            except (OSError, IndexError, ValueError):
+                load = ncpu = None
+            if die_waiter_cpu_blocked(env, load, ncpu, waiter_load_cap_factor(env)):
+                continue
         m = int(a[a.index("--mem") + 1])
         try:
             start = int(rd(f"/proc/{p}/stat").rsplit(")", 1)[1].split()[19])
@@ -1112,6 +1206,122 @@ def prio_waiters(table, skip=()):
             start = 0
         out.append((start, (admit_size(m, classify(a[a.index("--") + 1:]), table) or [m])[0]))
     return sorted(out)
+
+
+# DIE_RESERVE_1101 (FLOW-21, COORD 11-01 16:1x ruling on TOK-QK-2: a QC token build --priority die 252 GB waited 7.5 h on
+# intel2 because small jobs kept refilling the memory it needed; DIE-FIRST v2 only orders and holds nothing for a die job
+# that does not fit NOW).  Bounded reservation: when the oldest die waiter on a host has waited > RESERVE_AFTER_S, the
+# hub tick (ot-reserve, at most ONE host fleet-wide) writes RESERVE_FILE on that host; while it is valid the host admits
+# NO NEW non-die job (running jobs untouched, die jobs unchanged, no CPU-load hold).  It is released when the waiter is
+# admitted or gone, or RESERVE_MAX_S after it was set.  RESERVE / RELEASE lines go to admit.log and the hub log.
+RESERVE_FILE, RESERVE_AFTER_S, RESERVE_MAX_S = f"{D}/die_reserve.json", 3600, 6 * 3600
+
+
+def boot_time():
+    m = re.search(r"^btime (\d+)", rd("/proc/stat"), re.M)
+    return int(m[1]) if m else 0
+
+
+def die_waiter_rows(table):
+    """every waiting --priority die ot-heavy on this host: id (ot-run tag prefix 'otrun-<host>-<pid>-', stable across
+    REBALANCE re-tries, else 'pid:<pid>'), since (OT_HEAVY_WAIT_SINCE from ot-run, else the waiter's own start), charge"""
+    out, bt, tck = [], boot_time(), os.sysconf("SC_CLK_TCK")
+    for p in os.listdir("/proc"):
+        if not p.isdigit():
+            continue
+        a = rd(f"/proc/{p}/cmdline").split("\0")[:-1]
+        if not (len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:8] and "--" in a):
+            continue
+        try:
+            cwd = os.readlink(f"/proc/{p}/cwd")
+        except OSError:
+            cwd = ""
+        environment = rd(f"/proc/{p}/environ").split("\0")
+        cmd = a[a.index("--") + 1:]
+        if not die_like(cmd, cwd, environment):
+            continue
+        env = dict(x.split("=", 1) for x in environment if "=" in x)
+        try:
+            start = bt + int(rd(f"/proc/{p}/stat").rsplit(")", 1)[1].split()[19]) / tck
+        except (IndexError, ValueError):
+            start = NOW
+        try:
+            since = min(start, float(env.get("OT_HEAVY_WAIT_SINCE", start)))
+        except ValueError:
+            since = start
+        tag = a[a.index("--tag") + 1] if "--tag" in a[:a.index("--")] else ""
+        rid = tag.rsplit("-", 1)[0] + "-" if tag.startswith("otrun-") and tag.count("-") >= 3 else f"pid:{p}"
+        m = int(a[a.index("--mem") + 1])
+        out.append(dict(id=rid, pid=int(p), since=round(since), mem=m,
+                        charge=(admit_size(m, classify(cmd), table) or [m])[0], cmd=" ".join(cmd)[:160]))
+    return sorted(out, key=lambda r: r["since"])
+
+
+def reserve_log(m):
+    line = f"{time.strftime('%Y-%m-%dT%H:%M:%S%z')} {os.uname().nodename} {m}"
+    try:
+        open(f"{D}/admit.log", "a").write(line + "\n")
+        open(f"{D}/die_reserve.log", "a").write(line + "\n")
+    except OSError:
+        pass
+    return line
+
+
+def reserve_active(table, now=None):
+    """the valid reservation on this host, or None; an invalid one is released here (waiter admitted/gone, or expired)"""
+    now = NOW if now is None else now
+    try:
+        r = json.loads(rd(RESERVE_FILE))
+    except ValueError:
+        return None
+    if not isinstance(r, dict) or "id" not in r:
+        return None
+    why = None
+    if now - float(r.get("at", 0)) > RESERVE_MAX_S:
+        why = f"expired after {RESERVE_MAX_S // 3600} h"
+    elif not any(w["id"] == r["id"] for w in die_waiter_rows(table)):
+        why = "die waiter admitted or gone"
+    if why:
+        try:
+            os.unlink(RESERVE_FILE)
+            reserve_log(f"DIE-RESERVE RELEASE {r['id']} ({why}; held {(now - float(r.get('at', now))) / 60:.0f} min)")
+        except OSError:
+            pass
+        return None
+    return r
+
+
+def reserve_set(rid, table):
+    """hub tick: reserve this host for the die waiter rid (must be waiting here)"""
+    w = next((w for w in die_waiter_rows(table) if w["id"] == rid), None)
+    if not w:
+        print(f"NO die waiter {rid} on {os.uname().nodename}")
+        return 1
+    r = dict(id=rid, at=round(time.time()), since=w["since"], charge=w["charge"], cmd=w["cmd"])
+    tmp = RESERVE_FILE + ".tmp"
+    open(tmp, "w").write(json.dumps(r) + "\n")
+    os.replace(tmp, RESERVE_FILE)
+    print(reserve_log(f"DIE-RESERVE RESERVE {rid} charge {w['charge']} GB, waited {(time.time() - w['since']) / 60:.0f} min: "
+                      f"no NEW non-die job until it is admitted (max {RESERVE_MAX_S // 3600} h): {w['cmd']}"))
+    return 0
+
+
+def reserve_clear(why):
+    r = None
+    try:
+        r = json.loads(rd(RESERVE_FILE))
+        os.unlink(RESERVE_FILE)
+    except (OSError, ValueError):
+        return 0
+    print(reserve_log(f"DIE-RESERVE RELEASE {r.get('id') if isinstance(r, dict) else '?'} ({why})"))
+    return 0
+
+
+def die_waiters_report():
+    """hub tick input: this host's die waiters and its (validated) reservation"""
+    table = sizes()
+    print(json.dumps(dict(host=os.uname().nodename, now=round(time.time()), reserve=reserve_active(table),
+                          waiters=die_waiter_rows(table))))
 
 
 def die_hold(total, can, floor, table, need=None):
@@ -1151,6 +1361,7 @@ def free(path):
     can = inv_cap(can_v16, inv)                         # v17: admit_gb / die_admit_gb already include the invariant
     can_die = inv_cap(die_admissible(avail, b, floor, conf("NEED_FACTOR"), can), inv)
     wait, req = waiters(table)
+    rsv = reserve_active(table)
     try:
         v = os.statvfs(path)
         disk = v.f_bavail * v.f_frsize >> 30
@@ -1162,7 +1373,8 @@ def free(path):
                           young_gb=round(b["young"]), plenty=b["plenty"], headroom_gb=head, floor_gb=round(floor),
                           cpu_load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=b["running"],
                           fresh=b["fresh"], waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
-                          admit_gb=math.floor(can), free_gb=math.floor(can) - sum(wait), die_admit_gb=math.floor(can_die),
+                          admit_gb=0 if rsv else math.floor(can), free_gb=(0 if rsv else math.floor(can)) - sum(wait),
+                          die_admit_gb=math.floor(can_die), die_reserve=rsv,
                           inv_free_gb=math.floor(inv["free"]), committed_gb=round(inv["committed"]),
                           inv_limit_gb=round(inv["limit"]), other_gb=round(inv["other"]), admit_gb_v16=round(can_v16),
                           inv_terms=dict(in_use=round(inv["used"], 1), peak_gap=round(inv["held"] - inv["now"], 1),
@@ -1464,6 +1676,12 @@ if __name__ == "__main__":
                   f"'{cls}' (n={e['n']}+{e['live']} live); --mem {e['suggest_gb']} is enough")
     elif sys.argv[1:2] == ["--gate"]:
         gate(int(sys.argv[2]), sys.argv[4:])
+    elif sys.argv[1:2] == ["--die-waiters"]:
+        die_waiters_report()
+    elif sys.argv[1:2] == ["--reserve-set"]:
+        sys.exit(reserve_set(sys.argv[2], sizes()))
+    elif sys.argv[1:2] == ["--reserve-clear"]:
+        sys.exit(reserve_clear(" ".join(sys.argv[2:]) or "cleared by hand"))
     elif "--units" in sys.argv:
         units()
     elif "--selftest" in sys.argv:

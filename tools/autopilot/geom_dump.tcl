@@ -12,6 +12,8 @@
 #   T  layer dir pitch                               routing layer of the tech (GEOM-AUTO-2: channel/column capacity)
 #   O  master layer...                               routing layers obstructed by a hard-macro master (OBS / pins)
 #   Q  id status                                     non-PLACED placement status (FIRM/LOCKED/COVER: pre-placed islands)
+#   MC id x y                                        clock-pin location of a hard macro (avg XY of its CLOCK / clk-named
+#                                                    iterm): the pin tools/die_plan/clock_taps.tcl splits a macro by
 set gd_b [ord::get_db_block]
 set gd_u [expr {double([$gd_b getDbUnitsPerMicron])}]
 proc gd_f {v} { return [format %.4f [expr {$v / $::gd_u}]] }
@@ -50,6 +52,14 @@ foreach i [$gd_b getInsts] {
   set ps [$i getPlacementStatus]
   if {$ps ni {PLACED NONE UNPLACED SUGGESTED}} { puts $gd_o "Q\t[$i getId]\t$ps" }
   puts $gd_o "C\t[$i getId]\t$k\t$mn\t[gd_f [$bb xMin]]\t[gd_f [$bb yMin]]\t[gd_f [$bb xMax]]\t[gd_f [$bb yMax]]\t[$i getName]"
+  if {$k eq "M"} {
+    foreach it [$i getITerms] {
+      set mt [$it getMTerm]
+      if {[$mt getSigType] ne "CLOCK" && ![regexp -nocase {^(clk|ck|gclk)$} [$mt getName]]} { continue }
+      set axy [$it getAvgXY]
+      if {[lindex $axy 0]} { puts $gd_o "MC\t[$i getId]\t[gd_f [lindex $axy 1]]\t[gd_f [lindex $axy 2]]"; break }
+    }
+  }
 }
 set k 0
 array set gd_pk {}

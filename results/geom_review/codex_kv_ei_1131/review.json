@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS-COND DPL continuation only",
+  "image": "resized.png",
+  "looked": true,
+  "findings": [
+    "Actual3_4 output328738 non-tap cells and84071 fixed flops; captures follow the reserved face/landing strips, while combinational logic spreads into open interior channels.",
+    "No macro wall or new outline/pin/clock/PDN change; local high-density edges remain a GRT/detailed-placement question, not a routing approval.",
+    "Both previous DPL runs stopped at8.41GB RSS against8GB containers, with no completed placement verdict. Resume existing3_4 output at12GB; do not repeat GPL/resize.",
+    "After DPL, render actual final placement and run full reach/clock/channel/GRT gates before CTS/route."
+  ]
+}

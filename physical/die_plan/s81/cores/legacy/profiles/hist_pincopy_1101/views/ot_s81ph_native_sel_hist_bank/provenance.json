@@ -1,0 +1,111 @@
+{
+ "kit": {
+  "schema": "opentallas.s81.core_freeze.v1",
+  "kit": "ot_s81ph_native_sel_hist_bank_hrB20",
+  "module": "ot_s81ph_native_sel_hist_bank",
+  "plan_type": "bk_sel__t2",
+  "outline_um": [
+   64.8,
+   54.0
+  ],
+  "ref_tile": "physical/ref_tile/s81dvbk_hist32_b0r3",
+  "spec": "bd6f52e8c:physical/ref_tile/s81dvbk_hist32_b0r3/spec.json",
+  "spec_sha256": "ecfc0a201c77269f2463481d576995779bd17c6538a97b4e02bf54c108a87900",
+  "child_of": "dsdv_bksel_q",
+  "child_count": 16,
+  "drop_sources": [
+   "results/arch/s81_topk5_1020/gold_hist256.sv"
+  ],
+  "pin_expand": {
+   "clr": 17,
+   "gsel": 64
+  },
+  "pins_file": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank.lef",
+  "pins_sha256": "8c93992ea279186582cd4186e843618bb62cb6d3a87c4a59d45dd88cc29ae477",
+  "pins": 435,
+  "plan_lef": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank.lef",
+  "pins_canon_sha256": "33d548782c6ccb63b18c5bbcef4756f6c8dd5c970346333111da7579a51b2b3e",
+  "pins_placed_canon_sha256": "33d548782c6ccb63b18c5bbcef4756f6c8dd5c970346333111da7579a51b2b3e",
+  "pins_staged_file": "declared_pin_contract/ot_s81ph_native_sel_hist_bank.lef",
+  "pins_staged_sha256": "8c93992ea279186582cd4186e843618bb62cb6d3a87c4a59d45dd88cc29ae477",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "7ea712855c2b4ae0f3c53873d7716256ee3a4bbf7a44ab8c09f1510bb0e9c8ad",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_tol_ps": 40.0,
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "rc": "setRC_rcx_asap7.tcl",
+  "regional_taps": {
+   "nx": 2,
+   "ny": 2
+  },
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "face_guard (post-synth)",
+   "LEC EQUIVALENT (post-synth)",
+   "reg_fanout (post-synth)",
+   "TT/FF insertion (GRT, before route)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "2b24234ec46",
+  "sdc_lint_sha256": "9f4cb15408b946d7da4440c0c4430a013a311c295e504fa3deb4709349e9a1cb",
+  "face_guard_sha256": "da1b8ce4bb693991e33dcff378abb65121af213cbc8aa4655e94ed3375e5f67e",
+  "signoff_sha256": "e32413a9ca340f9817edcdf5c6f62b9914037200e87ec060e1c0c46c91061b04",
+  "macros": {},
+  "rtl_patches": [],
+  "kit_hash": "94b86a4eb39cadb1",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "etm_library_selection": {
+   "source_commit": "2fe29a90f",
+   "old_sha256": "def3d4e82b98b3058ff0dabd01b9653a81f1cc29700eaf2864181fb013528fea",
+   "new_sha256": "0bad183c29dc101b5f35f333851e9aa4a467362d997744dd818c9a84a9098754",
+   "rule": "exact ORFS TC/BC list through signoff resolver; no corner/margin change"
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20",
+ "src_commit": "2b24234ec46",
+ "flow_tag": null,
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-01T12:47:58-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20",
+  "base": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20/run/results/asap7/kl_ot_s81ph_native_sel_hist_bank_hrB20/base",
+  "signoff": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20/signoff/signoff.json",
+  "signoff_sha256": "504c627ed8266eceba9afe9cd14b7bda3729a34ce0c75ab0fc4bdd81363c0fe2",
+  "signoff_generated": "2026-11-01T12:38:08-08:00",
+  "odb": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20/run/results/asap7/kl_ot_s81ph_native_sel_hist_bank_hrB20/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20/lec_post1131/lec.json",
+  "note": "Fresh canonical435pinPINCOPYchild recovery; actual measured clock insertion; no parent adoption",
+  "lib_basis": null,
+  "files_sha256": {
+   "ot_s81ph_native_sel_hist_bank.lef": "8bea59762f9b8eff55de4429c845915abbd2de508085f114df0f47c10c8b5958",
+   "ot_s81ph_native_sel_hist_bank_ff.lib": "c12e678980c48fca1e335ccc150099ce1d679b3784ab258dd7f8cf755b5816d8",
+   "ot_s81ph_native_sel_hist_bank_tt.lib": "11993958edbe9ada8968d60243a0c82dbe014dc70da4315d4c5e06a07b025cc3",
+   "pins.json": "6ef43754c0f9363025163542392c924830fbab7822c6af06c697e83b937c10d9"
+  }
+ }
+}

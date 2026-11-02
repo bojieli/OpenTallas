@@ -1,0 +1,45 @@
+{
+  "enabled": false,
+  "verdict": "PASS-COND CTS and GRT diagnostic only; no route or canonical adoption",
+  "looked": [
+    "C_placed.png",
+    "D_placed.png"
+  ],
+  "source": "intel1 codex-kv-adp-mux1-1131/kits_{C,D}/qkd_hr_phy_adp__103.68x95.04 actual3_place.odb",
+  "findings": [
+    "Actual native SRAM fits unchanged core103.68x95.04 at25.92,8.64 with4.32halo.",
+    "Density.40/.35 spreads actual logic through contiguous W/N/E streets; no narrow slivers or cells on macro.",
+    "All560 pins registered; C/D pin-reg maxima15.74/39.94um, r2r maxima163.57/166um, zero >405um.",
+    "Both free-bin emptiness and horizontal/vertical channel proxies now pass.",
+    "Single top clock entry roots2066 endpoints, native SRAM clock pin geometry is retained; CTS latency/spread still requires measurement.",
+    "Core M5 PG grid and macro M4 pins unchanged; final PDN/IR and timing/signoff remain required."
+  ],
+  "prior_failures": {
+    "A": {
+      "empty": 0.607,
+      "channel_h": 0.491
+    },
+    "B": {
+      "empty": 0.5888,
+      "channel_h": 0.615
+    }
+  },
+  "current": {
+    "C": {
+      "place_density": 0.4,
+      "empty": 0.4564,
+      "channel_h": 0.466
+    },
+    "D": {
+      "place_density": 0.35,
+      "empty": 0.395,
+      "channel_h": 0.493
+    }
+  },
+  "held": [
+    "ActualGRT50overflow",
+    "TTsetup/FFhold at833ps,60/25uncertainty,clockinsertion/spread",
+    "Native/emitted functional and mapped equivalence gates",
+    "FinalSIGNED and canonicaladoption"
+  ]
+}

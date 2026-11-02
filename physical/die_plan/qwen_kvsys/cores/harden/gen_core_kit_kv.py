@@ -103,6 +103,136 @@ add_pdn_connect -grid {top} -layers {M5 M6}
 define_pdn_grid -macro -default -name {macro} -voltage_domains {CORE} -halo {2.0 2.0} -grid_over_boundary
 add_pdn_connect -grid {macro} -layers {M5 M6}
 """
+# DIE-KV-60/adp 11-01: an M4-PG native SRAM placed 90-degree rotated (R90 / R270 / MXR90 / MYR90) has VERTICAL M4 PG
+# stripes, parallel to the core M5 stripes (no M4-M5 overlap -> no via): the core adds the partition M6 straps (same
+# recipe as PDN_HARD_CHILDREN) and the macro grid connects M4 -> M6 (stacked via at every M4 x M6 crossing)
+PDN_MACRO_M4_ROT = """add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {1.968}
+add_pdn_connect -grid {top} -layers {M5 M6}
+define_pdn_grid -macro -default -name {macro} -voltage_domains {CORE} -halo {2.0 2.0} -grid_over_boundary
+add_pdn_connect -grid {macro} -layers {M4 M6}
+"""
+ROT90 = ("R90", "R270", "MXR90", "MYR90")
+# DIE-KV-60/adp 11-01: initialize_floorplan (IFP-0002) checks the UNROTATED master size of every BLOCK instance against
+# the core area, so a hard child that fits only rotated (qkd_hr_phy_adp SRAM 174.12 x 29.736 R270 in a 51.84 wide core)
+# stops the floorplan.  Such a child gets a kit-local R90 stand-in master (same pins, same liberty) for that one call
+# (PRE_FLOORPLAN ifp_standin.tcl); MACRO_PLACEMENT_TCL then places the real master at the planned orient + site.
+IFP_STANDIN_SUFFIX = "__ifp_r90"
+IFP_STANDIN_TCL = """# GENERATED (gen_core_kit_kv.py --hard-children, DIE-KV-60/adp 11-01): IFP-0002 in initialize_floorplan compares the
+# UNROTATED hard-child master size with the core area. A rotated (R90/R270) child that only fits rotated is swapped to
+# its kit-local R90 stand-in master (same pins, macros/<m>__ifp_r90.lef) for the initialize_floorplan call only and
+# swapped back at once; MACRO_PLACEMENT_TCL then sets the planned orient + site.
+if {[llength [info commands ot_ifp_orig_initialize_floorplan]]} { error "IFP_STANDIN: duplicate installation" }
+set ::ot_ifp_standins {}
+# the stand-in also gets the child's liberty views under its name (swapMaster with STA linked compares the timing arcs of
+# both masters): every corner's library list that holds <m>_*.lib reads macros/<s>_*.lib for that corner
+foreach {m s lef} $::env(OT_IFP_STANDINS) {
+  read_lef -library $lef
+  set corners [expr {[info exists ::env(CORNERS)] && $::env(CORNERS) ne "" ? $::env(CORNERS) : {{}}}]
+  set nlib 0
+  foreach c $corners {
+    set key [expr {$c eq "" ? "LIB_FILES" : "[string toupper $c]_LIB_FILES"}]
+    foreach f $::env($key) {
+      set t [file tail $f]
+      if {[string first "${m}_" $t] != 0 || [file extension $t] ne ".lib"} { continue }
+      set sl [file join [file dirname $lef] "$s[string range $t [string length $m] end]"]
+      if {$c eq ""} { read_liberty $sl } else { read_liberty -corner $c $sl }
+      incr nlib
+    }
+  }
+  if {!$nlib} { error "IFP_STANDIN: no liberty view of $m in the corner library lists" }
+  lappend ::ot_ifp_standins $m $s
+}
+rename initialize_floorplan ot_ifp_orig_initialize_floorplan
+proc initialize_floorplan {args} {
+  set db [ord::get_db]
+  set blk [ord::get_db_block]
+  set swapped {}
+  foreach {m s} $::ot_ifp_standins {
+    set mo [$db findMaster $m]
+    set so [$db findMaster $s]
+    if {$mo eq "NULL" || $so eq "NULL"} { error "IFP_STANDIN: master $m / $s missing" }
+    foreach i [$blk getInsts] {
+      if {[[$i getMaster] getName] eq $m} {
+        if {![$i swapMaster $so]} { error "IFP_STANDIN: swapMaster [$i getName] -> $s failed" }
+        lappend swapped $i $mo
+      }
+    }
+  }
+  puts "IFP_STANDIN: [expr {[llength $swapped] / 2}] hard child(ren) on R90 stand-in masters for initialize_floorplan"
+  set rc [catch {uplevel 1 [list ot_ifp_orig_initialize_floorplan {*}$args]} err opts]
+  foreach {i mo} $swapped {
+    if {![$i swapMaster $mo]} { error "IFP_STANDIN: swap back [$i getName] -> [$mo getName] failed" }
+  }
+  return -options $opts $err
+}
+"""
+
+# rtl_macro_placer (MPL-0006) makes the same unrotated-size check even for fixed macros: with every hard child already
+# FIRM at its planned site (MACRO_PLACEMENT_TCL) there is nothing to place, so the PRE_MACRO_PLACE hook replaces the
+# call by a check of that state (same form as tools/die_plan/fully_fixed_macros.py)
+IFP_STANDIN_MPL_TCL = r"""# GENERATED (gen_core_kit_kv.py, DIE-KV-60/adp 11-01): rotated-only-fit hard children, fixed-site check
+proc ot_ifp_fixed_children_check {} {
+  set b [ord::get_db_block]
+  set c [$b getCoreArea]
+  set boxes {}
+  foreach i [$b getInsts] {
+    if {![[$i getMaster] isBlock]} { continue }
+    if {[$i getPlacementStatus] ni {FIRM LOCKED}} { error "OT_IFP_FIXED [$i getName] is [$i getPlacementStatus], not placed by the plan" }
+    set bb [$i getBBox]
+    if {[$bb xMin] < [$c xMin] || [$bb yMin] < [$c yMin] || [$bb xMax] > [$c xMax] || [$bb yMax] > [$c yMax]} {
+      error "OT_IFP_FIXED [$i getName] lies outside the core"
+    }
+    foreach {o ob} $boxes {
+      if {min([$bb xMax], [lindex $ob 2]) > max([$bb xMin], [lindex $ob 0]) &&
+          min([$bb yMax], [lindex $ob 3]) > max([$bb yMin], [lindex $ob 1])} { error "OT_IFP_FIXED [$i getName] overlaps $o" }
+    }
+    lappend boxes [$i getName] [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+    puts "OT_IFP_FIXED [$i getName] [[$i getMaster] getName] [$i getOrient] [$i getPlacementStatus]"
+  }
+  if {![llength $boxes]} { error "OT_IFP_FIXED no hard child found" }
+  puts "OT_IFP_FIXED PASS [expr {[llength $boxes] / 2}] hard child(ren) fixed at the planned sites; rtl_macro_placer not needed"
+}
+if {[llength [info commands ::ot_ifp_rtl_macro_placer]] || ![llength [info commands ::rtl_macro_placer]]} {
+  error "OT_IFP_FIXED needs one native rtl_macro_placer"
+}
+rename ::rtl_macro_placer ::ot_ifp_rtl_macro_placer
+proc ::rtl_macro_placer {args} { ot_ifp_fixed_children_check }
+"""
+
+
+def ifp_standin_lef(text, master, standin):
+    """R90 copy of a hard-child LEF under a new MACRO name (same pins): for initialize_floorplan only (IFP-0002
+    checks the unrotated master size against the core area)."""
+    m = re.search(r"\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)\s*;", text)
+    W, H = float(m.group(1)), float(m.group(2))
+    out = []
+    for line in text.splitlines():
+        r = re.match(r"(\s*)RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s*;", line)
+        if r:
+            x1, y1, x2, y2 = map(float, r.groups()[1:])
+            line = f"{r.group(1)}RECT {H - y2:.4f} {x1:.4f} {H - y1:.4f} {x2:.4f} ;"
+        elif re.match(r"\s*SIZE\s", line):
+            line = f"  SIZE {H:.3f} BY {W:.3f} ;"
+        elif re.match(r"\s*(POLYGON|VIA)\b", line):
+            raise SystemExit(f"ifp stand-in: unsupported LEF geometry in {master}: {line.strip()}")
+        else:
+            line = re.sub(rf"^(\s*(MACRO|END|FOREIGN))\s+{re.escape(master)}\b", rf"\1 {standin}", line)
+        out.append(line)
+    return "\n".join(out) + "\n"
+
+
+def ifp_standin_children(blocks, size_of, core_wh):
+    """masters that need the stand-in: placed 90-degree rotated, unrotated too large for the core, rotated fits."""
+    cw, ch = core_wh
+    need = []
+    for b in blocks:
+        mw, mh = size_of(b["master"])
+        if b["orient"] in ROT90 and (mw > cw + 1e-6 or mh > ch + 1e-6):
+            if mh > cw + 1e-6 or mw > ch + 1e-6:
+                raise SystemExit(f"hard child {b['inst']} {b['master']} {mw} x {mh} does not fit the core even rotated")
+            if b["master"] not in need:
+                need.append(b["master"])
+    return need
 
 
 def kit_id_straps(hc, cj):
@@ -1092,6 +1222,10 @@ def main():
     ap.add_argument("--related-clock", action="append", default=[], metavar="PORT",
                     help="DIE-KV-10 opt-in: this clock-class port is its own RELATED clock root at the core period "
                          "(landing-ring write clock fclk), with the landing-contract phase window to clk; default off")
+    ap.add_argument("--synth-keepdc", action="store_true",
+                    help="DIE-KV-60 ctlin / KV-FN-7 opt-in (also recipe synth_keepdc): synth keeps constant-D flops "
+                         "(-keepdc on opt_dff / wreduce only, opt_merge default; tools/die_plan/synth_keepdc.py "
+                         "patches the disposable container synth.tcl); default off")
     ap.add_argument("--reset-ports", default="", metavar="P1,P2",
                     help="DIE-KV-3/CORETX 10-27: extra async reset input ports (base names, comma list) declared as reset "
                          "controls beside the RST_RE names (SDC reset delay, core.json boundary_role reset, "
@@ -1318,6 +1452,8 @@ def main():
             added_cycles=0, settle="+1 edge after power-up (quasi-static)"), indent=1) + "\n")
     if a.hr_face_ports:
         fr = json.load(open(Path(a.hr_face_ports) / "hr_face_ports.json"))
+        import hr_dead_inputs
+        hr_dead_inputs.emit(a.hr_face_ports, mod, kd, fr.get("dropped_in", []))
         (kd / "hr_face_delta.json").write_text(json.dumps(dict(
             transform="physical/die_plan/qwen_kvsys/cores/harden/hr_face_ports.py (hr_face_ports.sh)",
             added_cycles=0, private_port_flops=len(fr["private_out"]), merged_input_captures=len(fr["merged_in"]),
@@ -1393,16 +1529,18 @@ def main():
             ffl = [l for l in v["libs"] if re.search(r"_(ff|FF|fast)", Path(l).name)]
             libs_ff.append(f"/work/macros/{Path(ffl[0]).name}" if ffl else None)
     hard_children = None
+    ifp_standins = []
     if a.hard_children:
         hard_children = json.load(open(a.hard_children))
         if hard_children.get("module", mod) != mod or hard_children.get("outline_um", [w, h]) != [w, h]:
             raise SystemExit(f"{tid}: hard-child plan module/outline differs from the core slot")
         (kd / "macros").mkdir(exist_ok=True)
+        import cores as _CR    # tools/die_plan on sys.path (_policy_unc)
         for m, vdir in hard_children["children"].items():
-            vdir = Path(vdir) if Path(vdir).is_absolute() else REPO / vdir
             if not re.search(rf"\b{re.escape(m)}\b", hier):
                 raise SystemExit(f"{tid}: hard child {m} not reached by the core")
-            for f in [vdir / f"{m}.lef", vdir / f"{m}_tt.lib", vdir / f"{m}_ff.lib"]:
+            # DIE-KV-60/adp 11-01: views via cores.resolve (sparse / pruned source checkout: git store of REPO)
+            for f in [_CR.resolve(f"{vdir}/{m}{s}", REPO) for s in (".lef", "_tt.lib", "_ff.lib")]:
                 if not f.exists():
                     raise SystemExit(f"{tid}: hard child view file missing {f}")
                 shutil.copyfile(f, kd / "macros" / f.name)
@@ -1428,18 +1566,21 @@ def main():
                    f"puts \"hard child {b['inst']} -> [$i getName] {b['orient']} at {b['x']} {b['y']}\""]
         (kd / "macro_place.tcl").write_text("\n".join(mp) + "\n")
         if hard_children.get("static_rows"):
-            mp = ["# GENERATED: explicit core macro plan (same registered RTL and external slot)",
-                  "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]",
-                  "foreach {inst master x y orient} {" + "\n".join(
-                      "  {" + b["inst"] + "} " + b["master"] + f" {b['x']} {b['y']} {b['orient']}"
-                      for b in hard_children["blocks"]) + "\n} {",
-                  "  set i [$blk findInst $inst]",
-                  "  if {$i eq {NULL} || $i eq {}} {error \"missing planned macro $inst\"}",
-                  "  if {[[$i getMaster] getName] ne $master} {error \"wrong planned macro master $inst\"}",
-                  "  $i setOrient $orient", "  $i setLocation 0 0", "  set bb [$i getBBox]",
-                  "  $i setLocation [expr {round($x*$dbu)-[$bb xMin]}] [expr {round($y*$dbu)-[$bb yMin]}]",
-                  "  $i setPlacementStatus FIRM", "}"]
-            (kd / "macro_place.tcl").write_text("\n".join(mp) + "\n")
+            from macro_sites import static_placement_tcl
+            (kd / "macro_place.tcl").write_text(static_placement_tcl(hard_children["blocks"]))
+        def _lef_size(m):
+            g = re.search(r"\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)", (kd / "macros" / f"{m}.lef").read_text())
+            return float(g.group(1)), float(g.group(2))
+        for m in ifp_standin_children(hard_children["blocks"], _lef_size,
+                                      (w - 2 * CORE_MARGIN_UM, h - 2 * CORE_MARGIN_UM)):
+            s = m + IFP_STANDIN_SUFFIX
+            (kd / "macros" / f"{s}.lef").write_text(ifp_standin_lef((kd / "macros" / f"{m}.lef").read_text(), m, s))
+            for lib in sorted((kd / "macros").glob(f"{m}_*.lib")):     # same timing views under the stand-in name
+                (kd / "macros" / (s + lib.name[len(m):])).write_text(lib.read_text().replace(m, s))
+            ifp_standins += [m, s, f"/work/macros/{s}.lef"]
+        if ifp_standins:
+            (kd / "ifp_standin.tcl").write_text(IFP_STANDIN_TCL)
+            (kd / "ifp_standin_mpl.tcl").write_text(IFP_STANDIN_MPL_TCL)
     # pins: plan pins file + added / gap / strap pins
     pins_doc = json.load(open(plandir / hc["pins_file"]))
     ft_arcs, ft_names = island_ft_arcs(pins_doc, w, h)
@@ -1513,7 +1654,8 @@ def main():
     clks = list(dict.fromkeys(split_name(n)[0] for n in clk_bits))
     rsts = list(dict.fromkeys(split_name(n)[0] for n, c in cj["pin_class"].items()
                               if c == "in" and re.search(RST_RE, split_name(n)[0])))
-    rsts += extra_resets(cj, a.reset_ports, rsts)
+    # DIE-KV-60 ctlin 11-01: a recipe "reset_ports" (comma list) declares the same typed resets as --reset-ports
+    rsts += extra_resets(cj, ",".join(x for x in (a.reset_ports, rec.get("reset_ports", "")) if x), rsts)
     per = float(plan["die"]["period_ps"])
     ins = float(plan["clock"].get("common_latency_ps", plan["clock"]["insertion_ps"]))
     tol = float(plan["clock"]["insertion_tol_ps"])
@@ -1594,7 +1736,11 @@ def main():
     pg_m5_children = hard_children and hard_children.get("pg_pin_layer", "M5") == "M5"
     if hard_children and hard_children.get("pg_pin_layer", "M5") not in ("M4", "M5"):
         raise SystemExit(f"{tid}: unsupported hard-child PG pin layer")
-    (kd / "pdn.tcl").write_text(PDN + (PDN_HARD_CHILDREN if pg_m5_children else PDN_MACRO if lefs else ""))
+    m4_rot = bool(hard_children and not pg_m5_children and any(b["orient"] in ROT90 for b in hard_children["blocks"]))
+    if m4_rot and not all(b["orient"] in ROT90 for b in hard_children["blocks"]):
+        raise SystemExit(f"{tid}: M4-PG hard children mix 90-degree rotated and unrotated orients (one PG form per core)")
+    (kd / "pdn.tcl").write_text(PDN + (PDN_HARD_CHILDREN if pg_m5_children else PDN_MACRO_M4_ROT if m4_rot else
+                                       PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks())
     tool = Path(a.tool)
     for name in ("ot_keep_regs.tcl", "ot_pin_regs.tcl"):
@@ -1696,6 +1842,12 @@ def main():
             raise SystemExit("--head-lane-taps chains face_flops.tcl; recipe face_flops=false is not supported")
         head_lane_taps(kd, tool)
         cfg += ["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -balance_levels"]
+    synth_keepdc = bool(a.synth_keepdc or rec.get("synth_keepdc"))
+    if synth_keepdc:
+        # DIE-KV-60 ctlin / KV-FN-7 (COORD 11-01 09:1x): opt-in synth hook, -keepdc on opt_dff / wreduce only
+        # (tools/die_plan/synth_keepdc.py patches the disposable container synth.tcl; run_kit_kv.sh fails closed)
+        shutil.copyfile(Path(a.tool) / "synth_keepdc.py", kd / "synth_keepdc.py")
+        cfg.append("override export OT_SYNTH_KEEPDC = 1")
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     if lefs:
@@ -1704,6 +1856,14 @@ def main():
                 *([f"export SYNTH_BLACKBOXES = {' '.join(hard_children['children'])}",
                    "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if hard_children else []),
                 "export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5"]
+    if ifp_standins:   # DIE-KV-60/adp 11-01: rotated-only-fit hard children (IFP-0002), chained before other hooks
+        pre = [l for l in cfg if l.startswith("export PRE_FLOORPLAN_TCL = ")]
+        cfg = [l for l in cfg if not l.startswith("export PRE_FLOORPLAN_TCL = ")]
+        cfg += [f"export OT_IFP_STANDINS = {' '.join(ifp_standins)}",
+                "export PRE_FLOORPLAN_TCL = /work/ifp_standin.tcl" + "".join(" " + l.split(" = ", 1)[1] for l in pre)]
+        if any(l.startswith("export PRE_MACRO_PLACE_TCL = ") for l in cfg):
+            raise SystemExit(f"{tid}: PRE_MACRO_PLACE_TCL already set; the rotated hard-child fixed-site check needs it")
+        cfg.append("export PRE_MACRO_PLACE_TCL = /work/ifp_standin_mpl.tcl")
     # FLOW-FIX 10-25: main's flow defaults LAST (a recipe's own PRE/POST_GLOBAL_ROUTE_TCL is chained after / before
     # main's grt_pre.tcl / grt_post.tcl)
     own = {k: v for k, v in (l.split(" = ", 1) for l in cfg if l.startswith(("export PRE_GLOBAL_ROUTE_TCL = ",
@@ -1779,6 +1939,8 @@ def main():
     fz["source_commit"] = source_provenance.get("commit")
     if tm is not None:
         fz["timing_modes"] = tm
+    if synth_keepdc:
+        fz["synth_keepdc"] = "opt_dff/wreduce -keepdc (tools/die_plan/synth_keepdc.py), opt_merge default"
     if ms is not None:
         fz["master_plan"] = ms
     if reset_contract is not None:

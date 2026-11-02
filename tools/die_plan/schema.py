@@ -127,7 +127,8 @@ _bump_ports = {"type": "array", "items": {"type": "object", "required": ["pin", 
                                           "properties": {"pin": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
                                                          "dir": {"enum": ["input", "output"]},
                                                          "width": {"type": "integer", "minimum": 1},
-                                                         "note": {"type": "string"}}}}
+                                                         "note": {"type": "string"},
+                                                         "model_default": {"type": "integer", "minimum": 0}}}}
 
 # Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
 _physical_id_widths = {"strap_corner": 2, "strap_hid": 2, "strap_bsel": 2, "strap_tile_tid": 6}
@@ -360,6 +361,13 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    # Default-off physical source PREP with unchanged native gold; actual parent/die
+                    # producers and expanded-child native EQ are required before any activation.
+                    "signed_parent_source": {"type": "object", "required": ["views"], "additionalProperties": False,
+                        "properties": {"views": {"type": "object", "minProperties": 1,
+                            "additionalProperties": {"type": "string", "minLength": 1}}}},
+                    # Untrusted correspondence candidates; lec.py proves each relation inductively.
+                    "lec_hints": {"type": "array", "items": {"type": "array", "minItems": 3}},
                     "ft_full_stage_placement_file": {"type": "string", "minLength": 1},
                     "ft_full_stage_preserve_ff_families": {"type": "boolean"},
                     # Proof-layout matching opt-in; ordinary full proof and its guarded receipt remain mandatory.
@@ -488,6 +496,7 @@ SCHEMA = {
                         "type": "object", "required": ["name", "dir", "width"], "additionalProperties": False,
                         "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
                                        "width": {"type": "integer", "minimum": 1}, "clock": {"type": "boolean"},
+                                       "layer": _layer, "sites_um": {"type": "array", "items": _xy},
                                        "note": {"type": "string"},
                                        # S81-SERDES-PHY-3 (opt-in, gen_phys.pad_bumps): the pad IS this placed hard
                                        # part's pin (line side, no face flop, top pin on the macro pin)
@@ -1928,7 +1937,7 @@ TAP_CLEAR_UM = 8.64       # tap pin (and its root buffer) >= one lattice step of
 TAP_STEP_UM = 2.16
 
 
-def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
+def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False, *, pin_snap=None, legal_axes=None):
     """S81-P8 10-23 (GEOM-REVIEW5 15:14 condition (b)): an R4 grid tap at a cell centre landed ON a ROM / hard-core
     macro in 4-10 of 10 interior pins of the S81 frame kits (h9_r1: all), so its root buffer sat on a macro.  Move the
     tap to the nearest point (rings of 2.16 um) that is >= `clear` from every hard_cores box of the type (a channel),
@@ -1936,6 +1945,15 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
     tap is already in a channel, are unchanged (strict=True, density taps: the outline / taken spacing applies even
     without hard cores)."""
     w, h = t["outline_um"]
+    # Density clock pins are consumed on PG-safe routing tracks. Their legal
+    # candidate axes come from gen_phys, rather than an anchor lattice that
+    # can disappear when the pin is snapped. Other callers retain the legacy
+    # anchor search. Keep both early-core anchors and consumed pins reserved.
+    if (pin_snap is None) != (legal_axes is None):
+        raise ValueError('consumed clock placement requires both pin_snap and legal_axes')
+    eps = 1e-8 if legal_axes is not None else 0.0
+    if pin_snap is not None:
+        taken = list(taken) + [pin_snap(a, b) for a, b in taken]
     keep = [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in t.get("clock", {}).get("keepouts_um", [])]
     # a macro wholly inside a clock keepout blocks nothing the keepout does not (S81 PMA in the shore keepout): its box
     # would only add candidate edges and move grid taps that tie on the ring distance
@@ -1943,17 +1961,27 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
              if not any(k[0] <= m[0] and k[1] <= m[1] and m[2] <= k[2] and m[3] <= k[3] for k in keep)] + keep
 
     def free(px, py):
-        if not (clear <= px <= w - clear and clear <= py <= h - clear):
+        if not (clear - eps <= px <= w - clear + eps and clear - eps <= py <= h - clear + eps):
             return False
-        if any(abs(px - a) < clear and abs(py - b) < clear for a, b in taken):
+        if any(abs(px - a) < clear - eps and abs(py - b) < clear - eps for a, b in taken):
             return False
-        return not any(x0 < px < x1 and y0 < py < y1 for x0, y0, x1, y1 in boxes)
-    if (not boxes and not strict) or free(x, y):
-        return x, y
+        return not any(x0 + eps < px < x1 - eps and y0 + eps < py < y1 - eps
+                       for x0, y0, x1, y1 in boxes)
+    consumed = pin_snap(x, y) if pin_snap is not None else (x, y)
+    if (not boxes and not strict) or free(*consumed):
+        return consumed
     # Legal regions have axis-aligned boundaries. Project each boundary onto the same origin-centred 2.16-um
     # lattice as the old expanding rings; their Cartesian product contains the nearest legal ring site. This
     # avoids enumerating millions of interior points when an analog window pushes a tap hundreds of um.
-    def candidates(origin, extent, edges):
+    def candidates(origin, extent, edges, axis):
+        if legal_axes is not None:
+            from bisect import bisect_left
+            tracks = legal_axes[axis]
+            values = set()
+            for edge in [origin, clear, extent - clear] + list(edges):
+                j = bisect_left(tracks, edge)
+                values.update(tracks[k] for k in (j - 1, j) if 0 <= k < len(tracks))
+            return values
         values = {origin}
         for edge in [clear, extent - clear] + list(edges):
             q = (edge - origin) / TAP_STEP_UM
@@ -1963,35 +1991,36 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
                     values.add(v)
         return values
     obs = boxes + [(a - clear, b - clear, a + clear, b + clear) for a, b in taken]
-    xs = candidates(x, w, [v for a, b, c, d in obs for v in (a, c)])
-    ys = candidates(y, h, [v for a, b, c, d in obs for v in (b, d)])
+    xs = candidates(x, w, [v for a, b, c, d in obs for v in (a, c)], 0)
+    ys = candidates(y, h, [v for a, b, c, d in obs for v in (b, d)], 1)
     # Each obstacle blocks the same Y candidates for every X column. Compute
     # those exact comparisons once, then combine bitmasks per column instead
     # of scanning every obstacle at every Cartesian candidate. Keep abs() for
     # taken taps: rewriting it as interval bounds changes floating edge cases.
     ys = list(ys)
-    inside = sum(1 << i for i, py in enumerate(ys) if clear <= py <= h - clear)
-    blockers = [(x0, x1, sum(1 << i for i, py in enumerate(ys) if y0 < py < y1))
+    inside = sum(1 << i for i, py in enumerate(ys) if clear - eps <= py <= h - clear + eps)
+    blockers = [(x0, x1, sum(1 << i for i, py in enumerate(ys) if y0 + eps < py < y1 - eps))
                 for x0, y0, x1, y1 in boxes]
-    neighbours = [(a, sum(1 << i for i, py in enumerate(ys) if abs(py - b) < clear))
+    neighbours = [(a, sum(1 << i for i, py in enumerate(ys) if abs(py - b) < clear - eps))
                   for a, b in taken]
     def legal_candidates():
         for px in xs:
-            if not clear <= px <= w - clear:
+            if not clear - eps <= px <= w - clear + eps:
                 continue
             bits = inside
             for x0, x1, blocked in blockers:
-                if x0 < px < x1:
+                if x0 + eps < px < x1 - eps:
                     bits &= ~blocked
             for a, blocked in neighbours:
-                if abs(px - a) < clear:
+                if abs(px - a) < clear - eps:
                     bits &= ~blocked
             while bits:
                 low = bits & -bits
                 yield px, ys[low.bit_length() - 1]
                 bits ^= low
     ok = legal_candidates()
-    best = min(ok, key=lambda p: (round(max(abs(p[0] - x), abs(p[1] - y)), 7),
+    best = min(ok, key=lambda p: (round(abs(p[0] - x) + abs(p[1] - y) if legal_axes is not None
+                                      else max(abs(p[0] - x), abs(p[1] - y)), 7),
                                   (p[0] - x) ** 2 + (p[1] - y) ** 2, p), default=None)
     if best is not None:
         return round(best[0], 4), round(best[1], 4)

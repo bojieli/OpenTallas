@@ -1,0 +1,33 @@
+{
+  "proof_host": "intel1",
+  "proof_kit": "/srv/opentallas-scratch2/claude/codex-bksel-official-1323/kits/dsdv_bksel_c_pipe_ab_r2C",
+  "inputs_sha256": {
+    "rtl/dsdv_bksel_c.sv": "0d31c083eb7256c2b48364550351ef4c98d8041c02aae12c920f514e814c11fb",
+    "rtl/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "rtl/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/ot_hdc_v41x_sel.sv": "893675838e94c9fb2f5f54419417d0be3f13e3e9ac727b8e7784618f5695bdaf",
+    "rtl/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+    "rtl/ot_hdc_v41x_sel_slice.sv": "aa0cf52b30c907d061064c0653da384edb4d1f475e35e0c3e1526d5511c636cf",
+    "rtl/ot_s81ph_native_sel.sv": "08b22f64bc851aa681eeb0717c501b9fd82ab69b21c3fe2953dbaea3cfe3c99d",
+    "rtl/ot_s81ph_native_sel_lib.sv": "8b95ede44bf070b8c1c47f03952b69d4c77763b6f433573c922302ef863f62b0",
+    "rtl/ot_s81ph_native_sel_slice.sv": "9aa2031ad6365b055e1befd12188b474e8f72f8a9934b3dbb255cab922810b82",
+    "rtl/ot_s81ph_sel.sv": "c3fd0c31291fc694200c2ec146cfb294c4bf3a042e7bfc73327e071e087ded7a",
+    "rtl/ot_s81ph_sel_ctl_half.sv": "62c40e5e1221e71291f3baaa4fb4c4c914fb7735d952888646fbe5b3a9462706",
+    "rtl/ot_s81ph_sel_ctl_pp.sv": "ff63f419d7a2d7bbe20f254261a1fa554e6013eb86b66f57ccf7a48fdf05d029",
+    "rtl/ot_s81ph_sel_pipeline.sv": "f0130f1f29ba7dba9e4ea6fa382d533410232e218f063218fba2bea7ed95fae4",
+    "rtl/ot_s81ph_sel_tile.sv": "be1dd94cba0a80f39f1b82637ca925845ae85adc507f0a635026529ce78bc6c9",
+    "declared_pin_contract/dsdv_bksel_c.json": "b4bbc1c5ef4d8abf808abe4d243e38bb3cbb1435725a3020a4ebf455af9c9e34",
+    "reset_contract/receipt.txt": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8",
+    "config.mk": "1470b82c7b492d95361d2baa119e9b9b3358435ccac87bb2edff890324f02271",
+    "constraint.sdc": "abbcf9c520dd4a39bfc3dc772b6811903fbe9496e021a3b256dfea4353b09717",
+    "vclk_ff.sdc": "b804eadf3d3c656dbc3d425af0d4c8e54f92be8d34b68f9d0a5d7f4857ea5a42",
+    "clock_binding.json": "da770a8cadd4d0b3aadf42d9f66daecc57cabf969fb821ff23a29affc93c392b",
+    "pins.json": "6ed9349c27174e7f157aaa3db98cffe83d3e8d43c01f98f03511fca4f1fdaa96",
+    "reset_contract.json": "8eb7a65af236c88c47e0ef7abb66e53c47c2e85f1380fc268a2e58b12a03632c",
+    "lec_hints.json": "6f35db9c5aa5d0f449970b1ebcd2d4b394f3490af9cd241e7752b513c8a04ba7",
+    "ot_keep_regs.tcl": "78df5dbb486a068fdddfe80e3951ced97ebfb199f4e6affbe37ff931afd8da8f",
+    "run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r2_1131/base/1_2_yosys.v": "4f671762a17d63cd83389b27089ae84d1acb6e3ea66d07623349822231aea3f5",
+    "run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r2_1131/base/1_synth.v": "9e92e0440f9de37c17c3176ffd9d211c0ab4b5dce387a40dbc041ad65fa6033a"
+  },
+  "receipt_sha256": "05242f9f70db5629d2b15c52a5863b9781066cff95564d8a7c3f0e6ed5e74e50"
+}

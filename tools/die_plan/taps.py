@@ -218,7 +218,7 @@ def sink_sites(P, tn, control=True):
         rows += json.loads((_root() / ck["sink_bins_file"]).read_text())["bins"]
         out = []
     else:
-        out = [(x, y, 1.0) for x, y, _ in planned_sinks(P, tn)]
+        out = [(x, y, 1.0) for x, y, _ in planned_sinks(P, tn, bit_sites=True)]
     out += [(float(r[0]), float(r[1]), float(r[2]) if len(r) > 2 else 1.0) for r in rows]
     if control and ck.get("control_sinks"):
         out += [(x, y, 1.0) for _, x, y in control_pin_sinks(P, tn)]
@@ -306,23 +306,39 @@ def _merge(leaves, target, radius, blocked=lambda x, y: False):
     """bisection cuts along the median, so a sparse channel or an L-shaped region ends up in many small leaves (dead-ish
     taps of a few hundred sinks next to each other).  Greedily merge the pair of leaves whose union still fits the
     target and radius with the smallest merged radius, until no pair fits.  Deterministic."""
-    leaves = list(leaves)
-    while True:
-        best = None
-        for i, a in enumerate(leaves):
-            for j in range(i + 1, len(leaves)):
-                b = leaves[j]
-                if a[2] + b[2] > target or abs(a[0] - b[0]) + abs(a[1] - b[1]) > 2 * radius:
-                    continue
-                g = a[4] + b[4]
-                x, y = _wmedian(g, 0), _wmedian(g, 1)
-                r = max(abs(p[0] - x) + abs(p[1] - y) for p in g)
-                if r <= radius and not blocked(x, y) and (best is None or (r, i, j) < best[:3]):
-                    best = (r, i, j, (x, y, a[2] + b[2], r, g))
-        if best is None:
-            return leaves
-        _, i, j, m = best
-        leaves = [q for k, q in enumerate(leaves) if k not in (i, j)] + [m]
+    # Surviving leaves keep their relative order and each new merge is appended.
+    # Monotonic IDs therefore preserve the original (radius, list-i, list-j)
+    # tie break while unchanged pairs retain their previously computed cost.
+    import heapq
+    live = dict(enumerate(leaves))
+    pending = []
+
+    def offer(i, j):
+        a, b = live[i], live[j]
+        if a[2] + b[2] > target or abs(a[0] - b[0]) + abs(a[1] - b[1]) > 2 * radius:
+            return
+        g = a[4] + b[4]
+        x, y = _wmedian(g, 0), _wmedian(g, 1)
+        r = max(abs(p[0] - x) + abs(p[1] - y) for p in g)
+        if r <= radius and not blocked(x, y):
+            heapq.heappush(pending, (r, i, j, x, y))
+
+    for i in live:
+        for j in range(i + 1, len(live)):
+            offer(i, j)
+    next_id = len(live)
+    while pending:
+        r, i, j, x, y = heapq.heappop(pending)
+        if i not in live or j not in live:
+            continue
+        a, b = live.pop(i), live.pop(j)
+        k = next_id
+        next_id += 1
+        live[k] = (x, y, a[2] + b[2], r, a[4] + b[4])
+        for other in live:
+            if other != k:
+                offer(other, k)
+    return list(live.values())
 
 
 def explicit_tap_sites(P, tn):
@@ -486,12 +502,16 @@ def density_taps(P, tn, control=True):
     min_sinks = int(ck.get("tap_min_sinks", max(1, target // 20)))
     leaves = sorted(_bisect(pts, target, radius, blocked, min_sinks), key=lambda a: (round(a[1], 3), round(a[0], 3)))
 
+    import gen_phys
+    legal_axes = gen_phys.clock_legal_axes(P, tn)
+    pin_snap = lambda x, y: gen_phys._snap_tap(P, x, y, pg_legal=not t.get('hard'))
+
     def place(cands):
         tk, xy = list(taken), []
         for x, y in cands:
             x = min(max(x, TAP_MARGIN_UM), w - TAP_MARGIN_UM)
             y = min(max(y, TAP_MARGIN_UM), h - TAP_MARGIN_UM)
-            x, y = schema.tap_clear(t, x, y, tk, strict=True)
+            x, y = schema.tap_clear(t, x, y, tk, strict=True, pin_snap=pin_snap, legal_axes=legal_axes)
             tk.append((x, y))
             xy.append((round(x, 4), round(y, 4)))
         return xy
@@ -724,9 +744,13 @@ def sink_taps(P, tn):
 
 def report(P, tn):
     """kit / G0 summary of the sink-anchored taps."""
-    taps = sink_taps(P, tn)
     ck = P.types[tn].get("clock", {})
-    dens = ck.get("tap_mode") == "density"
+    mode = ck.get("tap_mode")
+    # The kit uses the plan's frozen endpoints. Reporting them must not launch
+    # a second placement/discovery pass with a different tap count/geometry.
+    taps = (explicit_taps(P, tn) if mode == "explicit" else
+            grid_explicit_taps(P, tn) if mode == "grid+explicit" else sink_taps(P, tn))
+    dens = mode == "density"
     return dict(mode=ck.get("tap_mode", "sinks"), radius_um=float(ck.get("tap_radius_um", 200.0 if dens else 250.0)),
                 max_sinks=int(ck.get("tap_max_sinks", 1500)), n=len(taps), empty=sum(1 for t in taps if t[3] == 0),
                 taps=[dict(name=n, xy=[x, y], planned_sinks=s, radius_um=r) for n, x, y, s, r in taps])

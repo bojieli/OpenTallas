@@ -1,0 +1,27 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "source_commit": "80bfa6a3f2b48df9f62ee054ca73bc1211cdddff",
+  "clock_period_ps": 833,
+  "timeprecision_fs": 1,
+  "added_flops": 0,
+  "added_cycles": 0,
+  "directed_command_vectors": 608,
+  "default_off_comparisons": 4096,
+  "dropped_bank_command_controls": 45,
+  "native_receiver": "qfd_dv_s8_rp1",
+  "users": 4,
+  "writes": 42,
+  "banks_per_user": 2,
+  "rows_per_bank": 4,
+  "warm_reset": "partial epoch cancelled then re-SETID and replay",
+  "mutants": [
+    "MUT_NO_RELOC",
+    "MUT_PAYLOAD",
+    "MUT_BEAT"
+  ],
+  "runtime": "intel2:/srv/opentallas-scratch2/claude/codex-rope-gate-1605",
+  "native_unit": "oth-ubuntu-1469560-1793574344",
+  "controls_unit": "oth-ubuntu-1583668-1793574570",
+  "first_runner_failure": "Native and literal gates passed. Initial mutant was correctly rejected, but shell verdict matching failed because rg was absent. Retained initial exit1; reran controls only with /usr/bin/grep, all3 expected mismatches caught. No RTL or binary change.",
+  "scope": "Literal calendar relocation and actual native receiver write pins. CROM storage/arithmetic, whole-calendar dates, normalized HEAD producer and mission token are not qualified. TABLE_USER_RELOC remains default0; no caller enabled."
+}

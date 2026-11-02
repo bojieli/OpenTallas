@@ -125,7 +125,7 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
 
-HOSTS = ["epyc2", "intel1", "intel2", "localhost"]   # FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
+HOSTS = ["epyc2", "intel1", "localhost"]   # HUB_SELF_1101 (FLOW-21): the hub is intel2 = localhost; listing intel2 too made a second, unreachable copy of the hub (ssh intel2 from intel2 fails: "intel2 unreachable" in --status, 11-01 13:19). FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
 # HOST ROLES (FLEET-NEW 2026-10-19): ot-epyc7 is 2x EPYC 7443 (Zen 3, slower per thread).  A "throughput" host takes
 # tile gates / routes / benches FIRST (while its projected load <= 1.0 x cores); die-level jobs (--priority die / DIE_RE:
 # die chains, die STA) go to the other hosts and use a throughput host only when no other host admits them.
@@ -156,6 +156,14 @@ HOST_RESERVE = {"localhost": (8, 16)}   # 2026-10-24 ~21:00 COORD (owner: use ep
 DIE_DISK_GB = int(os.environ.get("OT_RUN_DIE_DISK_GB", "60"))   # estimated scratch of one die chain (measured 10-19:
 # die case dirs 0.7 GB at start, die chains 16-40 GB per lane); the default --disk of a die job
 DISK_RESERVE_BELOW_GB = 2000     # below this, also reserve declared scratch for active die scopes
+
+
+def retryable_queued_probe_failures(first, previously_qualified, notes):
+    """Only known transport loss may keep an already-unstarted request queued."""
+    if first:
+        return []
+    transport = re.compile(r"kex_exchange_identification|Connection (?:reset|closed|timed out)|timed out after|SSH probe returned no admission JSON", re.I)
+    return [h for h in previously_qualified if transport.search(notes.get(h, ""))]
 
 
 def probe(host, d, spill_ok=False):
@@ -901,11 +909,24 @@ def crit_job():
     return os.environ.get("OT_RUN_CRIT", "") not in ("", "0")
 
 
+# FLOW-21 SSHRETRY 11-01 (COORD 09:2x (3)): sshd resets new connections under load (intel2 load 380: "kex_exchange_
+# identification: read: Connection reset by peer"); the request never reached ot-heavy, yet ot-run ended NOT RUN 255 and
+# canary clients died.  A connection that failed before any remote output is retried with backoff, then fails as before.
+SSH_CONNFAIL = ("kex_exchange_identification", "Connection reset by", "Connection timed out", "Connection refused",
+                "Connection closed by", "banner exchange", "ssh_exchange_identification")
+SSH_RETRY_BACKOFF_S = tuple(int(x) for x in os.environ.get("OT_RUN_SSH_BACKOFF", "5,15,45").split(",") if x)
+LAST_RUN = dict(connfail=False)
+# DIE_RESERVE_1101 (FLOW-21): the waiter learns when this request was first made, so a REBALANCE re-try (a new ot-heavy
+# process every REQUEUE_S) keeps its age for the hub die reservation (ot-reserve / ot-heavy-reconcile --die-waiters).
+RUN_T0 = time.time()
+
+
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None, disk=None):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
     env = os.environ.get("OT_RUN_PRIO_ENV", "") + ("OT_HEAVY_CPU=crit " if crit_job() else "") + env
+    env = f"OT_HEAVY_SHORT_SLOTS={16 if host == 'epyc2' else 12} OT_HEAVY_THREADS={int(os.environ.get('OT_RUN_THREADS', THREADS))} OT_HEAVY_WAIT_SINCE={int(RUN_T0)} " + env
     if disk is None:
         disk = DIE_DISK_GB if "OT_HEAVY_PRIO=die" in env else 20
     env += f"OT_HEAVY_DISK_GB={int(disk)} "
@@ -918,7 +939,8 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         + (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
         + inner + f'; rc=$?; echo "OT_RUN_EXIT {tag} $rc" >&2; exit $rc'
     p = subprocess.Popen(["ssh", "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=6", host, remote], stderr=subprocess.PIPE)
-    state = dict(started=False, rc=None, nocd=False, unit="?", refused=None)
+    state = dict(started=False, rc=None, nocd=False, unit="?", refused=None, connfail=False)
+    LAST_RUN["connfail"] = False
     unblock = lambda: signal.pthread_sigmask(signal.SIG_UNBLOCK, SIGS)
 
     def stop(sig, who):
@@ -959,6 +981,8 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
             state["refused"] = ("root fs above %d%% (DISK GUARD)" % ROOTFS_MAX_PCT if "ROOTFULL" in ln
                                 else "scratch disk below its floor / new run dir could not be placed on it (root fs never used)")
             continue
+        if not state["started"] and any(k in ln for k in SSH_CONNFAIL):
+            state["connfail"] = True
         if "OT_RUN_START" in ln and tag in ln:
             state["started"] = True
             state["unit"] = next((w for w in ln.split() if w.startswith("oth-")), "?")
@@ -981,6 +1005,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         return (ssh_rc or 255), False
     why = state["refused"] if state["refused"] else f"cannot cd to {d}" if state["nocd"] else f"ot-heavy exit {state['rc']}" if state["rc"] is not None \
         else f"ssh ended with status {ssh_rc} before the command was admitted"
+    LAST_RUN["connfail"] = state["connfail"] and ssh_rc == 255 and state["rc"] is None
     if not (quiet_notrun and state["rc"] == 75):
         say(f"ot-run: NOT RUN on {host}: {why}")
     return (state["rc"] or ssh_rc or 255), False
@@ -1056,6 +1081,7 @@ def main():
             os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         else: sys.exit(__doc__)
     cmd = a[1:]
+    os.environ["OT_RUN_THREADS"] = str(threads)
     if mem is None or not (cmd or pick):
         sys.exit(__doc__)
     held = held_hosts()
@@ -1073,6 +1099,8 @@ def main():
         trigger_sweep()
     t0 = time.time()
     first = True
+    conn_tries = 0
+    previously_qualified = set()
     pinned = hosts is not HOSTS
     die = "OT_HEAVY_PRIO=die" in os.environ.get("OT_RUN_PRIO_ENV", "")
     disk = disk if disk is not None else (DIE_DISK_GB if die else 20)
@@ -1086,6 +1114,7 @@ def main():
             hosts = [h for h in HOSTS if h not in held] or hosts
         raw = place(hosts, d, disk, mem, quiet=not first)
         ok = drop_low_disk(raw, die, disk, say if first else None)
+        previously_qualified.update(ok)
         if raw and not ok:              # DISK: every host with --dir lacks scratch for this die job -- spill, else wait
             best = max(raw, key=lambda h: raw[h].get("disk_gb", 0))
             plan = None
@@ -1140,6 +1169,13 @@ def main():
                     sys.exit(75)
                 spill = spill and not permanent
         if not best:
+            retry_hosts = retryable_queued_probe_failures(first, previously_qualified & set(hosts), PLACE_NOTES)
+            elapsed = time.time() - t0
+            if retry_hosts and not pick and (max_wait is None or elapsed < max_wait):
+                say("ot-run: RETRY: previously qualified host probe temporarily unavailable (" + ", ".join(sorted(retry_hosts)) + "); request remains unstarted")
+                time.sleep(REQUEUE_S if max_wait is None else max(1, min(REQUEUE_S, max_wait - elapsed)))
+                first = False
+                continue
             why = "; ".join(f"{h}: {PLACE_NOTES[h]}" for h in hosts if PLACE_NOTES.get(h)) or "no reachable host"
             sys.exit(f"ot-run: NOT RUN: no host qualifies ({why})")
         print(f"ot-run: -> {best}" + (f" (will queue: admits {ok[best].get('admit_gb', ok[best]['free_gb'])} GB < {mem} GB)" if queue else ""),
@@ -1154,6 +1190,14 @@ def main():
         if len(ok) > 1 or (spill and d) or not pinned:
             wait = REQUEUE_S if left is None else min(REQUEUE_S, left)
         rc, ran = run(best, mem, cmd, d, wait, quiet_notrun=(wait != left), disk=disk)
+        if not ran and LAST_RUN["connfail"] and conn_tries < len(SSH_RETRY_BACKOFF_S):
+            b = SSH_RETRY_BACKOFF_S[conn_tries]
+            conn_tries += 1
+            print(f"ot-run: RETRY {conn_tries}/{len(SSH_RETRY_BACKOFF_S)}: ssh to {best} failed before admission; "
+                  f"placing again in {b} s", file=sys.stderr)
+            time.sleep(b)
+            first = False
+            continue
         if ran or rc != 75 or wait == left:
             sys.exit(rc if ran else (rc or 255))
         print(f"ot-run: REBALANCE: not admitted on {best} within {wait} s; placing again", file=sys.stderr)

@@ -1,0 +1,4119 @@
+{
+ "schema": "opentallas.hbm_single_root_taps.v1",
+ "variant": "A",
+ "reach_target_um": 180.0,
+ "grid_um": 4.32,
+ "halo_um": 0.0,
+ "plan": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o_cm/die_plan.json",
+ "plan_sha256": "243ff7d018ba5e47abaa719aff7f74223fe5c49980f75fceb68a5b7b4b4f86d9",
+ "core_macros_sha256": "3bca79b4624e782a6424299f96571f7c9dc0e8fe2d1fe363e81470543ffb976f",
+ "basis": "COORD 11-01 10:2x DIE-HBM-57/TAPS: single-root HBM cores, explicit tap per far pin-register column (planned clock anchors -> core_density_taps.tcl OT_DTAP_SITES); greedy cover of the free core area",
+ "views": {
+  "ot_hfd_coll_q2_hard_v8g__reduce@07982cfbef37": {
+   "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+   "outline_um": [
+    233.28000000000003,
+    233.27999999999997
+   ],
+   "pins_sha256": "07982cfbef37edd49280a29e1b6e3963e734969a260e057a2f4bb3c728253534",
+   "root": [
+    122.52,
+    0.24
+   ],
+   "clock_sites_um": [
+    [
+     120.96,
+     8.64
+    ],
+    [
+     112.32,
+     159.84
+    ],
+    [
+     159.84,
+     86.4
+    ],
+    [
+     224.64,
+     224.64
+    ]
+   ],
+   "reach_before_um": 346.9,
+   "reach_after_um": 177.1
+  },
+  "ot_hfd_coll_q2_hard_v8g__ring_ag@bb7960a3d6b9": {
+   "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+   "outline_um": [
+    233.28,
+    233.28
+   ],
+   "pins_sha256": "bb7960a3d6b9d8606e842d00f0d47e183ef410b83d2592099c062c58727b48b7",
+   "root": [
+    116.664,
+    116.64
+   ],
+   "clock_sites_um": [
+    [
+     116.64,
+     116.64
+    ],
+    [
+     216.0,
+     151.2
+    ],
+    [
+     17.28,
+     82.08
+    ]
+   ],
+   "reach_before_um": 224.7,
+   "reach_after_um": 177.1
+  },
+  "ot_hfd_coll_q3_body_core@e9fac1f891ac": {
+   "module": "ot_hfd_coll_q3_body_core",
+   "outline_um": [
+    578.8799999999999,
+    1054.08
+   ],
+   "pins_sha256": "e9fac1f891ac369233298a26455d2be41fb1ce46a4aeedc193bb9458378e1135",
+   "root": [
+    149.064,
+    0.24
+   ],
+   "clock_sites_um": [
+    [
+     151.2,
+     8.64
+    ],
+    [
+     483.84,
+     963.36
+    ],
+    [
+     112.32,
+     721.44
+    ],
+    [
+     410.4,
+     311.04
+    ],
+    [
+     116.64,
+     367.2
+    ],
+    [
+     475.2,
+     613.44
+    ],
+    [
+     453.6,
+     86.4
+    ],
+    [
+     116.64,
+     984.96
+    ],
+    [
+     164.16,
+     181.44
+    ],
+    [
+     328.32,
+     846.72
+    ],
+    [
+     99.36,
+     531.36
+    ],
+    [
+     557.28,
+     336.96
+    ],
+    [
+     488.16,
+     768.96
+    ],
+    [
+     324.0,
+     432.0
+    ],
+    [
+     8.64,
+     790.56
+    ],
+    [
+     8.64,
+     129.6
+    ],
+    [
+     289.44,
+     1041.12
+    ],
+    [
+     414.72,
+     21.6
+    ],
+    [
+     565.92,
+     522.72
+    ],
+    [
+     406.08,
+     155.52
+    ],
+    [
+     246.24,
+     146.88
+    ],
+    [
+     216.0,
+     704.16
+    ],
+    [
+     565.92,
+     876.96
+    ],
+    [
+     8.64,
+     440.64
+    ],
+    [
+     565.92,
+     168.48
+    ]
+   ],
+   "reach_before_um": 1475.0,
+   "reach_after_um": 177.1
+  },
+  "ot_hfd_coll_q3_edge_core@9bacba9ba155": {
+   "module": "ot_hfd_coll_q3_edge_core",
+   "outline_um": [
+    216.0,
+    1054.08
+   ],
+   "pins_sha256": "9bacba9ba1551177aa2d0e33c45f978ed9c461443366559bd4da9128741ebd89",
+   "root": [
+    214.968,
+    1053.84
+   ],
+   "clock_sites_um": [
+    [
+     207.36,
+     1041.12
+    ],
+    [
+     17.28,
+     168.48
+    ],
+    [
+     17.28,
+     535.68
+    ],
+    [
+     194.4,
+     354.24
+    ],
+    [
+     17.28,
+     876.96
+    ],
+    [
+     190.08,
+     25.92
+    ],
+    [
+     203.04,
+     704.16
+    ],
+    [
+     8.64,
+     207.36
+    ],
+    [
+     207.36,
+     358.56
+    ],
+    [
+     8.64,
+     1041.12
+    ],
+    [
+     8.64,
+     704.16
+    ]
+   ],
+   "reach_before_um": 1260.2,
+   "reach_after_um": 177.1
+  },
+  "ot_hfd_coll_q3_vm_core@4ad7189a84a6": {
+   "module": "ot_hfd_coll_q3_vm_core",
+   "outline_um": [
+    328.32,
+    717.12
+   ],
+   "pins_sha256": "4ad7189a84a631cfb55ff5b7ecdbf91898d97478714162859f65b0a0cf961273",
+   "root": [
+    164.184,
+    0.24
+   ],
+   "clock_sites_um": [
+    [
+     164.16,
+     8.64
+    ],
+    [
+     99.36,
+     630.72
+    ],
+    [
+     172.8,
+     345.6
+    ],
+    [
+     159.84,
+     181.44
+    ],
+    [
+     289.44,
+     578.88
+    ],
+    [
+     8.64,
+     380.16
+    ],
+    [
+     315.36,
+     207.36
+    ],
+    [
+     8.64,
+     77.76
+    ],
+    [
+     319.68,
+     406.08
+    ],
+    [
+     220.32,
+     708.48
+    ],
+    [
+     319.68,
+     25.92
+    ]
+   ],
+   "reach_before_um": 872.4,
+   "reach_after_um": 177.1
+  },
+  "ot_hgi_coll_gq_issue@09cc7742757b": {
+   "module": "ot_hgi_coll_gq_issue",
+   "outline_um": [
+    237.6,
+    237.6
+   ],
+   "pins_sha256": "09cc7742757bf8fa9b4aa77992971aead6f9d1f05cd4e291299ecc2e76b00576",
+   "root": [
+    0.984,
+    237.36
+   ],
+   "clock_sites_um": [
+    [
+     8.64,
+     224.64
+    ],
+    [
+     181.44,
+     60.48
+    ],
+    [
+     224.64,
+     224.64
+    ],
+    [
+     8.64,
+     8.64
+    ]
+   ],
+   "reach_before_um": 465.3,
+   "reach_after_um": 168.5
+  },
+  "ot_hgi_coll_gq_issue@7eca913bb374": {
+   "module": "ot_hgi_coll_gq_issue",
+   "outline_um": [
+    237.6,
+    237.6
+   ],
+   "pins_sha256": "7eca913bb374e36145eb37eeed0af9b18aec6ad82ee5d9f8730247414564ecc7",
+   "root": [
+    0.984,
+    237.36
+   ],
+   "clock_sites_um": [
+    [
+     8.64,
+     224.64
+    ],
+    [
+     181.44,
+     60.48
+    ],
+    [
+     224.64,
+     224.64
+    ],
+    [
+     8.64,
+     8.64
+    ]
+   ],
+   "reach_before_um": 465.3,
+   "reach_after_um": 168.5
+  },
+  "ot_hgi_coll_gq_land@068dba88be63": {
+   "module": "ot_hgi_coll_gq_land",
+   "outline_um": [
+    142.56,
+    207.36
+   ],
+   "pins_sha256": "068dba88be63fb9b3cf7db03978f359ba490a2e68ddb4a74ef45610fb69e11a9",
+   "root": [
+    0.984,
+    0.24
+   ],
+   "clock_sites_um": [
+    [
+     8.64,
+     8.64
+    ],
+    [
+     133.92,
+     198.72
+    ]
+   ],
+   "reach_before_um": 340.1,
+   "reach_after_um": 159.8
+  },
+  "ot_hgi_coll_gq_land@7e7e2aef40e2": {
+   "module": "ot_hgi_coll_gq_land",
+   "outline_um": [
+    142.56,
+    207.36
+   ],
+   "pins_sha256": "7e7e2aef40e2290f3a86d9a0fe2a87f3e823f900b26332e1ea2dcd9a09e23299",
+   "root": [
+    0.984,
+    0.24
+   ],
+   "clock_sites_um": [
+    [
+     8.64,
+     8.64
+    ],
+    [
+     133.92,
+     198.72
+    ]
+   ],
+   "reach_before_um": 340.1,
+   "reach_after_um": 159.8
+  },
+  "ot_hgi_coll_gq_land@cbabbd40af9b": {
+   "module": "ot_hgi_coll_gq_land",
+   "outline_um": [
+    142.56,
+    207.36
+   ],
+   "pins_sha256": "cbabbd40af9b9c7b5a1a755983a8490a5ee2b2b97ee3d0b24232e2ddfab18bc9",
+   "root": [
+    0.984,
+    0.24
+   ],
+   "clock_sites_um": [
+    [
+     8.64,
+     8.64
+    ],
+    [
+     133.92,
+     198.72
+    ]
+   ],
+   "reach_before_um": 340.1,
+   "reach_after_um": 159.8
+  },
+  "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap@b05ff385dffe": {
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+   "outline_um": [
+    319.68,
+    345.5999999999999
+   ],
+   "pins_sha256": "b05ff385dffeb118a8a89f384f79c07a4f8084c1ab0275f3cb7dc1a193cc2cef",
+   "root": [
+    159.864,
+    172.8
+   ],
+   "clock_sites_um": [
+    [
+     159.84,
+     172.8
+    ],
+    [
+     146.88,
+     38.88
+    ],
+    [
+     146.88,
+     306.72
+    ],
+    [
+     302.4,
+     172.8
+    ],
+    [
+     8.64,
+     112.32
+    ],
+    [
+     311.04,
+     168.48
+    ]
+   ],
+   "reach_before_um": 324.0,
+   "reach_after_um": 177.1
+  },
+  "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap@a83e190d54f7": {
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+   "outline_um": [
+    319.68,
+    345.6
+   ],
+   "pins_sha256": "a83e190d54f7af9e9350f906160f8a692b8ade9713e797b13eca07b2302a35af",
+   "root": [
+    159.864,
+    172.8
+   ],
+   "clock_sites_um": [
+    [
+     159.84,
+     172.8
+    ],
+    [
+     146.88,
+     38.88
+    ],
+    [
+     138.24,
+     298.08
+    ],
+    [
+     302.4,
+     172.8
+    ],
+    [
+     8.64,
+     112.32
+    ],
+    [
+     285.12,
+     336.96
+    ],
+    [
+     311.04,
+     8.64
+    ]
+   ],
+   "reach_before_um": 324.0,
+   "reach_after_um": 177.1
+  },
+  "ot_hbm_hc_bank128_pair_core@7d149b37532c": {
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "pins_sha256": "7d149b37532c52673ef4878fa3f3d35197a73b4b8b4a085bcb189db375c2bb0a",
+   "root": [
+    125.304,
+    133.92
+   ],
+   "clock_sites_um": [
+    [
+     125.28,
+     133.92
+    ],
+    [
+     120.96,
+     254.88
+    ],
+    [
+     108.0,
+     77.76
+    ],
+    [
+     241.92,
+     25.92
+    ]
+   ],
+   "reach_before_um": 250.6,
+   "reach_after_um": 177.1
+  },
+  "ot_hbm_hc_bank128_pair_core@9bf80cdae38d": {
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "pins_sha256": "9bf80cdae38dd0d20b9899bfefedac95edf0754799b4ad7ab83c0e38669536e1",
+   "root": [
+    125.304,
+    133.92
+   ],
+   "clock_sites_um": [
+    [
+     125.28,
+     133.92
+    ],
+    [
+     120.96,
+     254.88
+    ],
+    [
+     108.0,
+     77.76
+    ],
+    [
+     241.92,
+     25.92
+    ]
+   ],
+   "reach_before_um": 250.6,
+   "reach_after_um": 177.1
+  },
+  "ot_hbm_hc_bank128_pair_first_core@3762e7b21fc5": {
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "pins_sha256": "3762e7b21fc5ebe9afcb9ad397a9d1a2a76816af426f6242048abbdd5ef79681",
+   "root": [
+    125.304,
+    133.92
+   ],
+   "clock_sites_um": [
+    [
+     125.28,
+     133.92
+    ],
+    [
+     120.96,
+     254.88
+    ],
+    [
+     108.0,
+     77.76
+    ],
+    [
+     241.92,
+     25.92
+    ]
+   ],
+   "reach_before_um": 250.6,
+   "reach_after_um": 177.1
+  },
+  "ot_hbm_hc_root_static__tailx_rest__v4f4566@b1f34cc2c362": {
+   "module": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+   "outline_um": [
+    182.304,
+    201.312
+   ],
+   "pins_sha256": "b1f34cc2c362e77ba7abd21ad2a1bbf33d6f3ca1acd04f81d1737b7cfad0b60f",
+   "root": [
+    0.12,
+    100.632
+   ],
+   "clock_sites_um": [
+    [
+     8.64,
+     99.36
+    ],
+    [
+     172.8,
+     99.36
+    ]
+   ],
+   "reach_before_um": 273.3,
+   "reach_after_um": 177.1
+  },
+  "ot_hbm_hc_root_static__tailx_rest__v6bc7f2@f517e6fb8774": {
+   "module": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+   "outline_um": [
+    182.304,
+    201.312
+   ],
+   "pins_sha256": "f517e6fb87745304a236c5df1b2f56c7bfc4056e8a2f262031a27de7b4c83239",
+   "root": [
+    0.12,
+    100.488
+   ],
+   "clock_sites_um": [
+    [
+     8.64,
+     99.36
+    ],
+    [
+     172.8,
+     99.36
+    ]
+   ],
+   "reach_before_um": 273.2,
+   "reach_after_um": 177.1
+  },
+  "ot_hbm_idx_rootctl_static_am@d3147e0cfabb": {
+   "module": "ot_hbm_idx_rootctl_static_am",
+   "outline_um": [
+    475.19999999999993,
+    259.19999999999993
+   ],
+   "pins_sha256": "d3147e0cfabb8347600b575c8f616953eab7ee41455fec3973290950709864ab",
+   "root": [
+    237.624,
+    129.6
+   ],
+   "clock_sites_um": [
+    [
+     237.6,
+     129.6
+    ],
+    [
+     401.76,
+     112.32
+    ],
+    [
+     69.12,
+     116.64
+    ],
+    [
+     298.08,
+     246.24
+    ],
+    [
+     8.64,
+     246.24
+    ],
+    [
+     159.84,
+     8.64
+    ],
+    [
+     462.24,
+     228.96
+    ]
+   ],
+   "reach_before_um": 358.6,
+   "reach_after_um": 177.1
+  },
+  "ot_hbm_idx_vm_query_static_n12@be0b530febe5": {
+   "module": "ot_hbm_idx_vm_query_static_n12",
+   "outline_um": [
+    216.0,
+    138.24
+   ],
+   "pins_sha256": "be0b530febe54193d0c2696ccfaa70adf804d8595db44a97f9ba6311bfc0455a",
+   "root": [
+    0.984,
+    138.0
+   ],
+   "clock_sites_um": [
+    [
+     8.64,
+     129.6
+    ],
+    [
+     207.36,
+     12.96
+    ]
+   ],
+   "reach_before_um": 344.4,
+   "reach_after_um": 164.2
+  },
+  "ot_pdie_serdes@d62659dbe46a": {
+   "module": "ot_pdie_serdes",
+   "outline_um": [
+    600.048,
+    600.48
+   ],
+   "pins_sha256": "d62659dbe46a085bc608254f10401d4daaa6b94a76ee7fb82dd39c1980047f0d",
+   "root": [
+    299.88,
+    0.096
+   ],
+   "clock_sites_um": [
+    [
+     298.08,
+     8.64
+    ],
+    [
+     501.12,
+     509.76
+    ],
+    [
+     181.44,
+     358.56
+    ],
+    [
+     462.24,
+     203.04
+    ],
+    [
+     125.28,
+     540.0
+    ],
+    [
+     69.12,
+     133.92
+    ],
+    [
+     552.96,
+     159.84
+    ],
+    [
+     328.32,
+     419.04
+    ],
+    [
+     587.52,
+     362.88
+    ],
+    [
+     8.64,
+     419.04
+    ],
+    [
+     237.6,
+     190.08
+    ],
+    [
+     285.12,
+     591.84
+    ],
+    [
+     501.12,
+     8.64
+    ],
+    [
+     8.64,
+     8.64
+    ]
+   ],
+   "reach_before_um": 891.6,
+   "reach_after_um": 177.1
+  },
+  "hfd_ep_static@ce811c3f8f1c": {
+   "module": "hfd_ep_static",
+   "outline_um": [
+    427.68,
+    246.24
+   ],
+   "pins_sha256": "ce811c3f8f1c4a3fc49d58988db026e8b93b6168e69b25b83d2e9a60492ff43d",
+   "root": [
+    220.344,
+    25.92
+   ],
+   "clock_sites_um": [
+    [
+     220.32,
+     25.92
+    ],
+    [
+     99.36,
+     228.96
+    ],
+    [
+     371.52,
+     142.56
+    ],
+    [
+     8.64,
+     64.8
+    ],
+    [
+     414.72,
+     8.64
+    ],
+    [
+     276.48,
+     237.6
+    ]
+   ],
+   "reach_before_um": 432.0,
+   "reach_after_um": 159.8
+  },
+  "hnx_fused_lane@2ea678e1526e": {
+   "module": "hnx_fused_lane",
+   "outline_um": [
+    345.5999999999999,
+    518.4
+   ],
+   "pins_sha256": "2ea678e1526e9d43f001002a7a5d69135c6f2fca24bee621ade987d69737d311",
+   "root": [
+    172.776,
+    259.2
+   ],
+   "clock_sites_um": [
+    [
+     172.8,
+     259.2
+    ],
+    [
+     125.28,
+     457.92
+    ],
+    [
+     125.28,
+     60.48
+    ],
+    [
+     293.76,
+     250.56
+    ],
+    [
+     328.32,
+     462.24
+    ],
+    [
+     332.64,
+     8.64
+    ],
+    [
+     8.64,
+     289.44
+    ]
+   ],
+   "reach_before_um": 423.4,
+   "reach_after_um": 177.1
+  },
+  "ot_hbm_host_cp_rxs@b41d079f0d99": {
+   "module": "ot_hbm_host_cp_rxs",
+   "outline_um": [
+    434.808,
+    480.0
+   ],
+   "pins_sha256": "b41d079f0d99d997893730bdc6231fda8253eba8cc6700d9dbe78a362510dcbc",
+   "root": [
+    216.024,
+    216.0
+   ],
+   "clock_sites_um": [
+    [
+     216.0,
+     216.0
+    ],
+    [
+     112.32,
+     406.08
+    ],
+    [
+     12.96,
+     146.88
+    ],
+    [
+     423.36,
+     177.12
+    ],
+    [
+     354.24,
+     432.0
+    ],
+    [
+     237.6,
+     8.64
+    ],
+    [
+     60.48,
+     8.64
+    ],
+    [
+     8.64,
+     324.0
+    ],
+    [
+     414.72,
+     8.64
+    ]
+   ],
+   "reach_before_um": 470.9,
+   "reach_after_um": 177.1
+  },
+  "ot_hgi_qw_dec@a9e064b32d70": {
+   "module": "ot_hgi_qw_dec",
+   "outline_um": [
+    260.0,
+    260.0
+   ],
+   "pins_sha256": "a9e064b32d70570925abbc28a36664b574698cc405fe5cbd517007bd7594edb0",
+   "root": [
+    69.336,
+    0.24
+   ],
+   "clock_sites_um": [
+    [
+     69.12,
+     8.64
+    ],
+    [
+     151.2,
+     181.44
+    ],
+    [
+     250.56,
+     51.84
+    ],
+    [
+     8.64,
+     250.56
+    ]
+   ],
+   "reach_before_um": 440.2,
+   "reach_after_um": 177.1
+  },
+  "ot_hnx_idxn_keybuf_slice@0f8b0906b5ed": {
+   "module": "ot_hnx_idxn_keybuf_slice",
+   "outline_um": [
+    241.92,
+    293.76
+   ],
+   "pins_sha256": "0f8b0906b5ed92d4216eb71b4be9578948c1966ec8777bbb91cc5d8fb0767506",
+   "root": [
+    207.384,
+    146.88
+   ],
+   "clock_sites_um": [
+    [
+     207.36,
+     146.88
+    ],
+    [
+     21.6,
+     164.16
+    ],
+    [
+     116.64,
+     164.16
+    ],
+    [
+     69.12,
+     8.64
+    ]
+   ],
+   "reach_before_um": 345.6,
+   "reach_after_um": 177.1
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp0_id@b2d5a1066f0c": {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+   "outline_um": [
+    414.72,
+    207.36
+   ],
+   "pins_sha256": "b2d5a1066f0c5c6c2b62bb08529798792d8df35c0d63535c8c3f04dc0b2693c2",
+   "root": [
+    207.384,
+    103.68
+   ],
+   "clock_sites_um": [
+    [
+     207.36,
+     103.68
+    ],
+    [
+     56.16,
+     95.04
+    ],
+    [
+     354.24,
+     90.72
+    ]
+   ],
+   "reach_before_um": 302.4,
+   "reach_after_um": 177.1
+  },
+  "ot_hgi_sfu_core_split3__opstore_a@edaf6c837898": {
+   "module": "ot_hgi_sfu_core_split3__opstore_a",
+   "outline_um": [
+    760.32,
+    483.84
+   ],
+   "pins_sha256": "edaf6c83789810dcd1e22512e383d129bc8b6bbd2b1c3588ad0006f5e5685fbf",
+   "root": [
+    380.376,
+    483.744
+   ],
+   "clock_sites_um": [
+    [
+     380.16,
+     475.2
+    ],
+    [
+     168.48,
+     17.28
+    ],
+    [
+     660.96,
+     220.32
+    ],
+    [
+     86.4,
+     263.52
+    ],
+    [
+     509.76,
+     34.56
+    ],
+    [
+     682.56,
+     432.0
+    ],
+    [
+     116.64,
+     432.0
+    ],
+    [
+     371.52,
+     241.92
+    ],
+    [
+     747.36,
+     8.64
+    ],
+    [
+     12.96,
+     177.12
+    ],
+    [
+     630.72,
+     263.52
+    ],
+    [
+     228.96,
+     51.84
+    ],
+    [
+     751.68,
+     324.0
+    ],
+    [
+     8.64,
+     362.88
+    ],
+    [
+     194.4,
+     332.64
+    ]
+   ],
+   "reach_before_um": 855.5,
+   "reach_after_um": 177.1
+  },
+  "ot_hgi_sfu_core_split3__opstore_b@de3ef0436950": {
+   "module": "ot_hgi_sfu_core_split3__opstore_b",
+   "outline_um": [
+    760.32,
+    691.2
+   ],
+   "pins_sha256": "de3ef0436950bf6ce924b2557348594e23e0fa3b2f46d7a274329c3ab3658fd1",
+   "root": [
+    380.184,
+    345.6
+   ],
+   "clock_sites_um": [
+    [
+     380.16,
+     345.6
+    ],
+    [
+     168.48,
+     17.28
+    ],
+    [
+     168.48,
+     673.92
+    ],
+    [
+     604.8,
+     47.52
+    ],
+    [
+     609.12,
+     643.68
+    ],
+    [
+     146.88,
+     259.2
+    ],
+    [
+     626.4,
+     259.2
+    ],
+    [
+     129.6,
+     453.6
+    ],
+    [
+     622.08,
+     462.24
+    ],
+    [
+     12.96,
+     211.68
+    ],
+    [
+     384.48,
+     578.88
+    ],
+    [
+     384.48,
+     142.56
+    ],
+    [
+     8.64,
+     557.28
+    ],
+    [
+     751.68,
+     246.24
+    ],
+    [
+     747.36,
+     557.28
+    ],
+    [
+     591.84,
+     8.64
+    ],
+    [
+     306.72,
+     466.56
+    ],
+    [
+     462.24,
+     682.56
+    ],
+    [
+     336.96,
+     8.64
+    ],
+    [
+     12.96,
+     34.56
+    ]
+   ],
+   "reach_before_um": 717.1,
+   "reach_after_um": 177.1
+  },
+  "hnx_rp3lp3h_n@a97a6f92c3e0": {
+   "module": "hnx_rp3lp3h_n",
+   "outline_um": [
+    630.72,
+    1209.6
+   ],
+   "pins_sha256": "a97a6f92c3e09c263b624a38fd3f680bc7737dfa971a283043fad792fd44783a",
+   "root": [
+    315.384,
+    604.8
+   ],
+   "clock_sites_um": [
+    [
+     315.36,
+     604.8
+    ],
+    [
+     332.64,
+     1196.64
+    ],
+    [
+     108.0,
+     77.76
+    ],
+    [
+     483.84,
+     272.16
+    ],
+    [
+     168.48,
+     894.24
+    ],
+    [
+     509.76,
+     768.96
+    ],
+    [
+     151.2,
+     414.72
+    ],
+    [
+     622.08,
+     894.24
+    ],
+    [
+     496.8,
+     51.84
+    ],
+    [
+     8.64,
+     894.24
+    ],
+    [
+     540.0,
+     475.2
+    ],
+    [
+     298.08,
+     1196.64
+    ],
+    [
+     25.92,
+     427.68
+    ],
+    [
+     332.64,
+     1192.32
+    ],
+    [
+     298.08,
+     1192.32
+    ],
+    [
+     332.64,
+     1188.0
+    ],
+    [
+     298.08,
+     1188.0
+    ],
+    [
+     298.08,
+     1183.68
+    ],
+    [
+     319.68,
+     228.96
+    ],
+    [
+     211.68,
+     30.24
+    ],
+    [
+     613.44,
+     509.76
+    ],
+    [
+     613.44,
+     198.72
+    ],
+    [
+     8.64,
+     557.28
+    ],
+    [
+     30.24,
+     211.68
+    ],
+    [
+     315.36,
+     851.04
+    ],
+    [
+     380.16,
+     401.76
+    ],
+    [
+     622.08,
+     691.2
+    ]
+   ],
+   "reach_before_um": 911.5,
+   "reach_after_um": 302.4
+  },
+  "hnx_rp3lp3h_s@bcba97c60131": {
+   "module": "hnx_rp3lp3h_s",
+   "outline_um": [
+    630.72,
+    1036.8
+   ],
+   "pins_sha256": "bcba97c6013187bfb10cad8c7b2409e7b463cab3b97af47803a301b7382a8748",
+   "root": [
+    315.384,
+    518.4
+   ],
+   "clock_sites_um": [
+    [
+     315.36,
+     518.4
+    ],
+    [
+     298.08,
+     1023.84
+    ],
+    [
+     527.04,
+     82.08
+    ],
+    [
+     168.48,
+     181.44
+    ],
+    [
+     570.24,
+     656.64
+    ],
+    [
+     142.56,
+     721.44
+    ],
+    [
+     116.64,
+     358.56
+    ],
+    [
+     622.08,
+     721.44
+    ],
+    [
+     8.64,
+     721.44
+    ],
+    [
+     496.8,
+     345.6
+    ],
+    [
+     138.24,
+     47.52
+    ],
+    [
+     332.64,
+     1023.84
+    ],
+    [
+     332.64,
+     1015.2
+    ],
+    [
+     298.08,
+     1015.2
+    ],
+    [
+     332.64,
+     1019.52
+    ],
+    [
+     298.08,
+     1019.52
+    ],
+    [
+     332.64,
+     164.16
+    ],
+    [
+     609.12,
+     354.24
+    ],
+    [
+     349.92,
+     708.48
+    ],
+    [
+     8.64,
+     371.52
+    ],
+    [
+     12.96,
+     133.92
+    ],
+    [
+     401.76,
+     8.64
+    ],
+    [
+     259.2,
+     302.4
+    ],
+    [
+     488.16,
+     552.96
+    ],
+    [
+     622.08,
+     177.12
+    ],
+    [
+     298.08,
+     833.76
+    ]
+   ],
+   "reach_before_um": 825.1,
+   "reach_after_um": 302.4
+  },
+  "ot_hbm_svc_sm_xcal_rel_t@59bcf8ea762e": {
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "outline_um": [
+    241.92,
+    224.64
+   ],
+   "pins_sha256": "59bcf8ea762ec3b95ca52777f311d32dd07f12cdb83262d293ddb67ad19f2e4f",
+   "root": [
+    125.304,
+    125.28
+   ],
+   "clock_sites_um": [
+    [
+     125.28,
+     125.28
+    ],
+    [
+     108.0,
+     8.64
+    ],
+    [
+     82.08,
+     216.0
+    ]
+   ],
+   "reach_before_um": 241.9,
+   "reach_after_um": 177.1
+  },
+  "ot_hbm_su_static_cxport_ij_q@2430134e0693": {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "outline_um": [
+    250.56,
+    449.28
+   ],
+   "pins_sha256": "2430134e0693a54f3971f8139a37b8836957fc1f3b1b38fd1fed57e84f8fe5e1",
+   "root": [
+    0.984,
+    449.04
+   ],
+   "clock_sites_um": [
+    [
+     8.64,
+     440.64
+    ],
+    [
+     164.16,
+     99.36
+    ],
+    [
+     172.8,
+     263.52
+    ],
+    [
+     8.64,
+     86.4
+    ],
+    [
+     241.92,
+     440.64
+    ]
+   ],
+   "reach_before_um": 690.0,
+   "reach_after_um": 177.1
+  },
+  "ot_hbm_su_static_qcore_r13@f5cc71db169d": {
+   "module": "ot_hbm_su_static_qcore_r13",
+   "outline_um": [
+    267.84,
+    250.56
+   ],
+   "pins_sha256": "f5cc71db169df5a24a9df7135bbde186f442844b10954b58b2da67c609e7d610",
+   "root": [
+    256.488,
+    0.24
+   ],
+   "clock_sites_um": [
+    [
+     254.88,
+     8.64
+    ],
+    [
+     99.36,
+     190.08
+    ],
+    [
+     12.96,
+     21.6
+    ],
+    [
+     259.2,
+     241.92
+    ]
+   ],
+   "reach_before_um": 498.2,
+   "reach_after_um": 168.5
+  },
+  "ot_hbm_su_static_sfustore_hw@f1be0a26f8e1": {
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "outline_um": [
+    362.88,
+    388.8
+   ],
+   "pins_sha256": "f1be0a26f8e1af0da1e2ebc0aa0dcfe2057245d93bde43fd7bf2e6a9accd4267",
+   "root": [
+    2.52,
+    0.24
+   ],
+   "clock_sites_um": [
+    [
+     8.64,
+     8.64
+    ],
+    [
+     250.56,
+     315.36
+    ],
+    [
+     250.56,
+     108.0
+    ],
+    [
+     56.16,
+     263.52
+    ],
+    [
+     354.24,
+     69.12
+    ],
+    [
+     120.96,
+     380.16
+    ]
+   ],
+   "reach_before_um": 740.3,
+   "reach_after_um": 177.1
+  },
+  "ot_hgi_sfu_programme_store_r10@9bc32c30475a": {
+   "module": "ot_hgi_sfu_programme_store_r10",
+   "outline_um": [
+    574.56,
+    738.72
+   ],
+   "pins_sha256": "9bc32c30475aa48fe6f8fed07f4ec6f3fe13d30ef9369addcde43b685143176f",
+   "root": [
+    287.064,
+    0.24
+   ],
+   "clock_sites_um": [
+    [
+     285.12,
+     8.64
+    ],
+    [
+     475.2,
+     652.32
+    ],
+    [
+     172.8,
+     414.72
+    ],
+    [
+     453.6,
+     254.88
+    ],
+    [
+     116.64,
+     669.6
+    ],
+    [
+     95.04,
+     177.12
+    ],
+    [
+     483.84,
+     99.36
+    ],
+    [
+     419.04,
+     414.72
+    ],
+    [
+     8.64,
+     440.64
+    ],
+    [
+     293.76,
+     652.32
+    ],
+    [
+     8.64,
+     8.64
+    ],
+    [
+     565.92,
+     492.48
+    ],
+    [
+     285.12,
+     254.88
+    ],
+    [
+     565.92,
+     8.64
+    ],
+    [
+     315.36,
+     492.48
+    ]
+   ],
+   "reach_before_um": 1017.3,
+   "reach_after_um": 177.1
+  },
+  "hfd_hgi_vms_glue_nw_t@004f73ad4474": {
+   "module": "hfd_hgi_vms_glue_nw_t",
+   "outline_um": [
+    777.6,
+    1635.552
+   ],
+   "pins_sha256": "004f73ad447401cc9dd60b52a4411f60d7c45dfee6c9527c930be2008e6a7c27",
+   "root": [
+    381.336,
+    0.24
+   ],
+   "clock_sites_um": [
+    [
+     380.16,
+     8.64
+    ],
+    [
+     682.56,
+     1542.24
+    ],
+    [
+     181.44,
+     924.48
+    ],
+    [
+     596.16,
+     565.92
+    ],
+    [
+     99.36,
+     1546.56
+    ],
+    [
+     181.44,
+     367.2
+    ],
+    [
+     596.16,
+     1010.88
+    ],
+    [
+     600.48,
+     181.44
+    ],
+    [
+     358.56,
+     1300.32
+    ],
+    [
+     112.32,
+     648.0
+    ],
+    [
+     133.92,
+     120.96
+    ],
+    [
+     112.32,
+     1196.64
+    ],
+    [
+     725.76,
+     786.24
+    ],
+    [
+     639.36,
+     1252.8
+    ],
+    [
+     393.12,
+     756.0
+    ],
+    [
+     410.4,
+     1499.04
+    ],
+    [
+     596.16,
+     375.84
+    ],
+    [
+     730.08,
+     138.24
+    ],
+    [
+     336.96,
+     470.88
+    ],
+    [
+     25.92,
+     375.84
+    ],
+    [
+     30.24,
+     920.16
+    ],
+    [
+     393.12,
+     224.64
+    ],
+    [
+     596.16,
+     1110.24
+    ],
+    [
+     367.2,
+     1092.96
+    ],
+    [
+     133.92,
+     1412.64
+    ],
+    [
+     760.32,
+     453.6
+    ],
+    [
+     397.44,
+     1607.04
+    ],
+    [
+     643.68,
+     1373.76
+    ],
+    [
+     73.44,
+     112.32
+    ],
+    [
+     462.24,
+     786.24
+    ],
+    [
+     768.96,
+     1058.4
+    ],
+    [
+     8.64,
+     1248.48
+    ],
+    [
+     583.2,
+     56.16
+    ],
+    [
+     457.92,
+     1075.68
+    ],
+    [
+     181.44,
+     743.04
+    ],
+    [
+     298.08,
+     609.12
+    ],
+    [
+     250.56,
+     1550.88
+    ],
+    [
+     8.64,
+     596.16
+    ],
+    [
+     570.24,
+     1624.32
+    ],
+    [
+     768.96,
+     635.04
+    ],
+    [
+     768.96,
+     1438.56
+    ],
+    [
+     393.12,
+     885.6
+    ],
+    [
+     768.96,
+     280.8
+    ],
+    [
+     203.04,
+     64.8
+    ],
+    [
+     99.36,
+     267.84
+    ]
+   ],
+   "reach_before_um": 2020.3,
+   "reach_after_um": 177.1
+  }
+ },
+ "report": [
+  {
+   "view": "ot_hfd_coll_q2_hard_v8g__reduce@07982cfbef37",
+   "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+   "outline_um": [
+    233.28000000000003,
+    233.27999999999997
+   ],
+   "root": [
+    122.52,
+    0.24
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 346.9,
+   "action": "sites",
+   "sites_um": [
+    [
+     120.96,
+     8.64
+    ],
+    [
+     112.32,
+     159.84
+    ],
+    [
+     159.84,
+     86.4
+    ],
+    [
+     224.64,
+     224.64
+    ]
+   ],
+   "taps": 4,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hfd_coll_q2_hard_v8g__ring_ag@bb7960a3d6b9",
+   "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+   "outline_um": [
+    233.28,
+    233.28
+   ],
+   "root": [
+    116.664,
+    116.64
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 224.7,
+   "action": "sites",
+   "sites_um": [
+    [
+     116.64,
+     116.64
+    ],
+    [
+     216.0,
+     151.2
+    ],
+    [
+     17.28,
+     82.08
+    ]
+   ],
+   "taps": 3,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hfd_coll_q3_body_core@e9fac1f891ac",
+   "module": "ot_hfd_coll_q3_body_core",
+   "outline_um": [
+    578.8799999999999,
+    1054.08
+   ],
+   "root": [
+    149.064,
+    0.24
+   ],
+   "clock_pin": "clk",
+   "macros_known": 11,
+   "reach_before_um": 1475.0,
+   "action": "sites",
+   "sites_um": [
+    [
+     151.2,
+     8.64
+    ],
+    [
+     483.84,
+     963.36
+    ],
+    [
+     112.32,
+     721.44
+    ],
+    [
+     410.4,
+     311.04
+    ],
+    [
+     116.64,
+     367.2
+    ],
+    [
+     475.2,
+     613.44
+    ],
+    [
+     453.6,
+     86.4
+    ],
+    [
+     116.64,
+     984.96
+    ],
+    [
+     164.16,
+     181.44
+    ],
+    [
+     328.32,
+     846.72
+    ],
+    [
+     99.36,
+     531.36
+    ],
+    [
+     557.28,
+     336.96
+    ],
+    [
+     488.16,
+     768.96
+    ],
+    [
+     324.0,
+     432.0
+    ],
+    [
+     8.64,
+     790.56
+    ],
+    [
+     8.64,
+     129.6
+    ],
+    [
+     289.44,
+     1041.12
+    ],
+    [
+     414.72,
+     21.6
+    ],
+    [
+     565.92,
+     522.72
+    ],
+    [
+     406.08,
+     155.52
+    ],
+    [
+     246.24,
+     146.88
+    ],
+    [
+     216.0,
+     704.16
+    ],
+    [
+     565.92,
+     876.96
+    ],
+    [
+     8.64,
+     440.64
+    ],
+    [
+     565.92,
+     168.48
+    ]
+   ],
+   "taps": 25,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hfd_coll_q3_edge_core@9bacba9ba155",
+   "module": "ot_hfd_coll_q3_edge_core",
+   "outline_um": [
+    216.0,
+    1054.08
+   ],
+   "root": [
+    214.968,
+    1053.84
+   ],
+   "clock_pin": "clk",
+   "macros_known": 12,
+   "reach_before_um": 1260.2,
+   "action": "sites",
+   "sites_um": [
+    [
+     207.36,
+     1041.12
+    ],
+    [
+     17.28,
+     168.48
+    ],
+    [
+     17.28,
+     535.68
+    ],
+    [
+     194.4,
+     354.24
+    ],
+    [
+     17.28,
+     876.96
+    ],
+    [
+     190.08,
+     25.92
+    ],
+    [
+     203.04,
+     704.16
+    ],
+    [
+     8.64,
+     207.36
+    ],
+    [
+     207.36,
+     358.56
+    ],
+    [
+     8.64,
+     1041.12
+    ],
+    [
+     8.64,
+     704.16
+    ]
+   ],
+   "taps": 11,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hfd_coll_q3_vm_core@4ad7189a84a6",
+   "module": "ot_hfd_coll_q3_vm_core",
+   "outline_um": [
+    328.32,
+    717.12
+   ],
+   "root": [
+    164.184,
+    0.24
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 872.4,
+   "action": "sites",
+   "sites_um": [
+    [
+     164.16,
+     8.64
+    ],
+    [
+     99.36,
+     630.72
+    ],
+    [
+     172.8,
+     345.6
+    ],
+    [
+     159.84,
+     181.44
+    ],
+    [
+     289.44,
+     578.88
+    ],
+    [
+     8.64,
+     380.16
+    ],
+    [
+     315.36,
+     207.36
+    ],
+    [
+     8.64,
+     77.76
+    ],
+    [
+     319.68,
+     406.08
+    ],
+    [
+     220.32,
+     708.48
+    ],
+    [
+     319.68,
+     25.92
+    ]
+   ],
+   "taps": 11,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hgi_coll_gq_issue@09cc7742757b",
+   "module": "ot_hgi_coll_gq_issue",
+   "outline_um": [
+    237.6,
+    237.6
+   ],
+   "root": [
+    0.984,
+    237.36
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 465.3,
+   "action": "sites",
+   "sites_um": [
+    [
+     8.64,
+     224.64
+    ],
+    [
+     181.44,
+     60.48
+    ],
+    [
+     224.64,
+     224.64
+    ],
+    [
+     8.64,
+     8.64
+    ]
+   ],
+   "taps": 4,
+   "reach_after_um": 168.5
+  },
+  {
+   "view": "ot_hgi_coll_gq_issue@7eca913bb374",
+   "module": "ot_hgi_coll_gq_issue",
+   "outline_um": [
+    237.6,
+    237.6
+   ],
+   "root": [
+    0.984,
+    237.36
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 465.3,
+   "action": "sites",
+   "sites_um": [
+    [
+     8.64,
+     224.64
+    ],
+    [
+     181.44,
+     60.48
+    ],
+    [
+     224.64,
+     224.64
+    ],
+    [
+     8.64,
+     8.64
+    ]
+   ],
+   "taps": 4,
+   "reach_after_um": 168.5
+  },
+  {
+   "view": "ot_hgi_coll_gq_land@068dba88be63",
+   "module": "ot_hgi_coll_gq_land",
+   "outline_um": [
+    142.56,
+    207.36
+   ],
+   "root": [
+    0.984,
+    0.24
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 340.1,
+   "action": "sites",
+   "sites_um": [
+    [
+     8.64,
+     8.64
+    ],
+    [
+     133.92,
+     198.72
+    ]
+   ],
+   "taps": 2,
+   "reach_after_um": 159.8
+  },
+  {
+   "view": "ot_hgi_coll_gq_land@7e7e2aef40e2",
+   "module": "ot_hgi_coll_gq_land",
+   "outline_um": [
+    142.56,
+    207.36
+   ],
+   "root": [
+    0.984,
+    0.24
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 340.1,
+   "action": "sites",
+   "sites_um": [
+    [
+     8.64,
+     8.64
+    ],
+    [
+     133.92,
+     198.72
+    ]
+   ],
+   "taps": 2,
+   "reach_after_um": 159.8
+  },
+  {
+   "view": "ot_hgi_coll_gq_land@cbabbd40af9b",
+   "module": "ot_hgi_coll_gq_land",
+   "outline_um": [
+    142.56,
+    207.36
+   ],
+   "root": [
+    0.984,
+    0.24
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 340.1,
+   "action": "sites",
+   "sites_um": [
+    [
+     8.64,
+     8.64
+    ],
+    [
+     133.92,
+     198.72
+    ]
+   ],
+   "taps": 2,
+   "reach_after_um": 159.8
+  },
+  {
+   "view": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap@b05ff385dffe",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+   "outline_um": [
+    319.68,
+    345.5999999999999
+   ],
+   "root": [
+    159.864,
+    172.8
+   ],
+   "clock_pin": "tile_clk",
+   "macros_known": 0,
+   "reach_before_um": 324.0,
+   "action": "sites",
+   "sites_um": [
+    [
+     159.84,
+     172.8
+    ],
+    [
+     146.88,
+     38.88
+    ],
+    [
+     146.88,
+     306.72
+    ],
+    [
+     302.4,
+     172.8
+    ],
+    [
+     8.64,
+     112.32
+    ],
+    [
+     311.04,
+     168.48
+    ]
+   ],
+   "taps": 6,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap@a83e190d54f7",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+   "outline_um": [
+    319.68,
+    345.6
+   ],
+   "root": [
+    159.864,
+    172.8
+   ],
+   "clock_pin": "tile_clk",
+   "macros_known": 0,
+   "reach_before_um": 324.0,
+   "action": "sites",
+   "sites_um": [
+    [
+     159.84,
+     172.8
+    ],
+    [
+     146.88,
+     38.88
+    ],
+    [
+     138.24,
+     298.08
+    ],
+    [
+     302.4,
+     172.8
+    ],
+    [
+     8.64,
+     112.32
+    ],
+    [
+     285.12,
+     336.96
+    ],
+    [
+     311.04,
+     8.64
+    ]
+   ],
+   "taps": 7,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_hc_bank128_pair_core@7d149b37532c",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "root": [
+    125.304,
+    133.92
+   ],
+   "clock_pin": "clk",
+   "macros_known": 3,
+   "reach_before_um": 250.6,
+   "action": "sites",
+   "sites_um": [
+    [
+     125.28,
+     133.92
+    ],
+    [
+     120.96,
+     254.88
+    ],
+    [
+     108.0,
+     77.76
+    ],
+    [
+     241.92,
+     25.92
+    ]
+   ],
+   "taps": 4,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_hc_bank128_pair_core@9bf80cdae38d",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "root": [
+    125.304,
+    133.92
+   ],
+   "clock_pin": "clk",
+   "macros_known": 3,
+   "reach_before_um": 250.6,
+   "action": "sites",
+   "sites_um": [
+    [
+     125.28,
+     133.92
+    ],
+    [
+     120.96,
+     254.88
+    ],
+    [
+     108.0,
+     77.76
+    ],
+    [
+     241.92,
+     25.92
+    ]
+   ],
+   "taps": 4,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_hc_bank128_pair_first_core@3762e7b21fc5",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "root": [
+    125.304,
+    133.92
+   ],
+   "clock_pin": "clk",
+   "macros_known": 3,
+   "reach_before_um": 250.6,
+   "action": "sites",
+   "sites_um": [
+    [
+     125.28,
+     133.92
+    ],
+    [
+     120.96,
+     254.88
+    ],
+    [
+     108.0,
+     77.76
+    ],
+    [
+     241.92,
+     25.92
+    ]
+   ],
+   "taps": 4,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_hc_root_static__hcp_sys1@0690dba9b78d",
+   "module": "ot_hbm_hc_root_static__hcp_sys1",
+   "outline_um": [
+    155.52,
+    172.8
+   ],
+   "root": [
+    77.784,
+    86.4
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 155.5,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hbm_hc_root_static__tailx_rest__v4f4566@b1f34cc2c362",
+   "module": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+   "outline_um": [
+    182.304,
+    201.312
+   ],
+   "root": [
+    0.12,
+    100.632
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 273.3,
+   "action": "sites",
+   "sites_um": [
+    [
+     8.64,
+     99.36
+    ],
+    [
+     172.8,
+     99.36
+    ]
+   ],
+   "taps": 2,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2@f517e6fb8774",
+   "module": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+   "outline_um": [
+    182.304,
+    201.312
+   ],
+   "root": [
+    0.12,
+    100.488
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 273.2,
+   "action": "sites",
+   "sites_um": [
+    [
+     8.64,
+     99.36
+    ],
+    [
+     172.8,
+     99.36
+    ]
+   ],
+   "taps": 2,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_hc_root_static__tailx_sk_steady@5c12f4d27bc6",
+   "module": "ot_hbm_hc_root_static__tailx_sk_steady",
+   "outline_um": [
+    155.51999999999998,
+    198.7199999999999
+   ],
+   "root": [
+    77.736,
+    99.36
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 168.5,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hbm_hc_root_static__tailx_sk_step0@8119d7e0efd7",
+   "module": "ot_hbm_hc_root_static__tailx_sk_step0",
+   "outline_um": [
+    155.51999999999998,
+    241.91999999999996
+   ],
+   "root": [
+    77.736,
+    120.96
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 190.1,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hbm_hc_subtree32_core@9e58e91df4c0",
+   "module": "ot_hbm_hc_subtree32_core",
+   "outline_um": [
+    220.32,
+    220.32
+   ],
+   "root": [
+    108.024,
+    108.0
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 216.0,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hbm_idx_rootctl_static_am@d3147e0cfabb",
+   "module": "ot_hbm_idx_rootctl_static_am",
+   "outline_um": [
+    475.19999999999993,
+    259.19999999999993
+   ],
+   "root": [
+    237.624,
+    129.6
+   ],
+   "clock_pin": "clk",
+   "macros_known": 1,
+   "reach_before_um": 358.6,
+   "action": "sites",
+   "sites_um": [
+    [
+     237.6,
+     129.6
+    ],
+    [
+     401.76,
+     112.32
+    ],
+    [
+     69.12,
+     116.64
+    ],
+    [
+     298.08,
+     246.24
+    ],
+    [
+     8.64,
+     246.24
+    ],
+    [
+     159.84,
+     8.64
+    ],
+    [
+     462.24,
+     228.96
+    ]
+   ],
+   "taps": 7,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_idx_tail_native@9496b22d4b49",
+   "module": "ot_hbm_idx_tail_native",
+   "outline_um": [
+    218.592,
+    187.488
+   ],
+   "root": [
+    107.976,
+    95.04
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 194.4,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hbm_idx_tail_native@f56d1f72f3f3",
+   "module": "ot_hbm_idx_tail_native",
+   "outline_um": [
+    218.592,
+    187.488
+   ],
+   "root": [
+    107.976,
+    95.04
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 194.4,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hbm_idx_vm_query_static_n12@be0b530febe5",
+   "module": "ot_hbm_idx_vm_query_static_n12",
+   "outline_um": [
+    216.0,
+    138.24
+   ],
+   "root": [
+    0.984,
+    138.0
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 344.4,
+   "action": "sites",
+   "sites_um": [
+    [
+     8.64,
+     129.6
+    ],
+    [
+     207.36,
+     12.96
+    ]
+   ],
+   "taps": 2,
+   "reach_after_um": 164.2
+  },
+  {
+   "view": "ot_pdie_serdes@d62659dbe46a",
+   "module": "ot_pdie_serdes",
+   "outline_um": [
+    600.048,
+    600.48
+   ],
+   "root": [
+    299.88,
+    0.096
+   ],
+   "clock_pin": "clk",
+   "macros_known": 2,
+   "reach_before_um": 891.6,
+   "action": "sites",
+   "sites_um": [
+    [
+     298.08,
+     8.64
+    ],
+    [
+     501.12,
+     509.76
+    ],
+    [
+     181.44,
+     358.56
+    ],
+    [
+     462.24,
+     203.04
+    ],
+    [
+     125.28,
+     540.0
+    ],
+    [
+     69.12,
+     133.92
+    ],
+    [
+     552.96,
+     159.84
+    ],
+    [
+     328.32,
+     419.04
+    ],
+    [
+     587.52,
+     362.88
+    ],
+    [
+     8.64,
+     419.04
+    ],
+    [
+     237.6,
+     190.08
+    ],
+    [
+     285.12,
+     591.84
+    ],
+    [
+     501.12,
+     8.64
+    ],
+    [
+     8.64,
+     8.64
+    ]
+   ],
+   "taps": 14,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "hfd_ep_static@ce811c3f8f1c",
+   "module": "hfd_ep_static",
+   "outline_um": [
+    427.68,
+    246.24
+   ],
+   "root": [
+    220.344,
+    25.92
+   ],
+   "clock_pin": "clk",
+   "macros_known": 4,
+   "reach_before_um": 432.0,
+   "action": "sites",
+   "sites_um": [
+    [
+     220.32,
+     25.92
+    ],
+    [
+     99.36,
+     228.96
+    ],
+    [
+     371.52,
+     142.56
+    ],
+    [
+     8.64,
+     64.8
+    ],
+    [
+     414.72,
+     8.64
+    ],
+    [
+     276.48,
+     237.6
+    ]
+   ],
+   "taps": 6,
+   "reach_after_um": 159.8
+  },
+  {
+   "view": "hnx_fused_lane@2ea678e1526e",
+   "module": "hnx_fused_lane",
+   "outline_um": [
+    345.5999999999999,
+    518.4
+   ],
+   "root": [
+    172.776,
+    259.2
+   ],
+   "clock_pin": "clk",
+   "macros_known": 2,
+   "reach_before_um": 423.4,
+   "action": "sites",
+   "sites_um": [
+    [
+     172.8,
+     259.2
+    ],
+    [
+     125.28,
+     457.92
+    ],
+    [
+     125.28,
+     60.48
+    ],
+    [
+     293.76,
+     250.56
+    ],
+    [
+     328.32,
+     462.24
+    ],
+    [
+     332.64,
+     8.64
+    ],
+    [
+     8.64,
+     289.44
+    ]
+   ],
+   "taps": 7,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_argmax_static_sw_vm_r2@efae72feb6e7",
+   "module": "ot_hbm_argmax_static_sw_vm_r2",
+   "outline_um": [
+    118.79999999999995,
+    118.79999999999995
+   ],
+   "root": [
+    60.504,
+    60.48
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 112.3,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hbm_host_cp_rxs@b41d079f0d99",
+   "module": "ot_hbm_host_cp_rxs",
+   "outline_um": [
+    434.808,
+    480.0
+   ],
+   "root": [
+    216.024,
+    216.0
+   ],
+   "clock_pin": "clk",
+   "macros_known": 6,
+   "reach_before_um": 470.9,
+   "action": "sites",
+   "sites_um": [
+    [
+     216.0,
+     216.0
+    ],
+    [
+     112.32,
+     406.08
+    ],
+    [
+     12.96,
+     146.88
+    ],
+    [
+     423.36,
+     177.12
+    ],
+    [
+     354.24,
+     432.0
+    ],
+    [
+     237.6,
+     8.64
+    ],
+    [
+     60.48,
+     8.64
+    ],
+    [
+     8.64,
+     324.0
+    ],
+    [
+     414.72,
+     8.64
+    ]
+   ],
+   "taps": 9,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@dd7000587876",
+   "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "outline_um": [
+    177.98399999999992,
+    177.98399999999992
+   ],
+   "root": [
+    90.744,
+    90.72
+   ],
+   "clock_pin": "clk",
+   "macros_known": 2,
+   "reach_before_um": 172.8,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hbm_xp_aq_tree13_fmt@ed62ddb93a97",
+   "module": "ot_hbm_xp_aq_tree13_fmt",
+   "outline_um": [
+    183.6,
+    108.0
+   ],
+   "root": [
+    90.744,
+    51.84
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 138.3,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hgi_qw_dec@a9e064b32d70",
+   "module": "ot_hgi_qw_dec",
+   "outline_um": [
+    260.0,
+    260.0
+   ],
+   "root": [
+    69.336,
+    0.24
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 440.2,
+   "action": "sites",
+   "sites_um": [
+    [
+     69.12,
+     8.64
+    ],
+    [
+     151.2,
+     181.44
+    ],
+    [
+     250.56,
+     51.84
+    ],
+    [
+     8.64,
+     250.56
+    ]
+   ],
+   "taps": 4,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hnx_fused_host_program@65a08f6d43f9",
+   "module": "ot_hnx_fused_host_program",
+   "outline_um": [
+    207.36,
+    129.6
+   ],
+   "root": [
+    103.656,
+    64.8
+   ],
+   "clock_pin": "clk",
+   "macros_known": 2,
+   "reach_before_um": 159.9,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hnx_fused_hub_n4ext@e84ee0e98a3b",
+   "module": "ot_hnx_fused_hub_n4ext",
+   "outline_um": [
+    216.0,
+    207.36
+   ],
+   "root": [
+    107.976,
+    103.68
+   ],
+   "clock_pin": "clk",
+   "macros_known": 3,
+   "reach_before_um": 203.1,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hnx_fused_tnode@50055cbac918",
+   "module": "ot_hnx_fused_tnode",
+   "outline_um": [
+    172.8,
+    172.8
+   ],
+   "root": [
+    86.376,
+    86.4
+   ],
+   "clock_pin": "clk",
+   "macros_known": 2,
+   "reach_before_um": 164.2,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hnx_idxn_keybuf_slice@0f8b0906b5ed",
+   "module": "ot_hnx_idxn_keybuf_slice",
+   "outline_um": [
+    241.92,
+    293.76
+   ],
+   "root": [
+    207.384,
+    146.88
+   ],
+   "clock_pin": "clk",
+   "macros_known": 5,
+   "reach_before_um": 345.6,
+   "action": "sites",
+   "sites_um": [
+    [
+     207.36,
+     146.88
+    ],
+    [
+     21.6,
+     164.16
+    ],
+    [
+     116.64,
+     164.16
+    ],
+    [
+     69.12,
+     8.64
+    ]
+   ],
+   "taps": 4,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp0_id@b2d5a1066f0c",
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+   "outline_um": [
+    414.72,
+    207.36
+   ],
+   "root": [
+    207.384,
+    103.68
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 302.4,
+   "action": "sites",
+   "sites_um": [
+    [
+     207.36,
+     103.68
+    ],
+    [
+     56.16,
+     95.04
+    ],
+    [
+     354.24,
+     90.72
+    ]
+   ],
+   "taps": 3,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_su_static_pgslice_lg__pretree@b51f26423130",
+   "module": "ot_hbm_su_static_pgslice_lg__pretree",
+   "outline_um": [
+    164.16,
+    241.92
+   ],
+   "root": [
+    82.104,
+    120.984
+   ],
+   "clock_pin": "clk_ctl",
+   "macros_known": 0,
+   "reach_before_um": 194.4,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hgi_sfu_core_split3__opstore_a@edaf6c837898",
+   "module": "ot_hgi_sfu_core_split3__opstore_a",
+   "outline_um": [
+    760.32,
+    483.84
+   ],
+   "root": [
+    380.376,
+    483.744
+   ],
+   "clock_pin": "clk",
+   "macros_known": 32,
+   "reach_before_um": 855.5,
+   "action": "sites",
+   "sites_um": [
+    [
+     380.16,
+     475.2
+    ],
+    [
+     168.48,
+     17.28
+    ],
+    [
+     660.96,
+     220.32
+    ],
+    [
+     86.4,
+     263.52
+    ],
+    [
+     509.76,
+     34.56
+    ],
+    [
+     682.56,
+     432.0
+    ],
+    [
+     116.64,
+     432.0
+    ],
+    [
+     371.52,
+     241.92
+    ],
+    [
+     747.36,
+     8.64
+    ],
+    [
+     12.96,
+     177.12
+    ],
+    [
+     630.72,
+     263.52
+    ],
+    [
+     228.96,
+     51.84
+    ],
+    [
+     751.68,
+     324.0
+    ],
+    [
+     8.64,
+     362.88
+    ],
+    [
+     194.4,
+     332.64
+    ]
+   ],
+   "taps": 15,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hgi_sfu_core_split3__opstore_b@de3ef0436950",
+   "module": "ot_hgi_sfu_core_split3__opstore_b",
+   "outline_um": [
+    760.32,
+    691.2
+   ],
+   "root": [
+    380.184,
+    345.6
+   ],
+   "clock_pin": "clk",
+   "macros_known": 48,
+   "reach_before_um": 717.1,
+   "action": "sites",
+   "sites_um": [
+    [
+     380.16,
+     345.6
+    ],
+    [
+     168.48,
+     17.28
+    ],
+    [
+     168.48,
+     673.92
+    ],
+    [
+     604.8,
+     47.52
+    ],
+    [
+     609.12,
+     643.68
+    ],
+    [
+     146.88,
+     259.2
+    ],
+    [
+     626.4,
+     259.2
+    ],
+    [
+     129.6,
+     453.6
+    ],
+    [
+     622.08,
+     462.24
+    ],
+    [
+     12.96,
+     211.68
+    ],
+    [
+     384.48,
+     578.88
+    ],
+    [
+     384.48,
+     142.56
+    ],
+    [
+     8.64,
+     557.28
+    ],
+    [
+     751.68,
+     246.24
+    ],
+    [
+     747.36,
+     557.28
+    ],
+    [
+     591.84,
+     8.64
+    ],
+    [
+     306.72,
+     466.56
+    ],
+    [
+     462.24,
+     682.56
+    ],
+    [
+     336.96,
+     8.64
+    ],
+    [
+     12.96,
+     34.56
+    ]
+   ],
+   "taps": 20,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "hnx_rp3lp3h_n@a97a6f92c3e0",
+   "module": "hnx_rp3lp3h_n",
+   "outline_um": [
+    630.72,
+    1209.6
+   ],
+   "root": [
+    315.384,
+    604.8
+   ],
+   "clock_pin": "ck_n",
+   "macros_known": 15,
+   "reach_before_um": 911.5,
+   "action": "sites",
+   "sites_um": [
+    [
+     315.36,
+     604.8
+    ],
+    [
+     332.64,
+     1196.64
+    ],
+    [
+     108.0,
+     77.76
+    ],
+    [
+     483.84,
+     272.16
+    ],
+    [
+     168.48,
+     894.24
+    ],
+    [
+     509.76,
+     768.96
+    ],
+    [
+     151.2,
+     414.72
+    ],
+    [
+     622.08,
+     894.24
+    ],
+    [
+     496.8,
+     51.84
+    ],
+    [
+     8.64,
+     894.24
+    ],
+    [
+     540.0,
+     475.2
+    ],
+    [
+     298.08,
+     1196.64
+    ],
+    [
+     25.92,
+     427.68
+    ],
+    [
+     332.64,
+     1192.32
+    ],
+    [
+     298.08,
+     1192.32
+    ],
+    [
+     332.64,
+     1188.0
+    ],
+    [
+     298.08,
+     1188.0
+    ],
+    [
+     298.08,
+     1183.68
+    ],
+    [
+     319.68,
+     228.96
+    ],
+    [
+     211.68,
+     30.24
+    ],
+    [
+     613.44,
+     509.76
+    ],
+    [
+     613.44,
+     198.72
+    ],
+    [
+     8.64,
+     557.28
+    ],
+    [
+     30.24,
+     211.68
+    ],
+    [
+     315.36,
+     851.04
+    ],
+    [
+     380.16,
+     401.76
+    ],
+    [
+     622.08,
+     691.2
+    ]
+   ],
+   "taps": 27,
+   "reach_after_um": 302.4
+  },
+  {
+   "view": "hnx_rp3lp3h_s@bcba97c60131",
+   "module": "hnx_rp3lp3h_s",
+   "outline_um": [
+    630.72,
+    1036.8
+   ],
+   "root": [
+    315.384,
+    518.4
+   ],
+   "clock_pin": "ck_s",
+   "macros_known": 15,
+   "reach_before_um": 825.1,
+   "action": "sites",
+   "sites_um": [
+    [
+     315.36,
+     518.4
+    ],
+    [
+     298.08,
+     1023.84
+    ],
+    [
+     527.04,
+     82.08
+    ],
+    [
+     168.48,
+     181.44
+    ],
+    [
+     570.24,
+     656.64
+    ],
+    [
+     142.56,
+     721.44
+    ],
+    [
+     116.64,
+     358.56
+    ],
+    [
+     622.08,
+     721.44
+    ],
+    [
+     8.64,
+     721.44
+    ],
+    [
+     496.8,
+     345.6
+    ],
+    [
+     138.24,
+     47.52
+    ],
+    [
+     332.64,
+     1023.84
+    ],
+    [
+     332.64,
+     1015.2
+    ],
+    [
+     298.08,
+     1015.2
+    ],
+    [
+     332.64,
+     1019.52
+    ],
+    [
+     298.08,
+     1019.52
+    ],
+    [
+     332.64,
+     164.16
+    ],
+    [
+     609.12,
+     354.24
+    ],
+    [
+     349.92,
+     708.48
+    ],
+    [
+     8.64,
+     371.52
+    ],
+    [
+     12.96,
+     133.92
+    ],
+    [
+     401.76,
+     8.64
+    ],
+    [
+     259.2,
+     302.4
+    ],
+    [
+     488.16,
+     552.96
+    ],
+    [
+     622.08,
+     177.12
+    ],
+    [
+     298.08,
+     833.76
+    ]
+   ],
+   "taps": 26,
+   "reach_after_um": 302.4
+  },
+  {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@59bcf8ea762e",
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "outline_um": [
+    241.92,
+    224.64
+   ],
+   "root": [
+    125.304,
+    125.28
+   ],
+   "clock_pin": "clk",
+   "macros_known": 4,
+   "reach_before_um": 241.9,
+   "action": "sites",
+   "sites_um": [
+    [
+     125.28,
+     125.28
+    ],
+    [
+     108.0,
+     8.64
+    ],
+    [
+     82.08,
+     216.0
+    ]
+   ],
+   "taps": 3,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hgi_sm_xload_cl2_bdring@0c99d1c898e0",
+   "module": "ot_hgi_sm_xload_cl2_bdring",
+   "outline_um": [
+    120.96,
+    216.0
+   ],
+   "root": [
+    60.504,
+    108.0
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 159.9,
+   "action": "none (reach <= 220)"
+  },
+  {
+   "view": "ot_hbm_su_programme_pslice_c5@25eff8011a12",
+   "module": "ot_hbm_su_programme_pslice_c5",
+   "outline_um": [
+    939.6,
+    760.32
+   ],
+   "root": [
+    937.416,
+    0.24
+   ],
+   "clock_pin": "clk",
+   "macros_known": 100,
+   "reach_before_um": 1688.9,
+   "action": "excluded (own recipe sites)"
+  },
+  {
+   "view": "ot_hbm_su_static_cxport_ij_q@2430134e0693",
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "outline_um": [
+    250.56,
+    449.28
+   ],
+   "root": [
+    0.984,
+    449.04
+   ],
+   "clock_pin": "clk_q",
+   "macros_known": 0,
+   "reach_before_um": 690.0,
+   "action": "sites",
+   "sites_um": [
+    [
+     8.64,
+     440.64
+    ],
+    [
+     164.16,
+     99.36
+    ],
+    [
+     172.8,
+     263.52
+    ],
+    [
+     8.64,
+     86.4
+    ],
+    [
+     241.92,
+     440.64
+    ]
+   ],
+   "taps": 5,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_su_static_qcore_r13@f5cc71db169d",
+   "module": "ot_hbm_su_static_qcore_r13",
+   "outline_um": [
+    267.84,
+    250.56
+   ],
+   "root": [
+    256.488,
+    0.24
+   ],
+   "clock_pin": "clk_ctl",
+   "macros_known": 2,
+   "reach_before_um": 498.2,
+   "action": "sites",
+   "sites_um": [
+    [
+     254.88,
+     8.64
+    ],
+    [
+     99.36,
+     190.08
+    ],
+    [
+     12.96,
+     21.6
+    ],
+    [
+     259.2,
+     241.92
+    ]
+   ],
+   "taps": 4,
+   "reach_after_um": 168.5
+  },
+  {
+   "view": "ot_hbm_su_static_sfustore_hw@f1be0a26f8e1",
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "outline_um": [
+    362.88,
+    388.8
+   ],
+   "root": [
+    2.52,
+    0.24
+   ],
+   "clock_pin": "clk",
+   "macros_known": 16,
+   "reach_before_um": 740.3,
+   "action": "sites",
+   "sites_um": [
+    [
+     8.64,
+     8.64
+    ],
+    [
+     250.56,
+     315.36
+    ],
+    [
+     250.56,
+     108.0
+    ],
+    [
+     56.16,
+     263.52
+    ],
+    [
+     354.24,
+     69.12
+    ],
+    [
+     120.96,
+     380.16
+    ]
+   ],
+   "taps": 6,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hgi_sfu_programme_store_r10@9bc32c30475a",
+   "module": "ot_hgi_sfu_programme_store_r10",
+   "outline_um": [
+    574.56,
+    738.72
+   ],
+   "root": [
+    287.064,
+    0.24
+   ],
+   "clock_pin": "clk",
+   "macros_known": 44,
+   "reach_before_um": 1017.3,
+   "action": "sites",
+   "sites_um": [
+    [
+     285.12,
+     8.64
+    ],
+    [
+     475.2,
+     652.32
+    ],
+    [
+     172.8,
+     414.72
+    ],
+    [
+     453.6,
+     254.88
+    ],
+    [
+     116.64,
+     669.6
+    ],
+    [
+     95.04,
+     177.12
+    ],
+    [
+     483.84,
+     99.36
+    ],
+    [
+     419.04,
+     414.72
+    ],
+    [
+     8.64,
+     440.64
+    ],
+    [
+     293.76,
+     652.32
+    ],
+    [
+     8.64,
+     8.64
+    ],
+    [
+     565.92,
+     492.48
+    ],
+    [
+     285.12,
+     254.88
+    ],
+    [
+     565.92,
+     8.64
+    ],
+    [
+     315.36,
+     492.48
+    ]
+   ],
+   "taps": 15,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "hfd_hgi_vms_glue_nw_t@004f73ad4474",
+   "module": "hfd_hgi_vms_glue_nw_t",
+   "outline_um": [
+    777.6,
+    1635.552
+   ],
+   "root": [
+    381.336,
+    0.24
+   ],
+   "clock_pin": "clk",
+   "macros_known": 0,
+   "reach_before_um": 2020.3,
+   "action": "sites",
+   "sites_um": [
+    [
+     380.16,
+     8.64
+    ],
+    [
+     682.56,
+     1542.24
+    ],
+    [
+     181.44,
+     924.48
+    ],
+    [
+     596.16,
+     565.92
+    ],
+    [
+     99.36,
+     1546.56
+    ],
+    [
+     181.44,
+     367.2
+    ],
+    [
+     596.16,
+     1010.88
+    ],
+    [
+     600.48,
+     181.44
+    ],
+    [
+     358.56,
+     1300.32
+    ],
+    [
+     112.32,
+     648.0
+    ],
+    [
+     133.92,
+     120.96
+    ],
+    [
+     112.32,
+     1196.64
+    ],
+    [
+     725.76,
+     786.24
+    ],
+    [
+     639.36,
+     1252.8
+    ],
+    [
+     393.12,
+     756.0
+    ],
+    [
+     410.4,
+     1499.04
+    ],
+    [
+     596.16,
+     375.84
+    ],
+    [
+     730.08,
+     138.24
+    ],
+    [
+     336.96,
+     470.88
+    ],
+    [
+     25.92,
+     375.84
+    ],
+    [
+     30.24,
+     920.16
+    ],
+    [
+     393.12,
+     224.64
+    ],
+    [
+     596.16,
+     1110.24
+    ],
+    [
+     367.2,
+     1092.96
+    ],
+    [
+     133.92,
+     1412.64
+    ],
+    [
+     760.32,
+     453.6
+    ],
+    [
+     397.44,
+     1607.04
+    ],
+    [
+     643.68,
+     1373.76
+    ],
+    [
+     73.44,
+     112.32
+    ],
+    [
+     462.24,
+     786.24
+    ],
+    [
+     768.96,
+     1058.4
+    ],
+    [
+     8.64,
+     1248.48
+    ],
+    [
+     583.2,
+     56.16
+    ],
+    [
+     457.92,
+     1075.68
+    ],
+    [
+     181.44,
+     743.04
+    ],
+    [
+     298.08,
+     609.12
+    ],
+    [
+     250.56,
+     1550.88
+    ],
+    [
+     8.64,
+     596.16
+    ],
+    [
+     570.24,
+     1624.32
+    ],
+    [
+     768.96,
+     635.04
+    ],
+    [
+     768.96,
+     1438.56
+    ],
+    [
+     393.12,
+     885.6
+    ],
+    [
+     768.96,
+     280.8
+    ],
+    [
+     203.04,
+     64.8
+    ],
+    [
+     99.36,
+     267.84
+    ]
+   ],
+   "taps": 45,
+   "reach_after_um": 177.1
+  },
+  {
+   "view": "ot_hbm_svc_vmdel_lane_n@dbb7f4d909eb",
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "outline_um": [
+    142.56,
+    116.64
+   ],
+   "root": [
+    17.304,
+    51.84
+   ],
+   "clock_pin": "clk",
+   "macros_known": 2,
+   "reach_before_um": 181.4,
+   "action": "none (reach <= 220)"
+  }
+ ]
+}

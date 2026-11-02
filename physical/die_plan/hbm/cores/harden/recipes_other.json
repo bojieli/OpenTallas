@@ -42,7 +42,50 @@
     84.24,
     "R0"
    ]
-  }
+  },
+  "lec_hints_basis": "H9b desc_n=0: idle ranks6/4/2/0 make source minimum-key bits copies of the refreshed127 sentinel. Slang packs s1k8x7 into2x28. These NONconstant source-derived equalities are untrusted: lec.py proves each jointly by induction and rejects stale layout/parameters. No reset-window extension or KEEP waiver.",
+  "lec_hints": [
+   [
+    "gold",
+    "ff:u_dut.u_fcore.controller.on.s1k[0][7]",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_fcore.controller.on.s1k[0][11]",
+     0
+    ]
+   ],
+   [
+    "gold",
+    "ff:u_dut.u_fcore.controller.on.s1k[0][8]",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_fcore.controller.on.s1k[0][11]",
+     0
+    ]
+   ],
+   [
+    "gold",
+    "ff:u_dut.u_fcore.controller.on.s1k[0][10]",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_fcore.controller.on.s1k[0][11]",
+     0
+    ]
+   ],
+   [
+    "gold",
+    "ff:u_dut.u_fcore.controller.on.s2k[0][0]",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_fcore.controller.on.s2k[0][3]",
+     0
+    ]
+   ]
+  ]
  },
  "ot_hbm_static_cfg_collar_idx256r__108x108": {
   "top": "ot_hbm_static_cfg_collar_idx256r",

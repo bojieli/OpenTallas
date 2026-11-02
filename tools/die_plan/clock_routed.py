@@ -34,6 +34,9 @@ DBU = 1000                       # ASAP7 1x LEF database units per micron
 # Every die_clock_128.STUB_SIZES cell: A bar x 0.018-0.036 (y >= 0.063-0.207), Y bar = the cell's right vertical bar.
 PIN_ACCESS = {f"BUFx{k}_ASAP7_75t_R": {"A": (0.027, 0.090), "Y": (yx, 0.180)}
               for k, yx in (("4", 0.348), ("6f", 0.513), ("8", 0.621), ("12f", 0.945), ("16f", 1.161), ("24", 1.593))}
+# Native BUFx4f (not BUFx4): 0.432 x 0.27 LEF, A vertical M1 bar
+# x0.018..0.036/y0.027..0.243; Y x0.396..0.414/y0.027..0.243.
+PIN_ACCESS["BUFx4f_ASAP7_75t_R"] = {"A": (0.027, 0.090), "Y": (0.405, 0.180)}
 ROW_H = 0.27
 # per-layer minimum step (um) along the preferred direction; each is >= the LEF AREA / default width
 # (M8 NDR 0.16 wide, M7/M6 0.032: 0.0021875 -> 0.07, M5/M4 0.024: 0.002 -> 0.084, M3/M2 0.018: 0.000666 -> 0.037)

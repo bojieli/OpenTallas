@@ -239,7 +239,11 @@ def placement(spec, view_records):
                   f'if {{[llength $sc_hit] != 1}} {{error "signed child site {pattern}: expected one actual instance"}}',
                   'set i [lindex $sc_hit 0]',
                   'if {[dict exists $sc_seen [$i getName]]} {error "signed child instance assigned twice"}',
-                  'dict set sc_seen [$i getName] 1', f'$i setOrient {orient}', '$i setLocation 0 0',
+                  'dict set sc_seen [$i getName] 1',
+                  # The generic master-based pass already marked this macro
+                  # FIRM. Release only this exact, uniquely matched instance
+                  # while applying its canonical site, then restore FIRM below.
+                  '$i setPlacementStatus PLACED', f'$i setOrient {orient}', '$i setLocation 0 0',
                   'set sc_box [$i getBBox]',
                   f'$i setLocation [expr {{round({x}*$sc_dbu)-[$sc_box xMin]}}] [expr {{round({y}*$sc_dbu)-[$sc_box yMin]}}]',
                   '$i setPlacementStatus FIRM']
@@ -284,6 +288,7 @@ def stage_contract(kd, original, ledger, root_pin, clock_only=False):
     kd=Path(kd);rows={'tt':[],'ff':[]};contracts=[]
     for child in original['children']:
         v=ledger['children'][child['view']];d=Path(v['view'])
+        tap=child.get('tap',root_pin)
         lib=(d/f"{v['master']}_tt.lib").read_text()
         clocks=re.findall(r'\bpin\s*\(\s*"?([^"\)]+)"?\s*\)\s*\{[^{}]*\bclock\s*:\s*true\s*;',lib)
         clock=json.loads((d/'insertion.json').read_text())
@@ -294,8 +299,8 @@ def stage_contract(kd, original, ledger, root_pin, clock_only=False):
                 cm=(clock.get('clock_measurements') or {}).get(pin,{}).get(corner,{}).get('boundary',{})
                 mean=float(cm.get('mean',v[f'{corner}_insertion_ps']))
                 means[corner]=dict(mean_ps=mean,basis='actual SIGNED child boundary mean')
-                rows[corner].append(f"{{{child['inst']}}} {{{pin}}} {mean:.6f} {{{root_pin}}}")
-            contracts.append(dict(inst=child['inst'],pin=pin,rise_ps=means['tt']['mean_ps'],tap=root_pin,
+                rows[corner].append(f"{{{child['inst']}}} {{{pin}}} {mean:.6f} {{{tap}}}")
+            contracts.append(dict(inst=child['inst'],pin=pin,rise_ps=means['tt']['mean_ps'],tap=tap,
                                   corners=means,source=v['view'],signed=True))
         if not clocks:raise ValueError(f"{v['master']}: native timing model has no clock input")
     for corner,name in [('tt','core_latency.txt'),('ff','core_latency_ff.txt')]:

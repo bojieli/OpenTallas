@@ -191,6 +191,7 @@ module qkd_kvs_grp_h_r2c (
     output wire [1061:0] krsp,
     output wire [0:0] af__fault,
     output wire [0:0] y__est__0_1,
+    output wire [0:0] y__est__0_1_b,    // CODEX-PICKUP-KV 11-01 HHP joint event: parallel EST copy (same edge)
     output wire [17:0] y__tok,
     output wire [15:0] y__tep,
     input wire [270:0] i_ctl,
@@ -258,9 +259,21 @@ module qkd_kvs_grp_h_r2c (
     end
     assign o_ctl = own_q;
     reg [34:0] xe0, xe1;
+    // HHP joint event (CODEX-PICKUP-KV 11-01, COORD Q3 / 12.28b): ONE parallel copy of the EST bit xe1[0] loads the
+    // lower two PC children (kvpc0 HHP head + kvpc1) from its own site while xe1[0] keeps the upper two (kvpc2/3):
+    // one shared xe1 cannot reach all four child captures within 405 um.  Same D (xe0[0]), same clock, same edge
+    // => y__est__0_1_b == y__est__0_1 every cycle after the first edge (no reset, like every pass flop here: the
+    // regional reset hold flushes it); 0 added cycles, +1 FF per instance.  keep: opt_merge must not fold the copy.
+    (* keep *) reg xe1b;
     always @(posedge ck) begin
         xe0 <= {x__tep, x__tok, x__est[0]};
         xe1 <= xe0;
+`ifdef KVS_GRP_R2_MUT5
+        xe1b <= x__est[0];                                              // MUT 5: EST copy one edge early
+`else
+        xe1b <= xe0[0];
+`endif
     end
     assign {y__tep, y__tok, y__est__0_1} = xe1;
+    assign y__est__0_1_b = xe1b;
 endmodule

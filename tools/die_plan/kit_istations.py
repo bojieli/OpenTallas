@@ -451,16 +451,37 @@ def core_stations(t, txt, apply, htree, tcl, rep):
     return txt
 
 
+# CODEX-PICKUP-KV 11-01 (KV HHP joint event): a relay key below a clock-landing ring instance (u_cland_*) names an
+# EXISTING ring flop that landing_placement.tcl packs into its ring band; that hook runs AFTER istations.tcl
+# (face_flops.tcl tail), so such a key is placed by relay_sites_post_tcl(), sourced after the landing hook.
+RING_KEY = re.compile(r"(^|[./])u_cland_")
+
+
+def _relay_dict(rs):
+    return "rs_place_all [dict create " + " ".join(f"{{{k}}} {{{v[0]:g} {v[1]:g}}}" for k, v in sorted(rs.items())) + "]"
+
+
 def relay_sites_lines(tn, t):
-    """plan relay_sites -> istations.tcl lines (RELAY_TCL + rs_place_all); [] when absent"""
+    """plan relay_sites -> istations.tcl lines (RELAY_TCL + rs_place_all of the non-ring keys); [] when absent"""
     rs = t.get("relay_sites") or {}
     if not rs:
         return []
     for k, v in rs.items():
         if not (isinstance(v, list) and len(v) == 2 and all(isinstance(a, (int, float)) for a in v)):
             raise SystemExit(f"kit_istations: {tn}: relay_sites[{k}] must be [x_um, y_um]")
-    return [RELAY_TCL, "rs_place_all [dict create " + " ".join(
-        f"{{{k}}} {{{v[0]:g} {v[1]:g}}}" for k, v in sorted(rs.items())) + "]"]
+    pre = {k: v for k, v in rs.items() if not RING_KEY.search(k)}
+    return [RELAY_TCL] + ([_relay_dict(pre)] if pre else [])
+
+
+def relay_sites_post_tcl(tn, t):
+    """ring-flop relay keys (RING_KEY) -> face_flops.tcl tail lines run after the landing placement hook (the ring
+    band packing would otherwise move them back); None when there is none.  Needs rs_place_all from istations.tcl."""
+    relay_sites_lines(tn, t)                                            # same validation
+    post = {k: v for k, v in (t.get("relay_sites") or {}).items() if RING_KEY.search(k)}
+    if not post:
+        return None
+    return ("uplevel #0 {\nset is_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt a]\n" + _relay_dict(post)
+            + "\nclose $is_fh\n}")
 
 
 def relay_sites_only_tcl(tn, t):

@@ -1,0 +1,26 @@
+type	l48z_delta	source_x	source_z	pin_reg_max_x	pin_reg_max_z	pin_reg_p90_x	pin_reg_p90_z	r2r_x	r2r_z	r2r_count_x	r2r_count_z	relay_collapse_x	relay_collapse_z	clock_reach_x	clock_reach_z	aspect_x	aspect_z	grt_x	grt_z	new_fail_z
+hd_ctl	no	UNCHECKED(no l48x wave geom)	UNCHECKED(type byte-identical)																	
+hd_ctl_e	no	UNCHECKED(no l48x wave geom)	UNCHECKED(type byte-identical)																	
+hd_ctl_n	no	UNCHECKED(no l48x wave geom)	UNCHECKED(type byte-identical)																	
+hd_host	no	UNCHECKED(no l48x wave geom)	UNCHECKED(type byte-identical)																	
+hd_host_n	no	UNCHECKED(no l48x wave geom)	UNCHECKED(type byte-identical)																	
+hd_lep0N	no	UNCHECKED(no l48x wave geom)	UNCHECKED(type byte-identical)																	
+hd_mesh	no	UNCHECKED(no l48x wave geom)	UNCHECKED(type byte-identical)																	
+hd_mesh_e	yes	CHECKED(l48x wave, main rules)	CHECKED(l48z kit)	281.64!	119.24	281.29!	42.59!	813.56!	404.41	2!	0	0	0	166.12i	170.57i	9.7!	9.7!	0	0	
+hd_serdes	no	UNCHECKED(no l48x wave geom)	UNCHECKED(type byte-identical)																	
+hd_spn	no	CHECKED(l48x wave, main rules)	SAME(type byte-identical)	174.39!	174.39!	27.86	27.86	1627.83!	1627.83!	2814!	2814!	696!	696!	254.38i	254.38i	3.529!	3.529!	0	0	
+hd_spn_end	no	CHECKED(l48x wave, main rules)	SAME(type byte-identical)	174.39!	174.39!	98.37!	98.37!	1468.53!	1468.53!	166!	166!	45!	45!	345.86i	345.86i	3.529!	3.529!	0	0	
+hd_spn_eshim_rx	no	CHECKED(l48x wave, main rules)	CHECKED(l48z kit)	179.15!	179.15!	27.35	27.35	375.84	375.95	0	0	0	0	165.13i	165.13i	10.909!	10.909!	0	0	
+hd_spn_eshim_tx	yes	CHECKED(l48x wave, main rules)	CHECKED(l48z kit)	163.53!	90.6	89.74!	89.75!	365.96	363.69	0	0	0	0	220.96i	221.06i	10.909!	10.909!	0	0	
+hd_spn_wshim_rx	no	CHECKED(l48x wave, main rules)	CHECKED(l48z kit)	179.15!	179.15!	27.36	27.35	370.76	369.63	0	0	0	0	181.32i	182.13i	1.481	1.481	0	0	
+hd_spn_wshim_tx	no	CHECKED(l48x wave, main rules)	CHECKED(l48z kit)	175.25!	22.64	21.01	21.02	350.46	349.81	0	0	0	0	178.82i	162.81i	1.481	1.481	0	0	
+hd_st_k5	no	CHECKED(l48x wave, main rules)	SAME(type byte-identical)	136.53	136.53	28.31	28.31	430.76!	430.76!	2!	2!	0	0	201.73i	201.73i	1.653	1.653	0	0	
+hd_st_m	no	CHECKED(l48x wave, main rules)	SAME(type byte-identical)	52.07	52.07	30.45!	30.45!	391.77	391.77	0	0	0	0	182.51i	182.51i	11.133!	11.133!	0	0	
+hd_st_n3_transit	yes	CHECKED(l48x wave, main rules)	CHECKED(l48z kit)	137.07	137.07	28.75	28.75	501.04!	381.29	4!	0	0	0	327.87i	327.87i	3.036!	3.036!	0	0	
+hd_st_n3_turn	yes	CHECKED(l48x wave, main rules)	CHECKED(l48z kit)	223.41!	134.67	27.66	27.66	1183.09!	379.62	143!	0	1!	0	340.52i	340.95i	2.157!	2.157!	0	0	
+hd_st_n4	no	CHECKED(l48x wave, main rules)	SAME(type byte-identical)	137.07	137.07	29.1	29.1	397.06	397.06	0	0	0	0	187.92i	187.92i	1.13	1.13	0	0	
+hd_st_str	no	CHECKED(l48x wave, main rules)	SAME(type byte-identical)	137.07	137.07	28.74	28.74	391.61	391.61	0	0	0	0	188.91i	188.91i	3.036!	3.036!	0	0	
+hd_st_turn	no	UNCHECKED(no l48x wave geom)	UNCHECKED(type byte-identical)																	
+hd_tile	no	CHECKED(l48x wave, main rules)	SAME(type byte-identical)	174.83!	174.83!	23.02	23.02	1132.92!	1132.92!	1031!	1031!	572!	572!	308.45i	308.45i	1.463	1.463	0	0	
+hd_turn_a	no	UNCHECKED(no l48x wave geom)	UNCHECKED(type byte-identical)																	
+hd_turn_b	no	CHECKED(l48x wave, main rules)	SAME(type byte-identical)	141.13	141.13	28.14	28.14	363.47	363.47	0	0	0	0	126.93i	126.93i	4.05!	4.05!	0	0	

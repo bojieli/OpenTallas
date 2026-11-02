@@ -1,0 +1,71 @@
+{
+  "reference": "5271d9d7f strictPASS",
+  "paired_plan": "physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+  "changed": [
+    {
+      "type": "slw_su_l1__clcc9d0155",
+      "fields": [
+        "tree"
+      ]
+    },
+    {
+      "type": "slw_su_l1__cla2a78701",
+      "fields": [
+        "collector_root_node",
+        "collector_root_xy",
+        "tree"
+      ]
+    },
+    {
+      "type": "slw_su_l0__cl76fb247e",
+      "fields": [
+        "collector_root_node",
+        "collector_root_xy",
+        "tree"
+      ]
+    },
+    {
+      "type": "slw_su_l0__cl1e5219ea",
+      "fields": [
+        "collector_root_node",
+        "collector_root_xy",
+        "tree"
+      ]
+    },
+    {
+      "type": "slw_su_l0__cl1a1c1f8f",
+      "fields": [
+        "tree"
+      ]
+    },
+    {
+      "type": "sle_su_l1__cl5ea486db",
+      "fields": [
+        "local_sources",
+        "tree"
+      ]
+    },
+    {
+      "type": "sle_su_l1__clc6d66f5b",
+      "fields": [
+        "local_sources",
+        "tree"
+      ]
+    },
+    {
+      "type": "sle_su_l0__cl7a55c676",
+      "fields": [
+        "tree"
+      ]
+    },
+    {
+      "type": "sle_su_l0__cl086d85ba",
+      "fields": [
+        "tree"
+      ]
+    }
+  ],
+  "count_schedule_preserved": true,
+  "boot_budget_preserved": true,
+  "added_cycles": 0
+}

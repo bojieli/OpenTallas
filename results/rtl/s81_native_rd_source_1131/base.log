@@ -1,0 +1,15 @@
+RD_SEAM_COMMIT bank0 cycle134 addr160
+RD_SEAM_COMMIT bank1 cycle134 addr160
+RD_SEAM_COMMIT bank0 cycle135 addr161
+RD_SEAM_COMMIT bank1 cycle135 addr161
+RD_SEAM_NATIVE age5 data40123456bfaabbcc3f800000123456784089abcdef012345765432103f012345
+RD_SEAM_NATIVE age6 datacafebabe00010203112233445566778899aabbccddeeff0013579bdf2468ace0
+RD_SEAM_PUBLIC age6 data40123456bfaabbcc3f800000123456784089abcdef012345765432103f012345
+RD_SEAM_PUBLIC age7 datacafebabe00010203112233445566778899aabbccddeeff0013579bdf2468ace0
+RD_SEAM_FAULT vp0 vnA0 vnB0 vs0 vq0 cland0 ready1
+RD_SEAM_RESULT swext129 swreg132 lastcommit135 commits4 rdext147 rdreg150 native2 public2 errors0 clock833
+NATIVE_RD_SEAM_PASS
+- tb_current_native_leaf.sv:477: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 255ns; walltime 0.918 s; speed 278.007 ns/s
+- Verilator: cpu 0.918 s on 1 threads; allocated 41 MB

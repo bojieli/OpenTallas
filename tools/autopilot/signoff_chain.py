@@ -53,7 +53,49 @@ def proof_stale(proof, base):
     return ""
 
 
-def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight=None, proof_only=False, lec=None):
+LATE_ECO_KEYS = ("verdict", "reason", "eligibility", "root", "base_signoff", "base_routed_db", "base_metrics", "best",
+                 "flow", "wall_s", "max_iter", "hold_margin_ps", "kind", "schema")
+
+
+def eco_tool():
+    """tools/die_plan/eco_loop.py: in the admission bundle (die_plan/ beside this file) or in a repo checkout"""
+    here = Path(__file__).resolve().parent
+    for p in (here / "die_plan" / "eco_loop.py", here.parent / "die_plan" / "eco_loop.py"):
+        if p.is_file():
+            return p
+    return None
+
+
+def late_eco_enabled(kit, flag=True):
+    """default ON (OWNER 11-01 20:0x); opt-out: --no-late-eco, OT_LATE_ECO=0, or a KIT/late_eco.off marker"""
+    return bool(flag) and os.environ.get("OT_LATE_ECO", "1") != "0" and not (Path(kit) / "late_eco.off").exists()
+
+
+def late_eco(kit, record, runner, mem, threads, run=subprocess.call):
+    """KW-ECO-1: the late-stage ECO loop on the kit's routed DB -> eco_loop result dict (None: tool missing)"""
+    tool = eco_tool()
+    if tool is None:
+        return dict(verdict="ERROR", reason="eco_loop.py not staged with the chain")
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("eco_loop", tool)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    res = mod.run_loop(kit, record, runner=runner, mem=mem, cpus=threads, run=run, tools=tool.parent)
+    res["summary"] = mod.summary(res)
+    return res
+
+
+def eco_receipt(res):
+    out = {k: res.get(k) for k in LATE_ECO_KEYS if k in res}
+    out["summary"] = res.get("summary", "")
+    out["record"] = str(Path(res["root"]) / "eco_loop.json") if res.get("root") and res.get("iterations") else None
+    out["iterations"] = [{k: it.get(k) for k in ("n", "mode", "variant", "status", "reason", "metrics", "wall_s",
+                                                 "commands", "signoff", "base")} for it in res.get("iterations") or []]
+    return out
+
+
+def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight=None, proof_only=False, lec=None,
+                 late=True, eco_loop=late_eco):
     kit = Path(kit).resolve()
     started = time.time()
     prior = {str(p): (p.stat().st_mtime_ns, p.stat().st_size)
@@ -76,12 +118,30 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
     out = kit / ("autopilot_chain_" + str(time.time_ns()) + ".json")
 
     def done(code, verdict, reason):
+        eco = receipt.get("eco") or {}
+        if eco.get("summary") and verdict != "PASS":
+            # the FAIL evidence names the late-ECO result (class table: "late-ECO exhausted")
+            reason = f"{reason}; {eco['summary']}"
         receipt.update(verdict=verdict, reason=reason, finished=time.time())
         out.write_text(json.dumps(receipt, indent=1) + "\n")
         return code
 
     records = [p for p in kit.glob("signoff*/signoff.json")
                if proof_only or prior.get(str(p)) != (p.stat().st_mtime_ns, p.stat().st_size)]
+    # KW-ECO-1 (OWNER 11-01 20:0x): a routed sign-off that fails only TIMING / DRV / small DRC is repaired on its own
+    # routed DB (<= 3 ECO iterations, eco_loop.py) BEFORE it is reported as a failure; sign-off + routed LEC unchanged.
+    if records and not proof_only and rc in (0, 1) and late_eco_enabled(kit, late):
+        latest = max(records, key=lambda p: p.stat().st_mtime)
+        if load(latest).get("verdict") not in ("SIGNED", "LOCAL_PASS_NEEDS_PARENT"):
+            res = eco_loop(kit, latest, runner, mem, threads, run=run) or {}
+            receipt["eco"] = eco_receipt(res)
+            best = res.get("best") or {}
+            if res.get("verdict") == "PASS" and best.get("signoff"):
+                link = kit / ("signoff_eco_" + str(time.time_ns()))
+                os.symlink(Path(best["signoff"]).parent, link)
+                records = [link / "signoff.json"]
+                rc = 0 if load(records[0]).get("verdict") == "SIGNED" else 1
+                receipt["eco"]["signoff_link"] = str(link)
     # signoff.py returns 1 for local-PASS-needs-parent. It is a valid
     # provisional result, so prove the route while preserving WAIT-PARENT.
     pending_parent = (rc == 1 and records and
@@ -147,13 +207,15 @@ def main():
     ap.add_argument("--proof-only", action="store_true", help="resume proof of an existing signed route, never reroute")
     ap.add_argument("--preflight", help="separately staged shared tool, including its source helpers")
     ap.add_argument("--lec", help="separately staged current main lec.py (routed proof); default KIT/lec.py")
+    ap.add_argument("--no-late-eco", action="store_true", help="KW-ECO-1 opt-out: no late-stage ECO loop on a NOT SIGNED route")
     ap.add_argument("runner")
     ap.add_argument("kit")
     ap.add_argument("goal")
     ap.add_argument("mem", type=int)
     ap.add_argument("threads", type=int)
     a = ap.parse_args()
-    return continue_kit(a.kit, a.runner, a.goal, a.mem, a.threads, preflight=a.preflight, proof_only=a.proof_only, lec=a.lec)
+    return continue_kit(a.kit, a.runner, a.goal, a.mem, a.threads, preflight=a.preflight, proof_only=a.proof_only, lec=a.lec,
+                        late=not a.no_late_eco)
 
 
 if __name__ == "__main__":

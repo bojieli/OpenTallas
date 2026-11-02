@@ -1,0 +1,69 @@
+{
+ "auto_line": "AUTO-GEOM FAIL HHPcleanB actual3_place read-only noGRT r2r=FAIL(739.85) r2r_count=FAIL(139) grt=NA(None) outline=ok(397.44x362.88) aspect=ok(1.095) fill=ok(0.1784) fill_hi=ok(0.1784) empty=ok(0.4985) pin_reg_p90=ok(8.45) pin_reg_max=ok(35.02) pin_unreg=ok(0) pin_density=ok(4.7) partial_face=ok(0) relay_collapse=ok(0) col_v=ok(0.596) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(42572)",
+ "reasons": [
+  "r2r 739.85 vs <=405.0",
+  "r2r_count 139 vs <=0",
+  "grt None vs 0 overflow"
+ ],
+ "metrics": {
+  "macros": 0,
+  "fill_of_free": 0.1784,
+  "empty_area": 0.4985,
+  "pin_reg_p50": 6.85,
+  "pin_reg_p90": 8.45,
+  "pin_reg_max": 35.02,
+  "pin_reg_worst": [
+   "35.0 hrst_n[0]",
+   "17.4 pc__land_es[285]",
+   "17.0 pc__land_es[287]",
+   "16.8 pc__land_es[286]",
+   "15.1 pc__land_es[283]"
+  ],
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 739.85,
+  "r2r_captures_gt405": 139,
+  "r2r_captures": 41072,
+  "r2r_worst": "u_leaf.u_pc.u_pce.u_esm.own$_DFF_PN1_ -> u_leaf.u_pc.u_pce.u_esm.her\\[0\\]$_DFF_PN0_",
+  "clock_sinks": 42572,
+  "clock_cells": 0,
+  "clock_depth_max": 0,
+  "clock_depth_spread": 0,
+  "clock_net_hpwl_max": 741.47,
+  "clock_net_hpwl_p90": 741.47,
+  "relay_collapsed": 0,
+  "clock_entry": "ck[0]",
+  "clock_entry_xy": [
+   198.744,
+   181.44
+  ],
+  "clock_entry_on_macro": 0,
+  "clock_entry_macro": [],
+  "clock_islands_fixed": 0,
+  "clock_reach_max": 370.6,
+  "clock_reach_far": [
+   5.1,
+   358.4
+  ],
+  "clock_leaf_reach_max": 370.6,
+  "clock_leaf_reach_far": [
+   5.1,
+   358.4
+  ],
+  "clock_leaf_reach_driver": [
+   198.7,
+   181.4
+  ],
+  "clock_entry_sink_max": 370.6,
+  "clock_entry_sink_far": [
+   5.1,
+   358.4
+  ],
+  "clock_tree_leg_max": 370.6,
+  "clock_tree_leg_worst": "ck[0] -> u_leaf.u_pc.u_pce.u_esm.own$_DFF_PN1_",
+  "clock_tree_leg_edges": 42572,
+  "clock_tree_clock_cells": 0,
+  "clock_tree_unrooted_sinks": 0,
+  "clock_tree_trace_errors": []
+ }
+}

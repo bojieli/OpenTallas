@@ -35,6 +35,8 @@ Kept registers (fail-closed): every register bit the RTL declares kept ((* keep 
 Hints (KIT/lec_hints.json or --hints; PATH-KV-PC4 10-25): untrusted register correspondences ('user match') for twins
         the signature search cannot find (rare-event bits, frontend array layouts); every hint is proved by the same
         induction and dropped if it fails, never a waiver (apply_hints).
+        An opt-in opentallas.lec_hint_plan.v1 object orders preseed/post candidates and discovery_rounds (0 = refine
+        supplied candidates only); all induction, reset-state, KEEP and final compare checks remain enabled.
 Verdict (DIR/lec.json; DIR defaults to KITDIR/lec):
   EQUIVALENT      every compare point proved (unmatched registers, if any, were free inputs: unobservable);
   NOT EQUIVALENT  >= 1 compare point differs and its cone sees only matched / proved key points and RTL registers the
@@ -365,6 +367,12 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
         cmds.append(f"read_verilog -sv {env['_LEC_ICG_GOLD_V']}")
     if frontend == "slang":
         a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + list(slang_extra)
+        # Yosys read_verilog keeps preprocessor state across the ordered source
+        # list. Its independent Slang replay must use the same compilation unit;
+        # otherwise a later source cannot see an earlier source's width macros.
+        # Preserve native Slang synthesis semantics when Slang was the producer.
+        if env.get("SYNTH_HDL_FRONTEND", "verilog") != "slang":
+            a.append("--single-unit")
         bbs = env.get("SYNTH_BLACKBOXES", "").split() + [c for l in lib_bbs for c in lib_cells(l)]
         a += [f"-I{i}" for i in incs] + defs + escaped_instance_safe(files, bbs)
         for k, v in top_params(env):
@@ -956,6 +964,10 @@ def bb_script(env, kit, frontend, lib_bbs, out):
     """pre-pass: elaborate the gold RTL and write every black-box module (ports only) as JSON."""
     s = read_rtl_cmds(env, kit, frontend, lib_bbs)
     s += [f"hierarchy -check -top {env['DESIGN_NAME']}"]
+    if (Path(kit) / "lec_native_stub_metadata.json").is_file():
+        # Observe the actual elaborated hierarchy, then restore it unchanged.
+        s += ["design -save lec_native_before", "proc", f"write_json {out}.native.json",
+              "design -load lec_native_before"]
     s += [f"blackbox {m}" for m in env.get("SYNTH_BLACKBOXES", "").split()]
     s += ["select =A:blackbox", f"write_verilog -blackboxes -noattr -selected {out}.v", "select -clear",
           f"blackbox {env['DESIGN_NAME']}", f"select ={env['DESIGN_NAME']}",
@@ -981,7 +993,7 @@ def parse_bb_verilog(path):
     return mods
 
 
-def stub_verilog(bbports):
+def stub_verilog(bbports, native_parameters=None):
     """{module: [(port, dir, width, lsb)]} -> stubs identical for gold and gate: input bits land on keep flops
     '<inst>.lec_bbi_<pin>[i]' (compare points), output bits come from free self-loop flops '<inst>.lec_bbo_<pin>[i]'
     (shared inputs)."""
@@ -990,7 +1002,12 @@ def stub_verilog(bbports):
         out.append(f"module \\{mod} ({', '.join(esc(p) for p, *_ in ports)});")
         # Generated ROM metadata must remain legal when the pin-model stub
         # replaces the native BB. Unknown parameter names still fail hierarchy.
-        if re.fullmatch(r"ot_rom_[0-9]+x[0-9]+_m[0-9]+", mod):
+        if native_parameters and mod in native_parameters:
+            for param, (kind, value) in sorted(native_parameters[mod].items()):
+                literal = str(value) if kind == "int" else json.dumps(value)
+                integer = "integer " if kind == "int" else ""
+                out.append(f"  parameter {integer}{param} = {literal};")
+        elif re.fullmatch(r"ot_rom_[0-9]+x[0-9]+_m[0-9]+", mod):
             out.append('  parameter VIAMAP = "", INSTANCE = "";')
         out.append("  wire lec_clk;")
         for p, d, w, lo in ports:
@@ -1309,6 +1326,100 @@ def lit_val(val, mask, lit):
     return val[lit >> 1] ^ (mask if lit & 1 else 0)
 
 
+def cons_base_coverage(values, allowed):
+    """Cover the native ternary reset cube without enumerating unknown assignments.
+
+    Every distinct allowed row compatible with the known mask covers exactly one
+    member of that cube. Its complete cardinality is 2**unknown_bits. Duplicate
+    rows and rows contradicting known reset bits provide no additional coverage.
+    """
+    n = len(values)
+    if any(v not in (None, 0, 1) for v in values):
+        raise ValueError("non-ternary native reset value")
+    mask = sum(1 << i for i, v in enumerate(values) if v is not None)
+    value = sum(int(v) << i for i, v in enumerate(values) if v is not None)
+    compatible = set()
+    for row in allowed:
+        if len(row) != n or any(v not in (0, 1) for v in row):
+            raise ValueError("malformed allowed state")
+        bits = sum(int(v) << i for i, v in enumerate(row))
+        if bits & mask == value:
+            compatible.add(bits)
+    unknown = n - mask.bit_count()
+    count = len(compatible)
+    complete = count > 0 and count.bit_count() == 1 and count.bit_length() - 1 == unknown
+    return dict(covered=complete, known_mask=hex(mask), known_value=hex(value),
+                unknown_bits=unknown, covered_states=count)
+
+
+def _native_reset_stamp(L):
+    return (int(os.environ.get("OT_LEC_RESET_CYCLES", "4")),
+            os.environ.get("OT_LEC_RESET_PORTS", ""),
+            os.environ.get("OT_LEC_RESET_POLARITY", "struct"),
+            tuple(sorted(getattr(L, "kit_reset_ports", ()) or ())),
+            # Raw AIGs are immutable inside Lec; detect replacement, and the
+            # mutable PI projections that determine reset polarity/bindings.
+            id(L.gold), id(L.gate),
+            tuple(sorted((k, v) for k, v in L.gp.items() if k.startswith("pi:"))),
+            tuple(sorted((k, v) for k, v in L.tp.items() if k.startswith("pi:"))))
+
+
+def cons_base_check(L, side, keys, allowed, stamp=None):
+    """Check an invariant's BASE using raw native reset propagation, never hints."""
+    stamp = _native_reset_stamp(L) if stamp is None else stamp
+    report = dict(side=side, keys=list(keys) if isinstance(keys, (list, tuple)) else [],
+                  covered=False, reset_cycles=stamp[0])
+    try:
+        points = L.gp if side == "gold" else L.tp if side == "gate" else {}
+        if (not keys or len(set(keys)) != len(keys) or not allowed or
+                any(not isinstance(k, str) or not k.startswith("ff:") or k not in points for k in keys)):
+            raise ValueError("invalid constraint state keys/side")
+        if getattr(L, "_rst_stamp", None) != stamp:
+            noreset_classify(L)
+        # Project through the CURRENT point map: alias/layout proposals can add
+        # keys after classification. The underlying native AIG state is unchanged.
+        st = L._rst_state[side]
+        values = [None if (points[k] >> 1) not in st else st[points[k] >> 1] ^ (points[k] & 1)
+                  for k in keys]
+        report.update(cons_base_coverage(values, allowed), values=values)
+        if not report["covered"]:
+            report["why"] = "allowed states do not cover the native ternary reset-base cube"
+    except (KeyError, TypeError, ValueError) as error:
+        report["why"] = "native reset base unavailable: " + str(error)
+    return report
+
+
+def _record_cons_base(L, report):
+    checks = L.__dict__.setdefault("cons_base_checks", [])
+    if report not in checks:
+        checks.append(report)
+    if not report["covered"]:
+        refused = L.__dict__.setdefault("cons_base_refused", [])
+        if report not in refused:
+            refused.append(report)
+
+
+def filter_cons_bases(L):
+    """No explicit, discovered, or restored constraint may mask a miter before BASE."""
+    kept, refused = [], []
+    stamp = _native_reset_stamp(L)
+    for constraint in L.cons:
+        try:
+            side, keys, allowed = constraint
+        except (TypeError, ValueError):
+            report = dict(covered=False, side=None, keys=[], why="malformed constraint",
+                          reset_cycles=stamp[0])
+        else:
+            report = cons_base_check(L, side, keys, allowed, stamp=stamp)
+        _record_cons_base(L, report)
+        if report["covered"]:
+            kept.append((side, keys, allowed))
+        else:
+            refused.append(report)
+    L.cons = kept
+    return refused
+
+
 class Lec:
     """gold / gate key points + register correspondence hypotheses -> miter AIGs."""
 
@@ -1398,6 +1509,8 @@ class Lec:
         (ternary: an X source is X, an AND is X unless an input is a definite 0); a compare output is
         (gold != gate) & gold-not-X, and a hypothesis on an RTL register whose next state is X holds (the register
         may take the value synthesis chose)."""
+        if self.cons:
+            filter_cons_bases(self)
         m = Aig()
         kind = {}
         lg, lt = {0: 0}, {0: 0}
@@ -1457,7 +1570,7 @@ class Lec:
         # unreachable since rk <= 17; RTL-vs-netlist co-simulation 0 mismatches)
         self.unwritten = sorted(k for k in self.gonly if k.startswith("ff:") and self.gc.get(k) == self.gp[k])
         unwritten = set(self.unwritten)
-        self.fill_live = fill_live(self.hyp)      # pipeline-fill hints whose ghost chain reaches its constant root
+        self.fill_live = fill_live(self.hyp)      # fill ghosts with a well-founded predecessor chain
         self.fill_in = {}                         # gold key -> ghost 'filled' input literal
         fillq = []
         for side, keys, p, lmap in (("gold", self.gonly, self.gp, lg), ("gate", self.tonly, self.tp, lt)):
@@ -1470,7 +1583,7 @@ class Lec:
                     lgx[p[k] & ~1] = 1
                 elif h and h[0] == "fill" and side == "gold" and k in self.fill_live:
                     # Q = filled ? c : X.  'filled' is a tool-owned ghost bit (not RTL state): filled' = filled(pred),
-                    # the root's filled' = 1, so every ghost is 1 a chain-length of edges after the reset state and
+                    # the unconditional root's filled' = 1; an opt-in enabled fill holds its ghost when not loaded.
                     # X is never held as a constant: an unfilled register is X (its RTL power-up value) and a compare
                     # point reading it is a don't care only while the register really is X in the RTL.
                     f = m.add_input(f"fill:{k}")
@@ -1636,6 +1749,16 @@ class Lec:
                         m.outs.append(1)
                     else:
                         fn = 1 if h[2] is None else self.fill_in[h[2]]
+                        if len(h) == 4:
+                            # Exact enabled load/hold recurrence. This never assumes a load happened:
+                            # filled' = enable ? predecessor_filled : filled. Both known AND X
+                            # obligations below remain mandatory, including for an incorrect enable.
+                            if os.environ.get("OT_LEC_ENABLE_FILL_GUARD") != "1":
+                                m.outs.append(1)
+                                m.onames.append(f"hyp:{side}:{k}")
+                                continue
+                            en = guard_lit(m, h[3], lambda key: G(self.gp[key]))
+                            fn = m.AND(m.AND(en, fn) ^ 1, m.AND(en ^ 1, self.fill_in[k]) ^ 1) ^ 1
                         dx = self.dxlit.get(k, 0)
                         bad = m.AND((d ^ h[1]) ^ 1, dx ^ 1) ^ 1
                         m.outs.append(m.AND(m.AND(fn, bad) ^ 1, m.AND(fn ^ 1, dx ^ 1) ^ 1) ^ 1)
@@ -1689,9 +1812,14 @@ def guard_lit(m, guard, lit):
 
 
 def fill_live(hyp):
-    """gold keys of 'fill' hypotheses whose predecessor chain ends at a root (pred None) through fill hypotheses only,
-    with no cycle: only those ghosts are guaranteed to become 1 (a broken chain would keep its register X forever)."""
-    fills = {k: h[2] for (sd, k), h in hyp.items() if sd == "gold" and h and h[0] == "fill"}
+    """Gold fill ghosts with an acyclic predecessor chain ending at a root (pred None).
+
+    Enabled fills need not ever load. Their additional not-filled' -> actual D is X
+    proof prevents an unfilled ghost from hiding any defined RTL observation.
+    """
+    enabled = os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1"
+    fills = {k: h[2] for (sd, k), h in hyp.items() if sd == "gold" and h and h[0] == "fill"
+             and (len(h) == 3 or (len(h) == 4 and enabled))}
     live = {}
     for k in fills:
         path, x = [], k
@@ -2619,7 +2747,7 @@ def sim_refine(L, log, tried, words=8, quiet=3, seed=4242, observe=None):
                 continue
             side, k = key
             tried[(side, k, "c") if h[0] == "const" else (side, k, h[2], h[3]) if h[0] == "eq" else
-                  (side, k, str(h[2]), str(h[3]))] += 1
+                  (side, k, *(str(v) for v in h[2:]))] += 1
             dropped += 1
         if badc:
             drop_failed(L, badc)
@@ -3331,21 +3459,27 @@ def reset_state(d, R, cycles):
 def noreset_classify(L):
     """per side: the reset-state value of every register (reset_state, OT_LEC_RESET_CYCLES edges, default 4) ->
     L.rst_val[(side, key)] = (value or None, first edge)."""
-    cycles = int(os.environ.get("OT_LEC_RESET_CYCLES", "4"))
-    L.rst_val, L.rst_ports = {}, {}
+    L.__dict__.pop("_rst_stamp", None)
+    stamp = _native_reset_stamp(L)
+    cycles = stamp[0]
+    rst_val, rst_ports, rst_asserted, rst_state = {}, {}, {}, {}
     pol = None
     for side, d, p in (("gold", L.gold, L.gp), ("gate", L.gate, L.tp)):
         lv = {}
         R = reset_vars(d, p, pol, lv, getattr(L, "kit_reset_ports", None))
         pol = lv if pol is None else pol
-        L.__dict__.setdefault("rst_asserted", {})[side] = lv
-        L.rst_ports[side] = sorted(k for k, lit in p.items() if (lit >> 1) in R and k.startswith("pi:"))
+        rst_asserted[side] = lv
+        rst_ports[side] = sorted(k for k, lit in p.items() if (lit >> 1) in R and k.startswith("pi:"))
         st, first = reset_state(d, R, cycles)
-        L.__dict__.setdefault("_rst_state", {})[side] = st
+        rst_state[side] = st
         for k, lit in p.items():
             if k.startswith("ff:"):
                 v = lit >> 1
-                L.rst_val[(side, k)] = (None if v not in st else st[v] ^ (lit & 1), first.get(v))
+                rst_val[(side, k)] = (None if v not in st else st[v] ^ (lit & 1), first.get(v))
+    L.rst_val, L.rst_ports = rst_val, rst_ports
+    L.rst_asserted, L._rst_state = rst_asserted, rst_state
+    L.__dict__.pop("_release_states", None)  # derived from the previous native base
+    L._rst_stamp = stamp
 
 
 def release_states(d, st, n):
@@ -4258,6 +4392,64 @@ def defer_narrow_memory_tail(g, t, geom, mapping):
         return mapping, []
     return {k: v for k, v in mapping.items() if k != key}, [key]
 
+def common_shape_maps(g, t, min_common=0.75):
+    """HBM-CORES-KITS-39 11-01 (h9b u_fcore.queue[0:31] x 64 b): a re-laid array (gate base#t) with the same index
+    depth on both sides whose bit sets are not subsets of each other, so no flat-subset layout pairs it and every
+    flop stayed free (1984 + 1984; 71 UNPROVEN head_q/push_q).  There the entry's beat[3:2] (bits 34..35) is
+    constant: the gate kept the RTL bit names and dropped 34..35, while the gold memory was narrowed before it was
+    mapped, so its names were compacted to 0..61 (it 'lacks' 62..63).
+    Candidates, each a {gate key: gold key} map:
+      * 'rank': when one side's inner indices are 0..n-1 in every row (compacted) and the other side has holes with
+        the same per-row count, pair the bits of each row in index order (outer index as is, or reversed);
+      * 'common': otherwise, the identity map on the common index tuples (outer index as is, or reversed), when they
+        are >= min_common of both sides.
+    One-side-only bits stay gold-only / gate-only for function correspondence.  Every name pair stays a
+    correspondence obligation (proved like every other), so a wrong map can only produce a difference.
+    g / t: {key: index tuple}.  -> (kind, [maps]).  OT_LEC_COMMON_SHAPE=0 disables it (in alias_arrays)."""
+    if not g or not t:
+        return None, []
+    depth = {len(v) for v in g.values()} | {len(v) for v in t.values()}
+    gi = {v: k for k, v in g.items()}
+    ti = {v: k for k, v in t.items()}
+    if len(depth) != 1 or len(gi) != len(g) or len(ti) != len(t):
+        return None, []
+    d = depth.pop()
+    hi0 = max(v[0] for v in list(g.values()) + list(t.values()))
+    outer = (False, True) if d > 1 else (False,)
+
+    def rows(ix):
+        r = collections.defaultdict(list)
+        for v in ix:
+            r[v[:-1]].append(v)
+        return {k: sorted(x) for k, x in r.items()}
+    rg, rt = rows(gi), rows(ti)
+    packed = lambda R: all([x[-1] for x in r] == list(range(len(r))) for r in R.values())
+    if set(rg) == set(rt) and all(len(rg[k]) == len(rt[k]) for k in rg) and packed(rg) != packed(rt):
+        out = []
+        for rev in outer:
+            mp = {}
+            for k, r in rt.items():
+                gk = ((hi0 - k[0],) + k[1:]) if rev else k
+                if gk not in rg or len(rg[gk]) != len(r):
+                    mp = None
+                    break
+                mp.update({ti[a]: gi[b] for a, b in zip(r, rg[gk])})
+            if mp and mp not in out:
+                out.append(mp)
+        if out:
+            return "rank", out
+    out = []
+    for rev in outer:
+        mp = {}
+        for v, tk in ti.items():
+            gv = ((hi0 - v[0],) + v[1:]) if rev else v
+            if gv in gi:
+                mp[tk] = gi[gv]
+        if mp and len(mp) >= min_common * len(g) and len(mp) >= min_common * len(t) and mp not in out:
+            out.append(mp)
+    return ("common", out) if out else (None, [])
+
+
 def alias_arrays(L, log, words=4, work=None):
     """an RTL array whose gate flops synthesis named after an ALIAS array (`assign SX[i] = X[i]`: rename -wire picked
     the alias wire, so the gate holds SX[i][b] while the gold, read with the other frontend, holds X[h][flat]): the
@@ -4293,10 +4485,10 @@ def alias_arrays(L, log, words=4, work=None):
             r[f] = k
         return r if len(r) == len(d) else None
 
-    def mismatches():
+    def mismatches(keys=None):
         m, kind = L.build(with_compare=False, with_hyp=False)
         val, mask = m.simulate(words, seed=4343)
-        return sum(1 for k in L.matched if k.startswith("ff:") and
+        return sum(1 for k in (L.matched if keys is None else keys) if k.startswith("ff:") and
                    lit_val(val, mask, L.dlit[("gold", k)]) != lit_val(val, mask, L.dlit[("gate", k)]))
 
     def apply(mp):                                   # gate key -> gold key
@@ -4351,16 +4543,17 @@ def alias_arrays(L, log, words=4, work=None):
                            f"({len(g)} b, Q-net alias evidence {n}); source memory layout {geom[gb]} "
                            f"(width, size, offset) (simulation scoring unnecessary; proof pending)")
                 continue
-            if 2 * len(t) < len(g) or len(t) > len(g):
-                continue
-            cands = []
-            for gr in (False, True):
-                for tr in (False, True):
-                    fg, ft = flats(g, gr), flats(t, tr)
-                    if fg and ft and set(ft) <= set(fg):
-                        mp = {ft[f]: fg[f] for f in ft}
-                        if mp not in cands:
-                            cands.append(mp)
+            cands, common = [], False
+            if not (2 * len(t) < len(g) or len(t) > len(g)):
+                for gr in (False, True):
+                    for tr in (False, True):
+                        fg, ft = flats(g, gr), flats(t, tr)
+                        if fg and ft and set(ft) <= set(fg):
+                            mp = {ft[f]: fg[f] for f in ft}
+                            if mp not in cands:
+                                cands.append(mp)
+            if not cands and tb == gb + "#t" and os.environ.get("OT_LEC_COMMON_SHAPE", "1") != "0":
+                common, cands = common_shape_maps(g, t)
             # The source memory's own geometry (pre-techmap gold: element width / size / offset) fixes the layout
             # exactly: yosys may widen a memory before mapping it (opt_mem_widen: a_pr [0:15] x 24 b -> 2 words x
             # 192 b, gold a_pr[w][j] = element 8w + j/24, bit j%24), and the gate may have dropped constant high
@@ -4368,7 +4561,7 @@ def alias_arrays(L, log, words=4, work=None):
             # flat variants above the right stride (QC slw_hc0 10-26: 223 a_pr + 268 b_emin false differences).
             if not cands:
                 continue
-            if len(cands) == 1:
+            if len(cands) == 1 and not common:
                 # one candidate: no score can change the choice (N59: 512 one-bit u_pd2_emb_code_q_<i>.r arrays,
                 # two whole-design simulations each, ~100 min before the first SAT round)
                 apply(cands[0])
@@ -4384,7 +4577,7 @@ def alias_arrays(L, log, words=4, work=None):
             # inductive proof/refinement still checks every selected relation.
             structural = [sum(1 for tk, gk in mp.items() if elem.get(gk) == tk[len(tb):]) for mp in cands]
             top = max(structural, default=0)
-            if top > 0 and structural.count(top) == 1:
+            if top > 0 and structural.count(top) == 1 and not common:
                 mp = cands[structural.index(top)]
                 apply(mp)
                 del T[tb]
@@ -4392,11 +4585,15 @@ def alias_arrays(L, log, words=4, work=None):
                            f"({len(g)} b, Q-net alias evidence {n}); unique slang element-driver layout "
                            f"{top}/{len(mp)} bits (simulation scoring unnecessary; proof pending)")
                 continue
-            base = mismatches()
+            # a common-shape map is scored on the compare points matched BEFORE it: its own new pairs read the
+            # array's free one-side-only neighbours / RTL X sources and disagree in simulation whatever the layout
+            # (h9b queue: 1151 -> 2515 counting them, 1151 -> 1137 on the points matched before)
+            keys = list(L.matched) if common else None
+            base = mismatches(keys)
             scored = []
             for mp in cands:
                 apply(mp)
-                scored.append((mismatches(), mp))
+                scored.append((mismatches(keys), mp))
                 apply({v: k for k, v in mp.items()})
             best = min(scored, key=lambda x: x[0])
             # slang's per-element driver cells name the element each flat gold bit belongs to: when they exist they
@@ -4415,7 +4612,9 @@ def alias_arrays(L, log, words=4, work=None):
             # evidence for any of the guessed layouts (QC slw_hc0 10-26: a_pr 2535 -> 2762, b_emin 2762 -> 3098,
             # every variant a wrong stride): leave the array unpaired for function-based correspondence, which
             # still proves whatever it pairs.  A refused re-key never hides a difference (nothing is assumed).
-            if best[0] > base and not structural:
+            # a common-shape map (each side dropped different constant bits) is taken only when it does not raise
+            # the disagreeing compare points, element-driver evidence or not
+            if best[0] > base and (common or not structural):
                 log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
                            f"REFUSED: best of {len(scored)} layouts raises mismatching compare points "
                            f"{base} -> {best[0]} (left to correspondence)")
@@ -4423,7 +4622,9 @@ def alias_arrays(L, log, words=4, work=None):
             apply(best[1])
             del T[tb]
             log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
-                       f"({len(g)} b, Q-net alias evidence {n}); mismatching compare points {base} -> {best[0]}")
+                       f"({len(g)} b, Q-net alias evidence {n}); mismatching compare points {base} -> {best[0]}"
+                       + (f"; {common} shape {len(best[1])} b, one-side-only bits gold {len(g) - len(best[1])} / "
+                          f"gate {len(t) - len(best[1])} left to correspondence" if common else ""))
 
 
 def merged_proposals(L, log, cap=4096):
@@ -5019,10 +5220,11 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             gone.add(k)
             # Equality candidates are looked up with an integer polarity. Keep
             # that key unchanged when recording rejection, or they are retried
-            # in every adding round. FSM cube tuples keep their textual key.
+            # in every adding round. FSM cube tuples keep their textual key;
+            # explicit fill/loaded hints have only three entries.
             tried[(side, k, "c") if h[0] == "const" else
                   (side, k, h[2], h[3]) if h[0] == "eq" else
-                  (side, k, str(h[2]), str(h[3]))] += 1
+                  (side, k, *(str(v) for v in h[2:]))] += 1
         if expired and gone:
             n0 = len(L.hyp)
             cascade_drop(L, sup, gone)
@@ -5072,6 +5274,136 @@ def cascade_drop(L, sup, gone):
     return out
 
 
+HINT_PLAN_SCHEMA = "opentallas.lec_hint_plan.v1"
+
+
+def decode_hint_plan(value):
+    """Order untrusted candidates without changing induction or final comparisons.
+
+    Legacy arrays retain their existing discovery schedule. A structured plan can
+    replay candidates before discovery, then add source aliases afterward. Every
+    candidate still passes ordinary apply_hints/reset/refinement/build checks.
+    """
+    if isinstance(value, list):
+        return None, value, 24
+    if not isinstance(value, dict) or value.get("schema") != HINT_PLAN_SCHEMA:
+        raise LecError("hints must be an array or an opentallas.lec_hint_plan.v1 object")
+    unknown = set(value) - {"schema", "preseed", "post", "discovery_rounds"}
+    if unknown:
+        raise LecError("unknown hint-plan fields: " + ", ".join(sorted(unknown)))
+    preseed, post = value.get("preseed", []), value.get("post", [])
+    rounds = value.get("discovery_rounds", 24)
+    if not isinstance(preseed, list) or not isinstance(post, list):
+        raise LecError("hint-plan preseed and post must be arrays")
+    if type(rounds) is not int or rounds < 0:
+        raise LecError("hint-plan discovery_rounds must be a nonnegative integer")
+    return preseed, post, rounds
+
+
+def _and_leaves(d, lit, cap=64, nodes=False):
+    """AND-tree leaves of an AIG literal of one side (a positive AND node expands; anything else is one leaf).
+    nodes=True: also every expanded AND node (each one is implied by `lit`, like the leaves)."""
+    I, Lc, a = d["I"], d["L"], d["ands"]
+    base = I + Lc + 1
+    out, inner, stack = [], [], [lit]
+    while stack:
+        x = stack.pop()
+        v = x >> 1
+        if not (x & 1) and v >= base and len(out) + len(stack) < cap:
+            q = v - base
+            inner.append(x)
+            stack += (a[2 * q], a[2 * q + 1])
+        else:
+            out.append(x)
+    return out + inner if nodes else out
+
+
+def loaded_proposals(L, log, cands=None, cap=20000):
+    """Automatic loaded-valid hints (KIT-WAVE-16 11-01, LEC NOT EQUIVALENT class x10: HBM g_ld3k p1/p2/q2, kshare,
+    QC coll_n e3, HEAD beat_link hold).  A gold-only RTL register with no reset that holds itself until a load with
+    the constant c (k <= en ? c : k; synthesis folds it to c) is X until that load, so noreset_filter drops its
+    constant hypothesis and the register stays free: every compare point that reads it -- only after the load, by
+    design -- 'differs'.  The approved loaded form (LEC-FPREG-5, apply_hints) states exactly the RTL fact: k ==
+    (guard ? c : its free power-up value), guard a gold register that is DEFINITELY false in the reset state.  This
+    only PROPOSES such hints (the commercial 'user match', untrusted): the hold term of D(k) (the AND term that
+    reads Q(k)) names the load condition en = NOT(another leaf); a guard is a gold register g whose next state
+    implies en, directly (an AND leaf of D(g): a valid delayed from the load, ldp_v <= ld_e) or sticky (a leaf
+    OR(Q(g), en): v <= v | ld), with reset-state value 1 - guard value.  apply_hints then proves every hint by the
+    same induction (guard' -> D(k) == c and not X), refuses a guard true at reset, and drops a wrong one; a read of
+    k outside its guard sees the free value and still differs.  Nothing is assumed: no X == c, no waiver.
+    cands: {gold key: c} (default: the gold-only constants noreset_filter dropped). -> hint list."""
+    d, gp, gc = L.gold, L.gp, L.gc
+    if cands is None:
+        gonly = set(L.gonly)
+        cands = {k: c for (sd, k), c in getattr(L, "noreset_dropped", {}).items()
+                 if sd == "gold" and k in gonly}
+    cands = {k: c for k, c in cands.items() if k.startswith("ff:") and "__" not in k and k in gp and k in gc
+             and c in (0, 1) and gc[k] != gp[k]}
+    if not cands:
+        return []
+    if not hasattr(L, "rst_val"):
+        noreset_classify(L)
+    I, Lc = d["I"], d["L"]
+    base = I + Lc + 1
+    # guard index: implied literal -> [(g, guard value)]
+    imp = collections.defaultdict(list)
+    for g, q in gp.items():
+        if not g.startswith("ff:") or "__" in g or g in cands or g not in gc:
+            continue
+        rv = L.rst_val.get(("gold", g), (None, None))[0]
+        if rv not in (0, 1):
+            continue
+        val = 1 - rv                      # the guard value that is definitely false in the reset state
+        nxt = gc[g] ^ (val ^ 1)           # literal true iff g' == val
+        for leaf in _and_leaves(d, nxt, nodes=True):
+            imp[leaf].append((g, val))    # g' == val -> leaf
+            v = leaf >> 1
+            if (leaf & 1) and v >= base:  # leaf = OR(NOT y_i): sticky form OR(g == val, en)
+                ys = [y ^ 1 for y in _and_leaves(d, leaf ^ 1)]
+                own = q ^ (val ^ 1)
+                rest = [y for y in ys if y != own]
+                if len(rest) == 1 and len(ys) == 2:
+                    imp[rest[0]].append((g, val))
+    hints, nog = [], 0
+    for k, c in sorted(cands.items()):
+        q, dk = gp[k], gc[k]
+        # D(k) as an OR of AND terms; the hold term reads Q(k) positively (c == 0: D = Q & ~en; c == 1: D = en | Q,
+        # or the mux en ? c : Q in either polarity)
+        terms = [_and_leaves(d, dk)] if not (dk & 1) else [_and_leaves(d, y ^ 1) for y in _and_leaves(d, dk ^ 1)]
+        hold = [t for t in terms if q in t]
+        ens = [x ^ 1 for t in hold for x in t if x != q]
+        pick = next((gv for e in ens for gv in imp.get(e, ()) if gv[0] != k), None)
+        if pick is None:
+            nog += 1
+            continue
+        hints.append(["gold", k, ["loaded", c, [[[pick[0], pick[1]]]]]])
+        if len(hints) >= cap:
+            break
+    log.append(f"auto loaded-valid proposals: {len(hints)} of {len(cands)} dropped no-reset constants "
+               f"({nog} without a guard register)")
+    return hints
+
+
+def auto_loaded(L, rec, work, conflicts, log):
+    """Default-on (OT_LEC_AUTO_LOADED=0 disables): loaded_proposals -> apply_hints.  The hypothesis set before is
+    restored when the refinement does not converge (never fewer proved registers than without the proposals).
+    -> rec['auto_loaded'] = dict(proposed, kept, dropped, refused, first)."""
+    auto = loaded_proposals(L, log)
+    if not auto:
+        rec["auto_loaded"] = dict(proposed=0)
+        return
+    keep_hyp, keep_cons = dict(L.hyp), list(L.cons)
+    r = apply_hints(L, auto, work, conflicts, log) or {}
+    kept = sorted(k for (sd, k), h in L.hyp.items() if h[0] == "loaded")
+    if not r.get("kept"):
+        L.hyp.clear(); L.hyp.update(keep_hyp)
+        L.cons[:] = keep_cons
+        kept = []
+        log.append("auto loaded-valid: refinement did not converge; hypotheses restored")
+    rec["auto_loaded"] = dict(proposed=len(auto), kept=len(kept), dropped=len(r.get("dropped") or []),
+                              refused=len(r.get("loaded_refused") or []), first=kept[:20])
+
+
 def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
     """Untrusted correspondence hints (the commercial 'user match' / 'add mapped points'; PATH-KV-PC4 10-25):
     [[side, key, ['eq', oside, okey, inv] | ['const', c]], ...] for registers the signature search cannot pair
@@ -5104,19 +5436,38 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
     # Proved with the other hypotheses (filled' -> D == c and not X).  Base: the register is not the other constant
     # in the reset state (ghost = 1 where it already is c, else 0 = X, which is its RTL value there).  A read while
     # unfilled is an RTL X (don't care, the tool's X rule); a read after filling is compared against c.
+    # Opt-in enabled load/hold form (default OFF): ['fill', c, pred, guard], where
+    # guard is the actual source enable as an OR of cubes over gold FFs/ports. The ghost
+    # recurrence is filled' = guard ? filled(pred) : filled. The same base and BOTH
+    # known/X induction obligations apply; no compare point is removed or masked
+    # while the actual RTL value is known. OT_LEC_ENABLE_FILL_GUARD=1 is required.
     fills = {}
     for e in hints:
         if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
                 and e[2][0] == "fill":
             fills[e[1] if isinstance(e[1], str) else repr(e[1])] = e
     rec["fill"], rec["fill_refused"] = [], []
+    fill_guard_key = lambda key: (isinstance(key, str) and key.startswith(("ff:", "pi:"))
+                                  and "__" not in key and key in L.gp)
+    if any(len(e[2]) == 4 for e in fills.values()):
+        rec["enable_fill_guard_enabled"] = os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1"
     for e in hints:
         if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
                 and e[2][0] == "fill":
             try:
-                sd, k, (_, c, pred) = e
+                sd, k, h = e
+                if len(h) not in (3, 4):
+                    raise ValueError("fill arity")
+                _, c, pred = h[:3]
+                guard = h[3] if len(h) == 4 else None
                 ok = (sd == "gold" and k in L.gonly and gk(k) and c in (0, 1) and k not in getattr(L, "unwritten", ())
                       and (pred is None or (pred in fills and pred != k)))
+                if len(h) == 4:
+                    ok = (ok and os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1"
+                          and isinstance(guard, (list, tuple)) and bool(guard)
+                          and all(isinstance(cube, (list, tuple)) and cube
+                                  and all(fill_guard_key(x) and v in (0, 1) and x not in fills for x, v in cube)
+                                  for cube in guard))
             except (TypeError, ValueError):
                 ok = False
             if not ok:
@@ -5128,7 +5479,7 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
             if rv == 1 - c:
                 rec["fill_refused"].append(dict(register=k, why=f"reset-state value {rv} is the other constant"))
                 continue
-            L.hyp[(sd, k)] = ("fill", c, pred)
+            L.hyp[(sd, k)] = ("fill", c, pred, guard) if guard is not None else ("fill", c, pred)
             rec["applied"] += 1
             continue
     for e in hints:
@@ -5160,6 +5511,13 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
             if not ok:
                 rec["skipped"].append(e)
                 continue
+            base = cons_base_check(L, csd, ck, allowed)
+            _record_cons_base(L, base)
+            if not base["covered"]:
+                rec.setdefault("cons_base_refused", []).append(base)
+                log.append(f"cons base refused {csd}:{ck[0]}: {base['why']}")
+                continue
+            rec.setdefault("cons_base", []).append(base)
             L.cons = [c for c in L.cons if not (c[0] == "gold" and list(c[1]) == list(ck))]
             L.cons.append(("gold", list(ck), [list(a) for a in allowed]))
             rec["applied"] += 1
@@ -5250,7 +5608,8 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
             rec["loaded"] = [dict(register=k, value=h[1], guard=[[list(x) for x in c] for c in h[2]], base="reset")
                              for (sd, k), h in sorted(L.hyp.items()) if h[0] == "loaded"]
             rec["fill"] = [dict(register=k, value=h[1], pred=h[2],
-                                base_filled=L.rst_val.get(("gold", k), (None, None))[0] == h[1])
+                                base_filled=L.rst_val.get(("gold", k), (None, None))[0] == h[1],
+                                **({"enable_guard": h[3]} if len(h) == 4 else {}))
                            for (sd, k), h in sorted(L.hyp.items()) if h[0] == "fill"]
             return rec
         drop_failed(L, [n for n in bad if n.startswith("cons:")])
@@ -5742,7 +6101,21 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         bbports = parse_bb_verilog(out / "bb.v")
         bbports = {k: v for k, v in bbports.items() if not k.startswith("$abstract") and not ICG_CELLS.match(k)}
         rec["black_boxes"] = {k: len(v) for k, v in sorted(bbports.items())}
-        (out / "stubs.v").write_text(stub_verilog(bbports))
+        native_parameters = None
+        if (Path(kit) / "lec_native_stub_metadata.json").is_file():
+            import importlib.util
+            helper = Path(__file__).with_name("native_stub_metadata.py")
+            spec = importlib.util.spec_from_file_location("lec_native_stub_metadata", helper)
+            native = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(native)
+            try:
+                native_parameters = native.check(kit, out / "bb.native.json", out / "native_stub_metadata.json")
+            except ValueError as e:
+                raise Unproven(str(e)) from e
+            if not set(native_parameters).issubset(bbports):
+                raise Unproven("selected native metadata master missing from elaborated blackboxes")
+            rec["native_stub_metadata"] = json.loads((out / "native_stub_metadata.json").read_text())
+        (out / "stubs.v").write_text(stub_verilog(bbports, native_parameters))
         tops = parse_bb_verilog(out / "bb_top.v")
         if top not in tops:
             raise LecError(f"pre-pass did not write the ports of {top}")
@@ -5772,30 +6145,39 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         L.kit_reset_ports = kit_reset_ports(kit)
         rec["kit_reset_ports"] = L.kit_reset_ports
         hf = Path(hints) if hints else Path(kit) / "lec_hints.json"
+        discovery_rounds = 24
         if hf.is_file():
-            supplied = json.loads(hf.read_text())
-            if os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
+            preseed, supplied, discovery_rounds = decode_hint_plan(json.loads(hf.read_text()))
+            if preseed is not None:
+                L.preseed_hints = preseed
+                rec["hint_plan"] = dict(schema=HINT_PLAN_SCHEMA, discovery_rounds=discovery_rounds,
+                                        preseed=len(preseed), post=len(supplied))
+            elif os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
                 L.preseed_hints = supplied
                 rec["hints_preseed_enabled"] = True
             L.fsm_hints = [e for e in supplied if isinstance(e, (list, tuple)) and e and
                            (e[0] == "cons" or (len(e) == 3 and isinstance(e[2], (list, tuple)) and
                                                e[2] and e[2][0] == "cube"))]
-        correspond(L, out, conflicts, log)
+        correspond(L, out, conflicts, log, rounds=discovery_rounds)
         if hasattr(L, "early_compare"):
             rec["early_compare"] = L.early_compare
         if hf.is_file():
             import hashlib
             rec["hints"] = dict(file=str(hf), sha256=hashlib.sha256(hf.read_bytes()).hexdigest())
-            rec["hints"].update(apply_hints(L, json.loads(hf.read_text()), out, conflicts, log))
+            rec["hints"].update(apply_hints(L, supplied, out, conflicts, log))
             rec["hints"]["skipped"] = len(rec["hints"]["skipped"])
             rec["hints"]["dropped"] = dict(n=len(rec["hints"]["dropped"]), first=rec["hints"]["dropped"][:40])
         elif hints:
             raise LecError(f"hints file {hints} not found")
+        if os.environ.get("OT_LEC_AUTO_LOADED", "1") != "0":
+            auto_loaded(L, rec, out, conflicts, log)
         noreset_filter(L, log, collections.Counter(), out, conflicts)
         rec["noreset_constants"] = noreset_report(L)
         rec["noreset_constants"]["listing"] = noreset_listing(L, out / "noreset_constants.tsv")
         (out / "hyp.json").write_text(json.dumps([[sd, k, list(h)] for (sd, k), h in sorted(L.hyp.items())]) + "\n")
         m, kind = L.build(with_compare=True, with_hyp=True)
+        rec["constraint_bases"] = dict(checks=getattr(L, "cons_base_checks", []),
+                                       refused=getattr(L, "cons_base_refused", []))
         rec["t_corr_s"] = round(time.time() - t1, 1)
         hyp = L.hyp
         consts = sorted(k for (sd, k), h in hyp.items() if h[0] == "const")
@@ -5928,6 +6310,12 @@ def via_docker(args, image, mem):
     me = str(Path(__file__).resolve())
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
            "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}"]
+    if (Path(kit) / "lec_native_stub_metadata.json").is_file():
+        for name in ("native_stub_metadata.py", "native_bb.py"):
+            path = Path(me).with_name(name)
+            if not path.is_file():
+                raise SystemExit("typed native stub metadata helper missing: " + str(path))
+            cmd += ["-v", f"{path}:/{name}:ro"]
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
     if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
         cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
@@ -6029,14 +6417,16 @@ def _provenance(kit=None):
         return dict(commit=None, dirty=None, source=f"kit provenance invalid: {type(e).__name__}: {e}")
 
 
-PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE")
+PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE",
+                 "OT_LEC_ENABLE_FILL_GUARD")
 
 
 def main(argv=None):
     global PROVE_JOBS
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv == ["--capabilities"]:
-        print(json.dumps(dict(schema="opentallas.lec_capabilities.v1", proof_options=list(PROOF_OPTIONS))))
+        print(json.dumps(dict(schema="opentallas.lec_capabilities.v1", proof_options=list(PROOF_OPTIONS),
+                              hint_plan_schema=HINT_PLAN_SCHEMA)))
         return 0
     if argv[:1] == ["--require-options"]:
         missing = sorted(set(argv[1:]) - set(PROOF_OPTIONS))

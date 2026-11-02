@@ -26,17 +26,12 @@ set ot_pg_C $C
 set ot_pg_c $c
 # The exact staged plan may declare the mean insertion band a design target
 # (12.3a); missing/malformed measurements remain fatal in either policy.
-set ot_pg_band_policy gate
-if {[file exists /work/master_slice.json]} {
-  set ot_pg_band_policy [exec python3 -c {
-import json, sys
-s = json.load(open(sys.argv[1]))
-p = s.get("core_tree", {}).get("model_qualification", {}).get("band_policy", "gate")
-if p not in ("gate", "info"):
-    raise ValueError("invalid model_qualification band_policy")
-print(p)
-} /work/master_slice.json]
-}
+set ot_pg_band_policy [exec python3 -c {
+import sys
+sys.path.insert(0, "/work")
+import core_clock_band
+print(core_clock_band.band_policy("/work"))
+}]
 # BEGIN embedded exact library selector
 # Resolve the exact libraries selected by this kit's ORFS make configuration.
 # No directory glob or installed-version fallback is permitted.

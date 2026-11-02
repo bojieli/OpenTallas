@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS",
+  "source_sha256": "107c4addac40494f621b463ca40a58bb47e560acddfc8d261aa1fe60c1ae5a88",
+  "old_source_sha256": "4d103ee87f3f8d8fe10a267de1dad347a62c82c86dcd589708fc8bd26fac1bbf",
+  "yosys": "actual full svc source parsed by Yosys0.68;0errors",
+  "lockstep": {
+    "predicate_cases": 32,
+    "address_cases": 65536,
+    "checks": 65568,
+    "wrong_address_low_bit_mutant_caught": 65536,
+    "new_predicate_source_binding": "exact disjunctions checked in actual new source"
+  },
+  "metadata_tests": "3PASS: missing early-core metadata fails, correct exact generated metadata passes, moved pin still fails",
+  "added_cycles": 0,
+  "clock_reset_pin_geometry_changed": false,
+  "scope": "syntax-equivalent canonical source + omitted physical clock metadata; whole kit physical signoff not claimed"
+}

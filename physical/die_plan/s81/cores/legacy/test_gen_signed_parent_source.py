@@ -154,7 +154,8 @@ def test_nonparameterized_signed_child_inside_wrapper_stays_supported(tmp_path):
 def test_indexed_child_site_executes_as_literal_or_explicit_glob(pattern):
     import subprocess
     if not shutil.which('tclsh'):pytest.skip('tclsh unavailable')
-    setup='''namespace eval ord {proc get_db_block {} {return B}}
+    setup='''set ::status FIRM
+namespace eval ord {proc get_db_block {} {return B}}
 proc B {m args} {if {$m eq "getDbUnitsPerMicron"} {return 1000};if {$m eq "getInsts"} {return I}}
 proc M {m args} {return child}
 proc Q {m args} {return 0}
@@ -162,11 +163,12 @@ proc I {m args} {
  if {$m eq "getMaster"} {return M}
  if {$m eq "getName"} {return {g_cp[0].u_e}}
  if {$m eq "getBBox"} {return Q}
- if {$m eq "setPlacementStatus"} {puts PLACED}
+ if {$m eq "setPlacementStatus"} {set ::status [lindex $args 0];puts $::status}
+ if {$m eq "setLocation" && $::status eq "FIRM"} {error "ODB-0359: cannot move FIRM instance"}
 }
 '''
     script=S.placement(dict(children=[dict(view='v/child',inst=pattern,at=[8.64,8.64])]),{})
-    run=subprocess.run(['tclsh'],input=setup+script,text=True,capture_output=True)
+    run=subprocess.run(['tclsh'],input=setup+script+'if {$::status ne "FIRM"} {error "macro left movable"}\n',text=True,capture_output=True)
     assert run.returncode==0 and run.stderr=='' and 'PLACED' in run.stdout
 
 

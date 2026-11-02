@@ -632,6 +632,19 @@ def test_explicit_platform_buffer_loads_functional_liberty_for_gold_and_lint(tmp
         assert not any('read_liberty -lib ' in c for c in cmds)
 
 
+def test_slang_replay_preserves_yosys_ordered_compilation_unit(tmp_path, monkeypatch):
+    files = [tmp_path / 'widths.sv', tmp_path / 'consumer.sv']
+    for p in files:
+        p.write_text('')
+    monkeypatch.setattr(lec, 'rtl_standard_libs', lambda *_: [])
+    env = {'VERILOG_FILES': ' '.join(map(str, files)), 'DESIGN_NAME': 't'}
+    for producer, single in [('verilog', True), ('slang', False)]:
+        env['SYNTH_HDL_FRONTEND'] = producer
+        cmd = next(c for c in lec.read_rtl_cmds(env, tmp_path, 'slang', []) if c.startswith('read_slang '))
+        assert ('--single-unit' in cmd) is single
+        assert cmd.index(str(files[0])) < cmd.index(str(files[1]))
+
+
 def test_structural_twin_closure_rare_carry_and_valid_pipe(tmp_path):
     for mutant in (False, True):
         g, gm = _seq(tmp_path, 'tw_gold', ['d', 'wrong'], ['carry', 'copy', 'valid', 'dup', 'out'],

@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.hbm.pslice_native_boundary_miter.v1",
+  "verdict": "PASS",
+  "profile": {
+    "SB": 2470,
+    "NCX": 1,
+    "NATIVE_PINS": 1,
+    "macro_count": 100
+  },
+  "rows": {
+    "run0": {
+      "MUT": 0,
+      "cycles": 1776,
+      "mismatches": 0,
+      "known": 4418983,
+      "unknown": 3257,
+      "valid": 460,
+      "nonzero": 460,
+      "writes": 499,
+      "starts": 43,
+      "warm": 2
+    },
+    "run1": {
+      "MUT": 1,
+      "cycles": 1776,
+      "mismatches": 5776,
+      "known": 4418983,
+      "unknown": 3257,
+      "valid": 460,
+      "nonzero": 460,
+      "writes": 499,
+      "starts": 43,
+      "warm": 2
+    },
+    "head_run0": {
+      "MUT": 0,
+      "cycles": 513,
+      "mismatches": 0,
+      "cwe_mismatches": 0,
+      "known": 143097,
+      "unknown": 543
+    },
+    "head_run1": {
+      "MUT": 1,
+      "cycles": 513,
+      "mismatches": 658,
+      "cwe_mismatches": 336,
+      "known": 143097,
+      "unknown": 543
+    }
+  },
+  "note": "All reference-defined bits each edge including valid0; unknown counts explicit. Two short warm resets, no64LOW assumption. This source unit is not mapped gate, LEC, timing, or physical qualification."
+}

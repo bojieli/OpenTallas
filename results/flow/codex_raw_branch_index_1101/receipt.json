@@ -1,0 +1,11 @@
+{
+ "status": "PASS",
+ "source": "/srv/opentallas-scratch2/claude/codex-kv-residuals-1101/hubei/ff/rtl/kv3_hub_Ei_part_bound.sv",
+ "source_sha256": "852d947577c936e46c3327ba238700f8ef444175bb99245353f2b3b1f243f24c",
+ "queries": 163,
+ "lookup_results_equal": true,
+ "old_seconds": 1.740514958044514,
+ "new_including_index_seconds": 0.01100012892857194,
+ "result_sha256": "fc9e1c2f7b3130439a00174a463926a6bd1c273b1713504b170d10715e624c52",
+ "scope": "actual existing Ei output relay lookup only; no full-bind runtime claim or advancing-job restart"
+}

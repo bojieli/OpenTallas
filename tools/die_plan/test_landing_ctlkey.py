@@ -56,7 +56,24 @@ def test_lsb_high_bus_reverses_bit_keys():
 
 
 def test_only_bands_with_a_start_pin_and_storage_are_rekeyed():
-    assert 'if {$bn eq "cland_fstart_in_$cbus"} { set sx [list $cx $cy] }' in TCL
+    assert 'if {$bn eq $start_name} { set sx [list $cx $cy] }' in TCL
     assert "if {[llength $sx] && [llength $bxy] && $base ne {}} {" in TCL
     i = TCL.index(" set ffs [lmap pr $ffs {list [cland_ffkey [lindex $pr 0] $rev $wch $nbits] [lindex $pr 1]}]")
     assert i < TCL.index("lassign [cland_ctl_rekey $ffs $base $kb $nbb $rev] nc ffs") < TCL.index("set ordered [lsort -dictionary -index 0 $ffs]")
+
+
+@pytest.mark.parametrize("names,want", [
+    (["cland_fstart_in_i_kvs_ctl_o_hroot_Q"], "cland_fstart_in_i_kvs_ctl_o_hroot_Q"),
+    (["cland_fstart_in_i_kvs_ctl_o_hroot_Q[0]"], "cland_fstart_in_i_kvs_ctl_o_hroot_Q[0]"),
+    (["unrelated"], ""),
+])
+def test_start_scalar_and_actual_bound_singleton(names, want):
+    body = _procs("cland_start_bterm_name") + "puts [cland_start_bterm_name {" + " ".join("{" + n + "}" for n in names) + "} i_kvs_ctl_o_hroot_Q]\n"
+    assert _run(body)[0] == want
+
+
+@pytest.mark.parametrize("suffixes", [["", "[0]"], ["[0]", "[1]"], ["[1]"]])
+def test_start_ambiguous_or_wider_inventory_rejected(suffixes):
+    names = " ".join("{cland_fstart_in_Q" + n + "}" for n in suffixes)
+    body = _procs("cland_start_bterm_name") + "puts [catch {cland_start_bterm_name {" + names + "} Q}]\n"
+    assert _run(body)[0] == "1"

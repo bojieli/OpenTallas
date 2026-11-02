@@ -1,0 +1,33 @@
+{
+ "status": "PASS_FRESH_NEW_SOURCE_ASSIGNMENT_NORM_ARITHMETIC_ONLY",
+ "source_cases": 28,
+ "source_expert_rows": 35840,
+ "logical_ranks": 4,
+ "expert_order": [
+  "exp61",
+  "exp69",
+  "exp112",
+  "exp170",
+  "exp299",
+  "exp357",
+  "shared"
+ ],
+ "canonical64_groups": 80,
+ "source_mapping_words": 35840,
+ "partial0": "3f102d76",
+ "RSTD": "412a6100",
+ "sum80_native_tree": "42349bca",
+ "combined_matches_checkpoint": true,
+ "POST_matches_checkpoint": true,
+ "fresh_partial_source": "new actualreleased FMat5Ksegment recomputation \u2192 actual104/56candidatewordmap \u2192 routedIDorderVS13\u2192nativePOSTmath\u2192canonicalVN64groups\u2192native80partialtree",
+ "source_values_sha256": "fe9fc2cc568534925485f669cea2356c700c473bffaede4d18009f8200fd42ab",
+ "map_sha256": "8d3538809abd66f0e7e3486e65034f80ec51e5d097e8d8cdc7cb14e4e29bf52d",
+ "partial_sha256": "b40a85563ede866edf487248c648afd66ebb93c0b8cc8e59d43477e5eac47590",
+ "old_partial_payloads_read": false,
+ "actual_new_images_qualified": false,
+ "actual_native_CAP_RD_residency": false,
+ "actual_global_VN_epochs": false,
+ "actual_final_layer_HEAD_input": false,
+ "HOST_START_authority": false,
+ "canonical_adopted": false
+}

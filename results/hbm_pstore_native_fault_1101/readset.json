@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.hbm.pstore_native_fault_readset.v1",
+  "release": false,
+  "files": {
+    "ot_hgi_sfu_programme_store_r10.sv": {
+      "gold_commit": "ec3d375602b3aec19cbe66821386ad6c126c22bb",
+      "gold_sha256": "156ac9146b23c5673f048caa581023819c3ab0047aaa902ca3357675145cf894",
+      "candidate_sha256": "f9ee5065debf3c65386aabcf1e36e7efc93665aae4417dc0b75d7a90de8bf383"
+    },
+    "ot_hgi_sfu_store_stripe_leaf_r10.sv": {
+      "gold_commit": "ec3d375602b3aec19cbe66821386ad6c126c22bb",
+      "gold_sha256": "f62f1edba405c45dcfe4e6be0fcb5de795f8a444ec7fb2df2d30b6587db5db4b",
+      "candidate_sha256": "f62f1edba405c45dcfe4e6be0fcb5de795f8a444ec7fb2df2d30b6587db5db4b"
+    }
+  },
+  "selected_kit": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-pstore-nativeoff-1131/gen32/ot_hgi_sfu_programme_store_r10_17784bf3df1b-pnat32",
+  "exact_selected_readset": true,
+  "macro": {
+    "path": "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
+    "sha256": "ba2cbf7634c3951ff68505f012b1d28cf415e161181a89ab620b28d5172a3598"
+  },
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-pstore-nativefix-1101",
+  "root_cause": "Only fault output shared its native sticky hold feedback. Dedicated retained scope captures same native NEXTSTATE from old internal state with no added edge.",
+  "physical_gate": "HELD actualLEC/freshphysical/currentparentevent",
+  "failures_handled": [
+    "InitialmodelstagingpointedtoASAP_v2where512macrodoesnotexist; correctedrealhbm_accel_macrosbehavioralmodel.",
+    "Epyc2probeNOTRUNscratchfloor50GB; movedself-containedinputsintel1/intel2, actualrunadmittedintel1. No floor waiver."
+  ],
+  "mapped_gate": "ActualGEN/PREFLIGHT and ordinary sourceSYNTH/nativeface2902/2902+portbind0/0PASS bothfanout32/64; mapped/mapped_guard_summary.json. Parent owns actualLEC/freshplacement/review/timing and adoption."
+}

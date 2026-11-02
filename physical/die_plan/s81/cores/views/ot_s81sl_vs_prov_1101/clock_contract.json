@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.core_clock_contract.v1",
+ "view_lib_sha256": "239b99128bd1f7a1cf7e5306e34cabb8538b83422f0aafa5d45e27df6b1da0df",
+ "signed": false,
+ "signoff_verdict": null,
+ "diagnostic": "Actual exact selected provisional routed ODB, re-extracted OpenRCX; TT/FF boundary register means. Provisional view remains unsigned; no setup/hold/LEC closure inferred.",
+ "pins": {
+  "clk": {
+   "tt": {
+    "mean_ps": 297.42264236071844,
+    "n": 2534,
+    "basis": "pin_register_mean",
+    "source": "intel2:/srv/opentallas-scratch2/claude/codex-s81-vsmean-1101/tt.log canonical ck_insertion raw-source boundary"
+   },
+   "ff": {
+    "mean_ps": 242.02596338524964,
+    "n": 2534,
+    "basis": "pin_register_mean",
+    "source": "intel2:/srv/opentallas-scratch2/claude/codex-s81-vsmean-1101/ff.log canonical ck_insertion raw-source boundary"
+   }
+  }
+ },
+ "measurement_receipts": {
+  "tt": {
+   "log_sha256": "4007d38d5867ef73f433425719fe075076c2b54fa8577ff8e972203634efb7e4",
+   "collector_tcl_sha256": "bc53a8ce53601e525d54aa4ad6525925315e2ba53864c2b28db6d56c2b720ab3",
+   "parasitics": "rcx",
+   "boundary_min_ps": 280.18146248465314,
+   "boundary_max_ps": 319.8853694722494,
+   "all_registers": 15763
+  },
+  "ff": {
+   "log_sha256": "1b8c4010da7ed319c93876c461f19679fe7c63abd4dff21e06a2ebf7bf487164",
+   "collector_tcl_sha256": "c31efbca7e298d94545889ea5973a2e256a56ea10eba8070c82c7396f612d2ab",
+   "parasitics": "rcx",
+   "boundary_min_ps": 227.02817494512854,
+   "boundary_max_ps": 263.7003959072669,
+   "all_registers": 15763
+  }
+ },
+ "source_odb": "epyc2:/srv/opentallas-scratch2/claude/kit-triage-1/in/vs/5_2_route.odb",
+ "source_odb_sha256_prefix": "1902e599c58b"
+}

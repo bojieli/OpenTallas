@@ -488,6 +488,13 @@ out["route_runs_finish"] = any("do-finish" in l and "route" in l for l in rt)
 cfg = _txt(os.path.join(K, "config.mk"))
 out["gds_gap"] = (bool(re.search(r"^export ADDITIONAL_LEFS", cfg, re.M)) and "ADDITIONAL_GDS" not in cfg
                   and not re.search(r"^export GDS_ALLOW_EMPTY", cfg, re.M))
+# KW-RESUME-1: a kit-wave stage-resumed kit (K/resume.json: ORFS steps reused from the previous attempt) -> PROVENANCE
+try:
+    with open(os.path.join(K, "resume.json")) as f: rj = json.load(f)
+    out["resume"] = {k: rj.get(k) for k in ("schema", "start", "reused_steps", "source", "why", "applied", "n_link",
+                                            "n_copy", "bytes_link", "bytes_copy")}
+except Exception:
+    out["resume"] = None
 done()
 '''
 
@@ -653,7 +660,9 @@ if V.get("module"):
     vd = os.path.join(A, "view", V["module"])
     os.makedirs(vd, exist_ok=True)
     for rel, src in sorted((V.get("files") or {}).items()):
-        shutil.copy2(src, os.path.join(vd, rel))
+        target = os.path.join(vd, rel)
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+        shutil.copy2(src, target)
     if V.get("core"):
         with open(os.path.join(vd, V["module"] + ".core.json"), "w") as f: json.dump(V["core"], f, indent=1)
     with open(os.path.join(vd, "provenance.json"), "w") as f: json.dump(V["provenance"], f, indent=1)
@@ -709,6 +718,43 @@ if mod:
             if os.path.isfile(c):
                 files[rel] = c; break
 out["files"] = files
+out["files_sha256"] = {rel: sha(path) for rel, path in files.items()}
+# Passive retention only: a missing/invalid graph never becomes clock coverage.
+W = a.get("clock_witness_dir") or S
+wp = os.path.join(W, "child_clock_witness.json")
+if os.path.isfile(wp) or a.get("clock_witness_dir"):
+    try:
+        wd = json.load(open(wp))
+        if wd.get("schema") != "opentallas.child_clock_witness.v1" or wd.get("qualification") != "NOT_ASSERTED":
+            raise ValueError("unknown child clock witness schema/qualification")
+        if not {"6_final.odb", "6_final.spef", "6_final.v"}.issubset(wd.get("native", {})):
+            raise ValueError("missing exact native source/ODB/SPEF identities")
+        for rel, digest in wd["native"].items():
+            if os.path.basename(rel) != rel or sha(os.path.join(B, rel)) != digest:
+                raise ValueError("native routed fixture identity mismatch: " + rel)
+        witness_files = {"child_clock_witness.json": wp}
+        for corner in ("tt", "ff"):
+            cr = wd["corners"][corner]
+            if cr["counts"]["missing"] or cr["counts"]["refs"] < 1:
+                raise ValueError("incomplete native child clock endpoints")
+            required = {"child_clock_" + corner + "_" + role + ".tsv" for role in ("endpoints", "pairs", "roots", "clocks", "masters", "counts", "inputs")}
+            if not required.issubset({os.path.basename(rel) for rel in cr["files"]}):
+                raise ValueError("missing full native endpoint/pair/identity payload")
+            if not any(os.path.basename(rel) in ("session.tcl", "export_" + corner + ".tcl") and digest == cr["extraction_tcl_sha256"] for rel, digest in cr["files"].items()):
+                raise ValueError("missing exact native extraction session")
+            for rel, digest in cr["files"].items():
+                if os.path.isabs(rel) or ".." in rel.split(os.sep):
+                    raise ValueError("unsafe witness payload path")
+                path = os.path.join(W, rel)
+                if sha(path) != digest:
+                    raise ValueError("child clock payload identity mismatch: " + rel)
+                witness_files[rel] = path
+        out["clock_witness"] = {"status": "RETAINED", "path": "child_clock_witness.json", "sha256": sha(wp),
+                                "qualification": "NOT_ASSERTED", "hierarchical_expansion": "NOT_ASSERTED",
+                                "expected_view_lib_sha256": {c: wd["corners"][c].get("exported_liberty_sha256") for c in ("tt", "ff")}}
+        files.update(witness_files)
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        out["clock_witness"] = {"status": "FAILED", "error": str(exc), "qualification": "NOT_ASSERTED"}
 print("AP_JSON " + json.dumps(out))
 """
 
@@ -778,6 +824,17 @@ def view_payload(r, j, so):
     prov = dict(kit=kitblk, verdict="SIGNED (autopilot: signoff.py + routed LEC EQUIVALENT all_shown)",
                 views_status="signoff" if not problems else "incomplete: " + "; ".join(problems),
                 src=j["src"], src_commit=j.get("src_commit"), flow_tag=j.get("flow_tag"), autopilot_id=j["id"])
+    if r.get("clock_witness"):
+        witness = dict(r["clock_witness"])
+        if witness.get("status") == "RETAINED":
+            hashes = r.get("files_sha256") or {}
+            bindings = {c: hashes.get(f"{mod}_{c}.lib") for c in ("tt", "ff")}
+            expected = witness.pop("expected_view_lib_sha256", {})
+            if any(not digest or (expected.get(c) and expected[c] != digest) for c, digest in bindings.items()):
+                witness.update(status="FAILED", error="exported child Liberty identity is absent or mismatched")
+            else:
+                witness["view_lib_sha256"] = bindings
+        prov["child_clock_witness"] = witness
     if core:
         core = dict(core)
         cl = (so.get("core_latency") or {}).get("measured")
@@ -1201,12 +1258,58 @@ def stage_admission_tools(source_chain=None, source_tools=None, root=None):
                 preflight=str(dest / "die_plan/kit_preflight.py"), sha256=version)
 
 
+def late_eco_on():
+    """KW-ECO-1 late-stage ECO loop in signoff_chain.py: default ON; COORD opt-out = "late_eco": false in
+    autopilot/kit_wave.json (one coord commit); per kit: a KIT/late_eco.off marker"""
+    try:
+        return json.loads((AP_DIR / "kit_wave.json").read_text()).get("late_eco", True) is not False
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
+NEAR_COUNT_FILE = "lanes/NEAR-COUNT.tsv"
+
+
+def parse_near_count(text):
+    """lanes/NEAR-COUNT.tsv (SIGNOFF-SPRINT-19; COORD 11-01 KIT-WAVE-16 (6)) -> {(die, name)} of cores/types one
+    step from the count: their builds get ot-run --priority die --crit on admission.  A header row names the columns
+    (die + item | type | core | module); without a header the first two columns are die, item.  '#' lines and blank
+    lines are skipped; die '*' matches every die."""
+    out = set()
+    cols = None
+    for ln in (text or "").splitlines():
+        if not ln.strip() or ln.lstrip().startswith("#"):
+            continue
+        f = [x.strip() for x in ln.split("\t")]
+        low = [x.lower() for x in f]
+        if cols is None and "die" in low and any(k in low for k in ("item", "type", "core", "module")):
+            name = next(k for k in ("item", "type", "core", "module") if k in low)
+            cols = (low.index("die"), low.index(name))
+            continue
+        di, ni = cols or (0, 1)
+        if len(f) > max(di, ni) and f[di] and f[ni]:
+            out.add((f[di], f[ni]))
+    return out
+
+
+def near_count_match(near, die, *names):
+    """True when (die or '*', name) is listed for any of the names (item, parent type, core module)"""
+    return any((d, n) in near for n in names if n for d in (die, "*"))
+
+
+def near_count_args(near, die, *names):
+    return ["--priority", "die", "--crit"] if near and near_count_match(near, die, *names) else []
+
+
 def submit(st, j, attempt_note=""):
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
     logf = AP_DIR / "jobs" / j["id"] / f"a{n}.log"
     kit, runner, mem, thr = j["path"], j["runner"], j["mem_gb"], j["threads"]
     argv = [OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit]
+    # NEAR-COUNT (COORD 11-01): a core/type listed in lanes/NEAR-COUNT.tsv is admitted as a die-priority crit job
+    argv += near_count_args(parse_near_count(read_coord(NEAR_COUNT_FILE)), j.get("die"), j.get("type"),
+                            j.get("module"), j.get("item"))
     if not runner.startswith(kit + "/"):
         argv += ["--stage", runner]
     if j["goal"] not in ("cts", "grt"):
@@ -1216,7 +1319,7 @@ def submit(st, j, attempt_note=""):
         encoded = base64.b64encode(json.dumps(bundle).encode()).decode()
         # --stage is spill-only. Fetch the immutable tool bundle on the
         # actual selected worker before executing any frozen kit runner.
-        argv += ["--", "python3", "-c", ADMISSION_BOOTSTRAP, encoded,
+        argv += ["--", "python3", "-c", ADMISSION_BOOTSTRAP, encoded] + ([] if late_eco_on() else ["--no-late-eco"]) + [
                  runner, kit, j["goal"], str(mem), str(thr)]
         # chain v2 (AUTOPILOT-SIGNOFF-2): main lec.py + all_shown + mtime proof, FAILED notice + data delete.
         # Jobs launched by an earlier chain keep the earlier rules (no retroactive demotion or deletion).
@@ -1486,6 +1589,25 @@ def apply_legacy(j):
     return True
 
 
+def flow_changes(tag, full, watch, exclude, own):
+    """Memoize identical flow comparisons within this tick, keyed by resolved commits."""
+    rc, out, _ = sh(["git", "-C", str(REPO), "rev-parse", "-q", "--verify", tag + "^{commit}"], timeout=60)
+    if rc or not out.strip():
+        return rc or 1, []
+    tag_sha = out.strip().split()[0]
+    key = (tag_sha, full, tuple(watch), tuple(exclude), None if own is None else tuple(own))
+    cache = CLOSURE.setdefault("flow_changes", {})
+    if key not in cache:
+        rc, out, _ = sh(["git", "-C", str(REPO), "diff", "--name-only", tag_sha, full], timeout=120)
+        if rc:
+            return rc, []                         # transport/Git failures remain retryable
+        changed = tuple(p for p in out.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)
+                        and not any(fnmatch.fnmatch(p, x) for x in exclude)
+                        and not (own is not None and p.startswith(PLAN_ROOT) and p[len(PLAN_ROOT):].split("/", 1)[0] not in own))
+        cache[key] = changed
+    return 0, list(cache[key])
+
+
 def resolve_provenance(src, flow="", die=None):
     """-> {src_commit, flow_tag} or {..., error}: the full source commit of branch@sha (fetched on the hub repo when
     missing) and the flow release tag whose watched flow files (tools/flow_canary/canaries.json 'watch') are identical
@@ -1511,12 +1633,9 @@ def resolve_provenance(src, flow="", die=None):
             return {"src_commit": full, "flow_tag": "", "error": f"flow tag {flow} does not cover die {die}"}
         return {"src_commit": full, "flow_tag": "", "error": f"flow tag {flow} not found on origin"}
     for t in ([flow] if flow else tags):
-        rc, out, _ = sh(["git", "-C", str(REPO), "diff", "--name-only", t, full], timeout=120)
+        rc, changed = flow_changes(t, full, watch, exclude, own)
         if rc:
             continue
-        changed = [p for p in out.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)
-                   and not any(fnmatch.fnmatch(p, x) for x in exclude)
-                   and not (own is not None and p.startswith(PLAN_ROOT) and p[len(PLAN_ROOT):].split("/", 1)[0] not in own)]
         if not changed:
             return {"src_commit": full, "flow_tag": t}
         if flow:
@@ -1540,10 +1659,25 @@ done()
 '''
 
 
+def eco_provenance(j):
+    """KW-ECO-1: a sign-off reached through the late-stage ECO loop names it (kind eco, base routed DB, iterations with
+    their commands, flow sha); sign-off + routed LEC are the usual ones on the ECO'd routed DB.  {} otherwise."""
+    eco = (j.get("chain") or {}).get("eco") or {}
+    if eco.get("verdict") != "PASS":
+        return {}
+    return dict(kind="eco", eco=dict(tool="tools/die_plan/eco_loop.py", base_routed_db=eco.get("base_routed_db"),
+                                     base_signoff=eco.get("base_signoff"), base_metrics=eco.get("base_metrics"),
+                                     routed_db=(eco.get("best") or {}).get("base"), record=eco.get("record"),
+                                     iterations=eco.get("iterations"), flow=eco.get("flow"), wall_s=eco.get("wall_s")))
+
+
 def write_provenance(host, dest, j):
     prov = {k: j.get(k) for k in ("id", "die", "type", "src", "src_commit", "flow_tag", "lane")}
+    if j.get("stage_resume"):                           # KW-RESUME-1: ORFS steps reused from the source attempt
+        prov["stage_resume"] = j["stage_resume"]
     prov.update(schema="opentallas.provenance.v1", verdict="SIGNED" if j.get("flow_tag") and j.get("src_commit")
                 else "SIGNED-UNVERSIONED", why=j.get("prov_error", ""), written=now_s())
+    prov.update(eco_provenance(j))
     return rpy(host, PROBE_PROVENANCE, {"dest": dest, "prov": prov}, timeout=120)
 
 
@@ -1744,6 +1878,7 @@ def admit_new(st, rows):
             set_status(st, j, "REJECTED", why)
             continue
         j["runner"] = p["runner"]
+        j["stage_resume"] = p.get("resume")              # KW-RESUME-1: reused steps + source attempt (PROVENANCE)
         j.pop("hold_why", None)
         trial_why = ("mode trial" if r["mode"] == "trial" else f"goal {r.get('goal')} (diagnostic)" if r.get("goal") in ("cts", "grt")
                      else path_gate_hold(r))
@@ -1856,11 +1991,15 @@ def finish(st, j, c, client):
             cls, kind, reasons = "STRUCTURAL", "routed-lec", "autopilot chain incomplete: " + str(chain.get("reason") or "missing current routed LEC")
     if client.get("orphan") and cls == "CRASH" and kind not in ("tool-segfault",):
         kind, reasons = "infra-orphan", client["msg"]
+    eco = ((c.get("chain") or {}).get("eco") or {}) if (c.get("chain") or {}).get("started", 0) >= j.get("started", 0) - 120 else {}
+    if eco.get("summary") and cls not in ("SIGNED", "WAIT-PARENT"):
+        # KW-ECO-1: the FAIL evidence carries the late-stage ECO result (kit_wave class table "late-ECO exhausted")
+        reasons = f"{eco['summary'][:240]} | {reasons}"
     j.update(cls=cls, kind=kind, reasons=reasons[:600], probe=c.get("probe_host"),
              signoff=c.get("signoff"), finished=time.time())
     if c.get("chain"):
         j["chain"] = {k: c["chain"].get(k) for k in ("verdict", "reason", "gates", "lec", "lec_verdict",
-                                                   "lec_all_shown", "lec_tool", "signoff", "netlist")}
+                                                   "lec_all_shown", "lec_tool", "signoff", "netlist", "eco")}
     log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> {cls} ({kind}): {reasons[:240]}")
     if cls == "CRASH" and kind in INFRA_KINDS and not j.get("adopted"):
         notrun = kind == "infra-notrun"
@@ -2220,7 +2359,10 @@ def write_loop_gaps(st, rows, geom_text):
     jobs = list(st["jobs"].values())
     submitted_tags = {geom_tag(j.get("geom_ref", "")) for j in jobs
                       if j.get("status") not in ("WAIT-GEOM", "REJECTED", None) and (j.get("attempts") or j.get("adopted"))}
-    gaps = LG.gaps_geom(geom_text, now, submitted_tags, LG.parse_resolved(read_coord("autopilot/resolved.tsv")))
+    submitted_kits = {(j.get("die", ""), j.get("type", "")) for j in jobs
+                      if j.get("status") not in ("WAIT-GEOM", "REJECTED", None) and (j.get("attempts") or j.get("adopted"))}
+    gaps = LG.gaps_geom(geom_text, now, submitted_tags, LG.parse_resolved(read_coord("autopilot/resolved.tsv")),
+                        submitted_kits)
     gaps += LG.gaps_runs([j for j in jobs if j.get("status") == "RUNNING" or str(j.get("status")).startswith("REVIEW-")
                           or j.get("status") == "SIGNED"], now)
     trows = read_tsv_rows("review.tsv") + read_tsv_rows("structural.tsv")

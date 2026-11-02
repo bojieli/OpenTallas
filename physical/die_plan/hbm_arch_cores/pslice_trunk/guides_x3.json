@@ -1,0 +1,923 @@
+{
+ "source": "physical/die_plan/hbm_arch_cores/pslice_trunk_plan.py",
+ "by": "DIE-HBM-57/PSLICE 11-01",
+ "mid_um": 113.4,
+ "grid": {
+  "xs": [
+   15.168,
+   131.472,
+   247.776,
+   364.08,
+   480.384,
+   596.688,
+   712.992,
+   829.296
+  ],
+  "ys": [
+   12.96,
+   54.27,
+   95.58,
+   136.89,
+   178.2,
+   219.51,
+   260.82,
+   426.09,
+   467.4,
+   508.71,
+   550.02,
+   591.33,
+   632.64
+  ],
+  "mid_street": [
+   301.884,
+   426.09
+  ],
+  "n_band": [
+   673.704,
+   756.0
+  ]
+ },
+ "xst": 3,
+ "planned_hop_um": {
+  "cfg_r0": 83.7,
+  "cfg_r1": 195.3,
+  "cfg_r2": 283.7,
+  "start_c0": 77.5,
+  "start_c1": 67.0,
+  "start_c2": 98.8,
+  "start_c3": 130.6,
+  "start_c4": 162.4,
+  "start_c5": 194.2,
+  "start_c6": 226.0,
+  "start_c7": 257.8,
+  "start_c8": 289.6,
+  "start_c9": 315.8
+ },
+ "boxes": [
+  {
+   "name": "leaf0",
+   "prefixes": [
+    "u_fcore.g_c[0].u_c.u_p.",
+    "u_fcore.g_c[0].u_c.q_",
+    "u_fcore.g_c[0].u_c.s_q",
+    "u_fcore.g_c[0].u_c.l_q",
+    "u_fcore.g_c[0].u_c.g_rr.u_rr.rst_n",
+    "u_fcore.u_h.g_o[0].",
+    "u_fcore.u_h.g_lx.g_l[0].f1"
+   ],
+   "box_um": [
+    21.5,
+    374.0,
+    91.5,
+    422.0
+   ]
+  },
+  {
+   "name": "oc0",
+   "prefixes": [
+    "u_fcore.g_oc[0]."
+   ],
+   "box_um": [
+    21.5,
+    680.0,
+    91.5,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf1",
+   "prefixes": [
+    "u_fcore.g_c[1].u_c.u_p.",
+    "u_fcore.g_c[1].u_c.q_",
+    "u_fcore.g_c[1].u_c.s_q",
+    "u_fcore.g_c[1].u_c.l_q",
+    "u_fcore.g_c[1].u_c.g_rr.u_rr.rst_n",
+    "u_fcore.u_h.g_o[1].",
+    "u_fcore.u_h.g_lx.g_l[1].f1",
+    "u_fcore.g_c[1].u_c.g_rr.u_rr.sync_q"
+   ],
+   "box_um": [
+    116.9,
+    374.0,
+    186.9,
+    422.0
+   ]
+  },
+  {
+   "name": "oc1",
+   "prefixes": [
+    "u_fcore.g_oc[1]."
+   ],
+   "box_um": [
+    116.9,
+    680.0,
+    186.9,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf2",
+   "prefixes": [
+    "u_fcore.g_c[2].u_c.u_p.",
+    "u_fcore.g_c[2].u_c.q_",
+    "u_fcore.g_c[2].u_c.s_q",
+    "u_fcore.g_c[2].u_c.l_q",
+    "u_fcore.g_c[2].u_c.g_rr.u_rr.rst_n",
+    "u_fcore.u_h.g_o[2].",
+    "u_fcore.u_h.g_lx.g_l[2].f1",
+    "u_fcore.g_c[2].u_c.g_rr.u_rr.sync_q"
+   ],
+   "box_um": [
+    212.3,
+    374.0,
+    282.3,
+    422.0
+   ]
+  },
+  {
+   "name": "oc2",
+   "prefixes": [
+    "u_fcore.g_oc[2]."
+   ],
+   "box_um": [
+    212.3,
+    680.0,
+    282.3,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf3",
+   "prefixes": [
+    "u_fcore.g_c[3].u_c.u_p.",
+    "u_fcore.g_c[3].u_c.q_",
+    "u_fcore.g_c[3].u_c.s_q",
+    "u_fcore.g_c[3].u_c.l_q",
+    "u_fcore.g_c[3].u_c.g_rr.u_rr.rst_n",
+    "u_fcore.u_h.g_o[3].",
+    "u_fcore.u_h.g_lx.g_l[3].f1",
+    "u_fcore.g_c[3].u_c.g_rr.u_rr.sync_q"
+   ],
+   "box_um": [
+    307.7,
+    374.0,
+    377.7,
+    422.0
+   ]
+  },
+  {
+   "name": "oc3",
+   "prefixes": [
+    "u_fcore.g_oc[3]."
+   ],
+   "box_um": [
+    307.7,
+    680.0,
+    377.7,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf4",
+   "prefixes": [
+    "u_fcore.g_c[4].u_c.u_p.",
+    "u_fcore.g_c[4].u_c.q_",
+    "u_fcore.g_c[4].u_c.s_q",
+    "u_fcore.g_c[4].u_c.l_q",
+    "u_fcore.g_c[4].u_c.g_rr.u_rr.rst_n",
+    "u_fcore.u_h.g_o[4].",
+    "u_fcore.u_h.g_lx.g_l[4].f1",
+    "u_fcore.g_c[4].u_c.g_rr.u_rr.sync_q"
+   ],
+   "box_um": [
+    403.1,
+    374.0,
+    473.1,
+    422.0
+   ]
+  },
+  {
+   "name": "oc4",
+   "prefixes": [
+    "u_fcore.g_oc[4]."
+   ],
+   "box_um": [
+    403.1,
+    680.0,
+    473.1,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf5",
+   "prefixes": [
+    "u_fcore.g_c[5].u_c.u_p.",
+    "u_fcore.g_c[5].u_c.q_",
+    "u_fcore.g_c[5].u_c.s_q",
+    "u_fcore.g_c[5].u_c.l_q",
+    "u_fcore.g_c[5].u_c.g_rr.u_rr.rst_n",
+    "u_fcore.u_h.g_o[5].",
+    "u_fcore.u_h.g_lx.g_l[5].f1",
+    "u_fcore.g_c[5].u_c.g_rr.u_rr.sync_q"
+   ],
+   "box_um": [
+    498.5,
+    374.0,
+    568.5,
+    422.0
+   ]
+  },
+  {
+   "name": "oc5",
+   "prefixes": [
+    "u_fcore.g_oc[5]."
+   ],
+   "box_um": [
+    498.5,
+    680.0,
+    568.5,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf6",
+   "prefixes": [
+    "u_fcore.g_c[6].u_c.u_p.",
+    "u_fcore.g_c[6].u_c.q_",
+    "u_fcore.g_c[6].u_c.s_q",
+    "u_fcore.g_c[6].u_c.l_q",
+    "u_fcore.g_c[6].u_c.g_rr.u_rr.rst_n",
+    "u_fcore.u_h.g_o[6].",
+    "u_fcore.u_h.g_lx.g_l[6].f1",
+    "u_fcore.g_c[6].u_c.g_rr.u_rr.sync_q"
+   ],
+   "box_um": [
+    593.9,
+    374.0,
+    663.9,
+    422.0
+   ]
+  },
+  {
+   "name": "oc6",
+   "prefixes": [
+    "u_fcore.g_oc[6]."
+   ],
+   "box_um": [
+    593.9,
+    680.0,
+    663.9,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf7",
+   "prefixes": [
+    "u_fcore.g_c[7].u_c.u_p.",
+    "u_fcore.g_c[7].u_c.q_",
+    "u_fcore.g_c[7].u_c.s_q",
+    "u_fcore.g_c[7].u_c.l_q",
+    "u_fcore.g_c[7].u_c.g_rr.u_rr.rst_n",
+    "u_fcore.u_h.g_o[7].",
+    "u_fcore.u_h.g_lx.g_l[7].f1",
+    "u_fcore.g_c[7].u_c.g_rr.u_rr.sync_q"
+   ],
+   "box_um": [
+    689.3,
+    374.0,
+    759.3,
+    422.0
+   ]
+  },
+  {
+   "name": "oc7",
+   "prefixes": [
+    "u_fcore.g_oc[7]."
+   ],
+   "box_um": [
+    689.3,
+    680.0,
+    759.3,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf8",
+   "prefixes": [
+    "u_fcore.g_c[8].u_c.u_p.",
+    "u_fcore.g_c[8].u_c.q_",
+    "u_fcore.g_c[8].u_c.s_q",
+    "u_fcore.g_c[8].u_c.l_q",
+    "u_fcore.g_c[8].u_c.g_rr.u_rr.rst_n",
+    "u_fcore.u_h.g_o[8].",
+    "u_fcore.u_h.g_lx.g_l[8].f1",
+    "u_fcore.g_c[8].u_c.g_rr.u_rr.sync_q"
+   ],
+   "box_um": [
+    784.7,
+    374.0,
+    854.7,
+    422.0
+   ]
+  },
+  {
+   "name": "oc8",
+   "prefixes": [
+    "u_fcore.g_oc[8]."
+   ],
+   "box_um": [
+    784.7,
+    680.0,
+    854.7,
+    700.0
+   ]
+  },
+  {
+   "name": "leaf9",
+   "prefixes": [
+    "u_fcore.g_c[9].u_c.u_p.",
+    "u_fcore.g_c[9].u_c.q_",
+    "u_fcore.g_c[9].u_c.s_q",
+    "u_fcore.g_c[9].u_c.l_q",
+    "u_fcore.g_c[9].u_c.g_rr.u_rr.rst_n",
+    "u_fcore.u_h.g_o[9].",
+    "u_fcore.u_h.g_lx.g_l[9].f1",
+    "u_fcore.g_c[9].u_c.g_rr.u_rr.sync_q"
+   ],
+   "box_um": [
+    870.4,
+    374.0,
+    926.261,
+    422.0
+   ]
+  },
+  {
+   "name": "oc9",
+   "prefixes": [
+    "u_fcore.g_oc[9]."
+   ],
+   "box_um": [
+    870.4,
+    680.0,
+    926.261,
+    700.0
+   ]
+  },
+  {
+   "name": "sync0",
+   "prefixes": [
+    "u_fcore.g_c[0].u_c.g_rr.u_rr.sync_q"
+   ],
+   "box_um": [
+    7.0,
+    650.0,
+    14.0,
+    680.0
+   ]
+  },
+  {
+   "name": "ob",
+   "prefixes": [
+    "u_fcore.u_ob."
+   ],
+   "box_um": [
+    112.0,
+    150.0,
+    129.0,
+    170.0
+   ]
+  },
+  {
+   "name": "oe",
+   "prefixes": [
+    "u_fcore.u_oe."
+   ],
+   "box_um": [
+    928.5,
+    380.0,
+    934.5,
+    416.0
+   ]
+  },
+  {
+   "name": "ux",
+   "prefixes": [
+    "u_fcore.u_h.u_x."
+   ],
+   "box_um": [
+    7.0,
+    362.0,
+    14.0,
+    418.0
+   ]
+  },
+  {
+   "name": "xs",
+   "prefixes": [
+    "u_fcore.u_xs."
+   ],
+   "box_um": [
+    113.0,
+    197.0,
+    127.0,
+    213.0
+   ]
+  },
+  {
+   "name": "reg0",
+   "prefixes": [
+    "u_fcore.u_h.g_r[0].k",
+    "u_fcore.u_h.g_r[0].u_rr."
+   ],
+   "box_um": [
+    182.0,
+    313.5,
+    218.0,
+    343.5
+   ]
+  },
+  {
+   "name": "reg1",
+   "prefixes": [
+    "u_fcore.u_h.g_r[1].k",
+    "u_fcore.u_h.g_r[1].u_rr."
+   ],
+   "box_um": [
+    517.0,
+    313.5,
+    553.0,
+    343.5
+   ]
+  },
+  {
+   "name": "reg2",
+   "prefixes": [
+    "u_fcore.u_h.g_r[2].k",
+    "u_fcore.u_h.g_r[2].u_rr."
+   ],
+   "box_um": [
+    782.0,
+    313.5,
+    818.0,
+    343.5
+   ]
+  },
+  {
+   "name": "fault",
+   "prefixes": [
+    "u_fcore.u_h.oor_d",
+    "u_fcore.u_h.g_lx.h",
+    "u_fcore.u_h.fault",
+    "u_fcore.h_fault"
+   ],
+   "box_um": [
+    328.0,
+    307.0,
+    352.0,
+    327.0
+   ]
+  },
+  {
+   "name": "y0s0",
+   "prefixes": [
+    "u_fcore.u_h.g_r[0].u_y.g_n.g_s[0]."
+   ],
+   "box_um": [
+    32.667,
+    328.5,
+    48.667,
+    344.5
+   ]
+  },
+  {
+   "name": "y0s1",
+   "prefixes": [
+    "u_fcore.u_h.g_r[0].u_y.g_n.g_s[1]."
+   ],
+   "box_um": [
+    116.333,
+    328.5,
+    132.333,
+    344.5
+   ]
+  },
+  {
+   "name": "y1s0",
+   "prefixes": [
+    "u_fcore.u_h.g_r[1].u_y.g_n.g_s[0]."
+   ],
+   "box_um": [
+    144.333,
+    328.5,
+    160.333,
+    344.5
+   ]
+  },
+  {
+   "name": "y1s1",
+   "prefixes": [
+    "u_fcore.u_h.g_r[1].u_y.g_n.g_s[1]."
+   ],
+   "box_um": [
+    339.667,
+    328.5,
+    355.667,
+    344.5
+   ]
+  },
+  {
+   "name": "y2s0",
+   "prefixes": [
+    "u_fcore.u_h.g_r[2].u_y.g_n.g_s[0]."
+   ],
+   "box_um": [
+    232.667,
+    328.5,
+    248.667,
+    344.5
+   ]
+  },
+  {
+   "name": "y2s1",
+   "prefixes": [
+    "u_fcore.u_h.g_r[2].u_y.g_n.g_s[1]."
+   ],
+   "box_um": [
+    500.333,
+    328.5,
+    516.333,
+    344.5
+   ]
+  },
+  {
+   "name": "x0s0",
+   "prefixes": [
+    "u_fcore.g_x[0].u_s.g_n.g_s[0]."
+   ],
+   "box_um": [
+    116.0,
+    278.5,
+    124.0,
+    286.5
+   ]
+  },
+  {
+   "name": "x0s1",
+   "prefixes": [
+    "u_fcore.g_x[0].u_s.g_n.g_s[1]."
+   ],
+   "box_um": [
+    92.5,
+    332.5,
+    100.5,
+    340.5
+   ]
+  },
+  {
+   "name": "x1s0",
+   "prefixes": [
+    "u_fcore.g_x[1].u_s.g_n.g_s[0]."
+   ],
+   "box_um": [
+    116.0,
+    267.967,
+    124.0,
+    275.967
+   ]
+  },
+  {
+   "name": "x1s1",
+   "prefixes": [
+    "u_fcore.g_x[1].u_s.g_n.g_s[1]."
+   ],
+   "box_um": [
+    106.433,
+    332.5,
+    114.433,
+    340.5
+   ]
+  },
+  {
+   "name": "x2s0",
+   "prefixes": [
+    "u_fcore.g_x[2].u_s.g_n.g_s[0]."
+   ],
+   "box_um": [
+    116.0,
+    295.767,
+    124.0,
+    303.767
+   ]
+  },
+  {
+   "name": "x2s1",
+   "prefixes": [
+    "u_fcore.g_x[2].u_s.g_n.g_s[1]."
+   ],
+   "box_um": [
+    172.033,
+    332.5,
+    180.033,
+    340.5
+   ]
+  },
+  {
+   "name": "x3s0",
+   "prefixes": [
+    "u_fcore.g_x[3].u_s.g_n.g_s[0]."
+   ],
+   "box_um": [
+    116.0,
+    319.567,
+    124.0,
+    327.567
+   ]
+  },
+  {
+   "name": "x3s1",
+   "prefixes": [
+    "u_fcore.g_x[3].u_s.g_n.g_s[1]."
+   ],
+   "box_um": [
+    249.633,
+    332.5,
+    257.633,
+    340.5
+   ]
+  },
+  {
+   "name": "x4s0",
+   "prefixes": [
+    "u_fcore.g_x[4].u_s.g_n.g_s[0]."
+   ],
+   "box_um": [
+    134.867,
+    332.5,
+    142.867,
+    340.5
+   ]
+  },
+  {
+   "name": "x4s1",
+   "prefixes": [
+    "u_fcore.g_x[4].u_s.g_n.g_s[1]."
+   ],
+   "box_um": [
+    309.233,
+    332.5,
+    317.233,
+    340.5
+   ]
+  },
+  {
+   "name": "x5s0",
+   "prefixes": [
+    "u_fcore.g_x[5].u_s.g_n.g_s[0]."
+   ],
+   "box_um": [
+    178.667,
+    344.5,
+    186.667,
+    352.5
+   ]
+  },
+  {
+   "name": "x5s1",
+   "prefixes": [
+    "u_fcore.g_x[5].u_s.g_n.g_s[1]."
+   ],
+   "box_um": [
+    372.833,
+    332.5,
+    380.833,
+    340.5
+   ]
+  },
+  {
+   "name": "x6s0",
+   "prefixes": [
+    "u_fcore.g_x[6].u_s.g_n.g_s[0]."
+   ],
+   "box_um": [
+    218.467,
+    332.5,
+    226.467,
+    340.5
+   ]
+  },
+  {
+   "name": "x6s1",
+   "prefixes": [
+    "u_fcore.g_x[6].u_s.g_n.g_s[1]."
+   ],
+   "box_um": [
+    436.433,
+    332.5,
+    444.433,
+    340.5
+   ]
+  },
+  {
+   "name": "x7s0",
+   "prefixes": [
+    "u_fcore.g_x[7].u_s.g_n.g_s[0]."
+   ],
+   "box_um": [
+    242.267,
+    344.5,
+    250.267,
+    352.5
+   ]
+  },
+  {
+   "name": "x7s1",
+   "prefixes": [
+    "u_fcore.g_x[7].u_s.g_n.g_s[1]."
+   ],
+   "box_um": [
+    492.033,
+    332.5,
+    500.033,
+    340.5
+   ]
+  },
+  {
+   "name": "x8s0",
+   "prefixes": [
+    "u_fcore.g_x[8].u_s.g_n.g_s[0]."
+   ],
+   "box_um": [
+    274.067,
+    332.5,
+    282.067,
+    340.5
+   ]
+  },
+  {
+   "name": "x8s1",
+   "prefixes": [
+    "u_fcore.g_x[8].u_s.g_n.g_s[1]."
+   ],
+   "box_um": [
+    563.633,
+    332.5,
+    571.633,
+    340.5
+   ]
+  },
+  {
+   "name": "x9s0",
+   "prefixes": [
+    "u_fcore.g_x[9].u_s.g_n.g_s[0]."
+   ],
+   "box_um": [
+    300.277,
+    332.5,
+    308.277,
+    340.5
+   ]
+  },
+  {
+   "name": "x9s1",
+   "prefixes": [
+    "u_fcore.g_x[9].u_s.g_n.g_s[1]."
+   ],
+   "box_um": [
+    616.054,
+    332.5,
+    624.054,
+    340.5
+   ]
+  },
+  {
+   "name": "lf0",
+   "prefixes": [
+    "u_fcore.u_h.g_lx.g_l[0].v1",
+    "u_fcore.u_h.g_lx.g_l[0].f2"
+   ],
+   "box_um": [
+    194.25,
+    344.5,
+    202.25,
+    352.5
+   ]
+  },
+  {
+   "name": "lf1",
+   "prefixes": [
+    "u_fcore.u_h.g_lx.g_l[1].v1",
+    "u_fcore.u_h.g_lx.g_l[1].f2"
+   ],
+   "box_um": [
+    233.95,
+    344.5,
+    241.95,
+    352.5
+   ]
+  },
+  {
+   "name": "lf2",
+   "prefixes": [
+    "u_fcore.u_h.g_lx.g_l[2].v1",
+    "u_fcore.u_h.g_lx.g_l[2].f2"
+   ],
+   "box_um": [
+    289.65,
+    344.5,
+    297.65,
+    352.5
+   ]
+  },
+  {
+   "name": "lf3",
+   "prefixes": [
+    "u_fcore.u_h.g_lx.g_l[3].v1",
+    "u_fcore.u_h.g_lx.g_l[3].f2"
+   ],
+   "box_um": [
+    337.35,
+    344.5,
+    345.35,
+    352.5
+   ]
+  },
+  {
+   "name": "lf4",
+   "prefixes": [
+    "u_fcore.u_h.g_lx.g_l[4].v1",
+    "u_fcore.u_h.g_lx.g_l[4].f2"
+   ],
+   "box_um": [
+    385.05,
+    344.5,
+    393.05,
+    352.5
+   ]
+  },
+  {
+   "name": "lf5",
+   "prefixes": [
+    "u_fcore.u_h.g_lx.g_l[5].v1",
+    "u_fcore.u_h.g_lx.g_l[5].f2"
+   ],
+   "box_um": [
+    432.75,
+    344.5,
+    440.75,
+    352.5
+   ]
+  },
+  {
+   "name": "lf6",
+   "prefixes": [
+    "u_fcore.u_h.g_lx.g_l[6].v1",
+    "u_fcore.u_h.g_lx.g_l[6].f2"
+   ],
+   "box_um": [
+    480.45,
+    344.5,
+    488.45,
+    352.5
+   ]
+  },
+  {
+   "name": "lf7",
+   "prefixes": [
+    "u_fcore.u_h.g_lx.g_l[7].v1",
+    "u_fcore.u_h.g_lx.g_l[7].f2"
+   ],
+   "box_um": [
+    528.15,
+    344.5,
+    536.15,
+    352.5
+   ]
+  },
+  {
+   "name": "lf8",
+   "prefixes": [
+    "u_fcore.u_h.g_lx.g_l[8].v1",
+    "u_fcore.u_h.g_lx.g_l[8].f2"
+   ],
+   "box_um": [
+    575.85,
+    344.5,
+    583.85,
+    352.5
+   ]
+  },
+  {
+   "name": "lf9",
+   "prefixes": [
+    "u_fcore.u_h.g_lx.g_l[9].v1",
+    "u_fcore.u_h.g_lx.g_l[9].f2"
+   ],
+   "box_um": [
+    615.165,
+    344.5,
+    623.165,
+    352.5
+   ]
+  }
+ ]
+}

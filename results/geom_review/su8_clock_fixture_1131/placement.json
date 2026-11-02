@@ -1,0 +1,2947 @@
+{
+  "schema": "opentallas.su8.final_def_placement.v1",
+  "source": "/home/ubuntu/coord/tmp/codex-geom-1131/su8_fixture/6_final.def",
+  "dbu": 1000,
+  "outline": [
+    0.0,
+    0.0,
+    172.8,
+    129.6
+  ],
+  "components": 114011,
+  "filler_decap": 76654,
+  "active_components": 37357,
+  "ff_master_origins": 4655,
+  "named_cts_cells": 488,
+  "clock_cells": [
+    {
+      "name": "clkbuf_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 86.184,
+      "y": 64.8
+    },
+    {
+      "name": "clkbuf_1_0_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 51.408,
+      "y": 63.72
+    },
+    {
+      "name": "clkbuf_1_1_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 104.22,
+      "y": 81.81
+    },
+    {
+      "name": "clkbuf_3_0_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 34.506,
+      "y": 53.46
+    },
+    {
+      "name": "clkbuf_3_1_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 39.906,
+      "y": 53.46
+    },
+    {
+      "name": "clkbuf_3_2_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 43.308,
+      "y": 95.58
+    },
+    {
+      "name": "clkbuf_3_3_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 48.708,
+      "y": 94.77
+    },
+    {
+      "name": "clkbuf_3_4_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 130.68,
+      "y": 93.15
+    },
+    {
+      "name": "clkbuf_3_5_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 130.68,
+      "y": 93.42
+    },
+    {
+      "name": "clkbuf_3_6_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 90.018,
+      "y": 105.57
+    },
+    {
+      "name": "clkbuf_3_7_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 95.634,
+      "y": 105.57
+    },
+    {
+      "name": "clkbuf_5_0_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 15.228,
+      "y": 39.15
+    },
+    {
+      "name": "clkbuf_5_10_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 33.642,
+      "y": 110.16
+    },
+    {
+      "name": "clkbuf_5_11_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 39.042,
+      "y": 110.7
+    },
+    {
+      "name": "clkbuf_5_12_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 55.512,
+      "y": 89.91
+    },
+    {
+      "name": "clkbuf_5_13_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 61.128,
+      "y": 88.83
+    },
+    {
+      "name": "clkbuf_5_14_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 54.594,
+      "y": 115.83
+    },
+    {
+      "name": "clkbuf_5_15_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 59.886,
+      "y": 114.75
+    },
+    {
+      "name": "clkbuf_5_16_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 127.494,
+      "y": 113.13
+    },
+    {
+      "name": "clkbuf_5_17_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 132.894,
+      "y": 112.86
+    },
+    {
+      "name": "clkbuf_5_18_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 145.908,
+      "y": 111.51
+    },
+    {
+      "name": "clkbuf_5_19_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 146.016,
+      "y": 110.43
+    },
+    {
+      "name": "clkbuf_5_1_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 21.33,
+      "y": 39.42
+    },
+    {
+      "name": "clkbuf_5_20_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 146.718,
+      "y": 76.68
+    },
+    {
+      "name": "clkbuf_5_21_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 146.718,
+      "y": 77.22
+    },
+    {
+      "name": "clkbuf_5_22_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 138.726,
+      "y": 94.5
+    },
+    {
+      "name": "clkbuf_5_23_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 144.126,
+      "y": 94.5
+    },
+    {
+      "name": "clkbuf_5_24_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 81.27,
+      "y": 89.64
+    },
+    {
+      "name": "clkbuf_5_25_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 86.562,
+      "y": 90.45
+    },
+    {
+      "name": "clkbuf_5_26_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 75.168,
+      "y": 111.24
+    },
+    {
+      "name": "clkbuf_5_27_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 80.568,
+      "y": 111.78
+    },
+    {
+      "name": "clkbuf_5_28_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 100.17,
+      "y": 104.49
+    },
+    {
+      "name": "clkbuf_5_29_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 105.408,
+      "y": 105.03
+    },
+    {
+      "name": "clkbuf_5_2_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 14.202,
+      "y": 60.21
+    },
+    {
+      "name": "clkbuf_5_30_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 94.716,
+      "y": 122.04
+    },
+    {
+      "name": "clkbuf_5_31_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 100.602,
+      "y": 118.8
+    },
+    {
+      "name": "clkbuf_5_3_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 19.602,
+      "y": 60.48
+    },
+    {
+      "name": "clkbuf_5_4_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 43.092,
+      "y": 34.56
+    },
+    {
+      "name": "clkbuf_5_5_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 48.492,
+      "y": 34.56
+    },
+    {
+      "name": "clkbuf_5_6_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 52.542,
+      "y": 52.11
+    },
+    {
+      "name": "clkbuf_5_7_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 57.942,
+      "y": 52.38
+    },
+    {
+      "name": "clkbuf_5_8_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 20.358,
+      "y": 97.47
+    },
+    {
+      "name": "clkbuf_5_9_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 25.11,
+      "y": 97.74
+    },
+    {
+      "name": "clkbuf_leaf_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 29.808,
+      "y": 40.5
+    },
+    {
+      "name": "clkbuf_leaf_100_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 74.412,
+      "y": 122.58
+    },
+    {
+      "name": "clkbuf_leaf_101_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 77.652,
+      "y": 119.61
+    },
+    {
+      "name": "clkbuf_leaf_102_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 79.812,
+      "y": 122.58
+    },
+    {
+      "name": "clkbuf_leaf_103_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 84.294,
+      "y": 119.34
+    },
+    {
+      "name": "clkbuf_leaf_104_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 84.24,
+      "y": 117.72
+    },
+    {
+      "name": "clkbuf_leaf_105_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 80.838,
+      "y": 117.45
+    },
+    {
+      "name": "clkbuf_leaf_106_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 83.538,
+      "y": 115.02
+    },
+    {
+      "name": "clkbuf_leaf_107_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 75.06,
+      "y": 111.78
+    },
+    {
+      "name": "clkbuf_leaf_108_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 69.606,
+      "y": 109.89
+    },
+    {
+      "name": "clkbuf_leaf_109_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 78.57,
+      "y": 107.73
+    },
+    {
+      "name": "clkbuf_leaf_10_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 12.096,
+      "y": 47.52
+    },
+    {
+      "name": "clkbuf_leaf_110_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 82.566,
+      "y": 105.57
+    },
+    {
+      "name": "clkbuf_leaf_111_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 83.538,
+      "y": 101.52
+    },
+    {
+      "name": "clkbuf_leaf_112_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 77.166,
+      "y": 97.74
+    },
+    {
+      "name": "clkbuf_leaf_113_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 68.796,
+      "y": 99.09
+    },
+    {
+      "name": "clkbuf_leaf_114_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 70.2,
+      "y": 102.6
+    },
+    {
+      "name": "clkbuf_leaf_115_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 66.312,
+      "y": 105.3
+    },
+    {
+      "name": "clkbuf_leaf_116_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 59.454,
+      "y": 102.6
+    },
+    {
+      "name": "clkbuf_leaf_117_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 58.05,
+      "y": 100.44
+    },
+    {
+      "name": "clkbuf_leaf_118_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 52.596,
+      "y": 94.77
+    },
+    {
+      "name": "clkbuf_leaf_119_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 59.508,
+      "y": 93.42
+    },
+    {
+      "name": "clkbuf_leaf_11_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 9.882,
+      "y": 47.79
+    },
+    {
+      "name": "clkbuf_leaf_120_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 63.558,
+      "y": 90.99
+    },
+    {
+      "name": "clkbuf_leaf_121_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 66.15,
+      "y": 84.78
+    },
+    {
+      "name": "clkbuf_leaf_122_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 70.902,
+      "y": 88.83
+    },
+    {
+      "name": "clkbuf_leaf_123_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 70.362,
+      "y": 93.69
+    },
+    {
+      "name": "clkbuf_leaf_124_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 81.864,
+      "y": 90.18
+    },
+    {
+      "name": "clkbuf_leaf_125_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 82.782,
+      "y": 81.81
+    },
+    {
+      "name": "clkbuf_leaf_126_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 77.274,
+      "y": 84.78
+    },
+    {
+      "name": "clkbuf_leaf_127_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 81.864,
+      "y": 76.68
+    },
+    {
+      "name": "clkbuf_leaf_128_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 84.078,
+      "y": 72.63
+    },
+    {
+      "name": "clkbuf_leaf_129_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 95.31,
+      "y": 82.08
+    },
+    {
+      "name": "clkbuf_leaf_12_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 14.58,
+      "y": 44.55
+    },
+    {
+      "name": "clkbuf_leaf_130_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 89.91,
+      "y": 86.4
+    },
+    {
+      "name": "clkbuf_leaf_131_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 92.178,
+      "y": 89.64
+    },
+    {
+      "name": "clkbuf_leaf_132_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 88.182,
+      "y": 91.8
+    },
+    {
+      "name": "clkbuf_leaf_133_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 97.2,
+      "y": 91.8
+    },
+    {
+      "name": "clkbuf_leaf_134_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 100.71,
+      "y": 89.64
+    },
+    {
+      "name": "clkbuf_leaf_135_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 104.382,
+      "y": 85.59
+    },
+    {
+      "name": "clkbuf_leaf_136_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 110.052,
+      "y": 102.06
+    },
+    {
+      "name": "clkbuf_leaf_137_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 108.432,
+      "y": 106.92
+    },
+    {
+      "name": "clkbuf_leaf_138_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 103.464,
+      "y": 104.76
+    },
+    {
+      "name": "clkbuf_leaf_139_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 100.332,
+      "y": 98.01
+    },
+    {
+      "name": "clkbuf_leaf_13_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 19.926,
+      "y": 50.76
+    },
+    {
+      "name": "clkbuf_leaf_140_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 93.42,
+      "y": 96.93
+    },
+    {
+      "name": "clkbuf_leaf_141_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 87.75,
+      "y": 100.44
+    },
+    {
+      "name": "clkbuf_leaf_142_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 90.72,
+      "y": 105.03
+    },
+    {
+      "name": "clkbuf_leaf_143_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 92.178,
+      "y": 109.08
+    },
+    {
+      "name": "clkbuf_leaf_144_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 95.31,
+      "y": 104.76
+    },
+    {
+      "name": "clkbuf_leaf_145_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 101.898,
+      "y": 110.7
+    },
+    {
+      "name": "clkbuf_leaf_146_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 93.474,
+      "y": 113.67
+    },
+    {
+      "name": "clkbuf_leaf_147_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 90.774,
+      "y": 113.94
+    },
+    {
+      "name": "clkbuf_leaf_148_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 91.098,
+      "y": 119.88
+    },
+    {
+      "name": "clkbuf_leaf_149_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 87.75,
+      "y": 117.72
+    },
+    {
+      "name": "clkbuf_leaf_14_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 12.474,
+      "y": 53.73
+    },
+    {
+      "name": "clkbuf_leaf_150_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 89.37,
+      "y": 118.53
+    },
+    {
+      "name": "clkbuf_leaf_151_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 94.122,
+      "y": 118.53
+    },
+    {
+      "name": "clkbuf_leaf_152_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 94.5,
+      "y": 119.61
+    },
+    {
+      "name": "clkbuf_leaf_153_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 98.442,
+      "y": 119.88
+    },
+    {
+      "name": "clkbuf_leaf_154_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 99.576,
+      "y": 122.04
+    },
+    {
+      "name": "clkbuf_leaf_155_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 104.112,
+      "y": 121.5
+    },
+    {
+      "name": "clkbuf_leaf_156_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 104.22,
+      "y": 117.45
+    },
+    {
+      "name": "clkbuf_leaf_157_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 102.492,
+      "y": 118.53
+    },
+    {
+      "name": "clkbuf_leaf_158_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 102.222,
+      "y": 117.99
+    },
+    {
+      "name": "clkbuf_leaf_159_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 106.92,
+      "y": 113.94
+    },
+    {
+      "name": "clkbuf_leaf_15_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 12.366,
+      "y": 52.38
+    },
+    {
+      "name": "clkbuf_leaf_160_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 111.834,
+      "y": 117.72
+    },
+    {
+      "name": "clkbuf_leaf_161_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 108.81,
+      "y": 115.56
+    },
+    {
+      "name": "clkbuf_leaf_162_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 109.566,
+      "y": 123.66
+    },
+    {
+      "name": "clkbuf_leaf_163_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 114.102,
+      "y": 122.85
+    },
+    {
+      "name": "clkbuf_leaf_164_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 115.344,
+      "y": 120.15
+    },
+    {
+      "name": "clkbuf_leaf_165_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 118.8,
+      "y": 121.77
+    },
+    {
+      "name": "clkbuf_leaf_166_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 122.58,
+      "y": 123.39
+    },
+    {
+      "name": "clkbuf_leaf_167_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 122.904,
+      "y": 121.77
+    },
+    {
+      "name": "clkbuf_leaf_168_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 122.796,
+      "y": 113.4
+    },
+    {
+      "name": "clkbuf_leaf_169_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 115.128,
+      "y": 109.89
+    },
+    {
+      "name": "clkbuf_leaf_16_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 12.582,
+      "y": 54.0
+    },
+    {
+      "name": "clkbuf_leaf_170_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 121.338,
+      "y": 106.65
+    },
+    {
+      "name": "clkbuf_leaf_171_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 122.526,
+      "y": 103.14
+    },
+    {
+      "name": "clkbuf_leaf_172_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 129.492,
+      "y": 103.68
+    },
+    {
+      "name": "clkbuf_leaf_173_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 133.704,
+      "y": 108.27
+    },
+    {
+      "name": "clkbuf_leaf_174_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 138.996,
+      "y": 107.73
+    },
+    {
+      "name": "clkbuf_leaf_175_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 143.208,
+      "y": 109.35
+    },
+    {
+      "name": "clkbuf_leaf_176_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 138.672,
+      "y": 113.13
+    },
+    {
+      "name": "clkbuf_leaf_177_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 132.732,
+      "y": 117.72
+    },
+    {
+      "name": "clkbuf_leaf_178_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 130.464,
+      "y": 122.58
+    },
+    {
+      "name": "clkbuf_leaf_179_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 133.218,
+      "y": 122.04
+    },
+    {
+      "name": "clkbuf_leaf_17_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 10.584,
+      "y": 56.97
+    },
+    {
+      "name": "clkbuf_leaf_180_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 135.324,
+      "y": 117.72
+    },
+    {
+      "name": "clkbuf_leaf_181_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 140.238,
+      "y": 121.23
+    },
+    {
+      "name": "clkbuf_leaf_182_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 141.21,
+      "y": 122.85
+    },
+    {
+      "name": "clkbuf_leaf_183_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 145.152,
+      "y": 122.58
+    },
+    {
+      "name": "clkbuf_leaf_184_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 144.558,
+      "y": 120.15
+    },
+    {
+      "name": "clkbuf_leaf_185_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 145.53,
+      "y": 116.1
+    },
+    {
+      "name": "clkbuf_leaf_186_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 150.66,
+      "y": 117.72
+    },
+    {
+      "name": "clkbuf_leaf_187_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 152.658,
+      "y": 122.04
+    },
+    {
+      "name": "clkbuf_leaf_188_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 156.6,
+      "y": 119.07
+    },
+    {
+      "name": "clkbuf_leaf_189_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 157.194,
+      "y": 117.72
+    },
+    {
+      "name": "clkbuf_leaf_18_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 13.176,
+      "y": 55.62
+    },
+    {
+      "name": "clkbuf_leaf_190_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 159.624,
+      "y": 120.42
+    },
+    {
+      "name": "clkbuf_leaf_191_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 165.672,
+      "y": 123.66
+    },
+    {
+      "name": "clkbuf_leaf_192_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 166.482,
+      "y": 119.34
+    },
+    {
+      "name": "clkbuf_leaf_193_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 163.674,
+      "y": 119.07
+    },
+    {
+      "name": "clkbuf_leaf_194_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 163.944,
+      "y": 113.94
+    },
+    {
+      "name": "clkbuf_leaf_195_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 156.168,
+      "y": 105.84
+    },
+    {
+      "name": "clkbuf_leaf_196_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 165.672,
+      "y": 106.92
+    },
+    {
+      "name": "clkbuf_leaf_197_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 163.728,
+      "y": 96.66
+    },
+    {
+      "name": "clkbuf_leaf_198_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 150.66,
+      "y": 103.95
+    },
+    {
+      "name": "clkbuf_leaf_199_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 144.882,
+      "y": 103.68
+    },
+    {
+      "name": "clkbuf_leaf_19_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 12.636,
+      "y": 59.94
+    },
+    {
+      "name": "clkbuf_leaf_1_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 28.944,
+      "y": 43.47
+    },
+    {
+      "name": "clkbuf_leaf_200_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 160.812,
+      "y": 94.77
+    },
+    {
+      "name": "clkbuf_leaf_201_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 166.482,
+      "y": 92.07
+    },
+    {
+      "name": "clkbuf_leaf_202_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 165.402,
+      "y": 71.01
+    },
+    {
+      "name": "clkbuf_leaf_203_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 162.27,
+      "y": 69.39
+    },
+    {
+      "name": "clkbuf_leaf_204_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 123.552,
+      "y": 75.87
+    },
+    {
+      "name": "clkbuf_leaf_205_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 150.822,
+      "y": 60.21
+    },
+    {
+      "name": "clkbuf_leaf_206_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 163.188,
+      "y": 56.16
+    },
+    {
+      "name": "clkbuf_leaf_207_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 165.78,
+      "y": 56.43
+    },
+    {
+      "name": "clkbuf_leaf_208_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 162.27,
+      "y": 51.84
+    },
+    {
+      "name": "clkbuf_leaf_209_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 159.894,
+      "y": 53.73
+    },
+    {
+      "name": "clkbuf_leaf_20_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 11.502,
+      "y": 64.53
+    },
+    {
+      "name": "clkbuf_leaf_210_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 162.054,
+      "y": 46.71
+    },
+    {
+      "name": "clkbuf_leaf_211_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 166.482,
+      "y": 48.06
+    },
+    {
+      "name": "clkbuf_leaf_212_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 163.08,
+      "y": 44.01
+    },
+    {
+      "name": "clkbuf_leaf_213_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 163.674,
+      "y": 41.04
+    },
+    {
+      "name": "clkbuf_leaf_214_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 166.482,
+      "y": 37.8
+    },
+    {
+      "name": "clkbuf_leaf_215_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 85.158,
+      "y": 49.14
+    },
+    {
+      "name": "clkbuf_leaf_216_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 70.848,
+      "y": 48.06
+    },
+    {
+      "name": "clkbuf_leaf_217_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 70.632,
+      "y": 42.66
+    },
+    {
+      "name": "clkbuf_leaf_218_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 65.61,
+      "y": 45.36
+    },
+    {
+      "name": "clkbuf_leaf_219_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 59.238,
+      "y": 42.39
+    },
+    {
+      "name": "clkbuf_leaf_21_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 11.178,
+      "y": 63.72
+    },
+    {
+      "name": "clkbuf_leaf_220_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 47.844,
+      "y": 6.75
+    },
+    {
+      "name": "clkbuf_leaf_221_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 48.978,
+      "y": 12.15
+    },
+    {
+      "name": "clkbuf_leaf_222_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 42.12,
+      "y": 16.74
+    },
+    {
+      "name": "clkbuf_leaf_223_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 41.148,
+      "y": 10.8
+    },
+    {
+      "name": "clkbuf_leaf_224_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 43.2,
+      "y": 7.02
+    },
+    {
+      "name": "clkbuf_leaf_225_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 38.07,
+      "y": 6.21
+    },
+    {
+      "name": "clkbuf_leaf_226_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 29.7,
+      "y": 7.56
+    },
+    {
+      "name": "clkbuf_leaf_227_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 30.024,
+      "y": 11.61
+    },
+    {
+      "name": "clkbuf_leaf_228_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 23.922,
+      "y": 8.91
+    },
+    {
+      "name": "clkbuf_leaf_229_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 7.398,
+      "y": 31.86
+    },
+    {
+      "name": "clkbuf_leaf_22_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 19.17,
+      "y": 59.13
+    },
+    {
+      "name": "clkbuf_leaf_230_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 35.64,
+      "y": 36.18
+    },
+    {
+      "name": "clkbuf_leaf_23_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 22.302,
+      "y": 54.27
+    },
+    {
+      "name": "clkbuf_leaf_24_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 26.19,
+      "y": 54.0
+    },
+    {
+      "name": "clkbuf_leaf_25_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 29.916,
+      "y": 62.91
+    },
+    {
+      "name": "clkbuf_leaf_26_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 40.338,
+      "y": 62.37
+    },
+    {
+      "name": "clkbuf_leaf_27_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 42.444,
+      "y": 53.19
+    },
+    {
+      "name": "clkbuf_leaf_28_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 36.18,
+      "y": 52.11
+    },
+    {
+      "name": "clkbuf_leaf_29_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 30.294,
+      "y": 48.87
+    },
+    {
+      "name": "clkbuf_leaf_2_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 22.68,
+      "y": 45.9
+    },
+    {
+      "name": "clkbuf_leaf_30_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 41.256,
+      "y": 46.98
+    },
+    {
+      "name": "clkbuf_leaf_31_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 40.878,
+      "y": 42.39
+    },
+    {
+      "name": "clkbuf_leaf_32_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 49.896,
+      "y": 41.04
+    },
+    {
+      "name": "clkbuf_leaf_33_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 48.276,
+      "y": 44.01
+    },
+    {
+      "name": "clkbuf_leaf_34_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 51.3,
+      "y": 47.79
+    },
+    {
+      "name": "clkbuf_leaf_35_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 56.592,
+      "y": 44.82
+    },
+    {
+      "name": "clkbuf_leaf_36_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 59.346,
+      "y": 51.3
+    },
+    {
+      "name": "clkbuf_leaf_37_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 54.324,
+      "y": 54.27
+    },
+    {
+      "name": "clkbuf_leaf_38_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 47.736,
+      "y": 54.27
+    },
+    {
+      "name": "clkbuf_leaf_39_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 54.864,
+      "y": 60.48
+    },
+    {
+      "name": "clkbuf_leaf_3_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 20.682,
+      "y": 39.15
+    },
+    {
+      "name": "clkbuf_leaf_40_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 63.126,
+      "y": 56.43
+    },
+    {
+      "name": "clkbuf_leaf_41_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 68.31,
+      "y": 55.35
+    },
+    {
+      "name": "clkbuf_leaf_42_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 68.58,
+      "y": 71.55
+    },
+    {
+      "name": "clkbuf_leaf_43_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 61.992,
+      "y": 71.55
+    },
+    {
+      "name": "clkbuf_leaf_44_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 56.052,
+      "y": 68.85
+    },
+    {
+      "name": "clkbuf_leaf_45_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 48.168,
+      "y": 68.04
+    },
+    {
+      "name": "clkbuf_leaf_46_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 50.706,
+      "y": 73.98
+    },
+    {
+      "name": "clkbuf_leaf_47_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 53.406,
+      "y": 75.6
+    },
+    {
+      "name": "clkbuf_leaf_48_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 57.834,
+      "y": 79.11
+    },
+    {
+      "name": "clkbuf_leaf_49_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 50.166,
+      "y": 85.05
+    },
+    {
+      "name": "clkbuf_leaf_4_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 13.554,
+      "y": 36.99
+    },
+    {
+      "name": "clkbuf_leaf_50_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 43.092,
+      "y": 90.72
+    },
+    {
+      "name": "clkbuf_leaf_51_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 37.962,
+      "y": 84.51
+    },
+    {
+      "name": "clkbuf_leaf_52_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 35.802,
+      "y": 75.6
+    },
+    {
+      "name": "clkbuf_leaf_53_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 39.906,
+      "y": 67.5
+    },
+    {
+      "name": "clkbuf_leaf_54_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 32.292,
+      "y": 68.31
+    },
+    {
+      "name": "clkbuf_leaf_55_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 25.596,
+      "y": 71.82
+    },
+    {
+      "name": "clkbuf_leaf_56_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 9.882,
+      "y": 65.88
+    },
+    {
+      "name": "clkbuf_leaf_57_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 8.1,
+      "y": 70.2
+    },
+    {
+      "name": "clkbuf_leaf_58_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 9.018,
+      "y": 72.63
+    },
+    {
+      "name": "clkbuf_leaf_59_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 7.722,
+      "y": 76.14
+    },
+    {
+      "name": "clkbuf_leaf_5_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 9.936,
+      "y": 34.02
+    },
+    {
+      "name": "clkbuf_leaf_60_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 14.742,
+      "y": 89.64
+    },
+    {
+      "name": "clkbuf_leaf_61_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 26.514,
+      "y": 86.4
+    },
+    {
+      "name": "clkbuf_leaf_62_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 32.454,
+      "y": 92.88
+    },
+    {
+      "name": "clkbuf_leaf_63_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 36.936,
+      "y": 90.45
+    },
+    {
+      "name": "clkbuf_leaf_64_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 30.672,
+      "y": 96.39
+    },
+    {
+      "name": "clkbuf_leaf_65_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 28.35,
+      "y": 99.09
+    },
+    {
+      "name": "clkbuf_leaf_66_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 28.188,
+      "y": 104.49
+    },
+    {
+      "name": "clkbuf_leaf_67_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 20.898,
+      "y": 102.06
+    },
+    {
+      "name": "clkbuf_leaf_68_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 20.736,
+      "y": 96.12
+    },
+    {
+      "name": "clkbuf_leaf_69_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 12.474,
+      "y": 97.47
+    },
+    {
+      "name": "clkbuf_leaf_6_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 10.8,
+      "y": 36.18
+    },
+    {
+      "name": "clkbuf_leaf_70_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 7.776,
+      "y": 100.98
+    },
+    {
+      "name": "clkbuf_leaf_71_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 8.046,
+      "y": 102.6
+    },
+    {
+      "name": "clkbuf_leaf_72_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 7.02,
+      "y": 108.54
+    },
+    {
+      "name": "clkbuf_leaf_73_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 12.042,
+      "y": 106.38
+    },
+    {
+      "name": "clkbuf_leaf_74_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 29.43,
+      "y": 116.1
+    },
+    {
+      "name": "clkbuf_leaf_75_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 36.828,
+      "y": 123.12
+    },
+    {
+      "name": "clkbuf_leaf_76_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 42.444,
+      "y": 123.66
+    },
+    {
+      "name": "clkbuf_leaf_77_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 39.798,
+      "y": 116.37
+    },
+    {
+      "name": "clkbuf_leaf_78_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 40.446,
+      "y": 112.59
+    },
+    {
+      "name": "clkbuf_leaf_79_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 34.56,
+      "y": 115.02
+    },
+    {
+      "name": "clkbuf_leaf_7_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 11.34,
+      "y": 39.96
+    },
+    {
+      "name": "clkbuf_leaf_80_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 35.208,
+      "y": 108.27
+    },
+    {
+      "name": "clkbuf_leaf_81_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 42.552,
+      "y": 107.19
+    },
+    {
+      "name": "clkbuf_leaf_82_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 47.412,
+      "y": 100.71
+    },
+    {
+      "name": "clkbuf_leaf_83_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 51.732,
+      "y": 103.41
+    },
+    {
+      "name": "clkbuf_leaf_84_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 48.546,
+      "y": 105.84
+    },
+    {
+      "name": "clkbuf_leaf_85_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 56.754,
+      "y": 105.3
+    },
+    {
+      "name": "clkbuf_leaf_86_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 57.51,
+      "y": 111.24
+    },
+    {
+      "name": "clkbuf_leaf_87_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 50.706,
+      "y": 117.99
+    },
+    {
+      "name": "clkbuf_leaf_88_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 47.898,
+      "y": 120.15
+    },
+    {
+      "name": "clkbuf_leaf_89_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 48.708,
+      "y": 120.96
+    },
+    {
+      "name": "clkbuf_leaf_8_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 11.07,
+      "y": 41.31
+    },
+    {
+      "name": "clkbuf_leaf_90_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 53.946,
+      "y": 124.74
+    },
+    {
+      "name": "clkbuf_leaf_91_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 55.566,
+      "y": 120.15
+    },
+    {
+      "name": "clkbuf_leaf_92_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 57.78,
+      "y": 123.12
+    },
+    {
+      "name": "clkbuf_leaf_93_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 61.182,
+      "y": 122.85
+    },
+    {
+      "name": "clkbuf_leaf_94_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 63.882,
+      "y": 122.04
+    },
+    {
+      "name": "clkbuf_leaf_95_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 61.074,
+      "y": 115.56
+    },
+    {
+      "name": "clkbuf_leaf_96_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 66.096,
+      "y": 113.13
+    },
+    {
+      "name": "clkbuf_leaf_97_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 69.336,
+      "y": 117.72
+    },
+    {
+      "name": "clkbuf_leaf_98_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 68.31,
+      "y": 123.39
+    },
+    {
+      "name": "clkbuf_leaf_99_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 73.332,
+      "y": 123.39
+    },
+    {
+      "name": "clkbuf_leaf_9_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 12.312,
+      "y": 44.28
+    },
+    {
+      "name": "clkload0",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 15.282,
+      "y": 39.96
+    },
+    {
+      "name": "clkload1",
+      "master": "INVx11_ASAP7_75t_R",
+      "x": 20.304,
+      "y": 40.23
+    },
+    {
+      "name": "clkload10",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 60.912,
+      "y": 89.1
+    },
+    {
+      "name": "clkload100",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 42.66,
+      "y": 108.27
+    },
+    {
+      "name": "clkload101",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 50.706,
+      "y": 73.17
+    },
+    {
+      "name": "clkload102",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 53.406,
+      "y": 76.41
+    },
+    {
+      "name": "clkload103",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 57.834,
+      "y": 79.38
+    },
+    {
+      "name": "clkload104",
+      "master": "INVx6_ASAP7_75t_R",
+      "x": 50.166,
+      "y": 85.32
+    },
+    {
+      "name": "clkload105",
+      "master": "INVx6_ASAP7_75t_R",
+      "x": 57.942,
+      "y": 99.63
+    },
+    {
+      "name": "clkload106",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 53.028,
+      "y": 95.31
+    },
+    {
+      "name": "clkload107",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 68.58,
+      "y": 71.01
+    },
+    {
+      "name": "clkload108",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 61.992,
+      "y": 72.63
+    },
+    {
+      "name": "clkload109",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 59.076,
+      "y": 92.61
+    },
+    {
+      "name": "clkload11",
+      "master": "CKINVDCx14_ASAP7_75t_R",
+      "x": 127.008,
+      "y": 113.67
+    },
+    {
+      "name": "clkload110",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 63.396,
+      "y": 91.53
+    },
+    {
+      "name": "clkload111",
+      "master": "CKINVDCx6p67_ASAP7_75t_R",
+      "x": 65.502,
+      "y": 86.67
+    },
+    {
+      "name": "clkload112",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 51.678,
+      "y": 103.68
+    },
+    {
+      "name": "clkload113",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 48.6,
+      "y": 105.03
+    },
+    {
+      "name": "clkload114",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 57.078,
+      "y": 106.38
+    },
+    {
+      "name": "clkload115",
+      "master": "CKINVDCx10_ASAP7_75t_R",
+      "x": 57.51,
+      "y": 112.86
+    },
+    {
+      "name": "clkload116",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 50.706,
+      "y": 118.26
+    },
+    {
+      "name": "clkload117",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 48.006,
+      "y": 120.42
+    },
+    {
+      "name": "clkload118",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 53.352,
+      "y": 123.39
+    },
+    {
+      "name": "clkload119",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 57.834,
+      "y": 123.66
+    },
+    {
+      "name": "clkload12",
+      "master": "CKINVDCx14_ASAP7_75t_R",
+      "x": 132.894,
+      "y": 113.13
+    },
+    {
+      "name": "clkload120",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 61.074,
+      "y": 121.23
+    },
+    {
+      "name": "clkload121",
+      "master": "INVx6_ASAP7_75t_R",
+      "x": 64.422,
+      "y": 120.96
+    },
+    {
+      "name": "clkload122",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 61.29,
+      "y": 116.91
+    },
+    {
+      "name": "clkload123",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "x": 65.934,
+      "y": 113.94
+    },
+    {
+      "name": "clkload124",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 68.742,
+      "y": 123.12
+    },
+    {
+      "name": "clkload125",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 66.42,
+      "y": 104.76
+    },
+    {
+      "name": "clkload126",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 122.58,
+      "y": 123.66
+    },
+    {
+      "name": "clkload127",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 123.282,
+      "y": 119.88
+    },
+    {
+      "name": "clkload128",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 122.742,
+      "y": 112.59
+    },
+    {
+      "name": "clkload129",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 121.716,
+      "y": 106.92
+    },
+    {
+      "name": "clkload13",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 146.016,
+      "y": 110.16
+    },
+    {
+      "name": "clkload130",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 122.472,
+      "y": 103.41
+    },
+    {
+      "name": "clkload131",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 133.65,
+      "y": 108.54
+    },
+    {
+      "name": "clkload132",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 138.456,
+      "y": 113.4
+    },
+    {
+      "name": "clkload133",
+      "master": "INVx6_ASAP7_75t_R",
+      "x": 132.732,
+      "y": 117.18
+    },
+    {
+      "name": "clkload134",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 135.0,
+      "y": 123.66
+    },
+    {
+      "name": "clkload135",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 139.482,
+      "y": 120.69
+    },
+    {
+      "name": "clkload136",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 140.13,
+      "y": 124.2
+    },
+    {
+      "name": "clkload137",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 145.314,
+      "y": 119.61
+    },
+    {
+      "name": "clkload138",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 144.342,
+      "y": 119.34
+    },
+    {
+      "name": "clkload139",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 145.53,
+      "y": 115.83
+    },
+    {
+      "name": "clkload14",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 146.718,
+      "y": 76.95
+    },
+    {
+      "name": "clkload140",
+      "master": "CKINVDCx8_ASAP7_75t_R",
+      "x": 150.66,
+      "y": 119.88
+    },
+    {
+      "name": "clkload141",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 158.004,
+      "y": 120.42
+    },
+    {
+      "name": "clkload142",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 143.64,
+      "y": 108.81
+    },
+    {
+      "name": "clkload143",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 153.36,
+      "y": 123.93
+    },
+    {
+      "name": "clkload144",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 155.79,
+      "y": 122.85
+    },
+    {
+      "name": "clkload145",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 166.266,
+      "y": 120.15
+    },
+    {
+      "name": "clkload146",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 162.81,
+      "y": 118.8
+    },
+    {
+      "name": "clkload147",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 163.944,
+      "y": 113.67
+    },
+    {
+      "name": "clkload148",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 156.168,
+      "y": 107.73
+    },
+    {
+      "name": "clkload149",
+      "master": "CKINVDCx12_ASAP7_75t_R",
+      "x": 165.672,
+      "y": 107.19
+    },
+    {
+      "name": "clkload15",
+      "master": "INVx11_ASAP7_75t_R",
+      "x": 138.726,
+      "y": 94.77
+    },
+    {
+      "name": "clkload150",
+      "master": "CKINVDCx9p33_ASAP7_75t_R",
+      "x": 150.12,
+      "y": 103.41
+    },
+    {
+      "name": "clkload151",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 164.97,
+      "y": 50.22
+    },
+    {
+      "name": "clkload152",
+      "master": "CKINVDCx9p33_ASAP7_75t_R",
+      "x": 159.894,
+      "y": 54.27
+    },
+    {
+      "name": "clkload153",
+      "master": "CKINVDCx10_ASAP7_75t_R",
+      "x": 166.32,
+      "y": 39.15
+    },
+    {
+      "name": "clkload154",
+      "master": "CKINVDCx14_ASAP7_75t_R",
+      "x": 162.27,
+      "y": 70.2
+    },
+    {
+      "name": "clkload155",
+      "master": "CKINVDCx12_ASAP7_75t_R",
+      "x": 150.822,
+      "y": 60.48
+    },
+    {
+      "name": "clkload156",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 166.104,
+      "y": 53.73
+    },
+    {
+      "name": "clkload157",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 163.242,
+      "y": 47.79
+    },
+    {
+      "name": "clkload158",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 163.674,
+      "y": 41.58
+    },
+    {
+      "name": "clkload159",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 104.382,
+      "y": 86.13
+    },
+    {
+      "name": "clkload16",
+      "master": "INVx11_ASAP7_75t_R",
+      "x": 144.126,
+      "y": 94.77
+    },
+    {
+      "name": "clkload160",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 129.492,
+      "y": 103.14
+    },
+    {
+      "name": "clkload161",
+      "master": "INVx11_ASAP7_75t_R",
+      "x": 123.552,
+      "y": 76.14
+    },
+    {
+      "name": "clkload162",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 163.728,
+      "y": 95.85
+    },
+    {
+      "name": "clkload163",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 145.26,
+      "y": 104.22
+    },
+    {
+      "name": "clkload164",
+      "master": "CKINVDCx8_ASAP7_75t_R",
+      "x": 166.914,
+      "y": 91.26
+    },
+    {
+      "name": "clkload165",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 76.68,
+      "y": 97.2
+    },
+    {
+      "name": "clkload166",
+      "master": "INVx6_ASAP7_75t_R",
+      "x": 70.902,
+      "y": 90.18
+    },
+    {
+      "name": "clkload167",
+      "master": "CKINVDCx8_ASAP7_75t_R",
+      "x": 70.416,
+      "y": 94.23
+    },
+    {
+      "name": "clkload168",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 81.864,
+      "y": 90.99
+    },
+    {
+      "name": "clkload169",
+      "master": "INVx6_ASAP7_75t_R",
+      "x": 82.782,
+      "y": 83.16
+    },
+    {
+      "name": "clkload17",
+      "master": "INVx11_ASAP7_75t_R",
+      "x": 80.568,
+      "y": 110.43
+    },
+    {
+      "name": "clkload170",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 77.004,
+      "y": 84.24
+    },
+    {
+      "name": "clkload171",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 81.972,
+      "y": 76.41
+    },
+    {
+      "name": "clkload172",
+      "master": "CKINVDCx14_ASAP7_75t_R",
+      "x": 84.078,
+      "y": 72.9
+    },
+    {
+      "name": "clkload173",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "x": 95.472,
+      "y": 82.89
+    },
+    {
+      "name": "clkload174",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 89.91,
+      "y": 86.13
+    },
+    {
+      "name": "clkload175",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 92.178,
+      "y": 88.29
+    },
+    {
+      "name": "clkload176",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "x": 88.02,
+      "y": 89.37
+    },
+    {
+      "name": "clkload177",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "x": 93.69,
+      "y": 97.2
+    },
+    {
+      "name": "clkload178",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 87.75,
+      "y": 100.71
+    },
+    {
+      "name": "clkload179",
+      "master": "INVx6_ASAP7_75t_R",
+      "x": 69.552,
+      "y": 120.96
+    },
+    {
+      "name": "clkload18",
+      "master": "CKINVDCx20_ASAP7_75t_R",
+      "x": 100.17,
+      "y": 103.95
+    },
+    {
+      "name": "clkload180",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 72.9,
+      "y": 122.85
+    },
+    {
+      "name": "clkload181",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 74.682,
+      "y": 119.07
+    },
+    {
+      "name": "clkload182",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 81.054,
+      "y": 117.18
+    },
+    {
+      "name": "clkload183",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 75.06,
+      "y": 110.7
+    },
+    {
+      "name": "clkload184",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "x": 69.606,
+      "y": 110.7
+    },
+    {
+      "name": "clkload185",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 83.538,
+      "y": 114.21
+    },
+    {
+      "name": "clkload186",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 78.57,
+      "y": 108.54
+    },
+    {
+      "name": "clkload187",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 82.242,
+      "y": 104.76
+    },
+    {
+      "name": "clkload188",
+      "master": "INVx6_ASAP7_75t_R",
+      "x": 90.72,
+      "y": 104.49
+    },
+    {
+      "name": "clkload189",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 100.98,
+      "y": 89.91
+    },
+    {
+      "name": "clkload19",
+      "master": "INVx11_ASAP7_75t_R",
+      "x": 105.57,
+      "y": 104.49
+    },
+    {
+      "name": "clkload190",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 100.332,
+      "y": 98.28
+    },
+    {
+      "name": "clkload191",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 91.908,
+      "y": 108.0
+    },
+    {
+      "name": "clkload192",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "x": 93.15,
+      "y": 112.05
+    },
+    {
+      "name": "clkload193",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 108.702,
+      "y": 106.65
+    },
+    {
+      "name": "clkload194",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 103.464,
+      "y": 104.49
+    },
+    {
+      "name": "clkload195",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 101.682,
+      "y": 110.97
+    },
+    {
+      "name": "clkload196",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 102.384,
+      "y": 116.64
+    },
+    {
+      "name": "clkload197",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 106.596,
+      "y": 114.75
+    },
+    {
+      "name": "clkload198",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 115.02,
+      "y": 111.24
+    },
+    {
+      "name": "clkload199",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 84.618,
+      "y": 121.77
+    },
+    {
+      "name": "clkload2",
+      "master": "CKINVDCx14_ASAP7_75t_R",
+      "x": 19.602,
+      "y": 59.4
+    },
+    {
+      "name": "clkload20",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 94.284,
+      "y": 124.2
+    },
+    {
+      "name": "clkload200",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 85.59,
+      "y": 119.07
+    },
+    {
+      "name": "clkload201",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 91.368,
+      "y": 116.37
+    },
+    {
+      "name": "clkload202",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 90.99,
+      "y": 118.53
+    },
+    {
+      "name": "clkload203",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 89.1,
+      "y": 123.39
+    },
+    {
+      "name": "clkload204",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 94.878,
+      "y": 120.42
+    },
+    {
+      "name": "clkload205",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 98.496,
+      "y": 122.04
+    },
+    {
+      "name": "clkload206",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 99.306,
+      "y": 123.12
+    },
+    {
+      "name": "clkload207",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 104.382,
+      "y": 122.85
+    },
+    {
+      "name": "clkload208",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 105.138,
+      "y": 120.42
+    },
+    {
+      "name": "clkload209",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 102.492,
+      "y": 119.34
+    },
+    {
+      "name": "clkload21",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 13.554,
+      "y": 37.26
+    },
+    {
+      "name": "clkload210",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 109.728,
+      "y": 118.53
+    },
+    {
+      "name": "clkload211",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 109.242,
+      "y": 118.8
+    },
+    {
+      "name": "clkload212",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 114.21,
+      "y": 123.93
+    },
+    {
+      "name": "clkload213",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 115.29,
+      "y": 121.23
+    },
+    {
+      "name": "clkload22",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 7.668,
+      "y": 35.91
+    },
+    {
+      "name": "clkload23",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 6.858,
+      "y": 38.34
+    },
+    {
+      "name": "clkload24",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 7.776,
+      "y": 39.42
+    },
+    {
+      "name": "clkload25",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 11.718,
+      "y": 42.12
+    },
+    {
+      "name": "clkload26",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 8.208,
+      "y": 44.82
+    },
+    {
+      "name": "clkload27",
+      "master": "INVx6_ASAP7_75t_R",
+      "x": 11.34,
+      "y": 45.9
+    },
+    {
+      "name": "clkload28",
+      "master": "CKINVDCx6p67_ASAP7_75t_R",
+      "x": 14.742,
+      "y": 46.17
+    },
+    {
+      "name": "clkload29",
+      "master": "CKINVDCx11_ASAP7_75t_R",
+      "x": 6.858,
+      "y": 30.24
+    },
+    {
+      "name": "clkload3",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 43.092,
+      "y": 34.83
+    },
+    {
+      "name": "clkload30",
+      "master": "INVx4_ASAP7_75t_R",
+      "x": 29.808,
+      "y": 38.88
+    },
+    {
+      "name": "clkload31",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 28.674,
+      "y": 44.01
+    },
+    {
+      "name": "clkload32",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 22.734,
+      "y": 45.63
+    },
+    {
+      "name": "clkload33",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 20.304,
+      "y": 39.15
+    },
+    {
+      "name": "clkload34",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 19.602,
+      "y": 50.49
+    },
+    {
+      "name": "clkload35",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "x": 30.294,
+      "y": 48.6
+    },
+    {
+      "name": "clkload36",
+      "master": "BUFx8_ASAP7_75t_R",
+      "x": 30.078,
+      "y": 10.8
+    },
+    {
+      "name": "clkload37",
+      "master": "INVx13_ASAP7_75t_R",
+      "x": 24.192,
+      "y": 7.83
+    },
+    {
+      "name": "clkload38",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 13.176,
+      "y": 52.65
+    },
+    {
+      "name": "clkload39",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 7.83,
+      "y": 48.06
+    },
+    {
+      "name": "clkload4",
+      "master": "CKINVDCx14_ASAP7_75t_R",
+      "x": 48.492,
+      "y": 34.83
+    },
+    {
+      "name": "clkload40",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 8.64,
+      "y": 56.43
+    },
+    {
+      "name": "clkload41",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 10.584,
+      "y": 59.4
+    },
+    {
+      "name": "clkload42",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 7.992,
+      "y": 59.94
+    },
+    {
+      "name": "clkload43",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 7.182,
+      "y": 64.53
+    },
+    {
+      "name": "clkload44",
+      "master": "CKINVDCx6p67_ASAP7_75t_R",
+      "x": 12.15,
+      "y": 63.45
+    },
+    {
+      "name": "clkload45",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 8.478,
+      "y": 66.42
+    },
+    {
+      "name": "clkload46",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 6.858,
+      "y": 68.04
+    },
+    {
+      "name": "clkload47",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 9.288,
+      "y": 73.17
+    },
+    {
+      "name": "clkload48",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 6.588,
+      "y": 78.03
+    },
+    {
+      "name": "clkload49",
+      "master": "BUFx8_ASAP7_75t_R",
+      "x": 19.17,
+      "y": 58.86
+    },
+    {
+      "name": "clkload5",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 52.488,
+      "y": 53.46
+    },
+    {
+      "name": "clkload50",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 26.19,
+      "y": 53.19
+    },
+    {
+      "name": "clkload51",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "x": 29.916,
+      "y": 62.37
+    },
+    {
+      "name": "clkload52",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 36.18,
+      "y": 52.38
+    },
+    {
+      "name": "clkload53",
+      "master": "CKINVDCx8_ASAP7_75t_R",
+      "x": 35.802,
+      "y": 75.87
+    },
+    {
+      "name": "clkload54",
+      "master": "INVx4_ASAP7_75t_R",
+      "x": 32.454,
+      "y": 67.23
+    },
+    {
+      "name": "clkload55",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 25.596,
+      "y": 72.09
+    },
+    {
+      "name": "clkload56",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 41.256,
+      "y": 46.71
+    },
+    {
+      "name": "clkload57",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 40.878,
+      "y": 42.66
+    },
+    {
+      "name": "clkload58",
+      "master": "CKINVDCx8_ASAP7_75t_R",
+      "x": 42.12,
+      "y": 17.01
+    },
+    {
+      "name": "clkload59",
+      "master": "INVx4_ASAP7_75t_R",
+      "x": 40.878,
+      "y": 10.53
+    },
+    {
+      "name": "clkload6",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 25.704,
+      "y": 97.47
+    },
+    {
+      "name": "clkload60",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 38.07,
+      "y": 6.75
+    },
+    {
+      "name": "clkload61",
+      "master": "CKINVDCx16_ASAP7_75t_R",
+      "x": 35.64,
+      "y": 36.45
+    },
+    {
+      "name": "clkload62",
+      "master": "BUFx8_ASAP7_75t_R",
+      "x": 49.896,
+      "y": 41.85
+    },
+    {
+      "name": "clkload63",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 48.276,
+      "y": 44.28
+    },
+    {
+      "name": "clkload64",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 48.114,
+      "y": 5.67
+    },
+    {
+      "name": "clkload65",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 48.654,
+      "y": 11.61
+    },
+    {
+      "name": "clkload66",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 40.338,
+      "y": 61.56
+    },
+    {
+      "name": "clkload67",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 42.228,
+      "y": 53.73
+    },
+    {
+      "name": "clkload68",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 54.324,
+      "y": 53.46
+    },
+    {
+      "name": "clkload69",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 47.574,
+      "y": 53.73
+    },
+    {
+      "name": "clkload7",
+      "master": "CKINVDCx14_ASAP7_75t_R",
+      "x": 33.426,
+      "y": 111.24
+    },
+    {
+      "name": "clkload70",
+      "master": "INVx6_ASAP7_75t_R",
+      "x": 54.864,
+      "y": 60.75
+    },
+    {
+      "name": "clkload71",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 56.052,
+      "y": 69.12
+    },
+    {
+      "name": "clkload72",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 48.438,
+      "y": 66.96
+    },
+    {
+      "name": "clkload73",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 59.346,
+      "y": 51.57
+    },
+    {
+      "name": "clkload74",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 63.126,
+      "y": 55.08
+    },
+    {
+      "name": "clkload75",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 68.31,
+      "y": 56.16
+    },
+    {
+      "name": "clkload76",
+      "master": "CKINVDCx10_ASAP7_75t_R",
+      "x": 85.158,
+      "y": 49.41
+    },
+    {
+      "name": "clkload77",
+      "master": "CKINVDCx9p33_ASAP7_75t_R",
+      "x": 70.848,
+      "y": 48.6
+    },
+    {
+      "name": "clkload78",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 70.632,
+      "y": 42.93
+    },
+    {
+      "name": "clkload79",
+      "master": "INVx3_ASAP7_75t_R",
+      "x": 65.61,
+      "y": 45.09
+    },
+    {
+      "name": "clkload8",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 39.042,
+      "y": 110.97
+    },
+    {
+      "name": "clkload80",
+      "master": "CKINVDCx10_ASAP7_75t_R",
+      "x": 59.238,
+      "y": 42.66
+    },
+    {
+      "name": "clkload81",
+      "master": "INVx11_ASAP7_75t_R",
+      "x": 14.742,
+      "y": 89.91
+    },
+    {
+      "name": "clkload82",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 20.898,
+      "y": 101.79
+    },
+    {
+      "name": "clkload83",
+      "master": "INVx8_ASAP7_75t_R",
+      "x": 20.52,
+      "y": 96.93
+    },
+    {
+      "name": "clkload84",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 12.312,
+      "y": 98.82
+    },
+    {
+      "name": "clkload85",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 6.21,
+      "y": 98.82
+    },
+    {
+      "name": "clkload86",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "x": 8.046,
+      "y": 103.14
+    },
+    {
+      "name": "clkload87",
+      "master": "CKINVDCx12_ASAP7_75t_R",
+      "x": 12.042,
+      "y": 105.84
+    },
+    {
+      "name": "clkload88",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 43.092,
+      "y": 90.18
+    },
+    {
+      "name": "clkload89",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 37.962,
+      "y": 83.7
+    },
+    {
+      "name": "clkload9",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 55.512,
+      "y": 88.83
+    },
+    {
+      "name": "clkload90",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 26.514,
+      "y": 86.67
+    },
+    {
+      "name": "clkload91",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 32.454,
+      "y": 93.15
+    },
+    {
+      "name": "clkload92",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 28.296,
+      "y": 99.36
+    },
+    {
+      "name": "clkload93",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 28.188,
+      "y": 105.03
+    },
+    {
+      "name": "clkload94",
+      "master": "INVx5_ASAP7_75t_R",
+      "x": 29.43,
+      "y": 115.83
+    },
+    {
+      "name": "clkload95",
+      "master": "INVx2_ASAP7_75t_R",
+      "x": 34.668,
+      "y": 114.75
+    },
+    {
+      "name": "clkload96",
+      "master": "CKINVDCx5p33_ASAP7_75t_R",
+      "x": 36.936,
+      "y": 92.88
+    },
+    {
+      "name": "clkload97",
+      "master": "BUFx4f_ASAP7_75t_R",
+      "x": 36.99,
+      "y": 122.85
+    },
+    {
+      "name": "clkload98",
+      "master": "BUFx24_ASAP7_75t_R",
+      "x": 39.798,
+      "y": 115.83
+    },
+    {
+      "name": "clkload99",
+      "master": "BUFx2_ASAP7_75t_R",
+      "x": 40.446,
+      "y": 112.32
+    }
+  ],
+  "scope": "read-only TT/FF clock coupon; no gate expansion/80ps waiver/legacy SIGNOFF claim"
+}

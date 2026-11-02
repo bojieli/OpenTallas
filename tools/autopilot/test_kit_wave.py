@@ -76,10 +76,10 @@ class Gate(unittest.TestCase):
         for ev in ("l47k", "l47t"):                            # COORD 10-31 04:4x: l47k now, l47t after merge
             c["dies"]["s81_head"]["event"] = ev
             self.assertTrue(KW.gate(c, "s81_head")[0])
-        for ev in ("l48w", "l48x", "l48y"):                    # COORD 10-31 16:2x l48w; l48x pin fixes; l48y COORD 11-01 01:0x
+        for ev in ("l48w", "l48x", "l48y", "l48z"):            # COORD 10-31 16:2x l48w; l48x pin fixes; l48y COORD 11-01 01:0x; l48z 11-01 14:0x
             c["dies"]["s81_head"]["event"] = ev
             self.assertTrue(KW.gate(c, "s81_head")[0])
-        for ev in ("l48", "l48z"):
+        for ev in ("l48", "l48q"):
             c["dies"]["s81_head"]["event"] = ev
             self.assertFalse(KW.gate(c, "s81_head")[0])
         c["dies"]["s81_head"]["event"] = "l48"
@@ -368,6 +368,38 @@ class QueueFill(unittest.TestCase):
             st["items"][KW.item_key("qwen_kvsys", "event28w_c", "kv3_st_t3")] = st["items"].pop("q")
             picks, _ = KW.select(rows, c, "qwen_kvsys", st, PLAN | {"kv3_st_t3"})
             self.assertIn("kv3_st_t3", [p["item"] for p in picks])
+
+
+class VolumeGeomTest(unittest.TestCase):
+    def test_geom_fail_does_not_cancel_volume(self):
+        with tempfile.TemporaryDirectory() as d:
+            ap = FakeAP(d, "{}")
+            c = cfg(pilot_mode="queue")
+            cls = "qwen_kvsys|type|kv#_st_t#"
+            now = time.time()
+            (Path(d) / "q").mkdir()
+            (Path(d) / "q" / "place.live.log").write_text("waiting for memory\n")
+            st = {"items": {
+                "p": {"die": "qwen_kvsys", "item": "kv3_st_t1", "status": "FAIL", "class": "PLAN", "stage": "geom",
+                      "updated": now},
+                "q": {"die": "qwen_kvsys", "item": "kv3_st_t3", "status": "RUNNING", "volume": cls, "unit": "u3",
+                      "dir": str(Path(d) / "q"), "started": now - 60},
+            }}
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, {}), 0)
+            self.assertEqual(st["items"]["q"]["status"], "RUNNING")
+            # a gen-stage pilot FAIL still cancels
+            st["items"]["p"]["stage"] = "gen"
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, {}), 1)
+            # back to a geom-only FAIL: the cancelled volume is pickable again (its reason no longer stands)
+            st["items"]["p"]["stage"] = "geom"
+            rows = KW.parse_owners(OWN + "qwen_kvsys\tkv3_st_t3\ttype\tNEEDS-KIT\tKV-PLAN\tnone\t999m\tkit it\t\tKV-PLAN\t1\t\n")
+            st["items"][KW.item_key("qwen_kvsys", "event28w_c", "kv3_st_t3")] = st["items"].pop("q")
+            picks, _ = KW.select(rows, c, "qwen_kvsys", st, PLAN | {"kv3_st_t3"})
+            self.assertIn("kv3_st_t3", [p["item"] for p in picks])
+            # a standing non-geom pilot FAIL keeps it held
+            st["items"]["p"]["stage"] = "gen"
+            picks, _ = KW.select(rows, c, "qwen_kvsys", st, PLAN | {"kv3_st_t3"})
+            self.assertNotIn("kv3_st_t3", [p["item"] for p in picks])
 
 
 class FakeAP:
@@ -772,6 +804,21 @@ class PreRouteHoldReason(unittest.TestCase):
         j = {"status": "DONE-STRUCTURAL", "kind": "routed-not-signed", "reasons": "hold_ff",
              "signoff": {"fails": ["hold_ff"], "tt_wns": 3.0, "ff_wns": -4.5}}
         self.assertIn("TT 3.0 FF -4.5 ps", KW.queue_class(j)[3])
+
+
+class LateEcoClass(unittest.TestCase):
+    # KW-ECO-1: a route/sign-off FAIL that went through the late-stage ECO loop names it in the class table
+    def test_exhausted_named(self):
+        j = {"status": "DONE-NEAR-MISS", "kind": "routed", "reasons": "hold_ff: FAIL",
+             "signoff": {"fails": ["hold_ff"], "tt_wns": 3.0, "ff_wns": -4.5},
+             "chain": {"eco": {"verdict": "EXHAUSTED", "summary": "late-ECO exhausted (2 it, 900 s): FF -6->-4.5"}}}
+        stage, st, cls, why = KW.queue_class(j)
+        self.assertEqual((st, cls), ("FAIL", "TIMING"))
+        self.assertIn("late-ECO exhausted (2 it", why)
+
+    def test_no_eco_unchanged(self):
+        j = {"status": "DONE-NEAR-MISS", "kind": "routed", "reasons": "hold_ff", "signoff": {"fails": ["hold_ff"]}}
+        self.assertNotIn("late-ECO", KW.queue_class(j)[3])
 
 
 class AdoptedPlanAllowlist(unittest.TestCase):

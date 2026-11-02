@@ -518,8 +518,11 @@ if {[file exists /work/relay_mid.tcl] && [info exists ::env(OT_RELAY_MID_RE)]} {
 # GPL_TIMING_DRIVEN and calls global_placement.  It generalises the opt-in plain-GPL form (gen phys --gpl-plain,
 # KV-KITS-5 10-27 kv3_hub_Ei: routability +1495 %, GPL-0305 after 2 h 25 m; plain GPL converged in 438 s):
 #  (1) SPARSE rule (judged when global_placement is called, after every PRE_GLOBAL_PLACE hook): movable std-cell area / (core area - FIRM area inside the core) below OT_GPL_SPARSE_UTIL (default
-#      0.02) -> plain wirelength GPL up front (QC sle_fw_v1__cl9d029624 / __clf58b4dfb: util 0.60 / 0.67 %, inflation
-#      +1692 / +1525 %, GPL-0305 after 1 h 12 m).  OT_GPL_SPARSE_UTIL=0 disables the rule.
+#      0.02) -> routability-driven mode dropped up front (QC sle_fw_v1__cl9d029624 / __clf58b4dfb: util 0.60 / 0.67 %,
+#      routability inflation +1692 / +1525 %, GPL-0305 after 1 h 12 m).  Timing-driven mode is KEPT (FLOW-21 canary
+#      11-01: dropping it too on S81 hd_turn_a, util 0.095 %, moved TT pinreg insertion 247 -> 236 ps, sign-off TT
+#      setup -3.8 -> -36.4 ps, FF hold endpoints 109 -> 220).  A sparse call that still diverges takes the FALLBACK.
+#      OT_GPL_SPARSE_UTIL=0 disables the rule.
 #  (2) FALLBACK: a routability- or timing-driven global_placement that diverges (GPL-0305) is retried ONCE on plain
 #      wirelength GPL (same density / padding / seed / phi; -routability_* / -timing_driven* / -keep_resize_below_overflow
 #      / -virtual_cts* removed) instead of failing the kit (HBM ot_hfd_coll_q3_vm_core util 4.9 %, +85 %, GPL-0305 after
@@ -553,7 +556,7 @@ proc ot_gpl_sparse {} {
  if {$thr <= 0} { puts "OT_GPL_SPARSE off (OT_GPL_SPARSE_UTIL=$thr)"; return 0 }
  set u [ot_gpl_sparse_util [ord::get_db_block]]
  if {$u < $thr} {
-  puts [format "OT_GPL_SPARSE movable util %.3f %% < %.3f %%: plain wirelength GPL" [expr {100.0*$u}] [expr {100.0*$thr}]]
+  puts [format "OT_GPL_SPARSE movable util %.3f %% < %.3f %%: routability-driven GPL off, timing-driven kept" [expr {100.0*$u}] [expr {100.0*$thr}]]
   return 1
  }
  puts [format "OT_GPL_SPARSE movable util %.3f %% (threshold %.3f %%): GPL modes unchanged" [expr {100.0*$u}] [expr {100.0*$thr}]]
@@ -571,17 +574,31 @@ proc ot_gpl_plain_args {argl} {
  }
  return $out
 }
+# global_placement arguments without the routability mode only (sparse rule keeps timing-driven placement)
+proc ot_gpl_noroute_args {argl} {
+ set out {}
+ set n [llength $argl]
+ for {set k 0} {$k < $n} {incr k} {
+  set a [lindex $argl $k]
+  if {$a in {-routability_driven -routability_use_grt}} continue
+  if {[regexp {^-routability_} $a]} { incr k; continue }
+  lappend out $a
+ }
+ return $out
+}
 # global_placement as called by ORFS global_place.tcl (the decision is taken at call time, after every hook above)
 proc ot_gpl_guarded {args} {
  set plain [ot_gpl_plain_args $args]
  if {[llength $plain] == [llength $args]} { return [uplevel 1 [list ::ot_gpl_native {*}$args]] }
+ set call $args
  if {[ot_gpl_sparse]} {
   set ::env(GPL_ROUTABILITY_DRIVEN) 0
-  set ::env(GPL_TIMING_DRIVEN) 0
-  puts "OT_GPL_SPARSE global_placement $plain"
-  return [uplevel 1 [list ::ot_gpl_native {*}$plain]]
+  set call [ot_gpl_noroute_args $args]
+  puts "OT_GPL_SPARSE global_placement $call"
+  if {[llength $call] == [llength $plain]} { set ::env(GPL_TIMING_DRIVEN) 0 }
  }
- if {![catch {uplevel 1 [list ::ot_gpl_native {*}$args]} res opts]} { return $res }
+ if {![catch {uplevel 1 [list ::ot_gpl_native {*}$call]} res opts]} { return $res }
+ if {[llength $call] == [llength $plain]} { return -options $opts $res }
  if {([info exists ::env(OT_GPL_FALLBACK)] && $::env(OT_GPL_FALLBACK) eq "0") || ![regexp {GPL-0305} $res]} {
   return -options $opts $res
  }

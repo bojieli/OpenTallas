@@ -1,0 +1,57 @@
+{
+  "verdict": "ACTUAL_FIXED_MESH_DRIVER_AND_BUFFER_INPUT_CONTACT_PASS",
+  "forms": {
+    "near": {
+      "drc": 0,
+      "iteration_counts": [
+        3,
+        0
+      ],
+      "connected_actual_terminals": [
+        "M0_0:Y",
+        "M0_1:Y",
+        "L_clk:A",
+        "mesh_contact"
+      ],
+      "resistor_edges": 28,
+      "Rsum_ohm": 2455.2473999999993,
+      "Cwire_ff": 67.11417886
+    },
+    "east": {
+      "drc": 0,
+      "iteration_counts": [
+        3,
+        0
+      ],
+      "connected_actual_terminals": [
+        "M0_0:Y",
+        "M0_1:Y",
+        "L_clk:A",
+        "mesh_contact"
+      ],
+      "resistor_edges": 31,
+      "Rsum_ohm": 2621.19134,
+      "Cwire_ff": 67.71975720000002
+    }
+  },
+  "source_class": "cfffa2617+a7c19acdf+b1306a118",
+  "scope": "Two actual union-sited BUFx24 driverY + actual BUFx4f/A buffer prototype load via explicit M8/M9 PG-gap conductor and pin stairs. Same net, no load BTerm alias. Current G core/partition/old clock geometry exactly matches E. This is a local physical buffer contact component, not a qualified native macro or complete current clock event.",
+  "release_qualified": false,
+  "remaining": [
+    "Actual current N1 complete fanout integration queued separately",
+    "108 native child K hooks unimplemented; G10 station input ports/reset/START/whole-feed/CA timing not adopted",
+    "No source-global phase or analog whole-mesh timing claim"
+  ],
+  "handled_failures": [
+    {
+      "attempt": "loaded east intel2",
+      "result": "NOT RUN SSH255 before admission",
+      "handled": "identical reviewed inputs staged epyc2 after failure, admitted unit269144 completedexit0"
+    },
+    {
+      "attempt": "both successful variants iter0",
+      "result": "3 DRC markers",
+      "handled": "normal DRT repaired all byiter1; no input/rule change"
+    }
+  ]
+}

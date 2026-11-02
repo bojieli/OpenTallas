@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.core_clock_contract.v1",
+ "view_lib_sha256": "ffe5528724e7f59eb3fff41d2980434dfcf2890be393dabe4a31a2430d3dd8aa",
+ "signed": false,
+ "signoff_verdict": null,
+ "diagnostic": "Exact selected-view SPEF export boundary means; no current SIGNED selected-view record. Historical insertion.json belongs to a different route and is retained unchanged.",
+ "pins": {
+  "ck": {
+   "tt": {
+    "mean_ps": 207.1,
+    "n": 133,
+    "basis": "pin_register_mean",
+    "source": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/export_tt.log:OT_IOREF boundary core_clk mapped to clock-port ck"
+   },
+   "ff": {
+    "mean_ps": 172.2,
+    "n": 133,
+    "basis": "pin_register_mean",
+    "source": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/export_ff.log:OT_IOREF boundary core_clk mapped to clock-port ck"
+   }
+  }
+ },
+ "measurement_receipts": {
+  "tt": {
+   "export_log_sha256": "5cfe61e9efc7a0e8c21a039d37ad466cd86bc1177ece84f1733f8a47cec0c6c8",
+   "export_tcl_sha256": "7be09017d29c295aa3bccb11d6c31338b44218110fda85ee88e97d8c3a6a997b",
+   "view_lib_sha256": "ffe5528724e7f59eb3fff41d2980434dfcf2890be393dabe4a31a2430d3dd8aa",
+   "parasitics": "spef",
+   "clock": "core_clk",
+   "lib_clock_pin": "ck",
+   "n": 133,
+   "minimum_ps": 189.7,
+   "maximum_ps": 222.9
+  },
+  "ff": {
+   "export_log_sha256": "2b8f44c5d7b77ad36797421541794c80b6d20f2c589d5a6e5b26aa223de5eb28",
+   "export_tcl_sha256": "1432df1df808b24ea68ca38122a1670e90c9945d8b782c3a4a2879ae62ad2425",
+   "view_lib_sha256": "7d42c284fcb8f2d3d6f65b66b08239190a125c387a7aaf9b787a90269aa409f0",
+   "parasitics": "spef",
+   "clock": "core_clk",
+   "lib_clock_pin": "ck",
+   "n": 133,
+   "minimum_ps": 156.0,
+   "maximum_ps": 187.5
+  }
+ }
+}

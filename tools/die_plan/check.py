@@ -159,10 +159,16 @@ def check_ft_macro_sites(P, R):
     import gen_phys
     import ft_bit_sites
     from ft_full_stage import load
+    from placement_obstacles import probe_blockages
     count = 0
     for tn, t in P.types.items():
         try:
             boxes = S.placed_macro_boxes(t)
+            # Match G2 placement blockages, including reuse leaves without LEFs.
+            # Split-core containers stay open between their actual hard cuts.
+            for c in probe_blockages(t):
+                x, y = c['origin_um']; w, h = c['outline_um']
+                boxes.setdefault(c['inst'], (x, y, x+w, y+h))
         except ValueError as exc:
             R.err('geometry', f'type {tn}: {exc}', type=tn)
             continue
@@ -196,10 +202,9 @@ def check_ft_macro_sites(P, R):
             pi, po = pins[name+'_i'], pins[name+'_o']
             for bit in sorted(set(pi) | set(po)):
                 ap = pi.get(bit) or po[bit]; bp = po.get(bit) or pi[bit]
-                def inset(p):
-                    x, y, face = p
-                    return {'E': (x-1,y), 'W': (x+1,y), 'N': (x,y-1), 'S': (x,y+1)}[face]
-                a, b = inset(ap), inset(bp); route = zroute(a, b, ap[2], bp[2]); length = plen(route)
+                from die_hop_scan import input_site, normal_slot
+                a, b = input_site(ap), input_site(bp); route = zroute(a, b, ap[2], bp[2]); length = plen(route)
+                normal = normal_slot(P, tn, name, full=full)
                 for j in range(stages):
                     if name in full:
                         row = full[name][j,bit]; x,y = row['xy']; w,h = row['size']
@@ -208,7 +213,7 @@ def check_ft_macro_sites(P, R):
                         x, y = slot['bit_sites_um'][j-1][bit]; w, h = slot['bit_site_cell_um']
                         rect = (x, y, x+w, y+h)
                     else:
-                        xy = a if slot.get('bit_sites_um') else tuple(slot['regs_um'][j]) if slot.get('regs_um') else point_at(route, length*j/stages)
+                        xy = a if (j == 0 and normal) or slot.get('bit_sites_um') else tuple(slot['regs_um'][j]) if slot.get('regs_um') else point_at(route, length*j/stages)
                         x, y = xy; rect = (x, y, x, y)
                     for macro, (x0,y0,x1,y1) in boxes.items():
                         # Centres have no extent; explicit cells must clear with their whole envelope.
@@ -678,6 +683,11 @@ def lane_geometry(P, lid):
             st = [P.to_die(part, centre(full[slot][j,0])) for j in range(k)]
         elif s.get("regs_um"):
             st = [P.to_die(part, tuple(r)) for r in s["regs_um"]]
+            from die_hop_scan import normal_slot, input_site
+            if normal_slot(P, P.parts[part]['type'], slot, full=full):
+                # Nominal window-centre view; the first-hop check below uses
+                # every real typed input bit, not an unused moved S0 hint.
+                st[0] = input_site((pa[0], pa[1], fin))
         else:
             st = [point_at(seg, L * j / k) for j in range(k)]
         regs.extend(st)
@@ -786,17 +796,41 @@ def check_m89_signals(P, R, max_msgs=40):
 
 def check_hops(P, R, geo):
     worst = []
+    from die_hop_scan import pin_table, first_internal_hops
+    input_tables, first_cache, lane_first = {}, {}, {}
+    def first(tn, sn):
+        key = tn, sn
+        if key not in first_cache:
+            slot = next((s for s in P.types[tn].get('ft_slots', []) if s['name'] == sn), None)
+            if slot is None:
+                first_cache[key] = (0., None)
+            else:
+                if tn not in input_tables:
+                    input_tables[tn] = pin_table(P, tn)
+                rows = first_internal_hops(P, tn, slot, pins=input_tables[tn])
+                first_cache[key] = max(((d, bit) for bit, d in rows), default=(0., None))
+        return first_cache[key]
     for lid, (pts, regs, xs) in geo.items():
         reach = min(float(P.lanes[lid].get("reach_um", P.reach)), P.reach)
         from ft_full_stage import lane_hops
         has_full = any(P.types[P.parts[x["part"]]["type"]].get("ft_full_stage_placement_file") for x in xs)
         hops = lane_hops(P, lid) if has_full else lane_pin_hops(P, lid, regs)
         h = max(hops) if hops else 0.0
+        native_first = max(((first(P.parts[x['part']]['type'], x['slot'])[0],
+                             x['part'], x['slot'], first(P.parts[x['part']]['type'], x['slot'])[1])
+                            for x in xs), default=(0., None, None, None))
+        lane_first[lid] = native_first
+        nominal = h
+        h = max(h, native_first[0])
         worst.append((h / reach, lid, h, reach))
         if h > reach + EPS:
-            i = hops.index(h)
-            R.err("hops", f"lane {lid}: hop {i} via mandatory slot pins is {h:.0f} um > reach {reach:.0f} (add stations to the crossed "
-                  "partition's slot or shorten it)", lane=lid)
+            if native_first[0] > nominal:
+                _, part, sn, bit = native_first
+                R.err('hops', f'lane {lid}: normal FT {part}.{sn} real input bit {bit} S0->S1 is {h:.0f} um > reach {reach:.0f}; regs_um[0] is not a native placement', lane=lid)
+            else:
+                i = hops.index(h)
+                R.err("hops", f"lane {lid}: hop {i} via mandatory slot pins is {h:.0f} um > reach {reach:.0f} (add stations to the crossed "
+                      "partition's slot or shorten it)", lane=lid)
     # R3 (ruling 9.4): ft stations at most budgets.ft_station_max_um (<= 405) apart inside every crossed partition
     smax = station_max(P, R)
     seen = set()
@@ -815,8 +849,11 @@ def check_hops(P, R, geo):
                 sp = max((sum(abs(a-b) for a,b in zip(centre(rows[j,b]),centre(rows[j+1,b]))) for b in range(width) for j in range(k-1)), default=0)
             else:
                 sp = x["len_um"] / max(1, x["stations"])
+                sp = max(sp, first(*key)[0])
             if sp > smax + EPS:
-                detail = "exact per-bit internal hop" if key[1] in full else f"{x['len_um']:.0f}um route / {x['stations']} stations"
+                detail = "exact per-bit internal hop" if key[1] in full else (
+                    "real normal input S0->S1" if first(*key)[0] > x['len_um']/max(1,x['stations'])
+                    else f"{x['len_um']:.0f}um route / {x['stations']} stations")
                 R.err("stations", f"type {key[0]} slot {key[1]}: {detail} = {sp:.0f} um > ft_station_max_um {smax:.0f}", type=key[0])
     worst.sort(reverse=True)
     result = []
@@ -825,6 +862,7 @@ def check_hops(P, R, geo):
         direct = max((abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(regs, regs[1:])), default=0.0)
         result.append(dict(lane=lid, hop_um=round(h, 1), reach_um=reach,
                            direct_ff_hop_um=round(direct, 1),
+                           normal_s0_first_hop_um=round(lane_first[lid][0], 1),
                            via_pin_role="mandatory seam pin lower bound"))
     return result
 

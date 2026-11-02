@@ -1,0 +1,21 @@
+{
+  "tool_source_commit": "b1a2125433d0ace1b6027f726fe53d1000cad241",
+  "tool_sha256": "2f60d61b39dcade31d9ab3a07483cc150ac76cc1f4f9523dedef7ac0a9b74aa2",
+  "baseline": "/srv/opentallas-scratch2/claude/codex-qc-q4-spill64",
+  "changed_existing_kit_files": [
+    "freeze.json",
+    "lec.py"
+  ],
+  "new_kit_file": "lec_hints.json (6 untrusted candidates)",
+  "cached_correspondence_candidates": 21545,
+  "new_candidates": 6,
+  "cache_reuse_files": [
+    "gate.aig",
+    "gold.aliases.json",
+    "gold.map",
+    "gate.map",
+    "gold.aig",
+    "gold.keep"
+  ],
+  "cache_verdict_reused": false
+}

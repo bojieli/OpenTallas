@@ -1,0 +1,14 @@
+%Error-MODMISSING: tb_exact_xrt.sv:66:9: Cannot find file containing module: 'ref_s81sl_xrt1'
+   66 |         ref_s81sl_xrt1 #(.FACE_LAND(0),.PDSK(15'd512),.QDELAYS(128'd0)) rf (
+      |         ^~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        ref_s81sl_xrt1
+                        ref_s81sl_xrt1.v
+                        ref_s81sl_xrt1.sv
+                        obj_hb0/ref_s81sl_xrt1
+                        obj_hb0/ref_s81sl_xrt1.v
+                        obj_hb0/ref_s81sl_xrt1.sv
+                   ... With current working directory '/srv/opentallas-scratch2/claude/codex-ds-norm-1101/QREL_exact_v1'
+%Error: Exiting due to 1 error(s)

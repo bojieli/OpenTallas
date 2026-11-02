@@ -208,11 +208,8 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
             raise ValueError('missing configured calibrated RC file')
         if not (kit / 'postcts_gate.tcl').is_file():
             raise ValueError('missing postcts gate')
-        band_policy = 'gate'
-        if (kit / 'master_slice.json').is_file():
-            band_policy = load(kit / 'master_slice.json').get('core_tree', {}).get('model_qualification', {}).get('band_policy', 'gate')
-        if band_policy not in ('gate', 'info'):
-            raise ValueError('invalid model_qualification band_policy')
+        import core_clock_band
+        band_policy = core_clock_band.band_policy(kit)
         import signoff as so
         disc, ctx, policy = policy_context(kit, candidates[0].parent, settings)
         retain(timing_receipt)
