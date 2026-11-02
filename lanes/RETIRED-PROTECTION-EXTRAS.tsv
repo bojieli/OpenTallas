@@ -1,0 +1,5 @@
+# Explicit owner retirement of manual extras only; automatic SIGNED/NEAR-COUNT protections are unchanged.
+# host<TAB>exact_path<TAB>owner_retirement_commit<TAB>reason
+# Actor transcript: deletion executed 2026-11-01 18:29:52 PST; protection retirement recorded 18:31:14 PST (~82 s later). The later lane phrase after removing is chronologically inaccurate.
+intel1	/srv/opentallas-scratch2/claude/kv-fn-7/b_es145	a04cee8bc4d49dad06075db19a863858e31ae24b	KV-FN-7 own superseded es145 build retired under COORD 18:2x prune order; current veh60 retained; no obsolete rebuild.
+intel1	/srv/opentallas-scratch2/claude/kv-fn-7/b_fx	a04cee8bc4d49dad06075db19a863858e31ae24b	KV-FN-7 own superseded FX build retired under COORD 18:2x prune order; collected failure and current veh60 retained; no obsolete rebuild.
