@@ -1,0 +1,556 @@
+{
+ "schema": "opentallas.hbm.query_head_callers.v1",
+ "scope": "Read-only exact currentC4 fourQUERY head8 callers, rootapproved H32 explicitzeroextension request only; no canonicaledit/bindclaim",
+ "rows": [
+  {
+   "part": "NW_hub",
+   "query_instance": "u_u_hb_idx_q_Q_q0",
+   "master": "ot_hbm_idx_query_static",
+   "port": "ql_head",
+   "old_width_bits": 8,
+   "old_parent_expression": "w_u_hb_idx_q_Q_q0_ql_head",
+   "current_wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv",
+   "producer_port_lines": [
+    {
+     "line": 11054,
+     "text": ".ql_head(w_u_hb_idx_q_Q_q0_ql_head),"
+    }
+   ],
+   "packed_boundary_paths": [
+    {
+     "lane": "L160",
+     "source_bus_field_bits": [
+      519,
+      512
+     ],
+     "old_head_high3_bus_bits": [
+      519,
+      517
+     ],
+     "old_head_low5_bus_bits": [
+      516,
+      512
+     ],
+     "source_pack_line": 9690,
+     "source_pack_expression": "ot_dp_st #(.W(4986)) u_bout_L160_o (.clk(clk), .rst_n(rst_n), .d({w_u_mu_keybuf_0_s3_q0_key_out[1098:0], w_u_mu_keybuf_0_s2_q0_key_out[1098:0], w_u_mu_keybuf_0_s1_q0_key_out[1098:0], w_u_mu_keybuf_0_s0_q0_key_out[1098:0], w_u_hb_idx_qctl_Q_q0_nq[11:0], w_u_hb_idx_qctl_Q_q0_key_slot[0], w_u_hb_idx_qctl_Q_q0_key_index[7:0], w_u_hb_idx_q_Q_q0_ql_w[15:0], w_u_hb_idx_q_Q_q0_ql_v[0], w_u_hb_idx_q_Q_q0_ql_sc[31:0], w_u_hb_idx_q_Q_q0_ql_head[7:0], w_u_hb_idx_q_Q_q0_ql_codes[511:0]}), .ea(rst_n), .q(L160_o[4985:0]), .eq(L160_o[4986]));",
+     "destination_wrappers": [
+      {
+       "module": "hbm_arch_q_b000__physical_v1",
+       "parts": [
+        "NW_b000"
+       ],
+       "file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000__physical_v1.sv",
+       "captures": [
+        {
+         "capture_register": "g_hb_idx_s_SW_scorer_procdff_71764_q",
+         "line": 1281,
+         "assignment": "always @(posedge clk) g_hb_idx_s_SW_scorer_procdff_71764_q <= L160_i_q[519:512];  // /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:65.2-69.5",
+         "direct_uses": [
+          {
+           "line": 1279,
+           "text": "reg [7:0] g_hb_idx_s_SW_scorer_procdff_71764_q;"
+          },
+          {
+           "line": 1280,
+           "text": "assign w_hb_idx_s_SW_scorer_procdff_71764_Q = g_hb_idx_s_SW_scorer_procdff_71764_q;"
+          }
+         ],
+         "capture_Q_alias": "w_hb_idx_s_SW_scorer_procdff_71764_Q",
+         "alias_consumers": [
+          {
+           "line": 1103,
+           "text": "ot_dp_st #(.W(4127)) u_bout_L14_o (.clk(clk), .rst_n(rst_n), .d({w_u_hcb_Q0_u_c_procdff_71790_Q[1320:0], w_u_hcb_Q0_u_c_procdff_71789_Q[9:0], w_u_hcb_Q0_u_c_procdff_71788_Q[9:0], w_u_hcb_Q0_u_c_procdff_71787_Q[7:0], w_u_hcb_Q0_u_c_procdff_71786_Q[0], w_hb_idx_s_SW_scorer_g_delivered_reset_u_rr_rst_n[0], w_hb_idx_s_SW_scorer_procmux_66659_Y[0], w_hb_idx_s_SW_scorer_procdff_71770_Q[4395:3308], w_hb_idx_s_SW_scorer_procdff_71770_Q[3296:2209], w_hb_idx_s_SW_scorer_procdff_71768_Q[0], w_hb_idx_s_SW_scorer_procdff_71767_Q[15:0], w_hb_idx_s_SW_scorer_procdff_71766_Q[31:0], w_hb_idx_s_SW_scorer_procdff_71765_Q[511:0], w_hb_idx_s_SW_scorer_procdff_71764_Q[7:0], w_hb_idx_s_SW_scorer_procdff_71763_Q[0], w_hb_idx_s_SW_scorer_lt_ot_hbm_idx_score_quarter_static_h_sv_87_54980_Y[0], w_hb_idx_s_SW_scorer_lt_ot_hbm_idx_score_quarter_static_h_sv_87_54972_Y[0], w_hb_idx_s_SW_scorer_lt_ot_hbm_idx_score_quarter_static_h_sv_87_54964_Y[0], w_hb_idx_s_SW_scorer_lt_ot_hbm_idx_score_quarter_static_h_sv_87_54956_Y[0], w_hb_idx_s_SW_scorer_logic_or_ot_hbm_idx_score_quarter_static_h_sv_88_54983_Y[0], w_hb_idx_s_SW_scorer_logic_or_ot_hbm_idx_score_quarter_static_h_sv_88_54975_Y[0], w_hb_idx_s_SW_scorer_logic_or_ot_hbm_idx_score_quarter_static_h_sv_88_54967_Y[0], w_hb_idx_s_SW_scorer_logic_or_ot_hbm_idx_score_quarter_static_h_sv_88_54959_Y[0], w_hb_idx_s_SW_scorer_ge_ot_hbm_idx_score_quarter_static_h_sv_92_54989_Y[0], w_hb_idx_s_SW_scorer_add_ot_hbm_idx_score_quarter_static_h_sv_91_54986_Y[19:0]}), .ea(rst_n), .q(L14_o[4126:0]), .eq(L14_o[4127]));"
+          },
+          {
+           "line": 1365,
+           "text": "always @(posedge clk) g_hb_idx_s_SW_scorer_ge_0_gc_0_leaf_procdff_71558_q <= {w_hb_idx_s_SW_scorer_procdff_71764_Q[7:0], w_hb_idx_s_SW_scorer_procdff_71765_Q[511:0], w_hb_idx_s_SW_scorer_procdff_71766_Q[31:0], w_hb_idx_s_SW_scorer_procdff_71767_Q[15:0]};  // /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:17.5-19.8"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requested_explicit_adapter": {
+    "new_query_output_wire": "w_u_hb_idx_q_Q_q0_ql_head_h32",
+    "new_width_bits": 5,
+    "old_parent_bus_wire": "w_u_hb_idx_q_Q_q0_ql_head",
+    "assignment": "assign w_u_hb_idx_q_Q_q0_ql_head = {3'b000, w_u_hb_idx_q_Q_q0_ql_head_h32};",
+    "mapping": {
+     "new_bits_4_0": "oldbits4_0 unchanged",
+     "oldbits7_5": "exactexistingproducerconstantzero; explicitsource-event adapter, no new runtime assumption"
+    },
+    "added_cycles": 0,
+    "root_approved_scope": "H32 QUERY8\u21925 pins + actualcallerzeroextension; no192head alias or other fields changed",
+    "status": "LOGICAL_FUNCTION_EXAMPLE_ONLY_SUPERSEDED_FOR_PHYSICAL_SOURCE",
+    "physical_placement_rule": "Do NOTzeroextendbeforephysicalcarrieroutput. Prune3constantphysicalbits fromeveryobservedcarrier; restore8 onlyafterphysicalboundary atactualconsumer. No newcycle, no constant-pin waiver."
+   },
+   "physical_carrier_pruning_obligations": [
+    {
+     "source_part": "NW_hub",
+     "output_port": "L160_o",
+     "old_data_width": 4986,
+     "new_data_width": 4983,
+     "old_head_field": [
+      519,
+      512
+     ],
+     "new_head_field": [
+      516,
+      512
+     ],
+     "prune_old_bits": [
+      519,
+      517
+     ],
+     "fields_above_head_shift_bits": -3,
+     "old_epoch_index": 4986,
+     "new_epoch_index": 4983,
+     "stage_count_delta": 0,
+     "gate": "Canonicaltypedplan/clockFFbudget/actualsource-bind event required; no planeditmade"
+    },
+    {
+     "source_parts": [
+      "NW_b000"
+     ],
+     "output_port": "L14_o",
+     "old_data_width": 4127,
+     "new_data_width": 4124,
+     "old_head_field": [
+      37,
+      30
+     ],
+     "new_head_field": [
+      34,
+      30
+     ],
+     "prune_old_bits": [
+      37,
+      35
+     ],
+     "fields_above_head_shift_bits": -3,
+     "old_epoch_index": 4127,
+     "new_epoch_index": 4124,
+     "stage_count_delta": 0,
+     "exact_source_file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000__physical_v1.sv",
+     "exact_source_line": 1103,
+     "gate": "Observedadditionalphysicalcarrier; mustpruneorkeep5bituntilactualconsumer, notearlyzeroextension"
+    }
+   ]
+  },
+  {
+   "part": "NW_hub",
+   "query_instance": "u_u_hb_idx_q_Q_q1",
+   "master": "ot_hbm_idx_query_static",
+   "port": "ql_head",
+   "old_width_bits": 8,
+   "old_parent_expression": "w_u_hb_idx_q_Q_q1_ql_head",
+   "current_wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv",
+   "producer_port_lines": [
+    {
+     "line": 11076,
+     "text": ".ql_head(w_u_hb_idx_q_Q_q1_ql_head),"
+    }
+   ],
+   "packed_boundary_paths": [
+    {
+     "lane": "L6",
+     "source_bus_field_bits": [
+      519,
+      512
+     ],
+     "old_head_high3_bus_bits": [
+      519,
+      517
+     ],
+     "old_head_low5_bus_bits": [
+      516,
+      512
+     ],
+     "source_pack_line": 9720,
+     "source_pack_expression": "ot_dp_st #(.W(828)) u_bout_L6_o (.clk(clk), .rst_n(rst_n), .d({w_u_mu_keybuf_0_s0_q1_key_out[237:0], w_u_hb_idx_qctl_Q_q1_nq[11:0], w_u_hb_idx_qctl_Q_q1_key_slot[0], w_u_hb_idx_qctl_Q_q1_key_index[7:0], w_u_hb_idx_q_Q_q1_ql_w[15:0], w_u_hb_idx_q_Q_q1_ql_v[0], w_u_hb_idx_q_Q_q1_ql_sc[31:0], w_u_hb_idx_q_Q_q1_ql_head[7:0], w_u_hb_idx_q_Q_q1_ql_codes[511:0]}), .ea(rst_n), .q(L6_o[827:0]), .eq(L6_o[828]));",
+     "destination_wrappers": [
+      {
+       "module": "hbm_arch_q_b100",
+       "parts": [
+        "NW_b100"
+       ],
+       "file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100.sv",
+       "captures": [
+        {
+         "capture_register": "g_procdff_71764_q",
+         "line": 703,
+         "assignment": "always @(posedge clk) g_procdff_71764_q <= L6_i_q[519:512];  // /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:65.2-69.5",
+         "direct_uses": [
+          {
+           "line": 701,
+           "text": "reg [7:0] g_procdff_71764_q;"
+          },
+          {
+           "line": 702,
+           "text": "assign w_procdff_71764_Q = g_procdff_71764_q;"
+          }
+         ],
+         "capture_Q_alias": "w_procdff_71764_Q",
+         "alias_consumers": [
+          {
+           "line": 528,
+           "text": "ot_dp_st #(.W(8)) u_bout_xo_procdff_71764_Q (.clk(clk), .rst_n(rst_n), .d(w_procdff_71764_Q[7:0]), .ea(rst_n), .q(xo_procdff_71764_Q[7:0]), .eq(xo_procdff_71764_Q[8]));"
+          },
+          {
+           "line": 793,
+           "text": "always @(posedge clk) g_ge_0_gc_0_leaf_procdff_71558_q <= {w_procdff_71764_Q[7:0], w_procdff_71765_Q[511:0], w_procdff_71766_Q[31:0], w_procdff_71767_Q[15:0]};  // /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:17.5-19.8"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requested_explicit_adapter": {
+    "new_query_output_wire": "w_u_hb_idx_q_Q_q1_ql_head_h32",
+    "new_width_bits": 5,
+    "old_parent_bus_wire": "w_u_hb_idx_q_Q_q1_ql_head",
+    "assignment": "assign w_u_hb_idx_q_Q_q1_ql_head = {3'b000, w_u_hb_idx_q_Q_q1_ql_head_h32};",
+    "mapping": {
+     "new_bits_4_0": "oldbits4_0 unchanged",
+     "oldbits7_5": "exactexistingproducerconstantzero; explicitsource-event adapter, no new runtime assumption"
+    },
+    "added_cycles": 0,
+    "root_approved_scope": "H32 QUERY8\u21925 pins + actualcallerzeroextension; no192head alias or other fields changed",
+    "status": "LOGICAL_FUNCTION_EXAMPLE_ONLY_SUPERSEDED_FOR_PHYSICAL_SOURCE",
+    "physical_placement_rule": "Do NOTzeroextendbeforephysicalcarrieroutput. Prune3constantphysicalbits fromeveryobservedcarrier; restore8 onlyafterphysicalboundary atactualconsumer. No newcycle, no constant-pin waiver."
+   },
+   "physical_carrier_pruning_obligations": [
+    {
+     "source_part": "NW_hub",
+     "output_port": "L6_o",
+     "old_data_width": 828,
+     "new_data_width": 825,
+     "old_head_field": [
+      519,
+      512
+     ],
+     "new_head_field": [
+      516,
+      512
+     ],
+     "prune_old_bits": [
+      519,
+      517
+     ],
+     "fields_above_head_shift_bits": -3,
+     "old_epoch_index": 828,
+     "new_epoch_index": 825,
+     "stage_count_delta": 0,
+     "gate": "Canonicaltypedplan/clockFFbudget/actualsource-bind event required; no planeditmade"
+    },
+    {
+     "source_parts": [
+      "NW_b100"
+     ],
+     "output_port": "xo_procdff_71764_Q",
+     "old_data_width": 8,
+     "new_data_width": 5,
+     "old_head_field": [
+      7,
+      0
+     ],
+     "new_head_field": [
+      4,
+      0
+     ],
+     "prune_old_bits": [
+      7,
+      5
+     ],
+     "fields_above_head_shift_bits": -3,
+     "old_epoch_index": 8,
+     "new_epoch_index": 5,
+     "stage_count_delta": 0,
+     "exact_source_file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100.sv",
+     "exact_source_line": 528,
+     "gate": "Observedadditionalphysicalcarrier; mustpruneorkeep5bituntilactualconsumer, notearlyzeroextension"
+    }
+   ]
+  },
+  {
+   "part": "NE_hub",
+   "query_instance": "u_u_hb_idx_q_Q_q0",
+   "master": "ot_hbm_idx_query_static",
+   "port": "ql_head",
+   "old_width_bits": 8,
+   "old_parent_expression": "w_u_hb_idx_q_Q_q0_ql_head",
+   "current_wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv",
+   "producer_port_lines": [
+    {
+     "line": 10381,
+     "text": ".ql_head(w_u_hb_idx_q_Q_q0_ql_head),"
+    }
+   ],
+   "packed_boundary_paths": [
+    {
+     "lane": "L160m",
+     "source_bus_field_bits": [
+      519,
+      512
+     ],
+     "old_head_high3_bus_bits": [
+      519,
+      517
+     ],
+     "old_head_low5_bus_bits": [
+      516,
+      512
+     ],
+     "source_pack_line": 9150,
+     "source_pack_expression": "ot_dp_st #(.W(4986)) u_bout_L160m_o (.clk(clk), .rst_n(rst_n), .d({w_u_mu_keybuf_0_s3_q0_key_out[1098:0], w_u_mu_keybuf_0_s2_q0_key_out[1098:0], w_u_mu_keybuf_0_s1_q0_key_out[1098:0], w_u_mu_keybuf_0_s0_q0_key_out[1098:0], w_u_hb_idx_qctl_Q_q0_nq[11:0], w_u_hb_idx_qctl_Q_q0_key_slot[0], w_u_hb_idx_qctl_Q_q0_key_index[7:0], w_u_hb_idx_q_Q_q0_ql_w[15:0], w_u_hb_idx_q_Q_q0_ql_v[0], w_u_hb_idx_q_Q_q0_ql_sc[31:0], w_u_hb_idx_q_Q_q0_ql_head[7:0], w_u_hb_idx_q_Q_q0_ql_codes[511:0]}), .ea(rst_n), .q(L160m_o[4985:0]), .eq(L160m_o[4986]));",
+     "destination_wrappers": [
+      {
+       "module": "hbm_arch_q_b000",
+       "parts": [
+        "NE_b000"
+       ],
+       "file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000.sv",
+       "captures": [
+        {
+         "capture_register": "g_hb_idx_s_SE_scorer_procdff_71764_q",
+         "line": 1281,
+         "assignment": "always @(posedge clk) g_hb_idx_s_SE_scorer_procdff_71764_q <= L160m_i_q[519:512];  // /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:65.2-69.5",
+         "direct_uses": [
+          {
+           "line": 1279,
+           "text": "reg [7:0] g_hb_idx_s_SE_scorer_procdff_71764_q;"
+          },
+          {
+           "line": 1280,
+           "text": "assign w_hb_idx_s_SE_scorer_procdff_71764_Q = g_hb_idx_s_SE_scorer_procdff_71764_q;"
+          }
+         ],
+         "capture_Q_alias": "w_hb_idx_s_SE_scorer_procdff_71764_Q",
+         "alias_consumers": [
+          {
+           "line": 1103,
+           "text": "ot_dp_st #(.W(4127)) u_bout_L14_o (.clk(clk), .rst_n(rst_n), .d({w_u_hcb_Q0_u_c_procdff_71790_Q[1320:0], w_u_hcb_Q0_u_c_procdff_71789_Q[9:0], w_u_hcb_Q0_u_c_procdff_71788_Q[9:0], w_u_hcb_Q0_u_c_procdff_71787_Q[7:0], w_u_hcb_Q0_u_c_procdff_71786_Q[0], w_hb_idx_s_SE_scorer_g_delivered_reset_u_rr_rst_n[0], w_hb_idx_s_SE_scorer_procmux_66659_Y[0], w_hb_idx_s_SE_scorer_procdff_71770_Q[4395:3308], w_hb_idx_s_SE_scorer_procdff_71770_Q[3296:2209], w_hb_idx_s_SE_scorer_procdff_71768_Q[0], w_hb_idx_s_SE_scorer_procdff_71767_Q[15:0], w_hb_idx_s_SE_scorer_procdff_71766_Q[31:0], w_hb_idx_s_SE_scorer_procdff_71765_Q[511:0], w_hb_idx_s_SE_scorer_procdff_71764_Q[7:0], w_hb_idx_s_SE_scorer_procdff_71763_Q[0], w_hb_idx_s_SE_scorer_lt_ot_hbm_idx_score_quarter_static_h_sv_87_54980_Y[0], w_hb_idx_s_SE_scorer_lt_ot_hbm_idx_score_quarter_static_h_sv_87_54972_Y[0], w_hb_idx_s_SE_scorer_lt_ot_hbm_idx_score_quarter_static_h_sv_87_54964_Y[0], w_hb_idx_s_SE_scorer_lt_ot_hbm_idx_score_quarter_static_h_sv_87_54956_Y[0], w_hb_idx_s_SE_scorer_logic_or_ot_hbm_idx_score_quarter_static_h_sv_88_54983_Y[0], w_hb_idx_s_SE_scorer_logic_or_ot_hbm_idx_score_quarter_static_h_sv_88_54975_Y[0], w_hb_idx_s_SE_scorer_logic_or_ot_hbm_idx_score_quarter_static_h_sv_88_54967_Y[0], w_hb_idx_s_SE_scorer_logic_or_ot_hbm_idx_score_quarter_static_h_sv_88_54959_Y[0], w_hb_idx_s_SE_scorer_ge_ot_hbm_idx_score_quarter_static_h_sv_92_54989_Y[0], w_hb_idx_s_SE_scorer_add_ot_hbm_idx_score_quarter_static_h_sv_91_54986_Y[19:0]}), .ea(rst_n), .q(L14_o[4126:0]), .eq(L14_o[4127]));"
+          },
+          {
+           "line": 1365,
+           "text": "always @(posedge clk) g_hb_idx_s_SE_scorer_ge_0_gc_0_leaf_procdff_71558_q <= {w_hb_idx_s_SE_scorer_procdff_71764_Q[7:0], w_hb_idx_s_SE_scorer_procdff_71765_Q[511:0], w_hb_idx_s_SE_scorer_procdff_71766_Q[31:0], w_hb_idx_s_SE_scorer_procdff_71767_Q[15:0]};  // /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:17.5-19.8"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requested_explicit_adapter": {
+    "new_query_output_wire": "w_u_hb_idx_q_Q_q0_ql_head_h32",
+    "new_width_bits": 5,
+    "old_parent_bus_wire": "w_u_hb_idx_q_Q_q0_ql_head",
+    "assignment": "assign w_u_hb_idx_q_Q_q0_ql_head = {3'b000, w_u_hb_idx_q_Q_q0_ql_head_h32};",
+    "mapping": {
+     "new_bits_4_0": "oldbits4_0 unchanged",
+     "oldbits7_5": "exactexistingproducerconstantzero; explicitsource-event adapter, no new runtime assumption"
+    },
+    "added_cycles": 0,
+    "root_approved_scope": "H32 QUERY8\u21925 pins + actualcallerzeroextension; no192head alias or other fields changed",
+    "status": "LOGICAL_FUNCTION_EXAMPLE_ONLY_SUPERSEDED_FOR_PHYSICAL_SOURCE",
+    "physical_placement_rule": "Do NOTzeroextendbeforephysicalcarrieroutput. Prune3constantphysicalbits fromeveryobservedcarrier; restore8 onlyafterphysicalboundary atactualconsumer. No newcycle, no constant-pin waiver."
+   },
+   "physical_carrier_pruning_obligations": [
+    {
+     "source_part": "NE_hub",
+     "output_port": "L160m_o",
+     "old_data_width": 4986,
+     "new_data_width": 4983,
+     "old_head_field": [
+      519,
+      512
+     ],
+     "new_head_field": [
+      516,
+      512
+     ],
+     "prune_old_bits": [
+      519,
+      517
+     ],
+     "fields_above_head_shift_bits": -3,
+     "old_epoch_index": 4986,
+     "new_epoch_index": 4983,
+     "stage_count_delta": 0,
+     "gate": "Canonicaltypedplan/clockFFbudget/actualsource-bind event required; no planeditmade"
+    },
+    {
+     "source_parts": [
+      "NE_b000"
+     ],
+     "output_port": "L14_o",
+     "old_data_width": 4127,
+     "new_data_width": 4124,
+     "old_head_field": [
+      37,
+      30
+     ],
+     "new_head_field": [
+      34,
+      30
+     ],
+     "prune_old_bits": [
+      37,
+      35
+     ],
+     "fields_above_head_shift_bits": -3,
+     "old_epoch_index": 4127,
+     "new_epoch_index": 4124,
+     "stage_count_delta": 0,
+     "exact_source_file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000.sv",
+     "exact_source_line": 1103,
+     "gate": "Observedadditionalphysicalcarrier; mustpruneorkeep5bituntilactualconsumer, notearlyzeroextension"
+    }
+   ]
+  },
+  {
+   "part": "NE_hub",
+   "query_instance": "u_u_hb_idx_q_Q_q1",
+   "master": "ot_hbm_idx_query_static",
+   "port": "ql_head",
+   "old_width_bits": 8,
+   "old_parent_expression": "w_u_hb_idx_q_Q_q1_ql_head",
+   "current_wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv",
+   "producer_port_lines": [
+    {
+     "line": 10403,
+     "text": ".ql_head(w_u_hb_idx_q_Q_q1_ql_head),"
+    }
+   ],
+   "packed_boundary_paths": [
+    {
+     "lane": "L6b",
+     "source_bus_field_bits": [
+      519,
+      512
+     ],
+     "old_head_high3_bus_bits": [
+      519,
+      517
+     ],
+     "old_head_low5_bus_bits": [
+      516,
+      512
+     ],
+     "source_pack_line": 9182,
+     "source_pack_expression": "ot_dp_st #(.W(828)) u_bout_L6b_o (.clk(clk), .rst_n(rst_n), .d({w_u_mu_keybuf_0_s0_q1_key_out[237:0], w_u_hb_idx_qctl_Q_q1_nq[11:0], w_u_hb_idx_qctl_Q_q1_key_slot[0], w_u_hb_idx_qctl_Q_q1_key_index[7:0], w_u_hb_idx_q_Q_q1_ql_w[15:0], w_u_hb_idx_q_Q_q1_ql_v[0], w_u_hb_idx_q_Q_q1_ql_sc[31:0], w_u_hb_idx_q_Q_q1_ql_head[7:0], w_u_hb_idx_q_Q_q1_ql_codes[511:0]}), .ea(rst_n), .q(L6b_o[827:0]), .eq(L6b_o[828]));",
+     "destination_wrappers": [
+      {
+       "module": "hbm_arch_q_b100__physical_v1",
+       "parts": [
+        "NE_b100"
+       ],
+       "file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100__physical_v1.sv",
+       "captures": [
+        {
+         "capture_register": "g_procdff_71764_q",
+         "line": 696,
+         "assignment": "always @(posedge clk) g_procdff_71764_q <= L6b_i_q[519:512];  // /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:65.2-69.5",
+         "direct_uses": [
+          {
+           "line": 694,
+           "text": "reg [7:0] g_procdff_71764_q;"
+          },
+          {
+           "line": 695,
+           "text": "assign w_procdff_71764_Q = g_procdff_71764_q;"
+          }
+         ],
+         "capture_Q_alias": "w_procdff_71764_Q",
+         "alias_consumers": [
+          {
+           "line": 524,
+           "text": "ot_dp_st #(.W(8)) u_bout_xo_procdff_71764_Q (.clk(clk), .rst_n(rst_n), .d(w_procdff_71764_Q[7:0]), .ea(rst_n), .q(xo_procdff_71764_Q[7:0]), .eq(xo_procdff_71764_Q[8]));"
+          },
+          {
+           "line": 786,
+           "text": "always @(posedge clk) g_ge_0_gc_0_leaf_procdff_71558_q <= {w_procdff_71764_Q[7:0], w_procdff_71765_Q[511:0], w_procdff_71766_Q[31:0], w_procdff_71767_Q[15:0]};  // /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv:17.5-19.8"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requested_explicit_adapter": {
+    "new_query_output_wire": "w_u_hb_idx_q_Q_q1_ql_head_h32",
+    "new_width_bits": 5,
+    "old_parent_bus_wire": "w_u_hb_idx_q_Q_q1_ql_head",
+    "assignment": "assign w_u_hb_idx_q_Q_q1_ql_head = {3'b000, w_u_hb_idx_q_Q_q1_ql_head_h32};",
+    "mapping": {
+     "new_bits_4_0": "oldbits4_0 unchanged",
+     "oldbits7_5": "exactexistingproducerconstantzero; explicitsource-event adapter, no new runtime assumption"
+    },
+    "added_cycles": 0,
+    "root_approved_scope": "H32 QUERY8\u21925 pins + actualcallerzeroextension; no192head alias or other fields changed",
+    "status": "LOGICAL_FUNCTION_EXAMPLE_ONLY_SUPERSEDED_FOR_PHYSICAL_SOURCE",
+    "physical_placement_rule": "Do NOTzeroextendbeforephysicalcarrieroutput. Prune3constantphysicalbits fromeveryobservedcarrier; restore8 onlyafterphysicalboundary atactualconsumer. No newcycle, no constant-pin waiver."
+   },
+   "physical_carrier_pruning_obligations": [
+    {
+     "source_part": "NE_hub",
+     "output_port": "L6b_o",
+     "old_data_width": 828,
+     "new_data_width": 825,
+     "old_head_field": [
+      519,
+      512
+     ],
+     "new_head_field": [
+      516,
+      512
+     ],
+     "prune_old_bits": [
+      519,
+      517
+     ],
+     "fields_above_head_shift_bits": -3,
+     "old_epoch_index": 828,
+     "new_epoch_index": 825,
+     "stage_count_delta": 0,
+     "gate": "Canonicaltypedplan/clockFFbudget/actualsource-bind event required; no planeditmade"
+    },
+    {
+     "source_parts": [
+      "NE_b100"
+     ],
+     "output_port": "xo_procdff_71764_Q",
+     "old_data_width": 8,
+     "new_data_width": 5,
+     "old_head_field": [
+      7,
+      0
+     ],
+     "new_head_field": [
+      4,
+      0
+     ],
+     "prune_old_bits": [
+      7,
+      5
+     ],
+     "fields_above_head_shift_bits": -3,
+     "old_epoch_index": 8,
+     "new_epoch_index": 5,
+     "stage_count_delta": 0,
+     "exact_source_file": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100__physical_v1.sv",
+     "exact_source_line": 524,
+     "gate": "Observedadditionalphysicalcarrier; mustpruneorkeep5bituntilactualconsumer, notearlyzeroextension"
+    }
+   ]
+  }
+ ],
+ "H32_physical_gate": "HELD typedcarrier event: allfourprimary+fourimmediatelyobservedsecondarycarriers removeheadhigh3 constantpins. Logical8 zeroextensionrestorationonlyafterphysicalboundary atactualconsumer. This isfinite2-hoptrace, notglobaltransitiveclosure or canonicaladoption.",
+ "observed_physical_carrier_count": 8
+}

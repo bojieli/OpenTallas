@@ -25,7 +25,7 @@
     }
   },
   "source_changes_required": "Native core ql_head[7:0] ->[4:0], assignment to emit_head without padding; native shell output and c_head same width5. No outside shell or new flop.",
-  "caller_changes_required": "Exact four actual wrappers/instances in caller_overlay.json: physical wire5 + explicit{3b000,new_head5} assignment to old logical8 wire. Packed fields519:512 and source/destination capture cycles unchanged.",
+  "caller_changes_required": "Exact8-observed-carrier finite2hop frontier in caller_pruning_frontier.json: four primaryL160/L6 prune519:517, secondaryq0L14prune37:35/q1xo8to5. Shift all higher fields+epochindices -3 withzeroaddedstages; restore logical8 only inside actual consumers afterphysicalboundary. BEFOREpackzeroextension is superseded logical-only and forbidden asphysicalwaiver. WholecanonicalG0C/sourceclosure remains held.",
   "source_and_plan_current_graph_changed": false,
   "source_miter": "Full native3-capture head path: unchanged eh_r input register, core c_head capture, native ql_head capture. Exhausts32768 inputheadtriples; wrong-upperbit/selector refuted. Earlier2-capture test covered only changed output path after eh_r; no cycle added. Other source bytes reverse-identical. Full new5ABI canonicalLEC still required."
 }

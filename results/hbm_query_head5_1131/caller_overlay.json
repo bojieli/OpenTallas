@@ -1,5 +1,5 @@
 {
-  "scope": "Explicit root-approved H32 physicalhead8\u21925/currentcallerzero-extension event. Every actual packed bus width and offset in the embedded caller trace is preserved; no192head/sourceglobaladoption.",
+  "scope": "SUPERSEDED AS PHYSICAL PATCH: logical8-value reference only. METHODOLOGY1.10 requires physical constant-bit removal across actual carrier boundaries; see caller_pruning_frontier.json. Restore logical8 only inside actual consumers after physical cuts.",
   "rows": [
     {
       "part": "NW_hub",
@@ -55,9 +55,10 @@
       ],
       "logical_head_width": 8,
       "physical_head_width": 5,
-      "zero_extension_at_actual_caller": true,
+      "zero_extension_at_actual_caller": false,
       "added_flops": 0,
-      "added_cycles": 0
+      "added_cycles": 0,
+      "physical_patch_status": "DO_NOT_APPLY_BEFORE_PACK: source fragment is logical reference only, not canonical physical event"
     },
     {
       "part": "NW_hub",
@@ -113,9 +114,10 @@
       ],
       "logical_head_width": 8,
       "physical_head_width": 5,
-      "zero_extension_at_actual_caller": true,
+      "zero_extension_at_actual_caller": false,
       "added_flops": 0,
-      "added_cycles": 0
+      "added_cycles": 0,
+      "physical_patch_status": "DO_NOT_APPLY_BEFORE_PACK: source fragment is logical reference only, not canonical physical event"
     },
     {
       "part": "NE_hub",
@@ -171,9 +173,10 @@
       ],
       "logical_head_width": 8,
       "physical_head_width": 5,
-      "zero_extension_at_actual_caller": true,
+      "zero_extension_at_actual_caller": false,
       "added_flops": 0,
-      "added_cycles": 0
+      "added_cycles": 0,
+      "physical_patch_status": "DO_NOT_APPLY_BEFORE_PACK: source fragment is logical reference only, not canonical physical event"
     },
     {
       "part": "NE_hub",
@@ -229,9 +232,10 @@
       ],
       "logical_head_width": 8,
       "physical_head_width": 5,
-      "zero_extension_at_actual_caller": true,
+      "zero_extension_at_actual_caller": false,
       "added_flops": 0,
-      "added_cycles": 0
+      "added_cycles": 0,
+      "physical_patch_status": "DO_NOT_APPLY_BEFORE_PACK: source fragment is logical reference only, not canonical physical event"
     }
   ]
 }
