@@ -207,9 +207,15 @@ def validate(req,folder,log):
         k=float(r['k_rise_late_ps'] if r['delay']=='min' else r['k_rise_early_ps'])
         if abs(float(r['uncredited_relative_bound_ps'])-(float(r['data_arrival_ps'])-k))>1e-6:raise ValueError('invalid uncredited bound')
     if seen!=set(expected):raise ValueError('incomplete all-bit witness')
+    summaries={}
+    for exp in req['exports']:
+        selected=[r for r in rows if r['export']==exp['export']]
+        early=min((r for r in selected if r['delay']=='min'),key=lambda r:float(r['uncredited_relative_bound_ps']))
+        late=max((r for r in selected if r['delay']=='max'),key=lambda r:float(r['uncredited_relative_bound_ps']))
+        summaries[exp['export']]=dict(bits=len(exp['bits']),forwarded_source=exp['source'],launch_roots=sorted({r['launch_source_port'] for r in selected}),different_root_bits=len({r['data_bit'] for r in selected if r['launch_source_port']!=exp['source']}),min_uncredited_bound_ps=float(early['uncredited_relative_bound_ps']),min_bit=early['data_bit'],max_uncredited_bound_ps=float(late['uncredited_relative_bound_ps']),max_bit=late['data_bit'])
     state=folder/'original_state.sdc'
     if not state.is_file():raise ValueError('missing original constrained state snapshot')
-    return dict(original_state_sha256=hashlib.sha256(state.read_bytes()).hexdigest(),status='COMPLETE_OBSERVATION',qualification='NOT_ASSERTED',parent_or_link_coverage='NOT_ASSERTED',bits=len(rows)//2,rows=len(rows),actual_launch_roots=sorted({r['launch_source_port'] for r in rows}),bounds='UNCORRELATED_CONSERVATIVE_NO_ADDITIONAL_CPPR',native_STD_reference=req['native_output_clock'],native_engine_cppr_enabled=counts['native_engine_cppr_enabled'])
+    return dict(exports=summaries,original_state_sha256=hashlib.sha256(state.read_bytes()).hexdigest(),status='COMPLETE_OBSERVATION',qualification='NOT_ASSERTED',parent_or_link_coverage='NOT_ASSERTED',bits=len(rows)//2,rows=len(rows),actual_launch_roots=sorted({r['launch_source_port'] for r in rows}),bounds='UNCORRELATED_CONSERVATIVE_NO_ADDITIONAL_CPPR',native_STD_reference=req['native_output_clock'],native_engine_cppr_enabled=counts['native_engine_cppr_enabled'])
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--sdc',required=True);p.add_argument('--netlist',required=True);p.add_argument('--module',required=True);p.add_argument('--out',required=True);p.add_argument('--out-dir',required=True);p.add_argument('--enable',action='store_true');p.add_argument('--query-limit',type=int,default=0)

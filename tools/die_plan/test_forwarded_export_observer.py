@@ -85,6 +85,8 @@ class Observer(unittest.TestCase):
  def test_generated_mixed_owner_all_bits_and_uncredited_bounds(self):
   p,log,_=self.run_tcl();v=F.validate(REQ,p,log)
   self.assertEqual(v['actual_launch_roots'],['rootA','rootB'])
+  self.assertEqual(v['exports']['fclk_out_data']['different_root_bits'],1)
+  self.assertEqual(v['exports']['fclk_out_data']['min_uncredited_bound_ps'],90.0)
   self.assertEqual(v['bits'],3);self.assertEqual(v['qualification'],'NOT_ASSERTED')
   rows=list(csv.DictReader((p/'data_k.tsv').open(),delimiter='\t'))
   self.assertEqual({r['data_bit'] for r in rows},set(REQ['exports'][0]['bits']))
