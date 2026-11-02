@@ -1,0 +1,302 @@
+[
+  {
+    "path": [
+      [
+        "83496",
+        "u_bound.u_bout_rec_tx_s1.eq$_DFF_PN0_"
+      ],
+      [
+        "215508",
+        "u_bound.u_rrl_36.q$_DFF_P_"
+      ],
+      [
+        "81309",
+        "u_bound.u_bout_io_collective__out_data.eq$_DFF_PN0_"
+      ]
+    ],
+    "endpoint": {
+      "node": "TYPE_OUTPUT",
+      "instance": "coll_core.TYPE_OUTPUT",
+      "port": "io_collective__out_data",
+      "bit": 512,
+      "xy_um": [
+        523.424,
+        1088.64
+      ],
+      "center_budget_um": 149,
+      "endpoint_budget_um": 150
+    },
+    "distance": 1262.6000000000001,
+    "max_allowed": 1096
+  },
+  {
+    "path": [
+      [
+        "83496",
+        "u_bound.u_bout_rec_tx_s1.eq$_DFF_PN0_"
+      ],
+      [
+        "215508",
+        "u_bound.u_rrl_36.q$_DFF_P_"
+      ],
+      [
+        "82396",
+        "u_bound.u_bout_rec_tx_s0.eq$_DFF_PN0_"
+      ]
+    ],
+    "endpoint": {
+      "node": "TYPE_OUTPUT",
+      "instance": "coll_core.TYPE_OUTPUT",
+      "port": "rec_tx_s0",
+      "bit": 548,
+      "xy_um": [
+        270.88,
+        1088.64
+      ],
+      "center_budget_um": 149,
+      "endpoint_budget_um": 150
+    },
+    "distance": 1167.2240000000002,
+    "max_allowed": 1096
+  },
+  {
+    "path": [
+      [
+        "83496",
+        "u_bound.u_bout_rec_tx_s1.eq$_DFF_PN0_"
+      ],
+      [
+        "215508",
+        "u_bound.u_rrl_36.q$_DFF_P_"
+      ],
+      [
+        "80788",
+        "u_bound.u_bout_io_collective__cmd_free.eq$_DFF_PN0_"
+      ]
+    ],
+    "endpoint": {
+      "node": "TYPE_OUTPUT",
+      "instance": "coll_core.TYPE_OUTPUT",
+      "port": "io_collective__cmd_free",
+      "bit": 1,
+      "xy_um": [
+        23.352,
+        1088.64
+      ],
+      "center_budget_um": 149,
+      "endpoint_budget_um": 150
+    },
+    "distance": 1414.7520000000002,
+    "max_allowed": 1096
+  },
+  {
+    "path": [
+      [
+        "83496",
+        "u_bound.u_bout_rec_tx_s1.eq$_DFF_PN0_"
+      ],
+      [
+        "215508",
+        "u_bound.u_rrl_36.q$_DFF_P_"
+      ],
+      [
+        "80793",
+        "u_bound.u_bout_io_collective__fault.eq$_DFF_PN0_"
+      ]
+    ],
+    "endpoint": {
+      "node": "TYPE_OUTPUT",
+      "instance": "coll_core.TYPE_OUTPUT",
+      "port": "io_collective__fault",
+      "bit": 1,
+      "xy_um": [
+        21.864,
+        1088.64
+      ],
+      "center_budget_um": 149,
+      "endpoint_budget_um": 150
+    },
+    "distance": 1416.2400000000002,
+    "max_allowed": 1096
+  },
+  {
+    "path": [
+      [
+        "83496",
+        "u_bound.u_bout_rec_tx_s1.eq$_DFF_PN0_"
+      ],
+      [
+        "215508",
+        "u_bound.u_rrl_36.q$_DFF_P_"
+      ],
+      [
+        "81844",
+        "u_bound.u_bout_io_collective__out_valid.eq$_DFF_PN0_"
+      ]
+    ],
+    "endpoint": {
+      "node": "TYPE_OUTPUT",
+      "instance": "coll_core.TYPE_OUTPUT",
+      "port": "io_collective__out_valid",
+      "bit": 1,
+      "xy_um": [
+        411.624,
+        1088.64
+      ],
+      "center_budget_um": 149,
+      "endpoint_budget_um": 150
+    },
+    "distance": 1150.8000000000002,
+    "max_allowed": 1096
+  },
+  {
+    "path": [
+      [
+        "83496",
+        "u_bound.u_bout_rec_tx_s1.eq$_DFF_PN0_"
+      ],
+      [
+        "215508",
+        "u_bound.u_rrl_36.q$_DFF_P_"
+      ],
+      [
+        "81825",
+        "u_bound.u_bout_io_collective__out_err.eq$_DFF_PN0_"
+      ]
+    ],
+    "endpoint": {
+      "node": "TYPE_OUTPUT",
+      "instance": "coll_core.TYPE_OUTPUT",
+      "port": "io_collective__out_err",
+      "bit": 1,
+      "xy_um": [
+        416.088,
+        1088.64
+      ],
+      "center_budget_um": 149,
+      "endpoint_budget_um": 150
+    },
+    "distance": 1155.2640000000001,
+    "max_allowed": 1096
+  },
+  {
+    "path": [
+      [
+        "83496",
+        "u_bound.u_bout_rec_tx_s1.eq$_DFF_PN0_"
+      ],
+      [
+        "215508",
+        "u_bound.u_rrl_36.q$_DFF_P_"
+      ],
+      [
+        "80714",
+        "u_bound.u_bout_fltv_o.eq$_DFF_PN0_"
+      ]
+    ],
+    "endpoint": {
+      "node": "TYPE_OUTPUT",
+      "instance": "coll_core.TYPE_OUTPUT",
+      "port": "fltv_o",
+      "bit": 70,
+      "xy_um": [
+        38.368,
+        1088.64
+      ],
+      "center_budget_um": 149,
+      "endpoint_budget_um": 150
+    },
+    "distance": 1399.736,
+    "max_allowed": 1096
+  },
+  {
+    "path": [
+      [
+        "83496",
+        "u_bound.u_bout_rec_tx_s1.eq$_DFF_PN0_"
+      ],
+      [
+        "215508",
+        "u_bound.u_rrl_36.q$_DFF_P_"
+      ],
+      [
+        "81830",
+        "u_bound.u_bout_io_collective__out_last.eq$_DFF_PN0_"
+      ]
+    ],
+    "endpoint": {
+      "node": "TYPE_OUTPUT",
+      "instance": "coll_core.TYPE_OUTPUT",
+      "port": "io_collective__out_last",
+      "bit": 1,
+      "xy_um": [
+        414.744,
+        1088.64
+      ],
+      "center_budget_um": 149,
+      "endpoint_budget_um": 150
+    },
+    "distance": 1153.92,
+    "max_allowed": 1096
+  },
+  {
+    "path": [
+      [
+        "83496",
+        "u_bound.u_bout_rec_tx_s1.eq$_DFF_PN0_"
+      ],
+      [
+        "215508",
+        "u_bound.u_rrl_36.q$_DFF_P_"
+      ],
+      [
+        "80640",
+        "u_bound.u_bout_flt_o.eq$_DFF_PN0_"
+      ]
+    ],
+    "endpoint": {
+      "node": "TYPE_OUTPUT",
+      "instance": "coll_core.TYPE_OUTPUT",
+      "port": "flt_o",
+      "bit": 1,
+      "xy_um": [
+        40.248,
+        1088.64
+      ],
+      "center_budget_um": 149,
+      "endpoint_budget_um": 150
+    },
+    "distance": 1397.8560000000002,
+    "max_allowed": 1096
+  },
+  {
+    "path": [
+      [
+        "83496",
+        "u_bound.u_bout_rec_tx_s1.eq$_DFF_PN0_"
+      ],
+      [
+        "215508",
+        "u_bound.u_rrl_36.q$_DFF_P_"
+      ],
+      [
+        "81837",
+        "u_bound.u_bout_io_collective__out_rank.eq$_DFF_PN0_"
+      ]
+    ],
+    "endpoint": {
+      "node": "TYPE_OUTPUT",
+      "instance": "coll_core.TYPE_OUTPUT",
+      "port": "io_collective__out_rank",
+      "bit": 3,
+      "xy_um": [
+        413.4,
+        1088.64
+      ],
+      "center_budget_um": 149,
+      "endpoint_budget_um": 150
+    },
+    "distance": 1152.576,
+    "max_allowed": 1096
+  }
+]

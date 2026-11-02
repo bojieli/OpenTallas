@@ -1,0 +1,16 @@
+{
+  "status": "ACTUAL_SOURCE_JOIN_CONDITIONAL_GEOMETRY_NOT_RELEASED",
+  "actual_macro_count": 29,
+  "actual_standard_FF_count": 63971,
+  "direct_macro_bit_edges": 2060,
+  "failed_direct_macro_bit_edges": 0,
+  "max_direct_macro_distance_um": 402.598,
+  "FFs_with_macro_constraints": 11308,
+  "macro_endpoint_constraints": 33469,
+  "unconstrained_diamond_feasible_FFs": 11308,
+  "empty_macro_diamond_FFs": 0,
+  "unqualified_clock_reset_pin_rows": 33,
+  "failed_direct_macro_pairs": [],
+  "failed_FF_families": [],
+  "scope": "Actual mapped source dependencies joined to actual selectedSRAM/referenceoldfoldpins with explicit orientation. No new FF/edge. Empty diamonds prove this placement cannot host those existingFFs within405 of every immediate macro endpoint. Nonempty diamonds do not prove macro-free cellsites, FF-to-FF/control reach, current-view identity, clocks/reset/PG, source equivalence or release. FOLD PIN POLICY IS A PLANNED NEW-VIEW OVERRIDE, NOT ACTUAL QUALIFIED PINS. All eight use one same proposed view; old rectangle is footprint only."
+}

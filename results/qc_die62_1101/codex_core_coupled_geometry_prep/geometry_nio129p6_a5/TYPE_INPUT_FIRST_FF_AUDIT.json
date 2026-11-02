@@ -1,0 +1,135 @@
+{
+  "status": "ACTUAL_TYPE_INPUT_FIRST_FF_SOURCE_PROPOSAL_AUDIT",
+  "ordinary_input_constraint_rows": 13856,
+  "first_FFs": 13856,
+  "missing_typed_pins": [],
+  "center_budget_um": 149,
+  "actual_FF_pin_halfextent_reserve_um": 0.837,
+  "failed_at_current_FF_sites": 13856,
+  "max_pin_to_first_FF_center_um": 1411.851,
+  "unqualified_infrastructure_top_inputs": [
+    "arst_n",
+    "cland_dn_fault_0",
+    "cland_dn_ready_0",
+    "cland_fstart_in_flt_n_i",
+    "cland_fstart_in_flt_s_i",
+    "cland_fstart_in_flt_u_i",
+    "cland_fstart_in_fltv_n_i",
+    "cland_fstart_in_fltv_s_i",
+    "cland_fstart_in_io_collective__cmd_mode",
+    "cland_fstart_in_io_collective__cmd_tag",
+    "cland_fstart_in_io_collective__cmd_v",
+    "cland_fstart_in_io_collective__cmd_words",
+    "cland_fstart_in_io_collective__in_data",
+    "cland_fstart_in_io_collective__in_last",
+    "cland_fstart_in_io_collective__in_mode",
+    "cland_fstart_in_io_collective__in_tag",
+    "cland_fstart_in_io_collective__in_valid",
+    "cland_fstart_in_rec_rx_s0_i",
+    "cland_fstart_in_rec_rx_s1_i",
+    "cland_fstart_in_rec_rx_s2_i",
+    "cland_fstart_in_shr_p_rx_i",
+    "cland_fstart_in_shr_r_rx_i",
+    "cland_tstart_in",
+    "start_i",
+    "strap_ca_efall",
+    "strap_ca_k_flt_n_i",
+    "strap_ca_k_flt_s_i",
+    "strap_ca_k_flt_u_i",
+    "strap_ca_k_fltv_n_i",
+    "strap_ca_k_fltv_s_i",
+    "strap_ca_k_io_collective__cmd_mode",
+    "strap_ca_k_io_collective__cmd_tag",
+    "strap_ca_k_io_collective__cmd_v",
+    "strap_ca_k_io_collective__cmd_words",
+    "strap_ca_k_io_collective__in_data",
+    "strap_ca_k_io_collective__in_last",
+    "strap_ca_k_io_collective__in_mode",
+    "strap_ca_k_io_collective__in_tag",
+    "strap_ca_k_io_collective__in_valid",
+    "strap_ca_k_rec_rx_s0_i",
+    "strap_ca_k_rec_rx_s1_i",
+    "strap_ca_k_rec_rx_s2_i",
+    "strap_ca_k_shr_p_rx_i",
+    "strap_ca_k_shr_r_rx_i",
+    "strap_ca_pad"
+  ],
+  "failure_groups": [
+    [
+      "shr_p_rx_i",
+      2396
+    ],
+    [
+      "shr_r_rx_i",
+      2268
+    ],
+    [
+      "rec_rx_s0_i",
+      2192
+    ],
+    [
+      "rec_rx_s1_i",
+      2192
+    ],
+    [
+      "rec_rx_s2_i",
+      2192
+    ],
+    [
+      "io_collective__in_data",
+      2052
+    ],
+    [
+      "io_collective__cmd_tag",
+      132
+    ],
+    [
+      "io_collective__in_tag",
+      132
+    ],
+    [
+      "fltv_s_i",
+      104
+    ],
+    [
+      "io_collective__cmd_words",
+      68
+    ],
+    [
+      "fltv_n_i",
+      52
+    ],
+    [
+      "flt_u_i",
+      20
+    ],
+    [
+      "flt_n_i",
+      8
+    ],
+    [
+      "flt_s_i",
+      8
+    ],
+    [
+      "io_collective__cmd_mode",
+      8
+    ],
+    [
+      "io_collective__cmd_v",
+      8
+    ],
+    [
+      "io_collective__in_last",
+      8
+    ],
+    [
+      "io_collective__in_mode",
+      8
+    ],
+    [
+      "io_collective__in_valid",
+      8
+    ]
+  ]
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "path": [
+      [
+        "85089",
+        "u_bound.u_bout_rec_tx_s2.q[543]$_DFF_P_"
+      ],
+      [
+        "204430",
+        "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sxo[0].u_face.qv$_DFF_PN0_"
+      ],
+      [
+        "82893",
+        "u_bound.u_bout_rec_tx_s0.q[547]$_DFF_P_"
+      ]
+    ],
+    "endpoint": {
+      "node": "TYPE_OUTPUT",
+      "instance": "coll_core.TYPE_OUTPUT",
+      "port": "rec_tx_s0",
+      "bit": 547,
+      "xy_um": [
+        270.84,
+        1088.64
+      ],
+      "center_budget_um": 149,
+      "endpoint_budget_um": 150
+    },
+    "distance_um": 1281.5520000000001,
+    "max_allowed_um": 1096
+  }
+]

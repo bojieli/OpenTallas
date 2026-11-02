@@ -1,0 +1,41 @@
+{
+  "status": "NECESSARY_BOUNDS_ONLY_NOT_PLACEMENT",
+  "all_existing_standard_FFs": 63971,
+  "macro_adjacent_FFs": 28582,
+  "undirected_data_FF_edges": 154815,
+  "macro_pin_reserve_budget_um": 402,
+  "FF_center_budget_um": 399,
+  "interval_updates": 1212,
+  "empty_after_propagation": 1,
+  "failures": [
+    {
+      "source": "83496",
+      "source_name": "u_bound.u_bout_rec_tx_s1.eq$_DFF_PN0_",
+      "capture": "215508",
+      "capture_name": "u_bound.u_rrl_36.q$_DFF_P_",
+      "source_bounds": [
+        200.464,
+        498.464,
+        200.464,
+        498.464
+      ],
+      "prior_capture_bounds": [
+        1064.064,
+        1658.5040000000001,
+        -1084.32,
+        -518.7760000000001
+      ],
+      "tightened_capture_bounds": [
+        1064.064,
+        897.4639999999999,
+        -198.536,
+        -518.7760000000001
+      ]
+    }
+  ],
+  "limits": [
+    "All DATA-cone FF associations included; clock/reset geometry notincluded",
+    "Unique sites/macros/halos/obstacles notchecked",
+    "Unqualified EIO foldpinpolicy/nativeR90 support remainheld"
+  ]
+}

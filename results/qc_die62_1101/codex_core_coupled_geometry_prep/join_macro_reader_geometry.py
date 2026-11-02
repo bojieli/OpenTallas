@@ -26,7 +26,8 @@ def pin(i,p,b):
     if ori in ['MX','R180']:y=z-y
     if ori=='R90':x,y=z-y,x
     if ori=='R270':x,y=y,w-x
-    return [round(x+h['origin_um'][0],6),round(y+h['origin_um'][1],6)]
+    dx,dy=h.get('track_offset_um',[0,0])
+    return [round(x+h['origin_um'][0]+dx,6),round(y+h['origin_um'][1]+dy,6)]
 def ep(i,p,b):return dict(node=i,instance=g['macro_nodes'][str(i)]['name'],port=p,bit=b,xy_um=pin(i,p,b))
 def man(a,b):return abs(a[0]-b[0])+abs(a[1]-b[1])
 terms=g['terms'];constraints=collections.defaultdict(dict);direct=[];unqualified_clock_reset=[]

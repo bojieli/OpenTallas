@@ -1,0 +1,111 @@
+{
+  "status": "PYTHON_METADATA_GUARD_PREP_ONLY_NOT_ELAB_OR_EQUIVALENCE",
+  "actual_retained_instances": 8,
+  "actual_all8_ABI_widths": {
+    "clk": 1,
+    "rst_n": 1,
+    "red_in": 1,
+    "src": 512,
+    "sum": 128,
+    "v_out": 1,
+    "e_out": 1
+  },
+  "declared_fixed_profile": {
+    "N": 4,
+    "ADD_LAT": 7,
+    "SEAM": 1
+  },
+  "equal_profile_fixture_serializer_report": {
+    "schema": "opentallas.signed-param-serialize.v1",
+    "errors": [],
+    "stripped": [
+      {
+        "type": "ot_coll_fold_slice",
+        "param": "ADD_LAT",
+        "default": 7,
+        "cells": [
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[0].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[1].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[2].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[3].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[0].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[1].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[2].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[3].u_fs"
+        ]
+      },
+      {
+        "type": "ot_coll_fold_slice",
+        "param": "N",
+        "default": 4,
+        "cells": [
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[0].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[1].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[2].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[3].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[0].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[1].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[2].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[3].u_fs"
+        ]
+      },
+      {
+        "type": "ot_coll_fold_slice",
+        "param": "SEAM",
+        "default": 1,
+        "cells": [
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[0].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[1].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[2].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[3].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[0].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[1].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[2].u_fs",
+          "fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_xf[3].u_fs"
+        ]
+      }
+    ]
+  },
+  "mutant_refusals": [
+    {
+      "parameter": "N",
+      "mutant_value": 8,
+      "refused": [
+        "ot_coll_fold_slice fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[0].u_fs: .N(00000000000000000000000000001000) != signed header default 4"
+      ]
+    },
+    {
+      "parameter": "ADD_LAT",
+      "mutant_value": 8,
+      "refused": [
+        "ot_coll_fold_slice fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[0].u_fs: .ADD_LAT(00000000000000000000000000001000) != signed header default 7"
+      ]
+    },
+    {
+      "parameter": "SEAM",
+      "mutant_value": 0,
+      "refused": [
+        "ot_coll_fold_slice fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[0].u_fs: .SEAM(00000000000000000000000000000000) != signed header default 1"
+      ]
+    },
+    {
+      "parameter": "N",
+      "mutant_value": null,
+      "refused": [
+        "ot_coll_fold_slice fixture_top/u_bound.u_io_collective_u_io_u_collective.u_coll.g_pf[0].u_fs: .N(xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx) != signed header default 4"
+      ]
+    }
+  ],
+  "ys_preview": [
+    "setparam -unset ADD_LAT t:ot_coll_fold_slice",
+    "setparam -unset N t:ot_coll_fold_slice",
+    "setparam -unset SEAM t:ot_coll_fold_slice"
+  ],
+  "no_shared_tool_modification": true,
+  "no_source_substitution": true,
+  "unqualified": [
+    "Actual8instanceparameter/defaultresolution beforecut",
+    "NativeYosysmetadata/hierarchy gate notrun",
+    "Currentfunction/reset/clock/viewqualification and fixedhardmasterphysicalABI notclosed"
+  ]
+}

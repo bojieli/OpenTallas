@@ -1,0 +1,12 @@
+{
+  "status": "DISABLED_ZERO_ADDITIONAL_EDGE_SINGLE_VALID_FF_COPY_MODEL_ONLY",
+  "source_FF": "204430",
+  "source_name": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sxo[0].u_face.qv$_DFF_PN0_",
+  "new_model_FF": "215626",
+  "redirect_capture_FF": "85089",
+  "redirect_capture_name": "u_bound.u_bout_rec_tx_s2.q[543]$_DFF_P_",
+  "retained_original_capture_FF": "82893",
+  "additional_standard_FFs": 1,
+  "mission_edge_delta": 0,
+  "clock_reset_semantics": "Exact same CLK/D/RESETN/SETN as original literal FF required. Native synthesis must preserve two copies and prove reset equality; no qualified source/view/function/clock/count credit. Shared reset replacement remains separately unpaired."
+}
