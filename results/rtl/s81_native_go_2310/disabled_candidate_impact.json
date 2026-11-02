@@ -1,0 +1,30 @@
+{
+  "status": "DISABLED_SINGLE_INSTANCE_PARALLEL_TAG_CANDIDATE",
+  "native_part": "fW0_p1_b0",
+  "native_type": "col_h10_r0_p1__t1__cl574cc59d",
+  "candidate_type": "col_h10_r0_p1__t1__cl574cc59d__CODEX_E0_TAG2_DISABLED",
+  "native_source": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/col_h10_r0_p1__t1__cl574cc59d.sv",
+  "native_source_sha256": "b2bb6c85cc3308a81832ed2fdddf28c31f2f61b4f1d0319b09545a2af6689cc5",
+  "candidate_source_sha256": "a1f3016558e6f6b5851815df80f5cd57755dd63debb94224266ac1380f486c1a",
+  "original_leaf": "u_f_0L01.u_r0.u_e0",
+  "tag_bits": 2,
+  "parallel_depth": 2,
+  "new_FF": 4,
+  "new_clock_pin_loads": 4,
+  "new_reset_pin_loads": 0,
+  "new_GO_CFG_XS_cycles": 0,
+  "changed_consumer_port": "go_tag",
+  "native_type_replicas": 5,
+  "selected_instance_specialization_required": true,
+  "blanket_type_cost_if_not_specialized": 20,
+  "global_864_Q_pairs_cost_if_adopted_everywhere": 3456,
+  "canonical_source_edited": false,
+  "canonical_plan_edited": false,
+  "production_enabled": false,
+  "physical_route_authorized": false,
+  "holds": [
+    "authoritative source generator translation",
+    "four actual placed FF sites/clock review",
+    "new native provider/source event review"
+  ]
+}

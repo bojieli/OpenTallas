@@ -1,0 +1,35 @@
+--- native/col_h10_r0_p1__t1__cl574cc59d.sv
++++ DISABLED/col_h10_r0_p1__t1__cl574cc59d__CODEX_E0_TAG2_DISABLED.sv
+@@ -3,7 +3,7 @@
+ // every crossing registered on both sides (ot_dp_st, data + epoch); one clock, one reset synchroniser.
+ `timescale 1ns/1ps
+ `default_nettype none
+-module col_h10_r0_p1__t1__cl574cc59d #(
++module col_h10_r0_p1__t1__cl574cc59d__CODEX_E0_TAG2_DISABLED #(
+     parameter [11:0] S_u_r0_u_cf_lk = 12'b010010010010,
+     parameter P_u_r0_u_c0_0_INSTANCE = "u_f_0L01.u_r0.u_c0_0",
+     parameter P_u_r0_u_c0_1_INSTANCE = "u_f_0L01.u_r0.u_c0_1",
+@@ -88,6 +88,14 @@
+     input wire cland_dn_ready_0,
+     input wire cland_dn_fault_0
+ );
++    // DISABLED selected-pair source candidate: parallel to actual two-stage qbank_S GO.
++    // Four reset-free FF; no additional GO/CFG/XS stage or reset pin load.
++    reg [1:0] codex_e0_tag_d1, codex_e0_tag_d2;
++    always @(posedge w_u_r0_0_Y[0]) begin
++        codex_e0_tag_d1 <= w_u_r0_u_s0_go_tag[1:0];
++        codex_e0_tag_d2 <= codex_e0_tag_d1;
++    end
++
+     assign fclk_out_ft1_o = clk_t30;
+     assign fclk_out_ft2_o = clk_t30;
+     assign fclk_out_ft3_o = clk_t30;
+@@ -2017,7 +2025,7 @@
+         .clk(w_u_r0_0_Y[0]),
+         .fault(w_u_r0_u_e0_fault),
+         .go(w_u_r0_u_bs0_o_go[0]),
+-        .go_tag(w_u_r0_u_s0_go_tag[1:0]),
++        .go_tag(codex_e0_tag_d2),
+         .perr(w_u_r0_u_e0_perr),
+         .pnseg(w_u_r0_u_e0_pnseg),
+         .ppos(w_u_r0_u_e0_ppos),
