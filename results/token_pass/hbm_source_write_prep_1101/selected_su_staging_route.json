@@ -89,5 +89,38 @@
       "scratch allocator ownership and final native DBK alignment"
     ],
     "hold": "No selected S0/S3 writer or VM0-to-SID3 staging ownership implied. Generic DMA.COPY and old3:4 comments are not an adopted one-core833ps route."
+  },
+  "finite_KVWB_staging_lower_bound": {
+    "scope": "Actual240scalarrows; conditional ring-slot shape, actualPOS unknown. NO selected data-COPY or globalcalendar adoption.",
+    "source_word_mod64_counts": {
+      "0": 231,
+      "24": 4,
+      "32": 3,
+      "48": 2
+    },
+    "usual_two_quad_slots": 124,
+    "usual_fragment_words": [
+      312,
+      200
+    ],
+    "aligned_rows_minimum_stage_words": 200,
+    "unaligned_rows_minimum_stage_words": 512,
+    "unaligned_fragment_requirement": "312and200word fragments need SEPARATE64-word-aligned scratch starts. A single contiguous512word stage does not align the second source312offset.",
+    "total_minimum_staged_words": 50808,
+    "total_minimum_staged_bytes": 203232,
+    "minimum_VM_read_sectors": 6351,
+    "minimum_VM_write_sectors": 6351,
+    "conditional16word_raw_delivery_payload_events": 3300,
+    "conditional_delivery_capacity_bytes": 211200,
+    "conditional_delivery_notes": "13events for200words,20for312; final8word padding requires explicit source-repeat/mask and ownership proof. Payload is not enough to price inject/capture/delivery/drain dates.",
+    "single_quad_slots": [
+      7,
+      39,
+      71,
+      103
+    ],
+    "single_quad_minimum_stage_words": 4608,
+    "single_quad_minimum_stage_bytes": 18432,
+    "unknown_position_rule": "These are separate conditional bounds, not weighted expectations. Actual240runtimepositions must resolve before counting."
   }
 }
