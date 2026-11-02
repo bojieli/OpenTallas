@@ -1,0 +1,27 @@
+{
+  "3_1_place_gp_skip_io": {
+    "script": "global_place_skip_io",
+    "elapsed": "0:19.79",
+    "peak_KB": 502056
+  },
+  "3_2_place_iop": {
+    "script": "io_placement",
+    "elapsed": "0:18.27",
+    "peak_KB": 505668
+  },
+  "3_3_place_gp": {
+    "script": "global_place",
+    "elapsed": "6:11.10",
+    "peak_KB": 1175424
+  },
+  "3_4_place_resized": {
+    "script": "resize",
+    "elapsed": "2:05.74",
+    "peak_KB": 749664
+  },
+  "3_5_place_dp": {
+    "script": "detail_place",
+    "elapsed": "2:19.87",
+    "peak_KB": 895804
+  }
+}

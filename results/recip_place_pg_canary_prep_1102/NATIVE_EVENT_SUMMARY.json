@@ -1,0 +1,227 @@
+{
+  "scope": "Actual private process observations; cumulative create/swap/bind EVENTS, not retained instance counts; GPL_REQUESTED must not be added again to GPL_NATIVE",
+  "stages": {
+    "detail_place": {
+      "BEGIN": {
+        "kind": "BEGIN",
+        "stage": "detail_place",
+        "strict_original": "UNSET",
+        "strict_gpl_supported": "0",
+        "native": "creates 0 swaps 0 bound 0"
+      },
+      "PRE": [
+        {
+          "kind": "PRE_HOOK",
+          "stage": "detail_place",
+          "native_before": "creates 0 swaps 0 bound 0",
+          "native_after": "creates 0 swaps 0 bound 0"
+        }
+      ],
+      "calls": [],
+      "END": {
+        "kind": "END",
+        "stage": "detail_place",
+        "native": "creates 0 swaps 0 bound 0",
+        "native_status_after_end": "contract native_pg_birth.flat_literal.v1 active 0",
+        "cleanup_errors": ""
+      },
+      "end_native_event_counts": {
+        "creates": 0,
+        "swaps": 0,
+        "bound": 0
+      },
+      "GPL_classification": "NO_NATIVE_GPL_CALL"
+    },
+    "global_place": {
+      "BEGIN": {
+        "kind": "BEGIN",
+        "stage": "global_place",
+        "strict_original": "UNSET",
+        "strict_gpl_supported": "0",
+        "native": "creates 0 swaps 0 bound 0"
+      },
+      "PRE": [
+        {
+          "kind": "PRE_HOOK",
+          "stage": "global_place",
+          "native_before": "creates 0 swaps 0 bound 0",
+          "native_after": "creates 0 swaps 0 bound 0"
+        }
+      ],
+      "calls": [
+        {
+          "tag": "REMOVE_BUFFERS",
+          "argv": "remove_buffers",
+          "code": 0,
+          "delta": {
+            "creates": 0,
+            "swaps": 0,
+            "bound": 0
+          },
+          "actual_timing_arg": null,
+          "actual_routability_arg": null,
+          "actual_skip_io_arg": null
+        },
+        {
+          "tag": "BUFFER_PORTS",
+          "argv": "buffer_ports",
+          "code": 0,
+          "delta": {
+            "creates": 68,
+            "swaps": 0,
+            "bound": 136
+          },
+          "actual_timing_arg": null,
+          "actual_routability_arg": null,
+          "actual_skip_io_arg": null
+        },
+        {
+          "tag": "GPL_NATIVE",
+          "argv": "::ot_gpl_native -density 0.35 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05",
+          "code": 0,
+          "delta": {
+            "creates": 1111,
+            "swaps": 165,
+            "bound": 2222
+          },
+          "actual_timing_arg": "1",
+          "actual_routability_arg": "1",
+          "actual_skip_io_arg": "0"
+        },
+        {
+          "tag": "GPL_REQUESTED",
+          "argv": "global_placement -density 0.35 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05",
+          "code": 0,
+          "delta": {
+            "creates": 1111,
+            "swaps": 165,
+            "bound": 2222
+          },
+          "actual_timing_arg": "1",
+          "actual_routability_arg": "1",
+          "actual_skip_io_arg": "0"
+        }
+      ],
+      "END": {
+        "kind": "END",
+        "stage": "global_place",
+        "native": "creates 1179 swaps 165 bound 2358",
+        "native_status_after_end": "contract native_pg_birth.flat_literal.v1 active 0",
+        "cleanup_errors": ""
+      },
+      "end_native_event_counts": {
+        "creates": 1179,
+        "swaps": 165,
+        "bound": 2358
+      },
+      "GPL_classification": "SINGLE_NATIVE_TIMING_ROUTABILITY_SUCCESS_WITH_BIRTH_EVENTS_NO_FALLBACK"
+    },
+    "global_place_skip_io": {
+      "BEGIN": {
+        "kind": "BEGIN",
+        "stage": "global_place_skip_io",
+        "strict_original": "UNSET",
+        "strict_gpl_supported": "0",
+        "native": "creates 0 swaps 0 bound 0"
+      },
+      "PRE": [
+        {
+          "kind": "PRE_HOOK",
+          "stage": "global_place_skip_io",
+          "native_before": "creates 0 swaps 0 bound 0",
+          "native_after": "creates 0 swaps 0 bound 0"
+        }
+      ],
+      "calls": [],
+      "END": {
+        "kind": "END",
+        "stage": "global_place_skip_io",
+        "native": "creates 0 swaps 0 bound 0",
+        "native_status_after_end": "contract native_pg_birth.flat_literal.v1 active 0",
+        "cleanup_errors": ""
+      },
+      "end_native_event_counts": {
+        "creates": 0,
+        "swaps": 0,
+        "bound": 0
+      },
+      "GPL_classification": "NO_NATIVE_GPL_CALL"
+    },
+    "io_placement": {
+      "BEGIN": {
+        "kind": "BEGIN",
+        "stage": "io_placement",
+        "strict_original": "UNSET",
+        "strict_gpl_supported": "0",
+        "native": "creates 0 swaps 0 bound 0"
+      },
+      "PRE": [
+        {
+          "kind": "PRE_HOOK",
+          "stage": "io_placement",
+          "native_before": "creates 0 swaps 0 bound 0",
+          "native_after": "creates 0 swaps 0 bound 0"
+        }
+      ],
+      "calls": [],
+      "END": {
+        "kind": "END",
+        "stage": "io_placement",
+        "native": "creates 0 swaps 0 bound 0",
+        "native_status_after_end": "contract native_pg_birth.flat_literal.v1 active 0",
+        "cleanup_errors": ""
+      },
+      "end_native_event_counts": {
+        "creates": 0,
+        "swaps": 0,
+        "bound": 0
+      },
+      "GPL_classification": "NO_NATIVE_GPL_CALL"
+    },
+    "resize": {
+      "BEGIN": {
+        "kind": "BEGIN",
+        "stage": "resize",
+        "strict_original": "UNSET",
+        "strict_gpl_supported": "0",
+        "native": "creates 0 swaps 0 bound 0"
+      },
+      "PRE": [
+        {
+          "kind": "PRE_HOOK",
+          "stage": "resize",
+          "native_before": "creates 0 swaps 0 bound 0",
+          "native_after": "creates 0 swaps 0 bound 0"
+        }
+      ],
+      "calls": [
+        {
+          "tag": "REPAIR_DESIGN",
+          "argv": "repair_design -verbose -cap_margin 20 -slew_margin 20",
+          "code": 0,
+          "delta": {
+            "creates": 55,
+            "swaps": 29,
+            "bound": 110
+          },
+          "actual_timing_arg": null,
+          "actual_routability_arg": null,
+          "actual_skip_io_arg": null
+        }
+      ],
+      "END": {
+        "kind": "END",
+        "stage": "resize",
+        "native": "creates 55 swaps 29 bound 110",
+        "native_status_after_end": "contract native_pg_birth.flat_literal.v1 active 0",
+        "cleanup_errors": ""
+      },
+      "end_native_event_counts": {
+        "creates": 55,
+        "swaps": 29,
+        "bound": 110
+      },
+      "GPL_classification": "NO_NATIVE_GPL_CALL"
+    }
+  }
+}
