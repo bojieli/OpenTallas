@@ -1,0 +1,8 @@
+WRITE 0 597 0 896 bc470000
+WRITE 0 598 0 897 bcb40000
+WRITE 0 613 0 898 3db90000
+FAULT 111 causes 0010 0100 0010 tree 00
+- tb_debug.sv:28: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.040 s; speed 33.297 us/s
+- Verilator: cpu 0.039 s on 1 threads; allocated 7 MB

@@ -1,0 +1,7 @@
+# Actual remaining BF row-count cases
+
+H9X and H10X now cover the actual WOA4/5/6 and router1/2 row-count domain, using their existing compiled source-class binaries. H9X adds actual6R12 phases125/130 (WOA4/router2). H10X adds actual0R01 phase122 (WOA4) and1L01 phase126 (router2). All values and return dates match with zero faults. Earlier full/tail/router replay, descriptor+1, actual W/E weight-swap, trace lockstep and native family hold receipts are retained and included in the fresh candidates. No class is borrowed for another master; cmp.wk remains unqualified.
+
+Actual intel1 root `/srv/opentallas-scratch2/claude/codex-ds-bf-nx-1131`: `shape_domain_remaining_1131/h9x/replay` retains H9X extra replays; `shape_domain_final_h9x` contains the completed fresh collector. `shape_domain_h10x_1131/h10x` contains H10X extras and collector. Final unit oth-ubuntu-2168970-1793577536 exited0. Static RTL binaries were copied read-only from own earlier gates; no re-elaboration was needed.
+
+Setup failures remain: an unset schedule directory and copied old-target measurement/walker symlinks prevented embedding/collection. Those were source-staging failures; the completed positive RTL cases were reused, not replayed. Old failed directories/logs were preserved. All candidates remain explicitly BF-active/Q-quiescent/source-bound,833ps, default OFF, no activation-residence, CAP/mission or G5 qualification.

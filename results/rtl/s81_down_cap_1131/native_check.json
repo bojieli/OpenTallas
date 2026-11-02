@@ -1,0 +1,276 @@
+{
+  "status": "PASS_CAP_NATIVE_COMPONENT",
+  "scope": "isolated exact selected CAP wrappers; no bound source/RD arrival or lease authority",
+  "source_commit": "537b916454f6fa1421d333f80850b7c415225fdb",
+  "clock_ps": 833,
+  "profiles": [
+    {
+      "e6_lane": 0,
+      "writes": [
+        {
+          "family": 1,
+          "edge": 590,
+          "port": 0,
+          "address": 936,
+          "data": 3178430464
+        },
+        {
+          "family": 1,
+          "edge": 591,
+          "port": 0,
+          "address": 937,
+          "data": 3167485952
+        },
+        {
+          "family": 2,
+          "edge": 600,
+          "port": 0,
+          "address": 896,
+          "data": 3182821376
+        },
+        {
+          "family": 2,
+          "edge": 601,
+          "port": 0,
+          "address": 897,
+          "data": 1024655360
+        },
+        {
+          "family": 1,
+          "edge": 602,
+          "port": 1,
+          "address": 934,
+          "data": 1023213568
+        },
+        {
+          "family": 1,
+          "edge": 603,
+          "port": 1,
+          "address": 935,
+          "data": 3186884608
+        },
+        {
+          "family": 2,
+          "edge": 604,
+          "port": 0,
+          "address": 898,
+          "data": 3179479040
+        },
+        {
+          "family": 2,
+          "edge": 605,
+          "port": 0,
+          "address": 899,
+          "data": 3171876864
+        },
+        {
+          "family": 0,
+          "edge": 606,
+          "port": 0,
+          "address": 896,
+          "data": 3158769664
+        },
+        {
+          "family": 0,
+          "edge": 607,
+          "port": 0,
+          "address": 897,
+          "data": 3165913088
+        },
+        {
+          "family": 0,
+          "edge": 610,
+          "port": 0,
+          "address": 898,
+          "data": 1035534336
+        },
+        {
+          "family": 0,
+          "edge": 611,
+          "port": 0,
+          "address": 899,
+          "data": 3182493696
+        }
+      ]
+    },
+    {
+      "e6_lane": 3,
+      "writes": [
+        {
+          "family": 1,
+          "edge": 590,
+          "port": 0,
+          "address": 936,
+          "data": 3178430464
+        },
+        {
+          "family": 1,
+          "edge": 591,
+          "port": 0,
+          "address": 937,
+          "data": 3167485952
+        },
+        {
+          "family": 2,
+          "edge": 600,
+          "port": 0,
+          "address": 896,
+          "data": 3182821376
+        },
+        {
+          "family": 2,
+          "edge": 601,
+          "port": 0,
+          "address": 897,
+          "data": 1024655360
+        },
+        {
+          "family": 1,
+          "edge": 602,
+          "port": 1,
+          "address": 934,
+          "data": 1023213568
+        },
+        {
+          "family": 1,
+          "edge": 603,
+          "port": 1,
+          "address": 935,
+          "data": 3186884608
+        },
+        {
+          "family": 2,
+          "edge": 604,
+          "port": 0,
+          "address": 898,
+          "data": 3179479040
+        },
+        {
+          "family": 2,
+          "edge": 605,
+          "port": 0,
+          "address": 899,
+          "data": 3171876864
+        },
+        {
+          "family": 0,
+          "edge": 622,
+          "port": 0,
+          "address": 896,
+          "data": 3158769664
+        },
+        {
+          "family": 0,
+          "edge": 623,
+          "port": 0,
+          "address": 897,
+          "data": 3165913088
+        },
+        {
+          "family": 0,
+          "edge": 626,
+          "port": 0,
+          "address": 898,
+          "data": 1035534336
+        },
+        {
+          "family": 0,
+          "edge": 627,
+          "port": 0,
+          "address": 899,
+          "data": 3182493696
+        }
+      ]
+    },
+    {
+      "e6_lane": 4,
+      "writes": [
+        {
+          "family": 1,
+          "edge": 590,
+          "port": 0,
+          "address": 936,
+          "data": 3178430464
+        },
+        {
+          "family": 1,
+          "edge": 591,
+          "port": 0,
+          "address": 937,
+          "data": 3167485952
+        },
+        {
+          "family": 2,
+          "edge": 600,
+          "port": 0,
+          "address": 896,
+          "data": 3182821376
+        },
+        {
+          "family": 2,
+          "edge": 601,
+          "port": 0,
+          "address": 897,
+          "data": 1024655360
+        },
+        {
+          "family": 1,
+          "edge": 602,
+          "port": 1,
+          "address": 934,
+          "data": 1023213568
+        },
+        {
+          "family": 1,
+          "edge": 603,
+          "port": 1,
+          "address": 935,
+          "data": 3186884608
+        },
+        {
+          "family": 2,
+          "edge": 604,
+          "port": 0,
+          "address": 898,
+          "data": 3179479040
+        },
+        {
+          "family": 2,
+          "edge": 605,
+          "port": 0,
+          "address": 899,
+          "data": 3171876864
+        },
+        {
+          "family": 0,
+          "edge": 630,
+          "port": 0,
+          "address": 896,
+          "data": 3158769664
+        },
+        {
+          "family": 0,
+          "edge": 631,
+          "port": 0,
+          "address": 897,
+          "data": 3165913088
+        },
+        {
+          "family": 0,
+          "edge": 634,
+          "port": 0,
+          "address": 898,
+          "data": 1035534336
+        },
+        {
+          "family": 0,
+          "edge": 635,
+          "port": 0,
+          "address": 899,
+          "data": 3182493696
+        }
+      ]
+    }
+  ],
+  "wrong_payload_detected": true
+}

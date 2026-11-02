@@ -1,0 +1,18 @@
+# Default-off down source placement that satisfies single-frame FIN
+
+`OT_XS_DOWN_CAP_PLAN=1` feeds a logical single-frame FIN score into the real FP placement search. It requires explicit eight-row aligned source ownership. Actual rank-image row tags replace the phase-local row/format fields for scoring. Source return-port collisions are rejected as search candidates; no invalid schedule is accepted. A successful plan must retire every owned row exactly once with no FIN fault. Default placement and every other operator remain unchanged.
+
+The initial actual0L01/shared.w2 phase71 train loses row3 at CAP with F5 (fresh A and non-complete re-entry B on one store port). Source model and exact native e6 wrapper agree. Full phase JSON, row IDs and return train are identical in the original107/53 and aligned104/56 fields: this failure predates alignment. The new placement reduces this train's logical FIN score4→0 without padding or new registers. K-segment sibling association and order remain canonical.
+
+Gates:
+
+* Real full-field `compile_frame` and `write_images`, flagON:131phases,176native masks, all126down rows bit-exact against the released fixture's canonical FP32/BF16 outputs. All35down phases carry zero single-frame FIN score. Actual image readback verifies630used CFG row tags; a flipped used tag fails.
+* Actual selected functional CAP families e6,landedw3,c2_w3:12fresh shared-source rows,36writes over the as-driven profiles e6 W0/W3/E0,w3lane0,c2lane0, zero faults; wrong payload caught. A separate actual3-row tail from3L01 phase75 also passes (no synthetic padding).
+* Independent peer checker cbf2c5d5d verifies every returned partial subtree and all12balanced roots directly from fresh shared Kseg5 source values, plus payload and equal-span tag-ownership swap controls. It imports no producer finish/canonical routine.
+* Four focused score tests cover success, lost row, invalid trial collision and the preserved actual F5 train.
+
+Native source authority is clean bind commit537b916454f6fa1421d333f80850b7c415225fdb, raw top7dcc944c1d951d28fba997d4cdd5ee88175b8f2d84c1bbf947eb60a40e63c176, recovered27-file readset including the differing historical delay_rf. Probe defines exclude SYNTHESIS and CAP_FACE flags, so LP ED24/LD16 simulation paths apply. This is functional-source qualification only; current physical flagged-body alignment is held, with no invented flag latency penalty. Family/path checks do not grant all72-frame simultaneous traffic, global epochs, real native storage or leases. The separate native CW mask helper failure is retained in s81_final_ffn_source_1131/cw_native_failure; G0C owns its emitter correction. No default, RTL or physical contract changes here.
+
+Actual intel1 roots under `/srv/opentallas-scratch2/claude/codex-ds-compiler-1101`: down_cap_native_gate_1131 (unit2218150-1793577676), down_cap_tail_gate_1131 (unit2779202-1793579223), down_cap_fullfield_retry2_1131 (compile unit2454529-1793578331; literal/control unit2828481-1793579349). The older72-field aligned image batch remains source/address evidence; its assignments are not promoted. CAP-safe images require separate regeneration.
+
+Preserved setup failures: initial scorer asserted on trial return collisions before they could be scored (fixed to reject such candidates); first fullfield launcher retained the old output root and stopped on the existing first case. No image was overwritten. Its accidental manifest report is retained, with clearly marked case reconstruction from unchanged artifacts and no invented elapsed times. Corrected retry2 asserts its fresh output path before mutation.
