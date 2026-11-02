@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.hbm_arch.views.v1",
+  "plan": "GEN_plan.json",
+  "plan_sha256": "b5dba10c3f1678dc14a38bc5c03892cf03192054f5b89da0dd722383fbbb8406",
+  "view_list": [
+    {
+      "view": "ot_hnx_sfu_store_b__1300886e9f18@38ab41d1bc5b",
+      "module": "ot_hnx_sfu_store_b__1300886e9f18",
+      "outline_um": [
+        760.32,
+        483.84
+      ],
+      "pins_file": "StoreB_pins.json",
+      "pins_sha256": "38ab41d1bc5b492213b5c7bebc69bf4ac169915d7ccea7b9f94bfa53edfd14d3",
+      "pins": 7864,
+      "recipe_keys": [
+        "ot_hnx_sfu_store_b__1300886e9f18"
+      ],
+      "family": "SOURCE13_NATIVE_STOREB",
+      "canonical_type": null,
+      "instances": [
+        "q_b113.u_sfucore_Q_opstore_b"
+      ],
+      "placed": 0
+    }
+  ]
+}

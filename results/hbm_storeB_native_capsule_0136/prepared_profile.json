@@ -1,0 +1,712 @@
+{
+  "recipe": {
+    "top": "ot_hnx_sfu_store_b__1300886e9f18",
+    "params": {},
+    "files": [
+      "results/hbm_storeB_native_capsule_0136/native/ot_hgi_su_lbank.sv",
+      "results/hbm_storeB_native_capsule_0136/native/ot_hgi_su_lgroup2.sv",
+      "results/hbm_storeB_native_capsule_0136/native/ot_hnx_sfu_store_b__1300886e9f18.sv",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+    ],
+    "source_commit": "38138c569166ad00e5c05ef46b73249af443aa26",
+    "read_at_commit": false,
+    "defines": [],
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "macro_placement": [
+      {
+        "inst": "m0.g_bank[0].u_b.g_m11.u_m",
+        "xy_um": [
+          17.28,
+          17.28
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[1].u_b.g_m11.u_m",
+        "xy_um": [
+          198.744,
+          17.28
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[2].u_b.g_m11.u_m",
+        "xy_um": [
+          380.208,
+          17.28
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[3].u_b.g_m11.u_m",
+        "xy_um": [
+          561.672,
+          17.28
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[4].u_b.g_m11.u_m",
+        "xy_um": [
+          17.28,
+          66.984
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[5].u_b.g_m11.u_m",
+        "xy_um": [
+          198.744,
+          66.984
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[6].u_b.g_m11.u_m",
+        "xy_um": [
+          380.208,
+          66.984
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[7].u_b.g_m11.u_m",
+        "xy_um": [
+          561.672,
+          66.984
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[8].u_b.g_m11.u_m",
+        "xy_um": [
+          17.28,
+          116.688
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[9].u_b.g_m11.u_m",
+        "xy_um": [
+          198.744,
+          116.688
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[10].u_b.g_m11.u_m",
+        "xy_um": [
+          380.208,
+          116.688
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[11].u_b.g_m11.u_m",
+        "xy_um": [
+          561.672,
+          116.688
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[12].u_b.g_m11.u_m",
+        "xy_um": [
+          17.28,
+          166.392
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[13].u_b.g_m11.u_m",
+        "xy_um": [
+          198.744,
+          166.392
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[14].u_b.g_m11.u_m",
+        "xy_um": [
+          380.208,
+          166.392
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m0.g_bank[15].u_b.g_m11.u_m",
+        "xy_um": [
+          561.672,
+          166.392
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[0].u_b.g_m11.u_m",
+        "xy_um": [
+          17.28,
+          216.096
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[1].u_b.g_m11.u_m",
+        "xy_um": [
+          198.744,
+          216.096
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[2].u_b.g_m11.u_m",
+        "xy_um": [
+          380.208,
+          216.096
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[3].u_b.g_m11.u_m",
+        "xy_um": [
+          561.672,
+          216.096
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[4].u_b.g_m11.u_m",
+        "xy_um": [
+          17.28,
+          265.8
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[5].u_b.g_m11.u_m",
+        "xy_um": [
+          198.744,
+          265.8
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[6].u_b.g_m11.u_m",
+        "xy_um": [
+          380.208,
+          265.8
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[7].u_b.g_m11.u_m",
+        "xy_um": [
+          561.672,
+          265.8
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[8].u_b.g_m11.u_m",
+        "xy_um": [
+          17.28,
+          315.504
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[9].u_b.g_m11.u_m",
+        "xy_um": [
+          198.744,
+          315.504
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[10].u_b.g_m11.u_m",
+        "xy_um": [
+          380.208,
+          315.504
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[11].u_b.g_m11.u_m",
+        "xy_um": [
+          561.672,
+          315.504
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[12].u_b.g_m11.u_m",
+        "xy_um": [
+          17.28,
+          365.208
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[13].u_b.g_m11.u_m",
+        "xy_um": [
+          198.744,
+          365.208
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[14].u_b.g_m11.u_m",
+        "xy_um": [
+          380.208,
+          365.208
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+        "inst": "m1.g_bank[15].u_b.g_m11.u_m",
+        "xy_um": [
+          561.672,
+          365.208
+        ],
+        "orient": "R0",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2"
+      }
+    ],
+    "source": "Exact selected SOURCE13 native StoreB and two native generic children; real same-name32SRAM binding, no provider alias"
+  },
+  "profile": {
+    "source_commit": "38138c569166ad00e5c05ef46b73249af443aa26",
+    "family": "SOURCE13_CURRENT_NATIVE_STOREB",
+    "release_eligible": false,
+    "qualification": "NATIVE_SOURCEPROOF_INTAKE_UNROUTED",
+    "added_face_cycles": 0,
+    "endpoint_contract": {
+      "kind": "INTERNAL_CORE",
+      "parent_partition": "q_b113*",
+      "partition_rule": "R2_INTERNAL_TIMED_IN_PARTITION"
+    },
+    "clock_ports": [
+      "store0_clk"
+    ],
+    "reset_ports": [
+      "store0_rst_n"
+    ],
+    "source_manifest": {
+      "results/hbm_storeB_native_capsule_0136/native/ot_hgi_su_lbank.sv": "bddfeb6efcafa10a98b1ccce33f005419155e89d96a9f3343b5caee0c845f64f",
+      "results/hbm_storeB_native_capsule_0136/native/ot_hgi_su_lgroup2.sv": "55e584eeb52f93907ba85f375da2d5efb92f22355a2ca2e94303fd8da17f8397",
+      "results/hbm_storeB_native_capsule_0136/native/ot_hnx_sfu_store_b__1300886e9f18.sv": "b14fffb6256a187e4c62c23cd04df104f109ccab4d9683561e8ba41f9e3bc5d9",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v": "35e0905c083a17f1c222512a3093a059cec5b128f5f017fda999653084c9e75f"
+    },
+    "source_caller": "SOURCE13 B113 u_u_sfucore_Q_opstore_b",
+    "source_readset": "results/hbm_storeB_native_capsule_0136/readset.json",
+    "pin_placement_policy": "DECLARED_CLOCK_RESET_POINTS",
+    "port_inventory": {
+      "top": "ot_hnx_sfu_store_b__1300886e9f18",
+      "source_file": "results/hbm_storeB_native_capsule_0136/native/ot_hnx_sfu_store_b__1300886e9f18.sv",
+      "source_sha256": "b14fffb6256a187e4c62c23cd04df104f109ccab4d9683561e8ba41f9e3bc5d9",
+      "ports": [
+        [
+          "store0_clk",
+          "input",
+          1
+        ],
+        [
+          "store0_flt",
+          "output",
+          1
+        ],
+        [
+          "store0_rst_n",
+          "input",
+          1
+        ],
+        [
+          "store0_sw_addr",
+          "input",
+          120
+        ],
+        [
+          "store0_sw_d",
+          "input",
+          2048
+        ],
+        [
+          "store0_sw_mask",
+          "input",
+          64
+        ],
+        [
+          "store1_flt",
+          "output",
+          1
+        ],
+        [
+          "cmd0_Q",
+          "output",
+          1024
+        ],
+        [
+          "cmd1_D",
+          "input",
+          768
+        ],
+        [
+          "cmd1_Q",
+          "output",
+          768
+        ],
+        [
+          "cmd2_D",
+          "input",
+          64
+        ],
+        [
+          "cmd2_Q",
+          "output",
+          64
+        ],
+        [
+          "cmd3_D",
+          "input",
+          384
+        ],
+        [
+          "cmd3_Q",
+          "output",
+          384
+        ],
+        [
+          "cmd4_D",
+          "input",
+          512
+        ],
+        [
+          "cmd4_Q",
+          "output",
+          512
+        ],
+        [
+          "cmd5_D",
+          "input",
+          32
+        ],
+        [
+          "cmd5_Q",
+          "output",
+          32
+        ],
+        [
+          "cmd6_D",
+          "input",
+          16
+        ],
+        [
+          "cmd6_Q",
+          "output",
+          16
+        ],
+        [
+          "comb32_A",
+          "input",
+          1
+        ],
+        [
+          "comb33_A",
+          "input",
+          1
+        ],
+        [
+          "comb34_A",
+          "input",
+          1
+        ],
+        [
+          "comb35_A",
+          "input",
+          1
+        ],
+        [
+          "comb36_A",
+          "input",
+          1
+        ],
+        [
+          "comb37_A",
+          "input",
+          1
+        ],
+        [
+          "comb38_A",
+          "input",
+          1
+        ],
+        [
+          "comb39_A",
+          "input",
+          1
+        ],
+        [
+          "comb48_B",
+          "input",
+          32
+        ],
+        [
+          "comb48_S",
+          "input",
+          1
+        ],
+        [
+          "comb49_B",
+          "input",
+          32
+        ],
+        [
+          "comb50_B",
+          "input",
+          32
+        ],
+        [
+          "comb51_B",
+          "input",
+          32
+        ],
+        [
+          "comb52_B",
+          "input",
+          32
+        ],
+        [
+          "comb53_B",
+          "input",
+          32
+        ],
+        [
+          "comb54_B",
+          "input",
+          32
+        ],
+        [
+          "comb55_B",
+          "input",
+          32
+        ],
+        [
+          "comb56_B",
+          "input",
+          32
+        ],
+        [
+          "comb57_B",
+          "input",
+          32
+        ],
+        [
+          "comb58_B",
+          "input",
+          32
+        ],
+        [
+          "comb59_B",
+          "input",
+          32
+        ],
+        [
+          "comb60_B",
+          "input",
+          32
+        ],
+        [
+          "comb61_B",
+          "input",
+          32
+        ],
+        [
+          "comb62_B",
+          "input",
+          32
+        ],
+        [
+          "comb63_B",
+          "input",
+          32
+        ],
+        [
+          "comb64_B",
+          "input",
+          32
+        ],
+        [
+          "comb64_S",
+          "input",
+          1
+        ],
+        [
+          "comb65_B",
+          "input",
+          32
+        ],
+        [
+          "comb66_B",
+          "input",
+          32
+        ],
+        [
+          "comb67_B",
+          "input",
+          32
+        ],
+        [
+          "comb68_B",
+          "input",
+          32
+        ],
+        [
+          "comb69_B",
+          "input",
+          32
+        ],
+        [
+          "comb70_B",
+          "input",
+          32
+        ],
+        [
+          "comb71_B",
+          "input",
+          32
+        ],
+        [
+          "comb72_B",
+          "input",
+          32
+        ],
+        [
+          "comb73_B",
+          "input",
+          32
+        ],
+        [
+          "comb74_B",
+          "input",
+          32
+        ],
+        [
+          "comb75_B",
+          "input",
+          32
+        ],
+        [
+          "comb76_B",
+          "input",
+          32
+        ],
+        [
+          "comb77_B",
+          "input",
+          32
+        ],
+        [
+          "comb78_B",
+          "input",
+          32
+        ],
+        [
+          "comb79_B",
+          "input",
+          32
+        ],
+        [
+          "comb80_A",
+          "input",
+          2
+        ],
+        [
+          "comb81_A",
+          "input",
+          2
+        ],
+        [
+          "comb82_A",
+          "input",
+          2
+        ],
+        [
+          "comb83_A",
+          "input",
+          2
+        ],
+        [
+          "comb84_A",
+          "input",
+          2
+        ],
+        [
+          "comb85_A",
+          "input",
+          2
+        ],
+        [
+          "comb86_A",
+          "input",
+          2
+        ],
+        [
+          "comb87_A",
+          "input",
+          2
+        ],
+        [
+          "comb128_A",
+          "input",
+          1
+        ],
+        [
+          "comb144_A",
+          "input",
+          1
+        ]
+      ]
+    },
+    "native_capacity": {
+      "macros": {
+        "ot_sram_1r1w_256x256_m2_r2c2": 32
+      },
+      "external_face_shell": false
+    },
+    "conditional_formal_reset_edges": 4,
+    "physical_reset_phase": "NOT_QUALIFIED: actual wrappert22\u2192native3edge\u2192store; no inherited64/native4physicalreceipt",
+    "START": "Opaque native command1742 producer join remainsheld; no dummySTART"
+  }
+}
