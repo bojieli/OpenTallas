@@ -1,0 +1,1252 @@
+{
+ "block": "tnode",
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-57/plan_s11/G",
+ "base_die_plan_sha256": "e0638225f8b38653671aa3a59d11023c566182278d7256359f8f5b221b34c492",
+ "changed_instances": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n1_q0_0",
+   "orient": "R0",
+   "old_origin": [
+    1779.84,
+    1365.12
+   ],
+   "new_origin": [
+    1805.76,
+    1382.4
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n1_q0_1",
+   "orient": "R0",
+   "old_origin": [
+    1788.48,
+    2782.08
+   ],
+   "new_origin": [
+    1805.76,
+    2799.36
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n1_q0_2",
+   "orient": "R0",
+   "old_origin": [
+    3654.72,
+    1365.12
+   ],
+   "new_origin": [
+    3680.64,
+    1382.4
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n1_q0_3",
+   "orient": "R0",
+   "old_origin": [
+    3654.72,
+    2782.08
+   ],
+   "new_origin": [
+    3680.64,
+    2799.36
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n2L_q0",
+   "orient": "R0",
+   "old_origin": [
+    1779.84,
+    2073.6
+   ],
+   "new_origin": [
+    1805.76,
+    2090.88
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n2R_q0",
+   "orient": "R0",
+   "old_origin": [
+    3654.72,
+    2073.6
+   ],
+   "new_origin": [
+    3680.64,
+    2090.88
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n3_q0",
+   "orient": "R0",
+   "old_origin": [
+    2721.6,
+    3447.36
+   ],
+   "new_origin": [
+    2738.88,
+    3464.64
+   ],
+   "old_outline": [
+    172.80000000000018,
+    172.80000000000018
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n1_q1_0",
+   "orient": "R0",
+   "old_origin": [
+    6030.72,
+    1365.12
+   ],
+   "new_origin": [
+    6048.0,
+    1382.4
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n1_q1_1",
+   "orient": "R0",
+   "old_origin": [
+    6030.72,
+    2782.08
+   ],
+   "new_origin": [
+    6048.0,
+    2799.36
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n1_q1_2",
+   "orient": "R0",
+   "old_origin": [
+    7905.6,
+    1365.12
+   ],
+   "new_origin": [
+    7922.88,
+    1382.4
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n1_q1_3",
+   "orient": "R0",
+   "old_origin": [
+    7905.6,
+    2782.08
+   ],
+   "new_origin": [
+    7922.88,
+    2799.36
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n2L_q1",
+   "orient": "R0",
+   "old_origin": [
+    6030.72,
+    2073.6
+   ],
+   "new_origin": [
+    6048.0,
+    2090.88
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n2R_q1",
+   "orient": "R0",
+   "old_origin": [
+    7905.6,
+    2073.6
+   ],
+   "new_origin": [
+    7922.88,
+    2090.88
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n3_q1",
+   "orient": "R0",
+   "old_origin": [
+    6972.48,
+    3309.12
+   ],
+   "new_origin": [
+    6989.76,
+    3326.4
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n4",
+   "orient": "R0",
+   "old_origin": [
+    4847.04,
+    3525.12
+   ],
+   "new_origin": [
+    4872.96,
+    3542.4
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n1_q0_0",
+   "orient": "R0",
+   "old_origin": [
+    1779.84,
+    1365.12
+   ],
+   "new_origin": [
+    1805.76,
+    1382.4
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n1_q0_1",
+   "orient": "R0",
+   "old_origin": [
+    1788.48,
+    2782.08
+   ],
+   "new_origin": [
+    1805.76,
+    2799.36
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n1_q0_2",
+   "orient": "R0",
+   "old_origin": [
+    3654.72,
+    1365.12
+   ],
+   "new_origin": [
+    3680.64,
+    1382.4
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n1_q0_3",
+   "orient": "R0",
+   "old_origin": [
+    3654.72,
+    2782.08
+   ],
+   "new_origin": [
+    3680.64,
+    2799.36
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n2L_q0",
+   "orient": "R0",
+   "old_origin": [
+    1779.84,
+    2073.6
+   ],
+   "new_origin": [
+    1805.76,
+    2090.88
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n2R_q0",
+   "orient": "R0",
+   "old_origin": [
+    3654.72,
+    2073.6
+   ],
+   "new_origin": [
+    3680.64,
+    2090.88
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n3_q0",
+   "orient": "R0",
+   "old_origin": [
+    2721.6,
+    3438.72
+   ],
+   "new_origin": [
+    2738.88,
+    3464.64
+   ],
+   "old_outline": [
+    172.80000000000018,
+    172.80000000000018
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n1_q1_0",
+   "orient": "R0",
+   "old_origin": [
+    6030.72,
+    1365.12
+   ],
+   "new_origin": [
+    6048.0,
+    1382.4
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n1_q1_1",
+   "orient": "R0",
+   "old_origin": [
+    6030.72,
+    2782.08
+   ],
+   "new_origin": [
+    6048.0,
+    2799.36
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n1_q1_2",
+   "orient": "R0",
+   "old_origin": [
+    7905.6,
+    1365.12
+   ],
+   "new_origin": [
+    7922.88,
+    1382.4
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n1_q1_3",
+   "orient": "R0",
+   "old_origin": [
+    7905.6,
+    2782.08
+   ],
+   "new_origin": [
+    7922.88,
+    2799.36
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n2L_q1",
+   "orient": "R0",
+   "old_origin": [
+    6030.72,
+    2073.6
+   ],
+   "new_origin": [
+    6048.0,
+    2090.88
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n2R_q1",
+   "orient": "R0",
+   "old_origin": [
+    7905.6,
+    2073.6
+   ],
+   "new_origin": [
+    7922.88,
+    2090.88
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n3_q1",
+   "orient": "R0",
+   "old_origin": [
+    6972.48,
+    3309.12
+   ],
+   "new_origin": [
+    6989.76,
+    3326.4
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    -4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n4",
+   "orient": "R0",
+   "old_origin": [
+    4847.04,
+    3525.12
+   ],
+   "new_origin": [
+    4872.96,
+    3542.4
+   ],
+   "old_outline": [
+    172.8,
+    172.8
+   ],
+   "new_outline": [
+    125.28,
+    95.04
+   ],
+   "old_pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "new_pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+   "clock_entry": true,
+   "tap_delta_and_old_tap_minus_entry": [
+    4.32,
+    -4.32,
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "pins_file": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+ "pins_sha256": "602a107613c5d9da9359c50e4b1efb27830b75ce1071809a18df178422316d57",
+ "pins_n": 1341,
+ "lattice_snaps": [
+  {
+   "want": [
+    1801.44,
+    1386.72
+   ],
+   "snapped": [
+    1805.76,
+    1382.4
+   ]
+  },
+  {
+   "want": [
+    1810.08,
+    2803.68
+   ],
+   "snapped": [
+    1805.76,
+    2799.36
+   ]
+  },
+  {
+   "want": [
+    3676.32,
+    1386.72
+   ],
+   "snapped": [
+    3680.64,
+    1382.4
+   ]
+  },
+  {
+   "want": [
+    3676.32,
+    2803.68
+   ],
+   "snapped": [
+    3680.64,
+    2799.36
+   ]
+  },
+  {
+   "want": [
+    1801.44,
+    2095.2
+   ],
+   "snapped": [
+    1805.76,
+    2090.88
+   ]
+  },
+  {
+   "want": [
+    3676.32,
+    2095.2
+   ],
+   "snapped": [
+    3680.64,
+    2090.88
+   ]
+  },
+  {
+   "want": [
+    2743.2,
+    3468.96
+   ],
+   "snapped": [
+    2738.88,
+    3464.64
+   ]
+  },
+  {
+   "want": [
+    6052.32,
+    1386.72
+   ],
+   "snapped": [
+    6048.0,
+    1382.4
+   ]
+  },
+  {
+   "want": [
+    6052.32,
+    2803.68
+   ],
+   "snapped": [
+    6048.0,
+    2799.36
+   ]
+  },
+  {
+   "want": [
+    7927.2,
+    1386.72
+   ],
+   "snapped": [
+    7922.88,
+    1382.4
+   ]
+  },
+  {
+   "want": [
+    7927.2,
+    2803.68
+   ],
+   "snapped": [
+    7922.88,
+    2799.36
+   ]
+  },
+  {
+   "want": [
+    6052.32,
+    2095.2
+   ],
+   "snapped": [
+    6048.0,
+    2090.88
+   ]
+  },
+  {
+   "want": [
+    7927.2,
+    2095.2
+   ],
+   "snapped": [
+    7922.88,
+    2090.88
+   ]
+  },
+  {
+   "want": [
+    6994.08,
+    3330.72
+   ],
+   "snapped": [
+    6989.76,
+    3326.4
+   ]
+  },
+  {
+   "want": [
+    4868.64,
+    3546.72
+   ],
+   "snapped": [
+    4872.96,
+    3542.4
+   ]
+  },
+  {
+   "want": [
+    1801.44,
+    1386.72
+   ],
+   "snapped": [
+    1805.76,
+    1382.4
+   ]
+  },
+  {
+   "want": [
+    1810.08,
+    2803.68
+   ],
+   "snapped": [
+    1805.76,
+    2799.36
+   ]
+  },
+  {
+   "want": [
+    3676.32,
+    1386.72
+   ],
+   "snapped": [
+    3680.64,
+    1382.4
+   ]
+  },
+  {
+   "want": [
+    3676.32,
+    2803.68
+   ],
+   "snapped": [
+    3680.64,
+    2799.36
+   ]
+  },
+  {
+   "want": [
+    1801.44,
+    2095.2
+   ],
+   "snapped": [
+    1805.76,
+    2090.88
+   ]
+  },
+  {
+   "want": [
+    3676.32,
+    2095.2
+   ],
+   "snapped": [
+    3680.64,
+    2090.88
+   ]
+  },
+  {
+   "want": [
+    2743.2,
+    3460.32
+   ],
+   "snapped": [
+    2738.88,
+    3464.64
+   ]
+  },
+  {
+   "want": [
+    6052.32,
+    1386.72
+   ],
+   "snapped": [
+    6048.0,
+    1382.4
+   ]
+  },
+  {
+   "want": [
+    6052.32,
+    2803.68
+   ],
+   "snapped": [
+    6048.0,
+    2799.36
+   ]
+  },
+  {
+   "want": [
+    7927.2,
+    1386.72
+   ],
+   "snapped": [
+    7922.88,
+    1382.4
+   ]
+  },
+  {
+   "want": [
+    7927.2,
+    2803.68
+   ],
+   "snapped": [
+    7922.88,
+    2799.36
+   ]
+  },
+  {
+   "want": [
+    6052.32,
+    2095.2
+   ],
+   "snapped": [
+    6048.0,
+    2090.88
+   ]
+  },
+  {
+   "want": [
+    7927.2,
+    2095.2
+   ],
+   "snapped": [
+    7922.88,
+    2090.88
+   ]
+  },
+  {
+   "want": [
+    6994.08,
+    3330.72
+   ],
+   "snapped": [
+    6989.76,
+    3326.4
+   ]
+  },
+  {
+   "want": [
+    4868.64,
+    3546.72
+   ],
+   "snapped": [
+    4872.96,
+    3542.4
+   ]
+  }
+ ],
+ "n_instances": 30,
+ "new_die_plan_sha256": "cee24246a5cc418802bc44cbe00b96897921c702922f4440d79833881d2c3e42",
+ "fixes": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_fused_n4",
+   "orient": [
+    "R0",
+    "MX"
+   ],
+   "tap": [
+    [
+     4937.736,
+     3607.2
+    ],
+    [
+     4937.736,
+     3572.64
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_fused_n4",
+   "orient": [
+    "R0",
+    "MX"
+   ],
+   "tap": [
+    [
+     4937.736,
+     3607.2
+    ],
+    [
+     4937.736,
+     3572.64
+    ]
+   ]
+  }
+ ]
+}
