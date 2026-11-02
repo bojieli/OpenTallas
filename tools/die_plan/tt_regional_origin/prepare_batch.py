@@ -39,10 +39,10 @@ def build(plan_path, sidecar_path, final, event_path, out):
         old = list(macro['origin_um'])
         macro['origin_um'] = [round(old[0]+delta['dx'], 6), old[1]]
         changed.append(dict(instance=name, old=old, new=macro['origin_um']))
-    # No schema extension is smuggled into the normal plan/sidecar. The local
-    # source-model extension is separate until its guarded generator is joined.
+    # An explicit default-OFF supported source pointer joins the exact model.
+    # The snapshot path is a future central-publication vehicle, not live state.
+    snapshot='/srv/opentallas-scratch2/claude/codex-tt-regional-event-1102'
     out.mkdir(parents=True, exist_ok=True)
-    write_gzip(out/'plan_DISABLED.json.gz', plan)
     write_gzip(out/'sidecar_BASELINE_NOT_REDERIVED.json.gz', sidecar)
     origins = json.loads((final/'final_source_homes_DISABLED.json').read_text())
     raw = json.loads((final/'final_raw_homes_DISABLED.json').read_text())
@@ -56,13 +56,19 @@ def build(plan_path, sidecar_path, final, event_path, out):
                  clock_association='../composed_final/final_clock_association_DISABLED.json.gz',
                  physical_release='HELD', standard_global_derivation=False)
     (out/'regional_model_DISABLED.json').write_text(json.dumps(model, indent=1)+'\n')
+    typ['clock']['landing_regional_origin'] = dict(enabled=False,
+        model_file=snapshot+'/results/geom_review/codex_tt_locality_1102/paired_batch/regional_model_DISABLED.json',
+        model_sha256=digest(out/'regional_model_DISABLED.json'))
+    write_gzip(out/'plan_DISABLED.json.gz', plan)
+    old_clock=original['partition_types']['tt_ctlm']['clock']
+    old_clock['landing_regional_origin']=typ['clock']['landing_regional_origin']
     receipt=dict(schema='opentallas.tt_paired_batch_prep.v1', enabled=False,
                  selected_plan_sha256=digest(plan_path), selected_sidecar_sha256=digest(sidecar_path),
-                 plan_delta=changed, clock_configuration_unchanged=original['partition_types']['tt_ctlm']['clock']==typ['clock'],
+                 plan_delta=changed, clock_configuration_unchanged_except_disabled_source_feature=old_clock==typ['clock'],
                  global_sidecar='BASELINE ONLY: not a new ClockLandings/global-reset receipt',
                  source_event=event['candidate_sha256'], native_clock_join_applied=False,
                  required_join_terms=[
-                     'Optional source emitter must consume this same regional_model and preserve default OFF.',
+                     'Guarded ClockLandings optional source hook is implemented; keep default OFF until all remaining global consumers are joined.',
                      'ClockLandings.manifest reset_placements.tt_ctlm.count_origin must model four same-edge s1/s2/pd regions, 37 exact receiver associations and four depth3 raw leaves, while retaining SF/S0 and central raw leaf.',
                      'Reset-tree/global count alignment must rederive on the composed current parent plan with the exact frozen 63 tap names/coordinates; no cached sidecar promotion.',
                      'All 2978 old FF homes and 16 replacement/new homes require native-name/row legalization; no old checkpoint adoption.',
