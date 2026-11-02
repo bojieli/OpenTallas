@@ -1,0 +1,9 @@
+# Legacy NW_v1 collection: DRC2 FAIL, finite same-route TT/FF readout
+
+Native detailed routing completed with two M9 MinStep violations on `n_root`, then its first STA arrival query crashed in `Graph::pinVertices` (EXIT139). The saved route/DEF/SPEF remain valid diagnostic inputs. The already waiting companion recovered ordinary TT and FF readouts from that same saved RC, using `report_checks` to initialize the graph. Normal `ot-run` spilled this 8 GiB/two-thread readout to Intel1 (`971269-1793624909`), completed EXIT0 and copied results back. No reroute was launched.
+
+The DRC cause is exact root-port geometry: the fixed M9 BTerm rectangle is x4296.240..4296.320/y1468.760..1468.840 µm. Its routed M9 wire is 0.04 µm wide at x4296.276, leaving 0.016/0.024 µm shoulders on the pad's top edge. Both reported MinStep markers coincide with these shoulders. This narrow variant remains FAIL; the existing NW_v2 variant has DRC0 and is already separately collected. Do not import a clean verdict into v1. If the narrow root transition is ever selected again, it needs an explicit pad/wire transition repair and fresh DRC, not a waiver.
+
+Each corner has 2,194 finite pin records, 2,460 finite both-edge records and 266 load endpoints, with zero missing pins. Diagnostic max reported arrival is TT2116.323/FF1800.312 ps and max slew TT316.527/FF316.283 ps. These are measured graph quantities, not a timing Signed claim or current native source/phase qualification. The maximum values are substantially worse than the separately retained wider NW_v2 component and do not support selecting this failed variant.
+
+Scope remains legacy fullhub component only. Current native clock pins, reset/66START, parent source graph, built PG and die G4 remain held. The two NE collectors continue waiting on their preserved jobs.

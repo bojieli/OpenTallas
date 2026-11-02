@@ -1,0 +1,48 @@
+{
+  "verdict": "FAIL_DRC2_LEGACY_VARIANT_READOUT_FINITE",
+  "native_route_drc": 2,
+  "native_exit": 139,
+  "native_failure": "STA Graph::pinVertices first-arrival initialization; saved DEF/SPEF retained",
+  "DRC_diagnosis": {
+    "kind": "M9 Min Step at n_root fixed root-port shoulder",
+    "port_rect_um": [
+      4296.24,
+      1468.76,
+      4296.32,
+      1468.84
+    ],
+    "routed_M9_centre_x_um": 4296.276,
+    "routed_M9_width_um": 0.04,
+    "shoulder_widths_um": [
+      0.016,
+      0.024
+    ],
+    "markers_y_um": 1468.84,
+    "alternative": "existing NW_v2 is DRC0; no reroute/source-current borrowing"
+  },
+  "readout_exit": 0,
+  "readout_host": "intel1 (ordinary ot-run spill copied outputs back)",
+  "readout_unit": "oth-ubuntu-971269-1793624909",
+  "same_saved_route_rc": true,
+  "corners": {
+    "TT": {
+      "pin_records": 2194,
+      "both_edge_records": 2460,
+      "nonfinite_pin_rows": [],
+      "nonfinite_edge_rows": [],
+      "loads": 266,
+      "max_reported_pin_arrival_ps": 2116.322754,
+      "max_reported_slew_ps": 316.526825
+    },
+    "FF": {
+      "pin_records": 2194,
+      "both_edge_records": 2460,
+      "nonfinite_pin_rows": [],
+      "nonfinite_edge_rows": [],
+      "loads": 266,
+      "max_reported_pin_arrival_ps": 1800.312378,
+      "max_reported_slew_ps": 316.282898
+    }
+  },
+  "scope": "legacy fullhub component only; DRC2 retained FAIL, current source/native66START/parent clocks/PG/G4 unqualified"
+}
