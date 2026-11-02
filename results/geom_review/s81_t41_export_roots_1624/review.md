@@ -19,10 +19,13 @@ not their fclk_out. Internal pair_skew enumerates register captures; its PASS
 is not an output-data/K qualification. The concrete downstream gap is
 ca_ring_fn in tools/die_plan/die_sta_related.py: its fn(A,B), using one
 type-level fwd_out_ps, defines writer=A(data-launch tap)+forwarded delay.
-That assumes the actual forwarded root F equals launch root L. For mixed
-L!=F, reusing this calculation assigns the wrong writer phase even though
-all78 sources are declared correctly. The helper cannot identify distinct
-exports of one part or their declared source roots.
+For writer/read phase its caller A must denote the actual forwarded root F,
+not silently reuse data-launch L when L!=F. The existing default COMPLETE
+source/destination tap cross-product hull includes F conservatively and may
+still bound that phase; it is not universally invalid. But the helper alone
+cannot bind each distinct export F and cannot certify the additional L/F
+data-to-K relation. An existing conservative phase solver can be reused;
+there is no requirement to replace it or force one tap owner.
 
 Minimal consumer/API contract: per output bit/connection retain (L,F,R),
 where L is the actual launch FF clock/source, F the named fclk_out and real

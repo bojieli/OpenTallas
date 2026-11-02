@@ -1,0 +1,449 @@
+{
+  "schema": "opentallas.external_child_graph_attachment.PREP.v1",
+  "status": "READY_SELECTED_INPUT_ATTACHMENT_NOT_STA",
+  "active_kit": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/parent_alias1613/kits/dsdv_bksel_q_signed_source",
+  "parent_top": "dsdv_bksel_q",
+  "parent_netlist": {
+    "path": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/parent_alias1613/kits/dsdv_bksel_q_signed_source/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/1_synth.v",
+    "sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942"
+  },
+  "actual_selected_libraries": {
+    "tt": {
+      "path": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/parent_alias1613/kits/dsdv_bksel_q_signed_source/macros/ot_s81ph_native_sel_hist_bank_tt.lib",
+      "sha256": "11993958edbe9ada8968d60243a0c82dbe014dc70da4315d4c5e06a07b025cc3"
+    },
+    "ff": {
+      "path": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/parent_alias1613/kits/dsdv_bksel_q_signed_source/macros/ot_s81ph_native_sel_hist_bank_ff.lib",
+      "sha256": "c12e678980c48fca1e335ccc150099ce1d679b3784ab258dd7f8cf755b5816d8"
+    }
+  },
+  "child_qualification": {
+    "path": "/srv/opentallas-scratch2/claude/codex-parent-hold-export/child_clock_hist_final1131.json",
+    "sha256": "b383e169e711b624311ca49672a3b3f74d2b7f49b54ac81ba3ca37f9ba404ee8",
+    "status": "QUALIFIED_NATIVE_GRAPH"
+  },
+  "boundary_maps": {
+    "path": "/srv/opentallas-scratch2/claude/codex-parent-hold-export/child_clock_hist_final1131.boundary_maps.json",
+    "sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd",
+    "inputs": 226,
+    "outputs": 207,
+    "boundary_registers": 433
+  },
+  "full_native_graph": {
+    "view": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank",
+    "manifest": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/child_clock_witness.json",
+    "sha256": "b02251c763963d55e818f2cd0b3e4cc175935b51c4404271cf1331c33be73552",
+    "native_base": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20/run/results/asap7/kl_ot_s81ph_native_sel_hist_bank_hrB20/base",
+    "native": {
+      "6_final.odb": "77fe9bada084d767f82b8d32c8735f191da6d9d27b6ce4a3256f297cef3417ad",
+      "6_final.spef": "16e326850e44d7c1fb9b8f4ad007213ec3107c388dcd3407457f56e188b418c8",
+      "6_final.v": "128bd31123e6a40aad1ebf7aaa63231d02bfc6e6f11b581485e61f358938dc9a"
+    },
+    "corners": {
+      "tt": {
+        "endpoints": 1624,
+        "internal_pairs": 18966,
+        "selected_liberty_sha256": "11993958edbe9ada8968d60243a0c82dbe014dc70da4315d4c5e06a07b025cc3"
+      },
+      "ff": {
+        "endpoints": 1624,
+        "internal_pairs": 18966,
+        "selected_liberty_sha256": "c12e678980c48fca1e335ccc150099ce1d679b3784ab258dd7f8cf755b5816d8"
+      }
+    },
+    "all_manifest_files": {
+      "tt": {
+        "tt/child_clock_tt_endpoints.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/tt/child_clock_tt_endpoints.tsv",
+          "sha256": "b0a93a3f6a274019546812ea4cc25d5f8c4252d16f90385e5663dde52a3d93d4",
+          "present": true
+        },
+        "tt/child_clock_tt_pairs.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/tt/child_clock_tt_pairs.tsv",
+          "sha256": "3f4dc9ca51f3b48bc73703f3652f503ec33e82f22900505cf17b97a8987a2938",
+          "present": true
+        },
+        "tt/child_clock_tt_roots.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/tt/child_clock_tt_roots.tsv",
+          "sha256": "dedeaea817045a8fa0acf32a5886f801b20cf72d635728ae3f8b6de0f38cf3cf",
+          "present": true
+        },
+        "tt/child_clock_tt_clocks.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/tt/child_clock_tt_clocks.tsv",
+          "sha256": "df496c424ae420091deebf716ce69a25ead9245823fa0ce4621515a95e789e0a",
+          "present": true
+        },
+        "tt/child_clock_tt_masters.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/tt/child_clock_tt_masters.tsv",
+          "sha256": "ec61831e6a8e5c4bc536b2a3809a37cb4d8d28b26f3571e521788d0b42356bf0",
+          "present": true
+        },
+        "tt/child_clock_tt_counts.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/tt/child_clock_tt_counts.tsv",
+          "sha256": "056be92f463e77fec96c536c799f6796929c3f679dde1b9ff53d1ddadc65b00c",
+          "present": true
+        },
+        "tt/child_clock_tt_inputs.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/tt/child_clock_tt_inputs.tsv",
+          "sha256": "7a9aed0d8b60a9b4926aedb6c6d7e9680fd1b686c3f9cc2ae41b203e73020205",
+          "present": true
+        },
+        "tt/session.tcl": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/tt/session.tcl",
+          "sha256": "e364ae8a20aabad8b8c248cc58a412750ff5b636e09838faf1bf85bc19ac9edb",
+          "present": true
+        },
+        "tt/libraries.json": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/tt/libraries.json",
+          "sha256": "d082b1ad3facc9c846bd53cc1c88b1fb3b6261d15a8d473680915d55f8cb99b2",
+          "present": true
+        },
+        "tt/sdcdir/golden.sdc": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/tt/sdcdir/golden.sdc",
+          "sha256": "86a77450e900e3856cc8519218b7a21e8d4c955bfe9fc524ead2836b8954ea40",
+          "present": true
+        }
+      },
+      "ff": {
+        "ff/child_clock_ff_endpoints.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/ff/child_clock_ff_endpoints.tsv",
+          "sha256": "864c86b6611007e1fd8940e109109c7e6cd9a68ae8b1024bd06fa2d1746115d7",
+          "present": true
+        },
+        "ff/child_clock_ff_pairs.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/ff/child_clock_ff_pairs.tsv",
+          "sha256": "d937dbfa80462fde03d4ed4615f3504e96e0b0c5bd6d8dcaba74ad36e6b4d6f4",
+          "present": true
+        },
+        "ff/child_clock_ff_roots.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/ff/child_clock_ff_roots.tsv",
+          "sha256": "dedeaea817045a8fa0acf32a5886f801b20cf72d635728ae3f8b6de0f38cf3cf",
+          "present": true
+        },
+        "ff/child_clock_ff_clocks.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/ff/child_clock_ff_clocks.tsv",
+          "sha256": "df496c424ae420091deebf716ce69a25ead9245823fa0ce4621515a95e789e0a",
+          "present": true
+        },
+        "ff/child_clock_ff_masters.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/ff/child_clock_ff_masters.tsv",
+          "sha256": "ec61831e6a8e5c4bc536b2a3809a37cb4d8d28b26f3571e521788d0b42356bf0",
+          "present": true
+        },
+        "ff/child_clock_ff_counts.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/ff/child_clock_ff_counts.tsv",
+          "sha256": "056be92f463e77fec96c536c799f6796929c3f679dde1b9ff53d1ddadc65b00c",
+          "present": true
+        },
+        "ff/child_clock_ff_inputs.tsv": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/ff/child_clock_ff_inputs.tsv",
+          "sha256": "61a3bcedcb77e41f11b6297b40f3ba9902c5164ff32bdb4ca9263624ab9bc753",
+          "present": true
+        },
+        "ff/session.tcl": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/ff/session.tcl",
+          "sha256": "e2de3548eaa694b2e8dc57e0d48b4e22e904a7fdd9d8947d4ad0c080b3931b02",
+          "present": true
+        },
+        "ff/libraries.json": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/ff/libraries.json",
+          "sha256": "a9f390a5eebbf20205f646134e613168eea11b7c4a706da3731fa095ed644f87",
+          "present": true
+        },
+        "ff/sdcdir/golden.sdc": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hist-clock-witness-1101/views/ot_s81ph_native_sel_hist_bank/ff/sdcdir/golden.sdc",
+          "sha256": "86a77450e900e3856cc8519218b7a21e8d4c955bfe9fc524ead2836b8954ea40",
+          "present": true
+        }
+      }
+    }
+  },
+  "instances": [
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hc.g_bank[0].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hc.g_bank[1].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hc.g_bank[2].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hc.g_bank[3].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hc.g_bank[4].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hc.g_bank[5].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hc.g_bank[6].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hc.g_bank[7].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hf.g_bank[0].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hf.g_bank[1].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hf.g_bank[2].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hf.g_bank[3].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hf.g_bank[4].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hf.g_bank[5].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hf.g_bank[6].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    },
+    {
+      "status": "PASS",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hf.g_bank[7].u_bank",
+      "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+      "parent_top": "dsdv_bksel_q",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "parent_clock_net": "ck",
+      "interface_bits": 435,
+      "input_bits": 228,
+      "output_bits": 207,
+      "source_qualification": "PASS",
+      "missing": "actual parent STA consumption and related parent path composition",
+      "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+    }
+  ],
+  "child_root_pin": "clk",
+  "parent_structural_clock_net": "ck",
+  "timing_clock_source_root_edge": "NOT_RUN_NO_PROPAGATED_PARENT_PATHS",
+  "actual_parent_STA_consumption": "NOT_RUN",
+  "parent_source_equivalence": "NOT_ASSERTED_OFFICIAL_PARENT_PROOF_IN_PROGRESS",
+  "parent_coverage": "UNEXPANDED_CHILD_ETM",
+  "mutation": "NONE_ACTIVE_KIT_UNTOUCHED",
+  "required_next": [
+    "actual normal parent PLACE and independent LOOK",
+    "stage/pass external registry to future inactive STA scope, not current active kit",
+    "normal parent consumed-library receipts matching exact selected TT/FF hashes",
+    "actual original-STD per-bit parent paths/clock/source/edge witnesses",
+    "qualified endpoint/pair composition with per-port maps; no aggregate or CPPR credit"
+  ]
+}
