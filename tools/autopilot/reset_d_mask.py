@@ -129,8 +129,10 @@ def qualify_cones(cells):
     return {'reset_chain': chain, 'candidates': rows}
 
 
-def physical_join(cells, dump, rows):
+def physical_join(cells, dump, rows, typed_dump=None):
     """Independently require actual placed net edges, not a mapped-name-only receipt."""
+    from reset_d_mask_typed import verify_typed
+    typed, critical = verify_typed(typed_dump or {}, rows)
     ids, drivers, loads, clocks, pin_ids = {}, {}, defaultdict(set), defaultdict(set), {}
     kinds, masters, cell_inputs = {}, {}, defaultdict(set)
     for line in dump.splitlines():
@@ -181,6 +183,29 @@ def physical_join(cells, dump, rows):
         return driver, parity
 
     inverse = {name: cid for cid, name in ids.items()}
+    def typed_ref(driver):
+        if driver[0] == 'port':
+            if driver[1] not in pin_ids:
+                raise ValueError('untyped receipt omitted actual root port')
+            return 'p' + str(pin_ids[driver[1]])
+        if driver[1] not in inverse:
+            raise ValueError('untyped receipt omitted actual driver cell')
+        return 'i' + str(inverse[driver[1]])
+
+    for name in critical:
+        cid = inverse.get(name)
+        if cid is None or masters[cid] != typed.cells[name]['master']:
+            raise ValueError('typed/untyped critical cell mismatch')
+        expected = set()
+        expected_clocks = set()
+        for pin, p in typed.cells[name]['ports'].items():
+            if p['direction'] != 'INPUT':
+                continue
+            ref = typed_ref(typed.driver(p['net']))
+            (expected_clocks if pin == 'CLK' else expected).add(ref)
+        if cell_inputs[cid] != expected or clocks[cid] != expected_clocks:
+            raise ValueError('typed/untyped critical pin-edge mismatch: ' + name)
+
     for name in ['u_rst.rst_n$_DFF_PN0_', 'u_rst.sync_q[1]$_DFF_PN0_', 'u_rst.sync_q[0]$_DFF_PN0_']:
         cid = inverse.get(name)
         if cid is None or masters[cid] != 'DFFASRHQNx1_ASAP7_75t_R':
@@ -189,7 +214,7 @@ def physical_join(cells, dump, rows):
             raise ValueError('actual reset relay clock changed')
     for row in rows:
         mask, capture = inverse.get(row['mask']), inverse.get(row['capture'])
-        if mask is None or capture is None or 'i' + str(capture) not in loads.get('i' + str(mask), set()):
+        if mask is None or capture is None or terminals('i' + str(mask)) != {'i' + str(capture)}:
             raise ValueError('actual placement lacks mask-to-own-capture edge: ' + row['pin'])
         if not re.fullmatch(r'AND2x\w*_ASAP7_75t_R', masters[mask]) or masters[capture] != 'DFFHQNx1_ASAP7_75t_R':
             raise ValueError('actual mask/capture cell truth class changed')
@@ -224,14 +249,14 @@ def proof_gate(lec, provenance, source_dir):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    for key in ['mapped', 'dump', 'lec', 'provenance', 'source-dir', 'out']:
+    for key in ['mapped', 'dump', 'typed-dump', 'lec', 'provenance', 'source-dir', 'out']:
         p.add_argument('--' + key, required=True, type=Path)
     a = p.parse_args()
     proof_gate(json.loads(a.lec.read_text()), json.loads(a.provenance.read_text()), a.source_dir)
     cells = mapped_cells(a.mapped.read_text())
     result = qualify_cones(cells)
-    result['physical_join'] = physical_join(cells, a.dump.read_text(), result['candidates'])
-    result['input_sha256'] = {key: hashlib.sha256(path.read_bytes()).hexdigest() for key, path in [('mapped', a.mapped), ('actual_dump', a.dump), ('lec', a.lec), ('provenance', a.provenance)]}
+    result['physical_join'] = physical_join(cells, a.dump.read_text(), result['candidates'], json.loads(a.typed_dump.read_text()))
+    result['input_sha256'] = {key: hashlib.sha256(path.read_bytes()).hexdigest() for key, path in [('mapped', a.mapped), ('actual_dump', a.dump), ('typed_dump', a.typed_dump), ('lec', a.lec), ('provenance', a.provenance)]}
     result.update(schema='opentallas.reset_d_mask.canary.v1', scope='SOURCE_SPECIFIC_CANDIDATE_ONLY',
                   gating_changed=False, generic_comb_waiver=False, registration_release=False)
     a.out.write_text(json.dumps(result, indent=1) + '\n')

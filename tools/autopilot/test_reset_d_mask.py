@@ -24,7 +24,7 @@ class ResetDMaskTest(unittest.TestCase):
     def test_actual_native_positive_and_physical_join(self):
         r.proof_gate(self.fixture['lec'], self.fixture['provenance'], FIXTURE)
         self.assertEqual(len(self.rows), 9)
-        result = r.physical_join(self.cells, self.fixture['physical_dump'], self.rows)
+        result = r.physical_join(self.cells, self.fixture['physical_dump'], self.rows, self.fixture['typed_physical'])
         self.assertEqual(result['actual_capture_edges'], 9)
 
     def test_functional_mask_operand(self):
@@ -54,7 +54,7 @@ class ResetDMaskTest(unittest.TestCase):
                 f[3] = 'OR2x2_ASAP7_75t_R'
             lines.append('\t'.join(f))
         with self.assertRaises(ValueError):
-            r.physical_join(self.cells, '\n'.join(lines), self.rows)
+            r.physical_join(self.cells, '\n'.join(lines), self.rows, self.fixture['typed_physical'])
 
     def test_actual_physical_reset_cell_is_not_async(self):
         dump = self.fixture['physical_dump']
@@ -65,7 +65,7 @@ class ResetDMaskTest(unittest.TestCase):
                 f[3] = 'DFFHQNx1_ASAP7_75t_R'
             lines.append('\t'.join(f))
         with self.assertRaises(ValueError):
-            r.physical_join(self.cells, '\n'.join(lines), self.rows)
+            r.physical_join(self.cells, '\n'.join(lines), self.rows, self.fixture['typed_physical'])
 
     def test_wrong_capture_clock(self):
         self.cells[self.capture]['ports']['CLK'] = 'clk'
@@ -116,7 +116,7 @@ class ResetDMaskTest(unittest.TestCase):
         # A renamed actual mask breaks the source/placement join, even with valid EQ.
         dump = dump.replace('\t' + self.gate + '\n', '\twrong_mask\n')
         with self.assertRaises(ValueError):
-            r.physical_join(self.cells, dump, self.rows)
+            r.physical_join(self.cells, dump, self.rows, self.fixture['typed_physical'])
 
 
 if __name__ == '__main__':

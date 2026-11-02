@@ -10,7 +10,9 @@ Sixteen tests include the native positive and controls for functional mask data,
 
 ```
 python3 -m unittest discover -s tools/autopilot -p test_reset_d_mask.py -v
-python3 tools/autopilot/reset_d_mask.py --mapped ACTUAL_1_2_YOSYS.v --dump ACTUAL_GEOM.tsv --lec ACTUAL_LEC.json --provenance ACTUAL_PROVENANCE.json --source-dir ACTUAL_RTL --out candidate.json
+python3 tools/autopilot/reset_d_mask.py --mapped ACTUAL_1_2_YOSYS.v --dump ACTUAL_GEOM.tsv --typed-dump ACTUAL_TYPED.json --lec ACTUAL_LEC.json --provenance ACTUAL_PROVENANCE.json --source-dir ACTUAL_RTL --out candidate.json
 ```
 
 Scope limits: only this frozen source and standard-cell truth family are supported. The checker rejects unfamiliar buffer/cell mappings and never uses a fallback. Generalizing beyond this exact native canary needs the same source/reset proof class and native negative controls. No geometry collector, registration, timing, CTS or DRT release is implied by a candidate result. No copied or fabricated source EQ receipt was created.
+
+Actual-join hardening: a pin-typed OpenDB export is now mandatory, with no old-dump fallback. The isolated exporter reads the immutable real checkpoint and records actual D/RESETN/SETN/CLK nets/directions. The native fixture now includes all three relay FF data/assert/preset edges and the literal reset root, not merely masters/clock/output paths. The typed checker proves the full actual three-FF relay release/data seed, assertion/preset/polarity and clock paths, plus exclusive mask-to-own-DFF fanout. It compares critical typed inputs against the ordinary geometry graph, so changing only one receipt fails. ROOT's independent physical-only reset input and extra capture controls are being run separately. The full actual native typed positive passes; no registration release is granted.
