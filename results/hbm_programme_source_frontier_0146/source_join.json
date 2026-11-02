@@ -104,6 +104,35 @@
     "narrow_transport_cost": "420payloadplusnativeepoch/facestages/newrelaycount+reset/clockpriceMUSTbecomputed; preserveall69statusports untilactualobservabilityknown",
     "collar_feedback_constraint": "Anynewreturnlatencyrequiresgenuinecollarstart/busy/completionphasecontract; movingr10alonecannotassumeoldremotehandshake",
     "exact_added_cycles": null,
-    "adopted": false
+    "adopted": false,
+    "actual_used_return_status_bits": 5,
+    "actual_used_return_ports": {
+      "programme_active": "collar.c_busy[0]",
+      "io_active": "collar.c_busy[1]",
+      "io_done": "collar.c_done",
+      "programme_done": "observer.obs",
+      "fault": "faultcollector.t_fault"
+    },
+    "unused_return_output_bits": 64,
+    "unused_return_outputs": [
+      "programme_ordinal[31:0]",
+      "io_ordinal[31:0]"
+    ],
+    "unused_scope": "ExactselectedNW_hubwirecensus: onlydeclaration+producerport, no consumer; providerABIstillpreservesnativeoutputs",
+    "joint_collar_r10_alternative": {
+      "forward_distinct_ingress_payload_bits": 279,
+      "fields": {
+        "cfg_v": 1,
+        "cfg_target": 8,
+        "cfg_addr": 12,
+        "cfg_data": 256,
+        "desc_v": 1,
+        "launch_v": 1
+      },
+      "static_tgt": 118,
+      "benefit": "Keepsactualc_busy/io_donefeedbacklocal, B113c_faultisalreadylocalnativeproducer",
+      "native_source_event": "NOT_IMPLEMENTED_OR_ADOPTED",
+      "new_source_clock_reset_phase": "MUST_PRICE_AND_QUALIFY"
+    }
   }
 }
