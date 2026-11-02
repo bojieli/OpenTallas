@@ -9785,3 +9785,5 @@ All 494 lane files inventoried under lanes/CODEX.md; six parent workers cover cu
 
 OWNER?
 2026-11-01 20:34 PST: HBM KIT-WAVE-16 asks to build reviewed q_su11/q_spu0 partition-type pilots before die clock PASS. This would override owner12.22 gate; default remains HOLD for types, hard cores and clock/other work continue. Does owner authorize that scoped allowlist?
+
+CODEX FLOW/KITS: ready shortpoold1cf33379 (16tests), nearcountintegrationb2ea7f8cd (6tests); ROOTmerge requested. Existing pilot/paused jobs preserved. OWNER? none for these scoped implementation changes.
