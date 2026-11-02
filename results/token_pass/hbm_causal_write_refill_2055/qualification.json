@@ -1,0 +1,35 @@
+{
+  "status": "PASS_CAUSAL_COMPONENT_WITH_TWO_NEGATIVE_CONTROLS",
+  "component": "STK3/q0 native CP308\u2192DBK\u2192WBK\u2192VMKS\u2192PC\u2192persistentDRAM\u2192new epoch/NPC2\u2192nativeSRAM",
+  "positive": "causal_positive.log",
+  "words": 256,
+  "physical_write_columns": 32,
+  "independent_true_service_completions": 32,
+  "actual_DRAM_read_columns": 2048,
+  "native_SRAM_commit_ACK": 96,
+  "finished_cycle": 4387,
+  "clock_ps": 833,
+  "RR_RT": 8,
+  "stale_cache_control": {
+    "status": "CAUGHT",
+    "log": "causal_stale_mutant.log",
+    "reason": "Actual nativeSRAM returns old pattern when new cache epoch/invalidation is omitted"
+  },
+  "premature_ACK_control": {
+    "status": "CAUGHT",
+    "log": "causal_early_ack_mutant.log",
+    "mechanism": "Existing WB_MUT1 posts wa at fill_done before real wk_done",
+    "observed_independent_completions_at_store_done": 0,
+    "required_completions": 32,
+    "unit": "oth-ubuntu-3715605-1793595276",
+    "exit": 0
+  },
+  "scope": {
+    "explicit_native_DQ_unit_inputs": true,
+    "production_COPY": false,
+    "production_scratch_reservation": false,
+    "canonical_programme_or_writer_source": false,
+    "physical_SIGNED": false,
+    "G5": false
+  }
+}
