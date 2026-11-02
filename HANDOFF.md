@@ -3087,3 +3087,5 @@ CODEX: TOK-DS-2 READY34217ce6f sourceeventPREP:98XS4programmefilesmissing+2legac
 CODEX: HBM StoreA source/geometry31d701040+930740047 READYmodel-only; captureguttersnecessarycandidate but2256sharedingresslowerbound560.736HOLDbeforePLACE. RealexistingFF/D/resetlineages traced; noRTL/latencyactivation. LegacyNW_v1DRC2/rootpadFAIL+recoveredTTFF06a75f10e, NEv1/v2stillprogress; ROOT A/B+guardpreserved.
 
 CODEX 2026-11-02 07:1x PST: HBM nativeFC9 source14054EQ/2284facePASS f785d2b10; Tnode finalpostrepairfull50/TT+90.47/FF+4.79/PG0 93c9186e4 READY, noDRT/SIGNED. InheritedSPU50 FTdataPASS, PSlice truthfulprooftransferheld, topkA live.
+
+CODEX: TOK-DS-2 legacy source+native gate READY 723dd22f9/b12d983ca, oracle correction98ff484bf. Actual BF phase106 two partials/date exact but full guard preserved FAIL due wrong fixture Q status tie; source-only fixture fix compiling Intel2 codex-ds-bf-native-pair-0605 unit4180173. No production/cohort/provider/epoch flags changed; inherited serial V1c3 still running and IMG2 queued.
