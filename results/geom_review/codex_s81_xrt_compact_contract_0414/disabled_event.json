@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.disabled_physical_contract_event.v1",
   "enabled": false,
-  "status": "PREP_REVIEW_ONLY_NO_CAD",
+  "status": "HOLD_PIN_DENSITY_BUDGET",
   "module": "ot_s81sl_xrt1",
   "top_params": {
     "FOREG": 0
@@ -143,6 +143,7 @@
     "make_tracks.tcl": "df36a9507153d2d945387ba3dd48e0822e9cb98fbb93f97df1f5b55942294b03"
   },
   "release_holds": [
+    "METH5.2 per-layer/face6pins/um budget exceeded on compact unchangedM4W/E (~12.6/13.1 perum); exact track-fit is insufficient. No FP dispatch from this proposal.",
     "ROOT review and footprint/clock/pin-event scope before normal FP",
     "no GEN/FP/PLACE/route dispatched or activated",
     "no new mapped FF count, physical PG/row/tap/clock/route/signoff/proof claim"
