@@ -11,6 +11,18 @@ OUT.mkdir(exist_ok=True)
 names = ['ot_qfd_ucie_x64_phy', 'ot_qfd_serdes_112g_x12_phy_s597']
 records = []
 wrappers = []
+clock_join = json.loads((SRC/'current_clock_join.json').read_text())
+vehicle = (SRC/'qc_vehicle.py').read_text()
+assert (clock_join['partitions'],clock_join['types'],clock_join['crossing_bits']) == (377,119,790393)
+assert clock_join['top_port_count'] == 639
+assert "conn[n] = 'ck_serdes' if a.phy_bringup_only and n == 'clk_serdes' else 'ck'" in vehicle
+assert 'reg ck = 0; always begin #0.416 ck = ~ck; #0.417 ck = ~ck; end' in vehicle
+assert {r['connections']['clk'] for r in clock_join['serdes_instances'].values()} == {
+    'clk_region_coll_n','clk_region_coll_s','clk_region_c_W5_bf_01'}
+for variant in ('phy_serdes','phy_serdes_b'):
+    text = (SRC/f'ot_qfd_serdes_112g_x12_phy_s597__{variant}.sv').read_text()
+    core = re.search(r'ot_qfd_serdes_112g_x12_phy_s597\s+u_core\s*\((.*?)\n\s*\);',text,re.S)
+    assert re.search(r'\.clk\(clk\)',core.group(1))
 for name, fw, lat, period in [(names[0],1043,4,1000), (names[1],597,223,833)]:
     abi = (SRC / (name + '_bb.v')).read_text()
     meta = json.loads((SRC / (name + '.json')).read_text())
@@ -147,6 +159,7 @@ initial begin
  repeat(4)@(negedge clk);#0.01;rst_n=1;
  repeat(LAT+300)@(negedge clk);
  #0.1;rst_n=0;resets=resets+1;
+ #0.000002; // let async NBA flush and its assertion complete before $finish
  if(accepted0<250 || accepted1<180 || delivered0<150 || delivered1<200 || resets!=2)
   $fatal(1,"INSUFFICIENT_ACTIVE_COVERAGE");
  $display("PHY_PAIR_PASS FW=%0d LAT=%0d period_ps=__PERIOD_PS__ mission_ps=833 accepted=%0d/%0d delivered=%0d/%0d async_resets=%0d",FW,LAT,accepted0,accepted1,delivered0,delivered1,resets);
@@ -170,7 +183,8 @@ manifest=dict(scope='PRIVATE_TWO_PEER_BOUNDARY_DIAGNOSTIC_ONLY',source_commit='b
               current_bind_receipt='82190c1ff',paired_plan_event='f79c1e228',
               canonical_plan_sha256='913be9b7f5ee612824f323d3d476999a36e2f224f1c3139f163d1b6558cdaab7',
               current_bind_parts=377,current_bind_types=119,current_top_ports=639,
-              current_top_sha256='b7db6bb8157f4e55f274b2e1d11482428d25d40803ff5bf5cb4bd7758c112295',
+              current_top_sha256=clock_join['top_sha256'],
+              serdes_clock_scope='833ps diagnostic condition following frozen qc_vehicle clock mapping; complete current vehicle/physical clock contract unqualified',
               models=records,hardware_added_cycles=0,physical_qualification_eligible=False,
               full_hierarchy_qualified=False,source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(SRC.iterdir()) if p.is_file()})
 (OUT/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')

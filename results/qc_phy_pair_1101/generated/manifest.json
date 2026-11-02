@@ -9,6 +9,7 @@
   "current_bind_types": 119,
   "current_top_ports": 639,
   "current_top_sha256": "b7db6bb8157f4e55f274b2e1d11482428d25d40803ff5bf5cb4bd7758c112295",
+  "serdes_clock_scope": "833ps diagnostic condition following frozen qc_vehicle clock mapping; complete current vehicle/physical clock contract unqualified",
   "models": [
     {
       "module": "ot_qfd_ucie_x64_phy",
@@ -112,14 +113,17 @@
   "physical_qualification_eligible": false,
   "full_hierarchy_qualified": false,
   "source_sha256": {
+    "current_clock_join.json": "451489ceb79ae4969b08c3cbb9cfb00d02d633bfd721a784453f44bf8a9ecf0b",
     "ot_qfd_serdes_112g_x12_phy_s597.json": "b8ea406e7b22fc637d42080446a19257b23d97fbd2837b82ba50c77a4db91035",
     "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes.sv": "ebd5e43a9b2801dbf1a3663f64ac26ea0ed4e831e0b48713569da903c3a441d7",
+    "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b.sv": "f72fe0da32fb53d560eaf03f51749f764fa90c380d3a66455e290983dd81d8b2",
     "ot_qfd_serdes_112g_x12_phy_s597_bb.v": "e06197be1fbf7f7c815f1115d393db1aed7674d07e0dd72adce6324bb593cf7e",
     "ot_qfd_serdes_112g_x12_phy_s597_model.sv": "93696a1acfa7a7cf89b94588f17cf5942854c3203e4e16a3477c84ca57bca94c",
     "ot_qfd_ucie_x64_phy.json": "58deba512878338f33da7c11ea2c99550c94277ecd23620067263261455b9be7",
     "ot_qfd_ucie_x64_phy_bb.v": "e459a9f81d360767530dab5142df2592333dd35136e4845741b291b6e794f02f",
     "ot_qfd_ucie_x64_phy_model.sv": "a29d98a67e186c40c5b967eb99c339b5dd78194b87b7727a031cdec21959d013",
     "ot_qkvd_ucie_x64_phy_model.sv": "ed5a1aed0051c38ef6c2335d30fa59b951afb8f331d5a6785e15a45924f067e4",
+    "qc_vehicle.py": "3b2d5bf828fa7f9b2ec324ae4385c4acb6f280af7c16fa5815b3557810502cbb",
     "qfd_qc_coll_ucie_part.sv": "dc354203ecd53310ea1c6a0d181ace67ce1c0fa625f9322defa38ff760140fcc"
   }
 }

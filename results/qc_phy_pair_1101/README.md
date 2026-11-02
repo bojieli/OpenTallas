@@ -29,15 +29,25 @@ In these models LAT means the input sampled on the first edge emerges on the
 LAT-th sampled edge, including the TX capture edge; it is not an extra LAT periods
 after that capture.
 
-The test matches the current bind's UCIE clk/lclk feedback at 1000 ps and its
-SerDes mission region input at 833 ps. The independent mission clock remains
-833 ps throughout. SerDes metadata describes a 1 GHz FDI assumption, while the
-current native wrapper receives mission-region clocks. This diagnostic exercises
-that actual runtime connection at 833 ps and does not qualify the timing assumption
-or any CDC. Both peers are synchronous to their tested FDI service, with independent
+The diagnostic configures the current bind's UCIE clk/lclk feedback at 1000 ps and
+SerDes input at 833 ps following the frozen functional vehicle's clock policy.
+The exact join is in `inputs/current_clock_join.json`: actual top instances
+`io_serdes`, `io_serdes_1`, `io_serdes_2` receive respectively
+`clk_region_coll_n`, `clk_region_coll_s`, `clk_region_c_W5_bf_01`. Both actual
+SerDes wrapper variants forward `.clk(clk)` directly to the macro. Frozen
+`inputs/qc_vehicle.py:215` maps these `clk_*` inputs to `ck`; its line 263 generates
+an exact 833 ps period. Its bringup override applies only to the literal
+`clk_serdes` port, not these three region ports. The independent mission clock
+remains 833 ps throughout the diagnostic. SerDes metadata describes a separate
+1 GHz FDI assumption. Thus 833 ps is the explicit diagnostic driver condition
+under the existing generator policy; the physical clock contract remains
+unqualified. A source-only attempt to emit a complete fresh current vehicle
+without a START provider refused 313 `pst_*` inputs, so no complete current-vehicle
+qualification is implied. No hierarchy build was attempted. Both peers are
+synchronous to their tested FDI service, with independent
 payloads, bursts and valid gaps; no ready/backpressure pin exists in this ABI.
 
-Intel2 job `oth-ubuntu-3988753-1793606375`, admitted through `ot-run` at 2 GB/1 thread,
+Intel2 job `oth-ubuntu-4087940-1793606663`, admitted through `ot-run` at 2 GB/1 thread,
 completed exit 0. Only the four macro instances and bounded testbench were compiled.
 
 | Check | Result |

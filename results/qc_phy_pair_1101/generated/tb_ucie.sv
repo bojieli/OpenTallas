@@ -78,6 +78,7 @@ initial begin
  repeat(4)@(negedge clk);#0.01;rst_n=1;
  repeat(LAT+300)@(negedge clk);
  #0.1;rst_n=0;resets=resets+1;
+ #0.000002; // let async NBA flush and its assertion complete before $finish
  if(accepted0<250 || accepted1<180 || delivered0<150 || delivered1<200 || resets!=2)
   $fatal(1,"INSUFFICIENT_ACTIVE_COVERAGE");
  $display("PHY_PAIR_PASS FW=%0d LAT=%0d period_ps=1000 mission_ps=833 accepted=%0d/%0d delivered=%0d/%0d async_resets=%0d",FW,LAT,accepted0,accepted1,delivered0,delivered1,resets);
