@@ -2953,3 +2953,27 @@ CODEX: S81 PARKED at explicitUSERhandback. Fullpacket handoff/codex_s81_20261101
 2026-11-01 20:24 PST COORD hourly: count 49 flat 3 h (HEAD e13a LEC EQ, reader fix pending); main a0f8f0ad6 (l48zgate); short-job slot pool ruling to FLOW-21; GEOM-109 + GEOM-108 live; KW-RESUME-1, KW-ECO-1 live.
 - 2026-11-01 20:27 PST SIGNOFF-SPRINT-19 PARKED: count 50 (HEAD 4/4 kp4_dchn counted); live: hd_st_m stm m20/m15 + HBM hcol rk90/rk60 ECOs queued on epyc2 (signoff-sprint-19/{stm,hcol}); chain tools ~/.claude/jobs/b7f906df/tmp/ss19 (cycle.sh N); see lanes/SIGNOFF-SPRINT-19.md PARKED.
 2026-11-01 20:28 PST COORD: count 50 (HEAD 4/4, kp4_dchn e13a). SIGNOFF-SPRINT-20 started; PRUNE-1101H intel2 scratch 96%; G0C-REGRESS-1 (HEAD l48x 1->3911, HBM d44c 14->250 after merges).
+
+CODEX: 2026-11-01 20:34 PST takeover active; all-lane inventory appended CODEX.md, six parent workers collecting/advancing all current dies+tokens+flow/geometry; root intake of approved late-stage resume/ECO and KV fixes.
+CODEX: 2026-11-01 20:35 PST S81 takeover collected: histguide gA live/gB queued, DS V0 actual96GiB OOM (split-hcore IMG2/V1c3 retained), current kw15d468sourcepaths closed/two stalecol retry requested; all S81 core/wave failures assigned.
+
+CODEX: 2026-11-01 20:35 PST KV/Qwen takeover collected active NOWAIT A/B + SOURCE13 hierarchy; no duplicate jobs; physical ECO hygiene and approved pickup intake advancing.
+CODEX: 2026-11-01 20:35 PST KV pickup CTL conflict resolved0691e4e36 READY,42focusedPASS; RECIP/ZH queued preserved, HHP/e0 approved train intake.
+
+CODEX: 2026-11-01 20:36 PST DS portableV0 actual96GiB/J1OOM diagnosed; structural-hcore IMG2 active169libs/V1c3 queued preserved. Source readiness4f6ea1405 READY strict measured read-after-commit,3testsPASS; no fullmission.
+
+CODEX: FLOW/KITS short-stage bounded poold1cf33379 and nearcount/ECOintegrationb2ea7f8cd READY;16+6 focusedtestsPASS, rootmerge pending, noCADlaunch.
+
+CODEX: 2026-11-01 20:40 PST MERGED+pushed98a8705cb78 (intel2merge.lock, HEAD==origin/main): stage resume/ECO/short-stage slots/nearcount/source-follow dedupe/LECloaded/retained runtime + approved KV e0/HHP/CTL + conditional S81 gunit contract/ROMalias; focused checks225pass across groups, no file deletions. FLOW deploying and relaunching eligible failed classes.
+
+CODEX: 2026-11-01 20:37 PST K41 collected tailmax m20 FAIL TT-560.31/FF-41.43, diagnosed HCOL1113 shared inputs across2clocks; additive2329pin regional master PREP with0cycles/FF, sourcebodyidentityPASS; Intel1 skewclock miter+mutant queued viaIntel2client3092499.
+CODEX: 2026-11-01 20:37 PST S81 stale-wave triage: kv_leaf2 exact ROM metadata fix ced76d05e READY7tests; seqhost missing-spare regenerate, t31 existing CTS-only verdict, svc_lo7 stale hold release sent FLOW; original failures preserved.
+
+CODEX: HEAD approved l48z wave config054dc702a published; ownreview1368c1245 mesh42.59p90 remainsFAIL; frozen703 export check/temporary freshkitstop while current-tools3910 resetdrift diagnosed. HostA_D route/DRVclean awaits existing STA+LEC (DIE-RESERVE stall).
+CODEX: 2026-11-01 20:38 PST S81 core takeover: L2 repeater identity bug fixed575161411 +reviewed normalretry queued; VEsGRT+22.74/+6.23PASS, caprtLWB−218.05/−15.41FAIL diagnosednext.
+CODEX: 2026-11-01 20:40 PST S81 QBS3missingchildGEN/reviewPASS-COND91eca6889, SYNTH-onlynormalqueues launched; stalewave alias+selectedcast concretefixesREADY, histguideoriginaljobsprogressing.
+
+CODEX: 2026-11-01 20:4x PST PRUNE-1101H recovered136.623GB old unreferenced canary DB/RC/layout scratch; intel2 free125→224GB,97→94%; verdicts/logs/sources retained, no jobs killed.
+
+CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measured DS source/read-readiness and default-off Qwenmonitor loader, selectedportfix cast exact1Mcontrol, S81repeateridentity, KVclock-masterECO protection, native reset/childclock helpers, HBMcontact/compact PREP/PSliceevidence, currentplanCI adapter + geometry/G0Cdiagnoses. Physical pilots pending; count50lastcollected.
+CODEX 2026-11-01 20:42 PST: HBM native writer source SID is fixed to STK strap; diagnosed prior source-only spill plan external-SID assumption. Corrected proposedSTK3 lowering stages82939/83229 fragments and146459840B (was33348/55857472B), +49591alignedforeignSIDfragments; no COPY/calendar/productionadoption. Pushed codex/hbm-token-2038@3f0bfd2e6. ActualcausalSTK3 frontend PASS/C++building Intel1 unit3391538-1793594311, 24GiB/J1(actual admission compiler cap); runtime+negatives pending. FirstSTK0/SID3queue cancelled beforeadmission, no build/resultclaimed.

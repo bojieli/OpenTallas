@@ -9779,3 +9779,18 @@ All children are parked or idle with PARK delivered; no new launches. Cap packet
 - L4 latest bounded216-cell readonly forecasts are F6 TT-8.29/F10-12.82 (from-74.07); FF-8.56 remains. No physical adoption.
 - SSTNGEN3873569 terminated at wrong contract class; corrected ordinary hard-core recipes are PREP only, no retry.
 - Owned gunit worktree sparse checkout FINISHED cleanly during park,46GB→1.9GB (~44GB recovered). All files remain inGit; closed50-file source/routedL0 bundle and routed datasets protected; foreign trees untouched. Do not infer that disk remains below floor from earlier sample; Claude should inventory before retries.
+
+## Active takeover 2026-11-01 20:34 PST
+All 494 lane files inventoried under lanes/CODEX.md; six parent workers cover current five dies, three token paths, flow/kits, geometry/disks. Root owns central integration. Existing jobs preserved. Current main origin a0f8f0ad6. Latest binding methodology precedence applies (6.1 owner12.24c setup uncertainty0, hold25, 833ps; no SS); no ad-hoc rule relaxations.
+
+OWNER?
+2026-11-01 20:34 PST: HBM KIT-WAVE-16 asks to build reviewed q_su11/q_spu0 partition-type pilots before die clock PASS. This would override owner12.22 gate; default remains HOLD for types, hard cores and clock/other work continue. Does owner authorize that scoped allowlist?
+
+CODEX FLOW/KITS: ready shortpoold1cf33379 (16tests), nearcountintegrationb2ea7f8cd (6tests); ROOTmerge requested. Existing pilot/paused jobs preserved. OWNER? none for these scoped implementation changes.
+
+## CODEX notes 2026-11-01 20:40 PST
+CODEX: 2026-11-01 20:40 PST MERGED+pushed98a8705cb78 (intel2merge.lock, HEAD==origin/main): stage resume/ECO/short-stage slots/nearcount/source-follow dedupe/LECloaded/retained runtime + approved KV e0/HHP/CTL + conditional S81 gunit contract/ROMalias; focused checks225pass across groups, no file deletions. FLOW deploying and relaunching eligible failed classes.
+
+OWNER? 2026-11-01 20:37 PST HCOL native shared-input repair requires explicit parent pin/window/lane-capacity event: additive regional master duplicates1113 query/key/valid input pins (1216→2329 total),0FF/0cycles, preserving each clk_pair capture. May this event be adopted after actual boundary/capacity checks? Existing master/parent remains unchanged; source proof work continues.
+
+CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measured DS source/read-readiness and default-off Qwenmonitor loader, selectedportfix cast exact1Mcontrol, S81repeateridentity, KVclock-masterECO protection, native reset/childclock helpers, HBMcontact/compact PREP/PSliceevidence, currentplanCI adapter + geometry/G0Cdiagnoses. Physical pilots pending; count50lastcollected.
