@@ -1,0 +1,270 @@
+{
+ "scope": "Unadopted compact native BFQG envelope PREP; SOURCE/PINS/PARENT EVENT REQUIRED; no CAD or placement claims",
+ "outline_um": [
+  259.2,
+  211.68
+ ],
+ "source": "286756143; mapped FF/root ownership model2b3287743",
+ "added_cycles": 0,
+ "source_and_pins_unchanged": false,
+ "macros": [
+  {
+   "bank": 0,
+   "instance": "g_t[0].u_m",
+   "xy_um": [
+    17.28,
+    8.64
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    4.32,
+    8.64,
+    12.96,
+    49.704
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l0": 2
+   }
+  },
+  {
+   "bank": 1,
+   "instance": "g_t[1].u_m",
+   "xy_um": [
+    17.28,
+    58.344
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    4.32,
+    58.344,
+    12.96,
+    99.408
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l1": 2
+   }
+  },
+  {
+   "bank": 2,
+   "instance": "g_t[2].u_m",
+   "xy_um": [
+    17.28,
+    108.048
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    4.32,
+    108.048,
+    12.96,
+    149.112
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l2": 2
+   }
+  },
+  {
+   "bank": 3,
+   "instance": "g_t[3].u_m",
+   "xy_um": [
+    17.28,
+    157.752
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    4.32,
+    157.752,
+    12.96,
+    198.816
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l3": 2
+   }
+  },
+  {
+   "bank": 4,
+   "instance": "g_t[4].u_m",
+   "xy_um": [
+    151.416,
+    8.64
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    138.456,
+    8.64,
+    147.096,
+    49.704
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l4": 2
+   }
+  },
+  {
+   "bank": 5,
+   "instance": "g_t[5].u_m",
+   "xy_um": [
+    151.416,
+    58.344
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    138.456,
+    58.344,
+    147.096,
+    99.408
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l5": 2
+   }
+  },
+  {
+   "bank": 6,
+   "instance": "g_t[6].u_m",
+   "xy_um": [
+    151.416,
+    108.048
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    138.456,
+    108.048,
+    147.096,
+    149.112
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l6": 2
+   }
+  },
+  {
+   "bank": 7,
+   "instance": "g_t[7].u_m",
+   "xy_um": [
+    151.416,
+    157.752
+   ],
+   "size_um": [
+    94.824,
+    41.064
+   ],
+   "orient": "R0",
+   "existing_FF_guide_box_um": [
+    138.456,
+    157.752,
+    147.096,
+    198.816
+   ],
+   "guide_FFs": 388,
+   "FF_roots": {
+    "clk_n": 128,
+    "clk": 257,
+    "clk_ctrl": 1,
+    "clk_l7": 2
+   }
+  }
+ ],
+ "shared_existing_FFs": 786,
+ "guide_semantics": "Inclusive region proposal, not fixed sites; real placement legality/occupancy to be checked. Macro west halo4.32um respected by right edge; each guide8.64x41.064um. No command consumes this proposal.",
+ "clock_model_hold": "All20inputs kept literal. clk2568 FF spread over bank-local cap/rp_sel plus shared OR4; clk_n1024 split bank-wise; separate clk_ctrl/clk_s/local-mask/SRAM roots must retain exact same-source root ownership and common-domain alignment. Actual tree insertion delay/cap and postCTS measured leaf reach are unmeasured.",
+ "review_hold": "Owner/root model acceptance and native kit image review required before PNR. Old wrapped4+4 route result is a topology clue only, never current native gate credit.",
+ "actual_native_halo_um": 4.32,
+ "unplaced_envelope": {
+  "outline_area_um2": 54867.456,
+  "macro_area_fraction": 0.5677467876039305,
+  "std_free_fill": 0.0641431660502905,
+  "rule_status": "Existing >=50% macro-dominated INFO treatment for lowfill only; no new waiver. Actual channel demand/placed empty-bin metrics remain unmeasured. Documented20%free-fill target not attained."
+ },
+ "parent_event_prep": {
+  "scope": "R0 illustrative transform ONLY; no adopted child origin/shape/pin event",
+  "new_child_origin_delta_um": [
+   21.6,
+   0
+  ],
+  "clock_local_translation_um": [
+   -21.6,
+   0
+  ],
+  "global_clock_points": "All20originalglobalpoints unchanged in illustrativeR0: origin+21.6x/localclock\u221221.6x,yunchanged. Origin21.6=5\u00d74.32 also preservesPGphase.",
+  "literal_clock_preservation_checks": "Expected20, actualinside20; no portmerge or dropped input",
+  "data_pins": "Fresh native emitted child data/reset pin contract and actual transformed parent endpoint/G0C obligations REQUIRED; no naive coordinate clipping or alias",
+  "source_cycles": "Unchanged; no added registers/source change"
+ },
+ "source_unchanged": true,
+ "pins_event_adopted": false,
+ "main_clock_station_model": {
+  "anchor_local_um": [
+   129.6,
+   146.88
+  ],
+  "reservation_box_um": [
+   120.96,
+   138.24,
+   138.24,
+   155.52
+  ],
+  "status": "Unadopted17.28square reservation only, not placed physical driver; allbankguideboxes disjoint, no root relocation. SameglobalPGanchor151.2/146.88 for illustrativeR0."
+ },
+ "shared_existing_register_region_prep": {
+  "box_um": [
+   250.56,
+   8.64,
+   254.88,
+   203.04
+  ],
+  "scope": "Eastband4.32\u00d7194.4=839.808um\u00b2,786existing shared FFs plus actual shared combinational cells placement proposal only; source FF area about229.2um\u00b2, cell-by-cell attribution/legality unmeasured. No group consumed by tool."
+ }
+}
