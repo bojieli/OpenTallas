@@ -1,0 +1,20 @@
+{
+  "status": "PREP_ONLY_DEFAULT_OFF",
+  "source": "intel2:/srv/opentallas-scratch2/claude/die-kv-60/ahub/eco/Gm10/rtl/qkd_ahub_static_dw.sv",
+  "module": "qkd_ahub_static_core_la_ck7",
+  "source_sha256": "1c69d14295082971b00d7c808dd018eed6433313cd2eda0ad3ebdee1ba43f384",
+  "failure": "NF2 actual nblk_zmask_q[4] to gqv[2] TT routed -61.21ps; four64bit compares reduced into one capture",
+  "change": "sixteen16bit compare captures plus existing scalar error capture; original fault consumer ORs same-edge captured terms",
+  "added_flops": 16,
+  "cycles_added": 0,
+  "pins_added": 0,
+  "clock_and_reset": "unchanged u_core clock, rn[3] async control reset",
+  "proof": "Yosys tempinduct on exact original/transformed gqv[2] source fragments, arbitrary zseen/zmask/issue/scalar and other fault terms; captured OR and downstream sticky/start fault recurrence equal from reset. Omit final16bit group mutant FAIL.",
+  "not_qualified": [
+    "full currentAHUB source miter",
+    "new source/clock-count parent event",
+    "placement/locality of16newFF",
+    "final fault-OR consumer timing",
+    "P&R/signoff"
+  ]
+}
