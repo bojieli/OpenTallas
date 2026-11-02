@@ -5,3 +5,8 @@ Description=OpenTallas DIE-CI: nightly full whole-die run (G2 on every die)
 Type=oneshot
 ExecStart=/bin/bash -lc '%h/OpenTallas/tools/die_plan/die_ci_cron.sh nightly'
 Nice=5
+# DIECI_WD_1101 (COORD 11-01): backstop past the script's own 12 h cap; SIGTERM reaches the script first (mixed), whose
+# trap stops its ot-run clients, ot-heavy scopes and G2 containers on the run host
+TimeoutStartSec=13h
+KillMode=mixed
+TimeoutStopSec=5min

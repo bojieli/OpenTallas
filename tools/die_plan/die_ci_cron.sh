@@ -13,19 +13,84 @@ export PATH=$HOME/.local/bin:$HOME/.local/opentallas-tools/bin:$PATH
 HUB=$HOME/OpenTallas
 TOOLS=${DIE_CI_TOOLS:-$HUB/tools/die_plan}          # die_ci.py + views registry used on localhost
 STATE=$HOME/.local/state/die-ci
-LR=/srv/opentallas-scratch/claude/die-ci             # localhost results + logs
-R=/srv/opentallas-scratch2/claude/die-ci             # run root on the scratch2 hosts (owner: never root disks)
-RESW=$HOME/wt/die-ci-results                         # results branch worktree (localhost)
+LR=${DIE_CI_LOCAL_ROOT:-/srv/opentallas-scratch/claude/die-ci}   # localhost results + logs
+R=${DIE_CI_RUN_ROOT:-/srv/opentallas-scratch2/claude/die-ci}      # run root on the scratch2 hosts (owner: never root disks)
+RESW=${DIE_CI_RESULTS_WT:-$HOME/wt/die-ci-results}                # results branch worktree (localhost)
 RESB=claude/die-ci-results
-HANDOFF=$HOME/coord/HANDOFF.md
+HANDOFF=${DIE_CI_HANDOFF:-$HOME/coord/HANDOFF.md}
 STA_REF=${DIE_CI_STA_REF:-claude/die-sta-1024}      # die_sta.py source while it is not on main (lane DIE-STA)
 # memory: one ot-run job PER DIE, sized by `die_ci.py job-mem <die>` (its largest G2 docker + 8 GB); G2 part probes
 # killed by their cgroup (EXIT 137) re-run at 2x inside the job up to the die's ceiling (die_ci.DIES g2_mem)
+# DIECI_WD_1101 (COORD 11-01 19:0x, FLOW-21; the 10-27 nightly held epyc2 for 5 days): a run stops itself
+#   - after DIE_CI_MAX_H (12) hours wall time,
+#   - when no file under its run dir on the run host was written for DIE_CI_IDLE_MIN (120) minutes while a per-die job
+#     has started (the 2-h hung-job watchdog rule, OWNER 12.22: log mtime is the progress signal),
+#   - when a newer nightly starts (it SIGTERMs the older run of any mode and takes the lock).
+# Stopping = SIGTERM the run's own ot-run clients, `systemctl --user stop` the ot-heavy scopes named in its per-die logs,
+# and `docker stop` the G2 containers that mount its run dir on the run host (exact handles only, never pkill).
+MAX_S=${DIE_CI_MAX_S:-$(( ${DIE_CI_MAX_H:-12} * 3600 ))}
+IDLE_S=${DIE_CI_IDLE_S:-$(( ${DIE_CI_IDLE_MIN:-120} * 60 ))}
+POLL_S=${DIE_CI_POLL_S:-60}
+T0=$(date +%s)
 mkdir -p "$STATE" "$LR/logs" "$LR/results/die_ci"
-exec 9>"$STATE/lock"
-flock -n 9 || { echo "die-ci: previous run still active"; exit 0; }
 ts() { TZ=America/Los_Angeles date '+%F %H:%M'; }
 log() { echo "$(ts) $*" | tee -a "$LR/logs/cron.log"; }
+exec 9>"$STATE/lock"
+if ! flock -n 9; then
+  read -r OPID OSTART OMODE < "$STATE/run.pid" 2>/dev/null
+  if [ "$MODE" = nightly ] && [ -n "${OPID:-}" ] && kill -0 "$OPID" 2>/dev/null; then
+    log "nightly: a newer nightly starts; stopping the previous ${OMODE:-?} run (pid $OPID, started $(date -d @"${OSTART:-0}" '+%F %H:%M'))"
+    kill -TERM "$OPID" 2>/dev/null
+    flock -w 900 9 || { log "nightly: previous run (pid $OPID) still holds the lock after 15 min; NOT RUN"; exit 1; }
+  else
+    echo "die-ci: previous run still active"; exit 0
+  fi
+fi
+echo "$$ $T0 $MODE" > "$STATE/run.pid"
+: > "$STATE/otrun.pids"
+rm -f "$STATE/stop.reason"
+HOST=""; NAME=""; STAMP=""; SHA=""; PIDS=""
+stop_run() {   # why
+  [ -n "${STOPPED:-}" ] && return 0
+  STOPPED=1
+  log "$MODE ${SHA:-?}: STOPPED ($1); stopping its per-die jobs${HOST:+ on $HOST}"
+  local p u units
+  for p in $(cat "$STATE/otrun.pids" 2>/dev/null); do kill -TERM "$p" 2>/dev/null; done
+  [ -n "$HOST" ] && [ -n "$NAME" ] || return 0
+  units=$(grep -hoE 'oth-[A-Za-z0-9_.@-]+' "$LR"/logs/run_"${STAMP}"_*.log 2>/dev/null | sed 's/\.$//' | sort -u | tr '\n' ' ')
+  ssh -o BatchMode=yes -o ConnectTimeout=20 "$HOST" "for u in $units; do systemctl --user stop \$u 2>/dev/null; done; \
+    for c in \$(docker ps -q 2>/dev/null); do docker inspect -f '{{range .Mounts}}{{.Source}} {{end}}' \$c 2>/dev/null \
+      | grep -qF '$R/results/die_ci/$NAME/' && docker stop -t 10 \$c >/dev/null; done" >/dev/null 2>&1
+  log "$MODE ${SHA:-?}: NOT COMPLETED (stopped: $1; scopes: ${units:-none})"
+}
+on_term() {
+  local why
+  why=$(cat "$STATE/stop.reason" 2>/dev/null)
+  stop_run "${why:-SIGTERM: a newer nightly or a systemd stop}"
+  exit 143
+}
+trap on_term TERM INT
+# watcher: wall-time cap + 2-h no-write watchdog on the run dir (only once a per-die job has started)
+watch_run() {
+  local now newest
+  while sleep "$POLL_S"; do
+    kill -0 $$ 2>/dev/null || return 0
+    now=$(date +%s)
+    if [ $(( now - T0 )) -gt "$MAX_S" ]; then
+      echo "max runtime $(( MAX_S / 3600 )) h ($MAX_S s) reached" > "$STATE/stop.reason"; kill -TERM $$; return 0
+    fi
+    [ -n "$HOST" ] && [ -n "$NAME" ] && [ $(( now - T0 )) -gt "$IDLE_S" ] || continue
+    grep -qsE 'oth-[A-Za-z0-9]' "$LR"/logs/run_"${STAMP}"_*.log || continue        # no per-die job started yet
+    # progress = any write to the per-die client logs here (job start, output) or under the run dir on the host
+    [ -n "$(find "$LR/logs" -maxdepth 1 -name "run_${STAMP}_*" -newermt @$(( now - IDLE_S )) -print -quit)" ] && continue
+    newest=$(ssh -o BatchMode=yes -o ConnectTimeout=20 "$HOST" \
+      "if test -d $R/results/die_ci/$NAME; then find $R/results/die_ci/$NAME -newermt @$(( now - IDLE_S )) -print -quit; fi; echo PROBE_OK" 2>/dev/null)
+    case "$newest" in
+      PROBE_OK) echo "watchdog: no file under $R/results/die_ci/$NAME written for $(( IDLE_S / 60 )) min ($IDLE_S s)" > "$STATE/stop.reason"
+                kill -TERM $$; return 0;;
+    esac
+  done
+}
 
 SHA=$(git -C "$HUB" rev-parse main) || exit 1
 LAST=$(cat "$STATE/last_sha" 2>/dev/null || true)
@@ -83,6 +148,8 @@ if ! git -C "$HUB" cat-file -e "$SHA:tools/die_plan/die_sta.py" 2>/dev/null; the
 fi
 NAME="$(date +%F)_${SHA:0:12}"
 STAMP="$(date +%Y%m%d_%H%M)_${SHA:0:10}"
+watch_run 9>&- &
+WATCH=$!
 DIES=$(ssh "$HOST" "cd $R/wt && python3 -c \"import sys; sys.path.insert(0,'tools/die_plan'); import die_ci; print(' '.join(die_ci.resolve_plans('.')))\"")
 log "$MODE $SHA: per-die jobs on $HOST: $DIES"
 ssh "$HOST" "rm -rf $R/results/die_ci/$NAME"
@@ -92,10 +159,14 @@ for d in $DIES; do
   # Harvest each completed die immediately. A congested probe on another die can
   # take hours; it must not hide the completed gates until the whole batch ends.
   {
+  trap - TERM INT
   ot-run --hosts "$HOST" --mem "$M" --threads 8 --dir "$R" --priority die -- \
     bash -lc "export PATH=\$HOME/.local/opentallas-tools/bin:\$PATH; cd $R/wt && python3 tools/die_plan/die_ci.py run \
       --sha $SHA --mode $MODE --g2 $G2 --out $R/results/die_ci --name $NAME --partial --dies $d \
-      --views-root $R/views $PREVARG $STAARG --jobs 1" > "$LR/logs/run_${STAMP}_$d.log" 2>&1
+      --views-root $R/views $PREVARG $STAARG --jobs 1" > "$LR/logs/run_${STAMP}_$d.log" 2>&1 9>&- &
+  OP=$!
+  echo "$OP" >> "$STATE/otrun.pids"
+  wait "$OP"
   RC=$?
   PARTIAL="$LR/partials/die_ci/$NAME"
   mkdir -p "$PARTIAL"
@@ -114,6 +185,7 @@ for d in $DIES; do
   PIDS="$PIDS $!"
 done
 for p in $PIDS; do wait $p; done
+kill "$WATCH" 2>/dev/null
 RDIR=$R/results/die_ci/$NAME
 ssh "$HOST" "cd $R/wt && python3 tools/die_plan/die_ci.py collect $RDIR --expect ${DIES// /,}" > "$LR/logs/run_${STAMP}_collect.log" 2>&1
 RUN=$(grep -oE "DIE-CI (PASS|FAIL|INCOMPLETE): \S+/SUMMARY.md" "$LR/logs/run_${STAMP}_collect.log" | tail -1)
