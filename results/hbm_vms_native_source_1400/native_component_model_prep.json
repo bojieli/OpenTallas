@@ -115,5 +115,17 @@
    "role": "mirror data"
   }
  ],
- "reset_review": "Existing native C local relay releases after3edges; unchanged source, parent boot/wavefront accounting still required. No reset timing exception or longer qualification window added."
+ "reset_review": "Existing native C local relay releases after3edges; unchanged source, parent boot/wavefront accounting still required. No reset timing exception or longer qualification window added.",
+ "unplaced_envelope_model": {
+  "outline_area_um2": 109058.40000000001,
+  "macro_area_um2": 36952.065216,
+  "standard_cell_area_um2": 3514.829844,
+  "free_area_um2": 72106.334784,
+  "std_free_fill": 0.048745090906769,
+  "macro_area_fraction": 0.33882823529411765,
+  "projected_unoccupied_outline_fraction": 0.6289428869303053,
+  "actual_empty_bin_metric": "NOT_MEASURED_UNPLACED",
+  "same_resources_area_at_20pct_free_fill_um2": 54526.214436,
+  "conclusion": "MODEL_HOLD: std/free below15% low band and20%target, macroshare below50%exception. Concrete compact envelope, parent transformed declared pin contract and native tree model required before PNR. No source/pin/slot change authorized by this resource calculation."
+ }
 }
