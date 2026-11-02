@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-_COORD 2026-11-01 18:28 PST: count 49 (KV adp plan event; HEAD kp4 e13a signed, LEC running -> HEAD 4/4). ccband merged 18:14: post-CTS crash class fixed, batch relaunch. DISK CRITICAL intel1 31 GB / epyc2 37 GB (ot-run refuses) -> PRUNE-1101F/E + snapshot/worktree dedupe class (KIT-WAVE-15). Train: diersv, stnbank, col2, qc-61 tools, pslice. Types 0/485._
+_Updated 2026-11-01 19:29 PST by COORD: count 49 (S81 23, HEAD 3, QC 5, KV 13, HBM 5); clock stays 1.2 GHz (owner); stale-FAIL sweep + LEC class live; localhost root 90% prune._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
