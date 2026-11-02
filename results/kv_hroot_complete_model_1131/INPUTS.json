@@ -1,0 +1,25 @@
+{
+  "actual_A4_dump": {
+    "local": "/srv/opentallas-scratch/claude/wt/codex-kv-physical-1101/results/kv_hroot_reloc_1131_A4_actual.tsv",
+    "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-kv-hroot-1131/geomA4/geom.tsv"
+  },
+  "source_reset_phase_proof": "codex/kv-hroot-reloc-1131@371263a9e results/kv_hroot_completeness_1131",
+  "actual_master_growth_inventory": "intel1:/srv/opentallas-scratch2/claude/codex-kv-hhp-parent-1131/ring_inventory7/ring_inventory.json",
+  "conditional_projection_status": "HELD pending exact current parent boot/START observation join",
+  "native_bound.sv": {
+    "runtime_or_local": "/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_bound.sv",
+    "sha256": "ac8193c1aa344148b848bac0d3e44ba7559567b4e5c2166e1f5272f8fb8ed002"
+  },
+  "face_guard.json": {
+    "runtime_or_local": "/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/face_guard.json",
+    "sha256": "175ed7560fcbd10d85074485bf5ded2a03afb15567abaa8a423704d9e2d2f619"
+  },
+  "land_slots.json": {
+    "runtime_or_local": "/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/land_slots.json",
+    "sha256": "d7614f48c0ad835dfb9110195685254462c7a4afba77b7124ba89516dd97c3a4"
+  },
+  "landing_placement_A4.tcl": {
+    "runtime_or_local": "/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/landing_placement_A4.tcl",
+    "sha256": "f0f3ea728613c89a1f9d54cce251fb001f781f30185fd97dd3181b015b86c1a0"
+  }
+}

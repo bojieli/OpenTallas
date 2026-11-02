@@ -1,0 +1,124 @@
+{
+  "scope": "CONDITIONAL GEOMETRY MODEL ONLY. Real terminal FF endpoints replace only source-qualified direct BUF/INV reset cones. No cells, stages, source, ODB or clock edges added/changed. Parent boot/START join still HELD; raw11reset failures retained in complete_footprint_proposal.json. These numbers are NOT physical signoff or an applied reset repair.",
+  "parent_boot_START_join": "HELD",
+  "projected_metrics": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 395.82,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 22408,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/q\\[24\\]$_DFF_P_ -> u_bound.u_bout_o_kvs_hroot_Q_o_ctl/q\\[24\\]$_DFF_P_"
+  },
+  "projected_bad_pairs": [],
+  "proposed_terminal_connections": [
+    {
+      "target": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/eq$_DFF_PN0_",
+      "old": "u_bound.u_rrl_123/q$_DFF_P_",
+      "new": "u_bound.u_rrl_35/q$_DFF_P_",
+      "old_input_net": 17089,
+      "input_refs": 1,
+      "retained_INV_parity": 1,
+      "new_reach_um": 56.26800000000014
+    },
+    {
+      "target": "u_bound.u_ist_o_host_hbm_rst_n_0/eq$_DFF_PN0_",
+      "old": "u_bound.u_rrl_101/q$_DFF_P_",
+      "new": "u_bound.u_rrl_149/q$_DFF_P_",
+      "old_input_net": 85385,
+      "input_refs": 2,
+      "retained_INV_parity": 1,
+      "new_reach_um": 62.42399999999995
+    },
+    {
+      "target": "u_bound.u_ist_o_host_hbm_rst_n_1/eq$_DFF_PN0_",
+      "old": "u_bound.u_rrl_101/q$_DFF_P_",
+      "new": "u_bound.u_rrl_149/q$_DFF_P_",
+      "old_input_net": 85385,
+      "input_refs": 1,
+      "retained_INV_parity": 1,
+      "new_reach_um": 62.64000000000003
+    },
+    {
+      "target": "u_bound.u_ist_o_host_hbm_rst_n_2/eq$_DFF_PN0_",
+      "old": "u_bound.u_rrl_101/q$_DFF_P_",
+      "new": "u_bound.u_rrl_149/q$_DFF_P_",
+      "old_input_net": 85385,
+      "input_refs": 1,
+      "retained_INV_parity": 1,
+      "new_reach_um": 62.910000000000025
+    },
+    {
+      "target": "u_bound.u_ist_o_host_hbm_rst_n_3/eq$_DFF_PN0_",
+      "old": "u_bound.u_rrl_101/q$_DFF_P_",
+      "new": "u_bound.u_rrl_153/q$_DFF_P_",
+      "old_input_net": 85385,
+      "input_refs": 1,
+      "retained_INV_parity": 1,
+      "new_reach_um": 72.30599999999998
+    },
+    {
+      "target": "u_bound.u_ist_o_host_hbm_rst_n_d1_0/eq$_DFF_PN0_",
+      "old": "u_bound.u_rrl_101/q$_DFF_P_",
+      "new": "u_bound.u_rrl_149/q$_DFF_P_",
+      "old_input_net": 85385,
+      "input_refs": 2,
+      "retained_INV_parity": 1,
+      "new_reach_um": 62.85599999999996
+    },
+    {
+      "target": "u_bound.u_ist_o_host_hbm_rst_n_d1_1/eq$_DFF_PN0_",
+      "old": "u_bound.u_rrl_101/q$_DFF_P_",
+      "new": "u_bound.u_rrl_149/q$_DFF_P_",
+      "old_input_net": 85385,
+      "input_refs": 1,
+      "retained_INV_parity": 1,
+      "new_reach_um": 62.586
+    },
+    {
+      "target": "u_bound.u_ist_o_host_hbm_rst_n_d1_2/eq$_DFF_PN0_",
+      "old": "u_bound.u_rrl_101/q$_DFF_P_",
+      "new": "u_bound.u_rrl_149/q$_DFF_P_",
+      "old_input_net": 85385,
+      "input_refs": 1,
+      "retained_INV_parity": 1,
+      "new_reach_um": 63.28800000000001
+    },
+    {
+      "target": "u_bound.u_ist_o_idhr_Q_y_0/eq$_DFF_PN0_",
+      "old": "u_bound.u_rrl_101/q$_DFF_P_",
+      "new": "u_bound.u_rrl_149/q$_DFF_P_",
+      "old_input_net": 85385,
+      "input_refs": 2,
+      "retained_INV_parity": 1,
+      "new_reach_um": 34.451999999999934
+    },
+    {
+      "target": "u_bound.u_ist_o_idhr_Q_y_1/eq$_DFF_PN0_",
+      "old": "u_bound.u_rrl_101/q$_DFF_P_",
+      "new": "u_bound.u_rrl_149/q$_DFF_P_",
+      "old_input_net": 85385,
+      "input_refs": 1,
+      "retained_INV_parity": 1,
+      "new_reach_um": 33.04799999999994
+    },
+    {
+      "target": "u_bound.u_ist_o_idhr_Q_y_2/eq$_DFF_PN0_",
+      "old": "u_bound.u_rrl_101/q$_DFF_P_",
+      "new": "u_bound.u_rrl_149/q$_DFF_P_",
+      "old_input_net": 85385,
+      "input_refs": 1,
+      "retained_INV_parity": 1,
+      "new_reach_um": 31.59000000000003
+    },
+    {
+      "target": "u_bound.u_ist_o_kvs_hroot_Q_o_ctl_0/eq$_DFF_PN0_",
+      "old": "u_bound.u_rrl_101/q$_DFF_P_",
+      "new": "u_bound.u_rrl_91/q$_DFF_P_",
+      "old_input_net": 85388,
+      "input_refs": 2,
+      "retained_INV_parity": 1,
+      "new_reach_um": 161.5680000000002
+    }
+  ]
+}
