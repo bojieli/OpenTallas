@@ -433,5 +433,6 @@
     }
   },
   "driver_function_and_signal_pin_equivalence": "Literal output functions and signal pin names/directions equal in actual selected TT and FF libraries for INVx1->INVx2 and NAND2x1->NAND2x2; actual postrouteLEC still required",
-  "global_baseline_unclosed": "TT -108.98/1821 endpoints and FF -15.85/18; this bounded event addresses only diagnosed corridor, not a global closure claim"
+  "global_baseline_unclosed": "TT -108.98/1821 endpoints and FF -15.85/18; this bounded event addresses only diagnosed corridor, not a global closure claim",
+  "future_native_pose_api": "JSON positions are lower-left cell bbox/getLocation/DEF placement coordinates. Set OpenDB orientation R0 for DEF N, MX for DEF FS, then setLocation; never interpret these as untransformed getOrigin. Actual new DB must match bbox and preserve all non-owned poses/flags."
 }
