@@ -1,0 +1,46 @@
+{
+  "scope": "actualcandidatepinlocations inclusive10um perface/layer; notescape/PG/PLACE",
+  "pass": true,
+  "rows": [
+    {
+      "face": "E",
+      "layer": "M4",
+      "bits": 90,
+      "inclusive10um_max": 48,
+      "budget": 60,
+      "pass": true
+    },
+    {
+      "face": "N",
+      "layer": "M5",
+      "bits": 279,
+      "inclusive10um_max": 53,
+      "budget": 60,
+      "pass": true
+    },
+    {
+      "face": "S",
+      "layer": "M5",
+      "bits": 106,
+      "inclusive10um_max": 48,
+      "budget": 60,
+      "pass": true
+    },
+    {
+      "face": "W",
+      "layer": "M4",
+      "bits": 96,
+      "inclusive10um_max": 48,
+      "budget": 60,
+      "pass": true
+    }
+  ],
+  "old_failure": "N119outputs.048pitch119/10um>60; firstfix.168offtracks rejectedGEN; preserved",
+  "new_output_pitch_um": 0.192,
+  "N_input_start_um": 23.004,
+  "output_plan_L1_max_um": {
+    "N": 402.516,
+    "E": 399.006,
+    "W": 347.046
+  }
+}

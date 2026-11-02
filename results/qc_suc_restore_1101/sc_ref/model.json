@@ -16,7 +16,7 @@
   "signal_ceiling": "M5; parent M6/M7 crossings reserved",
   "public_pin_basis": "Current committed plan_qc52.json sle_sc_v2 type_pins() generated records; source bit concatenation from825 strict bound RTL. These are plan pin centers, NOT measured boutFF locations.",
   "output_plan_L1_max_um": {
-    "N": 400.044,
+    "N": 402.516,
     "E": 399.006,
     "W": 347.046
   },
@@ -41,1535 +41,1535 @@
       "child": "busy",
       "parent_payload": "x_ctl_o[0]",
       "child_global_um": [
-        345.66,
+        345.80400000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         122.784,
         1339.2
       ],
-      "L1_um": 400.044
+      "L1_um": 400.188
     },
     {
       "child": "tok_idx[1]",
       "parent_payload": "x_ctl_o[3]",
       "child_global_um": [
-        345.708,
+        345.99600000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         122.856,
         1339.2
       ],
-      "L1_um": 400.02
+      "L1_um": 400.308
     },
     {
       "child": "tok_idx[0]",
       "parent_payload": "x_ctl_o[2]",
       "child_global_um": [
-        345.75600000000003,
+        346.18800000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         123.104,
         1339.2
       ],
-      "L1_um": 399.82
+      "L1_um": 400.252
     },
     {
       "child": "tok_idx[3]",
       "parent_payload": "x_ctl_o[5]",
       "child_global_um": [
-        345.80400000000003,
+        346.38,
         1162.0320000000002
       ],
       "public_plan_um": [
         123.48,
         1339.2
       ],
-      "L1_um": 399.492
+      "L1_um": 400.068
     },
     {
       "child": "tok_idx[2]",
       "parent_payload": "x_ctl_o[4]",
       "child_global_um": [
-        345.85200000000003,
+        346.572,
         1162.0320000000002
       ],
       "public_plan_um": [
         123.488,
         1339.2
       ],
-      "L1_um": 399.532
+      "L1_um": 400.252
     },
     {
       "child": "tok_idx[4]",
       "parent_payload": "x_ctl_o[6]",
       "child_global_um": [
-        345.90000000000003,
+        346.764,
         1162.0320000000002
       ],
       "public_plan_um": [
         123.808,
         1339.2
       ],
-      "L1_um": 399.26
+      "L1_um": 400.124
     },
     {
       "child": "tok_idx[5]",
       "parent_payload": "x_ctl_o[7]",
       "child_global_um": [
-        345.94800000000004,
+        346.956,
         1162.0320000000002
       ],
       "public_plan_um": [
         123.816,
         1339.2
       ],
-      "L1_um": 399.3
+      "L1_um": 400.308
     },
     {
       "child": "tok_idx[6]",
       "parent_payload": "x_ctl_o[8]",
       "child_global_um": [
-        345.99600000000004,
+        347.148,
         1162.0320000000002
       ],
       "public_plan_um": [
         124.128,
         1339.2
       ],
-      "L1_um": 399.036
+      "L1_um": 400.188
     },
     {
       "child": "tok_idx[7]",
       "parent_payload": "x_ctl_o[9]",
       "child_global_um": [
-        346.04400000000004,
+        347.34000000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         124.152,
         1339.2
       ],
-      "L1_um": 399.06
+      "L1_um": 400.356
     },
     {
       "child": "tok_idx[9]",
       "parent_payload": "x_ctl_o[11]",
       "child_global_um": [
-        346.09200000000004,
+        347.53200000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         124.488,
         1339.2
       ],
-      "L1_um": 398.772
+      "L1_um": 400.212
     },
     {
       "child": "tok_idx[8]",
       "parent_payload": "x_ctl_o[10]",
       "child_global_um": [
-        346.14000000000004,
+        347.72400000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         124.512,
         1339.2
       ],
-      "L1_um": 398.796
+      "L1_um": 400.38
     },
     {
       "child": "tok_idx[10]",
       "parent_payload": "x_ctl_o[12]",
       "child_global_um": [
-        346.18800000000005,
+        347.916,
         1162.0320000000002
       ],
       "public_plan_um": [
         124.768,
         1339.2
       ],
-      "L1_um": 398.588
+      "L1_um": 400.316
     },
     {
       "child": "tok_idx[11]",
       "parent_payload": "x_ctl_o[13]",
       "child_global_um": [
-        346.23600000000005,
+        348.108,
         1162.0320000000002
       ],
       "public_plan_um": [
         124.824,
         1339.2
       ],
-      "L1_um": 398.58
+      "L1_um": 400.452
     },
     {
       "child": "tok_idx[13]",
       "parent_payload": "x_ctl_o[15]",
       "child_global_um": [
-        346.28400000000005,
+        348.3,
         1162.0320000000002
       ],
       "public_plan_um": [
         125.208,
         1339.2
       ],
-      "L1_um": 398.244
+      "L1_um": 400.26
     },
     {
       "child": "tok_idx[15]",
       "parent_payload": "x_ctl_o[17]",
       "child_global_um": [
-        346.33200000000005,
+        348.492,
         1162.0320000000002
       ],
       "public_plan_um": [
         125.544,
         1339.2
       ],
-      "L1_um": 397.956
+      "L1_um": 400.116
     },
     {
       "child": "tok_idx[12]",
       "parent_payload": "x_ctl_o[14]",
       "child_global_um": [
-        346.38,
+        348.684,
         1162.0320000000002
       ],
       "public_plan_um": [
         125.792,
         1339.2
       ],
-      "L1_um": 397.756
+      "L1_um": 400.06
     },
     {
       "child": "tok_idx[14]",
       "parent_payload": "x_ctl_o[16]",
       "child_global_um": [
-        346.428,
+        348.87600000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         125.856,
         1339.2
       ],
-      "L1_um": 397.74
+      "L1_um": 400.188
     },
     {
       "child": "tok_idx[17]",
       "parent_payload": "x_ctl_o[19]",
       "child_global_um": [
-        346.476,
+        349.06800000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         125.88,
         1339.2
       ],
-      "L1_um": 397.764
+      "L1_um": 400.356
     },
     {
       "child": "tok_idx[16]",
       "parent_payload": "x_ctl_o[18]",
       "child_global_um": [
-        346.524,
+        349.26000000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         125.92,
         1339.2
       ],
-      "L1_um": 397.772
+      "L1_um": 400.508
     },
     {
       "child": "tok_idx[19]",
       "parent_payload": "x_ctl_o[21]",
       "child_global_um": [
-        346.572,
+        349.452,
         1162.0320000000002
       ],
       "public_plan_um": [
         126.216,
         1339.2
       ],
-      "L1_um": 397.524
+      "L1_um": 400.404
     },
     {
       "child": "tok_idx[18]",
       "parent_payload": "x_ctl_o[20]",
       "child_global_um": [
-        346.62,
+        349.644,
         1162.0320000000002
       ],
       "public_plan_um": [
         126.24,
         1339.2
       ],
-      "L1_um": 397.548
+      "L1_um": 400.572
     },
     {
       "child": "tok_idx[21]",
       "parent_payload": "x_ctl_o[23]",
       "child_global_um": [
-        346.668,
+        349.836,
         1162.0320000000002
       ],
       "public_plan_um": [
         126.552,
         1339.2
       ],
-      "L1_um": 397.284
+      "L1_um": 400.452
     },
     {
       "child": "tok_idx[20]",
       "parent_payload": "x_ctl_o[22]",
       "child_global_um": [
-        346.716,
+        350.028,
         1162.0320000000002
       ],
       "public_plan_um": [
         126.56,
         1339.2
       ],
-      "L1_um": 397.324
+      "L1_um": 400.636
     },
     {
       "child": "tok_idx[23]",
       "parent_payload": "x_ctl_o[25]",
       "child_global_um": [
-        346.764,
+        350.22,
         1162.0320000000002
       ],
       "public_plan_um": [
         126.936,
         1339.2
       ],
-      "L1_um": 396.996
+      "L1_um": 400.452
     },
     {
       "child": "tok_idx[22]",
       "parent_payload": "x_ctl_o[24]",
       "child_global_um": [
-        346.812,
+        350.41200000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         126.944,
         1339.2
       ],
-      "L1_um": 397.036
+      "L1_um": 400.636
     },
     {
       "child": "tok_user[0]",
       "parent_payload": "x_ctl_o[27]",
       "child_global_um": [
-        346.86,
+        350.60400000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         127.176,
         1339.2
       ],
-      "L1_um": 396.852
+      "L1_um": 400.596
     },
     {
       "child": "tok_own",
       "parent_payload": "x_ctl_o[26]",
       "child_global_um": [
-        346.908,
+        350.79600000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         127.264,
         1339.2
       ],
-      "L1_um": 396.812
+      "L1_um": 400.7
     },
     {
       "child": "tok_user[1]",
       "parent_payload": "x_ctl_o[28]",
       "child_global_um": [
-        346.956,
+        350.988,
         1162.0320000000002
       ],
       "public_plan_um": [
         127.584,
         1339.2
       ],
-      "L1_um": 396.54
+      "L1_um": 400.572
     },
     {
       "child": "tok_v",
       "parent_payload": "x_ctl_o[29]",
       "child_global_um": [
-        347.004,
+        351.18,
         1162.0320000000002
       ],
       "public_plan_um": [
         127.704,
         1339.2
       ],
-      "L1_um": 396.468
+      "L1_um": 400.644
     },
     {
       "child": "tok_val[1]",
       "parent_payload": "x_ctl_o[31]",
       "child_global_um": [
-        347.052,
+        351.372,
         1162.0320000000002
       ],
       "public_plan_um": [
         127.944,
         1339.2
       ],
-      "L1_um": 396.276
+      "L1_um": 400.596
     },
     {
       "child": "tok_val[0]",
       "parent_payload": "x_ctl_o[30]",
       "child_global_um": [
-        347.1,
+        351.564,
         1162.0320000000002
       ],
       "public_plan_um": [
         127.968,
         1339.2
       ],
-      "L1_um": 396.3
+      "L1_um": 400.764
     },
     {
       "child": "tok_val[3]",
       "parent_payload": "x_ctl_o[33]",
       "child_global_um": [
-        347.148,
+        351.75600000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         128.28,
         1339.2
       ],
-      "L1_um": 396.036
+      "L1_um": 400.644
     },
     {
       "child": "tok_val[2]",
       "parent_payload": "x_ctl_o[32]",
       "child_global_um": [
-        347.196,
+        351.94800000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         128.288,
         1339.2
       ],
-      "L1_um": 396.076
+      "L1_um": 400.828
     },
     {
       "child": "tok_val[5]",
       "parent_payload": "x_ctl_o[35]",
       "child_global_um": [
-        347.244,
+        352.14000000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         128.664,
         1339.2
       ],
-      "L1_um": 395.748
+      "L1_um": 400.644
     },
     {
       "child": "tok_val[4]",
       "parent_payload": "x_ctl_o[34]",
       "child_global_um": [
-        347.29200000000003,
+        352.33200000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         128.672,
         1339.2
       ],
-      "L1_um": 395.788
+      "L1_um": 400.828
     },
     {
       "child": "tok_val[6]",
       "parent_payload": "x_ctl_o[36]",
       "child_global_um": [
-        347.34000000000003,
+        352.524,
         1162.0320000000002
       ],
       "public_plan_um": [
         128.992,
         1339.2
       ],
-      "L1_um": 395.516
+      "L1_um": 400.7
     },
     {
       "child": "tok_val[7]",
       "parent_payload": "x_ctl_o[37]",
       "child_global_um": [
-        347.38800000000003,
+        352.716,
         1162.0320000000002
       ],
       "public_plan_um": [
         129.0,
         1339.2
       ],
-      "L1_um": 395.556
+      "L1_um": 400.884
     },
     {
       "child": "tok_val[8]",
       "parent_payload": "x_ctl_o[38]",
       "child_global_um": [
-        347.43600000000004,
+        352.908,
         1162.0320000000002
       ],
       "public_plan_um": [
         129.312,
         1339.2
       ],
-      "L1_um": 395.292
+      "L1_um": 400.764
     },
     {
       "child": "tok_val[9]",
       "parent_payload": "x_ctl_o[39]",
       "child_global_um": [
-        347.48400000000004,
+        353.1,
         1162.0320000000002
       ],
       "public_plan_um": [
         129.336,
         1339.2
       ],
-      "L1_um": 395.316
+      "L1_um": 400.932
     },
     {
       "child": "tok_val[11]",
       "parent_payload": "x_ctl_o[41]",
       "child_global_um": [
-        347.53200000000004,
+        353.29200000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         129.672,
         1339.2
       ],
-      "L1_um": 395.028
+      "L1_um": 400.788
     },
     {
       "child": "tok_val[10]",
       "parent_payload": "x_ctl_o[40]",
       "child_global_um": [
-        347.58000000000004,
+        353.48400000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         129.696,
         1339.2
       ],
-      "L1_um": 395.052
+      "L1_um": 400.956
     },
     {
       "child": "tok_val[12]",
       "parent_payload": "x_ctl_o[42]",
       "child_global_um": [
-        347.62800000000004,
+        353.67600000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         130.016,
         1339.2
       ],
-      "L1_um": 394.78
+      "L1_um": 400.828
     },
     {
       "child": "tok_val[13]",
       "parent_payload": "x_ctl_o[43]",
       "child_global_um": [
-        347.67600000000004,
+        353.86800000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         130.056,
         1339.2
       ],
-      "L1_um": 394.788
+      "L1_um": 400.98
     },
     {
       "child": "tok_val[15]",
       "parent_payload": "x_ctl_o[45]",
       "child_global_um": [
-        347.72400000000005,
+        354.06,
         1162.0320000000002
       ],
       "public_plan_um": [
         130.392,
         1339.2
       ],
-      "L1_um": 394.5
+      "L1_um": 400.836
     },
     {
       "child": "tok_val[14]",
       "parent_payload": "x_ctl_o[44]",
       "child_global_um": [
-        347.77200000000005,
+        354.252,
         1162.0320000000002
       ],
       "public_plan_um": [
         130.4,
         1339.2
       ],
-      "L1_um": 394.54
+      "L1_um": 401.02
     },
     {
       "child": "tok_val[16]",
       "parent_payload": "x_ctl_o[46]",
       "child_global_um": [
-        347.82000000000005,
+        354.444,
         1162.0320000000002
       ],
       "public_plan_um": [
         130.72,
         1339.2
       ],
-      "L1_um": 394.268
+      "L1_um": 400.892
     },
     {
       "child": "tok_val[17]",
       "parent_payload": "x_ctl_o[47]",
       "child_global_um": [
-        347.868,
+        354.636,
         1162.0320000000002
       ],
       "public_plan_um": [
         130.728,
         1339.2
       ],
-      "L1_um": 394.308
+      "L1_um": 401.076
     },
     {
       "child": "tok_val[19]",
       "parent_payload": "x_ctl_o[49]",
       "child_global_um": [
-        347.916,
+        354.82800000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         131.064,
         1339.2
       ],
-      "L1_um": 394.02
+      "L1_um": 400.932
     },
     {
       "child": "tok_val[18]",
       "parent_payload": "x_ctl_o[48]",
       "child_global_um": [
-        347.964,
+        355.02000000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         131.104,
         1339.2
       ],
-      "L1_um": 394.028
+      "L1_um": 401.084
     },
     {
       "child": "tok_val[21]",
       "parent_payload": "x_ctl_o[51]",
       "child_global_um": [
-        348.012,
+        355.21200000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         131.4,
         1339.2
       ],
-      "L1_um": 393.78
+      "L1_um": 400.98
     },
     {
       "child": "tok_val[20]",
       "parent_payload": "x_ctl_o[50]",
       "child_global_um": [
-        348.06,
+        355.404,
         1162.0320000000002
       ],
       "public_plan_um": [
         131.424,
         1339.2
       ],
-      "L1_um": 393.804
+      "L1_um": 401.148
     },
     {
       "child": "tok_val[22]",
       "parent_payload": "x_ctl_o[52]",
       "child_global_um": [
-        348.108,
+        355.596,
         1162.0320000000002
       ],
       "public_plan_um": [
         131.744,
         1339.2
       ],
-      "L1_um": 393.532
+      "L1_um": 401.02
     },
     {
       "child": "tok_val[23]",
       "parent_payload": "x_ctl_o[53]",
       "child_global_um": [
-        348.156,
+        355.788,
         1162.0320000000002
       ],
       "public_plan_um": [
         132.024,
         1339.2
       ],
-      "L1_um": 393.3
+      "L1_um": 400.932
     },
     {
       "child": "tok_val[25]",
       "parent_payload": "x_ctl_o[55]",
       "child_global_um": [
-        348.204,
+        355.98,
         1162.0320000000002
       ],
       "public_plan_um": [
         132.12,
         1339.2
       ],
-      "L1_um": 393.252
+      "L1_um": 401.028
     },
     {
       "child": "tok_val[24]",
       "parent_payload": "x_ctl_o[54]",
       "child_global_um": [
-        348.252,
+        356.172,
         1162.0320000000002
       ],
       "public_plan_um": [
         132.128,
         1339.2
       ],
-      "L1_um": 393.292
+      "L1_um": 401.212
     },
     {
       "child": "tok_val[26]",
       "parent_payload": "x_ctl_o[56]",
       "child_global_um": [
-        348.3,
+        356.36400000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         132.448,
         1339.2
       ],
-      "L1_um": 393.02
+      "L1_um": 401.084
     },
     {
       "child": "tok_val[27]",
       "parent_payload": "x_ctl_o[57]",
       "child_global_um": [
-        348.348,
+        356.55600000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         132.456,
         1339.2
       ],
-      "L1_um": 393.06
+      "L1_um": 401.268
     },
     {
       "child": "tok_val[29]",
       "parent_payload": "x_ctl_o[59]",
       "child_global_um": [
-        348.396,
+        356.74800000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         132.792,
         1339.2
       ],
-      "L1_um": 392.772
+      "L1_um": 401.124
     },
     {
       "child": "tok_val[28]",
       "parent_payload": "x_ctl_o[58]",
       "child_global_um": [
-        348.444,
+        356.94,
         1162.0320000000002
       ],
       "public_plan_um": [
         132.832,
         1339.2
       ],
-      "L1_um": 392.78
+      "L1_um": 401.276
     },
     {
       "child": "tok_val[31]",
       "parent_payload": "x_ctl_o[61]",
       "child_global_um": [
-        348.492,
+        357.132,
         1162.0320000000002
       ],
       "public_plan_um": [
         133.128,
         1339.2
       ],
-      "L1_um": 392.532
+      "L1_um": 401.172
     },
     {
       "child": "tok_val[30]",
       "parent_payload": "x_ctl_o[60]",
       "child_global_um": [
-        348.54,
+        357.324,
         1162.0320000000002
       ],
       "public_plan_um": [
         133.152,
         1339.2
       ],
-      "L1_um": 392.556
+      "L1_um": 401.34
     },
     {
       "child": "w1_addr[0]",
       "parent_payload": "x_ctl_o[62]",
       "child_global_um": [
-        348.588,
+        357.516,
         1162.0320000000002
       ],
       "public_plan_um": [
         133.344,
         1339.2
       ],
-      "L1_um": 392.412
+      "L1_um": 401.34
     },
     {
       "child": "w1_addr[2]",
       "parent_payload": "x_ctl_o[64]",
       "child_global_um": [
-        348.636,
+        357.708,
         1162.0320000000002
       ],
       "public_plan_um": [
         133.408,
         1339.2
       ],
-      "L1_um": 392.396
+      "L1_um": 401.468
     },
     {
       "child": "w1_addr[1]",
       "parent_payload": "x_ctl_o[63]",
       "child_global_um": [
-        348.684,
+        357.90000000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         133.512,
         1339.2
       ],
-      "L1_um": 392.34
+      "L1_um": 401.556
     },
     {
       "child": "w1_addr[3]",
       "parent_payload": "x_ctl_o[65]",
       "child_global_um": [
-        348.732,
+        358.09200000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         133.848,
         1339.2
       ],
-      "L1_um": 392.052
+      "L1_um": 401.412
     },
     {
       "child": "w1_addr[5]",
       "parent_payload": "x_ctl_o[67]",
       "child_global_um": [
-        348.78000000000003,
+        358.28400000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         134.184,
         1339.2
       ],
-      "L1_um": 391.764
+      "L1_um": 401.268
     },
     {
       "child": "w1_addr[4]",
       "parent_payload": "x_ctl_o[66]",
       "child_global_um": [
-        348.82800000000003,
+        358.476,
         1162.0320000000002
       ],
       "public_plan_um": [
         134.432,
         1339.2
       ],
-      "L1_um": 391.564
+      "L1_um": 401.212
     },
     {
       "child": "w1_addr[7]",
       "parent_payload": "x_ctl_o[69]",
       "child_global_um": [
-        348.87600000000003,
+        358.668,
         1162.0320000000002
       ],
       "public_plan_um": [
         134.52,
         1339.2
       ],
-      "L1_um": 391.524
+      "L1_um": 401.316
     },
     {
       "child": "w1_addr[6]",
       "parent_payload": "x_ctl_o[68]",
       "child_global_um": [
-        348.92400000000004,
+        358.86,
         1162.0320000000002
       ],
       "public_plan_um": [
         134.56,
         1339.2
       ],
-      "L1_um": 391.532
+      "L1_um": 401.468
     },
     {
       "child": "w1_addr[9]",
       "parent_payload": "x_ctl_o[71]",
       "child_global_um": [
-        348.97200000000004,
+        359.052,
         1162.0320000000002
       ],
       "public_plan_um": [
         134.856,
         1339.2
       ],
-      "L1_um": 391.284
+      "L1_um": 401.364
     },
     {
       "child": "w1_addr[8]",
       "parent_payload": "x_ctl_o[70]",
       "child_global_um": [
-        349.02000000000004,
+        359.244,
         1162.0320000000002
       ],
       "public_plan_um": [
         134.88,
         1339.2
       ],
-      "L1_um": 391.308
+      "L1_um": 401.532
     },
     {
       "child": "w1_addr[10]",
       "parent_payload": "x_ctl_o[72]",
       "child_global_um": [
-        349.06800000000004,
+        359.43600000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         135.2,
         1339.2
       ],
-      "L1_um": 391.036
+      "L1_um": 401.404
     },
     {
       "child": "w1_addr[11]",
       "parent_payload": "x_ctl_o[73]",
       "child_global_um": [
-        349.11600000000004,
+        359.62800000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         135.24,
         1339.2
       ],
-      "L1_um": 391.044
+      "L1_um": 401.556
     },
     {
       "child": "w1_addr[13]",
       "parent_payload": "x_ctl_o[75]",
       "child_global_um": [
-        349.16400000000004,
+        359.82000000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         135.576,
         1339.2
       ],
-      "L1_um": 390.756
+      "L1_um": 401.412
     },
     {
       "child": "w1_addr[12]",
       "parent_payload": "x_ctl_o[74]",
       "child_global_um": [
-        349.21200000000005,
+        360.012,
         1162.0320000000002
       ],
       "public_plan_um": [
         135.584,
         1339.2
       ],
-      "L1_um": 390.796
+      "L1_um": 401.596
     },
     {
       "child": "w1_addr[15]",
       "parent_payload": "x_ctl_o[77]",
       "child_global_um": [
-        349.26000000000005,
+        360.204,
         1162.0320000000002
       ],
       "public_plan_um": [
         135.816,
         1339.2
       ],
-      "L1_um": 390.612
+      "L1_um": 401.556
     },
     {
       "child": "w1_addr[14]",
       "parent_payload": "x_ctl_o[76]",
       "child_global_um": [
-        349.30800000000005,
+        360.396,
         1162.0320000000002
       ],
       "public_plan_um": [
         135.904,
         1339.2
       ],
-      "L1_um": 390.572
+      "L1_um": 401.66
     },
     {
       "child": "w1_addr[16]",
       "parent_payload": "x_ctl_o[78]",
       "child_global_um": [
-        349.356,
+        360.588,
         1162.0320000000002
       ],
       "public_plan_um": [
         136.288,
         1339.2
       ],
-      "L1_um": 390.236
+      "L1_um": 401.468
     },
     {
       "child": "w1_addr[17]",
       "parent_payload": "x_ctl_o[79]",
       "child_global_um": [
-        349.404,
+        360.78000000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         136.344,
         1339.2
       ],
-      "L1_um": 390.228
+      "L1_um": 401.604
     },
     {
       "child": "w1_addr[18]",
       "parent_payload": "x_ctl_o[80]",
       "child_global_um": [
-        349.452,
+        360.97200000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         136.608,
         1339.2
       ],
-      "L1_um": 390.012
+      "L1_um": 401.532
     },
     {
       "child": "w1_addr[19]",
       "parent_payload": "x_ctl_o[81]",
       "child_global_um": [
-        349.5,
+        361.16400000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         136.632,
         1339.2
       ],
-      "L1_um": 390.036
+      "L1_um": 401.7
     },
     {
       "child": "w1_addr[20]",
       "parent_payload": "x_ctl_o[82]",
       "child_global_um": [
-        349.548,
+        361.356,
         1162.0320000000002
       ],
       "public_plan_um": [
         136.928,
         1339.2
       ],
-      "L1_um": 389.788
+      "L1_um": 401.596
     },
     {
       "child": "w1_addr[21]",
       "parent_payload": "x_ctl_o[83]",
       "child_global_um": [
-        349.596,
+        361.548,
         1162.0320000000002
       ],
       "public_plan_um": [
         136.968,
         1339.2
       ],
-      "L1_um": 389.796
+      "L1_um": 401.748
     },
     {
       "child": "w1_addr[23]",
       "parent_payload": "x_ctl_o[85]",
       "child_global_um": [
-        349.644,
+        361.74,
         1162.0320000000002
       ],
       "public_plan_um": [
         137.304,
         1339.2
       ],
-      "L1_um": 389.508
+      "L1_um": 401.604
     },
     {
       "child": "w1_addr[22]",
       "parent_payload": "x_ctl_o[84]",
       "child_global_um": [
-        349.692,
+        361.932,
         1162.0320000000002
       ],
       "public_plan_um": [
         137.312,
         1339.2
       ],
-      "L1_um": 389.548
+      "L1_um": 401.788
     },
     {
       "child": "w1_data[0]",
       "parent_payload": "x_ctl_o[86]",
       "child_global_um": [
-        349.74,
+        362.124,
         1162.0320000000002
       ],
       "public_plan_um": [
         137.632,
         1339.2
       ],
-      "L1_um": 389.276
+      "L1_um": 401.66
     },
     {
       "child": "w1_data[1]",
       "parent_payload": "x_ctl_o[87]",
       "child_global_um": [
-        349.788,
+        362.31600000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         137.64,
         1339.2
       ],
-      "L1_um": 389.316
+      "L1_um": 401.844
     },
     {
       "child": "w1_data[3]",
       "parent_payload": "x_ctl_o[89]",
       "child_global_um": [
-        349.836,
+        362.50800000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         137.976,
         1339.2
       ],
-      "L1_um": 389.028
+      "L1_um": 401.7
     },
     {
       "child": "w1_data[2]",
       "parent_payload": "x_ctl_o[88]",
       "child_global_um": [
-        349.884,
+        362.70000000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         138.016,
         1339.2
       ],
-      "L1_um": 389.036
+      "L1_um": 401.852
     },
     {
       "child": "w1_data[4]",
       "parent_payload": "x_ctl_o[90]",
       "child_global_um": [
-        349.932,
+        362.89200000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         138.336,
         1339.2
       ],
-      "L1_um": 388.764
+      "L1_um": 401.724
     },
     {
       "child": "w1_data[5]",
       "parent_payload": "x_ctl_o[91]",
       "child_global_um": [
-        349.98,
+        363.084,
         1162.0320000000002
       ],
       "public_plan_um": [
         138.36,
         1339.2
       ],
-      "L1_um": 388.788
+      "L1_um": 401.892
     },
     {
       "child": "w1_data[6]",
       "parent_payload": "x_ctl_o[92]",
       "child_global_um": [
-        350.028,
+        363.276,
         1162.0320000000002
       ],
       "public_plan_um": [
         138.656,
         1339.2
       ],
-      "L1_um": 388.54
+      "L1_um": 401.788
     },
     {
       "child": "w1_data[7]",
       "parent_payload": "x_ctl_o[93]",
       "child_global_um": [
-        350.076,
+        363.468,
         1162.0320000000002
       ],
       "public_plan_um": [
         138.696,
         1339.2
       ],
-      "L1_um": 388.548
+      "L1_um": 401.94
     },
     {
       "child": "w1_data[9]",
       "parent_payload": "x_ctl_o[95]",
       "child_global_um": [
-        350.124,
+        363.66,
         1162.0320000000002
       ],
       "public_plan_um": [
         139.032,
         1339.2
       ],
-      "L1_um": 388.26
+      "L1_um": 401.796
     },
     {
       "child": "w1_data[8]",
       "parent_payload": "x_ctl_o[94]",
       "child_global_um": [
-        350.172,
+        363.85200000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         139.04,
         1339.2
       ],
-      "L1_um": 388.3
+      "L1_um": 401.98
     },
     {
       "child": "w1_data[10]",
       "parent_payload": "x_ctl_o[96]",
       "child_global_um": [
-        350.22,
+        364.04400000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         139.36,
         1339.2
       ],
-      "L1_um": 388.028
+      "L1_um": 401.852
     },
     {
       "child": "w1_data[11]",
       "parent_payload": "x_ctl_o[97]",
       "child_global_um": [
-        350.26800000000003,
+        364.23600000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         139.368,
         1339.2
       ],
-      "L1_um": 388.068
+      "L1_um": 402.036
     },
     {
       "child": "w1_data[13]",
       "parent_payload": "x_ctl_o[99]",
       "child_global_um": [
-        350.31600000000003,
+        364.428,
         1162.0320000000002
       ],
       "public_plan_um": [
         139.704,
         1339.2
       ],
-      "L1_um": 387.78
+      "L1_um": 401.892
     },
     {
       "child": "w1_data[12]",
       "parent_payload": "x_ctl_o[98]",
       "child_global_um": [
-        350.36400000000003,
+        364.62,
         1162.0320000000002
       ],
       "public_plan_um": [
         139.744,
         1339.2
       ],
-      "L1_um": 387.788
+      "L1_um": 402.044
     },
     {
       "child": "w1_data[14]",
       "parent_payload": "x_ctl_o[100]",
       "child_global_um": [
-        350.41200000000003,
+        364.812,
         1162.0320000000002
       ],
       "public_plan_um": [
         140.064,
         1339.2
       ],
-      "L1_um": 387.516
+      "L1_um": 401.916
     },
     {
       "child": "w1_data[15]",
       "parent_payload": "x_ctl_o[101]",
       "child_global_um": [
-        350.46000000000004,
+        365.004,
         1162.0320000000002
       ],
       "public_plan_um": [
         140.088,
         1339.2
       ],
-      "L1_um": 387.54
+      "L1_um": 402.084
     },
     {
       "child": "w1_data[16]",
       "parent_payload": "x_ctl_o[102]",
       "child_global_um": [
-        350.50800000000004,
+        365.196,
         1162.0320000000002
       ],
       "public_plan_um": [
         140.448,
         1339.2
       ],
-      "L1_um": 387.228
+      "L1_um": 401.916
     },
     {
       "child": "w1_data[17]",
       "parent_payload": "x_ctl_o[103]",
       "child_global_um": [
-        350.55600000000004,
+        365.38800000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         140.664,
         1339.2
       ],
-      "L1_um": 387.06
+      "L1_um": 401.892
     },
     {
       "child": "w1_data[19]",
       "parent_payload": "x_ctl_o[105]",
       "child_global_um": [
-        350.60400000000004,
+        365.58000000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         140.76,
         1339.2
       ],
-      "L1_um": 387.012
+      "L1_um": 401.988
     },
     {
       "child": "w1_data[18]",
       "parent_payload": "x_ctl_o[104]",
       "child_global_um": [
-        350.65200000000004,
+        365.77200000000005,
         1162.0320000000002
       ],
       "public_plan_um": [
         140.768,
         1339.2
       ],
-      "L1_um": 387.052
+      "L1_um": 402.172
     },
     {
       "child": "w1_data[20]",
       "parent_payload": "x_ctl_o[106]",
       "child_global_um": [
-        350.70000000000005,
+        365.964,
         1162.0320000000002
       ],
       "public_plan_um": [
         141.088,
         1339.2
       ],
-      "L1_um": 386.78
+      "L1_um": 402.044
     },
     {
       "child": "w1_data[21]",
       "parent_payload": "x_ctl_o[107]",
       "child_global_um": [
-        350.74800000000005,
+        366.156,
         1162.0320000000002
       ],
       "public_plan_um": [
         141.096,
         1339.2
       ],
-      "L1_um": 386.82
+      "L1_um": 402.228
     },
     {
       "child": "w1_data[22]",
       "parent_payload": "x_ctl_o[108]",
       "child_global_um": [
-        350.79600000000005,
+        366.348,
         1162.0320000000002
       ],
       "public_plan_um": [
         141.472,
         1339.2
       ],
-      "L1_um": 386.492
+      "L1_um": 402.044
     },
     {
       "child": "w1_data[23]",
       "parent_payload": "x_ctl_o[109]",
       "child_global_um": [
-        350.84400000000005,
+        366.54,
         1162.0320000000002
       ],
       "public_plan_um": [
         141.48,
         1339.2
       ],
-      "L1_um": 386.532
+      "L1_um": 402.228
     },
     {
       "child": "w1_data[24]",
       "parent_payload": "x_ctl_o[110]",
       "child_global_um": [
-        350.892,
+        366.732,
         1162.0320000000002
       ],
       "public_plan_um": [
         141.792,
         1339.2
       ],
-      "L1_um": 386.268
+      "L1_um": 402.108
     },
     {
       "child": "w1_data[25]",
       "parent_payload": "x_ctl_o[111]",
       "child_global_um": [
-        350.94,
+        366.92400000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         141.816,
         1339.2
       ],
-      "L1_um": 386.292
+      "L1_um": 402.276
     },
     {
       "child": "w1_data[26]",
       "parent_payload": "x_ctl_o[112]",
       "child_global_um": [
-        350.988,
+        367.11600000000004,
         1162.0320000000002
       ],
       "public_plan_um": [
         141.984,
         1339.2
       ],
-      "L1_um": 386.172
+      "L1_um": 402.3
     },
     {
       "child": "w1_data[28]",
       "parent_payload": "x_ctl_o[114]",
       "child_global_um": [
-        351.036,
+        367.308,
         1162.0320000000002
       ],
       "public_plan_um": [
         142.048,
         1339.2
       ],
-      "L1_um": 386.156
+      "L1_um": 402.428
     },
     {
       "child": "w1_data[27]",
       "parent_payload": "x_ctl_o[113]",
       "child_global_um": [
-        351.084,
+        367.5,
         1162.0320000000002
       ],
       "public_plan_um": [
         142.152,
         1339.2
       ],
-      "L1_um": 386.1
+      "L1_um": 402.516
     },
     {
       "child": "w1_data[29]",
       "parent_payload": "x_ctl_o[115]",
       "child_global_um": [
-        351.132,
+        367.692,
         1162.0320000000002
       ],
       "public_plan_um": [
         142.488,
         1339.2
       ],
-      "L1_um": 385.812
+      "L1_um": 402.372
     },
     {
       "child": "w1_data[31]",
       "parent_payload": "x_ctl_o[117]",
       "child_global_um": [
-        351.18,
+        367.884,
         1162.0320000000002
       ],
       "public_plan_um": [
         142.824,
         1339.2
       ],
-      "L1_um": 385.524
+      "L1_um": 402.228
     },
     {
       "child": "w1_data[30]",
       "parent_payload": "x_ctl_o[116]",
       "child_global_um": [
-        351.228,
+        368.076,
         1162.0320000000002
       ],
       "public_plan_um": [
         143.072,
         1339.2
       ],
-      "L1_um": 385.324
+      "L1_um": 402.172
     },
     {
       "child": "w1_we",
       "parent_payload": "x_ctl_o[118]",
       "child_global_um": [
-        351.276,
+        368.26800000000003,
         1162.0320000000002
       ],
       "public_plan_um": [
         143.2,
         1339.2
       ],
-      "L1_um": 385.244
+      "L1_um": 402.236
     },
     {
       "child": "dn_o[0]",

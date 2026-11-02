@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.qc.core_freeze.v1",
+ "kit": "qfd_dv_s5_sc2_leaf_pin1centerwideN",
+ "module": "qfd_dv_s5_sc2_leaf",
+ "plan_type": "sle_sc_v2",
+ "outline_um": [
+  244.56,
+  514.08
+ ],
+ "ref_tile": "results/qc_suc_restore_1101/sc_ref",
+ "spec": "results/qc_suc_restore_1101/sc_ref/spec.json",
+ "spec_sha256": "3686fdb42e3feaa400d3c5ee810e8f0e378f84931fdbc62d36e8672041cc85b3",
+ "pins_file": "/srv/opentallas-scratch2/claude/codex-qc-sc-initial-pinfix-1800/pins.json",
+ "pins_sha256": "4a2a3eb4b8309fc0c3caeba772343fc815784644cff347bc1f4347d5f1cb342c",
+ "pins": 572,
+ "plan_lef": "plan pin table (plan_pins_contract)",
+ "clocks": [
+  "ck"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "737ad157dae50dee7b4991e9215ee639dd2eb2ea7fdcbf6673525713341c84d3",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "Common250/202.5 reference only; center structured tree is unqualified hypothesis until actual sink/NLDM/root-slew model",
+  "ff": "Common250/202.5 reference only; center structured tree is unqualified hypothesis until actual sink/NLDM/root-slew model"
+ },
+ "insertion_tol_ps": 40.0,
+ "rc": "setRC_rcx_asap7.tcl",
+ "unc_setup_ps": 0.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "selrange (synth)",
+  "face_guard (post-synth)",
+  "lec (post-synth)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "1ca6a833501",
+ "sdc_lint_sha256": "9f4cb15408b946d7da4440c0c4430a013a311c295e504fa3deb4709349e9a1cb",
+ "face_guard_sha256": "da1b8ce4bb693991e33dcff378abb65121af213cbc8aa4655e94ed3375e5f67e",
+ "signoff_sha256": "e32413a9ca340f9817edcdf5c6f62b9914037200e87ec060e1c0c46c91061b04",
+ "macros": {},
+ "sram_pincol_halo": [],
+ "rtl_patches": [],
+ "kit_hash": "cf386bae73173aee",
+ "timing_modes": {
+  "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+  "tt": 250.0,
+  "ff": 202.5,
+  "default": true
+ },
+ "master_plan": {
+  "slice_sha256": "5ca9a0c94480f41404dd1c91c9352e86ce12233fc33ca8b57af267aa45129493",
+  "master_plan_sha256": "qc-sc-hard1-initial-unadopted",
+  "type": "qfd_dv_s5_sc2_leaf",
+  "frozen": false
+ },
+ "pins_canon_sha256": "c3a39a8d60e34952e49c0034f11450248a3e5d35e4f7f3e4d8cba269cbe58703",
+ "pins_placed_canon_sha256": "d7a9e381e6a2557ecfe33b4f043a007be96733717019bf83dacef8e51b27b760"
+}

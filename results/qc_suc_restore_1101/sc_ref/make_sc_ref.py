@@ -4,7 +4,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-p=Path(__file__).parent; out=p/'sc_ref';out.mkdir(exist_ok=True)
+p=Path(__file__).parent; out=p;out.mkdir(exist_ok=True)
 iface=json.load(open(p/'port_interface.json'))['ports']; pub=json.load(open(p/'current_plan_output_pins.json')); W,H=244.56,514.08; X,Y=345.6,648
 pins=[]
 def add(n,b,d,f,x,y,l):pins.append(dict(name=n if b is None else f'{n}[{b}]',dir=d,face=f,x=round(x,3),y=round(y,3),layer=l))
@@ -21,13 +21,13 @@ assert len(ctl)==119
 public={(n,b):(x,y) for n,b,l,x,y,f in pub}
 # Sort by exact target x to preserve correlation across the parent's paired pin layers.
 for rank,b in enumerate(sorted(range(119),key=lambda b:public['x_ctl_o',b][0])):
- n,bit=ctl[b];add(n,bit,'out','N',.012+.048*rank,H-.048,'M5')
+ n,bit=ctl[b];add(n,bit,'out','N',.012+.192*rank,H-.048,'M5')
 bus('dn_o',48,'out','W',242.796,.144)
 bus('up_o',48,'out','E',.012,.048)
 # Source groups occupy separate faces; no new data/control stages.
 idx=0
 for n,w in [('am_idx',24),('am_u',2),('am_v',1),('am_val',32),('sc_cfg',101)]:
- bus(n,w,'in','N',20.028+idx*1.344,1.344);idx+=w
+ bus(n,w,'in','N',23.004+idx*1.344,1.344);idx+=w
 bus('up_i',48,'in','W',260.028,.144)
 bus('dn_i',48,'in','S',230.028,.144)
 idx=0
