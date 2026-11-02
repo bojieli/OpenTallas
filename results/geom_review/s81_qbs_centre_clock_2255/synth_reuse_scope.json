@@ -1,0 +1,41 @@
+[
+ {
+  "module": "dsfd_node_LLfu",
+  "RTL_files": {
+   "ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+   "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+   "ot_s81_retn_static.sv": "eb68af1600b861259df9a692365e0e3342931629eefa7cdddbef125640514891",
+   "dsfd_node_LLfu.sv": "699976528bd30ae44b123ae180e392d4eb19bfaf0ae8c5fc8d4137845d88d94e"
+  },
+  "SDC_sha256": "435b459cd23cc21c28e07ed17457b94d500b4f2598e66b21f8d76b10ea89b7a7",
+  "source_exact": true,
+  "old_SYNTH_result": "separate retained source proof/1_2_yosys source to match before copy",
+  "new_physical_stages": "NOTRUN"
+ },
+ {
+  "module": "dsfd_node_LLfd",
+  "RTL_files": {
+   "ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+   "dsfd_node_LLfd.sv": "1efb43d0d9d2b3e532a9e599b3500c11a0f1fdeca88ee8490bdbce67aa13adc9",
+   "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+   "ot_s81_retn_static.sv": "eb68af1600b861259df9a692365e0e3342931629eefa7cdddbef125640514891"
+  },
+  "SDC_sha256": "b2bcf7f4d36dc04595a4bf2830c623059e406b99d84c557d730ed9da40534fb6",
+  "source_exact": true,
+  "old_SYNTH_result": "separate retained source proof/1_2_yosys source to match before copy",
+  "new_physical_stages": "NOTRUN"
+ },
+ {
+  "module": "dsfd_node_NNfu",
+  "RTL_files": {
+   "ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+   "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+   "ot_s81_retn_static.sv": "eb68af1600b861259df9a692365e0e3342931629eefa7cdddbef125640514891",
+   "dsfd_node_NNfu.sv": "7af10d34479d2cbb56a4baf3479bad7cc30f27e06e520cc16f2418e66d11443f"
+  },
+  "SDC_sha256": "140a440986b9d03bff3830b28bd3ae19bd22b9f84a6a8b88b9f1c000538e3e96",
+  "source_exact": true,
+  "old_SYNTH_result": "separate retained source proof/1_2_yosys source to match before copy",
+  "new_physical_stages": "NOTRUN"
+ }
+]

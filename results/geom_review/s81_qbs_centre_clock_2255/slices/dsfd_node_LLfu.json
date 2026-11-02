@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "die": "s81",
+ "kind": "core",
+ "type": "dsfd_node_LLfu",
+ "module": "dsfd_node_LLfu",
+ "instances": [],
+ "master_plan_sha256": "19a70bb3b1beaf2dcdef84bac779e55c01a331e3b796c4d179bf08c58ccc9963",
+ "frozen": false,
+ "outline_um": [
+  43.2,
+  77.76
+ ],
+ "core_clock_port": "clk",
+ "keepouts": [],
+ "islands": [
+  {
+   "name": "centre_clock_entry",
+   "rect_um": [
+    20.532,
+    37.692,
+    22.692,
+    40.032
+   ],
+   "centre_um": [
+    21.612,
+    38.892
+   ],
+   "clock_pin": {
+    "layer": "M5",
+    "xy_um": [
+     21.612,
+     38.892
+    ]
+   },
+   "use": "PG-safe centre entry reserved for new normal floorplan/clock stages"
+  }
+ ],
+ "bays": [
+  {
+   "name": "entry_driver",
+   "kind": "repeater",
+   "rect_um": [
+    20.532,
+    37.692,
+    22.692,
+    40.032
+   ],
+   "owner": "dsfd_node_LLfu.clock",
+   "note": "reserved actual driver placement/tree topology must be supplied before CTS; no old-tree reuse"
+  }
+ ],
+ "entry_pins": [],
+ "hard_cores": [],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250,
+   "FF": 202.5
+  },
+  "tol_ps": 40
+ },
+ "gates": {
+  "actual_floorplan": "NOT RUN",
+  "clock_tree": "NOT RUN"
+ },
+ "note": "DISABLED; do not use old extracted timing views after clock move."
+}
