@@ -1170,6 +1170,22 @@ def waiter_load_cap_factor(environ):
         return None
 
 
+def admitted_launcher(pid):
+    """The short-slot lease parent waits outside its already-running scope.
+
+    A direct child in this launcher's own PID-derived kernel cgroup is actual
+    admission evidence. A nested waiter sharing some other scope stays queued.
+    """
+    pid = str(pid)
+    if not pid.isdigit():
+        return False
+    pattern = re.compile(r"/oth-[^/\n]+-" + re.escape(pid) + r"-[0-9]+\.scope(?:/|$)")
+    for child in rd(f"/proc/{pid}/task/{pid}/children").split():
+        if child.isdigit() and pattern.search(rd(f"/proc/{child}/cgroup")):
+            return True
+    return False
+
+
 def prio_waiters(table, skip=()):
     """DIE-FIRST (owner 2026-10-15 23:50: die-level trials iterate back to back and get admission priority on the
     large-memory hosts): waiting ot-heavy processes started with OT_HEAVY_PRIO=die (ot-run --priority die), as
@@ -1180,6 +1196,8 @@ def prio_waiters(table, skip=()):
             continue
         a = rd(f"/proc/{p}/cmdline").split("\0")[:-1]
         if not (len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:8] and "--" in a):
+            continue
+        if admitted_launcher(p):
             continue
         try:
             cwd = os.readlink(f"/proc/{p}/cwd")
@@ -1263,6 +1281,8 @@ def die_waiter_rows(table):
             continue
         a = rd(f"/proc/{p}/cmdline").split("\0")[:-1]
         if not (len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:8] and "--" in a):
+            continue
+        if admitted_launcher(p):
             continue
         try:
             cwd = os.readlink(f"/proc/{p}/cwd")
@@ -1379,8 +1399,13 @@ def die_hold(total, can, floor, table, need=None):
 
 def waiters(table):
     wait, req = [], []
-    for a in (rd(f"/proc/{p}/cmdline").split("\0")[:-1] for p in os.listdir("/proc") if p.isdigit()):
+    for p in os.listdir("/proc"):
+        if not p.isdigit():
+            continue
+        a = rd(f"/proc/{p}/cmdline").split("\0")[:-1]
         if len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:8] and "--" in a:
+            if admitted_launcher(p):
+                continue
             m = int(a[a.index("--mem") + 1])
             req.append(m)                                # charged like ot-heavy will charge it
             wait.append((admit_size(m, classify(a[a.index("--") + 1:]), table) or [m])[0])
