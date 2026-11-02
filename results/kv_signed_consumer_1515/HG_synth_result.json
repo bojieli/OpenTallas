@@ -1,0 +1,46 @@
+{
+  "status": "SYNTH-only PREP PASS; native parent EQ/STA/P&R/SIGNED NOT RUN",
+  "source_commit": "783376fc5",
+  "unit": "intel1:oth-ubuntu-1981444-1793577041",
+  "client": "intel2:3056670",
+  "kit": "/srv/opentallas-scratch2/claude/codex-kv-signed-consumer-1507/kits/hg_ex_synth_prep_1",
+  "source_and_proof_lease_guards": "PASS",
+  "native_kit_read_only": true,
+  "normal_dont_use": "PASS",
+  "synth_exit": 0,
+  "raw_mapped_leaf_cells": 205371,
+  "raw_mapped_standard_cells": 205341,
+  "raw_sequential_cells": 59614,
+  "post_synth_instances": 189784,
+  "post_synth_standard_cells": 189754,
+  "macros": {
+    "qkd_astk_ex_s": 4,
+    "ot_sram_1r1w_64x128_m1_r2c2": 4,
+    "ot_sram_1r1w_256x128_m1_r2c2": 2,
+    "qkd_ectlk_q0": 1,
+    "qkd_ectlk_q1": 1,
+    "qkd_ectlk_q2": 1,
+    "qkd_ectlk_q3": 1,
+    "kv3_head_eighth_e0": 2,
+    "kv3_head_eighth_e1": 4,
+    "kv3_head_eighth_e2": 2,
+    "kv3_head_eighth_e6": 4,
+    "kv3_head_eighth_e5": 4
+  },
+  "stdcell_area_um2": 26957.2,
+  "macro_area_um2": 1000520.0,
+  "mapped_parent_netlists": {
+    "/srv/opentallas-scratch2/claude/codex-kv-signed-consumer-1507/kits/hg_ex_synth_prep_1/signed_parent/synth_prep/run/results/asap7/dp_kv3_hg_v1/base/1_2_yosys.v": "bdb210b62829e4608cf8bbb840b2446f91a9a0f071e4235587c8f3f0819d7674"
+  },
+  "warnings_diagnosed": [
+    "early unmatched EX selection; final actual4 EX macros present",
+    "loop-local integer m latch warnings; zero mapped latches",
+    "small pipeline arrays lowered to registers"
+  ],
+  "remaining": [
+    "actual flattened-die LEF and TC/BC producers",
+    "native-gold complete logic-macro expanded parent proof",
+    "parent clock compensation and complete FF means",
+    "full ft3 corridor geometry and all physical gates"
+  ]
+}
