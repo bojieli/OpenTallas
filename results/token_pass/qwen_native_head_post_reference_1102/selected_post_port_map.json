@@ -1,4 +1,43 @@
 {
+  "transport_identity_authority": {
+    "fabric_types": [
+      "qfd_c_land_r",
+      "qfd_c_land_w",
+      "qfd_c_stn514",
+      "qfd_c_stn516",
+      "qfd_q3h_run",
+      "qfd_q3h_stn"
+    ],
+    "fabric_payload": "whole word registered, repeated intact or ring slot selection; epoch/control separate",
+    "top_traversed_types": [
+      "qfd_landh0_514_NS_90x30",
+      "qfd_landh0_514_SN_90x30"
+    ],
+    "top_authority": "exact frozen final_asbuilt transport b:a declaration",
+    "top_rule": {
+      "module": "qfd_landh0_\\d+_\\w+",
+      "map": {
+        "b": "a"
+      },
+      "drop_in": [
+        "ck_s",
+        "en",
+        "ck",
+        "rs",
+        "k0",
+        "k1",
+        "k2",
+        "k3"
+      ],
+      "drop_out": [
+        "fault",
+        "tie_hi",
+        "tie_lo"
+      ],
+      "stages": 2
+    },
+    "original_placeholder_body": "ABSENT; no body or latency/phase claim; selected binder declared identity only"
+  },
   "status": "PASS_SOURCE_MEMBERSHIP_AND_LITERAL_BRACKET_REFERENCE_COMPARE",
   "profile": "selected frozen821/f79 MUT0 TG4 GBASE=4*tile_id",
   "native_cluster_leaf_local_ids": {
@@ -5188,6 +5227,10 @@
     "/home/ubuntu/OpenTallas/rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv": "f8b88f24b6b03f34749f6d79fb72ffb1ba7d280c328b26c4558c11052891f709",
     "/home/ubuntu/OpenTallas/rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv": "019e19dedcab454a9853a9d41e04dca72e51ad9044e7c36f66a11f8599fe829c",
     "/home/ubuntu/OpenTallas/rtl/physical/ot_qwen_tile_node.sv": "f40676e8db499d7c1b146eb33d3e474721116a202fad4c633e8c4ce331e3e71c",
+    "/home/ubuntu/coord/tmp/codex-native-head-consumer-prep/final_asbuilt.json": "d1732741a668c2fadccdd42f64b1ef80db4475a371a11b493a2b92c86d3e4f7c",
+    "/home/ubuntu/OpenTallas/rtl/physical/qcluster/qfd_q3h_stn.sv": "94469b77dd96768ece5c82ea654c739d62a8d4ccc6dc3a0878799c759b178cc8",
+    "/home/ubuntu/OpenTallas/rtl/physical/qcluster/qfd_c_stn.sv": "1adc9f32e59ecd5faedeb65ba2e308602cfbc2a7409439a2e31e0c1deafe11e5",
+    "/home/ubuntu/OpenTallas/rtl/physical/qcluster/qfd_c_land.sv": "04392bcb9a1fc4022f29faebbab8d6a8505957e3ef16f147d080e6ac665ececb",
     "results/token_pass/qwen_native_head_post_reference_1102/L6_prefix_streams_REFERENCE.tsv": "7fcefd6cf683021bd9ff62fa39ba94dda2e1e42e0194852e865a188e8ccb1b85",
     "/home/ubuntu/OpenTallas/tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
   }
