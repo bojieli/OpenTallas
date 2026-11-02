@@ -1,0 +1,26 @@
+{
+ "status": "PREP_NOT_RUN",
+ "old_unit": "oth-ubuntu-550012-1793623734.scope",
+ "no_duplicate_guard": true,
+ "original_problem_script_sha256": "aade0a586f82164853ee925d95a992097d9df68b0ce7f842d141efd5d854f08e",
+ "successor_sha256": "2074fdbb469d33a379cced9b43ffc3ab32f1da6e064f9a53557d01af8c95c48a",
+ "same_cells": 87,
+ "same_typed_edges": 3481,
+ "same_fixed_ff_source_obstacles": 38157,
+ "objective": "0: feasibility only",
+ "total_wall_solve_budget": 60,
+ "per_call_limit_s": 20,
+ "maximum_cut_iterations": 3,
+ "incumbent_receipts": "every returned integer candidate, including occupancy failures",
+ "resource_proposal": {
+  "mem_gb": 8,
+  "threads": 2,
+  "basis": "original optimizer observed3.85GiB at4GiB cap; normal admission only; bounded successor is not a cgroup override"
+ },
+ "source_phase": "conservative old declared13 footprint problem first; fresh actual12/244master/207halfsite and full audit after candidate",
+ "required_before_launch": "original row87 actual terminal; retain terminal resource diagnosis and original files; stage in a separate own runtime with exact original inputs",
+ "next_on_success": "full original candidate audit then prepared finite207 fresh-master2SAT and fresh38243 complete audit",
+ "next_on_unresolved": "retained candidate/cuts/residual receipt; inspect finite obstruction and propose one bounded repair, never report architecture infeasible from timeout",
+ "native_alias_accepted": false,
+ "physical_release": false
+}
