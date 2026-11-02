@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.source39_candidate_manifest.v1",
+ "enabled": false,
+ "source_qualified": false,
+ "source_sha": "39f754dda07e9746c4850ea0814d48d134a6cf2a",
+ "measured_manifest_sha256": "85c1bc9b81bbbdcbf6cadc3c5deccf2b916cf206f98c4f883116a0fdc5fcd2f4",
+ "candidate_manifest": "physical/die_plan/s81/bind/asbuilt_source39_candidate_1102.json",
+ "candidate_manifest_sha256": "3616471e3293e7497bca57c5bb0a24601c9b99ef261b41825a430bce3df92bc8",
+ "changes": [
+  "absolute source base becomes repository root",
+  "source-local map and clock-sidecar paths become relative",
+  "private dead-proof path becomes canonical immutable proof"
+ ],
+ "physical_release": false,
+ "source_tool_context": "frozen39; no implicit current reset_tree regeneration",
+ "reset_die_FF_delta": 6,
+ "cycle_delta": 0
+}
