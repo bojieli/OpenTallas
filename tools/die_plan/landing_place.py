@@ -69,6 +69,22 @@ def band_rects(tn,name,band,t=None):
     per rect with the same prefix and ring tag, and landing_placement.tcl packs the ring over them in that order.  Bands
     without rects_um return [rect_um] (unchanged output)."""
     if band.get('placement')=='FAIL' or not band.get('rect_um'):raise ValueError(f'{tn}.{name}: landing band absent')
+    # Optional measured FF-only fill window. The outer reserved band remains
+    # unchanged; a wide logic-sized band need not spread its FFs far past the
+    # actual bus pins after its combinational logic is released to GPL.
+    if 'ff_rect_um' in band:
+        if band.get('ring_place') != 'ff' or 'rects_um' in band:
+            raise ValueError(f'{tn}.{name}: ff_rect_um requires one FF-only band')
+        outer, r = band['rect_um'], band['ff_rect_um']
+        for rect in (outer, r):
+            if not isinstance(rect, (list, tuple)) or len(rect) != 4 or any(
+                    type(v) not in (int, float) or not isfinite(v) for v in rect):
+                raise ValueError(f'{tn}.{name}: ff_rect_um needs four finite numeric coordinates')
+        W,H=(t or {}).get('outline_um',[float('inf')]*2)
+        if not (0 <= outer[0] <= r[0] < r[2] <= outer[2] <= W and
+                0 <= outer[1] <= r[1] < r[3] <= outer[3] <= H):
+            raise ValueError(f'{tn}.{name}: ff_rect_um must be inside the reserved band and type outline')
+        return [list(r)]
     if 'rects_um' not in band:return [band['rect_um']]
     rs=band['rects_um']
     if not isinstance(rs,list) or len(rs)<2:raise ValueError(f'{tn}.{name}: rects_um needs 2 or more rects')
