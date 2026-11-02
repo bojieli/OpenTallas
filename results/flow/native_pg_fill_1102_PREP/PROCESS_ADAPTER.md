@@ -10,9 +10,12 @@ For an OWN fresh retained-route capsule, stage the helper as
 `pg_fill_pre.tcl`, `pg_fill_post.tcl` and `fillcell_driver.tcl`. Preserve the
 actual original PRE/POST bodies in mandatory `pg_fill_original_pre.tcl` and
 `pg_fill_original_post.tcl` files; an originally empty hook gets a file with
-only an explanatory comment. Do not drop or rewrite existing commands.
+an explanatory comment followed by its actual input guard initialization. The
+caller must set `::ot_pg_fill_baseline_ready` to 1 only after native input PG0
+and full old-instance/graph/pose/protection/library baselines are initialized.
+Do not drop or rewrite existing commands.
 
-Use strict1. Configure PRE_FILLCELL to `/work/pg_fill_pre.tcl`, POST_FILLCELL to
+Use strict1. Configure PRE_FILLCELL_TCL to `/work/pg_fill_pre.tcl`, POST_FILLCELL_TCL to
 `/work/pg_fill_post.tcl`, retaining the actual original hook/config receipt.
 Inside the OWN new container, normal MM patch must precede:
 
@@ -34,3 +37,13 @@ A successful stage still needs independent read-only saved PG0 and actual source
 geometry, logical and protection guards. No later finish/RCX or target release
 follows automatically. An honest different SDC path needs a separate input-only
 adapter receipt, not a fake stage alias.
+
+The actual pinned util.tcl consumer builds `${hook_type}_${step_name}_TCL`.
+An earlier packet used unconsumed short hook names; actual Tnode fill R1
+therefore ran without callback before its outer POST check rejected it. That
+partial output is quarantined with no PG or stage credit. The corrected driver
+verifies both exact `_TCL` bindings before the stock body and before the first
+filler factory. Its outer execution-enter sentinel requires actual full PRE,
+caller baseline readiness and authentic active native/currentDB/PG0 admission.
+It follows the canonical command rename and is removed during cleanup. Missing
+PRE/native context now refuses before cell creation, independently of POST.
