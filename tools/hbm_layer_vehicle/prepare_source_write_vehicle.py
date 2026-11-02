@@ -67,18 +67,18 @@ def prepare(repo,out,image=None,isa_repo=None):
             'Bootactualrefreshcfg. Fillownedepoch7 throughrealPC/VMKS; NPC2copyolddata toSlot1, verifythroughnativeRQ0/RR0.',
             'InitializealignedSlot0 newknownwords throughnativeDQ, verifyactualVMdone/readback. Thisisunitstimulus, notcanonicalCOPY.',
             'ProgramactualCW308collar withlegalresolvedordinal227, fixedissue/drainrelative dates. ObserveDBKmv_src separatelyfromtrueACK/mv_done.',
-            'Attruefence physical_write_count must equal exactfragmentsectors; no acceptance/readinesscount substitute.',
+            'At store_done sample after NBA settlement: case-delta physical_completion_count must equal exact fragment sectors. Independently require physical_write_count delta equal sectors; accepted columns are not ACK retirement.',
             'Releaseoldcacheepoch7 afterlastconsumer. AfterACKfence begin/fillnewownedepoch8, copyfromactualupdatedDRAMthroughNPC2 toSlot1.',
             'ReadactualnativeSRAM throughRQ0/RR0 andcompareeverywrittenword toSlot0knowninputs; no modelpeek substitutes forreadback.'
         ],
-        negatives=dict(premature_ACK='WB_MUT1 existingactualWBKmutant; fenceobservesphysicalwritecount/causalreadback beforecompletion.',
+        negatives=dict(premature_ACK='WB_MUT1 existing actual WBK mutant; event oracle observes independent service wk_done physical_completion_count at store_done, plus causal readback. Physical accepted-column count alone is insufficient.',
             missing_invalidation='Keepactualepoch7cache andomitrelease/newfill, repeatrealNPC2copy; actualoldBRAMdata must failnewwordoracle.'),
         costs=dict(canonical_COPY_edges=None,issue_date=None,drain_date=None,RR_RT=8,
             RR_RT_scope='ProposedlocalnativeVMunitprofile; no added72edgefabricatedtransport. Mustmeasureinfirstcomponentgate.',
             HOST_config_wire_edges=None,global_fence_date=None,physical_route_latency=None),
         holds=['No simulator/frontend/heavy job launched byprepare.',
             'Completeactualtestdriver/control-datequalification beforeclaimingcausalPASS.',
-            'No actualselectedCOPY/gather identified; control-onlyCOLLinj_copy isnotdataCOPY. ProductionCOPYcost remainsunpriced.',
+            'Selected raw COLL sector gather exists for QID2/3, but no VM0/1 source endpoint or complete bank-changing COPY programme is joined. Production COPY cost remains unpriced.',
             'No canonicaltop/RTL/plan/targetallocation/source0writeproducer installed. ActualN6/HOST/globalmapping remainsseparate.'])
     if image is not None:
         sys.path.insert(0,str((isa_repo or repo)/'tools/hbm_next'))
@@ -137,7 +137,7 @@ def prepare(repo,out,image=None,isa_repo=None):
             SOURCE_COPY_selected=False,actual_COPY_cycles=None,actual_COPY_producer=None,
             native_read_chunks='ceil(fragment_words/64)',WB_sectors='fragment_words/8',
             issue_and_drain='Actual native VM/route profile + COPY completion + WB epochs needed; dates deliberatelynot0',
-            dependency='Install/join actual bit-exact dataCOPY or gather producer; selectedCOLLinj_copy iscontrol-only. No freegenericCOPY credit.')
+            dependency='Join actual VM0/1 source endpoint and selected raw COLL gather/delivery with a fixed bank-changing programme. No free generic COPY credit.')
     (out/'vehicle_plan.json').write_text(json.dumps(staging,indent=2)+'\n')
     print(json.dumps(dict(status=staging['status'],source_files=len(files),soft_write_boundary_bits=9334,heavy_launch=False)))
 

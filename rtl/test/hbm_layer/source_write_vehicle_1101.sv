@@ -19,7 +19,7 @@ module source_write_vehicle_1101 #(
  output wire[7:0]VM_done,output wire[15:0]block_ready,
  output wire store_src,store_done,store_busy,store_quiet,load_active,
  output wire[11:0]true_ACKs,output wire fault,
- output reg[31:0]physical_write_count,physical_read_count
+ output reg[31:0]physical_write_count,physical_read_count,physical_completion_count
 );
  initial if((STK!=0&&STK!=3)||PHY_QUAD<0||PHY_QUAD>1)$fatal(1,"fixture supports exact STK0/STK3 and two real PHY halves");
  wire cmd_v,cp_fault,cp_configured,cp_active;wire[307:0]cmd;wire[31:0]cycle;
@@ -79,10 +79,13 @@ module source_write_vehicle_1101 #(
   .col_v(col_v),.col_we(col_we),.col_bank(col_bank),.col_col(col_col),.col_data(col_data),.col_strb(col_strb),
   .dram_rvalid(dram_v),.dram_rdata(dram_data));
  always @(posedge clk)begin
-  if(!rst_n)begin physical_write_count<=0;physical_read_count<=0;end
+  if(!rst_n)begin physical_write_count<=0;physical_read_count<=0;physical_completion_count<=0;end
   else begin
    physical_write_count<=physical_write_count+32'($countones(col_v&col_we));
    physical_read_count<=physical_read_count+32'($countones(col_v&~col_we));
+   // Independent of WB_MUT/wa: these are the real controller completions
+   // returned through service/VMKS, rather than accepted DRAM write columns.
+   physical_completion_count<=physical_completion_count+32'($countones(wk_done));
   end
  end
  wire provider_fault;wire[7:0]leaf_fault;wire[280:0]delivery;
