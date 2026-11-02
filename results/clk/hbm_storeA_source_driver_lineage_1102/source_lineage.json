@@ -32837,6 +32837,30 @@
       ]
     }
   ],
+  "additional_16bank_read_controls": [
+    {
+      "StoreA_port": "comb128_A",
+      "CTL_output": "u_core_procdff_66936__Q[0]",
+      "source_register": "g_compose_m25_q[400]",
+      "D_CTL_input": "u_core_procdff_66936__D[400]",
+      "D_parent_capture": "xi_u_sfucore_Q_ctl_u_core_procdff_66936_D_q[400]",
+      "clock": "clk[0]=TOP.clk_stream",
+      "reset": "n0/m55generatedregion3, distinct from native StoreA region1",
+      "enable": "NONE",
+      "physical_reach": "UNQUALIFIED;16-bank target bound only, not ignored"
+    },
+    {
+      "StoreA_port": "comb144_A",
+      "CTL_output": "u_core_procdff_66936__Q[1]",
+      "source_register": "g_compose_m25_q[401]",
+      "D_CTL_input": "u_core_procdff_66936__D[401]",
+      "D_parent_capture": "xi_u_sfucore_Q_ctl_u_core_procdff_66936_D_q[401]",
+      "clock": "clk[0]=TOP.clk_stream",
+      "reset": "n0/m55generatedregion3, distinct from native StoreA region1",
+      "enable": "NONE",
+      "physical_reach": "UNQUALIFIED;16-bank target bound only, not ignored"
+    }
+  ],
   "boundary_stages": {
     "xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__2": {
       "instance": "u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66926_D__2",
