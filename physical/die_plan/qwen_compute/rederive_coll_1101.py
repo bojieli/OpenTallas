@@ -39,9 +39,19 @@ def derive(P, lc, tn):
             c = [round((x0 + x1) / 2, 3), round((y0 + y1) / 2, 3)]
             tap = min(range(n), key=lambda i: L1(tapxy[i], c))
         srcs.append(tap)
-    old_n = RT.consumer_count(lc["collector_tree"])
-    kids = [f"rst_n_t{n + int(c['node'].split('rst_n_t')[1]) - old_n}" if c["node"].startswith("rst_n_t") else c["node"]
-            for c in lc.get("collector_children", [])]
+    # Wavefront re-siting can insert an output BEFORE an existing output. Its
+    # ordinal is then different even when the consumer count is unchanged.
+    # Children belong to a physical terminal, not an output-list ordinal.
+    kids = []
+    for c in lc.get("collector_children", []):
+        if not c["node"].startswith("rst_n_t"):
+            kids.append(c["node"])
+            continue
+        matches = [i for i, xy in enumerate(tree.get("outs", []))
+                   if L1(xy, c["xy_um"]) < 1e-6]
+        if len(matches) != 1:
+            raise ValueError(f"{tn}: child {c['part']} has {len(matches)} reset outputs at {c['xy_um']}")
+        kids.append(f"rst_n_t{n + matches[0]}")
     exp = {}
     outs = [p for p in lc["pins"] if p["kind"] == "clock" and p["dir"] == "out"]
     if outs:
