@@ -17,11 +17,12 @@ import die_port_bind as D
 PARTS = ['sl_W5_ctl', 'sl_W5_su_c', 'sl_W5_su_l0', 'sl_W5_su_l1', 'sl_W5_stm']
 
 
-def emit(rtl, provider):
+def emit(rtl, provider, include_sc=False):
     top_path = rtl/'qwen_compute_bound_top.sv'; top = top_path.read_text()
+    parts = PARTS + (['sl_W5_sc'] if include_sc else [])
     conn = {}; bodies = []; census = []
     source_hashes = {top_path.name: hashlib.sha256(top_path.read_bytes()).hexdigest()}
-    for part in PARTS:
+    for part in parts:
         match = re.search(r'^\s*(\w+) '+part+r' \(\n(.*?)^    \);', top, re.M|re.S)
         if not match:
             raise ValueError('selected instance missing '+part)
@@ -52,7 +53,7 @@ def emit(rtl, provider):
             raise ValueError('multiple real drivers '+net)
     p = json.loads(provider.read_text())
     start_nets = {o['net'] for o in p['native_outputs']}
-    if start_nets != {'pst_'+part for part in PARTS}:
+    if start_nets != {'pst_'+part for part in parts}:
         raise ValueError('START source does not cover exact selected partition cone')
     clock_ports = [s['clock_port'] for s in p['stages']]
     reset = p['root_reset_source']['net']
@@ -87,8 +88,8 @@ def emit(rtl, provider):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--rtl', type=Path, required=True);p.add_argument('--provider', type=Path, required=True)
-    p.add_argument('--out', type=Path, required=True);a=p.parse_args()
-    sv, doc=emit(a.rtl,a.provider);a.out.mkdir(parents=True,exist_ok=True)
+    p.add_argument('--out', type=Path, required=True);p.add_argument('--include-sc', action='store_true');a=p.parse_args()
+    sv, doc=emit(a.rtl,a.provider,a.include_sc);a.out.mkdir(parents=True,exist_ok=True)
     (a.out/'producer_cut.sv').write_text(sv)
     (a.out/'producer_cut.json').write_text(json.dumps(doc,indent=2)+'\n')
     print(json.dumps(dict(parts=len(doc['partitions']),boundary_ports=len(doc['boundary']),provider_clocks=len(doc['provider_clock_ports']),source_only=True)))
