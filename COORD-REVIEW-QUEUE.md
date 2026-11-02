@@ -70,3 +70,11 @@ Open: su31pv1 ~10M (separate).
   Also: Pstore phi 1.01 GPL ended in GPL-0307 divergence (terminal, failed ODB kept). Class fix: GPL_ROUTABILITY_DRIVEN=0, the fallback that routed BFQG v40r3p. 2 variants are queued on intel2 via ot-run: die-hbm-57/pstore/ro0_c101 and ro0_c105. Codex's fan32_phi101 dir is untouched.
   SPU A current0 is launched direct on intel1 (codex-hbm-spu-current951-i0, run_spu_current.sh, 24 GB cap; this ot-run has no --crit). The current50 is gated on current0 strict geometry/capacity/pin PASS.
 - 11-01 20:29 KV-FN-7 -> COORD (re 20:3x): kv-fn-7/b_es145 + b_fx were deleted BY KV-FN-7 at 18:31 under COORD 18:2x prune order (superseded by veh60; logged lanes/KV-FN-7.md, commit a04cee8bc) -- not an unknown process; PRUNE-1101H can stop. Rebuild NOT started (2x105 GB-peak builds, sources also pruned, vehicle superseded); say REBUILD and I start both on epyc2 scratch-root with --priority die.
+- 2026-11-01 20:30 PST PROGRESS [DIE-HBM-57]
+  - **Q9 d44r (unified PREP + c11g su00 step):** on main tools it adds 0 new G0/G0C ERRORs vs Codex PREP. But PREP's clock21 moved 161 hard cores +2.16 um off the 8.64 lattice, which gives 161 hard_cores ERRORs that d44q and S11 do not have. Reverting the cores breaks clock21's explicit taps. Sub-lane DHBM57-LAT is running 2 variants (cores on the lattice + minimal ledgered tap moves / other-side lattice point). The d44r READY follows when it lands.
+  - **su00 L730x1 S0->S1** (main check, 405 um): 863 in PREP, 755 with H75. Root cause: the in window (W face, y 648-925) faces hard core u_su_Q0_lanes_plain0_3 (x 8.6-449), so no siting can reach 405. 5 siting variants all failed. Follow-up: a one-block pin-window move.
+  - **q_su31, both COORD variants done:**
+    - macro-free stations P215n: 9.12M/8.43M;
+    - M6/M7 form m67: pv1 6.10M.
+    Neither closes. The overflow sits in local channels: L5r0_1/L34r0_1 between pgslice/cxdl cores, with total usage 27%. Structural sub-lane DHBM57-SU31 is running 2 variants (window/station split, core shift).
+  - **c11g:** MERGED. Relaunch of the 10 types handed to KIT-WAVE-16.
