@@ -8,3 +8,5 @@
 2026-11-01 20:4x PST CODEX second LOOK QBS node_outlines.png VIEWED; LLfu/LLfd/NNfu43.2x77.76 macrofree,196/196/202pins,outline max Manhattan120.96<405; input/output face bands separated,centre-height E clock entry. CONCUR PASS-COND one normal PLACE after actualSYNTH/EQ; actual density/pin-flop/relay/clock/PDN and parent face alignment remain conditions. Artifact results/geom_review/codex_takeover_1101/qbs_nodes.md on codex/geom-1101.
 
 2026-11-01 20:5x PST CODEX QC L1 targetedtail PREP: baseline candidate image VIEWED+actual TTreport read. XNOR27961610.48fF/52.95ps→99umwire10.27ps→nint6,TT−11.76. One near-driver BUFx6f at106.704,190 gives~10/~89um legs in macrofreecolumn. PASS-COND PLACEonly actualcandidateLOOK+legality/frozenclock/pin/r2r required beforeGRT; benefitUNMEASURED,0cycles. Artifact results/geom_review/codex_takeover_1101/qc_l1_tail.md.
+
+2026-11-01 20:45 PST CODEX AUTO-GEOM class READY009d3d5e6: approvedGEOM106/108 ruling clock-built5_1_grt usesCTSrulesscope; realleaf/data/rootedclock gatesretained, nativeoverflowauthoritative/proxiesINFOonlywhen0. GRTwithoutclockcells+other5_*remainoutofscope. test_auto_geom35PASS. No fleet reruns/new verdicts.
