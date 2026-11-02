@@ -1,0 +1,53 @@
+{
+ "checked_at_utc": "2026-11-02T16:54:05.639910+00:00",
+ "no_current_queued_or_running_owned_producer": true,
+ "NL50": {
+  "host": "intel1",
+  "path": "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/nl",
+  "unit": "oth-ubuntu-3960903-1793595959",
+  "exit": 0,
+  "ended": 1793613649,
+  "CLOCK": 1184,
+  "SIGNAL": 68340,
+  "missing_excluded": 0,
+  "PG_unchanged": true,
+  "full_after_POST_max_iterations": 50,
+  "actual_adaptive_zero_iteration": 24,
+  "ready": "codex/qc-nl-final50-1102@ae91422ab",
+  "scope": "capacity only; no CTS/DRT/STA/source or SIGNED credit"
+ },
+ "prefix": {
+  "host": "epyc2",
+  "path": "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/prefix_access_origin2",
+  "unit": "oth-ubuntu-4055723-1793609838",
+  "exit": 0,
+  "ended": 1793610058,
+  "cells": 51596,
+  "ports": 10929,
+  "connection_body_access_errors": 0,
+  "endpoint_delta": 0,
+  "new_active_masters_serialized": 118,
+  "PG_unbound": 103192,
+  "ready": "codex/qc-prefix-access-1102@ec0e8eb70",
+  "scope": "abstract native import/access only, no legalization/GRT/STA/START or child-view credit"
+ },
+ "neighbors": {
+  "host": "intel1",
+  "path": "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors",
+  "unit": "oth-ubuntu-4158701-1793596626",
+  "exit": 0,
+  "ended": 1793600677,
+  "count3_rc": 0,
+  "ready": "codex/qc-neighbor-counts-1101@c2b571529",
+  "scope": "COUNT/ABI/FACE only"
+ },
+ "prefix_older_failures_preserved": [
+  "oth-ubuntu-3442152-1793605572 physicalaccess collisionFAIL",
+  "oth-ubuntu-3854619-1793608538 retainedMASTER unlinkFAIL"
+ ],
+ "automatic_successor_disallowed": [
+  "no NL DRT/STA follower from capacity-only grant",
+  "prefix PG binding/topmesh/route require separately selected physical source scope",
+  "neighbor counts grant no hard-view/GDS/PPA/source alias"
+ ]
+}

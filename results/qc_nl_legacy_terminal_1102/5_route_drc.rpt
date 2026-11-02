@@ -1,0 +1,9 @@
+violation type: Short
+	srcs: net:clknet_leaf_1_ck_de net:VDD
+	bbox = (73.6210, 1065.2150) - (73.7070, 1065.2170) on Layer M6
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_2_ck_de net:VDD
+	bbox = (199.8130, 1065.2160) - (199.9150, 1065.2800) on Layer M6
+violation type: Metal Spacing
+	srcs: net:clknet_leaf_3_ck_de net:VDD
+	bbox = (325.8770, 1065.2160) - (326.0030, 1065.2800) on Layer M6

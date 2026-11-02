@@ -1,0 +1,49 @@
+{
+ "classification": "LSL_REAL_MATCHING_SIGNED_LAYOUT_CANDIDATE_ROM_LAYOUT_PROVIDER_MISSING",
+ "lookup": "FLOW authoritative signed.tsv; no producer launched",
+ "LSL": {
+  "archive": "intel1:/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/ot_qwen_tile_lsl_rawfault_m3__9a80f1465b",
+  "signed_row": "flow-20261029-b-qc",
+  "source_commit": "9a80f1465b44384c4dc0a7fc72c7336e45616062",
+  "matching_LEF_sha256": "548ef885da0fae4f3e3bdd0424282ef032c59bfff3ada4850fe933d7ad078fea",
+  "matching_TT_sha256": "73f6bade0756b5e39be284070f91316bbe8af8b0b62061fe1ebbe5543e7aefbc",
+  "gds": "base/6_final.gds",
+  "gds_bytes": 71188298,
+  "gds_sha256": "4d0e45e3328e8b0341fa1c32ad3520984ddfe0d6c0db7f8d598e2a0268e6f470",
+  "record_scan": "LSL_GDS_RECORDS.json proves actual root/nonempty hierarchy/no undefined SREF; not a full physical/pin/PG/source reuse join",
+  "reuse_status": "HELD_PENDING_ACTUAL_PHYSICAL_SOURCE_VIEW_JOIN"
+ },
+ "ROM": {
+  "archive": "intel1:/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/ot_qwen_tile_romleaf__02a7e51649",
+  "signed_row": "flow-20261029-a-qc",
+  "source_commit": "02a7e516497a838ca34f3266dd34711548104b20",
+  "matching_LEF_sha256": "0b826e409eef60e4ad32c26277b068a709d3180429116bc1f2bcc817884f5371",
+  "matching_TT_sha256": "e98ea295abdf3b1ae7cd81a00ca81511fe278642d31be6d4cae47dd82162a3d5",
+  "gds_oas_in_closed_archive": false,
+  "retained_base": [
+   "6_final.odb",
+   "6_final.def",
+   "6_final.spef",
+   "6_final.v"
+  ],
+  "defines": "SYNTHESIS only",
+  "nested_hard_macro": "ot_rom_4096x266_m8",
+  "nested_layout_in_archive": false,
+  "nested_repo_view_files": [
+   "json analytical geometry/timing model",
+   "lef",
+   "behavioralv",
+   "blackboxv",
+   "TT/FF/SSlib"
+  ],
+  "nested_repo_gds_oas": false,
+  "reuse_status": "GENUINE_MISSING_MATCHING_LAYOUT_PROVIDER; retained signed checkpoint can support later export after genuine nested layout exists"
+ },
+ "forbidden": [
+  "empty/dummyGDS/OAS",
+  "relabeled alternate master",
+  "mismatching old ROMref clockpin/source view",
+  "COUNT/ABI/FACE assets treated as GDS qualification",
+  "rebuild/reroute legacyNL to hide finish failure"
+ ]
+}
