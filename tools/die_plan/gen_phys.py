@@ -295,6 +295,12 @@ def write_partition_freeze(P, tn, kd, recs, *, private_clock_mesh=None):
     import kit_contract as KC
     kd = Path(kd)
     w, h = P.types[tn]["outline_um"]
+    if private_clock_mesh is not None:
+        import hhp_clock_mesh_role as HMR
+        HMR.validate_private_request(kd)
+        private_clock_mesh["actual_source_config"] = HMR.actual_source_config(kd)
+        private_clock_mesh["actual_config_sha256"] = HMR.digest((kd / "config.mk").read_bytes())
+        (kd / "private_clock_mesh.json").write_text(json.dumps(private_clock_mesh, indent=1) + "\n")
     body = json.dumps(dict(schema="opentallas.die_plan.partition_plan_pins.v1", die=P.name, type=tn,
                            source=("gen_phys.plan_pin_records (die plan)" if private_clock_mesh is None else
                                    "gen_phys plan pins + exact PRIVATE native clock role certificate"), pins=recs), indent=1) + "\n"

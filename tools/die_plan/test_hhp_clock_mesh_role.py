@@ -41,7 +41,7 @@ def kit_template(tmp_path_factory):
     (context / 'request.json').write_text(json.dumps(request))
     shutil.copytree(context / 'capsule_r4/pc_EN_0/rtl', kit / 'rtl')
     sources = ' '.join('/work/rtl/' + p.name for p in sorted((kit / 'rtl').iterdir()))
-    (kit / 'config.mk').write_text(f'export DESIGN_NAME = {M.TYPE}\nexport VERILOG_FILES = {sources}\nexport OT_PRIVATE_HHP_CLOCK_MESH = 1\n')
+    (kit / 'config.mk').write_text(f'export DESIGN_NAME = {M.TYPE}\nexport VERILOG_FILES = {sources}\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport OT_PRIVATE_HHP_CLOCK_MESH = 1\n')
     return kit
 
 
@@ -98,7 +98,7 @@ def test_private_ft_graph_controls(kit, change):
     with pytest.raises(ValueError): F.declaration(a, 'bad', private_clock_mesh_kit=kit)
 
 
-@pytest.mark.parametrize('change', ['disabled', 'editedcert', 'extra_source', 'source_mutant', 'wrongtop', 'escape'])
+@pytest.mark.parametrize('change', ['disabled', 'editedcert', 'extra_source', 'source_mutant', 'wrongtop', 'escape', 'define', 'parameter'])
 def test_request_and_actual_source_controls(kit, change):
     if change == 'disabled':
         p = kit / 'config.mk'; p.write_text(p.read_text().replace('MESH = 1', 'MESH = 0'))
@@ -110,6 +110,10 @@ def test_request_and_actual_source_controls(kit, change):
         p = kit / 'rtl' / (M.TYPE + '_bound.sv'); p.write_text(p.read_text() + '\nassign ck_mesh = 1\'b0;\n')
     if change == 'wrongtop':
         p = kit / 'config.mk'; p.write_text(p.read_text().replace('DESIGN_NAME = ' + M.TYPE, 'DESIGN_NAME = data'))
+    if change == 'define':
+        p = kit / 'config.mk'; p.write_text(p.read_text().replace('-DSYNTHESIS', '-DOTHER'))
+    if change == 'parameter':
+        p = kit / 'config.mk'; p.write_text(p.read_text() + '\nexport VERILOG_TOP_PARAMS = S_slg_slg_cfg_group 0\n')
     if change == 'escape':
         p = kit / M.REQUEST_FILE; j = json.loads(p.read_text()); j['capsule'] = '../external'; p.write_text(json.dumps(j))
     with pytest.raises((ValueError, FileNotFoundError)): M.validate_private_request(kit)
@@ -186,7 +190,7 @@ def native_partition_fixture(kit_template, tmp_path, monkeypatch):
     with tarfile.open(ROOT / 'results/hhp_native_ft_join_1102/actual_PC0355_model_fixture.tar.gz') as tar:
         tar.extractall(kit / 'macros')
     srcs = ' '.join('/work/rtl/' + p.name for p in sorted((kit / 'rtl').iterdir()))
-    (kit / 'config.mk').write_text(f'export DESIGN_NAME = {M.TYPE}\nexport VERILOG_FILES = {srcs}\nexport EXTRA_UNCHANGED = 123\n')
+    (kit / 'config.mk').write_text(f'export DESIGN_NAME = {M.TYPE}\nexport VERILOG_FILES = {srcs}\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport EXTRA_UNCHANGED = 123\n')
     for name in ('face_keep_release.tcl', 'face_flops.tcl', 'face_flops_release.tcl', 'cts_post.tcl', 'grt_post.tcl'):
         (kit / name).write_text('# Original normal hook\n')
     (kit / 'pins.json').write_text('[]\n'); (kit / 'port_bind_pins.json').write_text('[]\n'); (kit / 'io.tcl').write_text('# Original ordinary pins remain here\n')

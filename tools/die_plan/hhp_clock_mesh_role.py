@@ -237,11 +237,26 @@ def _inside(kit, name):
     return path
 
 
+def actual_source_config(kit):
+    text = (Path(kit) / 'config.mk').read_text().replace('\\\n', ' ')
+    profile = {}
+    expected = {'VERILOG_DEFINES': ['-DSYNTHESIS'], 'VERILOG_TOP_PARAMS': [],
+                'VERILOG_INCLUDE_DIRS': [], 'SYNTH_INCLUDE_DIRS': []}
+    for name, value in expected.items():
+        rows = re.findall(r'^\s*(?:override\s+)?export\s+' + name + r'\s*[:?]?=\s*(.*?)\s*$', text, re.M)
+        require(len(rows) <= 1, 'duplicate actual source config assignment: ' + name)
+        actual = rows[0].split() if rows else []
+        require(actual == value, 'actual parameter/define/include profile differs: ' + name)
+        profile[name] = actual
+    return profile
+
+
 def validate_private_request(kit):
     """Fresh whole-capsule/graph proof plus exact actual kit source readset; no trusted caller proof dict."""
     kit = Path(kit)
     require(private_enabled(kit), 'private HHP clock role is disabled')
     request = json.loads((kit / REQUEST_FILE).read_text())
+    actual_source_config(kit)
     require(request.get('schema') == REQUEST_SCHEMA and request.get('enabled') is True,
             'explicit private request schema/enable required')
     require(request.get('TYPE') == TYPE and request.get('cohort') == COHORT, 'wrong private TYPE/cohort')
@@ -291,7 +306,7 @@ def stage_private_context(kit, bundle, *, top, sources, synth_blackboxes=()):
     for file in bundle.rglob('*'):
         require(not file.is_symlink(), 'private context bundle must not contain symlinks')
     shutil.copytree(bundle, target)
-    text = f'export DESIGN_NAME = {top}\nexport VERILOG_FILES = {" ".join(sources)}\nexport OT_PRIVATE_HHP_CLOCK_MESH = 1\n'
+    text = f'export DESIGN_NAME = {top}\nexport VERILOG_FILES = {" ".join(sources)}\nexport VERILOG_DEFINES = -DSYNTHESIS\nexport OT_PRIVATE_HHP_CLOCK_MESH = 1\n'
     if synth_blackboxes:
         text += 'export SYNTH_BLACKBOXES = ' + ' '.join(synth_blackboxes) + '\n'
     # Honest partial generator source config; the completed config is revalidated below.
