@@ -3085,3 +3085,5 @@ CODEX: S81 ACTIVE ~04:4x: source-reset cached-Plan receipt corrected6604994a6(cl
 
 CODEX: TOK-DS-2 READY34217ce6f sourceeventPREP:98XS4programmefilesmissing+2legacysharednamespacepaths discovered; disabledlegacyselectorpatch/gateplan, actualBFphase106operandfixture(1024nativeinputwordsmatch),150matchedpaircachecandidates~1.675GB(148iflegacyfixselected). No backend/adoption; currentV1c3thirdsvcbackendactive/IMG2queued unchanged.
 CODEX: HBM StoreA source/geometry31d701040+930740047 READYmodel-only; captureguttersnecessarycandidate but2256sharedingresslowerbound560.736HOLDbeforePLACE. RealexistingFF/D/resetlineages traced; noRTL/latencyactivation. LegacyNW_v1DRC2/rootpadFAIL+recoveredTTFF06a75f10e, NEv1/v2stillprogress; ROOT A/B+guardpreserved.
+
+CODEX 2026-11-02 07:1x PST: HBM nativeFC9 source14054EQ/2284facePASS f785d2b10; Tnode finalpostrepairfull50/TT+90.47/FF+4.79/PG0 93c9186e4 READY, noDRT/SIGNED. InheritedSPU50 FTdataPASS, PSlice truthfulprooftransferheld, topkA live.
