@@ -1,0 +1,5 @@
+from pathlib import Path
+import json
+p=Path(__file__).resolve().parent/'output';a=json.loads((p/'old.json').read_text());b=json.loads((p/'new.json').read_text());assert a['counts']==b['counts'];assert a['digests']==b['digests'];assert a['outline_dbu']==b['outline_dbu'];assert a['db_units']==b['db_units']
+x=dict(a['mover']);y=dict(b['mover']);assert x.pop('xy')==[367740,102870];assert y.pop('xy')==[166698,81810];assert x==y;assert x['orientation']=='MX' and x['master']=='DFFASRHQNx1_ASAP7_75t_R'
+o={'verdict':'PASS','scope':'exact one existing reset FF XY change only; all other instance pose/master/status/donttouch, full net ITerm+BTerm graph, typed clock graph, all portboxes/net/io/sigtype, die/core/rows identical; no timing or CTS waiver','old_odb_sha256':a['odb_sha256'],'new_odb_sha256':b['odb_sha256'],'counts':a['counts'],'old_mover':a['mover'],'new_mover':b['mover'],'equal_digests':a['digests'],'outline_dbu':a['outline_dbu']};(p/'census_receipt.json').write_text(json.dumps(o,indent=2)+'\n');print(json.dumps(o,indent=2))

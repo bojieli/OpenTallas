@@ -1,0 +1,56 @@
+{
+  "tag": "new",
+  "odb_sha256": "a3db31fecf1ec367b28e69ad84ef3a885f391f5b9afe2023b2412b1475d77840",
+  "db_units": 1000,
+  "mover": {
+    "name": "u_c.rst_s\\[1\\]$_DFF_PN0_",
+    "xy": [
+      166698,
+      81810
+    ],
+    "orientation": "MX",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "master_dimensions": [
+      1404,
+      270
+    ],
+    "placement_status": "PLACED",
+    "dont_touch": false
+  },
+  "counts": {
+    "instances": 143594,
+    "nets": 150302,
+    "iterms": 701368,
+    "net_bterms": 5515,
+    "ports": 5515,
+    "port_boxes": 5693,
+    "rows": 608,
+    "typed_clock_nets": 1
+  },
+  "digests": {
+    "all_inst_master_dimensions": "63ce0ac66f8ae05486f6640530cdcbbfba6761773c19dd4dce68ba3c67d8f685",
+    "all_other_inst_pose_status_donttouch": "029a6c1b44cf02fb29e8ce23e66f592bf7911ca032f41e4f8efc0e4a3c58bd9c",
+    "net_headers": "4f1f8485a3e9505748c7988180dc952e6f867b268d337d87e750d35ab02b7137",
+    "full_iterm_membership": "5ded48d535a9dd86f33ff0c13abfaa99dae4961cdd689f35454056a89b8007b1",
+    "full_bterm_membership": "65f9e30ee48f85163e7e9351c787fcc2811cc2fb039b073d6e3e121d896ec554",
+    "full_net_graph": "0c424fde4f6bf6ab9930470ca3575d205ba040573babb028bd395bda8cdfd8ae",
+    "typed_clock_graph": "44fc6bf7569fbe20d0bad062b5d03199599ed87a8621cffd9475f44959fcf8a2",
+    "all_ports_boxes_net_io_sigtype": "153635af1a96f7aa615170308b243929dab9d376ed022f598a4d806e5c2e330b",
+    "all_rows": "7f584e2c905dd7a75c887dd1cb6d45757da77f79aa825ccd99cce34a1affca32"
+  },
+  "outline_dbu": {
+    "die": [
+      0,
+      0,
+      388800,
+      172800
+    ],
+    "core": [
+      4320,
+      4320,
+      384480,
+      168480
+    ]
+  },
+  "scope": "read-only native OpenDB full census; all nets/PG/ITerms/BTerms included; clock graph subset plus global graph; moved FF clock-load coordinate follows its sole allowed XY change; no STA or P&R"
+}
