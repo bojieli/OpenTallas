@@ -7,8 +7,9 @@ from native_inventory import build,read
 config=(W/'config.mk').read_text();lines=[s for s in config.splitlines() if s.startswith('export VERILOG_FILES = ')]
 if len(lines)!=1:raise ValueError('Missing/ambiguous actual native source read set')
 sources=[Path(p) for p in lines[0].split('=',1)[1].split()]
-libs=sorted(Path('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM').glob('asap7sc7p5t_*RVT_TT*.lib*'))
-if len(libs)!=5:raise ValueError('Selected normal profile requires the exact five TT RVT library groups')
+libroot=Path('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM')
+libs=[libroot/n for n in ['asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz','asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz','asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz','asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib','asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz']]
+if not all(p.is_file() for p in libs):raise ValueError('Missing one of the exact selected five normal TT RVT library groups')
 libs+=sorted((W/'macros').glob('*_tt.lib'))
 if len(libs)!=9:raise ValueError('Selected TT_C requires the original four macro libraries')
 netlist=W/'run/results/asap7/dp_tt_ctlm/base/1_2_yosys.v'
