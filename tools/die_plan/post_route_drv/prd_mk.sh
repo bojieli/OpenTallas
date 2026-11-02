@@ -54,9 +54,12 @@ if [ "${MM:-0}" = 1 ]; then
   for f in orfs_hold_mm.py orfs_hold_mm.tcl; do test -f $OUT/$f || cp "$SO/tools/$f" $OUT/; done
   [ ${V:0:1} = m ] || { echo "prd_mk: kit is two-mode (OT_HOLD_MM=1): use variant m<N>"; exit 2; }
 fi
-# ECO hook, then the kit's own post-GRT IO hook when it has one (as mk_eco.sh)
+# The generated legacy core wrapper also contains a second, unbounded data
+# repair. It must not run after the PRD hook has accounted for dirty routes.
+python3 -I "$HERE/post_grt_chain.py" "$OUT"
+# ECO hook, then the kit's own post-GRT IO / PG / reset checks.
 { echo 'source /work/kit_modes_eco.tcl'; echo 'source /work/prd_hook.tcl'; echo 'kit_modes_eco_done';
-  test -f $OUT/grt_post_core.tcl && echo 'source /work/grt_post_core.tcl'
+  echo 'source /work/prd_post_grt_chain.tcl'
   # PRD replaces the kit post-GRT hook, including its supply binding. Reconnect ECO-created cells before saving GRT.
   echo 'source /work/pg_connect.tcl'
   echo 'if {(![info exists ::env(OT_PG_STRICT)] || $::env(OT_PG_STRICT) ne "1") && [llength [[ord::get_db_block] getGlobalConnects]]} {ot_pg_connect_all post_route_drv}'

@@ -1,0 +1,24 @@
+{
+  "status": "DIAGNOSTIC_ONLY_UNTRUSTED",
+  "subject": "intel2:/srv/opentallas-scratch2/claude/codex-qc-glue/place_spill/kit",
+  "native_verdict_unchanged": {
+    "proved": 61971,
+    "different": 1124,
+    "undecided": 2
+  },
+  "result": [
+    "Both original legal-state domains are inductive in isolated native obligations; the proposed broad-domain-failure explanation is disproved here.",
+    "All five system-FSM codebook relations prove under the original domain.",
+    "Recovery original four cube relations fail; reachable-domain {0,5} proves inactive bits1/2 but RUN/READY still fail.",
+    "Native reset64 base is gold000 and gateonehot0 for both FSMs.",
+    "Concrete abstract step witness has goldREADY5 holding while gate goesRUN; unrelated gold reset relay states0/17/20 differ from matchedrelay38.",
+    "Naive same-cycle reset relay0/17/20==38 relations fail their own joint inductive obligations and were not accepted."
+  ],
+  "limits": [
+    "Only FSM/legal-state/reset-relay obligations, no compare-point proof or verdict reduction.",
+    "All other unmatched state is free in this isolated diagnostic; counterexample is not a demonstrated reachable DUT mismatch.",
+    "Exact original codebook was restored from retained lec.log88/89; exploratory newly inferred raw-model codebook differed and is not used for these results.",
+    "No accepted hint/constraint, source mutation or native receipt rewrite. Actual reset pipeline/array identity tracing remains necessary before a relation repair."
+  ],
+  "runtime": "Ordinary ot-run8GB2T shortpool, original kit read-only, ORFS image16470cea; full retained run artifacts codex-glue-fsm-lemma-2232."
+}
