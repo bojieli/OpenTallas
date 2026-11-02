@@ -1,0 +1,53 @@
+{
+  "module": "dsfd_node_LLfu",
+  "source": "fresh saved PG-only repaired 4_cts_pg.odb",
+  "groups": {
+    "planned": {
+      "cells": 13,
+      "PG_pins": 26,
+      "open_or_wrong_pins": [],
+      "missing_pin_census": []
+    },
+    "functional_new": {
+      "cells": 92,
+      "PG_pins": 184,
+      "open_or_wrong_pins": [],
+      "missing_pin_census": []
+    },
+    "dummy": {
+      "cells": 75,
+      "PG_pins": 150,
+      "open_or_wrong_pins": [],
+      "missing_pin_census": []
+    }
+  },
+  "clock_cell_total": 180,
+  "dummy_with_output_nets": [],
+  "clock_metrics": {
+    "taps": 1,
+    "grid_taps": 0,
+    "tap_mode": "tree",
+    "clock_sinks": 1972,
+    "unrooted_sinks": 0,
+    "grid_tap_sinks_min": null,
+    "grid_tap_sinks_max": null,
+    "grid_taps_empty": [],
+    "tap_sinks": {
+      "clk[0]": 1972
+    },
+    "tap_set": [
+      [
+        "clk[0]",
+        "area"
+      ]
+    ],
+    "clock_cells": 105,
+    "clock_depth_max": 12,
+    "clock_depth_spread": 0,
+    "leaf_sinks_p90": 29.0,
+    "leaf_sinks_max": 32,
+    "clock_net_hpwl_max": 34.56,
+    "clock_net_hpwl_p90": 22.28,
+    "stage": "cts"
+  }
+}
