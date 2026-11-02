@@ -116,7 +116,7 @@ def module_recipe(module):
         # Exact native F policy: synthesis EQ; route/final-netlist EQ remain separate release gates.
         return ["--recipes", str(HERE / "qkd_astk_ex_s_recipe.json"),
                 "--cts-setup-only", "--two-mode-grt", "--hold-ff-margin", "10"]
-    if module == "ot_qwen_tp8_pv_join_t":
+    if module in ("ot_qwen_tp8_pv_join_t", "kv3_pv_pair"):
         # Native TT setup / FF hold sessions, including guarded normal GRT.
         return ["--cts-setup-only", "--two-mode-grt", "--hold-ff-margin", "10"]
     if module in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
@@ -143,6 +143,23 @@ def memory_blackbox_sources(files):
         else:
             sources.append(name)
     return sources, substitutions
+
+
+def plan_inst_for_view(cj, view, plan_path):
+    """Select this pin table in the core's actual type, not an alias in another type."""
+    plan_path = Path(plan_path)
+    plan = json.loads(plan_path.read_text())
+    wanted = view["view"].rsplit("@", 1)[-1]
+    matches = []
+    for c in plan.get("partition_types", {}).get(cj["type"], {}).get("hard_cores", []):
+        if c.get("module") != cj["module"] or not c.get("pins_file"):
+            continue
+        pins = plan_path.parent / c["pins_file"]
+        if pins.is_file() and sha12(pins) == wanted:
+            matches.append(c["inst"])
+    if not matches:
+        sys.exit(f"NO_RECIPE {cj['module']}: requested pin view {wanted} has no slot in core type {cj['type']}")
+    return cj.get("inst") if cj.get("inst") in matches else matches[0]
 
 
 def gen(a, extra):
@@ -198,7 +215,7 @@ def gen(a, extra):
             sys.exit(f"NO_RECIPE {m}: no PASS hr face proof under {','.join(a.fp_root) or '(no --fp-root)'} "
                      f"(hr_face_ports.sh; results/kv_host_regen_1/fp_core.sh {m})")
         cmd += ["--hr-face-ports", str(fp)]
-    inst = cj.get("inst") if cj.get("inst") in e["insts"] else e["insts"][0]
+    inst = plan_inst_for_view(cj, e, a.plan or v["plan"])
     cmd += module_recipe(m) + ["--plan-inst", inst] + list(extra)
     (out / "kv_core_wave.json").write_text(json.dumps(dict(view=a.view, module=m, core_json=str(cjw), face_proof=str(
         fp) if fp else None, face_proof_sha=hashlib.sha256((fp / "hr_face_ports.json").read_bytes()).hexdigest()[:16]
