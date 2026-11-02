@@ -1,0 +1,625 @@
+{
+  "schema": "opentallas.qc.l1.data_candidate.v1",
+  "status": "PREPARED_UNEXECUTED_REVIEW_REQUIRED",
+  "source_odb_sha256": "f2ea233f4efaf564046b47fd1beb15b16363f52e4a5455e645564a94fce10d66",
+  "structural_exports_sha256": {
+    "cell_baseline.tsv": "df188475918129b6dbcfcd9bb89c87cbbdce1d159f44958c1ddd26ccb09fa1f8",
+    "clock_baseline.tsv": "d2364527587c0b427fe2a9d44e1f42b41921054d31a19e7df8902fea97b44883",
+    "bterm_baseline.tsv": "062095374ca316cbd12ed51bd78efbd97579a2b089b75fb731ea28cbbdb66318",
+    "cones.tsv": "cd07bf0bc3282821667fa245a56801788adc877c742cea5634a8ddc9110997c9",
+    "master_pins.tsv": "feed34dfdfc7e1b000dad2b2fad9c0a3091a19c82159ef826b7df0da5c47548e",
+    "odb_before.sha256": "05fc3bceffe9b8591c347f3afb7454dd877a1d3c289c020eff8fecda95f76877"
+  },
+  "swaps": [
+    {
+      "inst": "fanout24569",
+      "old_master": "BUFx2_ASAP7_75t_R",
+      "new_master": "BUFx4_ASAP7_75t_R",
+      "exact_old_connections": {
+        "A": {
+          "net": "net35111",
+          "terms": [
+            {
+              "inst": "_227458_",
+              "master": "AND3x1_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_227639_",
+              "master": "OA21x2_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_227644_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_227655_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_227659_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_227661_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_227666_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_227671_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_227681_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_276346_",
+              "master": "INVx1_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279439_",
+              "master": "OR3x1_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279473_",
+              "master": "NAND2x1_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279479_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279492_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279517_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279530_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279536_",
+              "master": "NOR2x1_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279537_",
+              "master": "AO22x1_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279557_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279563_",
+              "master": "AND2x2_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279568_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279581_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279583_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "fanout24569",
+              "master": "BUFx2_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "fanout35164",
+              "master": "BUFx3_ASAP7_75t_R",
+              "pin": "Y",
+              "direction": "OUTPUT"
+            }
+          ]
+        },
+        "Y": {
+          "net": "net24536",
+          "terms": [
+            {
+              "inst": "_227699_",
+              "master": "NAND2x1_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279450_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279465_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279501_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279520_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279527_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279543_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279546_",
+              "master": "NAND2x1_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279547_",
+              "master": "OR2x2_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279552_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279569_",
+              "master": "AND2x2_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279574_",
+              "master": "NOR2x1_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279575_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A1",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279576_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_279596_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_293205_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_323593_",
+              "master": "HAxp5_ASAP7_75t_R",
+              "pin": "B",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "fanout24569",
+              "master": "BUFx2_ASAP7_75t_R",
+              "pin": "Y",
+              "direction": "OUTPUT"
+            }
+          ]
+        }
+      },
+      "equivalence": "A input;Y output;function A in exact selected TT and FF Libs"
+    },
+    {
+      "inst": "fanout35140",
+      "old_master": "BUFx4f_ASAP7_75t_R",
+      "new_master": "BUFx6f_ASAP7_75t_R",
+      "exact_old_connections": {
+        "A": {
+          "net": "net21386",
+          "terms": [
+            {
+              "inst": "_198695_",
+              "master": "AND3x1_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198700_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A2",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198760_",
+              "master": "AND3x1_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198763_",
+              "master": "AND3x1_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198778_",
+              "master": "AOI22x1_ASAP7_75t_R",
+              "pin": "A2",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198780_",
+              "master": "AND4x1_ASAP7_75t_R",
+              "pin": "D",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198869_",
+              "master": "AND4x1_ASAP7_75t_R",
+              "pin": "D",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198870_",
+              "master": "AND4x1_ASAP7_75t_R",
+              "pin": "D",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_199058_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_199125_",
+              "master": "AOI22x1_ASAP7_75t_R",
+              "pin": "A2",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_199134_",
+              "master": "AND3x1_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "fanout35140",
+              "master": "BUFx4f_ASAP7_75t_R",
+              "pin": "A",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "place21419",
+              "master": "BUFx6f_ASAP7_75t_R",
+              "pin": "Y",
+              "direction": "OUTPUT"
+            }
+          ]
+        },
+        "Y": {
+          "net": "net35087",
+          "terms": [
+            {
+              "inst": "_198708_",
+              "master": "AND2x4_ASAP7_75t_R",
+              "pin": "B",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198781_",
+              "master": "AND4x1_ASAP7_75t_R",
+              "pin": "D",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198785_",
+              "master": "AOI22x1_ASAP7_75t_R",
+              "pin": "A2",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198786_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198797_",
+              "master": "AOI22x1_ASAP7_75t_R",
+              "pin": "A2",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198800_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198846_",
+              "master": "AND3x1_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198850_",
+              "master": "AOI22x1_ASAP7_75t_R",
+              "pin": "A2",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198851_",
+              "master": "AND4x1_ASAP7_75t_R",
+              "pin": "D",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198852_",
+              "master": "AND4x1_ASAP7_75t_R",
+              "pin": "D",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198856_",
+              "master": "AND3x1_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198858_",
+              "master": "AO21x1_ASAP7_75t_R",
+              "pin": "A2",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198868_",
+              "master": "AOI22x1_ASAP7_75t_R",
+              "pin": "A2",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198874_",
+              "master": "AOI22x1_ASAP7_75t_R",
+              "pin": "A2",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_198877_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_199039_",
+              "master": "AOI22x1_ASAP7_75t_R",
+              "pin": "A2",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_199040_",
+              "master": "AND4x1_ASAP7_75t_R",
+              "pin": "D",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_199041_",
+              "master": "AND4x1_ASAP7_75t_R",
+              "pin": "D",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_199048_",
+              "master": "AOI22x1_ASAP7_75t_R",
+              "pin": "A2",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_199051_",
+              "master": "OA211x2_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_199055_",
+              "master": "AOI22x1_ASAP7_75t_R",
+              "pin": "A2",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_199066_",
+              "master": "AND3x1_ASAP7_75t_R",
+              "pin": "C",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_199126_",
+              "master": "AND4x1_ASAP7_75t_R",
+              "pin": "D",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "_199127_",
+              "master": "AND4x1_ASAP7_75t_R",
+              "pin": "D",
+              "direction": "INPUT"
+            },
+            {
+              "inst": "fanout35140",
+              "master": "BUFx4f_ASAP7_75t_R",
+              "pin": "Y",
+              "direction": "OUTPUT"
+            }
+          ]
+        }
+      },
+      "equivalence": "A input;Y output;function A in exact selected TT and FF Libs"
+    }
+  ],
+  "insert_buffer": {
+    "inst": "codex_l1_hold_cva29_buf",
+    "master": "BUFx2_ASAP7_75t_R",
+    "input_pin": "A",
+    "output_pin": "Y",
+    "source_inst": "_145581_",
+    "source_pin": "Y",
+    "old_net": "u_u_lrly1.pa_q\\[157\\]",
+    "sink_inst": "u_u_lrly1.c_va\\[29\\]$_DFF_P_",
+    "sink_pin": "D",
+    "new_net": "codex_l1_hold_cva29",
+    "exact_old_net_terms": [
+      {
+        "inst": "_145581_",
+        "master": "INVx1_ASAP7_75t_R",
+        "pin": "Y",
+        "direction": "OUTPUT"
+      },
+      {
+        "inst": "u_u_lrly1.c_va\\[29\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "direction": "INPUT"
+      }
+    ],
+    "placement": "initial location/orientation at exact sink; native DPL must legalize; all original clock-connected instances fixed",
+    "upstream_inverter_input": {
+      "net": "net43933",
+      "terms": [
+        {
+          "inst": "_145581_",
+          "master": "INVx1_ASAP7_75t_R",
+          "pin": "A",
+          "direction": "INPUT"
+        },
+        {
+          "inst": "hold43986",
+          "master": "HB4xp67_ASAP7_75t_R",
+          "pin": "Y",
+          "direction": "OUTPUT"
+        }
+      ]
+    }
+  },
+  "allowed_logical_edits": 3,
+  "allowed_new_instances": 1,
+  "allowed_new_nets": 1,
+  "sequential_stages_added": 0,
+  "protected": "all original instance names/master counts except two listed swaps; all original FFs, clock-connected instance master/location/orientation/net-pin identities and flags, BTerms/source clock and SDC bytes; no clock padding or added cycles",
+  "rollback": {
+    "method": "discard candidate output; restore exact immutable original5_1ODB/SDC; never mutate original",
+    "source_sha256": "f2ea233f4efaf564046b47fd1beb15b16363f52e4a5455e645564a94fce10d66",
+    "inverse_edits": [
+      "restore fanout24569 old master",
+      "restore fanout35140 old master",
+      "reconnect exact hold sink D to old_net; destroy inserted BUF and new_net"
+    ]
+  },
+  "acceptance": "actual TT/FF final policy via current legacy_gate.py grt complete helper context; unchanged clock identity; native late write_guides/all CLOCK+SIGNAL guide coverage; actual changed geometry LOOK; later source/postroute EQ independent; no DRT authorization",
+  "retime_scope": "all predecessor drivers and output fanout terms in exact_old_connections; hold upstream INV/launch FF and single sink; full joint timing for all interactions",
+  "structural_extraction": {
+    "status": "PARTIAL_STRUCTURAL_IMPORT_CONES_COMPLETE",
+    "unit": "epyc2:oth-ubuntu-2438094-1793579058",
+    "dispatcher": 18594,
+    "normal_mem_gb": 4,
+    "threads": 1,
+    "actual_error": "report-name sink lacked native OpenDB bracket escapes; after all needed driver cones/baselines had been written",
+    "resolution": "exact sink/native net taken from retained _145581_/Y adjacency and full cell baseline; no second session",
+    "outer_rc": 0,
+    "native_error_preserved": true,
+    "original_odb_hash_after_unchanged": true,
+    "full_artifacts": "intel2:/srv/opentallas-scratch2/claude/codex-qc-su/l1_candidate_struct1131",
+    "data_cones": "cones.tsv is a NEW offline PG-filtered copy; retained raw includes PG adjacency",
+    "master_pins": "static exact selected ASAP7 LEF, not a completed DB master query",
+    "cell_count": 272918,
+    "DFF_cell_count": 39444,
+    "clock_ITerm_rows": 44924
+  },
+  "lib_master_contract_sha256": "c5b36b1b259afa9d3518a8da2787f5b6cadac147122bef0f45fb91c85c202e36",
+  "lef_sha256": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+  "platform_dont_use_patterns": [
+    "*x1p*_ASAP7*",
+    "*xp*_ASAP7*",
+    "SDF*",
+    "ICG*"
+  ],
+  "platform_config_sha256": "c5c868f35c7c04365a074aef2d81c72641441a8070a117bcb1a35b696942507c",
+  "phase_policy": "place coupon stops before route for actualLOOK; distinct route coupon replays immutable source and must match exact reviewed full placement digest; incrementalDATAtrial not newfullGRT50"
+}
