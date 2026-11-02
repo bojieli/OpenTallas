@@ -126,4 +126,4 @@ def test_hub_tick_end_to_end(tmp_path, monkeypatch):
 
 def test_ot_run_passes_wait_since():
     src = (HERE / 'ot-run').read_text()
-    assert 'env += f"OT_HEAVY_WAIT_SINCE={int(RUN_T0)} "' in src
+    assert 'env = f"OT_HEAVY_WAIT_SINCE={int(RUN_T0)} " + env' in src

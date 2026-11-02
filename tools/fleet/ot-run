@@ -919,10 +919,10 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
     env = os.environ.get("OT_RUN_PRIO_ENV", "") + ("OT_HEAVY_CPU=crit " if crit_job() else "") + env
+    env = f"OT_HEAVY_WAIT_SINCE={int(RUN_T0)} " + env
     if disk is None:
         disk = DIE_DISK_GB if "OT_HEAVY_PRIO=die" in env else 20
     env += f"OT_HEAVY_DISK_GB={int(disk)} "
-    env += f"OT_HEAVY_WAIT_SINCE={int(RUN_T0)} "
     inner = f"{env}/usr/local/bin/ot-heavy --mem {mem} --tag {tag}" + (f" --max-wait {int(max_wait)}" if max_wait else "") \
         + " -- " + " ".join(shlex.quote(x) for x in cmd)
     # Recheck before output placement: never recreate an input directory that
