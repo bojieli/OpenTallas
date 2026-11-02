@@ -1,0 +1,9 @@
+# Source event composition with measured native storage
+
+This joins the actual CAP-safe compiled0L01 field (35down phases/126words) to its actual emitted frame-return/CW paths and the now-passing selected native storage component. Source clock records distinguish compiler/frame-bench edge_n, static emitted register depths, native-measured boundaries, and unknown production epochs.
+
+The exact functional e6/W0 native observation calibrates an8-edge wrapper delta over the logical CAP model. For this frame, actual emitted return transport is38edges and CAP-output→registered native CW is8edges (native input_q included once). RegisteredCW→SRAM2edges is measured with real stored/read values. These constants produce126conditional per-word commit expressions. Each retains its own phase's unknown model-to-native source epoch; edge_n is not assumed to be a physical GO epoch. Other-frame FIN traffic, reset/CFG readiness and actual XS input residency remain separate.
+
+The immutable cd51ee550 producer ledger identifies two real shared-source RDpairs (source rows224/225and226/227). Their expected payloads match the two actual native/public RDOUT outputs exactly. Sixteen real component word-commit timestamps134..141 and native publications161/162(public162/163) are attached to those same word addresses. Production RDcommand grouping/issue epochs and global source leases remain unknown. Requiring allword commits by registeredRDOUTCV is a sufficient conservative readiness condition; this record does not invent an earliest read edge.
+
+The old native storage failure is no longer a blocker: its qualified private emitter correction and actual value gate are bb2ef1b55/G0C4034b8b18. This book is composition plus a measured component, not an end-to-end mission trace or an all80-profile admission. It does not promote fixture state to production state.
