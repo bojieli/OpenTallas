@@ -264,3 +264,8 @@ intel1	/srv/opentallas-scratch2/claude/hbm-cores-kits-27/ring_wl120	hbm/ot_hfd_c
 intel1	/srv/opentallas-scratch2/claude/hbm-cores-kits-28/ring_keepfix	hbm/ot_hfd_coll_q2_hard_v8g__ring_ag LEC kit (keep fix, same 6_final.v c361cd79)
 intel1	/srv/opentallas-scratch2/claude/signoff-sprint-18	SIGNOFF-SPRINT-18 re-sign/LEC dirs (ring_lec)
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-18	SIGNOFF-SPRINT-18 ring_ag LEC run + copied keepfix kit/tag tools
+
+intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-alias-replay-1131 CODEX KV-FN-7 untrusted prior-hyp replay through original prover; preserve live inputs/results
+
+epyc2 /srv/opentallas-scratch2/claude/codex-kv-ctl-alias-replay-1131 CODEX KV-FN-7 live untrusted-replay proof scope2489729; preserve source and results
+intel1	/srv/opentallas-scratch2/claude/kv-fn-7/vec	KV-FN-7 regenerated KV vectors (recipe 000167c13, KVATTN_VECTORS PASS, tree sha 88380c09); used by veh60 token runs + TOK-QK-2
