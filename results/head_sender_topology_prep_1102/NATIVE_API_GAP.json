@@ -8,13 +8,13 @@
  "export_A_if_ordinary_positive_BUF": "nonSinkMacro because Liberty A is not isRegClk; may instead be skipped if known TIMING buffer",
  "FSTART_CLOCK_if_native_register": "registerSinks, absent explicit macro/delay classification",
  "consequence": "Native macro/register fork can put the selected FF and exported BUF in distinct trees; physical proximity or common original net does not enforce same leaf",
- "required_B_API": "source-bound must-link/coassignment of exact proved FF CLOCK ITerm and export A, retaining actual cap/RC/load modeling, final same-leaf assertion and no global classification changes",
+ "required_B_API": "For a guaranteed during-CTS coassignment (B1), exact proved FF CLOCK ITerm and export A need source-bound must-link with cap/RC modeling. An independently scoped postCTS physical topology event (B2) may instead measure the explicit changed load and all affected source/parent paths; continuity alone cannot qualify it.",
  "forbidden_workarounds": [
   "disable insertionDelay globally",
   "patch Liberty A to fake a register clock",
   "mark BUF as unrelated clock source or alias leaf name",
-  "postCTS unpriced reconnect",
-  "assume colocated inputs produce a common leaf"
+  "assume colocated inputs produce a common leaf",
+  "unpriced/unqualified postCTS reconnect; B2 is a different explicit physicalABI experiment"
  ],
  "fragments": [
   {

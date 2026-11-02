@@ -89,11 +89,15 @@
   "requires": [
    "all A source/native joins",
    "owner selection of physical source ABI change",
-   "explicit BUFx24 A load included in CTS coassignment/optimization and exact load census",
+   "explicit BUFx24 A changed-load census and qualification: either native CTS coassignment or a separately scoped postCTS one-edge topology with fresh RC and complete affected source/parent clock/data timing",
    "final same-net assertion on selected FF CLOCK pin and export A, no clock reconvergence/cycle",
    "actual sender FF/export geometry, legal rows/TAP/PG and source/output reach",
    "paired TT/FF delta after the changed topology; no clkQ credit from names"
-  ]
+  ],
+  "implementation_vehicles": {
+   "B1_native_must_link": "guaranteed exactFF CLOCK/exportA coassignment during tree build; native source API proposal only",
+   "B2_postCTS_explicit_topology": "owner-selected physicalABI event intentionally moves exactly this A connection onto the proved FF CLOCK dbNet; source/clock freeze exception explicit; fresh allaffected RC/TT/FF/DRV/geometry/parent qualification required; no re-CTS pass inferred"
+  }
  },
  "refuse_now": [
   "no selected qualified hd_serdes sender mapped/native checkpoint",
