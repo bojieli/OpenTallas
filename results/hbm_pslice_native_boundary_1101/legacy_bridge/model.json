@@ -17,12 +17,17 @@
  "existing_command_ff_gaining_sameedge_reset": 768,
  "new_reset_branch_fanout_bits": 32,
  "additional_clock_loads": 24,
- "clock_cap_ps": "UNSUPPLIED actualGEN/nativeview required; no inventedcellcap/phase",
  "reset_release_cycles_added": 0,
  "public_cycles_added": 0,
  "public_ports_changed": [],
  "macro_count": 100,
  "macro_count_delta": 0,
  "macro_movement": false,
- "gate": "Functional actualC4legacy100macrobridge PASS repair_pass/result.json, phase5776caught; freshGEN/ordinarymappedguard+actual4FULLLEC stillPENDING changed8a source. Old8b gatesnotnewcredit."
+ "gate": "Actuallegacy100macrobridge PASS+phase5776, freshGEN/LINT/PREFLIGHT+nativeface2787/2787/port0/0PASS32+64. Freshchanged-sourceactual4FULLLEC ACTIVE; old8bproofnotnewcredit.",
+ "additional_clock_capacitance_fF": null,
+ "capacitance_gate": "UNSUPPLIED until fresh mapped/native typedview. Exactadditionalclockloads24; no inventedcap/phase.",
+ "flop_delta_baseline": "SelectedNCX1/c5e profile withNATIVE_PINS0. +43 countsnativeboundary19+coldreset24; NOT wholelegacyNCX0\u2192NCX1 replica delta. FreshactualSYNTHstatspricewholecandidate.",
+ "mapped_added_cell_master": "DFFASRHQNx1_ASAP7_75t_R",
+ "mapped_added_master_count_vs8b": 24,
+ "additional_async_clear_input_loads_vs8b": 24
 }
