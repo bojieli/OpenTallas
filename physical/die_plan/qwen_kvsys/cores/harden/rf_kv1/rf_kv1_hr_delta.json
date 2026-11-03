@@ -23,7 +23,17 @@
    "area_old_um2": 102195.3,
    "area_new_um2": 32920.47,
    "origin_note": "origin kept (lower-left); the freed slot area returns to hub_Wi glue",
-   "rtl_delta": "reset release +1 edge on every reset port"
+   "rtl_delta": "reset release +1 edge on every reset port",
+   "form": "registered faces only (v2)",
+   "signoff": {
+    "verdict": "SIGNED",
+    "db": "epyc2:/srv/opentallas-scratch2/claude/die-kv-64-rfc/cpc.eco/i1",
+    "tt": 34.73,
+    "ff": 0.21,
+    "lec": "EQUIVALENT",
+    "via": "1 eco_loop"
+   },
+   "pg_added_bits_per_mm2": 100
   },
   "kv3_hub_Wi.host__qkd_hr_core_guard": {
    "module": "qkd_hr_core_guard",
@@ -45,7 +55,9 @@
    "area_old_um2": 64945.15,
    "area_new_um2": 14631.32,
    "origin_note": "origin kept (lower-left); the freed slot area returns to hub_Wi glue",
-   "rtl_delta": "reset release +1 edge on every reset port"
+   "rtl_delta": "reset release +1 edge on every reset port; service_ready next-state = clean&&!activity&&!bad_noactivity&&!wait_advert&&quiet>=4 (exact, same cycle)",
+   "form": "negmid tk half-cycle copies + service_ready exact retime (activity-free bad terms) + inline_alias",
+   "pg_added_bits_per_mm2": 12800
   },
   "kv3_hub_Wi.host__qkd_hr_core_queue": {
    "module": "qkd_hr_core_queue",
@@ -67,7 +79,17 @@
    "area_old_um2": 58525.29,
    "area_new_um2": 19110.3,
    "origin_note": "origin kept (lower-left); the freed slot area returns to hub_Wi glue",
-   "rtl_delta": "reset release +1 edge on every reset port"
+   "rtl_delta": "reset release +1 edge on every reset port",
+   "form": "queue_slices (32b column slices, kept control copies, negedge take/issue/wdata copies)",
+   "signoff": {
+    "verdict": "SIGNED",
+    "db": "epyc2:/srv/opentallas-scratch2/claude/die-kv-64-rfc/cq.eco/i1",
+    "tt": 17.29,
+    "ff": 8.1,
+    "lec": "EQUIVALENT",
+    "via": "1 eco_loop"
+   },
+   "pg_added_bits_per_mm2": 62000
   },
   "kv3_hub_Wi.host__qkd_hr_cdc_hi": {
    "module": "qkd_hr_cdc_hi",
@@ -89,7 +111,17 @@
    "area_old_um2": 50463.13,
    "area_new_um2": 19110.3,
    "origin_note": "origin kept (lower-left); the freed slot area returns to hub_Wi glue",
-   "rtl_delta": "reset release +1 edge on every reset port; FWFT rdata/rempty +1 read cycle"
+   "rtl_delta": "reset release +1 edge on every reset port; FWFT rdata/rempty +1 read cycle",
+   "form": "rcopy 16b read-address copies + FWFT registered read",
+   "signoff": {
+    "verdict": "SIGNED",
+    "db": "epyc2:/srv/opentallas-scratch2/claude/die-kv-64-rfc/chi.eco/i1",
+    "tt": 93.6,
+    "ff": 0.66,
+    "lec": "EQUIVALENT",
+    "via": "1 eco_loop"
+   },
+   "pg_added_bits_per_mm2": 68700
   },
   "kv3_hub_Wi.host__qkd_hr_cdc_ci": {
    "module": "qkd_hr_cdc_ci",
