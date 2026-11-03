@@ -38,6 +38,38 @@ def is_ff(master):
     return "DFF" in master.upper()
 
 
+# S81-RF1 face lockup (DIE-S81-51/CLK crossing table row 1, 11-03; FLOW-LATCH-1): a registered output may leave its
+# flop through ONE negative-level latch (transparent while clk is LOW), no logic, no fan-out: flop -> latch -> port.
+# The flop stays the face register (the latch only moves the port change to the falling edge, 0 cycles).  Accepted
+# only when the latch is transparent-low w.r.t. the face flop's own clock: a DLLx* / $_DLATCH_N_ whose CLK / E is the
+# flop's clock net (through buffers, same inversion parity), or a DHLx* / $_DLATCH_P_ on the INVERTED flop clock
+# (synthesis may fold `if (!clk)` that way), and the face flop is rising-edge.  Any other latch stays unregistered.
+LATCH_LOW_RE = re.compile(r"^(DLLx\d+_ASAP7_75t_[RLS]+|\$_DLATCH_N_)$")
+LATCH_HIGH_RE = re.compile(r"^(DHLx\d+_ASAP7_75t_[RLS]+|\$_DLATCH_P_)$")
+RISE_FF_RE = re.compile(r"^(S?DFFH|DFFASRH|\$_(?:S?DFFC?E?|DFFSRE?|ALDFFE?)_P)")
+
+
+def is_latch_low(master):
+    return bool(LATCH_LOW_RE.match(master))
+
+
+def latch_level(master):
+    """'low' / 'high' (the level at which the latch cell is transparent on its own enable pin) or None."""
+    return "low" if LATCH_LOW_RE.match(master) else "high" if LATCH_HIGH_RE.match(master) else None
+
+
+def is_rise_ff(master):
+    return bool(RISE_FF_RE.match(master))
+
+
+def clk_pin(pp):
+    """the clock / enable pin of a flop or latch: ASAP7 CLK, Yosys C (flops) / E (latches)."""
+    for k in ("CLK", "C", "E"):
+        if k in pp and pp[k][0] == "in" and len(pp[k][1]) == 1:
+            return pp[k][1][0]
+    return None
+
+
 ASYNC_RESET_PINS = {"RESETN", "SETN", "R", "S"}   # ASAP7 DFFASRHQN async pins; Yosys $_DFF_P[NP][01]_ R / $_DFFSR_ S
 
 
@@ -563,6 +595,37 @@ def kit_spare_list(kitdir):
     return spare_out_list(json.loads(f.read_text())) if f.is_file() else []
 
 
+TIMED_SCHEMA = "opentallas.kit_timed_face.v1"
+# DIE-KV-61/hr 11-02: classes a declared timed-face bus may carry.  feedthrough (port wired to port) is never exempt:
+# it has no core-side timing arc the IO budget could bound.
+TIMED_CLASSES = frozenset({"unregistered", "shared", "dropped", "const"})
+
+
+def timed_face_list(doc):
+    """DIE-KV-61/hr 11-02 (HR raw memory-port / boot-handshake faces): a kit timed_face.json names whole port BUSES
+    whose bits the zero-cycle face transform cannot register (an async-FIFO storage cut wdata/rdata/wr/rd, an SRAM
+    address/data port, boot-barrier inputs read through logic).  Such a bit is a timed boundary: core STA times it
+    against the kit SDC IO budget (set_input_delay / set_output_delay on every non-clock port), exactly as a hard
+    macro pin is timed.  Its unregistered / shared / dropped / const finding is recorded in timed_declared instead
+    of failing; every other class (feedthrough, merged, ...) and every undeclared bus keeps the ordinary checks.
+    Fail-closed: schema, unique exact bus names (no regex, no bit index), a non-empty ruling and reason."""
+    if not isinstance(doc, dict) or doc.get("schema") != TIMED_SCHEMA:
+        raise ValueError(f"timed_face.json: schema must be {TIMED_SCHEMA}")
+    buses = doc.get("buses")
+    if not isinstance(buses, list) or not buses or len(set(buses)) != len(buses) or \
+            not all(isinstance(b, str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", b) for b in buses):
+        raise ValueError(f"timed_face.json: buses must be unique exact port names: {buses}")
+    if not str(doc.get("ruling") or "").strip() or not str(doc.get("reason") or "").strip():
+        raise ValueError("timed_face.json: ruling and reason are required")
+    return list(buses)
+
+
+def kit_timed_list(kitdir):
+    """the kit's declared timed-face buses (timed_face.json), [] when none."""
+    f = Path(kitdir) / "timed_face.json"
+    return timed_face_list(json.loads(f.read_text())) if f.is_file() else []
+
+
 def _std_cell(master):
     return "_ASAP7_" in master.upper() or master.startswith("$")
 
@@ -669,7 +732,7 @@ def _spare_tie(F, drv, r, limit=16):
 
 
 def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
-          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=()):
+          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=(), timed=()):
     """types: (top, {path: module}) from hier_module_types of the hierarchical netlist this flat netlist was written
     from (kit ODB write_verilog pass); fills only paths the netlist itself does not type; its top must match.
     straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
@@ -758,6 +821,38 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     for p in T.ports:
         for b in _bits_of(T, p):
             port_root[b] = F.find(b)
+    def clk_root(bit):
+        """a clock net bit -> (root net, inversion parity) through single-driver BUF/INV/HB cells."""
+        cur, par, seen = F.find(bit), 0, set()
+        while cur not in seen and len(drv[cur]) == 1:
+            seen.add(cur)
+            ci, _ = drv[cur][0]
+            m, _, pp = F.cells[ci]
+            ins = [v for k, (dd, v) in pp.items() if dd == "in"]
+            if not is_buf(m) or len(ins) != 1 or len(ins[0]) != 1:
+                break
+            if m.upper().startswith(("INV", "$_NOT_")):
+                par ^= 1
+            cur = F.find(ins[0][0])
+        return cur, par
+
+    def face_lockup_why(lci, fci):
+        """'' when latch lci is transparent-low on the clock of the rising-edge face flop fci, else the reason."""
+        lm, _, lpp = F.cells[lci]
+        fm, fpath, fpp = F.cells[fci]
+        if not is_rise_ff(fm):
+            return f"face flop {fpath} ({fm}) is not rising-edge"
+        lc, fc = clk_pin(lpp), clk_pin(fpp)
+        if lc is None or fc is None:
+            return "latch / flop clock pin not found"
+        (lr, lp), (fr, fp) = clk_root(lc), clk_root(fc)
+        if lr != fr:
+            return f"latch enable {lr} is not the face flop clock {fr}"
+        level = latch_level(lm)
+        if (level == "low") != (lp == fp):
+            return f"{lm} on {'inverted ' if lp != fp else ''}clock is transparent-high (want negative-level)"
+        return ""
+
     roots_ports = defaultdict(list)
     for b, r in port_root.items():
         roots_ports[r].append(b)
@@ -770,7 +865,14 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         res["spare_declared"] = []
     claimed = defaultdict(list)
 
+    timed = set(timed or ())
+    if timed:
+        res["timed_declared"] = []
+
     def fail(cls, b, why):
+        if timed and cls in TIMED_CLASSES and re.sub(r"\[\d+\]$", "", str(b)) in timed:
+            res["timed_declared"].append(f"{b}: {cls} {why}")   # DIE-KV-61/hr: declared timed-face bit
+            return
         res["fails"][cls].append(f"{b}: {why}")
 
     res["bumps_exempt"] = sorted(bump_names)
@@ -1191,7 +1293,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             if origin is not None:
                 declared = {origin, *copies}
                 if par != declared or not any(_module_is(origin, t) for t in
-                                              ("ot_dp_landing_origin", "ot_dp_landing_origin_s", "ot_dp_landing_relay")):
+                                              ("ot_dp_landing_origin", "ot_dp_landing_origin_s", "ot_dp_landing_origin_s_regional", "ot_dp_landing_relay")):
                     return f"origin start reaches {sp[:3]} outside declared typed origin {origin}", None
                 if copies and not all(_module_is(x, "ot_dp_landing_relay") for x in declared):
                     return "origin face copies require actual typed relay instances", None
@@ -1454,6 +1556,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 cur, chain, ff = r, [], None
                 ok = True
                 seen = set()
+                lat = None
                 while True:
                     if cur in seen:
                         fail("unregistered", b, "buffer/inverter cycle before boundary flop")
@@ -1473,7 +1576,24 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                     m, path, pp = F.cells[ci]
                     if is_ff(m):
                         ff = (ci, path)
+                        if lat is not None:
+                            why = face_lockup_why(lat[0], ci)
+                            if why:
+                                fail("unregistered", b, f"face latch {lat[1]}: {why}")
+                                ok = False
+                                break
+                            res.setdefault("face_lockup", []).append(b)
                         break
+                    if lat is None and latch_level(m) and pin == "Q" and pp.get("D", ("", []))[0] == "in" \
+                            and len(pp["D"][1]) == 1:
+                        lat = (ci, path)               # the one face lockup latch: trace on through its D
+                        chain.append(path)
+                        cur = F.find(pp["D"][1][0])
+                        if cur in roots_ports:
+                            fail("feedthrough", b, f"latched from port {roots_ports[cur][0]}")
+                            ok = False
+                            break
+                        continue
                     if not is_buf(m):
                         fail("const" if m.upper().startswith("TIE") else "unregistered", b, f"driven by {m} {path}")
                         ok = False
@@ -1658,8 +1778,9 @@ def main(argv=None):
     land = kit_land(lf) if lf and Path(lf).exists() else None
     dl = kit_dead_list(Path(a.pins).parent) if a.pins else []
     spl = kit_spare_list(Path(a.pins).parent) if a.pins else []
+    tml = kit_timed_list(Path(a.pins).parent) if a.pins else []
     pad_clocks, native_clock_pins = kit_pad_clocks(bd) if bd else ([], set())
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins, spare=spl,
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins, spare=spl, timed=tml,
               types=hier_module_types(Path(a.types_from).read_text(), a.top) if a.types_from else None)
     r["netlist"] = a.netlist
     if a.types_from:
