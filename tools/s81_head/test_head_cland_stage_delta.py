@@ -70,3 +70,18 @@ def test_refuses_existing_knobs(setup):
     T["clock"]["landing_reader_start"] = {"depth": 1}
     with pytest.raises(AssertionError):
         D.type_delta("t", T, coll)
+
+
+def test_ctl_e_bit_sites_hops(tmp_path):
+    """s0 (W face flop, x ~6) -> s1 -> s2 hops stay <= 400 planned (3_place adds ~2.4 um), E pin_reg < 60."""
+    rows = ["P\tx\tn_tx_ft_o[%d]\t0\t0\t0\t0\t%.3f" % (b, 8.64 + 0.27 * b) for b in range(65)]
+    g = tmp_path / "geom.tsv"
+    g.write_text("\n".join(rows) + "\n")
+    T = {"ft_slots": [dict(name="n_tx_ft", in_face="W", out_face="E", stations=3, width=64)]}
+    D.ctl_e_bit_sites(T, g)
+    s = T["ft_slots"][0]["bit_sites_um"]
+    w = T["ft_slots"][0]["bit_site_cell_um"][0]
+    assert len(s) == 2 and all(len(c) == 65 for c in s)
+    c1, c2 = s[0][0][0] + w / 2, s[1][0][0] + w / 2
+    assert c1 - 6.0 <= 400.0 and c2 - c1 <= 400.0 and 855.36 - c2 < 60.0
+    assert len({tuple(p) for p in s[0]}) == 65                                       # one site per bit

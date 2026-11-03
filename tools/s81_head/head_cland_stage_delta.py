@@ -15,7 +15,7 @@ pin or data-cycle change:
   landing_local_resets  same-cycle local copies (depth(raw)+1 == consumer reset depth) for every landing control
                         consumer (origin, FSTART flops, agg/up/sin collects), clustered, raw = a near reset-tree relay
   ft_slots[n_tx_ft].bit_sites_um (hd_ctl_e only)  per-bit s1/s2 sites on the pin rows (mesh_e l48z form), so the
-                        E output pins sit ~46 um from s2 (was 288)
+                        E output pins sit ~54 um from s2 (was 288), s1/s2 hops <= 400
 
 Stage sites are computed, not hand-placed: every stage lies on the straight segment between its two end points and
 every hop (including the farthest flop of a landing band, half-width + half-height of the plan band) is <= HMAX.
@@ -35,6 +35,7 @@ from pathlib import Path
 HMAX = 370.0          # planned hop (plan reach 405, 35 um left for placement scatter)
 COPY_REACH = 370.0    # raw -> local copy and copy -> consumer
 TYPES = ("hd_ctl_n", "hd_ctl_e", "hd_host_n")
+CTL_E_SITE_X = (401.5, 801.0)   # hd_ctl_e n_tx_ft s1/s2 cell centres (hop <= 400 planned, 405 measured reach)
 
 # reset-tree raw relays (net, depth, x, y, exported) from the frozen 703c07481 GEN of prepared_mesh_y864
 # (intel2 codex-head-wave-1101/.../hd_ctl_n, codex-head-wave-1131/.../hd_ctl_e/attempt_3, codex-head-lep-wave-1101/
@@ -224,8 +225,9 @@ def type_delta(tn, T, coll):
 
 def ctl_e_bit_sites(T, geom_tsv):
     """hd_ctl_e n_tx_ft (W->E, 3 stations over 855.36 um): s1/s2 per-bit sites on each bit's pin row (mesh_e l48z
-    form, ASAP7 site grid X0=Y0=4.32, SW 0.054, RH 0.27, DFF 1.404x0.27): s0 W face flop ~1.7 -> s1 405.0 -> s2 808.6
-    (hops 403.3 / 403.6) -> E pins 855.36 (~46.8; was 288)."""
+    form, ASAP7 site grid X0=Y0=4.32, SW 0.054, RH 0.27, DFF 1.404x0.27): s0 W face flop ~6 -> s1 401.5 -> s2 801.0
+    (hops ~395.5 / 399.5) -> E pins 855.36 (~54; was 288).  DH56-CLAND: the 405.0/808.6 sites (hop 403.6) placed at
+    3_place r2r 405.8-406.0 on 4 bits (D/Q pin offsets + legalisation, +2.4 um), so the hop target is <= 400."""
     X0 = Y0 = 4.32; SW, RH, CELL = 0.054, 0.27, [1.404, 0.27]
     slot = {s["name"]: s for s in T["ft_slots"]}["n_tx_ft"]
     assert slot["in_face"] == "W" and slot["out_face"] == "E" and slot["stations"] == 3, slot
@@ -239,7 +241,7 @@ def ctl_e_bit_sites(T, geom_tsv):
     assert sorted(pins) == list(range(slot["width"] + 1)), "n_tx_ft_o pins not 0..width"
     gx = lambda x: round(X0 + math.floor((x - X0) / SW + 1e-9) * SW, 3)
     sites = []
-    for xc in (405.0, 808.6):
+    for xc in CTL_E_SITE_X:
         x = gx(xc - CELL[0] / 2); used = set(); col = []
         for b in range(slot["width"] + 1):
             n0 = round((pins[b] - RH / 2 - Y0) / RH)
@@ -249,7 +251,7 @@ def ctl_e_bit_sites(T, geom_tsv):
     slot["bit_sites_um"] = sites; slot["bit_site_cell_um"] = CELL
     slot["note"] = ("DH55-CLAND l48h: per-bit station sites s1 x~%.1f, s2 x~%.1f on each bit's pin row "
                     "(L*j/3 put s2 288 um from the E pins)" % (sites[0][0][0] + 0.702, sites[1][0][0] + 0.702))
-    return "n_tx_ft bit sites s1/s2 (E pin_reg ~46.8, was 288)"
+    return "n_tx_ft bit sites s1/s2 (hops <= 400, E pin_reg ~54, was 288)"
 
 
 def strap_update(out, repo, plan, side, old_k):
