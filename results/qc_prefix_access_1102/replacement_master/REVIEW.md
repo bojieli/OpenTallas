@@ -1,0 +1,9 @@
+# Native clock-prefix access repair
+
+The first origin-centre correction retained all 173468 access collisions. A single actual collision showed that OpenDB dbBox.destroy did not unlink old master obstructions: original M1 boxes 338 plus corrected 356 became 694 serialized boxes. The collision belongs to sl_E0_fw, not the native clock cell itself. The first failure remains unchanged.
+
+This successor creates fresh generated stand-in masters in owned libraries, retaining the same logical master names, dimensions, origin, type, symmetry, non-PG MTerm/MPin geometry, and upper-layer obstructions. It replaces only lower M1-M3 obstruction reservations and M7 PG cutouts. All actual instance locations, orientation, placement status, do-not-touch flags, nets and public ports are guarded. Source geometry and the personally viewed origin_window_fix.png retain the same centre offset (+0.81,+0.135 um); no further home or window shift is introduced.
+
+A separate serialized reload verifies exact expected lower-obstruction count and hash before the unchanged census. The job reads the original failed native checkpoint and performs no full reimport, legalization, GRT, STA, PG qualification or production adoption. It retains 64 GB / 8 threads and runs under normal ot-run admission on epyc2.
+
+Actual producer: epyc2 oth-ubuntu-4055723-1793609838, prefix_access_origin2, terminal exit 0. The unchanged census reports CONNECTED_UNROUTED_BODY_CENSUS: 51596/51596 cells, 10929 native M7 clock ports, zero connection errors, zero body overlaps, zero access collisions, zero endpoint delta. Separate reload verified all 118 replacement masters. Protected before/after fingerprint is identical. The 103192 native clock PG pins remain unbound and explicitly pending; no routing or timing credit is inferred. Original import FAIL and first correction FAIL are preserved.

@@ -1,0 +1,135 @@
+{
+  "scope": "Actual native graph/body/M1-M3 and PG7 access only; plan-abstract clock-only target; no routing/STA/START freeze/closed child view claim.",
+  "status": "FAIL_IMPORT_CENSUS",
+  "clock_cells_expected": 51596,
+  "clock_cells_found": 51596,
+  "consumed_native_clock_ports": 10929,
+  "exact_connection_errors": 0,
+  "errors": [],
+  "master_body_um": [
+    [
+      "CKINVDCx16_ASAP7_75t_R",
+      1.62,
+      0.27
+    ]
+  ],
+  "actual_routing_pin_layers": [
+    [
+      "CKINVDCx16_ASAP7_75t_R",
+      "A",
+      "M1"
+    ],
+    [
+      "CKINVDCx16_ASAP7_75t_R",
+      "Y",
+      "M1"
+    ]
+  ],
+  "body_overlap_pairs": 0,
+  "body_access_collisions": 173468,
+  "samples": [
+    [
+      "M1-M3_or_PG7_access",
+      "ck_b0_r",
+      "OBS:sl_E0_fw:M1"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_b0_r",
+      "OBS:sl_E0_fw:M2"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_b0_r",
+      "OBS:sl_E0_fw:M3"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r1_0",
+      "OBS:sl_E0_stm:M1"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r1_0",
+      "OBS:sl_E0_stm:M2"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r1_0",
+      "OBS:sl_E0_stm:M3"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r1_1",
+      "OBS:sl_E0_stm:M1"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r1_1",
+      "OBS:sl_E0_stm:M2"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r1_1",
+      "OBS:sl_E0_stm:M3"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r1_2",
+      "OBS:sl_E0_stm:M1"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r1_2",
+      "OBS:sl_E0_stm:M2"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r1_2",
+      "OBS:sl_E0_stm:M3"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_b1",
+      "OBS:sl_E0_sc:M1"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_b1",
+      "OBS:sl_E0_sc:M2"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_b1",
+      "OBS:sl_E0_sc:M3"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r2_0",
+      "OBS:sl_E0_sc:M1"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r2_0",
+      "OBS:sl_E0_sc:M2"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r2_0",
+      "OBS:sl_E0_sc:M3"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r2_1",
+      "OBS:sl_E0_sc:M1"
+    ],
+    [
+      "M1-M3_or_PG7_access",
+      "ck_r2_1",
+      "OBS:sl_E0_sc:M2"
+    ]
+  ],
+  "max_native_M7_vs_planned_endpoint_manhattan_um": 0.0,
+  "unconnected_clock_PG_pins": 103192,
+  "pending": "PG binding/top mesh, actual root/port access routing, RC, all-view contracts, related clock/START and timing qualification remain mandatory."
+}
