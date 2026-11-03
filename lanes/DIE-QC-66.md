@@ -4,3 +4,4 @@ TWO-STRIKES (OWNER 06:07): in-flight admitted runs finish their current step; no
 Work dir: /home/ubuntu/OpenTallas/tmp/dieqc66 (local, light only).
 ## log
 - 06:17 CLOSURE posted (QC-023..029), TWO-STRIKES cancels done
+- 06:20 helpers launched: /CLK (hold-safe estimate 08:00, collects v3), /CORES (NK > su l0-l3 > l4-l7 > NL re-form), /PLAN (RF-QC-1 plan event: shape/split/infra/channels/latency table/templates + plan-time GEOM + prototype). Brief tmp/dieqc66/helper_brief.md (localhost OpenTallas).
