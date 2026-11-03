@@ -21,3 +21,15 @@
 
 ## intel1 manifest C (2026-11-02 22:47 PST): finish PRUNE-1102A i1_canary_big.tsv
 - Only *.odb/*.spef/*.def of that list (64 files, 1.78 GB; .v/.csv/.map/.lib kept), untagged sha, >24 h, not live, no .keep. Result intel1:.../prune-1102a/i1_canary_del_result_1102b.tsv.
+
+## epyc2 manifest D (2026-11-02 23:00 PST): MOVE (not delete) idle dirs to epyc2 root scratch + symlink (PRUNE-1102A move class)
+- Rule: no .keep anywhere inside/above, newest file >24 h, not in PROTECTED-DBS/protect.d, not live (act.py rechecks /proc+docker before and after copy), rsync -aH, verify bytes+file count, rename+symlink, old copy removed. Root keeps >=500 GB free (2.4 TB free now).
+| MB | newest | path -> /home/ubuntu/scratch-root/claude/<name> |
+|---|---|---|
+| 18103 | 2026-11-01 01:47 | /srv/opentallas-scratch2/claude/hbm-cores-kits-36 |
+| 8978 | 2026-11-01 21:14 | /srv/opentallas-scratch2/claude/kt1-lec |
+| 6568 | 2026-10-31 21:00 | /srv/opentallas-scratch2/claude/s81ck11cap |
+| 5212 | 2026-11-01 18:54 | /srv/opentallas-scratch2/claude/kv60-ahpc |
+| 5564 | 2026-11-01 00:44 | /srv/opentallas-scratch2/claude/hbm-cores-kits-37 |
+| 5716 | 2026-10-31 15:33 | /srv/opentallas-scratch2/claude/hbm-cores-kits-26 |
+| 4757 | 2026-10-30 02:00 | /srv/opentallas-scratch2/claude/kits10-1029 |
