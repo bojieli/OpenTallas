@@ -554,7 +554,7 @@
    "bus_drivers": [],
    "cells": {
     "u_efault": {
-     "age_rule": "max in-lane cycles over the 4 replicas (33) + 2 sync stages",
+     "age_rule": "max in-lane cycles over the 4 replicas (33) + 2 sync stages + 1 eq pipeline stage (DIE-KV-61/hroot 11-02: eq arrives one edge later through u_eqp_*, so the check instant moves one edge; fault(t) = old fault(t-1))",
      "conns": {
       "clk": [
        {
@@ -563,31 +563,76 @@
       ],
       "eq": [
        {
-        "epoch": "i_fch_pc_Q_N_q"
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_eqp_fch_pc",
+        "port": "q"
        },
        {
-        "epoch": "i_host_die_rst_n"
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_eqp_host_die",
+        "port": "q"
        },
        {
-        "epoch": "i_host_hbm_rst_n"
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_eqp_host_hbm",
+        "port": "q"
        },
        {
-        "epoch": "i_idsrc_Q_y"
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_eqp_idsrc",
+        "port": "q"
        },
        {
-        "epoch": "i_kvpc_Q_N_o_next"
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_eqp_kvpc_next",
+        "port": "q"
        },
        {
-        "epoch": "i_kvpc_Q_N_pc__fo"
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_eqp_kvpc_fo",
+        "port": "q"
        },
        {
-        "epoch": "i_kvs_ctl_o_hroot_Q"
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_eqp_kvs_ctl",
+        "port": "q"
        },
        {
-        "epoch": "i_seq__g_fan_N__u_fan_kc"
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_eqp_fan_kc",
+        "port": "q"
        },
        {
-        "epoch": "i_slg_Q_N_o_ctl"
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_eqp_slg",
+        "port": "q"
        }
       ],
       "rst_n": [
@@ -598,7 +643,7 @@
      },
      "module": "ot_dp_efault",
      "params": {
-      "AGE": 35,
+      "AGE": 36,
       "N": 9
      }
     },
@@ -620,7 +665,8 @@
          0,
          0
         ],
-        "bus": "i_fch_pc_Q_N_q"
+        "cell": "u_fchp",
+        "port": "q"
        }
       ],
       "ck": [
@@ -675,6 +721,234 @@
       "K": 0,
       "W": 2
      }
+    },
+    "u_eqp_fch_pc": {
+     "note": "DIE-KV-61/hroot 11-02 (OWNER/COORD ruling: pipeline stage on the long reach): registered copy of the in-boundary epoch of i_fch_pc_Q_N_q (a|a = a; no reset) between its landing ring and u_efault, FIRM by relay_sites; health plane +1 edge",
+     "conns": {
+      "a": [
+       {
+        "epoch": "i_fch_pc_Q_N_q"
+       }
+      ],
+      "b": [
+       {
+        "epoch": "i_fch_pc_Q_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_eqp_host_die": {
+     "note": "DIE-KV-61/hroot 11-02 (OWNER/COORD ruling: pipeline stage on the long reach): registered copy of the in-boundary epoch of i_host_die_rst_n (a|a = a; no reset) between its landing ring and u_efault, FIRM by relay_sites; health plane +1 edge",
+     "conns": {
+      "a": [
+       {
+        "epoch": "i_host_die_rst_n"
+       }
+      ],
+      "b": [
+       {
+        "epoch": "i_host_die_rst_n"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_eqp_host_hbm": {
+     "note": "DIE-KV-61/hroot 11-02 (OWNER/COORD ruling: pipeline stage on the long reach): registered copy of the in-boundary epoch of i_host_hbm_rst_n (a|a = a; no reset) between its landing ring and u_efault, FIRM by relay_sites; health plane +1 edge",
+     "conns": {
+      "a": [
+       {
+        "epoch": "i_host_hbm_rst_n"
+       }
+      ],
+      "b": [
+       {
+        "epoch": "i_host_hbm_rst_n"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_eqp_idsrc": {
+     "note": "DIE-KV-61/hroot 11-02 (OWNER/COORD ruling: pipeline stage on the long reach): registered copy of the in-boundary epoch of i_idsrc_Q_y (a|a = a; no reset) between its landing ring and u_efault, FIRM by relay_sites; health plane +1 edge",
+     "conns": {
+      "a": [
+       {
+        "epoch": "i_idsrc_Q_y"
+       }
+      ],
+      "b": [
+       {
+        "epoch": "i_idsrc_Q_y"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_eqp_kvpc_next": {
+     "note": "DIE-KV-61/hroot 11-02 (OWNER/COORD ruling: pipeline stage on the long reach): registered copy of the in-boundary epoch of i_kvpc_Q_N_o_next (a|a = a; no reset) between its landing ring and u_efault, FIRM by relay_sites; health plane +1 edge",
+     "conns": {
+      "a": [
+       {
+        "epoch": "i_kvpc_Q_N_o_next"
+       }
+      ],
+      "b": [
+       {
+        "epoch": "i_kvpc_Q_N_o_next"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_eqp_kvpc_fo": {
+     "note": "DIE-KV-61/hroot 11-02 (OWNER/COORD ruling: pipeline stage on the long reach): registered copy of the in-boundary epoch of i_kvpc_Q_N_pc__fo (a|a = a; no reset) between its landing ring and u_efault, FIRM by relay_sites; health plane +1 edge",
+     "conns": {
+      "a": [
+       {
+        "epoch": "i_kvpc_Q_N_pc__fo"
+       }
+      ],
+      "b": [
+       {
+        "epoch": "i_kvpc_Q_N_pc__fo"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_eqp_kvs_ctl": {
+     "note": "DIE-KV-61/hroot 11-02 (OWNER/COORD ruling: pipeline stage on the long reach): registered copy of the in-boundary epoch of i_kvs_ctl_o_hroot_Q (a|a = a; no reset) between its landing ring and u_efault, FIRM by relay_sites; health plane +1 edge",
+     "conns": {
+      "a": [
+       {
+        "epoch": "i_kvs_ctl_o_hroot_Q"
+       }
+      ],
+      "b": [
+       {
+        "epoch": "i_kvs_ctl_o_hroot_Q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_eqp_fan_kc": {
+     "note": "DIE-KV-61/hroot 11-02 (OWNER/COORD ruling: pipeline stage on the long reach): registered copy of the in-boundary epoch of i_seq__g_fan_N__u_fan_kc (a|a = a; no reset) between its landing ring and u_efault, FIRM by relay_sites; health plane +1 edge",
+     "conns": {
+      "a": [
+       {
+        "epoch": "i_seq__g_fan_N__u_fan_kc"
+       }
+      ],
+      "b": [
+       {
+        "epoch": "i_seq__g_fan_N__u_fan_kc"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_eqp_slg": {
+     "note": "DIE-KV-61/hroot 11-02 (OWNER/COORD ruling: pipeline stage on the long reach): registered copy of the in-boundary epoch of i_slg_Q_N_o_ctl (a|a = a; no reset) between its landing ring and u_efault, FIRM by relay_sites; health plane +1 edge",
+     "conns": {
+      "a": [
+       {
+        "epoch": "i_slg_Q_N_o_ctl"
+       }
+      ],
+      "b": [
+       {
+        "epoch": "i_slg_Q_N_o_ctl"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_fchp": {
+     "note": "DIE-KV-61/hroot 11-02: registered copy of i_fch_pc_Q_N_q (S ring) before the u_fch OR, so u_fch sits within reach of both u_efault and the E-face o_fch_hroot_Q_q register (ring->bout 1226 um > 3x405); with u_eqp_* the whole o_fch_hroot_Q_q stream is the old stream delayed by exactly one edge",
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pc_Q_N_q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pc_Q_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
     }
    },
    "leaf_binds": [],

@@ -12,6 +12,12 @@ ot_dp_rrelay b (.clk(clk), .d(rst_root_n), .q(b0));
 ot_dp_rrelay b1 (.clk(clk), .d(b0), .q(rst_n_t14));
 ot_dp_st #(.W(8)) u_bin_i (.clk(clk), .rst_n(rst_n), .d(d), .ea(ea), .q(q), .eq(eq));
 native_core u_core (.clk(clk), .rst_n(rst_n), .data(d));
+ot_dp_efault #(.AGE(36), .N(1)) u_u_efault (
+        .clk(clk),
+        .rst_n(rst_n),
+        .eq(eq),
+        .fault(f)
+    );
 endmodule
 '''
 TREE={'relays':[dict(name=n,q=q,d=d,depth=dp) for n,q,d,dp in [('a','a0','rst_root_n',1),('a1','rst_n_t5','a0',2),('b','b0','rst_root_n',1),('b1','rst_n_t14','b0',2)]]}
@@ -65,3 +71,10 @@ def test_duplicate_and_extra_keys_rejected():
 def test_unknown_tree_and_combinational_reset_rejected():
     with pytest.raises(ResetConsumerError):localize(TEXT,[ROW],None)
     with pytest.raises(ResetConsumerError):localize(TEXT.replace('wire rst_n = rst_n_t5','wire rst_n = ~rst_n_t5'),[ROW],TREE)
+
+def test_plan_efault_control_reset_localized_without_native_role():
+    txt,rs=localize(TEXT,[dict(ROW,instance='u_u_efault')],TREE)
+    assert txt==TEXT.replace('        .rst_n(rst_n),\n        .eq(eq)','        .rst_n(rst_n_t14),\n        .eq(eq)')
+    assert rs[0]['cycles_added']==0
+    with pytest.raises(ResetConsumerError):localize(TEXT,[dict(ROW,instance='u_u_efault',pin='eq',old_reset='eq')],TREE)
+    with pytest.raises(ResetConsumerError,match='depth'):localize(TEXT,[dict(ROW,instance='u_u_efault',new_reset='b0')],TREE)
