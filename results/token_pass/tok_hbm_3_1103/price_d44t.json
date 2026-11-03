@@ -1,0 +1,118 @@
+{
+ "basis": "TOK-HBM-3 2026-11-03: tok/s price of HBM plan events d44t (DIE-HBM-59 FT S0 re-site: 34 lanes +1..+4) and d44x\n(= d44t + R8 bus groups L168_word/L168m_word: L14/L167 (+m) padded 8 -> 10), on the TOK-13d model unchanged\n(DS native S2, base 576702.4178 + record 610734.93 asserted; needs a FULL results/arch + results/rtl tree: a sparse\ntree silently changes the base to 557291.4). Reference row = TOK-13d A1 (1677.0 tok/s, the accepted HBM ceiling).\n\nCharge per changed lane = increase of the MAX leg of its model term (every record of the term sees the slowest leg):\n  SFU   L730/L730m ctl(b113)->lane(b112) 42->44 is the max ctl->lane leg: +2 on one leg of 2(tap-2)+2(lane-2) -> +2;\n        L731 ctl->su20 17->18 below the max tap (su11) -> +0 (bound case charges +1).\n  IDX   L6/L6b/L6c (+m) hub->b100 R8 group 8->9: +1 (serial IDX chain); L12m/L12ms root->NE_hub idx link 13->14 NE only\n        (NW L12 stays 13): +1 (max of the two hubs); d44x L14 (b000->b001 scorer -> gc leaves) 8->10: +2 bound.\n  SM    L28/L28m hub->sm0 29->30 = max hub->SM leg: +1 (L100 sm3 7->8 below max -> +0).\n  COLL  L36/L36m hub->su00 14->18 (hb_coll del_flit/obase/valid + cic inj) becomes the max hub->SU delivery leg\n        (L0 su01 14): +4 per COLL record.\n  FUSED L36 also carries hc lg_rq/lg_wq -> hc_NW0 c_rq/c_wq: +4 per FUSED record (bound: every FUSED record);\n        L168 (+ d44x L14/L167) hcb chain b000->b001 +2: bound +2 more; L181 su31->hub 5->6 below the 8-cycle max -> +0.\n  status/fault/obs (L117 L138 L206m L735 L736 L202 L203 cfg) -> +0 (off the per-token path; L202/L203 col_idx.prm\n        is boot-time config).\nRun at a full repo root: PYTHONPATH=src python3 price_d44t.py OUT.json",
+ "base_cycles": 576702.4178468838,
+ "record_cycles": 610734.931155155,
+ "record_tok_s": 1799.79,
+ "rows": [
+  {
+   "case": "A1_ref_d44s",
+   "deltas": {
+    "dIDX": 0,
+    "dSM": 0,
+    "dSFU": 0,
+    "dCOLL": 0,
+    "dFUSED": 0
+   },
+   "extra": {
+    "SU": 3,
+    "IDX": 38,
+    "SM": 1,
+    "COLL": 0,
+    "FUSED": 0
+   },
+   "sfu": 168,
+   "cycles": 655471.98,
+   "tok_s": 1676.95,
+   "d_cycles_vs_ref": 0.0,
+   "pct_vs_ref": 0.0
+  },
+  {
+   "case": "d44t_expected",
+   "deltas": {
+    "dIDX": 2,
+    "dSM": 1,
+    "dSFU": 2,
+    "dCOLL": 4,
+    "dFUSED": 4
+   },
+   "extra": {
+    "SU": 3,
+    "IDX": 40,
+    "SM": 2,
+    "COLL": 4,
+    "FUSED": 4
+   },
+   "sfu": 170,
+   "cycles": 658992.98,
+   "tok_s": 1667.99,
+   "d_cycles_vs_ref": 3521.0,
+   "pct_vs_ref": -0.534
+  },
+  {
+   "case": "d44t_bound",
+   "deltas": {
+    "dIDX": 2,
+    "dSM": 1,
+    "dSFU": 3,
+    "dCOLL": 4,
+    "dFUSED": 6
+   },
+   "extra": {
+    "SU": 3,
+    "IDX": 40,
+    "SM": 2,
+    "COLL": 4,
+    "FUSED": 6
+   },
+   "sfu": 171,
+   "cycles": 659579.98,
+   "tok_s": 1666.51,
+   "d_cycles_vs_ref": 4108.0,
+   "pct_vs_ref": -0.623
+  },
+  {
+   "case": "d44x_expected",
+   "deltas": {
+    "dIDX": 2,
+    "dSM": 1,
+    "dSFU": 2,
+    "dCOLL": 4,
+    "dFUSED": 4
+   },
+   "extra": {
+    "SU": 3,
+    "IDX": 40,
+    "SM": 2,
+    "COLL": 4,
+    "FUSED": 4
+   },
+   "sfu": 170,
+   "cycles": 658992.98,
+   "tok_s": 1667.99,
+   "d_cycles_vs_ref": 3521.0,
+   "pct_vs_ref": -0.534
+  },
+  {
+   "case": "d44x_bound",
+   "deltas": {
+    "dIDX": 4,
+    "dSM": 1,
+    "dSFU": 3,
+    "dCOLL": 4,
+    "dFUSED": 6
+   },
+   "extra": {
+    "SU": 3,
+    "IDX": 42,
+    "SM": 2,
+    "COLL": 4,
+    "FUSED": 6
+   },
+   "sfu": 171,
+   "cycles": 659675.98,
+   "tok_s": 1666.26,
+   "d_cycles_vs_ref": 4204.0,
+   "pct_vs_ref": -0.637
+  }
+ ]
+}
