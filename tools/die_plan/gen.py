@@ -162,6 +162,9 @@ def main(argv=None):
     a3.add_argument("--hard-wrappers", default="", metavar="TYPES",
                     help="opt-in hard types containing bound wrapper glue; comma list, requires explicit --types, "
                          "--kit-rtl and a placed macro with timing views (default: skip all hard types)")
+    a3.add_argument("--region-guide", action="append", default=[], metavar="TYPE=SPEC_JSON",
+                    help="opt-in (FLOW-23, AUTO-GEOM class D r2r): the type kit sources the region_guide.py plan "
+                         "spec as soft GPL region guides (released before DPL); repeatable; default none = unchanged")
     a3.add_argument("--cland-pinslot", default="", metavar="all|TYPES",
                     help="AUTOBUILD-PIPE-1 (COORD 10-30 23:1x): OT_CLAND_PINSLOT=1 for these types ('all' = every kit; "
                          "a kit without landing-ring bands is unchanged by it) in addition to plan budgets.cland_pinslot_types")
@@ -239,7 +242,8 @@ def main(argv=None):
                                            bound_native_reset=[x for x in a.bound_native_reset.split(",") if x],
                                            landing=load_json(a.clock_landing) if a.clock_landing else None,
                                            hard_wrappers=[x for x in a.hard_wrappers.split(",") if x],
-                                           cland_pinslot=[x for x in a.cland_pinslot.split(",") if x])
+                                           cland_pinslot=[x for x in a.cland_pinslot.split(",") if x],
+                                           region_guide=dict(x.split("=", 1) for x in a.region_guide))
             else:
                 kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve(),
                                                 pg_map=json.loads(Path(a.pg_map).read_text()) if a.pg_map else None)]
