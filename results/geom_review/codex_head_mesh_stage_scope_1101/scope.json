@@ -1,0 +1,82 @@
+{
+ "status": "MATCHED_POSTCTS_GEOMETRY_CONTEXT_ONLY_NOT_RELEASED",
+ "added_cycles": 0,
+ "physical_changes": false,
+ "current_source": {
+  "prepared": "codex-head-collect-1101/prepared_mesh_y864",
+  "plan": "ad1e5a17b355",
+  "sidecar": "bbdd2f7b5ad1",
+  "frozen_tools": "703c07481",
+  "wrapper": "c6ec243bc188",
+  "pin_contract": "9c616664e587",
+  "sdc": "95dcfd5f93b5"
+ },
+ "stale_metric": {
+  "stage": "placed",
+  "clock_cells": 0,
+  "clock_leaf_reach_um": 590.15,
+  "driver_xy": [
+   279.3,
+   34.1
+  ],
+  "capture_xy": [
+   831.9,
+   71.7
+  ],
+  "path": "clk -> u_cland_fstart_m_rx_ft_o/q"
+ },
+ "matched_postcts": {
+  "clock_cells": 162,
+  "clock_sinks": 840,
+  "clock_leaf_tree_leg_um": 147.2,
+  "clock_edges": 1043,
+  "unrooted_sinks": 0,
+  "trace_errors": 0,
+  "related_pair_STA": "NOT QUALIFIED"
+ },
+ "coverage": {
+  "connected_CLOCK": 170,
+  "connected_SIGNAL": 3702,
+  "missing_native_guides": 0,
+  "special_CLOCK_SIGNAL": 0,
+  "GRT_overflow": 0
+ },
+ "checkpoints": {
+  "placement": {
+   "path": "intel2:/srv/opentallas-scratch2/claude/codex-head-pins-1131/mesh_kit4/gen/hd_mesh_e/run/results/asap7/dp_hd_mesh_e/base/3_place.odb",
+   "sha256": "75e65034db5f293b7dc49f4198a2c3d8e3a85008baa77e5547f4854428706841"
+  },
+  "cts": {
+   "path": "intel2:/srv/opentallas-scratch2/claude/codex-head-pins-1131/mesh_combined/gen/hd_mesh_e/run/results/asap7/dp_hd_mesh_e/base/4_cts.odb",
+   "sha256": "095852fe0d562bed678d3bb5caba38d8c8925ea15f2bb87f7b326c5153e48145"
+  },
+  "grt": {
+   "path": "intel2:/srv/opentallas-scratch2/claude/codex-head-pins-1131/mesh_combined/gen/hd_mesh_e/run/results/asap7/dp_hd_mesh_e/base/5_1_grt.odb",
+   "sha256": "c2f6a9653bbf9da30e9a7a5e01071dca76c91895e4f330ae1e20ddf6209bb194"
+  }
+ },
+ "current_constraint_scope": {
+  "period_ps": 833,
+  "actual_setup_uncertainty_ps": 0,
+  "actual_hold_uncertainty_ps": 25,
+  "seam_half_hold_ps": 12.5,
+  "clock_binding_target_tt_ps": 450,
+  "clock_binding_target_ff_ps": 342.67,
+  "core_input_source_early_ps": -30,
+  "legacy_input_min_ps": -90,
+  "forwarded_m_tx_input_min_ps": 80
+ },
+ "DRT_eligible": false,
+ "remaining": [
+  "real matching parent/sender IO-minimum guarantee and TT/FF propagated STA",
+  "clock-guide integrity: retry2 changed one actual clock guide and remains HELD",
+  "proper typed existing-checkpoint resume/adopt completion association"
+ ],
+ "sender_parts": [
+  "mesh0S",
+  "mesh7S",
+  "mesh7N"
+ ],
+ "sender_type": "hd_mesh",
+ "source_sender_proof_status": "Current wave hd_mesh prereoute LEC FAIL recorded 19:00; no qualified sender timing assumed"
+}
