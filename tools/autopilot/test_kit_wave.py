@@ -354,6 +354,10 @@ class QueueFill(unittest.TestCase):
                       "dir": str(Path(d) / "s"), "started": now + 60},            # queued after the failure: kept
             }}
             notices = {}
+            # KW-FIX-1 11-02: a WAIT-DEP pilot record (child view not signed yet) never stops its class volume
+            st["items"]["p"]["reason"] = "WAIT-DEP child view (lef/lib) missing in the plan @gen: ValueError"
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, {}), 0)
+            st["items"]["p"]["reason"] = "AUTO-GEOM rule FAIL"
             self.assertEqual(KW.cancel_class_volume(ap, c, st, notices), 1)
             self.assertEqual(st["items"]["q"]["status"], "CANCELLED")
             self.assertEqual(st["items"]["r"]["status"], "RUNNING")             # admitted = running, never cancelled
