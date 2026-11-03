@@ -1224,6 +1224,10 @@
           "--dpl-diamond",
           "sle_sc_v3"
         ]
+      },
+      "retry_fix": {
+        "sle_hc2__clcc5e3e61@2": "DPL-STALL class: gen phys --dpl-diamond (merged main 08542fa9d7d via 1b76e9abd9a = a589a3fea9; wave src kit-wave-qc-dpl-1103 f75b8a10890 port) in type_args; diamond legalizer proved on the same 3_4 DBs; launched 04:52 by DIE-QC-65/KITS, resume_from prev attempt",
+        "sle_sc_v3@3": "DPL-STALL class: gen phys --dpl-diamond (merged main 08542fa9d7d via 1b76e9abd9a = a589a3fea9; wave src kit-wave-qc-dpl-1103 f75b8a10890 port) in type_args; diamond legalizer proved on the same 3_4 DBs; launched 04:52 by DIE-QC-65/KITS, resume_from prev attempt"
       }
     },
     "hbm": {
