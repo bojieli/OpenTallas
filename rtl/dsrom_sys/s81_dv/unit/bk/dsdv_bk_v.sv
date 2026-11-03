@@ -41,7 +41,13 @@ endmodule
 // V ingress: tapped beats -> 4 lane words (registered, fixed latency: V pin -> lane word 3 edges) + drain commands
 module dsdv_bk_vin #(
     parameter integer V   = 276,
-    parameter integer MUT = 0             // bench only: 1 = part 1 written into the low half, 2 = single drops type/tag
+    parameter integer MUT = 0,            // bench only: 1 = part 1 written into the low half, 2 = single drops type/tag
+    // LPIPE (DIE-S81-51/RF-D 11-03, S81-062 RE-FORM form 2; RF-D build 1 CTS TT -152.5 on u_vs.dl_n -> kind/lane compare
+    // AND5 -> 515-b lane mux / hold fanout -> lanes[*]): 1 = the deliveries land in a register stage first (beat copies
+    // + pre-decoded one-hot lane hits pn / ps), so the lane mux selects from flops.  Lane words (incl. live and the
+    // sticky fault) leave +1 edge (V pin -> lane word 3 -> 4); the drain command (dr_*) timing is UNCHANGED (window LW,
+    // CTL-relative, unchanged).  0 = the old form.
+    parameter integer LPIPE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -60,6 +66,28 @@ module dsdv_bk_vin #(
     wire dn = dl_nv && dl_n[3:1] == ik, ds = dl_sv && dl_s[3:1] == ik;
     wire cn = dl_nv && dl_n[3:1] == 3'd0 && dl_n[28:21] == uid && dl_n[31:29] == 3'd1;
     wire cs = dl_sv && dl_s[3:1] == 3'd0 && dl_s[28:21] == uid && dl_s[31:29] == 3'd1;
+    // lane-path view of the deliveries: pn[l] / ps[l] = a N / S ingress beat of lane l; bn / bs the beats
+    wire [3:0] pn, ps; wire [V-1:0] bn, bs; wire cc;
+    generate if (LPIPE != 0) begin : g_lp
+        reg [3:0] pn_q, ps_q; reg [V-1:0] bn_q, bs_q; reg cc_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin pn_q <= 4'd0; ps_q <= 4'd0; cc_q <= 1'b0; end
+            else for (integer l = 0; l < 4; l = l + 1) begin
+                pn_q[l] <= dn && dl_n[5:4] == l; ps_q[l] <= ds && dl_s[5:4] == l; cc_q <= cn && cs;
+            end
+        always @(posedge clk) begin bn_q <= dl_n; bs_q <= dl_s; end
+        assign pn = pn_q; assign ps = ps_q; assign cc = cc_q;
+`ifdef OT_RFD_MUT_VIN   // bench mutant: the beat data bypass the stage (select from flops, data one edge early)
+        assign bn = dl_n; assign bs = dl_s;
+`else
+        assign bn = bn_q; assign bs = bs_q;
+`endif
+    end else begin : g_lw
+        for (genvar l = 0; l < 4; l = l + 1) begin : g_h
+            assign pn[l] = dn && dl_n[5:4] == l; assign ps[l] = ds && dl_s[5:4] == l;
+        end
+        assign bn = dl_n; assign bs = dl_s; assign cc = cn && cs;
+    end endgenerate
     reg [3:0]   hv;                       // part 0 held per lane
     reg [255:0] hd [0:3];
     reg [3:0]   wv, err;                  // this cycle: word complete / protocol error, per lane
@@ -68,10 +96,10 @@ module dsdv_bk_vin #(
     always @(*) begin
         for (integer l = 0; l < 4; l = l + 1) begin : g_ln
             reg [V-1:0] b;                    // the lane beat, assigned on every pass (comb temporary, no latch)
-            b = (dn && dl_n[5:4] == l) ? dl_n : dl_s;
+            b = pn[l] ? bn : bs;
             wv[l] = 1'b0; err[l] = 1'b0; wf[l] = 1'b0; wd[l] = 512'd0;
-            if ((dn && dl_n[5:4] == l) || (ds && dl_s[5:4] == l)) begin
-                if (dn && ds && dl_n[5:4] == dl_s[5:4]) err[l] = 1'b1;          // two beats of one lane in a cycle
+            if (pn[l] || ps[l]) begin
+                if (pn[l] && ps[l]) err[l] = 1'b1;                              // two beats of one lane in a cycle
                 if (!b[6]) begin
                     if (b[7]) begin
                         wv[l] = 1'b1;
@@ -90,10 +118,10 @@ module dsdv_bk_vin #(
     reg [4*515-1:0] lq;                   // lane registers; bit 515*l+513 (live) comes from lv_q[l] instead
     // S81-KITS-RTLC 10-25: one KEPT live chain per lane (the 4 identical chains were merged into one flop that fed all
     // four ln*[513] pins); the data bits load the word and are 0 when no word arrives (no hold self-loop at the pin)
-    (* keep = "true" *) reg [3:0] lv_0, lv_q;
+    (* keep = "true" *) reg [3:0] lv_0, lv_1, lv_q;   // LPIPE 1: one more live stage (lane words +1 edge)
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin lv_0 <= 4'd0; lv_q <= 4'd0; end
-        else begin lv_0 <= 4'hf; lv_q <= lv_0; end
+        if (!rst_n) begin lv_0 <= 4'd0; lv_1 <= 4'd0; lv_q <= 4'd0; end
+        else begin lv_0 <= 4'hf; lv_1 <= lv_0; lv_q <= (LPIPE != 0) ? lv_1 : lv_0; end
     genvar gl;
     generate for (gl = 0; gl < 4; gl = gl + 1) begin : g_live
         assign lanes[515 * gl +: 515] = {lq[515 * gl + 514], lv_q[gl], lq[515 * gl + 1 +: 512], lq[515 * gl]};
@@ -101,7 +129,7 @@ module dsdv_bk_vin #(
 `ifdef OT_DSDV_BK_TRACE
     integer tc = 0;
     always @(posedge clk) begin tc <= tc + 1; if (tc < 120 && (dl_nv || dl_sv)) $display("DSDV_BK_VIN t %0d n %0d/%h s %0d/%h", tc, dl_nv, dl_n[19:0], dl_sv, dl_s[19:0]); end
-    always @(posedge clk) if (rst_n && ((cn && cs) || err != 4'd0))
+    always @(posedge clk) if (rst_n && (cc || err != 4'd0))
         $display("DSDV_BK_VIN fault err %b n %0d/%h s %0d/%h hv %b", err, dl_nv, dl_n[19:0], dl_sv, dl_s[19:0], hv);
 `endif
     always @(posedge clk or negedge rst_n)
@@ -110,9 +138,9 @@ module dsdv_bk_vin #(
             for (integer l = 0; l < 4; l = l + 1) begin lq[515 * l] <= 1'b0; lq[515 * l + 514] <= 1'b0; end
         end else begin
             dr_v <= cn | cs;
-            if ((cn && cs) || err != 4'd0) fault <= 1'b1;
+            if (cc || err != 4'd0) fault <= 1'b1;
             for (integer l = 0; l < 4; l = l + 1) begin
-                if ((dn && dl_n[5:4] == l && !dl_n[6] && !dl_n[7]) || (!(dn && dl_n[5:4] == l) && ds && dl_s[5:4] == l && !dl_s[6] && !dl_s[7]))
+                if ((pn[l] && !bn[6] && !bn[7]) || (!pn[l] && ps[l] && !bs[6] && !bs[7]))
                     hv[l] <= 1'b1;
                 else if (wv[l]) hv[l] <= 1'b0;
                 lq[515 * l]       <= wv[l];
@@ -128,8 +156,8 @@ module dsdv_bk_vin #(
 `else
             lq[515 * l + 1 +: 512] <= wv[l] ? wd[l] : 512'd0;     // wd[l] is 0 when !wv[l] (comb default)
 `endif
-            if ((dn && dl_n[5:4] == l && !dl_n[6]) || (!(dn && dl_n[5:4] == l) && ds && dl_s[5:4] == l && !dl_s[6]))
-                hd[l] <= (dn && dl_n[5:4] == l) ? dl_n[275:20] : dl_s[275:20];
+            if ((pn[l] && !bn[6]) || (!pn[l] && ps[l] && !bs[6]))
+                hd[l] <= pn[l] ? bn[275:20] : bs[275:20];
         end
     end
 endmodule
