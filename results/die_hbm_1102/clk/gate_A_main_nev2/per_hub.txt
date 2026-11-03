@@ -1,0 +1,13 @@
+HBM die clock 12.25 (TT setup>=0, FF hold>=0, 25 ps hold unc), hub MESH a3e6s, C12e die tree on d44g, physical feed A, main tools.
+Route: NW_v2 (NDR w0.12, DRC 0) + NE_v2 (NDR w0.12, DRT violations 0, intel1 clkloc7-drt-NE_v2 ended 18:49; DRT process exit 139 after the final write, SPEF + DEF present).
+                 NE_v1 (w0.04 + n_root ECO)   NE_v2 (w0.12)
+TT setup die     +93.69                       +93.69
+contract viol    0                            0
+NW_hub need/W160 85.23 (+74.77)               85.23 (+74.77)
+NE_hub need/W160 155.24 (+4.76)               109.50 (+50.50)
+worst intra tag  NE_hub 155.24                NE_b101 153.16
+worst seam       NE_spu1->NE_spb2 155.63      155.63 (+4.37)
+CA crossings     773/773 TT lo 109.3 FF lo 144.2 (same)
+NE mesh skew     TT 98.9 / FF 93.7            TT 96.1 / FF 78.4 (MC worst 129.7 / 116.2)
+Verdict          BLOCKED(kits): 376206 hold pairs without signed real views (OWNER 12.19)
+Ruling DIE-HBM-59: NE route of record = NE_v2 (DRC 0, larger margin). n_root ECO on NE_v1 no longer needed.
