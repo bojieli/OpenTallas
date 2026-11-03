@@ -110,8 +110,8 @@
   "interface": {
     "controller_clock_mhz": {
       "grade": "assumed",
-      "note": "the core clock the HBM model's time base assumes (CLK_PS = 1000)",
-      "value": 1000.0
+      "note": "the die clock (1.2 GHz); min_period 833 ps (XCHECK-1 11-03)",
+      "value": 1200.0
     },
     "controller_side": {
       "address_basis": "ceil(log2(stack capacity 2.25e+10 B / 32 B))",
@@ -169,7 +169,7 @@
       "corner": "ff",
       "hold_ps": 27.060841075555558,
       "leakage_nw": 0.0,
-      "min_period_ps": 1000.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 400.0,
       "out_r_kohm": 0.31724855211381614,
       "out_slew_intrinsic_ps": 22.165861613333334,
@@ -189,7 +189,7 @@
       "corner": "ss",
       "hold_ps": 41.87064116916667,
       "leakage_nw": 0.0,
-      "min_period_ps": 1000.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 400.0,
       "out_r_kohm": 0.7083491406580278,
       "out_slew_intrinsic_ps": 35.38986175375,
@@ -209,7 +209,7 @@
       "corner": "tt",
       "hold_ps": 30.732718771111113,
       "leakage_nw": 0.0,
-      "min_period_ps": 1000.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 400.0,
       "out_r_kohm": 0.4562575976456151,
       "out_slew_intrinsic_ps": 27.39737815666667,
@@ -225,8 +225,8 @@
   "views": {
     "ot_hbm3e_phy.lef": "b640d6229a29c17790a3a6b03649481fb61a7144154becc2a982d266cdd52011",
     "ot_hbm3e_phy_bb.v": "6c50696a532d19c9264bcc6451ceae271969bdcc57fb0d4d68d672126f30b688",
-    "ot_hbm3e_phy_ff.lib": "e25300f464cfa6faa086518d156e440a0322651d8b4d54327ac5982e5a22342c",
-    "ot_hbm3e_phy_ss.lib": "6fba65e3e8d68c87f1f6fff3f8f7b163523603564d6aa1169fc02b05f5d62268",
-    "ot_hbm3e_phy_tt.lib": "b58d5f587d58b0d20f9f866455b0e6d84c919b6abc9b44f827c88c0c4e230a42"
+    "ot_hbm3e_phy_ff.lib": "f5841733b54030254dc47005b35358f8a083c8b1f058c7d7cf3dd9b63f4a75eb",
+    "ot_hbm3e_phy_ss.lib": "6039c6b2a722f45a61f7d9e3fab443038b402cd6060c41b1141ac5e743f0900a",
+    "ot_hbm3e_phy_tt.lib": "e21565cb65a942b16352b53045f0a4c8706f4aa987baed5aaaf1710555c1e1ba"
   }
 }
