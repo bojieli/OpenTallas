@@ -20,6 +20,8 @@ CHAIN = {
 def source(repo, original):
     """Use the current reviewed RTL chain, preserving generated interface leaves."""
     original = Path(original)
+    if 'rtl_rf1' in original.parts:   # RF-KV1 (DIE-KV-64/RF-B 11-03): a re-form source copy is kept as named in the core json
+        return original
     return Path(repo) / 'rtl/qwen_sys' / CHAIN[original.name] / original.name if original.name in CHAIN else original
 
 
