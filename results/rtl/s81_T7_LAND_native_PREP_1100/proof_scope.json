@@ -1,0 +1,38 @@
+{
+  "status": "PREP_ONLY_NO_LAND_RTL_OR_JOB",
+  "source_parent_sha256": "61c902f184b49e231c34de041d0f1832a4117749592f81fa3bf42d6ff4df504a",
+  "att_source_sha256": "107c4addac40494f621b463ca40a58bb47e560acddfc8d261aa1fe60c1ae5a88",
+  "native_helper_sha256": "f71c37d38a954e2894d5af93747e3332964c1c2ae58b5a86c798d667be946b8c",
+  "macros": 12,
+  "LVT_bits": 1280,
+  "old_ekv_w_FF": 1060,
+  "new_metadata_FF": 40,
+  "external_FF_delta": 260,
+  "macro_clock_delta": 12,
+  "reset_delta": 0,
+  "cycle_delta": 0,
+  "metadata_state_count_per_lane": 773,
+  "independent_ekv_m_4FF_unchanged": true,
+  "out_of_range_native_semantics_qualified": false,
+  "all_init_qualified": false,
+  "physical_or_source_cohort_adopted": false,
+  "mandatory_cases": [
+    "3 writers different addresses same bank128/132/136",
+    "3 writers same address ROWS>PC1>PC0",
+    "same-edge readOLD allwriterhistories",
+    "all640 logical rows through real writes",
+    "rowword window including need0",
+    "compressed needed and ignored",
+    "invalid row and rc0/161+/tjob exposure",
+    "live scale/wfirst/wcount/need changes afterwrite",
+    "warmreset/resetpluswrite/read",
+    "all raw outputs evenvalid0"
+  ],
+  "independent_controls": [
+    "wrongpriority",
+    "drop concurrent samebank writer",
+    "postwriteLVT/readNEW",
+    "scale_at_write",
+    "oneedgecapture"
+  ]
+}

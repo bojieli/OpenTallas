@@ -1,0 +1,95 @@
+{
+  "status": "READ_ONLY_CURRENT_NATIVE_CENSUS",
+  "kit_host": "intel1",
+  "kit": "/srv/opentallas-scratch2/claude/codex-flow-s81-source-2055/t7_current_canary2/gen/svc_lo_dsdv_svc_rs__t7",
+  "parent": "/srv/opentallas-scratch2/claude/codex-flow-s81-source-2055/t7_current_canary2/rtl/s81p_svc_lo_dsdv_svc_rs__t7_bound.sv",
+  "sources": [
+    {
+      "local_name": "parent.sv",
+      "bytes": 1640821,
+      "sha256": "61c902f184b49e231c34de041d0f1832a4117749592f81fa3bf42d6ff4df504a"
+    },
+    {
+      "local_name": "att.sv",
+      "bytes": 53859,
+      "sha256": "107c4addac40494f621b463ca40a58bb47e560acddfc8d261aa1fe60c1ae5a88"
+    },
+    {
+      "local_name": "engine.sv",
+      "bytes": 66710,
+      "sha256": "b1f0d0def70e01764895016c92556ec03ebc7254d4b469fe532971d947020dc5"
+    },
+    {
+      "local_name": "ot_bind_native_193c9bdc13b0c4251a5bbbc4.sv",
+      "bytes": 40179,
+      "sha256": "26dec0c55cedfaa8598b1f3fb19939ad72d05f8a3935442c4941763bc8ad6cc6"
+    },
+    {
+      "local_name": "ot_bind_native_4c805a5536bda0930879099e.sv",
+      "bytes": 178115,
+      "sha256": "f71c37d38a954e2894d5af93747e3332964c1c2ae58b5a86c798d667be946b8c"
+    }
+  ],
+  "native_parameters": {
+    "H": 16,
+    "D": 32,
+    "TD": 32,
+    "NL": 4,
+    "TR": 640,
+    "PFIFO": 512,
+    "PWORDS": 2,
+    "REPL": 2,
+    "ROWX_export_logic_selected": false
+  },
+  "pmem": {
+    "native_helper": "193c9bdc13b0c4251a5bbbc4",
+    "shape": [
+      512,
+      512
+    ],
+    "read_ports": 2,
+    "read_type": "asynchronous",
+    "read_addresses": [
+      "pr[8:0]+9d1 modulo512 (lowRD_DATA512)",
+      "pr[8:0] (highRD_DATA512)"
+    ],
+    "first_captures": [
+      "u_eng.g_pskid.sk0 on push&&!wp",
+      "u_eng.g_pskid.sk1 on push&&wp"
+    ],
+    "native_push": "p_v && (sk_n != 2)",
+    "p_v": "job_active && p_left!=0 && jc>=po",
+    "native_pop": "(sk_n!=0) && p_ready_i",
+    "write": "single clocked fullword source channel; native helper exposes per-bit512mask",
+    "native_clock_processes": 1
+  },
+  "land": {
+    "native_helper": "4c805a5536bda0930879099e",
+    "shape": [
+      640,
+      256
+    ],
+    "read_ports": 4,
+    "read_type": "asynchronous",
+    "read_addresses": [
+      "4*(rc-1)+j for j0..3"
+    ],
+    "first_capture": "ekv_w1060 unconditional at same next clk: rowword(lrd,scale,need); payload1024/control36, ekv_m4 independent unchanged",
+    "other_current_live_land_consumers": [],
+    "export_absent": "ROWX/x_em state absent and bound RD_ADDR literalrcstride; do not borrow unselected ROWXmux",
+    "write_logical_slots": 7,
+    "write_logical_fullword_channels": 3,
+    "native_clock_processes": 1,
+    "write_priority": "ROWS > PC1 > PC0; higher native slot wins bitwise on equaladdress",
+    "same_bank_different_address_parallel_writes_possible": true
+  },
+  "source_parameter_alternatives": {
+    "SRAM_MACRO": "passed into engine staging only; no generate branch around land or pmem",
+    "PFIFO": "changes probability capacity; no justified reduction proposed",
+    "ROWX": "current compiledout; enabling it adds arbitrary export addresses and changes this read-bank scope",
+    "PWORDS": "parent hardcodes2; do not silently change feed cadence"
+  },
+  "jobs_started": 0,
+  "RTL_changed": false,
+  "physical_or_default_adopted": false
+}

@@ -1,0 +1,5 @@
+PMEM_NATIVE_PASS checks=4096 pushes=1667 pops=1576 writes=4092 collisions=439 odd=896 tail=766 empty=1168 warm=74 resetpush=37 fullpvpop=244 FFdelta=-1020 macros=4 clockps=833
+- tb.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.094 s; speed 36.393 us/s
+- Verilator: cpu 0.094 s on 1 threads; allocated 7 MB

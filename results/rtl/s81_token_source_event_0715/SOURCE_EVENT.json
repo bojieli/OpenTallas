@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.inactive_token_source_event.v1",
+  "enabled": false,
+  "source_clock_selection": null,
+  "frozen_source": "39f754dda07e9746c4850ea0814d48d134a6cf2a",
+  "accepted_comparison": "9db068b5458b7a20a548ab165aabc8dc6c077a30",
+  "candidate_manifest": "physical/die_plan/s81/bind/asbuilt_token_namespace_source39_candidate_1102.json",
+  "source_overlays": {
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv": "b12d983ca",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv": "b12d983ca",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xg.sv": "b12d983ca",
+    "tools/s81/verilator_hier_params.py": "6430864fb"
+  },
+  "current_XS4_sha256": "0e49aefdedcc41a1cb571c21cad73f247c2d97a7904799027af1373b16a920e1",
+  "explicit_child_files": [
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv"
+  ],
+  "native_simulator_helper": "tools/s81/verilator_hier_params.py",
+  "hierarchy_option_policy": "Apply helper to each fresh generated library and final-top args in NEW output paths; preserve genuine type files; no -f recursion guesses. Do not alter inherited args/caches.",
+  "source_state_or_cycle_delta_from_namespace": 0,
+  "plan_clock_options": "plan_clock_options.json",
+  "image_input_contract": "image_and_programme_inputs.json",
+  "readset": "source_readset.json",
+  "cache_classes": "cache_classes.json",
+  "fresh_emission_launched": false,
+  "frontend_backend_launched": false,
+  "provider_flags_changed": false,
+  "physical_epoch_qualified": false,
+  "fullmission_programme_qualified": false,
+  "ready_scope": "One concrete inactive source/manifest/tool/cache/image event for root review; not a buildable mission until actual112 XS images/programme and source/clock selection are supplied",
+  "exact_XS_paths_and_capture_contract": "XS_selector_contract.json"
+}

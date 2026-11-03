@@ -1,0 +1,82 @@
+424:     reg [7:0] go_cnt; reg go_arm; reg go;
+425:     reg [15:0] po, pvo, pio, jc;                    // compiled p-feed start / P.V drain base / P injection start; cycles since the share's start
+426:     reg dr_arm, dr_on; reg [2:0] dbeat;
+427:     reg [9:0] rc; reg run;                           // program cycle
+428:     wire [9:0] nbeat = (tjob + 10'd3) >> 2;
+429:     // engine ports
+430:     reg ej_v; reg eq_v; reg [D*16-1:0] eq_w; reg ekv_v; reg [NL-1:0] ekv_m, kc_m; reg [NL*265-1:0] ekv_w, kc_w;
+431:     wire ej_ready, eq_ready, kv_ready;
+432:     reg [NL-1:0] rel_bad;
+433:     // row word at release
+434:     function automatic [264:0] rowword(input integer row, input [255:0] l, input [1023:0] sc, input [7:0] wc,
+435:                                        input [20:0] wf, input need);
+436:         reg [6:0] sl;
+437:         if (row < wc) begin
+438:             sl = 7'(wf[6:0] + 7'(row));
+439:             rowword = {1'b0, sc[8*sl +: 8], l};
+440:         end else rowword = need ? {1'b1, 120'd0, l[143:0]} : {1'b1, 264'd0};
+441:     endfunction
+442:     // ------------------------------------------------------------------ S81-ROWX held-row list + export job state
+443:     localparam integer XW = $clog2(XN);
+
+459:     // fault 25 / 27), so the export adds no landing read port
+460:     reg [255:0] lrd [0:NL-1];
+461:     integer j;
+462:     integer row; reg need, ok;
+463:     always @(*) begin
+464:         kc_w = '0; kc_m = '0; rel_bad = '0; row = 0; need = 1'b0; ok = 1'b0;
+465:         for (j = 0; j < NL; j = j + 1) begin
+466:             row = 4 * (32'(rc) - 1) + j;
+467:             lrd[j] = land[(RX && x_em && j == 0) ? 32'(x_s0) : (RX && x_em && j == 1) ? 32'(x_s1) : row];
+468:         end
+469:         for (j = 0; j < NL; j = j + 1) begin
+470:             row = 4 * (32'(rc) - 1) + j; need = 1'b0; ok = 1'b0;
+471:             if (row < 32'(tjob)) begin
+472:                 kc_m[j] = 1'b1;
+473: `ifdef OT_SVC_ALLQ
+474:                 need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r || allq_r;
+475: `else
+476:                 need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r;
+477: `endif
+478:                 ok = pres[row] && (row >= 32'(wcount) || spres[7'(wfirst[6:0] + 7'(row)) >> 5]);
+479:                 kc_w[265*j +: 265] = rowword(row, lrd[j], wsc, wcount, wfirst, need);
+480:                 rel_bad[j] = need && !ok;
+481:             end
+482:         end
+483:     end
+484: 
+
+550:         for (k = 0; k < 3; k = k + 1) if (wpush[k]) wq[k][wpush_pc[k]][wq_w[k][wpush_pc[k]][2:0]] <= wpush_d[k];
+551:         // q store
+552:         if (q_word) qmem[{f_hdr[448], f_idx[6:4]}] <= q_d;
+553:         // p store
+554:         if (pay_mine && f_type == 4'd5) pmem[pw[PFW-1:0]] <= q_d;
+555:         // landing writes: PC responses, ROWS
+556:         for (k = 0; k < 2; k = k + 1) if (qrv[k]) begin
+557:             reg [16:0] tg; reg [11:0] o144; reg [511:0] two; reg [9:0] slot;
+558:             tg = qr_tag[17*k +: 17];
+559:             case (tg[16:15])
+560:                 2'd0: land[tg[7:0]] <= qr_data[256*k +: 256];
+561:                 2'd1: wsc[256 * {tg[1], tg[0]} +: 256] <= qr_data[256*k +: 256];
+562:                 2'd2: begin
+563:                     o144 = 12'(tg[13:10]) * 12'd144;
+564:                     two = {qr_data[256*k +: 256], hold[k]};
+565:                     slot = 10'(wcount) + tg[9:0];
+566:                     if (32'(o144[7:0]) + 144 <= 256 && qr_beat[4*k +: 4] == 4'd0)
+567:                         land[slot] <= {112'd0, 144'(qr_data[256*k +: 256] >> o144[7:0])};
+568:                     else if (qr_beat[4*k +: 4] == 4'd1)
+569:                         land[slot] <= {112'd0, 144'(two >> o144[7:0])};
+570:                     if (qr_beat[4*k +: 4] == 4'd0) hold[k] <= qr_data[256*k +: 256];
+571:                 end
+572:                 default: ;
+573:             endcase
+574:         end
+575:         if (rw_v) land[rw_slot] <= {112'd0, rw_bits};
+
+579:         if (sw_step && sw_i < sw_n[sw_r[4:0]] && g_own)
+580:             fq[sid_g[8]][fq_w[sid_g[8]][3:0]] <= {sid_g[3:0], s_rank, sid_g[20:9]};
+581:         // SEL words
+582:         // engine program inputs
+583:         eq_w <= qmem[4'(rc - 10'd1)];
+584:         ekv_w <= kc_w; ekv_m <= kc_m;
+585:         // PC request flops

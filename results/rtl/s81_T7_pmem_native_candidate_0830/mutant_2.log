@@ -1,0 +1,4 @@
+PMEM_NATIVE_FAIL cycle=517 mutant=2 n=1 wp=1 rp=0 ready=1/1 valid=1/1 s0=0 s1=1 out=0 rst=1
+[430245] %Fatal: tb.sv:40: Assertion failed in tb: native memory+capture mismatch
+%Error: tb.sv:40: Verilog $stop
+Aborting...

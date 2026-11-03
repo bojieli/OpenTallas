@@ -1,0 +1,101 @@
+%Warning-SELRANGE: src3/015_ot_s81sl_xs4.sv:826:68: Selection index out of range: 4:4 outside 3:0
+                                                  : ... note: In instance 'tb_bf_source_pair.xs'
+  826 |                 assign mw_m[gs][gm][32*gj +: 32] = {32{gj < 4 ? mlo[gj] : mhi[gj - 4]}};
+      |                                                                    ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-SELRANGE: src3/015_ot_s81sl_xs4.sv:826:68: Selection index out of range: 5:5 outside 3:0
+                                                  : ... note: In instance 'tb_bf_source_pair.xs'
+  826 |                 assign mw_m[gs][gm][32*gj +: 32] = {32{gj < 4 ? mlo[gj] : mhi[gj - 4]}};
+      |                                                                    ^
+%Warning-SELRANGE: src3/015_ot_s81sl_xs4.sv:826:68: Selection index out of range: 6:6 outside 3:0
+                                                  : ... note: In instance 'tb_bf_source_pair.xs'
+  826 |                 assign mw_m[gs][gm][32*gj +: 32] = {32{gj < 4 ? mlo[gj] : mhi[gj - 4]}};
+      |                                                                    ^
+%Warning-SELRANGE: src3/015_ot_s81sl_xs4.sv:826:68: Selection index out of range: 7:7 outside 3:0
+                                                  : ... note: In instance 'tb_bf_source_pair.xs'
+  826 |                 assign mw_m[gs][gm][32*gj +: 32] = {32{gj < 4 ? mlo[gj] : mhi[gj - 4]}};
+      |                                                                    ^
+%Warning-SELRANGE: src3/015_ot_s81sl_xs4.sv:865:36: Selection index out of range: 87:80 outside 79:0
+                                                  : ... note: In instance 'tb_bf_source_pair.xs'
+  865 |         wire [7:0] o0 = FB ? ohb[0][8*G +: 8] : ohq[0][8*G +: 8];
+      |                                    ^
+%Warning-SELRANGE: src3/015_ot_s81sl_xs4.sv:866:36: Selection index out of range: 87:80 outside 79:0
+                                                  : ... note: In instance 'tb_bf_source_pair.xs'
+  866 |         wire [7:0] o1 = FB ? ohb[1][8*G +: 8] : ohq[1][8*G +: 8];
+      |                                    ^
+%Warning-SELRANGE: src3/015_ot_s81sl_xs4.sv:867:36: Selection index out of range: 87:80 outside 79:0
+                                                  : ... note: In instance 'tb_bf_source_pair.xs'
+  867 |         wire [7:0] o2 = FB ? ohb[2][8*G +: 8] : ohq[2][8*G +: 8];
+      |                                    ^
+%Warning-SELRANGE: src3/015_ot_s81sl_xs4.sv:865:36: Selection index out of range: 95:88 outside 79:0
+                                                  : ... note: In instance 'tb_bf_source_pair.xs'
+  865 |         wire [7:0] o0 = FB ? ohb[0][8*G +: 8] : ohq[0][8*G +: 8];
+      |                                    ^
+%Warning-SELRANGE: src3/015_ot_s81sl_xs4.sv:866:36: Selection index out of range: 95:88 outside 79:0
+                                                  : ... note: In instance 'tb_bf_source_pair.xs'
+  866 |         wire [7:0] o1 = FB ? ohb[1][8*G +: 8] : ohq[1][8*G +: 8];
+      |                                    ^
+%Warning-SELRANGE: src3/015_ot_s81sl_xs4.sv:867:36: Selection index out of range: 95:88 outside 79:0
+                                                  : ... note: In instance 'tb_bf_source_pair.xs'
+  867 |         wire [7:0] o2 = FB ? ohb[2][8*G +: 8] : ohq[2][8*G +: 8];
+      |                                    ^
+%Warning-ALWNEVER: src3/014_ot_s81sl_xrt.sv:910:9: 'always @*' will never execute as expression list is empty (no variables read)
+                                                 : ... note: In instance 'tb_bf_source_pair.xr.u'
+                                                 : ... Suggest use 'always_comb'
+  910 |         always @(*) fcore = 1'b0;
+      |         ^~~~~~
+                   ... For warning description see https://verilator.org/warn/ALWNEVER?v=5.050
+                   ... Use "/* verilator lint_off ALWNEVER */" and lint_on around source to disable this message.
+%Warning-COMBDLY: src3/031_ot_s81_bf_front_roots.sv:292:49: Non-blocking assignment '<=' in combinational logic process
+                                                          : ... This will be executed as a blocking assignment '='!
+  292 |             always_latch if (!clk) begin busy_l <= busy_e; fault_l <= fault_e; end
+      |                                                 ^~
+                  ... For warning description see https://verilator.org/warn/COMBDLY?v=5.050
+                  ... Use "/* verilator lint_off COMBDLY */" and lint_on around source to disable this message.
+                  *** See https://verilator.org/warn/COMBDLY?v=5.050 before disabling this,
+                  else you may end up with different sim results.
+%Warning-COMBDLY: src3/031_ot_s81_bf_front_roots.sv:292:68: Non-blocking assignment '<=' in combinational logic process
+                                                          : ... This will be executed as a blocking assignment '='!
+  292 |             always_latch if (!clk) begin busy_l <= busy_e; fault_l <= fault_e; end
+      |                                                                    ^~
+%Warning-MULTIDRIVEN: src3/031_ot_s81_bf_front_roots.sv:185:31: Signal has multiple driving blocks with different clocking: 'tb_bf_source_pair.front.u_view.programme_pin_q'
+                      src3/031_ot_s81_bf_front_roots.sv:189:18: ... Location of first driving block
+  189 |             else programme_pin_q[18:0] <= f_prog[18:0];
+      |                  ^~~~~~~~~~~~~~~
+                      src3/031_ot_s81_bf_front_roots.sv:192:18: ... Location of other driving block
+  192 |             else programme_pin_q[37:19] <= f_prog[37:19];
+      |                  ^~~~~~~~~~~~~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: src3/015_ot_s81sl_xs4.sv:486:36: Signal has multiple driving blocks with different clocking: 'tb_bf_source_pair.xs.u_ctl.bv_c'
+                      src3/015_ot_s81sl_xs4.sv:489:82: ... Location of first driving block
+  489 |         if (!rb[1]) bv_c[17:0] <= 18'd0; else for (kb = 0; kb < 18; kb = kb + 1) bv_c[kb] <= btx_c[0] | btg_c[0];
+      |                                                                                  ^~~~
+                      src3/015_ot_s81sl_xs4.sv:491:85: ... Location of other driving block
+  491 |         if (!rx[20]) bv_c[34:18] <= 17'd0; else for (kb = 18; kb < 35; kb = kb + 1) bv_c[kb] <= btx_c[1] | btg_c[1];
+      |                                                                                     ^~~~
+ot-heavy: verilator build -j2 capped to -j1 (8 GB / 30 GB per cc1plus)
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -j 2 --x-assign 0 --x-initial 0 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-lint -Wno-style -Wno-MULTITOP --output-split 20000 --output-split-cfuncs 2000 +define+DSFD_PQ_STATIC_X2 +define+DSFD_PQ_HAS_BF_X2 +define+S81CTRL_SRAM_FIFO +define+S81CTRL_SRAM_P192 +define+S81CTRL_NATIVE32 +define+OT_COLL_NATIVE32 +define+OT_COLL_NATIVE32_OFF +define+OT_S81ENG_TAP_N32R2 +define+OT_S81SL_KV_TRANSPORT +define+OT_SVC_ALLQ +define+SU_SMU_T +define+OT_ATTN_HCORE +define+OT_S81ENG_RR_N32 +define+OT_S81C_HCORE_CTLA +define+OT_S81C_HCORE_RST_TIMED +define+S81_HOSTB_LAND_OBS +define+OT_S81_SH_SRAM +define+OT_S81_SH_RSZ +define+OT_S81_SH_P192 +define+OT_S81_SH_APIPE9 +define+OT_S81_SH_APIPE10 --top-module tb_bf_source_pair -Mdir /srv/opentallas-scratch2/claude/codex-ds-bf-native-pair-0605/obj -f sources.f"
+	User time (seconds): 182.04
+	System time (seconds): 8.54
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:09.02
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1116712
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2334151
+	Voluntary context switches: 636
+	Involuntary context switches: 584
+	Swaps: 0
+	File system inputs: 216
+	File system outputs: 639160
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

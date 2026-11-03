@@ -1,0 +1,482 @@
+{
+  "roots": [
+    "ot_s81sl_xrt1",
+    "ot_s81sl_rstopt_xo",
+    "ot_s81sl_xs4",
+    "dsfd_cfifo_crs4",
+    "ot_s81_sstn_base566",
+    "ot_s81_sstn_payload536",
+    "dsfd_rly_2_NW",
+    "dsfd_rly_15_SN",
+    "dsfd_rly_283_EW",
+    "dsfd_rly_266_EW",
+    "dsfd_rly_536_SW",
+    "dsfd_rly_536_EN",
+    "dsfd_rly_54_WN",
+    "dsfd_rly_38_WN",
+    "ot_dp_dly",
+    "ot_s81_cfg7_seq_bfp",
+    "ot_rom_4096x72_m8",
+    "dsfd_bf_front_roots",
+    "dsfd_bf_col"
+  ],
+  "modules": [
+    "dsfd_bf_col",
+    "dsfd_bf_front_roots",
+    "dsfd_cfifo_crs4",
+    "dsfd_rly_15_EN",
+    "dsfd_rly_15_NS",
+    "dsfd_rly_15_SN",
+    "dsfd_rly_15_SW",
+    "dsfd_rly_1_EW",
+    "dsfd_rly_1_WE",
+    "dsfd_rly_1_WN",
+    "dsfd_rly_266_EW",
+    "dsfd_rly_266_SN",
+    "dsfd_rly_266_WE",
+    "dsfd_rly_283_EW",
+    "dsfd_rly_283_SN",
+    "dsfd_rly_283_WE",
+    "dsfd_rly_2_ES",
+    "dsfd_rly_2_EW",
+    "dsfd_rly_2_NE",
+    "dsfd_rly_2_NS",
+    "dsfd_rly_2_NW",
+    "dsfd_rly_2_SN",
+    "dsfd_rly_2_WE",
+    "dsfd_rly_2_WS",
+    "dsfd_rly_38_WN",
+    "dsfd_rly_536_EN",
+    "dsfd_rly_536_SN",
+    "dsfd_rly_536_SW",
+    "dsfd_rly_536_WS",
+    "dsfd_rly_54_EW",
+    "dsfd_rly_54_WN",
+    "dsfd_rly_63_ES",
+    "dsfd_rly_63_NE",
+    "dsfd_rly_63_NS",
+    "dsfd_rly_63_NW",
+    "dsfd_rly_63_SE",
+    "dsfd_rly_63_SN",
+    "dsfd_rly_63_WE",
+    "dsfd_rly_63_WN",
+    "dsfd_rly_63_WS",
+    "dsfd_rly_66_EN",
+    "dsfd_rly_66_ES",
+    "dsfd_rly_66_EW",
+    "dsfd_rly_66_NE",
+    "dsfd_rly_66_NS",
+    "dsfd_rly_66_NW",
+    "dsfd_rly_66_SN",
+    "dsfd_rly_66_SW",
+    "dsfd_rly_66_WS",
+    "dsfd_rly_68_EW",
+    "ot_bf6_cen_pool",
+    "ot_bf6_ereg",
+    "ot_bf6_kand",
+    "ot_bf6_kao",
+    "ot_bf6_kcopy",
+    "ot_bf6_kor",
+    "ot_bf_hdly",
+    "ot_dp_and",
+    "ot_dp_dly",
+    "ot_dp_lockq",
+    "ot_dp_or",
+    "ot_dp_rgate",
+    "ot_dp_rrelay",
+    "ot_dp_rsync",
+    "ot_dp_rsync_s2",
+    "ot_dp_rsync_s3",
+    "ot_dp_st",
+    "ot_fp32_add_rne_pipe",
+    "ot_hdc_bmul",
+    "ot_hdc_cg",
+    "ot_hdc_delay",
+    "ot_hdc_fadd",
+    "ot_hdc_fmul",
+    "ot_hdc_fp32_mul_pipe",
+    "ot_rom_4096x274_m8",
+    "ot_rom_4096x72_m8",
+    "ot_rom_8192x274_m8",
+    "ot_rst_relay",
+    "ot_s81_bf_front_roots",
+    "ot_s81_bf_prog_seq",
+    "ot_s81_bf_seam_roots",
+    "ot_s81_cfg7_seq",
+    "ot_s81_cfg7_seq_bf",
+    "ot_s81_cfg7_seq_bf_local",
+    "ot_s81_cfg7_seq_bfp",
+    "ot_s81_cfg7_seq_local",
+    "ot_s81_land",
+    "ot_s81_rly",
+    "ot_s81_rly_k",
+    "ot_s81_rly_rq",
+    "ot_s81_so_label_q",
+    "ot_s81_sstn_base566",
+    "ot_s81_sstn_payload536",
+    "ot_s81sl_rstd_release",
+    "ot_s81sl_rstopt_xo",
+    "ot_s81sl_xr_cp",
+    "ot_s81sl_xr_rcp",
+    "ot_s81sl_xrt",
+    "ot_s81sl_xrt1",
+    "ot_s81sl_xrt3",
+    "ot_s81sl_xs4",
+    "ot_s81sl_xs4_bad",
+    "ot_s81sl_xs4_bdec",
+    "ot_s81sl_xs4_cal",
+    "ot_s81sl_xs4_ctl",
+    "ot_s81sl_xs4_due",
+    "ot_s81sl_xs4_fetch",
+    "ot_s81sl_xs4_pdec",
+    "ot_s81sl_xs4_rng",
+    "ot_s81sl_xs4_rst",
+    "ot_sram_1r1w2c_128x64_m1",
+    "ot_sram_1r1w_128x256_m1_r2c2",
+    "ot_v41_bf16_lanes",
+    "ot_v41_bf16_lanes2",
+    "ot_v41_bf16_lanes3",
+    "ot_v41_bf_col",
+    "ot_v41_bf_front_core_roots",
+    "ot_v41_bf_tag_delay",
+    "ot_v41_bmul2_rne_prepare",
+    "ot_v41_bmul_subnormal_rne_prepare",
+    "ot_v41_bterm",
+    "ot_v41_bterm2_w10",
+    "ot_v41_bterm4_w10",
+    "ot_v41_chain",
+    "ot_v41_chain2",
+    "ot_v41_chain2u2",
+    "ot_v41_chain4",
+    "ot_v41_csa",
+    "ot_v41_cut",
+    "ot_v41_fadd",
+    "ot_v41_fadd2",
+    "ot_v41_fadd_s0",
+    "ot_v41_first_w10",
+    "ot_v41_inc",
+    "ot_v41_kreg",
+    "ot_v41_ksadd",
+    "ot_v41_rom_elem_qx_w10",
+    "ot_v41_rom_elem_w10",
+    "ot_v41_segtree",
+    "ot_v41_segtree2",
+    "ot_v41_segtree4",
+    "ot_v41_segtree5",
+    "ot_v41_tile_clk",
+    "ot_v41_walk2_w10",
+    "ot_v41_walk_w10"
+  ],
+  "files": [
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/bind_cells.sv",
+      "staged": "src3/000_bind_cells.sv",
+      "sha256": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+      "staged": "src3/001_ot_rom_4096x274_m8.v",
+      "sha256": "9e83cdca202aa4e54e8024d91b35f5309ff9fca0961d23b36cd01a4e41c13e3f"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+      "staged": "src3/002_ot_rom_4096x72_m8.v",
+      "sha256": "f9606abe8f228ffbdf8ad3be5380abab6dbb9bac9bdc31af6b76abf99e502e2e"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
+      "staged": "src3/003_ot_rom_8192x274_m8.v",
+      "sha256": "aa82c75dd7c1368386cb4ed2bc4e2f7852c4a7d0a8b36a8d363d68afbc3526ba"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+      "staged": "src3/004_ot_sram_1r1w2c_128x64_m1.v",
+      "sha256": "03a15da7f7691bfcf973a4d4e833fc4853c3d56bd8146092c8390705f0108083"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "staged": "src3/005_ot_sram_1r1w_128x256_m1_r2c2.v",
+      "sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/common/ot_prefix.sv",
+      "staged": "src3/006_ot_prefix.sv",
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
+      "staged": "src3/007_dsfd_bf_col.sv",
+      "sha256": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv",
+      "staged": "src3/008_dsfd_bf_front_roots.sv",
+      "sha256": "54c30803704601943e827a37263584f505e7546e0c1d8c62a8834031d5e16cf4"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv",
+      "staged": "src3/009_ot_s81_bf_prog_seq.sv",
+      "sha256": "4f4290a6bacb37e98b6d48f4c914d8ab4eb9b417d81d1c271ba96b48d4936cc8"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
+      "staged": "src3/010_dsfd_rly_frame_exact.sv",
+      "sha256": "df18dbcd870f952acb0f4fa4a3f77fb51641b283ff3879943e2601d35ab8963c"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv",
+      "staged": "src3/011_dsfd_cfifo_crs4.sv",
+      "sha256": "44e30c7a2c33a725b2f15ff85f23d2916cf35e3146b0de5db5ed07fb188a4fbd"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv",
+      "staged": "src3/012_ot_s81_land.sv",
+      "sha256": "3b33fb6f14752a7f0e71bfbaff5d127d4e091e1503774fdfede70da829cf7662"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+      "staged": "src3/013_ot_s81sl_rstopt_xo.sv",
+      "sha256": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+      "staged": "src3/014_ot_s81sl_xrt.sv",
+      "sha256": "59a53960b2c66851b14fbfcc615e451d380774ac483f2987a5f806abeb0cffa9"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+      "staged": "src3/015_ot_s81sl_xs4.sv",
+      "sha256": "0e49aefdedcc41a1cb571c21cad73f247c2d97a7904799027af1373b16a920e1"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv",
+      "staged": "src3/016_dsfd_rly_masters.sv",
+      "sha256": "711feddaee9446a08088936e6190d3920a6f5fc74e15da35cb32bcd12460ef6a"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv",
+      "staged": "src3/017_dsfd_rly_masters_266ew.sv",
+      "sha256": "23300ab7868673cca1ace623995db83a3f83961005efda3164f5058d05da5cee"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv",
+      "staged": "src3/018_dsfd_rly_masters_536.sv",
+      "sha256": "e3584dd29cf76543149415f65808a8525e9cf19e1858c2a5d56ad5a2e45185fc"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv",
+      "staged": "src3/019_dsfd_rly_masters_c26l.sv",
+      "sha256": "6e922cfe663df02ff19aa121aa97dfd4d95c93e37ed38e5b21cfe1d7df5e24de"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv",
+      "staged": "src3/020_dsfd_rly_masters_gen18.sv",
+      "sha256": "1312d4134029df6d419bdd45757ee17dca41eca738a7bb20199fcb09b9ff4e26"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv",
+      "staged": "src3/021_dsfd_rly_masters_v16.sv",
+      "sha256": "357ffbcd9ecf0e9f67ab6c1901d18e75dbc5d6e7c35a5d69529134327d118f4f"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+      "staged": "src3/022_ot_s81_rly.sv",
+      "sha256": "57f568bf0cde9d0dfcf8ce9c2ffb18818471fd7a6e5ee7a30b806fcb03f905ea"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv",
+      "staged": "src3/023_ot_s81_sstn_base566.sv",
+      "sha256": "b40694f6fdb6a36bd461c5c0b9c436933231ea56d060dc5fbcc7474d5534e3cf"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_static_net/ot_s81_sstn_payload536.sv",
+      "staged": "src3/024_ot_s81_sstn_payload536.sv",
+      "sha256": "7467c59d1cad40f3cb3e4146506dd32d7ad8dbb5f0fbd21270c05b0c790d0c0a"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/hdc/ot_hdc_cg.sv",
+      "staged": "src3/025_ot_hdc_cg.sv",
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/hdc/ot_hdc_delay.sv",
+      "staged": "src3/026_ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "staged": "src3/027_ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/hdc/ot_hdc_fpu.sv",
+      "staged": "src3/028_ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/lib/ot_rst_relay.sv",
+      "staged": "src3/029_ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "staged": "src3/030_ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/s81/ot_s81_bf_front_roots.sv",
+      "staged": "src3/031_ot_s81_bf_front_roots.sv",
+      "sha256": "ee6caa2511c362c5122a5b49c4e5afe7f1a9e6ebc1762f5366583a3529a3f708"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/s81/ot_s81_bf_seam_roots.sv",
+      "staged": "src3/032_ot_s81_bf_seam_roots.sv",
+      "sha256": "2f52cc4c8ccad305e8fbbe4f223c1ad503f04008ca0ecdc0650705313352f3c4"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41die/ot_s81_cfg7_seq.sv",
+      "staged": "src3/033_ot_s81_cfg7_seq.sv",
+      "sha256": "9acc1f62ca6e800988a420a3fd1335c7b3f65c756831d35d5ae168687a18d714"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41die/ot_s81_cfg7_seq_bfp.sv",
+      "staged": "src3/034_ot_s81_cfg7_seq_bfp.sv",
+      "sha256": "6e36b1e26fe71717374dcd09edcefce18d8758ca1b4b19a0a0f79b51b60a4a7c"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_bf6_n32.sv",
+      "staged": "src3/035_ot_bf6_n32.sv",
+      "sha256": "d85f14129b645548a03bd1c266c8297154106e7db549bab38cf42017fc166158"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_bf_hdly.sv",
+      "staged": "src3/036_ot_bf_hdly.sv",
+      "sha256": "4869bc5fa88d37110380ef79cdb805c771c9b51e93e4beb36ab89657ba134271"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_s81_so_label_q.sv",
+      "staged": "src3/037_ot_s81_so_label_q.sv",
+      "sha256": "9b2a8c94cc19c38bd900d3fde07c1a2a36dcabddd23df193813a21e6dc901650"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_bf16_lanes.sv",
+      "staged": "src3/038_ot_v41_bf16_lanes.sv",
+      "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+      "staged": "src3/039_ot_v41_bf16_lanes2_rne_prepare.sv",
+      "sha256": "81e512dd86ba0b58c1ea35ffa20346d4aa691bee8bbb1e87dd49a4183ea1ad48"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_bf16_lanes3.sv",
+      "staged": "src3/040_ot_v41_bf16_lanes3.sv",
+      "sha256": "f42b16ef33b63661f4b04f5a9e52793de4fbc2a63f2fe8c30b827ae5a3bdb595"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_bf_col.sv",
+      "staged": "src3/041_ot_v41_bf_col.sv",
+      "sha256": "66bf23bbce504d037bba98fb45af08559e7f77410d818d48d05adb761b983531"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_bf_front_core_roots.sv",
+      "staged": "src3/042_ot_v41_bf_front_core_roots.sv",
+      "sha256": "c72d93465a1c24277cb78fb021d06b95cee551a0da4af5c3c560c95d5e245b7d"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+      "staged": "src3/043_ot_v41_bmul2_rne_prepare.sv",
+      "sha256": "5cedb6188e1925ad3389fd22e219d35a9b42d04c2bbd9c5101e14d1b0ef1d0de"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+      "staged": "src3/044_ot_v41_bmul_subnormal_rne_prepare.sv",
+      "sha256": "2bf1f96455fe42b6b14bd9c1ffa3f79da3021ff0ca9f975644b3d5b555da8cf6"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_bterm.sv",
+      "staged": "src3/045_ot_v41_bterm.sv",
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "staged": "src3/046_ot_v41_bterm2_w10.sv",
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_bterm4_w10.sv",
+      "staged": "src3/047_ot_v41_bterm4_w10.sv",
+      "sha256": "93dec42cae3a02b1a3430e74c8ac60e0631e99eb826f5a69aac9cbb3970b222e"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_chain.sv",
+      "staged": "src3/048_ot_v41_chain.sv",
+      "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_chain2.sv",
+      "staged": "src3/049_ot_v41_chain2.sv",
+      "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_chain2u2.sv",
+      "staged": "src3/050_ot_v41_chain2u2.sv",
+      "sha256": "c265da065d16babaa1eb5ad557faefd8b42b57da51e0075dd93b814a09e40020"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_chain4.sv",
+      "staged": "src3/051_ot_v41_chain4.sv",
+      "sha256": "8a53efcfd26811a2306258e4b2e2cb7b6cb7339d3e9a28d05ea70db9136251b9"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_fadd.sv",
+      "staged": "src3/052_ot_v41_fadd.sv",
+      "sha256": "821bfb17da8332d265c4a85201af5bb1abe1ff47964ebac78b2fe3e973fd346d"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_fadd2.sv",
+      "staged": "src3/053_ot_v41_fadd2.sv",
+      "sha256": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_kreg.sv",
+      "staged": "src3/054_ot_v41_kreg.sv",
+      "sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+      "staged": "src3/055_ot_v41_rom_elem_qx_w10.sv",
+      "sha256": "cce28349aa1403737d2bf38a1da7f0c19472040772fdde0f29ff07a8ae10b9db"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+      "staged": "src3/056_ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+      "sha256": "5c46883af2f50721c5d2e4cd30913e03ccb9a2d67800ab88c18af7c282344179"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_segtree.sv",
+      "staged": "src3/057_ot_v41_segtree.sv",
+      "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_segtree2.sv",
+      "staged": "src3/058_ot_v41_segtree2.sv",
+      "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_segtree4.sv",
+      "staged": "src3/059_ot_v41_segtree4.sv",
+      "sha256": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_segtree5.sv",
+      "staged": "src3/060_ot_v41_segtree5.sv",
+      "sha256": "8fbcf60f5ae43bd7b5b1f6bc7f6eac74736bc9d5e553db73c660c0f3f829d4f8"
+    },
+    {
+      "original": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/fs/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/v41rom/ot_v41_tile_clk.sv",
+      "staged": "src3/061_ot_v41_tile_clk.sv",
+      "sha256": "ba4c5d41484f6b37839d24b2aaa02190210f69a75b3f6a8f8fa62673a4bcd4fd"
+    }
+  ]
+}

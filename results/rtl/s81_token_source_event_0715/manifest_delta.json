@@ -1,0 +1,33 @@
+{
+  "base_revision": "a01e4dfb0",
+  "base_manifest": "physical/die_plan/s81/bind/asbuilt_source39_candidate_1102.json",
+  "base_sha256": "3616471e3293e7497bca57c5bb0a24601c9b99ef261b41825a430bce3df92bc8",
+  "candidate": "physical/die_plan/s81/bind/asbuilt_token_namespace_source39_candidate_1102.json",
+  "candidate_sha256": "83bfe3840101587f5df06d1aedae81da31d39d8f2f23b09d78d19cb13fc905f6",
+  "INSTANCE_rules_added": [
+    {
+      "module": "dsfd_bf_col",
+      "param": "INSTANCE"
+    },
+    {
+      "module": "dsfd_bf_front_roots",
+      "param": "INSTANCE"
+    },
+    {
+      "module": "ot_s81sl_xgt_xo",
+      "param": "INSTANCE"
+    },
+    {
+      "module": "ot_s81sl_xg",
+      "param": "INSTANCE"
+    }
+  ],
+  "all_hardware_parameters_substitutions_and_defines_unchanged": true,
+  "legacy_XS_added_cycles": 0,
+  "XS4_added_cycles": 1,
+  "deadproof": "results/token_pass/s81_dead_inputs_2148/proof_closing_source39_1101.json",
+  "path_normalization": {
+    "base": "private root dot to repository manifest ../../../..",
+    "map_file": "repository-relative map path to manifest-relative inputs/map_b178.json"
+  }
+}

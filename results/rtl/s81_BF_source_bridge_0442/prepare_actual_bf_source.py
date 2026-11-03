@@ -54,7 +54,7 @@ def prepare(base,fixture,vector,out,selector):
     (out/'producer.txt').write_text(''.join(new_lines));(out/'wrong_norm_operand_producer.txt').write_text(''.join(lines))
     (out/'actual_BF_operand_fp32.hex').write_text(''.join(f'{int(x):08x}\n' for x in bits))
     (out/'actual_BF_operand_bf16.hex').write_text(''.join(f'{int(x):04x}\n' for x in bf))
-    gold=[dict(row=int(k),source_row=v['src'][1],fp32_bits=f'{v["acc"]:08x}',bf16_bits=f'{v["bf16"]:04x}') for k,v in vm['rows'].items()]
+    gold=[dict(row=int(k),source_row=v['src'][1],segment=0,fp32_bits=f'{v["vals"][0]:08x}',full_accumulated_fp32_bits=f'{v["acc"]:08x}',full_accumulated_bf16_bits=f'{v["bf16"]:04x}') for k,v in vm['rows'].items()]
     d=dict(status='PREPARED_ACTUAL_BF_OPERAND_AND_SELECTED_XS_IMAGES_NOT_RUN',base=str(base),out=str(out),source=str(fixture/name),source_sha256=sha,source_shape=spec['shape'],source_note=spec.get('note'),source_group=group,source_group_count=groups,K=K,phase=106,measured_kseg=[lo,hi],first1024_FP32_words_equal_retained_native_vector=True,BF16_rule='FP32 round-to-nearest-even, integer bits+0x7fff+LSB, finite checkpoint',BF_gather_indices=indices,BF_payload_fragments_changed=len(changes),Q_fragments_and_all_control_GO_CFG_calendar_dates_changed=False,wrong_norm_source_BF16_words=wrong_words,selected_XS_selector=selector,selected_XS_aliases=7,native_BF_partial_gold=gold,arithmetic_consumer_executed=False,same_binary_executed=False,full_mission_programme_qualified=False,fresh_source_epoch_qualified=False,native_provider_qualified=False,physical_clock_sampling_qualified=False)
     (out/'BF_source_preparation.json').write_text(json.dumps(d,indent=2)+'\n')
     return d

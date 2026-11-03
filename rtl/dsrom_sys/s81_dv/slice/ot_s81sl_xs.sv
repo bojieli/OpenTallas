@@ -58,9 +58,9 @@
 `ifdef SYNTHESIS
 `define OT_S81SL_XS_ROM(n) ot_rom_4096x72_m8
 `else
-`define OT_S81SL_XS_ROM(n) ot_rom_4096x72_m8 #(.INSTANCE(n))
+`define OT_S81SL_XS_ROM(n) ot_rom_4096x72_m8 #(.INSTANCE(INSTANCE == "" ? n : {INSTANCE, ".", n}))
 `endif
-module ot_s81sl_xs (
+module ot_s81sl_xs #(parameter INSTANCE = "") (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [2:0]    g_v,

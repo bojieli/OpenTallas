@@ -1,0 +1,71 @@
+{
+  "status": "MODEL_OPTION_ONLY_ROOT_REVIEW_REQUIRED",
+  "existing_master": "ot_sram_1r1w_32x64_m1",
+  "reason": "existing single-clock model explicitly performs read-before-write in one process, matching native old-data capture",
+  "master_cells": 34,
+  "logical_groups": {
+    "data_words": 4,
+    "cells_per_data_word": 8,
+    "header_cells": 2,
+    "read_enables": "dr_on && p_i==group (0header,1..4data)",
+    "all_groups_written": "nativepv_v with actual2120bitmask splitexactly; unusedheaderpadding56bitsmaskedoff"
+  },
+  "addresses": "zeroextend native3bit slot to5bit macroaddress; preserve8live rows andfullcapacity",
+  "native_bits": 16960,
+  "nominal_macro_bits": 69632,
+  "capture": {
+    "old_pv_od_FF": 513,
+    "new_readtime_dynamic_provenance_FF": 48,
+    "reconstructed_constant_provenance_bits": 392,
+    "new_resetfree_kind_FF": 3,
+    "new_total_external_capture_FF": 51,
+    "delta_external_FF": -462,
+    "no_reset_added": true,
+    "all_original_pvr_pvw_p_i_dr_on_valid_fault_logic_kept": true,
+    "raw_empty_and_warm_reset_output_hold_required": true,
+    "source_literal": "provenance={392'd0,pos21,live1,t4,q2,owner20}",
+    "source_hash": "107c4addac40494f621b463ca40a58bb47e560acddfc8d261aa1fe60c1ae5a88",
+    "upper_bits_are_source_constants_not_runtime_assumption": true
+  },
+  "header_rule": "latch original identityprovenance440 onlyonactualheader capture; never move itto write or borrowliveupstreamvalue afterwarmreset",
+  "source_control_invariant": "p_i only0..4 afteroriginal reset/mod5update; an all-initial-state proof must retain original controls and account for arbitraryinitial/out-of-range selector semantics, not impose a new dont-care",
+  "macro_read_output_state_bits": 2176,
+  "macro_clock_pins": 34,
+  "outline_um": [
+    31.968,
+    17.28
+  ],
+  "one_area_um2": 552.40704,
+  "total_area_um2": 18781.83936,
+  "one_clk_cap_fF": 9.3458,
+  "total_added_macro_clock_cap_fF": 317.7572,
+  "removed_FF_clock_load_not_subtracted": true,
+  "geometry_or_timing_fit": false,
+  "source_or_default_edited": false,
+  "native_gate": false,
+  "required_smallest_proof_scope": [
+    "unchanged9c281 helper and exact heldpv_od capture source asreference",
+    "all513raw output bits evenwhen dr_on0, warmreset andconfigurationchanges",
+    "sameclock sameaddress read/write OLD word, independent per-bitmasks",
+    "fivewordpacking including440provenance+8tag+64faults, all4dataquarters",
+    "slot7\u21920wrap; alloriginaloverflow/empty/read/valid dates preserved",
+    "wrongwordselect, oneedge andprovenance-reset controls"
+  ],
+  "source_hashes": {
+    "lef": "783546b59561cdeb3a09e912973286a9d38cdd2ced58391f7ab9aa74b38f3d02",
+    "ttlib": "89e8a678c954a540f86a2c2571edfa312f8ff1ac3171a08556a7eeaa23670672"
+  },
+  "TT_FF_clock_and_readout_tables": "TT_FF_macro_tables.json",
+  "reset_semantics": "new dynamicprovenance48 andkind3 are resetfree; sample48onlyatnativeheaderread and reconstructall440protocolbits. Preserve rawcold/empty/warmreset behavior; original sourcecontrol/identityresetstaysunchanged.",
+  "proof_compare": "all513rawpv_odbits everycycle includingdr_on0 andwarmreset; not justvalid output",
+  "conservative_full_provenance_capture": {
+    "old_pv_od_FF": 513,
+    "new_readtime_provenance_FF": 440,
+    "new_resetfree_kind_FF": 3,
+    "new_total_external_capture_FF": 443,
+    "delta_external_FF": -70,
+    "no_reset_added": true,
+    "all_original_pvr_pvw_p_i_dr_on_valid_fault_logic_kept": true,
+    "raw_empty_and_warm_reset_output_hold_required": true
+  }
+}
