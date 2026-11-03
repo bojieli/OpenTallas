@@ -20,3 +20,22 @@ S81-064 dsdv_gunit_l0r RF 1 (registered one-hot write slots + go +1):
     RF0 (-DOT_GUNIT_L0R_RF0): MUT=0 GUNIT PASS router_lat=39 (51) hc_lat=1007 (1019)
   Parent contract: HC latency +1 (lower_gu HC_LAT_N/S 1018/1016 -> 1019/1017).
 Kits (plan_h2_2249, outline/pins unchanged, recipes_rfd_1103.json): GEN_LINT PASS issues 0, KIT_PREFLIGHT PASS issues 0 (both).
+
+FORM 2 (11-03, after build 1: bk_g oth-ubuntu-1507608 EXIT 2 = GRT-0116 ov 227 at the SRAM channel mouths + CTS TT -152.5
+u_vs.dl_n -> vin lane decode; l0r oth-ubuntu-1507612 EXIT 2 = OT_HOLD_STRUCTURAL GRT FF hold -154.31 / 408 ep on the
+input faces, setup met SS +168.5).  Outputs /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench2.
+S81-062 dsdv_bk_g RF 2 = RF 1 + dsdv_bk_vin LPIPE (registered beats + one-hot lane hits; ln* +1 edge, vo / drain unchanged)
+  + kit-local SRAM sites (recipes_rfd_1103 _rfd2: interior channel 10.824 -> 34.584 um, outline / pins unchanged):
+  run_bk_g_rf.sh lockstep RA 1 / RB 2 (vo equal, ln +1): seed 1 PASS errors=0, seed 7 PASS errors=0
+               RA 0 / RB 2 (vo +1, ln +1): seed 3 PASS errors=0;  RA 0 / RB 1 (form 1 record) seed 1 PASS
+               mut 2 (OT_RFD_MUT_VIN, beat data bypass the stage): FAIL errors=66103 (caught)
+  run_bk_bench.sh sel RF 2 (default): DSDV_BK_SEL PASS mut=0, all 6 variants (wrap errors 0; selector tail inside TAIL_BUDGET)
+               RF 1 (+define+OT_DSDV_BKG_RF1) base thru: PASS
+  run_vstop_bench.sh: VSTOP_GATE PASS (40 golden runs, 3/3 mutants)
+  Parent contract: unchanged vs form 1 (rung transit 4; lane words are internal to dsdv_bk_sel).
+S81-064 dsdv_gunit_l0r RF 2 = RF 1 + negedge in-face (all inputs incl. rst_n, 0 cycles):
+  results/rfd_1103/l0r/run.sh lockstep RA 1 / RB 2 (equal every edge): mode 0 seed 1 PASS, mode 1 seed 5 PASS
+               RA 0 / RB 2 (+1): mode 0 seed 3 PASS;  RA 0 / RB 1 seed 1 PASS (form 1 record)
+               mut 2 (OT_RFD_MUT_L0R2, posedge in-face): FAIL errors=199929 (caught)
+  run_gunit_bench.sh 8 cases: RF 2 MUT=0 GUNIT PASS router_lat=39 (51) hc_lat=1008 (1020), = RF 1 (contract unchanged)
+Kits rfd2 (plan_h2_2249): GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0 (both).

@@ -37,7 +37,10 @@ module dsdv_bk_g #(
     //           the posedge flop holds the value it held before; pin hold window ~T/2 by construction); rst_n is
     //           sampled by a negedge flop that clears the release synchronizer (reset held >= 64 edges, release edge
     //           unchanged when rst_n rises in the high phase).
-    //   RF = 0: the old form.  dsdv_bk_sel passes RF 1; dsdv_bk_col (VD_PK 0) keeps RF 0.
+    //   RF = 2 (form 2, 11-03: RF-D build 1 CTS TT -152.5 on u_vs.dl_n -> vin lane decode -> lanes[*]): RF 1 + dsdv_bk_vin
+    //           LPIPE 1 (deliveries registered, one-hot lane hits pre-decoded): ln0..ln3 +1 edge (V pin -> lane word
+    //           3 -> 4); vo and the drain window unchanged vs RF 1 (the selector tail is inside lower_bk TAIL_BUDGET).
+    //   RF = 0: the old form.  dsdv_bk_sel passes RF 2; dsdv_bk_col (VD_PK 0) keeps RF 0.
     parameter integer RF = 0
 ) (
     input  wire [0:0]        clk,
@@ -95,11 +98,11 @@ module dsdv_bk_g #(
     else begin : g_vfl assign vdu = vd_f; end endgenerate
     always @(posedge clk[0]) vdd <= vdu[513:2];
     wire dnv, dsv; wire [V-1:0] dn, ds, ob; wire vs_f, vi_f, vo_f, ov;
-    ot_dsdv_vstop #(.V(V), .BK_DRAIN_SINK(BK_DRAIN_SINK), .FPIPE(RF)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k({tap_k[5:1], 2'b00, tap_k[0]}), .sink_k({sink_k[5:1], 2'b00, sink_k[0]}), .bk_uid(uid), .vi_s(vi_s_f), .vo_n(vo_n_r),
+    ot_dsdv_vstop #(.V(V), .BK_DRAIN_SINK(BK_DRAIN_SINK), .FPIPE(RF != 0)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k({tap_k[5:1], 2'b00, tap_k[0]}), .sink_k({sink_k[5:1], 2'b00, sink_k[0]}), .bk_uid(uid), .vi_s(vi_s_f), .vo_n(vo_n_r),
         .vi_n(vi_n_f), .vo_s(vo_s_r), .dl_nv(dnv), .dl_n(dn), .dl_sv(dsv), .dl_s(ds),
         .in_nv(ov && egn_c), .in_n(ob), .in_sv(ov && !egn_c), .in_s(ob), .fault(vs_f));
     wire drv; wire [7:0] drn, drd;
-    dsdv_bk_vin #(.V(V), .MUT(MUT)) u_vin (.clk(clk[0]), .rst_n(rn), .ik(ik_c), .uid(uid_c), .dl_nv(dnv), .dl_n(dn),
+    dsdv_bk_vin #(.V(V), .MUT(MUT), .LPIPE(RF >= 2)) u_vin (.clk(clk[0]), .rst_n(rn), .ik(ik_c), .uid(uid_c), .dl_nv(dnv), .dl_n(dn),
         .dl_sv(dsv), .dl_s(ds), .lanes(ln), .dr_v(drv), .dr_n(drn), .dr_d(drd), .fault(vi_f));
     dsdv_bk_vout #(.V(V), .MUT(MUT)) u_vout (.clk(clk[0]), .rst_n(rn), .ek(ek_c), .w_v(vdv), .w_d(vdd),
         .dr_v(drv), .dr_n(drn), .dr_d(drd), .o_v(ov), .o_b(ob), .fault(vo_f));
