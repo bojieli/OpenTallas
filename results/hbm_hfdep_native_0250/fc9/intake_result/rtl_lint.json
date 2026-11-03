@@ -1,0 +1,19 @@
+{
+ "verdict": "PASS",
+ "rc": 0,
+ "mapped_cell_types": 0,
+ "top_params": [
+  "IDLE_K",
+  "204",
+  "MUT",
+  "0"
+ ],
+ "errors": [],
+ "yosys_cast": 0,
+ "command": [
+  "yosys",
+  "-q",
+  "-s",
+  "/work/rtl_lint.ys"
+ ]
+}

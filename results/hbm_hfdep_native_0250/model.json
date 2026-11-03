@@ -1,0 +1,211 @@
+{
+ "status": "ACTUAL_SELECTED_SOURCE_ABI_PREP_GEOMETRY_REFERENCE_ONLY",
+ "source_top_sha256": "d905b388a1c20fe47cd51f6b956bebe34313597f603898010380182e9fb873bf",
+ "source_files": 7,
+ "actual_callers": [
+  {
+   "parent_module": "hbm_arch_NE_io",
+   "instance": "u_u_ep_N2",
+   "explicit_parameters": null,
+   "source_line": 162247
+  },
+  {
+   "parent_module": "hbm_arch_q_spb0",
+   "instance": "u_u_ep_S0",
+   "explicit_parameters": null,
+   "source_line": 276890
+  },
+  {
+   "parent_module": "hbm_arch_q_spb0__physical_v1",
+   "instance": "u_u_ep_S0",
+   "explicit_parameters": null,
+   "source_line": 277111
+  },
+  {
+   "parent_module": "hbm_arch_vsN0",
+   "instance": "u_u_ep_S1",
+   "explicit_parameters": null,
+   "source_line": 356008
+  }
+ ],
+ "selected_hfd_instances": 4,
+ "planned_static_slots": 4,
+ "unjoined_two_slots": "Resolved as separate classes: NW_io.u_u_ep_N0 hfd_ep_static_vc2 HQ4/IDLE204; NW_io.u_u_host_ep hfd_ep_host_vc defaults. Only static class4 authorized for source intake.",
+ "parameters": {
+  "IDLE_K": 204,
+  "MUT": 0,
+  "authority": "exactselecteddefinition defaults; all4actualcallers nooverride"
+ },
+ "ports": {
+  "clk": {
+   "direction": "input",
+   "width": 1
+  },
+  "rst_n": {
+   "direction": "input",
+   "width": 1
+  },
+  "tx_v": {
+   "direction": "input",
+   "width": 1
+  },
+  "tx_frame": {
+   "direction": "input",
+   "width": 612
+  },
+  "rx_arm_v": {
+   "direction": "input",
+   "width": 1
+  },
+  "rx_arm_bank": {
+   "direction": "input",
+   "width": 1
+  },
+  "rx_block_words": {
+   "direction": "input",
+   "width": 7
+  },
+  "rx_release_v": {
+   "direction": "input",
+   "width": 1
+  },
+  "rx_release_bank": {
+   "direction": "input",
+   "width": 1
+  },
+  "rx_slot_v": {
+   "direction": "input",
+   "width": 1
+  },
+  "rx_slot_bank": {
+   "direction": "input",
+   "width": 1
+  },
+  "rx_slot_index": {
+   "direction": "input",
+   "width": 6
+  },
+  "rx_pin_v": {
+   "direction": "output",
+   "width": 1
+  },
+  "rx_pin_flit": {
+   "direction": "output",
+   "width": 612
+  },
+  "rx_block_ready": {
+   "direction": "output",
+   "width": 2
+  },
+  "phy_up": {
+   "direction": "output",
+   "width": 1
+  },
+  "fault": {
+   "direction": "output",
+   "width": 1
+  },
+  "fault_cause": {
+   "direction": "output",
+   "width": 11
+  },
+  "sd_tx": {
+   "direction": "output",
+   "width": 512
+  },
+  "sd_rx": {
+   "direction": "input",
+   "width": 512
+  },
+  "sd_st": {
+   "direction": "input",
+   "width": 2
+  }
+ },
+ "physical_pin_bits": 2288,
+ "input_bits": 1148,
+ "output_bits": 1140,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "internal_release": "async assert, rs2 plus fourparallelregionalrelay outputs rn_tx/rx/bd/o =3edges; notdelivered3parameter",
+ "native_external_shell": false,
+ "source_pipeline_delta": 0,
+ "current_die_cycle_delta": "0 proposed: exactselectedsource unchanged; oldoutsidecoupon +1in/+1out isnotcomposed",
+ "macros": [
+  {
+   "instance": "u_rxb.g_block\\[0\\].u_block.g_mem\\[0\\].u_mem.u_sram",
+   "x": 17.28,
+   "y": 47.532,
+   "w": 171.288,
+   "h": 77.784,
+   "orient": "MY"
+  },
+  {
+   "instance": "u_rxb.g_block\\[1\\].u_block.g_mem\\[0\\].u_mem.u_sram",
+   "x": 239.112,
+   "y": 47.532,
+   "w": 171.288,
+   "h": 77.784,
+   "orient": "R0"
+  },
+  {
+   "instance": "u_rxb.g_block\\[0\\].u_block.g_mem\\[1\\].u_mem.u_sram",
+   "x": 17.28,
+   "y": 146.892,
+   "w": 171.288,
+   "h": 77.784,
+   "orient": "MY"
+  },
+  {
+   "instance": "u_rxb.g_block\\[1\\].u_block.g_mem\\[1\\].u_mem.u_sram",
+   "x": 239.112,
+   "y": 146.892,
+   "w": 171.288,
+   "h": 77.784,
+   "orient": "R0"
+  }
+ ],
+ "physical_storage_bits": 131072,
+ "logical_frame_storage_bits": 78336,
+ "calendar": {
+  "data_frames_per5beats": 4,
+  "frame_bits": 612,
+  "transport_valid_bit": 1,
+  "beat_bits": 512,
+  "calibration_idle_K": 204,
+  "period_beats": 1021,
+  "useful_payload_bytes_per_cycle": 61.14005876591577,
+  "scope": "sourceequations only; boundcalendar/latency receipt mustjoin"
+ },
+ "outline_reference_um": [
+  427.68,
+  246.24
+ ],
+ "macro_area_um2": 53293.86316800001,
+ "reference_halo_um": 4.32,
+ "reference_clear_intercolumn_um": 41.903999999999996,
+ "reference_clear_interrow_um": 12.936,
+ "clock_entry_reference_um": [
+  220.344,
+  25.92
+ ],
+ "legacy_synth_reference": {
+  "total_area_um2": 57692.066,
+  "outside_sequential_area_um2": 767.695,
+  "qualification": "oldcoupledreset64SYNTH includes2286outsideFF; no nativeSYNTHcredit"
+ },
+ "holds": [
+  "No native GEN/SYNTH/EQ/KEEP/faceguard yet",
+  "GlobalHBM64 backend receipt versus newnativecomponent reset4 proof scope must be explicit; no inheritedphysicalreset credit",
+  "Actualfourcaller/latency/clock joins and separatevc2 class beforeglobalcounts",
+  "427.68+246.24 envelope exceeds405: true flow/registeredpairs must be measured beforeplace/route; no allpair bounding claim",
+  "PG/nativeclock/placement/route/timing NOTRUN"
+ ],
+ "raw_link_bytes_per_cycle_per_direction": 64,
+ "raw_aggregate_duplex_bytes_per_cycle": 128,
+ "six_endpoint_inventory": "six_endpoint_inventory.json"
+}

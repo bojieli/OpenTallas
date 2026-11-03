@@ -1,0 +1,3 @@
+Actual FC9 new-source GEN/SYNTH/native4 official equivalence PASS.
+14054/14054 compare points, zero differs/undecided; KEEP160/160. Native4 requested/used with no die reset receipt or debug override. Data face2284/2284 PASS, actual ABI2286 including clock/reset. Four true64x512 macros; mapped7702FF, totalarea56924.822660um2.
+This proves only the additive FC9 component source against its own mapped body. Prior selected2288 source and two-bit failure are preserved. Four-caller/carrier/OBS136 transformation has separate projection proofs and remains disabled. No physical placement, parent clock/calendar/reset adoption, SIGNED or default activation.

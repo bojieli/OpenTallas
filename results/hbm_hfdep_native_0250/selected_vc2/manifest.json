@@ -1,0 +1,42 @@
+{
+  "top": "hfd_ep_static_vc2",
+  "source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/selected_preprocessed.sv",
+  "policy": "Conservative selected-definition lexical closure; not parameter/nativeproof",
+  "modules": [
+    {
+      "module": "hfd_ep_static_vc2",
+      "origin": "`line 163 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/readset/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/rtl/b2_native/hfd_ep_static_vc2.sv\" 0",
+      "sha256": "90d2f8679b7843840deec39a954e46fe16c3221f1cc6146c79507e1175974c8b"
+    },
+    {
+      "module": "ot_hep_rx_block",
+      "origin": "`line 40 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv\" 0",
+      "sha256": "6d2f57182c64cadd136268b909f5d788a1a3bd3955fcb87239656b268f7ea787"
+    },
+    {
+      "module": "ot_hep_rx_gbx_vc",
+      "origin": "`line 94 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/readset/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/rtl/b2_native/hfd_ep_static_vc2.sv\" 0",
+      "sha256": "22a823533f6365efa5d2ead41480531c681fb95230e4a1bb06b65bcbb71e6835"
+    },
+    {
+      "module": "ot_hep_rx_leaf",
+      "origin": "`line 8 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv\" 0",
+      "sha256": "8adafe78d41fa62f0f10a136ef383f16abb093d9ae34997c62f8d844be9eabe8"
+    },
+    {
+      "module": "ot_hep_rx_pingpong",
+      "origin": "`line 117 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv\" 0",
+      "sha256": "dbc4ef06a8011e1d4dfea52f264ea4576e2a558c62bd42dcb910dda06b32b6da"
+    },
+    {
+      "module": "ot_hep_tx_gbx_vc",
+      "origin": "`line 32 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/readset/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/rtl/b2_native/hfd_ep_static_vc2.sv\" 0",
+      "sha256": "5fcae029ae596f77b411c4d80f6c8cab961ed4392455976cbaba78fd112cbe45"
+    },
+    {
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v\" 1",
+      "sha256": "d8bd0caece17416fe9d1e6044ab1a73d7256cbcdba3b642ef058a2e2e2f55c70"
+    }
+  ]
+}

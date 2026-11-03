@@ -1,0 +1,49 @@
+{
+ "top": "hfd_ep_static",
+ "view": "hfd_ep_static@source13_native4",
+ "plan_sha256": "da9465bdf0adb5fc21ed0b1b34c6171d6a2978a0d5a2a1e9e5545c1bf00dd420",
+ "files": [
+  {
+   "file": "results/hbm_hfdep_native_0250/selected/hfd_ep_static.sv",
+   "sha256": "d905b388a1c20fe47cd51f6b956bebe34313597f603898010380182e9fb873bf"
+  },
+  {
+   "file": "results/hbm_hfdep_native_0250/selected/ot_hep_rx_block.sv",
+   "sha256": "6d2f57182c64cadd136268b909f5d788a1a3bd3955fcb87239656b268f7ea787"
+  },
+  {
+   "file": "results/hbm_hfdep_native_0250/selected/ot_hep_rx_gbx.sv",
+   "sha256": "629dce13721e0d23a5981b849c25abd8c24a81494984a259b437af115b52fb7f"
+  },
+  {
+   "file": "results/hbm_hfdep_native_0250/selected/ot_hep_rx_leaf.sv",
+   "sha256": "8adafe78d41fa62f0f10a136ef383f16abb093d9ae34997c62f8d844be9eabe8"
+  },
+  {
+   "file": "results/hbm_hfdep_native_0250/selected/ot_hep_rx_pingpong.sv",
+   "sha256": "dbc4ef06a8011e1d4dfea52f264ea4576e2a558c62bd42dcb910dda06b32b6da"
+  },
+  {
+   "file": "results/hbm_hfdep_native_0250/selected/ot_hep_tx_gbx.sv",
+   "sha256": "68085ad7a68f390afd989b320babeac3f7aa8fe7152478ad5e6b0ffef2a71827"
+  },
+  {
+   "file": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+   "sha256": "619a3fc13acb0c172387f5564dee71faa3161ddc1ce000fd53353fbb2c4845b6"
+  }
+ ],
+ "selected_macro_simulation_excluded": "ot_sram_1r1w_64x512_m1_r2c2.sv",
+ "macro_blackbox": "native hard-macro interface; no RAM expansion",
+ "parameters": {
+  "IDLE_K": 204,
+  "MUT": 0
+ },
+ "abi_bits": 2288,
+ "actual_instance_count": 4,
+ "resources": {
+  "memory_gb": 8,
+  "threads": 2,
+  "disk_gb": 5
+ },
+ "proof_scope": "native4 SOURCE_ONLY; no die reset receipt or P&R"
+}

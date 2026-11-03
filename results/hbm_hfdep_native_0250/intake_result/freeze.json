@@ -1,0 +1,106 @@
+{
+ "schema": "opentallas.hbm_arch.core_freeze.v1",
+ "view": "hfd_ep_static@source13_native4",
+ "module": "hfd_ep_static",
+ "design": "hfd_ep_static",
+ "rtl_top": "hfd_ep_static",
+ "recipe_key": "hfd_ep_static",
+ "recipe_sha256": "66d61dd69209a77fae8b78d39fe0a122e947475c328459512df68b1820ca99b4",
+ "canonical_type": null,
+ "wrapper": null,
+ "outline_um": [
+  427.68,
+  246.24
+ ],
+ "plan": "results/hbm_hfdep_native_0250/intake/plan.json",
+ "plan_sha256": "da9465bdf0adb5fc21ed0b1b34c6171d6a2978a0d5a2a1e9e5545c1bf00dd420",
+ "pins_file": "results/hbm_hfdep_native_0250/intake/pins.json",
+ "pins_sha256": "285e192a8a962dfa6304af144e1c2d374be67dafeb100367b22b4872ca67a154",
+ "pins_canon_sha256": "c46b1c35fbf5df0b2696f9c183e28dc63360aaa259e3913a2ce7dfb92257a94d",
+ "pins": 2288,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "period_ps": 833.0,
+ "common_latency_ps": 250.0,
+ "corner": "TC",
+ "plan_common_latency_ps": 250.0,
+ "core_clock_contract": null,
+ "orfs_var_overrides": [],
+ "sdc_lint": "PASS (gen)",
+ "macros": [
+  "ot_sram_1r1w_64x512_m1_r2c2"
+ ],
+ "face_shell": null,
+ "kit_hash": "6b45f8c3c6cfd65c",
+ "source_profile": {
+  "source_commit": "552b15ed84ad29dd5bf695736bbff06d72c690ea",
+  "family": "HFDEP_SELECTED_STATIC_NATIVE4_SOURCE_ONLY",
+  "release_eligible": false,
+  "qualification": "SOURCE_PROOF_ONLY",
+  "added_face_cycles": 0,
+  "component_proof_reset_cycles": 4,
+  "clock_ports": [
+   "clk"
+  ],
+  "reset_ports": [
+   "rst_n"
+  ],
+  "source_manifest": {
+   "results/hbm_hfdep_native_0250/selected/hfd_ep_static.sv": "d905b388a1c20fe47cd51f6b956bebe34313597f603898010380182e9fb873bf",
+   "results/hbm_hfdep_native_0250/selected/ot_hep_rx_block.sv": "6d2f57182c64cadd136268b909f5d788a1a3bd3955fcb87239656b268f7ea787",
+   "results/hbm_hfdep_native_0250/selected/ot_hep_rx_gbx.sv": "629dce13721e0d23a5981b849c25abd8c24a81494984a259b437af115b52fb7f",
+   "results/hbm_hfdep_native_0250/selected/ot_hep_rx_leaf.sv": "8adafe78d41fa62f0f10a136ef383f16abb093d9ae34997c62f8d844be9eabe8",
+   "results/hbm_hfdep_native_0250/selected/ot_hep_rx_pingpong.sv": "dbc4ef06a8011e1d4dfea52f264ea4576e2a558c62bd42dcb910dda06b32b6da",
+   "results/hbm_hfdep_native_0250/selected/ot_hep_tx_gbx.sv": "68085ad7a68f390afd989b320babeac3f7aa8fe7152478ad5e6b0ffef2a71827",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v": "619a3fc13acb0c172387f5564dee71faa3161ddc1ce000fd53353fbb2c4845b6"
+  },
+  "source_readset": "results/hbm_hfdep_native_0250/intake/readset.json",
+  "endpoint_contract": {
+   "kind": "INTERNAL_CORE",
+   "parent_partition": "UNJOINED_SOURCE_ONLY",
+   "partition_rule": "R2_INTERNAL_TIMED_IN_PARTITION"
+  },
+  "pin_placement_policy": "DECLARED_CLOCK_RESET_POINTS",
+  "native_capacity": {
+   "macros": {
+    "ot_sram_1r1w_64x512_m1_r2c2": 4
+   },
+   "external_face_shell": false
+  }
+ },
+ "source_commit": "552b15ed84ad29dd5bf695736bbff06d72c690ea",
+ "flow_defaults": {
+  "rc_cal": true,
+  "f1": {
+   "io_tt_ps": 250.0,
+   "io_ff_ps": 202.5,
+   "mechanism": "two-mode GRT (scene BC vclk_ff.sdc FF hold, scene tc TT setup) + gates",
+   "basis": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "f4": true,
+  "cts_setup_tt": {
+   "previous_post_cts": "/work/f4_chain_leaf.tcl",
+   "repair": "setup only (scene tc / vclk OT_VCLK_TT)",
+   "hold": "GRT step only"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold",
+   "tt": 250.0,
+   "ff": 202.5
+  },
+  "rule": "FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)"
+ },
+ "clock_entry_source": {
+  "policy": "DECLARED_CLOCK_RESET_POINTS",
+  "pins_file": "pins.json",
+  "pins_sha256": "285e192a8a962dfa6304af144e1c2d374be67dafeb100367b22b4872ca67a154",
+  "ports": [
+   "clk",
+   "rst_n"
+  ]
+ }
+}
