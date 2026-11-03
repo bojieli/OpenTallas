@@ -198,6 +198,9 @@ def main(argv=None):
     a3.add_argument("--gpl-plain", default="", metavar="TYPES",
                     help="comma list of pure-FT corridor types whose kits place with GPL_ROUTABILITY_DRIVEN=0 / "
                          "GPL_TIMING_DRIVEN=0 (stations FIRM at plan sites; KV hub_Ei routability GPL diverged)")
+    a3.add_argument("--dpl-diamond", default="", metavar="TYPES",
+                    help="comma list of types whose kits detail-place with the diamond legalizer (DETAIL_PLACEMENT_ARGS "
+                         "-use_diamond_legalizer; negotiation DPL stalls beside large FIRM landing bands). Per-type opt-in")
     a3.add_argument("--kit-rtl", action="append", default=[], metavar="TYPE=FILELIST",
                     help="G3: the type's kit RTL = this filelist (bind.py kit-rtl: bound partition inside the plan "
                          "wrapper) instead of the generated plan wrapper + type sources; repeatable")
@@ -241,6 +244,7 @@ def main(argv=None):
                                            plan_path=Path(a.plan).resolve(), rc_cal=not a.stock_rc,
                                            master_slice=a.master_slice, trial=a.trial,
                                            gpl_plain=[x for x in a.gpl_plain.split(",") if x],
+                                           dpl_diamond=[x for x in a.dpl_diamond.split(",") if x],
                                            bound_native_reset=[x for x in a.bound_native_reset.split(",") if x],
                                            landing=load_json(a.clock_landing) if a.clock_landing else None,
                                            hard_wrappers=[x for x in a.hard_wrappers.split(",") if x],
