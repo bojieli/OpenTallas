@@ -17,7 +17,8 @@ stations u_ft_<slot>_o_<j> (rtl/<T>_bound.sv) with their plan bays in ft_station
     30 ps) shows TT setup and FF hold >= 10% of the period and slew <= 320 ps -> OT_MAXWIRE_UM (the hop delay is fixed by
     the form, not tuned).
 Pre-build table relay_bay_table.tsv (per hop: length, pitch, delay, slew, setup, hold, skew); any hop below +10% ->
-'FAIL_PREBUILD relay_bay' and exit 2 before anything is built.  Idempotent: a kit that already carries
+'ADVISORY relay_bay', form not applied, exit 0 (OWNER 11-03 06:40: pre-build checks report, never block).
+FAIL_PREBUILD (exit 2) only for tool failures (bound RTL / station / config.mk not found).  Idempotent: a kit that already carries
 declared_cycles.json of this form is re-checked only.  --check writes nothing but the table (dry run)."""
 import argparse, json, math, os, re, sys
 
@@ -182,8 +183,11 @@ def main(argv=None):
     nh = sum(1 for r in table if r[-1] == "PASS" or r[-1].startswith("FAIL"))
     st = {s: (d["stations_plan"], d["stations_new"]) for s, d in decl.items()}
     if bad:
-        print(f"FAIL_PREBUILD relay_bay: {T}: {bad} of {nh} hops below +10% of the period (table {K}/relay_bay_table.tsv)")
-        return 2
+        # OWNER 11-03 06:40: pre-build checks are ADVISORY (design target, report and launch anyway); COORD 06:42 approved
+        # this form only without a launch gate.  The kit stays as gen made it (form not applied), only the table is kept.
+        print(f"ADVISORY relay_bay: {T}: {bad} of {nh} hops below +10% of the period, form not applied, kit launches "
+              f"unchanged (table {K}/relay_bay_table.tsv)")
+        return 0
     if a.check or not decl:
         print(f"RELAY_BAY {'CHECK' if a.check else 'NOOP'} {T}: {nh} hops PASS, pitch {pitch}, stations {st}")
         return 0
