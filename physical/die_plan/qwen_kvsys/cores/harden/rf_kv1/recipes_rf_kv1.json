@@ -67,7 +67,8 @@
      "rempty": "u_hx__rempty",
      "rst": "u_hx__rrst_n"
     }
-   ]
+   ],
+   "rcopy_bits": 16
   }
  },
  "qkd_hr_core_rx": {
@@ -103,7 +104,13 @@
     "u_queue__rst_n",
     "u_marker_consumer__rst_n",
     "u_bootbarrier__rst_n"
-   ]
+   ],
+   "bank_split": {
+    "mem": "\\u_queue.q ",
+    "data": "\\u_queue.dq ",
+    "en": "\\u_queue.take ",
+    "wa": "\\u_queue.wp "
+   }
   }
  },
  "qkd_hr_ingest_eng": {
@@ -175,7 +182,8 @@
      "rempty": "u_rx__rempty",
      "rst": "u_rx__rrst_n"
     }
-   ]
+   ],
+   "rcopy_bits": 16
   },
   "source": "DIE-KV-64/RF-C 11-03 RF-KV1 RE-FORM (OWNER TWO-STRIKES): right-sized slot (fill ~0.38-0.42), registered reset relay; FWFT read faces registered | was: "
  },
@@ -244,6 +252,18 @@
    "resets": [
     "u_guard__rst_n",
     "u_native__rst_n"
+   ],
+   "negmid": [
+    {
+     "reg": "\\u_guard.g_mu.tk_q ",
+     "src": "\\u_native.local_tk ",
+     "rst": "u_native__rst_n"
+    },
+    {
+     "reg": "u_guard__guarded_tk",
+     "src": "\\u_guard.g_mu.tk_q ",
+     "rst": "u_guard__rst_n"
+    }
    ]
   }
  },
