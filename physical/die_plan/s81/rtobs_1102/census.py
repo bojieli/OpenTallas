@@ -1,5 +1,5 @@
 """DIE-S81-49 11-02 S81 rtobs/tap census of a plan with the tools of a tree (plan as given, no override):
-grid+explicit tap legality (taps.grid_explicit_taps) on every type, and published landing collector_tree relays vs
+grid+explicit / explicit tap legality (taps.grid_explicit_taps / explicit_taps) on every type, and published landing collector_tree relays vs
 reset_tree.for_type.   usage: census.py TOOLS_ROOT PLAN [OUT.json]"""
 import sys, json
 W, pl = sys.argv[1:3]
@@ -11,9 +11,10 @@ def key(rs):
 tap_bad, ct_bad, ct_n, ok = [], [], 0, 0
 for tn in sorted(P.types):
     t = P.types[tn]
-    if (t.get("clock") or {}).get("tap_mode") == "grid+explicit":
+    mode = (t.get("clock") or {}).get("tap_mode")
+    if mode in ("grid+explicit", "explicit"):
         try:
-            taps.grid_explicit_taps(P, tn)
+            (taps.explicit_taps if mode == "explicit" else taps.grid_explicit_taps)(P, tn)
         except Exception as e:
             tap_bad.append([tn, str(e)[:300]])
     ct = ((raw["partition_types"][tn].get("clock") or {}).get("landing_contract") or {}).get("collector_tree")

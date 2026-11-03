@@ -9,6 +9,9 @@ every sink it takes is within the radius (Manhattan minimax box in rotated u=x+y
 point to the old site), re-validate the type with the SAME tools (relays are re-planned from the moved tap), iterate.
 A type where no single-tap move closes is reported, never forced.
 
+Explicit types (clock.tap_mode "explicit", DIE-S81-49 11-02): the same single-tap move on clock.taps against
+taps.explicit_taps (every local tap budgeted, data/control sinks, keepouts and core taps kept clear); never an add.
+
 Frozen reset contract (DIE-S81-49 11-02): a type that publishes a landing collector_tree (clock.landing_contract) keeps
 its reset contract -- tap count and indices (rst_n_t<k> nodes the landing children / local sources name), depths,
 tap_depth, entry/root, outs and core resets (GUARD_KEYS) -- or the candidate is rejected; so an ADDED tap (which
@@ -79,19 +82,42 @@ def republish(P, raw, tn, side=None):
     return len(old["relays"]), len(new["relays"]), len(kn - ko)
 
 
+MODES = ("grid+explicit", "explicit")
+
+
+def _mode(P, tn):
+    return P.types[tn].get("clock", {}).get("tap_mode")
+
+
 def check(P, tn):
+    """None when the type's taps pass the kit rule of their mode, else the error text"""
     try:
-        taps.grid_explicit_taps(P, tn)
+        (taps.explicit_taps if _mode(P, tn) == "explicit" else taps.grid_explicit_taps)(P, tn)
         return None
     except ValueError as e:
         return str(e)
 
 
+def _sites(P, tn):
+    return taps.explicit_tap_sites(P, tn) if _mode(P, tn) == "explicit" else taps.grid_explicit_sites(P, tn)
+
+
+def _n_fixed(P, tn):
+    """leading taps the rule does not budget (the R4 grid of grid+explicit); explicit: every tap is budgeted"""
+    return 0 if _mode(P, tn) == "explicit" else len(S._grid_taps(P, tn))
+
+
+def _table(raw, P, tn):
+    """the plan's editable tap rows: clock.added_taps (grid+explicit) or the local clock.taps (explicit)"""
+    ck = raw["partition_types"][tn]["clock"]
+    return ck["taps"] if _mode(P, tn) == "explicit" else ck["added_taps"]
+
+
 def tap_sinks(P, tn):
-    out = taps.grid_explicit_sites(P, tn)
+    out = _sites(P, tn)
     ck = P.types[tn].get("clock", {})
     sinks = taps.sink_sites(P, tn)
-    if not P.types[tn].get("hard"):
+    if not P.types[tn].get("hard") and _mode(P, tn) != "explicit":     # explicit_taps budgets data/control sinks only
         import reset_tree as RT
         sinks = sinks + [(float(r["xy"][0]), float(r["xy"][1]), 1.0) for r in RT.for_type(P, tn).get("relays", [])]
     cap = int(ck.get("tap_max_sinks", 1500))
@@ -107,7 +133,10 @@ def legal(P, tn, x, y, name):
     eps = 1e-8
     from placement_obstacles import placement_boxes
     boxes = list(placement_boxes(t, halo=clear).values())
-    others = [(a, b) for n, a, b in taps.grid_explicit_sites(P, tn) if n != name]
+    others = [(a, b) for n, a, b in _sites(P, tn) if n != name]
+    if _mode(P, tn) == "explicit":          # explicit_tap_sites also keeps clear of keepouts and core taps
+        boxes += [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in t.get("clock", {}).get("keepouts_um", [])]
+        others += [(x, y) for _, x, y, _ in S.core_taps(P, tn)]
     return (clear - eps <= x <= w - clear + eps and clear - eps <= y <= h - clear + eps
             and not any(abs(x - a) < clear - eps and abs(y - b) < clear - eps for a, b in others)
             and not any(a + eps < x < c - eps and b + eps < y < d - eps for a, b, c, d in boxes))
@@ -146,7 +175,7 @@ def fix_type(P, raw, tn, step, max_iter, add=False):
         if err is None:
             break
         out, sinks, asg, load, far, radius = tap_sinks(P, tn)
-        ng = len(S._grid_taps(P, tn))
+        ng = _n_fixed(P, tn)
         bad = [i for i in range(ng, len(out)) if far[i] > radius + 1e-6]
         if not bad:
             rec["unfixable"] = f"error not a radius failure: {err}"
@@ -154,7 +183,7 @@ def fix_type(P, raw, tn, step, max_iter, add=False):
         i = bad[0]
         name, x0, y0 = out[i]
         pts = [(s[0], s[1]) for s, j in zip(sinks, asg) if j == i]
-        table = raw["partition_types"][tn]["clock"]["added_taps"]
+        table = _table(raw, P, tn)
         ent = next(e for e in table if e["name"] == name)
         done = False
         for _, x, y in candidates(pts, x0, y0, radius, step)[:int(__import__("os").environ.get("ATR_MAXC", "400"))]:
@@ -162,7 +191,6 @@ def fix_type(P, raw, tn, step, max_iter, add=False):
                 continue
             old = list(ent["xy"])
             ent["xy"] = [x, y]
-            P.types[tn]["clock"]["added_taps"] = table
             S_reset_cache(P)
             e2 = check(P, tn)
             g = reset_guard(P, raw, tn) if (e2 is None or name not in e2) else "radius"
@@ -176,7 +204,7 @@ def fix_type(P, raw, tn, step, max_iter, add=False):
                 break
             ent["xy"] = old
             S_reset_cache(P)
-        if not done and add:
+        if not done and add and _mode(P, tn) == "grid+explicit":
             # no single move closes it (the tap's sinks span > 2 x radius): append ONE light tap at the legal site nearest
             # the out-of-radius sinks' minimax centre; it takes them by the nearest-tap rule, the old tap keeps the rest
             farp = [p for p in pts if abs(p[0] - x0) + abs(p[1] - y0) > radius - 1.0]
@@ -245,7 +273,7 @@ def main():
     want = a.types.split(",") if a.types else sorted(P.types)
     recs = []
     for tn in want:
-        if P.types[tn].get("clock", {}).get("tap_mode") != "grid+explicit":
+        if _mode(P, tn) not in MODES:
             continue
         if check(P, tn) is None:
             continue
