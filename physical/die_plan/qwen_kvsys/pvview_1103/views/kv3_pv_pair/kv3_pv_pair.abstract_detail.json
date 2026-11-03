@@ -1,0 +1,26 @@
+{
+ "base": "in/kv3_pv_pair.lef",
+ "base_sha256": "f1a3980c2445c6cb501e28227177805d3a31f22a1454fdd07edfe4b10453713d",
+ "detail": "out/detail.lef",
+ "out": "out/kv3_pv_pair.lef",
+ "out_sha256": "25ada09fdd3be06646804a725d7d828bf962fdc92e2f6c5458c1f2f1d7c2fa39",
+ "layers_detailed": [
+  "M6",
+  "M7"
+ ],
+ "rects": {
+  "M6": 7541,
+  "M7": 2673
+ },
+ "pg_pin_layers": {
+  "VDD": [
+   "M5"
+  ],
+  "VSS": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": []
+}
