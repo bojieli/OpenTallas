@@ -67,6 +67,18 @@ from pathlib import Path
 
 SCHEMA = "opentallas.lec.v1"
 PROVE_JOBS = 1
+# LEC-CONE-TIMEOUT (FLOW-22 11-02, COORD: HBM LECs hung 45-151 h inside one per-cone &cec batch): every per-cone
+# ABC batch gets a wall limit; a batch that overruns is bisected down to the single cone, which then stays
+# 'undecided' (UNRESOLVED, never EQ).  OT_LEC_CONE_S = seconds per hung cone (0 = no limit, the old behaviour).
+CONE_S_DEFAULT = 600
+CONE_BUDGET_S = 2.0          # + this much wall per cone in a batch (normal cones close in ~1 s)
+
+
+def cone_limit_s():
+    try:
+        return max(0.0, float(os.environ.get("OT_LEC_CONE_S", CONE_S_DEFAULT)))
+    except ValueError:
+        return float(CONE_S_DEFAULT)
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 ORFS = "/OpenROAD-flow-scripts"
 NLDM = ORFS + "/flow/platforms/asap7/lib/NLDM"
@@ -1941,7 +1953,12 @@ def xor_sat(m, ids, log):
         if v > m.ni:
             k = v - m.ni - 1
             stack.extend(t >> 1 for t in m.ands[2 * k:2 * k + 2])
-    solver = pycryptosat.Solver(threads=1)
+    lim = cone_limit_s()
+    try:
+        # the per-cone wall limit applies here too: an exhausted solve returns None -> undecided
+        solver = pycryptosat.Solver(threads=1, time_limit=lim) if lim else pycryptosat.Solver(threads=1)
+    except TypeError:
+        solver = pycryptosat.Solver(threads=1)
     if need:
         # Also declare a cone consisting solely of an unconstrained input.
         solver.add_clause([max(need), -max(need)])
@@ -1984,6 +2001,68 @@ def xor_sat(m, ids, log):
                    f"{statuses[m.onames[i]]}, {len(need)} cone variables, {nx} redundant XORs, "
                    f"{time.time() - start:.3f}s")
     return statuses
+
+
+CONE_PAT = (r"Networks are (NOT EQUIVALENT|equivalent|UNDECIDED)|"
+            r"UNSAT\s*=\s*(\d+)\.\s*SAT\s*=\s*(\d+)\.\s*UNDEC\s*=\s*(\d+)\.")
+
+
+def parse_cone_statuses(t):
+    """per-cone statuses, in script order, from the text of one &cone/&cec batch.  Naive SAT reports one aggregate
+    line for a nontrivial cone; trivial cones use the CEC sentence.  Keep UNDECIDED in sequence: dropping it would
+    shift a later proof onto the wrong output."""
+    res = []
+    for hit in re.finditer(CONE_PAT, t):
+        if hit[1]:
+            res.append({"NOT EQUIVALENT": "differs", "equivalent": "proved"}.get(hit[1], "undecided"))
+        else:
+            u, sat, undec = map(int, hit.group(2, 3, 4))
+            res.append("proved" if (u, sat, undec) == (1, 0, 0) else
+                       "differs" if (u, sat, undec) == (0, 1, 0) else "undecided")
+    return res
+
+
+def run_abc_script(abc, sf, limit):
+    """-> (text, timed_out).  limit None/0 = no wall limit.  On a timeout ABC is killed and the text is whatever it
+    printed (a piped ABC may buffer, so the caller never relies on partial text alone)."""
+    try:
+        r = subprocess.run([abc, "-f", str(sf)], capture_output=True, text=True, timeout=limit or None)
+        return r.stdout + r.stderr, False
+    except subprocess.TimeoutExpired as e:
+        def s(x):
+            return x.decode(errors="replace") if isinstance(x, bytes) else (x or "")
+        return s(e.stdout) + s(e.stderr), True
+
+
+def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runner=None):
+    """statuses (aligned with ids) of one &cone -O i; &cec batch.  With a per-cone wall limit (OT_LEC_CONE_S) the
+    batch gets limit + CONE_BUDGET_S per cone; on an overrun the cones answered before the hang keep their status
+    and the rest is bisected until the hung cone runs alone, which stays 'undecided' (UNRESOLVED, never proved)."""
+    limit = cone_limit_s() if limit is None else limit
+    runner = runner or run_abc_script
+    # no &cec -T: an ABC-side time-out may print no status line and would shift later statuses onto the wrong
+    # outputs; the wall limit + bisection below is the only limit, so every parsed line stays aligned
+    script = [f"&r {swept}; &cone -O {i}; &cec {opt} -C {conflicts}" for i in ids]
+    # one command per line in a script file (abc -f): a long batch passed as one -c argument exceeds the
+    # kernel per-argument limit (MAX_ARG_STRLEN 128 KiB; OSError E2BIG on the 48k-output kvs_pc miters)
+    sf = Path(work) / f"{tag}_cones_{ids[0]}_{ids[-1]}_n{len(ids)}_C{conflicts}{opt.replace(' ', '')}.abc"
+    sf.write_text("\n".join(script) + "\n")
+    wall = (limit + CONE_BUDGET_S * len(ids)) if limit else None
+    t, timed_out = runner(abc, sf, wall)
+    log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]} (&cec {opt} -C {conflicts})"
+               f"{' TIMEOUT after %.0f s' % wall if timed_out else ''}\n{t}")
+    res = parse_cone_statuses(t)
+    if not timed_out:
+        return res
+    done = res[:len(ids)]
+    rest = ids[len(done):]
+    if len(rest) <= 1 or len(ids) == 1:
+        if rest:
+            log.append(f"LEC CONE TIMEOUT {tag} output {rest[0]}: no answer within {wall:.0f} s -> undecided")
+        return done + ["undecided"] * len(rest)
+    h = (len(rest) + 1) // 2
+    return (done + cone_batch(abc, swept, work, tag, rest[:h], opt, conflicts, log, limit, runner)
+            + cone_batch(abc, swept, work, tag, rest[h:], opt, conflicts, log, limit, runner))
 
 
 def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
@@ -2036,29 +2115,9 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
         size = len(pending) if jobs == 1 else max(1, (len(pending) + jobs * 4 - 1) // (jobs * 4))
         batches = [pending[i:i+size] for i in range(0, len(pending), size)]
         def one_batch(ids, factor=factor, opt=opt):
-            script = [f"&r {swept}; &cone -O {i}; &cec {opt} -C {conflicts * factor}" for i in ids]
-            # one command per line in a script file (abc -f): a long batch passed as one -c argument exceeds the
-            # kernel per-argument limit (MAX_ARG_STRLEN 128 KiB; OSError E2BIG on the 48k-output kvs_pc miters)
-            sf = work / f"{tag}_cones_{ids[0]}_{ids[-1]}_x{factor}{opt.replace(' ', '')}.abc"
-            sf.write_text("\n".join(script) + "\n")
-            r = subprocess.run([abc, "-f", str(sf)], capture_output=True, text=True)
-            return ids, r.stdout + r.stderr
+            return ids, cone_batch(abc, swept, work, tag, ids, opt, conflicts * factor, log)
         with ThreadPoolExecutor(max_workers=jobs) as ex:
-            for ids, t in ex.map(one_batch, batches):
-                log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]} (&cec {opt} conflicts x{factor})\n{t}")
-                # Naive SAT reports one aggregate line for a nontrivial cone; trivial
-                # cones use the CEC sentence. Keep UNDECIDED in sequence: dropping it
-                # would shift a later proof onto the wrong output.
-                pat = (r"Networks are (NOT EQUIVALENT|equivalent|UNDECIDED)|"
-                       r"UNSAT\s*=\s*(\d+)\.\s*SAT\s*=\s*(\d+)\.\s*UNDEC\s*=\s*(\d+)\.")
-                res = []
-                for hit in re.finditer(pat, t):
-                    if hit[1]:
-                        res.append({"NOT EQUIVALENT": "differs", "equivalent": "proved"}.get(hit[1], "undecided"))
-                    else:
-                        u, sat, undec = map(int, hit.group(2, 3, 4))
-                        res.append("proved" if (u, sat, undec) == (1, 0, 0) else
-                                   "differs" if (u, sat, undec) == (0, 1, 0) else "undecided")
+            for ids, res in ex.map(one_batch, batches):
                 for i, status in zip(ids, res):
                     st[m.onames[i]] = status
         pending = [i for i in pending if st[m.onames[i]] == "undecided"]
@@ -6374,7 +6433,7 @@ def via_docker(args, image, mem):
     Path(out).mkdir(parents=True, exist_ok=True)
     me = str(Path(__file__).resolve())
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
-           "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}"]
+           "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}", "-e", f"OT_LEC_CONE_S={os.environ.get('OT_LEC_CONE_S', str(CONE_S_DEFAULT))}"]
     if (Path(kit) / "lec_native_stub_metadata.json").is_file():
         for name in ("native_stub_metadata.py", "native_bb.py"):
             path = Path(me).with_name(name)
