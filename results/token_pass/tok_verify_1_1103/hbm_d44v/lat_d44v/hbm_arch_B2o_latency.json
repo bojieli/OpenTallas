@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "hbm_arch_B2o",
- "plan_digest": "e5a5d9947422803f",
+ "plan_digest": "21cf54234bfab5e7",
  "period_ps": 833,
  "lanes": {
   "HOST_BOOT": {
@@ -3577,12 +3577,12 @@
    "width": 1615
   },
   "L34": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 10,
+   "stations": 8,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 8,
+   "natural": 10,
    "pad": 0,
    "param": "LAT_L34",
    "src": {
@@ -3596,12 +3596,12 @@
    "width": 1615
   },
   "L34m": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 10,
+   "stations": 8,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 8,
+   "natural": 10,
    "pad": 0,
    "param": "LAT_L34M",
    "src": {
@@ -4394,12 +4394,12 @@
    "width": 2784
   },
   "L5": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 11,
+   "stations": 9,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 9,
+   "natural": 11,
    "pad": 0,
    "param": "LAT_L5",
    "src": {
@@ -4717,12 +4717,12 @@
    "width": 514
   },
   "L5m": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 11,
+   "stations": 9,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 9,
+   "natural": 11,
    "pad": 0,
    "param": "LAT_L5M",
    "src": {
@@ -4736,13 +4736,13 @@
    "width": 2725
   },
   "L6": {
-   "cycles": 9,
+   "cycles": 10,
    "stations": 0,
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
    "natural": 2,
-   "pad": 7,
+   "pad": 8,
    "param": "LAT_L6",
    "src": {
     "part": "NW_hub",
@@ -5135,12 +5135,12 @@
    "width": 268
   },
   "L6b": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 10,
+   "stations": 8,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 10,
    "pad": 0,
    "param": "LAT_L6B",
    "src": {
@@ -5154,12 +5154,12 @@
    "width": 828
   },
   "L6bm": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 10,
+   "stations": 8,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 10,
    "pad": 0,
    "param": "LAT_L6BM",
    "src": {
@@ -5173,13 +5173,13 @@
    "width": 828
   },
   "L6c": {
-   "cycles": 9,
+   "cycles": 10,
    "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
    "natural": 4,
-   "pad": 5,
+   "pad": 6,
    "param": "LAT_L6C",
    "src": {
     "part": "NW_hub",
@@ -5192,13 +5192,13 @@
    "width": 828
   },
   "L6cm": {
-   "cycles": 9,
+   "cycles": 10,
    "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
    "natural": 4,
-   "pad": 5,
+   "pad": 6,
    "param": "LAT_L6CM",
    "src": {
     "part": "NE_hub",
@@ -5211,13 +5211,13 @@
    "width": 828
   },
   "L6m": {
-   "cycles": 9,
+   "cycles": 10,
    "stations": 0,
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
    "natural": 2,
-   "pad": 7,
+   "pad": 8,
    "param": "LAT_L6M",
    "src": {
     "part": "NE_hub",
@@ -5572,12 +5572,12 @@
    "width": 274
   },
   "L730": {
-   "cycles": 47,
-   "stations": 45,
+   "cycles": 51,
+   "stations": 49,
    "boundary": 2,
    "faces": 8,
    "fixed": 0,
-   "natural": 47,
+   "natural": 51,
    "pad": 0,
    "param": "LAT_L730",
    "src": {
@@ -5591,12 +5591,12 @@
    "width": 1662
   },
   "L730m": {
-   "cycles": 47,
-   "stations": 45,
+   "cycles": 51,
+   "stations": 49,
    "boundary": 2,
    "faces": 8,
    "fixed": 0,
-   "natural": 47,
+   "natural": 51,
    "pad": 0,
    "param": "LAT_L730M",
    "src": {
