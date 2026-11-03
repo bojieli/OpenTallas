@@ -25,7 +25,7 @@ module ot_hdc_sk_step0_en_phys #(
     input  wire         load,                  // accept edge: er <= in_e
     input  wire [511:0] in_e,
     input  wire         pa, pb,                // control phase flops of ot_hdc_sk_steady_en_phys
-    output reg  [511:0] b_q,
+    output wire [511:0] b_q,               // sign bits constant 0 (see b_m)
     output reg          bbad_q,
     output reg          abad_q
 );
@@ -116,6 +116,16 @@ module ot_hdc_sk_step0_en_phys #(
         always @(posedge clk) q <= (q << 1) | sk_en_base;
         assign sk_en = q[EN_DELAY-1];
     end endgenerate
+    // DIE-HBM-60/LEC C6 (11-03): b_out[k][31] is the constant 0 by construction ({1'b0, ...} below), so the B output
+    // word stores only its 31 magnitude bits and drives the sign as a constant.  As a no-reset register the sign bit
+    // was X until the first pb load and synthesis folded it to 0 (kit LEC NOT EQ, 16 bits); after the first load the
+    // port value is bit-identical, before it the sign is 0 instead of X.
+    reg [30:0] b_m [0:15];
+    generate
+        for (r = 0; r < 16; r = r + 1) begin : g_bq
+            assign b_q[32*r +: 32] = {1'b0, b_m[r]};
+        end
+    endgenerate
     integer k;
     always @(posedge clk) if (sk_en) begin
         for (k = 0; k < 16; k = k + 1) begin
@@ -125,7 +135,7 @@ module ot_hdc_sk_step0_en_phys #(
                 a_xe[k] <= nx_e[k];
                 a_xz[k] <= nx_z[k];
             end
-            if ((MUT == 1) ? pa : pb) b_q[32*k +: 32] <= b_out[k];
+            if ((MUT == 1) ? pa : pb) b_m[k] <= b_out[k][30:0];
         end
         for (k = 0; k < 4; k = k + 1) if (pa) begin
             a_tm[k] <= nt_m[k];
