@@ -102,11 +102,19 @@ module dsdv_idx_txm #(
         initial if (D % 1024 != 0 || D < 1024) $fatal(1, "dsdv_idx_txm: D must be a multiple of 1024");
         wire [255:0] q [0:NB-1];
         reg  [(AW > 10 ? AW-11 : 0):0] bs;
+        // DIE-S81-51 11-03: bank address bits as a generate branch (AW = 10 has none): ra[AW-1:10] at AW = 10 is a
+        // reversed range that yosys-slang (the LEC gold frontend) refuses even under the constant NB == 1 mask.
+        wire [(AW > 10 ? AW-11 : 0):0] ra_hi, wa_hi;
+        if (AW > 10) begin : g_hi
+            assign ra_hi = ra[AW-1:10]; assign wa_hi = wa[AW-1:10];
+        end else begin : g_hi0
+            assign ra_hi = '0; assign wa_hi = '0;
+        end
         genvar b;
         for (b = 0; b < NB; b = b + 1) begin : g_b
             ot_sram_1r1w_1024x256_m2_r2c2 u_mem (
-                .clk(ck), .r_ce_in(re && (NB == 1 || ra[AW-1:10] == b)), .r_addr_in(ra[9:0]), .rd_out(q[b]), // selrange-ok: ra[AW-1:10] is unnecessary at NB=1/D=1024 because constant true NB==1 masks the comparison; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
-                .w_ce_in(we && (NB == 1 || wa[AW-1:10] == b)), .w_addr_in(wa[9:0]), .wd_in(wd), .w_mask_in(wm), // selrange-ok: wa[AW-1:10] is unnecessary at NB=1/D=1024 because constant true NB==1 masks the comparison; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
+                .clk(ck), .r_ce_in(re && (NB == 1 || ra_hi == b)), .r_addr_in(ra[9:0]), .rd_out(q[b]), // selrange-ok: ra[AW-1:10] is unnecessary at NB=1/D=1024 because constant true NB==1 masks the comparison; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
+                .w_ce_in(we && (NB == 1 || wa_hi == b)), .w_addr_in(wa[9:0]), .wd_in(wd), .w_mask_in(wm), // selrange-ok: wa[AW-1:10] is unnecessary at NB=1/D=1024 because constant true NB==1 masks the comparison; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
                 .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
         end
         // bank select: one-hot AND-OR (no runtime-indexed part-select)
@@ -117,7 +125,7 @@ module dsdv_idx_txm #(
             for (k = 0; k < NB; k = k + 1) if (bs == k) mx = mx | q[k];
         end
         always @(posedge ck) begin
-            if (re) bs <= (NB == 1) ? '0 : ra[AW-1:10]; // selrange-ok: ra[AW-1:10] dead at NB=1/D=1024 because constant ternary chooses zero; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
+            if (re) bs <= (NB == 1) ? '0 : ra_hi; // selrange-ok: ra[AW-1:10] dead at NB=1/D=1024 because constant ternary chooses zero; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
             rd <= mx;
         end
     end else begin : g_b
