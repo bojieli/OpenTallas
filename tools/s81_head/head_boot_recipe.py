@@ -48,12 +48,34 @@ def provider(plan, module):
     return matches[0]
 
 
-def boot_routes(plan, host, ctl):
+def host_provider(plan):
+    """HBC HOST provider: the unsplit core, or (DH55-HSPLIT) the W half (HBC, coll_i0, h_rx) plus the lane1-only
+    E half. Returns (part, type, content, east_part_or_None, planned E->W seam cycles)."""
+    try:
+        hp, ht, hc = provider(plan, 'ot_s81hd_host_ep_core')
+        return hp, ht, hc, None, 0
+    except ValueError:
+        pass
+    hp, ht, hc = provider(plan, 'ot_s81hd_host_w_core')
+    ep, _, _ = provider(plan, 'ot_s81hd_host_e_core')
+    ports = {p['id']: p for p in plan['ports']}
+    seam = [l for l in plan['lanes'] if any(ports[n]['src']['part'] == ep['name'] and
+                                            ports[n]['dst']['part'] == hp['name'] for n in l['ports'])]
+    if len(seam) != 1:
+        raise ValueError('split HOST needs exactly one E->W seam lane')
+    cyc = plan.get('latency', {}).get('lanes', {}).get(seam[0]['id'], {}).get('cycles')
+    if not cyc or cyc < 2:
+        raise ValueError('split HOST seam lane needs planned cycles (E boundary flop + W landing flop)')
+    # the E boundary flop is the lane's own RX flop (already in the unsplit HOST timing): added age = cycles - 1
+    return hp, ht, hc, ep['name'], cyc - 1
+
+
+def boot_routes(plan, host, ctl, host_e=None):
     """Select actual ingress/config routes by provider interfaces, not type names."""
     ports = {p['id']: p for p in plan['ports']}
     parts = {p['name']: p for p in plan['partitions']}
     routes = []
-    wanted = {(host, 'coll_i0'), (host, 'coll_i1')}
+    wanted = {(host, 'coll_i0'), (host_e or host, 'coll_i1')}
     for lane in plan['lanes']:
         rows = [ports[n] for n in lane['ports']]
         ingress = any((r['dst']['part'], r['dst']['bus']) in wanted for r in rows)
@@ -94,7 +116,7 @@ def compile_recipe(plan, offsets, source_defaults, programme=None):
                    if typ.get('reset', {}).get('start_role') == 'bootstrap')
     if offsets.get('start', {}).get('bootstrap_types') != roles:
         raise ValueError('published offset bootstrap roles differ from the selected plan')
-    hp, ht, hc = provider(plan, 'ot_s81hd_host_ep_core')
+    hp, ht, hc, host_e, seam_cycles = host_provider(plan)
     cp, ct, _ = provider(plan, 'ot_s81hd_ctl_core')
     params = dict(source_defaults)
     params.update({k: number(v) for k, v in hc.get('params', {}).items() if k in PARAMETERS})
@@ -108,7 +130,7 @@ def compile_recipe(plan, offsets, source_defaults, programme=None):
             params['BOOT_HEADER_EDGE'] + 6 < params['BOOT_COMMIT_EDGE'] < (1 << 48) - 1)
     if not good:
         blockers.append('selected HOST binding has an invalid HBC production profile; bind real stage/rank/phase/clock identity/header/commit values')
-    routes = boot_routes(plan, hp['name'], cp['name'])
+    routes = boot_routes(plan, hp['name'], cp['name'], host_e)
     for route in routes:
         if route['mission_reset_blockers']:
             blockers.append(f"{route['lane']}: pre-START {route['purpose']} route lacks an explicit raw-reset/epoch transport contract")
@@ -120,6 +142,7 @@ def compile_recipe(plan, offsets, source_defaults, programme=None):
               'symbolic_contract': dict(parts={n: symbolic['parts'][n] for n in (hp['name'], cp['name'])},
                                         partition_count=len(symbolic['parts']), element_GO=symbolic['element_GO'],
                                         die_START_edge_status=symbolic['die_START_edge_status']),
+              'host_e_part': host_e, 'host1_seam_cycles': seam_cycles,
               'blockers': blockers, 'frames': [],
               'scope': 'source dates/frames only; HBC payload/CRC, RTL, physical and token gates remain separate',
               'steady_state_cycles_added': 0}
@@ -145,7 +168,7 @@ def compile_recipe(plan, offsets, source_defaults, programme=None):
         if any(v < 0 for v in tr.values()) or tr['peer_frame_period'] == 0:
             raise ValueError('negative transport age')
         cfg_path = next(r for r in routes if r['purpose'] == 'config')['plan_cycles']
-        if cfg_path is None or tr['peer_to_ctl_csr_apply'] < cfg_path:
+        if cfg_path is None or tr['peer_to_ctl_csr_apply'] < cfg_path + seam_cycles or tr['peer_to_host_frame'] < seam_cycles:
             raise ValueError('CSR transport contract omits actual HOST-to-CTL plan stages')
         records = programme['hbc_records']
         dates = [params['BOOT_HEADER_EDGE'], params['BOOT_HEADER_EDGE'] + 4, params['BOOT_COMMIT_EDGE']]
