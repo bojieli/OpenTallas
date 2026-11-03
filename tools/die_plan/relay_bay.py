@@ -189,6 +189,19 @@ def main(argv=None):
         return 0
     open(bf, "w").write(rtl)
     open(f"{K}/ft_stations.txt", "w").write("\n".join(out) + "\n")
+    # gen's per-bit explicit FT sites (ft_bit_sites.tcl, keyed slot,stage,bit) describe the PLAN stages; a lane whose bays
+    # were regenerated drops them, so face_flops puts each station FIRM on the station grid nearest its new bay
+    # (ff_put_stage fallback) instead of failing 'explicit FT site missing' on the added stages
+    fbs = f"{K}/ft_bit_sites.tcl"
+    regen = [s for s, d in decl.items() if not d["sites_kept"]]
+    if regen and os.path.exists(fbs):
+        pat = re.compile(r"^dict set ff_bit_site(?:s|_cells) \{(?:" + "|".join(map(re.escape, regen)) + r")(?:,[^}]*)?\}")
+        lines = open(fbs).read().splitlines(True)
+        kept = [l for l in lines if not pat.match(l)]
+        if len(kept) != len(lines):
+            open(fbs, "w").write("".join(kept))
+            for s in regen:
+                decl[s]["bit_sites_dropped"] = True
     if pitch is not None:
         cm = f"{K}/config.mk"; t = open(cm).read()
         t2, nn = re.subn(r"^export OT_MAXWIRE_UM = \d+$", f"export OT_MAXWIRE_UM = {pitch}", t, flags=re.M)

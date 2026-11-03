@@ -63,6 +63,18 @@ class RelayBay(unittest.TestCase):
             self.assertEqual(len(re.findall(r"u_ft_fb_o_\d", open(K + "/rtl/t_bound.sv").read())), 5)
             self.assertEqual(json.load(open(K + "/declared_cycles.json"))["lanes"]["fb"]["extra_cycles"], 2)
 
+    def test_bit_sites_dropped_for_regenerated_lanes(self):
+        with tempfile.TemporaryDirectory() as d:
+            K = mkkit(d)
+            open(K + "/ft_bit_sites.tcl", "w").write("set ff_bit_sites {}\nset ff_bit_site_cells {}\n"
+                "dict set ff_bit_site_cells {fb} {1.404 0.27}\ndict set ff_bit_sites {fb,1,0} {200 400}\n"
+                "dict set ff_bit_site_cells {fbx} {1.404 0.27}\ndict set ff_bit_sites {fbx,1,0} {9 9}\n")
+            self.assertEqual(RB.main([K]), 0)
+            t = open(K + "/ft_bit_sites.tcl").read()
+            self.assertNotIn("{fb}", t); self.assertNotIn("{fb,1,0}", t)
+            self.assertIn("{fbx}", t); self.assertIn("{fbx,1,0}", t)
+            self.assertTrue(json.load(open(K + "/declared_cycles.json"))["lanes"]["fb"]["bit_sites_dropped"])
+
     def test_check_is_dry(self):
         with tempfile.TemporaryDirectory() as d:
             K = mkkit(d)
