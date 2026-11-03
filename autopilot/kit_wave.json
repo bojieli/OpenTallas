@@ -103,7 +103,8 @@
     "kv3_hub_Ei@2",
     "qkd_hr_cdc_hi@2",
     "kv3_sys_SD@2",
-    "kv3_sys_SD_v1@2"
+    "kv3_sys_SD_v1@2",
+    "kv3_io_cor_v1@1"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -163,7 +164,11 @@
     "kv3_hgi": "KV-030 PDN class C fixed (82eacd7eac + 50e5dda3118, in source-follow src 08542fa9d7d); relaunch HELD by DIE-KV-64 until head_eighth_e6#341b signs (KV-031) and the KV-028 strap tie-in (PORT_BIND extra 48) lands; then ONE retry batch",
     "kv3_hgi_v*": "KV-030 PDN class C fixed (82eacd7eac + 50e5dda3118, in source-follow src 08542fa9d7d); relaunch HELD by DIE-KV-64 until head_eighth_e6#341b signs (KV-031) and the KV-028 strap tie-in (PORT_BIND extra 48) lands; then ONE retry batch"
    },
-   "work_root": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/kit-wave"
+   "work_root": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/kit-wave",
+   "retry_fix": {
+    "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
+    "kv3_io_cor_v1@1": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d"
+   }
   },
   "s81": {
    "enabled": true,
