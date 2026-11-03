@@ -121,6 +121,10 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                                       "l48w", "l48x", "l48y", "l48z", "l48h0")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
+# SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
+# right after gen: a registered relay at every <=300-um hop, extra cycles declared, per-hop table >= +10% of the period
+# or FAIL_PREBUILD before route.  Class default ON; a die opts out with "relay_bay_re": "".
+RELAY_BAY_RE = {"s81": r"^slice_station__", "qwen_compute": r"^sl[ew]_(?:stm|fw|fe)_v\d"}
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
             "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24,
             "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
@@ -564,6 +568,8 @@ RULES = [
     # (undriven wires) reported only as 'FAIL_PREFLOOR rtl_lint' fell through to 'unclassified'
     ("RTL", None, r"is used but has no driver|Found \d+ problems in 'check -assert'|FAIL_PREFLOOR rtl_lint",
      "RTL lint at preflight (undriven / check -assert)"),
+    # SAFE-STATION-1 11-03: a relay-bay hop below +10% of the period = the station plan (bays / lane length), not the flow
+    ("PLAN", None, r"FAIL_PREBUILD relay_bay", "relay-bay pre-build hop table below +10% (station lane plan)"),
     ("PLAN", None, r"FACE_GUARD FAIL|face_guard[^\n]*FAIL|FAIL_PREFLOOR face_guard", "face guard (plan pins / landing)"),
     ("PLAN", None, r"PORT_BIND FAIL|port_bind[^\n]*FAIL|FAIL_PREFLOOR port_bind", "port bind (plan pins)"),
     ("PLAN", None, r"LEF master \S+ not found|ORD-2013", "macro not declared in the plan type"),
@@ -911,6 +917,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
             "lint_mem_gb": int((d.get("lint_mem_gb_by_item") or {}).get(item, opt(cfg, die, "lint_mem_gb"))),
+            "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": OT_RUN,
             "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item))}
 
@@ -1254,6 +1261,26 @@ def run_item(spec_path):
         rc, _ = run("gen_kit", idempotent=True, argv=remote(f"test -f {q(K)}/config.mk || test -f {q(K)}/freeze.json"))
         if rc:
             return fail("gen", txt + "\nGEN_NO_KIT: gen.py exit 0 but wrote no kit for this type (hard type? see gen --hard-wrappers)")
+    # SAFE-STATION-1 11-03: relay-bay station form on wire-only station kits (class default, see RELAY_BAY_RE).  The tool
+    # and its computed hop rows come from the scheduler checkout (the wave src is pinned and may predate them), staged
+    # into W/relay_bay; it rewrites K in place (extra relays, plan bays, repeater pitch, declared_cycles.json) or fails
+    # closed with FAIL_PREBUILD relay_bay before any gate / build.  Before resume_inputs, so a resume fingerprints it.
+    rbre = sp.get("relay_bay_re") or ""
+    if not core and rbre and re.search(rbre, T):
+        rbd = Path(__file__).resolve().parents[1] / "die_plan"
+        staged = f"{W}/relay_bay"
+        rc, txt = run("relay_bay_dir", remote(f"mkdir -p {q(staged)}"), idempotent=True)
+        if rc:
+            return fail("relay_bay", txt)
+        dest = staged + "/" if G in ("localhost", hub) else f"{G}:{staged}/"
+        rc, txt = run("relay_bay_copy", ["rsync", "-a", "-e", "ssh -o BatchMode=yes -o ControlPath=none",
+            str(rbd / "relay_bay.py"), str(rbd / "relay_bay_hop_rows.json"), dest], idempotent=True)
+        if rc:
+            return fail("relay_bay", txt)
+        rc, txt = run("relay_bay", remote(f"python3 -I {q(staged)}/relay_bay.py {q(K)} --rows {q(staged)}/relay_bay_hop_rows.json"))
+        if rc:
+            return fail("relay_bay", txt, f"{G}:{K}/relay_bay_table.tsv")
+        res["relay_bay"] = (txt.strip().splitlines() or [""])[-1][:300]
     # New-attempt tool update only, before any physical/proof work or resume copy.
     # The generator source stays pinned; record the independent scheduler LEC snapshot.
     lt = sp.get("future_lec")
