@@ -1,0 +1,453 @@
+
+-- Running command `read_verilog -sv normal.sv; hierarchy -top m; proc; flatten; async2sync; opt; sat -seq 3 -tempinduct -set-init-zero -prove eq 1 -verify -show-inputs -show-outputs' --
+
+1. Executing Verilog-2005 frontend: normal.sv
+Parsing SystemVerilog input from `normal.sv' to AST representation.
+Generating RTLIL representation for module `\m'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \m
+
+2.2. Analyzing design hierarchy..
+Top module:  \m
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$normal.sv:20$93 in module m.
+Marked 2 switch rules as full_case in process $proc$normal.sv:19$89 in module m.
+Marked 1 switch rules as full_case in process $proc$normal.sv:10$22 in module m.
+Marked 1 switch rules as full_case in process $proc$normal.sv:5$6 in module m.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 2 redundant assignments.
+Promoted 9 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\m.$proc$normal.sv:20$93'.
+Found async reset \rst_n in `\m.$proc$normal.sv:19$89'.
+Found async reset \rst_n in `\m.$proc$normal.sv:10$22'.
+Found async reset \rst_n in `\m.$proc$normal.sv:5$6'.
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~4 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\m.$proc$normal.sv:3$103'.
+Creating decoders for process `\m.$proc$normal.sv:3$102'.
+Creating decoders for process `\m.$proc$normal.sv:3$101'.
+Creating decoders for process `\m.$proc$normal.sv:3$100'.
+Creating decoders for process `\m.$proc$normal.sv:20$93'.
+     1/1: $0\cf[0:0]
+Creating decoders for process `\m.$proc$normal.sv:19$89'.
+     1/1: $0\gf[0:0]
+Creating decoders for process `\m.$proc$normal.sv:10$22'.
+     1/22: $1$fordecl_block$2.fg_a[31:0]$29
+     2/22: $1$fordecl_block$2.$for_loop$3[3].$fordecl_block$4.fg_s[31:0]$33
+     3/22: $0\cq[16:0] [16]
+     4/22: $0\cq[16:0] [15]
+     5/22: $0\cq[16:0] [14]
+     6/22: $0\cq[16:0] [13]
+     7/22: $1$fordecl_block$2.$for_loop$3[2].$fordecl_block$4.fg_s[31:0]$32
+     8/22: $0\cq[16:0] [12]
+     9/22: $0\cq[16:0] [11]
+    10/22: $0\cq[16:0] [10]
+    11/22: $0\cq[16:0] [9]
+    12/22: $1$fordecl_block$2.$for_loop$3[1].$fordecl_block$4.fg_s[31:0]$31
+    13/22: $0\cq[16:0] [8]
+    14/22: $0\cq[16:0] [7]
+    15/22: $0\cq[16:0] [6]
+    16/22: $0\cq[16:0] [5]
+    17/22: $1$fordecl_block$2.$for_loop$3[0].$fordecl_block$4.fg_s[31:0]$30
+    18/22: $0\cq[16:0] [4]
+    19/22: $0\cq[16:0] [3]
+    20/22: $0\cq[16:0] [2]
+    21/22: $0\cq[16:0] [1]
+    22/22: $0\cq[16:0] [0]
+Creating decoders for process `\m.$proc$normal.sv:5$6'.
+     1/1: $0\gq[0:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\m.\zseen[3]' from process `\m.$proc$normal.sv:3$103'.
+No latch inferred for signal `\m.\zseen[2]' from process `\m.$proc$normal.sv:3$102'.
+No latch inferred for signal `\m.\zseen[1]' from process `\m.$proc$normal.sv:3$101'.
+No latch inferred for signal `\m.\zseen[0]' from process `\m.$proc$normal.sv:3$100'.
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\m.\cf' using process `\m.$proc$normal.sv:20$93'.
+  created $adff cell `$procdff$118' with positive edge clock and positive level reset.
+Creating register for signal `\m.\gf' using process `\m.$proc$normal.sv:19$89'.
+  created $adff cell `$procdff$123' with positive edge clock and positive level reset.
+Creating register for signal `\m.\cq' using process `\m.$proc$normal.sv:10$22'.
+  created $adff cell `$procdff$128' with positive edge clock and positive level reset.
+Creating register for signal `\m.$fordecl_block$2.fg_a' using process `\m.$proc$normal.sv:10$22'.
+  created $dff cell `$procdff$135' with positive edge clock.
+Creating register for signal `\m.$fordecl_block$2.$for_loop$3[0].$fordecl_block$4.fg_s' using process `\m.$proc$normal.sv:10$22'.
+  created $dff cell `$procdff$142' with positive edge clock.
+Creating register for signal `\m.$fordecl_block$2.$for_loop$3[1].$fordecl_block$4.fg_s' using process `\m.$proc$normal.sv:10$22'.
+  created $dff cell `$procdff$149' with positive edge clock.
+Creating register for signal `\m.$fordecl_block$2.$for_loop$3[2].$fordecl_block$4.fg_s' using process `\m.$proc$normal.sv:10$22'.
+  created $dff cell `$procdff$156' with positive edge clock.
+Creating register for signal `\m.$fordecl_block$2.$for_loop$3[3].$fordecl_block$4.fg_s' using process `\m.$proc$normal.sv:10$22'.
+  created $dff cell `$procdff$163' with positive edge clock.
+Creating register for signal `\m.\gq' using process `\m.$proc$normal.sv:5$6'.
+  created $adff cell `$procdff$168' with positive edge clock and positive level reset.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `m.$proc$normal.sv:3$103'.
+Removing empty process `m.$proc$normal.sv:3$102'.
+Removing empty process `m.$proc$normal.sv:3$101'.
+Removing empty process `m.$proc$normal.sv:3$100'.
+Found and cleaned up 2 empty switches in `\m.$proc$normal.sv:20$93'.
+Removing empty process `m.$proc$normal.sv:20$93'.
+Found and cleaned up 2 empty switches in `\m.$proc$normal.sv:19$89'.
+Removing empty process `m.$proc$normal.sv:19$89'.
+Removing empty process `m.$proc$normal.sv:10$22'.
+Removing empty process `m.$proc$normal.sv:5$6'.
+Cleaned up 4 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+<suppressed ~18 debug messages>
+
+4. Executing FLATTEN pass (flatten design).
+
+5. Executing ASYNC2SYNC pass.
+Replacing m.$procdff$168 ($adff): ARST=\rst_n, D=$logic_or$normal.sv:6$21_Y, Q=\gq
+Replacing m.$procdff$128 ($adff): ARST=\rst_n, D={ $logic_and$normal.sv:15$87_Y $logic_and$normal.sv:15$84_Y $logic_and$normal.sv:15$81_Y $logic_and$normal.sv:15$78_Y $logic_and$normal.sv:15$75_Y $logic_and$normal.sv:15$72_Y $logic_and$normal.sv:15$69_Y $logic_and$normal.sv:15$66_Y $logic_and$normal.sv:15$63_Y $logic_and$normal.sv:15$60_Y $logic_and$normal.sv:15$57_Y $logic_and$normal.sv:15$54_Y $logic_and$normal.sv:15$51_Y $logic_and$normal.sv:15$48_Y $logic_and$normal.sv:15$45_Y $logic_and$normal.sv:15$42_Y $logic_or$normal.sv:12$39_Y }, Q=\cq
+Replacing m.$procdff$123 ($adff): ARST=\rst_n, D=$procmux$112_Y, Q=\gf
+Replacing m.$procdff$118 ($adff): ARST=\rst_n, D=$procmux$107_Y, Q=\cf
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Computing hashes of 111 cells of `\m'.
+Finding duplicate cells in `\m'.
+Computing hashes of 81 cells of `\m'.
+Finding duplicate cells in `\m'.
+Computing hashes of 80 cells of `\m'.
+Finding duplicate cells in `\m'.
+<suppressed ~93 debug messages>
+Removed a total of 31 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \m..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~24 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \m.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Computing hashes of 80 cells of `\m'.
+Finding duplicate cells in `\m'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$149 ($dff) from module m (D = 4, Q = $fordecl_block$2.$for_loop$3[1].$fordecl_block$4.fg_s).
+Adding EN signal on $procdff$156 ($dff) from module m (D = 4, Q = $fordecl_block$2.$for_loop$3[2].$fordecl_block$4.fg_s).
+Adding EN signal on $procdff$135 ($dff) from module m (D = 4, Q = $fordecl_block$2.fg_a).
+Adding EN signal on $procdff$142 ($dff) from module m (D = 4, Q = $fordecl_block$2.$for_loop$3[0].$fordecl_block$4.fg_s).
+Adding EN signal on $procdff$163 ($dff) from module m (D = 4, Q = $fordecl_block$2.$for_loop$3[3].$fordecl_block$4.fg_s).
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 1-bit at position 2 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$181 ($dffe) from module m.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 1-bit at position 2 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$180 ($dffe) from module m.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 1-bit at position 2 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$179 ($dffe) from module m.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 1-bit at position 2 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$178 ($dffe) from module m.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 1-bit at position 2 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$177 ($dffe) from module m.
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+Removed 7 unused cells and 92 unused wires.
+<suppressed ~8 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \m..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~14 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \m.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Computing hashes of 68 cells of `\m'.
+Finding duplicate cells in `\m'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+6.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 68 cells to SAT database.
+Final init constraint equation: { $auto$async2sync.cc:253:execute$175 $auto$async2sync.cc:253:execute$169 $auto$async2sync.cc:253:execute$171 $auto$async2sync.cc:253:execute$173 } = 20'00000000000000000000
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 68 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 68 cells to SAT database.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 68 cells to SAT database.
+Import proof-constraint: \eq = 1'1
+Final proof equation: \eq = 1'1
+
+** Trying induction with length 1 **
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 68 cells to SAT database.
+Import proof-constraint: \eq = 1'1
+Final proof equation: \eq = 1'1
+Import show expression: \other_fault
+Import show expression: \act_q
+Import show expression: \sq
+Import show expression: \start_q
+Import show expression: \zmask
+Import show expression: \zflat
+Import show expression: \done_seen
+Import show expression: \issue
+Import show expression: \lm_seen
+Import show expression: \m_issue
+Import show expression: \rst_n
+Import show expression: \clk
+Import show expression: \eq
+
+[base case 1] Solving problem with 6778 variables and 17342 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 68 cells to SAT database.
+Import proof-constraint: \eq = 1'1
+Final proof equation: \eq = 1'1
+Import show expression: \other_fault
+Import show expression: \act_q
+Import show expression: \sq
+Import show expression: \start_q
+Import show expression: \zmask
+Import show expression: \zflat
+Import show expression: \done_seen
+Import show expression: \issue
+Import show expression: \lm_seen
+Import show expression: \m_issue
+Import show expression: \rst_n
+Import show expression: \clk
+Import show expression: \eq
+
+[induction step 1] Solving problem with 3322 variables and 8449 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 454df093ac, time: 0.22s, user: 0.14s, system: 0.02s, MEM: 26.85 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+Time spent: 73% 1x sat (0 sec), 10% 2x read_verilog (0 sec), ...
