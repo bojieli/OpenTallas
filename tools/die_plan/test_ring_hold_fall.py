@@ -27,7 +27,7 @@ def _max(s, ck):
     return next(float(ln.split()[2]) for ln in tail.splitlines() if ln.startswith(f"set_input_delay -max") and ck in ln)
 
 
-def test_fall_moves_ring_max_by_half_period_and_lints():
+def test_fall_keeps_ring_max_at_the_io_budget_and_lints():
     P0, tn, b, _w = _ring_kit()
     ck = f"fclk_in_{b}"
     Pr, Pf = _plan(P0, None), _plan(P0, "fall")
@@ -35,7 +35,8 @@ def test_fall_moves_ring_max_by_half_period_and_lints():
     sr, sf = gen_phys.sdc(Pr, tn, pins), gen_phys.sdc(Pf, tn, pins)
     per = gen_phys.t_lib(P0.die["period_ps"])
     assert LC.ring_fall_clocks(Pr, tn) == set() and LC.ring_fall_clocks(Pf, tn) == {ck}
-    assert abs(_max(sr, ck) - per / 2 - _max(sf, ck)) < 1e-3
+    assert abs(_max(sr, ck) - _max(sf, ck)) < 1e-3     # STA captures at the fall: no extra T/2 shift (DH56-IOHP)
+    assert per > 0
     ctx = sdc_lint.kit_context(Pf, tn)
     assert _errs(sf, ctx) == []
     # a lower budget still is a relaxation
@@ -132,7 +133,7 @@ def test_verify_moves_the_lag_window_by_half_period_for_fall_writers():
 
 def test_fall_ca_start_input_timed_on_forwarded_clock():
     """HEAD-RINGHOLD-2: a count-aligned fall writer captures cland_fstart_in_<b> (its t_rst_n) on wclk, so with
-    write_edge fall the start input joins the forwarded ring inputs at the T/2 budget; a rise writer times it on fclk_in_<b> at the full cycle (DIE-HEAD-55)."""
+    write_edge fall the start input joins the forwarded ring inputs (IO budget, captured at the T/2 fall); a rise writer times it on fclk_in_<b> at the full cycle (DIE-HEAD-55)."""
     P0, tn, b, _w = _ring_kit()
     ck, fs = f"fclk_in_{b}", f"cland_fstart_in_{b}"
     raw = copy.deepcopy(P0.raw)
@@ -146,7 +147,7 @@ def test_fall_ca_start_input_timed_on_forwarded_clock():
     per = gen_phys.t_lib(P0.die["period_ps"])
     tag = next(ln for ln in sf.splitlines() if ln.startswith(LC.RING_INPUTS_TAG))
     assert tag.split()[-1] == fs
-    mx = gen_phys.IO_BUDGET * per - per / 2
+    mx = gen_phys.IO_BUDGET * per       # DH56-IOHP: the fall IS the T/2 capture, no extra shift
     assert f"set_input_delay -max {mx:.4f} -clock {ck} [get_ports {{{fs}}}]" in sf
     assert f"set_input_delay -min 80.0000 -clock {ck} [get_ports {{{fs}}}]" in sf
     assert _errs(sf, sdc_lint.kit_context(Pf, tn)) == []

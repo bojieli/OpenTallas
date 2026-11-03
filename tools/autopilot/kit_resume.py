@@ -60,6 +60,10 @@ STEP_LOGS = {"synth": ("1_2_yosys.log", "1_synth.log"),
              "place": ("3_3_place_gp.log", "3_5_place_dp.log"),
              "cts": ("4_1_cts.log",),
              "grt": ("5_1_grt.log",)}
+# FLOW-24 11-03: HOLD-GUARD-GRT ends each buffer-capped hold chunk on a caught RSZ-0060 (OpenROAD still logs it as
+# [ERROR RSZ-0060]); the guard prints its "OT_HOLD_GUARD_GRT chunk N" line right after and continues.  That caught
+# cap is not a crash; an RSZ-0060 the guard did not catch has no chunk line after it and still counts.
+HOLD_GUARD_CAP_RE = re.compile(r"^\[ERROR RSZ-0060\][^\n]*\n(?=(?:[^\n]*\n){0,4}OT_HOLD_GUARD_GRT chunk \d+:)", re.M)
 ERR_LINE = re.compile(r"^(?:\[ERROR|ERROR:|Error:)", re.M)
 
 # run_kit.sh (gen_phys RUN_KIT) itself reads these kit files.  Producers: the make step whose output they change.
@@ -336,7 +340,7 @@ def checkpoint(K):
                         bad.append(f"{lg} missing")
                         continue
                     with open(p, errors="replace") as f:
-                        m = ERR_LINE.search(f.read())
+                        m = ERR_LINE.search(HOLD_GUARD_CAP_RE.sub("", f.read()))
                     if m:
                         bad.append(f"{lg} has an error line")
                 st["passed"] = not bad

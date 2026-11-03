@@ -1,0 +1,13 @@
+# Full-T7 Verilator 5.050 --lint-only of closure bound 12605dc2 + 3 children (lint_closure.sh = ../s81_T7_LAND_bound_cut_1102/full_t7_lint.sh with run closure); intel2 systemd --user tokds4-t7lint-closure MemoryMax 56G
+Result=success ExecMainStatus=0 
+closure rc=0 errors=0 warnings=6
+ot_bind_native_9dac3ec6a10d5c1fa30ab0cf.sv:11:17: Extracting 1024 bits from only 256 bit number
+ot_bind_native_9b4fb12e1e10c18fd5ac186c.sv:11:17: Extracting 2132 bits from only 32 bit number
+ot_bind_native_94fb3121d89a024ad3313eef.sv:11:17: Extracting 512 bits from only 32 bit number
+ot_bind_native_15eceba1215313fce255258d.sv:9:17: Extracting 512 bits from only 32 bit number
+ot_dsrom_su_fdiv_f12.sv:70:9: 'always @*' will never execute as expression list is empty (no variables read)
+ot_dsrom_su_fdiv_f12.sv:88:9: 'always @*' will never execute as expression list is empty (no variables read)
+/srv/opentallas-scratch2/claude/tok-ds-3-t7lint-1102/closure.log:- Verilator: Walltime 1125.133 s (elab=12.070, cvt=926.592, bld=0.000); cpu 1061.012 s on 1 threads; allocated 36316.473 MB
+/srv/opentallas-scratch2/claude/tok-ds-3-t7lint-1102/closure.err:	Maximum resident set size (kbytes): 36560696
+
+[exited with code 0]

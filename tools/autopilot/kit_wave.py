@@ -115,9 +115,11 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # (WFALL 4 types + per-type tap windows + seam_ps 90, merged 29e4be44f); l48x = l48w + one-pin raw-export fixes
                # (COORD 10-31 18:0x (4), DIE-HEAD-52; gate only after its READY is approved); l48y = COORD 11-01 01:0x
                # HEAD plan of record (dh52-tile2 1d77f1bb566 hd_tile; wave switches only after that merge); l48z = l48x +
-               # one-block geom fixes in 4 types (COORD 11-01 09:2x plan event, APPROVED 14:0x, merged 854277ebaaf)
+               # one-block geom fixes in 4 types (COORD 11-01 09:2x plan event, APPROVED 14:0x, merged 854277ebaaf);
+               # l48h0 = DIE-HEAD-55 prepared_l48h0 on src claude/dh55-headsrc-1102@69e06c8b9 (COORD 11-03 00:2x (a) APPROVED)
+               # l48h1 = DIE-HEAD-56 prep_v3 (plan 8e8ce514127b: l48h0 + hd_ctl_e/hd_ctl_n/hd_host_n cland republish), DIE-HEAD-56 RULING 11-03 04:5x
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
@@ -245,6 +247,14 @@ PLAN_BLOCK = {
     # AUTOBUILD-PIPE-1 10-30: not launched (gen would fail 'macros have LEF but no timing liberty'); no FAIL record, so
     # the type launches on its own once the plan of record carries the child's signed lib (die owner / core sign-off)
     "noview": "WAIT-DEP: a child hard core / ROM view in the plan has a lef but no lib (child not signed yet)",
+    # DIE-KV-62/types 11-02 (class A, KV 21 rows 'macro not declared in the plan type' ORD-2013): a hard_cores[] entry
+    # with no lef is a PLANNED core whose view the plan does not bind yet.  gen_phys.type_macros skips it, so kit-rtl
+    # inlines the child's soft RTL (kv3_pv_pair -> its ot_sram_1r1w_32x128_m1 leaves; HR cores -> their SRAMs) and the
+    # flat kit stops at synth_odb ORD-2013 (macros the type does not place) or runs far over the 400k cell cap.  Not a
+    # failure: the type waits (PENDING-DEP) until the plan binds the child's signed lef/lib.  Die opt-out:
+    # kit_wave.json dies.<die>.planned_core_flat true (old behaviour: build the type flat with the child inlined).
+    "planned": "WAIT-DEP: a child hard core has no view bound in the plan (PLANNED core, no lef/lib): the type kit would "
+               "inline the child RTL; waits for the plan to bind the signed child view",
 }
 
 
@@ -254,6 +264,8 @@ def plan_entry_block(d, item):
         return "plan block identity held: " + d["_identity_holds"][item]
     f = (d.get("_plan_flags") or {}).get(item)
     if f == "hard" and item in (d.get("hard_wrappers") or []):
+        return None
+    if f == "planned" and d.get("planned_core_flat"):
         return None
     return PLAN_BLOCK.get(f)
 
@@ -968,6 +980,35 @@ def outline_cmd(K):
             f" if o:\n  print(f'{{o[0]}}x{{o[1]}}');break\"")
 
 
+def region_guide_geom(prev, gen_host):
+    """FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D): the previous attempt's AUTO-GEOM dir when it FAILED at the geom
+    stage on the gen host (its geom.tsv is read in place), else None.  region_guide.py plan itself writes a spec only
+    when that AUTO-GEOM r2r rule FAILED (class D), so every other relaunch gets no guide (kit unchanged)."""
+    ev = str(prev.get("evidence") or "")
+    if prev.get("status") != "FAIL" or prev.get("stage") != "geom" or not ev.endswith("/auto_geom.json") or ":" not in ev:
+        return None
+    host, path = ev.split(":", 1)
+    return path.rsplit("/", 1)[0] if host == gen_host and path.startswith("/") else None
+
+
+def region_guide_cmd(sp, core):
+    """-> (shell prefix that sets RG, ' $RG'): region_guide.py plan on the previous AUTO-GEOM; RG = the generator flag
+    (core: --region-guide SPEC; type: --region-guide TYPE=SPEC) only when a class-D spec was written.  A source
+    without region_guide.py, a missing geom.tsv or a planner error leaves RG empty (kit unchanged, KW_NOTE)."""
+    q = shlex.quote
+    gd = sp.get("region_guide_geom")
+    if not gd:
+        return "RG=; ", ""
+    out = f"{sp['work']}/region_guide.json"
+    flag = f"--region-guide {out}" if core else f"--region-guide {sp['item']}={out}"
+    return (f"RG=; rm -f {q(out)}; if [ -f tools/die_plan/region_guide.py ] && [ -f {q(gd + '/geom.tsv')} ]; then "
+            f"python3 tools/die_plan/region_guide.py plan --geom-dir {q(gd)} --out {q(out)} "
+            f"|| echo 'KW_NOTE region_guide plan failed: kit without region guide'; "
+            f"if [ -s {q(out)} ]; then RG={q(flag)}; fi; "
+            f"else echo 'KW_NOTE no region_guide.py in this source or no previous geom.tsv: kit without region guide'; fi; "
+            f"echo \"KW_REGION_GUIDE ${{RG:-none}}\"; "), " $RG"
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     sp = json.loads(Path(spec_path).read_text())
@@ -1166,7 +1207,8 @@ def run_item(spec_path):
             rc, txt = run("views", otrun(8, 2, sp["root"], prep, gh))
             if rc:
                 return fail("views", txt, f"{G}:{sp['root']}/views.log")
-        rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, f"cd {q(src)} && {gcmd}", gh))
+        rgp, rga = region_guide_cmd(sp, True)
+        rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, f"cd {q(src)} && {rgp}{gcmd}{rga}", gh))
         if rc:
             return fail("gen", txt)
         rc, kt = run("gen_kit", idempotent=True, argv=remote(kfind))
@@ -1214,8 +1256,9 @@ def run_item(spec_path):
         pin = (f"PS=; if python3 tools/die_plan/gen.py phys --help 2>/dev/null | grep -q -- --cland-pinslot; then "
                f"PS='--cland-pinslot {ps}'; else echo 'KW_NOTE gen.py of this source has no --cland-pinslot (plan list only)'; fi; "
                if ps and re.fullmatch(r"[A-Za-z0-9_,]+", ps) else "PS=; ")
-        gen = (f"cd {q(src)} && {pin}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
-               f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}")
+        rgp, rga = region_guide_cmd(sp, False)
+        gen = (f"cd {q(src)} && {pin}{rgp}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
+               f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}{rga}")
         rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, gen, gh))
         if rc:
             return fail("gen", txt)
@@ -1468,7 +1511,8 @@ def _descends(AP):
     return f
 
 
-PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + r'''
+PROBE_V = 2   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run)
+PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
 import hashlib, json, os, sys
 a = json.loads(sys.argv[1]); out = {}
 H = lambda o: hashlib.sha256(json.dumps(o, sort_keys=True, default=str).encode()).hexdigest()
@@ -1493,17 +1537,23 @@ try:
         # gen_phys.type_macros + write_type_kit: a hard core / content with a lef but no lib fails gen at once
         noview = sorted({str(c.get("module") or c.get("inst")) for c in (v.get("hard_cores") or []) + (v.get("contents") or [])
                          if isinstance(c, dict) and c.get("lef") and not c.get("lib")})
+        # DIE-KV-62/types 11-02: hard_cores[] without a lef = PLANNED core (view not bound in the plan yet)
+        planned = sorted({str(c.get("module") or c.get("inst")) for c in (v.get("hard_cores") or [])
+                          if isinstance(c, dict) and not c.get("lef")})
         if v.get("hard"):
             flags[t] = "hard"
         elif noview:
             flags[t] = "noview"
             deps[t] = noview
+        elif planned:
+            flags[t] = "planned"
+            deps[t] = planned
         elif ck.get("core_taps") == "internal" and not signed and any(
                 str(tp.get("budget_owner", "")).startswith("parent_budget") for tp in taps):
             # DIE-KV-60/taps 11-01: = gen_phys.internal_core_taps_estimate (unsigned internal taps -> estimate form)
             flags[t] = "contract"
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
-           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps}
+           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps, "probe_v": PROBE_V}
     if a.get("core_views"):
         # AUTOBUILD-PIPE-2: pin tables per hard-core module (sha256[:12] of the plan pins_file = views_b2r2 view key)
         cv = {}
@@ -1527,7 +1577,7 @@ def plan_names(AP, st, d):
     key = f"{d['gen_host']}:{d['plan']}|{d['event']}"
     c = (st.get("plans") or {}).get(key)
     mode = d.get("block_identity", "raw")
-    if mode == "raw" and c and c.get("blocks") and time.time() - c.get("t", 0) < 6 * 3600:
+    if mode == "raw" and c and c.get("blocks") and c.get("probe_v") == PROBE_V and time.time() - c.get("t", 0) < 6 * 3600:
         return c
     args = {"plan": d["plan"], "core_views": bool(d.get("core_kit"))}
     if mode != "raw":
@@ -1658,6 +1708,12 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         sp["work"] += f"/attempt_{attempt}"
         if opt(cfg, die, "stage_resume") is not False and prev.get("dir"):
             sp["resume_from"] = resume_source(AP, prev)
+        # FLOW-23 class D: a relaunch after an AUTO-GEOM FAIL plans soft region guides from that result (written only
+        # when its r2r rule failed); die opt-out: region_guide false
+        if opt(cfg, die, "region_guide") is not False:
+            rgg = region_guide_geom(prev, sp["gen_host"])
+            if rgg:
+                sp["region_guide_geom"] = rgg
     unit = f"kw-{re.sub(r'[^A-Za-z0-9]', '', die)[:6]}-{re.sub(r'[^A-Za-z0-9]', '', r['item'])[:28]}-{attempt}-{int(time.time()) % 100000}"
     if AP.DRY:
         AP.log(f"KIT-WAVE would launch {die}/{r['item']} unit {unit}: gen {sp['gen_host']}:{sp['work']} plan {sp['plan']}")

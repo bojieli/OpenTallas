@@ -92,6 +92,28 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
+def face_flops_text(ff, clks, rsts, straps, home_resets=True):
+    """Kit face_flops.tcl = the shared tool hook + this generator's patches (skip set, unreg-pin audit).
+    KW-FIX-2 11-02 (GEOM-111 class R, COORD 23:0x): reset INPUTS are no longer skipped.  The skip was written for
+    kits whose reset_tree.tcl FIRMs the reset entry stage (face_flops.tcl sources /work/reset_tree.tcl), but this
+    generator never writes one, so the entry flop of every rst*_n synchroniser floated to the logic centroid
+    (rst_n 212-647 um from its pin on 11 HBM kits: qw_dec, q3_body/q3_vm, pgslice, sfu_split3__ctl, rp3lp3h_n,
+    cxport_ij_q, keybuf_slice, fused_lane, host_cp_rxs, xload_cl2_ctlx).  ff_from_in follows every non-CLOCK input
+    pin (async RESET pins included), so the first flop on the reset net is homed FIRM at the pin face like any
+    other pin register.  home_resets=False (--no-reset-face-home) restores the old skip set."""
+    skip_names = list(clks) + ([] if home_resets else list(rsts)) + list(straps)
+    skip = "^(" + "|".join(re.escape(n) for n in skip_names) + ")$"
+    ff, nskip = re.subn(r"(?m)^set ff_skip_re .*?$", lambda _: "set ff_skip_re {" + skip + "}", ff)
+    assert nskip == 1, "expected exactly one face_flops clock/reset skip declaration"
+    assert ("set ff_skip_re {" + skip + "}") in ff, "face_flops.tcl skip anchor changed"
+    ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
+                    "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
+                    "set ff_unreg [open $::env(RESULTS_DIR)/ot_unreg_pins.txt w]")
+    ff = ff.replace("    if {$f eq \"\"} { incr ff_miss; continue }",
+                    "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
+    return ff
+
+
 def stage_pin_audit(kit):
     """Use the current exact-geometry consumer for face, interior and scalar pins."""
     shutil.copyfile(TOOL / "pin_audit.py", Path(kit) / "pin_audit_core.py")
@@ -668,34 +690,70 @@ def slice_clock_ports(slice_dir, module, clks):
     return list(clks) if ms.clock_entry_ports(sl) else None
 
 
-def write_boundary_context(kd, clks, rsts):
+# COORD ruling 10-24 (gen_core_kit_kv.write_core_contract / gen_core_kit_legacy form): typed hard-core latency contract.
+HARD_CORE_LATENCY_CONTRACT = dict(
+    kind="hard_core_latency", ruling="COORD 10-24",
+    target_applies_at="parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+    measured_in="KIT/signoff/signoff.json core_latency; views <module>.core.json; <module>_tt.lib max_clock_tree_path")
+
+
+MEASURED_HOLD_FLAG = "override export OT_MM_MEASURED_HOLD = 1"   # tools/die_plan/kit_modes.MEASURED_FLAG
+
+
+def drop_measured_hold(kd):
+    """hard_core_latency kits use the 'bound-ff' FF reference (vclk_ref), and the measured-FF two-mode hold reference is
+    for 'rebind' kits only (kit_modes.stage_measured_hold; sdc_lint.measured_frame_errors fails closed otherwise).  The
+    two-mode staging runs before core.json is written, so remove the opt-in line it added -> the kit keeps the bound-ff
+    hold reference, as KV/S81 contract kits do.  Returns True when the line was present."""
+    cfg = Path(kd) / "config.mk"
+    if not cfg.is_file():
+        return False
+    lines = cfg.read_text().splitlines(keepends=True)
+    keep = [ln for ln in lines if ln.strip() != MEASURED_HOLD_FLAG]
+    if len(keep) != len(lines):
+        cfg.write_text("".join(keep))
+    return len(keep) != len(lines)
+
+
+def write_boundary_context(kd, clks, rsts, hard_core_latency=False):
     """COORD 10-30 15:27 (HBM-CORES-KITS-28 ASK rst_col, default A): the typed boundary control declaration every
     other core generator writes (KV gen_core_kit_kv.write_core_contract form): KIT/core.json boundary_role
     {clock bus: clk, reset port: reset} + KIT/boundary_guard_context.json (schema v1, no data-pin exemptions).
     The sign-off face_guard (signoff.boundary_controls) and lec.declared_resets read it, so a real reset port
     (freeze.json resets, matched by RST_RE, SDC '# reset' line) is not reported as a 'shared' data face.  Declaration
     only: clock/reset names come from the same clks/rsts the SDC and freeze.json use; no timing or netlist change.
-    No clock_contract (HBM cores keep the plan insertion target), so vclk_ref / core_io_reference are unchanged."""
+    No clock_contract by default (HBM cores keep the plan insertion target), so vclk_ref / core_io_reference are unchanged.
+    hard_core_latency=True (--hard-core-latency, DIE-HBM-60/CORES 11-03 class CLK-BAND): the SAME typed contract the
+    KV/S81 generators write (COORD 10-24; METHODOLOGY 12.3 v5.0 / 12.3a): the core publishes its measured insertion and
+    the parent taps it early, so the insertion band is a design target (core_clock_band info, vclk_ref bound-ff);
+    no gate changes."""
     base = lambda n: re.sub(r"\[\d+\]$", "", n)
     cb = sorted({base(c) for c in clks})
     rb = sorted({base(r) for r in rsts} - set(cb))
     kd = Path(kd)
     (kd / "core.json").write_text(json.dumps(dict(
         schema="opentallas.hbm_core_boundary.v1", source="gen_core_kit_hbm.write_boundary_context",
-        boundary_role={**{c: "clk" for c in cb}, **{r: "reset" for r in rb}}), indent=1) + "\n")
+        boundary_role={**{c: "clk" for c in cb}, **{r: "reset" for r in rb}},
+        **({"clock_contract": HARD_CORE_LATENCY_CONTRACT} if hard_core_latency else {})), indent=1) + "\n")
     (kd / "boundary_guard_context.json").write_text(json.dumps(dict(
         schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json",
         clock_ports=cb, unused_clock_ports=[], reset_ports=rb, data_pin_exemptions=[]), indent=1) + "\n")
     return dict(clock_ports=cb, reset_ports=rb)
 
 
-def retrofit_boundary_context(kd):
+def retrofit_boundary_context(kd, hard_core_latency=False):
     """--retrofit-boundary KIT: write the same declaration into an already generated HBM kit from its freeze.json
     clocks/resets (kits built before this change; same content the generator now writes)."""
     fz = json.loads((Path(kd) / "freeze.json").read_text())
     if fz.get("schema") != "opentallas.hbm_arch.core_freeze.v1":
         raise SystemExit(f"{kd}: not an HBM core kit freeze.json")
-    return write_boundary_context(kd, fz.get("clocks") or [], fz.get("resets") or [])
+    rep = write_boundary_context(kd, fz.get("clocks") or [], fz.get("resets") or [], hard_core_latency)
+    if hard_core_latency:   # ledger (KV retrofit_contract.py form): declaration only, no RTL/SDC/netlist change
+        rep["measured_hold_dropped"] = drop_measured_hold(kd)
+        (Path(kd) / "contract_retrofit.json").write_text(json.dumps(dict(
+            tool="gen_core_kit_hbm --retrofit-boundary --hard-core-latency (DIE-HBM-60/CORES CLK-BAND)",
+            clock_contract=HARD_CORE_LATENCY_CONTRACT, hold_reference="bound-ff", **rep), indent=1) + "\n")
+    return rep
 
 
 def resolve_recipe_by_top(module, R):
@@ -1247,6 +1305,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "(INCLUSIVE regions, released before DPL, fail-closed on an empty box / fill >= 0.80); boxes "
                          "must be inside the core and pairwise disjoint and no prefix may nest with another box's; "
                          "default off = kit unchanged")
+    ap.add_argument("--region-guide", default=None, metavar="SPEC_JSON",
+                    help="opt-in (FLOW-23, AUTO-GEOM class D r2r): tools/die_plan/region_guide.py plan spec of the "
+                         "kit's last AUTO-GEOM; per bit-slice INCLUSIVE GPL regions for the failing launch/capture "
+                         "registers, released before DPL (soft guide); default off = kit unchanged")
     ap.add_argument("--macro-reg-guide-um", type=float, default=15.0,
                     help="guide box = macro bbox grown by this many um on every side (clipped to the core area)")
     ap.add_argument("--macro-grid-snap", default="on", choices=["on", "off"],
@@ -1304,6 +1366,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--stock-rc", action="store_true", help="old basis: platform setRC.tcl (no RCX-calibrated RC)")
     ap.add_argument("--no-f1", action="store_true", help="no per-corner FF IO basis in the FF hold repair")
     ap.add_argument("--no-f4", action="store_true", help="no zero-logic chain leaf affinity post-CTS")
+    ap.add_argument("--hard-core-latency", action="store_true",
+                    help="typed hard_core_latency clock contract in core.json (COORD 10-24; class CLK-BAND)")
+    ap.add_argument("--no-reset-face-home", action="store_true",
+                    help="old skip set: reset inputs excluded from face_flops pin-register homing (GEOM-111 class R)")
     ap.add_argument("--clock-tap-dmax", type=float, default=80.0)
     # HBM-CORES-R11 2026-10-27 (COORD 10:37 ruling 2, SIGNOFF-MODES-2): one timing mode per corner.  Default: setup-only
     # TT repair post-CTS (post_cts_setup.tcl) + the kit staged two-mode (tools/die_plan/kit_modes.py stage: GRT repairs
@@ -1796,16 +1862,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         libs.append(f"/work/macros/{m}{cl if (md / f'{m}{cl}').is_file() else '_tt.lib'}")
     (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks(plan_path))
-    skip = "^(" + "|".join(re.escape(n) for n in clks + rsts + kit_straps) + ")$"
-    ff = (TOOL / "face_flops.tcl").read_text()
-    ff, nskip = re.subn(r"(?m)^set ff_skip_re .*?$", lambda _: "set ff_skip_re {" + skip + "}", ff)
-    assert nskip == 1, "expected exactly one face_flops clock/reset skip declaration"
-    assert ("set ff_skip_re {" + skip + "}") in ff, "face_flops.tcl skip anchor changed"
-    ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
-                    "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
-                    "set ff_unreg [open $::env(RESULTS_DIR)/ot_unreg_pins.txt w]")
-    ff = ff.replace("    if {$f eq \"\"} { incr ff_miss; continue }",
-                    "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
+    ff = face_flops_text((TOOL / "face_flops.tcl").read_text(), clks, rsts, kit_straps,
+                         home_resets=not a.no_reset_face_home)
     (kd / "face_flops.tcl").write_text(ff)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py", "dump_placed.py", "hold_cap.tcl",
@@ -1987,6 +2045,14 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                                                                      sha256=sha(a.reg_guide_boxes))),
                                                             indent=1) + "\n")
         rec["reg_guide_boxes"] = dict(boxes=len(rgb), sha256=sha(a.reg_guide_boxes))
+    if a.region_guide:
+        # FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D): soft GPL region guides per failing r2r bit slice from the
+        # kit's last AUTO-GEOM (tools/die_plan/region_guide.py plan), sourced LAST in face_flops.tcl and released at
+        # the end of face_flops_release.tcl (before DPL); default off = kit unchanged.
+        sys.path.insert(0, str(TOOL))
+        import region_guide as RG
+        rec["region_guide"] = RG.install(kd, json.load(open(a.region_guide)), outline=(w, h),
+                                         src=dict(file=str(a.region_guide), sha256=sha(a.region_guide)))
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     # HBM-CORES3 10-25: --orfs-var overrides go LAST (a later make export wins; they used to precede the macro block,
@@ -2086,7 +2152,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # normal kit hash and generation provenance; never retrofit a built kit.
     from kit_runtime_assets import stage as stage_runtime_assets
     runtime_files = stage_runtime_assets(kd, REPO, rec.get("runtime_files"))
-    write_boundary_context(kd, clks, rsts)   # before kit_hash: typed clock/reset declaration (COORD 10-30 15:27)
+    write_boundary_context(kd, clks, rsts, a.hard_core_latency)   # before kit_hash: typed clock/reset declaration (COORD 10-30 15:27)
+    if a.hard_core_latency:
+        flow["timing_modes"]["measured_hold_dropped"] = drop_measured_hold(kd)   # bound-ff kit (see drop_measured_hold)
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
               canonical_type=v.get("canonical_type"), wrapper=wrap_rep, outline_um=[w, h],
@@ -2164,7 +2232,7 @@ def native_hc128_dispatch(argv):
 
 if __name__ == "__main__":
     native_hc128_dispatch(sys.argv[1:])
-    if len(sys.argv) == 3 and sys.argv[1] == "--retrofit-boundary":
-        print(json.dumps(retrofit_boundary_context(sys.argv[2])))
+    if len(sys.argv) in (3, 4) and sys.argv[1] == "--retrofit-boundary" and sys.argv[3:] in ([], ["--hard-core-latency"]):
+        print(json.dumps(retrofit_boundary_context(sys.argv[2], sys.argv[3:] == ["--hard-core-latency"])))
     else:
         main()

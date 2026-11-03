@@ -558920,7 +558920,7 @@
        ],
        "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
        "ring_place": "ff",
-       "fill_axis": "x"
+       "resize_stations_1102": "DIE-KV-62/stations 11-02: fill_axis x dropped. The bus pins are a y column on the E face, so the +x column form refused pinslot ('pins not an x row in key order: old column fill') and packed the ring bit-agnostic over the band (kv3_io_ft_v1 wave attempt_2 ft0_i pin_reg p50 74.9 / max 153.8 um). The +ff y-column pinslot form (as the W twin ft2_i) puts each bit's slot flops in the rows beside its own pin."
       },
       "i_seq__g_fan_N__u_fan_kc": {
        "rect_um": [
@@ -1201009,7 +1201009,7 @@
        ],
        "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
        "ring_place": "ff",
-       "fill_axis": "x"
+       "resize_stations_1102": "DIE-KV-62/stations 11-02: fill_axis x dropped. The bus pins are a y column on the E face, so the +x column form refused pinslot ('pins not an x row in key order: old column fill') and packed the ring bit-agnostic over the band (kv3_io_ft_v1 wave attempt_2 ft0_i pin_reg p50 74.9 / max 153.8 um). The +ff y-column pinslot form (as the W twin ft2_i) puts each bit's slot flops in the rows beside its own pin."
       },
       "ft1_i": {
        "rect_um": [
@@ -1225681,7 +1225681,7 @@
        ],
        "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
        "ring_place": "ff",
-       "fill_axis": "x"
+       "resize_stations_1102": "DIE-KV-62/stations 11-02: fill_axis x dropped. The bus pins are a y column on the E face, so the +x column form refused pinslot ('pins not an x row in key order: old column fill') and packed the ring bit-agnostic over the band (kv3_io_ft_v1 wave attempt_2 ft0_i pin_reg p50 74.9 / max 153.8 um). The +ff y-column pinslot form (as the W twin ft2_i) puts each bit's slot flops in the rows beside its own pin."
       },
       "ft1_i": {
        "rect_um": [
@@ -2467877,7 +2467877,17 @@
   "ft_station_max_um": 405.0,
   "reach_margin": 1.0,
   "cland_fit_resize_off_types": [
-   "kv3_io_cor"
+   "kv3_io_cor",
+   "kv3_io_cor_v1"
+  ],
+  "dpl_legalizer_types": [
+   "kv3_io_cor",
+   "kv3_io_cor_v1"
+  ],
+  "cland_pinslot_dense_types": [
+   "kv3_io_ft",
+   "kv3_io_ft_v1",
+   "kv3_hroot"
   ]
  },
  "census": [

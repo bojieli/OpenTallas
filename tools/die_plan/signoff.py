@@ -304,7 +304,7 @@ KIT_TOOL_DEPENDENCIES = {
     "hold_gate.tcl": ("vclk_corner.tcl",),
     "face_guard_core.py": ("face_guard.py",),
     "core_preflight.py": ("signoff.py", "face_guard.py"),
-    "kit_contract.py": ("core_io_reference.py",),
+    "kit_contract.py": ("core_io_reference.py", "bound_macro_paths.py"),
 }
 
 
@@ -1620,6 +1620,23 @@ def run_internal_core_face_guard(disc, fz, contract):
                 guard_sha256=hashlib.sha256(src.read_bytes()).hexdigest())
 
 
+def synth_types(synth, synth_text):
+    """DIE-S81-50 11-03: the instance-path module types of the flat synth netlist, read from the hierarchical
+    1_2_yosys.v beside it, exactly as the kit's face_guard_core.py passes them (guard types=).  Without them the typed
+    proofs (land_slot registered one-hot write enable in ot_pl_land_local_kw, status copies, origins) cannot see the
+    module of a flattened path, so sign-off failed land_slot on netlists the kit gate proved (S81 lnland 1116 bits).
+    None when the hierarchical netlist is absent or names a different top (the guard then runs untyped, as before)."""
+    raw = Path(synth).with_name("1_2_yosys.v")
+    if not raw.is_file():
+        return None
+    try:
+        import face_guard
+        types = face_guard.hier_module_types(raw.read_text(errors="replace"))
+    except Exception:
+        return None
+    return types if re.search(r"^\s*module\s+\\?" + re.escape(types[0]) + r"\b", synth_text, re.M) else None
+
+
 def run_face_guard(disc, clock_ports=(), library_receipt=None):
     import face_guard
     if not disc.get("synth"):
@@ -1677,10 +1694,12 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
         land = face_guard.kit_land(lf) if lf is not None and lf.is_file() else None
         pad_clocks, native_clock_pins = face_guard.kit_pad_clocks(disc['kit'], library_receipt) if disc.get('kit') else ([], set())
         exports = face_guard.sdc_clock_exports(Path(disc['sdc']).read_text()) if pad_clocks else []
-        r = face_guard.guard(Path(disc["synth"]).read_text(errors="replace"), pins=pins, skip_re=skip_re, ft1=ft1,
+        synth_text = Path(disc["synth"]).read_text(errors="replace")
+        types = synth_types(disc["synth"], synth_text)
+        r = face_guard.guard(synth_text, pins=pins, skip_re=skip_re, ft1=ft1,
                              straps=sl, dead=dl, land=land, exports=exports, spare=spl, timed=tml,
                              pad_clocks=pad_clocks, native_clock_pins=native_clock_pins,
-                             clocks=[p['name'] for p in pad_clocks if p['dir'] == 'in'])
+                             clocks=[p['name'] for p in pad_clocks if p['dir'] == 'in'], types=types)
     except Exception as e:
         return dict(verdict="NOT RUN", reason=f"face_guard error: {e}", netlist=disc["synth"])
     return dict(verdict=r["verdict"], top=r.get("top"), checked=r.get("checked"), ok=r.get("ok"),

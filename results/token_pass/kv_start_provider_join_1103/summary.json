@@ -1,0 +1,15 @@
+{
+  "lane": "DIE-KV-63/start 2026-11-03",
+  "status": "PASS (START-skeleton vehicle on the current KV bind); native veh60 boot_go root cause = stale pre-f4fc168ee C45 HOST, not the START provider",
+  "current_bind": {
+    "bound_top": "intel1+intel2 /srv/opentallas-scratch2/claude/die-kv-62-stations/g0/bind (strict bind PASS 0 errors, 160 partitions / 56 types; plan_c sha256[:12] c250636f0d64 = main 7af661c74d plan_c; asbuilt src 54c3c7c9f)",
+    "provider": "epyc2 /home/ubuntu/scratch-root/claude/die-kv-61/grt/vA/em (die clock variant A of record; start_stage_emit: 1528 stages / 10530 flops / 157 pst outputs)",
+    "join": "tools/die_plan/start_provider_bind.py (main 48c37eca7d) --top qwen_kvsys_bound_top --reset-port pad_por_n",
+    "integrated_top": "intel1+intel2 /srv/opentallas-scratch2/claude/die-kv-63-start/joined/joined_top.sv (sha in sha256_and_build.txt) + provider_vA/start_stages.sv; receipt joined_top.json (logical_cycles_added 0)"
+  },
+  "vehicle": "START-skeleton: every partition reduced to its ot_dp_* START/reset/landing infrastructure (skel.py; cores dropped), joined top + provider unchanged, u_host = dkv63_host_stub (real qkd_d2d_boot_event_bridge + C45 installed predicate). hub_C kvs_ctl setup_ready and PLL lock injected. 6 GB / 4 min build, 0.1 s run (intel2 ot-run).",
+  "result_mode0_main_c45": "157/157 pst_* rise (latest cyc 635); cland_start hub_C 113 / hub_Wi 152 / hub_Wo 194 / hroot_WN,WS 242 / hroot_EN,ES 257; hub_Wi mission_start(start_t13) = START+18, never before START; setup lands +5; d2d_boot_begin once, o_host_boot_go_d1 = START+19 (FX vehicle BOOTOBS START+18, same path length)",
+  "result_mode1_old_predicate": "boot_go_d1 never rises (setup && program_ready && START closed loop) = the native veh60 symptom",
+  "veh60_root_cause": "kv-fn-7/veh60/b/boot_abi_sources/1_qkd_host_root_admission_obsx_bo1_c45.sv sha f48511bd = staged from src_0822 @9178c9c1555 (not a descendant of f4fc168ee): installed = static_setup_ready && program_ready && mission_start. The obsx half of f4fc168ee is present (program_installed_local exported but unconnected). veh60 already had the provider joined (veh60_join.sh, em_kv58) and its tree is sound (all 160 regions rooted at hub_C).",
+  "veh60_fix": "intel1 /srv/opentallas-scratch2/claude/die-kv-63-start/veh60c45: vdir = veh60 vdir with ONE file replaced by main c45 (sha 26b8df10, f4fc168ee); build.sh = veh60_build.sh recipe (HIER NATIVE_BOOT NATIVE_BOOT_ABI, D2D_IMG veh60/vimg); output veh60c45/b/obj/Vtb_kvslice; run with kv-fn-7/veh60/run_veh60.sh BIN=that"
+}

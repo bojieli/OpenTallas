@@ -21,6 +21,7 @@ no standard cells besides the die top's own (none), PDN = die.pg grid on M8/M9 s
 routing of the clock spine and the abutment nets only, then a die STA script over the partitions' routed netlists +
 SPEF (sta_die.tcl): timing paths through the face boundary flops.
 """
+import hashlib as _hashlib
 import json
 import math
 import re
@@ -48,9 +49,51 @@ PIN_LEN_UM = 0.192
 LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032, M8=0.04, M9=0.04)
 
 
-def _dpl_args(budgets):
-    """FLOW-7 10-30: plan budgets.dpl_legalizer="diamond" -> ORFS DETAIL_PLACEMENT_ARGS lines; absent = [] (kit unchanged)."""
+# DIE-KV-63 11-03 (default-on, no-op on legal kits): a FIRM CLAND cell that the resizer upsized IN PLACE after packing
+# (repair_design / timing GPL resize FIRM cells, they do not move them) can overlap a TAPCELL or another fixed cell; DPL
+# cannot move a FIRM cell, so 3_5 fails DPL-0033 (KV io_cor: 19 dsel INVx1 -> INVx2 over TAPCELLs under the legacy no-fit
+# form, which io_cor needs because the resize reserve leaves no status site). Only those overlapping CLAND cells go back
+# to PLACED, so DPL moves each to the nearest free site; every CLAND cell that still fits stays FIRM.
+CLAND_RELEASE_GROWN_TCL = """
+set cg_rows [dict create]
+foreach cg_i [$ff_blk getInsts] {
+ if {[$cg_i getPlacementStatus] ni {FIRM LOCKED FIXED COVER}} continue
+ if {[[$cg_i getMaster] isBlock]} continue
+ set cg_b [$cg_i getBBox]
+ dict lappend cg_rows [$cg_b yMin] [list [$cg_b xMin] [$cg_b xMax] $cg_i]
+}
+set cg_bad [dict create]
+dict for {cg_y cg_l} $cg_rows {
+ set cg_px -1; set cg_pi ""
+ foreach cg_e [lsort -integer -index 0 $cg_l] {
+  lassign $cg_e cg_x0 cg_x1 cg_i
+  if {$cg_pi ne "" && $cg_x0 < $cg_px} {
+   foreach cg_c [list $cg_i $cg_pi] {
+    if {[$cg_c getPlacementStatus] eq "FIRM" && [string match *u_cland_* [$cg_c getName]]} { dict set cg_bad [$cg_c getName] $cg_c }
+   }
+  }
+  if {$cg_x1 > $cg_px} { set cg_px $cg_x1; set cg_pi $cg_i }
+ }
+}
+dict for {cg_n cg_c} $cg_bad { $cg_c setPlacementStatus PLACED }
+puts "OT_CLAND released [dict size $cg_bad] FIRM cland cells grown into an occupied site (in-place resize) for DPL"
+"""
+
+
+def _dpl_args(budgets, tn=None, diamond=False):
+    """FLOW-7 10-30: plan budgets.dpl_legalizer="diamond" -> ORFS DETAIL_PLACEMENT_ARGS lines; absent = [] (kit unchanged).
+    DIE-KV-63 11-03: budgets.dpl_legalizer_types names the types (or unsplit base names) that get the diamond legalizer
+    while the plan-wide key is absent (KV io_cor 3_5: negotiation stalled at 122 illegal repair buffers / relay flops
+    inside FIRM ring bands for 1400 iterations; diamond legal in one pass).
+    DIE-QC-65/KITS 11-03: diamond=True (gen phys --dpl-diamond TYPES, per-type CLI opt-in) gives the same line for that kit:
+    QC sle_hc2__clcc5e3e61 negotiation DPL stalled at 5,139 illegal cells for 1,400 iterations beside a 35,887-cell FIRM
+    landing band 55 um deep, then bad optional access; the diamond legalizer on the same 3_4 DB passes check_placement
+    in 434 s (max displacement 35.9 um, HPWL +4 %)."""
     v=budgets.get("dpl_legalizer")
+    if v is None and tn is not None:
+        on=list(budgets.get("dpl_legalizer_types") or [])
+        if tn in on or tn.split("__")[0] in on:v="diamond"
+    if v is None and diamond:v="diamond"
     if v is None:return []
     if v!="diamond":raise SystemExit(f"gen phys: budgets.dpl_legalizer {v!r} is not 'diamond'")
     return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
@@ -67,6 +110,14 @@ def _cland_pinslot(budgets, tn, extra=()):
         return False
     return True
 
+
+
+def _cland_pinslot_dense(budgets, tn):
+    """DIE-KV-62/stations 11-02 opt-in: budgets.cland_pinslot_dense_types names the types (or unsplit base names) whose
+    y-column pinslot rows pack the ring slot flops body to body (OT_CLAND_PINSLOT_DENSE=1, landing_placement.tcl);
+    absent/empty = unchanged kits."""
+    on = list(budgets.get("cland_pinslot_dense_types") or [])
+    return tn in on or tn.split("__")[0] in on
 
 def _cland_fit_mode(budgets, tn=None):
     """landing_placement fit footprint for CLAND cells -> OT_CLAND_FIT_RESERVE value or None.
@@ -484,8 +535,104 @@ def tap_points(P, tn):
 
 
 def core_tap_pins(P, tn):
-    """CP2 early core taps of a type (schema.core_taps; clock.core_taps 'early'), snapped: [(port, x, y)]."""
-    return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y, _ in S.core_taps(P, tn)]
+    """CP2 early core taps of a type (schema.core_taps; clock.core_taps 'early'), snapped: [(port, x, y)].
+    S81-49/kits 11-02: a tap the plan puts on a hard core's edge pin can snap a few tracks INTO a macro whose LEF
+    obstructs the entry layer or the via layer below (S81 ve_m/vn_a/vn_b/vq: M5 edge pin, OBS M1-M7, port 0.02-0.4 um
+    inside); such a pin is moved to the nearest PG-legal track position whose pin metal clears every obstructing
+    macro (<= ENTRY_CLEAR_MAX_UM).  Taps clear of such macros are byte-identical."""
+    pg = not P.types[tn].get("hard")
+    taps = S.core_taps(P, tn)
+    blocks = entry_block_boxes(P, tn) if taps else []
+    out = []
+    for n, x, y, _ in taps:
+        sx, sy = _snap_tap(P, x, y, pg_legal=pg)
+        if blocks and _pin_hits(P, tn, n, sx, sy, blocks):
+            sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), blocks, pg)
+        out.append((n, sx, sy))
+    return out
+
+
+ENTRY_CLEAR_MAX_UM = 2.0       # an entry is moved off a macro edge by snapping distance only, never re-planned
+
+
+def _lef_metal_top(lef_text):
+    """highest LAYER Mn carrying OBS or PIN geometry in a one-macro LEF (0: none)."""
+    return max([int(v) for v in re.findall(r"\bLAYER\s+M(\d+)\b", lef_text)] or [0])
+
+
+def entry_block_boxes(P, tn, root=None):
+    """[(x0, y0, x1, y1)] type-frame boxes of the placed macros (type_macros) whose metal reaches the partition entry
+    layer (layer_budget partition_signal_max) or the via layer below it: LEF OBS/PIN layers, else plan obs_max."""
+    t = P.types[tn]
+    top = int(P.layer_budget["partition_signal_max"][1:])
+    ents = {}
+    for c in (t.get("contents", []) or []) + (t.get("hard_cores", []) or []):
+        ents.setdefault(c.get("physical_inst") or c["inst"], c)
+        ents.setdefault(c["inst"], c)
+    base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
+    out = []
+    for inst, mod, lef, lib, x, y, o in type_macros(P, tn):
+        c = ents.get(inst) or {}
+        if not c.get("outline_um"):
+            continue
+        # the staged LEF is the truth (S81 vq: plan obs_max M5, LEF OBS M1-M7); plan obs_max only without a LEF
+        om = re.fullmatch(r"M(\d+)", str(c.get("obs_max") or ""))
+        try:
+            f = _CR.resolve(lef, base)
+            mtop = _lef_metal_top(f.read_text(errors="replace")) if f.is_file() else None
+        except (OSError, ValueError):
+            mtop = None
+        if mtop is None:
+            mtop = int(om.group(1)) if om else top      # unknown view: treat as obstructing (fail closed)
+        if mtop < top - 1:
+            continue
+        w, h = map(float, c["outline_um"])
+        if o in ("R90", "R270", "MXR90", "MYR90"):
+            w, h = h, w
+        out.append((float(x), float(y), float(x) + w, float(y) + h))
+    return out
+
+
+def _pin_box(P, tn, name, x, y):
+    top = P.layer_budget["partition_signal_max"]
+    L = P.layers[top]
+    hw = float(L.get("width_um", 0.032)) / 2
+    hl = (tap_pin_height(P, tn, name) if name in P.types[tn].get("clock", {}).get("tap_pin_heights_um", {})
+          else 4 * PIN_LEN_UM) / 2
+    return (x - hw, y - hl, x + hw, y + hl) if L["dir"] == "V" else (x - hl, y - hw, x + hl, y + hw)
+
+
+def _pin_hits(P, tn, name, x, y, blocks, eps=1e-6):
+    a = _pin_box(P, tn, name, x, y)
+    return any(min(a[2], b[2]) - max(a[0], b[0]) > -eps and min(a[3], b[3]) - max(a[1], b[1]) > -eps for b in blocks)
+
+
+def _clear_core_tap(P, tn, name, x, y, snapped, blocks, pg):
+    """nearest PG-legal snapped centre (plan tap x, y moved straight out of the obstructing macro) whose pin clears
+    every block, within ENTRY_CLEAR_MAX_UM of the plan tap; else the original snap (kit_contract still FAILs it)."""
+    a = _pin_box(P, tn, name, x, y)
+    hx, hy = (a[2] - a[0]) / 2, (a[3] - a[1]) / 2
+    best = None
+    for b in blocks:
+        if not (min(a[2], b[2]) - max(a[0], b[0]) > -1e-6 and min(a[3], b[3]) - max(a[1], b[1]) > -1e-6):
+            continue
+        for step in range(0, 40):
+            d = 0.012 * step
+            for tx, ty in ((x, b[3] + hy + d), (x, b[1] - hy - d), (b[0] - hx - d, y), (b[2] + hx + d, y)):
+                if math.hypot(tx - x, ty - y) > ENTRY_CLEAR_MAX_UM:
+                    continue
+                try:
+                    q = _snap_tap(P, tx, ty, pg_legal=pg)
+                except ValueError:
+                    continue
+                if _pin_hits(P, tn, name, q[0], q[1], blocks) or math.hypot(q[0] - x, q[1] - y) > ENTRY_CLEAR_MAX_UM:
+                    continue
+                w, h = P.types[tn]["outline_um"]
+                if not (0 < q[0] < w and 0 < q[1] < h):
+                    continue
+                k = (math.hypot(q[0] - x, q[1] - y), q)
+                best = k if best is None or k < best else best
+    return best[1] if best else snapped
 
 
 def clock_tap_pin_metadata(P, tn):
@@ -1372,6 +1519,15 @@ def input_hold_min(P, tn, structural=False):
         out[gen_rtl.sv_id(bus)] = dict(in_min_ps=round(g, 4), basis=sorted({v[1] for v in vals if v[0] == g})[0],
                                        senders=sorted({v[2] for v in vals}))
     return out
+
+
+def ring_hold_obligation(P, tn):
+    """True when plan clock.ring_hold gives type tn's forwarded ring inputs the measured sender min (the ports
+    sdc_lint._io_hold_ctx adds to hold_in_min_ports_ps): an option-A style parent obligation without io_hold.tcl."""
+    if P.clock.get("ring_hold") is None:
+        return False
+    import landing_contract as LC
+    return any(sel for _ck, sel in LC.ring_input_ports(P, tn))
 
 
 def io_hold_tcl(P, tn):
@@ -2574,7 +2730,7 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
-                   cland_pinslot=(), spare_out=(), private_clock_mesh=None):
+                   cland_pinslot=(), spare_out=(), private_clock_mesh=None, region_guide=None, dpl_diamond=False):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -2788,10 +2944,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)
            # FLOW-7 10-30 opt-in plan budgets.dpl_legalizer="diamond" (KV-022 SD: negotiation DPL non-convergence
            # around ~12k FIRM landing cells). Absent = unchanged kit.
-           *_dpl_args(P.budgets),
+           *_dpl_args(P.budgets, tn, dpl_diamond),
            # FLOW-11 10-30 (default-on since 12.27 b; budgets.cland_pinslot_off_types opts out) (DIE-HEAD-43 (C)): ring slot flops next to their own
            # bus-bit pin (HEAD turn_a t_i farthest-slot p90 69 um, bit-major band fill). Absent = unchanged kit.
            *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn, cland_pinslot) else []),
+           # DIE-KV-62/stations 11-02 opt-in budgets.cland_pinslot_dense_types: y-column pinslot rows body to body
+           *(["export OT_CLAND_PINSLOT_DENSE = 1"] if _cland_pinslot_dense(P.budgets, tn) else []),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
@@ -2935,7 +3093,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl"):
+              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
@@ -2982,7 +3140,7 @@ foreach cland_line [split [read $cland_fh] "\n"] {
 }
 close $cland_fh
 puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
-""")
+""" + CLAND_RELEASE_GROWN_TCL)
     # CODEX-PICKUP-KV 11-01 (KV HHP joint event): plan relay_sites keys naming EXISTING clock-landing ring flops
     # (u_cland_*) are placed after the landing placement hook, which would otherwise pack them back into the band
     if t.get("relay_sites"):
@@ -3026,6 +3184,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             f.write("\nsource /work/reset_physical_stages.tcl\n")
         with (kd / "face_flops_release.tcl").open("a") as f:
             f.write("\nsource /work/reset_physical_stages_release.tcl\n")
+    if region_guide:
+        # FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D, opt-in gen phys --region-guide TYPE=SPEC): soft GPL region
+        # guides per failing r2r bit slice (tools/die_plan/region_guide.py plan of the kit's last AUTO-GEOM), sourced
+        # LAST in face_flops.tcl, released at the end of face_flops_release.tcl (before DPL); no spec = kit unchanged.
+        import region_guide as RG
+        RG.install(kd, json.loads(Path(region_guide).read_text()), outline=(w, h),
+                   src=dict(file=str(region_guide), sha256=_hashlib.sha256(Path(region_guide).read_bytes()).hexdigest()))
     if rc_cal:
         import core_flow   # FLOW-RC-1: fail-closed per-class (signal + clock) RC calibration guard
         core_flow.install_rc(kd, Path(__file__).with_name(RC_CAL_FILE))
@@ -3102,10 +3267,16 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     _ec = edge_clock_pins(P, tn)
     if _ec:
         bud["clock"]["edge_clocks"] = [dict(name=n, xy=[x, y], period_mult=m) for n, x, y, m in _ec]
-    if ioh:
+    # DH56-IOHP 11-03: a plan clock.ring_hold kit takes the measured sender min on its forwarded ring inputs
+    # (sdc_lint._io_hold_ctx hold_in_min_ports_ps), so signoff.py applies the same parent obligation; without the plan
+    # digest here that obligation could never be met (io_hold_qualification: 'parent plan differs').
+    ring_a = ring_hold_obligation(P, tn)
+    if ioh or ring_a:
         from io_hold_qualification import plan_digest
         bud['io_hold'] = dict(mode='sender_min',plan_sha256=plan_digest(P.raw),requires_parent=True)
-        if io_hold_mode(P, tn) == 'plan_demand':
+        if not ioh:
+            bud['io_hold']['kind'] = 'ring_hold'
+        if ioh and io_hold_mode(P, tn) == 'plan_demand':
             hd = P.clock['hold_demand']
             bud['io_hold'].update(mode='plan_demand', hold_demand=dict(
                 derate=hd.get('derate'), cell=hd.get('cell'), windows_ps=hd.get('windows_ps'),
@@ -3672,8 +3843,10 @@ def bound_parent_id_plan(raw, kit_rtl):
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=(), private_clock_mesh=None):
-    """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain)."""
+               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=(), private_clock_mesh=None,
+               region_guide=None, dpl_diamond=()):
+    """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain).
+    dpl_diamond: types whose kit legalizes with the diamond DPL (--dpl-diamond; FIRM landing-band DPL stall)."""
     """landing (opt-in, DIE-HEAD-4b, gen phys --clock-landing): the clock_landing_plan sidecar of a composed landed plan.
     The kit wrapper is the SAME landed wrapper gen rtl --clock-landing emits (clock_landings.type_rtl: rings, ring
     reset relays, monitor), every type generated so the sidecar's type check sees all copies, and each kit carries the
@@ -3747,6 +3920,12 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     # Only the bound kit metadata receives promoted child inputs. The plan-only
     # die emitter retains its original parent declarations and tie values.
     P = S.Plan(bound_parent_id_plan(raw, kit_rtl), plan_path)
+    # KW-FIX-1/S81PF 11-02 (default on): a bound kit places its plan macros by their bound netlist path (bind flattens
+    # u_r0.u_bn0 -> u_bound.u_u_r0_u_bn0); declared as the kit-only physical identity, receipt in each kit.
+    import bound_macro_paths as BMP
+    praw, macro_paths = BMP.project(P.raw, kit_rtl)
+    if macro_paths:
+        P = S.Plan(praw, plan_path)
     lands = None
     if landing is not None:    # DIE-HEAD-21: the same Landings write_rtl just validated -> per-type land_slots.json
         import clock_landings as CL
@@ -3782,14 +3961,18 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
                                    skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,
                                    gpl_plain=tn in (gpl_plain or ()),
+                                   dpl_diamond=tn in (dpl_diamond or ()),
                                    land_slots=(None if lands is None else
                                                kit_rtl_land_slots(lands, tn, mine) if land_decl_only else
                                                lands.land_slots(tn)),
                                    plain_rings=bool(kit_rtl and tn in kit_rtl),
                                    kit_defines=kit_rtl_defines(kit_rtl[tn], mine) if kit_rtl and tn in kit_rtl else None,
                                    cland_pinslot=tuple(cland_pinslot or ()),
+                                   region_guide=(region_guide or {}).get(tn),
                                    spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else (),
                                    private_clock_mesh=(private_clock_mesh or {}).get(tn)))
+        if tn in macro_paths:
+            (Path(kits[-1]) / BMP.RECEIPT).write_text(json.dumps(macro_paths[tn], indent=1) + "\n")
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits

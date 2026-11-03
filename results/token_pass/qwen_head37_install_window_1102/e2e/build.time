@@ -1,0 +1,23 @@
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O0 -finline -j 4 --output-groups 16 --x-assign 0 --x-initial 0 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -CFLAGS -O0 -w -fno-var-tracking --top-module tb_ctlm_tload ot_ks_add.sv ot_rom_4096x266_m8.v ot_sram_1r1w_64x512_m1_r2c2.v qfd_dv_calendar_rom.sv qfd_dv_cmd_cal_mu_head37.sv qkd_program_commit.sv qkd_program_pw_observer_p.sv qfd_dv_table_rom_loader.sv qfd_dv_slice_tload.sv tb_ctlm_tload.sv --Mdir obj"
+	User time (seconds): 51.20
+	System time (seconds): 10.62
+	Percent of CPU this job got: 189%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:32.65
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 369236
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1692637
+	Voluntary context switches: 831
+	Involuntary context switches: 5743
+	Swaps: 0
+	File system inputs: 1000
+	File system outputs: 512248
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
