@@ -1,0 +1,35 @@
+{
+  "status": "DISABLED_SOURCE_MODEL_PROPOSAL",
+  "enabled": false,
+  "emit_allowed": false,
+  "current_public_port_changes": false,
+  "primitive_source_sha256": {
+    "rtl/lib/ot_async_fifo.sv": "7a3df9c5491bddcdef321105b931c4d0e2f5c973b3ea01c3ba50ff350bc784da",
+    "rtl/lib/ot_cdc_mailbox.sv": "f3fecaea6089477d6349144d76406e5dbd90740e127067301c352c3ebdbe2e76",
+    "rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+    "rtl/rom/ot_rom_link_cdc.sv": "71afe6c98a91e5bdfd43e453be6a0b96c9dc462b94d0503e8f8fde5868a77b66"
+  },
+  "preferred_candidate": {
+    "primitive": "ot_async_fifo",
+    "WIDTH": 7,
+    "DEPTH": 4,
+    "EXT_RST": 0,
+    "descriptor": [
+      "slot_version",
+      "slot_addr[5:0]"
+    ],
+    "raw_offered_event_overflow": "adapter sticky(raw_slot&&!ready), not primitive wr_overflow",
+    "delivery_latency": "variable phase+queue+stall; no fixed calendar",
+    "current_workload_rate_qualified": false
+  },
+  "current_native_authority": "bd55 ot_coll_static_linkcal snapshot from prior packet; primitives are available source candidates only",
+  "state_count": "69 declared bits including adapter3 vs oldlanding11; mapped delta unqualified",
+  "holds": [
+    "interface choice/ready or proven compiler spacing",
+    "actual global START and peer TX/RX accepted epoch",
+    "real source+FDI clocks/physical provider",
+    "real fault/abort consumer",
+    "native adapter phase/reset/order+mutant gate",
+    "mapped area/cost and all15/95 concrete joins"
+  ]
+}
