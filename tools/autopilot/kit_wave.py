@@ -265,7 +265,72 @@ def plan_entry_block(d, item):
         return None
     if f == "planned" and d.get("planned_core_flat"):
         return None
-    return PLAN_BLOCK.get(f)
+    if PLAN_BLOCK.get(f):
+        return PLAN_BLOCK[f]
+    li = (d.get("_lint") or {}).get(item)
+    if li and d.get("prelint", True) is not False:
+        return lint_reason(li)
+    return None
+
+
+# ------------------------------------------------------------------------------------------------ KW-FIX-4 gen-time lint
+# OWNER 11-03 (COORD 06:11 RE-FORM template, GEN rules): before any kit launches, a lint fails the type on
+#   cells   estimated flat std cells > 150k (plan probe; die prelint_cells_max overrides);
+#   memory  a memory over SYNTH_MEMORY_MAX_BITS that is not a macro (the type's GEN_LINT memory_bits verdict on this
+#           same plan block; a block change, or a retry row whose fix is named in retry_fix, clears it);
+#   view    a planned hard core without a signed view (probe flags planned / noview: these already wait as WAIT-DEP);
+#   strap   leaked strap ports (strap_* type ports not declared id_straps/count_straps, duplicate declared names, or the
+#           type's gen verdict 'undeclared top-level ID' / 'straps: duplicate names' on this same block).
+# A hit is never launched and costs no build: it shows as one LINT row (stage prelint) in kit_wave_stages.tsv.
+# Die opt-out: dies.<die>.prelint false.
+PRELINT_HISTORY = (
+    ("memory", re.compile(r"memory_bits|SYNTH_MEMORY_MAX_BITS"),
+     "memory over SYNTH_MEMORY_MAX_BITS is not a macro (GEN_LINT memory_bits on this block): make it a generated memory macro"),
+    ("strap", re.compile(r"undeclared top-level ID|straps: duplicate names"),
+     "leaked / duplicate strap ports (gen verdict on this block): declare them in the plan (parent_id_straps)"),
+)
+
+
+def lint_reason(issues):
+    kinds = sorted({str(i).split(":", 1)[0] for i in issues})
+    return f"LINT {'+'.join(kinds)}: gen-time lint before launch (no build), see kit_wave_stages.tsv LINT rows"
+
+
+def prelint(d, die, names, state):
+    """-> {item: [issue, ...]} for the current plan of record: probe (plan-static) issues + verdict history on the SAME
+    plan block (key) that no named fix released.  names: {type: block_sha} (or a set)."""
+    out = {t: list(v) for t, v in (d.get("_plan_lint") or {}).items()}
+    for t, f in (d.get("_plan_flags") or {}).items():
+        if f in ("planned", "noview") and not (f == "planned" and d.get("planned_core_flat")):
+            out.setdefault(t, []).append(f"view: planned hard core without a signed view: "
+                                         f"{','.join((d.get('_plan_deps') or {}).get(t, [])[:4])} (waits, WAIT-DEP)")
+    fixed = set((d.get("retry_fix") or {}).keys()) if isinstance(d.get("retry_fix"), dict) else set()
+    items = (state or {}).get("items") or {}
+    blocks = names if isinstance(names, dict) else {}
+    for t in (names or ()):
+        rec = items.get(item_key(die, d.get("event"), t, blocks.get(t)))
+        if not rec or rec.get("status") not in ("FAIL", "CANCELLED") or f"{t}@{rec.get('attempt')}" in fixed:
+            continue
+        txt = f"{rec.get('reason') or ''}\n{rec.get('errors') or ''}"
+        for kind, rx, msg in PRELINT_HISTORY:
+            if rx.search(txt):
+                out.setdefault(t, []).append(f"{kind}: {msg} (attempt {rec.get('attempt')})")
+    return {t: v for t, v in out.items() if v and (not names or t in names)}
+
+
+def record_lint(st, cfg, die, lint):
+    """replace the die's LINT rows (st['lint']) with this tick's verdict"""
+    d = cfg["dies"][die]
+    L = st.setdefault("lint", {})
+    for k in [k for k, v in L.items() if v.get("die") == die]:
+        del L[k]
+    if d.get("prelint", True) is False:
+        return
+    blocks = d.get("_lint_blocks") or {}
+    for t, issues in lint.items():
+        L[f"{die}|{t}"] = dict(die=die, item=t, event=d.get("event"), plan_sha=d.get("_plan_sha"),
+                               block_sha=blocks.get(t) if isinstance(blocks, dict) else None,
+                               issues=issues, evidence=d.get("plan", ""), updated=time.time())
 
 
 def _own_wave_unit(r):
@@ -1478,9 +1543,9 @@ def _descends(AP):
     return f
 
 
-PROBE_V = 2   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run)
+PROBE_V = 3   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
 PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
-import hashlib, json, os, sys
+import hashlib, json, os, re, sys
 a = json.loads(sys.argv[1]); out = {}
 H = lambda o: hashlib.sha256(json.dumps(o, sort_keys=True, default=str).encode()).hexdigest()
 try:
@@ -1493,10 +1558,31 @@ try:
     if mode != "raw" and a.get("identity_baseline_plan"):
         baseline_path = a["identity_baseline_plan"]
         baseline = identities(json.loads(Path(baseline_path).read_text()), baseline_path, mode)
-    flags, deps = {}, {}
+    flags, deps, lint = {}, {}, {}
+    cmax = int(a.get("cells_max") or 150000)
     for t, v in pt.items():
         if not isinstance(v, dict):
             continue
+        # KW-FIX-4 11-03 (OWNER gen-time lint): plan-static checks, no build.  cells: plan type.cells, else the sum of
+        # contents[].cells when every content carries one; a type with hard_cores[] is skipped (its estimate may
+        # include the cores, which the type kit does not build flat)
+        li = []
+        nc = v.get("cells")
+        if not isinstance(nc, (int, float)) or isinstance(nc, bool):
+            cc = [c.get("cells") for c in (v.get("contents") or []) if isinstance(c, dict)]
+            nc = sum(cc) if cc and all(isinstance(x, (int, float)) for x in cc) else None
+        if nc is not None and nc > cmax and not v.get("hard_cores") and not v.get("hard"):
+            li.append(f"cells: est {int(nc)} flat std cells > {cmax} (plan estimate): re-form into hard cores / a smaller slot")
+        decl = [r.get("name") for r in (v.get("id_straps") or []) + (v.get("count_straps") or []) if isinstance(r, dict)]
+        dup = sorted({n for n in decl if decl.count(n) > 1})
+        if dup:
+            li.append("strap: duplicate declared strap names " + ",".join(map(str, dup[:4])))
+        leak = sorted({str(b.get("name")) for b in (v.get("buses") or []) if isinstance(b, dict)
+                       and re.match(r"strap_", str(b.get("name") or "")) and b.get("name") not in decl})
+        if leak:
+            li.append("strap: leaked strap ports on the type boundary, not declared id_straps/count_straps: " + ",".join(leak[:4]))
+        if li:
+            lint[t] = li
         ck = v.get("clock") or {}
         taps = [tp for tp in ck.get("taps") or [] if isinstance(tp, dict) and tp.get("kind") == "core"]
         signed = bool(taps and v.get("hard_cores") and all("insertion_ff_ps" in tp and
@@ -1520,7 +1606,7 @@ try:
             # DIE-KV-60/taps 11-01: = gen_phys.internal_core_taps_estimate (unsigned internal taps -> estimate form)
             flags[t] = "contract"
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
-           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps, "probe_v": PROBE_V}
+           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps, "lint": lint, "probe_v": PROBE_V}
     if a.get("core_views"):
         # AUTOBUILD-PIPE-2: pin tables per hard-core module (sha256[:12] of the plan pins_file = views_b2r2 view key)
         cv = {}
@@ -1546,7 +1632,7 @@ def plan_names(AP, st, d):
     mode = d.get("block_identity", "raw")
     if mode == "raw" and c and c.get("blocks") and c.get("probe_v") == PROBE_V and time.time() - c.get("t", 0) < 6 * 3600:
         return c
-    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit"))}
+    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": d.get("prelint_cells_max")}
     if mode != "raw":
         args.update(block_identity=mode, identity_baseline_plan=d.get("identity_baseline_plan"))
     p = AP.rpy(d["gen_host"], PROBE_PLAN, args, timeout=600)
@@ -1591,6 +1677,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     d["_plan_sha"] = pn.get("plan_sha")
                     d["_plan_flags"] = pn.get("flags") or {}
                     d["_plan_deps"] = pn.get("deps") or {}
+                    d["_plan_lint"] = pn.get("lint") or {}
                     names = core_view_names(names, pn.get("core_views"))
                     d["_identity_holds"] = {}
                     if d.get("block_identity", "raw") != "raw":
@@ -1598,6 +1685,10 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                             names, pn["identities"], pn.get("baseline_identities"),
                             st.get("items") or {}, die=die, event=d["event"],
                             receipts=d.get("identity_reuse_receipts"))
+                    # KW-FIX-4 11-03 OWNER gen-time lint: LINT rows before any launch (plan_entry_block refuses them)
+                    d["_lint_blocks"] = names if isinstance(names, dict) else {}
+                    d["_lint"] = prelint(d, die, names, st)
+                    record_lint(st, cfg, die, d["_lint"])
             if ok:
                 picks, skip = select(owners, cfg, die, st, names)
                 n = capacity(cfg, die, st, status, hub)      # per-die share; the global caps apply below
@@ -2251,6 +2342,13 @@ def write_stages(st, ap_dir, cfg=None):
             v.update(stage=r["q_stage"], status=r.get("q_status") or "", **{"class": r.get("q_class") or ""},
                      reason=(r.get("q_reason") or "")[:240],
                      evidence=f"autopilot job {r.get('q_id', '')} | {r.get('evidence') or ''}")
+        rows.append("\t".join(re.sub(r"\s+", " ", str(v.get(c) or "")) for c in STAGE_COLS))
+    # KW-FIX-4 11-03: gen-time lint verdicts of the current plans (never launched, no build cost)
+    for r in sorted((st.get("lint") or {}).values(), key=lambda r: (r.get("die", ""), r.get("item", ""))):
+        v = dict(r, plan_sha=(r.get("plan_sha") or "")[:12], block_sha=(r.get("block_sha") or "")[:12], stage="prelint",
+                 status="LINT", plan_current="yes", **{"class": "LINT"},
+                 updated=time.strftime("%Y-%m-%d %H:%M", time.localtime(r.get("updated") or 0)),
+                 reason="; ".join(r.get("issues") or [])[:240])
         rows.append("\t".join(re.sub(r"\s+", " ", str(v.get(c) or "")) for c in STAGE_COLS))
     tmp = Path(ap_dir) / (STAGES_FILE + ".tmp")
     tmp.write_text("\n".join(rows) + "\n")
