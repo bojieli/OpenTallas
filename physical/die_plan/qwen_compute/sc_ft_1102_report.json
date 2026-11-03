@@ -1,0 +1,4933 @@
+{
+ "event": "QC SC event step 2: SC ft stations off the SC hard core (DIE-QC-64/SC 11-02)",
+ "slots": [
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_fe_fw",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.269,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_fe_fw_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 367.071,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.343,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_stm_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.917,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_fe_stm",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.753,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_fe_stm_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 361.107,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_fw_fe",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 370.627,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_fw_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 371.135,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 372.223,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    6
+   ],
+   "worst_paired_bit_um": 376.703,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_fw_ctl_p2",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 365.313,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_st_a_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 368.453,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_fe_fw",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.269,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_fe_fw_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 367.071,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 361.023,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_stm_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 370.581,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_fe_stm",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.753,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_fe_stm_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 361.107,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_fw_fe",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 370.627,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_fw_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 371.135,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 372.223,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    6
+   ],
+   "worst_paired_bit_um": 376.703,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_fw_ctl_p2",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 365.313,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_st_a_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 373.641,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_fe_fw",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 368.415,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_fe_fw_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 374.079,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 361.191,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_stm_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 376.257,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_fe_stm",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 369.603,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_fe_stm_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 348.723,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_fw_fe",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 368.625,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_fw_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 364.779,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 374.247,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 378.763,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_fw_ctl_p2",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 374.463,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "l9_eo_l9_wi",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 372.405,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 374.935,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_stm_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.125,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_fw_fe",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 369.599,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_fw_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 371.031,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 372.691,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 376.703,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_fw_ctl_p2",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 374.817,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "l9_eo_l9_wi",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 368.121,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fe_fw",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 372.759,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fe_fw_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 372.735,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.687,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_stm_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.049,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fe_stm",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.497,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fe_stm_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 356.787,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fw_fe",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 371.391,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fw_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 371.711,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 371.463,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    6
+   ],
+   "worst_paired_bit_um": 378.763,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fw_ctl_p2",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 370.311,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_st_a_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.231,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fw_st_b",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 367.695,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fe_fw",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 372.759,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fe_fw_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 372.735,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.687,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_stm_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.049,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fe_stm",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.497,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fe_stm_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 356.787,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fw_fe",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 371.391,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fw_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 371.711,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 371.463,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    6
+   ],
+   "worst_paired_bit_um": 378.763,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fw_ctl_p2",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 370.311,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_st_a_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.231,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fw_st_b",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 367.695,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fe_fw",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 372.759,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fe_fw_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 372.735,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.687,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_stm_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.049,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fe_stm",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.497,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fe_stm_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 356.787,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fw_fe",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 371.391,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fw_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 371.711,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 371.463,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    6
+   ],
+   "worst_paired_bit_um": 378.763,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fw_ctl_p2",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 370.311,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_st_a_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.231,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fw_st_b",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 367.695,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fe_fw",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 368.023,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fe_fw_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 368.367,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 373.383,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_stm_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.113,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fe_stm",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 374.751,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fe_stm_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 360.729,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fw_fe",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 372.855,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fw_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 364.547,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 375.867,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 377.769,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fw_ctl_p2",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 374.463,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "l9_eo_l9_wi",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 370.997,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fw_st_b",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 368.607,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fe_fw",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 368.023,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fe_fw_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 368.367,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 373.383,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_stm_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.113,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fe_stm",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 374.751,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fe_stm_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 360.729,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fw_fe",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 372.855,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fw_fe_p1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 364.547,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 375.867,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 377.769,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fw_ctl_p2",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 374.463,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "l9_eo_l9_wi",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 370.997,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fw_st_b",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 368.607,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  }
+ ],
+ "added": [
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.343,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 372.223,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    6
+   ],
+   "worst_paired_bit_um": 376.703,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_st_a_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 368.453,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 361.023,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 372.223,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    6
+   ],
+   "worst_paired_bit_um": 376.703,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_st_a_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 373.641,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 361.191,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 374.247,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 372.691,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v3",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.687,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    6
+   ],
+   "worst_paired_bit_um": 378.763,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_st_a_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.231,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fw_st_b",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 367.695,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.687,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    6
+   ],
+   "worst_paired_bit_um": 378.763,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_st_a_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.231,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fw_st_b",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 367.695,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.687,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fw_ctl_p1",
+   "stations": [
+    5,
+    6
+   ],
+   "worst_paired_bit_um": 378.763,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_st_a_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 369.231,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fw_st_b",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 367.695,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 373.383,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 375.867,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fw_st_b",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 368.607,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_ctl_su_c",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 373.647,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_ctl_su_c_p1",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 374.991,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_ctl_su_c_p2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 379.439,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_stm_fe",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 373.383,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fw_fe_p2",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 375.867,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "cws2",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 371.573,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_su_l1_ctl",
+   "stations": [
+    4,
+    5
+   ],
+   "worst_paired_bit_um": 355.773,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fw_st_b",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 368.607,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "m7_over_core_band": null,
+   "bit_ordered": false,
+   "mode": "row-legal-per-bit"
+  }
+ ],
+ "lane_cycles": [
+  {
+   "lane": "sl_W5_hc2__cws2",
+   "before": 25,
+   "after": 26
+  },
+  {
+   "lane": "sl_W4_hc2__cws2",
+   "before": 25,
+   "after": 26
+  },
+  {
+   "lane": "sl_W3_hc2__cws2",
+   "before": 25,
+   "after": 26
+  },
+  {
+   "lane": "sl_W2_hc2__cws2",
+   "before": 25,
+   "after": 26
+  },
+  {
+   "lane": "sl_W1_hc2__cws2",
+   "before": 25,
+   "after": 26
+  },
+  {
+   "lane": "sl_W0_hc2__cws2",
+   "before": 25,
+   "after": 26
+  },
+  {
+   "lane": "sl_E0_hc2__cws2",
+   "before": 25,
+   "after": 26
+  },
+  {
+   "lane": "sl_E1_hc2__cws2",
+   "before": 25,
+   "after": 26
+  },
+  {
+   "lane": "sl_E2_hc2__cws2",
+   "before": 25,
+   "after": 26
+  },
+  {
+   "lane": "sl_E3_hc2__cws2",
+   "before": 25,
+   "after": 26
+  },
+  {
+   "lane": "sl_E4_hc2__cws2",
+   "before": 25,
+   "after": 26
+  },
+  {
+   "lane": "sl_E5_hc2__cws2",
+   "before": 25,
+   "after": 26
+  },
+  {
+   "lane": "sl_W5_fw__x_fw_fe_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W5_stm__x_stm_fe",
+   "before": 8,
+   "after": 9
+  },
+  {
+   "lane": "sl_W5_st_a__x_st_a_fe",
+   "before": 16,
+   "after": 17
+  },
+  {
+   "lane": "sl_W5_fw__x_fw_ctl_p1",
+   "before": 15,
+   "after": 16
+  },
+  {
+   "lane": "sl_W5_su_l1__x_su_l1_ctl",
+   "before": 18,
+   "after": 19
+  },
+  {
+   "lane": "sl_W5_ctl__x_ctl_su_c",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W5_ctl__x_ctl_su_c_p1",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W5_ctl__x_ctl_su_c_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W4_stm__x_stm_fe",
+   "before": 8,
+   "after": 9
+  },
+  {
+   "lane": "sl_W4_st_a__x_st_a_fe",
+   "before": 16,
+   "after": 17
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_ctl_p1",
+   "before": 15,
+   "after": 16
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_st_b",
+   "before": 14,
+   "after": 15
+  },
+  {
+   "lane": "sl_W4_su_l1__x_su_l1_ctl",
+   "before": 18,
+   "after": 19
+  },
+  {
+   "lane": "sl_W4_ctl__x_ctl_su_c",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W4_ctl__x_ctl_su_c_p1",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W4_ctl__x_ctl_su_c_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_fe_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W3_stm__x_stm_fe",
+   "before": 8,
+   "after": 9
+  },
+  {
+   "lane": "sl_W3_st_a__x_st_a_fe",
+   "before": 16,
+   "after": 17
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_ctl_p1",
+   "before": 15,
+   "after": 16
+  },
+  {
+   "lane": "sl_W3_su_l1__x_su_l1_ctl",
+   "before": 18,
+   "after": 19
+  },
+  {
+   "lane": "sl_W3_ctl__x_ctl_su_c",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W3_ctl__x_ctl_su_c_p1",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W3_ctl__x_ctl_su_c_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W2_stm__x_stm_fe",
+   "before": 8,
+   "after": 9
+  },
+  {
+   "lane": "sl_W2_st_a__x_st_a_fe",
+   "before": 16,
+   "after": 17
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_ctl_p1",
+   "before": 15,
+   "after": 16
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_st_b",
+   "before": 14,
+   "after": 15
+  },
+  {
+   "lane": "sl_W2_su_l1__x_su_l1_ctl",
+   "before": 18,
+   "after": 19
+  },
+  {
+   "lane": "sl_W2_ctl__x_ctl_su_c",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W2_ctl__x_ctl_su_c_p1",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W2_ctl__x_ctl_su_c_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_fe_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W1_stm__x_stm_fe",
+   "before": 8,
+   "after": 9
+  },
+  {
+   "lane": "sl_W1_st_a__x_st_a_fe",
+   "before": 16,
+   "after": 17
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_ctl_p1",
+   "before": 15,
+   "after": 16
+  },
+  {
+   "lane": "sl_W1_su_l1__x_su_l1_ctl",
+   "before": 18,
+   "after": 19
+  },
+  {
+   "lane": "sl_W1_ctl__x_ctl_su_c",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W1_ctl__x_ctl_su_c_p1",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W1_ctl__x_ctl_su_c_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W0_stm__x_stm_fe",
+   "before": 8,
+   "after": 9
+  },
+  {
+   "lane": "sl_W0_st_a__x_st_a_fe",
+   "before": 16,
+   "after": 17
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_ctl_p1",
+   "before": 15,
+   "after": 16
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_st_b",
+   "before": 14,
+   "after": 15
+  },
+  {
+   "lane": "sl_W0_su_l1__x_su_l1_ctl",
+   "before": 18,
+   "after": 19
+  },
+  {
+   "lane": "sl_W0_ctl__x_ctl_su_c",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W0_ctl__x_ctl_su_c_p1",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_W0_ctl__x_ctl_su_c_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_fe_p2",
+   "before": 10,
+   "after": 11
+  },
+  {
+   "lane": "sl_E0_stm__x_stm_fe",
+   "before": 7,
+   "after": 8
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_st_b",
+   "before": 13,
+   "after": 14
+  },
+  {
+   "lane": "sl_E0_su_l1__x_su_l1_ctl",
+   "before": 18,
+   "after": 19
+  },
+  {
+   "lane": "sl_E0_ctl__x_ctl_su_c",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E0_ctl__x_ctl_su_c_p1",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E0_ctl__x_ctl_su_c_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_fe_p2",
+   "before": 10,
+   "after": 11
+  },
+  {
+   "lane": "sl_E1_stm__x_stm_fe",
+   "before": 7,
+   "after": 8
+  },
+  {
+   "lane": "sl_E1_su_l1__x_su_l1_ctl",
+   "before": 18,
+   "after": 19
+  },
+  {
+   "lane": "sl_E1_ctl__x_ctl_su_c",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E1_ctl__x_ctl_su_c_p1",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E1_ctl__x_ctl_su_c_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_fe_p2",
+   "before": 10,
+   "after": 11
+  },
+  {
+   "lane": "sl_E2_stm__x_stm_fe",
+   "before": 7,
+   "after": 8
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_st_b",
+   "before": 13,
+   "after": 14
+  },
+  {
+   "lane": "sl_E2_su_l1__x_su_l1_ctl",
+   "before": 18,
+   "after": 19
+  },
+  {
+   "lane": "sl_E2_ctl__x_ctl_su_c",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E2_ctl__x_ctl_su_c_p1",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E2_ctl__x_ctl_su_c_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_fe_p2",
+   "before": 10,
+   "after": 11
+  },
+  {
+   "lane": "sl_E3_stm__x_stm_fe",
+   "before": 7,
+   "after": 8
+  },
+  {
+   "lane": "sl_E3_su_l1__x_su_l1_ctl",
+   "before": 18,
+   "after": 19
+  },
+  {
+   "lane": "sl_E3_ctl__x_ctl_su_c",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E3_ctl__x_ctl_su_c_p1",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E3_ctl__x_ctl_su_c_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_fe_p2",
+   "before": 10,
+   "after": 11
+  },
+  {
+   "lane": "sl_E4_stm__x_stm_fe",
+   "before": 7,
+   "after": 8
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_st_b",
+   "before": 13,
+   "after": 14
+  },
+  {
+   "lane": "sl_E4_su_l1__x_su_l1_ctl",
+   "before": 18,
+   "after": 19
+  },
+  {
+   "lane": "sl_E4_ctl__x_ctl_su_c",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E4_ctl__x_ctl_su_c_p1",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E4_ctl__x_ctl_su_c_p2",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E5_fw__x_fw_fe_p2",
+   "before": 10,
+   "after": 11
+  },
+  {
+   "lane": "sl_E5_su_l1__x_su_l1_ctl",
+   "before": 18,
+   "after": 19
+  },
+  {
+   "lane": "sl_E5_ctl__x_ctl_su_c",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E5_ctl__x_ctl_su_c_p1",
+   "before": 11,
+   "after": 12
+  },
+  {
+   "lane": "sl_E5_ctl__x_ctl_su_c_p2",
+   "before": 11,
+   "after": 12
+  }
+ ],
+ "latency_rows_rewritten": [
+  "sl_E0_ctl__x_ctl_su_c",
+  "sl_E0_ctl__x_ctl_su_c_p1",
+  "sl_E0_ctl__x_ctl_su_c_p2",
+  "sl_E0_fw__x_fw_fe_p2",
+  "sl_E0_fw__x_fw_st_b",
+  "sl_E0_hc2__cws2",
+  "sl_E0_stm__x_stm_fe",
+  "sl_E0_su_l1__x_su_l1_ctl",
+  "sl_E1_ctl__x_ctl_su_c",
+  "sl_E1_ctl__x_ctl_su_c_p1",
+  "sl_E1_ctl__x_ctl_su_c_p2",
+  "sl_E1_fw__x_fw_fe_p2",
+  "sl_E1_hc2__cws2",
+  "sl_E1_stm__x_stm_fe",
+  "sl_E1_su_l1__x_su_l1_ctl",
+  "sl_E2_ctl__x_ctl_su_c",
+  "sl_E2_ctl__x_ctl_su_c_p1",
+  "sl_E2_ctl__x_ctl_su_c_p2",
+  "sl_E2_fw__x_fw_fe_p2",
+  "sl_E2_fw__x_fw_st_b",
+  "sl_E2_hc2__cws2",
+  "sl_E2_stm__x_stm_fe",
+  "sl_E2_su_l1__x_su_l1_ctl",
+  "sl_E3_ctl__x_ctl_su_c",
+  "sl_E3_ctl__x_ctl_su_c_p1",
+  "sl_E3_ctl__x_ctl_su_c_p2",
+  "sl_E3_fw__x_fw_fe_p2",
+  "sl_E3_hc2__cws2",
+  "sl_E3_stm__x_stm_fe",
+  "sl_E3_su_l1__x_su_l1_ctl",
+  "sl_E4_ctl__x_ctl_su_c",
+  "sl_E4_ctl__x_ctl_su_c_p1",
+  "sl_E4_ctl__x_ctl_su_c_p2",
+  "sl_E4_fw__x_fw_fe_p2",
+  "sl_E4_fw__x_fw_st_b",
+  "sl_E4_hc2__cws2",
+  "sl_E4_stm__x_stm_fe",
+  "sl_E4_su_l1__x_su_l1_ctl",
+  "sl_E5_ctl__x_ctl_su_c",
+  "sl_E5_ctl__x_ctl_su_c_p1",
+  "sl_E5_ctl__x_ctl_su_c_p2",
+  "sl_E5_fw__x_fw_fe_p2",
+  "sl_E5_hc2__cws2",
+  "sl_E5_su_l1__x_su_l1_ctl",
+  "sl_W0_ctl__x_ctl_su_c",
+  "sl_W0_ctl__x_ctl_su_c_p1",
+  "sl_W0_ctl__x_ctl_su_c_p2",
+  "sl_W0_fw__x_fw_ctl_p1",
+  "sl_W0_fw__x_fw_st_b",
+  "sl_W0_hc2__cws2",
+  "sl_W0_st_a__x_st_a_fe",
+  "sl_W0_stm__x_stm_fe",
+  "sl_W0_su_l1__x_su_l1_ctl",
+  "sl_W1_ctl__x_ctl_su_c",
+  "sl_W1_ctl__x_ctl_su_c_p1",
+  "sl_W1_ctl__x_ctl_su_c_p2",
+  "sl_W1_fw__x_fw_ctl_p1",
+  "sl_W1_fw__x_fw_fe_p2",
+  "sl_W1_hc2__cws2",
+  "sl_W1_st_a__x_st_a_fe",
+  "sl_W1_stm__x_stm_fe",
+  "sl_W1_su_l1__x_su_l1_ctl",
+  "sl_W2_ctl__x_ctl_su_c",
+  "sl_W2_ctl__x_ctl_su_c_p1",
+  "sl_W2_ctl__x_ctl_su_c_p2",
+  "sl_W2_fw__x_fw_ctl_p1",
+  "sl_W2_fw__x_fw_st_b",
+  "sl_W2_hc2__cws2",
+  "sl_W2_st_a__x_st_a_fe",
+  "sl_W2_stm__x_stm_fe",
+  "sl_W2_su_l1__x_su_l1_ctl",
+  "sl_W3_ctl__x_ctl_su_c",
+  "sl_W3_ctl__x_ctl_su_c_p1",
+  "sl_W3_ctl__x_ctl_su_c_p2",
+  "sl_W3_fw__x_fw_ctl_p1",
+  "sl_W3_fw__x_fw_fe_p2",
+  "sl_W3_hc2__cws2",
+  "sl_W3_st_a__x_st_a_fe",
+  "sl_W3_stm__x_stm_fe",
+  "sl_W3_su_l1__x_su_l1_ctl",
+  "sl_W4_ctl__x_ctl_su_c",
+  "sl_W4_ctl__x_ctl_su_c_p1",
+  "sl_W4_ctl__x_ctl_su_c_p2",
+  "sl_W4_fw__x_fw_ctl_p1",
+  "sl_W4_fw__x_fw_st_b",
+  "sl_W4_hc2__cws2",
+  "sl_W4_st_a__x_st_a_fe",
+  "sl_W4_stm__x_stm_fe",
+  "sl_W4_su_l1__x_su_l1_ctl",
+  "sl_W5_ctl__x_ctl_su_c",
+  "sl_W5_ctl__x_ctl_su_c_p1",
+  "sl_W5_ctl__x_ctl_su_c_p2",
+  "sl_W5_fw__x_fw_ctl_p1",
+  "sl_W5_fw__x_fw_fe_p2",
+  "sl_W5_hc2__cws2",
+  "sl_W5_st_a__x_st_a_fe",
+  "sl_W5_stm__x_stm_fe",
+  "sl_W5_su_l1__x_su_l1_ctl"
+ ],
+ "latency_rows_predrift": [],
+ "sc_geometry_failures_after": []
+}

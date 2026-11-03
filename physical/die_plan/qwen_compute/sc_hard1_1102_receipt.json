@@ -1,0 +1,213 @@
+{
+ "event": "QC SC hard-core event (DIE-QC-63/SC 11-02)",
+ "types": [
+  {
+   "type": "slw_sc_v2",
+   "replicas": 2,
+   "family": "base_HARD1",
+   "module": "qfd_dv_s5_sc2_leaf",
+   "params": {
+    "HARD_PINREG": 1
+   },
+   "origin_um": [
+    345.6,
+    648.0
+   ],
+   "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_h1_pins.json",
+   "tap": {
+    "name": "u_core.ck",
+    "xy": [
+     468.024,
+     648.06
+    ],
+    "tt": 335.3,
+    "ff": 287.3
+   }
+  },
+  {
+   "type": "sle_sc_v2",
+   "replicas": 2,
+   "family": "base_HARD1",
+   "module": "qfd_dv_s5_sc2_leaf",
+   "params": {
+    "HARD_PINREG": 1
+   },
+   "origin_um": [
+    345.6,
+    648.0
+   ],
+   "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_h1_pins.json",
+   "tap": {
+    "name": "u_core.ck",
+    "xy": [
+     468.024,
+     648.06
+    ],
+    "tt": 335.3,
+    "ff": 287.3
+   }
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "replicas": 1,
+   "family": "base_HARD1",
+   "module": "qfd_dv_s5_sc2_leaf",
+   "params": {
+    "HARD_PINREG": 1
+   },
+   "origin_um": [
+    345.6,
+    648.0
+   ],
+   "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_h1_pins.json",
+   "tap": {
+    "name": "u_core.ck",
+    "xy": [
+     468.024,
+     648.06
+    ],
+    "tt": 335.3,
+    "ff": 287.3
+   }
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "replicas": 1,
+   "family": "base_HARD1",
+   "module": "qfd_dv_s5_sc2_leaf",
+   "params": {
+    "HARD_PINREG": 1
+   },
+   "origin_um": [
+    345.6,
+    648.0
+   ],
+   "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_h1_pins.json",
+   "tap": {
+    "name": "u_core.ck",
+    "xy": [
+     468.024,
+     648.06
+    ],
+    "tt": 335.3,
+    "ff": 287.3
+   }
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "replicas": 1,
+   "family": "base_HARD1",
+   "module": "qfd_dv_s5_sc2_leaf",
+   "params": {
+    "HARD_PINREG": 1
+   },
+   "origin_um": [
+    345.6,
+    648.0
+   ],
+   "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_h1_pins.json",
+   "tap": {
+    "name": "u_core.ck",
+    "xy": [
+     468.024,
+     648.06
+    ],
+    "tt": 335.3,
+    "ff": 287.3
+   }
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "replicas": 2,
+   "family": "base_HARD1",
+   "module": "qfd_dv_s5_sc2_leaf",
+   "params": {
+    "HARD_PINREG": 1
+   },
+   "origin_um": [
+    345.6,
+    648.0
+   ],
+   "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_h1_pins.json",
+   "tap": {
+    "name": "u_core.ck",
+    "xy": [
+     468.024,
+     648.06
+    ],
+    "tt": 335.3,
+    "ff": 287.3
+   }
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "replicas": 1,
+   "family": "base_HARD1",
+   "module": "qfd_dv_s5_sc2_leaf",
+   "params": {
+    "HARD_PINREG": 1
+   },
+   "origin_um": [
+    345.6,
+    648.0
+   ],
+   "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_h1_pins.json",
+   "tap": {
+    "name": "u_core.ck",
+    "xy": [
+     468.024,
+     648.06
+    ],
+    "tt": 335.3,
+    "ff": 287.3
+   }
+  },
+  {
+   "type": "slw_sc_v3",
+   "replicas": 1,
+   "family": "chain_end_as_is",
+   "module": "qfd_dv_s5_sc2_leaf_up0",
+   "params": {},
+   "origin_um": [
+    345.6,
+    648.0
+   ],
+   "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_up0_pins.json",
+   "tap": {
+    "name": "u_core.ck",
+    "xy": [
+     468.024,
+     648.06
+    ],
+    "tt": 335.3,
+    "ff": 287.3
+   }
+  },
+  {
+   "type": "sle_sc_v3",
+   "replicas": 1,
+   "family": "chain_end_as_is",
+   "module": "qfd_dv_s5_sc2_leaf_dn0",
+   "params": {},
+   "origin_um": [
+    345.6,
+    648.0
+   ],
+   "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_dn0_pins.json",
+   "tap": {
+    "name": "u_core.ck",
+    "xy": [
+     468.024,
+     648.06
+    ],
+    "tt": 335.3,
+    "ff": 287.3
+   }
+  }
+ ],
+ "added_cycles": 0,
+ "base_types": 7,
+ "base_replicas": 10,
+ "ce_types": 2,
+ "ce_replicas": 2
+}
