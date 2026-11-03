@@ -4004,7 +4004,13 @@ def raw_constant_bases(L, work, conflicts, log):
         m.ands = d["ands"]
         m.outs = [points[k] ^ c for k, c in candidates]
         m.onames = [f"raw-base:{side}:{k}:{c}" for k, c in candidates]
-        status = prove(m, work, conflicts, log, tag=f"rawbase{batch}_{side}")
+        # FLOW-LATCH-1 11-03 (SIGNOFF-SPRINT-24 RAW-PREFIX hang class): this universal sweep gets the same wall
+        # backstop as the raw prefix (OT_LEC_RAWPREFIX_S); an overrun proves no base (undecided -> dropped, sound)
+        wall = raw_prefix_limit_s()
+        status = prove(m, work, conflicts, log, tag=f"rawbase{batch}_{side}", wall=wall)
+        if status.pop(SWEEP_TIMEOUT, False):
+            L.__dict__.setdefault("raw_prefix_bounded", []).append(
+                dict(tag=f"rawbase{batch}_{side}", side=side, steps=1, n=len(candidates), why="wall", limit=wall))
         for (k, c), name in zip(candidates, m.onames):
             cache[(side, k, c)] = status.get(name, "undecided")
         log.append(f"universal raw-D bases {side}: {sum(status.get(n) == 'proved' for n in m.onames)}"
