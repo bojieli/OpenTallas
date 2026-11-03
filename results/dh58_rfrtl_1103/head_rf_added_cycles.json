@@ -1,0 +1,111 @@
+{
+ "schema": "opentallas.head_rf_added_cycles.v1",
+ "event": "l48rf",
+ "producer": "DH58-RFRTL 2026-11-03 (branch claude/dh58-rfrtl-1103)",
+ "consumer": "DH58-RFCLK results/dh58_rfclk_1103/head_xing_table.py --added (lanes/ports schema); ports adds go to that port's lane",
+ "note": "Cycles ADDED by the l48rf RE-FORM RTL splits relative to the unsplit cores, on existing die plan ports (port ids of prepared_l48h0 / l48h1). Split-internal seams are new plan ports (see new_seams) whose plan latency is declared by the plan event; they are not listed in ports so nothing is counted twice.",
+ "lanes": {},
+ "ports": {
+  "m7N_tx__1__h5e": {
+   "cycles": 2,
+   "reason": "hd_mesh -> hd_mesh_a/hd_mesh_b balanced seam: m_tx_i -> both lanes +2 (a: mt1/mt2, b: W face mtb + E landing mtl)"
+  },
+  "m0S_tx__9__h5e": {
+   "cycles": 2,
+   "reason": "hd_mesh -> hd_mesh_a/hd_mesh_b balanced seam: m_tx_i -> both lanes +2"
+  },
+  "m7S_tx__8__h5e": {
+   "cycles": 2,
+   "reason": "hd_mesh -> hd_mesh_a/hd_mesh_b balanced seam: m_tx_i -> both lanes +2"
+  },
+  "m7N_rx__0__h5e": {
+   "cycles": 2,
+   "reason": "hd_mesh split: both lanes -> copy logic -> m_rx_o +2 (a: pa1/pa2, b: E face pq/dq + W landing pb1/db1)"
+  },
+  "m0S_rx__0__h5e": {
+   "cycles": 2,
+   "reason": "hd_mesh split: lanes -> m_rx_o +2"
+  },
+  "m7S_rx__0__h5e": {
+   "cycles": 2,
+   "reason": "hd_mesh split: lanes -> m_rx_o +2"
+  }
+ },
+ "declared_in_plan_by_delta": {
+  "note": "tools/s81_head/head_host_split_delta.py writes these into the plan (lane fixed_cycles / latency.lanes) when it builds host_w/host_e; count them from the plan, not again from here",
+  "host_l1rx": {
+   "cycles": 4,
+   "reason": "HSPLIT seam E->W (host1 RX frames, lane1 faults): wrapper bout/bin 2 + E l1rx_m + W landing l1rx"
+  },
+  "host_l1tx": {
+   "cycles": 4,
+   "reason": "HSPLIT seam W->E (lane1 STATUS TX): wrapper 2 + W face l1tx + E l1tx_m"
+  },
+  "coll_HOST1_d__0": {
+   "cycles": 1,
+   "reason": "HSPLIT E co_m relay on the lane1 TX flits (HOST1 egress)"
+  },
+  "coll_HOST0_u__1": {
+   "cycles": 1,
+   "reason": "DH58 W lane0 RX stage (L0_STAGE=1): HOST0 ingress -> HBC / frame mux +1; transport.peer_to_hbc_input +1"
+  }
+ },
+ "fault_only": {
+  "hd_serdes": {
+   "cycles": 2,
+   "bits": "coll_o0[512] (st fault) of every hd_serdes partition (lk_*)",
+   "reason": "serdes_tx -> serdes_rx seam e_flt (encoder sticky fault): tx face ef_q + rx landing ef_l; data, live bit and lock unchanged (0 cycles)"
+  }
+ },
+ "new_seams": {
+  "hd_mesh_a<->hd_mesh_b": [
+   {
+    "bus": "b_tx",
+    "dir": "a->b",
+    "width": 64,
+    "cycles": 2,
+    "form": "a face register + b landing register (valid/fault reset, data unreset), fixed latency (balanced with lane a)"
+   },
+   {
+    "bus": "b_rx",
+    "dir": "b->a",
+    "width": 103,
+    "cycles": 2,
+    "form": "b face register {fl_b4, rv_b, can_b, rd_b97} + a landing register, fixed latency (balanced with lane a)"
+   }
+  ],
+  "hd_serdes_tx->hd_serdes_rx": [
+   {
+    "bus": "e_flt",
+    "dir": "tx->rx",
+    "width": 1,
+    "cycles": 2,
+    "form": "tx face register + rx landing register, fault-only fixed latency contract"
+   }
+  ],
+  "hd_host_w<->hd_host_e": [
+   {
+    "bus": "l1_rx",
+    "dir": "e->w",
+    "width": 558,
+    "cycles": 4
+   },
+   {
+    "bus": "l1_tx",
+    "dir": "w->e",
+    "width": 554,
+    "cycles": 4
+   }
+  ]
+ },
+ "unchanged": {
+  "hd_ctl": "measured 95,986 std cells (no split)",
+  "hd_lep0N": "176,571 std cells, kept one block in l48rf (150k = aim, OWNER 07:0x); prepared cut = copy-B lane pair 2/3 TX/RX FIFOs (~43k), not built",
+  "all other HEAD types": "< 150k, no added cycles"
+ },
+ "proofs": {
+  "hd_mesh": "tools/s81_head/mesh_split_bench.sh (Verilator 5.050): lockstep split == unsplit every edge (m_tx_i +2, m_rx_o +2), 11000 edges, 402/402 records x 2 copies, non-vacuous fault phase (lane a/b flt, ncan, m_tx decode fault); SPLIT_MUT 1-5 each caught (FAIL)",
+  "hd_serdes": "tools/s81_head/serdes_split_bench.sh: lockstep split == unsplit over KP4 FEC + plesiochronous peer with pad bit errors, 8000 edges, 6000 beats, fault bit exactly +2; SPLIT_MUT 1-3 each caught; reset-sync mutants dropped (unobservable by construction, see RTL header)",
+  "hd_host": "tools/s81_head/head_host_split_bench.sh: MODE0 boot (HBC dates +1, receiver_edge == REF+1) + MODE1 open loop, E2W 4 / W2E 4 / P1X 1 / W0X 1; SPLIT_MUT 1-5 each caught in >= 1 mode"
+ }
+}

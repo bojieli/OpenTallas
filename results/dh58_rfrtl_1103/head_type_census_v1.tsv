@@ -1,0 +1,24 @@
+type	stdcells	stdcell_area_um2	macro_area_um2	mem_max_bits	mems/over4096	mem_lint	over150k	macros	kit
+hd_ctl_e	2715	395.3	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/dh55-cland/kits_v3/hd_ctl_e/gen/hd_ctl_e
+hd_ctl_n	36745	5173.5	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/dh55-cland/kits/hd_ctl_n/gen/hd_ctl_n
+hd_host	204630	31296.9	124005	4096	0/0	PASS	1	ot_sram_1r1w2c_256x64_m1x72,ot_sram_1r1w2c_32x64_m1x38	/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48x/items/hd_host/attempt_2/gen/hd_host
+hd_host_n	18450	2612.6	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/dh55-cland/kits/hd_host_n/gen/hd_host_n
+hd_lep0N	176571	26246.6	1670090	4096	0/0	PASS	1	ot_s81hd_lep_pairx4,ot_sram_1r1w_128x256_m1_r0c0x5,ot_sram_1r1w_32x128_m1_r0c0x20,ot_sram_1r1w_512x128_m4_r0c0x20	/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48x/items/hd_lep0N/attempt_2/gen/hd_lep0N
+hd_mesh	191052	29506.9	124005	4096	0/0	PASS	1	ot_sram_1r1w2c_256x64_m1x72,ot_sram_1r1w2c_32x64_m1x38	/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/kit-wave/s81_head/l48x/items/hd_mesh/attempt_2/gen/hd_mesh
+hd_mesh_e	2721	396.3	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_mesh_e/gen/hd_mesh_e
+hd_spn	94043	14071.7	0	4096	0/0	NOT_RUN	0		/srv/opentallas-scratch2/claude/die-head-48/dh53/spn3b_v1/hd_spn/gen/hd_spn
+hd_spn_end	60758	8985.5	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/items/hd_spn_end/gen/hd_spn_end
+hd_spn_eshim_rx	14018	1856.7	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_spn_eshim_rx/attempt_2/gen/hd_spn_eshim_rx
+hd_spn_eshim_tx	1207	202.0	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_spn_eshim_tx/gen/hd_spn_eshim_tx
+hd_spn_wshim_rx	16402	2257.1	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_spn_wshim_rx/attempt_2/gen/hd_spn_wshim_rx
+hd_spn_wshim_tx	3473	581.9	0	4096	0/0	NOT_RUN	0		/srv/opentallas-scratch2/claude/die-head-48/dh53/l48z/kits_l48z/hd_spn_wshim_tx/gen/hd_spn_wshim_tx
+hd_st_k5	38078	5358.6	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/items/hd_st_k5/gen/hd_st_k5
+hd_st_m	5064	724.1	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/items/hd_st_m/gen/hd_st_m
+hd_st_n3_transit	31950	4455.9	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_st_n3_transit/gen/hd_st_n3_transit
+hd_st_n3_turn	34099	4817.4	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_st_n3_turn/gen/hd_st_n3_turn
+hd_st_n4	64069	8939.6	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/items/hd_st_n4/gen/hd_st_n4
+hd_st_str	32080	4479.1	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave/s81_head/l48z/items/hd_st_str/attempt_2/gen/hd_st_str
+hd_st_turn	37674	5418.1	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/kit-wave/s81_head/l48x/items/hd_st_turn/attempt_2/gen/hd_st_turn
+hd_tile	64684	10351.2	490075	4096	0/0	PASS	0	ot_s81hd_elemA_cvx4,ot_s81hd_elemB_cvx1	/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/items/hd_tile/gen/hd_tile
+hd_turn_a	16307	2239.9	0	4096	0/0	NOT_RUN	0		/srv/opentallas-scratch2/claude/flow-21/wplive/gen/hd_turn_a
+hd_turn_b	15144	2044.9	0	4096	0/0	PASS	0		/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/items/hd_turn_b/gen/hd_turn_b
