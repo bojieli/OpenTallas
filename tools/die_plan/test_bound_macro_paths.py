@@ -1,0 +1,108 @@
+"""KW-FIX-1/S81PF 11-02: plan macro paths -> bound netlist paths (S81 kit-wave macro_instances class, 42+ items:
+'placed macro u_r0.u_bn0: component u_r0 is neither an instance nor a generate block')."""
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import bound_macro_paths as BMP  # noqa: E402
+import reset_tree as RT  # noqa: E402
+
+BOUND = """module s81p_x__t1_bound #(parameter P_u_r0_u_e0_INSTANCE = "") (input wire clk);
+    // as-built u_f_0R01.u_r0.u_bn0
+    dsfd_qbank_N u_u_r0_u_bn0 (
+        .ck(clk)
+    );
+    // as-built u_f_0R01.u_r0.u_e1e
+    dsfd_bf_col #(.INSTANCE(""), .MB(0)) u_u_r0_u_e1e (
+        .ck(clk)
+    );
+    // as-built u_f_0R01.u_r0.u_e0
+    ot_v41_rom_elem_q_qxpq_w10_gb #(.INSTANCE(P_u_r0_u_e0_INSTANCE)) u_u_r0_u_e0 (
+        .ck(clk)
+    );
+    // as-built u_f_0R01.u_r0.u_x
+    other_mod u_u_r0_u_x (
+        .ck(clk)
+    );
+endmodule
+"""
+
+LEAF = """    // as-built u_s_0N.u_sl.u_lf4.u_ve.u_m
+    ot_s81sl_ve_m #(.LA(4), .LM(5), .MUT(0)) u_u_lf4_u_ve_u_m (
+        .clk(clk)
+    );
+    // as-built u_s_0N.u_sl.u_lf4.u_vsw
+    ot_s81sl_vsw #(.LA(4), .LM(5), .LR(1)) u_u_lf4_u_vsw (
+        .clk(clk)
+    );
+"""
+
+
+def _core(inst, module, **kw):
+    return dict(inst=inst, module=module, lef=f"v/{module}.lef", origin_um=[1.0, 2.0], outline_um=[3.0, 4.0], **kw)
+
+
+def test_col_flat_nested_and_mismatch():
+    t = dict(contents=[dict(inst="u_r0", module="col_r0")],
+             hard_cores=[_core("u_r0.u_bn0", "dsfd_qbank_N"), _core("u_r0.u_e1e.u_view", "ot_v41_bf_col"),
+                         _core("u_r0.u_e0", "ot_v41_rom_elem_q_qxpq_w10_gb"),
+                         _core("u_r0.u_x", "dsfd_qbank_S"),             # same path, different module: unmapped
+                         _core("u_r0.u_t0__payload", "ot_s81_sstn_payload536"),   # no as-built leaf: unmapped
+                         _core("u_bound.u_done", "m"),                  # already a bound path: untouched
+                         _core("u_r0.u_k", "m", physical_inst="u_bound.k", physical_master="m")])
+    rows = {r["inst"]: r for r in BMP.resolve(t, BOUND)}
+    assert rows["u_r0.u_bn0"]["physical_inst"] == "u_bound.u_u_r0_u_bn0"
+    assert rows["u_r0.u_e1e.u_view"]["physical_inst"] == "u_bound.u_u_r0_u_e1e.u_view"
+    assert rows["u_r0.u_e0"]["physical_inst"] == "u_bound.u_u_r0_u_e0"
+    assert rows["u_r0.u_e0"]["physical_master"] == "ot_v41_rom_elem_q_qxpq_w10_gb"
+    assert set(rows) == {"u_r0.u_bn0", "u_r0.u_e1e.u_view", "u_r0.u_e0"}
+
+
+def test_leaf_renamed_content_root():
+    # plan content u_lf is the as-built u_s_0N.u_sl.u_lf4: the root comes from the macros' common suffix match
+    t = dict(contents=[dict(inst="u_lf", module="ot_s81sl_leaf")],
+             hard_cores=[_core("u_lf.u_ve.u_m", "ot_s81sl_ve_m"), _core("u_lf.u_vsw", "ot_s81sl_vsw")])
+    rows = {r["inst"]: r["physical_inst"] for r in BMP.resolve(t, "module b(input clk);\n" + LEAF + "endmodule\n")}
+    assert rows == {"u_lf.u_ve.u_m": "u_bound.u_u_lf4_u_ve_u_m", "u_lf.u_vsw": "u_bound.u_u_lf4_u_vsw"}
+
+
+def test_ambiguous_root_unmapped():
+    two = LEAF + LEAF.replace("u_lf4", "u_lf5")
+    t = dict(contents=[dict(inst="u_lf", module="l")], hard_cores=[_core("u_lf.u_vsw", "ot_s81sl_vsw")])
+    assert BMP.resolve(t, "module b(input clk);\n" + two + "endmodule\n") == []
+
+
+def test_project_receipt_and_overlay(tmp_path):
+    kd = tmp_path / "rtl"
+    kd.mkdir()
+    (kd / "s81p_x__t1_bound.sv").write_text(BOUND)
+    (kd / "s81p_x__t1.sv").write_text("module s81p_x__t1(input wire clk); s81p_x__t1_bound u_bound(.clk(clk)); endmodule\n")
+    (kd / "kit_rtl.f").write_text(f"{kd}/s81p_x__t1.sv\n{kd}/s81p_x__t1_bound.sv\n")
+    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="s81p_x__t1_bound")))
+    raw = dict(partition_types=dict(x__t1=dict(module="s81p_x__t1", contents=[dict(inst="u_r0", module="c")],
+                                               hard_cores=[_core("u_r0.u_bn0", "dsfd_qbank_N")])))
+    before = json.dumps(raw, sort_keys=True)
+    new, rec = BMP.project(raw, {"x__t1": str(kd / "kit_rtl.f")})
+    assert json.dumps(raw, sort_keys=True) == before                    # plan of record untouched
+    c = new["partition_types"]["x__t1"]["hard_cores"][0]
+    assert (c["inst"], c["physical_inst"], c["physical_master"]) == ("u_r0.u_bn0", "u_bound.u_u_r0_u_bn0", "dsfd_qbank_N")
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    (kit / BMP.RECEIPT).write_text(json.dumps(rec["x__t1"]))
+    ent = BMP.overlay(kit, {"u_r0.u_bn0": raw["partition_types"]["x__t1"]["hard_cores"][0]})
+    assert ent["u_bound.u_u_r0_u_bn0"]["module"] == "dsfd_qbank_N" and ent["u_bound.u_u_r0_u_bn0"]["outline_um"] == [3.0, 4.0]
+    # no bound module text -> nothing projected, the same object back
+    assert BMP.project(raw, {})[0] is raw
+
+
+def test_reset_tcl_resolves_physical_name():
+    T = dict(entry="sync", reach_um=100, root=[0, 0], taps=[], n_tree=0, n_pad=0, max_hop_um=1, relays=[], depth=1,
+             core_resets=[dict(inst="u_r0.u_e0", physical_inst="u_bound.u_u_r0_u_e0", pin="rst_n", tap=3,
+                               pin_um=[1.0, 2.0], xy=[1.0, 2.0], internal_depth=1)])
+    line = next(x for x in RT.tcl_text(T).splitlines() if "lappend rtr_ci" in x)
+    assert "$n eq {u_r0.u_e0}" in line and "$n eq {u_bound.u_u_r0_u_e0}" in line
+    T["core_resets"][0].pop("physical_inst")
+    line = next(x for x in RT.tcl_text(T).splitlines() if "lappend rtr_ci" in x)
+    assert line == ("foreach i [$ff_blk getInsts] { set n [$i getName]; if {$n eq {u_r0.u_e0} || [string range $n "
+                    "end-[string length {u_r0.u_e0}] end] eq {/u_r0.u_e0}} { lappend rtr_ci $i } }")   # unchanged form

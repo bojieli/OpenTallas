@@ -1421,6 +1421,10 @@ def core_reset_targets(P, tn):
             else:domain_root=None
             out.append(dict(inst=c["inst"], pin=name, pin_um=list(pin), xy=list(site),
                             internal_depth=int(c.get("reset", {}).get("depth", 1))))
+            if c.get("physical_inst") and c["physical_inst"] != c["inst"]:
+                # KW-FIX-1/S81PF 11-02: the kit netlist names the core by its declared physical identity (bound kit:
+                # u_bound.u_u_r0_u_e0 for plan u_r0.u_e0); reset_tree.tcl resolves either name
+                out[-1]["physical_inst"] = c["physical_inst"]
             if domain_root is not None:
                 out[-1]['native_clock_root']=domain_root
                 out[-1]['native_clock_status']='GEOMETRY PREP; period/reset phase qualification separate'
@@ -1999,10 +2003,12 @@ def tcl_text(T):
     for c in T.get("core_resets", []):
         q = f"rst_n_t{c['tap']}"
         inst, pin = c["inst"], c["pin"]
+        names = [inst] + ([c["physical_inst"]] if c.get("physical_inst") else [])
+        match = " || ".join(f"$n eq {{{x}}} || [string range $n end-[string length {{{x}}}] end] eq {{/{x}}}" for x in names)
         t += [f"# Equal-depth reset target for hard core {inst}.{pin}",
               "set rtr_cn {}; set rtr_ci {}",
               f"foreach n [$ff_blk getNets] {{ if {{[regexp {{(^|[/.]){q}$}} [$n getName]]}} {{ lappend rtr_cn $n }} }}",
-              f"foreach i [$ff_blk getInsts] {{ set n [$i getName]; if {{$n eq {{{inst}}} || [string range $n end-[string length {{{inst}}}] end] eq {{/{inst}}}}} {{ lappend rtr_ci $i }} }}",
+              f"foreach i [$ff_blk getInsts] {{ set n [$i getName]; if {{{match}}} {{ lappend rtr_ci $i }} }}",
               f"if {{[llength $rtr_cn] != 1 || [llength $rtr_ci] != 1}} {{ error {{OT_RESET_CORE unresolved {inst}.{pin} or {q}}} }}",
               f"set rtr_it [[lindex $rtr_ci 0] findITerm {{{pin}}}]",
               f"if {{$rtr_it eq \"NULL\"}} {{ error {{OT_RESET_CORE missing {inst}.{pin}}} }}",
