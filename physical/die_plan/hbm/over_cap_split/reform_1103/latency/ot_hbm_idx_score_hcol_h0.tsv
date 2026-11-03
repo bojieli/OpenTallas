@@ -1,0 +1,11 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_hbm_idx_score_hcol_h0	ot_hbm_idx_score_hcol_h0_ra+rb	q_b[567:0]	in	0	broadcast to ra and rb (one face flop each, as the uncut shell)
+ot_hbm_idx_score_hcol_h0	ot_hbm_idx_score_hcol_h0_ra+rb	qv_b	in	0	broadcast to ra and rb
+ot_hbm_idx_score_hcol_h0	ot_hbm_idx_score_hcol_h0_ra+rb	key[543:0]	in	0	broadcast to ra and rb
+ot_hbm_idx_score_hcol_h0	ot_hbm_idx_score_hcol_h0_ra	hid4[15:0]	in	0	ra hid2
+ot_hbm_idx_score_hcol_h0	ot_hbm_idx_score_hcol_h0_rb	hid4[31:16]	in	0	rb hid2
+ot_hbm_idx_score_hcol_h0	ot_hbm_idx_score_hcol_h0_ra+rb	rst_col	in	0	reset: one relay per sub-block (was one per region inside the core)
+ot_hbm_idx_score_hcol_h0	ot_hbm_idx_score_hcol_h0_rb	cs_out[31:0],cf_out	out	0	ra->rb seam +2 face flops paid back inside ra (seed + head-1 term delay -2)
+ot_hbm_idx_score_hcol_h0	ot_hbm_idx_score_hcol_h0_ra	prdy[0]	out	0	region 0 online
+ot_hbm_idx_score_hcol_h0	ot_hbm_idx_score_hcol_h0_rb	prdy[1]	out	0	region 1 online
+ot_hbm_idx_score_hcol_h0	(internal)	ra.cs_out->rb.cs_in (33 b)	seam	+2 (internal, compensated)	face-to-face wire only between ra and rb; the parent connects it

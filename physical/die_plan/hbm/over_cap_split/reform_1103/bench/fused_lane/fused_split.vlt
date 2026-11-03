@@ -1,0 +1,5 @@
+`verilator_config
+// build each lane-level block once (32 lanes flattened OOM: ~1.5 GB of Verilator memory a lane, measured 10-19)
+hier_block -module "hnx_fused_lane"
+hier_block -module "hnx_fused_lane_ctl"
+hier_block -module "hnx_fused_lane_elp"

@@ -21,6 +21,13 @@ LEAF = "kv3_astk__leaf"
 QO = "u_strip_u_strip_u_ctl__qo"
 QO_W = 572
 FACE = "astk_qo_face"
+STRAP = "strap_corner"
+ZN_DECL = "    (* keep *) reg [3:0]   zc_q;\n"
+ZN_CAP = "always @(posedge ck) begin zc_q <= zc; "
+ZN_USE = "wire [1:0]  S = zc_q[1:0], L = zc_q[3:2];"
+CTL_DECL = "    (* keep *) reg [1:0]   st_q;\n"
+CTL_CAP = "        st_q <= st; aq_q[20:1]"
+CTL_USE = "wire [13:0]  base_s = {5'd0, st_q, 7'd0};"
 
 
 def _concat_bits(s):
@@ -66,6 +73,50 @@ def leaf_transform(text):
     return text
 
 
+def _module_span(text, mod):
+    hits = [m.start() for m in re.finditer(rf"\bmodule {mod}\s*[#(]", text)]
+    if len(hits) != 1:
+        raise ValueError(f"expected exactly one module {mod}, found {len(hits)}")
+    return hits[0], text.index("endmodule", hits[0])
+
+
+def _sub_once(text, mod, old, new):
+    i, j = _module_span(text, mod)
+    body = text[i:j]
+    if body.count(old) != 1:
+        raise ValueError(f"{mod}: expected one '{old.strip()}', found {body.count(old)}")
+    return text[:i] + body.replace(old, new, 1) + text[j:]
+
+
+def strap_direct(leaf_text, leaves_text, ctl_text):
+    """-> (leaves_text, ctl_text, zones): the strap-only capture registers dropped (see the module doc).  Fail-closed:
+    every qkd_astk_zn instance of the leaf has zc = {2 constants, strap_corner[1:0]} and the one ctl instance st =
+    strap_corner[1:0]."""
+    sb = rf"{STRAP}\[1\], {STRAP}\[0\]"
+    zn = re.findall(r"\bqkd_astk_zn (\w+) \((.*)", leaf_text)
+    if not zn:
+        raise ValueError("strap direct: no qkd_astk_zn instance in the leaf")
+    for inst, line in zn:
+        if not re.search(rf"\.zc\(\{{1'b[01], 1'b[01], {sb}\}}\)", line):
+            raise ValueError(f"strap direct: zone {inst} zc is not {{const, const, {STRAP}[1:0]}}")
+    ctl = re.findall(r"\bqkd_astk_ctl_s_g0 #\(.*?\) (\w+) \((.*)", leaf_text)
+    if len(ctl) != 1 or not re.search(rf"\.st\(\{{{sb}\}}\)", ctl[0][1]):
+        raise ValueError(f"strap direct: expected one ctl instance with st = {STRAP}[1:0]")
+    m = "qkd_astk_zn"
+    leaves_text = _sub_once(leaves_text, m, ZN_DECL, "    (* keep *) reg [3:2]   zc_q;   // zc[1:0] = ID strap: read from the port\n")
+    leaves_text = _sub_once(leaves_text, m, ZN_CAP, "always @(posedge ck) begin zc_q[3:2] <= zc[3:2]; ")
+    leaves_text = _sub_once(leaves_text, m, ZN_USE, "wire [1:0]  S = zc[1:0], L = zc_q[3:2];")
+    m = "qkd_astk_ctl_s_g0"
+    ctl_text = _sub_once(ctl_text, m, CTL_DECL, "    // st = ID strap (quasi-static): read from the port, no capture register\n")
+    ctl_text = _sub_once(ctl_text, m, CTL_CAP, "        aq_q[20:1]")
+    ctl_text = _sub_once(ctl_text, m, CTL_USE, "wire [13:0]  base_s = {5'd0, st, 7'd0};")
+    for t, mm, bad in ((leaves_text, "qkd_astk_zn", "zc_q[1"), (ctl_text, "qkd_astk_ctl_s_g0", "st_q")):
+        i, j = _module_span(t, mm)
+        if bad in t[i:j]:
+            raise ValueError(f"strap direct: {mm} still reads {bad}")
+    return leaves_text, ctl_text, [i for i, _ in zn]
+
+
 def dead_bits(wrapper_text, cj):
     """stale_in pin bits of (non clock/reset) buses that are input ports of the wrapper and are referenced nowhere but
     their declaration"""
@@ -96,6 +147,13 @@ def apply_kit(kd, mod, cj, src_core_json=None):
     leaf = leaves[0]
     before = hashlib.sha256(leaf.read_bytes()).hexdigest()
     leaf.write_text(leaf_transform(leaf.read_text()))
+    lv, cf = kd / "rtl" / "qkd_astk_leaves.sv", kd / "rtl" / "qkd_astk_ctl_s_g0.sv"
+    if not (lv.is_file() and cf.is_file()):
+        raise SystemExit("--astk-native-faces: kit rtl lacks qkd_astk_leaves.sv / qkd_astk_ctl_s_g0.sv (strap direct)")
+    sha_lv, sha_cf = (hashlib.sha256(p.read_bytes()).hexdigest() for p in (lv, cf))
+    lvt, cft, zones = strap_direct(leaf.read_text(), lv.read_text(), cf.read_text())
+    lv.write_text(lvt)
+    cf.write_text(cft)
     wrapper = kd / "rtl" / f"{mod}.sv"
     wt = wrapper.read_text()
     bits = dead_bits(wt, cj)
@@ -113,6 +171,11 @@ def apply_kit(kd, mod, cj, src_core_json=None):
         leaf_sha256_before=before, leaf_sha256_after=hashlib.sha256(leaf.read_bytes()).hexdigest(),
         qo_face_bits=QO_W, fault_b_landing="PORT_REGS(1): +1 external-fault edge, +2 FF", dead_inputs=len(bits),
         command_cycles=0, nominal_token_cycles=0, local_fault_cycles=0, external_fault_cycles=1,
+        strap_direct=dict(strap=STRAP, zones=zones, ctl="st", dropped_flops=2 * len(zones) + 2,
+                          rule="COORD 2026-10-28 06:26 (KV-KITS-7 strap-capture class): no strap-capture register without timed fan-in",
+                          leaves_sha256_before=sha_lv, ctl_sha256_before=sha_cf,
+                          leaves_sha256_after=hashlib.sha256(lv.read_bytes()).hexdigest(),
+                          ctl_sha256_after=hashlib.sha256(cf.read_bytes()).hexdigest()),
         same_as="0828 kit core.json actual_bind7_native_recut c6b9852b (command_cycles_added 0, external_fault_b_cycles_added 1)"),
         indent=1) + "\n")
     return bits

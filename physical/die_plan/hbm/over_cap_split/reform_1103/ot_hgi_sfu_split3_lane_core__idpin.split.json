@@ -1,0 +1,113 @@
+{
+ "core": "ot_hgi_sfu_split3_lane_core__idpin",
+ "status": "EQ-PASS",
+ "n_inst": 32,
+ "types_unblocked": 8,
+ "census_cells": 253074,
+ "synth_est_uncut": 307395,
+ "calib_note": "synth_est.sh (ORFS asap7lock flat synth, face-shelled) reads +21% vs the kit census; cells_census_scaled = cells_est x 0.823",
+ "form": "3 hardened sub-blocks per SFU lane on pipeline-stage boundaries (cut at S in): _fr (map + lane front through AD) -> _ex (exp unit) -> _bk (rest of S .. OUT); _fr -> _bk direct S-in bus. Every lane of the 16-lane grid identical: 3 unique masters x 32 instances.",
+ "rtl": {
+  "generator": "rtl/hbm_accel/cores_split/reform_1103/ot_hgi_sfu_split3_lane_core__idpin/gen_split3_lane.py (from rtl/hbm_accel/generic/peers/sfu_sp2/ot_su12_sfu_sp2.sv + rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_lane_core.sv, verbatim stage text)",
+  "files": [
+   "ot_hgi_sfu_split3_lane_core_fr.sv",
+   "ot_hgi_sfu_split3_lane_core_ex.sv",
+   "ot_hgi_sfu_split3_lane_core_bk.sv",
+   "ot_hgi_sfu_split3_lane_core__idpin__split.sv"
+  ]
+ },
+ "sub_blocks": [
+  {
+   "module": "ot_hgi_sfu_split3_lane_core_fr",
+   "per_core": 1,
+   "cells_est": 102247,
+   "cells_census_scaled": 84149,
+   "clock": [
+    "map_clk",
+    "sfu_clk"
+   ],
+   "role": "ot_hgi_sfu_lane_map + lane broadcast reg b_q + F0/G1/G2/reads/X/PRE/M1(mul+div)/M2/Q/AD (memory read loop stays here)",
+   "pins": {
+    "inp": 1189,
+    "out": 367
+   }
+  },
+  {
+   "module": "ot_hgi_sfu_split3_lane_core_ex",
+   "per_core": 1,
+   "cells_est": 77664,
+   "cells_census_scaled": 63917,
+   "clock": [
+    "sfu_clk"
+   ],
+   "role": "ot_hdc_v41x_exp LM6/LA6 (D_EXP 94)",
+   "pins": {
+    "inp": 33,
+    "out": 33
+   }
+  },
+  {
+   "module": "ot_hgi_sfu_split3_lane_core_bk",
+   "per_core": 1,
+   "cells_est": 130108,
+   "cells_census_scaled": 107079,
+   "clock": [
+    "sfu_clk"
+   ],
+   "role": "S rest (den add, u_num ring, fdiv f12, u_l4 insertion line) + E1 + E2 + OUT + status, 2-edge ALIGN line on x_bus",
+   "pins": {
+    "inp": 234,
+    "out": 149
+   }
+  }
+ ],
+ "crossings": [
+  {
+   "between": "fr -> ex",
+   "bits": 33,
+   "kind": "REG->REG (face)",
+   "added": 2,
+   "note": "{x_exp_v, x_exp_x}: exp operand (R or -R) at S in"
+  },
+  {
+   "between": "ex -> bk",
+   "bits": 33,
+   "kind": "REG->REG (face)",
+   "added": 2,
+   "note": "{x_exp_y, x_exp_f}"
+  },
+  {
+   "between": "fr -> bk",
+   "bits": 201,
+   "kind": "REG->REG (face) + 2-edge pure ALIGN line in bk",
+   "added": 4,
+   "note": "{v3, R, B, C, O, ci_sfu, cs_sfu, cs_e1, cs_imm2, ce_e2, ce_imm1, co_rnd, co_dst, front fault OR, c1}: bk pipeline runs uniformly 4 edges behind the uncut lane"
+  }
+ ],
+ "shift_map": {
+  "sfu_vm_we/waddr/wdata": 4,
+  "sfu_kv_we/waddr/wdata": 4,
+  "sfu_ro_v/ro_x": 4,
+  "sfu_fault": 4,
+  "sfu_coll": 4,
+  "sfu_vi_re/vi_addr, sfu_rd_addr/rd_re/rd_src": 0,
+  "all inputs": 0
+ },
+ "parent_impact": "lane write / reducer / status +4 edges (uniform over all 16 lanes): the SFU controller write->read hazard distance and the done/fault timing +4 (priced in the parent like DENR); 1.2 GHz kept",
+ "eq": {
+  "bench": "physical/die_plan/hbm/over_cap_split/reform_1103/bench/split3_lane (spec.json + run.sh; lockstep_gen.py, facewrap.py; verilator 5.050 --x-initial 0, random ops / controls / read data every edge, lane_j 9)",
+  "result": "MUT 0 LOCKSTEP PASS checks=168000 (12000 edges, warmup 800) toggled_out_bits=266/282 with the declared +4 shift on the _bk outputs",
+  "mutants": {
+   "MUT 1 (ALIGN 1: bk one edge off the exp result)": "FAIL errs=511002",
+   "MUT 2 (front fault dropped from status)": "FAIL errs=347",
+   "MUT 3 (no sigmoid sign flip on the exp operand)": "FAIL errs=33137"
+  },
+  "host": "epyc2"
+ },
+ "latency_rows": "latency/ot_hgi_sfu_split3_lane_core__idpin.tsv",
+ "open": [
+  "_bk 130k synth_est (~107k census-scaled) is above the 120k target, within 150k",
+  "_fr keeps two clock pins (map_clk, sfu_clk) as the uncut core; one clock entry each (sinks << 5k)",
+  "prebuild gate (synth + quick-place >= +83.3 ps) not run: DIE-HBM-61/RTL gate tool not yet on a branch"
+ ]
+}

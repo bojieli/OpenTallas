@@ -68,7 +68,9 @@ class PlaceAsync(unittest.TestCase):
             self.assertEqual(res["place_receipt"]["proof_owner"], "dpkit-T-1")
             run = [c for c in f.calls if c.startswith("systemd-run")]
             self.assertEqual(len(run), 1)
-            self.assertIn("--hosts intel1 ", run[0])                      # pinned to the gen host = proof owner host
+            # KW-FIX-4 11-03: unpinned + staged kit/runner, so ot-run may SPILL it (outputs copied back to the gen host)
+            self.assertNotIn("--hosts", run[0])
+            self.assertIn("--dir /w/gen/T --stage /w/gen/T --stage /w/gen/run_kit.sh ", run[0])
             self.assertIn(" place 48 8", run[0])
             self.assertFalse([c for c in f.calls if "rsync" in c and ("epyc2:" in c or "pull" in c)])
             self.assertFalse([c for c in f.calls if "ssh -o BatchMode=yes -o ControlPath=none intel1 rm" in c])
@@ -76,6 +78,22 @@ class PlaceAsync(unittest.TestCase):
             self.assertEqual((svc["launch"], svc["receipt"]["run_id"]), ("launched", "dpkit-T-1"))
             # GEOM ran after the receipt, on the gen host copy
             self.assertTrue(any("geom_check.sh" in c for c in f.calls))
+
+    def test_place_spill_false_keeps_gen_host_pin(self):
+        with tempfile.TemporaryDirectory() as d:
+            f = Fake(d)
+            real, poll = KW.subprocess.run, KW.PLACE_POLL_S
+            KW.subprocess.run, KW.PLACE_POLL_S = f, 0
+            try:
+                p = spec(d)
+                sp = json.loads(p.read_text()); sp["place_spill"] = False; p.write_text(json.dumps(sp))
+                rc = KW.run_item(p)
+            finally:
+                KW.subprocess.run, KW.PLACE_POLL_S = real, poll
+            run = [c for c in f.calls if c.startswith("systemd-run")]
+            self.assertEqual(rc, 0)
+            self.assertIn("--hosts intel1 ", run[0])
+            self.assertNotIn("--stage", run[0])
 
     def test_terminal_client_rc_is_the_place_result(self):
         with tempfile.TemporaryDirectory() as d:

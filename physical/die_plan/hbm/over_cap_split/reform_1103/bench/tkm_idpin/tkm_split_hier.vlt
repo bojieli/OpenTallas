@@ -1,0 +1,5 @@
+`verilator_config
+// DIE-HBM-61/SPLIT: the uncut tile core and the half tile are hier blocks (one compile per master; 32 / 64 stubs in the
+// top pass).  Flattening 32 e86 tiles costs >280 GB (tkm_tp192_e86_hier.vlt note).
+hier_block -module "ot_hgi_coll_tkm_tp192_tile_core"
+hier_block -module "ot_hgi_coll_tkm_tp192_htile_core"

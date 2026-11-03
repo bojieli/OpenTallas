@@ -1,15 +1,16 @@
-"""DIE-HBM-59/G0C: ft_s0_resite helpers (stage medoids are real bit sites, never a centroid inside a core)."""
+"""DIE-HBM-59/G0C: ft_s0_resite helpers (stage positions are real bit sites, never a centroid inside a core)."""
 import json
 import ft_s0_resite as R
 
 
-def test_stage_medoid_is_a_real_site_not_the_centroid():
-    # a band split around a core: half the bits at x=0, half at x=100 -> centroid x=50 lies in the core gap
+def test_stage_position_is_a_real_site_not_the_centroid():
+    # a band split around a core: bits 0-3 at x=0, bits 4-7 at x=100 -> centroid x=50 lies in the core gap
     slot = dict(bit_site_cell_um=[1.0, 0.5], bit_sites_um=[[[0.0, float(y)] for y in range(4)] +
                                                           [[100.0, float(y)] for y in range(4)]])
     (m,) = R.stage_medoids(slot)
     centres = [[x + 0.5, y + 0.25] for x, y in slot['bit_sites_um'][0]]
     assert m in centres and m[0] != 50.5
+    assert m == centres[4]          # the middle bit (window order) carries the stage position
 
 
 def test_medoid_fix_rewrites_only_internal_regs(tmp_path):

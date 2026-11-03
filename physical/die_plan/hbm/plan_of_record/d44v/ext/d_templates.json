@@ -1,0 +1,143 @@
+{
+ "partition_types": 81,
+ "partitions": 90,
+ "singleton_types": 72,
+ "near_duplicate_groups": [
+  [
+   "q_b012",
+   "q_b012__physical_v1"
+  ],
+  [
+   "q_b013",
+   "q_b013__physical_v1"
+  ],
+  [
+   "q_b110",
+   "q_b110__physical_v1"
+  ],
+  [
+   "q_b111",
+   "q_b111__physical_v1"
+  ],
+  [
+   "q_b113",
+   "q_b113__physical_v1"
+  ],
+  [
+   "NE_io",
+   "NW_io"
+  ],
+  [
+   "q_spb0",
+   "q_spb0__physical_v1"
+  ],
+  [
+   "q_spb2",
+   "q_spb2__physical_v1"
+  ],
+  [
+   "q_spt0",
+   "q_spt0__physical_v1"
+  ],
+  [
+   "q_spt1",
+   "q_spt2"
+  ],
+  [
+   "q_spu1",
+   "q_spu1__physical_v1"
+  ],
+  [
+   "vsN5",
+   "vsN6"
+  ]
+ ],
+ "near_duplicate_types": 24,
+ "types_cut_if_merged": 12,
+ "hard_core_modules": 74,
+ "hard_core_unique_designs": 106,
+ "hard_core_instances": 1156,
+ "modules_with_variants": [
+  [
+   "hnx_vms_bank_q0_faces__vecd4ae",
+   8,
+   32
+  ],
+  [
+   "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+   5,
+   31
+  ],
+  [
+   "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   5,
+   32
+  ],
+  [
+   "ot_hnx_idxn_keybuf_slice",
+   4,
+   16
+  ],
+  [
+   "hnx_fused_lane",
+   3,
+   32
+  ],
+  [
+   "ot_hgi_coll_gq_land",
+   3,
+   4
+  ],
+  [
+   "ot_hbm_hc_bank128_pair_core",
+   2,
+   112
+  ],
+  [
+   "ot_hbm_idx_tail_native",
+   2,
+   8
+  ],
+  [
+   "ot_hbm_svc_sm_group_rel_id",
+   2,
+   8
+  ],
+  [
+   "ot_hgi_sm_xload_cl2_bfqg",
+   2,
+   16
+  ],
+  [
+   "ot_hnx_fused_tnode",
+   2,
+   30
+  ],
+  [
+   "hfd_hgi_vm_calendar_f20",
+   2,
+   4
+  ],
+  [
+   "ot_hbm_su_programme_pslice_c5",
+   2,
+   4
+  ],
+  [
+   "ot_hfd_coll_q2_hard_v8g__reduce",
+   2,
+   2
+  ],
+  [
+   "ot_hgi_coll_gq_issue",
+   2,
+   4
+  ],
+  [
+   "ot_hgi_coll_inj_idx_join_rg",
+   2,
+   4
+  ]
+ ],
+ "designs_cut_if_variants_unified": 32
+}

@@ -15,7 +15,7 @@ slot's explicit bit sites stay reserved).  The station count is kept when a chai
 stations are tried and every added cycle is listed in the ledger (re-run gen.py latency --inplace after).  A slot
 no count fits is left unchanged and listed.  Windows, pins, outlines, cores and other slots never change.
 
-regs_um[1:] = per-stage medoid bit site (a real free site, never a centroid inside a core).
+regs_um[1:] = per-stage middle-bit site (a real free site, never a centroid inside a core).
 
     python3 tools/die_plan/ft_s0_resite.py PLAN.json OUT_PLAN.json LEDGER.json [--types a,b] [--slots T/S,..] [--limit 364.5]
     python3 tools/die_plan/ft_s0_resite.py --medoid-fix PLAN.json OUT_PLAN.json T/S,...   (re-derive regs_um only)
@@ -44,16 +44,18 @@ def chain_hops(slot, pi, po):
 
 
 def stage_medoids(slot):
-    """per internal stage, the centre of the real bit site nearest the band centroid (die lane geometry / street
-    checks read regs_um[j] as the stage position; a centroid of a band split around a core can fall inside it)."""
+    """per internal stage, the centre of the MIDDLE bit's real site (bits are in window order, so the middle bit's pin
+    is the window centre that check.py lane geometry uses for S0 / the port point).  regs_um[j] is the stage position
+    for the die lane geometry, reach and street checks: a real free site (never a centroid inside a core), and the
+    centre-level hops equal the middle bit's own hops (<= the per-bit limit), not a medoid jump across the band."""
     cw, ch = slot['bit_site_cell_um']; out = []
     for st in slot['bit_sites_um']:
-        c = np.asarray(st, float) + (cw / 2, ch / 2)
-        out.append(c[int(np.argmin(np.abs(c - c.mean(axis=0)).sum(axis=1)))].round(4).tolist())
+        x, y = st[len(st) // 2]
+        out.append([round(x + cw / 2, 4), round(y + ch / 2, 4)])
     return out
 
 
-def resite_type(P, raw, tn, limit, max_add, only=None):
+def resite_type(P, raw, tn, limit, max_add, only=None, jog_sweep=0):
     rt = raw['partition_types'][tn]; ty = P.types[tn]
     pins = pin_table(P, tn)
     w, h = ty['outline_um']
@@ -91,15 +93,30 @@ def resite_type(P, raw, tn, limit, max_add, only=None):
         bpt = np.array([(po.get(b) or pi[b])[:2] for b in range(wd)], float)
         rec = dict(type=tn, slot=name, width=s['width'], stations_before=k0, hop_before_um=round(before, 1))
         done = None; errs = []
+        # jog candidates: the default path first; for opposite-face (Z) slots, then the jog leg swept over the type
+        # (DIE-HBM-59 d44u: wide bands in dense fields find a channel row/column the default mid-line jog misses)
+        # L (adjacent-face) slots: then per-bit corners (ft_corridor bit_paths)
+        jogs = [None]
+        if jog_sweep and S.OPP[s['in_face']] == s['out_face']:
+            span = h if s['in_face'] in 'NS' else w
+            jogs += [round(float(f) * span, 3) for f in np.linspace(0.06, 0.94, jog_sweep)]
+        elif jog_sweep and s['in_face'] != s['out_face']:
+            jogs += ['bits']
+        lane = max(20.0, wd * FC.LANE_UM_PER_BIT)
         for k in range(k0, k0 + max_add + 1):
-            trial = dict(s, stations=k)
-            saved = set(alloc.used)
-            try:
-                sites, cents, path, led = FC.place_slot(trial, a, bpt, s['in_face'], s['out_face'], w, h, boxes, alloc,
-                                                        limit)
-                done = (k, sites, cents, led); break
-            except ValueError as e:
-                alloc.used = saved; errs.append(f'k={k}: {str(e)[:120]}')
+            for jg in jogs:
+                trial = dict(s, stations=k)
+                saved = set(alloc.used)
+                try:
+                    bits = jg == 'bits'; jv = None if bits else jg
+                    sites, cents, path, led = FC.place_slot(trial, a, bpt, s['in_face'], s['out_face'], w, h, boxes,
+                                                            alloc, limit, jog=jv,
+                                                            jog_lane=(lane if jv is not None else None), bit_paths=bits)
+                    done = (k, sites, cents, led); rec['jog_um'] = jg; break
+                except ValueError as e:
+                    alloc.used = saved; errs.append(f'k={k} jog={jg}: {str(e)[:120]}')
+            if done:
+                break
         if not done:
             rec.update(kept='no chain within limit', tried=errs); ledger.append(rec)
             print(f'{tn}/{name}: KEPT ({errs[-1]})', flush=True); continue
@@ -136,6 +153,7 @@ def main(argv=None):
     ap.add_argument('--slots', default='', help='comma list of TYPE/SLOT to restrict to')
     ap.add_argument('--limit', type=float, default=0.9 * 405.0)
     ap.add_argument('--max-add', type=int, default=3)
+    ap.add_argument('--jog-sweep', type=int, default=0, help='Z slots: also try N jog positions over the type (0 = off)')
     a = ap.parse_args(argv)
     raw = S.load(a.plan); P = S.Plan(raw, Path(a.plan))
     want = {t for t in a.types.split(',') if t}
@@ -146,7 +164,7 @@ def main(argv=None):
     for tn in sorted(raw['partition_types']):
         if (want and tn not in want) or (only and tn not in only):
             continue
-        ledger += resite_type(P, raw, tn, a.limit, a.max_add, only.get(tn))
+        ledger += resite_type(P, raw, tn, a.limit, a.max_add, only.get(tn), a.jog_sweep)
     Path(a.out).write_text(json.dumps(raw, indent=1))
     summ = dict(slots=len(ledger), resited=sum(1 for r in ledger if 'stations_after' in r),
                 kept=[f"{r['type']}/{r['slot']}" for r in ledger if 'kept' in r],

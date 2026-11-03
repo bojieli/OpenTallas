@@ -163,22 +163,40 @@ def test_unplaced_macros_fail_closed(kit):
 def test_preflight_emits_beside_freeze(kit):
     rc = KP.main([str(kit)])
     rec = json.loads((kit / "preflight.json").read_text())
-    assert rec["schema"] == "opentallas.kit_preflight.v2" and set(KC.CHECKS) <= set(rec["checks"])
-    assert all(rec["checks"][c]["verdict"] == ("NA" if c == "macro_instances" else "PASS") for c in KC.CHECKS)
+    assert rec["schema"] == "opentallas.kit_preflight.v2"
+    # OWNER 11-03 07:0x: blocking checks = TOOL_FAIL_CHECKS; the rest are reported in contract_advisory
+    rows = dict(rec["checks"], **rec["contract_advisory"])
+    assert set(KC.TOOL_FAIL_CHECKS) <= set(rec["checks"]) and set(KC.CHECKS) <= set(rows)
+    assert all(rows[c]["verdict"] == ("NA" if c == "macro_instances" else "PASS") for c in KC.CHECKS)
     assert rc == int(rec["verdict"] != "PASS")
 
 
 def test_contract_binding_scope(kit):
     assert KC.is_core_kit(kit)
     m_rc(kit)
-    assert any(i.startswith("rc_calibration") for i in KP.check(kit)["issues"])
+    # OWNER 11-03 07:0x (KW-FIX-4): rc_calibration is a design target, advisory even on a binding (core) kit
+    r = KP.check(kit)
+    assert r["contract_binding"] and r["contract_advisory"]["rc_calibration"]["verdict"] == "FAIL"
+    assert not any(i.startswith("rc_calibration") for i in r["issues"])
+    assert not any(i.startswith("rc_calibration") for i in KP.check(kit, contract=True)["issues"])
+
+
+def test_contract_tool_fail_checks_still_block(kit):
+    """a certain tool failure (duplicate module = Yosys re-definition) still fails a binding kit; advisory on a tile"""
+    m_dup(kit)
+    r = KP.check(kit)
+    assert r["verdict"] == "FAIL" and any(i.startswith("duplicate_modules") for i in r["issues"])
+
+
+def test_contract_binding_scope_partition(kit):
+    m_rc(kit)
     fz = json.loads((kit / "freeze.json").read_text())
     fz["schema"] = "opentallas.partition_freeze.v1"
     (kit / "freeze.json").write_text(json.dumps(fz))
     r = KP.check(kit)
     assert not r["contract_binding"] and r["contract_advisory"]["rc_calibration"]["verdict"] == "FAIL"
     assert not any(i.startswith("rc_calibration") for i in r["issues"])
-    assert any(i.startswith("rc_calibration") for i in KP.check(kit, contract=True)["issues"])
+    assert not any(i.startswith("rc_calibration") for i in KP.check(kit, contract=True)["issues"])
 
 
 # ---------------------------------------------------------------- COORD 10-27 KV-KITS-7 rulings 2+3 (partition kits)

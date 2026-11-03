@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.hbm.reform_split.v1",
+ "lane": "DIE-HBM-61/SPLIT 2026-11-03",
+ "core": "ot_hbm_idx_score_hcol_h0",
+ "census": {"cells": 180462, "instances": 128, "types_unblocked": 16, "source": "epyc2 die-hbm-60-plan/reform_v4.json (AUTO-GEOM d44o)"},
+ "status": "EQ-PASS",
+ "form": "clock-region cut: the HALF-0 half column (heads 0-3, regions 0/1 on clk_pair[0]/[1]) -> 2 sub-blocks of one region (2 heads) each; one clock per sub-block; ra->rb seam = 33-bit running sum (reg->reg); the +2 face-shell edges on the seam are paid back inside ra (head-0 seed delay 7->5, head-1 term delay 9->7, pure unreset delay lines) => cycle-exact, 0 added cycles on every port",
+ "rtl": ["rtl/hbm_accel/cores_split/reform_1103/ot_hbm_idx_score_hcol_h0/ot_hbm_idx_score_hcol_h0_rgn.sv",
+         "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_idx_score_hcol_h0/ot_hbm_idx_score_hcol_h0__split.sv"],
+ "sub_blocks": [
+  {"module": "ot_hbm_idx_score_hcol_h0_ra", "per_core": 1, "cells_est": 97320, "macros": 0, "clock": "clk = clk_pair[0]",
+   "pins": {"in_bits": 1129, "out_bits": 34, "in": {"qv_b": 1, "q_b": 568, "key": 544, "hid2": 16}, "out": {"cs_out": 32, "cf_out": 1, "prdy": 1}, "reset": "rst_col"}},
+  {"module": "ot_hbm_idx_score_hcol_h0_rb", "per_core": 1, "cells_est": 103151, "macros": 0, "clock": "clk = clk_pair[1]",
+   "pins": {"in_bits": 1162, "out_bits": 34, "in": {"qv_b": 1, "q_b": 568, "key": 544, "hid2": 16, "cs_in": 32, "cf_in": 1}, "out": {"cs_out": 32, "cf_out": 1, "prdy": 1}, "reset": "rst_col"}}
+ ],
+ "cells_basis": "ORFS asap7lock make synth (flat), each sub-block in its face-shelled form (facewrap.py); calibration: uncut kit top ot_hbm_idx_score_hcol_h0 = 198208 by the same recipe vs 180462 census => estimates ~10% conservative",
+ "unique_masters": 2,
+ "crossings": [
+  {"between": "ra.cs_out/cf_out -> rb.cs_in/cf_in", "bits": 33, "kind": "REG->REG (cs_o -> face -> face -> csi_p)", "edges": 2, "compensated": true},
+  {"between": "parent -> ra and rb (q_b, qv_b, key)", "bits": 1113, "kind": "broadcast to two face shells (was one)", "edges": 0, "note": "parent drives both sub-block faces; rr fan-out x2"}
+ ],
+ "eq": {"bench": "physical/die_plan/hbm/over_cap_split/reform_1103/bench/hcol_h0/run.sh (lockstep_gen.py spec.json, verilator 5.050)",
+        "ref": "kit d44o attempt_2 RTL (ot_hbm_idx_score_hcol_h0 kit face shell + __fcore), sources.sha256",
+        "result": "MUT 0 LOCKSTEP PASS checks=17100 (every output bit every edge after warmup 300, 6000 edges, random q/key/qv with heads 0-4), 33 output bits toggled",
+        "mutants": {"MUT 1 (ra without the 2-edge advance)": "FAIL errs=34510", "MUT 2 (rb head-3 term delay -1)": "FAIL errs=20276"}},
+ "latency": "physical/die_plan/hbm/over_cap_split/reform_1103/latency/ot_hbm_idx_score_hcol_h0.tsv (0 added cycles on every port)",
+ "plan_notes": ["2 slots per hcol_h0 instance (128 -> 256 hard cores, 2 masters); each ~1/2 the cell area of the uncut slot",
+                "pin-heavy: ~1130 input bits per sub-block (q_b+key broadcast) -> split pins over two faces (e.g. q_b N, key S) at M4/M5",
+                "hcol_h1 (signed, pins/outline kept) still receives cs_out at the same edge"]
+}

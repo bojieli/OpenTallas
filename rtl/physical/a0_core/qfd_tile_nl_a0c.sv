@@ -11,6 +11,7 @@
 // Q-ROMPARENT 10-16 18:40: the eight TX roots ck_tx0..7 are separate compensated entries again (gate3 measured the
 // shared ck root at TT 556..1230 ps over 10,644 sinks); each TX root owns only its LSL's two rungs + reset relay.
 module qfd_tile_nl_a0c #(
+    parameter integer IDLE_UCK = 0,    // DIE-QC-66 11-03: 1 = u_me.idle on the ungated tile clock ck_u (as-built B3 NL form)
     parameter integer G4_ROOTS = 1,
     parameter integer REGROOT_MODE = 3,
     // DIE-QC-16 ICG (opt-in, default 0 = the ungated form above, unchanged elaboration): 1 = one tile-root ICG
@@ -310,11 +311,12 @@ module qfd_tile_nl_a0c #(
         initial if (ICG_GOH < 2 || ICG_DRAIN < 1 || ICG_DRAIN > 255 || ICG > 2) $fatal(1, "a0c ICG: ICG <= 2, ICG_GOH >= 2, 1 <= ICG_DRAIN <= 255");
     end endgenerate
 `ifndef SYNTHESIS
-    qfd_tile_nl_rp2_45 #(.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
+    qfd_tile_nl_rp2_45 #(.IDLE_UCK(IDLE_UCK),.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
 `else
-    qfd_tile_nl_rp2_45 #(.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
+    qfd_tile_nl_rp2_45 #(.IDLE_UCK(IDLE_UCK),.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
 `endif
         .ck(ck_g),
+        .ck_u(ck),
         .me_idle(me_idle),
         .ck_rp0(ck_rp0),
         .ck_rp1(ck_rp1),

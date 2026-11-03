@@ -8,6 +8,7 @@
 // OT_QFD_TILE_NL_RP2_MUT (bench only): go taken from the top bit of the tap (wrong field order).
 `timescale 1ns/1ps
 module qfd_tile_nl_rp2_45 #(
+    parameter integer IDLE_UCK = 0,    // DIE-QC-66 11-03: 1 = u_me.idle on the ungated tile clock ck_u (as-built B3 NL form)
 `ifndef SYNTHESIS
     parameter integer ROM_TILE = -1, // constant die tile identity for released simulation masks
 `endif
@@ -63,6 +64,7 @@ module qfd_tile_nl_rp2_45 #(
     output wire          tie_lo,
     input  wire [507:0]  tap,
     output wire [513:0]  t_out,
+    input  wire          ck_u,     // DIE-QC-66 IDLE_UCK pass-through
     output wire          me_idle   // QC-PG-5 ICG: u_tile.idle (engine drained, registered; tile-root ICG enable)
 );
     (* keep = "true" *) wire tie_hi_w = 1'b1;
@@ -102,6 +104,7 @@ module qfd_tile_nl_rp2_45 #(
     wire [511:0]   to;
     wire           tv, tf;
     ot_qwen_rom_tile_nk #(
+        .IDLE_UCK(IDLE_UCK),
 `ifndef SYNTHESIS
         .ROM_TILE(ROM_TILE),
 `endif
@@ -118,7 +121,7 @@ module qfd_tile_nl_rp2_45 #(
         .ck_lsl({ck_lsl7,ck_lsl6,ck_lsl5,ck_lsl4,ck_lsl3,ck_lsl2,ck_lsl1,ck_lsl0}),
         .ck_node(ck),                                  // NODE 0: no node leaf, the entry has no sink
         .clk(ck), .rst_n(reset_q), .tile_id(tile_id_q), .ib_go(go), .ib(ib), .xl(xl), .t_out(to), .t_vout(tv),
-        .n_a(512'd0), .n_b(512'd0), .n_va(1'b0), .n_y(), .n_vy(), .fault(tf), .idle(me_idle));   // NODE 0: n_* not read / not driven
+        .n_a(512'd0), .n_b(512'd0), .n_va(1'b0), .n_y(), .n_vy(), .fault(tf), .ck_u(ck_u), .idle(me_idle));   // NODE 0: n_* not read / not driven
     (* keep *) reg [513:0] t_out_q;
     always @(posedge ck_fa2) begin
         t_out_q[511:0]<=to;

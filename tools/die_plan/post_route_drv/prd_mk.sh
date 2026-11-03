@@ -27,9 +27,17 @@ test -n "$SPEF" || SPEF=$RS/6_final.spef
 FROM=${OT_PRD_FROM:-grt}
 case $FROM in grt) SRC=5_1_grt.odb ;; route) SRC=5_2_route.odb ;; *) echo "prd_mk: OT_PRD_FROM=$FROM: want grt|route"; exit 2 ;; esac
 test -f $RS/$SRC -a -f "$SPEF" || { echo "prd_mk: $RS lacks $SRC / $SPEF"; exit 2; }
-# Stage policies distinguish GRT from CTS by the ORIGINAL CTS checkpoint.
-# Preserve that checkpoint through every PRD pass; never manufacture it from GRT.
-test -f "$RS/4_1_cts.odb" || { echo "prd_mk: $RS lacks original 4_1_cts.odb (GRT stage identity)"; exit 2; }
+# Stage policies distinguish GRT from CTS by the ORIGINAL CTS checkpoint (orfs_hold_mm.tcl ot_hold_stage: file EXISTENCE
+# only, the content is never read).  Preserve it through every PRD pass.  DIE-QC-66 11-03 (class fix, tool-input): a
+# routed kit whose 4_1_cts.odb was pruned (scratch reaper / resume-derived kits) still IS past CTS when its 5_1_grt.odb
+# exists (that DB carries the post-CTS clock tree), so the stage identity is taken from 5_1_grt.odb and recorded in
+# PRD.json ("cts_identity").  No 4_1_cts.odb and no 5_1_grt.odb -> refused (never an invalid vehicle).
+CTS_ID=4_1_cts.odb
+if [ ! -f "$RS/4_1_cts.odb" ]; then
+  test -f "$RS/5_1_grt.odb" || { echo "prd_mk: $RS lacks original 4_1_cts.odb and 5_1_grt.odb (GRT stage identity)"; exit 2; }
+  CTS_ID=5_1_grt.odb
+  echo "prd_mk: $RS lacks original 4_1_cts.odb: GRT stage identity from 5_1_grt.odb (recorded in PRD.json)"
+fi
 HM=${V:1}; [[ "$HM" =~ ^[0-9]+$ && ${V:0:1} =~ ^[bmt]$ ]] || { echo "prd_mk: variant $V: want b<hold margin ps>, m<hold margin ps> or t<N>"; exit 2; }
 mkdir -p $OUT
 rsync -a --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' \
@@ -38,7 +46,7 @@ rsync -a --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OUT/run/objects/asap7/$NICK/base
 cp $RS/$SRC $B/4_cts.odb
-cp "$RS/4_1_cts.odb" "$B/4_1_cts.odb"
+cp "$RS/$CTS_ID" "$B/4_1_cts.odb"
 cp "$SPEF" $B/6_final.spef
 for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_unreg_pins.txt; do
   test -f $RS/$f && cp $RS/$f $B/; done
@@ -143,5 +151,9 @@ else
 echo "OT_PRD_FROM=$FROM" >> $OUT/variant.env
 printf '{"tool": "post_route_drv", "variant": "%s", "from": "%s", "source_kit": "%s:%s", "source_route": "%s/%s", "parasitics": "%s", "signoff_tools": "%s"}\n' \
   $V $FROM "$(hostname)" $KIT $RS $SRC "$SPEF" "$SO" > $OUT/PRD.json
+fi
+if [ $CTS_ID != 4_1_cts.odb ]; then
+  python3 -I -c 'import json,sys; p=sys.argv[1]; d=json.load(open(p)); d["cts_identity"]=sys.argv[2]; open(p,"w").write(json.dumps(d)+"\n")' \
+    $OUT/PRD.json "$RS/$CTS_ID (original 4_1_cts.odb absent)"
 fi
 echo "prd pass dir ready $OUT ($(du -sh $OUT | cut -f1))"

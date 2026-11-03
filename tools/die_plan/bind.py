@@ -3119,6 +3119,12 @@ class Binder:
                     for d in t.get("contents", []) + t.get("hard_cores", [])
                     for strap, native in (d.get("physical_id_alias") or {}).items()}
         id_ports = {}
+        tied_ids = set()
+        # DIE-KV-64 11-03 (OWNER gen rule "no leaked straps"; ID-strap rule B applied at the type = the core parent): a type
+        # in budgets.id_straps_in_type_types (or its unsplit base / split_of name) ties every plan-declared hard-core ID
+        # strap INSIDE the type when all die instances carry the plan value; the type then has no strap_* ID ports.
+        _tie = set((self.plan.get("budgets") or {}).get("id_straps_in_type_types") or [])
+        tie_in_type = bool(_tie) and (tn in _tie or tn.split("__")[0] in _tie or t.get("split_of") in _tie)
         invalid_id_leaves = set()
         # strap parameters: one per (leaf, port), the port width, constant bits in place
         straps = defaultdict(dict)
@@ -3163,11 +3169,21 @@ class Binder:
                     self._gap(f"parent ID {tn}.{r}.{pn}: {e}")
                     invalid_id_leaves.add(r)
                     continue
+                if tie_in_type:
+                    if any(len(set(vals)) != 1 for vals in bitsv.values()):
+                        self._gap(f"parent ID {tn}.{r}.{pn}: id_straps_in_type needs one value on every instance")
+                        invalid_id_leaves.add(r)
+                        continue
+                    nm = short_id(f"S_{r}__{pn}", 80)
+                    pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{format(expected, f'0{w}b')}")
+                    tied_ids.add((r, key))
+                    pnames[("strap", r, pn)] = (nm, w)
+                    continue
                 id_ports[nm] = dict(leaf=r, port=pn, width=w)
             else:
                 pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{''.join(reversed(v0))}")
             pnames[("strap", r, pn)] = (nm, w)
-        used_ids = {(x["leaf"], alias_of.get((x["leaf"], x["port"]), x["port"])) for x in id_ports.values()}
+        used_ids = {(x["leaf"], alias_of.get((x["leaf"], x["port"]), x["port"])) for x in id_ports.values()} | tied_ids
         missing_ids = {(r, pn) for r, ids in id_decls.items() for pn in ids} - used_ids
         if missing_ids:
             self._gap(f"parent ID {tn}: declarations do not match bound known strap inputs {sorted(missing_ids)}")

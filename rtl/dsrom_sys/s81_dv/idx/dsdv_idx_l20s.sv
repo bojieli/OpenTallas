@@ -393,15 +393,26 @@ module dsdv_idx_tx_n32 #(
     parameter integer SCS = 0,      // STW-S81c-COLLA2-TX 10-22: grid-slot count compare carry-selected off slot_q (0 cycles)
     parameter integer RIL = 0,      // STW-S81c-COLLA2 10-22: score-store read issue landed at the macro pins (+1 lookup edge)
     parameter integer RHP = 0,      // STW-S81c-COLLA2 10-22: result-FIFO head prefetched into a register (0 cycles)
-    parameter integer SPLIT = 0     // STW-S81c-TOK4 10-22: score store as two bank groups (column A hardened child), 0 cycles
+    parameter integer SPLIT = 0,    // STW-S81c-TOK4 10-22: score store as two bank groups (column A hardened child), 0 cycles
+    // DIE-S81-51/RF-C RE-FORM 11-03 (OWNER TWO-STRIKES, registered faces, S81-056): FACE = 1 lands every vi / vo bit in its
+    // own face flop (vi_f / vo_f: port -> flop, no logic) BEFORE the one-edge-early selects (n_p0w / n_octl / n_ep0, hsw,
+    // shs, scl_*) and the pin registers vi_r / vo_r, which then load from vi_f / vo_f.  The whole core sees its inputs one
+    // edge later: lo / st = the FACE 0 core's lo / st delayed by exactly +1 ck edge (bench_idx_tx_face.sh, bit-exact,
+    // shifted).  FACE = 0 is the old form, unchanged.
+    parameter integer FACE = 0,
+    // LKL = 1 (DIE-S81-51/CLK crossing table row 1, core->parent face): a NEGATIVE-level lockup latch (transparent while
+    // ck is low) after each registered output flop drives the port, so the output changes half a cycle after the launch
+    // edge (parent FF hold >= +179 ps est.).  0 cycles: the parent's capture edge sees the same value.
+    parameter integer LKL = 0
 ) (
     input  wire          ck,
     input  wire          rst,       // active low (as dsdv_idx_tx / the bk_sel rst_n)
     input  wire [V-1:0]  vi,        // tap: u_sel.vi_s (the vmux output)
     input  wire [V-1:0]  vo,        // tap: u_sel.vo_s
-    output reg  [V-1:0]  lo,        // tree link to the parent die
-    output reg  [15:0]   st
+    output wire [V-1:0]  lo,        // tree link to the parent die
+    output wire [15:0]   st
 );
+    reg [V-1:0] lo_q; reg [15:0] st_q;     // the registered output face (drives the ports; LKL: through the latch)
     localparam integer AW = $clog2(D), IW = $clog2(IB);
     localparam integer IBD = (IB < 1024) ? 1024 : IB, IBA = $clog2(IBD);
 
@@ -412,16 +423,28 @@ module dsdv_idx_tx_n32 #(
     ot_rst_relay #(.REGIONS(7), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst), .rst_n(rl));
 
     // ------------------------------------------------------------------ pin registers
+    // FACE: input face flops (vi_f[0] / vo_f[0] on the same reset leaf as vi_r[0] / vo_r[0])
+    wire [V-1:0] vi_p, vo_p;
+    generate if (FACE != 0) begin : g_face
+        reg [V-1:0] vi_f, vo_f;
+        always @(posedge ck or negedge rl[0])
+            if (!rl[0]) begin vi_f[0] <= 1'b0; vo_f[0] <= 1'b0; end
+            else begin vi_f[0] <= vi[0]; vo_f[0] <= vo[0]; end
+        always @(posedge ck) begin vi_f[V-1:1] <= vi[V-1:1]; vo_f[V-1:1] <= vo[V-1:1]; end
+        assign vi_p = vi_f; assign vo_p = vo_f;
+    end else begin : g_face0
+        assign vi_p = vi; assign vo_p = vo;
+    end endgenerate
     reg [V-1:0] vi_r, vo_r;
     always @(posedge ck or negedge rl[0])
         if (!rl[0]) begin vi_r[0] <= 1'b0; vo_r[0] <= 1'b0; end
-        else begin vi_r[0] <= vi[0]; vo_r[0] <= vo[0]; end
-    always @(posedge ck) begin vi_r[V-1:1] <= vi[V-1:1]; vo_r[V-1:1] <= vo[V-1:1]; end
+        else begin vi_r[0] <= vi_p[0]; vo_r[0] <= vo_p[0]; end
+    always @(posedge ck) begin vi_r[V-1:1] <= vi_p[V-1:1]; vo_r[V-1:1] <= vo_p[V-1:1]; end
 
     // ------------------------------------------------------------------ one-edge-early selects from the pins (kept)
-    wire       n_p0w  = vi[0] && vi[3:1] == 3'(IK) && !vi[6] && !vi[7];      // BEAT part 0 of kind IK
-    wire       n_octl = vo[0] && vo[3:1] == 3'd0 && vo[28:21] == 8'(UID) && vo[31:29] == 3'd2;
-    wire       n_ep0  = vo[0] && vo[3:1] == 3'(EK) && !vo[6];                 // egress part 0
+    wire       n_p0w  = vi_p[0] && vi_p[3:1] == 3'(IK) && !vi_p[6] && !vi_p[7];      // BEAT part 0 of kind IK
+    wire       n_octl = vo_p[0] && vo_p[3:1] == 3'd0 && vo_p[28:21] == 8'(UID) && vo_p[31:29] == 3'd2;
+    wire       n_ep0  = vo_p[0] && vo_p[3:1] == 3'(EK) && !vo_p[6];                 // egress part 0
     (* keep = "true" *) reg [63:0] hsw;      // [8 l + c]: hs[l][32 c +: 32] write enable
     (* keep = "true" *) reg [31:0] shs;      // [8 l + c]: lane l one-hot for m_wd[32 c +: 32]
     (* keep = "true" *) reg [3:0]  scl_m, scl_w;
@@ -432,10 +455,10 @@ module dsdv_idx_tx_n32 #(
         integer l_, c_;
         for (l_ = 0; l_ < 4; l_ = l_ + 1) begin
             for (c_ = 0; c_ < 16; c_ = c_ + 1)
-                hsw[16*l_+c_] <= n_p0w && vi[5:4] == 2'(l_);
-            for(c_=0;c_<8;c_=c_+1)shs[8*l_+c_] <= vi[5:4] == 2'(l_);
-            scl_m[l_] <= vi[5:4] == 2'(l_);
-            scl_w[l_] <= vi[5:4] == 2'(l_);
+                hsw[16*l_+c_] <= n_p0w && vi_p[5:4] == 2'(l_);
+            for(c_=0;c_<8;c_=c_+1)shs[8*l_+c_] <= vi_p[5:4] == 2'(l_);
+            scl_m[l_] <= vi_p[5:4] == 2'(l_);
+            scl_w[l_] <= vi_p[5:4] == 2'(l_);
         end
         eph <= {16{n_ep0}};
     end
@@ -805,7 +828,7 @@ module dsdv_idx_tx_n32 #(
     (* keep = "true" *) reg [1:0]  srb, sb1; // REBASE base / part-1 lane-valid of buffer b
     (* keep = "true" *) reg        s_b0, s_b1, s_h, s_p;   // any part 0 / any part 1 / HDR / any beat
     always @(posedge ck or negedge rl[3])
-        if (!rl[3]) begin sb0 <= 16'd0; srb <= 2'd0; sb1 <= 2'd0; s_b0 <= 1'b0; s_b1 <= 1'b0; s_h <= 1'b0; s_p <= 1'b0; lo[0] <= 1'b0; end
+        if (!rl[3]) begin sb0 <= 16'd0; srb <= 2'd0; sb1 <= 2'd0; s_b0 <= 1'b0; s_b1 <= 1'b0; s_h <= 1'b0; s_p <= 1'b0; lo_q[0] <= 1'b0; end
         else begin : g_sel
             integer b_, c_;
             for (b_ = 0; b_ < 2; b_ = b_ + 1) begin
@@ -814,7 +837,7 @@ module dsdv_idx_tx_n32 #(
                 sb1[b_] <= nx_pop && nx_isb1 && !nx_d_em && nx_d_buf == b_[0];
             end
             s_b0 <= nx_pop && nx_isb0; s_b1 <= nx_pop && nx_isb1; s_h <= nx_pop && nx_d_h; s_p <= nx_pop;
-            lo[0] <= s_p;
+            lo_q[0] <= s_p;
         end
     wire s_h_data;
     dsdv_tx_copy #(.W(1),.RESET(1),.ID(5000))u_shd(.ck(ck),.rn(rl[3]),.d(nx_pop&&nx_d_h),.q(s_h_data));
@@ -831,7 +854,7 @@ module dsdv_idx_tx_n32 #(
         for (c_ = 0; c_ < 8; c_ = c_ + 1)                                      // part 0 scores
             dd[32 * c_ +: 32] = dd[32 * c_ +: 32] | ({32{sb0[c_]}} & wmk0[32 * c_ +: 32]) | ({32{sb0[8 + c_]}} & wmk1[32 * c_ +: 32]);
         tt = s_h ? {4'd1, j_pt} : (srb != 2'd0) ? {4'd6, j_pt} : s_b0 ? {4'd2, j_pt} : 12'd0;
-        lo[V-1:1] <= {dd, tt, s_h || srb != 2'd0, s_b1, {2{s_p}} & j_l, {3{s_p}} & 3'(IK)};
+        lo_q[V-1:1] <= {dd, tt, s_h || srb != 2'd0, s_b1, {2{s_p}} & j_l, {3{s_p}} & 3'(IK)};
     end
 
     // ------------------------------------------------------------------ faults / status
@@ -850,8 +873,16 @@ module dsdv_idx_tx_n32 #(
             fc <= fc | fc_set;
         end
     always @(posedge ck or negedge rl[4])
-        if (!rl[4]) st <= 16'd0;
-        else st <= {fc, 4'b0, done, armed, busy, fc != 8'd0};
+        if (!rl[4]) st_q <= 16'd0;
+        else st_q <= {fc, 4'b0, done, armed, busy, fc != 8'd0};
+    // output face: flop -> port (LKL: flop -> negative-level lockup latch -> port; no other logic)
+    generate if (LKL != 0) begin : g_lkl
+        reg [V-1:0] lo_l; reg [15:0] st_l;
+        always @* if (!ck) begin lo_l = lo_q; st_l = st_q; end
+        assign lo = lo_l; assign st = st_l;
+    end else begin : g_lkl0
+        assign lo = lo_q; assign st = st_q;
+    end endgenerate
 endmodule
 
 // ===================================================================================================================

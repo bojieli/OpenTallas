@@ -97,8 +97,8 @@
   "interface": {
     "controller_clock_mhz": {
       "grade": "assumed",
-      "note": "the die clock; min_period 900 ps",
-      "value": 1087.0
+      "note": "the die clock (1.2 GHz); min_period 833 ps (XCHECK-1 11-03)",
+      "value": 1200.0
     },
     "parameters": {
       "KTAGW": 17,
@@ -173,7 +173,7 @@
       "corner": "ff",
       "hold_ps": 27.060841075555558,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.31724855211381614,
       "out_slew_intrinsic_ps": 22.165861613333334,
@@ -193,7 +193,7 @@
       "corner": "ss",
       "hold_ps": 41.87064116916667,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.7083491406580278,
       "out_slew_intrinsic_ps": 35.38986175375,
@@ -213,7 +213,7 @@
       "corner": "tt",
       "hold_ps": 30.732718771111113,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.4562575976456151,
       "out_slew_intrinsic_ps": 27.39737815666667,
@@ -229,8 +229,8 @@
   "views": {
     "ot_hbm3e_phy_v41x_aw30_e8p5.lef": "b119fdcec16ea432709ffa7fc97c9fbb801c7a703410512008f4b74133254878",
     "ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": "2b3a1d2d452bef84ac4e732012f9df5a40cfc216bee2fabeb344fcbd65812631",
-    "ot_hbm3e_phy_v41x_aw30_e8p5_ff.lib": "a64a3ad7a6b937d06cec3d954298c00c2cbaff6684b9cc9a5f27f4d7ab789b6b",
-    "ot_hbm3e_phy_v41x_aw30_e8p5_ss.lib": "3ecd753f44e273aa36156e6506b45c2ca86d52715207da14e9bdd87f65aeb676",
-    "ot_hbm3e_phy_v41x_aw30_e8p5_tt.lib": "565bbbe8eeb184c82349b3e14437bd00333801c81ac9d2c75df1ce4b6c4b25aa"
+    "ot_hbm3e_phy_v41x_aw30_e8p5_ff.lib": "b22fdb49ebbc69103eec22c8fa974cc31ef7105636e4a4436fc211a94227cc13",
+    "ot_hbm3e_phy_v41x_aw30_e8p5_ss.lib": "b03d90a61cb5d0c6479c039a1cb2d4befdcc21a57d9036af515d75f9f400b976",
+    "ot_hbm3e_phy_v41x_aw30_e8p5_tt.lib": "2df68a2675489035e1fc1cf7c3c4d788d2f83d62bc82233ba5f2aaa6f3dcfe1d"
   }
 }

@@ -1,0 +1,349 @@
+[
+ {
+  "core": "hfd_ep_static",
+  "outline_um": [
+   427.68,
+   246.24
+  ],
+  "cell_area_um2": 4760,
+  "pin_need_wh": [
+   210.0,
+   122.4
+  ],
+  "old_fill": 0.0915,
+  "old_macro_area": 53294,
+  "new_macros": [
+   "4x 64x306"
+  ],
+  "new_macro_area": 13531,
+  "max_pins_per_face_new": 314,
+  "fill_on_current_outline": 0.052,
+  "reshaped": {
+   "cols": 1,
+   "rows": 4,
+   "block_edge": "W",
+   "block_um": [
+    166.46,
+    136.3
+   ],
+   "channels_um": [
+    10.8,
+    10.8
+   ],
+   "max_channel_um": 10.8,
+   "outline_um": [
+    250.56,
+    146.88
+   ],
+   "aspect": 1.71,
+   "fill_of_free": 0.205,
+   "bound": "pins",
+   "fits_parent": true
+  }
+ },
+ {
+  "core": "ot_hbm_host_cp_rxs",
+  "outline_um": [
+   434.808,
+   480.0
+  ],
+  "cell_area_um2": 4971,
+  "pin_need_wh": [
+   249.6,
+   22.0
+  ],
+  "old_fill": 0.0352,
+  "old_macro_area": 67488,
+  "new_macros": [
+   "4x 64x141",
+   "2x 256x256"
+  ],
+  "new_macro_area": 14294,
+  "max_pins_per_face_new": 266,
+  "fill_on_current_outline": 0.026,
+  "reshaped": {
+   "cols": 2,
+   "rows": 3,
+   "block_edge": "S",
+   "block_um": [
+    381.74,
+    100.25
+   ],
+   "channels_um": [
+    10.8,
+    12.77,
+    10.8
+   ],
+   "max_channel_um": 12.77,
+   "outline_um": [
+    397.44,
+    138.24
+   ],
+   "aspect": 2.88,
+   "fill_of_free": 0.122,
+   "bound": "pins",
+   "fits_parent": true
+  }
+ },
+ {
+  "core": "ot_hfd_coll_q3_edge_core",
+  "outline_um": [
+   216.0,
+   1054.08
+  ],
+  "cell_area_um2": 23710,
+  "pin_need_wh": [
+   0.2,
+   888.4
+  ],
+  "old_fill": 0.3497,
+  "old_macro_area": 159882,
+  "new_macros": [
+   "12x 64x141"
+  ],
+  "new_macro_area": 14029,
+  "max_pins_per_face_new": 149,
+  "fill_on_current_outline": 0.111,
+  "reshaped": {
+   "cols": 4,
+   "rows": 3,
+   "block_edge": "S",
+   "block_um": [
+    287.38,
+    92.66
+   ],
+   "channels_um": [
+    10.8,
+    10.8,
+    10.8,
+    10.8,
+    10.8
+   ],
+   "max_channel_um": 10.8,
+   "outline_um": [
+    302.4,
+    889.92
+   ],
+   "aspect": 2.94,
+   "fill_of_free": 0.093,
+   "bound": "pins",
+   "fits_parent": true
+  }
+ },
+ {
+  "core": "ot_hbm_su_programme_pslice_c5",
+  "outline_um": [
+   939.6,
+   760.32
+  ],
+  "cell_area_um2": 17681,
+  "pin_need_wh": [
+   494.0,
+   60.4
+  ],
+  "old_fill": 0.0544,
+  "old_macro_area": 389385,
+  "new_macros": [
+   "100x 128x256"
+  ],
+  "new_macro_area": 253148,
+  "max_pins_per_face_new": 265,
+  "fill_on_current_outline": 0.038,
+  "reshaped": {
+   "cols": 5,
+   "rows": 20,
+   "block_edge": "W",
+   "block_um": [
+    728.64,
+    540.12
+   ],
+   "channels_um": [
+    10.8,
+    12.72,
+    12.72,
+    12.72,
+    12.72,
+    10.8
+   ],
+   "max_channel_um": 12.72,
+   "outline_um": [
+    812.16,
+    552.96
+   ],
+   "aspect": 1.47,
+   "fill_of_free": 0.09,
+   "bound": "pins",
+   "fits_parent": true
+  }
+ },
+ {
+  "core": "ot_hbm_su_static_sfustore_hw",
+  "outline_um": [
+   362.88,
+   388.8
+  ],
+  "cell_area_um2": 2505,
+  "pin_need_wh": [
+   365.6,
+   0.2
+  ],
+  "old_fill": 0.0318,
+  "old_macro_area": 62302,
+  "new_macros": [
+   "16x 512x32"
+  ],
+  "new_macro_area": 24802,
+  "max_pins_per_face_new": 43,
+  "fill_on_current_outline": 0.022,
+  "reshaped": {
+   "cols": 2,
+   "rows": 8,
+   "block_edge": "W",
+   "block_um": [
+    306.72,
+    147.36
+   ],
+   "channels_um": [
+    10.8,
+    10.8,
+    10.8
+   ],
+   "max_channel_um": 10.8,
+   "outline_um": [
+    371.52,
+    164.16
+   ],
+   "aspect": 2.26,
+   "fill_of_free": 0.069,
+   "bound": "pins",
+   "fits_parent": true
+  }
+ },
+ {
+  "core": "ot_hnx_idxn_keybuf_slice",
+  "outline_um": [
+   241.92,
+   293.76
+  ],
+  "cell_area_um2": 1427,
+  "pin_need_wh": [
+   0.0,
+   446.2
+  ],
+  "old_fill": 0.0401,
+  "old_macro_area": 35484,
+  "new_macros": [
+   "4x 256x256",
+   "1x 256x64"
+  ],
+  "new_macro_area": 20744,
+  "max_pins_per_face_new": 266,
+  "fill_on_current_outline": 0.028,
+  "reshaped": {
+   "cols": 1,
+   "rows": 5,
+   "block_edge": "W",
+   "block_um": [
+    189.48,
+    199.61
+   ],
+   "channels_um": [
+    10.8,
+    10.8
+   ],
+   "max_channel_um": 10.8,
+   "outline_um": [
+    198.72,
+    449.28
+   ],
+   "aspect": 2.26,
+   "fill_of_free": 0.021,
+   "bound": "pins",
+   "fits_parent": false
+  }
+ },
+ {
+  "core": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "outline_um": [
+   142.56,
+   216.0
+  ],
+  "cell_area_um2": 6292,
+  "pin_need_wh": [
+   231.2,
+   223.2
+  ],
+  "old_fill": 0.2339,
+  "old_macro_area": 3894,
+  "new_macros": [
+   "1x 128x256"
+  ],
+  "new_macro_area": 2531,
+  "max_pins_per_face_new": 265,
+  "fill_on_current_outline": 0.223,
+  "reshaped": {
+   "cols": 1,
+   "rows": 1,
+   "block_edge": "S",
+   "block_um": [
+    122.04,
+    40.54
+   ],
+   "channels_um": [
+    10.8,
+    10.8
+   ],
+   "max_channel_um": 10.8,
+   "outline_um": [
+    233.28,
+    224.64
+   ],
+   "aspect": 1.04,
+   "fill_of_free": 0.126,
+   "bound": "pins",
+   "fits_parent": false
+  }
+ },
+ {
+  "core": "ot_hbm_idx_rootctl_static_am",
+  "outline_um": [
+   475.19999999999993,
+   259.19999999999993
+  ],
+  "cell_area_um2": 12780,
+  "pin_need_wh": [
+   492.0,
+   177.0
+  ],
+  "old_fill": 0.1101,
+  "old_macro_area": 7097,
+  "new_macros": [
+   "1x 256x256"
+  ],
+  "new_macro_area": 4809,
+  "max_pins_per_face_new": 266,
+  "fill_on_current_outline": 0.108,
+  "reshaped": {
+   "cols": 1,
+   "rows": 1,
+   "block_edge": "S",
+   "block_um": [
+    199.61,
+    41.35
+   ],
+   "channels_um": [
+    10.8,
+    10.8
+   ],
+   "max_channel_um": 10.8,
+   "outline_um": [
+    492.48,
+    181.44
+   ],
+   "aspect": 2.71,
+   "fill_of_free": 0.151,
+   "bound": "pins",
+   "fits_parent": true
+  }
+ }
+]

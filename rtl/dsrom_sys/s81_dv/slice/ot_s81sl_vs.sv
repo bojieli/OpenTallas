@@ -614,6 +614,26 @@ module ot_s81sl_vs #(
 `else
     wire eng_r = arr && op == OP_ENG && !ph, eng_a = arr && op == OP_ENG && ph;
 `endif
+`ifdef OT_S81SL_VS_HWQ
+`ifndef OT_S81SL_VS_SRAM
+    // S81-RF1 HWQ (DIE-S81-51/RF-A 2026-11-03, pipeline cut, 0 external cycles): the REDUCE h-row stash write
+    // (arrival ka < 16 -> hst[ka]) lands one edge later from registered copies: hwq_sel[4 r + q] = row r / 64-bit
+    // quarter q select (64 kept flops, each driving 64 stash bits) and hwq_d = xq_c.  This removes the
+    // xqv_c -> arr -> eng_r -> row decode -> 4096-bit enable fanout path (quick-place TT -221 ps) from one stage.
+    // Safe: a stash row written at arrival k is first read >= 14 arrivals later (REDUCE K/W reads rows by ka[3:1],
+    // ADD reads in the next phase), and the ADD writer runs only in ph=1, never on the same edge as a REDUCE write.
+    `S81_VS_CONTROL_KEEP reg [63:0] hwq_sel; reg [255:0] hwq_d;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) hwq_sel <= 64'd0;
+        else for (integer r = 0; r < 16; r = r + 1) for (integer qq = 0; qq < 4; qq = qq + 1)
+`ifdef OT_S81SL_VS_HWQ_MUT
+            hwq_sel[4 * r + qq] <= eng_r && ka < 8'd16 && ka[3:0] == r[3:0] && !(r == 3 && qq == 1);   // MUTANT: one quarter lost
+`else
+            hwq_sel[4 * r + qq] <= eng_r && ka < 8'd16 && ka[3:0] == r[3:0];
+`endif
+    always @(posedge clk) hwq_d <= xq_c;
+`endif
+`endif
     wire [7:0] er = ka - 8'd16;                      // REDUCE K / W arrival r (16 .. 79): K pair even r, W pair odd r
     `S81_VS_CONTROL_KEEP reg  [255:0] kst; reg [127:0] wst; (* keep *) reg epend;    // K pair stash, W upper half, second quad pending
     wire [5:0] eq0 = {er[6:4], er[3:1], 1'b0}; reg [5:0] eqp;
@@ -756,7 +776,12 @@ for (integer rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er
 `endif
         // REDUCE: arrivals 0..15 = h half rows into the stash; 16..79 = K / W of quad q -> ve
 `ifndef OT_S81SL_VS_SRAM
+`ifdef OT_S81SL_VS_HWQ
+        for (integer r = 0; r < 16; r = r + 1) for (integer qq = 0; qq < 4; qq = qq + 1)
+            if (hwq_sel[4 * r + qq]) hst[r][64 * qq +: 64] <= hwq_d[64 * qq +: 64];
+`else
         if (eng_r && ka < 8'd16) hst[ka[3:0]] <= xq_c;
+`endif
 `endif
         ve_rc <= eq[5:4];
 `ifndef OT_S81SL_VS_SRAM

@@ -21,8 +21,8 @@
   "interface": {
     "controller_clock_mhz": {
       "grade": "assumed",
-      "note": "the PHY-side controller clock; min_period 900 ps",
-      "value": 1087.0
+      "note": "the PHY-side controller clock = the die clock (1.2 GHz); min_period 833 ps",
+      "value": 1200.0
     },
     "functional_model": "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv",
     "parameters": {
@@ -88,7 +88,7 @@
       "corner": "ff",
       "hold_ps": 27.060841075555558,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.31724855211381614,
       "out_slew_intrinsic_ps": 22.165861613333334,
@@ -108,7 +108,7 @@
       "corner": "ss",
       "hold_ps": 41.87064116916667,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.7083491406580278,
       "out_slew_intrinsic_ps": 35.38986175375,
@@ -128,7 +128,7 @@
       "corner": "tt",
       "hold_ps": 30.732718771111113,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.4562575976456151,
       "out_slew_intrinsic_ps": 27.39737815666667,
@@ -144,8 +144,8 @@
   "views": {
     "ot_hbm3e_phy_rc_e8p5.lef": "5112c676cb94ece49c98092fad8612c142e3ee7124788ab1d42229ba4ab568cf",
     "ot_hbm3e_phy_rc_e8p5_bb.v": "d4bb21eaf844e8d2a360b91d27b470f3d7664027c34ea0c504619d102d8c2b0a",
-    "ot_hbm3e_phy_rc_e8p5_ff.lib": "8387ed137259fddd941faf93e7348fac9415dca67374a7758915c8faef8e2c19",
-    "ot_hbm3e_phy_rc_e8p5_ss.lib": "4c4788a50c7953761c31b8e4bfd12b3453d224b4dbd6f89be03940df4f95c4eb",
-    "ot_hbm3e_phy_rc_e8p5_tt.lib": "f70496c4db224f43d8b3effc80c8f8b51995583c202f66bf6916181c9b964dd3"
+    "ot_hbm3e_phy_rc_e8p5_ff.lib": "b09241b8bbcbf36e9c89938e56b11f8143f25f07adc206b2e9e87abc1ee5b3ff",
+    "ot_hbm3e_phy_rc_e8p5_ss.lib": "2aa8a31265c368d83ea3f7bce67bd52008386f24990e378c1ccd6aa2a78e51f5",
+    "ot_hbm3e_phy_rc_e8p5_tt.lib": "a3f6a783a0c4eed2ca8e8d043dee2cd47fe5746256c66b65641ae0b1c1f84e72"
   }
 }

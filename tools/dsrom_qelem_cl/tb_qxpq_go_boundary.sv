@@ -7,6 +7,9 @@
 // Bypass mutant must fail: its command arrives one edge before the priced date.
 // S81-QX-GB 2026-10-26: TB_DUT_CGR / TB_REF_CGR (default 0) set the CGR of the _gb DUT / legacy ref; the CGR mutant is
 // OT_CGR_MUTANT_R3 (qx_pq: region 3 gate ungated) with TB_DUT_CGR=8 (the ref at CGR 0 never instantiates g_cgr).
+`ifndef TB_DUT_OLAT
+`define TB_DUT_OLAT 0
+`endif
 `ifndef TB_DUT_CGR
 `define TB_DUT_CGR 0
 `endif
@@ -42,7 +45,7 @@ module tb_qxpq_go_boundary;
   .walking(awk), .bank_free(abf), .sh_free(ash),
   .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1),
   .xs_pos(xs_pos), .pv(av), .pval(ad), .prow(ar), .pseg(asg), .pnseg(an), .perr(ae), .ppos(ap), .busy(ab), .fault(af));
- ot_v41_rom_elem_q_qxpq_w10_gb #(`QP, .GO_BOUNDARY(1), .RSTP(1), .CGR(`TB_DUT_CGR), .INSTANCE("d")) dut_e (
+ ot_v41_rom_elem_q_qxpq_w10_gb #(`QP, .GO_BOUNDARY(1), .RSTP(1), .CGR(`TB_DUT_CGR), .OLAT(`TB_DUT_OLAT), .INSTANCE("d")) dut_e (
   .clk(clk), .rst_n(dut_rst), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_tag(go_tag),
   .walking(bwk), .bank_free(bbf), .sh_free(bsh),
   .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1),
@@ -67,8 +70,21 @@ module tb_qxpq_go_boundary;
    if (rel_dut != 2) begin rel_bad = rel_bad + 1;
      if (rel_bad <= 4) $display("RELEASE_BAD %0t: RSTP element local reset %0d edges after its pin (want 2)", $realtime, rel_dut); end
  end
+ // S81-RF1 OLAT: the latched DUT face must equal the ref 0.1 ns after the falling edge (latch transparent) and still
+ // hold the ref's PREVIOUS value 0.1 ns after the rising edge (latch opaque while the face flops update): a positive-level
+ // or missing latch fails the second check, a wrong-cycle value the first.
+ reg [OW-1:0] ro_prev = 0; integer olat_mism = 0;
+ always @(posedge clk) begin
+   ro_prev = ro;
+   if (`TB_DUT_OLAT != 0) begin
+     #0.1;
+     if (dov !== ro_prev) begin olat_mism = olat_mism + 1; mism = mism + 1; if (first_mism < 0) first_mism = cyc;
+       if (olat_mism <= 4) $display("OLAT_MISMATCH (rise+0.1) cyc %0d ref_prev %h dut %h", cyc, ro_prev, dov); end
+   end
+ end
  always @(negedge clk) begin
    cyc = cyc + 1;
+   if (`TB_DUT_OLAT != 0) #0.1;
    if (ro !== dov) begin
      mism = mism + 1;
      if (first_mism < 0) first_mism = cyc;

@@ -1,0 +1,16 @@
+seed 1 COVER leaf_writes=2078 leaf_nonzero_reads=3882 block_ready_cycles=174 pin_v_cycles=1034 fault=0
+seed 1 LOCKSTEP EQUAL (4002 lines)
+seed 1 m_addr killed
+seed 1 m_data killed
+seed 1 m_mut killed
+seed 1103 COVER leaf_writes=1982 leaf_nonzero_reads=3880 block_ready_cycles=173 pin_v_cycles=1023 fault=0
+seed 1103 LOCKSTEP EQUAL (4002 lines)
+seed 1103 m_addr killed
+seed 1103 m_data killed
+seed 1103 m_mut killed
+seed 7 COVER leaf_writes=1994 leaf_nonzero_reads=3869 block_ready_cycles=151 pin_v_cycles=1081 fault=0
+seed 7 LOCKSTEP EQUAL (4002 lines)
+seed 7 m_addr killed
+seed 7 m_data killed
+seed 7 m_mut killed
+rc=0

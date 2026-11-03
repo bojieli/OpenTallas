@@ -1,0 +1,8 @@
+core	port_or_bus	added_cycles	form	note
+hfd_ep_static	rx store SRAM leaf (u_rxb.*.u_mem)	0	RW_MACRO 64x306 r0c0	same 1r1w registered read
+ot_hbm_host_cp_rxs	llr replay leaves + landing256 banks	0	RW_MACRO 64x141/64x32/256x256 r0c0	same 1r1w registered read
+ot_hnx_idxn_keybuf_slice	key line SRAMs (gm[0..4])	0	RW_MACRO 4x256x256 + 256x64 r0c0	same 1r1w registered read
+ot_hfd_coll_q3_edge_core	llr replay leaves (12)	0	RW_MACRO 64x141 r0c0	prepared; current-kit relaunch first (KW-FIX-4)
+ot_hbm_su_programme_pslice_c5	programme SRAMs (100)	0	RW_MACRO 128x256 r0c0	prepared (builder only); current-kit relaunch first
+ot_hbm_su_static_sfustore_hw	data store banks (16)	0	RW_MACRO 512x32 r0c0	planned (RTL + EQ not done); current-kit relaunch first
+ot_hbm_sm_vm_wr_q_t_lanes4	wr queue SRAM	0	RW_MACRO 128x256 r0c0	planned

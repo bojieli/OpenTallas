@@ -1,0 +1,11 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_hgi_sfu_split3_lane_core__idpin	_fr	map_* (ld_terms, i_o_v, i_i_v, i_krow, i_ls, i_lvw, i_emit, i_pass, lane_j)	in	0	same single face flop as the uncut core
+ot_hgi_sfu_split3_lane_core__idpin	_fr	sfu_rd_q / sfu_vi_q	in	0	read data return: the gather / read loop stays inside _fr
+ot_hgi_sfu_split3_lane_core__idpin	_fr	sfu_vi_re / sfu_vi_addr / sfu_rd_addr / sfu_rd_re / sfu_rd_src	out	0	read requests unshifted
+ot_hgi_sfu_split3_lane_core__idpin	_bk	sfu_vm_we / sfu_vm_waddr / sfu_vm_wdata	out	4	vector-memory write 4 edges later (fr->ex->bk face flops; fr->bk +2 face +2 ALIGN line); same words/addresses/order
+ot_hgi_sfu_split3_lane_core__idpin	_bk	sfu_kv_we / sfu_kv_waddr / sfu_kv_wdata	out	4	KV write 4 edges later
+ot_hgi_sfu_split3_lane_core__idpin	_bk	sfu_ro_v / sfu_ro_x	out	4	reducer element 4 edges later
+ot_hgi_sfu_split3_lane_core__idpin	_bk	sfu_fault / sfu_coll	out	4	status 4 edges later
+ot_hgi_sfu_split3_lane_core__idpin	internal	fr->ex {x_exp_v, x_exp_x} 33 b	cut	2	face out + face in
+ot_hgi_sfu_split3_lane_core__idpin	internal	ex->bk {x_exp_y, x_exp_f} 33 b	cut	2	face out + face in
+ot_hgi_sfu_split3_lane_core__idpin	internal	fr->bk x_bus 201 b	cut	2	face out + face in, + 2-edge ALIGN line in _bk (total 4 = exp path)

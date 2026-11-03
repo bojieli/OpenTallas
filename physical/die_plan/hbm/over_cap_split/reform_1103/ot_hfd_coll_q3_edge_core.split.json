@@ -1,0 +1,13 @@
+{"core": "ot_hfd_coll_q3_edge_core", "type": "q_hub_nw", "status": "EQ_PASS_SYNTH_TODO",
+ "form": "3 x LINK (identical replica) + 1 x ARG; member boundary of the as-built __mc, no member-to-member wire -> no new seam",
+ "sub_blocks": [
+  {"name": "ot_hfd_coll_q3_edge_link", "replicas": 3, "rtl": "ot_hgi_coll_link_e_pr", "macros": "4 x ot_sram_1r1w_64x512_m1_r2c2",
+   "cells_est": "~27k (24.4k pre-shell synth 10-25 + ~2.4k face flops); NOT re-synthesized 11-03", "clock": "clk (one)"},
+  {"name": "ot_hfd_coll_q3_edge_arg", "replicas": 1, "rtl": "ot_hgi_coll_argmax_m_tp192_pr", "macros": 0,
+   "cells_est": "~11k (9.7k pre-shell + ~1.2k face flops); NOT re-synthesized", "clock": "clk (one)"}],
+ "added_cycles": 0,
+ "eq": {"bench": "bench/q3_edge/run.sh + spec_base.json", "host": "epyc2 /home/ubuntu/scratch-root/claude/die-hbm-61-split/runs/q3e",
+  "mut0": "LOCKSTEP PASS checks=251160 toggled_out_bits=3484/4030 (tx_pin_v, rx_v, abort all toggle; directed epoch/seq + TX->RX loop-back, every 4th 1000-cycle period random)",
+  "mut1": "FAIL (link1 epoch_new bit0)", "mut2": "FAIL (link1/2 rx_pin_flit swap)", "mut3": "FAIL (link2 reset held)"},
+ "alt_2way": "{link0+arg} + {link1+link2}: 2 unique types, fewer instances, 8 macros in one block",
+ "todo": ["synth estimate per sub-block (synth_est.sh copy with SRAM lib/lef blackbox)", "macro pins per side from the SRAM LEF; plan: 4 SRAMs on one edge of LINK (class-4 channel fix)"]}

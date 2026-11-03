@@ -1,0 +1,81 @@
+{
+ "core": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+ "census_cells": 244361,
+ "macros": 24,
+ "n_inst": 4,
+ "types": [
+  "q_su20",
+  "q_su20__physical_v1",
+  "q_su30",
+  "q_su30__physical_v1"
+ ],
+ "status": "EQ-PASS (pre-build)",
+ "form": "4 IDENTICAL replicas of ot_hbm_su_pg_lane1_core (= pair k = lane k + bank k, k 0..3; each pair = ot_hbm_su_static_lane_pinreg + ot_hbm_su_static_pinned_bank with its 6 SRAM macros). The lanes4 core is 4 independent lane k <-> bank k pairs (member nets n_int join only lane k and bank k); the pairs share only broadcast INPUTS (lane0_* command/config bus 1414 b, bank0_rst_n, bank0_read_v[4], bank0_read_addr), which land on both sub-block faces. No sub-block <-> sub-block crossing.",
+ "sub_blocks": [
+  {
+   "module": "ot_hbm_su_pg_lane1_core",
+   "per_core": 4,
+   "cells_est": 86270,
+   "cells_est_census_scale": 65697,
+   "macros": 6,
+   "macro_type": "ot_sram_1r1w_128x256_m1_r2c2 (generated macro, unchanged)",
+   "clock": "regional clocks kept as pins: bank0_clk, bank0_clk_macro[5:0], lane0_clk_stage[7:0], lane0_clk_insert[3:0] (19 clock bits); face flops on bank0_clk",
+   "resets": [
+    "bank0_rst_n",
+    "lane0_rst_n"
+   ],
+   "pins": {
+    "in_bits": 1609,
+    "out_bits": 405,
+    "broadcast_in_bits_per_face": 1414
+   },
+   "replica_map": {
+    "u_p0": "uncut pair 0 (bank0_*, lane0_*)",
+    "u_p<k> k=1..3": "bank<k>_* on its bank0_* pins (read_v = {bank0_read_v[4], bank<k>_read_v[3:0]}); lane<k> per-lane pins (clk_stage, clk_insert, rst_n, rd_q, lane_id, all outputs) on its lane0_* pins; shared: lane0_* broadcast inputs, bank0_rst_n, bank0_read_addr"
+   }
+  }
+ ],
+ "calibration": {
+  "uncut_orfs_synth_cells": 320881,
+  "census_cells": 244361,
+  "note": "same synth_est.sh recipe on the uncut kit top; SRAMs black boxes (sram_blackbox.v) in both"
+ },
+ "crossings": [],
+ "rejected_forms": [
+  {
+   "form": "2 x ot_hbm_su_pg_lanes2_core (pairs {0,1},{2,3}, 12 macros)",
+   "cells_est": 169093,
+   "cells_est_census_scale": 128770,
+   "reason": "169k ORFS cells > 150k (census-scale 129k would pass; kept as the fewer-pins alternative: broadcast bus on 2 faces instead of 4)"
+  }
+ ],
+ "rtl": {
+  "sub_block": "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_su_static_pgslice_lg__lanes8_11/ot_hbm_su_pg_lane1_core.sv",
+  "composition": "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_su_static_pgslice_lg__lanes8_11/ot_hbm_su_pg_lanes4_core__split.sv (same ports as ot_hbm_su_pg_lanes4_core; sub-blocks in __fs face-shelled form)",
+  "generator": "physical/die_plan/hbm/over_cap_split/reform_1103/bench/lanes8_11/gen_lane1.py (from rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core.sv, verbatim members)"
+ },
+ "eq": {
+  "bench": "physical/die_plan/hbm/over_cap_split/reform_1103/bench/lanes8_11/run.sh KITRTL OUT (verilator 5.050, epyc2): ref = kit top ot_hbm_su_static_pgslice_lg__lanes8_11 (kit face shell + __fcore + lanes4 core, d44o attempt_8 kit RTL); dut = same shell ports, face flops moved onto 4 x lane1__fs; SRAM bench model with write mask, same on both sides",
+  "result": "MUT 0 LOCKSTEP PASS checks=173850 (all outputs every edge, 3000 cycles, random stimulus), 1552 output bits toggled",
+  "mutants": {
+   "1": "u_p2 read_v[3:0] from bank0 -> FAIL errs=123163",
+   "2": "u_p3 rd_q from lane2 -> FAIL errs=65102",
+   "3": "broadcast ld 1 edge late into u_p1 -> FAIL errs=251996"
+  },
+  "cycle_shift_map": {}
+ },
+ "latency": [
+  {
+   "sub_block": "*",
+   "port_or_bus": "all ports",
+   "dir": "in/out",
+   "added_cycles": 0,
+   "note": "every sub-block pin is an uncut core pin; kit face shell +1/+1 as before; no internal seam"
+  }
+ ],
+ "open_items": [
+  "lane0_lane_id / lane1_lane_id (11 b each) are sub-block PINS (replica straps): the uncut wrap ties them to lane-id constants inside the core; as identical replicas they must be strap_* pins tied at the parent (OWNER 10-25 ID straps rule B) or the two replicas become 2 masters. PLAN/gen to name them strap_*.",
+  "broadcast inputs (1414 b) are duplicated on all 4 faces (4 x 1609 in + 405 out per sub-block vs uncut ~3800 pins): PLAN face sizing; the broadcast bus may instead be one parent relay row per sub-block",
+  "pre-build synth+quick-place gate (DIE-HBM-61/RTL tool) not run: no kit for the sub-block yet"
+ ]
+}

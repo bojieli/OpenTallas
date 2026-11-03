@@ -97,8 +97,8 @@
   "interface": {
     "controller_clock_mhz": {
       "grade": "assumed",
-      "note": "the die clock; min_period 900 ps",
-      "value": 1087.0
+      "note": "the die clock (1.2 GHz); min_period 833 ps (XCHECK-1 11-03)",
+      "value": 1200.0
     },
     "parameters": {
       "KTAGW": 17,
@@ -173,7 +173,7 @@
       "corner": "ff",
       "hold_ps": 27.060841075555558,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.31724855211381614,
       "out_slew_intrinsic_ps": 22.165861613333334,
@@ -193,7 +193,7 @@
       "corner": "ss",
       "hold_ps": 41.87064116916667,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.7083491406580278,
       "out_slew_intrinsic_ps": 35.38986175375,
@@ -213,7 +213,7 @@
       "corner": "tt",
       "hold_ps": 30.732718771111113,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.4562575976456151,
       "out_slew_intrinsic_ps": 27.39737815666667,
@@ -229,8 +229,8 @@
   "views": {
     "ot_hbm3e_phy_v41x_aw30.lef": "0c50b6923b9fddcf37174fdeb3ffc714502bb8a1ba6735bb20f11304ea391242",
     "ot_hbm3e_phy_v41x_aw30_bb.v": "cf44e7c4df31c028ec8b675b5addafb214964c104ec27d8709e1acca224f0237",
-    "ot_hbm3e_phy_v41x_aw30_ff.lib": "fd5e8afcd2f1dd6e29a9579753269c879255feb3b4b23ac412aa18bc5730ada0",
-    "ot_hbm3e_phy_v41x_aw30_ss.lib": "9215b2c1f09d9c747af4945ba1b7fb9583d33d7ca6afc86e9f30eb234d111ffb",
-    "ot_hbm3e_phy_v41x_aw30_tt.lib": "f8aaa2733f65a5069b4aee539022d9c9d308994e377b3d5766c3f6376f9e83ba"
+    "ot_hbm3e_phy_v41x_aw30_ff.lib": "ad9be9bfada846178d481ac5eb3799e8b565431260f4b5ac6b2bebe4b0933888",
+    "ot_hbm3e_phy_v41x_aw30_ss.lib": "3e7f33cafb9b37c54d0de154b626b45839f1f1eb2694947a0725d3b922758411",
+    "ot_hbm3e_phy_v41x_aw30_tt.lib": "c476c606abd2e45baa4bf8565fa8bd9972edd9a18e2ffd614d32772a937ad330"
   }
 }

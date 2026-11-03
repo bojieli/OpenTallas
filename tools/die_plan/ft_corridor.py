@@ -97,7 +97,7 @@ def in_boxes(pts, boxes):
 
 
 def place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog=None, step=2.0, look=8.0, band=None,
-               jog_lane=None):
+               jog_lane=None, bit_paths=False):
     """retry with a tighter hop target when the bit spread (L corners, lane offsets) exceeds the slack."""
     base = set(alloc.used)
     for proj in (MAX_PROJ, 3 * MAX_PROJ, 6 * MAX_PROJ):
@@ -106,7 +106,7 @@ def place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog=None, step
             alloc.used = set(base)
             try:
                 return _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, look, extra, proj, band,
-                                   jog_lane)
+                                   jog_lane, bit_paths)
             except HopError as e:
                 extra += e.excess + 2.0
             except NoChain:
@@ -172,7 +172,7 @@ def _band_offsets(pts, c, band, axis):
 
 
 def _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, look, extra, max_proj, band=None,
-                jog_lane=None):
+                jog_lane=None, bit_paths=False):
     """returns (sites per internal station [(width+1)x2 centres], centroids, path, ledger dict)."""
     k = int(slot["stations"])
     ca, cb = a.mean(axis=0), b.mean(axis=0)
@@ -209,15 +209,27 @@ def _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, lo
         Pseg = np.abs(np.diff(P, axis=1)).sum(axis=2)          # (nb, 3)
         Pcum = np.concatenate([np.zeros((nb, 1)), np.cumsum(Pseg, axis=1)], axis=1)
 
+    lbits = bit_paths and len(path) == 3
+    if lbits:
+        # DIE-HBM-59 d44u: on an L (adjacent-face) path each bit turns at its OWN corner (in-pin row/column meets its
+        # out-pin column/row) and a station sits at the same fraction of every bit's own length, instead of the bundle
+        # switching from its in-window offsets to its out-window offsets at one station (a wide band then jumps up to
+        # the window width in one hop: q_b112 L700 2,807 b, 622 um)
+        corner = np.column_stack((a[:, 0], b[:, 1])) if fin in "NS" else np.column_stack((b[:, 0], a[:, 1]))
+        P = np.stack([a, corner, b], axis=1)
+        Pseg = np.abs(np.diff(P, axis=1)).sum(axis=2)          # (nb, 2)
+        Pcum = np.concatenate([np.zeros((nb, 1)), np.cumsum(Pseg, axis=1)], axis=1)
+
     def bit_points(s):
         u = (s / L) * Pcum[:, -1]
-        j = np.clip((u >= Pcum[:, 1]).astype(int) + (u >= Pcum[:, 2]), 0, 2)
+        nseg = Pseg.shape[1]
+        j = np.clip(sum((u >= Pcum[:, q]).astype(int) for q in range(1, nseg)), 0, nseg - 1)
         r = np.arange(nb)
         f = (u - Pcum[r, j]) / np.maximum(Pseg[r, j], 1e-9)
         return P[r, j] + (P[r, j + 1] - P[r, j]) * f[:, None]
 
     def lane_points(s):
-        if zjog:
+        if zjog or lbits:
             return bit_points(s)
         p, d = point_dir(path, s)
         last = s >= (cum[-2] if len(cum) > 2 else 0.0)

@@ -1,0 +1,61 @@
+{
+ "plan_sha256": "dd4f98192729989cac933a6a8d54eef90b7f560c45a80243ceb2afdc7d8988b1",
+ "summary": {
+  "die_clock_gate": {
+   "rule": "OWNER 12.25/11-02: TT setup >= 0, FF hold >= 0 ps, block arrival-contract violations = 0; skew > 150 ps = WARN only",
+   "tt_setup_ps": 156.82,
+   "ff_hold_ps": null,
+   "hold_min_ps": 0.0,
+   "contract_violations": 1,
+   "skew_max_ps": 2013.45,
+   "skew_target_ps": 150.0,
+   "skew_role": "TARGET (WARN only, never FAIL)",
+   "reasons": [
+    "1 block arrival-contract violation(s)"
+   ],
+   "warnings": [
+    "related-pair skew 2013.45 ps > target 150 ps (WARN only)"
+   ],
+   "verdict": "FAIL"
+  },
+  "landed": {
+   "tt_setup_margin_ps": -1442.32,
+   "ff_hold_margin_ps": -1550.03,
+   "verdict": "FAIL"
+  },
+  "period_policy": {
+   "period_ps": 833.0,
+   "required_period_ps": 833.0,
+   "verdict": "PASS",
+   "role": "canonical timing"
+  }
+ },
+ "intra": {
+  "tt_setup_ps": 156.82,
+  "ff_hold_margin_ps": null,
+  "hold_pairs_measured": 0,
+  "hold_pairs_unmeasured": 380848,
+  "hold_status": "BLOCKED(kits)",
+  "ff_hold_all_pairs_diag_ps": -503.27,
+  "verdict": "BLOCKED(kits)",
+  "ff_hold_kit_contract_ps": 0.22,
+  "kit_contract_window_ps": 50.0,
+  "kit_contract_window_needed_ps": 49.78,
+  "kit_contract_verdict": "PASS",
+  "kit_contract_role": "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)"
+ },
+ "seam": {
+  "tt_setup_ps": 228.24,
+  "ff_hold_margin_ps": null,
+  "hold_pairs_measured": 0,
+  "hold_pairs_unmeasured": 112370,
+  "hold_status": "BLOCKED(kits)",
+  "ff_hold_all_pairs_diag_ps": -442.62,
+  "verdict": "BLOCKED(kits)",
+  "ff_hold_kit_contract_ps": 35.33,
+  "kit_contract_window_ps": 110.0,
+  "kit_contract_window_needed_ps": 74.67,
+  "kit_contract_verdict": "PASS",
+  "kit_contract_role": "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)"
+ }
+}

@@ -97,8 +97,8 @@
   "interface": {
     "controller_clock_mhz": {
       "grade": "assumed",
-      "note": "the die clock; min_period 900 ps",
-      "value": 1087.0
+      "note": "the die clock (1.2 GHz); min_period 833 ps (XCHECK-1 11-03)",
+      "value": 1200.0
     },
     "parameters": {
       "KTAGW": 17,
@@ -173,7 +173,7 @@
       "corner": "ff",
       "hold_ps": 27.060841075555558,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.31724855211381614,
       "out_slew_intrinsic_ps": 22.165861613333334,
@@ -193,7 +193,7 @@
       "corner": "ss",
       "hold_ps": 41.87064116916667,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.7083491406580278,
       "out_slew_intrinsic_ps": 35.38986175375,
@@ -213,7 +213,7 @@
       "corner": "tt",
       "hold_ps": 30.732718771111113,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.4562575976456151,
       "out_slew_intrinsic_ps": 27.39737815666667,
@@ -229,8 +229,8 @@
   "views": {
     "ot_hbm3e_phy_v41x.lef": "0865c7c737238182da45f24091de0ea65b4675a94589e231ea5f87386ed7547f",
     "ot_hbm3e_phy_v41x_bb.v": "a09a08ba0e5d1efe91cb095ce0347c47ecd9071d909490b0409ee70a0d09869a",
-    "ot_hbm3e_phy_v41x_ff.lib": "473e19b682b5c62a54f697b76161e6c511f84d3d5ef33385539f018192e48037",
-    "ot_hbm3e_phy_v41x_ss.lib": "fa6d99c852b703750a1669a2f9fc751f04ee334d1c97b4e2ead1071718014f84",
-    "ot_hbm3e_phy_v41x_tt.lib": "125f68081f6640138872c3689b99c10bc390bf73cc2c26900bae77d118e36e3f"
+    "ot_hbm3e_phy_v41x_ff.lib": "56ddb5822c4e5b2f261e17e88efd629f8dd0735af4241f965bc509e9e1e34d1d",
+    "ot_hbm3e_phy_v41x_ss.lib": "405b21c8f4a5599e67086975a42fc51c34d0a56dc615730c8137d149a6767e8c",
+    "ot_hbm3e_phy_v41x_tt.lib": "85fc98773cfecebdf4a8d2c98a224dd2bd511ffb1a4cf159c5a4a60378abae0f"
   }
 }

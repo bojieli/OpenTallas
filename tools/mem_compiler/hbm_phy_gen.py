@@ -53,6 +53,13 @@ PUBLISHED = {
 }
 
 
+# XCHECK-1 11-03: the controller-side clock pin runs on the die clock (METHODOLOGY 2.8: DFI side at 1.2 GHz, the only
+# crossing lives inside the PHY). The abstracts carried the old 1087 MHz / 900 ps (v41x/rc) and 1000 MHz / 1000 ps (v1)
+# die clock, which OpenSTA flags as a -67 ps min_period violation on u_phy/clk at 833 ps. min_pulse 360/400 ps stays
+# below the 416 ps half period.
+CTRL_CLOCK_MHZ = 1200.0
+CTRL_MIN_PERIOD_PS = 833.0
+
 def tech(path: str) -> dict[str, Any]:
     node: Any = asap7.technology()
     for k in path.split("."):
@@ -136,7 +143,7 @@ def generate(out: Path | None, npc: int = 32, aw: int = 31, tagw: int = 16, lenw
             corner=c, voltage=k["voltage_v"], temperature=k["temperature_c"],
             clk_to_q_ps=k["dff_clk_to_q_ps"] + 3 * fo4, out_r_kohm=k["inv4_r_kohm"] / 2.0,
             out_slew_intrinsic_ps=1.5 * fo4, setup_ps=k["dff_setup_ps"] + 3 * fo4, hold_ps=k["dff_hold_ps"] + fo4,
-            min_period_ps=1000.0, min_pulse_ps=400.0,
+            min_period_ps=CTRL_MIN_PERIOD_PS, min_pulse_ps=400.0,
             read_energy_fj=energy["value"] * 1e15 * iface["sector_bytes"], write_energy_fj=0.0,
             leakage_nw=0.0, pin_cap_ff=k["inv1_cin_ff"] * 2, clk_cap_ff=50.0,
             breakdown={"fo4_ps": fo4})
@@ -164,8 +171,8 @@ def generate(out: Path | None, npc: int = 32, aw: int = 31, tagw: int = 16, lenw
             "package_side": "1,024 DQ + CA + clocks under the macro in the micro-bump field: blackbox, not in the LEF",
             "stack_bandwidth": {"value_bytes_s": bw["value"], "grade": bw["grade"],
                                 "source": "configs/hardware/technology.json hbm.hbm3e.stack_bandwidth_bytes_s"},
-            "controller_clock_mhz": {"value": 1000.0, "grade": "assumed",
-                                     "note": "the core clock the HBM model's time base assumes (CLK_PS = 1000)"},
+            "controller_clock_mhz": {"value": CTRL_CLOCK_MHZ, "grade": "assumed",
+                                     "note": "the die clock (1.2 GHz), min_period 833 ps; was 1000 MHz, the HBM model's time base (CLK_PS = 1000)"},
         },
         "pins": pin_info,
         "timing": {c: asdict(t) for c, t in per_corner.items()},
@@ -309,7 +316,7 @@ def generate_v41x(out: Path | None, npc: int = 32, k_aw: int = 28) -> dict[str, 
             corner=c, voltage=k["voltage_v"], temperature=k["temperature_c"],
             clk_to_q_ps=k["dff_clk_to_q_ps"] + 3 * fo4, out_r_kohm=k["inv4_r_kohm"] / 2.0,
             out_slew_intrinsic_ps=1.5 * fo4, setup_ps=k["dff_setup_ps"] + 3 * fo4, hold_ps=k["dff_hold_ps"] + fo4,
-            min_period_ps=900.0, min_pulse_ps=360.0,
+            min_period_ps=CTRL_MIN_PERIOD_PS, min_pulse_ps=360.0,
             read_energy_fj=energy["value"] * 1e15 * 32, write_energy_fj=0.0,
             leakage_nw=0.0, pin_cap_ff=k["inv1_cin_ff"] * 2, clk_cap_ff=50.0,
             breakdown={"fo4_ps": fo4})
@@ -325,8 +332,8 @@ def generate_v41x(out: Path | None, npc: int = 32, k_aw: int = 28) -> dict[str, 
                                    "protocol, 8 response pseudo-channels); status",
                       "parameters": {"NPC": npc, "KTAGW": 17, "NPC_W": 8, "LWIN": 10,
                                      **({"K_AW": k_aw} if k_aw != 28 else {})},
-                      "controller_clock_mhz": {"value": 1087.0, "grade": "assumed",
-                                               "note": "the die clock; min_period 900 ps"}},
+                      "controller_clock_mhz": {"value": CTRL_CLOCK_MHZ, "grade": "assumed",
+                                               "note": "the die clock (1.2 GHz); min_period 833 ps"}},
         "pins": pin_info,
         "timing": {c: asdict(t) for c, t in per_corner.items()},
         "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy (ASAP7 flop clock-to-Q / setup + 3 FO4)",
@@ -492,7 +499,7 @@ def generate_v41x_legal(out: Path | None, edge_mm: float = V2_EDGE_BASIS["value_
             corner=c, voltage=k["voltage_v"], temperature=k["temperature_c"],
             clk_to_q_ps=k["dff_clk_to_q_ps"] + 3 * fo4, out_r_kohm=k["inv4_r_kohm"] / 2.0,
             out_slew_intrinsic_ps=1.5 * fo4, setup_ps=k["dff_setup_ps"] + 3 * fo4, hold_ps=k["dff_hold_ps"] + fo4,
-            min_period_ps=900.0, min_pulse_ps=360.0,
+            min_period_ps=CTRL_MIN_PERIOD_PS, min_pulse_ps=360.0,
             read_energy_fj=energy["value"] * 1e15 * 32, write_energy_fj=0.0,
             leakage_nw=0.0, pin_cap_ff=k["inv1_cin_ff"] * 2, clk_cap_ff=50.0,
             breakdown={"fo4_ps": fo4})
@@ -512,8 +519,8 @@ def generate_v41x_legal(out: Path | None, edge_mm: float = V2_EDGE_BASIS["value_
                       "depth": "area / edge, snapped up to 2.16 um"},
         "interface": {"port_list": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv (as v1)",
                       "parameters": {"NPC": npc, "KTAGW": 17, "NPC_W": 8, "LWIN": 10, "K_AW": k_aw},
-                      "controller_clock_mhz": {"value": 1087.0, "grade": "assumed",
-                                               "note": "the die clock; min_period 900 ps"}},
+                      "controller_clock_mhz": {"value": CTRL_CLOCK_MHZ, "grade": "assumed",
+                                               "note": "the die clock (1.2 GHz); min_period 833 ps"}},
         "pins": pin_info,
         "timing": {c: asdict(t) for c, t in per_corner.items()},
         "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy (ASAP7 flop clock-to-Q / setup + 3 FO4)",
@@ -588,7 +595,7 @@ def generate_rc(out: Path | None, edge_mm: float = V2_EDGE_BASIS["value_mm"], np
             corner=c, voltage=k["voltage_v"], temperature=k["temperature_c"],
             clk_to_q_ps=k["dff_clk_to_q_ps"] + 3 * fo4, out_r_kohm=k["inv4_r_kohm"] / 2.0,
             out_slew_intrinsic_ps=1.5 * fo4, setup_ps=k["dff_setup_ps"] + 3 * fo4, hold_ps=k["dff_hold_ps"] + fo4,
-            min_period_ps=900.0, min_pulse_ps=360.0,
+            min_period_ps=CTRL_MIN_PERIOD_PS, min_pulse_ps=360.0,
             read_energy_fj=energy["value"] * 1e15 * 32, write_energy_fj=0.0,
             leakage_nw=0.0, pin_cap_ff=k["inv1_cin_ff"] * 2, clk_cap_ff=50.0,
             breakdown={"fo4_ps": fo4})
@@ -609,8 +616,8 @@ def generate_rc(out: Path | None, edge_mm: float = V2_EDGE_BASIS["value_mm"], np
         "interface": {"port_list": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves.sv "
                                    "PHY-side ports", "parameters": {"NPC": npc},
                       "functional_model": "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv",
-                      "controller_clock_mhz": {"value": 1087.0, "grade": "assumed",
-                                               "note": "the PHY-side controller clock; min_period 900 ps"}},
+                      "controller_clock_mhz": {"value": CTRL_CLOCK_MHZ, "grade": "assumed",
+                                               "note": "the PHY-side controller clock = the die clock (1.2 GHz); min_period 833 ps"}},
         "pins": pin_info,
         "timing": {c: asdict(t) for c, t in per_corner.items()},
         "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy (ASAP7 flop clock-to-Q / setup + 3 FO4)",
@@ -684,7 +691,7 @@ def generate_rc_slice(out: Path | None, lo: int, hi: int, edge_mm: float = V2_ED
             corner=c, voltage=k["voltage_v"], temperature=k["temperature_c"],
             clk_to_q_ps=k["dff_clk_to_q_ps"] + 3 * fo4, out_r_kohm=k["inv4_r_kohm"] / 2.0,
             out_slew_intrinsic_ps=1.5 * fo4, setup_ps=k["dff_setup_ps"] + 3 * fo4, hold_ps=k["dff_hold_ps"] + fo4,
-            min_period_ps=900.0, min_pulse_ps=360.0,
+            min_period_ps=CTRL_MIN_PERIOD_PS, min_pulse_ps=360.0,
             read_energy_fj=tech("energy.hbm_j_per_byte")["value"] * 1e15 * 32, write_energy_fj=0.0,
             leakage_nw=0.0, pin_cap_ff=k["inv1_cin_ff"] * 2, clk_cap_ff=50.0 * n / npc_full,
             breakdown={"fo4_ps": fo4})
@@ -698,7 +705,7 @@ def generate_rc_slice(out: Path | None, lo: int, hi: int, edge_mm: float = V2_ED
                       "width_basis": f"{n} x full window {win_full} um snapped up to {SLICE_LATTICE_UM} um",
                       "depth": "full rc macro height"},
         "interface": {"port_list": "ot_hbm3e_phy_rc PHY-side ports at NPC = " + str(n), "parameters": {"NPC": n},
-                      "controller_clock_mhz": {"value": 1087.0, "grade": "assumed"}},
+                      "controller_clock_mhz": {"value": CTRL_CLOCK_MHZ, "grade": "assumed"}},
         "pins": pin_info,
         "power_share": {"fraction_of_stack": n / npc_full, "basis": "by pseudo-channel count (ASSUMED)"},
         "timing": {c: asdict(t) for c, t in per_corner.items()},

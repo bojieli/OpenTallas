@@ -1,0 +1,4 @@
+{"ref": "ot_hfd_coll_q3_body_core", "dut": "ot_hfd_coll_q3_body_core__split",
+ "clocks": ["clk"], "resets": ["rst_n"], "reset_active_low": true, "reset_cycles": 16, "warmup": 40, "cycles": 6000,
+ "valid_dens": 8,
+ "stim": {"cfg_target": "($urandom() % 2) ? 8'd52 : 8'($urandom())"}}

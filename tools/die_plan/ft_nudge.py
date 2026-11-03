@@ -22,6 +22,7 @@ import schema as S  # noqa: E402
 import check as C  # noqa: E402
 import ft_corridor as FC  # noqa: E402
 from gen_phys import type_pins  # noqa: E402
+from placement_obstacles import placement_boxes  # noqa: E402
 from tools.die_trial.legal_sites import RowAllocator  # noqa: E402
 
 KEEPOFF = 1.08
@@ -31,6 +32,21 @@ CELL_DEFAULT = (1.404, .27)
 
 def inside(pt, boxes):
     return any(x0 < pt[0] < x1 and y0 < pt[1] < y1 for x0, y0, x1, y1 in boxes)
+
+
+def clock_points(t):
+    """DIE-HBM-60 d44v: the type's clock branch buffers + leg repeaters (check.py clock: no FT bit site / station cell
+    within CLOCK_BUF_HALO_UM of one) -- a re-site must keep off them like it keeps off the macros."""
+    ck = t.get("clock") or {}
+    pts = []
+    for b in ck.get("branch_buffers") or []:
+        pts.append(tuple(b["xy"]))
+        pts += [tuple(r["xy"]) for r in b.get("leg_repeaters") or []]
+    return pts
+
+
+def near_clock(x, y, wh, pts, h=C.CLOCK_BUF_HALO_UM, eps=1e-6):
+    return any(x - h - eps < q[0] < x + wh[0] + h + eps and y - h - eps < q[1] < y + wh[1] + h + eps for q in pts)
 
 
 def rect_hits(r, boxes):
@@ -46,11 +62,21 @@ def main():
         m = re.search(r"type (\S+) slot (\S+):", x["msg"])
         if m:
             hit.setdefault(m.group(1), set()).add(m.group(2))
+    for tn, t in raw["partition_types"].items():           # bit sites inside a clock buffer / leg repeater halo
+        pts = clock_points(t)
+        for s in t.get("ft_slots") or [] if pts else []:
+            wh = s.get("bit_site_cell_um", CELL_DEFAULT)
+            if any(near_clock(x, y, wh, pts) for st in s.get("bit_sites_um") or [] for x, y in st):
+                hit.setdefault(tn, set()).add(s["name"])
     ledger = []
     for tn, slots in sorted(hit.items()):
         t = raw["partition_types"][tn]; w, h = t["outline_um"]
-        macro = list(S.placed_macro_boxes(t).values())
+        # DIE-HBM-59: the same obstacle union as check.py geometry (placed macros + G2 probe blockages of reuse leaves)
+        macro = list(placement_boxes(t).values())
         boxes = [(a - KEEPOFF, b - KEEPOFF, c + KEEPOFF, d + KEEPOFF) for a, b, c, d in macro]
+        cpts = clock_points(t); hh = C.CLOCK_BUF_HALO_UM + 0.01
+        cw0, ch0 = CELL_DEFAULT                            # a site whose cell LL is in this box is in the halo
+        boxes += [(q[0] - hh - cw0, q[1] - hh - ch0, q[0] + hh, q[1] + hh) for q in cpts]
         pins = {}
         for bus, bit, _l, x, y, face in type_pins(P, tn):
             pins.setdefault(bus, {})[bit] = (x, y, face)
@@ -69,7 +95,7 @@ def main():
                 cw_, ch_ = s.get("bit_site_cell_um", CELL_DEFAULT); moved, dmax = 0, 0.0
                 for j, st in enumerate(s["bit_sites_um"]):
                     for bi, (x, y) in enumerate(st):
-                        if rect_hits((x, y, x + cw_, y + ch_), macro):
+                        if rect_hits((x, y, x + cw_, y + ch_), macro) or near_clock(x, y, (cw_, ch_), cpts):
                             c = np.array([x + cw_ / 2, y + ch_ / 2])
                             p, _ = alloc.allocate(c, 1, max_radius_um=MAX_SLIDE)
                             st[bi] = [round(float(p[0][0] - cw_ / 2), 6), round(float(p[0][1] - ch_ / 2), 6)]
