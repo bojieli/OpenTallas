@@ -92,6 +92,18 @@ def main(argv=None):
     a = ap.parse_args(argv)
     K = os.path.abspath(a.kit); T = os.path.basename(K); margin = a.margin * a.period
     probe = load_rows(a.rows)
+    # cross-tap skew (pilot t30 11-03: ft0 s2->s3 on clk_t5/clk_t3 = 133 ps): the kit SDC gives every tap port a source
+    # latency window (early..late) with no CPPR between ports, so a hop whose bays sit on different taps sees that window
+    # plus the local tree tolerance.  Reported per hop (hold_ff_xtap, setup_after_pads); hold repair pads such a hop
+    # out of its setup slack, which the form keeps large.
+    win = 0.0
+    if os.path.exists(f"{K}/constraint.sdc"):
+        sdc = open(f"{K}/constraint.sdc").read()
+        e = re.search(r"set_clock_latency -source -early -clock \S+ ([-\d.]+)", sdc)
+        l = re.search(r"set_clock_latency -source -late -clock \S+ ([-\d.]+)", sdc)
+        if e and l:
+            win = max(0.0, float(l.group(1)) - float(e.group(1)))
+    xskew = win + a.skew
     prev = None
     if os.path.exists(f"{K}/declared_cycles.json"):
         prev = json.load(open(f"{K}/declared_cycles.json"))
@@ -152,7 +164,9 @@ def main(argv=None):
                     pitch = w["pitch"] if pitch is None else min(pitch, w["pitch"])
             table.append([s, names[j], names[j + 1], f"{h:.1f}", str(w.get("pitch", "")), str(w.get("delay", "")),
                           str(w.get("slew", "")), str(w.get("setup", "")), str(w.get("hold", "")), str(a.skew),
-                          "PASS" if ok else "FAIL " + w.get("why", "")])
+                          "PASS" if ok else "FAIL " + w.get("why", ""),
+                          *((str(round(w["hold"] - win, 1)), str(round(w["setup"] - max(0.0, win - w["hold"]), 1)))
+                            if "hold" in w else ("", ""))])
         table.append([s, f"{s} s{k2-1}", f"port {s}_o", f"{dist(ch[-1], B):.1f}", "", "", "", "", "", "",
                       "face (kit IO budget, unchanged)"])
         out.append(" ".join([s, str(k2), fin, fout] + [f"{v:.4f}" for p in sites for v in p]))
@@ -177,12 +191,12 @@ def main(argv=None):
         decl[s] = dict(landed=landed, L_um=round(L, 1), stations_plan=k0, stations_new=k2, extra_cycles=k2 - k0,
                        sites_kept=keep)
     hdr = ["lane", "from", "to", "hop_um", "bufx4_pitch_um", "wirebuf_delay_tt_ps", "slew_ps", "setup_tt_ps", "hold_ff_ps",
-           "skew_bound_ps", "verdict"]
+           "skew_bound_ps", "verdict", f"hold_ff_xtap_ps(skew {xskew:g})", "setup_after_hold_pads_ps"]
     with open(f"{K}/relay_bay_table.tsv", "w") as fh:
         fh.write(f"# relay-bay pre-build table {T}: period {a.period} ps, required >= +{margin:.1f} ps (10%) TT setup and "
                  f"FF hold after a {a.skew}-ps skew bound, hops <= {a.max_hop} um\n")
         fh.write("\t".join(hdr) + "\n" + "".join("\t".join(r) + "\n" for r in table))
-    nh = sum(1 for r in table if r[-1] == "PASS" or r[-1].startswith("FAIL"))
+    nh = sum(1 for r in table if r[10] == "PASS" or r[10].startswith("FAIL"))
     st = {s: (d["stations_plan"], d["stations_new"]) for s, d in decl.items()}
     if bad:
         # OWNER 11-03 06:40: pre-build checks are ADVISORY (report, never block).  COORD 07:0x: the relay-bay form is the
