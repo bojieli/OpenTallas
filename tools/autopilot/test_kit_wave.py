@@ -345,6 +345,13 @@ class GeomVerdict(unittest.TestCase):
         self.assertEqual(KW.geom_verdict(real2), ("PASS", ["empty", "fill"], "FILL-EXCEPTION"))
         self.assertEqual(KW.geom_verdict(L.format("FAIL", "pin_reg=FAIL(9)"))[0], "FAIL")
         self.assertEqual(KW.geom_verdict("AP_AUTO_GEOM_ERROR dump rc 1")[0], "FAIL")
+        # GEOM-111 class E: estimate congestion waived only when the measured GRT is 0 overflow
+        v, f, tag = KW.geom_verdict(L.format("FAIL", "fill=FAIL(0.1) col_v=FAIL(1.165) channel_v=FAIL(1.165) grt=ok(0)"))
+        self.assertEqual((v, f), ("PASS-COND", ["channel_v", "col_v", "fill"]))
+        self.assertIn("GEOM-111 class E", tag)
+        self.assertEqual(KW.geom_verdict(L.format("FAIL", "col_v=FAIL(1.05) grt=FAIL(4843)"))[0], "FAIL")
+        self.assertEqual(KW.geom_verdict(L.format("FAIL", "channel_h=FAIL(1.004) r2r=FAIL(435) grt=ok(0)"))[0], "FAIL")
+        self.assertEqual(KW.geom_verdict(L.format("FAIL", "channel_h=FAIL(1.004) grt=NA(None)"))[0], "FAIL")
 
 
 class QueueFill(unittest.TestCase):
