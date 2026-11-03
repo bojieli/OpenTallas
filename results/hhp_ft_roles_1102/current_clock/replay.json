@@ -1,0 +1,42 @@
+{
+ "schema": "ot_clk_replay/1",
+ "die": "kv",
+ "event": "kv58_main2160_geom93",
+ "config": "/srv/opentallas-scratch2/claude/die-kv-58/clk/kv58.yaml",
+ "reference": "/srv/opentallas-scratch2/claude/die-kv-47-sd/clk/sd47b/kit/clock",
+ "stage_check": "PASS",
+ "stage_why": [
+  "entry inv_ndr_kv21_treeb matches {'cell': 'CKINVDCx16_ASAP7_75t_R', 'polarity': 'inv', 'clock_rc': 'ndr'} (DIE-KV-21 fit_dme_stage_cal on 94 routed DME legs of tree b (rms TT 6.02/FF 5.88 ps); self-consistent on tree c (refit 6.8 vs built 7.3 TT))"
+ ],
+ "pins_rebase": null,
+ "files": {
+  "tree.json": {
+   "identical": false,
+   "sha_new": "7834cf95b1929f67",
+   "sha_ref": "b97e422a0f00a0be",
+   "reference_file": "tree.json",
+   "diff_keys": [
+    "meta.leaves",
+    "meta.nodes",
+    "meta.repeaters",
+    "meta.site_legal",
+    "meta.taps",
+    "meta.wire_um",
+    "node_buf",
+    "node_stages",
+    "nodes",
+    "parent_of",
+    "sites",
+    "taps"
+   ],
+   "meta_added": []
+  },
+  "ctree.v": {
+   "identical": false,
+   "sha_new": "054eee9a63a20501",
+   "sha_ref": "9f7f2c4b693f0bd5",
+   "reference_file": "ctree.v"
+  }
+ },
+ "replay": "DIFFERENT"
+}
