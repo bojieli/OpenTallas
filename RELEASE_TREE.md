@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-_Updated 2026-11-03 05:4x PST by COORD: count 60 (S81 28, HEAD 4, QC 5/16, KV 17, HBM 6; +3 since 04:3x); OWNER 05:3x SAFE FORMS ONLY (structural form + pre-build check, no blind retries); stations = FIXED-BAY with lockup latch per relay (hold T/2 by construction, cycle counts unchanged); types with planned cores wait for signed core views (283db3a0cbe); S81 KIT_PREFLIGHT fix merged F10 + relaunched 05:04 (S81 preflight FAIL 69 -> 32); KV PDN class C fix (82eacd7eac/50e5dda3118) in merge; HEAD l48h1 plan of record (GEOM-gated), owner DIE-HEAD-57; kit FAIL 170 / RUNNING 156; CLOSURE lists due 06:00_
+**Status 2026-11-03 06:34 PST:** count 61 (HEAD first type signed 1/25; S81 28/54, HEAD 4/4, QC 5/16, KV 17/35, HBM 6/84 cores). OWNER 11-03: TWO-STRIKES -> RE-FORM (conservative OpenROAD form, 1.2 GHz kept, extra pipeline cycles), one batch per die, released per type (never waits on the whole batch); plan freeze on batch GEOM pass; cores first; token/cross-die/PG/area checks run in parallel, never block. F12 (17 class fixes) landed 06:20 main 08542fa9d7d. Kit FAIL 141 / RUNNING 155. Open: S81 macro_channels (plan 8.64 um vs rule 10.8 um, 76 kits) plan fix in progress.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
