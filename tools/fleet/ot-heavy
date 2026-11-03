@@ -55,12 +55,13 @@ while :; do
     V=NO; [ $((avail - grow)) -ge $((RES + HEADROOM_GB)) ] && [ $((avail - RES)) -ge $REAL_FLOOR ] && V=OK
     WHY="gate unavailable, plain rule: need ${RES}+${HEADROOM_GB} GB, available ${avail} GB, growth charged ${grow} GB (every unit at its reservation), real floor ${REAL_FLOOR} GB"
   fi
-  # SHORT_POOL_1101 (COORD 11-01 20:24): <=2-thread, <=8-GB stages use a bounded
+  # SHORT_POOL_1101 (COORD 11-01 20:24; widened to <=10 GB by COORD 11-02 so the default gen_lint 8+2 GB fits):
+  # <=2-thread, <=OT_HEAVY_SHORT_MAX_GB (default 10) stages use a bounded
   # independent slot pool. Memory/die-reservation admission above is unchanged.
   # flock leases vanish on exit, including crashes; acquire under the admission lock.
   _short=0
   if [ "$V" = OK ] && [ "${OT_HEAVY_SHORT_POOL:-1}" != 0 ] &&
-     [[ "$MEM" =~ ^[0-9]+$ ]] && [ "$MEM" -le 8 ] &&
+     [[ "$MEM" =~ ^[0-9]+$ ]] && [ "$MEM" -le "${OT_HEAVY_SHORT_MAX_GB:-10}" ] &&
      [[ "${OT_HEAVY_THREADS:-}" =~ ^[12]$ ]]; then
     _slots=12; [ "${OT_HEAVY_SHORT_SLOTS:-}" = 16 ] && _slots=16
     _short=1; _lease=0
