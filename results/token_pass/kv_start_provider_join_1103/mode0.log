@@ -1,0 +1,17 @@
+PST rose 157/157 latest_cyc 635
+PST pst_hroot_EN cyc 254
+PST pst_hroot_ES cyc 254
+PST pst_hroot_WN cyc 239
+PST pst_hroot_WS cyc 239
+PST pst_hub_Ei cyc 161
+PST pst_hub_Eo cyc 206
+PST pst_hub_Wi cyc 149
+PST pst_hub_Wo cyc 191
+CLAND_START hub_C 113 hub_Wi 152 hub_Wo 194 hroot_WN 242 hroot_WS 242 hroot_EN 257 hroot_ES 257 (root reset released 40)
+HUBWI mission_start(start_t13) first 4018 (START+18) high_before_START 0; static_setup_ready landed 3005 (inject 3000, +5)
+BOOT mode 0 d2d_boot_begin first 4018 n 1; o_host_boot_go_d1 first 4019 (START+19) n 1
+VERDICT PASS mode0 boot_go_d1 rises once after START (START+19)
+- /srv/opentallas-scratch2/claude/die-kv-63-start/tb_start_skel.sv:216: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.106 s; speed 47.200 us/s
+- Verilator: cpu 0.076 s on 1 threads; allocated 8 MB

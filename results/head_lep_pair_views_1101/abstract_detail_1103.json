@@ -1,0 +1,51 @@
+{
+ "base": "results/head_lep_pair_views_1101/ot_s81hd_lep_pair.lef@origin/main 48c37eca7d (blanket -bloat_occupied_layers, sha256 8edce1d8...)",
+ "base_sha256": "8edce1d8875e117a91071d9d8d93687436b797f5b8113617e03f3a545f64f1a6",
+ "detail": "intel2:/srv/opentallas-scratch2/claude/dh56-lep/exp/detail_b1.lef = write_abstract_lef -bloat_factor 1 of intel2:/srv/opentallas-scratch2/claude/die-head-46/lep_eco7_kit/run/results/asap7/hbc_ot_s81hd_lep_pair/base/6_final.odb (signed, no re-route; OpenROAD 26Q3-1510-g6cb3f2b704)",
+ "out": "results/head_lep_pair_views_1101/ot_s81hd_lep_pair.lef",
+ "out_sha256": "ad47cc153670a647ec7e4973df1fb7e2a0c64d327b78d4dedfaa4bf78e4b872e",
+ "layers_detailed": [
+  "M6",
+  "M7"
+ ],
+ "rects": {
+  "M6": 39138,
+  "M7": 12641
+ },
+ "pg_pin_layers": {
+  "VSS": [
+   "M5"
+  ],
+  "VDD": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": [],
+ "tool": "tools/die_plan/abstract_detail.py splice",
+ "pdn_probe": {
+  "kit": "copy of intel2 codex-head-wave-1131/kit-wave/s81_head/l48x/items/hd_lep0N/attempt_2/gen/hd_lep0N, only macros/ot_s81hd_lep_pair.lef replaced; make do-1_synth do-2_1_floorplan do-2_2_floorplan_macro do-2_3_floorplan_tapcell do-2_4_floorplan_pdn (docker 12g)",
+  "workdir": "intel2:/srv/opentallas-scratch2/claude/dh56-lep/probe_b1",
+  "verdict": "PASS (old view: [ERROR PDN-0006] VSS on M5 blocked by M6, M7)",
+  "pdn_0007_vdd_partially_blocked_pct": 12.7,
+  "core_pg_probe": {
+   "macro_pg_terms": 98,
+   "unconnected_terms": 0,
+   "u_pair_pin_strips_touched": "178/178 VSS and VDD on all 4 u_pair",
+   "u_pair_vias_per_pin": [
+    12867,
+    13121
+   ]
+  },
+  "strap_vs_obs_u_pair0": {
+   "overlaps": 0,
+   "min_gap_nm": {
+    "M6": 49,
+    "M7": 104
+   },
+   "parent_M6_um": 180476,
+   "parent_M7_um": 88826
+  }
+ }
+}

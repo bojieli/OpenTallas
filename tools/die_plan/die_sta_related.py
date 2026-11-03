@@ -2458,6 +2458,12 @@ def early_core_map(plan, taps, plan_path=None):
         if (P.types[tn].get("clock", {}) or {}).get("core_taps") != "early":
             continue
         hc = {h["inst"]: h for h in P.types[tn].get("hard_cores", []) or []}
+        # DIE-S81-50/diegrt 11-03: core_tap_rows names a core by its PHYSICAL identity (gen_phys.
+        # content_physical_identity: physical_inst, e.g. bound-native u_bound.u_u_rsv_..._u_c), so key those too --
+        # else every early tap of a bound-native type got module None and stayed unmeasured although its core is
+        # signed (S81 svc_lo_dsdv_svc_rs_w__t1: 1024 ot_s81c_attn_hcore taps, missing_views core:None).
+        for h in list(hc.values()):
+            hc.setdefault(G.content_physical_identity(h)[0], h)
         rows = {c: G.core_tap_rows(P, tn, c, pending=[]) for c in ("TT", "FF")}
         for (pn, inst, pin, e_tt, i_tt), (_, _, _, e_ff, i_ff) in zip(rows["TT"], rows["FF"]):
             port = byname.get(n, {}).get(pn)

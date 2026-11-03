@@ -39,6 +39,10 @@ from pathlib import Path
 G = 4.32
 HALO = 4.32
 PIN_PITCH = 0.192
+# layer track pitch (schema.ASAP7_LAYERS): a scaled edge pin keeps its ORIGINAL track phase (coordinate mod pitch), so a
+# pin that was on a plan track stays on one (DIE-HBM-60 d44v: the d44w height shrinks put 2241 / 4097 pins of
+# lanes8_11 / cxport_ij_q off the M4 tracks -> check.py hard_cores ERROR)
+TRACK_PITCH = {"M2": 0.036, "M3": 0.036, "M4": 0.048, "M5": 0.048, "M6": 0.064, "M7": 0.064, "M8": 0.080, "M9": 0.080}
 LANDING_REACH = 405.0
 
 
@@ -128,6 +132,10 @@ def remap_pins(pins, old, new, tol=0.5):
                 if prev is not None:
                     need = min(orig[k] - orig[k - 1], PIN_PITCH)
                     v = max(v, prev + need)
+                tp = TRACK_PITCH.get(lay)
+                if tp:                                   # up to the next coordinate on the original track phase
+                    ph = orig[k] - math.floor(orig[k] / tp + 1e-9) * tp
+                    v = ph + math.ceil((v - ph) / tp - 1e-6) * tp
                 prev = v
                 out[i][along] = round(v, 3)
             if ii and out[ii[-1]][along] > L2 - 0.0:

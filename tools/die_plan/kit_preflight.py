@@ -258,10 +258,13 @@ def check(kit, plan_dir=None, contract=False):
         run('master_slice', slice_check)
     # PREFLIGHT-2 (OWNER 10-27): the shared kit contract, one check per recent bug class (kit_contract.py)
     # Binding (fail-closed) on hard-core kits; recorded as advisory on other kits (partition tiles) unless forced.
+    # OWNER 11-03 07:0x (rules are design targets, only sign-off blocks; KW-FIX-4): even when binding, only the checks
+    # in kit_contract.TOOL_FAIL_CHECKS (a certain tool failure later in the flow) block; every other contract check
+    # (macro_channels, clock_entry_clear, pins_canonical, ...) is reported in contract_advisory and never fails the kit.
     binding = contract or kit_contract.is_core_kit(kit)
     advisory = {}
     for name, row in kit_contract.run_all(kit, plan_dir).items():
-        if binding:
+        if binding and name in kit_contract.TOOL_FAIL_CHECKS:
             checks[name] = row
             issues.extend(f'{name}: {error}' for error in row['errors'])
         else:
@@ -297,6 +300,9 @@ def main(argv=None):
     print('KIT_PREFLIGHT', record['verdict'], 'issues', len(record['issues']))
     for issue in record['issues'][:30]:
         print('  -', issue)
+    for name, row in sorted((record.get('contract_advisory') or {}).items()):
+        if row.get('verdict') == 'FAIL':
+            print('KIT_PREFLIGHT ADVISORY', name, (row.get('errors') or [''])[0][:200])
     return int(record['verdict'] != 'PASS')
 
 

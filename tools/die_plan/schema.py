@@ -1054,6 +1054,7 @@ SCHEMA = {
             # sdpg 3_4: the default negotiation legalizer stalled at 902 illegal cells after 2847 s around 12308 FIRM
             # landing cells (fragmented 5/9-site gaps, 92.9 % fixed); diamond legalised in 44 s; unset = unchanged kits
             dpl_legalizer={"enum": ["diamond"]},
+            dpl_legalizer_types={"type": "array", "uniqueItems": True, "items": _name},
             # FLOW 10-30: only named types may move landing bands to avoid reset relay/collector sites.
             # Absent/empty preserves all existing bands; compose also accepts the unsplit base type name.
             cland_avoid_reset_types={"type": "array", "uniqueItems": True, "items": _name},
@@ -1068,7 +1069,10 @@ SCHEMA = {
             cland_fit_resize_off_types={"type": "array", "uniqueItems": True, "items": _name},
             # DIE-KV-62/stations 11-02 opt-in: these types (or unsplit base names) export OT_CLAND_PINSLOT_DENSE=1 (y-column
             # pinslot rows pack the ring slot flops body to body); absent/empty = unchanged kits
-            cland_pinslot_dense_types={"type": "array", "uniqueItems": True, "items": _name})},
+            cland_pinslot_dense_types={"type": "array", "uniqueItems": True, "items": _name},
+            # DIE-KV-64 11-03 opt-in: these types (or unsplit base names) tie their plan-declared hard-core ID straps
+            # inside the type (bind.emit_type; one value on every instance, else a bind gap); absent/empty = unchanged
+            id_straps_in_type_types={"type": "array", "uniqueItems": True, "items": _name})},
     },
 }
 

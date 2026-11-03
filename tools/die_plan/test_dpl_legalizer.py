@@ -28,5 +28,21 @@ def test_other_values_fail():
 
 def test_config_mk_uses_it_once():
     src = (HERE / "gen_phys.py").read_text()
-    assert src.count("*_dpl_args(P.budgets),") == 1
+    assert src.count("*_dpl_args(P.budgets, tn, dpl_diamond),") == 1
     assert src.count("DETAIL_PLACEMENT_ARGS") == 2          # helper + docstring; no other writer of the ORFS var
+
+
+def test_per_type_opt_in():
+    b = {"dpl_legalizer_types": ["kv3_io_cor"]}
+    assert gen_phys._dpl_args(b) == []
+    assert gen_phys._dpl_args(b, "kv3_io_cor") == ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
+    assert gen_phys._dpl_args(b, "kv3_io_cor__cl1234") == ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
+    assert gen_phys._dpl_args(b, "kv3_io_cor_v1") == []
+    assert "dpl_legalizer_types" not in schema.DEFAULT_BUDGETS
+
+
+def test_release_grown_hook_follows_the_refirm():
+    src = (HERE / "gen_phys.py").read_text()
+    assert src.count("+ CLAND_RELEASE_GROWN_TCL)") == 1
+    t = gen_phys.CLAND_RELEASE_GROWN_TCL
+    assert "u_cland_" in t and "setPlacementStatus PLACED" in t and "TAPCELL" not in t

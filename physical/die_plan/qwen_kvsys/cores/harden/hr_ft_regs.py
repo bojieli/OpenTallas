@@ -71,3 +71,23 @@ def write_report(kd, rep, spec):
         schema="opentallas.kit_hr_ft_regs.v1", regs=rep, ruling=spec["ruling"], reason=spec["reason"],
         note="each listed output is the input delayed by ONE core clock edge (face register); the parent bind / "
              "sim must price +1 edge on these signals"), indent=1) + "\n")
+
+
+def ft_pairs(rep):
+    """DIE-KV-63/hr 11-03: the ONE face register of a registered feed-through is by construction both the input face
+    register of IN and the output face register of OUT, so face_guard sees one flop registering IN[k] and OUT[k]
+    (class merged: core_order u_chain__chain_fault_i -> u_chain__chain_fault, CORE_PREFLIGHT merged 8).  Declare each
+    such bus as a core one-station pair (`pair IN OUT` in the kit ft_stations.txt = face_guard.read_ft1 / _ft1_pair,
+    the gen_core_kit_qc ft1_pairs form): face_guard then verifies every bit structurally (IN[k] -> exactly one flop D,
+    its Q -> OUT[k], no other load).  Only an exact bit-for-bit map OUT[i] = IN[i] of one input bus (or scalar to
+    scalar) is declared; any other source map stays undeclared (face_guard keeps failing it)."""
+    out = []
+    for r in rep:
+        srcs = r["src"]
+        m = [re.fullmatch(r"([A-Za-z_][A-Za-z0-9_]*)\[(\d+)\]", s) for s in srcs]
+        if srcs and all(m) and len({x.group(1) for x in m}) == 1 and \
+                [int(x.group(2)) for x in m] == list(range(len(srcs))):
+            out.append((m[0].group(1), r["out"]))
+        elif len(srcs) == 1 and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", srcs[0]):
+            out.append((srcs[0], r["out"]))
+    return out

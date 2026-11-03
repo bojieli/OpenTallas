@@ -1,0 +1,117 @@
+type	W_plan	need_base	need_v1	need_v2	over_base	over_v1	over_v2	class	worst_region_v2	launch_v2	capture_v2
+sle_su_l1__clc6d66f5b	70	178.55	82.71	82.71	1	1	1	1 early su_lane core taps	sl_E2_su_l1	t_sl_E2_su_l1__clk_c3	t_sl_E2_su_l1__clk_t2
+slw_su_l1__cla2a78701	100	176.09	87.29	87.29	1	0	0	1 early su_lane core taps	sl_W0_su_l1	t_sl_W0_su_l1__clk_c3	t_sl_W0_su_l1__clk_t8
+slw_su_l0__cl76fb247e	40	173.28	48.05	48.05	1	1	1	1 early su_lane core taps	sl_W1_su_l0	t_sl_W1_su_l0__clk_c1	t_sl_W1_su_l0__clk_t9
+slw_su_l0__cl1a1c1f8f	40	173.28	32.02	32.02	1	0	0	1 early su_lane core taps	sl_W0_su_l0	t_sl_W0_su_l0__clk_t5	t_sl_W0_su_l0__clk_t8
+sle_su_l1__cl5ea486db	80	171.07	51.01	51.01	1	0	0	1 early su_lane core taps	sl_E0_su_l1	t_sl_E0_su_l1__clk_c1	t_sl_E0_su_l1__clk_t13
+slw_su_l0__cl1e5219ea	40	165.88	44.08	44.08	1	1	1	1 early su_lane core taps	sl_W2_su_l0	t_sl_W2_su_l0__clk_c1	t_sl_W2_su_l0__clk_t6
+sle_su_l0__cl7a55c676	50	165.77	60.93	60.93	1	1	1	1 early su_lane core taps	sl_E0_su_l0	t_sl_E0_su_l0__clk_c3	t_sl_E0_su_l0__clk_t2
+sle_su_l0__cl086d85ba	40	165.27	60.87	60.87	1	1	1	1 early su_lane core taps	sl_E5_su_l0	t_sl_E5_su_l0__clk_c3	t_sl_E5_su_l0__clk_t2
+slw_su_l1__clcc9d0155	90	159.99	56.11	56.11	1	0	0	1 early su_lane core taps	sl_W5_su_l1	t_sl_W5_su_l1__clk_c3	t_sl_W5_su_l1__clk_t8
+cbf_q11	150	129.99	129.99	129.99	0	0	0		c_E1_tf_11	t_c_E1_tf_11__clk_c1	t_c_E1_tf_11__clk_t23
+cbn_q11__cl49ae4555	150	129.97	129.97	129.97	0	0	0		c_E1_tn_11	t_c_E1_tn_11__clk_c1	t_c_E1_tn_11__clk_t23
+cbn_q11__cl5cc92dfe	150	129.91	129.91	129.91	0	0	0		c_W3_tn_11	t_c_W3_tn_11__clk_c1	t_c_W3_tn_11__clk_t23
+cbx_q10__cl94a12200	130	114.39	114.39	114.39	0	0	0		c_W4_bn_10	t_c_W4_bn_10__clk_c3	t_c_W4_bn_10__clk_t15
+cbx_q10__cl89936551	130	114.34	114.34	114.34	0	0	0		c_E0_bn_10	t_c_E0_bn_10__clk_c3	t_c_E0_bn_10__clk_t15
+sle_su_c	120	111.11	111.11	111.11	0	0	0		sl_E3_su_c	t_sl_E3_su_c__clk_c4	t_sl_E3_su_c__clk_c2
+cbn_q00__cldbcda913	120	104.07	104.07	104.07	0	0	0		c_E2_tn_00	t_c_E2_tn_00__clk_c1	t_c_E2_tn_00__clk_t14
+cbn_q00__cl622f65d2	120	104.07	104.07	104.07	0	0	0		c_W2_tn_00	t_c_W2_tn_00__clk_c1	t_c_W2_tn_00__clk_t14
+cbf_q00__cl870de686	120	102.95	102.95	102.95	0	0	0		c_E2_tf_00	t_c_E2_tf_00__clk_c1	t_c_E2_tf_00__clk_t14
+cbf_q00__cl1b5a6458	120	102.95	102.95	102.95	0	0	0		c_W2_tf_00	t_c_W2_tf_00__clk_c1	t_c_W2_tf_00__clk_t14
+cbn_q01__cld9ff4c40	120	102.1	102.1	102.1	0	0	0		c_E3_bn_01	t_c_E3_bn_01__clk_c3	t_c_E3_bn_01__clk_t8
+cbn_q01__clab6e67f2	120	102.1	102.1	102.1	0	0	0		c_W1_bn_01	t_c_W1_bn_01__clk_c3	t_c_W1_bn_01__clk_t8
+slw_su_c__cl19bb38ef	80	102.09	102.09	87.57	1	1	1	2 su_c W0 hang	sl_W0_su_c	t_sl_W0_su_c__clk_c4	t_sl_W0_su_c__clk_c1
+cbf_q01_s2	120	101.9	101.9	101.9	0	0	0		c_W5_bf_01	t_c_W5_bf_01__clk_c2	t_c_W5_bf_01__clk_t8
+cbf_q01	120	101.32	101.32	101.32	0	0	0		c_E3_bf_01	t_c_E3_bf_01__clk_c3	t_c_E3_bf_01__clk_t8
+slw_su_c__cl92142dac	100	90.37	90.37	90.37	0	0	0		sl_W1_su_c	t_sl_W1_su_c__clk_c4	t_sl_W1_su_c__clk_c2
+cbn_q01__cldd6ea846	100	85.49	85.49	85.49	0	0	0		c_W5_bn_01	t_c_W5_bn_01__clk_c2	t_c_W5_bn_01__clk_t8
+cbf_q00_s2	90	74.81	74.81	74.81	0	0	0		c_W5_bf_00	t_c_W5_bf_00__clk_c1	t_c_W5_bf_00__clk_t17
+sle_stm_v2__cl7b3062fa	50	67.42	67.42	67.42	1	1	1	3 ordinary spread	sl_E1_stm	t_sl_E1_stm__clk_t16	t_sl_E1_stm__clk_t61
+slw_fw_v1__cl51d45468	60	66.66	66.66	66.66	1	1	1	3 ordinary spread	sl_W0_fw	t_sl_W0_fw__clk_t6	t_sl_W0_fw__clk_t17
+sle_ctl__cl67434795	70	64.6	64.6	64.6	0	0	0		sl_W2_ctl	t_sl_W2_ctl__clk_t15	t_sl_W2_ctl__clk_t36
+sle_stm_v1__cl27746664	80	61.61	61.61	61.61	0	0	0		sl_E0_stm	t_sl_E0_stm__clk_t12	t_sl_E0_stm__clk_t63
+cbn_q00__cld7bf7197	80	60.98	60.98	60.98	0	0	0		c_W5_bn_00	t_c_W5_bn_00__clk_c3	t_c_W5_bn_00__clk_t23
+slw_sc_v2	70	59.4	59.4	59.4	0	0	0		sl_W3_sc	t_sl_W3_sc__clk_t51	t_sl_W3_sc__clk_t26
+slw_stm_v2__cl1ca9c415	80	59.27	59.27	59.27	0	0	0		sl_W3_stm	t_sl_W3_stm__clk_t30	t_sl_W3_stm__clk_t60
+sle_sc_v1__cl115da35f	60	58.68	58.68	58.68	0	0	0		sl_E0_sc	t_sl_E0_sc__clk_t53	t_sl_E0_sc__clk_t13
+sle_fw_v1__clf58b4dfb	70	57.26	57.26	57.26	0	0	0		sl_E4_fw	t_sl_E4_fw__clk_t16	t_sl_E4_fw__clk_t23
+slw_fe_v1__clfe325744__cl08d14f0d	70	56.92	56.92	56.92	0	0	0		sl_W2_fe	t_sl_W2_fe__clk_t29	t_sl_W2_fe__clk_t16
+slw_stm_v1__cl05fc43f7__cl389df4e9	60	56.75	56.75	56.75	0	0	0		sl_W2_stm	t_sl_W2_stm__clk_t33	t_sl_W2_stm__clk_t26
+sle_ctl__cl503337ff	70	56.68	56.68	56.68	0	0	0		sl_E2_ctl	t_sl_E2_ctl__clk_t15	t_sl_E2_ctl__clk_t36
+slw_st_b_v1__cl6357f1cc	70	55.27	55.27	55.27	0	0	0		sl_W4_st_b	t_sl_W4_st_b__clk_t7	t_sl_W4_st_b__clk_t3
+slw_sc_v1__cl64543eaf__cl5e017c6f	70	55.25	55.25	55.25	0	0	0		sl_W4_sc	t_sl_W4_sc__clk_t52	t_sl_W4_sc__clk_t15
+sle_fw_v1__cl9d029624	90	54.22	54.22	54.22	0	0	0		sl_E2_fw	t_sl_E2_fw__clk_t31	t_sl_E2_fw__clk_t6
+sle_hc1__cl7d360508	70	54.13	54.13	54.13	0	0	0		sl_E4_hc1	t_sl_E4_hc1__clk_t9	t_sl_E4_hc1__clk_t2
+slw_hc1__cl3449ea95	60	54.13	54.13	54.13	0	0	0		sl_W0_hc1	t_sl_W0_hc1__clk_t9	t_sl_W0_hc1__clk_t2
+slw_hc1__cl68f9248e__cle683a076	70	54.13	54.13	54.13	0	0	0		sl_W5_hc1	t_sl_W5_hc1__clk_t9	t_sl_W5_hc1__clk_t2
+sle_fe_v3	50	53.92	53.92	53.92	1	1	1	3 ordinary spread	sl_E5_fe	t_sl_E5_fe__clk_t3	t_sl_E5_fe__clk_t14
+slw_fw_v1__clf51c11d8__clc7ddab13	70	53.31	53.31	53.31	0	0	0		sl_W4_fw	t_sl_W4_fw__clk_t28	t_sl_W4_fw__clk_t17
+sle_stm_v1__clbe630b9c	80	51.04	51.04	51.04	0	0	0		sl_E2_stm	t_sl_E2_stm__clk_t70	t_sl_E2_stm__clk_t73
+slw_fw_v1__clf51c11d8__cl592e3d37	60	50.66	50.66	50.66	0	0	0		sl_W2_fw	t_sl_W2_fw__clk_t30	t_sl_W2_fw__clk_t8
+slw_sc_v1__cl63e5a7a2	60	50.53	50.53	50.53	0	0	0		sl_W0_sc	t_sl_W0_sc__clk_t3	t_sl_W0_sc__clk
+slw_sc_v3	60	49.86	49.86	49.86	0	0	0		sl_W5_sc	t_sl_W5_sc__clk_t21	t_sl_W5_sc__clk_t26
+coll_ftm	60	49.84	49.84	49.84	0	0	0		coll_f3	t_coll_f3__clk_t18	t_coll_f3__clk_t7
+sle_sc_v2	50	49.78	49.78	49.78	0	0	0		sl_E1_sc	t_sl_E1_sc__clk_t23	t_sl_E1_sc__clk_t26
+slw_stm_v3	80	49.19	49.19	49.19	0	0	0		sl_W5_stm	t_sl_W5_stm__clk_t10	t_sl_W5_stm__clk_t46
+sle_ctl__cla4f6f12f	70	48.35	48.35	48.35	0	0	0		sl_W0_ctl	t_sl_W0_ctl__clk_t35	t_sl_W0_ctl__clk_t21
+sle_st_b_v1	60	47.64	47.64	47.64	0	0	0		sl_E4_st_b	t_sl_E4_st_b__clk_t6	t_sl_E4_st_b__clk_t3
+sle_ctl__cl372cea1c	60	47.14	47.14	47.14	0	0	0		sl_W1_ctl	t_sl_W1_ctl__clk_t15	t_sl_W1_ctl__clk_t36
+slw_fe_v1__clfe325744__cldb4efe33	60	46.08	46.08	46.08	0	0	0		sl_W4_fe	t_sl_W4_fe__clk_t29	t_sl_W4_fe__clk_t7
+sle_fe_v1__cl8210183c	80	45.45	45.45	45.45	0	0	0		sl_E0_fe	t_sl_E0_fe__clk_t7	t_sl_E0_fe__clk_t26
+slw_fe_v2__cle312294d	60	44.99	44.99	44.99	0	0	0		sl_W3_fe	t_sl_W3_fe__clk_t12	t_sl_W3_fe__clk_t14
+slw_stm_v2__cl9beb65e6	60	44.64	44.64	44.64	0	0	0		sl_W1_stm	t_sl_W1_stm__clk_t71	t_sl_W1_stm__clk_t44
+sle_st_a_v1__cl989804f6__cled3c1d7b	60	43.03	43.03	43.03	0	0	0		sl_E4_st_a	t_sl_E4_st_a__clk_t27	t_sl_E4_st_a__clk_t18
+tt_ctlm	30	42.99	42.99	42.99	1	1	1	3 ordinary spread	tt_ctlm	t_tt_ctlm__clk_t10	t_tt_ctlm__clk_t17
+slw_st_b_v1__cle6023ec2	60	42.72	42.72	42.72	0	0	0		sl_W0_st_b	t_sl_W0_st_b__clk_t7	t_sl_W0_st_b__clk_t3
+coll_core	50	42.37	42.37	42.37	0	0	0		coll_core	t_coll_core__clk_t3	t_coll_core__clk_t4
+sle_stm_v2__cl55be2264	70	42.33	42.33	42.33	0	0	0		sl_E3_stm	t_sl_E3_stm__clk_t41	t_sl_E3_stm__clk_t23
+sle_fe_v1__cl1cbb7497	60	42.1	42.1	42.1	0	0	0		sl_E2_fe	t_sl_E2_fe__clk_t31	t_sl_E2_fe__clk_t22
+slw_fw_v3	40	40.76	40.76	40.76	1	1	1	3 ordinary spread	sl_W5_fw	t_sl_W5_fw__clk_t27	t_sl_W5_fw__clk_t14
+sle_fe_v2	60	40.67	40.67	40.67	0	0	0		sl_E3_fe	t_sl_E3_fe__clk_t29	t_sl_E3_fe__clk_t27
+coll_ucie	60	40.29	40.29	40.29	0	0	0		coll_ucie	t_coll_ucie__clk	t_coll_ucie__clk_t9
+sle_st_a_v1__cl989804f6__cl18eece69	50	39.68	39.68	39.68	0	0	0		sl_E2_st_a	t_sl_E2_st_a__clk	t_sl_E2_st_a__clk_t7
+slw_st_a_v1__clb036e152	60	39.46	39.46	39.46	0	0	0		sl_W2_st_a	t_sl_W2_st_a__clk	t_sl_W2_st_a__clk_t18
+slw_stm_v1__cle34a73c3	50	39.06	39.06	39.06	0	0	0		sl_W0_stm	t_sl_W0_stm__clk_t13	t_sl_W0_stm__clk_t50
+sle_hc2__cl9c4c4509__cl3edce1b8	50	38.46	38.46	38.46	0	0	0		sl_E4_hc2	t_sl_E4_hc2__clk_t4	t_sl_E4_hc2__clk_t1
+slw_hc2__cla3497502__cl16607c7a	50	38.46	38.46	38.46	0	0	0		sl_W5_hc2	t_sl_W5_hc2__clk_t4	t_sl_W5_hc2__clk_t1
+slw_hc2__cl6bcaba89	50	38.46	38.46	38.46	0	0	0		sl_W0_hc2	t_sl_W0_hc2__clk_t4	t_sl_W0_hc2__clk_t1
+sle_hc0__cl05696ed1	40	38.36	38.36	38.36	0	0	0		sl_E0_hc0	t_sl_E0_hc0__clk	t_sl_E0_hc0__clk_t2
+slw_stm_v1__cl05fc43f7__cl2086fa2c	80	38.21	38.21	38.21	0	0	0		sl_W4_stm	t_sl_W4_stm__clk_t8	t_sl_W4_stm__clk_t64
+slw_st_a_v1__clfc5867a6	60	38.21	38.21	38.21	0	0	0		sl_W0_st_a	t_sl_W0_st_a__clk_t27	t_sl_W0_st_a__clk_t8
+slw_st_b_v2	50	38.01	38.01	38.01	0	0	0		sl_W1_st_b	t_sl_W1_st_b__clk_t15	t_sl_W1_st_b__clk_t8
+sle_fw_v2__cl69f5e854	60	38.01	38.01	38.01	0	0	0		sl_E1_fw	t_sl_E1_fw__clk_t9	t_sl_E1_fw__clk_t32
+sle_hc0__cl929603c0__cl4baa7c9c	60	37.71	37.71	37.71	0	0	0		sl_E4_hc0	t_sl_E4_hc0__clk_t9	t_sl_E4_hc0__clk_t2
+sle_st_a_v2	50	37.17	37.17	37.17	0	0	0		sl_E5_st_a	t_sl_E5_st_a__clk_t22	t_sl_E5_st_a__clk_t8
+sle_st_a_v1__cl67389ecd	50	36.65	36.65	36.65	0	0	0		sl_E0_st_a	t_sl_E0_st_a__clk_t27	t_sl_E0_st_a__clk_t22
+sle_st_b_v2__cl14c98df5	60	35.54	35.54	35.54	0	0	0		sl_E3_st_b	t_sl_E3_st_b__clk_t19	t_sl_E3_st_b__clk_t1
+sle_sc_v3	50	35.05	35.05	35.05	0	0	0		sl_E5_sc	t_sl_E5_sc__clk_t25	t_sl_E5_sc__clk_t3
+slw_hc0__cl4f54b7a3	60	34.84	34.84	34.84	0	0	0		sl_W3_hc0	t_sl_W3_hc0__clk_t11	t_sl_W3_hc0__clk_t4
+sle_stm_v3	50	34.06	34.06	34.06	0	0	0		sl_E5_stm	t_sl_E5_stm__clk_t34	t_sl_E5_stm__clk_t41
+slw_st_a_v2__cl9f076a5c	50	33.68	33.68	33.68	0	0	0		sl_W3_st_a	t_sl_W3_st_a__clk_t31	t_sl_W3_st_a__clk_t25
+sle_fw_v3	50	32.94	32.94	32.94	0	0	0		sl_E5_fw	t_sl_E5_fw__clk_t30	t_sl_E5_fw__clk_t11
+slw_st_a_v2__clf4365a62	50	32.59	32.59	32.59	0	0	0		sl_W5_st_a	t_sl_W5_st_a__clk_t29	t_sl_W5_st_a__clk_t8
+slw_fe_v1__cl95cd1d0c	50	32.32	32.32	32.32	0	0	0		sl_W0_fe	t_sl_W0_fe__clk_t29	t_sl_W0_fe__clk_t27
+sle_sc_v1__cl7479a5ec	50	32.03	32.03	32.03	0	0	0		sl_E2_sc	t_sl_E2_sc__clk_t29	t_sl_E2_sc__clk_t12
+slw_hc1__cl68f9248e__cl144ee7b3	50	31.75	31.75	31.75	0	0	0		sl_W2_hc1	t_sl_W2_hc1__clk_t6	t_sl_W2_hc1__clk_t2
+sle_hc1__cl22c1ff36	50	31.75	31.75	31.75	0	0	0		sl_E2_hc1	t_sl_E2_hc1__clk_t6	t_sl_E2_hc1__clk_t2
+slw_fw_v2__cl8f84514c	40	30.22	30.22	30.22	0	0	0		sl_W1_fw	t_sl_W1_fw__clk_t3	t_sl_W1_fw__clk_t19
+sle_hc0__cl929603c0__cl38badc56	60	29.63	29.63	29.63	0	0	0		sl_E2_hc0	t_sl_E2_hc0__clk_t11	t_sl_E2_hc0__clk_t4
+coll_ftc	40	29.54	29.54	29.54	0	0	0		coll_f4	t_coll_f4__clk_t8	t_coll_f4__clk_t13
+sle_fw_v2__cl6740750e	50	28.79	28.79	28.79	0	0	0		sl_E3_fw	t_sl_E3_fw__clk_t10	t_sl_E3_fw__clk_t6
+slw_hc0__cl1bc59e1c	50	28.6	28.6	28.6	0	0	0		sl_W2_hc0	t_sl_W2_hc0__clk_t11	t_sl_W2_hc0__clk_t4
+slw_fw_v2__cl8537f156	50	28.26	28.26	28.26	0	0	0		sl_W3_fw	t_sl_W3_fw__clk_t7	t_sl_W3_fw__clk_t29
+slw_sc_v1__cl64543eaf__cl4590432d	40	26.31	26.31	26.31	0	0	0		sl_W2_sc	t_sl_W2_sc__clk_t53	t_sl_W2_sc__clk_t25
+sle_hc2__cl9c4c4509__clf60c5152	40	25.39	25.39	25.39	0	0	0		sl_E2_hc2	t_sl_E2_hc2__clk_t3	t_sl_E2_hc2__clk_t4
+slw_hc2__cla3497502__cldc737267	40	25.39	25.39	25.39	0	0	0		sl_W2_hc2	t_sl_W2_hc2__clk_t3	t_sl_W2_hc2__clk_t4
+sle_st_b_v2__clfde1249e	40	22.9	22.9	22.9	0	0	0		sl_E5_st_b	t_sl_E5_st_b__clk_t19	t_sl_E5_st_b__clk_t6
+sle_hc2__clcc5e3e61	40	21.81	21.81	21.81	0	0	0		sl_E5_hc2	t_sl_E5_hc2__clk_t4	t_sl_E5_hc2__clk_t1
+coll_ft__cla4a25d77	40	20.65	20.65	20.65	0	0	0		coll_f1	t_coll_f1__clk	t_coll_f1__clk_t4
+glue	40	18.39	18.39	18.39	0	0	0		glue	t_glue__clk_t2	t_glue__clk
+coll_n	30	17.66	17.66	17.66	0	0	0		coll_n	t_coll_n__clk_t3	t_coll_n__clk_t2
+coll_ft__cl78c7b300	30	15.33	15.33	15.33	0	0	0		coll_f0	t_coll_f0__clk_t1	t_coll_f0__clk_t4
+coll_s	30	14.56	14.56	14.56	0	0	0		coll_s	t_coll_s__clk_t4	t_coll_s__clk_t3
+slw_hc3__cld86a7ad4	30	13.73	13.73	13.73	0	0	0		sl_W2_hc3	t_sl_W2_hc3__clk_t3	t_sl_W2_hc3__clk
+slw_hc3__clccfc3e6b	30	13.72	13.72	13.72	0	0	0		sl_E2_hc3	t_sl_E2_hc3__clk_t3	t_sl_E2_hc3__clk
+coll_ftn	30	13.55	13.55	13.55	0	0	0		coll_f5	t_coll_f5__clk_t3	t_coll_f5__clk_t2
+slw_fe_v2__clf110fab2	40	13.24	13.24	13.24	0	0	0		sl_W5_fe	t_sl_W5_fe__clk_t13	t_sl_W5_fe__clk_t14
+native59	20	5.94	5.94	5.94	0	0	0		native59	t_native59__clk	t_native59__clk_t3

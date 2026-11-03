@@ -1,0 +1,64 @@
+{
+ "plan": "plan_rtobs.json",
+ "out": "plan_fix3.json",
+ "failing": 2,
+ "fixed": 2,
+ "types": [
+  {
+   "type": "col_h10_r0_p1__t1__cl574cc59d",
+   "moves": [
+    {
+     "tap": "clk_t28",
+     "old_xy": [
+      1126.44,
+      980.6
+     ],
+     "new_xy": [
+      1126.818,
+      954.666
+     ],
+     "move_um": 26.312,
+     "sinks": 413,
+     "after": null
+    }
+   ],
+   "before": "col_h10_r0_p1__t1__cl574cc59d: grid+explicit tap clk_t28 load=413/1500, radius=219.173/200.0, empty=False",
+   "published_tree": true,
+   "tree_matched_before": true,
+   "after": null,
+   "republished": {
+    "relays_before": 184,
+    "relays_after": 185,
+    "relays_changed": 124
+   }
+  },
+  {
+   "type": "col_h10_r0_p1__t1__cl911743eb",
+   "moves": [
+    {
+     "tap": "clk_t28",
+     "old_xy": [
+      1126.44,
+      980.6
+     ],
+     "new_xy": [
+      1126.818,
+      954.666
+     ],
+     "move_um": 26.312,
+     "sinks": 413,
+     "after": null
+    }
+   ],
+   "before": "col_h10_r0_p1__t1__cl911743eb: grid+explicit tap clk_t28 load=413/1500, radius=219.173/200.0, empty=False",
+   "published_tree": true,
+   "tree_matched_before": true,
+   "after": null,
+   "republished": {
+    "relays_before": 178,
+    "relays_after": 179,
+    "relays_changed": 121
+   }
+  }
+ ]
+}

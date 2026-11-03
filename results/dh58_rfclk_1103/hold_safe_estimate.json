@@ -1,0 +1,9 @@
+{"schema":"dh58_rfclk.hold_safe_estimate.v1","plan":"l48h1 prep_v3 8e8ce514127b","clock":"l48w sth proof (die-head-48/clk_st51/proof_l48w_sth)","tool":"main 08542fa9d7d die_sta_related + latch_eval_head.py (latch_eval_s81 form)","rule":"FF hold slack>=0 with 25 ps hold uncertainty; TT setup nominal",
+"latch_arcs":{"DLLx1_ckq_tt_ps":73,"DLLx1_ckq_min_ff_ps":15,"status":"ESTIMATED"},
+"classes":[
+{"class":"part<->part landed","ports":427,"bits":211813,"form":"fixed latency contract (count-aligned, +3 landing cycles)","margin_lo_ps":{"TT":215.3,"FF":244.5},"margin_hi_ps":{"TT":676.2,"FF":701.8},"need_ps":100,"status":"tool output, NUMBER-CHECK pending","single_cycle_latch_fail":{"hold":159,"setup":149,"skew_max_ps":953.8}},
+{"class":"seam (shim/strip)","ports":39,"bits":14715,"pairs":8368,"form":"registered face + launch lockup latch","ff_hold_ps":315.35,"tt_setup_ps":268.29,"plain_ff_hold_ps":-79.13,"plain_hold_neg":4586},
+{"class":"type<->core hd_tile elemA/elemB","core_inst":1320,"form":"hard_core_latency early tap + face reg + launch latch (glue-launched); core-launched hops need shared leaf or planned delay cells","base_real_view_ff_hold_ps":-204.08,"aligned_plain_ff_hold_ps":-54.08,"aligned_tt_setup_ps":402.75,"aligned_latch_ff_hold_ps":65.57,"aligned_latch_tt_setup_ps":-2.27,"selective_latch_tt_setup_ps":0.69,"alignment_model_ps":150},
+{"class":"type<->core hd_lep0N lep_pair","core_inst":4,"contract":{"tt_mean_ps":452.9,"ff_mean_ps":366.27,"lib_tt_ps":[396.89,487.27]},"gap":"no typed core.json hard_core_latency in kit; insertion > 450 region target"},
+{"class":"type<->core hd_serdes kp4_dchn","core_inst":12,"contract":{"lib_tt_ps":[223.24,291.45]},"gap":"no typed contract"},
+{"class":"landing_network","edges":1744,"forwarded_clock":427,"ctl_registered_both":1317,"start_skew_fail":0}]}

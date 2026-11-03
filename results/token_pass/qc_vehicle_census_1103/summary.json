@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.tok_qw5.qc_vehicle_census.v1",
+  "lane": "TOK-QW-5",
+  "date": "2026-11-03",
+  "inputs": "TOK-QK-2 build0 inputs unchanged (intel2 /srv/opentallas-scratch2/claude/tok-qk-2/stage1 bindC, veh0, qc59q), Verilator 5.050",
+  "question": "why does the whole-QC token vehicle (tb_qcdie) not build (flat build0 MEMCG-OOM at 360 GiB; census json-only OOM at 64 GiB with and without the 768 ROM_TILE defparams)",
+  "frontend_bisection_json_only_maxrss_gb": {"no_instances": 5.56, "slices_only_185": 14.7, "cb12": 9.25, "cb48": 21.9, "cb48_all_strap_params_stripped": 21.8, "cbs_only_192": "OOM at 64", "full_bound_top": 81.7},
+  "findings": [
+    "ROM_TILE defparams are not the census blow-up: the full bound top without them needs 81.7 GB (13m55s) for --json-only, the 64 GiB census cap was simply too small",
+    "per-instance cost ~0.33 GB per compute block (cb12/cb48 linear), identical with all strap params stripped -> instance count, not parameter specialisation",
+    "flattened-node census: one compute block = 19.5M nodes, 88% in 4 x ot_qwen_w12_matvec_part (4.27M each, no ROM inside, no cross-module refs); whole die ~3.97G flattened nodes = 192 blocks 3.74G + slices/coll/glue 0.23G",
+    "the 768 tile-level ROM_TILE defparams additionally specialise every tile subtree (incl. matvec) 768x in the flat build0",
+    "Verilator 5.050 rejects defparam through generate-array scopes (g_rb[b]) -> leaf-level ROM defparams are not possible"
+  ],
+  "class_fix_sim_only": {
+    "hier_block": "ot_qwen_w12_matvec_part (hier.vlt, Verilator --hierarchical): 768 instances share one separately verilated block",
+    "rom_load": "tb rom_bind.vh replaced by rom_load.vh (tools/qwen_tokfunc/current_path/qc_rom_load.py): 7732 hierarchical $readmemh at #0.01 ns = 7680 tile ROMs (qtile_t<T>_b<b>_c<c>, T from rom_bind.vh) + opseg (rom_bind INSTANCE defparam) + 51 programme ROMs (sys_face_cfg, calendar_m0/1, 12 x table_s0_m0..3), plusarg +OT_TB_ROM_DIR, missing image fatal, +OT_ROM_DIR refused; every tile keeps ROM_TILE -1 (one shared body). No RTL change."
+  },
+  "ab_unit_test": {
+    "what": "one compute block cbx_q10__cl94a12200 (tiles 708..711, 40 ROMs), both with hier_block matvec_part: A = ROM_TILE defparams + +OT_ROM_DIR (build0 bench law), B = qc_rom_load readmemh + +OT_TB_ROM_DIR; $writememh of every ROM array at 1 ns",
+    "result": "40/40 arrays bit-identical (md5 lists ab_dump_A.md5 == ab_dump_B.md5), every array has >= 416 of 512 non-zero rows; builds rc 0 11.4 GB 31-33 min, sims rc 0",
+    "host": "intel2, memory-capped scopes"
+  },
+  "build1": "whole-QC hierarchical build + 6000-cycle QC-only bring-up run: epyc2 ot-heavy oth-ubuntu-3153048-1793709264 (--mem 160, die priority), /home/ubuntu/scratch-root/claude/tok-qw-5/build1 (inputs copied from intel2 tok-qk-2), rom_load.vh md5 922ebe213ca5c34935e46843dc61b7da",
+  "status": "CLASS_FOUND_FIX_UNIT_PASS_BUILD_RUNNING"
+}

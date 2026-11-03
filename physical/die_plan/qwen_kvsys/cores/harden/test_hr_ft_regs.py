@@ -77,3 +77,37 @@ def test_spare_tie_masks_reserved_bits():
     with pytest.raises(SystemExit, match="lacks bit 9"):
         S.transform(rtl, ["o[9]"])
     assert json.load(open(H / "recipes_kv.json"))["qkd_hr_cdc_pc"]["spare_out_tie"] is True
+
+
+def test_ft_pairs_declares_one_station_pair():
+    """DIE-KV-63/hr: the ft face register is both faces -> `pair IN OUT` (face_guard ft1 pair), exact maps only."""
+    M = _m()
+    _, rep = M.transform(RTL, SPEC)
+    assert M.ft_pairs(rep) == [("f_i", "f")]
+    assert M.ft_pairs([dict(out="f", src=["f_i[1]", "f_i[0]"])]) == []          # crossed bits: undeclared
+    assert M.ft_pairs([dict(out="f", src=["a[0]", "b[1]"])]) == []              # two source buses: undeclared
+    assert M.ft_pairs([dict(out="x", src=["y"])]) == [("y", "x")]               # scalar
+
+
+def test_ft_pair_face_guard_accepts_registered_ft(tmp_path):
+    """the declared pair turns the one-flop feed-through from 'merged' into an ft1 pair in face_guard"""
+    import sys
+    sys.path.insert(0, str(H.parents[4] / "tools" / "die_plan"))
+    import face_guard as FG
+    net = """module c(clk, a, o);
+  input clk;
+  input [1:0] a;
+  output [1:0] o;
+  DFFHQNx1_ASAP7_75t_R r0 (.CLK(clk), .D(a[0]), .QN(n0));
+  DFFHQNx1_ASAP7_75t_R r1 (.CLK(clk), .D(a[1]), .QN(n1));
+  INVx1_ASAP7_75t_R i0 (.A(n0), .Y(o[0]));
+  INVx1_ASAP7_75t_R i1 (.A(n1), .Y(o[1]));
+endmodule
+"""
+    ft = tmp_path / "ft_stations.txt"
+    ft.write_text("# core kit: no ft slots\n")
+    bad = FG.guard(net, top="c", ft1=FG.read_ft1(ft))
+    assert bad["fail_counts"].get("merged") == 4
+    ft.write_text("# core kit: no ft slots\npair a o\n")
+    good = FG.guard(net, top="c", ft1=FG.read_ft1(ft))
+    assert not good["fail_counts"], good["fails"]

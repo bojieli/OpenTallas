@@ -24,6 +24,10 @@ LEGACY_REPAIRS = (LEGACY_REPAIR, [c for c in LEGACY_REPAIR if not c.startswith('
 # grt_post.tcl (the gate chain) still runs.  Any other extra line still refuses.
 FINAL_REPAIR_TAIL = ['write_db /work/pre_final_state.odb', 'write_sdc -no_timestamp /work/pre_final_state.sdc',
                      'set_debug_level EST estimate_parasitics 2', 'source /work/core_final_repair.tcl']
+# DIE-S81-50 11-03: tools/die_plan/core_flow.py itself writes the bare form (grt_post_core.tcl = kit hooks, grt_post.tcl,
+# then only 'source /work/core_final_repair.tcl', e.g. S81 sstn_base566 bodyA): the same final data repair without the
+# state dump, skipped alike.  Any other tail still refuses.
+FINAL_REPAIR_TAILS = (FINAL_REPAIR_TAIL, FINAL_REPAIR_TAIL[-1:])
 
 
 def stage(kit):
@@ -36,7 +40,7 @@ def stage(kit):
         if any('post_grt_drv.tcl' in line for line in lines):
             drv = kit / 'post_grt_drv.tcl'
             tail = lines[len(LEGACY_WRAPPER):]
-            final_tail = tail == FINAL_REPAIR_TAIL and (kit / 'core_final_repair.tcl').is_file()
+            final_tail = tail in FINAL_REPAIR_TAILS and (kit / 'core_final_repair.tcl').is_file()
             if ((lines != LEGACY_WRAPPER and not (lines[:len(LEGACY_WRAPPER)] == LEGACY_WRAPPER and final_tail))
                     or not drv.is_file() or
                     commands(drv) not in LEGACY_REPAIRS or not (kit / 'grt_post.tcl').is_file()):

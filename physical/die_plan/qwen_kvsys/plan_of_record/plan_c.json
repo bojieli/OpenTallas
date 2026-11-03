@@ -2467868,6 +2467868,7 @@
   }
  },
  "budgets": {
+  "id_straps_in_type_types": ["kv3_hg", "kv3_hg_v1", "kv3_hg_v1p2", "kv3_hg_v1p3", "kv3_hg_v1p4", "kv3_hg_v1p5", "kv3_hg_v1p6", "kv3_hg_v3", "kv3_hgi", "kv3_hgi_v1", "kv3_hgi_v2", "kv3_hgi_v3", "kv3_hgi_v4", "kv3_hgi_v5", "kv3_hgi_v6", "kv3_hgi_v7", "kv3_hgi_v8", "kv3_hub_Eo", "kv3_hub_Wo"],
   "face_pins_per_um": 6,
   "face_pin_layers": 2,
   "face_window_um": 10,
@@ -2467877,7 +2467878,12 @@
   "ft_station_max_um": 405.0,
   "reach_margin": 1.0,
   "cland_fit_resize_off_types": [
-   "kv3_io_cor"
+   "kv3_io_cor",
+   "kv3_io_cor_v1"
+  ],
+  "dpl_legalizer_types": [
+   "kv3_io_cor",
+   "kv3_io_cor_v1"
   ],
   "cland_pinslot_dense_types": [
    "kv3_io_ft",
