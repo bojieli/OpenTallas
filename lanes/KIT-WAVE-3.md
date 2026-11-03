@@ -75,3 +75,8 @@ Elapsed time: 24:08.01[h:]min:sec. CPU time: user 5821.16 sys 12.58 (402%). Peak
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hbm_idx_vm_query_static_n12/base/5_1_grt.odb] Error 2
  | kit localhost:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_vm_query_static_n12/attempt_2/gen/ot_hbm_idx_vm_query_static_n12_be0b530febe5 src claude/kit-wave-15-hbmtaps-cc-1101@e96f241822a | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-02 19:54:49 PST AUTOPILOT -> KIT-WAVE-3: FAILED 78b7dd126ccf hbm/hfd_ep_static (CRASH/flow-error): 40.000000 (sign-off band FAIL; fix the clock, not the hold)
+Elapsed time: 15:45.14[h:]min:sec. CPU time: user 2079.86 sys 6.56 (220%). Peak memory: 1835872KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/hbc_hfd_ep_static/base/5_1_grt.odb] Error 2
+ | kit localhost:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/hfd_ep_static/attempt_8/gen/hfd_ep_static_ce811c3f8f1c src claude/kit-wave-15-hbmtaps-cc-1101@e96f241822a | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
