@@ -1,33 +1,53 @@
 {
  "schema": "opentallas.signoff.v1",
  "name": "kl_dsfd_node_NNfu_c",
- "generated": "2026-10-24T21:37:10-07:00",
- "host": "dear-crayfish",
+ "generated": "2026-11-02T18:02:29-08:00",
+ "host": "tolerant-swine",
  "inputs": {
-  "base": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base",
-  "orfs": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run",
+  "base": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base",
+  "orfs": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run",
   "design": "kl_dsfd_node_NNfu_c",
-  "kit": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c",
-  "odb": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.odb",
-  "spef": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.spef",
-  "sdc": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/constraint.sdc",
+  "kit": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c",
+  "odb": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/constraint.sdc",
   "sdc_source": "kit",
-  "synth": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/1_2_yosys.v",
-  "final_v": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.v",
+  "synth": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/1_synth.v",
+  "final_v": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.v",
   "metrics": {
-   "5_2_route.json": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/logs/asap7/kl_dsfd_node_NNfu_c/base/5_2_route.json",
-   "5_1_grt.json": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/logs/asap7/kl_dsfd_node_NNfu_c/base/5_1_grt.json",
-   "6_report.json": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/logs/asap7/kl_dsfd_node_NNfu_c/base/6_report.json"
+   "5_2_route.json": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/logs/asap7/kl_dsfd_node_NNfu_c/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/logs/asap7/kl_dsfd_node_NNfu_c/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/logs/asap7/kl_dsfd_node_NNfu_c/base/6_report.json"
   },
-  "drc_rpt": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/reports/asap7/kl_dsfd_node_NNfu_c/base/5_route_drc.rpt",
-  "pins": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/pins.json",
-  "sdc_lint_ctx": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/sdc_lint.json",
-  "record": null
+  "drc_rpt": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/reports/asap7/kl_dsfd_node_NNfu_c/base/5_route_drc.rpt",
+  "pins": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/pins.json",
+  "sdc_lint_ctx": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/sdc_lint.json",
+  "record": null,
+  "library_config": null,
+  "ff_bound_ps": 202.5
  },
  "policy": {
   "period_ps": 833.0,
-  "uncertainty_setup_ps": 60.0,
+  "margin_policy": "nominal OWNER 12.24b/c (setup uncertainty 0, hold unchanged)",
+  "margin_policy_switch": "OT_MARGIN_POLICY=legacy | signoff.py run --margin-policy legacy",
+  "margin_policy_rule": "OWNER 12.24b/c 2026-10-31: nominal setup (setup clock uncertainty 0, hold 25 kept; legacy setup 60 = A/B only)",
+  "uncertainty_setup_ps": 0.0,
   "uncertainty_hold_ps": 25.0,
+  "uncertainty_source": {
+   "setup": "in-session override after read_sdc",
+   "hold": "golden SDC as written"
+  },
+  "sdc_uncertainty_ps": {
+   "setup": 0.0,
+   "hold": 25.0
+  },
+  "sdc_uncertainty_overridden": {
+   "setup": {
+    "sdc": 0.0,
+    "signoff": 0.0,
+    "changed": false
+   }
+  },
   "spread_max_ps": 80.0,
   "spread_corners": [
    "tt",
@@ -35,18 +55,22 @@
   ],
   "insertion_tol_ps": 40.0,
   "fanout_max": 64,
+  "ff_vclk": "bound-ff",
+  "ff_vclk_contract": "declared core FF insertion /srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/sdc_lint.json",
+  "insertion_bound": null,
+  "ff_vclk_bound_ps": 202.5,
   "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
-  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "derate": "none in the verdict (OWNER 12.24b/c: setup uncertainty 0, no spice clock factor; hold uncertainty per policy); ocv5_* = flat late 1.05 / early 0.95, information only",
   "engine": "OpenSTA in OpenROAD (openroad/orfs:asap7lock), one process per corner",
-  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
-  "corner_rule": "setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a)"
+  "libs": "Exact routed-kit ORFS make TC/BC_LIB_FILES including macro views; hashed receipt",
+  "corner_rule": "setup TT / hold FF / uncertainty 0-25 ps (nominal) / related pair skew CPPR INFO (target 80); spread INFO; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a; OWNER 12.24b)"
  },
  "tool_commit": null,
  "corners": {
   "tt": {
    "done": true,
    "design": "dsfd_node_NNfu",
-   "cells": 23437.0,
+   "cells": 22255.0,
    "parasitics": "spef",
    "clocks": [
     "clk",
@@ -73,22 +97,23 @@
     "o"
    ],
    "overlay": "applied vclk in_min -40 out_min 0",
-   "sdc_wns_max": 18.88,
-   "sdc_wns_min": 11.08,
+   "ff_vclk_reference": null,
+   "sdc_wns_max": 9.62,
+   "sdc_wns_min": 20.09,
    "sdc_tns_max": 0.0,
    "sdc_tns_min": 0.0,
    "sdc_nviol_max": 0.0,
    "sdc_nviol_min": 0.0,
-   "std_wns_max": 18.88,
-   "std_wns_min": 11.08,
+   "std_wns_max": 9.62,
+   "std_wns_min": 20.09,
    "std_tns_max": 0.0,
    "std_tns_min": 0.0,
    "std_nviol_max": 0.0,
    "std_nviol_min": 0.0,
    "slew_viol": 0.0,
    "cap_viol": 0.0,
-   "fanout_max": 31.0,
-   "fanout_worst_net": "clknet_leaf_21_clk[0]",
+   "fanout_max": 33.0,
+   "fanout_worst_net": "clknet_leaf_15_qb_SW_out",
    "fanout_viol": 0.0,
    "check_setup": {
     "unconstrained": 0,
@@ -98,32 +123,101 @@
     "generated": 0
    },
    "ck_errors": 0.0,
+   "pg_terms": 44510.0,
+   "pg_open": 0.0,
+   "pg_first_open": null,
    "insertion_all": {
     "n": 1978,
-    "min": 235.9,
-    "mean": 246.56,
-    "max": 262.07,
-    "spread": 26.17
+    "min": 241.32,
+    "mean": 247.14,
+    "max": 256.1,
+    "spread": 14.78
    },
    "insertion_pinflops": {
     "n": 200,
-    "min": 245.49,
-    "mean": 252.1,
-    "max": 262.05,
-    "spread": 16.56
+    "min": 246.41,
+    "mean": 248.58,
+    "max": 250.89,
+    "spread": 4.48
    },
-   "ocv5_wns_max": -25.51,
-   "ocv5_wns_min": -6.6,
+   "pair_skew": {
+    "done": true,
+    "checks": {
+     "max": {
+      "n": 50309.0,
+      "worst_abs_ps": 17.94,
+      "bounded": false,
+      "worst_signed_ps": -17.94,
+      "worst_launch": "u_n.cal_d[3][16]$_DFFE_PP_",
+      "worst_capture": "u_n.r_d[16]$_DFF_P_",
+      "worst_crpr_ps": 5.2,
+      "p99_raw_ps": 18.91,
+      "searched": 1124.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     },
+     "min": {
+      "n": 50309.0,
+      "worst_abs_ps": 17.86,
+      "bounded": false,
+      "worst_signed_ps": 17.86,
+      "worst_launch": "u_n.wa_t[1][14]$_DFF_P_",
+      "worst_capture": "u_n.fw_sb[34]$_DFF_P_",
+      "worst_crpr_ps": 5.2,
+      "p99_raw_ps": 20.78,
+      "searched": 3015.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     }
+    },
+    "counts": {
+     "regs": 1978.0,
+     "no_clock_arrival": 0.0,
+     "data_pins": 1978.0,
+     "pairs": 50309.0,
+     "inter_clock": 0.0
+    },
+    "method": "tag",
+    "seconds": 266.0,
+    "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+    "tsv": "pair_skew.tsv"
+   },
+   "clock_endpoint_masters": [
+    "DFFASRHQNx1_ASAP7_75t_R",
+    "DFFHQNx1_ASAP7_75t_R"
+   ],
+   "clock_endpoint_mapping_errors": 0.0,
+   "ocv5_wns_max": -42.99,
+   "ocv5_wns_min": 8.95,
+   "unc_policy": {
+    "policy": "nominal",
+    "setup_ps": 0.0,
+    "hold_ps": 25.0,
+    "errors": 0.0
+   },
    "corner": "tt",
    "rc": 0,
    "macro_libs": [],
    "macro_missing": [],
-   "errors": []
+   "errors": [],
+   "clock_endpoint_coverage": {
+    "schema": "opentallas.clock_endpoint_coverage.v1",
+    "raw_pair_basis": "visible_clock_pins",
+    "models": [],
+    "instantiated_masters": [
+     "DFFASRHQNx1_ASAP7_75t_R",
+     "DFFHQNx1_ASAP7_75t_R"
+    ],
+    "status": "NO_UNEXPANDED_CHILD_ETM",
+    "verdict": "PASS",
+    "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+    "library_receipt": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/sign_q-s81/signoff/tt/libraries.json"
+   }
   },
   "ff": {
    "done": true,
    "design": "dsfd_node_NNfu",
-   "cells": 23437.0,
+   "cells": 22255.0,
    "parasitics": "spef",
    "clocks": [
     "clk",
@@ -150,22 +244,23 @@
     "o"
    ],
    "overlay": "applied vclk in_min -40 out_min 0",
-   "sdc_wns_max": 232.57,
-   "sdc_wns_min": 3.96,
+   "ff_vclk_reference": "applied mode bound_ff clock vclk latency_ps 202.500000",
+   "sdc_wns_max": 233.46,
+   "sdc_wns_min": -29.14,
    "sdc_tns_max": 0.0,
-   "sdc_tns_min": 0.0,
+   "sdc_tns_min": -1796.31,
    "sdc_nviol_max": 0.0,
-   "sdc_nviol_min": 0.0,
-   "std_wns_max": 232.57,
-   "std_wns_min": 3.96,
+   "sdc_nviol_min": 67.0,
+   "std_wns_max": 233.46,
+   "std_wns_min": 4.03,
    "std_tns_max": 0.0,
    "std_tns_min": 0.0,
    "std_nviol_max": 0.0,
    "std_nviol_min": 0.0,
    "slew_viol": 0.0,
    "cap_viol": 0.0,
-   "fanout_max": 31.0,
-   "fanout_worst_net": "clknet_leaf_21_clk[0]",
+   "fanout_max": 33.0,
+   "fanout_worst_net": "clknet_leaf_15_qb_SW_out",
    "fanout_viol": 0.0,
    "check_setup": {
     "unconstrained": 0,
@@ -175,27 +270,96 @@
     "generated": 0
    },
    "ck_errors": 0.0,
+   "pg_terms": 44510.0,
+   "pg_open": 0.0,
+   "pg_first_open": null,
    "insertion_all": {
     "n": 1978,
-    "min": 179.33,
-    "mean": 189.77,
-    "max": 205.37,
-    "spread": 26.04
+    "min": 180.97,
+    "mean": 187.18,
+    "max": 196.02,
+    "spread": 15.05
    },
    "insertion_pinflops": {
     "n": 200,
-    "min": 188.47,
-    "mean": 195.25,
-    "max": 205.35,
-    "spread": 16.88
+    "min": 186.81,
+    "mean": 188.71,
+    "max": 190.97,
+    "spread": 4.16
    },
-   "ocv5_wns_max": 200.11,
-   "ocv5_wns_min": -6.64,
+   "pair_skew": {
+    "done": true,
+    "checks": {
+     "max": {
+      "n": 50309.0,
+      "worst_abs_ps": 16.08,
+      "bounded": false,
+      "worst_signed_ps": -16.08,
+      "worst_launch": "u_n.cal_d[3][16]$_DFFE_PP_",
+      "worst_capture": "u_n.r_d[16]$_DFF_P_",
+      "worst_crpr_ps": 3.36,
+      "p99_raw_ps": 15.06,
+      "searched": 173.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     },
+     "min": {
+      "n": 50309.0,
+      "worst_abs_ps": 16.0,
+      "bounded": false,
+      "worst_signed_ps": 16.0,
+      "worst_launch": "u_n.wa_t[1][14]$_DFF_P_",
+      "worst_capture": "u_n.fw_sb[34]$_DFF_P_",
+      "worst_crpr_ps": 3.36,
+      "p99_raw_ps": 16.71,
+      "searched": 921.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     }
+    },
+    "counts": {
+     "regs": 1978.0,
+     "no_clock_arrival": 0.0,
+     "data_pins": 1978.0,
+     "pairs": 50309.0,
+     "inter_clock": 0.0
+    },
+    "method": "tag",
+    "seconds": 79.0,
+    "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+    "tsv": "pair_skew.tsv"
+   },
+   "clock_endpoint_masters": [
+    "DFFASRHQNx1_ASAP7_75t_R",
+    "DFFHQNx1_ASAP7_75t_R"
+   ],
+   "clock_endpoint_mapping_errors": 0.0,
+   "ocv5_wns_max": 194.62,
+   "ocv5_wns_min": -1.79,
+   "unc_policy": {
+    "policy": "nominal",
+    "setup_ps": 0.0,
+    "hold_ps": 25.0,
+    "errors": 0.0
+   },
    "corner": "ff",
    "rc": 0,
    "macro_libs": [],
    "macro_missing": [],
-   "errors": []
+   "errors": [],
+   "clock_endpoint_coverage": {
+    "schema": "opentallas.clock_endpoint_coverage.v1",
+    "raw_pair_basis": "visible_clock_pins",
+    "models": [],
+    "instantiated_masters": [
+     "DFFASRHQNx1_ASAP7_75t_R",
+     "DFFHQNx1_ASAP7_75t_R"
+    ],
+    "status": "NO_UNEXPANDED_CHILD_ETM",
+    "verdict": "PASS",
+    "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+    "library_receipt": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/sign_q-s81/signoff/ff/libraries.json"
+   }
   }
  },
  "sdc_lint": {
@@ -203,7 +367,7 @@
   "mode": "kit sdc_lint.json",
   "errors": [],
   "n_errors": 0,
-  "sdc": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/constraint.sdc",
+  "sdc": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/constraint.sdc",
   "sdc_source": "kit"
  },
  "face_guard": {
@@ -213,11 +377,12 @@
   "ok": 200,
   "fail_counts": {},
   "fails": {},
-  "netlist": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/1_2_yosys.v",
-  "pins": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/pins.json",
+  "dead_declared": [],
+  "netlist": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/1_synth.v",
+  "pins": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/pins.json",
   "boundary_context": {
-   "manifest": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/boundary_guard_context.json",
-   "source_core_json": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/core.json",
+   "manifest": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/boundary_guard_context.json",
+   "source_core_json": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/core.json",
    "controls": [
     "clk",
     "rst_n"
@@ -234,17 +399,19 @@
  "checks": {
   "setup_tt": {
    "verdict": "PASS",
-   "wns_ps": 18.88,
+   "wns_ps": 9.62,
    "tns_ps": 0.0,
    "violators": 0.0
   },
   "hold_ff": {
    "verdict": "PASS",
-   "wns_ps": 3.96,
+   "wns_ps": 4.03,
    "tns_ps": 0.0,
    "violators": 0.0,
-   "sdc_wns_ps": 3.96,
-   "overlay": "applied vclk in_min -40 out_min 0"
+   "sdc_wns_ps": -29.14,
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "ff_vclk_reference": "applied mode bound_ff clock vclk latency_ps 202.500000",
+   "reason": null
   },
   "drv": {
    "verdict": "PASS",
@@ -267,8 +434,8 @@
     "tt": 0.0,
     "ff": 0.0
    },
-   "max_fanout": 31.0,
-   "worst_net": "clknet_leaf_21_clk[0]"
+   "max_fanout": 33.0,
+   "worst_net": "clknet_leaf_15_qb_SW_out"
   },
   "unconstrained": {
    "verdict": "PASS",
@@ -282,52 +449,171 @@
   },
   "clock": {
    "verdict": "PASS",
-   "spread_max_ps": 80.0,
+   "endpoint_model_coverage": {
+    "tt": {
+     "schema": "opentallas.clock_endpoint_coverage.v1",
+     "raw_pair_basis": "visible_clock_pins",
+     "models": [],
+     "instantiated_masters": [
+      "DFFASRHQNx1_ASAP7_75t_R",
+      "DFFHQNx1_ASAP7_75t_R"
+     ],
+     "status": "NO_UNEXPANDED_CHILD_ETM",
+     "verdict": "PASS",
+     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+     "library_receipt": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/sign_q-s81/signoff/tt/libraries.json"
+    },
+    "ff": {
+     "schema": "opentallas.clock_endpoint_coverage.v1",
+     "raw_pair_basis": "visible_clock_pins",
+     "models": [],
+     "instantiated_masters": [
+      "DFFASRHQNx1_ASAP7_75t_R",
+      "DFFHQNx1_ASAP7_75t_R"
+     ],
+     "status": "NO_UNEXPANDED_CHILD_ETM",
+     "verdict": "PASS",
+     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+     "library_receipt": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/sign_q-s81/signoff/ff/libraries.json"
+    }
+   },
+   "raw_clock_verdict": "PASS",
+   "raw_pair_basis": "visible_clock_pins",
+   "pair_skew_max_ps": 80.0,
+   "spread_info_only": true,
+   "pair_skew_info_only": true,
+   "pair_skew_info": [],
    "by_corner": {
     "tt": {
      "pinflops": {
       "n": 200,
-      "min": 245.49,
-      "mean": 252.1,
-      "max": 262.05,
-      "spread": 16.56
+      "min": 246.41,
+      "mean": 248.58,
+      "max": 250.89,
+      "spread": 4.48
      },
      "all": {
       "n": 1978,
-      "min": 235.9,
-      "mean": 246.56,
-      "max": 262.07,
-      "spread": 26.17
+      "min": 241.32,
+      "mean": 247.14,
+      "max": 256.1,
+      "spread": 14.78
      },
-     "ck_errors": 0.0
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 50309.0,
+        "worst_abs_ps": 17.94,
+        "bounded": false,
+        "worst_signed_ps": -17.94,
+        "worst_launch": "u_n.cal_d[3][16]$_DFFE_PP_",
+        "worst_capture": "u_n.r_d[16]$_DFF_P_",
+        "worst_crpr_ps": 5.2,
+        "p99_raw_ps": 18.91,
+        "searched": 1124.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 50309.0,
+        "worst_abs_ps": 17.86,
+        "bounded": false,
+        "worst_signed_ps": 17.86,
+        "worst_launch": "u_n.wa_t[1][14]$_DFF_P_",
+        "worst_capture": "u_n.fw_sb[34]$_DFF_P_",
+        "worst_crpr_ps": 5.2,
+        "p99_raw_ps": 20.78,
+        "searched": 3015.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       }
+      },
+      "counts": {
+       "regs": 1978.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 1978.0,
+       "pairs": 50309.0,
+       "inter_clock": 0.0
+      },
+      "method": "tag",
+      "seconds": 266.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
     },
     "ff": {
      "pinflops": {
       "n": 200,
-      "min": 188.47,
-      "mean": 195.25,
-      "max": 205.35,
-      "spread": 16.88
+      "min": 186.81,
+      "mean": 188.71,
+      "max": 190.97,
+      "spread": 4.16
      },
      "all": {
       "n": 1978,
-      "min": 179.33,
-      "mean": 189.77,
-      "max": 205.37,
-      "spread": 26.04
+      "min": 180.97,
+      "mean": 187.18,
+      "max": 196.02,
+      "spread": 15.05
      },
-     "ck_errors": 0.0
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 50309.0,
+        "worst_abs_ps": 16.08,
+        "bounded": false,
+        "worst_signed_ps": -16.08,
+        "worst_launch": "u_n.cal_d[3][16]$_DFFE_PP_",
+        "worst_capture": "u_n.r_d[16]$_DFF_P_",
+        "worst_crpr_ps": 3.36,
+        "p99_raw_ps": 15.06,
+        "searched": 173.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 50309.0,
+        "worst_abs_ps": 16.0,
+        "bounded": false,
+        "worst_signed_ps": 16.0,
+        "worst_launch": "u_n.wa_t[1][14]$_DFF_P_",
+        "worst_capture": "u_n.fw_sb[34]$_DFF_P_",
+        "worst_crpr_ps": 3.36,
+        "p99_raw_ps": 16.71,
+        "searched": 921.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       }
+      },
+      "counts": {
+       "regs": 1978.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 1978.0,
+       "pairs": 50309.0,
+       "inter_clock": 0.0
+      },
+      "method": "tag",
+      "seconds": 79.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
     }
    },
    "problems": [],
-   "insertion_target_ps": 250.0
+   "insertion_target_ps": null,
+   "insertion_bound": null,
+   "core_latency_contract": "hard_core_latency"
   },
   "sdc_lint": {
    "verdict": "PASS",
    "mode": "kit sdc_lint.json",
    "errors": [],
    "n_errors": 0,
-   "sdc": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/constraint.sdc",
+   "sdc": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/constraint.sdc",
    "sdc_source": "kit"
   },
   "face_guard": {
@@ -337,11 +623,12 @@
    "ok": 200,
    "fail_counts": {},
    "fails": {},
-   "netlist": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/1_2_yosys.v",
-   "pins": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/pins.json",
+   "dead_declared": [],
+   "netlist": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/1_synth.v",
+   "pins": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/pins.json",
    "boundary_context": {
-    "manifest": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/boundary_guard_context.json",
-    "source_core_json": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/core.json",
+    "manifest": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/boundary_guard_context.json",
+    "source_core_json": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/core.json",
     "controls": [
      "clk",
      "rst_n"
@@ -358,8 +645,46 @@
    "verdict": "PASS",
    "count": 0,
    "source": "5_2_route.json"
+  },
+  "pg": {
+   "verdict": "PASS",
+   "open_terms": 0,
+   "pg_terms": 44510,
+   "first": null
+  },
+  "timing_modes": {
+   "verdict": "PASS",
+   "applicable": true,
+   "step": "signoff",
+   "tt": 250.0,
+   "ff": 202.5,
+   "mm": true
   }
  },
  "reasons": [],
- "verdict": "SIGNED"
+ "verdict": "SIGNED",
+ "core_latency": {
+  "contract": {
+   "kind": "hard_core_latency",
+   "ruling": "COORD 10-24",
+   "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+   "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+  },
+  "measured": {
+   "tt": {
+    "n": 200,
+    "min": 246.41,
+    "mean": 248.58,
+    "max": 250.89,
+    "spread": 4.48
+   },
+   "ff": {
+    "n": 200,
+    "min": 186.81,
+    "mean": 188.71,
+    "max": 190.97,
+    "spread": 4.16
+   }
+  }
+ }
 }

@@ -1069,8 +1069,8 @@ MACRO dsfd_node_NNfu
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
-      LAYER M4 ;
-        RECT  43.116 38.352 43.2 38.376 ;
+      LAYER M5 ;
+        RECT  21.588 38.652 21.636 39.132 ;
     END
   END clk[0]
   PIN fi[0]
@@ -1078,6 +1078,7 @@ MACRO dsfd_node_NNfu
     USE SIGNAL ;
     PORT
       LAYER M5 ;
+        RECT  21.552 75.623 21.576 77.712 ;
         RECT  21.552 77.676 21.576 77.76 ;
     END
   END fi[0]
@@ -1086,6 +1087,7 @@ MACRO dsfd_node_NNfu
     USE SIGNAL ;
     PORT
       LAYER M5 ;
+        RECT  21.552 0.016 21.576 2.137 ;
         RECT  21.552 0 21.576 0.084 ;
     END
   END fo[0]
@@ -1622,6 +1624,7 @@ MACRO dsfd_node_NNfu
     USE SIGNAL ;
     PORT
       LAYER M4 ;
+        RECT  43.121 39.36 43.164 39.384 ;
         RECT  43.116 39.36 43.2 39.384 ;
     END
   END rst_n[0]

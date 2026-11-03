@@ -1,25 +1,28 @@
 {
  "schema": "opentallas.s81.native_core_view.v1",
  "module": "dsfd_node_NNfu",
- "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c (gen_core_kit_legacy.py, claude/elem-s81-cores-1024 @a460187405 balance hooks; RTL claude/s81-kits-1024r-nodes @896eccfb49; round r6)",
- "routed_db": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.odb",
+ "kit": "intel2:/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c (Codex gen11_allpg_sdc QBS centre-clock kit, build c9021ed99 codex/s81-die-2032; DIE-S81-48 normal stage-resume route from the saved GRT DB 11-02)",
+ "routed_db": "/srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.odb",
  "verdict": "SIGNED",
  "pins": 202,
  "flow_change": "POST_CTS clock-insertion balance to the 250 ps budget (tap_balance.tcl, clk[0]) + SKIP_CTS_REPAIR_TIMING + PRE_CTS hold_budget.tcl; NO post-synth netlist hook, no pair lines; boundary registers in RTL (claude/s81-kits-1024r-nodes @896eccfb49)",
  "geom_review": "author PASS results/geom_review/s81_kits_1024r/dsfd_node_NNfu_c.json; GEOM-REVIEW PASS 2026-10-24 21:30 (claude/geom-review-1024@5ce9f91957) (PASS)",
  "files": {
-  "config.mk": "bff63ab46af1ff82316df34c04e9e3e16aaf497c9c59b95120f5d59c8e41d2ea",
-  "constraint.sdc": "47aafd5f844cdd339b94575e6cdb95327104c2d761a5e6cc9f55a2dae177935c",
-  "cts_post.tcl": "5d8e6f0b282278ffecda5b983b2370b66c8c0266441cfb4d973da785184a9c69",
-  "hold_budget.tcl": "e0905790acfc92fab0a2bdb4face91cc1e2818f2adc80aa185e93f50ae48bc4f",
-  "tap_balance.tcl": "df8747491d8f0d8e7ec85989669e44a1423fd104f397ff7aec0d27aa3fb10259",
+  "config.mk": "2151caae9f1827ee4da416d1cd63bacb4ccb1886a936b12553f538e27368e06a",
+  "constraint.sdc": "140a440986b9d03bff3830b28bd3ae19bd22b9f84a6a8b88b9f1c000538e3e96",
+  "cts_post.tcl": "d310e810e61783d7855e889133507f957547bfe0126f00bb43c88113f3e3cf57",
+  "dsfd_node_NNfu.lef": "f4e0985f2836bdafb992d3954e6424b87fdd97dbdbdedd8d9c62d8667e0851de",
+  "dsfd_node_NNfu_ff.lib": "70f42428e504b6c27083baa57d96156fe8d5ae37039bc9e9be2fbdb574279cde",
+  "dsfd_node_NNfu_tt.lib": "b6906e92d1329e8be407c9d06d2207a7f63c50e4cb420b22c2a7016d8bb8dda1",
   "face_guard.json": "bab1feebfdb63bdedacacc22ee2f4ad27e713341930cb85d14c86f5a2934ff39",
-  "freeze.json": "8f6eb90664f80ec125a4b116e02d1e5ae57562c6ea46e0efc519b5e972c9e170",
+  "freeze.json": "29302ea2d84996af9d44b47e5213a6ec8a696b7e353450c05346637abb0e83df",
+  "hold_budget.tcl": "76a68a887b46ef1253e052f448ae15ef842108b3da100556a893fe5560a52555",
+  "lec_routed.json": "84ffd44523bb223c8c13cecad2314c0af28c4bea437a4fff7042980d5492188f",
   "pin_audit.json": "5e0ddb2ffee184a167d1213862e0eb658d857e547e6bcecbf19d88a4a65608e5",
-  "pins.json": "c69dee069de4c44deebc1a819c7cb8e2c1101a4d7b1b901dffa502d2bcb36d1f",
-  "signoff.json": "4dfbdd8874377ad289f18e274c0ca14bfa2dcb609e81a4d7e506d7e8befe923a",
-  "dsfd_node_NNfu.lef": "0113bd6d5cba6a7f4a9e6b8337e6604b75e74e2040ef92ba6cd746f0fed50b38",
-  "dsfd_node_NNfu_tt.lib": "ef936de9e5fa53251fee49971051a7293341c8fe18fdd59aac15294a30bbceae",
-  "dsfd_node_NNfu_ff.lib": "10715082f403bf1fa731505e3838dfdf141ac52718596c148fc66f6153f744d4"
- }
+  "pins.json": "d1d49a6e2a78302886edc77aeef48ab6fcb12504c0ae11c785abc3df705ae292",
+  "signoff.json": "3e50533987f04881c657aedc644eadc2b57b4265bf74a40ab514e722f1b43a38",
+  "tap_balance.tcl": "fca605006e5ef912d887d81fcba9c61c179423290623671f4f3eca24a9a31823"
+ },
+ "signoff": "SIGNED flow-20261102-q-s81 (9db068b5458): TT +9.62 / FF +4.03 / DRC 0 / ant 0; post-route LEC EQUIVALENT 2066 (lec_routed.json); PROVENANCE intel2 .../nnfu/r1/sign_q-s81/PROVENANCE.json",
+ "plan_event": "DIE-S81-48 ruling 11-02 (12.8a centre clock entry): clk[0] M5 centre (21.612,38.892); plan_h2_2249 NNfu lef/lib -> this view"
 }
