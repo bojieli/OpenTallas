@@ -1,5 +1,5 @@
 LAND_NATIVE_PASS edges=4096 rows_seeded=640 writes_pc0=3014 writes_pc1=2954 writes_rows=2989 samebank3=352 samebank2=1750 sameaddr=1333 rdwr_collisions=723 oor_writes=530 tjob_gt640_edges=308 rc0_edges=272 lanes_window=4779 lanes_need=4321 lanes_ignored=2312 lanes_invalid=4972 lanes_nonzero_writer=7950 wsc_changes=1959
-- tb.sv:151: Verilog $finish
+- tb.sv:156: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 3us; walltime 1.135 s; speed 3.006 us/s
-- Verilator: cpu 1.127 s on 1 threads; allocated 8 MB
+- Verilator: $finish at 3us; walltime 1.072 s; speed 3.184 us/s
+- Verilator: cpu 1.065 s on 1 threads; allocated 8 MB
