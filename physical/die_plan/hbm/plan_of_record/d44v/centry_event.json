@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.hbm_clock_entry_pin_event.v1",
  "plan": "p/b3/die_plan.json",
- "plan_sha256": "d258a39fbdb643a50276342c7c0774af4fa160cb72743573946282e1b80dcaa1",
+ "plan_sha256": "b117a7de1a9853b6571fe56a62931945450174e279aadcba8d3115c043225b3d",
  "clock_entries_sha256": "a045dee33b82a1ae9faf631a40b79bbd03ac32db1a0135e6cd2e31d06f3848ec",
  "keep": [
   "ot_hbm_idx_qctl_static",
@@ -33,9 +33,9 @@
    "pins_file": "cores/ot_hbm_idx_score_hcol_h0__218.592x187.488__canon__c25c_native__d16f__codex_g21.json",
    "status": "UNCHANGED (table at entry or no entry)"
   },
-  "ot_hbm_idx_score_hcol_h1|cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21.json": {
+  "ot_hbm_idx_score_hcol_h1|cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21__mpisl.json": {
    "module": "ot_hbm_idx_score_hcol_h1",
-   "pins_file": "cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21.json",
+   "pins_file": "cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21__mpisl.json",
    "status": "KEPT (signed record)"
   },
   "ot_hbm_hc_bank128_pair_core|cores/ot_hbm_hc_bank128_pair_core__250.56x267.84__canon.json": {
