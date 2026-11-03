@@ -171,6 +171,7 @@ module ot_qwen_w12_matvec #(
 endmodule
 
 module ot_qwen_w12_matvec_part #(
+    parameter integer IDLE_UCK = 0,    // DIE-QC-66 11-03: 1 = u_me.idle on the ungated tile clock ck_u (as-built B3 NL form)
     parameter integer SPLIT_CP = 0,
     parameter integer W  = 16,
     parameter integer G  = 4,
@@ -253,6 +254,7 @@ module ot_qwen_w12_matvec_part #(
     //: REGROOT < 8: unused (instantiations tie it to {32{go}}).
     input  wire [31:0]       go_cp,
     output wire              ready,
+    input  wire              ck_u,     // DIE-QC-66 IDLE_UCK: ungated tile clock (unused when IDLE_UCK = 0)
     output reg               idle,
     input  wire [NW-1:0]     i_nout,
     input  wire [NW-1:0]     i_tiles,     // rounds
@@ -2169,10 +2171,17 @@ end endgenerate
     wire ord_busy = |(ov_line & OMASK);
     wire idle_c = !acc[4] && !pend && !e_v && !(|m_vl) && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|post_pending) && !(|tv) && !ov1
                   && !ov2 && !ord_busy && !mx_we;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) idle <= 1'b1;
-        else idle <= idle_c && !(go && ready);
-    end
+    generate if (IDLE_UCK != 0) begin : g_idle_uck
+        always @(posedge ck_u or negedge rst_n) begin
+            if (!rst_n) idle <= 1'b1;
+            else idle <= idle_c && !(go && ready);
+        end
+    end else begin : g_idle_ck
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) idle <= 1'b1;
+            else idle <= idle_c && !(go && ready);
+        end
+    end endgenerate
 endmodule
 
 
