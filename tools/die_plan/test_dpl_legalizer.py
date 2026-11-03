@@ -28,5 +28,5 @@ def test_other_values_fail():
 
 def test_config_mk_uses_it_once():
     src = (HERE / "gen_phys.py").read_text()
-    assert src.count("*_dpl_args(P.budgets),") == 1
+    assert src.count("*_dpl_args(P.budgets, dpl_diamond),") == 1
     assert src.count("DETAIL_PLACEMENT_ARGS") == 2          # helper + docstring; no other writer of the ORFS var
