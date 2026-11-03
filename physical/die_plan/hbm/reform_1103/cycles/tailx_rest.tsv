@@ -1,0 +1,17 @@
+core	port_or_bus	plus_cycles	note
+ot_hbm_hc_root_static__tailx_rest__v4f4566	result_v	0	exact every edge (lockstep)
+ot_hbm_hc_root_static__tailx_rest__v4f4566	result[767:0]	0	exact every edge (lockstep)
+ot_hbm_hc_root_static__tailx_rest__v4f4566	sk_in_valid	0	exact every edge; sink launch window unchanged (age>=198 on the wrap edge)
+ot_hbm_hc_root_static__tailx_rest__v4f4566	sk_in_e[511:0]	0	exact on every sk_in_valid edge
+ot_hbm_hc_root_static__tailx_rest__v4f4566	sk_en_sk	0	exact every edge (free-running enable)
+ot_hbm_hc_root_static__tailx_rest__v4f4566	fault	0	sticky flag: rises 1..3 edges later inside a schedule (unit errors after the operand register), never earlier; equal at result_v
+ot_hbm_hc_root_static__tailx_rest__v4f4566	(internal) u_tail unit issue	+1	operand capture register before mul/add/exp/div; index delay lines +1
+ot_hbm_hc_root_static__tailx_rest__v4f4566	(internal) u_tail MAX / P3	+2	max4 two-stage (MAX 55->56, final 57), P3 56->58; EREADY 197 and all phase ends unchanged
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	result_v	0	exact every edge (lockstep)
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	result[767:0]	0	exact every edge (lockstep)
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_in_valid	0	exact every edge; sink launch window unchanged (age>=198 on the wrap edge)
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_in_e[511:0]	0	exact on every sk_in_valid edge
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_en_sk	0	exact every edge (free-running enable)
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	fault	0	sticky flag: rises 1..3 edges later inside a schedule (unit errors after the operand register), never earlier; equal at result_v
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	(internal) u_tail unit issue	+1	operand capture register before mul/add/exp/div; index delay lines +1
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	(internal) u_tail MAX / P3	+2	max4 two-stage (MAX 55->56, final 57), P3 56->58; EREADY 197 and all phase ends unchanged

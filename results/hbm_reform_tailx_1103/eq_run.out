@@ -1,0 +1,18 @@
+pos_r1_s2 R=1 seed=7741 expect=pass rc=0: TAILX_REFORM checks=74175 errors=0 masked=628 results=64 nonzero=64 sk_checks=901 fault_lag_edges=18 prio=8 TAILX_REFORM PASS 
+mut_pair_order R=1 seed=20261103 expect=fail rc=1: TAILX_REFORM checks=74175 errors=478 masked=838 results=64 nonzero=64 sk_checks=901 fault_lag_edges=18 prio=8 [742271000] %Fatal: tb_reform.sv:76: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_neg R=1 seed=20261103 expect=fail rc=1: TAILX_REFORM checks=74175 errors=40519 masked=23921 results=64 nonzero=64 sk_checks=901 fault_lag_edges=18 prio=8 [742271000] %Fatal: tb_reform.sv:76: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_phase_edge R=1 seed=20261103 expect=fail rc=1: TAILX_REFORM checks=74175 errors=41023 masked=23921 results=64 nonzero=64 sk_checks=901 fault_lag_edges=18 prio=8 [742271000] %Fatal: tb_reform.sv:76: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_max_early R=1 seed=20261103 expect=fail rc=1: TAILX_REFORM checks=74175 errors=119 masked=656 results=64 nonzero=64 sk_checks=901 fault_lag_edges=18 prio=8 [742271000] %Fatal: tb_reform.sv:76: Assertion failed in tb: TAILX_REFORM FAIL 
+eqv_bal_tie R=1 seed=20261103 expect=fail rc=0: TAILX_REFORM checks=74175 errors=0 masked=628 results=64 nonzero=64 sk_checks=901 fault_lag_edges=18 prio=8 TAILX_REFORM PASS 
+mut_phase_prio R=1 seed=20261103 expect=fail rc=1: TAILX_REFORM checks=74175 errors=4920 masked=4477 results=64 nonzero=64 sk_checks=901 fault_lag_edges=18 prio=8 [742271000] %Fatal: tb_reform.sv:76: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_mx_stage R=1 seed=20261103 expect=fail rc=1: TAILX_REFORM checks=74175 errors=499 masked=922 results=64 nonzero=64 sk_checks=901 fault_lag_edges=18 prio=8 [742271000] %Fatal: tb_reform.sv:76: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_p3_early R=1 seed=20261103 expect=fail rc=1: TAILX_REFORM checks=74175 errors=408 masked=908 results=64 nonzero=64 sk_checks=901 fault_lag_edges=18 prio=8 [742271000] %Fatal: tb_reform.sv:76: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_index_late R=1 seed=20261103 expect=fail rc=1: TAILX_REFORM checks=74175 errors=36077 masked=23185 results=64 nonzero=64 sk_checks=901 fault_lag_edges=33 prio=8 [742271000] %Fatal: tb_reform.sv:76: Assertion failed in tb: TAILX_REFORM FAIL 
+pos_r1 R=1 seed=20261103 expect=pass rc=0: TAILX_REFORM checks=74175 errors=0 masked=628 results=64 nonzero=64 sk_checks=901 fault_lag_edges=18 prio=8 TAILX_REFORM PASS 
+pos_r0 R=0 seed=20261103 expect=pass rc=0: TAILX_REFORM checks=74175 errors=0 masked=0 results=64 nonzero=64 sk_checks=901 fault_lag_edges=0 prio=8 TAILX_REFORM PASS 
+mut_opq_short R=1 seed=20261103 expect=fail rc=1: TAILX_REFORM checks=74175 errors=41501 masked=24159 results=64 nonzero=64 sk_checks=901 fault_lag_edges=18 prio=8 [742271000] %Fatal: tb_reform.sv:76: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_opq_exp_v R=1 seed=20261103 expect=fail rc=1: TAILX_REFORM checks=74175 errors=499 masked=922 results=64 nonzero=64 sk_checks=901 fault_lag_edges=18 prio=8 [742271000] %Fatal: tb_reform.sv:76: Assertion failed in tb: TAILX_REFORM FAIL 
+b95f7ddc754d50bbdda52d0b14525d15336c564a814fc6c2a71baa05fdd3107e  rtl/hbm_accel/cores_split/sk_en_q4/ot_hbm_hc_tail_rest_core_ce.sv
+3b6ae28d3ea1f0db1a728a78c6d12600f54c0c358079b998a60352c109fd96fb  results/hbm_reform_tailx_1103/tb_reform.sv
+523510acce5a043d9898f92ebd7764fa1694e165505b1231ec786104d5384230  tools/hbm_b2/sk_ce_kit.py
+OVERALL rc=0 (eqv_bal_tie is the declared-equivalent tie mutant: expected PASS)
