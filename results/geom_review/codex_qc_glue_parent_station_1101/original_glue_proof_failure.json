@@ -1,0 +1,30 @@
+{
+ "verdict": "NOT EQUIVALENT",
+ "scope": "original prereoute GLUE; not new station event",
+ "host": "intel2",
+ "kit": "/srv/opentallas-scratch2/claude/codex-qc-glue/place_spill/kit",
+ "rc": 1,
+ "counts": {
+  "compare_points": 63097,
+  "proved": 61971,
+  "differs": 1124,
+  "undecided": 2
+ },
+ "runtime_s": 30438.4,
+ "reset_edges_used": 64,
+ "keep": {
+  "declared": 16076,
+  "mapped": 16063,
+  "constant_proved": 13,
+  "missing": 0
+ },
+ "first_failure": "D2D SRAM write address inputs",
+ "dominant_unmatched": [
+  "u_d2d_rom.u_core.u_rec.st[0..2]",
+  "u_sys_face.u_ot_pr_core.st[0..2]"
+ ],
+ "runtime_already_proposed_FSM_relations": true,
+ "source_bug_not_established": true,
+ "narrow_fsm_diagnosis_owner": "FLOW/KITS",
+ "no_new_proof": true
+}
