@@ -1293698,7 +1293698,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1293719,7 +1293721,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1293740,7 +1293744,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1293761,7 +1293767,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1293782,7 +1293790,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1293803,7 +1293813,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1293824,7 +1293836,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1293845,7 +1293859,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1293866,7 +1293882,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1293887,7 +1293905,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1293908,7 +1293928,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1293929,7 +1293951,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1293950,7 +1293974,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1293971,7 +1293997,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1293992,7 +1294020,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1294013,7 +1294043,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1294034,7 +1294066,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1294055,7 +1294089,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1294076,7 +1294112,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1294097,7 +1294135,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1358954,7 +1358994,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1358975,7 +1359017,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1358996,7 +1359040,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1359017,7 +1359063,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1359038,7 +1359086,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1359059,7 +1359109,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1359080,7 +1359132,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1359101,7 +1359155,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1359122,7 +1359178,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1359143,7 +1359201,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1359164,7 +1359224,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1359185,7 +1359247,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1359206,7 +1359270,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1359227,7 +1359293,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1359248,7 +1359316,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1359269,7 +1359339,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1359290,7 +1359362,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1359311,7 +1359385,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1359332,7 +1359408,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1359353,7 +1359431,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1428002,7 +1428082,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1428023,7 +1428105,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1428044,7 +1428128,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1428065,7 +1428151,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1428086,7 +1428174,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1428107,7 +1428197,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1428128,7 +1428220,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1428149,7 +1428243,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1428170,7 +1428266,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1428191,7 +1428289,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1428212,7 +1428312,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1428233,7 +1428335,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1428254,7 +1428358,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1428275,7 +1428381,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1428296,7 +1428404,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1428317,7 +1428427,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1428338,7 +1428450,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1428359,7 +1428473,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1428380,7 +1428496,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1428401,7 +1428519,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1504874,7 +1504994,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1504895,7 +1505017,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1504916,7 +1505040,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1504937,7 +1505063,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1504958,7 +1505086,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1504979,7 +1505109,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1505000,7 +1505132,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1505021,7 +1505155,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1505042,7 +1505178,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1505063,7 +1505201,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1505084,7 +1505224,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1505105,7 +1505247,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1505126,7 +1505270,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1505147,7 +1505293,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1505168,7 +1505316,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1505189,7 +1505339,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1505210,7 +1505362,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1505231,7 +1505385,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1505252,7 +1505408,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1505273,7 +1505431,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1524657,7 +1524817,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1524678,7 +1524840,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1524699,7 +1524863,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1524720,7 +1524886,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1524741,7 +1524909,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1524762,7 +1524932,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1524783,7 +1524955,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1524804,7 +1524978,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1524825,7 +1525001,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1524846,7 +1525024,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1524867,7 +1525047,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1524888,7 +1525070,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1524909,7 +1525093,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1524930,7 +1525116,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1524951,7 +1525139,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1524972,7 +1525162,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1524993,7 +1525185,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1525014,7 +1525208,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1525035,7 +1525231,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1525056,7 +1525254,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1583402,7 +1583602,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1583423,7 +1583625,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1583444,7 +1583648,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1583465,7 +1583671,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1583486,7 +1583694,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1583507,7 +1583717,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1583528,7 +1583740,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1583549,7 +1583763,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1583570,7 +1583786,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1583591,7 +1583809,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1583612,7 +1583832,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1583633,7 +1583855,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1583654,7 +1583878,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1583675,7 +1583901,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1583696,7 +1583924,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1583717,7 +1583947,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1583738,7 +1583970,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1583759,7 +1583993,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1583780,7 +1584016,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1583801,7 +1584039,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1613019,7 +1613259,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1613040,7 +1613282,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1613061,7 +1613305,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1613082,7 +1613328,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1613103,7 +1613351,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1613124,7 +1613374,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1613145,7 +1613397,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1613166,7 +1613420,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1613187,7 +1613443,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1613208,7 +1613466,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1613229,7 +1613489,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1613250,7 +1613512,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1613271,7 +1613535,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1613292,7 +1613558,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1613313,7 +1613581,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1613334,7 +1613604,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1613355,7 +1613627,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1613376,7 +1613650,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1613397,7 +1613673,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1613418,7 +1613696,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1673623,7 +1673903,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1673644,7 +1673926,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1673665,7 +1673949,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1673686,7 +1673972,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1673707,7 +1673995,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1673728,7 +1674018,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1673749,7 +1674041,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1673770,7 +1674064,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1673791,7 +1674087,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1673812,7 +1674110,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1673833,7 +1674133,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1673854,7 +1674156,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1673875,7 +1674179,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1673896,7 +1674202,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1673917,7 +1674225,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1673938,7 +1674248,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1673959,7 +1674271,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1673980,7 +1674294,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1674001,7 +1674317,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1674022,7 +1674340,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1685909,7 +1686229,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1685930,7 +1686252,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1685951,7 +1686275,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1685972,7 +1686298,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1685993,7 +1686321,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1686014,7 +1686344,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1686035,7 +1686367,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1686056,7 +1686390,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1686077,7 +1686413,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1686098,7 +1686436,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1686119,7 +1686459,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1686140,7 +1686482,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1686161,7 +1686505,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1686182,7 +1686528,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1686203,7 +1686551,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1686224,7 +1686574,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1686245,7 +1686597,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1686266,7 +1686620,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1686287,7 +1686643,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1686308,7 +1686666,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1702721,7 +1703081,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1702742,7 +1703104,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1702763,7 +1703127,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1702784,7 +1703150,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1702805,7 +1703173,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1702826,7 +1703196,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1702847,7 +1703219,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1702868,7 +1703242,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1702889,7 +1703265,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1702910,7 +1703288,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1702931,7 +1703311,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1702952,7 +1703334,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1702973,7 +1703357,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1702994,7 +1703380,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1703015,7 +1703403,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1703036,7 +1703426,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1703057,7 +1703449,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1703078,7 +1703472,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1703099,7 +1703495,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1703120,7 +1703518,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1712217,7 +1712617,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1712238,7 +1712640,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1712259,7 +1712663,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1712280,7 +1712686,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1712301,7 +1712709,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1712322,7 +1712732,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1712343,7 +1712755,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1712364,7 +1712778,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1712385,7 +1712801,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1712406,7 +1712824,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1712427,7 +1712847,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1712448,7 +1712870,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1712469,7 +1712893,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1712490,7 +1712916,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1712511,7 +1712939,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1712532,7 +1712962,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1712553,7 +1712985,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1712574,7 +1713008,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1712595,7 +1713031,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1712616,7 +1713054,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1777990,7 +1778430,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1778011,7 +1778453,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1778032,7 +1778476,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1778053,7 +1778499,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1778074,7 +1778522,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1778095,7 +1778545,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1778116,7 +1778568,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1778137,7 +1778591,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1778158,7 +1778614,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1778179,7 +1778637,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1778200,7 +1778660,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1778221,7 +1778683,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1778242,7 +1778706,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1778263,7 +1778729,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1778284,7 +1778752,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1778305,7 +1778775,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1778326,7 +1778798,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1778347,7 +1778821,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1778368,7 +1778844,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1778389,7 +1778867,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1790537,7 +1791017,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1790558,7 +1791040,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1790579,7 +1791063,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1790600,7 +1791086,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1790621,7 +1791109,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1790642,7 +1791132,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1790663,7 +1791155,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1790684,7 +1791178,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1790705,7 +1791201,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1790726,7 +1791224,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1790747,7 +1791247,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1790768,7 +1791270,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1790789,7 +1791293,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1790810,7 +1791316,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1790831,7 +1791339,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1790852,7 +1791362,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1790873,7 +1791385,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1790894,7 +1791408,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1790915,7 +1791431,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1790936,7 +1791454,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1859642,7 +1860162,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1859663,7 +1860185,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1859684,7 +1860208,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1859705,7 +1860231,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1859726,7 +1860254,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1859747,7 +1860277,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1859768,7 +1860300,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1859789,7 +1860323,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1859810,7 +1860346,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1859831,7 +1860369,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1859852,7 +1860392,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1859873,7 +1860415,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1859894,7 +1860438,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1859915,7 +1860461,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1859936,7 +1860484,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1859957,7 +1860507,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1859978,7 +1860530,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1859999,7 +1860553,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1860020,7 +1860576,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1860041,7 +1860599,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1876471,7 +1877031,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1876492,7 +1877054,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1876513,7 +1877077,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1876534,7 +1877100,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1876555,7 +1877123,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1876576,7 +1877146,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1876597,7 +1877169,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1876618,7 +1877192,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1876639,7 +1877215,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1876660,7 +1877238,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1876681,7 +1877261,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1876702,7 +1877284,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1876723,7 +1877307,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1876744,7 +1877330,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1876765,7 +1877353,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1876786,7 +1877376,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1876807,7 +1877399,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1876828,7 +1877422,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1876849,7 +1877445,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1876870,7 +1877468,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -1953024,7 +1953624,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p1",
@@ -1953045,7 +1953647,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p2",
@@ -1953066,7 +1953670,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg0_p3",
@@ -1953087,7 +1953693,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg0_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g0_j",
@@ -1953108,7 +1953716,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g0_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg1_p0",
@@ -1953129,7 +1953739,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p1",
@@ -1953150,7 +1953762,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p2",
@@ -1953171,7 +1953785,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg1_p3",
@@ -1953192,7 +1953808,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg1_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g1_j",
@@ -1953213,7 +1953831,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g1_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg2_p0",
@@ -1953234,7 +1953854,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p1",
@@ -1953255,7 +1953877,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p2",
@@ -1953276,7 +1953900,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg2_p3",
@@ -1953297,7 +1953923,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg2_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g2_j",
@@ -1953318,7 +1953946,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g2_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     },
     {
      "inst": "pvg3_p0",
@@ -1953339,7 +1953969,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p0",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p1",
@@ -1953360,7 +1953992,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p1",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p2",
@@ -1953381,7 +1954015,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p2",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pvg3_p3",
@@ -1953402,7 +1954038,9 @@
      ],
      "pins_file": "pins/kv3_pv_pair_pins_fMX_r26c_lc.json",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+     "physical_inst": "u_bound.u_pvg3_p3",
+     "physical_master": "kv3_pv_pair"
     },
     {
      "inst": "pv__u_g3_j",
@@ -1953423,7 +1954061,9 @@
      "pins_file": "pins/pv_join_pins_r26q5c.json",
      "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
      "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
-     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib",
+     "physical_inst": "u_bound.u_pv_u_g3_j",
+     "physical_master": "ot_qwen_tp8_pv_join_t"
     }
    ],
    "internal_stations": [
@@ -2468535,7 +2469175,11 @@
   "reach_margin": 1.0,
   "cland_fit_resize_off_types": [
    "kv3_io_cor",
-   "kv3_io_cor_v1"
+   "kv3_io_cor_v1",
+   "kv3_hgi",
+   "kv3_hgi_v3",
+   "kv3_hgi_v4",
+   "kv3_hgi_v5"
   ],
   "dpl_legalizer_types": [
    "kv3_io_cor",
@@ -2468544,8 +2469188,14 @@
   "cland_pinslot_dense_types": [
    "kv3_io_ft",
    "kv3_io_ft_v1",
-   "kv3_hroot"
-  ]
+   "kv3_hroot",
+   "kv3_hgi",
+   "kv3_hgi_v3",
+   "kv3_hgi_v4",
+   "kv3_hgi_v5",
+   "kv3_io_cor_v1"
+  ],
+  "cland_note_kv64_1103": "DIE-KV-64 11-03 (COORD 11:3x class 2, OT_CLAND ring-band capacity: reserve > band by 4-7% under resize): kv3_hgi/_v3/_v4/_v5 legacy no-fit footprint (same as io_cor DIE-KV-56) + dense y-column pinslot rows (DIE-KV-62 form); kv3_io_cor_v1 + dense. hgi_v5/v6 band over a hard blockage is a separate class."
  },
  "census": [
   {
