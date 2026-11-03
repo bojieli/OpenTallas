@@ -1,0 +1,3493 @@
+{
+  "schema": "native_start_cone/1",
+  "source_only": true,
+  "selected_phase_qualified": false,
+  "physical_qualified": false,
+  "virtual_stage_count": 78,
+  "native_outputs": [
+    {
+      "port": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000000->sl_W5_sc",
+      "dst_region": "sl_W5_sc",
+      "dst_part": "sl_W5_sc",
+      "net": "pst_sl_W5_sc",
+      "stage": "r6439_0"
+    },
+    {
+      "port": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000000->sl_W5_ctl",
+      "dst_region": "sl_W5_ctl",
+      "dst_part": "sl_W5_ctl",
+      "net": "pst_sl_W5_ctl",
+      "stage": "r6377_0"
+    },
+    {
+      "port": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000000000->sl_W5_stm",
+      "dst_region": "sl_W5_stm",
+      "dst_part": "sl_W5_stm",
+      "net": "pst_sl_W5_stm",
+      "stage": "b6499"
+    },
+    {
+      "port": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010001000->sl_W5_su_c",
+      "dst_region": "sl_W5_su_c",
+      "dst_part": "sl_W5_su_c",
+      "net": "pst_sl_W5_su_c",
+      "stage": "b17296"
+    },
+    {
+      "port": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000000->sl_W5_su_l0",
+      "dst_region": "sl_W5_su_l0",
+      "dst_part": "sl_W5_su_l0",
+      "net": "pst_sl_W5_su_l0",
+      "stage": "r6748_0"
+    },
+    {
+      "port": "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000000000000->sl_W5_su_l1",
+      "dst_region": "sl_W5_su_l1",
+      "dst_part": "sl_W5_su_l1",
+      "net": "pst_sl_W5_su_l1",
+      "stage": "r6779_0"
+    }
+  ],
+  "stages": [
+    {
+      "id": "b0",
+      "region": "st:h",
+      "tree_path_id": "h",
+      "node_cell": "b0",
+      "node_xy_um": [
+        17007.84,
+        12463.2
+      ],
+      "clock_net": "n0",
+      "clock_from": "Y",
+      "clock_port": "t_st_b0__clk",
+      "clock_pin_xy_um": [
+        17002.98,
+        12463.2
+      ],
+      "rect_um": [
+        17002.98,
+        12463.2,
+        17007.3,
+        12463.74
+      ],
+      "flops": 8,
+      "pad": 0,
+      "edge_fall": false,
+      "root": true,
+      "module": "ot_dp_landing_root",
+      "settle": 64,
+      "start_port_in": null,
+      "parent": null,
+      "start_ports_out": [
+        "start:st:h->st:h0000",
+        "start:st:h->st:h10",
+        "start:st:h->st:h20"
+      ],
+      "children": [
+        "st:h0000",
+        "st:h10",
+        "st:h20"
+      ],
+      "reset_parent": "rst_raw_n",
+      "reset_output": "st_b0_rraw",
+      "reset_flops": 0,
+      "actual_clock_driver": "b0",
+      "clock_stub_manhattan_um": 4.860000000000582,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r3_1",
+      "region": "st:h20",
+      "tree_path_id": "h_2_0",
+      "node_cell": "r3_1",
+      "node_xy_um": [
+        16698.69,
+        12463.2
+      ],
+      "clock_net": "rn3_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r3_1__clk",
+      "clock_pin_xy_um": [
+        16700.85,
+        12463.2
+      ],
+      "rect_um": [
+        16700.85,
+        12463.2,
+        16705.17,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h->st:h20",
+      "parent": "st:h",
+      "start_ports_out": [
+        "start:st:h20->st:h2000"
+      ],
+      "children": [
+        "st:h2000"
+      ],
+      "reset_parent": "st_b0_rraw",
+      "reset_output": "st_r3_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r3_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b3",
+      "region": "st:h2000",
+      "tree_path_id": "h_2_0_0_0",
+      "node_cell": "b3",
+      "node_xy_um": [
+        16387.866,
+        12463.2
+      ],
+      "clock_net": "n3",
+      "clock_from": "Y",
+      "clock_port": "t_st_b3__clk",
+      "clock_pin_xy_um": [
+        16383.006000000001,
+        12463.2
+      ],
+      "rect_um": [
+        16383.006000000001,
+        12463.2,
+        16387.326,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20->st:h2000",
+      "parent": "st:h20",
+      "start_ports_out": [
+        "start:st:h2000->st:h200000"
+      ],
+      "children": [
+        "st:h200000"
+      ],
+      "reset_parent": "st_r3_1_rraw",
+      "reset_output": "st_b3_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b3",
+      "clock_stub_manhattan_um": 4.860000000000582,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r4_1",
+      "region": "st:h200000",
+      "tree_path_id": "h_2_0_0_0_0_0",
+      "node_cell": "r4_1",
+      "node_xy_um": [
+        16080.93,
+        12463.2
+      ],
+      "clock_net": "rn4_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r4_1__clk",
+      "clock_pin_xy_um": [
+        16083.090000000002,
+        12463.2
+      ],
+      "rect_um": [
+        16083.090000000002,
+        12463.2,
+        16087.41,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000->st:h200000",
+      "parent": "st:h2000",
+      "start_ports_out": [
+        "start:st:h200000->st:h20000000"
+      ],
+      "children": [
+        "st:h20000000"
+      ],
+      "reset_parent": "st_b3_rraw",
+      "reset_output": "st_r4_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r4_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b4",
+      "region": "st:h20000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0",
+      "node_cell": "b4",
+      "node_xy_um": [
+        15772.32,
+        12463.2
+      ],
+      "clock_net": "n4",
+      "clock_from": "Y",
+      "clock_port": "t_st_b4__clk",
+      "clock_pin_xy_um": [
+        15774.480000000001,
+        12463.2
+      ],
+      "rect_um": [
+        15774.480000000001,
+        12463.2,
+        15778.8,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000->st:h20000000",
+      "parent": "st:h200000",
+      "start_ports_out": [
+        "start:st:h20000000->st:h200000000000",
+        "start:st:h20000000->st:h2000000010",
+        "start:st:h20000000->st:h2000000020",
+        "start:st:h20000000->st:h2000000030"
+      ],
+      "children": [
+        "st:h200000000000",
+        "st:h2000000010",
+        "st:h2000000020",
+        "st:h2000000030"
+      ],
+      "reset_parent": "st_r4_1_rraw",
+      "reset_output": "st_b4_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b4",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r19_1",
+      "region": "st:h2000000020",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0",
+      "node_cell": "r19_1",
+      "node_xy_um": [
+        15463.71,
+        12463.2
+      ],
+      "clock_net": "rn19_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r19_1__clk",
+      "clock_pin_xy_um": [
+        15465.87,
+        12463.2
+      ],
+      "rect_um": [
+        15465.87,
+        12463.2,
+        15470.19,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000->st:h2000000020",
+      "parent": "st:h20000000",
+      "start_ports_out": [
+        "start:st:h2000000020->st:h200000002000"
+      ],
+      "children": [
+        "st:h200000002000"
+      ],
+      "reset_parent": "st_b4_rraw",
+      "reset_output": "st_r19_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r19_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b19",
+      "region": "st:h200000002000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0",
+      "node_cell": "b19",
+      "node_xy_um": [
+        15155.154,
+        12463.2
+      ],
+      "clock_net": "n19",
+      "clock_from": "Y",
+      "clock_port": "t_st_b19__clk",
+      "clock_pin_xy_um": [
+        15157.314000000002,
+        12463.2
+      ],
+      "rect_um": [
+        15157.314000000002,
+        12463.2,
+        15161.634,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020->st:h200000002000",
+      "parent": "st:h2000000020",
+      "start_ports_out": [
+        "start:st:h200000002000->st:h20000000200000"
+      ],
+      "children": [
+        "st:h20000000200000"
+      ],
+      "reset_parent": "st_r19_1_rraw",
+      "reset_output": "st_b19_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b19",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r20_1",
+      "region": "st:h20000000200000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0",
+      "node_cell": "r20_1",
+      "node_xy_um": [
+        14845.95,
+        12463.2
+      ],
+      "clock_net": "rn20_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r20_1__clk",
+      "clock_pin_xy_um": [
+        14848.110000000002,
+        12463.2
+      ],
+      "rect_um": [
+        14848.110000000002,
+        12463.2,
+        14852.43,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000->st:h20000000200000",
+      "parent": "st:h200000002000",
+      "start_ports_out": [
+        "start:st:h20000000200000->st:h2000000020000000"
+      ],
+      "children": [
+        "st:h2000000020000000"
+      ],
+      "reset_parent": "st_b19_rraw",
+      "reset_output": "st_r20_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r20_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b20",
+      "region": "st:h2000000020000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0",
+      "node_cell": "b20",
+      "node_xy_um": [
+        14536.8,
+        12463.2
+      ],
+      "clock_net": "n20",
+      "clock_from": "Y",
+      "clock_port": "t_st_b20__clk",
+      "clock_pin_xy_um": [
+        14538.960000000001,
+        12463.2
+      ],
+      "rect_um": [
+        14538.960000000001,
+        12463.2,
+        14543.28,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000->st:h2000000020000000",
+      "parent": "st:h20000000200000",
+      "start_ports_out": [
+        "start:st:h2000000020000000->st:h20000000200000000000",
+        "start:st:h2000000020000000->st:h200000002000000010"
+      ],
+      "children": [
+        "st:h20000000200000000000",
+        "st:h200000002000000010"
+      ],
+      "reset_parent": "st_r20_1_rraw",
+      "reset_output": "st_b20_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b20",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r53_1",
+      "region": "st:h200000002000000010",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0",
+      "node_cell": "r53_1",
+      "node_xy_um": [
+        14228.19,
+        12463.2
+      ],
+      "clock_net": "rn53_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r53_1__clk",
+      "clock_pin_xy_um": [
+        14230.350000000002,
+        12463.2
+      ],
+      "rect_um": [
+        14230.350000000002,
+        12463.2,
+        14234.67,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000->st:h200000002000000010",
+      "parent": "st:h2000000020000000",
+      "start_ports_out": [
+        "start:st:h200000002000000010->st:h20000000200000001000"
+      ],
+      "children": [
+        "st:h20000000200000001000"
+      ],
+      "reset_parent": "st_b20_rraw",
+      "reset_output": "st_r53_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r53_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b53",
+      "region": "st:h20000000200000001000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0",
+      "node_cell": "b53",
+      "node_xy_um": [
+        13921.2,
+        12463.2
+      ],
+      "clock_net": "n53",
+      "clock_from": "Y",
+      "clock_port": "t_st_b53__clk",
+      "clock_pin_xy_um": [
+        13923.360000000002,
+        12463.2
+      ],
+      "rect_um": [
+        13923.360000000002,
+        12463.2,
+        13927.68,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010->st:h20000000200000001000",
+      "parent": "st:h200000002000000010",
+      "start_ports_out": [
+        "start:st:h20000000200000001000->st:h2000000020000000100000"
+      ],
+      "children": [
+        "st:h2000000020000000100000"
+      ],
+      "reset_parent": "st_r53_1_rraw",
+      "reset_output": "st_b53_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b53",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r54_1",
+      "region": "st:h2000000020000000100000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0",
+      "node_cell": "r54_1",
+      "node_xy_um": [
+        13610.43,
+        12463.2
+      ],
+      "clock_net": "rn54_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r54_1__clk",
+      "clock_pin_xy_um": [
+        13612.590000000002,
+        12463.2
+      ],
+      "rect_um": [
+        13612.590000000002,
+        12463.2,
+        13616.91,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000->st:h2000000020000000100000",
+      "parent": "st:h20000000200000001000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000->st:h200000002000000010000000"
+      ],
+      "children": [
+        "st:h200000002000000010000000"
+      ],
+      "reset_parent": "st_b53_rraw",
+      "reset_output": "st_r54_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r54_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b54",
+      "region": "st:h200000002000000010000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0",
+      "node_cell": "b54",
+      "node_xy_um": [
+        13301.28,
+        12463.2
+      ],
+      "clock_net": "n54",
+      "clock_from": "Y",
+      "clock_port": "t_st_b54__clk",
+      "clock_pin_xy_um": [
+        13303.440000000002,
+        12463.2
+      ],
+      "rect_um": [
+        13303.440000000002,
+        12463.2,
+        13307.76,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000->st:h200000002000000010000000",
+      "parent": "st:h2000000020000000100000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000->st:h2000000020000000100000000000",
+        "start:st:h200000002000000010000000->st:h20000000200000001000000010",
+        "start:st:h200000002000000010000000->st:h20000000200000001000000020",
+        "start:st:h200000002000000010000000->st:h20000000200000001000000030"
+      ],
+      "children": [
+        "st:h2000000020000000100000000000",
+        "st:h20000000200000001000000010",
+        "st:h20000000200000001000000020",
+        "st:h20000000200000001000000030"
+      ],
+      "reset_parent": "st_r54_1_rraw",
+      "reset_output": "st_b54_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b54",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r87_1",
+      "region": "st:h20000000200000001000000020",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0",
+      "node_cell": "r87_1",
+      "node_xy_um": [
+        12992.67,
+        12463.2
+      ],
+      "clock_net": "rn87_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r87_1__clk",
+      "clock_pin_xy_um": [
+        12994.830000000002,
+        12463.2
+      ],
+      "rect_um": [
+        12994.830000000002,
+        12463.2,
+        12999.15,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000->st:h20000000200000001000000020",
+      "parent": "st:h200000002000000010000000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020->st:h2000000020000000100000002000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000"
+      ],
+      "reset_parent": "st_b54_rraw",
+      "reset_output": "st_r87_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r87_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b87",
+      "region": "st:h2000000020000000100000002000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0",
+      "node_cell": "b87",
+      "node_xy_um": [
+        12684.06,
+        12463.2
+      ],
+      "clock_net": "n87",
+      "clock_from": "Y",
+      "clock_port": "t_st_b87__clk",
+      "clock_pin_xy_um": [
+        12686.220000000001,
+        12463.2
+      ],
+      "rect_um": [
+        12686.220000000001,
+        12463.2,
+        12690.54,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020->st:h2000000020000000100000002000",
+      "parent": "st:h20000000200000001000000020",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000->st:h200000002000000010000000200000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000"
+      ],
+      "reset_parent": "st_r87_1_rraw",
+      "reset_output": "st_b87_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b87",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r88_1",
+      "region": "st:h200000002000000010000000200000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0",
+      "node_cell": "r88_1",
+      "node_xy_um": [
+        12374.91,
+        12463.2
+      ],
+      "clock_net": "rn88_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r88_1__clk",
+      "clock_pin_xy_um": [
+        12377.070000000002,
+        12463.2
+      ],
+      "rect_um": [
+        12377.070000000002,
+        12463.2,
+        12381.39,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000->st:h200000002000000010000000200000",
+      "parent": "st:h2000000020000000100000002000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000->st:h20000000200000001000000020000000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000"
+      ],
+      "reset_parent": "st_b87_rraw",
+      "reset_output": "st_r88_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r88_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b88",
+      "region": "st:h20000000200000001000000020000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0",
+      "node_cell": "b88",
+      "node_xy_um": [
+        12065.76,
+        12463.2
+      ],
+      "clock_net": "n88",
+      "clock_from": "Y",
+      "clock_port": "t_st_b88__clk",
+      "clock_pin_xy_um": [
+        12067.920000000002,
+        12463.2
+      ],
+      "rect_um": [
+        12067.920000000002,
+        12463.2,
+        12072.24,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000->st:h20000000200000001000000020000000",
+      "parent": "st:h200000002000000010000000200000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000->st:h200000002000000010000000200000000000",
+        "start:st:h20000000200000001000000020000000->st:h2000000020000000100000002000000010"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000000000",
+        "st:h2000000020000000100000002000000010"
+      ],
+      "reset_parent": "st_r88_1_rraw",
+      "reset_output": "st_b88_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b88",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r147_1",
+      "region": "st:h2000000020000000100000002000000010",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0",
+      "node_cell": "r147_1",
+      "node_xy_um": [
+        11757.15,
+        12463.2
+      ],
+      "clock_net": "rn147_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r147_1__clk",
+      "clock_pin_xy_um": [
+        11759.310000000001,
+        12463.2
+      ],
+      "rect_um": [
+        11759.310000000001,
+        12463.2,
+        11763.63,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000->st:h2000000020000000100000002000000010",
+      "parent": "st:h20000000200000001000000020000000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010->st:h200000002000000010000000200000001000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000"
+      ],
+      "reset_parent": "st_b88_rraw",
+      "reset_output": "st_r147_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r147_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b147",
+      "region": "st:h200000002000000010000000200000001000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0",
+      "node_cell": "b147",
+      "node_xy_um": [
+        11448.54,
+        12463.2
+      ],
+      "clock_net": "n147",
+      "clock_from": "Y",
+      "clock_port": "t_st_b147__clk",
+      "clock_pin_xy_um": [
+        11450.700000000003,
+        12463.2
+      ],
+      "rect_um": [
+        11450.700000000003,
+        12463.2,
+        11455.02,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010->st:h200000002000000010000000200000001000",
+      "parent": "st:h2000000020000000100000002000000010",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000->st:h20000000200000001000000020000000100000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000"
+      ],
+      "reset_parent": "st_r147_1_rraw",
+      "reset_output": "st_b147_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b147",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r148_1",
+      "region": "st:h20000000200000001000000020000000100000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0",
+      "node_cell": "r148_1",
+      "node_xy_um": [
+        11139.39,
+        12463.2
+      ],
+      "clock_net": "rn148_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r148_1__clk",
+      "clock_pin_xy_um": [
+        11141.550000000001,
+        12463.2
+      ],
+      "rect_um": [
+        11141.550000000001,
+        12463.2,
+        11145.87,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000->st:h20000000200000001000000020000000100000",
+      "parent": "st:h200000002000000010000000200000001000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000->st:h2000000020000000100000002000000010000000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000"
+      ],
+      "reset_parent": "st_b147_rraw",
+      "reset_output": "st_r148_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r148_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b148",
+      "region": "st:h2000000020000000100000002000000010000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0",
+      "node_cell": "b148",
+      "node_xy_um": [
+        10830.24,
+        12463.2
+      ],
+      "clock_net": "n148",
+      "clock_from": "Y",
+      "clock_port": "t_st_b148__clk",
+      "clock_pin_xy_um": [
+        10832.400000000001,
+        12463.2
+      ],
+      "rect_um": [
+        10832.400000000001,
+        12463.2,
+        10836.72,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000->st:h2000000020000000100000002000000010000000",
+      "parent": "st:h20000000200000001000000020000000100000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000->st:h20000000200000001000000020000000100000000000",
+        "start:st:h2000000020000000100000002000000010000000->st:h200000002000000010000000200000001000000010",
+        "start:st:h2000000020000000100000002000000010000000->st:h200000002000000010000000200000001000000020",
+        "start:st:h2000000020000000100000002000000010000000->st:h200000002000000010000000200000001000000030"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000000000",
+        "st:h200000002000000010000000200000001000000010",
+        "st:h200000002000000010000000200000001000000020",
+        "st:h200000002000000010000000200000001000000030"
+      ],
+      "reset_parent": "st_r148_1_rraw",
+      "reset_output": "st_b148_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b148",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r209_1",
+      "region": "st:h200000002000000010000000200000001000000020",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0",
+      "node_cell": "r209_1",
+      "node_xy_um": [
+        10521.63,
+        12463.2
+      ],
+      "clock_net": "rn209_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r209_1__clk",
+      "clock_pin_xy_um": [
+        10523.79,
+        12463.2
+      ],
+      "rect_um": [
+        10523.79,
+        12463.2,
+        10528.11,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000->st:h200000002000000010000000200000001000000020",
+      "parent": "st:h2000000020000000100000002000000010000000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020->st:h20000000200000001000000020000000100000002000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000"
+      ],
+      "reset_parent": "st_b148_rraw",
+      "reset_output": "st_r209_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r209_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b209",
+      "region": "st:h20000000200000001000000020000000100000002000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0",
+      "node_cell": "b209",
+      "node_xy_um": [
+        10213.02,
+        12463.2
+      ],
+      "clock_net": "n209",
+      "clock_from": "Y",
+      "clock_port": "t_st_b209__clk",
+      "clock_pin_xy_um": [
+        10215.180000000002,
+        12463.2
+      ],
+      "rect_um": [
+        10215.180000000002,
+        12463.2,
+        10219.5,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020->st:h20000000200000001000000020000000100000002000",
+      "parent": "st:h200000002000000010000000200000001000000020",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000->st:h2000000020000000100000002000000010000000200000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000"
+      ],
+      "reset_parent": "st_r209_1_rraw",
+      "reset_output": "st_b209_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b209",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r210_1",
+      "region": "st:h2000000020000000100000002000000010000000200000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0",
+      "node_cell": "r210_1",
+      "node_xy_um": [
+        9903.87,
+        12463.2
+      ],
+      "clock_net": "rn210_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r210_1__clk",
+      "clock_pin_xy_um": [
+        9906.030000000002,
+        12463.2
+      ],
+      "rect_um": [
+        9906.030000000002,
+        12463.2,
+        9910.35,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000->st:h2000000020000000100000002000000010000000200000",
+      "parent": "st:h20000000200000001000000020000000100000002000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000->st:h200000002000000010000000200000001000000020000000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000"
+      ],
+      "reset_parent": "st_b209_rraw",
+      "reset_output": "st_r210_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r210_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b210",
+      "region": "st:h200000002000000010000000200000001000000020000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0",
+      "node_cell": "b210",
+      "node_xy_um": [
+        9594.72,
+        12463.2
+      ],
+      "clock_net": "n210",
+      "clock_from": "Y",
+      "clock_port": "t_st_b210__clk",
+      "clock_pin_xy_um": [
+        9596.880000000001,
+        12463.2
+      ],
+      "rect_um": [
+        9596.880000000001,
+        12463.2,
+        9601.2,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000->st:h200000002000000010000000200000001000000020000000",
+      "parent": "st:h2000000020000000100000002000000010000000200000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000->st:h2000000020000000100000002000000010000000200000000000",
+        "start:st:h200000002000000010000000200000001000000020000000->st:h20000000200000001000000020000000100000002000000010"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000000000",
+        "st:h20000000200000001000000020000000100000002000000010"
+      ],
+      "reset_parent": "st_r210_1_rraw",
+      "reset_output": "st_b210_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b210",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r299_1",
+      "region": "st:h20000000200000001000000020000000100000002000000010",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0",
+      "node_cell": "r299_1",
+      "node_xy_um": [
+        9286.11,
+        12463.2
+      ],
+      "clock_net": "rn299_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r299_1__clk",
+      "clock_pin_xy_um": [
+        9288.270000000002,
+        12463.2
+      ],
+      "rect_um": [
+        9288.270000000002,
+        12463.2,
+        9292.59,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000->st:h20000000200000001000000020000000100000002000000010",
+      "parent": "st:h200000002000000010000000200000001000000020000000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010->st:h2000000020000000100000002000000010000000200000001000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000"
+      ],
+      "reset_parent": "st_b210_rraw",
+      "reset_output": "st_r299_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r299_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b299",
+      "region": "st:h2000000020000000100000002000000010000000200000001000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0",
+      "node_cell": "b299",
+      "node_xy_um": [
+        8977.554,
+        12463.2
+      ],
+      "clock_net": "n299",
+      "clock_from": "Y",
+      "clock_port": "t_st_b299__clk",
+      "clock_pin_xy_um": [
+        8979.714000000002,
+        12463.2
+      ],
+      "rect_um": [
+        8979.714000000002,
+        12463.2,
+        8984.034,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010->st:h2000000020000000100000002000000010000000200000001000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000->st:h200000002000000010000000200000001000000020000000100000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000"
+      ],
+      "reset_parent": "st_r299_1_rraw",
+      "reset_output": "st_b299_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b299",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r300_1",
+      "region": "st:h200000002000000010000000200000001000000020000000100000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0",
+      "node_cell": "r300_1",
+      "node_xy_um": [
+        8668.35,
+        12463.2
+      ],
+      "clock_net": "rn300_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r300_1__clk",
+      "clock_pin_xy_um": [
+        8670.510000000002,
+        12463.2
+      ],
+      "rect_um": [
+        8670.510000000002,
+        12463.2,
+        8674.83,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000->st:h200000002000000010000000200000001000000020000000100000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000->st:h20000000200000001000000020000000100000002000000010000000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000"
+      ],
+      "reset_parent": "st_b299_rraw",
+      "reset_output": "st_r300_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r300_1",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b300",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0",
+      "node_cell": "b300",
+      "node_xy_um": [
+        8359.2,
+        12463.2
+      ],
+      "clock_net": "n300",
+      "clock_from": "Y",
+      "clock_port": "t_st_b300__clk",
+      "clock_pin_xy_um": [
+        8361.360000000002,
+        12463.2
+      ],
+      "rect_um": [
+        8361.360000000002,
+        12463.2,
+        8365.68,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000->st:h20000000200000001000000020000000100000002000000010000000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000->st:h200000002000000010000000200000001000000020000000100000000000",
+        "start:st:h20000000200000001000000020000000100000002000000010000000->st:h2000000020000000100000002000000010000000200000001000000010",
+        "start:st:h20000000200000001000000020000000100000002000000010000000->st:h2000000020000000100000002000000010000000200000001000000020",
+        "start:st:h20000000200000001000000020000000100000002000000010000000->st:h2000000020000000100000002000000010000000200000001000000030"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000000000",
+        "st:h2000000020000000100000002000000010000000200000001000000010",
+        "st:h2000000020000000100000002000000010000000200000001000000020",
+        "st:h2000000020000000100000002000000010000000200000001000000030"
+      ],
+      "reset_parent": "st_r300_1_rraw",
+      "reset_output": "st_b300_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b300",
+      "clock_stub_manhattan_um": 2.1600000000016735,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r380_1",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0",
+      "node_cell": "r380_1",
+      "node_xy_um": [
+        8050.59,
+        12463.2
+      ],
+      "clock_net": "rn380_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r380_1__clk",
+      "clock_pin_xy_um": [
+        8052.75,
+        12463.2
+      ],
+      "rect_um": [
+        8052.75,
+        12463.2,
+        8057.07,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000->st:h2000000020000000100000002000000010000000200000001000000020",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020->st:h200000002000000010000000200000001000000020000000100000002000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000002000"
+      ],
+      "reset_parent": "st_b300_rraw",
+      "reset_output": "st_r380_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r380_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b380",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0",
+      "node_cell": "b380",
+      "node_xy_um": [
+        7743.6,
+        12463.2
+      ],
+      "clock_net": "n380",
+      "clock_from": "Y",
+      "clock_port": "t_st_b380__clk",
+      "clock_pin_xy_um": [
+        7745.76,
+        12463.2
+      ],
+      "rect_um": [
+        7745.76,
+        12463.2,
+        7750.08,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020->st:h200000002000000010000000200000001000000020000000100000002000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000->st:h20000000200000001000000020000000100000002000000010000000200000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000"
+      ],
+      "reset_parent": "st_r380_1_rraw",
+      "reset_output": "st_b380_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b380",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r381_1",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0",
+      "node_cell": "r381_1",
+      "node_xy_um": [
+        7432.83,
+        12463.2
+      ],
+      "clock_net": "rn381_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r381_1__clk",
+      "clock_pin_xy_um": [
+        7434.99,
+        12463.2
+      ],
+      "rect_um": [
+        7434.99,
+        12463.2,
+        7439.31,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000->st:h20000000200000001000000020000000100000002000000010000000200000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000->st:h2000000020000000100000002000000010000000200000001000000020000000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000"
+      ],
+      "reset_parent": "st_b380_rraw",
+      "reset_output": "st_r381_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r381_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b381",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0",
+      "node_cell": "b381",
+      "node_xy_um": [
+        7123.68,
+        12463.2
+      ],
+      "clock_net": "n381",
+      "clock_from": "Y",
+      "clock_port": "t_st_b381__clk",
+      "clock_pin_xy_um": [
+        7125.84,
+        12463.2
+      ],
+      "rect_um": [
+        7125.84,
+        12463.2,
+        7130.16,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000->st:h2000000020000000100000002000000010000000200000001000000020000000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000->st:h20000000200000001000000020000000100000002000000010000000200000000000",
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000->st:h200000002000000010000000200000001000000020000000100000002000000010"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000000000",
+        "st:h200000002000000010000000200000001000000020000000100000002000000010"
+      ],
+      "reset_parent": "st_r381_1_rraw",
+      "reset_output": "st_b381_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b381",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r477_1",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0",
+      "node_cell": "r477_1",
+      "node_xy_um": [
+        6815.07,
+        12463.2
+      ],
+      "clock_net": "rn477_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r477_1__clk",
+      "clock_pin_xy_um": [
+        6817.23,
+        12463.2
+      ],
+      "rect_um": [
+        6817.23,
+        12463.2,
+        6821.55,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000->st:h200000002000000010000000200000001000000020000000100000002000000010",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010->st:h20000000200000001000000020000000100000002000000010000000200000001000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000"
+      ],
+      "reset_parent": "st_b381_rraw",
+      "reset_output": "st_r477_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r477_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b477",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0",
+      "node_cell": "b477",
+      "node_xy_um": [
+        6506.46,
+        12463.2
+      ],
+      "clock_net": "n477",
+      "clock_from": "Y",
+      "clock_port": "t_st_b477__clk",
+      "clock_pin_xy_um": [
+        6508.62,
+        12463.2
+      ],
+      "rect_um": [
+        6508.62,
+        12463.2,
+        6512.94,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000000010->st:h20000000200000001000000020000000100000002000000010000000200000001000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000000010",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000->st:h2000000020000000100000002000000010000000200000001000000020000000100000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000"
+      ],
+      "reset_parent": "st_r477_1_rraw",
+      "reset_output": "st_b477_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b477",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r478_1",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0",
+      "node_cell": "r478_1",
+      "node_xy_um": [
+        6197.31,
+        12463.2
+      ],
+      "clock_net": "rn478_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r478_1__clk",
+      "clock_pin_xy_um": [
+        6199.47,
+        12463.2
+      ],
+      "rect_um": [
+        6199.47,
+        12463.2,
+        6203.79,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000->st:h2000000020000000100000002000000010000000200000001000000020000000100000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000->st:h200000002000000010000000200000001000000020000000100000002000000010000000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000"
+      ],
+      "reset_parent": "st_b477_rraw",
+      "reset_output": "st_r478_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r478_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b478",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0",
+      "node_cell": "b478",
+      "node_xy_um": [
+        5888.16,
+        12463.2
+      ],
+      "clock_net": "n478",
+      "clock_from": "Y",
+      "clock_port": "t_st_b478__clk",
+      "clock_pin_xy_um": [
+        5890.32,
+        12463.2
+      ],
+      "rect_um": [
+        5890.32,
+        12463.2,
+        5894.64,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000->st:h200000002000000010000000200000001000000020000000100000002000000010000000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000000000",
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000010",
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020",
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000030"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000000000",
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000010",
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020",
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000030"
+      ],
+      "reset_parent": "st_r478_1_rraw",
+      "reset_output": "st_b478_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b478",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r563_1",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0",
+      "node_cell": "r563_1",
+      "node_xy_um": [
+        5579.55,
+        12463.2
+      ],
+      "clock_net": "rn563_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r563_1__clk",
+      "clock_pin_xy_um": [
+        5581.71,
+        12463.2
+      ],
+      "rect_um": [
+        5581.71,
+        12463.2,
+        5586.03,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000000010000000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000"
+      ],
+      "reset_parent": "st_b478_rraw",
+      "reset_output": "st_r563_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r563_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b563",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0",
+      "node_cell": "b563",
+      "node_xy_um": [
+        5270.94,
+        12463.2
+      ],
+      "clock_net": "n563",
+      "clock_from": "Y",
+      "clock_port": "t_st_b563__clk",
+      "clock_pin_xy_um": [
+        5273.099999999999,
+        12463.2
+      ],
+      "rect_um": [
+        5273.099999999999,
+        12463.2,
+        5277.42,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000"
+      ],
+      "reset_parent": "st_r563_1_rraw",
+      "reset_output": "st_b563_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b563",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r564_1",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0",
+      "node_cell": "r564_1",
+      "node_xy_um": [
+        4961.79,
+        12463.2
+      ],
+      "clock_net": "rn564_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r564_1__clk",
+      "clock_pin_xy_um": [
+        4963.95,
+        12463.2
+      ],
+      "rect_um": [
+        4963.95,
+        12463.2,
+        4968.27,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000"
+      ],
+      "reset_parent": "st_b563_rraw",
+      "reset_output": "st_r564_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r564_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b564",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0",
+      "node_cell": "b564",
+      "node_xy_um": [
+        4652.64,
+        12463.2
+      ],
+      "clock_net": "n564",
+      "clock_from": "Y",
+      "clock_port": "t_st_b564__clk",
+      "clock_pin_xy_um": [
+        4654.8,
+        12463.2
+      ],
+      "rect_um": [
+        4654.8,
+        12463.2,
+        4659.12,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000000000",
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000000000",
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010"
+      ],
+      "reset_parent": "st_r564_1_rraw",
+      "reset_output": "st_b564_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b564",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r661_1",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0",
+      "node_cell": "r661_1",
+      "node_xy_um": [
+        4344.03,
+        12463.2
+      ],
+      "clock_net": "rn661_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r661_1__clk",
+      "clock_pin_xy_um": [
+        4346.19,
+        12463.2
+      ],
+      "rect_um": [
+        4346.19,
+        12463.2,
+        4350.51,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000"
+      ],
+      "reset_parent": "st_b564_rraw",
+      "reset_output": "st_r661_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r661_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b661",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0",
+      "node_cell": "b661",
+      "node_xy_um": [
+        4035.42,
+        12463.2
+      ],
+      "clock_net": "n661",
+      "clock_from": "Y",
+      "clock_port": "t_st_b661__clk",
+      "clock_pin_xy_um": [
+        4037.58,
+        12463.2
+      ],
+      "rect_um": [
+        4037.58,
+        12463.2,
+        4041.9,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000"
+      ],
+      "reset_parent": "st_r661_1_rraw",
+      "reset_output": "st_b661_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b661",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r662_1",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0",
+      "node_cell": "r662_1",
+      "node_xy_um": [
+        3726.27,
+        12463.2
+      ],
+      "clock_net": "rn662_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r662_1__clk",
+      "clock_pin_xy_um": [
+        3728.43,
+        12463.2
+      ],
+      "rect_um": [
+        3728.43,
+        12463.2,
+        3732.75,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000"
+      ],
+      "reset_parent": "st_b661_rraw",
+      "reset_output": "st_r662_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r662_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b662",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0",
+      "node_cell": "b662",
+      "node_xy_um": [
+        3417.12,
+        12463.2
+      ],
+      "clock_net": "n662",
+      "clock_from": "Y",
+      "clock_port": "t_st_b662__clk",
+      "clock_pin_xy_um": [
+        3419.2799999999997,
+        12463.2
+      ],
+      "rect_um": [
+        3419.2799999999997,
+        12463.2,
+        3423.6,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000",
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010",
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020",
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000",
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010",
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020",
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030"
+      ],
+      "reset_parent": "st_r662_1_rraw",
+      "reset_output": "st_b662_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b662",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b741",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_1_0",
+      "node_cell": "b741",
+      "node_xy_um": [
+        3106.08,
+        12463.2
+      ],
+      "clock_net": "n741",
+      "clock_from": "Y",
+      "clock_port": "t_st_b741__clk",
+      "clock_pin_xy_um": [
+        3101.22,
+        12463.2
+      ],
+      "rect_um": [
+        3101.22,
+        12463.2,
+        3105.54,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000"
+      ],
+      "reset_parent": "st_b662_rraw",
+      "reset_output": "st_b741_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b741",
+      "clock_stub_manhattan_um": 4.860000000000127,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r745_1",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0",
+      "node_cell": "r745_1",
+      "node_xy_um": [
+        3108.51,
+        12463.2
+      ],
+      "clock_net": "rn745_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r745_1__clk",
+      "clock_pin_xy_um": [
+        3110.67,
+        12463.2
+      ],
+      "rect_um": [
+        3110.67,
+        12463.2,
+        3114.99,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000002000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000002000"
+      ],
+      "reset_parent": "st_b662_rraw",
+      "reset_output": "st_r745_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r745_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b747",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0",
+      "node_cell": "b747",
+      "node_xy_um": [
+        3106.08,
+        12462.66
+      ],
+      "clock_net": "n747",
+      "clock_from": "Y",
+      "clock_port": "t_st_b747__clk",
+      "clock_pin_xy_um": [
+        3108.24,
+        12462.66
+      ],
+      "rect_um": [
+        3108.24,
+        12462.66,
+        3112.56,
+        12463.2
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000"
+      ],
+      "reset_parent": "st_b662_rraw",
+      "reset_output": "st_b747_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b747",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b6437",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_0_0_0_0",
+      "node_cell": "b6437",
+      "node_xy_um": [
+        3417.12,
+        12128.4
+      ],
+      "clock_net": "n6437",
+      "clock_from": "Y",
+      "clock_port": "t_st_b6437__clk",
+      "clock_pin_xy_um": [
+        3419.2799999999997,
+        12128.4
+      ],
+      "rect_um": [
+        3419.2799999999997,
+        12128.4,
+        3423.6,
+        12128.94
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000000"
+      ],
+      "reset_parent": "st_b662_rraw",
+      "reset_output": "st_b6437_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b6437",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r742_1",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_1_0_0_0",
+      "node_cell": "r742_1",
+      "node_xy_um": [
+        3106.08,
+        12797.46
+      ],
+      "clock_net": "rn742_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r742_1__clk",
+      "clock_pin_xy_um": [
+        3108.24,
+        12797.46
+      ],
+      "rect_um": [
+        3108.24,
+        12797.46,
+        3112.56,
+        12798.0
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000"
+      ],
+      "reset_parent": "st_b741_rraw",
+      "reset_output": "st_r742_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r742_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b745",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000002000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0",
+      "node_cell": "b745",
+      "node_xy_um": [
+        2799.954,
+        12463.2
+      ],
+      "clock_net": "n745",
+      "clock_from": "Y",
+      "clock_port": "t_st_b745__clk",
+      "clock_pin_xy_um": [
+        2802.114,
+        12463.2
+      ],
+      "rect_um": [
+        2802.114,
+        12463.2,
+        2806.434,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000002000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000002000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000"
+      ],
+      "reset_parent": "st_r745_1_rraw",
+      "reset_output": "st_b745_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b745",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r748_1",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0",
+      "node_cell": "r748_1",
+      "node_xy_um": [
+        3106.08,
+        12128.4
+      ],
+      "clock_net": "rn748_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r748_1__clk",
+      "clock_pin_xy_um": [
+        3101.22,
+        12128.4
+      ],
+      "rect_um": [
+        3101.22,
+        12128.4,
+        3105.54,
+        12128.94
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000"
+      ],
+      "reset_parent": "st_b747_rraw",
+      "reset_output": "st_r748_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r748_1",
+      "clock_stub_manhattan_um": 4.860000000000127,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b742",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_1_0_0_0_0_0",
+      "node_cell": "b742",
+      "node_xy_um": [
+        3106.08,
+        13131.72
+      ],
+      "clock_net": "n742",
+      "clock_from": "Y",
+      "clock_port": "t_st_b742__clk",
+      "clock_pin_xy_um": [
+        3108.24,
+        13131.72
+      ],
+      "rect_um": [
+        3108.24,
+        13131.72,
+        3112.56,
+        13132.26
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000"
+      ],
+      "reset_parent": "st_r742_1_rraw",
+      "reset_output": "st_b742_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b742",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r746_1",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0",
+      "node_cell": "r746_1",
+      "node_xy_um": [
+        2490.75,
+        12463.2
+      ],
+      "clock_net": "rn746_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r746_1__clk",
+      "clock_pin_xy_um": [
+        2492.91,
+        12463.2
+      ],
+      "rect_um": [
+        2492.91,
+        12463.2,
+        2497.23,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000002000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000002000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020000000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020000000"
+      ],
+      "reset_parent": "st_b745_rraw",
+      "reset_output": "st_r746_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r746_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b748",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0",
+      "node_cell": "b748",
+      "node_xy_um": [
+        3106.08,
+        11794.14
+      ],
+      "clock_net": "n748",
+      "clock_from": "Y",
+      "clock_port": "t_st_b748__clk",
+      "clock_pin_xy_um": [
+        3108.24,
+        11794.14
+      ],
+      "rect_um": [
+        3108.24,
+        11794.14,
+        3112.56,
+        11794.68
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000"
+      ],
+      "reset_parent": "st_r748_1_rraw",
+      "reset_output": "st_b748_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b748",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r6439_0",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_0_0_0_0_0_0_0",
+      "node_cell": "r6439_0",
+      "node_xy_um": [
+        3107.7,
+        12044.7
+      ],
+      "clock_net": "n6438",
+      "clock_from": "A",
+      "clock_port": "t_st_r6439_0__clk",
+      "clock_pin_xy_um": [
+        3109.8599999999997,
+        12044.7
+      ],
+      "rect_um": [
+        3109.8599999999997,
+        12044.7,
+        3114.18,
+        12045.24
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000000000000->sl_W5_sc"
+      ],
+      "children": [
+        "sl_W5_sc"
+      ],
+      "reset_parent": "st_b6437_rraw",
+      "reset_output": "st_r6439_0_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b6438",
+      "clock_stub_manhattan_um": 85.3199999999988,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b743",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0",
+      "node_cell": "b743",
+      "node_xy_um": [
+        2799.36,
+        13133.34
+      ],
+      "clock_net": "n743",
+      "clock_from": "Y",
+      "clock_port": "t_st_b743__clk",
+      "clock_pin_xy_um": [
+        2801.52,
+        13133.34
+      ],
+      "rect_um": [
+        2801.52,
+        13133.34,
+        2805.84,
+        13133.88
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000"
+      ],
+      "reset_parent": "st_b742_rraw",
+      "reset_output": "st_b743_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b743",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b746",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0",
+      "node_cell": "b746",
+      "node_xy_um": [
+        2181.6,
+        12463.2
+      ],
+      "clock_net": "n746",
+      "clock_from": "Y",
+      "clock_port": "t_st_b746__clk",
+      "clock_pin_xy_um": [
+        2183.7599999999998,
+        12463.2
+      ],
+      "rect_um": [
+        2183.7599999999998,
+        12463.2,
+        2188.08,
+        12463.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020000000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000000000",
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000002000000010"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000000000",
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000002000000010"
+      ],
+      "reset_parent": "st_r746_1_rraw",
+      "reset_output": "st_b746_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b746",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b749",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0",
+      "node_cell": "b749",
+      "node_xy_um": [
+        2796.714,
+        11792.52
+      ],
+      "clock_net": "n749",
+      "clock_from": "Y",
+      "clock_port": "t_st_b749__clk",
+      "clock_pin_xy_um": [
+        2798.874,
+        11792.52
+      ],
+      "rect_um": [
+        2798.874,
+        11792.52,
+        2803.194,
+        11793.06
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000"
+      ],
+      "reset_parent": "st_b748_rraw",
+      "reset_output": "st_b749_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b749",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r744_1",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_0_0",
+      "node_cell": "r744_1",
+      "node_xy_um": [
+        2799.36,
+        13467.6
+      ],
+      "clock_net": "rn744_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r744_1__clk",
+      "clock_pin_xy_um": [
+        2801.52,
+        13467.6
+      ],
+      "rect_um": [
+        2801.52,
+        13467.6,
+        2805.84,
+        13468.14
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000000000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000000000"
+      ],
+      "reset_parent": "st_b743_rraw",
+      "reset_output": "st_r744_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r744_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r750_1",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0",
+      "node_cell": "r750_1",
+      "node_xy_um": [
+        2796.714,
+        11423.16
+      ],
+      "clock_net": "rn750_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r750_1__clk",
+      "clock_pin_xy_um": [
+        2798.874,
+        11423.16
+      ],
+      "rect_um": [
+        2798.874,
+        11423.16,
+        2803.194,
+        11423.7
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000"
+      ],
+      "reset_parent": "st_b749_rraw",
+      "reset_output": "st_r750_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r750_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b744",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_0_0_0_0",
+      "node_cell": "b744",
+      "node_xy_um": [
+        2799.36,
+        13802.4
+      ],
+      "clock_net": "n744",
+      "clock_from": "Y",
+      "clock_port": "t_st_b744__clk",
+      "clock_pin_xy_um": [
+        2801.52,
+        13802.4
+      ],
+      "rect_um": [
+        2801.52,
+        13802.4,
+        2805.84,
+        13802.94
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000000000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000",
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000001000",
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000000000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000000020",
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000000000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000000030"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000",
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000001000",
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000000020",
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000010000000000030"
+      ],
+      "reset_parent": "st_r744_1_rraw",
+      "reset_output": "st_b744_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b744",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b6499",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_0_0_0_0",
+      "node_cell": "b6499",
+      "node_xy_um": [
+        2181.6,
+        12128.4
+      ],
+      "clock_net": "n6499",
+      "clock_from": "Y",
+      "clock_port": "t_st_b6499__clk",
+      "clock_pin_xy_um": [
+        2183.7599999999998,
+        12128.4
+      ],
+      "rect_um": [
+        2183.7599999999998,
+        12128.4,
+        2188.08,
+        12128.94
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000000000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000020000000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000200000000000->sl_W5_stm"
+      ],
+      "children": [
+        "sl_W5_stm"
+      ],
+      "reset_parent": "st_b746_rraw",
+      "reset_output": "st_b6499_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b6499",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b750",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0",
+      "node_cell": "b750",
+      "node_xy_um": [
+        2796.714,
+        11052.72
+      ],
+      "clock_net": "n750",
+      "clock_from": "Y",
+      "clock_port": "t_st_b750__clk",
+      "clock_pin_xy_um": [
+        2798.874,
+        11052.72
+      ],
+      "rect_um": [
+        2798.874,
+        11052.72,
+        2803.194,
+        11053.26
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010",
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001",
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010",
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001",
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200"
+      ],
+      "reset_parent": "st_r750_1_rraw",
+      "reset_output": "st_b750_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b750",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r841_0",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0_1",
+      "node_cell": "r841_0",
+      "node_xy_um": [
+        2846.772,
+        11040.84
+      ],
+      "clock_net": "n750",
+      "clock_from": "A",
+      "clock_port": "t_st_r841_0__clk",
+      "clock_pin_xy_um": [
+        2841.912,
+        11040.84
+      ],
+      "rect_um": [
+        2841.912,
+        11040.84,
+        2846.232,
+        11041.38
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000010"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000010"
+      ],
+      "reset_parent": "st_b750_rraw",
+      "reset_output": "st_r841_0_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b750",
+      "clock_stub_manhattan_um": 57.077999999999065,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r841_1",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000010",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0_1_0",
+      "node_cell": "r841_1",
+      "node_xy_um": [
+        3208.194,
+        11028.42
+      ],
+      "clock_net": "rn841_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r841_1__clk",
+      "clock_pin_xy_um": [
+        3210.354,
+        11028.42
+      ],
+      "rect_um": [
+        3210.354,
+        11028.42,
+        3214.674,
+        11028.96
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000010",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000010->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000100000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000100000"
+      ],
+      "reset_parent": "st_r841_0_rraw",
+      "reset_output": "st_r841_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r841_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r844_2",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0_2_0_0",
+      "node_cell": "r844_2",
+      "node_xy_um": [
+        2465.154,
+        11016.54
+      ],
+      "clock_net": "rn844_1",
+      "clock_from": "A",
+      "clock_port": "t_st_r844_2__clk",
+      "clock_pin_xy_um": [
+        2467.314,
+        11016.54
+      ],
+      "rect_um": [
+        2467.314,
+        11016.54,
+        2471.634,
+        11017.08
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200000"
+      ],
+      "reset_parent": "st_b750_rraw",
+      "reset_output": "st_r844_2_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r844_1",
+      "clock_stub_manhattan_um": 36.125999999999294,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b6375",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0",
+      "node_cell": "b6375",
+      "node_xy_um": [
+        2799.36,
+        13467.06
+      ],
+      "clock_net": "n6375",
+      "clock_from": "Y",
+      "clock_port": "t_st_b6375__clk",
+      "clock_pin_xy_um": [
+        2801.52,
+        13467.06
+      ],
+      "rect_um": [
+        2801.52,
+        13467.06,
+        2805.84,
+        13467.6
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000100000000000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000000"
+      ],
+      "reset_parent": "st_b744_rraw",
+      "reset_output": "st_b6375_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b6375",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b17286",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_1_0",
+      "node_cell": "b17286",
+      "node_xy_um": [
+        2790.234,
+        10683.9
+      ],
+      "clock_net": "n17286",
+      "clock_from": "Y",
+      "clock_port": "t_st_b17286__clk",
+      "clock_pin_xy_um": [
+        2792.394,
+        10683.9
+      ],
+      "rect_um": [
+        2792.394,
+        10683.9,
+        2796.714,
+        10684.44
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010001000"
+      ],
+      "children": [
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010001000"
+      ],
+      "reset_parent": "st_b750_rraw",
+      "reset_output": "st_b17286_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b17286",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b842",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000100000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0_1_0_0_0_0_0",
+      "node_cell": "b842",
+      "node_xy_um": [
+        3413.34,
+        11124.0
+      ],
+      "clock_net": "n842",
+      "clock_from": "Y",
+      "clock_port": "t_st_b842__clk",
+      "clock_pin_xy_um": [
+        3415.5,
+        11124.0
+      ],
+      "rect_um": [
+        3415.5,
+        11124.0,
+        3419.82,
+        11124.54
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000010->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000100000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000010",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000100000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000"
+      ],
+      "reset_parent": "st_r841_1_rraw",
+      "reset_output": "st_b842_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b842",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b845",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0_2_0_0_0_0_0",
+      "node_cell": "b845",
+      "node_xy_um": [
+        2183.706,
+        11124.0
+      ],
+      "clock_net": "n845",
+      "clock_from": "Y",
+      "clock_port": "t_st_b845__clk",
+      "clock_pin_xy_um": [
+        2178.846,
+        11124.0
+      ],
+      "rect_um": [
+        2178.846,
+        11124.0,
+        2183.166,
+        11124.54
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000"
+      ],
+      "reset_parent": "st_r844_2_rraw",
+      "reset_output": "st_b845_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b845",
+      "clock_stub_manhattan_um": 4.860000000000127,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r6377_0",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0",
+      "node_cell": "r6377_0",
+      "node_xy_um": [
+        2492.64,
+        13383.9
+      ],
+      "clock_net": "n6376",
+      "clock_from": "A",
+      "clock_port": "t_st_r6377_0__clk",
+      "clock_pin_xy_um": [
+        2494.7999999999997,
+        13383.9
+      ],
+      "rect_um": [
+        2494.7999999999997,
+        13383.9,
+        2499.12,
+        13384.44
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000001000000000000000000->sl_W5_ctl"
+      ],
+      "children": [
+        "sl_W5_ctl"
+      ],
+      "reset_parent": "st_b6375_rraw",
+      "reset_output": "st_r6377_0_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b6376",
+      "clock_stub_manhattan_um": 85.86000000000058,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b846",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0",
+      "node_cell": "b846",
+      "node_xy_um": [
+        1874.88,
+        11124.0
+      ],
+      "clock_net": "n846",
+      "clock_from": "Y",
+      "clock_port": "t_st_b846__clk",
+      "clock_pin_xy_um": [
+        1877.04,
+        11124.0
+      ],
+      "rect_um": [
+        1877.04,
+        11124.0,
+        1881.36,
+        11124.54
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000002000000000000000",
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200000001000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000002000000000000000",
+        "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000200000001000"
+      ],
+      "reset_parent": "st_b845_rraw",
+      "reset_output": "st_b846_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b846",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r6747_1",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_0_0",
+      "node_cell": "r6747_1",
+      "node_xy_um": [
+        3662.28,
+        11079.18
+      ],
+      "clock_net": "rn6747_1",
+      "clock_from": "Y",
+      "clock_port": "t_st_r6747_1__clk",
+      "clock_pin_xy_um": [
+        3664.44,
+        11079.18
+      ],
+      "rect_um": [
+        3664.44,
+        11079.18,
+        3668.76,
+        11079.72
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000100000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000100000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000000"
+      ],
+      "children": [
+        "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000000"
+      ],
+      "reset_parent": "st_b842_rraw",
+      "reset_output": "st_r6747_1_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "r6747_1",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b17296",
+      "region": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010001000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_1_0_0_0_1_0_0_0",
+      "node_cell": "b17296",
+      "node_xy_um": [
+        2475.846,
+        10654.2
+      ],
+      "clock_net": "n17296",
+      "clock_from": "Y",
+      "clock_port": "t_st_b17296__clk",
+      "clock_pin_xy_um": [
+        2478.006,
+        10654.2
+      ],
+      "rect_um": [
+        2478.006,
+        10654.2,
+        2482.326,
+        10654.74
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010->st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010001000",
+      "parent": "st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010",
+      "start_ports_out": [
+        "start:st:h2000000020000000100000002000000010000000200000001000000020000000100000002000000010000000300000000000000010001000->sl_W5_su_c"
+      ],
+      "children": [
+        "sl_W5_su_c"
+      ],
+      "reset_parent": "st_b17286_rraw",
+      "reset_output": "st_b17296_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b17296",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r6748_0",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_0_0_0_0_0",
+      "node_cell": "r6748_0",
+      "node_xy_um": [
+        3740.58,
+        10770.84
+      ],
+      "clock_net": "n6747",
+      "clock_from": "A",
+      "clock_port": "t_st_r6748_0__clk",
+      "clock_pin_xy_um": [
+        3742.74,
+        10770.84
+      ],
+      "rect_um": [
+        3742.74,
+        10770.84,
+        3747.06,
+        10771.38
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000001000000000000->sl_W5_su_l0"
+      ],
+      "children": [
+        "sl_W5_su_l0"
+      ],
+      "reset_parent": "st_r6747_1_rraw",
+      "reset_output": "st_r6748_0_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b6747",
+      "clock_stub_manhattan_um": 30.779999999998836,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "b6778",
+      "region": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000002000000000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0",
+      "node_cell": "b6778",
+      "node_xy_um": [
+        1887.3,
+        10758.96
+      ],
+      "clock_net": "n6778",
+      "clock_from": "Y",
+      "clock_port": "t_st_b6778__clk",
+      "clock_pin_xy_um": [
+        1889.4599999999998,
+        10758.96
+      ],
+      "rect_um": [
+        1889.4599999999998,
+        10758.96,
+        1892.7,
+        10759.5
+      ],
+      "flops": 5,
+      "pad": 0,
+      "edge_fall": false,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000->st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000002000000000000000",
+      "parent": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000",
+      "start_ports_out": [
+        "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000002000000000000000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000000000000"
+      ],
+      "children": [
+        "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000000000000"
+      ],
+      "reset_parent": "st_b846_rraw",
+      "reset_output": "st_b6778_rraw",
+      "reset_flops": 2,
+      "actual_clock_driver": "b6778",
+      "clock_stub_manhattan_um": 2.1599999999998545,
+      "placement_scope": "original node-adjacent row"
+    },
+    {
+      "id": "r6779_0",
+      "region": "st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000000000000",
+      "tree_path_id": "h_2_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_1_0_0_0_0_0_0_0_3_0_0_0_0_0_0_0_0_0_0_0_2_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0",
+      "node_cell": "r6779_0",
+      "node_xy_um": [
+        1803.33,
+        10486.26
+      ],
+      "clock_net": "n6778",
+      "clock_from": "A",
+      "clock_port": "t_st_r6779_0__clk",
+      "clock_pin_xy_um": [
+        1805.4899999999998,
+        10486.26
+      ],
+      "rect_um": [
+        1805.4899999999998,
+        10486.26,
+        1809.81,
+        10486.8
+      ],
+      "flops": 7,
+      "pad": 0,
+      "edge_fall": true,
+      "root": false,
+      "module": "ot_dp_landing_origin",
+      "settle": null,
+      "start_port_in": "start:st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000002000000000000000->st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000000000000",
+      "parent": "st:h20000000200000001000000020000000100000002000000010000000200000001000000020000000100000003000000000002000000000000000",
+      "start_ports_out": [
+        "start:st:h200000002000000010000000200000001000000020000000100000002000000010000000200000001000000030000000000020000000000000000->sl_W5_su_l1"
+      ],
+      "children": [
+        "sl_W5_su_l1"
+      ],
+      "reset_parent": "st_b6778_rraw",
+      "reset_output": "st_r6779_0_rraw",
+      "reset_flops": 3,
+      "actual_clock_driver": "b6778",
+      "clock_stub_manhattan_um": 354.5099999999991,
+      "placement_scope": "original node-adjacent row"
+    }
+  ],
+  "source_commit": "bd55b15b452761be8ceefeae7b97abdf4a915bd4",
+  "root_reset_source": {
+    "port": "rst_raw_n",
+    "part": "sl_E0_fw",
+    "pin": "rst_o_0",
+    "net": "rstw_sl_E0_fw_rst_o_0",
+    "xy_um": [
+      17003.04,
+      12295.776
+    ],
+    "source_part_release_cycles": 17,
+    "hop_to_root_um": 171.8040000000019,
+    "phase_qualified": false,
+    "scope": "existing whole-die synchronized neighbor-wavefront output; one local provider root input, not raw global star"
+  },
+  "holds": [
+    "selected actual stage clock driver and polarity binding",
+    "native producer command/operand/write source cone",
+    "full current physical provider composition and timing"
+  ],
+  "excluded": "unrelated provider branches pruned; no alternate origin or added cycle",
+  "retained_source_sha256": "8882c519f83a472a8d786ddd93eb8286e2d4af43c5944076ff93a1e8248c26e2"
+}

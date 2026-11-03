@@ -1,0 +1,32 @@
+{
+  "schema": "native_head_tile0_partial_gold/1",
+  "source_only": true,
+  "rtl_executed": false,
+  "scope": "unscaled actual TG4 PART1 partial; no global tree, BF16 scale, AMAX or selected physical claim",
+  "rows": 3200,
+  "columns": 32,
+  "k_split": 4,
+  "chunk_length": 8,
+  "row_mapping": "round*768 + slot*16 + lane; round0..24,slot0..7,lane0..15",
+  "source_layout": "hdc_qwen_int8_image_w12.matrix_code/engine_word_arrays: round*64+kk*8+slot; bytegroup*16+lane",
+  "controlled_input": {
+    "raw_residual_fp32": "42000000",
+    "mean_fp32": "44800000",
+    "rstd_fp32": "3cffffff",
+    "H": "mul(mul(FP32(32),canonical_rsqrt(FP32(1024))),genuine_model_norm); matvec rounds H to BF16",
+    "consumer_input": "STREAM BF16-RNE(H), expanded to FP32 with low16 zero; do not truncate raw upstream H",
+    "upstream_status": "controlled component input; producer/clock/calendar transport not qualified"
+  },
+  "oracle": "hdc_golden.matvec: separate RNE mul/add sequential eight terms from+0, pairwise four-chunk tree",
+  "mutant": {
+    "field": "first actual INT8 weight",
+    "gold_hex": "c3312600",
+    "mutant_hex": "c32f0600"
+  },
+  "source_sha256": {
+    "/srv/opentallas-scratch/claude/wt/codex-native-head-consumer-prep/results/token_pass/qwen_native_head_consumer_prep_1102/tile0_logical_int8.hex": "4b466a9550d49b943cc9cb2e7118b74274b3fb38260abb4c741bcd82d28048b0",
+    "results/token_pass/qwen_head_norm_object_1101/object.json": "593cb2bd27c1fb25f838431f9209e04fc19a194dc076e4a7ca83641952091534",
+    "/srv/opentallas-scratch/claude/wt/codex-native-head-consumer-prep/results/token_pass/qwen_native_head_consumer_prep_1102/consumer_prep.json": "e2bf5672eb47f6633ea0695f2451b5f647f881692d2c2e4a73e71fe5d34a99ea",
+    "/home/ubuntu/OpenTallas/tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  }
+}

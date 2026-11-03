@@ -1,0 +1,40 @@
+{
+  "status": "FAIL_FIXTURE_INTERMEDIATE_K_COMPARED_TO_FINAL_K",
+  "runtime_host": "epyc2/dear-crayfish",
+  "unit": "oth-ubuntu-2176313-1793622913",
+  "runtime": "/srv/opentallas-scratch2/claude/codex-native-head-leaf-1102/gate1",
+  "input_packet_sha256": "0173eabd386340f4e9ce21c8d87479261eb7346d94667221c646c97751604da1",
+  "normal_admission": "4GB/1thread/disk2; no critical priority",
+  "build_rc": 0,
+  "build_elapsed_seconds": 460.49,
+  "build_maxRSS_KB": 2452728,
+  "scope_memory_peak_bytes": 3237744640,
+  "baseline_rc": 1,
+  "baseline_elapsed_seconds": 2.95,
+  "baseline_maxRSS_KB": 68684,
+  "wrong_weight": "NOT_RUN_AFTER_BASELINE_FAIL",
+  "actual_first_raw": "c3174c00",
+  "incorrect_fixture_first_expected": "c3312600",
+  "independent_preverdict_prediction": {
+    "firstK0": "c3174c00",
+    "weights": [
+      -42,
+      -12,
+      -8,
+      -11
+    ],
+    "H": [
+      2.125,
+      2.03125,
+      1.9375,
+      2.015625
+    ],
+    "method": "canonical pairwise4 sum of separate FP32 products"
+  },
+  "diagnosis": "Actual PART1 emits intermediate K0..K7 vectors; selected STN KC8 discards first7 K blocks. Packet3 compared K0 to finalK7. No RTL/mask/gold/clock change indicated.",
+  "minimal_repair": "packet4 counts1600 rawvectors and compares final8/64 against unchanged3200goldvalues; same833ps/sourceXschedule and genuinecode1600read count",
+  "repair_source": "codex/native-head-consumer-prep@a71993ee9",
+  "old_failure_preserved": true,
+  "successor_state": "PREPARED_NOT_DISPATCHED_PENDING_PARENT_RESOURCE_RELEASE",
+  "physical_global_rate_claim": false
+}

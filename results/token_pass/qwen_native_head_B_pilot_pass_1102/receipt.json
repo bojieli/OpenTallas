@@ -1,0 +1,90 @@
+{
+  "status": "PASS_NATIVE_PUBLIC_ROM_PART1_COUPLED_PILOT",
+  "source_commit": "d4c791529",
+  "source_branch": "codex/native-head-consumer-prep",
+  "packet_manifest_sha256": "b9b915112ac5752994a458fdce56d2cc33d2f3363dc9fe5bde9c393a71ba84d6",
+  "host": "intel1/key-cardinal",
+  "unit": "oth-ubuntu-3651382-1793635280",
+  "runtime": "/srv/opentallas-scratch2/claude/codex-native-head-B-pilot-1102/gate1",
+  "resources": {
+    "admission_memory_GB": 4,
+    "threads": 1,
+    "disk_GB": 2,
+    "build_wall_seconds": 719.39,
+    "build_maxRSS_KB": 2133700,
+    "compiled_obj_allocated_KiB": 981640,
+    "baseline_tile0_seconds": 3.35,
+    "baseline_tile639_seconds": 3.03,
+    "runtime_maxRSS_KB": 60396
+  },
+  "contexts": [
+    {
+      "tile": 0,
+      "codebase": 18432,
+      "requests": 64,
+      "responses": 64,
+      "raw_vectors": 64,
+      "required_vectors": 64,
+      "real_pad_vectors": 0,
+      "actual_ROM_transcript_sha256": "b334cc92fada3b5935e91dab879c8e74963b050a5d74098c9ccbdead72cf779f",
+      "raw_oracle_sha256": "99426b01901943c7bb33d955d449d9780c2acd04117376ea15617249c2e849a7",
+      "raw_evidence": "all64 actual native raw values matched fixed preread oracle; transcript records actual consumed ROMwire, rawdump notadded inpilot"
+    },
+    {
+      "tile": 639,
+      "codebase": 19968,
+      "requests": 64,
+      "responses": 64,
+      "raw_vectors": 64,
+      "required_vectors": 24,
+      "real_pad_vectors": 40,
+      "actual_ROM_transcript_sha256": "736f0cbfdf279478f494ffbe32a03db67ed706513260253ea040432077cdbe08",
+      "raw_oracle_sha256": "2c2aa78384f817221ae00911bee44ae53a2183e29f36189ec5b126931bc55eff",
+      "raw_evidence": "all64 actual native raw values matched fixed preread oracle; transcript records actual consumed ROMwire, rawdump notadded inpilot"
+    }
+  ],
+  "controls": {
+    "wrongAddress": {
+      "exit": 1,
+      "first_contract_fault_cycle": 59,
+      "ordinal": 0
+    },
+    "wrongCycle": {
+      "exit": 1,
+      "first_contract_fault_cycle": 59,
+      "ordinal": 0,
+      "actual_first_response": "zero instead of nonzero genuine weight word"
+    }
+  },
+  "profile": "unchanged actual PART1 G4/GT3072/WCONV1/MEM_EXTRA8/NX0; actual macro VIAMAP content ABI and unchanged public ROMleaflogic; selected request+return M+9",
+  "source_identity": "genuine original tile0/639 bank4 column0/1 fullmasks authenticated in immutable fresh CWD; does not retarget selected ROM_TILE wrapper",
+  "old_leaf_crosscheck": {
+    "tile0_K0": "c3174c00",
+    "tile0_K7": "c3312600",
+    "prior_actual": "8b597f35c/6742ae10a"
+  },
+  "counts": {
+    "raw_requests": 128,
+    "raw_vectors": 128,
+    "scored_FP32_values": 2048,
+    "required_vectors": 88,
+    "real_pad_vectors": 40
+  },
+  "tail": "actual raw PART1 emits64 at tile639, including40 genuine pad vectors; no filter inserted; production station contract remains separately open",
+  "scope": "nominal composed component only; no actual full512, selected wholeleaf, L6, providerphase, START, fullvocab or token claim",
+  "files": {
+    "staging_guard.log": "8a7c9d59c7d9f280e419a10ae0799b25fcc2479b26ed60d25c63c56887252ce0",
+    "hash_guard.log": "8a7c9d59c7d9f280e419a10ae0799b25fcc2479b26ed60d25c63c56887252ce0",
+    "build.log": "f671599e52dd03e60bb08f0e9a7ba16ef4e76c1ed499ba15f0acfd4109180b68",
+    "SHA256SUMS": "b9b915112ac5752994a458fdce56d2cc33d2f3363dc9fe5bde9c393a71ba84d6",
+    "compiler_version.log": "8244d8527346f6d814fd8f86a765e17fa80b7c75d93c642d638ec7613404ca22",
+    "contexts/tile639/actual_ROM_transcript_baseline.sha256": "cb2d6feacab41801ea1f4f96630a59979f7d63a61f180de4870c59574e50de54",
+    "contexts/tile639/actual_ROM_transcript_baseline.tsv": "736f0cbfdf279478f494ffbe32a03db67ed706513260253ea040432077cdbe08",
+    "contexts/tile639/baseline.log": "b888e858f9afe147d1fc3b2119bc20c1af8b1e973fc2a0103bd41bb6af5d05fa",
+    "contexts/tile0/actual_ROM_transcript_baseline.sha256": "9377d5d41eaaa71b6862e99dc026a0bb70fdf91d1e180ad5a3156fd80a67f5ef",
+    "contexts/tile0/wrongAddress.log": "21f1087ce8bc79accc182694d79ea32dd11cfed5db53da1fe90c2bbe575e1b3e",
+    "contexts/tile0/actual_ROM_transcript_baseline.tsv": "b334cc92fada3b5935e91dab879c8e74963b050a5d74098c9ccbdead72cf779f",
+    "contexts/tile0/baseline.log": "cb690d83e312760c2412502ad435f45dec4ba037ba121b930859ca13b6158ce2",
+    "contexts/tile0/wrongCycle.log": "00a28e2ed27cf80bdd975897c6089c512af650fc7b1063f5d1b209b5622d4ecf"
+  }
+}

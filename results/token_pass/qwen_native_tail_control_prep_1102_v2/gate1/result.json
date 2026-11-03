@@ -1,0 +1,17 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "collected_by": "TOK-QW-3 2026-11-02 (Codex run finished 2026-11-02 09:06 PST, never collected)",
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-native-tail-control-1102/gate1",
+  "nominal": {
+    "raw8": "PASS accepted=64 selected=8 outputs=8 result_age=106..113",
+    "keep3": "PASS accepted=24 selected=3 outputs=3 result_age=106..108",
+    "round16": "PASS accepted=128 selected=16 outputs=16 result_age=106..177"
+  },
+  "expected_contract_faults": {
+    "bad3": "exit1 TAIL_COUNTER_BUG accepted64 selected21_22_23_45_46_47 outputs3 -> EXPECTED_NATIVE_RAW64_NWORDS3_FAULT (raw64 publisher with nwords3 station = the documented tail mismatch)",
+    "cfg_between": "exit1 EXPECTED_NATIVE_CONTIGUOUS_ROUND_CFG_FAULT accepted=51"
+  },
+  "mutant": {"wrong_keep_model": "CAUGHT exit1 TAIL_SELECTION mismatch ordinal57 vs 56"},
+  "clock": "nominal 833ps",
+  "scope": "actual station counter/CFG witness + external contract model only; CONTROL_REPLAY_NOT_L6; no producer/controller repair or L6 numeric claim"
+}

@@ -1,0 +1,5 @@
+FIRST_K0_RAW actual=c3152c00 independent_expected=c3174c00
+RAW_PARTIAL_MISMATCH raw=56 vector=0 lane=0 row=0 actual=c32f0600 expected=c3312600
+[106000000] %Fatal: tb_native_head_leaf.sv:37: Assertion failed in tb_native_head_leaf.unnamedblk1: RAW_PARTIAL_MISMATCH
+%Error: tb_native_head_leaf.sv:37: Verilog $stop
+Aborting...

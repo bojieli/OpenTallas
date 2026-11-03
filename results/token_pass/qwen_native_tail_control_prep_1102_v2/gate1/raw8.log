@@ -1,0 +1,36 @@
+TAIL_SELECTED case=raw8 ordinal=56 cycle=72
+TAIL_SELECTED case=raw8 ordinal=57 cycle=73
+TAIL_SELECTED case=raw8 ordinal=58 cycle=74
+TAIL_SELECTED case=raw8 ordinal=59 cycle=75
+TAIL_SELECTED case=raw8 ordinal=60 cycle=76
+TAIL_SELECTED case=raw8 ordinal=61 cycle=77
+TAIL_SELECTED case=raw8 ordinal=62 cycle=78
+TAIL_SELECTED case=raw8 ordinal=63 cycle=79
+PASS_NATIVE_TAIL_CONTROL case=raw8 accepted=64 selected=8 outputs=8 result_age=106..113 nominal833ps CONTROL_REPLAY_NOT_L6
+- rtl/test/qwen_dv/tb_qwen_native_head_tail_control.sv:112: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 165ns; walltime 0.195 s; speed 846.932 ns/s
+- Verilator: cpu 0.190 s on 1 threads; allocated 23 MB
+	Command being timed: "./obj/Vtb_qwen_native_head_tail_control +INPUT=inputs +CASE=raw8"
+	User time (seconds): 0.19
+	System time (seconds): 0.00
+	Percent of CPU this job got: 97%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.20
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 19336
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 396
+	Voluntary context switches: 5
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 64
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

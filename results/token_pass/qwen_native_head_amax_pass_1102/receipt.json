@@ -1,0 +1,104 @@
+{
+  "status": "PASS_NATIVE_AMAX_MU_COMPONENT",
+  "source_commit": "b4b9a00e5",
+  "source_branch": "codex/native-head-consumer-prep",
+  "packet_manifest_sha256": "9991c24a673acb57a5a4ce1b73116c2f80070258948aed6f751d5d6381411b5f",
+  "host": "intel1/key-cardinal",
+  "unit": "oth-ubuntu-3200594-1793633473",
+  "runtime": "/srv/opentallas-scratch2/claude/codex-native-head-amax-mu-1102/gate2",
+  "resources": {
+    "admission_memory_GB": 2,
+    "threads": 1,
+    "disk_GB": 2,
+    "build_wall_seconds": 5.38,
+    "build_maxRSS_KB": 254496,
+    "runtime_seconds": 0.003,
+    "runtime_maxRSS_KB": 4764
+  },
+  "input_evidence": "actual post PASS9e2427a8c; assembled11real16lane vectors qualified by176 exact native scalar comparisons across16sequential two-lane contexts",
+  "vectors": 11,
+  "scalar_values": 176,
+  "addresses": [
+    [
+      0,
+      128
+    ],
+    [
+      18944,
+      18992
+    ]
+  ],
+  "one_word_STN_dbases": [
+    0,
+    64,
+    18944,
+    16,
+    80,
+    18960,
+    32,
+    96,
+    18976,
+    48,
+    112
+  ],
+  "per_user_vector_indices": [
+    [
+      0,
+      4,
+      8
+    ],
+    [
+      1,
+      5,
+      9
+    ],
+    [
+      2,
+      6,
+      10
+    ],
+    [
+      3,
+      7
+    ]
+  ],
+  "candidates": [
+    {
+      "user": 0,
+      "index": 11,
+      "value": "410d3210"
+    },
+    {
+      "user": 1,
+      "index": 30,
+      "value": "41078928"
+    },
+    {
+      "user": 2,
+      "index": 36,
+      "value": "4119bef9"
+    },
+    {
+      "user": 3,
+      "index": 63,
+      "value": "40dd051a"
+    }
+  ],
+  "mutants_detected": {
+    "MUT2": "current STN user replaces carried pipeline user",
+    "MUT3": "clear erases all users",
+    "MUT4": "emit uses current STN user instead of requested AMAX tag"
+  },
+  "pipeline": "actual NU4 al0..al4 plus merge; six quiet drain edges, legal oldlast one-word STN replacement; no internal state drives",
+  "clock": "833ps/1fs nominal component",
+  "scope": "logical actual qfd_dv_amax_mu NU4 component from checked post boundary data; selected HARD1 control is flattened and not executed here; no full-vocabulary, ROOT, physicalphase or global token claim",
+  "packet1": "NOT_RUN_SOURCE_DESCRIPTOR_CORRECTION, preserved",
+  "added_pipeline_edges": 0,
+  "files": {
+    "hash_guard.log": "0a90f4af933976c8aa8e882f3aae681e02bb1c968d7c46e83d3ec5210e0f7bd8",
+    "build.log": "e0c4daaac20f5b15e0e0622eec3aa6f66acde83c8c36dd585ac9ebbcb2ac37af",
+    "SHA256SUMS": "9991c24a673acb57a5a4ce1b73116c2f80070258948aed6f751d5d6381411b5f",
+    "compiler_version.log": "8244d8527346f6d814fd8f86a765e17fa80b7c75d93c642d638ec7613404ca22",
+    "baseline_and_controls.log": "0de7f3e6f2f8cfe1241f6d9d87e8356cbef41753ed89bc3a861b6fffe1e190f0"
+  }
+}

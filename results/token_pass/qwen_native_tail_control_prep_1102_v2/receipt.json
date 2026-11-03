@@ -1,0 +1,28 @@
+{
+  "status": "SOURCE_CONTROL_FIXTURE_NOT_EXECUTED",
+  "source_sha256": {
+    "results/token_pass/qwen_native_head_actual_prefixes_1102/actual_raw_prefixes.tsv": "c3db0ddac19d2e7d4803ca2300eb3409d16aef47279c44fbf2660b7899e815b3",
+    "/srv/opentallas-scratch/claude/wt/codex-native-head-consumer-prep/results/token_pass/qwen_native_head_consumer_prep_1102/genuine_scale_bf16.hex": "df41b740b4cbbe3cdf67fae428cfbf081513269412baca49f5fcf15ccc9d3674",
+    "/home/ubuntu/coord/tmp/codex-native-head-post-two-lane-packet1/inputs/genuine_btab.hex": "8b46afb9e1b98102495ec07a447405ad3b481d923f27d0287e4c92874eb7c762",
+    "/home/ubuntu/coord/tmp/codex-qwen-headlease-2125/head37_monitor_slice0_candidate.json": "fee738366af2e6a076974e629a1118d407382c2ff317668877fbfdf3a050021b",
+    "/home/ubuntu/OpenTallas/tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  },
+  "data": "first128 actual TG4 prefix words, low2 lanes replayed identically at8 independent station control-test input ports",
+  "actual_cadence": "first512 captured fullleaf publications have511 consecutive833000fs deltas; includes63to64 and127to128",
+  "scope": "counter/control witness only; input words are not full L6 sums and output gold is not a genuine LM logit",
+  "DUT": "actual unchanged tail1 sender/receiver, genuine shared BTAB rows72..87, nominal833ps/SKEW14/direct neighbor boundary",
+  "cases": {
+    "raw8": "64 accepted words; actual KC8 selects56..63",
+    "bad3": "64 accepted words; actual KC8/nwords3 selects21..23/45..47 and faults at fourth receiver fv",
+    "keep3": "external contract model only:64 physical slots, publishj<3;24accepted words select56..58, no implemented publisher repair",
+    "round16": "128continuous words, one NWORDS16 descriptor,16selected outputs with genuine contiguous receiver scales",
+    "cfg_between": "128continuous words, NWORDS8 descriptor replaced at raw round boundary; intrinsic cfg_schedule_fault expected"
+  },
+  "intended_repair": "separate selected-source placement and ABI event required; this external keep model does not qualify an RTL implementation",
+  "output_sha256": {
+    "good16.hex": "0e1e711f26cc6d4a4af0e1be6d080f6ea9305f55a6b3ea9cffebffc5f27c625f",
+    "captured_TG4_128.hex": "bb6a821281c1def07375184144de25bfd434fb4cdfd398db0f478cbf5cb683f5",
+    "genuine_btab_four_records.hex": "077fa1f688b50ad6dd59bcae197d30ef444e14407a69126ee7e71d8e0aa661b5",
+    "bad3_first.hex": "3d633da98a35e2287a7f8b7dbca9f83b92bceddc3c3333ac242a4a5b3ee0f348"
+  }
+}

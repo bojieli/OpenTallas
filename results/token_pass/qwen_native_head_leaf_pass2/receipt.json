@@ -1,0 +1,52 @@
+{
+  "status": "PASS_ACTUAL_NATIVE_HEAD_TILE0_RAW_PART1_COMPONENT",
+  "host": "intel1/key-cardinal",
+  "unit": "oth-ubuntu-827538-1793624519",
+  "runtime": "/srv/opentallas-scratch2/claude/codex-native-head-leaf-1102/gate2",
+  "normal_admission": "4GB/1thread/disk2; no critical priority",
+  "packet_sha256": "9ad290adae8524503d8d8d476a31cfdbbdae61e7f1448864dbda0e471614b973",
+  "source_component": "exact selected c_W5_bf_00.u_u_t_0_0 TG4 native leaf; all39 literal clk bindings preserved from selected parent",
+  "genuine_data": "rank0 physicalbank4 masks,INT8 code1600 and canonical BF16-RNE projected H32",
+  "chunks": [
+    8,
+    8,
+    8,
+    1
+  ],
+  "raw_vectors": 1600,
+  "checked_finalK7_vectors": 200,
+  "checked_FP32_values": 3200,
+  "code_words_read": 1600,
+  "code_words_per_chunk": [
+    512,
+    512,
+    512,
+    64
+  ],
+  "baseline_rc": 0,
+  "wrong_weight_rc": 1,
+  "wrong_weight": "same ELF fresh genuine-mask directory, bank4col0 physicalrow256bitline0: D6(-42)\u2192D7(-41)",
+  "first_baseline_K0": "c3174c00",
+  "first_baseline_finalK7": "c3312600",
+  "first_mutated_finalK7": "c32f0600",
+  "generate_seconds": 83.28,
+  "generate_maxRSS_KB": 2449860,
+  "make_seconds": 766.54,
+  "make_maxRSS_KB": 1243112,
+  "baseline_seconds": 60.91,
+  "baseline_maxRSS_KB": 69684,
+  "mutant_seconds": 7.17,
+  "mutant_maxRSS_KB": 69804,
+  "generated_file_delta": {
+    "same": 556,
+    "changed": 1
+  },
+  "cache_limit": "normal make recompiled additional native units despite byte-identical generated inputs; no forced stamps",
+  "prior_failure": "qwen_native_head_leaf_failure1 preserved; first run compared K0 to finalK7",
+  "source_repair": "bench-only KC8 final selection a71993ee9; no native RTL/gold/mask/833ps/XOFF3 change",
+  "holds": [
+    "only32 input columns, raw TG4 PART1 partials; full512split logit not qualified",
+    "selected collector/STN/BF16BTAB/scales/8regionAMAX/scalar path not integrated by this gate",
+    "no global calendar/clock/physical/token/rate qualification"
+  ]
+}

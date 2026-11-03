@@ -1,0 +1,24 @@
+{
+  "status": "PREP_ONLY_NO_DISPATCH",
+  "passed_runtime": "/srv/opentallas-scratch2/claude/codex-native-head-leaf-1102/gate2",
+  "passed_status_sha256": "69cbb63600a75feeca0f87f14576f9423faa3a2fa958289454e63e8fffad921e",
+  "checked_gold_scope": "200finalK7vectors/3200values and wrongweight source-control",
+  "capture_scope": "1600actualrawKprefixvectors/25600FP32words from unmodified native model; no full512split or post/STN claim",
+  "entry_policy": "GNUld wraps only CRT main entry; original grouped model archive remains byte-identical",
+  "model_inputs": {
+    "/srv/opentallas-scratch2/claude/codex-native-head-leaf-1102/gate2/obj/Vtb_native_head_leaf__ALL.a": "c89f981a2b80602a42103bd3ec8251e48dc1a78d4f24fc3ff451905aa9065255",
+    "/srv/opentallas-scratch2/claude/codex-native-head-leaf-1102/gate2/obj/verilated.o": "14d5aedd6ef964f6fab505e3210ba3b3a42cc1c6328052a5cfe73e8f8bbd5334",
+    "/srv/opentallas-scratch2/claude/codex-native-head-leaf-1102/gate2/obj/verilated_timing.o": "5a66603d58bcf1155d44037fd7abf1e1a19e064f9ed257f9e755049fefefe72f",
+    "/srv/opentallas-scratch2/claude/codex-native-head-leaf-1102/gate2/obj/verilated_threads.o": "b78b291493efa3991a6f5d15d7f4341bd51e58363ee3a68e3afccdfd9cd9a497",
+    "/srv/opentallas-scratch2/claude/codex-native-head-leaf-1102/gate2/obj/Vtb_native_head_leaf.h": "ab181f358fd07aa97cbc16ad760ca73e88d9dd5a3ab5aca120302f628404ed78",
+    "/srv/opentallas-scratch2/claude/codex-native-head-leaf-1102/gate2/obj/Vtb_native_head_leaf__Syms.h": "2fbfc1481b2d5d2bd1d1007710e6d89053b42f7f6ccedf7802e504f829220f67",
+    "/srv/opentallas-scratch2/claude/codex-native-head-leaf-1102/gate2/obj/Vtb_native_head_leaf___024root.h": "3dbfb7d6277f240e4517f703320a52cac95516e0f7c8240723220700e0b409de",
+    "/srv/opentallas-scratch2/claude/codex-native-head-leaf-1102/gate2/obj/Vtb_native_head_leaf__pch.h": "566e907e5d208233ffa2a89a3c3219ec5120bc9a8d9b5a912a705f81a695ed2f"
+  },
+  "driver_sha256": "6289ce2d6575d7bc870017e040a498986b387b6eda179f0988b81def5c98b225",
+  "holds": [
+    "parent finite readset/resource review before normal compile/link/replay",
+    "passed model library must remain immutable; no active cache mutation",
+    "all timestamps are original component TEST_ONLY times, not global clock/calendar epochs"
+  ]
+}

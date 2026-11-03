@@ -1,0 +1,4 @@
+RAW_PARTIAL_MISMATCH vector=0 lane=0 row=0 actual=c3174c00 expected=c3312600
+[60000000] %Fatal: tb_native_head_leaf.sv:32: Assertion failed in tb_native_head_leaf.unnamedblk1: RAW_PARTIAL_MISMATCH
+%Error: tb_native_head_leaf.sv:32: Verilog $stop
+Aborting...

@@ -1,0 +1,24 @@
+{
+  "status": "SOURCE_CONTROL_FIXTURE_NOT_EXECUTED",
+  "source_sha256": {
+    "results/token_pass/qwen_native_head_actual_prefixes_1102/actual_raw_prefixes.tsv": "c3db0ddac19d2e7d4803ca2300eb3409d16aef47279c44fbf2660b7899e815b3",
+    "/srv/opentallas-scratch/claude/wt/codex-native-head-consumer-prep/results/token_pass/qwen_native_head_consumer_prep_1102/genuine_scale_bf16.hex": "df41b740b4cbbe3cdf67fae428cfbf081513269412baca49f5fcf15ccc9d3674",
+    "/home/ubuntu/coord/tmp/codex-native-head-post-two-lane-packet1/inputs/genuine_btab.hex": "8b46afb9e1b98102495ec07a447405ad3b481d923f27d0287e4c92874eb7c762",
+    "/home/ubuntu/OpenTallas/tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  },
+  "data": "first64 actual TG4 prefix words, low2 lanes replayed identically at8 independent station control-test input ports",
+  "scope": "counter/control witness only; input words are not full L6 sums and output gold is not a genuine LM logit",
+  "DUT": "actual unchanged tail1 sender/receiver, genuine shared BTAB rows72..79, nominal833ps/SKEW14/direct neighbor boundary",
+  "cases": {
+    "raw8": "64 accepted words; actual KC8 selects56..63",
+    "bad3": "64 accepted words; actual KC8/nwords3 selects21..23/45..47 and faults at fourth receiver fv",
+    "keep3": "external contract model only:64 physical slots, publishj<3;24accepted words select56..58, no implemented publisher repair"
+  },
+  "intended_repair": "separate selected-source placement and ABI event required; this external keep model does not qualify an RTL implementation",
+  "output_sha256": {
+    "good8.hex": "2bbc4283ef46432cdc8e48563ad795e98d69a77bf2b8e90625921f3aab4418c6",
+    "genuine_btab_two_records.hex": "9f35988761ab956fc1afe55294cd22d4598df88143a78e332fa977eee020e9fa",
+    "captured_TG4_64.hex": "99426b01901943c7bb33d955d449d9780c2acd04117376ea15617249c2e849a7",
+    "bad3_first.hex": "3d633da98a35e2287a7f8b7dbca9f83b92bceddc3c3333ac242a4a5b3ee0f348"
+  }
+}

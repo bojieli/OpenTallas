@@ -1,0 +1,27 @@
+[139000000] %Fatal: tb_qwen_native_head_post_two_lane.sv:60: Assertion failed in tb_qwen_native_head_post_two_lane: post mismatch block=0 region=0 idx=0 actual=bfaf6d1140fe9e25 expected=bfaf6d1140fd8fae
+%Error: rtl/test/qwen_dv/tb_qwen_native_head_post_two_lane.sv:60: Verilog $stop
+Aborting...
+Command exited with non-zero status 1
+	Command being timed: "./obj/Vtb_qwen_native_head_post_two_lane +INPUT=inputs +CONTROL=wrongBTAB"
+	User time (seconds): 0.26
+	System time (seconds): 0.00
+	Percent of CPU this job got: 85%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.31
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 19684
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 407
+	Voluntary context switches: 1
+	Involuntary context switches: 3
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

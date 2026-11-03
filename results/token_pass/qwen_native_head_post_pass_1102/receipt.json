@@ -1,0 +1,243 @@
+{
+  "status": "PASS_NATIVE_POST_COMPONENT",
+  "source_commit": "e238e0b1a",
+  "source_branch": "codex/native-head-consumer-prep",
+  "packet_manifest_sha256": "117f2441830db2edad090f7b76d6492c12c1a2497e85af24a3f36f761cc994b6",
+  "host": "intel1/key-cardinal",
+  "unit": "oth-ubuntu-2875333-1793632218",
+  "runtime": "/srv/opentallas-scratch2/claude/codex-native-head-post-two-lane-1102/gate1",
+  "resources": {
+    "admission_memory_GB": 4,
+    "threads": 1,
+    "disk_GB": 2,
+    "build_wall_seconds": 244.6,
+    "build_maxRSS_KB": 737660,
+    "baseline_wall_seconds": 2.89,
+    "baseline_maxRSS_KB": 18996
+  },
+  "contexts": [
+    {
+      "block": 0,
+      "region": 0,
+      "values": 16,
+      "first_nb": 86,
+      "last_nb": 93,
+      "first_bt": 95,
+      "last_bt": 102,
+      "first_result": 106,
+      "last_result": 113
+    },
+    {
+      "block": 148,
+      "region": 0,
+      "values": 6,
+      "first_nb": 51,
+      "last_nb": 53,
+      "first_bt": 60,
+      "last_bt": 62,
+      "first_result": 71,
+      "last_result": 73
+    },
+    {
+      "block": 0,
+      "region": 1,
+      "values": 16,
+      "first_nb": 86,
+      "last_nb": 93,
+      "first_bt": 95,
+      "last_bt": 102,
+      "first_result": 106,
+      "last_result": 113
+    },
+    {
+      "block": 148,
+      "region": 1,
+      "values": 6,
+      "first_nb": 51,
+      "last_nb": 53,
+      "first_bt": 60,
+      "last_bt": 62,
+      "first_result": 71,
+      "last_result": 73
+    },
+    {
+      "block": 0,
+      "region": 2,
+      "values": 16,
+      "first_nb": 86,
+      "last_nb": 93,
+      "first_bt": 95,
+      "last_bt": 102,
+      "first_result": 106,
+      "last_result": 113
+    },
+    {
+      "block": 148,
+      "region": 2,
+      "values": 6,
+      "first_nb": 51,
+      "last_nb": 53,
+      "first_bt": 60,
+      "last_bt": 62,
+      "first_result": 71,
+      "last_result": 73
+    },
+    {
+      "block": 0,
+      "region": 3,
+      "values": 16,
+      "first_nb": 86,
+      "last_nb": 93,
+      "first_bt": 95,
+      "last_bt": 102,
+      "first_result": 106,
+      "last_result": 113
+    },
+    {
+      "block": 148,
+      "region": 3,
+      "values": 6,
+      "first_nb": 51,
+      "last_nb": 53,
+      "first_bt": 60,
+      "last_bt": 62,
+      "first_result": 71,
+      "last_result": 73
+    },
+    {
+      "block": 0,
+      "region": 4,
+      "values": 16,
+      "first_nb": 86,
+      "last_nb": 93,
+      "first_bt": 95,
+      "last_bt": 102,
+      "first_result": 106,
+      "last_result": 113
+    },
+    {
+      "block": 148,
+      "region": 4,
+      "values": 6,
+      "first_nb": 51,
+      "last_nb": 53,
+      "first_bt": 60,
+      "last_bt": 62,
+      "first_result": 71,
+      "last_result": 73
+    },
+    {
+      "block": 0,
+      "region": 5,
+      "values": 16,
+      "first_nb": 86,
+      "last_nb": 93,
+      "first_bt": 95,
+      "last_bt": 102,
+      "first_result": 106,
+      "last_result": 113
+    },
+    {
+      "block": 148,
+      "region": 5,
+      "values": 6,
+      "first_nb": 51,
+      "last_nb": 53,
+      "first_bt": 60,
+      "last_bt": 62,
+      "first_result": 71,
+      "last_result": 73
+    },
+    {
+      "block": 0,
+      "region": 6,
+      "values": 16,
+      "first_nb": 86,
+      "last_nb": 93,
+      "first_bt": 95,
+      "last_bt": 102,
+      "first_result": 106,
+      "last_result": 113
+    },
+    {
+      "block": 148,
+      "region": 6,
+      "values": 6,
+      "first_nb": 51,
+      "last_nb": 53,
+      "first_bt": 60,
+      "last_bt": 62,
+      "first_result": 71,
+      "last_result": 73
+    },
+    {
+      "block": 0,
+      "region": 7,
+      "values": 16,
+      "first_nb": 86,
+      "last_nb": 93,
+      "first_bt": 95,
+      "last_bt": 102,
+      "first_result": 106,
+      "last_result": 113
+    },
+    {
+      "block": 148,
+      "region": 7,
+      "values": 6,
+      "first_nb": 51,
+      "last_nb": 53,
+      "first_bt": 60,
+      "last_bt": 62,
+      "first_result": 71,
+      "last_result": 73
+    }
+  ],
+  "checked_scalar_values": 176,
+  "row_intervals": [
+    [
+      0,
+      128
+    ],
+    [
+      18944,
+      18992
+    ]
+  ],
+  "controls": {
+    "wrongBTAB": {
+      "exit": 1,
+      "actual": "40fe9e25",
+      "unchanged_expected": "40fd8fae",
+      "cause": "genuine first BF16 scale3a70 changed to3a71; otherlane unchanged"
+    },
+    "noNeighbor": {
+      "exit": 1,
+      "outputs": 0,
+      "sender_publications": 8,
+      "BTAB_requests": 0,
+      "cause": "explicit component neighbor-valid boundary suppression; finitewatchdog"
+    }
+  },
+  "checked_rows": {
+    "file": "checked_scaled_rows.hex",
+    "sha256": "d30ff61ec386d96ef582d294e813983500432fbb0d795b65010425fab9d1435f",
+    "method": "Fixed pre-run oracle words, qualified by all176 actual native outputs matching exact assertions across16 sequential contexts. Each16-lane word assembled from8 separatelychecked2-lane regions, not simultaneously emitted hardware.",
+    "full_words": 11,
+    "padding": "none;128firstblock rows plus48tail rows only"
+  },
+  "clock": "exact833ps/1fs nominal component clock; selected distinct regionalproviders and actualnumericalL9 transport notqualified",
+  "origin": "first near referenceL6 valid presentation before capture; componentcycles only",
+  "pipeline_changes": 0,
+  "scope": "Actual selected native station sender/receiver math and real shared BTAB/fatalmacro/v2 SRAM behavior withreferenceL6 boundary inputs. No executedfullL6/global512ME, selected START/physicalphase, AMAX, ROOT, token orrate claim.",
+  "outputs": {
+    "noNeighbor.log": "34ff8331941c62c42cd6636d065ae053b1f504aab2c81c5f92e0f4cde2da5fe5",
+    "hash_guard.log": "7e976aea548aeea2b4f563cc23a96b3fb1cf113a9ba96c924e2cd009ac36588a",
+    "wrongBTAB.log": "e205d26b6fb790163cdd1aade891943ffd78d5880c885b2ee6ecf5819e2b2153",
+    "build.log": "3ceb76597dd80c57aba606d65c6763c23f20504b053c9106f535cb45ecfc6562",
+    "SHA256SUMS": "117f2441830db2edad090f7b76d6492c12c1a2497e85af24a3f36f761cc994b6",
+    "compiler_version.log": "8244d8527346f6d814fd8f86a765e17fa80b7c75d93c642d638ec7613404ca22",
+    "checked_scaled_rows.hex": "d30ff61ec386d96ef582d294e813983500432fbb0d795b65010425fab9d1435f",
+    "baseline.log": "2cf06f54a8d9328de7fdee13d0d104c2af7647330cb3835691c3e1f3b32ec0d6"
+  }
+}
