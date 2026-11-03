@@ -206,7 +206,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
       .T_RCD(TIMING_833?24:19),.T_RP(TIMING_833?20:16),.T_RAS(TIMING_833?34:28),.T_RTP(TIMING_833?7:6),.T_CCDL(TIMING_833?4:3),
       .T_RRDS(TIMING_833?4:3),.T_RRDL(4),.T_FAW(TIMING_833?19:15),.T_RFC(TIMING_833?421:342),.T_RFCPB(TIMING_833?241:196),
       .T_REFI(TIMING_833?4681:3808),.T_REFIPB(TIMING_833?144:118),.T_RREFD(TIMING_833?10:8),
-      .T_RTW(TIMING_833?12:10),.T_WTR(TIMING_833?17:14),.T_WRR(TIMING_833?34:28),.T_RCDW(TIMING_833?12:10)) controller(
+      .T_RTW(TIMING_833?12:10),.T_WTR(TIMING_833?17:14),.T_WRR(TIMING_833?34:28),.T_RCDW(TIMING_833?12:10),
+      .WP_REG(1)) controller(   // DIE-HBM-61 RE-FORM 2026-11-03: registered write pointer / not-full, zero latency
         .reset_regions(reset_regions),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .clk(clk),.rst_n(lrst_n),.desc_v(state==DESC),.desc_r(dr),.desc_row(active_row),.desc_n(11'd0),
         .go(1'b1),.next_posted(1'b0),.row_v(r_v),.row_prio(),.row_gnt(1'b1),
