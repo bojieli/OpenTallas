@@ -255,11 +255,22 @@ SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualifi
 OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py")
 
 
+def _common_flow(source, name):
+    """physical/common_flow/<name> of the checkout that holds tools/die_plan `source`; a sparse checkout without
+    physical/common_flow reads it from git HEAD (common_flow_src.py, DIE-KV-62 11-02).  A standalone kit copy has no
+    common_flow_src.py: the plain path, as before."""
+    try:
+        from common_flow_src import common_flow_file
+    except ImportError:
+        return Path(source).parents[1] / "physical/common_flow" / name
+    return common_flow_file(name, Path(source).parents[1])
+
+
 def signoff_bundle_sources(source=HERE):
     source = Path(source)
     paths = {name: source / name for name in SIGNOFF_BUNDLE}
     if not paths["clock_family.tcl"].is_file():
-        paths["clock_family.tcl"] = source.parents[1] / "physical/common_flow/clock_family.tcl"
+        paths["clock_family.tcl"] = _common_flow(source, "clock_family.tcl")
     missing = [name for name, path in paths.items() if not path.is_file()]
     if missing:
         raise ValueError("signoff: incomplete tool bundle: " + ", ".join(missing))
@@ -316,7 +327,7 @@ def copy_signoff_bundle(destination, source=HERE, extra=()):
         if name not in paths and (name in requested or not (destination / name).is_file()):
             path = source / name
             if name in ("clock_family.tcl", "macro_cts_cluster.tcl") and not path.is_file():
-                path = source.parents[1] / "physical/common_flow" / name
+                path = _common_flow(source, name)
             paths[name] = path
         pending.extend(KIT_TOOL_DEPENDENCIES.get(name, ()))
     missing = [name for name, path in paths.items() if not path.is_file()]

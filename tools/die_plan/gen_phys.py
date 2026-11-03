@@ -32,6 +32,16 @@ import schema as S
 import taps as T
 from schema import DIE_PART
 
+
+def _common_flow_file(name, repo):
+    """physical/common_flow/<name> of checkout `repo`, from git HEAD in a sparse checkout without it
+    (common_flow_src.py, DIE-KV-62 11-02); a copy of this module without the helper: the plain path."""
+    try:
+        from common_flow_src import common_flow_file
+    except ImportError:
+        return Path(repo) / "physical/common_flow" / name
+    return common_flow_file(name, repo)
+
 CORE_MARGIN_UM = 4.32        # multiple of row 0.27 and site 0.054
 IO_BUDGET = 0.2
 PIN_LEN_UM = 0.192
@@ -2712,7 +2722,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if grouped["groups"]:
         (kd / "core_clock_groups.json").write_text(json.dumps(grouped, indent=1) + "\n")
         (kd / "core_clock_groups_apply.tcl").write_text(CG.tcl_text(grouped))
-        shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/core_clock_groups.tcl",
+        shutil.copyfile(_common_flow_file("core_clock_groups.tcl", Path(__file__).resolve().parents[2]),
                         kd / "core_clock_groups.tcl")
         group_hook = "\nsource /work/core_clock_groups_apply.tcl\n"
     # DIE-HEAD-17 (opt-in partition_types.<t>.reg_spine): register clock as a plan-placed spine + local trees and the
@@ -2906,7 +2916,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
     cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
-    shutil.copyfile(HOLD_PAD_HB4, kd / "hold_pad_hb4.tcl")
+    shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
     if _tap_grt_pre(P, t):
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
@@ -3131,9 +3141,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # Copy the current shared hook and its conditional helpers beside each generated kit.
-    cf = Path(__file__).resolve().parents[2] / "physical" / "common_flow"
     for f in KEEP_REGS_HOOK:
-        shutil.copyfile(cf / f, kd / f)
+        shutil.copyfile(_common_flow_file(f, Path(__file__).resolve().parents[2]), kd / f)
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
     from signoff import copy_signoff_bundle
     copy_signoff_bundle(kd, extra=("kit_preflight.py", "legacy_gate.py", "core_clock_band.py"))

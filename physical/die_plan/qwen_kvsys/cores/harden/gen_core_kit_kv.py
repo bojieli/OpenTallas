@@ -1764,8 +1764,10 @@ def main():
                                        PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks())
     tool = Path(a.tool)
+    from common_flow_src import common_flow_file    # tools/die_plan on sys.path (_policy_unc)
     for name in ("ot_keep_regs.tcl", "ot_pin_regs.tcl"):
-        shutil.copyfile(REPO / "physical/common_flow" / name, kd / name)
+        # DIE-KV-62 11-02: a sparse checkout without physical/common_flow reads it from git HEAD (killed q2/astk/e6 gens)
+        shutil.copyfile(common_flow_file(name, REPO), kd / name)
     for name in ("face_keep.tcl", "face_keep_release.tcl"):
         text = (tool / name).read_text()
         text = text.replace("u_(bin|bout|ft)_[^/]*[/.]", "(u_(bin|bout|ft)_[^/]*[/.]|u_ric[/.])")
