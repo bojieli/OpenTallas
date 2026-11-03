@@ -18,7 +18,11 @@ def expert_end(records,first):
     raise ValueError('expert source block lacks known three-rsel/final-collective boundary')
 
 
-def layout(records,first,last):
+def layout(records,first,last,align=None):
+    # align (opt-in, words): place every region congruent with its canonical source word mod align, so
+    # retirement stores keep the HBM-home congruence of the native 64-word writer groups (TOK-HBM-2,
+    # four-stack ruling A).  None = the original dense packing, byte-identical.
+    if align is not None and(align%32 or align<32):raise ValueError('expert congruence must be a whole number of 32-word regions')
     from vm_value_phase import engine_span
     from isa_loader import load_isa
     IR,_=load_isa()
@@ -57,7 +61,9 @@ def layout(records,first,last):
         if merged and lo<=merged[-1][1]:merged[-1][1]=max(hi,merged[-1][1])
         else:merged.append([lo,hi])
     result=[];base=0
-    for i,(lo,hi)in enumerate(merged):result.append(dict(source_words=[lo,hi],vm_words=[base,base+hi-lo],name=f'actual_region_{i}'));base+=hi-lo
+    for i,(lo,hi)in enumerate(merged):
+        if align is not None:base+=(lo-base)%align
+        result.append(dict(source_words=[lo,hi],vm_words=[base,base+hi-lo],name=f'actual_region_{i}'));base+=hi-lo
     if base>262144:raise ValueError(f'expert source component needs{base}words')
     return result,base
 
@@ -69,9 +75,9 @@ def translate(address,segments):
     raise ValueError(f'expert source pointer lacks bounded region: {address}')
 
 
-def lower(records,first=1559,last=None):
+def lower(records,first=1559,last=None,align=None):
     if last is None:last=expert_end(records,first)
-    segments,high=layout(records,first,last);blob=bytearray();manifest=[]
+    segments,high=layout(records,first,last,align);blob=bytearray();manifest=[]
     for index in range(first,last+1):
         _,r,x,_=records[index];r=copy.deepcopy(r);x=copy.deepcopy(x)
         for d in r.desc.values():
