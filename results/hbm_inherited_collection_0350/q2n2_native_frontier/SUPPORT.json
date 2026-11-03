@@ -1,0 +1,453 @@
+{
+ "scope": "READONLY_NATIVE_NEXT_D_NOT_EQ_OR_BASE_PROOF",
+ "rows": [
+  {
+   "key": "ff:u_dut.u_fcore.u_x._190855_[0]",
+   "literal": 1200591,
+   "same_next_D_keys": [],
+   "support": [
+    {
+     "kind": "input",
+     "index": 14074,
+     "names": [
+      [
+       "rst_n",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 7950,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_begin_pin$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 17873,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190855_[0]$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 76116,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190684_[0]",
+       0
+      ],
+      [
+       "u_dut.u_fcore.u_x._190684_[0]$_DFF_P_.lecq",
+       0
+      ],
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_pin[0]",
+       0
+      ]
+     ]
+    }
+   ],
+   "prior_hyp": []
+  },
+  {
+   "key": "ff:u_dut.u_fcore.u_x._190855_[1]",
+   "literal": 1200573,
+   "same_next_D_keys": [],
+   "support": [
+    {
+     "kind": "input",
+     "index": 14074,
+     "names": [
+      [
+       "rst_n",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 7950,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_begin_pin$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 17872,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190855_[1]$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 76115,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190684_[1]",
+       1
+      ],
+      [
+       "u_dut.u_fcore.u_x._190684_[1]$_DFF_P_.lecq",
+       0
+      ],
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_pin[1]",
+       0
+      ]
+     ]
+    }
+   ],
+   "prior_hyp": []
+  },
+  {
+   "key": "ff:u_dut.u_fcore.u_x._190855_[2]",
+   "literal": 1200555,
+   "same_next_D_keys": [],
+   "support": [
+    {
+     "kind": "input",
+     "index": 14074,
+     "names": [
+      [
+       "rst_n",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 7950,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_begin_pin$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 17871,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190855_[2]$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 76114,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190684_[2]",
+       2
+      ],
+      [
+       "u_dut.u_fcore.u_x._190684_[2]$_DFF_P_.lecq",
+       0
+      ],
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_pin[2]",
+       0
+      ]
+     ]
+    }
+   ],
+   "prior_hyp": []
+  },
+  {
+   "key": "ff:u_dut.u_fcore.u_x._190855_[3]",
+   "literal": 1200537,
+   "same_next_D_keys": [],
+   "support": [
+    {
+     "kind": "input",
+     "index": 14074,
+     "names": [
+      [
+       "rst_n",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 7950,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_begin_pin$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 17870,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190855_[3]$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 76113,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190684_[3]",
+       3
+      ],
+      [
+       "u_dut.u_fcore.u_x._190684_[3]$_DFF_P_.lecq",
+       0
+      ],
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_pin[3]",
+       0
+      ]
+     ]
+    }
+   ],
+   "prior_hyp": []
+  },
+  {
+   "key": "ff:u_dut.u_fcore.u_x._190855_[4]",
+   "literal": 1200519,
+   "same_next_D_keys": [],
+   "support": [
+    {
+     "kind": "input",
+     "index": 14074,
+     "names": [
+      [
+       "rst_n",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 7950,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_begin_pin$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 17869,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190855_[4]$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 76112,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190684_[4]",
+       4
+      ],
+      [
+       "u_dut.u_fcore.u_x._190684_[4]$_DFF_P_.lecq",
+       0
+      ],
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_pin[4]",
+       0
+      ]
+     ]
+    }
+   ],
+   "prior_hyp": []
+  },
+  {
+   "key": "ff:u_dut.u_fcore.u_x._190855_[5]",
+   "literal": 1200501,
+   "same_next_D_keys": [],
+   "support": [
+    {
+     "kind": "input",
+     "index": 14074,
+     "names": [
+      [
+       "rst_n",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 7950,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_begin_pin$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 17868,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190855_[5]$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 76111,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190684_[5]",
+       5
+      ],
+      [
+       "u_dut.u_fcore.u_x._190684_[5]$_DFF_P_.lecq",
+       0
+      ],
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_pin[5]",
+       0
+      ]
+     ]
+    }
+   ],
+   "prior_hyp": []
+  },
+  {
+   "key": "ff:u_dut.u_fcore.u_x._190855_[6]",
+   "literal": 1200483,
+   "same_next_D_keys": [],
+   "support": [
+    {
+     "kind": "input",
+     "index": 14074,
+     "names": [
+      [
+       "rst_n",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 7950,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_begin_pin$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 17867,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190855_[6]$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 76110,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190684_[6]",
+       6
+      ],
+      [
+       "u_dut.u_fcore.u_x._190684_[6]$_DFF_P_.lecq",
+       0
+      ],
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_pin[6]",
+       0
+      ]
+     ]
+    }
+   ],
+   "prior_hyp": []
+  },
+  {
+   "key": "ff:u_dut.u_fcore.u_x._190855_[7]",
+   "literal": 242269,
+   "same_next_D_keys": [],
+   "support": [
+    {
+     "kind": "input",
+     "index": 14074,
+     "names": [
+      [
+       "rst_n",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 7735,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190855_[7]$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 7950,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_begin_pin$_ALDFF_PN_.lecq",
+       0
+      ]
+     ]
+    },
+    {
+     "kind": "latch",
+     "index": 76109,
+     "names": [
+      [
+       "u_dut.u_fcore.u_x._190684_[7]",
+       7
+      ],
+      [
+       "u_dut.u_fcore.u_x._190684_[7]$_DFF_P_.lecq",
+       0
+      ],
+      [
+       "u_dut.u_fcore.u_x.u_body.g_link[0].u_link.u_ctl.u.epoch_pin[7]",
+       0
+      ]
+     ]
+    }
+   ],
+   "prior_hyp": []
+  }
+ ]
+}

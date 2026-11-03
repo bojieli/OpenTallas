@@ -1,0 +1,245 @@
+{
+ "scope": "Diagnosis only; no geometry waiver or changed source",
+ "mapped": "1_2_yosys.v",
+ "reset_operand": "u_rst.relay_q[0][0]",
+ "reset_drivers": [
+  {
+   "master": "INVx2_ASAP7_75t_R",
+   "instance": "_12344_",
+   "ports": {
+    "A": "_07465_",
+    "Y": "\\u_rst.relay_q[0][0]"
+   }
+  },
+  {
+   "master": "BUFx4f_ASAP7_75t_R",
+   "instance": "_12342_",
+   "ports": {
+    "A": "_06692_",
+    "Y": "_07465_"
+   }
+  },
+  {
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "instance": "\\u_rst.rst_n$_DFF_PN0_",
+   "ports": {
+    "CLK": "clk_ctrl",
+    "D": "\\u_rst.sync_q[1]",
+    "QN": "_06692_",
+    "RESETN": "rst_n",
+    "SETN": "_07468_"
+   }
+  }
+ ],
+ "source": "ot_hgi_sm_xload_bfqg.sv lines31..45: posedgeclk_ctrl synchronous reset low drives0 else input; no enable",
+ "cones": [
+  {
+   "input": "r_ce[7]",
+   "gate": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "instance": "_12345_",
+    "ports": {
+     "A": "\\u_rst.relay_q[0][0]",
+     "B": "r_ce[7]",
+     "Y": "_06707_"
+    }
+   },
+   "captures": [
+    {
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "instance": "\\g_t[7].rp_ce$_SDFF_PN0_",
+     "ports": {
+      "CLK": "clk_ctrl",
+      "D": "_06707_",
+      "QN": "_02831_"
+     }
+    }
+   ]
+  },
+  {
+   "input": "r_ce[6]",
+   "gate": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "instance": "_12347_",
+    "ports": {
+     "A": "\\u_rst.relay_q[0][0]",
+     "B": "r_ce[6]",
+     "Y": "_06709_"
+    }
+   },
+   "captures": [
+    {
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "instance": "\\g_t[6].rp_ce$_SDFF_PN0_",
+     "ports": {
+      "CLK": "clk_ctrl",
+      "D": "_06709_",
+      "QN": "_02829_"
+     }
+    }
+   ]
+  },
+  {
+   "input": "r_ce[5]",
+   "gate": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "instance": "_12349_",
+    "ports": {
+     "A": "\\u_rst.relay_q[0][0]",
+     "B": "r_ce[5]",
+     "Y": "_06711_"
+    }
+   },
+   "captures": [
+    {
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "instance": "\\g_t[5].rp_ce$_SDFF_PN0_",
+     "ports": {
+      "CLK": "clk_ctrl",
+      "D": "_06711_",
+      "QN": "_02827_"
+     }
+    }
+   ]
+  },
+  {
+   "input": "r_ce[4]",
+   "gate": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "instance": "_12351_",
+    "ports": {
+     "A": "\\u_rst.relay_q[0][0]",
+     "B": "r_ce[4]",
+     "Y": "_06713_"
+    }
+   },
+   "captures": [
+    {
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "instance": "\\g_t[4].rp_ce$_SDFF_PN0_",
+     "ports": {
+      "CLK": "clk_ctrl",
+      "D": "_06713_",
+      "QN": "_02825_"
+     }
+    }
+   ]
+  },
+  {
+   "input": "r_ce[3]",
+   "gate": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "instance": "_12353_",
+    "ports": {
+     "A": "\\u_rst.relay_q[0][0]",
+     "B": "r_ce[3]",
+     "Y": "_06715_"
+    }
+   },
+   "captures": [
+    {
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "instance": "\\g_t[3].rp_ce$_SDFF_PN0_",
+     "ports": {
+      "CLK": "clk_ctrl",
+      "D": "_06715_",
+      "QN": "_02823_"
+     }
+    }
+   ]
+  },
+  {
+   "input": "r_ce[2]",
+   "gate": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "instance": "_12355_",
+    "ports": {
+     "A": "\\u_rst.relay_q[0][0]",
+     "B": "r_ce[2]",
+     "Y": "_06717_"
+    }
+   },
+   "captures": [
+    {
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "instance": "\\g_t[2].rp_ce$_SDFF_PN0_",
+     "ports": {
+      "CLK": "clk_ctrl",
+      "D": "_06717_",
+      "QN": "_02821_"
+     }
+    }
+   ]
+  },
+  {
+   "input": "r_ce[1]",
+   "gate": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "instance": "_12357_",
+    "ports": {
+     "A": "\\u_rst.relay_q[0][0]",
+     "B": "r_ce[1]",
+     "Y": "_06719_"
+    }
+   },
+   "captures": [
+    {
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "instance": "\\g_t[1].rp_ce$_SDFF_PN0_",
+     "ports": {
+      "CLK": "clk_ctrl",
+      "D": "_06719_",
+      "QN": "_02819_"
+     }
+    }
+   ]
+  },
+  {
+   "input": "r_ce[0]",
+   "gate": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "instance": "_12359_",
+    "ports": {
+     "A": "\\u_rst.relay_q[0][0]",
+     "B": "r_ce[0]",
+     "Y": "_06721_"
+    }
+   },
+   "captures": [
+    {
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "instance": "\\g_t[0].rp_ce$_SDFF_PN0_",
+     "ports": {
+      "CLK": "clk_ctrl",
+      "D": "_06721_",
+      "QN": "_02817_"
+     }
+    }
+   ]
+  },
+  {
+   "input": "wce",
+   "gate": {
+    "master": "AND2x2_ASAP7_75t_R",
+    "instance": "_12360_",
+    "ports": {
+     "A": "\\u_rst.relay_q[0][0]",
+     "B": "wce",
+     "Y": "_06722_"
+    }
+   },
+   "captures": [
+    {
+     "master": "DFFHQNx1_ASAP7_75t_R",
+     "instance": "\\wce_q$_SDFF_PN0_",
+     "ports": {
+      "CLK": "clk_ctrl",
+      "D": "_06722_",
+      "QN": "_06691_"
+     }
+    }
+   ]
+  }
+ ],
+ "source_reset_qualifier": "rn_l[0] from ot_rst_relay(REGIONS1,SYNC_STAGES2,TREE_STAGES1), clk_ctrl; async assertion rst_n,2sync+1relay release; mapped active-low reset operand after BUF/INV from u_rst.rst_n DFFASRHQN, CLKclk_ctrl,RESETNrst_n,Dsync_q[1]"
+}

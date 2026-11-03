@@ -1,0 +1,124 @@
+{
+ "scope": "Inherited terminal collection; no result promoted to selected-native qualification",
+ "pstore": {
+  "host": "intel2",
+  "root": "/srv/opentallas-scratch2/claude/die-hbm-57/pstore",
+  "current_log": "selector_place.log (run_place.log is preserved earlier missing-selector failure)",
+  "ro0_c101": {
+   "unit": "3565079-1793595210",
+   "rc": 0,
+   "stage": "3_place.odb saved",
+   "stdcells": 133124,
+   "SRAMs": 44,
+   "placed_area_um2": 308485,
+   "utilization_percent": 58
+  },
+  "ro0_c105": {
+   "unit": "3608567-1793595322",
+   "rc": 2,
+   "stage": "GPL-0307 divergence",
+   "regions": 2,
+   "HPWL_increase_percent": 29.2658
+  },
+  "selector_fix": "Both already contain7c9557945; no further selector patch/retry needed",
+  "mapped_sha256": "20bcb7967e13b7cdb58d502d395759763f3b2d21c1b2eee27a2e15f253281b37",
+  "top_sha256": "f9ee5065debf3c65386aabcf1e36e7efc93665aae4417dc0b75d7a90de8bf383",
+  "leaf_sha256": "f62f1edba405c45dcfe4e6be0fcb5de795f8a444ec7fb2df2d30b6587db5db4b",
+  "params": {
+   "PAGE_AW": 1,
+   "NATIVE_FAULT_PIN": 1
+  },
+  "synth_context": {
+   "stdcells": 66275,
+   "soft_um2": 9506.7,
+   "SRAMs": 44,
+   "macro_um2": 295936
+  },
+  "selected_SOURCE13_join": "NOT exact6260top/2889leaf; cannot reuse as current selected provider. Token owns fresh selected native mapping. Source/parent/reset/clock holds remain."
+ },
+ "q2n2body": {
+  "host": "intel2",
+  "root": "/srv/opentallas-scratch2/claude/hbm-cores-kits-40/lecc/q2n2body",
+  "current_log": "lec_run.log",
+  "verdict": "NOT EQUIVALENT",
+  "points": 95355,
+  "proved": 93673,
+  "differs": 1682,
+  "undecided": 0,
+  "seconds": 51222.1,
+  "first_failure": "flow SRAM lec_bbi_addr_in; gold-only _190855_[0..7] removed although not constant",
+  "old_run_place_seconds": 41259.4,
+  "next": "Native-source/BASE+STEP correspondence diagnosis with FLOW; no replay or inherited source activation"
+ },
+ "rp3lp3h": {
+  "host": "intel2",
+  "root": "/srv/opentallas-scratch2/claude/hbm-cores-kits-40/lecc/rp3lp3h",
+  "verdict": "KEEP FAIL",
+  "missing_kept": 54,
+  "declared_kept": 23302,
+  "differs": 102,
+  "seconds": 57388.3,
+  "first_failure": "u_ck.f0/g_fc.r[12:14] retained aliases merged or folded",
+  "next": "Existing actual source/reset/KEEP relation frontier; no waiver/retry"
+ },
+ "topkA": {
+  "host": "intel2",
+  "root": "/srv/opentallas-scratch2/claude/hbm-cores-kits-40/lecc/topkA",
+  "status": "LIVE at collection",
+  "controller": 174944,
+  "container_pid": 174961,
+  "python_pid": 175903,
+  "lec_terminal_receipt": false,
+  "next": "Collect existing producer only; no duplicate",
+  "last_recollection": "2026-11-02 07:1x: exact original controller174944/container174961/python175903 remain LIVE, no duplicate."
+ },
+ "pslice": {
+  "host": "intel2",
+  "root": "/srv/opentallas-scratch2/claude/die-hbm-57-pslice",
+  "tx3_unit": "3279007-1793586020",
+  "tx4_unit": "3279023-1793586020",
+  "both_rc": 126,
+  "cause": "Permission denied invoking nonexecutable run_kit_hbm.sh before CAD",
+  "next": "ONE owned tx3 copy explicit-bash PLACE-only retry after fresh exact GEN image LOOK/concurrence and normal preflight. tx4 preserved fallback; no parallel retry.",
+  "retry_root": "/srv/opentallas-scratch2/claude/codex-pslice-tx3-place-retry-0400",
+  "retry_controller": 1971924,
+  "retry_unit": "1998358-1793622945",
+  "retry_preflight": "PASS 0",
+  "source_scope": "622cfa83 trunk XST3/OSTG1 plus external1in1out/reset64; no selected-native4/parent credit",
+  "retry_terminal": "MPL0020 active generate-scope namespace mismatch; source e39d92b43 corrects100 macro bijection and all65 guide groups. Existing107482 officialEQ64 completed; failedphysical completed-proof transfer under FLOW review, repaired PLACE held."
+ },
+ "SPU": {
+  "host": "intel1",
+  "root": "/srv/opentallas-scratch2/claude/codex-hbm-stations-1131/spu_current_source/g2_i0",
+  "exit": 0,
+  "strict_current_pass": true,
+  "overflow": 0,
+  "pin_no_access": 0,
+  "slots": 17,
+  "station_cells": 106445,
+  "max_actual_hop_um": 371.25,
+  "overreach": 0,
+  "source": "951cc6273",
+  "scope": "FT data geometry prototype only, leaf_blockages0; parent native body/clock/reset/START/source/TTFF/G4 unqualified",
+  "next": "Terminal current50 PASS; native body/clock/reset/START and sourcegraph joins remain separate.",
+  "current50": {
+   "host": "intel1",
+   "root": "/srv/opentallas-scratch2/claude/codex-spu-current50-0355",
+   "unit": "174365-1793622617",
+   "exit": 0,
+   "iterations": 50,
+   "all_layer_overflow": 0,
+   "strict_current_pass": true,
+   "pin_access_missing": 0,
+   "max_actual_hop_um": 371.25,
+   "overreach": 0,
+   "peak_GB": 19.06,
+   "scope": "FT data-geometry prototype only; no native parent clock/reset/START/sourcegraph/TTFF/G4 transfer"
+  }
+ },
+ "ten_type_wave": {
+  "status": "HELD at owner clock gate, not a hidden active producer",
+  "reference": "KIT-WAVE-16 20:30 exact ten c11g types type-build opt-in request; default waits die-clock PASS",
+  "next": "No bypass or duplicate type dispatch; current native clock/cohort work owns gate"
+ }
+}

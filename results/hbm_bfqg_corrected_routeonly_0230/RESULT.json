@@ -1,0 +1,33 @@
+{
+ "status": "RAW_CONGESTION_PASS",
+ "scope": "ROOT correctedguideplacement PG0 no-birth nativeCLOCK+SIGNAL50 diagnostic only",
+ "raw_overflow": 0,
+ "native_clock_nets": 20,
+ "clock_guide_coverage": {
+  "classified": 20,
+  "routable": 20,
+  "guides": 17402
+ },
+ "PG": {
+  "before_pg": {
+   "checked": 32782,
+   "failure_count": 0
+  },
+  "after_pg": {
+   "checked": 32782,
+   "failure_count": 0
+  },
+  "saved_pg": {
+   "checked": 32782,
+   "failure_count": 0
+  }
+ },
+ "structural_guard_equal": true,
+ "new_cells": false,
+ "repair": false,
+ "registration_failures_held": 9,
+ "CTS": false,
+ "STA": false,
+ "DRT": false,
+ "SIGNED": false
+}

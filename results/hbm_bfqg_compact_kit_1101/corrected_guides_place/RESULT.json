@@ -1,0 +1,135 @@
+{
+  "status": "CORRECTED_PLACE_DIAGNOSTIC_PG_FAIL_NO_ROUTE_RELEASE",
+  "PG_checked": 32782,
+  "PG_failures": 4680,
+  "PG_class": "2340 insertedbuffers allVDD/VSS empty; persisted correct native rails exist; no wrongnet",
+  "access": [
+    {
+      "instance": "g_t\\[0\\].u_m",
+      "orient": "R0",
+      "faces": {
+        "W": 410,
+        "E": 409
+      },
+      "nearest": {
+        "W_active": 2.16,
+        "W_tap_endcap": 2.052,
+        "E_active": 2.16,
+        "E_tap_endcap": 2.052
+      },
+      "same_layer_PG_signal_overlap": 0
+    },
+    {
+      "instance": "g_t\\[1\\].u_m",
+      "orient": "R0",
+      "faces": {
+        "W": 410,
+        "E": 409
+      },
+      "nearest": {
+        "W_active": 2.16,
+        "W_tap_endcap": 2.052,
+        "E_active": 2.16,
+        "E_tap_endcap": 2.052
+      },
+      "same_layer_PG_signal_overlap": 0
+    },
+    {
+      "instance": "g_t\\[2\\].u_m",
+      "orient": "R0",
+      "faces": {
+        "W": 410,
+        "E": 409
+      },
+      "nearest": {
+        "W_active": 2.16,
+        "W_tap_endcap": 2.052,
+        "E_active": 2.16,
+        "E_tap_endcap": 2.052
+      },
+      "same_layer_PG_signal_overlap": 0
+    },
+    {
+      "instance": "g_t\\[3\\].u_m",
+      "orient": "R0",
+      "faces": {
+        "W": 410,
+        "E": 409
+      },
+      "nearest": {
+        "W_active": 2.16,
+        "W_tap_endcap": 2.052,
+        "E_active": 2.16,
+        "E_tap_endcap": 2.052
+      },
+      "same_layer_PG_signal_overlap": 0
+    },
+    {
+      "instance": "g_t\\[4\\].u_m",
+      "orient": "R0",
+      "faces": {
+        "W": 410,
+        "E": 409
+      },
+      "nearest": {
+        "W_active": 2.16,
+        "W_tap_endcap": 2.052,
+        "E_active": 2.16,
+        "E_tap_endcap": 2.052
+      },
+      "same_layer_PG_signal_overlap": 0
+    },
+    {
+      "instance": "g_t\\[5\\].u_m",
+      "orient": "R0",
+      "faces": {
+        "W": 410,
+        "E": 409
+      },
+      "nearest": {
+        "W_active": 2.16,
+        "W_tap_endcap": 2.052,
+        "E_active": 2.16,
+        "E_tap_endcap": 2.052
+      },
+      "same_layer_PG_signal_overlap": 0
+    },
+    {
+      "instance": "g_t\\[6\\].u_m",
+      "orient": "MY",
+      "faces": {
+        "E": 410,
+        "W": 409
+      },
+      "nearest": {
+        "W_active": 2.16,
+        "W_tap_endcap": 2.052,
+        "E_active": 2.16,
+        "E_tap_endcap": 2.052
+      },
+      "same_layer_PG_signal_overlap": 0
+    },
+    {
+      "instance": "g_t\\[7\\].u_m",
+      "orient": "MY",
+      "faces": {
+        "E": 410,
+        "W": 409
+      },
+      "nearest": {
+        "W_active": 2.16,
+        "W_tap_endcap": 2.052,
+        "E_active": 2.16,
+        "E_tap_endcap": 2.052
+      },
+      "same_layer_PG_signal_overlap": 0
+    }
+  ],
+  "limits": [
+    "bbox overlap is not full DRC",
+    "PG via enclosure not expanded",
+    "pin-access legal points NOT RUN",
+    "no universal STD4.32 keepout inferred"
+  ],
+  "next": "Guarded standardPG-only NEWsavedcopy repair; freshsavedDBaudit0 before ROOT chooses corrected rawCLOCK+SIGNAL50. Source9registrationflags held; no CTS/timing/DRT."
+}
