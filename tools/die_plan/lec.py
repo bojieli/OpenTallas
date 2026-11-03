@@ -72,7 +72,8 @@ PROVE_JOBS = 1
 # one batch of 256 cones under &cec -m x100 ran 45-151 h with no limit (49 cones each > 60 s).
 CONE_S = int(os.environ.get("OT_LEC_CONE_S", "60"))
 # wall backstop per cone (seconds) on top of CONE_S for the whole batch: covers the one SAT call ABC may finish after
-# the -T deadline; on expiry the batch is killed and every cone without a verdict stays UNDECIDED.
+# the -T deadline (probe 11-02: up to ~130 s at x100); on expiry the batch is killed and every cone without a verdict
+# stays UNDECIDED.
 CONE_WALL_S = int(os.environ.get("OT_LEC_CONE_WALL_S", "600"))
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 ORFS = "/OpenROAD-flow-scripts"
@@ -2024,20 +2025,15 @@ def cone_verdicts(text):
 def run_cone_batch(abc, script, n):
     """run one marked cone batch (abc -f script) under a wall backstop of n * (CONE_S + CONE_WALL_S) seconds.
 
-    Output goes line-buffered to a file so that a killed batch keeps the verdicts of the cones it finished; the
-    remaining cones simply have no verdict (UNDECIDED in cone_verdicts)."""
-    outf = Path(str(script) + ".out")
-    cmd = [abc, "-f", str(script)]
-    if shutil.which("stdbuf"):
-        cmd = ["stdbuf", "-oL", "-eL"] + cmd
-    wall = n * (max(CONE_S, 0) + CONE_WALL_S) if CONE_S > 0 else None
-    note = ""
-    with open(outf, "w") as fh:
-        try:
-            subprocess.run(cmd, stdout=fh, stderr=subprocess.STDOUT, text=True, timeout=wall)
-        except subprocess.TimeoutExpired:
-            note = f"\nBATCH WALL BACKSTOP {wall}s expired: unfinished cones stay UNDECIDED\n"
-    return outf.read_text(errors="replace") + note
+    On expiry the batch is killed; the output it produced so far is kept, so the cones it finished keep their
+    verdict and the rest have no verdict (UNDECIDED in cone_verdicts)."""
+    wall = n * (CONE_S + CONE_WALL_S) if CONE_S > 0 else None
+    try:
+        r = subprocess.run([abc, "-f", str(script)], capture_output=True, text=True, timeout=wall)
+        return (r.stdout or "") + (r.stderr or "")
+    except subprocess.TimeoutExpired as e:
+        part = "".join(x.decode(errors="replace") if isinstance(x, bytes) else x for x in (e.stdout, e.stderr) if x)
+        return part + f"\nBATCH WALL BACKSTOP {wall}s expired: unfinished cones stay UNDECIDED\n"
 
 
 def prove(m, work, conflicts, log, tag="miter", single_cap=2000):

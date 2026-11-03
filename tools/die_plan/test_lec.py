@@ -307,7 +307,8 @@ def test_parallel_cones_preserve_each_status(tmp_path, monkeypatch):
             (tmp_path / 'parallel_swept.aig').touch()
             return SimpleNamespace(stdout='Undef calls 2', stderr='')
         ids = [int(i) for i in re.findall(r'&cone -O (\d+)', script)]
-        return SimpleNamespace(stdout='\n'.join('Networks are equivalent' if i == 0 else 'Networks are NOT EQUIVALENT' for i in ids), stderr='')
+        # each cone is preceded by its echo marker (ABC prints the echo text)
+        return SimpleNamespace(stdout='\n'.join(f'OTCONE {i} \n' + ('Networks are equivalent' if i == 0 else 'Networks are NOT EQUIVALENT') for i in ids), stderr='')
     monkeypatch.setattr(lec.subprocess, 'run', run)
     assert lec.prove(m, tmp_path, 100, [], tag='parallel') == {'equivalent_cone': 'proved', 'different_cone': 'differs'}
 
@@ -333,7 +334,7 @@ def test_naive_cone_unknown_does_not_shift_later_status(tmp_path, monkeypatch):
         replies = ['UNSAT = 0. SAT = 0. UNDEC = 1. Trivial = 0.',
                    'Networks are equivalent. Time = 0.0 sec',
                    'UNSAT = 0. SAT = 1. UNDEC = 0. Trivial = 0.']
-        return SimpleNamespace(stdout='\n'.join(replies[i] for i in ids), stderr='')
+        return SimpleNamespace(stdout='\n'.join(f'OTCONE {i} \n' + replies[i] for i in ids), stderr='')
     monkeypatch.setattr(lec.subprocess, 'run', run)
     assert lec.prove(m, tmp_path, 100, [], tag='mixed') == {'unknown': 'undecided', 'proved': 'proved', 'different': 'differs'}
 
@@ -744,6 +745,9 @@ def test_undecided_naive_cone_escalates_to_sat_sweeping(tmp_path, monkeypatch):
             return SimpleNamespace(stdout='Undef calls 2', stderr='')
         out = []
         for line in script.splitlines():
+            if line.startswith('echo '):
+                out.append(line[5:])          # ABC echo: the per-cone marker
+                continue
             i = int(re.search(r'&cone -O (\d+)', line)[1])
             naive = '&cec -n -m' in line
             seen.append((i, naive))
