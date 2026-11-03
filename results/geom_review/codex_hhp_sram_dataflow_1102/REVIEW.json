@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS-COND geometry PREP only; NO GEN/CAD/adoption release",
+  "personally_viewed": true,
+  "picture": "hhp_four_sram_prep.png",
+  "picture_sha256": "f83b29207db494bef66233402c6adb5cf739e26f042eca771b4c92a69ffb7c58",
+  "finding": "Real BASE data exits S, but genuine planned head data exits N. Four memories now occupy the middle horizontal channel, outside all PC footprints,126 clock reservations and eight fixed relay sites including conservative4.32um halos. Existing D1/D3/D1/D5 and landing ad_q/out_data/hop295/rowctl/BOUT state supplies the drawn guide chain; no new state/edge. Initial D3 guide point collided with a real driver island and was moved6.48um before this reviewed image.",
+  "SRAM_clock_pin_nearest_tap_max_um": 196.508,
+  "preferred_M4_grid_phase_um": 0.024,
+  "new_SRAM_origins_Y_phase_um": 0.012,
+  "off_signal_pin_centres": 0,
+  "max_existing_stage_guide_screen_um": 390.63599999999997,
+  "BOUT_pin_screen_um": {
+    "o_slg_Q_N_krsp": 123.21199999999999,
+    "o_slg_Q_N_rsp": 97.08400000000006
+  },
+  "limitations": [
+    "genuine head hardview absent; its data pins here are explicitly planned only",
+    "parent FT roles/wiring and coherent source projection remain pending",
+    "complete source-date/programme join and timing qualification pending",
+    "not a generated hard-macro kit; actual GEN render/native PG/pin/access/clock/guides and placement required"
+  ]
+}
