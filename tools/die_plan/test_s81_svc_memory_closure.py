@@ -51,3 +51,22 @@ def test_fit_v2_rebinds_children_and_is_idempotent():
         assert (c.ROOT / p).exists(), name
     with pytest.raises(ValueError):
         c.fit_v2(s1.replace("ot_t7_pvq_capture_candidate ", "ot_t7_pvq_capture_x "))
+
+
+def test_idx_fit_renames_svc_lo_reader_and_sizes_masters():
+    import gzip
+    import s81_svc_idx_fit as idx
+    pk = c.ROOT / "results/rtl/s81_svc_memory_fit_1103/closed"
+    lo = gzip.decompress((pk / "s81p_svc_lo_dsdv_svc_rs__t1_bound.sv.gz").read_bytes()).decode()
+    hi = gzip.decompress((pk / "s81p_svc_hi_dsdv_svc_rs__t1_bound.sv.gz").read_bytes()).decode()
+    src = c.ROOT / "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv"
+    files = ["/x/rtl/dsdv_idx_rg2.sv", str(src)]
+    s2, kids, macros, rep = c.idx_fit(lo, files)
+    assert s2.count("dsdv_idx_rg3_fit #(") == 1 and rep["renamed"] == 1 and set(kids) == {"dsdv_idx_fit_mem.sv", "dsdv_idx_rg3_fit.sv"}
+    assert c.idx_fit(s2, files)[0] == s2                      # idempotent
+    fit = kids["dsdv_idx_rg3_fit.sv"]
+    assert "dsdv_idx_rg2_m1k #(" not in fit and fit.count("dsdv_idx_fit_mem #(") == 6 and ".WORDS(128), .BITS(MW + 1)) u_mq" in fit
+    assert sum(macros.values()) == 13
+    assert c.idx_fit(hi, files)[1:] == ({}, {}, None)         # svc_hi: no reader, untouched
+    with pytest.raises(ValueError, match="not a proven source"):
+        idx.fit_source(src.read_text().replace("lw_h1[u] <= !sc && bt[0];", "lw_h1[u] <= !sc;"))

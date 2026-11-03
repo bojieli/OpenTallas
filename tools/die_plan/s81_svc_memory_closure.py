@@ -21,6 +21,8 @@ from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 sys.setrecursionlimit(1000000); threading.stack_size(512 * 1024 * 1024)
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import s81_svc_idx_fit as IDX   # MEM idx fit (svc_lo dsdv_idx_rg3 -> dsdv_idx_rg3_fit), gate s81_svc_idx_fit_1103
 REF = {
     'pmem': ROOT / 'results/rtl/s81_T7_pmem_bound_cut_0900/transform.py',
     'pvq': ROOT / 'results/rtl/s81_T7_pvq_bound_cut_1040/transform.py',
@@ -59,6 +61,24 @@ def fit_v2(closed):
 
 def children(form):
     return CHILDREN if form == 'v1' else CHILDREN_V2
+
+
+def idx_fit(closed, files, rtl=None):
+    """MEM idx fit (v2 only): rename the svc_lo dsdv_idx_rg3 instance to dsdv_idx_rg3_fit and generate that child
+    from the dsdv_idx_rg3.sv the kit lists (`files`; sha-checked + proof preconditions in s81_svc_idx_fit).
+    Returns (closed, {child name: text}, macros, receipt) - no children / macros when the bound has no reader."""
+    closed, n = IDX.fit_bound(closed)
+    if not n and not re.search(r'^\s*dsdv_idx_rg3_fit #\(', closed, re.M): return closed, {}, {}, None
+    srcs = [f for f in files if Path(f).name == 'dsdv_idx_rg3.sv']
+    if len(srcs) != 1: raise ValueError('idx fit: %d dsdv_idx_rg3.sv in the kit file list' % len(srcs))
+    src = Path(srcs[0]).read_text(); fit = IDX.fit_source(src)
+    kids = {'dsdv_idx_fit_mem.sv': (ROOT / IDX.FIT_MEM).read_text(), 'dsdv_idx_rg3_fit.sv': fit}
+    # the original reader leaves the kit lists when nothing else instantiates it (bound now binds the fit child)
+    users = [f for f in files if f.endswith('.sv') and f != srcs[0] and Path(f).exists()
+             and re.search(r'^\s*dsdv_idx_rg3\s+#\(', Path(f).read_text(), re.M)]
+    if rtl is not None: users = [f for f in users if Path(f).resolve() != Path(rtl).resolve()]
+    return closed, kids, IDX.MACROS, dict(source=srcs[0], source_sha=IDX.sha12(src), fit_sha=IDX.sha12(fit), renamed=n,
+                                          dropped=[] if users else [srcs[0]])
 
 
 REF_GZ = ROOT / 'results/rtl/s81_T7_pmem_bound_cut_0900/native_parent.sv.gz'   # T7 original bound 61c902f1
@@ -210,15 +230,23 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2'):
         rep = dict(before_sha256=sha(s), after_sha256=sha(closed))
     if form == 'v2':
         rep['v1_after_sha256'] = sha(closed); closed = fit_v2(closed); rep['after_sha256'] = sha(closed)
+    idx_kids, idx_macros, drop = {}, {}, []
+    if form == 'v2':
+        closed, idx_kids, idx_macros, idx_rep = idx_fit(closed, kr['files'], bound)
+        if idx_rep:
+            rep['v2_after_sha256'] = rep['after_sha256']; rep['after_sha256'] = sha(closed); rep['idx_fit'] = idx_rep
+            drop = idx_rep['dropped']
     kids = []
     for c, (p, h) in children(form).items():
         b = (ROOT / p).read_bytes()
         if h and hashlib.sha256(b).hexdigest()[:8] != h: raise ValueError('child hash ' + c)
         (rtl / c).write_bytes(b); kids.append(str(rtl / c))
+    for c, t in idx_kids.items(): (rtl / c).write_text(t); kids.append(str(rtl / c))
+    macros = {m: MACROS[form].get(m, 0) + idx_macros.get(m, 0) for m in {**MACROS[form], **idx_macros}}
     # macro views the closure instantiates and bind did not see (bind runs before this event): black box in
     # kit_rtl.f / files, behavioural model in kit_rtl_sim.f, lef + libs in hard_macros (same form as bind)
     hm = kr.setdefault('hard_macros', {}); bbs, models = [], []
-    for mac in MACROS[form]:
+    for mac in macros:
         if mac in hm: continue
         d = next((ROOT / md / mac for md in ('physical/asap7_memory_macros_v2', 'physical/asap7_memory_macros')
                   if (ROOT / md / mac / (mac + '.lef')).exists()), None)
@@ -232,7 +260,10 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2'):
         p = rtl / fl
         if not p.exists(): continue
         L = p.read_text().split('\n'); i = L.index(str(bound))
+        for x in drop: i -= L.index(x) < i; L.remove(x)
         L[i + 1:i + 1] = kids + (models if fl == 'kit_rtl_sim.f' else bbs); edits[p] = '\n'.join(L)
+    for x in drop: kr['files'].remove(x)
+    if 'sim_files' in kr: kr['sim_files'] = [x for x in kr['sim_files'] if x not in drop]
     i = kr['files'].index(str(bound)); kr['files'][i + 1:i + 1] = kids + bbs
     if 'sim_files' in kr and str(bound) in kr['sim_files']:
         i = kr['sim_files'].index(str(bound)); kr['sim_files'][i + 1:i + 1] = kids + models
@@ -240,7 +271,7 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2'):
     for p, t in edits.items(): p.write_text(t)
     bound.write_text(closed)
     rep.update(status='APPLIED', event='S81-066 svc memory closure (T7 12605dc2 class port)', bound=str(bound),
-               children=kids, form=form, macros_added=MACROS[form])
+               children=kids, form=form, macros_added=macros)
     (rtl / 'memory_closure.json').write_text(json.dumps(rep, indent=1) + '\n')
     return rep
 

@@ -4,16 +4,19 @@
 # Usage: pilot.sh <type> <pristine kit rtl dir>
 set -euo pipefail
 T=$1; SRC_RTL=${2%/}
-M=/srv/opentallas-scratch2/claude/die-s81-51/mem; K=$M/pilot_v2/$T; W=$M/wt
+M=/srv/opentallas-scratch2/claude/die-s81-51/mem; K=$M/${PILOT_DIR:-pilot_v2}/$T; W=$M/wt
 S=/srv/opentallas-scratch2/claude/wt/kit-wave-15-s81b
 rm -rf "$K"; mkdir -p "$K"; cp -a "$SRC_RTL" "$K/rtl"
 python3 -I - "$K/rtl" "$SRC_RTL" <<"PY"
 from pathlib import Path
-import sys
+import os, sys
 root = Path(sys.argv[1]); old = sys.argv[2]
 for f in root.rglob("*"):
     if f.is_file() and f.suffix in (".f", ".json"):
-        f.write_text(f.read_text().replace(old, str(root)))
+        t = f.read_text().replace(old, str(root))
+        for kv in filter(None, os.environ.get("PILOT_SUBST", "").split(",")):   # pilot-only source swap (stale kit tree)
+            t = t.replace(*kv.split("="))
+        f.write_text(t)
 PY
 cd "$W"
 python3 tools/die_plan/s81_svc_memory_closure.py --form v2 --kit-rtl "$K/rtl" --closed-dir "$W/results/rtl/s81_svc_memory_fit_1103" > "$K/apply.log" 2>&1
