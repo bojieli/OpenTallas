@@ -133,7 +133,22 @@ module dsdv_gunit_l0r #(
     generate for (c = 0; c < 40; c = c + 1) begin : g_sel
         (* keep = "true" *) reg [4:0] q;
         (* keep = "true" *) reg [31:0] oh;
-        wire [4:0] qn = ga_s ? {gb_s, 4'd0} : {q[4], q[3:0] + 4'd1};
+        // RF >= 1 (form 2b, 11-03: RF 2 build oth-ubuntu-3202643 routed TT -21.68 / 25 ep on g_w1.ga2 -> ~1,500-load buffer
+        // tree (40 copies x 37 q / oh flops) -> g_sel[*].oh): each copy registers its OWN go (ga / gb -> gac / gbc, kept,
+        // = ga2 / gb2 on every edge), so the go reaches 37 local loads; the select copies are not reset (as q / oh).
+        wire gq_a, gq_b;
+        if (RF >= 1) begin : g_gc
+            (* keep = "true" *) reg gac, gbc;
+            always @(posedge clk) begin gac <= ga; gbc <= gb; end
+`ifdef OT_RFD_MUT_L0R3   // bench mutant: the copy uses the undelayed go (read select one edge early)
+            assign gq_a = ga; assign gq_b = gb;
+`else
+            assign gq_a = gac; assign gq_b = gbc;
+`endif
+        end else begin : g_gn
+            assign gq_a = ga_s; assign gq_b = gb_s;
+        end
+        wire [4:0] qn = gq_a ? {gq_b, 4'd0} : {q[4], q[3:0] + 4'd1};
         always @(posedge clk) begin q <= qn; oh <= 32'd1 << qn; end
         assign ohs[32 * c +: 32] = oh;
     end endgenerate
