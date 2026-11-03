@@ -1066,7 +1066,7 @@ def related_sta_state(path, pre, post_clock=None):
             setup, hold = tt.get("worst_setup_slack_ps"), hm.get("hold_margin_ps")
             if not (isinstance(setup, (int, float)) and not isinstance(setup, bool) and math.isfinite(setup)):
                 return stop("NOT RUN", f"{name}: actual TT setup result missing")
-            # OWNER 12.25: measured FF hold >= +10 ps and 0 block arrival-contract violations
+            # OWNER 12.25/11-02: measured FF hold >= HOLD_MIN_PS (0 ps) and 0 block arrival-contract violations
             st = "FAIL" if (tt.get("setup_neg_pairs") != 0 or setup < 0 or hm.get("neg_pairs") or _contract_viol(ff)
                             or (isinstance(hold, (int, float)) and hold < PSG.HOLD_MIN_PS)) else \
                 "BLOCKED(kits)" if hm.get("pairs_unmeasured") else "PASS"
