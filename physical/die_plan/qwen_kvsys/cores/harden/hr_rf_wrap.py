@@ -79,11 +79,15 @@ def transform(text, mod, spec):
                   f"    else if (rf_ld_{b}) rf_ov_{b} <= 1'b1; else if ({rd}[0]) rf_ov_{b} <= 1'b0;",
                   f"  always @(posedge {ck}) rf_oh_{b} <= rf_ld_{b} ? rf_i_{b} : rf_oh_{b};",
                   f"  always @(posedge {ck}) rf_od_{b} <= rf_ld_{b} ? rf_i_{b} : rf_oh_{b};   // private port bank",
-                  f"  assign {rdat} = rf_od_{b};", f"  assign {remp} = {{!rf_ov_{b}}};"]
+                  # private rempty port flop (= !rf_ov), next state from rf_ov, so its Q loads only the port
+                  f"  (* keep = 1 *) reg rf_pe_{b};",
+                  f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) rf_pe_{b} <= 1'b1;",
+                  f"    else rf_pe_{b} <= rf_ld_{b} ? 1'b0 : ({rd}[0] ? 1'b1 : !rf_ov_{b});",
+                  f"  assign {rdat} = rf_od_{b};", f"  assign {remp} = {{rf_pe_{b}}};"]
         conn[rd] = "{rf_ird_" + b + "}"; conn[rdat] = "rf_i_" + b; conn[remp] = "rf_ie_" + b
         rep["fwft_reads"].append(dict(rd=rd, rdata=rdat, rempty=remp, rst=rst, width=w, read_added_cycles=1,
                                       throughput="1/cycle", rd_face="combinational (stage load enable)"))
-        rep["added_flops"] += 2 * w + 1
+        rep["added_flops"] += 2 * w + 2
     hdr = [f"// GENERATED hr_rf_wrap.py (RF-KV1 RE-FORM, DIE-KV-64/RF-C 11-03): {mod} = {inner} + registered reset/read faces",
            "(* top = 1 *)", f"module {mod}({', '.join(order)});"]
     hdr += [f"  {decl[p][0]} {decl[p][1]+' ' if decl[p][1] else ''}{p};" for p in order]
