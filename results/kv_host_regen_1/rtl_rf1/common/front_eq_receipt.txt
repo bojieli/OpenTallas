@@ -1,0 +1,5 @@
+feq/eq.log:  Of those cells 10665 are proven and 222 are unproven.
+feq/eq.log:Found a total of 222 unproven $equiv cells.
+feq/eq.log:ERROR: Found 222 unproven $equiv cells in 'equiv_status -assert'.
+feq/inv.log:Induction step proven: SUCCESS!
+equiv: all cells proven except mem_rd (222); mem_rd follows from the copy-equality invariant proven by sat -tempinduct (inv.ys). keep_hierarchy stripped for the proof.
