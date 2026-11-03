@@ -34,6 +34,9 @@ module ot_hbm_hc_qcen_static #(
     // (lfd grows by 2 so ps_f stays aligned); every other output is unchanged.  Declared in
     // physical/die_plan/hbm/reform_1103/cycles/subtree32.tsv (the root absorbs it as XRU + 2).
     parameter integer SFR  = 0,
+    // SXC (DIE-HBM-61 11-03, with SFR only): ot_hdc_fp32_add_lat XCUTS of the subtree (level 1..5) adders: every stage
+    // <= 70% of 833 ps; each set bit adds one edge per level (+5 per subtree).  Levels 6, 7 (parent) keep TLA.
+    parameter integer SXC  = 0,
     // derived (do not override)
     parameter integer NVW  = (W == 128) ? 8 : 7,
     parameter integer IWW  = (W == 128) ? 6 : 5,
@@ -152,7 +155,8 @@ module ot_hbm_hc_qcen_static #(
     end
     wire [(W-1)*32-1:0] nd; wire [W-2:0] nv, ne;
     // SFR face registers (names g_sf[k].u_fi / u_fo / u_ff are what hc128_qhub_cut.py selects into subtree k)
-    localparam integer SFD = (SFR != 0) ? 2 : 0;
+    localparam integer SXN = (SFR != 0) ? (SXC % 2) + ((SXC / 2) % 2) + ((SXC / 4) % 2) : 0;   // extra edges per level
+    localparam integer SFD = (SFR != 0) ? 2 + 5 * SXN : 0;
     wire ne_or;                                        // ps_f's node-fault OR (registered subtree faults when SFR)
     wire [3:0] st_rst;                                 // SFR: subtree k's own reset relay output (u_rr); unused at SFR 0
     if (SFR != 0) begin : g_sfr
@@ -174,7 +178,7 @@ module ot_hbm_hc_qcen_static #(
                 assign ned[B +: N4] = ne[OFF + k*N4 +: N4];
                 assign ne_f[OFF + k*N4 +: N4] = neq[B +: N4];
             end
-            ot_hbm_hc_sfr_reg #(.W(31), .VB(-2)) u_ff (.clk(clk), .rst_n(st_rst[k]), .d(ned), .q(neq));
+            ot_hbm_hc_sfr_nf #(.N(SXN)) u_ff (.clk(clk), .rst_n(st_rst[k]), .d(ned), .q(neq));
         end
         assign ne_f[W-2:124] = ne[W-2:124];            // levels 6, 7 (nodes 124..126) stay in the parent, unregistered
         assign ne_or = |ne_f;
@@ -197,7 +201,7 @@ module ot_hbm_hc_qcen_static #(
                 assign a = nd[(POFF + 2*i)*32 +: 32]; assign b = nd[(POFF + 2*i + 1)*32 +: 32]; assign va = nv[POFF + 2*i];
             end
             localparam integer SK = (SFR != 0 && l <= 5) ? i / (32 >> l) : 0;   // SFR: subtree of this node
-            ot_hdc_fp32_add_lat #(.LAT(TLA), .DRST(0)) u_a (.clk(clk), .rst_n((SFR != 0 && l <= 5) ? st_rst[SK] : rc),
+            ot_hdc_fp32_add_lat #(.LAT(TLA), .DRST(0), .XCUTS((SFR != 0 && l <= 5) ? SXC : 0)) u_a (.clk(clk), .rst_n((SFR != 0 && l <= 5) ? st_rst[SK] : rc),
                 .valid_in(va), .a(a), .b(b),
                 .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
             assign ne[OFF + i] = nv[OFF + i] && (|e);
@@ -220,6 +224,22 @@ endmodule
 // SFR subtree reset relay (DIE-HBM-61 11-03): ot_rst_relay with one region, kept as its own module for the cut.
 module ot_hbm_hc_sfr_rst (input wire clk, rst_n_in, output wire rst_n);
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+
+// SFR subtree node-fault face register (DIE-HBM-61 11-03): bits ordered level 1 (16) | 2 (8) | 3 (4) | 4 (2) | 5 (1).
+// Level l waits 1 + N * (5 - l) edges, N = extra adder cuts per level, so every node fault leaves the subtree on the
+// same edge offset as with N = 0 relative to the subtree output (a uniform shift of the whole master).  All bits reset.
+module ot_hbm_hc_sfr_nf #(parameter integer N = 0) (
+    input wire clk, rst_n, input wire [30:0] d, output wire [30:0] q
+);
+    for (genvar l = 1; l <= 5; l = l + 1) begin : g_l
+        localparam integer B = 32 - (64 >> l), C = 32 >> l, D = 1 + N * (5 - l);
+        reg [C-1:0] r [0:D-1];
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin for (integer t = 0; t < D; t = t + 1) r[t] <= {C{1'b0}}; end
+            else begin r[0] <= d[B +: C]; for (integer t = 1; t < D; t = t + 1) r[t] <= r[t-1]; end
+        assign q[B +: C] = r[D-1];
+    end
 endmodule
 
 // SFR face register (DIE-HBM-61 11-03): W plain flops; bit VB (default W-1, the valid) async reset by rst_n;

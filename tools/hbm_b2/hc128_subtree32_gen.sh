@@ -10,12 +10,15 @@
 #   4 export hc128_export.py -> OUT/ot_hbm_hc_subtree32_core.sv + _receipt.json (plain instance identifiers, ruling 5)
 # SFR (env, default 1 = DIE-HBM-61 RE-FORM 11-03 committed form): ot_hbm_hc_qcen_static SFR, the subtree face registers
 # (every master port on its own flop; tree +2 edges, declared in physical/die_plan/hbm/reform_1103/cycles/subtree32.tsv).
+# SXC (env, default 7 with SFR): ot_hdc_fp32_add_lat XCUTS E/F/G of the 31 subtree adders (stages <= 583 ps;
+# +5 edges a bit, 37 -> 52 edges at 7).
 # SFR=0 reproduces the 10-31 master (sha256 f1971bc0...cfb138) bit for bit.
 # Sources are taken from git SRC_COMMIT (default HEAD) with `git show`, so OUT is a function of the commit alone.
 # Needs ~/.local/opentallas-tools/bin/yosys (slang plugin); ~8 GB, ~5 min.  Committed output:
 #   rtl/hbm_accel/cores_split/ot_hbm_hc_subtree32/ot_hbm_hc_subtree32_core.sv (+ _receipt.json)
 set -euo pipefail
-OUT=$(mkdir -p "$1" && cd "$1" && pwd); C=${2:-HEAD}; SFR=${SFR:-1}
+OUT=$(mkdir -p "$1" && cd "$1" && pwd); C=${2:-HEAD}; SFR=${SFR:-1}; SXC=${SXC:-$((SFR ? 7 : 0))}
+NX=$(( (SXC & 1) + ((SXC >> 1) & 1) + ((SXC >> 2) & 1) ))
 R=$(git -C "$(dirname "$0")" rev-parse --show-toplevel); SHA=$(git -C "$R" rev-parse --short=10 "$C")
 export PATH=$HOME/.local/opentallas-tools/bin:$PATH
 mkdir -p "$OUT/src"
@@ -26,7 +29,7 @@ for f in rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv rtl/hbm_
 done
 S=$OUT/src
 cat > "$OUT/elab.ys" <<YS
-read_slang --keep-hierarchy --compat=vcs --ignore-assertions --top ot_hbm_hc_qhub_static -G W=128 -G DRLY=2 -G CHX=11 -G RD_CAPTURE=51 -G GATHER_PHASE=51 -G DONE_LAT=47 -G SFR=$SFR $S/ot_hbm_hc_q_static_bb.v $S/ot_hbm_hc_qcen_static.sv $S/ot_hbm_hc_qhub_static.sv $S/ot_hdc_fastfp.sv $S/ot_hdc_fastfp_lat.sv $S/ot_hdc_fp32_add_lat.sv $S/ot_hdc_prefix.sv $S/ot_rst_relay.sv
+read_slang --keep-hierarchy --compat=vcs --ignore-assertions --top ot_hbm_hc_qhub_static -G W=128 -G DRLY=2 -G CHX=11 -G RD_CAPTURE=51 -G GATHER_PHASE=51 -G DONE_LAT=47 -G SFR=$SFR -G SXC=$SXC $S/ot_hbm_hc_q_static_bb.v $S/ot_hbm_hc_qcen_static.sv $S/ot_hbm_hc_qhub_static.sv $S/ot_hdc_fastfp.sv $S/ot_hdc_fastfp_lat.sv $S/ot_hdc_fp32_add_lat.sv $S/ot_hdc_prefix.sv $S/ot_rst_relay.sv
 setattr -mod -unset keep_hierarchy
 setattr -set keep_hierarchy 1 t:ot_hdc_fp32_add_lat* t:ot_hbm_hc_qcen_static* t:ot_hbm_hc_sfr_*
 proc
@@ -43,6 +46,6 @@ python3 -I "$T/hc128_qhub_cut.py" --source-commit "$SHA" "$OUT/qhub128.json" --o
 yosys -Q -s "$OUT/cut/cut.ys" > "$OUT/submod.log" 2>&1
 python3 -I "$T/hc128_qhub_compact.py" "$OUT/cut/qhub_split128.json" --out "$OUT/compact" > "$OUT/compact.log" 2>&1
 python3 -I "$T/hc128_export.py" --netlist "$OUT/compact/qhub_compact128.json" --master ot_hbm_hc_subtree32_core \
-  --out "$OUT/master" --source-commit "$SHA" --added-cycles $((SFR ? 2 : 0)) > "$OUT/export.log" 2>&1
+  --out "$OUT/master" --source-commit "$SHA" --added-cycles $((SFR ? 2 + 5 * NX : 0)) > "$OUT/export.log" 2>&1
 rm -f "$OUT/qhub128.json" "$OUT/cut/qhub_split128.json" "$OUT/cut/qhub_split128.v"     # >300 MB intermediates
 sha256sum "$OUT/master/ot_hbm_hc_subtree32_core.sv"

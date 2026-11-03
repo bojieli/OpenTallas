@@ -22,7 +22,13 @@ module ot_hdc_fp32_add_lat #(
     parameter integer CUTS = -1,
     // DRST 0 (fe-push-hphys-1010, opt-in via OT_FP_DATA_NORST): only the valid bits are reset (cuts VB, valid_out);
     // y / err / data cuts are plain flops (consumers qualify them with valid_out).  1: legacy, every stage bit reset.
-    parameter integer DRST = `ifdef OT_FP_DATA_NORST 0 `else 1 `endif
+    parameter integer DRST = `ifdef OT_FP_DATA_NORST 0 `else 1 `endif,
+    // XCUTS (DIE-HBM-61 RE-FORM 11-03, opt-in; default 0 = unchanged, bit for bit): extra register stages on top of
+    // LAT, bits {G, F, E}; latency = LAT + popcount(XCUTS).  Needs LAT 7 (all of A..D cut).  Same function.
+    //   E  inside A2: swap-select the smaller operand + one jam shifter | sticky OR, d >= 28 pick
+    //   F  inside B2a: carry pick, sentinel OR | LZC
+    //   G  inside C2: round carry, exponent, encode, overflow | zero check, output select
+    parameter integer XCUTS = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -41,6 +47,17 @@ module ot_hdc_fp32_add_lat #(
         ot_hdc_fp32_add_lat_CUTS_must_match_LAT u_trap ();
     end endgenerate
     localparam [1:0] E_NONE = 2'd0, E_NONFINITE = 2'd1, E_OVERFLOW = 2'd2;
+    localparam integer XC_E = XCUTS % 2, XC_F = (XCUTS / 2) % 2, XC_G = (XCUTS / 4) % 2;
+    generate if (XCUTS != 0 && (LAT != 7 || XCUTS > 7)) begin : g_bad_xcuts
+        ot_hdc_fp32_add_lat_XCUTS_needs_LAT7 u_trap ();
+    end endgenerate
+    // XCUTS stage outputs (driven only inside g_xe / g_xf when the cut is on)
+    wire        xe_v, xe_byp, xe_sub, xe_sign;
+    wire [1:0]  xe_err;
+    wire [31:0] xe_code;
+    wire [7:0]  xe_exp;
+    wire [23:0] xe_big;
+    wire [27:0] xe_small;
 
     // ---- A1 ----------------------------------------------------------------------------------------
     wire [7:0]  a_field = a[30:23];
@@ -99,18 +116,36 @@ module ot_hdc_fp32_add_lat #(
     reg [27:0] s1_small;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s1_v <= 1'b0;
-        else s1_v <= x_v;
+        else s1_v <= XC_E ? xe_v : x_v;
     end
     always @(posedge clk) begin
-        s1_byp <= x_byp;
-        s1_err <= x_err;
-        s1_code <= x_code;
-        s1_sub <= x_sub;
-        s1_sign <= x_swap ? x_bs : x_as;
-        s1_exp <= x_swap ? x_bexp : x_aexp;
-        s1_big <= x_swap ? x_bman : x_aman;
-        s1_small <= x_swap ? small_a : small_b;
+        s1_byp <= XC_E ? xe_byp : x_byp;
+        s1_err <= XC_E ? xe_err : x_err;
+        s1_code <= XC_E ? xe_code : x_code;
+        s1_sub <= XC_E ? xe_sub : x_sub;
+        s1_sign <= XC_E ? xe_sign : x_swap ? x_bs : x_as;
+        s1_exp <= XC_E ? xe_exp : x_swap ? x_bexp : x_aexp;
+        s1_big <= XC_E ? xe_big : x_swap ? x_bman : x_aman;
+        s1_small <= XC_E ? xe_small : x_swap ? small_a : small_b;
     end
+
+    generate if (XC_E != 0) begin : g_xe
+        // A2a: the smaller operand is the one jammed (jam28(a, dba) when swapped, else jam28(b, dab))
+        wire [23:0] sm = x_swap ? x_aman : x_bman;
+        wire [7:0]  sd = x_swap ? x_dba : x_dab;
+        wire [27:0] val = {1'b0, sm, 3'b000};
+        wire [27:0] shf = val >> sd[4:0];
+        wire [27:0] lost = val & ~({28{1'b1}} << sd[4:0]);
+        localparam integer WE = 1 + 1 + 2 + 32 + 1 + 1 + 8 + 24 + 28 + 28 + 1 + 1;
+        wire [WE-1:0] e_q;
+        ot_hdc_w11_cut #(.W(WE), .CUT(1), .VB(DRST ? -1 : WE - 1)) u_ce (.clk(clk), .rst_n(rst_n),
+            .d({x_v, x_byp, x_err, x_code, x_sub, x_swap ? x_bs : x_as, x_swap ? x_bexp : x_aexp,
+                x_swap ? x_bman : x_aman, shf, lost, sd >= 8'd28, |val}), .q(e_q));
+        // A2b: sticky OR and the d >= 28 pick
+        wire [27:0] e_shf, e_lost; wire e_ge, e_any;
+        assign {xe_v, xe_byp, xe_err, xe_code, xe_sub, xe_sign, xe_exp, xe_big, e_shf, e_lost, e_ge, e_any} = e_q;
+        assign xe_small = e_ge ? {27'd0, e_any} : (e_shf | {27'd0, |e_lost});
+    end endgenerate
 
     // ---- B1 ----------------------------------------------------------------------------------------
     wire [27:0] big28 = {1'b0, s1_big, 3'b000};
@@ -137,9 +172,22 @@ module ot_hdc_fp32_add_lat #(
     ot_hdc_lzc32 u_lzc (.x({dif[26:0] | sentinel, 5'b11111}), .n(lz_w));
     // B2a -> B2b boundary (LAT >= 7)
     localparam integer WD = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27 + 28 + 6 + 1;
+    wire [WD-1:0] xf_d;                                // XCUTS F: the u_cd input after the extra cut
+    generate if (XC_F != 0) begin : g_xf
+        // B2a1: carry pick, sentinel OR | B2a2: LZC
+        localparam integer WF = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27 + 28 + 27 + 1;
+        wire [WF-1:0] f_q;
+        ot_hdc_w11_cut #(.W(WF), .CUT(1), .VB(DRST ? -1 : WF - 1)) u_cf (.clk(clk), .rst_n(rst_n),
+            .d({t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, add_val, dif, dif[26:0] | sentinel, carry}), .q(f_q));
+        wire f_v, f_byp, f_sub, f_sign, f_carry; wire [1:0] f_err; wire [31:0] f_code; wire [7:0] f_exp;
+        wire [26:0] f_add, f_x; wire [27:0] f_dif; wire [5:0] f_lz;
+        assign {f_v, f_byp, f_sub, f_sign, f_err, f_code, f_exp, f_add, f_dif, f_x, f_carry} = f_q;
+        ot_hdc_lzc32 u_lzf (.x({f_x, 5'b11111}), .n(f_lz));
+        assign xf_d = {f_v, f_byp, f_sub, f_sign, f_err, f_code, f_exp, f_add, f_dif, f_lz, f_carry};
+    end endgenerate
     wire [WD-1:0] d2_in;
     ot_hdc_w11_cut #(.W(WD), .CUT(CUT_D), .VB(DRST ? -1 : WD - 1)) u_cd (.clk(clk), .rst_n(rst_n),
-        .d({t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, add_val, dif, lz_w, carry}), .q(d2_in));
+        .d(XC_F ? xf_d : {t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, add_val, dif, lz_w, carry}), .q(d2_in));
     wire        w_v, w_byp, w_sub, w_sign, w_carry;
     wire [1:0]  w_err;
     wire [31:0] w_code;
@@ -195,7 +243,38 @@ module ot_hdc_fp32_add_lat #(
     wire subnormal = (e == 9'd1) && !man[23];
     wire [31:0] code = {u_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};
     wire over = (u_exp == 8'hff) || (e >= 9'd255);
-    generate if (DRST != 0) begin : g_yr
+    generate if (XC_G != 0) begin : g_yx
+        // C2a: round carry, exponent, encode, overflow | C2b: zero check, output select
+        localparam integer WG = 1 + 1 + 1 + 1 + 32 + 2 + 32;
+        wire [WG-1:0] g_q;
+        ot_hdc_w11_cut #(.W(WG), .CUT(1), .VB(DRST ? -1 : WG - 1)) u_cg (.clk(clk), .rst_n(rst_n),
+            .d({u_v, u_byp, u_zero, over, u_code, u_err, code}), .q(g_q));
+        wire g_v, g_byp, g_zero, g_over; wire [31:0] g_ucode, g_code; wire [1:0] g_err;
+        assign {g_v, g_byp, g_zero, g_over, g_ucode, g_err, g_code} = g_q;
+        if (DRST != 0) begin : g_r
+            always @(posedge clk or negedge rst_n) begin
+                if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
+                else begin
+                    valid_out <= g_v;
+                    if (g_byp) begin y <= g_ucode; err <= g_err; end
+                    else if (g_zero) begin y <= 32'd0; err <= E_NONE; end
+                    else if (g_over) begin y <= 32'd0; err <= E_OVERFLOW; end
+                    else begin y <= (g_code[30:0] == 31'd0) ? 32'd0 : g_code; err <= E_NONE; end
+                end
+            end
+        end else begin : g_n
+            always @(posedge clk or negedge rst_n) begin
+                if (!rst_n) valid_out <= 1'b0;
+                else valid_out <= g_v;
+            end
+            always @(posedge clk) begin
+                if (g_byp) begin y <= g_ucode; err <= g_err; end
+                else if (g_zero) begin y <= 32'd0; err <= E_NONE; end
+                else if (g_over) begin y <= 32'd0; err <= E_OVERFLOW; end
+                else begin y <= (g_code[30:0] == 31'd0) ? 32'd0 : g_code; err <= E_NONE; end
+            end
+        end
+    end else if (DRST != 0) begin : g_yr
         always @(posedge clk or negedge rst_n) begin
             if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
             else begin
