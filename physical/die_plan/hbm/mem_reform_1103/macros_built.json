@@ -1,0 +1,114 @@
+{
+ "out": "/home/ubuntu/scratch-root/claude/die-hbm-61-mem/repo/physical/asap7_memory_macros_v2",
+ "macros": [
+  {
+   "name": "ot_sram_1r1w_64x306_m1_r0c0_g306",
+   "size_um": [
+    106.056,
+    31.896
+   ],
+   "signal_pins": 628,
+   "pins_per_edge": 314,
+   "clk_to_q_ps": 299.7738573794983,
+   "setup_ps": 28.256178771111113,
+   "min_period_ps": 291.5677308593271,
+   "consumers": {
+    "hfd_ep_static": 4
+   }
+  },
+  {
+   "name": "ot_sram_1r1w_64x141_m1_r0c0_g141",
+   "size_um": [
+    56.184,
+    20.808
+   ],
+   "signal_pins": 298,
+   "pins_per_edge": 149,
+   "clk_to_q_ps": 295.9289685880672,
+   "setup_ps": 28.256178771111113,
+   "min_period_ps": 287.72284206789607,
+   "consumers": {
+    "ot_hfd_coll_q3_edge_core": 12,
+    "ot_hbm_host_cp_rxs": 1
+   }
+  },
+  {
+   "name": "ot_sram_1r1w_64x32_m1_r0c0_g32",
+   "size_um": [
+    23.112,
+    20.808
+   ],
+   "signal_pins": 80,
+   "pins_per_edge": 40,
+   "clk_to_q_ps": 253.4028953354195,
+   "setup_ps": 28.256178771111113,
+   "min_period_ps": 245.19676881524833,
+   "consumers": {
+    "ot_hbm_host_cp_rxs": 2
+   }
+  },
+  {
+   "name": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+   "size_um": [
+    91.8,
+    27.576
+   ],
+   "signal_pins": 530,
+   "pins_per_edge": 265,
+   "clk_to_q_ps": 367.08113323359345,
+   "setup_ps": 28.256178771111113,
+   "min_period_ps": 360.12984504911157,
+   "consumers": {
+    "ot_hbm_su_programme_pslice_c5": 100,
+    "ot_hbm_sm_vm_wr_q_t_lanes4": 1
+   }
+  },
+  {
+   "name": "ot_sram_1r1w_256x256_m2_r0c0_g256",
+   "size_um": [
+    169.368,
+    28.392
+   ],
+   "signal_pins": 532,
+   "pins_per_edge": 266,
+   "clk_to_q_ps": 376.213592619149,
+   "setup_ps": 28.256178771111113,
+   "min_period_ps": 360.12984504911157,
+   "consumers": {
+    "ot_hnx_idxn_keybuf_slice": 4,
+    "ot_hbm_host_cp_rxs": 2,
+    "ot_hbm_idx_rootctl_static_am": 1
+   }
+  },
+  {
+   "name": "ot_sram_1r1w_256x64_m2_r0c0_g64",
+   "size_um": [
+    53.16,
+    28.392
+   ],
+   "signal_pins": 148,
+   "pins_per_edge": 74,
+   "clk_to_q_ps": 328.85886764378614,
+   "setup_ps": 28.256178771111113,
+   "min_period_ps": 312.7751200737487,
+   "consumers": {
+    "ot_hnx_idxn_keybuf_slice": 1
+   }
+  },
+  {
+   "name": "ot_sram_1r1w_512x32_m4_r0c0_g32",
+   "size_um": [
+    53.16,
+    29.16
+   ],
+   "signal_pins": 86,
+   "pins_per_edge": 43,
+   "clk_to_q_ps": 337.9913270293417,
+   "setup_ps": 28.256178771111113,
+   "min_period_ps": 312.7751200737487,
+   "consumers": {
+    "ot_hbm_su_static_sfustore_hw": 16
+   }
+  }
+ ]
+}

@@ -36,6 +36,7 @@
 //                  registers the node inputs (one of NWS).
 // ---------------------------------------------------------------------------
 module ot_qwen_rom_tile_logic_w12 #(
+    parameter integer IDLE_UCK = 0,    // DIE-QC-66 11-03: 1 = u_me.idle on the ungated tile clock ck_u (as-built B3 NL form)
     parameter integer W  = 16,
     parameter integer IL = 8,
     parameter integer AW = 24,
@@ -186,6 +187,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     output wire [TG*AW-1:0]  kv_addr,
     input  wire [TG*W*32-1:0] kv_q,
     // QC-PG-5 ICG: the engine drained flag (u_me.idle, registered, 1 in reset) for the A0 tile-root clock-gate enable
+    input  wire              ck_u,     // DIE-QC-66 IDLE_UCK: ungated tile clock (unused when IDLE_UCK = 0)
     output wire              idle
 );
     localparam integer IBW = 3 * NW + 13 * AW + 13;
@@ -269,11 +271,11 @@ module ot_qwen_rom_tile_logic_w12 #(
     generate if (GLUE_HARD != 0 && (KV_LOCAL != 0 || W != 16 || TG != 4 || HIER != 2 || ROM_PIPE != 1 || LOCAL_ROOTS == 0 || CHILD_CLOCKS == 0)) begin:g_bad_glue
         initial $fatal(1,"GLUE_HARD requires ROM-only fixed 64-lane A0 local clock configuration");
     end endgenerate
-    ot_qwen_w12_matvec_part #(.SPLIT_CP(REGROOT >= 9 && IREG != 0), .W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
+    ot_qwen_w12_matvec_part #(.IDLE_UCK(IDLE_UCK), .SPLIT_CP(REGROOT >= 9 && IREG != 0), .W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
         .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .REGROOT(REGROOT), .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
         .ck_lsl(ck_lsl), .ck_tx(ck_tx), .ck_reg(ck_reg),
-        .clk(clk), .rst_n(rst_n), .go(go_i), .go_cp(go_cp), .ready(), .idle(idle),
+        .clk(clk), .rst_n(rst_n), .go(go_i), .go_cp(go_cp), .ready(), .ck_u(ck_u), .idle(idle),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
         .i_wbase(b_wbase), .i_ts(b_ts), .i_ks(b_ks), .i_js(b_js),
         .i_xbase(b_xbase), .i_xks(b_xks), .i_xjs(b_xjs), .i_xcs(b_xcs),
@@ -838,6 +840,7 @@ endmodule
 // and its KV slice (2 x ot_sram_1r1w_128x256_m1_r2c2, written through a
 // registered masked port from the die's KV fill network).
 module ot_qwen_rom_tile_w12 #(
+    parameter integer IDLE_UCK = 0,    // DIE-QC-66 11-03: 1 = u_me.idle on the ungated tile clock ck_u (as-built B3 NL form)
 `ifndef SYNTHESIS
     parameter integer ROM_TILE = -1, // constant die tile identity for released simulation masks
 `endif
@@ -916,6 +919,7 @@ module ot_qwen_rom_tile_w12 #(
     input  wire [6:0]        kvw_addr,
     input  wire [511:0]      kvw_data,
     input  wire [511:0]      kvw_mask,
+    input  wire              ck_u,     // DIE-QC-66 IDLE_UCK: ungated tile clock (unused when IDLE_UCK = 0)
     output wire              idle      // QC-PG-5 ICG: u_logic.u_me.idle
 );
     wire [CODE_BANKS-1:0] rom_ce;
@@ -927,6 +931,7 @@ module ot_qwen_rom_tile_w12 #(
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic_w12 #(
+        .IDLE_UCK(IDLE_UCK),
 `ifndef SYNTHESIS
         .ROM_TILE(ROM_TILE),
 `endif
@@ -940,7 +945,7 @@ module ot_qwen_rom_tile_w12 #(
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),
         .kvs_r_ce(kvs_r_ce), .kvs_r_addr(kvs_r_addr), .kvs_rd(kvs_rd),
-        .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}), .idle(idle));
+        .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}), .ck_u(ck_u), .idle(idle));
     genvar p, b;
     generate
         //: BAW 12 keeps the original macro path g_col[p].g_bank[b].u_rom (floorplan scripts, die views, runtime

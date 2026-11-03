@@ -378,10 +378,32 @@ def test_prd_preserves_original_cts_stage_identity_and_refuses_missing_checkpoin
     selected=subprocess.run(["tclsh"],input=script,text=True,capture_output=True,check=True)
     assert selected.stdout.strip()=="grt" and not selected.stderr
     (kit/"run/results/asap7"/NICK/"base/4_1_cts.odb").unlink()
+    # DIE-QC-66 11-03: pruned 4_1_cts.odb -> the stage identity comes from the kit's 5_1_grt.odb (post-CTS), recorded
+    alt=tmp_path/"grt_identity"
+    result=mk(kit,alt)
+    assert result.returncode==0,result.stdout+result.stderr
+    assert "GRT stage identity from 5_1_grt.odb" in result.stdout
+    abase=alt/"run/results/asap7"/NICK/"base"
+    assert (abase/"4_1_cts.odb").read_text()=="kit grt\n"
+    selected=subprocess.run(["tclsh"],input=stage+f'\nset ::env(RESULTS_DIR) {{{abase}}}\nputs [ot_hold_stage]\n',
+                            text=True,capture_output=True,check=True)
+    assert selected.stdout.strip()=="grt"
+    rec=json.loads((alt/"PRD.json").read_text())
+    assert rec["cts_identity"].endswith("5_1_grt.odb (original 4_1_cts.odb absent)")
+    assert "cts_identity" not in json.loads((out/"PRD.json").read_text())  # default record unchanged
+    # neither checkpoint -> refused, nothing created
+    (kit/"run/results/asap7"/NICK/"base/5_1_grt.odb").unlink()
     missing=tmp_path/"missing_cts"
     result=mk(kit,missing)
-    assert result.returncode==2 and "lacks original 4_1_cts.odb" in result.stdout
+    assert result.returncode==2 and "lacks 5_1_grt.odb" in result.stdout
     assert not missing.exists()  # never fake a checkpoint or create an invalid vehicle
+    # OT_PRD_FROM=route seeds from 5_2_route.odb: that alone is not a stage identity either
+    (kit/"run/results/asap7"/NICK/"base/5_2_route.odb").write_text("kit route\n")
+    missing2=tmp_path/"missing_cts_route"
+    result=subprocess.run(["bash",str(PRD/"prd_mk.sh"),str(kit),str(missing2),"b0",str(ROOT)],
+                          env=dict(os.environ,OT_PRD_FROM="route"),capture_output=True,text=True)
+    assert result.returncode==2 and "lacks original 4_1_cts.odb and 5_1_grt.odb" in result.stdout
+    assert not missing2.exists()
 
 
 def test_mk_stages_eco_drt_pre_hook_and_chains_kit_hook(tmp_path):

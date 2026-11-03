@@ -98,3 +98,18 @@ def test_variant_a_with_extra_setup_repair_still_refuses(tmp_path):
     (tmp_path / 'post_grt_drv.tcl').write_text('\n'.join(C.LEGACY_REPAIRS[1] + ['repair_timing -setup']) + '\n')
     with pytest.raises(ValueError, match='unrecognized'):
         C.stage(tmp_path)
+
+
+def test_two_mode_generated_repair_body_skipped_alike(tmp_path):
+    """DIE-QC-66 11-03: the OT_HOLD_MM form of the generated body (QC A0 NL b3h kit) is the same repair class."""
+    fixture(tmp_path)
+    (tmp_path / 'post_grt_drv.tcl').write_text('# generated\n' + '\n'.join(
+        ('  ' + c if c.startswith(('ot_', 'repair_timing')) else c) for c in C.LEGACY_REPAIR_MM) + '\n')
+    assert C.stage(tmp_path)['skipped_generated_repair']
+    assert (tmp_path / 'prd_post_grt_chain.tcl').read_text() == 'source /work/grt_post.tcl\n'
+    # one changed knob in the MM body -> refuse
+    p = tmp_path / 'post_grt_drv.tcl'
+    p.write_text(p.read_text().replace('-hold_margin 5 -repair_tns 100', '-hold_margin 5 -repair_tns 50'))
+    (tmp_path / 'prd_post_grt_chain.tcl').unlink()
+    with pytest.raises(ValueError, match='unrecognized'):
+        C.stage(tmp_path)

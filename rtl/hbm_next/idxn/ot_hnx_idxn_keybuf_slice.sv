@@ -20,9 +20,24 @@ module ot_hnx_idxn_keybuf_slice #(parameter integer RS=1)(
  wire [1279:0] wd={192'b0,key_in[1098:11]};
  wire [1279:0] rd;
  for(genvar m=0;m<5;m=m+1)begin:gm
+`ifdef OT_HBM_RW_MACROS
+  // DIE-HBM-61/MEM 11-03 RE-FORM (macro channels; HBM RE-FORM recipe define only, other builds unchanged): r0c0 master,
+  // one mask pin (all-ones mask, repair pins tied 0 before), same 1r1w cycle contract
+  // (tools/mem_compiler/build_hbm_rightwidth_1103.py).
+  // the fifth SRAM holds only rd[1087:1024] (64 bits; wd[1279:1088] are tied 0 and rd[1279:1088] never read)
+  if(m<4)begin:g_rw
+   ot_sram_1r1w_256x256_m2_r0c0_g256 mem(.clk(clk),.r_ce_in(pre_v),.r_addr_in(pre_index),.rd_out(rd[m*256+:256]),
+    .w_ce_in(live_v),.w_addr_in(live_index),.wd_in(wd[m*256+:256]),.w_mask_in(1'b1));
+  end else begin:g_rw64
+   ot_sram_1r1w_256x64_m2_r0c0_g64 mem(.clk(clk),.r_ce_in(pre_v),.r_addr_in(pre_index),.rd_out(rd[m*256+:64]),
+    .w_ce_in(live_v),.w_addr_in(live_index),.wd_in(wd[m*256+:64]),.w_mask_in(1'b1));
+   assign rd[m*256+64+:192]=192'd0;
+  end
+`else
   ot_sram_1r1w_256x256_m2_r2c2 mem(.clk(clk),.r_ce_in(pre_v),.r_addr_in(pre_index),.rd_out(rd[m*256+:256]),
    .w_ce_in(live_v),.w_addr_in(live_index),.wd_in(wd[m*256+:256]),.w_mask_in({256{1'b1}}),
    .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(16'd0));
+`endif
  end
  reg[170:0]have;reg pre_q;reg[7:0]pre_iq;
 `ifdef C3MUT_KB_TAG

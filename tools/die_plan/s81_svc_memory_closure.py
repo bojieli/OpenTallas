@@ -205,7 +205,7 @@ def main():
     ap.add_argument('--bound', nargs='+', help='type bound files s81p_<type>_bound.sv')
     ap.add_argument('--out', help='fresh output dir')
     ap.add_argument('--kit-rtl', nargs='+', help='apply in place to kit rtl dirs (kit_rtl.json/.f); with --closed-dir reuse closed bounds')
-    ap.add_argument('--closed-dir', help='dir of precomputed closed bounds (s81p_<type>_bound.sv) checked by before sha')
+    ap.add_argument('--closed-dir', help='packet dir (closure.json + closed/<bound>.sv.gz) or a dir of closed bounds; used only when the kit bound sha equals the recorded before sha, else the closure is computed')
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--skip-self-check', action='store_true', help='only when the self-check already ran on this tool sha')
     a = ap.parse_args()
@@ -218,7 +218,8 @@ def main():
                 kr = json.loads((Path(d) / 'kit_rtl.json').read_text()); t = kr['bound_type']
                 r = rep_j['types'].get(t, {}); b = Path(d) / ('s81p_%s_bound.sv' % t)
                 if r.get('status') == 'CLOSED' and b.exists() and sha(b.read_text()) == r['before_sha256']:
-                    closed = (Path(a.closed_dir) / b.name).read_text()
+                    cd = Path(a.closed_dir); gz = cd / "closed" / (b.name + ".gz")
+                    closed = gzip.decompress(gz.read_bytes()).decode() if gz.exists() else (cd / b.name).read_text()
                     if sha(closed) != r['after_sha256']: sys.exit('closed bound sha mismatch ' + t)
             print(d, json.dumps({k: v for k, v in apply_kit(d, ref_s, closed).items() if k in ('status', 'after_sha256')}), flush=True)
         return

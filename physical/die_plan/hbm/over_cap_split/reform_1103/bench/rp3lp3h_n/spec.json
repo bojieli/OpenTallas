@@ -1,0 +1,115 @@
+{
+ "ref": "tbw_ref_nx",
+ "dut": "tbw_dut_nx",
+ "ports": {
+  "ck_n": [
+   "input",
+   1
+  ],
+  "ck_s": [
+   "input",
+   1
+  ],
+  "rst_n": [
+   "input",
+   1
+  ],
+  "xs_a1": [
+   "input",
+   9
+  ],
+  "xs_g1": [
+   "input",
+   5
+  ],
+  "xs_a2": [
+   "input",
+   7
+  ],
+  "xs_g2": [
+   "input",
+   5
+  ],
+  "xss_a1": [
+   "input",
+   9
+  ],
+  "xss_g1": [
+   "input",
+   5
+  ],
+  "xss_a2": [
+   "input",
+   7
+  ],
+  "xss_g2": [
+   "input",
+   5
+  ],
+  "rin_n": [
+   "input",
+   818
+  ],
+  "rin_s": [
+   "input",
+   818
+  ],
+  "bin": [
+   "input",
+   2069
+  ],
+  "gin": [
+   "input",
+   100
+  ],
+  "rout_n": [
+   "output",
+   818
+  ],
+  "rout_s": [
+   "output",
+   818
+  ],
+  "bout": [
+   "output",
+   2069
+  ],
+  "gout_leaf": [
+   "output",
+   100
+  ],
+  "gout_pass": [
+   "output",
+   100
+  ]
+ },
+ "clocks": [
+  "ck_n",
+  "ck_s"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "reset_cycles": 24,
+ "warmup": 600,
+ "cycles": 5000,
+ "hold": {
+  "xs_a1": "9'd37",
+  "xs_g1": "5'd3",
+  "xs_a2": "7'd11",
+  "xs_g2": "5'd2",
+  "xss_a1": "9'd101",
+  "xss_g1": "5'd1",
+  "xss_a2": "7'd29",
+  "xss_g2": "5'd4"
+ },
+ "stim": {
+  "bin": "{1'($urandom() % 2), 7'($urandom()), (($urandom() % 32) == 0) ? 13'd0 : 13'($urandom()), 2048'({$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom()})}",
+  "rin_n": "818'({$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom()})",
+  "rin_s": "818'({$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom()})",
+  "gin": "100'({$urandom(),$urandom(),$urandom(),$urandom()})"
+ },
+ "shift": {
+  "gout_leaf": 7
+ }
+}

@@ -21,8 +21,8 @@
   "interface": {
     "controller_clock_mhz": {
       "grade": "assumed",
-      "note": "the die clock; min_period 900 ps",
-      "value": 1087.0
+      "note": "the die clock (1.2 GHz); min_period 833 ps",
+      "value": 1200.0
     },
     "parameters": {
       "KTAGW": 17,
@@ -95,7 +95,7 @@
       "corner": "ff",
       "hold_ps": 27.060841075555558,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.31724855211381614,
       "out_slew_intrinsic_ps": 22.165861613333334,
@@ -115,7 +115,7 @@
       "corner": "ss",
       "hold_ps": 41.87064116916667,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.7083491406580278,
       "out_slew_intrinsic_ps": 35.38986175375,
@@ -135,7 +135,7 @@
       "corner": "tt",
       "hold_ps": 30.732718771111113,
       "leakage_nw": 0.0,
-      "min_period_ps": 900.0,
+      "min_period_ps": 833.0,
       "min_pulse_ps": 360.0,
       "out_r_kohm": 0.4562575976456151,
       "out_slew_intrinsic_ps": 27.39737815666667,
@@ -151,8 +151,8 @@
   "views": {
     "ot_hbm3e_phy_v41x_aw30_e8p5.lef": "f38a056344291b7fa949291563be9ba1bb3a19a2aa8f468f9ff1118f173bce14",
     "ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": "2b3a1d2d452bef84ac4e732012f9df5a40cfc216bee2fabeb344fcbd65812631",
-    "ot_hbm3e_phy_v41x_aw30_e8p5_ff.lib": "7402e4489915fd8a8220626b4235f82f4826d163cc88784213e368f2ff087706",
-    "ot_hbm3e_phy_v41x_aw30_e8p5_ss.lib": "180cee9f3c62dc72970f89e589bdfb70eed8aea0c70cd8e15ba62ca1903daf1e",
-    "ot_hbm3e_phy_v41x_aw30_e8p5_tt.lib": "08316f92e3a1e1413c169f02162fa53fa50e46960aae2c9b312a462716b0083a"
+    "ot_hbm3e_phy_v41x_aw30_e8p5_ff.lib": "50e25f3c70d9208645036a889e057ec11a533806626707b77fac5c1f937d569b",
+    "ot_hbm3e_phy_v41x_aw30_e8p5_ss.lib": "327b33c53ac3dfc2f0508cb1eee053a233901493131bfbd9dcdd5814cbe262ce",
+    "ot_hbm3e_phy_v41x_aw30_e8p5_tt.lib": "45f6e0dfa02023692b6b65d3e6b49e7db8e407159eaf5ed01171ef791d393c19"
   }
 }
