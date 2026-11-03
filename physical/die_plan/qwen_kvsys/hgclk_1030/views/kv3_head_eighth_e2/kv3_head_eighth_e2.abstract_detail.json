@@ -1,0 +1,40 @@
+{
+ "schema": "opentallas.abstract_detail_rebind.v1",
+ "tool": "tools/die_plan/abstract_detail.py (claude/dh56-lep-1103@82eacd7eac) tcl --bloat-factor 1 | openroad; splice; check",
+ "routed_db": "intel2:/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e2__3e7fccd216/base/6_final.odb",
+ "splice": {
+  "base": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e2__3e7fccd216/kit/views/kv3_head_eighth_e2.lef",
+  "base_sha256": "53fd80f7c069bb48116e78ab807682cf8827ac90473a863eb4452bba5a7fd1f2",
+  "detail": "hd/e2/detail.lef",
+  "out": "hd/e2/kv3_head_eighth_e2.lef",
+  "out_sha256": "b292451f782ece3a935c20a1a238ec3369d2426ad8301bcd4fb16a452f7944ca",
+  "layers_detailed": [
+   "M6",
+   "M7"
+  ],
+  "rects": {
+   "M6": 13321,
+   "M7": 5465
+  },
+  "pg_pin_layers": {
+   "VSS": [
+    "M5"
+   ],
+   "VDD": [
+    "M5"
+   ]
+  },
+  "detail_pins_equal_base": true,
+  "check_ok": true,
+  "problems": []
+ },
+ "check": {
+  "check_ok": true,
+  "layers_detailed": [
+   "M6",
+   "M7"
+  ],
+  "problems": []
+ },
+ "note": "DIE-KV-63/types class C: same signed routed DB, no re-route; libs/netlist/signoff.json unchanged; only M6/M7 OBS detailed"
+}

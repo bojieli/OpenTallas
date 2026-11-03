@@ -30,3 +30,13 @@ new 20 SIGNED rows + M5->M6 core PG grid.
 Kit wave: its plan copy (intel1 wt/kit-wave-1030/kv40/event28w/plan_c.json) is not main. Refresh it, or transplant with
 `apply_hgclk.py COPY VIEWS_ROOT OUT` (absolute views on the gen host). Note: that copy's kv3_hg_v1
 `clock.landing_contract` already differs from main (main has the DIE-KV-28 event27 native START pin sites).
+
+## DIE-KV-63/types 11-03: detailed M6/M7 OBS (class C, PDN-0006)
+
+The five head_eighth LEFs were ORFS generate_abstract exports (-bloat_occupied_layers): blanket OBS M1-M7 over
+216x216 with PG pins on M5 only, so every kv3_hg*/kv3_hgi* kit stopped at pdngen with PDN-0006. Re-exported with
+the die-agnostic tools/die_plan/abstract_detail.py (DIE-HEAD-56, claude/dh56-lep-1103@82eacd7eac): write_abstract_lef
+-bloat_factor 1 from the SAME signed routed 6_final.odb (no re-route), splice only the M6/M7 OBS into the signed view;
+'check' PASS = pins, SIZE, PG pins and M1-M5 OBS unchanged. Libs / netlist / signoff.json unchanged. Evidence:
+<module>.abstract_detail.json. Probe (kv3_hgi_v4 kit pdn.tcl, 16 macros, OpenROAD read_lef/floorplan/macro_place/
+pdngen): old LEFs PDN-0006; new LEFs PASS, PDN-0007 2.8-8.3 % partially blocked, 142-539 M5-M6 vias per macro per net.
