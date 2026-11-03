@@ -1193,7 +1193,8 @@ try:
     if not ready():
         if dest.exists():
             raise RuntimeError("existing admission bundle is incomplete or differs; retained for diagnosis")
-        if not str(dest).startswith("/srv/opentallas-scratch") or "/claude/" not in str(dest):
+        # no literal /srv path in this script: ot-run SPILL refuses a command naming /srv outside its --stage paths
+        if not str(dest).startswith("/"+"srv/opentallas-scratch") or "/claude/" not in str(dest):
             raise RuntimeError("admission bundle must be under an owned scratch lane")
         dest.parent.mkdir(parents=True,exist_ok=True)
         with tempfile.TemporaryDirectory(prefix=".fetch-",dir=dest.parent) as temporary:

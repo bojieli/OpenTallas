@@ -1,6 +1,7 @@
 """Opt-in structural composition before Graph: exact terminals, no aliases or timing edits."""
 import hashlib
 import json
+import os
 import re
 from collections import defaultdict
 from pathlib import Path
@@ -206,8 +207,14 @@ def apply(binder, spec_path):
     for mod,rtl in sources:
         digest=hashlib.sha256(rtl.encode()).hexdigest()
         p=out/(digest+'.sv')
-        if p.exists() and p.read_text()!=rtl: raise CompositionError('source hash collision')
-        p.write_text(rtl)
+        if p.exists():
+            # Content-addressed and immutable: an existing file is never rewritten (source-follow delta snapshots
+            # hard-link it read-only from the previous snapshot).
+            if p.read_text()!=rtl: raise CompositionError('source hash collision')
+        else:
+            p.write_text(rtl)
         binder.extra_lib.append(str(p))
-    (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+    rj=out/'receipt.json'; rtxt=json.dumps(receipt,indent=2)+'\n'
+    if not rj.exists() or rj.read_text()!=rtxt:
+        tmp=out/'.receipt.json.tmp'; tmp.write_text(rtxt); os.replace(tmp,rj)
     binder.composition_receipt=receipt

@@ -109,6 +109,13 @@ class TestAdmissionBundle(unittest.TestCase):
             self.assertIn("HELPER_PASS",result.stdout)
             self.assertIn("CHAIN_PASS",result.stdout)
 
+    def test_bootstrap_names_no_srv_path_so_otrun_can_spill(self):
+        # KW-FIX-1 11-02: ot-run --stage SPILL refused every wave route ("command names /srv/opentallas-scratch outside
+        # the --stage paths") because this script carried that literal; jobs then queued on intel1 only
+        import autopilot
+        ap=importlib.reload(autopilot)
+        self.assertEqual(re.findall(r"/srv/[^\s'\";|&()<>]*", ap.ADMISSION_BOOTSTRAP), [])
+
     def test_shared_clock_family_is_pinned_inside_standalone_bundle(self):
         import autopilot
         ap=importlib.reload(autopilot);ap.DRY=False

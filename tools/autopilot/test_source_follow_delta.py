@@ -202,3 +202,12 @@ if __name__ == "__main__":
                 fails += 1
                 print("FAIL", name, repr(e))
     sys.exit(1 if fails else 0)
+
+
+def test_changed_elaborated_source_runs_fresh_elab_by_default():
+    # KW-FIX-1 11-02: a changed elaborated HDL source re-elaborates in the snapshot (bind.py elab) instead of holding
+    r = S.REMOTE
+    assert 'opts.get("fresh_elab",True) is not False' in r
+    assert '"tools/die_plan/bind.py","elab"' in r
+    assert r.index('"tools/die_plan/bind.py","elab"') < r.index('"tools/die_plan/bind.py","bind"')
+    compile(r, "<remote>", "exec")
