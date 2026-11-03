@@ -1,25 +1,27 @@
 #!/bin/bash
 # OWNER 11-03 RE-FORM pre-build gate (die-agnostic): ORFS synth + floorplan + global place + resize (no CTS, no route)
 # on a kit dir, then OpenSTA TT setup with ideal clocks at the kit's planned insertion latency, then gen-time lint.
-#   prebuild_gate.sh KIT_DIR OUT_DIR [CPUS] [MEM_GB]
+#   prebuild_gate.sh KIT_DIR OUT_DIR [CPUS] [MEM_GB]    (PREBUILD_GATE_STA_ONLY=1: re-run only STA + verdict on OUT)
 # ADVISORY report (OWNER 07:0x, never blocks a launch). PASS iff worst setup >= +10% of the clock period AND the lint passes (see prebuild_gate.py).
 # Runs in docker (openroad/orfs:asap7lock) with a memory cap; never run it on the coordinator host.
 set -u
 KIT=$(cd "$1" && pwd -P); OUT=$(mkdir -p "$2" && cd "$2" && pwd -P); CPUS=${3:-4}; MEM=${4:-24}
 HERE=$(cd "$(dirname "$0")" && pwd -P); IMG=${PREBUILD_GATE_IMAGE:-openroad/orfs:asap7lock}
 mkdir -p "$OUT/work"
-rsync -a --delete --exclude run --exclude lec --exclude 'eco_*' --exclude '*.odb' --exclude logs "$KIT/" "$OUT/work/"
+[ -n "${PREBUILD_GATE_STA_ONLY:-}" ] || rsync -a --delete --exclude run --exclude lec --exclude 'eco_*' --exclude '*.odb' --exclude logs "$KIT/" "$OUT/work/"
 echo "$KIT" > "$OUT/kit_src.txt"
 N=pbgate-$(basename "$OUT")-$$
 docker run --rm --name "$N" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" \
   -v "$OUT/work":/work -v "$HERE":/gate:ro -w /OpenROAD-flow-scripts/flow "$IMG" bash -lc "
 source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
 M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=gate NUM_CORES=$CPUS'
-st=ok; for s in synth do-floorplan do-3_1_place_gp_skip_io do-3_2_place_iop do-3_3_place_gp do-3_4_place_resized; do
+st=ok; [ -n \"${PREBUILD_GATE_STA_ONLY:-}\" ] && st=sta_only
+[ \$st = sta_only ] || for s in synth do-floorplan do-3_1_place_gp_skip_io do-3_2_place_iop do-3_3_place_gp do-3_4_place_resized; do
   [ \$s = do-floorplan ] && \$M floorplan >> /work/gate_flow.log 2>&1 && continue
   \$M \$s >> /work/gate_flow.log 2>&1 || { st=\$s; break; }
 done
-echo \"GATE_FLOW stop=\$st\" > /work/gate_flow.status
+[ \$st = sta_only ] || echo \"GATE_FLOW stop=\$st\" > /work/gate_flow.status
+[ \$st = sta_only ] && sed -i \"/^GATE_STAGE\\|^GATE_STA /d\" /work/gate_flow.status
 R=\$(ls -d /work/run/results/asap7/*/gate | head -n 1)
 ODB=\$R/3_4_place_resized.odb; STAGE=place_resized
 [ -f \$ODB ] || { ODB=\$R/3_3_place_gp.odb; STAGE=place_gp; }

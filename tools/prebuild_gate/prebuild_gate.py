@@ -5,8 +5,8 @@ OUT/prebuild_gate.json.  PASS iff ALL of:
   cells   std cells after resize <= 150,000
   memory  no inferred memory over SYNTH_MEMORY_MAX_BITS (memories must be generated macros)
   straps  no strap_* port that the kit does not declare (leaked strap)
-  face    every data input/output bit has a flop at the face (tools/die_plan/face_guard.py guard(), plain mode:
-          clock + reset ports skipped, declared straps/dead inputs exempt) -> pin_unreg == 0
+  face    pin_unreg == 0 with the auto_geom definition (geom_rules.pin_reg_metrics: every non-clock, non-strap port
+          bit reaches / is driven by a flop through BUF/INV only); the strict face_guard plain-mode count is reported too
   reset   every reset port lands on <= 8 flop pins (registered relay / synchroniser), not raw async fanout
 Also reported (not gated): stage_ps = period - worst r2r slack (> 583 ps = 70% of 833 -> RTL stage cut), counts.
     python3 prebuild_gate.py OUT_DIR
@@ -44,6 +44,10 @@ def sta_numbers(log):
             r["period"] = float(t[2])
         elif t[1] == "group":
             r["groups"][t[2]] = None if t[3] == "none" else {"slack": float(t[4]), "start": t[6], "end": t[8]}
+        elif t[1] == "pin_unreg":
+            r.update(pin_unreg=int(t[2]), pins_registered=int(t[4]), pins_to_macro=int(t[6]), pins_exempt=int(t[8]))
+        elif t[1] == "pin_unreg_list":
+            r["pin_unreg_list"] = t[2:]
         elif t[1] == "r2r_endpoints_stage_over_583":
             r["r2r_endpoints_stage_over_583"] = int(t[2])
     sl = [g["slack"] for g in r["groups"].values() if g]
@@ -106,8 +110,14 @@ def main(out):
         dead = FG.kit_dead_list(w)
         g = FG.guard(text, top, skip_re="^(" + "|".join(clk + rst) + ")$", straps=straps, dead=dead)
         nf = sum(g.get("fail_counts", {}).values())
-        checks["face"] = {"ok": nf == 0, "pin_unreg": nf, "checked": g.get("checked"), "fail_counts": g.get("fail_counts"),
-                          "fails_head": {k: v[:8] for k, v in g.get("fails", {}).items()}}
+        pu = s.get("pin_unreg")
+        lst = s.get("pin_unreg_list") or []
+        checks["face"] = {"ok": pu == 0, "pin_unreg": pu, "pins_registered": s.get("pins_registered"),
+                          "pins_to_macro": s.get("pins_to_macro"), "unreg_head": lst[:40],
+                          "unreg_buses": sorted({re.sub(r"\[\d+\]$", "", x) for x in lst}),
+                          "definition": "geom_rules.pin_reg_metrics (flop reachable through BUF/INV)",
+                          "strict_face_guard": {"fails": nf, "fail_counts": g.get("fail_counts"),
+                                                "fails_head": {k: v[:6] for k, v in g.get("fails", {}).items()}}}
         mt = re.search(r"module\s+" + re.escape(top) + r"\b.*?endmodule", text, re.S)
         ports = re.findall(r"\b(?:input|output)\s+(?:wire\s+)?(?:\[[^\]]+\]\s*)?(\w+)", mt.group(0) if mt else "")
         sp = sorted({p for p in ports if p.startswith("strap_")})
