@@ -44,3 +44,5 @@ epyc2 /home/ubuntu/scratch-root/claude/die-kv-61/repo_qkv DIE-KV-62/q2e6 flow-20
 intel2 /srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_qctl_static/gen/ot_hbm_idx_qctl_static_7bf7f6ba3842/eco_20261102_220344_3347490/i2 SIGNOFF-SPRINT-22 HBM ot_hbm_idx_qctl_static ECO routed DB (sha 2865edee) re-signed q-hbm; preserve (count)
 intel2 /srv/opentallas-scratch2/claude/ss21-resign/ves_eco/i1 SIGNOFF-SPRINT-22 S81 ot_s81sl_ve_s ECO routed DB (eco_loop PASS, re-sign q-s81); preserve (count)
 intel2 /srv/opentallas-scratch2/claude/ss22-resign SIGNOFF-SPRINT-22 re-sign dirs (ves_q_s81, qctl_q_hbm) + tag tools + ECO runs
+epyc2	/home/ubuntu/scratch-root/claude/die-hbm-58-cores/hcol_h1_w90	DIE-HBM-60/CORES HBM ot_hbm_idx_score_hcol_h1 PRD w90 m0 SIGNED 11-03 03:51 (count candidate, re-sign r-hbm)
+epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-19/hcol/p2_src	DIE-HBM-60/CORES source kit of hcol_h1 PRD w90 (SIGNED)
