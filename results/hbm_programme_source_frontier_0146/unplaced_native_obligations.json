@@ -1,0 +1,306 @@
+{
+  "scope": "Per B113 lane, frozen SOURCE13 native state; current parent absolute row/clock/pin budget unjoined. None is an as-built reservation.",
+  "all_existing_XO_banks": [
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66891_Q",
+      "data_bits": 1,
+      "native_FF_including_epoch": 2,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66896_Q",
+      "data_bits": 8,
+      "native_FF_including_epoch": 9,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66901_Q",
+      "data_bits": 8,
+      "native_FF_including_epoch": 9,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66906_Q",
+      "data_bits": 256,
+      "native_FF_including_epoch": 257,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66911_Q",
+      "data_bits": 256,
+      "native_FF_including_epoch": 257,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__0",
+      "data_bits": 34,
+      "native_FF_including_epoch": 35,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66916_Q__1",
+      "data_bits": 34,
+      "native_FF_including_epoch": 35,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__0",
+      "data_bits": 562,
+      "native_FF_including_epoch": 563,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66921_Q__1",
+      "data_bits": 562,
+      "native_FF_including_epoch": 563,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_u_engine_u_arithmetic_procdff_71639_Q__0",
+      "data_bits": 1022,
+      "native_FF_including_epoch": 1023,
+      "related_L730": true
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_u_engine_u_arithmetic_procdff_71639_Q__1",
+      "data_bits": 1022,
+      "native_FF_including_epoch": 1023,
+      "related_L730": true
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane14_lane_kv_waddr",
+      "data_bits": 24,
+      "native_FF_including_epoch": 25,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane14_lane_kv_wdata",
+      "data_bits": 32,
+      "native_FF_including_epoch": 33,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane14_lane_kv_we",
+      "data_bits": 1,
+      "native_FF_including_epoch": 2,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane14_lane_vi_addr",
+      "data_bits": 24,
+      "native_FF_including_epoch": 25,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane14_lane_vi_re",
+      "data_bits": 1,
+      "native_FF_including_epoch": 2,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane15_lane_kv_waddr",
+      "data_bits": 24,
+      "native_FF_including_epoch": 25,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane15_lane_kv_wdata",
+      "data_bits": 32,
+      "native_FF_including_epoch": 33,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane15_lane_kv_we",
+      "data_bits": 1,
+      "native_FF_including_epoch": 2,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane15_lane_vi_addr",
+      "data_bits": 24,
+      "native_FF_including_epoch": 25,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_lane15_lane_vi_re",
+      "data_bits": 1,
+      "native_FF_including_epoch": 2,
+      "related_L730": false
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_opstore_a_cmd0_Q__0",
+      "data_bits": 256,
+      "native_FF_including_epoch": 257,
+      "related_L730": true
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_opstore_a_cmd0_Q__1",
+      "data_bits": 320,
+      "native_FF_including_epoch": 321,
+      "related_L730": true
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_opstore_b_cmd0_Q__0",
+      "data_bits": 256,
+      "native_FF_including_epoch": 257,
+      "related_L730": true
+    },
+    {
+      "instance": "u_bout_xo_u_sfucore_Q_opstore_b_cmd0_Q__1",
+      "data_bits": 320,
+      "native_FF_including_epoch": 321,
+      "related_L730": true
+    }
+  ],
+  "all_existing_XO_native_FF": 5106,
+  "L730_related_existing_XO_FF": 3202,
+  "new_L730_upstream_FF": 2304,
+  "existing_XO_FF_reused_by_L730_not_new": 1023,
+  "new_programme_transport_FF": "280*ingress_stages +6*status_stages perlane, plus unpriced separate reset-delivery state; logical2/2=572, physicalcounts null",
+  "programme_relocated_declared_soft_FF": 22922,
+  "collar_relocated_soft_FF": "Not yet sized/mapped at exact PAGE_W3/NS2/NPR1/NREC0 profile",
+  "programme_native_macro_clock_inputs": 44,
+  "new_clock_obligations": "Actual XO locations, new upstreambanks, programme core clock/native tree, collar row sites, new transport source/destination/station clocks all unplaced/unqualified",
+  "layout_interpretation": "The nominal blank rectangle does not reserve rows or clockload; physical cells and clock contacts must be allocated jointly before adoption.",
+  "historical_failed_reset_as_data_transport_FF": "282*ingress_stages +6*status_stages per lane; minimum logical prototype2/2=576, physical stage counts null",
+  "actual_distinct_reset_routes": 2,
+  "new_reset_route_state_FF": null,
+  "preserved_programme_wrapper_captures": {
+    "scope": "Existing SOURCE13 state, no added RTL; exact physical reservation unjoined. Union prevents double charge of B113 fault BOUT.",
+    "regions": {
+      "NW": {
+        "source_hashes": {
+          "hbm_arch_q_hub__q_hub_nw": "1fd067da80ce3f7f96eedad5e2766c87d30f72d9ad542927440c4cb342b87626",
+          "hbm_arch_q_b113": "9c9baa826addf80e96ac646a0238377c5f3aaefb1be3e45e09d89d457b0c8697"
+        },
+        "banks": [
+          {
+            "owner": "old_hub",
+            "instance": "u_bout_xo_u_sfup_Q_q1_compiler_control",
+            "primitive": "ot_dp_st",
+            "data_bits": 1742,
+            "native_FF_with_epoch": 1743,
+            "already_in_25_XO_census": false,
+            "actual_source_call": "ot_dp_st #(.W(1742)) u_bout_xo_u_sfup_Q_q1_compiler_control (.clk(clk), .rst_n(rst_n), .d(w_u_sfup_Q_q1_compiler_control[1741:0]), .ea(rst_n), .q(xo_u_sfup_Q_q1_compiler_control[1741:0]), .eq(xo_u_sfup_Q_q1_compiler_control[1742]));"
+          },
+          {
+            "owner": "old_hub",
+            "instance": "u_bout_xo_u_sfup_Q_q1_io_word",
+            "primitive": "ot_dp_st",
+            "data_bits": 471,
+            "native_FF_with_epoch": 472,
+            "already_in_25_XO_census": false,
+            "actual_source_call": "ot_dp_st #(.W(471)) u_bout_xo_u_sfup_Q_q1_io_word (.clk(clk), .rst_n(rst_n), .d(w_u_sfup_Q_q1_io_word[470:0]), .ea(rst_n), .q(xo_u_sfup_Q_q1_io_word[470:0]), .eq(xo_u_sfup_Q_q1_io_word[471]));"
+          },
+          {
+            "owner": "B113",
+            "instance": "u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66941_D",
+            "primitive": "ot_dp_st",
+            "data_bits": 1742,
+            "native_FF_with_epoch": 1743,
+            "already_in_25_XO_census": false,
+            "actual_source_call": "ot_dp_st #(.W(1742)) u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66941_D (.clk(clk), .rst_n(rst_n), .d(xi_u_sfucore_Q_ctl_u_core_procdff_66941_D[1741:0]), .ea(xi_u_sfucore_Q_ctl_u_core_procdff_66941_D[1742]), .q(xi_u_sfucore_Q_ctl_u_core_procdff_66941_D_q), .eq(xi_u_sfucore_Q_ctl_u_core_procdff_66941_D_eq));"
+          },
+          {
+            "owner": "B113",
+            "instance": "u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66936_D",
+            "primitive": "ot_dp_st",
+            "data_bits": 471,
+            "native_FF_with_epoch": 472,
+            "already_in_25_XO_census": false,
+            "actual_source_call": "ot_dp_st #(.W(471)) u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66936_D (.clk(clk), .rst_n(rst_n), .d(xi_u_sfucore_Q_ctl_u_core_procdff_66936_D[470:0]), .ea(xi_u_sfucore_Q_ctl_u_core_procdff_66936_D[471]), .q(xi_u_sfucore_Q_ctl_u_core_procdff_66936_D_q), .eq(xi_u_sfucore_Q_ctl_u_core_procdff_66936_D_eq));"
+          },
+          {
+            "owner": "old_hub",
+            "instance": "u_bin_xi_u_col_sfu_Q_c_fault",
+            "primitive": "ot_dp_st",
+            "data_bits": 1,
+            "native_FF_with_epoch": 2,
+            "already_in_25_XO_census": false,
+            "actual_source_call": "ot_dp_st #(.W(1)) u_bin_xi_u_col_sfu_Q_c_fault (.clk(clk), .rst_n(rst_n), .d(xi_u_col_sfu_Q_c_fault[0:0]), .ea(xi_u_col_sfu_Q_c_fault[1]), .q(xi_u_col_sfu_Q_c_fault_q), .eq(xi_u_col_sfu_Q_c_fault_eq));"
+          },
+          {
+            "owner": "B113",
+            "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66891_Q",
+            "primitive": "ot_dp_st",
+            "data_bits": 1,
+            "native_FF_with_epoch": 2,
+            "already_in_25_XO_census": true,
+            "actual_source_call": "ot_dp_st #(.W(1)) u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66891_Q (.clk(clk), .rst_n(rst_n), .d(w_u_sfucore_Q_ctl_u_core_procdff_66891_Q[0]), .ea(rst_n), .q(xo_u_sfucore_Q_ctl_u_core_procdff_66891_Q[0:0]), .eq(xo_u_sfucore_Q_ctl_u_core_procdff_66891_Q[1]));"
+          }
+        ],
+        "total_preserved": 4434,
+        "overlap_with_existing_5106_XO": 2,
+        "outside_existing_XO": 4432,
+        "known_distinct_wrapper_union": 9538
+      },
+      "NE": {
+        "source_hashes": {
+          "hbm_arch_q_hub__q_hub_ne": "e1e23fdbddecc14dd291806420ce97e6bff21c8c91b31d9de4051d74a72c69ab",
+          "hbm_arch_q_b113__physical_v1": "b34269bc2675ef9315ec37db28fedf678315dcb4222a0f3aa9716fb387642ebd"
+        },
+        "banks": [
+          {
+            "owner": "old_hub",
+            "instance": "u_bout_xo_u_sfup_Q_q1_compiler_control",
+            "primitive": "ot_dp_st",
+            "data_bits": 1742,
+            "native_FF_with_epoch": 1743,
+            "already_in_25_XO_census": false,
+            "actual_source_call": "ot_dp_st #(.W(1742)) u_bout_xo_u_sfup_Q_q1_compiler_control (.clk(clk), .rst_n(rst_n), .d(w_u_sfup_Q_q1_compiler_control[1741:0]), .ea(rst_n), .q(xo_u_sfup_Q_q1_compiler_control[1741:0]), .eq(xo_u_sfup_Q_q1_compiler_control[1742]));"
+          },
+          {
+            "owner": "old_hub",
+            "instance": "u_bout_xo_u_sfup_Q_q1_io_word",
+            "primitive": "ot_dp_st",
+            "data_bits": 471,
+            "native_FF_with_epoch": 472,
+            "already_in_25_XO_census": false,
+            "actual_source_call": "ot_dp_st #(.W(471)) u_bout_xo_u_sfup_Q_q1_io_word (.clk(clk), .rst_n(rst_n), .d(w_u_sfup_Q_q1_io_word[470:0]), .ea(rst_n), .q(xo_u_sfup_Q_q1_io_word[470:0]), .eq(xo_u_sfup_Q_q1_io_word[471]));"
+          },
+          {
+            "owner": "B113",
+            "instance": "u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66941_D",
+            "primitive": "ot_dp_st",
+            "data_bits": 1742,
+            "native_FF_with_epoch": 1743,
+            "already_in_25_XO_census": false,
+            "actual_source_call": "ot_dp_st #(.W(1742)) u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66941_D (.clk(clk), .rst_n(rst_n), .d(xi_u_sfucore_Q_ctl_u_core_procdff_66941_D[1741:0]), .ea(xi_u_sfucore_Q_ctl_u_core_procdff_66941_D[1742]), .q(xi_u_sfucore_Q_ctl_u_core_procdff_66941_D_q), .eq(xi_u_sfucore_Q_ctl_u_core_procdff_66941_D_eq));"
+          },
+          {
+            "owner": "B113",
+            "instance": "u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66936_D",
+            "primitive": "ot_dp_st",
+            "data_bits": 471,
+            "native_FF_with_epoch": 472,
+            "already_in_25_XO_census": false,
+            "actual_source_call": "ot_dp_st #(.W(471)) u_bin_xi_u_sfucore_Q_ctl_u_core_procdff_66936_D (.clk(clk), .rst_n(rst_n), .d(xi_u_sfucore_Q_ctl_u_core_procdff_66936_D[470:0]), .ea(xi_u_sfucore_Q_ctl_u_core_procdff_66936_D[471]), .q(xi_u_sfucore_Q_ctl_u_core_procdff_66936_D_q), .eq(xi_u_sfucore_Q_ctl_u_core_procdff_66936_D_eq));"
+          },
+          {
+            "owner": "old_hub",
+            "instance": "u_bin_xi_u_col_sfu_Q_c_fault",
+            "primitive": "ot_dp_st",
+            "data_bits": 1,
+            "native_FF_with_epoch": 2,
+            "already_in_25_XO_census": false,
+            "actual_source_call": "ot_dp_st #(.W(1)) u_bin_xi_u_col_sfu_Q_c_fault (.clk(clk), .rst_n(rst_n), .d(xi_u_col_sfu_Q_c_fault[0:0]), .ea(xi_u_col_sfu_Q_c_fault[1]), .q(xi_u_col_sfu_Q_c_fault_q), .eq(xi_u_col_sfu_Q_c_fault_eq));"
+          },
+          {
+            "owner": "B113",
+            "instance": "u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66891_Q",
+            "primitive": "ot_dp_st",
+            "data_bits": 1,
+            "native_FF_with_epoch": 2,
+            "already_in_25_XO_census": true,
+            "actual_source_call": "ot_dp_st #(.W(1)) u_bout_xo_u_sfucore_Q_ctl_u_core_procdff_66891_Q (.clk(clk), .rst_n(rst_n), .d(w_u_sfucore_Q_ctl_u_core_procdff_66891_Q[0]), .ea(rst_n), .q(xo_u_sfucore_Q_ctl_u_core_procdff_66891_Q[0:0]), .eq(xo_u_sfucore_Q_ctl_u_core_procdff_66891_Q[1]));"
+          }
+        ],
+        "total_preserved": 4434,
+        "overlap_with_existing_5106_XO": 2,
+        "outside_existing_XO": 4432,
+        "known_distinct_wrapper_union": 9538
+      }
+    }
+  },
+  "programme_actual_selected_mapped_soft_FF": 21930
+}

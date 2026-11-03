@@ -1,0 +1,201 @@
+alias array: gate si_ord#t (64 b) -> gold si_ord (64 b, Q-net alias evidence 64); source memory layout (32, 2, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+replica proposal: 12766 generated-register relations (gold input support modulo copy indices)
+merged proposal: 2 of 291 gold-only registers share a matched register's next-state support
+register aliases: 0 same-name / register-output relations proposed
+sequential traces: 43057 registers, 22652 constant, 2+48 cycles x 256 lanes
+simulation refinement: 10887 hypotheses refuted by concrete witnesses in 30 iterations
+eq-to-const hypotheses resolved: 2000 ['both:ff:u_dut.g_leaf[10].u_leaf.calendar[0]=0', 'both:ff:u_dut.g_leaf[1].u_leaf.calendar[0]=0', 'both:ff:u_dut.g_leaf[2].u_leaf.calendar[0]=0', 'both:ff:u_dut.g_leaf[3].u_leaf.calendar[0]=0', 'both:ff:u_dut.g_leaf[4].u_leaf.calendar[0]=0', 'both:ff:u_dut.g_leaf[5].u_leaf.calendar[0]=0']
+==== rawbase0_gold
+======== ABC command line "&r /lecout/rawbase0_gold.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/rawbase0_gold_swept.aig"
+[1;37m/lecout/rawbase0_gold[0m : i/o =  73468/   2227  [1;36mand =    3325[0m  [1;35mlev =   11[0m [1;35m(10.97)[0m  mem = 1.19 MB
+[1;37m/lecout/rawbase0_gold[0m : i/o =  73468/   2227  [1;36mand =    3325[0m  [1;35mlev =   11[0m [1;35m(10.97)[0m  mem = 1.19 MB
+SAT solver statistics:
+CO =     2227  AND =     3325  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls   2227  (100.00 %)   Ave conf =      0.0   Time =     0.25 sec ( 21.31 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     1.18 sec
+[1;37m/lecout/rawbase0_gold[0m : i/o =  73468/   2227  [1;36mand =    3325[0m  [1;35mlev =   11[0m [1;35m(10.97)[0m  mem = 1.19 MB
+
+universal raw-D bases gold: 0 / 2227 proved with all RTL X and state free
+==== rawbase1_gate
+======== ABC command line "&r /lecout/rawbase1_gate.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/rawbase1_gate_swept.aig"
+[1;37m/lecout/rawbase1_gate[0m : i/o =  81021/   2227  [1;36mand =    3328[0m  [1;35mlev =   12[0m [1;35m(9.98)[0m  mem = 1.31 MB
+[1;37m/lecout/rawbase1_gate[0m : i/o =  81021/   2227  [1;36mand =    3328[0m  [1;35mlev =   12[0m [1;35m(9.98)[0m  mem = 1.31 MB
+SAT solver statistics:
+CO =     2227  AND =     3328  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls   2227  (100.00 %)   Ave conf =      0.0   Time =     0.26 sec ( 21.49 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     1.21 sec
+[1;37m/lecout/rawbase1_gate[0m : i/o =  81021/   2227  [1;36mand =    3328[0m  [1;35mlev =   12[0m [1;35m(9.98)[0m  mem = 1.31 MB
+
+universal raw-D bases gate: 0 / 2227 proved with all RTL X and state free
+no-reset constants: 11 constant hypotheses dropped (not that constant in the reset state: X power-up until a load) ['both:ff:u_dut.g_leaf[10].u_leaf.last0=0', 'both:ff:u_dut.g_leaf[1].u_leaf.last0=0', 'both:ff:u_dut.g_leaf[2].u_leaf.last0=0', 'both:ff:u_dut.g_leaf[3].u_leaf.last0=0', 'both:ff:u_dut.g_leaf[4].u_leaf.last0=0', 'both:ff:u_dut.g_leaf[5].u_leaf.last0=0']
+==== hyp0
+======== ABC command line "&r /lecout/hyp0.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp0_swept.aig"
+[1;37m/lecout/hyp0[0m : i/o =  61690/  10430  [1;36mand =    5989[0m  [1;35mlev =   12[0m [1;35m(4.46)[0m  mem = 1.17 MB
+[1;37m/lecout/hyp0[0m : i/o =  61690/  10430  [1;36mand =    3202[0m  [1;35mlev =   11[0m [1;35m(4.68)[0m  mem = 1.14 MB
+SAT solver statistics:
+CO =    10430  AND =     3202  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls   4450  (100.00 %)   Ave conf =      0.0   Time =     0.32 sec ( 25.20 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     1.26 sec
+[1;37m/lecout/hyp0[0m : i/o =  61690/  10430  [1;36mand =    3202[0m  [1;35mlev =   11[0m [1;35m(4.68)[0m  mem = 1.14 MB
+
+correspondence round 0: 10430 hypotheses, 4450 failed (0 undecided) ['hyp:both:ff:u_dut.g_leaf[0].u_leaf.calendar[0]', 'hyp:bothg:ff:u_dut.g_leaf[0].u_leaf.calendar[0]', 'hyp:both:ff:u_dut.g_leaf[0].u_leaf.calendar[100]', 'hyp:bothg:ff:u_dut.g_leaf[0].u_leaf.calendar[100]', 'hyp:both:ff:u_dut.g_leaf[0].u_leaf.calendar[101]', 'hyp:bothg:ff:u_dut.g_leaf[0].u_leaf.calendar[101]']
+trace proposals: 534 register relations from equal sequential traces
+simulation refinement: 241 hypotheses refuted by concrete witnesses in 25 iterations
+eq-to-const hypotheses resolved: 2 ['gold:ff:u_dut.g_leaf[8].u_leaf.loops_one_q=0', 'gold:ff:u_dut.g_leaf[9].u_leaf.loops_one_q=0']
+==== rawbase2_gold
+======== ABC command line "&r /lecout/rawbase2_gold.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/rawbase2_gold_swept.aig"
+[1;37m/lecout/rawbase2_gold[0m : i/o =  73468/     12  [1;36mand =     279[0m  [1;35mlev =   34[0m [1;35m(12.00)[0m  mem = 1.13 MB
+[1;37m/lecout/rawbase2_gold[0m : i/o =  73468/     12  [1;36mand =     270[0m  [1;35mlev =   32[0m [1;35m(11.50)[0m  mem = 1.13 MB
+SAT solver statistics:
+CO =       12  AND =      270  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls     12  (100.00 %)   Ave conf =      0.2   Time =     0.00 sec ( 11.44 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.01 sec
+[1;37m/lecout/rawbase2_gold[0m : i/o =  73468/     12  [1;36mand =     270[0m  [1;35mlev =   32[0m [1;35m(11.50)[0m  mem = 1.13 MB
+
+universal raw-D bases gold: 0 / 12 proved with all RTL X and state free
+==== rawbase3_gate
+======== ABC command line "&r /lecout/rawbase3_gate.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/rawbase3_gate_swept.aig"
+[1;37m/lecout/rawbase3_gate[0m : i/o =  81021/     10  [1;36mand =     201[0m  [1;35mlev =   14[0m [1;35m(8.30)[0m  mem = 1.24 MB
+[1;37m/lecout/rawbase3_gate[0m : i/o =  81021/     10  [1;36mand =     185[0m  [1;35mlev =   13[0m [1;35m(8.10)[0m  mem = 1.24 MB
+SAT solver statistics:
+CO =       10  AND =      185  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls     10  (100.00 %)   Ave conf =      0.0   Time =     0.00 sec ( 10.32 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.01 sec
+[1;37m/lecout/rawbase3_gate[0m : i/o =  81021/     10  [1;36mand =     185[0m  [1;35mlev =   13[0m [1;35m(8.10)[0m  mem = 1.24 MB
+
+universal raw-D bases gate: 0 / 10 proved with all RTL X and state free
+no-reset constants: 5 constant hypotheses dropped (not that constant in the reset state: X power-up until a load) ['both:ff:u_dut.g_leaf[6].u_leaf.last0=0', 'both:ff:u_dut.p_sv=0', 'both:ff:u_dut.g_leaf[10].u_leaf.loops_one=0', 'both:ff:u_dut.g_leaf[8].u_leaf.loops_one=0', 'both:ff:u_dut.g_leaf[9].u_leaf.loops_one=0']
+==== hyp1
+======== ABC command line "&r /lecout/hyp1.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp1_swept.aig"
+[1;37m/lecout/hyp1[0m : i/o =  59233/  14614  [1;36mand =    6038[0m  [1;35mlev =   12[0m [1;35m(3.19)[0m  mem = 1.20 MB
+[1;37m/lecout/hyp1[0m : i/o =  59233/  14614  [1;36mand =    3223[0m  [1;35mlev =   11[0m [1;35m(3.34)[0m  mem = 1.16 MB
+SAT solver statistics:
+CO =    14614  AND =     3223  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls   4444  (100.00 %)   Ave conf =      0.0   Time =     0.47 sec ( 24.09 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     1.93 sec
+[1;37m/lecout/hyp1[0m : i/o =  59233/  14614  [1;36mand =    3223[0m  [1;35mlev =   11[0m [1;35m(3.34)[0m  mem = 1.16 MB
+
+correspondence round 1: 14614 hypotheses, 4444 failed (0 undecided) ['hyp:both:ff:u_dut.g_leaf[0].u_leaf.calendar[0]', 'hyp:bothg:ff:u_dut.g_leaf[0].u_leaf.calendar[0]', 'hyp:both:ff:u_dut.g_leaf[0].u_leaf.calendar[100]', 'hyp:bothg:ff:u_dut.g_leaf[0].u_leaf.calendar[100]', 'hyp:both:ff:u_dut.g_leaf[0].u_leaf.calendar[101]', 'hyp:bothg:ff:u_dut.g_leaf[0].u_leaf.calendar[101]']
+simulation refinement: 1991 hypotheses refuted by concrete witnesses in 4 iterations
+==== hyp2
+======== ABC command line "&r /lecout/hyp2.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp2_swept.aig"
+[1;37m/lecout/hyp2[0m : i/o =  63444/   6191  [1;36mand =      15[0m  [1;35mlev =    4[0m [1;35m(0.00)[0m  mem = 1.06 MB
+[1;37m/lecout/hyp2[0m : i/o =  63444/   6191  [1;36mand =      15[0m  [1;35mlev =    4[0m [1;35m(0.00)[0m  mem = 1.06 MB
+SAT solver statistics:
+CO =     6191  AND =       15  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      2  (100.00 %)   Ave conf =      0.0   Time =     0.00 sec (  3.58 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/lecout/hyp2[0m : i/o =  63444/   6191  [1;36mand =      15[0m  [1;35mlev =    4[0m [1;35m(0.00)[0m  mem = 1.06 MB
+
+correspondence round 2: 6191 hypotheses, 2 failed (0 undecided) ['hyp:gold:ff:u_dut.g_leaf[8].u_leaf.loops_one_q', 'hyp:gold:ff:u_dut.g_leaf[9].u_leaf.loops_one_q']
+==== hyp3
+======== ABC command line "&r /lecout/hyp3.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp3_swept.aig"
+[1;37m/lecout/hyp3[0m : i/o =  63446/   6189  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.06 MB
+[1;37m/lecout/hyp3[0m : i/o =  63446/   6189  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.06 MB
+SAT solver statistics:
+CO =     6189  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/lecout/hyp3[0m : i/o =  63446/   6189  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.06 MB
+
+correspondence round 3: 6189 hypotheses, 0 failed (0 undecided) []
+structural twin closure: 2 relations proposed
+simulation refinement: 4 hypotheses refuted by concrete witnesses in 5 iterations
+==== hyp4
+======== ABC command line "&r /lecout/hyp4.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp4_swept.aig"
+[1;37m/lecout/hyp4[0m : i/o =  63444/   6191  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.06 MB
+[1;37m/lecout/hyp4[0m : i/o =  63444/   6191  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.06 MB
+SAT solver statistics:
+CO =     6191  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/lecout/hyp4[0m : i/o =  63444/   6191  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.06 MB
+
+correspondence round 4: 6191 hypotheses, 0 failed (0 undecided) []
+matched copy closure: 2 matched registers proposed equal to a matched copy of equal trace and next state
+simulation refinement: 2 hypotheses refuted by concrete witnesses in 4 iterations
+==== hyp5
+======== ABC command line "&r /lecout/hyp5.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp5_swept.aig"
+[1;37m/lecout/hyp5[0m : i/o =  63444/   6191  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.06 MB
+[1;37m/lecout/hyp5[0m : i/o =  63444/   6191  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.06 MB
+SAT solver statistics:
+CO =     6191  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/lecout/hyp5[0m : i/o =  63444/   6191  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.06 MB
+
+correspondence round 5: 6191 hypotheses, 0 failed (0 undecided) []
+trace constant closure: 862 registers of constant sequential trace proposed constant
+==== rawbase4_gold
+======== ABC command line "&r /lecout/rawbase4_gold.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/rawbase4_gold_swept.aig"
+[1;37m/lecout/rawbase4_gold[0m : i/o =  73468/    862  [1;36mand =   28474[0m  [1;35mlev =   34[0m [1;35m(23.69)[0m  mem = 1.46 MB
+[1;37m/lecout/rawbase4_gold[0m : i/o =  73468/    862  [1;36mand =   25153[0m  [1;35mlev =   35[0m [1;35m(23.26)[0m  mem = 1.42 MB
+SAT solver statistics:
+CO =      862  AND =    25153  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls    862  (100.00 %)   Ave conf =      0.2   Time =     0.19 sec ( 36.25 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.52 sec
+[1;37m/lecout/rawbase4_gold[0m : i/o =  73468/    862  [1;36mand =   25153[0m  [1;35mlev =   35[0m [1;35m(23.26)[0m  mem = 1.42 MB
+
+universal raw-D bases gold: 0 / 862 proved with all RTL X and state free
+==== rawbase5_gate
+======== ABC command line "&r /lecout/rawbase5_gate.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/rawbase5_gate_swept.aig"
+[1;37m/lecout/rawbase5_gate[0m : i/o =  81021/    862  [1;36mand =    9309[0m  [1;35mlev =   18[0m [1;35m(9.81)[0m  mem = 1.36 MB
+[1;37m/lecout/rawbase5_gate[0m : i/o =  81021/    862  [1;36mand =    8744[0m  [1;35mlev =   18[0m [1;35m(9.72)[0m  mem = 1.35 MB
+SAT solver statistics:
+CO =      862  AND =     8744  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls    862  (100.00 %)   Ave conf =      0.1   Time =     0.12 sec ( 23.67 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.51 sec
+[1;37m/lecout/rawbase5_gate[0m : i/o =  81021/    862  [1;36mand =    8744[0m  [1;35mlev =   18[0m [1;35m(9.72)[0m  mem = 1.35 MB
+
+universal raw-D bases gate: 0 / 862 proved with all RTL X and state free
+no-reset constants: 862 constant hypotheses dropped (not that constant in the reset state: X power-up until a load) ['both:ff:u_dut.g_leaf[0].u_leaf.base[0]=0', 'both:ff:u_dut.g_leaf[0].u_leaf.base[10]=0', 'both:ff:u_dut.g_leaf[0].u_leaf.base[1]=0', 'both:ff:u_dut.g_leaf[0].u_leaf.base[2]=0', 'both:ff:u_dut.g_leaf[0].u_leaf.base[3]=0', 'both:ff:u_dut.g_leaf[0].u_leaf.base[4]=0']
+simulation refinement: 3 hypotheses refuted by concrete witnesses in 5 iterations
+==== hyp6
+======== ABC command line "&r /lecout/hyp6.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp6_swept.aig"
+[1;37m/lecout/hyp6[0m : i/o =  63444/   6191  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.06 MB
+[1;37m/lecout/hyp6[0m : i/o =  63444/   6191  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.06 MB
+SAT solver statistics:
+CO =     6191  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/lecout/hyp6[0m : i/o =  63444/   6191  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.06 MB
+
+correspondence round 6: 6191 hypotheses, 0 failed (0 undecided) []
+correspondence round 6: the same proved set (3505 hypotheses) recurred 3x with no surviving closure change; fixpoint, returned
+==== miter
+======== ABC command line "&r /lecout/miter.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/miter_swept.aig"
+[1;37m/lecout/miter[0m : i/o =  63444/  54439  [1;36mand =  198777[0m  [1;35mlev =   88[0m [1;35m(2.11)[0m  mem = 4.07 MB
+[1;37m/lecout/miter[0m : i/o =  63444/  54439  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.80 MB
+SAT solver statistics:
+CO =    54439  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/lecout/miter[0m : i/o =  63444/  54439  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.80 MB

@@ -1,0 +1,26 @@
+{
+  "status": "PASS_CONDITIONAL_NATIVE_STOREA_SOURCE_EQ",
+  "official_lec": "EQUIVALENT",
+  "counts": {
+    "compare_points": 25760,
+    "proved": 25760,
+    "differs": 0,
+    "undecided": 0
+  },
+  "native_master_count": 32,
+  "source_snapshot": "97949a4f99316b4c12c97faf985517aa4270ae4f",
+  "hint_snapshot": "834797670",
+  "actual_unit": "oth-ubuntu-1885065-1793622537",
+  "actual_out": "intel2:/srv/opentallas-scratch2/claude/codex-storeA-native-cubes-0435/lec",
+  "typed_candidates": 36,
+  "retained_predecode_cubes": 32,
+  "retained_constants": 4,
+  "hints_dropped": 0,
+  "reset_assertion_edges": 4,
+  "historical_reset64_inherited": false,
+  "physical_parent_reset_phase": "HELD: actual exportedCTL region1 reset, deliveredparentreset/reset66 START join notqualified",
+  "SRC13_unchanged": true,
+  "PNR_dispatched": false,
+  "earlier_official": "0120 UNPROVEN128 remainshistorical",
+  "small_positive_and_mutant": "BASE firstactualcapture+3edges SATPASS; wrongdecoder inputpolarity caught"
+}

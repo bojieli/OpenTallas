@@ -1,0 +1,7 @@
+RAW_SAMPLE tile=0 ordinal=0 lane0=c3174c00
+RAW_SAMPLE tile=0 ordinal=56 lane0=c3312600
+PASS_NATIVE_B_PILOT tile=0 raw_requests64 responses64 raw_vectors64 useful_vectors=64 nominal833ps
+- tb_native_head_B_pilot.sv:73: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 135ns; walltime 2.578 s; speed 52.340 ns/s
+- Verilator: cpu 2.501 s on 1 threads; allocated 63 MB

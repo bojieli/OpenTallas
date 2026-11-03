@@ -1,0 +1,93 @@
+{
+ "core_source_sha256": "5d45a822fe5a7550e98e274ebb7d19f4c27ac1f3e3352daefa0258b9a29b5b04",
+ "core_module_header": "module qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1(rst_n,pw,dh,init_u0,ctx_x,mu_fault,dh_user,kok,kwd,fab,program_obs,control_stores_ready,layer_context_v,native_tok,native_pos,command_stage,cal_program_obs,cal_descriptor_obs,cal_image_ready,dc,native_cmd,native_ret,hr,cmd,tl,ss5,ag5,emb_start,emb_token,emb_position,emb_user,cf,f16_auth,f16_obs,f16_st,table_req,ck_core,ck_hr);",
+ "actual_wtn_callsite": "qfd_tt_ctlm_dv_wtn \\u_gi.g_wtn.u_wtn (.auth({n_69796,n_69795,n_69794,n_69793,n_69792,n_69791,n_69790,n_69789,n_69788,n_69787,n_69786,n_69785,n_69784,n_69783,n_69782,n_69781,n_69780,n_69779,n_69778,n_69777,n_69776,n_69775,n_69774,n_69773,n_69772,n_69771,n_69770,n_69769,n_69768,n_69767,n_69766,n_69765,n_69764,n_69763,n_69762,n_69761,n_69760,n_69759,n_69758,n_69757,n_69756,n_69755,n_69754,n_69753,n_69752,n_69751,n_69750,n_69749,n_69748,n_69747,n_69746,n_69745,n_69744,n_69743,n_69742,n_69741,n_69740,n_69739,n_69738,n_69737,n_69736,n_69735,n_69734,n_69733,n_69732,n_69731,n_69730,n_69729,n_69728,n_69727,n_69726,n_69725,n_69724,n_69723,n_69722,n_69721,n_69720,n_69719,n_69718,n_69717,n_69716,n_69715,n_69714}),.ck(n_3159),.obs({n_69834,n_69833,n_69832,n_69831,n_69830,n_69829,n_69828,n_69827,n_69826,n_69825,n_69824,n_69823,n_69822,n_69821,n_69820,n_69819,n_69818,n_69817,n_69816,n_69815,n_69814,n_69813,n_69812,n_69811,n_69810,n_69809,n_69808,n_69807,n_69806,n_69805,n_69804,n_69803,n_69802,n_69801,n_69800,n_69799,n_69798,n_69797}),.pw({n_77,n_76,n_75,n_74,n_73,n_72,n_71,n_70,n_69,n_68,n_67,n_66,n_65,n_64,n_63,n_62,n_61,n_60,n_59,n_58,n_57,n_56,n_55,n_54,n_53,n_52,n_51,n_50,n_49,n_48,n_47,n_46,n_45,n_44,n_43,n_42,n_41,n_40,n_39,n_38,n_37,n_36,n_35,n_34,n_33,n_32,n_31,n_30,n_29,n_28,n_27,n_26,n_25,n_24,n_23,n_22,n_21,n_20,n_19,n_18,n_17,n_16,n_15,n_14,n_13,n_12,n_11,n_10,n_9,n_8,n_7,n_6,n_5,n_4,n_3}),.retire({n_19740,n_7320,n_7318,n_65410}),.rst_n(n_96145),.st({n_53842,n_69850,n_69849,n_69848,n_69847,n_69846,n_69845,n_69844,n_69843,n_69842,n_69841,n_69840,n_69839,n_69838,n_69837,n_69836,n_69835}),.start({n_59038,n_66431,n_66430,n_28639,n_24976,n_24978,n_28637,n_24980,n_28634,n_69517,n_69515,n_69513,n_69511,n_69509,n_69507,n_69505,n_69503,n_69501,n_69499,n_69497,n_69495,n_69493,n_69491,n_69489,n_69487}));",
+ "clock_alias": {
+  "kind": "assign",
+  "rhs": "ck_core",
+  "text": "assign n_3159 = ck_core;"
+ },
+ "control_reset_source": "n_96145",
+ "reset_trace": [
+  {
+   "net": "n_96145",
+   "kind": "qfd_bmath_dff_p",
+   "params": ".ID(0)",
+   "instance": "u_75372",
+   "ports": {
+    "C": "n_3159",
+    "D": "n_96268",
+    "Q": "n_96145"
+   },
+   "text": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_p #(.ID(0)) u_75372(.C(n_3159),.D(n_96268),.Q(n_96145));"
+  },
+  {
+   "net": "n_96268",
+   "kind": "qfd_bmath_dff_p",
+   "params": ".ID(0)",
+   "instance": "u_75495",
+   "ports": {
+    "C": "n_3159",
+    "D": "n_17658",
+    "Q": "n_96268"
+   },
+   "text": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_p #(.ID(0)) u_75495(.C(n_3159),.D(n_17658),.Q(n_96268));"
+  },
+  {
+   "net": "n_17658",
+   "kind": "qfd_bmath_dff_p",
+   "params": ".ID(0)",
+   "instance": "u_7255",
+   "ports": {
+    "C": "n_3159",
+    "D": "n_17654",
+    "Q": "n_17658"
+   },
+   "text": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_p #(.ID(0)) u_7255(.C(n_3159),.D(n_17654),.Q(n_17658));"
+  },
+  {
+   "net": "n_17654",
+   "kind": "qfd_bmath_dff_p",
+   "params": ".ID(0)",
+   "instance": "u_7250",
+   "ports": {
+    "C": "n_3159",
+    "D": "n_17653",
+    "Q": "n_17654"
+   },
+   "text": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_p #(.ID(0)) u_7250(.C(n_3159),.D(n_17653),.Q(n_17654));"
+  },
+  {
+   "net": "n_17653",
+   "kind": "qfd_bmath_dff_p",
+   "params": ".ID(0)",
+   "instance": "u_7249",
+   "ports": {
+    "C": "n_3159",
+    "D": "n_17652",
+    "Q": "n_17653"
+   },
+   "text": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_p #(.ID(0)) u_7249(.C(n_3159),.D(n_17652),.Q(n_17653));"
+  },
+  {
+   "net": "n_17652",
+   "kind": "qfd_bmath_dff_p",
+   "params": ".ID(0)",
+   "instance": "u_7248",
+   "ports": {
+    "C": "n_3159",
+    "D": "n_2",
+    "Q": "n_17652"
+   },
+   "text": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_p #(.ID(0)) u_7248(.C(n_3159),.D(n_2),.Q(n_17652));"
+  },
+  {
+   "net": "n_2",
+   "kind": "assign",
+   "rhs": "rst_n",
+   "text": "assign n_2 = rst_n;"
+  }
+ ],
+ "reset_trace_terminal": "rst_n",
+ "reset_registered_edges": 6
+}

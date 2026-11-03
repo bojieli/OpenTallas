@@ -1,0 +1,121 @@
+{
+  "status": "PASS_DISABLED_SOURCE_OVERLAY_COMPOSITION_NOT_FRONTEND_QUALIFIED",
+  "definitions": 32,
+  "native47_programme_preserved_sha256": {
+    "hbm_arch_q_b113": "0ba633e0d92f6f983212cdfd77f3c82d936a24848d8760a349ccdcd2108325ee",
+    "hbm_arch_q_b113__physical_v1": "6c175698a39b596ddfbd047c80eff1e0ca3e0e93213ded9ab16c937e57bb3c88",
+    "hbm_arch_q_su31__physical_v1": "aeee33ed1ea131dc8efebb097358fd4bbb78d6ef482331f3ff0113766c7a58cd",
+    "hbm_arch_q_b002": "9b05ca5656853393a618ffb52bc8fb48898fbb52bf398d448dd0a66b7cbdba54",
+    "hbm_arch_q_b002__physical_v1": "11f82b462f6d1a7b212c88b5449846945c954370aff83859674201e85a6b46e2"
+  },
+  "actual_native_stage_checks": [
+    {
+      "module": "hbm_arch_q_su00",
+      "slot": "L730x1",
+      "width": 1662,
+      "stages": 8
+    },
+    {
+      "module": "hbm_arch_q_su00__physical_v1",
+      "slot": "L730x1",
+      "width": 1662,
+      "stages": 8
+    },
+    {
+      "module": "hbm_arch_q_spu0",
+      "slot": "L730x5",
+      "width": 1662,
+      "stages": 6
+    },
+    {
+      "module": "hbm_arch_q_spu0__physical_v1",
+      "slot": "L730x5",
+      "width": 1662,
+      "stages": 6
+    },
+    {
+      "module": "hbm_arch_q_su11",
+      "slot": "L730x7",
+      "width": 1662,
+      "stages": 8
+    },
+    {
+      "module": "hbm_arch_q_su11__physical_v1",
+      "slot": "L730x7",
+      "width": 1662,
+      "stages": 8
+    },
+    {
+      "module": "hbm_arch_q_su31",
+      "slot": "L5r0_1",
+      "width": 128,
+      "stages": 7
+    },
+    {
+      "module": "hbm_arch_q_su31__physical_v1",
+      "slot": "L5r0_1",
+      "width": 128,
+      "stages": 8
+    },
+    {
+      "module": "hbm_arch_q_b002",
+      "slot": "L731x2",
+      "width": 596,
+      "stages": 10
+    },
+    {
+      "module": "hbm_arch_q_b002__physical_v1",
+      "slot": "L731x2",
+      "width": 596,
+      "stages": 10
+    }
+  ],
+  "programme_parent_connection_guard": [
+    {
+      "module": "hbm_arch_q_hub__q_hub_nw",
+      "ports": 335,
+      "connections": 335,
+      "missing": [],
+      "extra": []
+    },
+    {
+      "module": "hbm_arch_q_b113",
+      "ports": 188,
+      "connections": 188,
+      "missing": [],
+      "extra": []
+    },
+    {
+      "module": "hbm_arch_q_hub__q_hub_ne",
+      "ports": 327,
+      "connections": 327,
+      "missing": [],
+      "extra": []
+    },
+    {
+      "module": "hbm_arch_q_b113__physical_v1",
+      "ports": 188,
+      "connections": 188,
+      "missing": [],
+      "extra": []
+    }
+  ],
+  "parent_width_join": "parent_width_join.json",
+  "wrong_width_control": {
+    "status": "CAUGHT",
+    "mutation": "one actual QUERY endpoint width+1 (epoch mismatch)",
+    "reason": "('endpoint widths differ', 'x_NE_hub_L160m_o_NE_b000', [{'instance': 'NE_b000', 'module': 'hbm_arch_q_b000', 'port': 'L160m_i', 'old_width': 4987, 'new_width': 4985}, {'instance': 'NE_hub', 'module': "
+  },
+  "source_proof_transfer": false,
+  "source13_mutated": false,
+  "frontend_built": false,
+  "PNR_dispatched": false,
+  "held": [
+    "This is a32definition overlay plusparent, not whole source closure",
+    "Changed native child frontends must be rebuilt before generated-parent reuse",
+    "Actual QUERY/47/programme source and global numerical mission proofs remain distinct",
+    "Current physical/source/model/clock/reset/START adoption remains held"
+  ],
+  "inputs": "input_manifest_same_tokens.json",
+  "generator_inputs": "QUERY1db7a4e6b + native47source supplement + programme directreset event"
+}

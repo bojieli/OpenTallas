@@ -1,0 +1,40 @@
+{
+  "source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/selected_preprocessed.sv",
+  "selected_modules": [
+    {
+      "module": "hbm_arch_q_b000",
+      "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/bound/hbm_arch_q_b000.sv\" 1",
+      "sha256": "fec78e19bae4d6218de87e69d4f27611a33006a26f44841d1cf8b3ff92aab838"
+    },
+    {
+      "module": "hbm_arch_q_b000__physical_v1",
+      "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/bound/hbm_arch_q_b000__physical_v1.sv\" 1",
+      "sha256": "a8f71ef46aa2d68286d2547b948d1ac5e0571a4742d59c993d17b00f7c8c24c5"
+    },
+    {
+      "module": "hbm_arch_q_b100",
+      "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/bound/hbm_arch_q_b100.sv\" 1",
+      "sha256": "c078de26153c02a38143e408d162d9829f2a8cff8971dea2f1951ef0073cf939"
+    },
+    {
+      "module": "hbm_arch_q_b100__physical_v1",
+      "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/bound/hbm_arch_q_b100__physical_v1.sv\" 1",
+      "sha256": "b25778f0fc4764b9657f75dbe2e5503f567140aee64495dd13c7ae0702ddff85"
+    },
+    {
+      "module": "hbm_arch_q_hub__q_hub_ne",
+      "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/bound/hbm_arch_q_hub__q_hub_ne.sv\" 1",
+      "sha256": "e1e23fdbddecc14dd291806420ce97e6bff21c8c91b31d9de4051d74a72c69ab"
+    },
+    {
+      "module": "hbm_arch_q_hub__q_hub_nw",
+      "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/bound/hbm_arch_q_hub__q_hub_nw.sv\" 1",
+      "sha256": "1fd067da80ce3f7f96eedad5e2766c87d30f72d9ad542927440c4cb342b87626"
+    },
+    {
+      "module": "ot_hbm_idx_query_static",
+      "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/ot_hbm_idx_query_static.sv\" 1",
+      "sha256": "dfb1cc11342a03ab6d26d99ed0f6b30d5b683ae0a824749da109aea6e6b50e66"
+    }
+  ]
+}

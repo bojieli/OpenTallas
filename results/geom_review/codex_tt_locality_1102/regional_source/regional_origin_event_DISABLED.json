@@ -1,0 +1,328 @@
+{
+ "schema": "opentallas.tt_regional_origin_event.v1",
+ "enabled": false,
+ "type": "tt_ctlm",
+ "cohort": "exact existing TT_C63tap",
+ "source_wrapper": "/home/ubuntu/coord/tmp/codex_tt_locality_1102/frozen_bound.sv",
+ "source_sha256": "257dbcf6a07ad81558b83122204fe4df7b4430e94cf478f4ea67fa368f4e0e05",
+ "candidate_sha256": "f46fd0964c31660911021559bbb27d7a45de316db9308c1f333a5fa680795c0b",
+ "opt_in_parameter": "OT_TT_REGIONAL_ORIGIN",
+ "default": 0,
+ "padw": 1,
+ "regions": 4,
+ "receiver_regions": {
+  "u_bound.u_cland_fstart_cal_descriptor_obs": 0,
+  "u_bound.u_cland_fstart_cal_image_ready": 0,
+  "u_bound.u_cland_fstart_cal_program_obs": 0,
+  "u_bound.u_cland_fstart_cmd": 1,
+  "u_bound.u_cland_fstart_command_stage__to_glue__sys_face__tt_command_stage": 0,
+  "u_bound.u_cland_fstart_command_stage__to_native59__command_stage": 0,
+  "u_bound.u_cland_fstart_control_stores_ready": 0,
+  "u_bound.u_cland_fstart_dc": 0,
+  "u_bound.u_cland_fstart_emb_position": 0,
+  "u_bound.u_cland_fstart_emb_start__to_glue__embed_prov__core_start": 0,
+  "u_bound.u_cland_fstart_emb_start__to_native59__head_prepare_v": 0,
+  "u_bound.u_cland_fstart_emb_token__to_glue__embed_prov__core_token": 0,
+  "u_bound.u_cland_fstart_emb_token__to_native59__head_prepare_token": 0,
+  "u_bound.u_cland_fstart_emb_user": 0,
+  "u_bound.u_cland_fstart_flt_o": 0,
+  "u_bound.u_cland_fstart_hr": 1,
+  "u_bound.u_cland_fstart_layer_context_v__to_glue__sys_face__tt_layer_context_v": 0,
+  "u_bound.u_cland_fstart_layer_context_v__to_native59__layer_context_v": 0,
+  "u_bound.u_cland_fstart_native_cmd": 0,
+  "u_bound.u_cland_fstart_native_pos__to_glue__sys_face__tt_native_pos": 0,
+  "u_bound.u_cland_fstart_native_pos__to_native59__native_position": 0,
+  "u_bound.u_cland_fstart_native_tok__to_glue__sys_face__tt_native_tok": 0,
+  "u_bound.u_cland_fstart_native_tok__to_native59__native_token": 0,
+  "u_bound.u_cland_fstart_program_obs": 0,
+  "u_bound.u_cland_fstart_table_req": 3,
+  "u_bound.u_cland_fstart_tl": 3,
+  "u_bound.u_cland_ag5": 1,
+  "u_bound.u_cland_ctx_x": 0,
+  "u_bound.u_cland_dh": 0,
+  "u_bound.u_cland_dh_user": 0,
+  "u_bound.u_cland_fab": 0,
+  "u_bound.u_cland_kok": 0,
+  "u_bound.u_cland_kwd": 2,
+  "u_bound.u_cland_mu_flt_i": 0,
+  "u_bound.u_cland_native_ret": 0,
+  "u_bound.u_cland_pw": 2,
+  "u_bound.u_cland_ss5": 1
+ },
+ "homes": [
+  {
+   "stage": "s1",
+   "region": 0,
+   "xy": [
+    194.4,
+    130.005
+   ],
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    193.85999999999999,
+    129.87,
+    194.94000000000003,
+    130.14
+   ]
+  },
+  {
+   "stage": "s2",
+   "region": 0,
+   "xy": [
+    194.39999999999998,
+    129.465
+   ],
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    193.85999999999999,
+    129.33,
+    194.93999999999997,
+    129.6
+   ]
+  },
+  {
+   "stage": "pd",
+   "region": 0,
+   "xy": [
+    197.64,
+    129.46500000000003
+   ],
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    197.1,
+    129.33000000000004,
+    198.17999999999998,
+    129.60000000000002
+   ]
+  },
+  {
+   "stage": "s1",
+   "region": 1,
+   "xy": [
+    583.2,
+    130.275
+   ],
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    582.6600000000001,
+    130.14,
+    583.74,
+    130.41000000000003
+   ]
+  },
+  {
+   "stage": "s2",
+   "region": 1,
+   "xy": [
+    583.1999999999999,
+    129.735
+   ],
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    582.66,
+    129.60000000000002,
+    583.7399999999999,
+    129.87
+   ]
+  },
+  {
+   "stage": "pd",
+   "region": 1,
+   "xy": [
+    586.4399999999999,
+    129.735
+   ],
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    585.9,
+    129.60000000000002,
+    586.9799999999999,
+    129.87
+   ]
+  },
+  {
+   "stage": "s1",
+   "region": 2,
+   "xy": [
+    388.8,
+    173.20500000000004
+   ],
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    388.26,
+    173.07000000000005,
+    389.34000000000003,
+    173.34000000000003
+   ]
+  },
+  {
+   "stage": "s2",
+   "region": 2,
+   "xy": [
+    388.79999999999995,
+    172.665
+   ],
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    388.26,
+    172.53,
+    389.3399999999999,
+    172.79999999999998
+   ]
+  },
+  {
+   "stage": "pd",
+   "region": 2,
+   "xy": [
+    392.03999999999996,
+    172.665
+   ],
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    391.5,
+    172.52999999999997,
+    392.5799999999999,
+    172.8
+   ]
+  },
+  {
+   "stage": "s1",
+   "region": 3,
+   "xy": [
+    522.288,
+    328.45500000000004
+   ],
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    521.748,
+    328.32000000000005,
+    522.828,
+    328.59000000000003
+   ]
+  },
+  {
+   "stage": "s2",
+   "region": 3,
+   "xy": [
+    583.1999999999999,
+    388.665
+   ],
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    582.66,
+    388.53000000000003,
+    583.7399999999999,
+    388.8
+   ]
+  },
+  {
+   "stage": "pd",
+   "region": 3,
+   "xy": [
+    586.4399999999999,
+    388.665
+   ],
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    585.9,
+    388.53000000000003,
+    586.9799999999999,
+    388.8
+   ]
+  }
+ ],
+ "raw_regional_leaves": [
+  {
+   "name": "u_bound.g_tt_raw_regions.g_region[0].u_raw_copy/q",
+   "xy": [
+    196.01999999999998,
+    130.00500000000002
+   ],
+   "parent": "rst_rl_85",
+   "depth": 3,
+   "clock": "clk",
+   "role": "raw"
+  },
+  {
+   "name": "u_bound.g_tt_raw_regions.g_region[1].u_raw_copy/q",
+   "xy": [
+    581.5799999999999,
+    130.00500000000002
+   ],
+   "parent": "rst_rl_85",
+   "depth": 3,
+   "clock": "clk",
+   "role": "raw"
+  },
+  {
+   "name": "u_bound.g_tt_raw_regions.g_region[2].u_raw_copy/q",
+   "xy": [
+    390.41999999999996,
+    173.47500000000005
+   ],
+   "parent": "rst_rl_85",
+   "depth": 3,
+   "clock": "clk",
+   "role": "raw"
+  },
+  {
+   "name": "u_bound.g_tt_raw_regions.g_region[3].u_raw_copy/q",
+   "xy": [
+    581.5799999999999,
+    388.125
+   ],
+   "parent": "rst_rl_85",
+   "depth": 3,
+   "clock": "clk",
+   "role": "raw"
+  }
+ ],
+ "clock_association": "../composed_final/final_clock_association_DISABLED.json.gz",
+ "price": {
+  "added_mission_cycles": 0,
+  "added_boot_cycles": 0,
+  "added_posedge_clock_sinks": 13,
+  "added_raw_reset_sinks": 9,
+  "added_upstream_reset_data_sinks": 4,
+  "added_input_p_start_sinks": 0,
+  "added_s0_data_sinks": 3,
+  "added_strap_pad_mux_consumers": 3,
+  "old_state_ff_including_parent_raw_leaf": 6,
+  "new_state_ff_including_parent_and_copies": 19,
+  "added_state_ff": 13,
+  "clock": "same existing clk, no new root/guide",
+  "reset": "retain existing central rst_n_t0/u_rrl_87;4 same-D/CLK/depth copies from rst_rl_85; regional branch resets/FSTART take local copy; no new release edge"
+ },
+ "preserved": [
+  "SF/S0 sampling and input fanout",
+  "all old start/start_d output functions",
+  "existing pins/macro homes/ports/type and pad count"
+ ],
+ "paired_gates": [
+  "native local reset64 lockstep and mutants",
+  "parent clock/reset load model and reset/source tree rederive as ONE event",
+  "typed all-pair geometry including actual macro ports",
+  "actual GEN/G0C0new/strictbind0/LOOK before physical",
+  "no partial45-only placement or full LEC rerun"
+ ],
+ "source_files": {
+  "replace": {
+   "qfd_qc_tt_ctlm_part_bound.sv": "results/geom_review/codex_tt_locality_1102/regional_source/qfd_qc_tt_ctlm_part_bound_DISABLED.sv",
+   "qfd_qc_tt_ctlm_part.sv": "results/geom_review/codex_tt_locality_1102/regional_source/qfd_qc_tt_ctlm_part_DISABLED.sv"
+  },
+  "append": [
+   "tools/die_plan/tt_regional_origin/ot_dp_landing_origin_s_regional.sv"
+  ]
+ },
+ "top_parameter": "qfd_qc_tt_ctlm_part.OT_TT_REGIONAL_ORIGIN (default0; explicit1 only in reviewed disabled source-event snapshot)",
+ "composed_targeted_gate": "../composed_final/source_event_gate.json",
+ "ordinary_ff_homes": "../composed_final/final_composed_homes_DISABLED.json.gz",
+ "macro_delta": "../composed_final/macro_delta3_DISABLED.json",
+ "clock_application": "mandatory explicit phase-preserving51sink reassociation among existing63ports; actual-name join before CTS; no old999/timing credit",
+ "current_other_die_gates": "HELD as recorded in composed_final/source_event_gate.json",
+ "source_reference": {
+  "host": "intel2",
+  "kit": "/srv/opentallas-scratch2/claude/die-qc-61/tt_ctlm_C/gen/tt_ctlm",
+  "plan_pair": "exact original 63-tap TT_C freeze; current global plan/sidecar must be rederived for adoption"
+ }
+}

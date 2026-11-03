@@ -1,0 +1,673 @@
+{
+  "status": "FAIL_PROPOSED_ADJACENT_SEQUENTIAL_GEOMETRY",
+  "actual_FF": 20842,
+  "actual_SRAM": 44,
+  "proposed_outline_um": [
+    604.8,
+    803.52
+  ],
+  "macro_halo_um": 4.32,
+  "edge_classes": {
+    "ff\u2192ff": {
+      "edges": 151475,
+      "bad": 67,
+      "max_optimistic_pin_distance_um": 538.905
+    },
+    "ff\u2192macro": {
+      "edges": 12496,
+      "bad": 0,
+      "max_optimistic_pin_distance_um": 376.957
+    },
+    "macro\u2192ff": {
+      "edges": 11264,
+      "bad": 0,
+      "max_optimistic_pin_distance_um": 326.67299999999994
+    }
+  },
+  "bad_bank_pairs": [
+    {
+      "kind": "ff\u2192ff",
+      "launch_family": "g_leaf[10].u_leaf.out_ord",
+      "capture_family": "si_mm",
+      "edges": 32
+    },
+    {
+      "kind": "ff\u2192ff",
+      "launch_family": "g_leaf[9].u_leaf.out_ord",
+      "capture_family": "si_mm",
+      "edges": 32
+    },
+    {
+      "kind": "ff\u2192ff",
+      "launch_family": "g_leaf[7].u_leaf.out_hz",
+      "capture_family": "nb7_s",
+      "edges": 1
+    },
+    {
+      "kind": "ff\u2192ff",
+      "launch_family": "rb",
+      "capture_family": "nbio_s",
+      "edges": 1
+    },
+    {
+      "kind": "ff\u2192ff",
+      "launch_family": "rbd1",
+      "capture_family": "si_f",
+      "edges": 1
+    }
+  ],
+  "worst_bad_edges": [
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[27\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 538.905
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[26\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 538.905
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[25\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 538.905
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[24\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 538.905
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[23\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 538.905
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[22\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 538.9049999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[10\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 538.635
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[0\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 538.635
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[2\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 535.665
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[13\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 535.395
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[3\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 527.025
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[16\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 526.755
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[29\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 522.7049999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[12\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 522.435
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[31\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 518.3849999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[15\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 518.1149999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[30\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 514.0649999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[14\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 513.795
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[9\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 504.885
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[8\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 504.88499999999993
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[28\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 504.615
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[27\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 504.615
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[26\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 504.61499999999995
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[17\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 504.345
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[16\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 504.34499999999997
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[31\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 504.3449999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[20\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 504.07499999999993
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[12\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 503.80499999999995
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[3\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 500.025
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[21\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 499.755
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[13\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 499.485
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[4\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 495.705
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[22\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 495.435
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[11\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 495.1649999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[21\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 459.79499999999985
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[8\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 459.52499999999986
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[20\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 455.4749999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[7\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 455.2049999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[19\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 451.155
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[5\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 450.885
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[18\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 446.83500000000004
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[9\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 446.56499999999994
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "rb\\[1\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "nbio_s$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 444.135
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[1\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 438.19499999999994
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[6\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 437.92499999999995
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[17\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 433.875
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[4\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 433.605
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[11\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 433.06499999999994
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[9\\].u_leaf.out_ord\\[28\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 432.79499999999996
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[25\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 426.04499999999996
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[6\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 425.775
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[15\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 421.995
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[24\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 421.725
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[5\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 421.45500000000004
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[14\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 417.675
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[23\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 417.40500000000003
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[7\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 417.13499999999993
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "rbd1$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_f\\[1\\]$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 414.43499999999995
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[7\\].u_leaf.out_hz\\[1\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "nb7_s$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 414.43499999999995
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[0\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 413.895
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[10\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 413.8949999999999
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[19\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 413.625
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[18\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 413.625
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[1\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 413.62499999999994
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[29\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 413.355
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[2\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 413.35499999999996
+    },
+    {
+      "launch_kind": "ff",
+      "launch_owner": "g_leaf\\[10\\].u_leaf.out_ord\\[30\\]$_DFF_P_",
+      "launch_pin": "QN",
+      "capture_kind": "ff",
+      "capture_owner": "si_mm$_DFF_P_",
+      "capture_pin": "D",
+      "optimistic_native_pin_distance_um": 413.3549999999999
+    }
+  ],
+  "traversal": "Actual MTerm INPUT/OUTPUT graph; combinational arcs conservatively all-input/all-output, stop at every sequential/native boundary, CLOCK targets excluded",
+  "geometry": "Actual native LEF signal rectangles; proposed R0 SRAM locations and either R0/MX FF orientation. Minimum rectangle distance is optimistic; >405 is a necessary failure, <=405 is not timing/routing closure.",
+  "extra_preopt_rows": 1088,
+  "extra_rows_placed_or_used_as_endpoints": false,
+  "holds": [
+    "No CAD/PLACE/CTS/route/STA/source/default activation",
+    "Native macro pin-grid snap and actual physical IO/clock/reset/START integration remain separate",
+    "Combinational structural reach may include unsensitized arcs; source-specific exclusion would need proof"
+  ]
+}

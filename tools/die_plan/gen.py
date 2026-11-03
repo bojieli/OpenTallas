@@ -159,6 +159,8 @@ def main(argv=None):
     a3.add_argument("--bound-native-reset", default="", metavar="TYPES",
                     help="opt-in comma list: exact bound native collector_tree reset entry/topology; "
                          "requires explicit --types/--kit-rtl and verified native symbols (default off)")
+    a3.add_argument("--private-hhp-clock-mesh", action="append", default=[], metavar="TYPE=CONTEXT",
+                    help="default-off exact PRIVATE historical source certificate/context; --trial and actual --kit-rtl required")
     a3.add_argument("--hard-wrappers", default="", metavar="TYPES",
                     help="opt-in hard types containing bound wrapper glue; comma list, requires explicit --types, "
                          "--kit-rtl and a placed macro with timing views (default: skip all hard types)")
@@ -173,7 +175,7 @@ def main(argv=None):
     a3.add_argument("--stock-rc", action="store_true",
                     help="platform setRC.tcl for placement/CTS/GRT estimates (default since FLOW 10-25: the "
                          "RCX-calibrated tools/die_plan/setRC_rcx_asap7.tcl)")
-    a3.add_argument("--hold-ff-margin", type=float, default=10.0, metavar="PS",   # FLOW-HOLD-1 (OWNER 12.19): 5 -> 10
+    a3.add_argument("--hold-ff-margin", type=float, default=0.0, metavar="PS",   # OWNER 11-02: 10 -> 0 (FLOW-HOLD-1 12.19 was 5 -> 10)
                     help="repair hold at the FF sign-off corner only (CTS-stage combined repair skipped; post-GRT "
                          "repair with CORNERS=bc and this hold margin); TT setup is judged by signoff.py")
     a3.add_argument("--slew-margin", type=float, default=None, metavar="PCT",
@@ -239,7 +241,8 @@ def main(argv=None):
                                            bound_native_reset=[x for x in a.bound_native_reset.split(",") if x],
                                            landing=load_json(a.clock_landing) if a.clock_landing else None,
                                            hard_wrappers=[x for x in a.hard_wrappers.split(",") if x],
-                                           cland_pinslot=[x for x in a.cland_pinslot.split(",") if x])
+                                           cland_pinslot=[x for x in a.cland_pinslot.split(",") if x],
+                                           private_clock_mesh=dict(x.split("=", 1) for x in a.private_hhp_clock_mesh))
             else:
                 kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve(),
                                                 pg_map=json.loads(Path(a.pg_map).read_text()) if a.pg_map else None)]

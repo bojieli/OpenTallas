@@ -523,6 +523,10 @@ SCHEMA = {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # Native START capture location used by physical source planning.
                         "start_capture_um": _xy,
+                        # FLOW-CANARY 10-25 opt-in GRT-RC tap pre-pass + pin-register pad (gen_phys._tap_grt_pre: type
+                        # clock.tap_grt_pre > plan clock.tap_grt_pre > OT_GEN_TAP_GRT_PRE > default off); DIE-HEAD-55
+                        # 11-02: the knob was read by gen_phys but refused here, so it could not be set from a plan
+                        "tap_grt_pre": {"type": "boolean"},
                         "landing_origin_clock_port": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
                         "tap_pin_heights_um": {"type": "object", "additionalProperties": {
                             "type": "number", "minimum": 0.768}},
@@ -912,6 +916,7 @@ SCHEMA = {
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
+            "tap_grt_pre": {"type": "boolean"},   # die default of the type knob above (gen_phys._tap_grt_pre)
             # INFRA-FIRST-R4 kit hold window (COORD 10-26 11:24 ruling, opt-in, gen_phys.tap_window_ps): the die
             # delivers every grid tap of one partition within window_ps of each other ([-W, 0] source latency on each
             # real clock port in the kit SDC, CRPR credits same-tap); absent = all taps on one ideal clock (feature off).
@@ -1060,7 +1065,10 @@ SCHEMA = {
             cland_pinslot_off_types={"type": "array", "uniqueItems": True, "items": _name},
             # DIE-KV-56 10-31: these types (or unsplit base names) keep the legacy no-fit CLAND footprint while
             # budgets.cland_fit_resize stays default-on for every other type (gen_phys._cland_fit_mode)
-            cland_fit_resize_off_types={"type": "array", "uniqueItems": True, "items": _name})},
+            cland_fit_resize_off_types={"type": "array", "uniqueItems": True, "items": _name},
+            # DIE-KV-62/stations 11-02 opt-in: these types (or unsplit base names) export OT_CLAND_PINSLOT_DENSE=1 (y-column
+            # pinslot rows pack the ring slot flops body to body); absent/empty = unchanged kits
+            cland_pinslot_dense_types={"type": "array", "uniqueItems": True, "items": _name})},
     },
 }
 
@@ -1071,6 +1079,9 @@ SCHEMA = {
 # status hops are checked by landing_contract.py; default plans are unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+# DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
+# historical metadata when the cohort says mesh_status "historical".
+SCHEMA["properties"]["clock"]["properties"]["cohort"] = {"type": "object", "required": ["id", "authority", "source"]}
 # Existing PHY pad clocks have an explicit period/source and physical role.
 # They are distinct from registered landing clocks and imply no CDC exception, unless an input pin opts in with
 # "cdc": "synchronized" + "cdc_evidence" (COORD 10-31 ruling (3), pad_clock.cdc_sdc; default off).
@@ -1167,6 +1178,16 @@ _CKPROPS["landing_raw_branches"] = {
             "consumers": {"type": "array", "minItems": 1, "uniqueItems": True,
                           "items": {"type": "string", "pattern": "^(origin|reader:\\w+:[0-9]+|writer:\\w+:[0-9]+|fstart:\\w+)$"}}
         }}}
+
+# Default-OFF TT_C source-event PREP. This pointer is admitted only with exact
+# source/model identity; global source/slot/reset/clock consumers still gate it.
+_CKPROPS["landing_regional_origin"] = {
+    "type": "object", "additionalProperties": False,
+    "required": ["enabled", "model_file", "model_sha256"],
+    "properties": {
+        "enabled": {"type": "boolean", "default": False},
+        "model_file": {"type": "string", "pattern": "^/", "minLength": 2},
+        "model_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}
 
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}

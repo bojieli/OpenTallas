@@ -1,0 +1,958 @@
+{
+  "status": "DISABLED_EXACT_NATIVE_PRE_GPL_BLOCKAGE_PREP",
+  "model_sha256": "dd6387305f8fcd6dc00430766f2bafdac988e2c0d667b3def9e7c47466ab2663",
+  "input_identity": {
+    "native_pins_clock_entry.json": "941a1c747d9047acf19bfc576fea988fb607e08e8164e5af40df028574bfb6ca",
+    "model.json": "161218bfea47d804ea6438968f9b7ce24d5b654d55b3a076a0fd66d318b97ef6",
+    "std.lef": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+    "source_clock_sink_map.json": "abb19870ee18f7e6dfa2383140d1d6cca9436f0ec73c2cab3cdc62b182d59dde",
+    "actual_FF_rows.csv": "1e347ed819e9d35fd8d24e54ac5c011825280035b39c39eb8c63fe72cdd9072f",
+    "macro.lef": "6762ba9ac612990803670c949413ddeabd589e9fab87fa9c2352d6d387911a3a",
+    "clock_entry_gate.json": "ca669a2bebab883615f37f0eae4b794ecedc0b16377a43ce0552186078ed5ade"
+  },
+  "outline_um": [
+    604.8,
+    803.52
+  ],
+  "rounding_permitted": false,
+  "creates_clock_cells": false,
+  "transfers_CTS_sink_ownership": false,
+  "root_island_um": [
+    345.816,
+    397.44,
+    354.456,
+    406.08
+  ],
+  "reservations": [
+    {
+      "name": "regional_0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        160.65,
+        91.66499999999986
+      ],
+      "lower_left_um": [
+        159.84,
+        91.52999999999986
+      ],
+      "body_rect_um": [
+        159.84,
+        91.52999999999986,
+        161.46,
+        91.79999999999987
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 652,
+      "max_actual_Y_to_CLK_full_corner_um": 217.8749999999999
+    },
+    {
+      "name": "regional_1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        214.65,
+        97.06499999999987
+      ],
+      "lower_left_um": [
+        213.84,
+        96.92999999999986
+      ],
+      "body_rect_um": [
+        213.84,
+        96.92999999999986,
+        215.46,
+        97.19999999999987
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 116.38599999999988
+    },
+    {
+      "name": "regional_2",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        238.41000000000003,
+        120.55499999999982
+      ],
+      "lower_left_um": [
+        237.60000000000002,
+        120.41999999999982
+      ],
+      "body_rect_um": [
+        237.60000000000002,
+        120.41999999999982,
+        239.22000000000003,
+        120.68999999999983
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 652,
+      "max_actual_Y_to_CLK_full_corner_um": 122.32599999999981
+    },
+    {
+      "name": "regional_3",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        236.25,
+        118.39499999999983
+      ],
+      "lower_left_um": [
+        235.44,
+        118.25999999999982
+      ],
+      "body_rect_um": [
+        235.44,
+        118.25999999999982,
+        237.06,
+        118.52999999999983
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 84.79599999999985
+    },
+    {
+      "name": "regional_4",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        173.61,
+        180.2249999999997
+      ],
+      "lower_left_um": [
+        172.8,
+        180.08999999999972
+      ],
+      "body_rect_um": [
+        172.8,
+        180.08999999999972,
+        174.42000000000002,
+        180.3599999999997
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 652,
+      "max_actual_Y_to_CLK_full_corner_um": 219.89899999999975
+    },
+    {
+      "name": "regional_5",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        162.81,
+        352.2149999999994
+      ],
+      "lower_left_um": [
+        162.0,
+        352.0799999999994
+      ],
+      "body_rect_um": [
+        162.0,
+        352.0799999999994,
+        163.62,
+        352.3499999999994
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 219.80099999999942
+    },
+    {
+      "name": "regional_6",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        264.33000000000004,
+        185.8949999999997
+      ],
+      "lower_left_um": [
+        263.52000000000004,
+        185.7599999999997
+      ],
+      "body_rect_um": [
+        263.52000000000004,
+        185.7599999999997,
+        265.14000000000004,
+        186.0299999999997
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 112.06600000000032
+    },
+    {
+      "name": "regional_7",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        238.41000000000003,
+        260.9549999999996
+      ],
+      "lower_left_um": [
+        237.60000000000002,
+        260.8199999999996
+      ],
+      "body_rect_um": [
+        237.60000000000002,
+        260.8199999999996,
+        239.22000000000003,
+        261.0899999999996
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 108.2860000000004
+    },
+    {
+      "name": "regional_8",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        357.21000000000004,
+        93.82499999999986
+      ],
+      "lower_left_um": [
+        356.40000000000003,
+        93.68999999999986
+      ],
+      "body_rect_um": [
+        356.40000000000003,
+        93.68999999999986,
+        358.02000000000004,
+        93.95999999999987
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 652,
+      "max_actual_Y_to_CLK_full_corner_um": 65.72900000000013
+    },
+    {
+      "name": "regional_9",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        322.65000000000003,
+        185.3549999999997
+      ],
+      "lower_left_um": [
+        321.84000000000003,
+        185.21999999999971
+      ],
+      "body_rect_um": [
+        321.84000000000003,
+        185.21999999999971,
+        323.46000000000004,
+        185.4899999999997
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 111.08899999999966
+    },
+    {
+      "name": "regional_10",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        504.09000000000003,
+        91.66499999999986
+      ],
+      "lower_left_um": [
+        503.28000000000003,
+        91.52999999999986
+      ],
+      "body_rect_um": [
+        503.28000000000003,
+        91.52999999999986,
+        504.90000000000003,
+        91.79999999999987
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 219.81899999999985
+    },
+    {
+      "name": "regional_11",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        463.05,
+        185.0849999999997
+      ],
+      "lower_left_um": [
+        462.24,
+        184.9499999999997
+      ],
+      "body_rect_um": [
+        462.24,
+        184.9499999999997,
+        463.86,
+        185.2199999999997
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 219.7959999999997
+    },
+    {
+      "name": "regional_12",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        348.57,
+        247.7249999999996
+      ],
+      "lower_left_um": [
+        347.76,
+        247.5899999999996
+      ],
+      "body_rect_um": [
+        347.76,
+        247.5899999999996,
+        349.38,
+        247.8599999999996
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 652,
+      "max_actual_Y_to_CLK_full_corner_um": 78.41900000000035
+    },
+    {
+      "name": "regional_13",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        333.45000000000005,
+        353.8349999999994
+      ],
+      "lower_left_um": [
+        332.64000000000004,
+        353.6999999999994
+      ],
+      "body_rect_um": [
+        332.64000000000004,
+        353.6999999999994,
+        334.26000000000005,
+        353.9699999999994
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 119.45899999999938
+    },
+    {
+      "name": "regional_14",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        368.01,
+        352.7549999999994
+      ],
+      "lower_left_um": [
+        367.2,
+        352.61999999999944
+      ],
+      "body_rect_um": [
+        367.2,
+        352.61999999999944,
+        368.82,
+        352.8899999999994
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 103.79899999999935
+    },
+    {
+      "name": "regional_15",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        491.13000000000005,
+        273.37499999999955
+      ],
+      "lower_left_um": [
+        490.32000000000005,
+        273.23999999999955
+      ],
+      "body_rect_um": [
+        490.32000000000005,
+        273.23999999999955,
+        491.94000000000005,
+        273.50999999999954
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 218.5490000000005
+    },
+    {
+      "name": "regional_16",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        147.69,
+        439.9649999999993
+      ],
+      "lower_left_um": [
+        146.88,
+        439.8299999999993
+      ],
+      "body_rect_um": [
+        146.88,
+        439.8299999999993,
+        148.5,
+        440.0999999999993
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 652,
+      "max_actual_Y_to_CLK_full_corner_um": 219.8990000000007
+    },
+    {
+      "name": "regional_17",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        238.41000000000003,
+        439.6949999999993
+      ],
+      "lower_left_um": [
+        237.60000000000002,
+        439.5599999999993
+      ],
+      "body_rect_um": [
+        237.60000000000002,
+        439.5599999999993,
+        239.22000000000003,
+        439.8299999999993
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 82.73899999999932
+    },
+    {
+      "name": "regional_18",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        247.05,
+        440.5049999999993
+      ],
+      "lower_left_um": [
+        246.24,
+        440.3699999999993
+      ],
+      "body_rect_um": [
+        246.24,
+        440.3699999999993,
+        247.86,
+        440.6399999999993
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 652,
+      "max_actual_Y_to_CLK_full_corner_um": 90.02899999999931
+    },
+    {
+      "name": "regional_19",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        264.33000000000004,
+        527.9849999999992
+      ],
+      "lower_left_um": [
+        263.52000000000004,
+        527.8499999999992
+      ],
+      "body_rect_um": [
+        263.52000000000004,
+        527.8499999999992,
+        265.14000000000004,
+        528.1199999999992
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 116.92599999999914
+    },
+    {
+      "name": "regional_20",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        136.89000000000001,
+        619.5149999999991
+      ],
+      "lower_left_um": [
+        136.08,
+        619.3799999999991
+      ],
+      "body_rect_um": [
+        136.08,
+        619.3799999999991,
+        137.70000000000002,
+        619.6499999999991
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 652,
+      "max_actual_Y_to_CLK_full_corner_um": 219.8990000000009
+    },
+    {
+      "name": "regional_21",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        234.09,
+        778.2749999999988
+      ],
+      "lower_left_um": [
+        233.28,
+        778.1399999999988
+      ],
+      "body_rect_um": [
+        233.28,
+        778.1399999999988,
+        234.9,
+        778.4099999999988
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 131.60899999999873
+    },
+    {
+      "name": "regional_22",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        238.41000000000003,
+        612.7649999999991
+      ],
+      "lower_left_um": [
+        237.60000000000002,
+        612.6299999999991
+      ],
+      "body_rect_um": [
+        237.60000000000002,
+        612.6299999999991,
+        239.22000000000003,
+        612.8999999999991
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 142.575999999999
+    },
+    {
+      "name": "regional_23",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        236.25,
+        619.2449999999991
+      ],
+      "lower_left_um": [
+        235.44,
+        619.1099999999991
+      ],
+      "body_rect_um": [
+        235.44,
+        619.1099999999991,
+        237.06,
+        619.3799999999991
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 176.5960000000009
+    },
+    {
+      "name": "regional_24",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        359.37,
+        442.9349999999993
+      ],
+      "lower_left_um": [
+        358.56,
+        442.79999999999933
+      ],
+      "body_rect_um": [
+        358.56,
+        442.79999999999933,
+        360.18,
+        443.0699999999993
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 652,
+      "max_actual_Y_to_CLK_full_corner_um": 105.4189999999993
+    },
+    {
+      "name": "regional_25",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        322.65000000000003,
+        532.0349999999992
+      ],
+      "lower_left_um": [
+        321.84000000000003,
+        531.8999999999992
+      ],
+      "body_rect_um": [
+        321.84000000000003,
+        531.8999999999992,
+        323.46000000000004,
+        532.1699999999992
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 108.11899999999912
+    },
+    {
+      "name": "regional_26",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        460.89000000000004,
+        436.9949999999993
+      ],
+      "lower_left_um": [
+        460.08000000000004,
+        436.85999999999933
+      ],
+      "body_rect_um": [
+        460.08000000000004,
+        436.85999999999933,
+        461.70000000000005,
+        437.1299999999993
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 216.82599999999928
+    },
+    {
+      "name": "regional_27",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        480.33000000000004,
+        530.1449999999992
+      ],
+      "lower_left_um": [
+        479.52000000000004,
+        530.0099999999992
+      ],
+      "body_rect_um": [
+        479.52000000000004,
+        530.0099999999992,
+        481.14000000000004,
+        530.2799999999992
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 219.8989999999991
+    },
+    {
+      "name": "regional_28",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        348.57,
+        600.8849999999991
+      ],
+      "lower_left_um": [
+        347.76,
+        600.7499999999991
+      ],
+      "body_rect_um": [
+        347.76,
+        600.7499999999991,
+        349.38,
+        601.0199999999991
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 652,
+      "max_actual_Y_to_CLK_full_corner_um": 71.66900000000078
+    },
+    {
+      "name": "regional_29",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        333.45000000000005,
+        701.5949999999989
+      ],
+      "lower_left_um": [
+        332.64000000000004,
+        701.4599999999989
+      ],
+      "body_rect_um": [
+        332.64000000000004,
+        701.4599999999989,
+        334.26000000000005,
+        701.7299999999989
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 97.75599999999883
+    },
+    {
+      "name": "regional_30",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        363.69,
+        704.8349999999989
+      ],
+      "lower_left_um": [
+        362.88,
+        704.6999999999989
+      ],
+      "body_rect_um": [
+        362.88,
+        704.6999999999989,
+        364.5,
+        704.9699999999989
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 103.25899999999876
+    },
+    {
+      "name": "regional_31",
+      "master": "BUFx24_ASAP7_75t_R",
+      "cell_centre_um": [
+        488.97,
+        699.9749999999989
+      ],
+      "lower_left_um": [
+        488.16,
+        699.8399999999989
+      ],
+      "body_rect_um": [
+        488.16,
+        699.8399999999989,
+        489.78000000000003,
+        700.1099999999989
+      ],
+      "size_um": [
+        1.62,
+        0.27
+      ],
+      "orientation": "ACTUAL_NATIVE_ROW_R0_OR_MX_PENDING",
+      "qualified_orientation_envelope": [
+        "R0",
+        "MX"
+      ],
+      "sink_count": 653,
+      "max_actual_Y_to_CLK_full_corner_um": 219.3589999999988
+    }
+  ],
+  "orientation_note": "Actual row R0/MX must be read from fresh GEN. Both orientations have identical body and are covered in the Y-to-CLK full-metal union audit. No fabricated final orientation.",
+  "consumer": "Only ordinary OpenDB placement blockages before GPL; exact same FF/macro/clock source cohort. Actual post-GEN DBU conversion/geometry must be checked without silent rounding."
+}

@@ -1,0 +1,604 @@
+
+-- Running command `read_verilog -formal -sv results/hbm_storeA_predecode_0425/predecode.sv; prep -top predecode; flatten; sat -seq 3 -prove-asserts -verify' --
+
+1. Executing Verilog-2005 frontend: results/hbm_storeA_predecode_0425/predecode.sv
+Parsing formal SystemVerilog input from `results/hbm_storeA_predecode_0425/predecode.sv' to AST representation.
+Generating RTLIL representation for module `\predecode'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \predecode
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \predecode
+Removed 0 unused modules.
+Module predecode directly or indirectly contains formal properties -> setting "keep" attribute.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:2$563'.
+  Set init value: \filled = 1'0
+
+2.2.4. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:2$563'.
+     1/1: $1\filled[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+     1/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212
+     2/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_CHECK[0:0]$211
+     3/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:38$2_EN[0:0]$214
+     4/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:38$2_CHECK[0:0]$213
+     5/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:39$3_EN[0:0]$216
+     6/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:39$3_CHECK[0:0]$215
+     7/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:40$4_EN[0:0]$218
+     8/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:40$4_CHECK[0:0]$217
+     9/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:41$5_EN[0:0]$220
+    10/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:41$5_CHECK[0:0]$219
+    11/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:42$6_EN[0:0]$222
+    12/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:42$6_CHECK[0:0]$221
+    13/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:43$7_EN[0:0]$224
+    14/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:43$7_CHECK[0:0]$223
+    15/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:44$8_EN[0:0]$226
+    16/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:44$8_CHECK[0:0]$225
+    17/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:45$9_EN[0:0]$228
+    18/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:45$9_CHECK[0:0]$227
+    19/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:46$10_EN[0:0]$230
+    20/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:46$10_CHECK[0:0]$229
+    21/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:47$11_EN[0:0]$232
+    22/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:47$11_CHECK[0:0]$231
+    23/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:48$12_EN[0:0]$234
+    24/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:48$12_CHECK[0:0]$233
+    25/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:49$13_EN[0:0]$236
+    26/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:49$13_CHECK[0:0]$235
+    27/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:50$14_EN[0:0]$238
+    28/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:50$14_CHECK[0:0]$237
+    29/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:51$15_EN[0:0]$240
+    30/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:51$15_CHECK[0:0]$239
+    31/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:52$16_EN[0:0]$242
+    32/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:52$16_CHECK[0:0]$241
+    33/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:53$17_EN[0:0]$244
+    34/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:53$17_CHECK[0:0]$243
+    35/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:54$18_EN[0:0]$246
+    36/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:54$18_CHECK[0:0]$245
+    37/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:55$19_EN[0:0]$248
+    38/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:55$19_CHECK[0:0]$247
+    39/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:56$20_EN[0:0]$250
+    40/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:56$20_CHECK[0:0]$249
+    41/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:57$21_EN[0:0]$252
+    42/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:57$21_CHECK[0:0]$251
+    43/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:58$22_EN[0:0]$254
+    44/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:58$22_CHECK[0:0]$253
+    45/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:59$23_EN[0:0]$256
+    46/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:59$23_CHECK[0:0]$255
+    47/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:60$24_EN[0:0]$258
+    48/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:60$24_CHECK[0:0]$257
+    49/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:61$25_EN[0:0]$260
+    50/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:61$25_CHECK[0:0]$259
+    51/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:62$26_EN[0:0]$262
+    52/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:62$26_CHECK[0:0]$261
+    53/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:63$27_EN[0:0]$264
+    54/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:63$27_CHECK[0:0]$263
+    55/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:64$28_EN[0:0]$266
+    56/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:64$28_CHECK[0:0]$265
+    57/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:65$29_EN[0:0]$268
+    58/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:65$29_CHECK[0:0]$267
+    59/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:66$30_EN[0:0]$270
+    60/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:66$30_CHECK[0:0]$269
+    61/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:67$31_EN[0:0]$272
+    62/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:67$31_CHECK[0:0]$271
+    63/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:68$32_EN[0:0]$274
+    64/64: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:68$32_CHECK[0:0]$273
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:35$205'.
+     1/1: $0\g287049[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:34$199'.
+     1/1: $0\g287048[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:33$193'.
+     1/1: $0\g287047[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:32$187'.
+     1/1: $0\g287046[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:31$183'.
+     1/1: $0\g287045[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:30$178'.
+     1/1: $0\g287044[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:29$173'.
+     1/1: $0\g287043[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:28$168'.
+     1/1: $0\g287042[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:27$163'.
+     1/1: $0\g287041[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:26$157'.
+     1/1: $0\g287040[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:25$151'.
+     1/1: $0\g287039[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:24$145'.
+     1/1: $0\g287038[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:23$140'.
+     1/1: $0\g287037[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:22$134'.
+     1/1: $0\g287036[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:21$128'.
+     1/1: $0\g287035[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:20$122'.
+     1/1: $0\g287034[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:19$117'.
+     1/1: $0\g287033[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:18$111'.
+     1/1: $0\g287032[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:17$105'.
+     1/1: $0\g287031[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:16$99'.
+     1/1: $0\g287030[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:15$95'.
+     1/1: $0\g287029[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:14$90'.
+     1/1: $0\g287028[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:13$85'.
+     1/1: $0\g287027[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:12$80'.
+     1/1: $0\g287026[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:11$75'.
+     1/1: $0\g287025[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:10$69'.
+     1/1: $0\g287024[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:9$63'.
+     1/1: $0\g287023[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:8$57'.
+     1/1: $0\g287022[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:7$52'.
+     1/1: $0\g287021[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:6$46'.
+     1/1: $0\g287020[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:5$40'.
+     1/1: $0\g287019[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:4$34'.
+     1/1: $0\g287018[0:0]
+Creating decoders for process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:3$33'.
+     1/2: $0\filled[0:0]
+     2/2: $0\q[767:0]
+
+2.2.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:38$2_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:38$2_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:39$3_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:39$3_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:40$4_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:40$4_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:41$5_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:41$5_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:42$6_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:42$6_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:43$7_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:43$7_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:44$8_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:44$8_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:45$9_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:45$9_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:46$10_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:46$10_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:47$11_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:47$11_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:48$12_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:48$12_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:49$13_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:49$13_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:50$14_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:50$14_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:51$15_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:51$15_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:52$16_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:52$16_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:53$17_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:53$17_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:54$18_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:54$18_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:55$19_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:55$19_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:56$20_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:56$20_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:57$21_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:57$21_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:58$22_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:58$22_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:59$23_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:59$23_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:60$24_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:60$24_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:61$25_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:61$25_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:62$26_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:62$26_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:63$27_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:63$27_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:64$28_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:64$28_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:65$29_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:65$29_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:66$30_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:66$30_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:67$31_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:67$31_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:68$32_CHECK' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+No latch inferred for signal `\predecode.$formal$results/hbm_storeA_predecode_0425/predecode.sv:68$32_EN' from process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+
+2.2.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\predecode.\g287049' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:35$205'.
+  created $dff cell `$procdff$692' with positive edge clock.
+Creating register for signal `\predecode.\g287048' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:34$199'.
+  created $dff cell `$procdff$693' with positive edge clock.
+Creating register for signal `\predecode.\g287047' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:33$193'.
+  created $dff cell `$procdff$694' with positive edge clock.
+Creating register for signal `\predecode.\g287046' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:32$187'.
+  created $dff cell `$procdff$695' with positive edge clock.
+Creating register for signal `\predecode.\g287045' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:31$183'.
+  created $dff cell `$procdff$696' with positive edge clock.
+Creating register for signal `\predecode.\g287044' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:30$178'.
+  created $dff cell `$procdff$697' with positive edge clock.
+Creating register for signal `\predecode.\g287043' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:29$173'.
+  created $dff cell `$procdff$698' with positive edge clock.
+Creating register for signal `\predecode.\g287042' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:28$168'.
+  created $dff cell `$procdff$699' with positive edge clock.
+Creating register for signal `\predecode.\g287041' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:27$163'.
+  created $dff cell `$procdff$700' with positive edge clock.
+Creating register for signal `\predecode.\g287040' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:26$157'.
+  created $dff cell `$procdff$701' with positive edge clock.
+Creating register for signal `\predecode.\g287039' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:25$151'.
+  created $dff cell `$procdff$702' with positive edge clock.
+Creating register for signal `\predecode.\g287038' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:24$145'.
+  created $dff cell `$procdff$703' with positive edge clock.
+Creating register for signal `\predecode.\g287037' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:23$140'.
+  created $dff cell `$procdff$704' with positive edge clock.
+Creating register for signal `\predecode.\g287036' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:22$134'.
+  created $dff cell `$procdff$705' with positive edge clock.
+Creating register for signal `\predecode.\g287035' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:21$128'.
+  created $dff cell `$procdff$706' with positive edge clock.
+Creating register for signal `\predecode.\g287034' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:20$122'.
+  created $dff cell `$procdff$707' with positive edge clock.
+Creating register for signal `\predecode.\g287033' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:19$117'.
+  created $dff cell `$procdff$708' with positive edge clock.
+Creating register for signal `\predecode.\g287032' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:18$111'.
+  created $dff cell `$procdff$709' with positive edge clock.
+Creating register for signal `\predecode.\g287031' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:17$105'.
+  created $dff cell `$procdff$710' with positive edge clock.
+Creating register for signal `\predecode.\g287030' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:16$99'.
+  created $dff cell `$procdff$711' with positive edge clock.
+Creating register for signal `\predecode.\g287029' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:15$95'.
+  created $dff cell `$procdff$712' with positive edge clock.
+Creating register for signal `\predecode.\g287028' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:14$90'.
+  created $dff cell `$procdff$713' with positive edge clock.
+Creating register for signal `\predecode.\g287027' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:13$85'.
+  created $dff cell `$procdff$714' with positive edge clock.
+Creating register for signal `\predecode.\g287026' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:12$80'.
+  created $dff cell `$procdff$715' with positive edge clock.
+Creating register for signal `\predecode.\g287025' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:11$75'.
+  created $dff cell `$procdff$716' with positive edge clock.
+Creating register for signal `\predecode.\g287024' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:10$69'.
+  created $dff cell `$procdff$717' with positive edge clock.
+Creating register for signal `\predecode.\g287023' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:9$63'.
+  created $dff cell `$procdff$718' with positive edge clock.
+Creating register for signal `\predecode.\g287022' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:8$57'.
+  created $dff cell `$procdff$719' with positive edge clock.
+Creating register for signal `\predecode.\g287021' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:7$52'.
+  created $dff cell `$procdff$720' with positive edge clock.
+Creating register for signal `\predecode.\g287020' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:6$46'.
+  created $dff cell `$procdff$721' with positive edge clock.
+Creating register for signal `\predecode.\g287019' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:5$40'.
+  created $dff cell `$procdff$722' with positive edge clock.
+Creating register for signal `\predecode.\g287018' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:4$34'.
+  created $dff cell `$procdff$723' with positive edge clock.
+Creating register for signal `\predecode.\q' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:3$33'.
+  created $dff cell `$procdff$724' with positive edge clock.
+Creating register for signal `\predecode.\filled' using process `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:3$33'.
+  created $dff cell `$procdff$725' with positive edge clock.
+
+2.2.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:2$563'.
+Found and cleaned up 1 empty switch in `\predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:36$210'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:35$205'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:34$199'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:33$193'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:32$187'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:31$183'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:30$178'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:29$173'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:28$168'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:27$163'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:26$157'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:25$151'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:24$145'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:23$140'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:22$134'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:21$128'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:20$122'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:19$117'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:18$111'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:17$105'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:16$99'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:15$95'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:14$90'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:13$85'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:12$80'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:11$75'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:10$69'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:9$63'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:8$57'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:7$52'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:6$46'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:5$40'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:4$34'.
+Removing empty process `predecode.$proc$results/hbm_storeA_predecode_0425/predecode.sv:3$33'.
+Cleaned up 1 empty switch.
+
+2.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module predecode.
+<suppressed ~128 debug messages>
+
+2.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \predecode..
+Removed 0 unused cells and 291 unused wires.
+<suppressed ~1 debug messages>
+
+2.5. Executing CHECK pass (checking for obvious problems).
+checking module predecode..
+found and reported 0 problems.
+
+2.6. Executing OPT pass (performing simple optimizations).
+
+2.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module predecode.
+
+2.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\predecode'.
+<suppressed ~534 debug messages>
+Removed a total of 178 cells.
+
+2.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \predecode..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~64 debug messages>
+
+2.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \predecode.
+Performed a total of 0 changes.
+
+2.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\predecode'.
+<suppressed ~93 debug messages>
+Removed a total of 31 cells.
+
+2.6.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \predecode..
+Removed 0 unused cells and 209 unused wires.
+<suppressed ~1 debug messages>
+
+2.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module predecode.
+
+2.6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \predecode..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~33 debug messages>
+
+2.6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \predecode.
+Performed a total of 0 changes.
+
+2.6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\predecode'.
+Removed a total of 0 cells.
+
+2.6.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \predecode..
+
+2.6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module predecode.
+
+2.6.16. Finished OPT passes. (There is nothing left to do.)
+
+2.7. Executing WREDUCE pass (reducing word size of cells).
+Removed top 20 bits (of 768) from FF cell predecode.$procdff$724 ($dff).
+Removed top 20 bits (of 768) from wire predecode.q.
+
+2.8. Executing MEMORY_DFF pass (merging $dff cells to $memrd and $memwr).
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \predecode..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module predecode.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\predecode'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.11.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \predecode..
+
+2.11.5. Finished fast OPT passes.
+
+2.12. Printing statistics.
+
+=== predecode ===
+
+   Number of wires:                227
+   Number of wire bits:           1741
+   Number of public wires:          36
+   Number of public wire bits:    1550
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                257
+     $and                          102
+     $assert                        32
+     $dff                           34
+     $eq                            32
+     $mux                           33
+     $not                           20
+     $or                             4
+
+2.13. Executing CHECK pass (checking for obvious problems).
+checking module predecode..
+found and reported 0 problems.
+
+3. Executing FLATTEN pass (flatten design).
+No more expansions possible.
+
+4. Executing SAT pass (solving SAT problems in the circuit).
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 257 cells to SAT database.
+Import set-constraint from init attribute: \filled = 1'0
+Final init constraint equation: \filled = 1'0
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_CHECK[0:0]$211 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:38$2_CHECK[0:0]$213 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:39$3_CHECK[0:0]$215 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:40$4_CHECK[0:0]$217 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:41$5_CHECK[0:0]$219 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:42$6_CHECK[0:0]$221 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:43$7_CHECK[0:0]$223 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:44$8_CHECK[0:0]$225 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:45$9_CHECK[0:0]$227 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:46$10_CHECK[0:0]$229 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:47$11_CHECK[0:0]$231 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:48$12_CHECK[0:0]$233 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:49$13_CHECK[0:0]$235 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:50$14_CHECK[0:0]$237 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:51$15_CHECK[0:0]$239 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:52$16_CHECK[0:0]$241 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:53$17_CHECK[0:0]$243 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:54$18_CHECK[0:0]$245 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:55$19_CHECK[0:0]$247 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:56$20_CHECK[0:0]$249 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:57$21_CHECK[0:0]$251 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:58$22_CHECK[0:0]$253 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:59$23_CHECK[0:0]$255 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:60$24_CHECK[0:0]$257 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:61$25_CHECK[0:0]$259 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:62$26_CHECK[0:0]$261 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:63$27_CHECK[0:0]$263 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:64$28_CHECK[0:0]$265 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:65$29_CHECK[0:0]$267 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:66$30_CHECK[0:0]$269 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:67$31_CHECK[0:0]$271 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:68$32_CHECK[0:0]$273 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 257 cells to SAT database.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_CHECK[0:0]$211 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:38$2_CHECK[0:0]$213 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:39$3_CHECK[0:0]$215 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:40$4_CHECK[0:0]$217 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:41$5_CHECK[0:0]$219 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:42$6_CHECK[0:0]$221 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:43$7_CHECK[0:0]$223 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:44$8_CHECK[0:0]$225 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:45$9_CHECK[0:0]$227 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:46$10_CHECK[0:0]$229 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:47$11_CHECK[0:0]$231 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:48$12_CHECK[0:0]$233 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:49$13_CHECK[0:0]$235 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:50$14_CHECK[0:0]$237 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:51$15_CHECK[0:0]$239 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:52$16_CHECK[0:0]$241 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:53$17_CHECK[0:0]$243 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:54$18_CHECK[0:0]$245 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:55$19_CHECK[0:0]$247 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:56$20_CHECK[0:0]$249 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:57$21_CHECK[0:0]$251 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:58$22_CHECK[0:0]$253 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:59$23_CHECK[0:0]$255 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:60$24_CHECK[0:0]$257 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:61$25_CHECK[0:0]$259 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:62$26_CHECK[0:0]$261 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:63$27_CHECK[0:0]$263 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:64$28_CHECK[0:0]$265 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:65$29_CHECK[0:0]$267 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:66$30_CHECK[0:0]$269 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:67$31_CHECK[0:0]$271 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:68$32_CHECK[0:0]$273 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 257 cells to SAT database.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_CHECK[0:0]$211 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:38$2_CHECK[0:0]$213 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:39$3_CHECK[0:0]$215 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:40$4_CHECK[0:0]$217 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:41$5_CHECK[0:0]$219 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:42$6_CHECK[0:0]$221 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:43$7_CHECK[0:0]$223 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:44$8_CHECK[0:0]$225 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:45$9_CHECK[0:0]$227 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:46$10_CHECK[0:0]$229 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:47$11_CHECK[0:0]$231 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:48$12_CHECK[0:0]$233 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:49$13_CHECK[0:0]$235 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:50$14_CHECK[0:0]$237 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:51$15_CHECK[0:0]$239 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:52$16_CHECK[0:0]$241 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:53$17_CHECK[0:0]$243 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:54$18_CHECK[0:0]$245 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:55$19_CHECK[0:0]$247 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:56$20_CHECK[0:0]$249 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:57$21_CHECK[0:0]$251 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:58$22_CHECK[0:0]$253 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:59$23_CHECK[0:0]$255 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:60$24_CHECK[0:0]$257 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:61$25_CHECK[0:0]$259 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:62$26_CHECK[0:0]$261 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:63$27_CHECK[0:0]$263 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:64$28_CHECK[0:0]$265 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:65$29_CHECK[0:0]$267 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:66$30_CHECK[0:0]$269 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:67$31_CHECK[0:0]$271 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+Import proof for assert: $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:68$32_CHECK[0:0]$273 when $0$formal$results/hbm_storeA_predecode_0425/predecode.sv:37$1_EN[0:0]$212.
+
+Solving problem with 11727 variables and 24148 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+

@@ -1,0 +1,8 @@
+ot-run: intel1         admits     2 GB (avail 187, reserve 0, fresh 22.2, peak 98.8, headroom 0, waiters 51/2446 GB) load 165/112 running 73 disk 384 GB 
+ot-run: epyc2          admits    65 GB (avail 230, reserve 0, fresh 19.6, peak 80.7, headroom 0, waiters 0/0 GB) load 96/128 running 45 disk 58 GB 
+ot-run: -> epyc2
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-935315-1793612635 after 1 s
+NATIVE_REGIONAL_PROOF prod rc=0
+NATIVE_REGIONAL_PROOF late rc=1
+NATIVE_REGIONAL_PROOF reset rc=1
+ot-run: RAN on epyc2 (unit oth-ubuntu-935315-1793612635): exit 0

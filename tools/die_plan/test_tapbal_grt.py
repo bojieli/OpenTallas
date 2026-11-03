@@ -96,3 +96,17 @@ def test_runner_prepass_predicate_honors_standalone_pinreg_pad(config, enabled):
     predicate = re.search(r"grep -Eq '([^']+)' /work/config.mk", gen_phys.RUN_KIT)[1]
     result = subprocess.run(["grep", "-Eq", predicate], input=config, text=True)
     assert (result.returncode == 0) == enabled
+
+
+def test_plan_schema_accepts_tap_grt_pre():
+    """DIE-HEAD-55 11-02: gen_phys reads type/plan clock.tap_grt_pre, so validate_structure must accept it (it refused
+    the key as unknown, which made the knob unusable from a plan)."""
+    import copy
+    import schema
+    from test_flow_hold_basis import TINY
+    raw = copy.deepcopy(TINY)
+    raw["partition_types"]["src"]["clock"]["tap_grt_pre"] = True
+    raw["clock"]["tap_grt_pre"] = False
+    assert not [e for e in schema.validate_structure(raw) if "tap_grt_pre" in e]
+    raw["partition_types"]["src"]["clock"]["tap_grt_pre"] = "yes"
+    assert [e for e in schema.validate_structure(raw) if "tap_grt_pre" in e]

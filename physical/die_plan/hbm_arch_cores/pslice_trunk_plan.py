@@ -75,8 +75,14 @@ def macro_table(core_macros):
             rows.append(dict(k=n, macro="ot_sram_1r1w_128x256_m1_r2c2", origin_um=[x, y], orient="R0"))
             k += 1
     old = {q["name"].replace("u_fcore.", "", 1) for q in e["macros"]}
+    # The legacy plan names the unguarded leaf; OT_PSLICE_TRUNK instantiates
+    # its active leaf in generate g_p. Match semantic legacy identity first,
+    # then emit the actual synthesis hierarchy for both old and updated plans.
+    old = {n.replace(".u_c.g_p.u_p.", ".u_c.u_p.") for n in old}
     if {r["k"] for r in rows} != old:
         raise SystemExit("macro names differ from the plan core_macros entry")
+    for row in rows:
+        row["k"] = row["k"].replace(".u_c.u_p.", ".u_c.g_p.u_p.")
     top = max(r["origin_um"][1] for r in rows) + MAC_H
     return rows, dict(xs=xs, ys=ys, mid_street=[round(ys[6] + MAC_H, 3), ys[7]], n_band=[round(top, 3), CORE_HI_Y])
 
@@ -150,7 +156,7 @@ def guides(xst):
     for c in range(NC):
         cx, lo, hi = leaf_ctr(c)
         hw = min(35.0, (hi - lo) / 2 - 3)
-        p = [f"{f}g_c[{c}].u_c.u_p.", f"{f}g_c[{c}].u_c.q_", f"{f}g_c[{c}].u_c.s_q", f"{f}g_c[{c}].u_c.l_q",
+        p = [f"{f}g_c[{c}].u_c.g_p.u_p.", f"{f}g_c[{c}].u_c.q_", f"{f}g_c[{c}].u_c.s_q", f"{f}g_c[{c}].u_c.l_q",
              f"{f}g_c[{c}].u_c.g_rr.u_rr.rst_n", f"{f}u_h.g_o[{c}].", f"{f}u_h.g_lx.g_l[{c}].f1"]
         if c != 0:
             p.append(f"{f}g_c[{c}].u_c.g_rr.u_rr.sync_q")
@@ -176,7 +182,9 @@ def guides(xst):
         L = plen(pts)
         for s in range(xst - 1):
             want = along(pts, L * (s + 1) / xst)
-            add(f"y{g}s{s}", [f"{f}u_h.g_r[{g}].u_y.g_n.g_s[{s}]."], place_free(B, want, 8.0, 8.0, lane))
+            prefix = f"{f}u_h.g_r[{g}].u_y."
+            prefix += "q" if s == xst - 2 else f"g_n.g_s[{s}]."
+            add(f"y{g}s{s}", [prefix], place_free(B, want, 8.0, 8.0, lane))
         hops[f"cfg_r{g}"] = round(L / xst, 1)
     # start/length: u_xs -> g_x[c] stages -> leaf c box
     for c in range(NC):
@@ -187,7 +195,9 @@ def guides(xst):
         for s in range(xst - 1):
             want = along(pts, L * (s + 1) / xst)
             area = lane if want[1] >= LANE_Y[0] - 1 else [STREET01_X - 9, 60.0, STREET01_X + 9, LANE_Y[0]]
-            add(f"x{c}s{s}", [f"{f}g_x[{c}].u_s.g_n.g_s[{s}]."], place_free(B, want, 4.0, 4.0, area))
+            prefix = f"{f}g_x[{c}].u_s."
+            prefix += "q" if s == xst - 2 else f"g_n.g_s[{s}]."
+            add(f"x{c}s{s}", [prefix], place_free(B, want, 4.0, 4.0, area))
         hops[f"start_c{c}"] = round(L / xst, 1)
     # leaf fault / valid mid stages halfway between leaf c and the fault box
     for c in range(NC):

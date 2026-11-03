@@ -1,0 +1,106 @@
+[
+  {
+    "top": "ot_hidx_score_hcol",
+    "logic_file": "logic_ot_hidx_score_hcol.sv",
+    "logic_policy": "Exact native memory master definitions excluded only for true same-name native LEF/Liberty binding; no replacement alias",
+    "file": "closure_ot_hidx_score_hcol.sv",
+    "sha256": "be0512fbd8e953b48b575a680412b328d8d0bd149df02dcc99848f258702c76b",
+    "selected_modules": [
+      "ot_hdc_delay",
+      "ot_hdc_fp32_add_fast",
+      "ot_hdc_fp32_add_lat",
+      "ot_hdc_ksa",
+      "ot_hdc_ksadd_k__u1",
+      "ot_hdc_lzc32",
+      "ot_hdc_v41x_bf16",
+      "ot_hdc_v41x_bmul_l",
+      "ot_hdc_v41x_csa",
+      "ot_hdc_v41x_faddl",
+      "ot_hdc_v41x_q4dot_l",
+      "ot_hdc_w11_cut",
+      "ot_hidx_score_hcol",
+      "ot_rst_delivered3",
+      "ot_rst_relay"
+    ],
+    "module_count": 15,
+    "dependency_policy": "Conservative selected-definition lexical closure, including all parameter branches; no substitute or body alias"
+  },
+  {
+    "top": "ot_hbm_idx_score_hcol_h0",
+    "logic_file": "logic_ot_hbm_idx_score_hcol_h0.sv",
+    "logic_policy": "Exact native memory master definitions excluded only for true same-name native LEF/Liberty binding; no replacement alias",
+    "file": "closure_ot_hbm_idx_score_hcol_h0.sv",
+    "sha256": "ccb9044671657030a9a926ea3dc50bb75a70f894617cdd47adcb3a8cc509381d",
+    "selected_modules": [
+      "ot_hbm_idx_score_hcol_h0",
+      "ot_hdc_delay",
+      "ot_hdc_fp32_add_fast",
+      "ot_hdc_fp32_add_lat",
+      "ot_hdc_ksa",
+      "ot_hdc_ksadd_k__u1",
+      "ot_hdc_lzc32",
+      "ot_hdc_v41x_bf16",
+      "ot_hdc_v41x_bmul_l",
+      "ot_hdc_v41x_csa",
+      "ot_hdc_v41x_faddl",
+      "ot_hdc_v41x_q4dot_l",
+      "ot_hdc_w11_cut",
+      "ot_hidx_score_hcol",
+      "ot_rst_delivered3",
+      "ot_rst_relay"
+    ],
+    "module_count": 16,
+    "dependency_policy": "Conservative selected-definition lexical closure, including all parameter branches; no substitute or body alias"
+  },
+  {
+    "top": "ot_hbm_idx_score_hcol_h1",
+    "logic_file": "logic_ot_hbm_idx_score_hcol_h1.sv",
+    "logic_policy": "Exact native memory master definitions excluded only for true same-name native LEF/Liberty binding; no replacement alias",
+    "file": "closure_ot_hbm_idx_score_hcol_h1.sv",
+    "sha256": "641cdde5c9b191965b7e801f0ba42570d5bcb762cb4e6e71646b86fae921d285",
+    "selected_modules": [
+      "ot_hbm_idx_score_hcol_h1",
+      "ot_hdc_delay",
+      "ot_hdc_fp32_add_fast",
+      "ot_hdc_fp32_add_lat",
+      "ot_hdc_ksa",
+      "ot_hdc_ksadd_k__u1",
+      "ot_hdc_lzc32",
+      "ot_hdc_v41x_bf16",
+      "ot_hdc_v41x_bmul_l",
+      "ot_hdc_v41x_csa",
+      "ot_hdc_v41x_faddl",
+      "ot_hdc_v41x_q4dot_l",
+      "ot_hdc_w11_cut",
+      "ot_hidx_score_hcol",
+      "ot_rst_delivered3",
+      "ot_rst_relay"
+    ],
+    "module_count": 16,
+    "dependency_policy": "Conservative selected-definition lexical closure, including all parameter branches; no substitute or body alias"
+  },
+  {
+    "top": "ot_rst_delivered3",
+    "logic_file": "logic_ot_rst_delivered3.sv",
+    "logic_policy": "Exact native memory master definitions excluded only for true same-name native LEF/Liberty binding; no replacement alias",
+    "file": "closure_ot_rst_delivered3.sv",
+    "sha256": "9acf49c87de26db832315be74684b36359af3061e53031b57530249cfdc0ce7d",
+    "selected_modules": [
+      "ot_rst_delivered3"
+    ],
+    "module_count": 1,
+    "dependency_policy": "Conservative selected-definition lexical closure, including all parameter branches; no substitute or body alias"
+  },
+  {
+    "top": "ot_rst_relay",
+    "logic_file": "logic_ot_rst_relay.sv",
+    "logic_policy": "Exact native memory master definitions excluded only for true same-name native LEF/Liberty binding; no replacement alias",
+    "file": "closure_ot_rst_relay.sv",
+    "sha256": "ae627fdff37ab755f2e114d3c9b8755cc6166d9dfd1b0884641d099e52792358",
+    "selected_modules": [
+      "ot_rst_relay"
+    ],
+    "module_count": 1,
+    "dependency_policy": "Conservative selected-definition lexical closure, including all parameter branches; no substitute or body alias"
+  }
+]

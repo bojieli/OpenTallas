@@ -1,0 +1,134 @@
+{
+  "schema": "opentallas.hhp.actual_base_native_join.v1",
+  "source": "Intel1 codex-pc-post-0355 completed native case selected by HHP014",
+  "master": "qkd_kvs_pc",
+  "model_sha256": {
+    "qkd_kvs_pc.lef": "b6a6b09f21cc43f2c1dc35f58514fbf86744935e1b7611795cb0c6b3552dab78",
+    "qkd_kvs_pc_tt.lib": "581c4f2e427b16aca2d495e6284e75038f0329b77a82602b3d4b44f6d8858304",
+    "qkd_kvs_pc_ff.lib": "235388ad7f0e2f7928329254a390780f9989c44a3acde569954a25d655f381e7"
+  },
+  "actual_native_sha256": {
+    "6_final.v": "36bb1d1537d4dc2ea79fc31edffd79f770d5e8f6cb275ae10823107b04ff786c",
+    "6_final.def": "0666fa2c890119d94b0d7490ecc421142b3b4390f2847fd5ee0fe8ccd2a1bbfa"
+  },
+  "full_pin_join": {
+    "source_bits": 4133,
+    "real_lef_bits": 4133,
+    "missing": [],
+    "extra": [],
+    "wrong_direction": [],
+    "source_file": "01484262b complete_source_capsule_r4/pc_EN_0/rtl/qkd_kvs_pc.sv",
+    "model": "PC0355 real qkd_kvs_pc.lef",
+    "scalar_aliases_used": false
+  },
+  "actual_private_parallel_joins": {
+    "buffers": 4,
+    "port_nets": 4,
+    "endpoint_inventory": "Exactly one BTerm and both real BUF A or Y pins per net",
+    "private_p1_nets": "Absent after actual native physical join; both Y outputs on public FT output"
+  },
+  "canonical_parent_pose_join": {
+    "cells_across_EN_WN": 24,
+    "nonzero_delta": 0,
+    "max_delta_um": 0
+  },
+  "qualified": false,
+  "holds": [
+    "PC NOT_SIGNED; separate final post-LEC pending",
+    "No parent timing/clock/PG/adoption credit",
+    "HEAD native physical joins NOT RUN; genuine separate producer required"
+  ],
+  "native_cells": {
+    "mp_isl0_ck0": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "ports": {
+        "A": "ft_ck_i_0",
+        "Y": "ft_ck_o_0"
+      },
+      "placement_status": "FIXED",
+      "xy_um": [
+        123.39,
+        86.4
+      ],
+      "orient": "N"
+    },
+    "mp_isl0_ck1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "ports": {
+        "A": "ft_ck_i_0",
+        "Y": "ft_ck_o_0"
+      },
+      "placement_status": "FIXED",
+      "xy_um": [
+        125.01,
+        86.4
+      ],
+      "orient": "N"
+    },
+    "mp_isl1_ck0": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "ports": {
+        "A": "ft_ck_i_1",
+        "Y": "ft_ck_o_1"
+      },
+      "placement_status": "FIXED",
+      "xy_um": [
+        123.39,
+        276.21
+      ],
+      "orient": "FS"
+    },
+    "mp_isl1_ck1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "ports": {
+        "A": "ft_ck_i_1",
+        "Y": "ft_ck_o_1"
+      },
+      "placement_status": "FIXED",
+      "xy_um": [
+        125.01,
+        276.21
+      ],
+      "orient": "FS"
+    }
+  },
+  "parent_macro_sites": [
+    {
+      "inst": "u_bound.u_core_kvpc1",
+      "master": "qkd_kvs_pc",
+      "x_um": 552.576,
+      "y_um": 198.72,
+      "orient": "R0",
+      "outline_um": [
+        397.44,
+        362.88
+      ],
+      "bound_relative_inst": "u_core_kvpc1"
+    },
+    {
+      "inst": "u_bound.u_core_kvpc2",
+      "master": "qkd_kvs_pc",
+      "x_um": 552.576,
+      "y_um": 959.04,
+      "orient": "R0",
+      "outline_um": [
+        397.44,
+        362.88
+      ],
+      "bound_relative_inst": "u_core_kvpc2"
+    },
+    {
+      "inst": "u_bound.u_core_kvpc3",
+      "master": "qkd_kvs_pc",
+      "x_um": 85.44,
+      "y_um": 959.04,
+      "orient": "MY",
+      "outline_um": [
+        397.44,
+        362.88
+      ],
+      "bound_relative_inst": "u_core_kvpc3"
+    }
+  ],
+  "native_parent_scope": "The actual outer wrapper is TYPE with u_bound; these are exact source-derived normal partition registration paths/poses, not an executed native parent placement."
+}

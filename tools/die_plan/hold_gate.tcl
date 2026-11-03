@@ -90,7 +90,7 @@ set hg_legacy [expr {$hg_cin >= -40.0 && $hg_win <= 20.0}]
 puts "OT_HOLD_GATE structural limit $hg_lim (contract in_min $hg_cin, tap window $hg_win, endpoint cap [expr {$hg_legacy ? 2000 : {none}}])"
 # COORD 11-01 05:1x / OWNER 12.28b (closure first): the post-CTS / pre-repair FF hold check is INFO; the one hard stop
 # is FF hold WNS worse than OT_HOLD_STOP_PS = -150 ps (structural, not repairable by hold padding).  Hold is judged
-# at the routed sign-off (FF hold >= +10 ps on real views), unchanged.  Same constant in tools/die_plan/hold_gate.tcl,
+# at the routed sign-off (FF hold >= 0 ps on real views, OWNER 11-02).  Same constant in tools/die_plan/hold_gate.tcl,
 # tools/orfs_hold_mm.tcl and physical/die_plan/hbm_arch_cores/hold_gate.tcl (test_hold_structural_gate pins it).
 # The limit/cap above is that pre-repair screen (reported).  Like the FLOW-19 limit, the stop counts from the kit's
 # contract (in_min, tap window W_t: the SDC shifts every such endpoint by the same amount), so it is never stricter

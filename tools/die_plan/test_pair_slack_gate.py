@@ -31,8 +31,12 @@ def test_skew_200_with_slack_passes_with_warn():
     assert len(v["warnings"]) == 1 and "WARN" in v["warnings"][0] and v["skew_max_ps"] == 200.0
 
 
-def test_hold_9_fails():
-    v = PSG.from_related(_rec(hold=9.0))
+def test_hold_below_zero_fails():
+    """OWNER 11-02: no +10 ps hold margin -- FF hold slack >= 0 passes, < 0 fails (25 ps FF hold uncertainty stays)."""
+    assert PSG.HOLD_MIN_PS == 0.0
+    assert PSG.from_related(_rec(hold=0.0))["verdict"] == "PASS"
+    assert PSG.from_related(_rec(hold=9.0))["verdict"] == "PASS"
+    v = PSG.from_related(_rec(hold=-0.1))
     assert v["verdict"] == "FAIL" and any("FF hold" in r for r in v["reasons"])
 
 
@@ -52,7 +56,7 @@ def _ca(lo_tt=42.8, lo_ff=27.1, guard=0):
 
 
 def test_count_aligned_landed_judged_by_crossings_not_half_period():
-    """COORD 13:0x (DIE-KV-56 4b/4c): count-aligned landed = crossings at 12.25 (TT >= 0, FF >= +10); need 100 INFO;
+    """COORD 13:0x (DIE-KV-56 4b/4c): count-aligned landed = crossings at 12.25 (TT >= 0, FF >= 0 since OWNER 11-02); need 100 INFO;
     the half-period plan_landing FAIL does not count."""
     r = _rec(skew=100.0)
     bad = dict(pairs=8, plan_landing=dict(verdict="FAIL", window_ps=416.5, damage_max_ps=1260.0))
@@ -63,8 +67,10 @@ def test_count_aligned_landed_judged_by_crossings_not_half_period():
     v = PSG.from_related(r)
     assert v["verdict"] == "PASS" and v["contract_violations"] == 0
     assert v["count_aligned"]["FF"]["below_need_INFO"] == 1
-    r["count_aligned"] = _ca(lo_ff=9.9)
-    assert PSG.from_related(r)["contract_violations"] == 1                # FF crossing below +10
+    r["count_aligned"] = _ca(lo_ff=0.0)
+    assert PSG.from_related(r)["contract_violations"] == 0                # FF crossing at 0 passes (OWNER 11-02)
+    r["count_aligned"] = _ca(lo_ff=-0.1)
+    assert PSG.from_related(r)["contract_violations"] == 1                # FF crossing below 0
     r["count_aligned"] = _ca(lo_tt=-0.1)
     assert PSG.from_related(r)["verdict"] == "FAIL"
     r["count_aligned"] = _ca(guard=1)
@@ -107,7 +113,8 @@ def _infra(tmp_path, hold, contract=0, unc_setup=0):
 def test_die_infra_freeze_gate_1225(tmp_path):
     ok = _infra(tmp_path, hold=10)
     assert ok["verdict"] == "PASS" and "WARN" in ok["skew_role"]          # skew 210 never fails
-    assert _infra(tmp_path, hold=9)["verdict"] == "FAIL"
+    assert _infra(tmp_path, hold=0)["verdict"] == "PASS"                  # OWNER 11-02: hold >= 0
+    assert _infra(tmp_path, hold=-1)["verdict"] == "FAIL"
     assert _infra(tmp_path, hold=50, contract=1)["verdict"] == "FAIL"
     assert _infra(tmp_path, hold=10, unc_setup=60)["verdict"] == "PASS"   # legacy record still accepted
     assert _infra(tmp_path, hold=10, unc_setup=30)["verdict"] == "FAIL"

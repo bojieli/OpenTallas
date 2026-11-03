@@ -1609,7 +1609,7 @@ def stage_of_odb(name, clock_cells=0):
 
 
 def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False, ft_interface=None, ft_ports=None,
-            land_slots=None, face_guard=None):
+            land_slots=None, face_guard=None, reset_capture_kit=None, reset_capture_typed=None):
     D = Design(path, memory_libs, memory_reach)
     sr = re.compile(strap_re)
     m = area_metrics(D)
@@ -1633,6 +1633,15 @@ def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=Non
         m["land_ring"] = dict(buses=lr["buses"], pins=len(caps), clock_exports=lr["clock_exports"], errors=lr["errors"],
                               rejected=len(lr["rejected"]), rejected_sample=lr["rejected"][:8])
     m.update(pin_reg_metrics(D, sr, frozenset(ck["tap_sinks"]) | infra_pins | ring_clocks, caps))
+    if reset_capture_kit is not None or reset_capture_typed is not None:
+        try:
+            if reset_capture_kit is None or reset_capture_typed is None:
+                raise ValueError("reset capture review needs both actual kit and typed graph")
+            from reset_d_mask_review import review as reset_capture_review
+            m["reset_capture_review"] = reset_capture_review(Path(path).read_text(), reset_capture_kit, reset_capture_typed)
+        except (OSError, ValueError, TypeError, KeyError, AttributeError) as error:
+            m["reset_capture_review"] = dict(status="REJECTED", errors=[str(error)], registration_release=False,
+                gating_changed=False, raw_registration_failures_preserved=True)
     m.update(r2r_metrics(D))
     m.update(ck)
     m.update(macro_metrics(D))
@@ -1678,9 +1687,11 @@ def main(argv=None):
     ap.add_argument("--ft-ports", help="matching hash-checked scalar FT declaration")
     ap.add_argument("--land-slots", help="kit land_slots.json: declared landing ring (with --face-guard PASS) = registered capture")
     ap.add_argument("--face-guard", help="kit face_guard.json (verdict PASS) matching --land-slots")
+    ap.add_argument("--reset-capture-kit", help="opt-in BFQG source/capture review only; raw registration gates unchanged")
+    ap.add_argument("--reset-capture-typed", help="actual pin-typed OpenDB graph for --reset-capture-kit; mandatory pair")
     a = ap.parse_args(argv)
     m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach, a.ft_interface, a.ft_ports,
-                a.land_slots, a.face_guard)
+                a.land_slots, a.face_guard, a.reset_capture_kit, a.reset_capture_typed)
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else (m["outline"] if a.outline_self else None)
     rules, verdict = judge(m, tmpl, outline, a.all_kits)

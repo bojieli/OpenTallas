@@ -1,0 +1,27 @@
+{
+  "status": "PREPARED_NOT_DISPATCHED",
+  "source": "/srv/opentallas-scratch2/claude/codex-pc-post-0355",
+  "source_hashes": {
+    "constraint.sdc": "766c8118de59cbe2d3489a6e60c641869b86378c25c12e2b98f4adb4975c31fd",
+    "config.mk": "7d7e4269b3e2bad04cc5a0c7a0b423c7d62fad172925e6598e75f7e40fef6f82",
+    "run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/5_2_route.odb": "68650b4a50d838feab16db8b742775f5e05b1904d6e6a34687ea0faf14767404",
+    "run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/6_final.spef": "c10a0e35d0b92e426116d912895a256eb86ab775ef2afe4bdaeb64672f7201ba",
+    "run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/4_1_cts.odb": "8c6fbb43d1e72f73f8359bfeeec4b914e8525d69e206a288fca1a1cf83577542",
+    "run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/1_2_yosys.v": "47db99529c32ba7513d874f62a9592cbffb1bbdddc978da34bde72fb53ccc041"
+  },
+  "private_target": "net41987 exact four endpoints/masters plus current normal DRV targets",
+  "source_RTL_changed": false,
+  "source_SDC_changed": false,
+  "clock_changed": false,
+  "phase": "repair-only before DPL/GRT",
+  "genuine_CTS_sha256": "8c6fbb43d1e72f73f8359bfeeec4b914e8525d69e206a288fca1a1cf83577542",
+  "variant_env": "OT_MAX_FANOUT=0\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=10\nOT_HOLD_MARGIN=10\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=TC CORNERS=\"tc bc\"'\nOT_SETUP_MARGIN=10\nOT_HOLD_ALLOW_SETUP=0\nOT_PRD_MAX_WIRE_LENGTH=80\nOT_PRD_TARGETED=1\nOT_HOLD_MM_KIT=1\nOT_ECO_FROM=route\nOT_PRD_FROM=route\n",
+  "native_pins": {
+    "nativepgbirth.so": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
+    "native_pg_binding.tcl": "e19c5fd9872e37f68d610e2dc46608359c9970b7c9e6de84f546f3b3c3ea3a2d",
+    "native_pg_entry_original.tcl": "aeeb5c3aa3bdef64ba569cb650fd119c3389d0f0bf7478a7e440dca3f6b50447",
+    "patch_native_pg_entry.py": "a6f76eae45dd5a8760485c6bf36ecd7aa8657f3e8498c687a16b3bdd4e5001e0"
+  },
+  "native_scope": "begin after load_design, entire original PRE/repair body, canonical end plus active0 before typed expected stop",
+  "native_strict": true
+}

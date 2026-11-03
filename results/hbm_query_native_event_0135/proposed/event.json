@@ -1,0 +1,163 @@
+{
+  "status": "DISABLED_SOURCE_PREP_NO_BIND_OR_PHYSICAL_CREDIT",
+  "selected_source": "frozen SOURCE13 selected_preprocessed.sv",
+  "rows": [
+    {
+      "module": "hbm_arch_q_b000",
+      "input_sha256": "fec78e19bae4d6218de87e69d4f27611a33006a26f44841d1cf8b3ff92aab838",
+      "output_sha256": "0e2d42a575e207c9d7c01aaf04915daafb4e476a365c9cea216b926fbf7a8a99",
+      "carriers": [
+        {
+          "name": "L14_o",
+          "old_data": 4127,
+          "new_data": 4124,
+          "dropped": [
+            37,
+            35
+          ],
+          "epoch": [
+            4127,
+            4124
+          ]
+        }
+      ]
+    },
+    {
+      "module": "hbm_arch_q_b000__physical_v1",
+      "input_sha256": "a8f71ef46aa2d68286d2547b948d1ac5e0571a4742d59c993d17b00f7c8c24c5",
+      "output_sha256": "aa6ad710c04c657ba7f13842b0f202264aad1bef94a0d0ce62dcf8a14f32bf90",
+      "carriers": [
+        {
+          "name": "L14_o",
+          "old_data": 4127,
+          "new_data": 4124,
+          "dropped": [
+            37,
+            35
+          ],
+          "epoch": [
+            4127,
+            4124
+          ]
+        }
+      ]
+    },
+    {
+      "module": "hbm_arch_q_b100",
+      "input_sha256": "c078de26153c02a38143e408d162d9829f2a8cff8971dea2f1951ef0073cf939",
+      "output_sha256": "8efab8be0536244b22cdec0eabb0be78afddb91802df8b50ff253a259c591767",
+      "carriers": [
+        {
+          "name": "xo_procdff_71764_Q",
+          "old_data": 8,
+          "new_data": 5,
+          "dropped": [
+            7,
+            5
+          ],
+          "epoch": [
+            8,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "module": "hbm_arch_q_b100__physical_v1",
+      "input_sha256": "b25778f0fc4764b9657f75dbe2e5503f567140aee64495dd13c7ae0702ddff85",
+      "output_sha256": "6200f776492c9eb3f3d8e7cf7a6f9bf8e6567d4a06853d8824165de6e2f60830",
+      "carriers": [
+        {
+          "name": "xo_procdff_71764_Q",
+          "old_data": 8,
+          "new_data": 5,
+          "dropped": [
+            7,
+            5
+          ],
+          "epoch": [
+            8,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "module": "hbm_arch_q_hub__q_hub_ne",
+      "input_sha256": "e1e23fdbddecc14dd291806420ce97e6bff21c8c91b31d9de4051d74a72c69ab",
+      "output_sha256": "a1df0ee901fa4e1c88906225b44f50deff5e06d4fa3b7de9ac4301756bf079e6",
+      "carriers": [
+        {
+          "name": "L160m_o",
+          "old_data": 4986,
+          "new_data": 4983,
+          "dropped": [
+            519,
+            517
+          ],
+          "epoch": [
+            4986,
+            4983
+          ]
+        },
+        {
+          "name": "L6b_o",
+          "old_data": 828,
+          "new_data": 825,
+          "dropped": [
+            519,
+            517
+          ],
+          "epoch": [
+            828,
+            825
+          ]
+        }
+      ]
+    },
+    {
+      "module": "hbm_arch_q_hub__q_hub_nw",
+      "input_sha256": "1fd067da80ce3f7f96eedad5e2766c87d30f72d9ad542927440c4cb342b87626",
+      "output_sha256": "8421dbc6d86403be6d6b6bbb0c4f3ecc6d04835d06e7529c0670be70251e7e20",
+      "carriers": [
+        {
+          "name": "L160_o",
+          "old_data": 4986,
+          "new_data": 4983,
+          "dropped": [
+            519,
+            517
+          ],
+          "epoch": [
+            4986,
+            4983
+          ]
+        },
+        {
+          "name": "L6_o",
+          "old_data": 828,
+          "new_data": 825,
+          "dropped": [
+            519,
+            517
+          ],
+          "epoch": [
+            828,
+            825
+          ]
+        }
+      ]
+    }
+  ],
+  "new_cycles": 0,
+  "added_ff": 0,
+  "removed_boundary_data_bits": 24,
+  "removed_ff": "not counted until actual mapped synthesis; intermediate capture high3 projections also shrink",
+  "holds": [
+    "Producer native295a8 full7-source versus frozen SOURCE13 closure join must be exact before activation",
+    "Six wrapper re-GEN and full typed ABI/carrier lane pin-plan updates required",
+    "Upstream/downstream outside six selected wrappers must consume compact physical vectors before logical zero restore",
+    "Clock budgets 311.5/262.6 UNSELECTED; no adopted parent/as-built",
+    "New canonical wrapper proofs, pin/clock/PG/native geometry gates NOTRUN"
+  ]
+}

@@ -12,8 +12,8 @@ One iteration (at most MAX_ITER = 3), from the previous iteration's routed DB (i
      t<N> (TT setup + DRV, no hold) when TT fails, then b<N> (FF hold + DRV) from it when FF fails; OT_PRD_FROM=route when the DB has no DRC,
      else grt = one full detailed route from the pre-DRT GRT DB, the FLOW-SHARED-10 form that clears small DRC counts)
   2. prd_run.sh D CPUS MEM 1 with OT_PRD_POST=0: the ECO hook prd_hook.tcl on the routed RCX SPEF (= measured arrivals)
-       repair_design (slew/cap) -> repair_timing -setup (two-mode kits) -> repair_timing -hold, hold margin 10 ps
-       (OWNER 12.19, measured arrivals + 10 ps) -> detailed_placement (legalises only what moved) ->
+       repair_design (slew/cap) -> repair_timing -setup (two-mode kits) -> repair_timing -hold, hold margin 0 ps
+       (OWNER 11-02; was 12.19 measured arrivals + 10 ps) -> detailed_placement (legalises only what moved) ->
        global_route -start_incremental/-end_incremental -> detailed_route (route-keep: only the dirty nets are ripped)
      -> clk_freeze_check.sh (clock wires frozen) -> RCX + slew/cap count -> do-finish
   3. the kit's own sign-off on D with the kit's ORIGINAL config.mk restored (the ECO overrides only steer the route):
@@ -27,7 +27,7 @@ The post-route LEC is the caller's (signoff_chain.py runs its usual routed LEC o
 kit's lec.py with --lec).  Result: ROOT/eco_loop.json {schema opentallas.eco_loop.v1, kind eco, verdict, base routed
 DB, iterations [commands, metrics, wall], best, flow sha}.
 
-    eco_loop.py run --kit K [--runner R] [--out ROOT] [--max-iter 3] [--hold-margin 10] [--mem 48] [--cpus 8] [--lec]
+    eco_loop.py run --kit K [--runner R] [--out ROOT] [--max-iter 3] [--hold-margin 0] [--mem 48] [--cpus 8] [--lec]
     eco_loop.py check SIGNOFF.json        eligibility of a sign-off record (prints the class decision)
 Heavy: run through ot-run (--mem = honest peak, the ECO session + DRT + sign-off STA), never on localhost.
     The ECO docker cap is max(--mem, ceil(1.5 x the kit's measured OpenROAD peak)) (ECO-OOM-1); a step killed for memory
@@ -51,7 +51,7 @@ HERE = Path(__file__).resolve().parent
 PRD = HERE / "post_route_drv"
 SCHEMA = "opentallas.eco_loop.v1"
 MAX_ITER = 3
-HOLD_MARGIN_PS = 10           # OWNER 12.19: kit hold repair = measured arrivals + 10 ps
+HOLD_MARGIN_PS = 0            # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was 10 (12.19)
 MIN_WNS_GAIN_PS = 1.0         # stop rule: < 1 ps gain and DRV/DRC not falling = no improvement
 DRC_SMALL = 50                # = autopilot NEAR_DRC_MAX: above it the route is a ROUTING problem, not an ECO
 ECO_FAILS = {"setup_tt", "hold_ff", "drv", "drc", "fanout"}

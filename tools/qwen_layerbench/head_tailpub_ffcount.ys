@@ -1,0 +1,8 @@
+# FF census of the HEAD PART1 engine as the selected A0 tile binds it (head_tailpub_ff_wrap.sv), one run per variant.
+# run.sh substitutes @PART1@ (the PART1 source), @DEF@ (-DFF_TP=n or empty) and @OUT@.
+read_verilog -sv -DSYNTHESIS src/002_ot_hdc_delay.sv src/003_ot_hdc_fastfp.sv src/004_ot_hdc_fp32_add_lat.sv src/005_ot_hdc_fp32_add_lat_nr.sv src/006_ot_hdc_fp32_mul_pipe.sv src/007_ot_hdc_fpu.sv src/008_ot_hdc_prefix.sv src/009_ot_hdc_sfu.sv src/010_ot_qwen_w12_arith.sv src/011_ot_rst_relay.sv src/020_ot_qwen_tile_lsl.sv src/021_ot_qwen_tile_lsl_fp1.sv src/027_ot_fp32_add_rne_pipe.sv
+read_verilog -sv -DSYNTHESIS @PART1@
+read_verilog -sv -DSYNTHESIS @DEF@ head_tailpub_ff_wrap.sv
+hierarchy -top head_tailpub_ff_wrap
+synth -top head_tailpub_ff_wrap -noabc
+tee -o @OUT@ stat

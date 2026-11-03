@@ -10,7 +10,9 @@ PROVIDERS = {
 }
 
 def abi(text):
-    header = text.split(');',1)[0]
+    start = re.search(r'\bmodule\s+\w+', text)
+    if not start: raise ValueError('module header absent')
+    header = text[start.start():].split(');',1)[0]
     return [dict(name=m[3], direction=m[0], is_vector=bool(m[1]), width=abs(int(m[1])-int(m[2]))+1 if m[1] else 1)
             for m in re.findall(r'\b(input|output|inout)\s+(?:wire|logic|reg)?\s*(?:\[\s*(\d+)\s*:\s*(\d+)\s*\])?\s*(\w+)',header)]
 

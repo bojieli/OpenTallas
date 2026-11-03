@@ -119,6 +119,10 @@ def module_recipe(module):
     if module in ("ot_qwen_tp8_pv_join_t", "kv3_pv_pair"):
         # Native TT setup / FF hold sessions, including guarded normal GRT.
         return ["--cts-setup-only", "--two-mode-grt", "--hold-ff-margin", "10"]
+    if module == "kv3_astk":
+        # DIE-KV-61 11-02: native strap master face recut (CORE_PREFLIGHT dropped 60 / shared 17 / unregistered 1
+        # without it) + the native TT setup / FF hold sessions.
+        return ["--astk-native-faces", "--cts-setup-only", "--two-mode-grt", "--hold-ff-margin", "10"]
     if module in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
         return ["--kvspc-face-ports", "--kvspc-private-ports", "--kvspc-core-clock"]
     if module == "qkd_ahub":

@@ -31,6 +31,8 @@ Five independent controls each fail the unchanged checker:
 
 Run on intel2 (ot-run unit oth-ubuntu-2388643-1793674139, exit 0): build 118.9 s / 415 MB, sim 1.1 s.
 
+**Production child.** `ot_t7_land_capture_candidate.sv` (sha256 64e23cf3) is the MUT=0 normal form with no mutant/test state; it is the module the bound transform instantiates (`s81_T7_LAND_bound_cut_1102`). `tb.sv` instantiates it next to the gated candidate and compares all 1060 bits against the reference on every edge (any mismatch fails the positive run). Re-run with the child included: PASS with the same counts, controls still caught at the same edges (intel2 ot-run unit oth-ubuntu-4063984-1793687692, exit 0, TOK-DS-4).
+
 **Held:**
 - The gate is two-state zero-start only. It is not an all-initial-state proof.
 - Rows 640..1023 agree only because the native out-of-range read is 0 under Verilator two-state and the candidate never writes those rows.

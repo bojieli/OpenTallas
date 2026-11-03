@@ -1,0 +1,1067 @@
+{
+  "status": "PASSIVE_NATIVE_QUERY",
+  "metrics": {
+    "_073262_": {
+      "wire_cap_fF": 17.0337,
+      "sink_pin_cap_fF": null,
+      "total_cap_fF": null,
+      "route_length_um": 70.78399999999996,
+      "bbox_um": [
+        163.161,
+        232.352,
+        233.469,
+        232.785
+      ],
+      "connections": [
+        {
+          "instance": "_218317_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "u_leaf.u_pc.u_pce.u_esm.es[36]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "D"
+        }
+      ]
+    },
+    "net41132": {
+      "wire_cap_fF": 12.5133,
+      "sink_pin_cap_fF": 24.131920000000008,
+      "total_cap_fF": 36.64522000000001,
+      "route_length_um": 68.32799999999983,
+      "bbox_um": [
+        165.051,
+        228.645,
+        200.853,
+        238.329
+      ],
+      "connections": [
+        {
+          "instance": "_211229_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_211262_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_218265_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_235431_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_239816_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_241197_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_241310_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_248452_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_248731_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_250102_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_250287_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_250309_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_250996_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_306884_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_307000_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_307293_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "fanout41133",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "place22722",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place22723",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place22724",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place22725",
+          "master": "BUFx6f_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place22726",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place22727",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place22728",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place22729",
+          "master": "BUFx6f_ASAP7_75t_R",
+          "pin": "A"
+        }
+      ]
+    },
+    "_126907_": {
+      "wire_cap_fF": 0.159682,
+      "sink_pin_cap_fF": 0.619928,
+      "total_cap_fF": 0.77961,
+      "route_length_um": 0.9360000000000355,
+      "bbox_um": [
+        128.655,
+        219.384,
+        129.573,
+        219.393
+      ],
+      "connections": [
+        {
+          "instance": "_297797_",
+          "master": "OA211x2_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "_297798_",
+          "master": "INVx1_ASAP7_75t_R",
+          "pin": "A"
+        }
+      ]
+    },
+    "net20827": {
+      "wire_cap_fF": 5.9855100000000006,
+      "sink_pin_cap_fF": 1.8324600000000002,
+      "total_cap_fF": 7.817970000000001,
+      "route_length_um": 40.09500000000003,
+      "bbox_um": [
+        118.179,
+        182.205,
+        128.616,
+        211.185
+      ],
+      "connections": [
+        {
+          "instance": "fanout38367",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place20826",
+          "master": "BUFx6f_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place20828",
+          "master": "BUFx6f_ASAP7_75t_R",
+          "pin": "Y"
+        }
+      ]
+    },
+    "_126906_": {
+      "wire_cap_fF": 1.5050000000000001,
+      "sink_pin_cap_fF": 2.38482,
+      "total_cap_fF": 3.8898200000000003,
+      "route_length_um": 8.118000000000023,
+      "bbox_um": [
+        128.637,
+        212.607,
+        129.627,
+        219.357
+      ],
+      "connections": [
+        {
+          "instance": "_213215_",
+          "master": "NAND2x1_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "_297796_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "_297797_",
+          "master": "OA211x2_ASAP7_75t_R",
+          "pin": "C"
+        },
+        {
+          "instance": "_297800_",
+          "master": "NAND2x1_ASAP7_75t_R",
+          "pin": "A"
+        }
+      ]
+    },
+    "_168485_": {
+      "wire_cap_fF": 4.38921,
+      "sink_pin_cap_fF": 1.656069,
+      "total_cap_fF": 6.045279000000001,
+      "route_length_um": 19.99199999999999,
+      "bbox_um": [
+        184.437,
+        228.645,
+        197.577,
+        234.981
+      ],
+      "connections": [
+        {
+          "instance": "_217824_",
+          "master": "NAND2x2_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "_241764_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "fanout41133",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "A"
+        }
+      ]
+    },
+    "net38366": {
+      "wire_cap_fF": 14.656600000000001,
+      "sink_pin_cap_fF": null,
+      "total_cap_fF": null,
+      "route_length_um": 84.92699999999996,
+      "bbox_um": [
+        113.481,
+        182.097,
+        129.519,
+        212.664
+      ],
+      "connections": [
+        {
+          "instance": "_265557_",
+          "master": "OA211x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_265565_",
+          "master": "OA211x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_265577_",
+          "master": "OA211x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_265585_",
+          "master": "OA211x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_265653_",
+          "master": "OA211x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_278382_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_295238_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_295384_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_296809_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_297532_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_297667_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_297796_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_297920_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_301079_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_301735_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_304522_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_304785_",
+          "master": "AO32x1_ASAP7_75t_R",
+          "pin": "A3"
+        },
+        {
+          "instance": "_306419_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_306444_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_306450_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "fanout38367",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "place20822",
+          "master": "BUFx6f_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place20823",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place20824",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place20827",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A"
+        }
+      ]
+    },
+    "net25706": {
+      "wire_cap_fF": 0.243313,
+      "sink_pin_cap_fF": 2.34187,
+      "total_cap_fF": 2.5851830000000002,
+      "route_length_um": 1.637999999999991,
+      "bbox_um": [
+        152.793,
+        69.705,
+        153.081,
+        71.055
+      ],
+      "connections": [
+        {
+          "instance": "place25707",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "wire41988",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "A"
+        }
+      ]
+    },
+    "_073260_": {
+      "wire_cap_fF": 15.9194,
+      "sink_pin_cap_fF": null,
+      "total_cap_fF": null,
+      "route_length_um": 79.88399999999999,
+      "bbox_um": [
+        163.413,
+        233.208,
+        240.777,
+        234.405
+      ],
+      "connections": [
+        {
+          "instance": "_242024_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "u_leaf.u_pc.u_pce.u_esm.es[34]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "D"
+        }
+      ]
+    },
+    "net40106": {
+      "wire_cap_fF": 6.870990000000001,
+      "sink_pin_cap_fF": 25.30897000000001,
+      "total_cap_fF": 32.17996000000001,
+      "route_length_um": 38.361000000000104,
+      "bbox_um": [
+        151.389,
+        231.039,
+        163.521,
+        237.411
+      ],
+      "connections": [
+        {
+          "instance": "_211280_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_233547_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_235692_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_236147_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_237084_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_237228_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_240557_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_240910_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_241796_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_248220_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_248331_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_248412_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_248873_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_249686_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_249980_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_250107_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_250200_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_250312_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_250497_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_251277_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_306968_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_307609_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "fanout40106",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "fanout40107",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "Y"
+        }
+      ]
+    },
+    "_073258_": {
+      "wire_cap_fF": 15.3247,
+      "sink_pin_cap_fF": null,
+      "total_cap_fF": null,
+      "route_length_um": 69.894,
+      "bbox_um": [
+        159.381,
+        232.389,
+        228.609,
+        233.055
+      ],
+      "connections": [
+        {
+          "instance": "_237314_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "u_leaf.u_pc.u_pce.u_esm.es[32]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "D"
+        }
+      ]
+    },
+    "_053064_": {
+      "wire_cap_fF": 0.028942,
+      "sink_pin_cap_fF": null,
+      "total_cap_fF": null,
+      "route_length_um": 0.16200000000000614,
+      "bbox_um": [
+        128.673,
+        219.195,
+        128.745,
+        219.285
+      ],
+      "connections": [
+        {
+          "instance": "_297798_",
+          "master": "INVx1_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.u_ctl.core.on.bank[19].rtp[1]$_DFFE_PN0P_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "D"
+        }
+      ]
+    },
+    "net40105": {
+      "wire_cap_fF": 4.698790000000001,
+      "sink_pin_cap_fF": 26.77991800000001,
+      "total_cap_fF": 31.47870800000001,
+      "route_length_um": 27.921000000000106,
+      "bbox_um": [
+        158.769,
+        231.039,
+        165.321,
+        237.645
+      ],
+      "connections": [
+        {
+          "instance": "_208215_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_211200_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_218317_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_236908_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_236953_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_237147_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_237269_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_237314_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_240037_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_240052_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_241372_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_241435_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_241527_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B1"
+        },
+        {
+          "instance": "_241528_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_241811_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_241969_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_242024_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_249507_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_249745_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_249749_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_252332_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_307349_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_307351_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "_307585_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "B2"
+        },
+        {
+          "instance": "fanout40106",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "Y"
+        }
+      ]
+    },
+    "net22724": {
+      "wire_cap_fF": 0.427788,
+      "sink_pin_cap_fF": 0.534279,
+      "total_cap_fF": 0.962067,
+      "route_length_um": 3.1859999999999786,
+      "bbox_um": [
+        163.377,
+        230.895,
+        165.321,
+        231.975
+      ],
+      "connections": [
+        {
+          "instance": "fanout40107",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place22725",
+          "master": "BUFx6f_ASAP7_75t_R",
+          "pin": "Y"
+        }
+      ]
+    },
+    "_073213_": {
+      "wire_cap_fF": 15.6448,
+      "sink_pin_cap_fF": null,
+      "total_cap_fF": null,
+      "route_length_um": 72.00000000000003,
+      "bbox_um": [
+        161.145,
+        230.967,
+        231.741,
+        231.288
+      ],
+      "connections": [
+        {
+          "instance": "_307349_",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "u_leaf.u_pc.u_pce.u_esm.es[25]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "D"
+        }
+      ]
+    },
+    "_168484_": {
+      "wire_cap_fF": 1.4279099999999998,
+      "sink_pin_cap_fF": 2.592535,
+      "total_cap_fF": 4.020445,
+      "route_length_um": 9.629999999999995,
+      "bbox_um": [
+        184.005,
+        220.437,
+        185.463,
+        228.537
+      ],
+      "connections": [
+        {
+          "instance": "_217823_",
+          "master": "INVx1_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "_217824_",
+          "master": "NAND2x2_ASAP7_75t_R",
+          "pin": "B"
+        },
+        {
+          "instance": "_237067_",
+          "master": "AND3x1_ASAP7_75t_R",
+          "pin": "B"
+        }
+      ]
+    },
+    "net41987": {
+      "wire_cap_fF": 28.202499999999997,
+      "sink_pin_cap_fF": 1.802533,
+      "total_cap_fF": 30.005032999999997,
+      "route_length_um": 187.8179999999998,
+      "bbox_um": [
+        152.307,
+        69.741,
+        183.897,
+        220.545
+      ],
+      "connections": [
+        {
+          "instance": "_206161_",
+          "master": "AND3x1_ASAP7_75t_R",
+          "pin": "B"
+        },
+        {
+          "instance": "_217823_",
+          "master": "INVx1_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place25706",
+          "master": "BUFx3_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "wire41988",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "Y"
+        }
+      ]
+    },
+    "_105305_": {
+      "wire_cap_fF": 2.09461,
+      "sink_pin_cap_fF": null,
+      "total_cap_fF": null,
+      "route_length_um": 12.492000000000019,
+      "bbox_um": [
+        119.583,
+        178.929,
+        123.849,
+        182.871
+      ],
+      "connections": [
+        {
+          "instance": "_265548_",
+          "master": "OR4x2_ASAP7_75t_R",
+          "pin": "Y"
+        },
+        {
+          "instance": "_300669_",
+          "master": "OA21x2_ASAP7_75t_R",
+          "pin": "A1"
+        },
+        {
+          "instance": "_300678_",
+          "master": "OA21x2_ASAP7_75t_R",
+          "pin": "A1"
+        },
+        {
+          "instance": "_300681_",
+          "master": "OA21x2_ASAP7_75t_R",
+          "pin": "A1"
+        },
+        {
+          "instance": "_300684_",
+          "master": "OA21x2_ASAP7_75t_R",
+          "pin": "A1"
+        },
+        {
+          "instance": "_301498_",
+          "master": "OA22x2_ASAP7_75t_R",
+          "pin": "A2"
+        },
+        {
+          "instance": "_304769_",
+          "master": "AO32x1_ASAP7_75t_R",
+          "pin": "A3"
+        },
+        {
+          "instance": "_304790_",
+          "master": "AO32x1_ASAP7_75t_R",
+          "pin": "A3"
+        },
+        {
+          "instance": "_304792_",
+          "master": "AO32x1_ASAP7_75t_R",
+          "pin": "A3"
+        },
+        {
+          "instance": "place20821",
+          "master": "BUFx6f_ASAP7_75t_R",
+          "pin": "A"
+        },
+        {
+          "instance": "place20828",
+          "master": "BUFx6f_ASAP7_75t_R",
+          "pin": "A"
+        }
+      ]
+    }
+  },
+  "candidate_master_input_caps": {
+    "BUFx10_ASAP7_75t_R": {
+      "Y": null,
+      "A": 1.20694
+    },
+    "BUFx12_ASAP7_75t_R": {
+      "Y": null,
+      "A": 1.20393
+    },
+    "BUFx12f_ASAP7_75t_R": {
+      "Y": null,
+      "A": 2.34288
+    },
+    "BUFx16f_ASAP7_75t_R": {
+      "Y": null,
+      "A": 2.34187
+    },
+    "BUFx24_ASAP7_75t_R": {
+      "Y": null,
+      "A": 2.35026
+    },
+    "BUFx2_ASAP7_75t_R": {
+      "Y": null,
+      "A": 0.534279
+    },
+    "BUFx3_ASAP7_75t_R": {
+      "Y": null,
+      "A": 0.62959
+    },
+    "BUFx4_ASAP7_75t_R": {
+      "Y": null,
+      "A": 0.538751
+    },
+    "BUFx4f_ASAP7_75t_R": {
+      "Y": null,
+      "A": 1.00419
+    },
+    "BUFx5_ASAP7_75t_R": {
+      "Y": null,
+      "A": 0.629797
+    },
+    "BUFx6f_ASAP7_75t_R": {
+      "Y": null,
+      "A": 1.20287
+    },
+    "BUFx8_ASAP7_75t_R": {
+      "Y": null,
+      "A": 0.852045
+    },
+    "INVx11_ASAP7_75t_R": {
+      "Y": null,
+      "A": 6.33283
+    },
+    "INVx13_ASAP7_75t_R": {
+      "Y": null,
+      "A": 7.46672
+    },
+    "INVx1_ASAP7_75t_R": {
+      "Y": null,
+      "A": 0.619928
+    },
+    "INVx2_ASAP7_75t_R": {
+      "Y": null,
+      "A": 1.19281
+    },
+    "INVx3_ASAP7_75t_R": {
+      "Y": null,
+      "A": 1.76686
+    },
+    "INVx4_ASAP7_75t_R": {
+      "Y": null,
+      "A": 2.33645
+    },
+    "INVx5_ASAP7_75t_R": {
+      "Y": null,
+      "A": 2.90749
+    },
+    "INVx6_ASAP7_75t_R": {
+      "Y": null,
+      "A": 3.48244
+    },
+    "INVx8_ASAP7_75t_R": {
+      "Y": null,
+      "A": 4.61057
+    },
+    "INVxp33_ASAP7_75t_R": {
+      "Y": null,
+      "A": 0.275723
+    },
+    "INVxp67_ASAP7_75t_R": {
+      "Y": null,
+      "A": 0.443164
+    }
+  },
+  "STA_new_run": false
+}

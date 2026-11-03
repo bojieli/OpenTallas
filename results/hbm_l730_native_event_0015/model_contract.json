@@ -26,5 +26,41 @@
     "extra_reset_loads": 2,
     "extra_cycles": 0,
     "physical_route_qualification": "NOT_RUN"
+  },
+  "baselines": {
+    "actual_SOURCE13_42": {
+      "logical_added_edges": 5,
+      "added_FF_per_lane": 7293,
+      "paired_added_FF": 14586
+    },
+    "current_coherent_plan45": {
+      "logical_upstream_added_edges": 2,
+      "RTL_added_FF_per_lane": 2304,
+      "downstream3edges_and4989FF_already_budgeted": true,
+      "optional_local_epoch_extra_FF": 2,
+      "absolute_plan_FF_pricing": "UNJOINED_NATIVE_XO_BOUNDARY_STATE_CLOCK_PIN_BUDGET"
+    },
+    "reused_XO_state": {
+      "actual_SOURCE13_FF": 1023,
+      "new_RTL_FF": 0,
+      "physical_plan_credit": "UNJOINED; do not assume free physical capacity"
+    }
+  },
+  "current_plan_XO_budget_audit": {
+    "plan": "/home/ubuntu/coord/tmp/codex-hbm-su00-upper-clock-2335/composite_root_PENDING.json",
+    "rows": [
+      {
+        "type": "q_b113",
+        "explicit_native_XO_matches": [],
+        "aggregate_cells": 1429626,
+        "scope": "No explicit native XO port/FF/clock reservation identity. Aggregate cells cannot establish or exclude this state. Absolute plan budget unjoined; no free physical credit."
+      },
+      {
+        "type": "q_b113__physical_v1",
+        "explicit_native_XO_matches": [],
+        "aggregate_cells": 1429626,
+        "scope": "No explicit native XO port/FF/clock reservation identity. Aggregate cells cannot establish or exclude this state. Absolute plan budget unjoined; no free physical credit."
+      }
+    ]
   }
 }

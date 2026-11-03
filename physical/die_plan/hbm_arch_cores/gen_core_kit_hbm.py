@@ -1110,7 +1110,7 @@ def drv_fanout(a):
 
 
 def hold_ff_margin(a):
-    """FLOW-HOLD-1 (OWNER 12.19): OT_HOLD_FF_MARGIN = --hold-ff-margin, else max(--hold-margin, shared default 10)."""
+    """FLOW-HOLD-1 (OWNER 12.19): OT_HOLD_FF_MARGIN = --hold-ff-margin, else max(--hold-margin, shared default 0 since OWNER 11-02)."""
     if a.hold_ff_margin is not None:
         return a.hold_ff_margin
     sys.path.insert(0, str(TOOL))
@@ -1224,7 +1224,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # band (sfu lane14 4_cts FF: 1467 endpoints < 0, 37822 < 30) at ~20 iterations/min -> 57 + 16 non-convergent runs.
     ap.add_argument("--hold-margin", type=float, default=0.0, help="HOLD_SLACK_MARGIN ps at the flow corner (extra over the SDC 25 ps hold uncertainty)")
     # FLOW-HOLD-1 (OWNER 12.19): the FF GRT hold repair margin (OT_HOLD_FF_MARGIN, run_kit_hbm.sh grt HOLD_SLACK_MARGIN=)
-    # is its own knob now: default max(--hold-margin, tools/die_plan/core_flow.HOLD_FF_MARGIN_DEFAULT = 10); 15 where a
+    # is its own knob now: default max(--hold-margin, tools/die_plan/core_flow.HOLD_FF_MARGIN_DEFAULT = 0, OWNER 11-02); 15 where a
     # measured GRT->final RC hold loss > 10 ps is documented (ring).  HOLD_SLACK_MARGIN (other steps) stays --hold-margin.
     ap.add_argument("--hold-ff-margin", type=float, default=None, help="OT_HOLD_FF_MARGIN ps (FF GRT hold repair)")
     # HBM-CORES-KITS-20: shared core-flow DRV basis (KV/S81/QC); 0 disables either knob
@@ -2082,6 +2082,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             physical_reset_qualification=False, die_contract_staged=False), indent=1) + "\n")
     else:
         reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"])
+    # Optional source-pinned placement/model assets are assembled before the
+    # normal kit hash and generation provenance; never retrofit a built kit.
+    from kit_runtime_assets import stage as stage_runtime_assets
+    runtime_files = stage_runtime_assets(kd, REPO, rec.get("runtime_files"))
     write_boundary_context(kd, clks, rsts)   # before kit_hash: typed clock/reset declaration (COORD 10-30 15:27)
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
@@ -2099,6 +2103,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                **({"out_extra_stages": shell["out_extra_stages"]} if shell.get("out_extra_stages") else {}))
                           if shell else None),
               kit_hash=kit_hash(kd))
+    if runtime_files:
+        fz["runtime_files"] = runtime_files
     if not source_profile:
         fz.update(plan_pins_source=v["pins_file"], plan_pins_source_sha256=v["pins_sha256"],
                   plan_pins_source_canon_sha256=pins_canon, pins_file="plan_pins.json",

@@ -32,6 +32,16 @@ import schema as S
 import taps as T
 from schema import DIE_PART
 
+
+def _common_flow_file(name, repo):
+    """physical/common_flow/<name> of checkout `repo`, from git HEAD in a sparse checkout without it
+    (common_flow_src.py, DIE-KV-62 11-02); a copy of this module without the helper: the plain path."""
+    try:
+        from common_flow_src import common_flow_file
+    except ImportError:
+        return Path(repo) / "physical/common_flow" / name
+    return common_flow_file(name, repo)
+
 CORE_MARGIN_UM = 4.32        # multiple of row 0.27 and site 0.054
 IO_BUDGET = 0.2
 PIN_LEN_UM = 0.192
@@ -57,6 +67,14 @@ def _cland_pinslot(budgets, tn, extra=()):
         return False
     return True
 
+
+
+def _cland_pinslot_dense(budgets, tn):
+    """DIE-KV-62/stations 11-02 opt-in: budgets.cland_pinslot_dense_types names the types (or unsplit base names) whose
+    y-column pinslot rows pack the ring slot flops body to body (OT_CLAND_PINSLOT_DENSE=1, landing_placement.tcl);
+    absent/empty = unchanged kits."""
+    on = list(budgets.get("cland_pinslot_dense_types") or [])
+    return tn in on or tn.split("__")[0] in on
 
 def _cland_fit_mode(budgets, tn=None):
     """landing_placement fit footprint for CLAND cells -> OT_CLAND_FIT_RESERVE value or None.
@@ -287,7 +305,7 @@ def port_bind_pin_records(P, tn, pins, bump_ports=None):
     return list({(p["bus"], p["bit"]): p for p in port_pins}.values())
 
 
-def write_partition_freeze(P, tn, kd, recs):
+def write_partition_freeze(P, tn, kd, recs, *, private_clock_mesh=None):
     """plan_pins.json (die-plan pin centres) + freeze.json (schema partition_freeze: outline, pins_file, pins_sha256,
     pins_canon_sha256 of the die-plan pins) for kit_contract.pins_canonical; refuses the kit when io.tcl is not that
     pin set with the consumed master-plan slice applied (kit_contract.slice_expected)."""
@@ -295,8 +313,15 @@ def write_partition_freeze(P, tn, kd, recs):
     import kit_contract as KC
     kd = Path(kd)
     w, h = P.types[tn]["outline_um"]
+    if private_clock_mesh is not None:
+        import hhp_clock_mesh_role as HMR
+        HMR.validate_private_request(kd)
+        private_clock_mesh["actual_source_config"] = HMR.actual_source_config(kd)
+        private_clock_mesh["actual_config_sha256"] = HMR.digest((kd / "config.mk").read_bytes())
+        (kd / "private_clock_mesh.json").write_text(json.dumps(private_clock_mesh, indent=1) + "\n")
     body = json.dumps(dict(schema="opentallas.die_plan.partition_plan_pins.v1", die=P.name, type=tn,
-                           source="gen_phys.plan_pin_records (die plan)", pins=recs), indent=1) + "\n"
+                           source=("gen_phys.plan_pin_records (die plan)" if private_clock_mesh is None else
+                                   "gen_phys plan pins + exact PRIVATE native clock role certificate"), pins=recs), indent=1) + "\n"
     (kd / "plan_pins.json").write_text(body)
     canon = KC._canon(recs, [w, h])
     # 12.7c: a kit that consumed its master-plan slice places the slice-fixed pins where the slice says
@@ -308,6 +333,8 @@ def write_partition_freeze(P, tn, kd, recs):
     fz = dict(schema="opentallas.partition_freeze.v1", die=P.name, type=tn, outline_um=[w, h],
               pins_file="plan_pins.json", pins_sha256=hashlib.sha256(body.encode()).hexdigest(),
               pins_canon_sha256=canon, pins=len(recs))
+    if private_clock_mesh is not None:
+        fz["private_clock_mesh"] = private_clock_mesh
     # DIE-QC-59 11-01: a partition kit has the same proven boot reset as its die.
     # Core kits already staged this contract; type kits silently used LEC's four-edge
     # default, leaving reset-less pipeline/SRAM write constants unresolved.
@@ -1498,7 +1525,7 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 # kit HOLD_SLACK_MARGIN (owner 00:46: repair only 0..5 ps above the SDC).  gen.py phys --hold-mcmm = old MCMM GRT.
 # FLOW-HOLD-1 (OWNER 12.19): 5 -> 10 ps for NEW kits (the shared core_flow.HOLD_FF_MARGIN_DEFAULT; 15 where a measured
 # GRT->final RC hold loss > 10 ps is documented); signed views stay valid.
-HOLD_FF_MARGIN_DEFAULT = 10.0
+HOLD_FF_MARGIN_DEFAULT = 0.0   # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was 10 (12.19)
 # HOLD-REPAIR 10-26 (plan_demand kits only): repair_timing buffer cap and the HB4 hold-pad hook
 HOLD_REPAIR_MAX_BUFFER_PERCENT = 100.0
 HOLD_PAD_HB4 = Path(__file__).resolve().parents[2] / "physical" / "common_flow" / "hold_pad_hb4.tcl"
@@ -2235,6 +2262,10 @@ def declared_rom_bits(rtl_dir):
 DECLARED_FLOP_MEMORIES = {
     # KV kv3_hub_Eo / kv3_hub_Wo qkd_seq_xs_s u_q: 40 x 128 Q store FIFO (rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv)
     "ot_qkvd_seq_m_sfifo": 40 * 128,
+    # S81 T7 svc_lo_dsdv_svc_rs__t7 u_att.sw (TOK-DS-3 11-02): 32 x 512 score-window FIFO, bound native glue of
+    # dsdv_svc_att.sv sw[]; the head row is read asynchronously at sw_r into the same-cycle consumer (bound 191_Y), so a
+    # synchronous macro would add a read cycle.  Content-hashed glue name: a re-bind with other content no longer matches.
+    "ot_bind_native_bfac540d36e9ad5c410d0d97": 32 * 512,
 }
 
 
@@ -2551,7 +2582,7 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
-                   cland_pinslot=(), spare_out=()):
+                   cland_pinslot=(), spare_out=(), private_clock_mesh=None):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -2699,7 +2730,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if grouped["groups"]:
         (kd / "core_clock_groups.json").write_text(json.dumps(grouped, indent=1) + "\n")
         (kd / "core_clock_groups_apply.tcl").write_text(CG.tcl_text(grouped))
-        shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/core_clock_groups.tcl",
+        shutil.copyfile(_common_flow_file("core_clock_groups.tcl", Path(__file__).resolve().parents[2]),
                         kd / "core_clock_groups.tcl")
         group_hook = "\nsource /work/core_clock_groups_apply.tcl\n"
     # DIE-HEAD-17 (opt-in partition_types.<t>.reg_spine): register clock as a plan-placed spine + local trees and the
@@ -2769,6 +2800,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # FLOW-11 10-30 (default-on since 12.27 b; budgets.cland_pinslot_off_types opts out) (DIE-HEAD-43 (C)): ring slot flops next to their own
            # bus-bit pin (HEAD turn_a t_i farthest-slot p90 69 um, bit-major band fill). Absent = unchanged kit.
            *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn, cland_pinslot) else []),
+           # DIE-KV-62/stations 11-02 opt-in budgets.cland_pinslot_dense_types: y-column pinslot rows body to body
+           *(["export OT_CLAND_PINSLOT_DENSE = 1"] if _cland_pinslot_dense(P.budgets, tn) else []),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
@@ -2893,7 +2926,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
     cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
-    shutil.copyfile(HOLD_PAD_HB4, kd / "hold_pad_hb4.tcl")
+    shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
     if _tap_grt_pre(P, t):
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
@@ -2910,7 +2943,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
-              "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "grt_pre.tcl",
+              "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
@@ -3118,9 +3151,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # Copy the current shared hook and its conditional helpers beside each generated kit.
-    cf = Path(__file__).resolve().parents[2] / "physical" / "common_flow"
     for f in KEEP_REGS_HOOK:
-        shutil.copyfile(cf / f, kd / f)
+        shutil.copyfile(_common_flow_file(f, Path(__file__).resolve().parents[2]), kd / f)
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
     from signoff import copy_signoff_bundle
     copy_signoff_bundle(kd, extra=("kit_preflight.py", "legacy_gate.py", "core_clock_band.py"))
@@ -3156,9 +3188,20 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         # Logical declaration is required by synthesis/LEC gates even before physical strap sites are planned.
         # Missing sites remain absent from pins.json and keep their ordinary physical qualification obligations.
         (kd / "straps.json").write_text(json.dumps(dict(straps=declared_straps), indent=1) + "\n")
+    private_clock_pins, private_clock_info = [], None
+    if private_clock_mesh is not None:
+        if not trial:
+            raise ValueError("private historical clock source requires explicit --trial")
+        import hhp_clock_mesh_role as HMR
+        private_clock_pins, private_clock_info = HMR.install_generated_partition(kd, private_clock_mesh, tn, macros)
+        bud["native_infrastructure"] = dict(pins=len(private_clock_pins), arcs=4, data_cycles_added=0,
+            role="exact private intentional clock mesh", qualification="HOLD: actual HEAD joins and timing not run")
+        (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     import infra_rtl as IR
     infra = IR.type_ports(t)
     if infra:
+        if private_clock_mesh is not None:
+            raise ValueError("private native clock cut cannot mix with generic infrastructure ports")
         import ft_ports as FT
         decl = FT.declaration(t.get("infra_arcs", []), f"die plan {P.name} type {tn}: explicit native hard-core interfaces")
         if {p["name"] for p in infra} != {p["name"] for p in decl["ports"]}:
@@ -3172,13 +3215,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # HEAD-TILE-C9: reviewed canonical placement, scoped to s81_head hd_tile and guarded by recipe/netlist identity.
     import head_tile_c9
     head_tile_c9.install(P, tn, kd)
-    planned_pins = plan_pin_records(P, tn, pins, bump_sites)
+    planned_pins = plan_pin_records(P, tn, pins, bump_sites) + private_clock_pins
     # pins.json remains the boundary-flop contract consumed by face_guard.
     # The physical audit also checks all other non-exempt declared ABI pins.
     audit_pins = audit_pin_records(json.loads((kd / "pins.json").read_text()), planned_pins)
     (kd / "audit_pins.json").write_text(json.dumps(audit_pins, indent=1) + "\n")
     prepare_signed_parent_source(P, tn, kd, macros, root)
-    write_partition_freeze(P, tn, kd, planned_pins)
+    write_partition_freeze(P, tn, kd, planned_pins, private_clock_mesh=private_clock_info)
     return kd
 
 
@@ -3639,7 +3682,7 @@ def bound_parent_id_plan(raw, kit_rtl):
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=()):
+               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=(), private_clock_mesh=None):
     """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain)."""
     """landing (opt-in, DIE-HEAD-4b, gen phys --clock-landing): the clock_landing_plan sidecar of a composed landed plan.
     The kit wrapper is the SAME landed wrapper gen rtl --clock-landing emits (clock_landings.type_rtl: rings, ring
@@ -3650,6 +3693,11 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
     import gen_rtl
     import master_slice as MS
+    if private_clock_mesh:
+        if not trial or set(private_clock_mesh) != {"kv3_pc__cl5a95b461"} or not types or set(types) != set(private_clock_mesh):
+            raise ValueError("private clock request requires exact single TYPE and explicit --trial/--types")
+        if not kit_rtl or set(private_clock_mesh) - set(kit_rtl):
+            raise ValueError("private clock request requires the actual bound --kit-rtl readset")
     if not master_slice and not trial and MS.required(raw):     # 12.7c: refuse before writing anything
         raise SystemExit(MS.REFUSE)
     # plan-relative declarations (hard-core pins_file for the reset wavefront) resolve against the plan file
@@ -3750,7 +3798,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                    plain_rings=bool(kit_rtl and tn in kit_rtl),
                                    kit_defines=kit_rtl_defines(kit_rtl[tn], mine) if kit_rtl and tn in kit_rtl else None,
                                    cland_pinslot=tuple(cland_pinslot or ()),
-                                   spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else ()))
+                                   spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else (),
+                                   private_clock_mesh=(private_clock_mesh or {}).get(tn)))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits

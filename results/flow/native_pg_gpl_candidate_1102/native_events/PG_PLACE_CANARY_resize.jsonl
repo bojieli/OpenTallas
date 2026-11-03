@@ -1,0 +1,6 @@
+{"kind":"BEGIN","stage":"resize","strict_original":"UNSET","strict_gpl_supported":"0","native":"creates 0 swaps 0 bound 0"}
+{"kind":"PRE_HOOK","stage":"resize","native_before":"creates 0 swaps 0 bound 0","native_after":"creates 0 swaps 0 bound 0"}
+{"kind":"WATCHES","stage":"resize","requested_command":"::global_placement","final_command":"::global_placement"}
+{"kind":"ENTER","stage":"resize","id":"1","tag":"REPAIR_DESIGN","argv":"repair_design -verbose -cap_margin 20 -slew_margin 20","native_before":"creates 0 swaps 0 bound 0"}
+{"kind":"LEAVE","stage":"resize","id":"1","tag":"REPAIR_DESIGN","argv":"repair_design -verbose -cap_margin 20 -slew_margin 20","command_code":"0","result":"","native_after":"creates 55 swaps 29 bound 110","delta_creates":"55","delta_swaps":"29","delta_bound":"110"}
+{"kind":"END","stage":"resize","native":"creates 55 swaps 29 bound 110","native_status_after_end":"contract native_pg_birth.flat_literal.v1 active 0","cleanup_errors":""}

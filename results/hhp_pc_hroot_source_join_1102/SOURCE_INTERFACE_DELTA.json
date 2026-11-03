@@ -1,0 +1,209 @@
+{
+  "status": "BOUNDED_SOURCE_DELTA_PREP_NOT_FULL_COMPATIBILITY",
+  "source_event": "ea246756a",
+  "lanes": [
+    {
+      "path": "/ports/1745",
+      "row": {
+        "id": "L1190_0",
+        "src": {
+          "part": "pc_EN_7",
+          "bus": "o_kvpc_Q_N_o_next"
+        },
+        "dst": {
+          "part": "hroot_EN",
+          "bus": "i_kvpc_Q_N_o_next"
+        },
+        "width": 299,
+        "kind": "data",
+        "face": "S",
+        "layers": [
+          "M5",
+          "M7"
+        ],
+        "window_um": [
+          9695.8083,
+          9724.3843
+        ],
+        "order": "lsb_high"
+      }
+    },
+    {
+      "path": "/ports/1807",
+      "row": {
+        "id": "L1252_0",
+        "src": {
+          "part": "pc_ES_7",
+          "bus": "o_kvpc_Q_N_o_next"
+        },
+        "dst": {
+          "part": "hroot_ES",
+          "bus": "i_kvpc_Q_N_o_next"
+        },
+        "width": 299,
+        "kind": "data",
+        "face": "N",
+        "layers": [
+          "M5",
+          "M7"
+        ],
+        "window_um": [
+          9695.8083,
+          9724.3843
+        ],
+        "order": "lsb_high"
+      }
+    },
+    {
+      "path": "/ports/1869",
+      "row": {
+        "id": "L1314_0",
+        "src": {
+          "part": "pc_WN_7",
+          "bus": "o_kvpc_Q_N_o_next"
+        },
+        "dst": {
+          "part": "hroot_WN",
+          "bus": "i_kvpc_Q_N_o_next"
+        },
+        "width": 299,
+        "kind": "data",
+        "face": "S",
+        "layers": [
+          "M5",
+          "M7"
+        ],
+        "window_um": [
+          1352.0957,
+          1380.6717
+        ],
+        "order": "lsb_low"
+      }
+    },
+    {
+      "path": "/ports/1931",
+      "row": {
+        "id": "L1376_0",
+        "src": {
+          "part": "pc_WS_7",
+          "bus": "o_kvpc_Q_N_o_next"
+        },
+        "dst": {
+          "part": "hroot_WS",
+          "bus": "i_kvpc_Q_N_o_next"
+        },
+        "width": 299,
+        "kind": "data",
+        "face": "N",
+        "layers": [
+          "M5",
+          "M7"
+        ],
+        "window_um": [
+          1352.0957,
+          1380.6717
+        ],
+        "order": "lsb_low"
+      }
+    }
+  ],
+  "raw_data_bits": 299,
+  "physical_bus_bits": 300,
+  "direct_added_output_stages": 0,
+  "before_after": {
+    "return_hop_instance": {
+      "identical": true,
+      "sha256": "27b2378057d6fb24758346e7f26133abb10dd988e6090dc0cd18953dedf31a34",
+      "source": "    qkd_embedding_static_return_hop u_embr (.ck(ck), .rst_n(rst_n), .capture_slot(w_pc__emb_capture_slot[0:0]), .capture_v(w_pc__emb_beat_v[0:0]), .capture_record({w_pc__emb_beat_epoch[15:0], w_pc__emb_beat_scale[0:0], w_pc__emb_beat_half[0:0], w_pc__emb_beat_word[5:0], w_pc__emb_beat_token[17:0], w_pc__emb_beat_data[255:0]}), .transfer_slot(w_pc__emb_transfer_slot[0:0]), .upi(embr__upi), .upo(w_embr__upo), .fault(w_embr__fault));"
+    },
+    "return_output_assignment": {
+      "identical": true,
+      "sha256": "c6b367aa1f20098187bb9ccf5c9ca4e65cc891e09b171fa1db621364dbe517ee",
+      "source": "    assign o_next = {w_embr__upo};"
+    }
+  },
+  "source_files": {
+    "before": {
+      "path": "/home/ubuntu/coord/tmp/codex-pc-p3-event-0005/native/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+      "sha256": "e38a80024ea26b60f8bdbc2619a202dc689bfd8881f028ca711021d0275c8497"
+    },
+    "after": {
+      "path": "/home/ubuntu/coord/tmp/codex-pc-p3-event-0005/full_event_r1/rtl_overlay/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+      "sha256": "2fab4ca52ed74e7588c2ccb33cc9dc4fb3d34f1229c14e07b2178ac260ebcab2"
+    }
+  },
+  "P3": "Seven o_grp fault observation bits only; this o_next return bus is distinct.",
+  "P4": "780-bit o_prev forward launch only; this o_next return bus is distinct.",
+  "P1_P2": "Private actual_* hold copies, zero added cycles; return-hop module unmodified.",
+  "P7": "Genuine head upo record pin flop form has zero added cycles; PC_N31 source is the non-head return hop.",
+  "common_clock_programme": "NOT JOINED: owner14 common-clock adapter and command/forward date changes may alter record availability; no fixed programme compatibility claim.",
+  "physical_epoch_edges": {
+    "scope": "ACTUAL current4596 physical graph only; not origin/source or epoch semantics proof",
+    "geom_sha256": "d38d1ce6d3f140bbd7a221e7fd0a6ca8e0cf1b5f8b028a8fe05bfa1a5b0dadca",
+    "pins": [
+      {
+        "pin": {
+          "k": 1466,
+          "name": "i_kvpc_Q_N_o_next[298]",
+          "io": "INPUT",
+          "sig": "SIGNAL",
+          "layer": "M5",
+          "x": 1380.6,
+          "y": 0.096
+        },
+        "net": 43194,
+        "driver": [
+          "p",
+          1466,
+          false
+        ],
+        "sinks": [
+          {
+            "endpoint": [
+              "i",
+              200648,
+              false
+            ],
+            "name": "input1711"
+          }
+        ]
+      },
+      {
+        "pin": {
+          "k": 1467,
+          "name": "i_kvpc_Q_N_o_next[299]",
+          "io": "INPUT",
+          "sig": "SIGNAL",
+          "layer": "M7",
+          "x": 1380.576,
+          "y": 0.096
+        },
+        "net": 43193,
+        "driver": [
+          "p",
+          1467,
+          false
+        ],
+        "sinks": [
+          {
+            "endpoint": [
+              "i",
+              200649,
+              false
+            ],
+            "name": "input1712"
+          }
+        ]
+      }
+    ],
+    "freeze_sha256": "23b8767685389980dd2d301ea3a45d5af21d4269089f86990b2be08740ba073d",
+    "source_readset_missing": true
+  },
+  "normal_binder_contract": "tools/die_plan/bind.py gen_bound ports: data W plus reset epoch [W]; raw 299-bit source payload already includes its own return-valid bit0 and 298 record bits. Physical bit299 is outside that raw header.",
+  "remaining_hold": [
+    "Current 4596-pin physical graph has no materialized exact plan_pins/RTL/bind readset.",
+    "Normal binder mechanism is known, but origin/reset semantics and station latency of actual current bit299 are not reconstructed.",
+    "Current graph cannot be aliased to older event28w_c 4562-pin source.",
+    "No P1-P7 adoption, regenerated programme, epoch-reset parity, clock, geometry or hroot CAD credit."
+  ]
+}
