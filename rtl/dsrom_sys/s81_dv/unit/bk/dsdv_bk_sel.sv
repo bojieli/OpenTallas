@@ -53,10 +53,14 @@ module dsdv_bk_sel #(
 `else
     // RF 1: S81-062 RE-FORM (DIE-S81-51/RF-D 11-03): rung transit vi -> vo through the sel unit 3 -> 4 edges (relay +1,
     // vstop FPIPE 3); dv_layer_compile BKSEL_TRANSIT 4, lower_bk FWD 3.  +define+OT_DSDV_BKG_RF0 = the old leaf (benches).
+    // RF 2 (form 2, 11-03): + vin LPIPE, ln0..ln3 +1 edge inside the unit (rung transit unchanged); +define+OT_DSDV_BKG_RF1
+    // = form 1 (benches).
 `ifdef OT_DSDV_BKG_RF0
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(0)) u_g (
-`else
+`elsif OT_DSDV_BKG_RF1
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(1)) u_g (
+`else
+    dsdv_bk_g #(.V(V), .MUT(MUT), .RF(2)) u_g (
 `endif
 `endif
         .clk(clk), .rst_n(rst_n), .tap_k({tap_k[7:3], tap_k[0]}), .sink_k({sink_k[7:3], sink_k[0]}), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n),

@@ -981,6 +981,12 @@ SCHEMA = {
             # ft seam budget split (COORD RULING 2026-10-24 12:37, S81): receiver share of T at the ft face (input delay
             # max (1 - share) T on ft_i, output delay max share T on ft_o); default gen_phys.FT_HOP_IN_SHARE (0.08)
             "ft_hop_in_share": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 0.5},
+            # plain-lane input budget event (DIE-S81-51 11-03, COORD 10:49; gen_phys.plain_seam_split): plain ft-lane
+            # receiver input max <= rx_in_max_ps written (raw <= rx_in_raw_max_ps), cut taken from registered senders
+            "plain_seam_split": {"type": "object", "additionalProperties": False, "required": ["rx_in_max_ps"],
+                                 "properties": {"rx_in_max_ps": {"type": "number", "exclusiveMinimum": 0},
+                                                "rx_in_raw_max_ps": {"type": "number", "exclusiveMinimum": 0},
+                                                "note": {"type": "string"}}},
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
             "spine": {"type": "object", "additionalProperties": False, "properties": {
                 "layers": {"type": "array", "items": _layer}, "root_um": _xy,

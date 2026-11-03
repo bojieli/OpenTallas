@@ -26,12 +26,20 @@
 // lands on the edge its stream's first one-hot read select does (same order as RF 0).  Ports and transactions
 // unchanged; every r_* output is +1 edge (RF 1 == RF 0 one edge later, bench results/rfd_1103/l0r): gunit HC latency
 // +1 (lower_gu HC_LAT_N / HC_LAT_S +1, parent contract).  RF = 0: the old form.
+// RF = 2 (form 2, 11-03; RF 1 build oth-ubuntu-1507612 met setup (GRT SS ws +168.5) but stopped at OT_HOLD_STRUCTURAL GRT
+// FF hold ws -154.31 / 408 ep: the input faces (rst_n -> u_rst removal, go_a -> ga, wr_* -> input flops) captured on
+// the rising edge with the core insertion ~281 ps vs vclk 250): RF 1 + a NEGEDGE IN-FACE: every input (incl. rst_n) lands
+// in a negative-edge flop, then the unchanged posedge input flop (0 cycles: the posedge flop takes the value it took
+// before; pin hold window ~T/2 by construction, as dsdv_bk_g RF 1).  rst_n assertion lands half an edge later, the
+// release edge is unchanged (rst_n leaves a posedge flop).  Outputs / latency identical to RF 1.
 module dsdv_gunit_l0r #(
     parameter integer MUT = 0,
 `ifdef OT_GUNIT_L0R_RF0
     parameter integer RF  = 0         // benches: +define+OT_GUNIT_L0R_RF0 = the old form under an unchanged parent
+`elsif OT_GUNIT_L0R_RF1
+    parameter integer RF  = 1         // benches: form 1 (posedge in-face)
 `else
-    parameter integer RF  = 1
+    parameter integer RF  = 2
 `endif
 ) (
     input  wire          clk,
@@ -46,13 +54,33 @@ module dsdv_gunit_l0r #(
     (* keep = "true" *) reg fault_hold;
     integer j;
     wire [1:0] rq;
-    ot_rst_relay #(.REGIONS(2)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
+    // ---------------------------------------------------------------- RF 2: negedge in-face
+    wire i_rst, i_av, i_bv, i_wb, i_ga, i_gb; wire [4:0] i_agh, i_bgh, i_gacc; wire [191:0] i_ad, i_bd;
+    generate if (RF >= 2) begin : g_ifn
+        reg n_rst, n_av, n_bv, n_wb, n_ga, n_gb; reg [4:0] n_agh, n_bgh, n_gacc; reg [191:0] n_ad, n_bd;
+`ifdef OT_RFD_MUT_L0R2   // RF-D bench mutant: the in-face on the RISING edge (+1 cycle on every input)
+        always @(posedge clk) begin
+`else
+        always @(negedge clk) begin
+`endif
+            n_rst <= rst_n; n_av <= wr_av; n_bv <= wr_bv; n_wb <= wr_b; n_ga <= go_a; n_gb <= go_b;
+            n_agh <= wr_agh; n_bgh <= wr_bgh; n_gacc <= go_acc; n_ad <= wr_ad; n_bd <= wr_bd;
+        end
+        assign i_rst = n_rst; assign i_av = n_av; assign i_bv = n_bv; assign i_wb = n_wb; assign i_ga = n_ga;
+        assign i_gb = n_gb; assign i_agh = n_agh; assign i_bgh = n_bgh; assign i_gacc = n_gacc; assign i_ad = n_ad;
+        assign i_bd = n_bd;
+    end else begin : g_ifw
+        assign i_rst = rst_n; assign i_av = wr_av; assign i_bv = wr_bv; assign i_wb = wr_b; assign i_ga = go_a;
+        assign i_gb = go_b; assign i_agh = wr_agh; assign i_bgh = wr_bgh; assign i_gacc = go_acc; assign i_ad = wr_ad;
+        assign i_bd = wr_bd;
+    end endgenerate
+    ot_rst_relay #(.REGIONS(2)) u_rst (.clk(clk), .rst_n_in(i_rst), .rst_n(rq));
     // ---------------------------------------------------------------- input flops
     reg av, bv, wb, ga; reg [4:0] agh, bgh, gacc; reg [191:0] ad, bd; reg gb;
     always @(posedge clk or negedge rq[0])
         if (!rq[0]) begin av <= 1'b0; bv <= 1'b0; ga <= 1'b0; end
-        else begin av <= wr_av; bv <= wr_bv; ga <= go_a; end
-    always @(posedge clk) begin agh <= wr_agh; ad <= wr_ad; bgh <= wr_bgh; bd <= wr_bd; wb <= wr_b; gacc <= go_acc; gb <= go_b; end
+        else begin av <= i_av; bv <= i_bv; ga <= i_ga; end
+    always @(posedge clk) begin agh <= i_agh; ad <= i_ad; bgh <= i_bgh; bd <= i_bd; wb <= i_wb; gacc <= i_gacc; gb <= i_gb; end
     // ---------------------------------------------------------------- root store (2 window buffers)
     wire [31:0] rsw [0:2*16*2*6-1];                     // the store words as the read side sees them
     wire ga_s, gb_s; wire [4:0] gacc_s;                 // the go as the stream sees it (RF 1: one edge later)
