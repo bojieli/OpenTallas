@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.serdes_warm_reset.v1",
+ "die": "s81",
+ "decision": "OWNER 2026-11-02 17:55 (final): SerDes soft warm reset = a local reset sequencer holding reset >= 64 edges after the PMA clock restarts (no system running-clock promise)",
+ "types": "serdes__* (14 SerDes columns u_lk_{WS,WN,ES,EN}{0..3} of physical/die_plan/s81/bind/inputs/die_b178.v)",
+ "inst": "u_lk_* = ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64))",
+ "mechanism": "shared ot_pdie_pma_reset_hold (rtl/dsrom_sys/s81_link/ot_pdie_serdes_locksafe.sv; same module as HEAD ot_s81hd_serdes_link_ls, codex/serdes-locksafe-2047): async assert on rst low or pma_lock low; 2 recovered-clock (pma_rck) synchroniser edges + 64 recovered edges before the column's rs_t/rs_r synchronisers release; instantiated inside the column (g_locksafe.u_hold), so every column child path is unchanged",
+ "new_pad": "io_pma_lock (in, 1 bit) per serdes type = die IO lk_<lane>_pma_lock, the PMA lock authority (modelled PMA macro output, OWNER 10-29 modelled-PHY basis); asbuilt io_roles maps it to role pma_lock",
+ "release_rck_edges": {"guard": 66, "native_recovered_reset": 68},
+ "cost": {"ff_per_column": 9, "columns": 14, "mission_cycles": 0},
+ "untouched": "die boot reset contract physical/die_plan/s81/reset_contract.json (64 die-clock edges, kit LEC) unchanged; released column behaviour at LOCKSAFE=0 identical every edge (gate dflt==orig)",
+ "plan_delta": "physical/die_plan/s81/delta_serdes_locksafe_1102.py",
+ "proof": "results/rtl/s81_reset_locksafe_1102/ (run_gate.sh: ba934c4af gate set + tb_s81_col_locksafe lockstep vs released column and vs shared gated wrapper, 5 epochs cold / stopped-warm / running-warm / lock loss / stopped-unlocked restart, mutants HOLD63 / IGNORE_LOCK / DEFAULT_MUT)"
+}
