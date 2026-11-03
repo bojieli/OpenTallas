@@ -1404,6 +1404,11 @@ def main():
             (kd / "hr_spare_tie.json").write_text(json.dumps(dict(schema="opentallas.kit_hr_spare_tie.v1", ties=stie,
                 note="declared spare_out bits driven 0 from the first edge (refines the native X-until-written)"),
                 indent=1) + "\n")
+        if rec.get("rf_wrap") and dst.stem == mod:
+            import hr_rf_wrap    # DIE-KV-64/RF-C 11-03 RF-KV1 RE-FORM: registered reset relay + FWFT read faces
+            text, rfw = hr_rf_wrap.transform(dst.read_text(), mod, rec["rf_wrap"])
+            dst.write_text(text)
+            hr_rf_wrap.write_report(kd, rfw, rec["rf_wrap"])
         preserve_head_relays(dst)
         # std-cell simulation models (asap7sc7p5t_*.v, for leaves that instantiate cells): yosys takes the cells
         # from the liberty, the models are not synthesisable input
