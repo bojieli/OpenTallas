@@ -1,6 +1,6 @@
 diff -ru kit_base/rtl/ot_qwen_rom_tile_nk.sv rtl_nkp/ot_qwen_rom_tile_nk.sv
 --- kit_base/rtl/ot_qwen_rom_tile_nk.sv	2026-11-01 09:13:10.000000000 -0800
-+++ rtl_nkp/ot_qwen_rom_tile_nk.sv	2026-11-03 08:10:22.690103553 -0800
++++ rtl_nkp/ot_qwen_rom_tile_nk.sv	2026-11-03 10:10:24.728433250 -0800
 @@ -48,7 +48,10 @@
      parameter integer CHILD_CLOCKS = 0,
      parameter integer REGROOT = 0,     // Q-ROMPARENT 10-16 (RPH 3 only): ck_reg = {data E, data W, gn W, gs W} regional roots; 0 = ck_reg unused
@@ -24,7 +24,7 @@ diff -ru kit_base/rtl/ot_qwen_rom_tile_nk.sv rtl_nkp/ot_qwen_rom_tile_nk.sv
          .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(tile_fault),
 diff -ru kit_base/rtl/ot_qwen_rom_tile_w12_land32.sv rtl_nkp/ot_qwen_rom_tile_w12_land32.sv
 --- kit_base/rtl/ot_qwen_rom_tile_w12_land32.sv	2026-11-01 09:13:10.000000000 -0800
-+++ rtl_nkp/ot_qwen_rom_tile_w12_land32.sv	2026-11-03 08:10:22.689778074 -0800
++++ rtl_nkp/ot_qwen_rom_tile_w12_land32.sv	2026-11-03 10:10:24.728131766 -0800
 @@ -145,7 +145,10 @@
      parameter integer GLOBAL_KV_CONST0 = 0, // opt-in ROM-only global KV port is already hardwired zero
      // DIE-QC-58B form (1) (opt-in, default 0 = unchanged): 1 = the IREG input stage (go_q, its kept go_cp copies, ib_q,
@@ -69,7 +69,7 @@ diff -ru kit_base/rtl/ot_qwen_rom_tile_w12_land32.sv rtl_nkp/ot_qwen_rom_tile_w1
          .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
 diff -ru kit_base/rtl/ot_qwen_w12_matvec_land32.sv rtl_nkp/ot_qwen_w12_matvec_land32.sv
 --- kit_base/rtl/ot_qwen_w12_matvec_land32.sv	2026-10-29 08:35:21.000000000 -0700
-+++ rtl_nkp/ot_qwen_w12_matvec_land32.sv	2026-11-03 08:10:22.688792425 -0800
++++ rtl_nkp/ot_qwen_w12_matvec_land32.sv	2026-11-03 10:10:24.727146760 -0800
 @@ -171,6 +171,9 @@
  endmodule
  
@@ -89,7 +89,7 @@ diff -ru kit_base/rtl/ot_qwen_w12_matvec_land32.sv rtl_nkp/ot_qwen_w12_matvec_la
          always @(posedge clk) begin : p_terms
              integer b;
              for (b = 0; b < NB_GT; b = b + 1) begin
-@@ -671,6 +674,65 @@
+@@ -671,6 +674,68 @@
              pr_a <= GT >> spc[4*8 +: 4];
              kpad_a <= {1'b0, ktc[0 +: NW]} + ((1 << spc[4*((REGROOT >= 7) ? 35 : 8) +: 4]) - 1);
          end
@@ -117,7 +117,7 @@ diff -ru kit_base/rtl/ot_qwen_w12_matvec_land32.sv rtl_nkp/ot_qwen_w12_matvec_la
 +        end
 +        always @(posedge clk) pr_a <= GT >> spc[4*8 +: 4];
 +        if ((NKP & 1) != 0) begin : g_kp1
-+            reg [NW:0] kpm_q;
++            reg [14:0] kpm_q;   // (1 << S) - 1 with S <= 15: 15 bits (no structurally-zero register bits)
 +            always @(posedge clk) begin
 +                kpm_q <= ((1 << spc[4*((REGROOT >= 7) ? 35 : 8) +: 4]) - 1);
 +                kpad_a <= {1'b0, ktc[0 +: NW]} + kpm_q;
@@ -133,14 +133,17 @@ diff -ru kit_base/rtl/ot_qwen_w12_matvec_land32.sv rtl_nkp/ot_qwen_w12_matvec_la
 +                assign orf[t7*(AW+PRW) +: AW+PRW] = orow[t7];
 +            end
 +            wire [AW+PRW-1:0] ts_s, ts_c, os_s, os_c, ts_a, os_a;
++            //: async-reset so the carry bits the CSA makes structurally 0 are reset-constant registers (LEC)
 +            reg  [AW+PRW-1:0] ts_sq, ts_cq, os_sq, os_cq;
 +            ot_qwen_w12_csa_tree #(.W(AW+PRW), .N(NB_GT)) u_tc (.rows(trf), .s(ts_s), .c(ts_c));
 +            ot_qwen_w12_csa_tree #(.W(AW+PRW), .N(NB_GT)) u_oc (.rows(orf), .s(os_s), .c(os_c));
 +            ot_qwen_w12_kadd #(.W(AW+PRW)) u_tk (.a(ts_sq), .b(ts_cq), .s(ts_a));
 +            ot_qwen_w12_kadd #(.W(AW+PRW)) u_ok (.a(os_sq), .b(os_cq), .s(os_a));
++            always @(posedge clk or negedge rst_n)
++                if (!rst_n) begin ts_sq <= {(AW+PRW){1'b0}}; ts_cq <= {(AW+PRW){1'b0}}; os_sq <= {(AW+PRW){1'b0}}; os_cq <= {(AW+PRW){1'b0}}; end
++                else begin ts_sq <= ts_s; ts_cq <= ts_c; os_sq <= os_s; os_cq <= os_c; end
 +            always @(posedge clk) begin : p_sum_nkp
 +                integer b2;
-+                ts_sq <= ts_s; ts_cq <= ts_c; os_sq <= os_s; os_cq <= os_c;
 +                for (b2 = 0; b2 < NB_GT; b2 = b2 + 1) begin
 +                    tsh[b2] <= (b2 == 0) ? ts_a : {(AW+PRW){1'b0}};
 +                    osh[b2] <= (b2 == 0) ? os_a : {(AW+PRW){1'b0}};
@@ -155,7 +158,7 @@ diff -ru kit_base/rtl/ot_qwen_w12_matvec_land32.sv rtl_nkp/ot_qwen_w12_matvec_la
      end
      wire [AW+PRW-1:0] tsum, osum;
      wire [NB_GT*(AW+PRW)-1:0] tsh_flat, osh_flat;
-@@ -1252,13 +1314,28 @@
+@@ -1252,13 +1317,29 @@
                      klim[gk] <= kls[NW:0];
                      e_gm[gk] <= (gsh < tsh_gt) && (!wsc[2] || ({1'b0, k} < klim[gk]));
                  end
@@ -171,21 +174,22 @@ diff -ru kit_base/rtl/ot_qwen_w12_matvec_land32.sv rtl_nkp/ot_qwen_w12_matvec_la
 +            //: NKP bit0: the masked chunk index c32 and the pad mask (1 << S) - 1 registered (edge 1), then the
 +            //: compare / subtract / add (kdif edge 2) and the shift (klim edge 3 <= KV_PREP: the first KV element
 +            //: reads klim at edge KV_PREP + 1).  Values unchanged (kdif is NW+1 bits: the mask's low bits suffice).
-+            reg [31:0] c32_q;
-+            reg [NW:0] kdm_q;
++            //: 15 bits each: the masks (1 << S) - 1 have S <= 15 (no structurally-zero register bits)
++            reg [14:0] c32_q;
++            reg [14:0] kdm_q;
 +            always @(posedge clk) begin
 +                c32_q <= (gb + gk) & ((1 << sa) - 1);
 +                kdm_q <= (1 << sd) - 1;
 +            end
 +            always @(posedge clk) begin
-+                kdif[gk] <= ({{(32-NW){1'b0}}, kt} > c32_q) ? (kt - c32_q[NW:0] + kdm_q) : {(NW+1){1'b0}};
++                kdif[gk] <= ({{(32-NW){1'b0}}, kt} > c32_q) ? (kt - c32_q + kdm_q) : {(NW+1){1'b0}};
 +                klim[gk] <= kdif[gk] >> sb;
 +                e_gm[gk] <= (((gb + gk) >> sc) < (GT >> sc)) && (!wsc[2] || ({1'b0, k} < klim[gk]));
 +            end
              end
          end
      end else if (LANES) begin : g_gm
-@@ -1313,7 +1390,7 @@
+@@ -1313,7 +1394,7 @@
      wire [GL*32-1:0] x_rnd;
      genvar xr;
      generate for (xr = 0; xr < GL; xr = xr + 1) begin : g_xrnd
@@ -194,7 +198,7 @@ diff -ru kit_base/rtl/ot_qwen_w12_matvec_land32.sv rtl_nkp/ot_qwen_w12_matvec_la
              ot_qwen_w12_kadd #(.W(32)) u_r (.a(s2_x[32*xr +: 32]), .b(32'h7FFF + {31'd0, s2_x[32*xr + 16]}), .s(x_rnd[32*xr +: 32]));
          end else begin : g_legacy_round
              assign x_rnd[32*xr +: 32] = s2_x[32*xr +: 32] + 32'h7FFF + {31'd0, s2_x[32*xr + 16]};
-@@ -1558,9 +1635,9 @@
+@@ -1558,9 +1639,9 @@
                  //: and rung 1 (both ck_tx[g]): same values on the same edges, 0 cycles.  The round is the exact identity
                  //: hi(x + 0x7FFF + x[16]) = x[31:16] + (x[15] & (x[16] | |x[14:0])); the mask / round selects arrive
                  //: as two copies per group (one per 16-bit half).
@@ -206,7 +210,7 @@ diff -ru kit_base/rtl/ot_qwen_w12_matvec_land32.sv rtl_nkp/ot_qwen_w12_matvec_la
                      wire [4*G-1:0] sel;
                      for (gl = 0; gl < G; gl = gl + 1) begin : g_s
                          assign sel[4*gl +: 4] = {round_local[2*gl+1], round_local[2*gl], s2_gm[gl], s2_gm[gl]};
-@@ -1623,7 +1700,7 @@
+@@ -1623,7 +1704,7 @@
                              assign tc[XW*(rr+1) +: XW] = qo;
                          end
                      end
@@ -215,7 +219,7 @@ diff -ru kit_base/rtl/ot_qwen_w12_matvec_land32.sv rtl_nkp/ot_qwen_w12_matvec_la
                          //: the leaf's round + mask on its rung-0 copy (ck_tx[g])
                          wire [G*32-1:0] xr = r0q[G*32-1:0];
                          wire [4*G-1:0]  sr = r0q[G*32 +: 4*G];
-@@ -2166,6 +2243,12 @@
+@@ -2166,6 +2247,12 @@
          if (!rst_n) idle <= 1'b1;
          else idle <= idle_c && !(go && ready);
      end
@@ -230,7 +234,7 @@ diff -ru kit_base/rtl/ot_qwen_w12_matvec_land32.sv rtl_nkp/ot_qwen_w12_matvec_la
  
 diff -ru kit_base/rtl/qfd_tile_nk_a0c.sv rtl_nkp/qfd_tile_nk_a0c.sv
 --- kit_base/rtl/qfd_tile_nk_a0c.sv	2026-11-01 09:13:10.000000000 -0800
-+++ rtl_nkp/qfd_tile_nk_a0c.sv	2026-11-03 08:10:22.690613739 -0800
++++ rtl_nkp/qfd_tile_nk_a0c.sv	2026-11-03 10:10:24.728895979 -0800
 @@ -43,7 +43,10 @@
      parameter integer ICG_K_LSL = 2,
      parameter integer ICG_K_FA2 = 0,
@@ -257,7 +261,7 @@ diff -ru kit_base/rtl/qfd_tile_nk_a0c.sv rtl_nkp/qfd_tile_nk_a0c.sv
          .me_idle(me_idle),
 diff -ru kit_base/rtl/qfd_tile_nk_rp2_45.sv rtl_nkp/qfd_tile_nk_rp2_45.sv
 --- kit_base/rtl/qfd_tile_nk_rp2_45.sv	2026-11-01 09:13:10.000000000 -0800
-+++ rtl_nkp/qfd_tile_nk_rp2_45.sv	2026-11-03 08:10:22.690343758 -0800
++++ rtl_nkp/qfd_tile_nk_rp2_45.sv	2026-11-03 10:10:24.728467377 -0800
 @@ -55,7 +55,10 @@
      // DIE-QC-58B form (1) (opt-in, default 0 = unchanged): 1 = the first stage after the input faces runs on ck_ireg
      // (the u_tile IREG stage go_q / go_cp / ib_q / xl_q, and the node-port alignment / fault registers mis_q / fy_q)

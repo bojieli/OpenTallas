@@ -1,5 +1,5 @@
---- rtl_nkp/qfd_tile_nk_a0c.sv	2026-11-03 08:10:22.690613739 -0800
-+++ rtl_nkpirt/qfd_tile_nk_a0c.sv	2026-11-03 09:32:46.178576393 -0800
+--- rtl_nkp/qfd_tile_nk_a0c.sv	2026-11-03 10:10:24.728895979 -0800
++++ rtl_nkpirt/qfd_tile_nk_a0c.sv	2026-11-03 10:10:24.789488274 -0800
 @@ -46,7 +46,10 @@
      parameter integer ICG_K_NODE = 0,
      // NKP (DIE-QC-66 11-03, opt-in, default 0 = unchanged): ot_qwen_w12_matvec_part logic-depth cuts (bit0 K-limit

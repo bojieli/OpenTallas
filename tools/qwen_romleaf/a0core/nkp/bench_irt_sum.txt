@@ -13,3 +13,4 @@ NKP_FAIL MUT=4 strict_out_errors=13290 first=270 engine_state_errors=10252 first
 NKP_FAIL MUT=5 strict_out_errors=10119 first=10 engine_state_errors=0 first=-1 checks=14000
 NKP_FAIL MUT=6 strict_out_errors=6519 first=1091 engine_state_errors=0 first=-1 checks=14000
 NKP_PASS MUT=0 checks=14000 strict_out=0 engine_state=0
+LEC EQUIVALENT: qfd_tile_nk_a0c cp=37436 proved=37436 differs=0 undecided=0 37436 compare points proved; 25425 key points matched by name, 4444 register pairs / merges and 6247 constant registers proved inductively; 80 RTL and 14850 gate registers unmatched and unobservable (proved as free inputs) (1539.1 s)
