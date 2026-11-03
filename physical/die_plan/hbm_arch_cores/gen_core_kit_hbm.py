@@ -809,6 +809,28 @@ def clone_output_state(files, top, clone, kd):
     return helper
 
 
+def face_flops_text(ff, clks, rsts, straps, home_resets=True):
+    """Kit face_flops.tcl = the shared tool hook + this generator's patches (skip set, unreg-pin audit).
+    KW-FIX-2 11-02 (GEOM-111 class R, COORD 23:0x): reset INPUTS are no longer skipped.  The skip was written for
+    kits whose reset_tree.tcl FIRMs the reset entry stage (face_flops.tcl sources /work/reset_tree.tcl), but this
+    generator never writes one, so the entry flop of every rst*_n synchroniser floated to the logic centroid
+    (rst_n 212-647 um from its pin on 11 HBM kits: qw_dec, q3_body/q3_vm, pgslice, sfu_split3__ctl, rp3lp3h_n,
+    cxport_ij_q, keybuf_slice, fused_lane, host_cp_rxs, xload_cl2_ctlx).  ff_from_in follows every non-CLOCK input
+    pin (async RESET pins included), so the first flop on the reset net is homed FIRM at the pin face like any
+    other pin register.  home_resets=False (--no-reset-face-home) restores the old skip set."""
+    skip_names = list(clks) + ([] if home_resets else list(rsts)) + list(straps)
+    skip = "^(" + "|".join(re.escape(n) for n in skip_names) + ")$"
+    ff, nskip = re.subn(r"(?m)^set ff_skip_re .*?$", lambda _: "set ff_skip_re {" + skip + "}", ff)
+    assert nskip == 1, "expected exactly one face_flops clock/reset skip declaration"
+    assert ("set ff_skip_re {" + skip + "}") in ff, "face_flops.tcl skip anchor changed"
+    ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
+                    "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
+                    "set ff_unreg [open $::env(RESULTS_DIR)/ot_unreg_pins.txt w]")
+    ff = ff.replace("    if {$f eq \"\"} { incr ff_miss; continue }",
+                    "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
+    return ff
+
+
 def build_wrapper(module, pb, top, params, tports, cmap=None, straps=None, ties=None):
     """pass-through wrapper `module` (plan pins pb {bus: (w, scalar)}) around `top` (tports).  cmap = {plan bus:
     {top port: bits}} (split cut map) else names must match.  A cmap value may instead be a SLICE LIST
@@ -1228,6 +1250,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--stock-rc", action="store_true", help="old basis: platform setRC.tcl (no RCX-calibrated RC)")
     ap.add_argument("--no-f1", action="store_true", help="no per-corner FF IO basis in the FF hold repair")
     ap.add_argument("--no-f4", action="store_true", help="no zero-logic chain leaf affinity post-CTS")
+    ap.add_argument("--no-reset-face-home", action="store_true",
+                    help="old skip set: reset inputs excluded from face_flops pin-register homing (GEOM-111 class R)")
     ap.add_argument("--clock-tap-dmax", type=float, default=80.0)
     # HBM-CORES-R11 2026-10-27 (COORD 10:37 ruling 2, SIGNOFF-MODES-2): one timing mode per corner.  Default: setup-only
     # TT repair post-CTS (post_cts_setup.tcl) + the kit staged two-mode (tools/die_plan/kit_modes.py stage: GRT repairs
@@ -1711,16 +1735,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         libs.append(f"/work/macros/{m}{cl if (md / f'{m}{cl}').is_file() else '_tt.lib'}")
     (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks(plan_path))
-    skip = "^(" + "|".join(re.escape(n) for n in clks + rsts + kit_straps) + ")$"
-    ff = (TOOL / "face_flops.tcl").read_text()
-    ff, nskip = re.subn(r"(?m)^set ff_skip_re .*?$", lambda _: "set ff_skip_re {" + skip + "}", ff)
-    assert nskip == 1, "expected exactly one face_flops clock/reset skip declaration"
-    assert ("set ff_skip_re {" + skip + "}") in ff, "face_flops.tcl skip anchor changed"
-    ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
-                    "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
-                    "set ff_unreg [open $::env(RESULTS_DIR)/ot_unreg_pins.txt w]")
-    ff = ff.replace("    if {$f eq \"\"} { incr ff_miss; continue }",
-                    "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
+    ff = face_flops_text((TOOL / "face_flops.tcl").read_text(), clks, rsts, kit_straps,
+                         home_resets=not a.no_reset_face_home)
     (kd / "face_flops.tcl").write_text(ff)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py", "dump_placed.py", "hold_cap.tcl",
