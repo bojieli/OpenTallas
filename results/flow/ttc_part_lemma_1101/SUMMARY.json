@@ -1,0 +1,29 @@
+{
+  "classification": "UNTRUSTED_PROPOSAL_ONLY",
+  "subject": "intel2:/srv/opentallas-scratch2/claude/die-qc-61/tt_ctlm_C/gen/tt_ctlm",
+  "native_original_verdict": "145 UNPROVEN; historical missing PROVENANCE",
+  "exact_original_context_restored": true,
+  "proposal": {
+    "source_state": "u_core.u_gi.g_wtn.u_wtn.u_ctl.part[0:1]",
+    "legal_domain": [
+      0,
+      1,
+      2
+    ],
+    "codebook_to_gate_onehot": {
+      "0": 0,
+      "1": 2,
+      "2": 1
+    },
+    "native_step": "all three cube relations plus legal domain PROVED",
+    "native_base": "original reset-contract64; gold00 / gatebit0 only"
+  },
+  "negative_control": "Other reset-compatible permutation fails native STEP",
+  "not_done": [
+    "No accepted hints applied or original artifacts changed",
+    "No comparepoint/fullproof rerun or 145-point reduction claimed",
+    "Original anonymous synthesis-only _50814.. residual remains undiagnosed",
+    "Missing original source provenance remains unqualified"
+  ],
+  "next_step": "Review exact retained codebook proposal, then finite diagnosis of anonymous synthesis-only residual; no 12k-second full proof authorized."
+}
