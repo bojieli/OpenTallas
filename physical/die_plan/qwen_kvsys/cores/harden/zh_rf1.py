@@ -86,3 +86,66 @@ def apply_kit(kd, mod):
                  form="pre-decoded registered ZH read address (RF-KV1)")
     (kd / "zh_rf1_delta.json").write_text(json.dumps(delta, indent=1) + "\n")
     return delta
+
+
+# ---- derive: the RE-FORM kit from the exact native ZH kit (same pins / io.tcl / outline / PG / SDC) --------------------
+# The native ZH kit's pin geometry is the retained ref_tile LEF contract (offset 0.012, q6_pin_geometry_prepare.py), which
+# gen_core_kit_kv.py's symmetric-track pin gate does not take; so the RE-FORM keeps that generated kit byte-for-byte
+# except: the transformed RTL, the DRV form OT_MAXWIRE_UM (repeater pitch, tools/die_plan/grt_maxwire.tcl), the KV core
+# recipe GRT hold target OT_HOLD_FF_MARGIN, and a fresh freeze/PROVENANCE stamp (kit_hash, source_commit).
+SKIP_DIRS = {"run", "signoff", "lec", "lec_async.runs", "views", "physical_completion", "__pycache__", "reset_contract"}
+SKIP_FILES = {"1_synth_odb.v", "pin_audit.json", "status", "status.grt_est0104", "lec_async.done", "lec_async.identity",
+              "lec_async.lock", "lec_async.owner", "lec_async.pid", "lec_async.rc", "lec_async.ready",
+              "lec_async.source_identity", "face_guard_synth_model.json", "face_guard_odb.json", "face_guard.json",
+              "synth_area_model.json", "rtl_lint.json", "sdc_lint.json", "selrange.json"}
+
+
+def derive(src, out, repo, maxwire_um=60, hold_ff_margin=10):
+    import re as _re
+    import shutil
+    import sys
+    src, out, repo = Path(src), Path(out), Path(repo)
+    sys.path.insert(0, str(repo / "tools/die_plan"))
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import lec as LEC
+    import gen_core_kit_kv as GEN
+    fz = json.loads((src / "freeze.json").read_text())
+    if fz.get("module") != MOD or fz.get("outline_um") != [151.2, 151.2]:
+        raise SystemExit("zh_rf1 derive: source kit is not the 151.2 native ZH kit")
+    kd = out / fz["type"]
+    if kd.exists():
+        raise SystemExit(f"zh_rf1 derive: {kd} exists")
+    kd.mkdir(parents=True)
+    for p in sorted(src.iterdir()):
+        if p.is_dir():
+            if p.name not in SKIP_DIRS:
+                shutil.copytree(p, kd / p.name)
+        elif p.name not in SKIP_FILES and not p.name.endswith(".log") and not p.name.startswith("cont."):
+            shutil.copy2(p, kd / p.name)
+    delta = apply_kit(kd, MOD)
+    cfg = (kd / "config.mk").read_text()
+    cfg, n = _re.subn(r"^export OT_HOLD_FF_MARGIN = .*$", f"export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}", cfg, flags=_re.M)
+    if n != 1 or "OT_MAXWIRE_UM" in cfg:
+        raise SystemExit("zh_rf1 derive: config.mk OT_HOLD_FF_MARGIN / OT_MAXWIRE_UM not in the expected form")
+    cfg += f"export OT_MAXWIRE_UM = {maxwire_um:g}\n"
+    (kd / "config.mk").write_text(cfg)
+    shutil.copyfile(repo / "tools/die_plan/grt_maxwire.tcl", kd / "grt_maxwire.tcl")
+    prov = LEC._repo_provenance(repo)
+    fz.update(source_commit=prov.get("commit"), rf1=dict(delta, derived_from=str(src), derived_from_kit_hash=fz.get("kit_hash"),
+              maxwire_um=maxwire_um, hold_ff_margin_ps=hold_ff_margin))
+    fz["kit_hash"] = GEN.kit_hash(kd)
+    (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
+    LEC.write_kit_provenance(kd, repo, provenance=prov)
+    return kd
+
+
+if __name__ == "__main__":
+    import argparse
+    ap = argparse.ArgumentParser(description="derive the RF-KV1 ZH kit from the native ZH kit")
+    ap.add_argument("--from", dest="src", required=True)
+    ap.add_argument("--out", required=True)
+    ap.add_argument("--repo", default=str(Path(__file__).resolve().parents[5]))
+    ap.add_argument("--maxwire-um", type=float, default=60)
+    ap.add_argument("--hold-ff-margin", type=float, default=10)
+    a = ap.parse_args()
+    print(derive(a.src, a.out, a.repo, a.maxwire_um, a.hold_ff_margin))
