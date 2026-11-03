@@ -72,6 +72,12 @@ PROVE_JOBS = 1
 # 'undecided' (UNRESOLVED, never EQ).  OT_LEC_CONE_S = seconds per hung cone (0 = no limit, the old behaviour).
 CONE_S_DEFAULT = 600
 CONE_BUDGET_S = 2.0          # + this much wall per cone in a batch (normal cones close in ~1 s)
+# LEC-RAWPREFIX-BOUND: a universal raw prefix miter larger than RAWPREFIX_ANDS_DEFAULT AND nodes is not swept
+# (deterministic: the same design gives the same result on any host load); the wall limit on the sweep of the
+# smaller ones is only a backstop.  Either bound proves no base (the constant is dropped, never assumed) and is
+# recorded in noreset.raw_prefix_bounded.  0 = no limit (the old behaviour).
+RAWPREFIX_ANDS_DEFAULT = 500000
+RAWPREFIX_S_DEFAULT = 900
 
 
 def cone_limit_s():
@@ -91,8 +97,13 @@ UNSUPPORTED_CELLS = re.compile(r"^(ICG|DHL|DLL|SDF|SDFH|SDFL)")   # clock gates,
 # latch-based integrated clock gates modelled by the clock-gate -> enable abstraction (icg_to_enable); every ASAP7
 # ICG drive strength has the same statetable: IQ = ENA | SE while CLK is low, held while high; GCLK = CLK & IQ
 ICG_CELLS = re.compile(r"^ICGx(1|2|2p67DC|3|4|4DC|5|5p33DC|6p67DC|8DC)_ASAP7_75t_(R|L|SL)$")
-# transparent-low latches (lockup latches, latch : enable "!CLK"): modelled by latch_to_wire (OT_LEC_LATCH=0 refuses)
-LOCKUP_CELLS = re.compile(r"^DLLx(1|2|3)_ASAP7_75t_(R|L|SL)$")
+# transparent-low (DLL, latch : enable "!CLK") and transparent-high (DHL, enable "CLK") latches: lockup / face
+# latches, modelled phase-aware by latch_to_wire + latch_phase_diff (OT_LEC_LATCH=0 refuses)
+LOCKUP_CELLS = re.compile(r"^D[LH]Lx(1|2|3)_ASAP7_75t_(R|L|SL)$")
+# gold latches (latch mode on both sides): always_latch, ASAP7 latch cells, the gen_rtl TX-face ot_dp_lk and the
+# Verilog-2001 form `always @(*) if (!clk) q = d;` (FLOW-LATCH-1: ot_dp_lk is written that way since 867e693fa67)
+RTL_LATCH = re.compile(r"\balways_latch\b|\bD[LH]Lx[123]_ASAP7_75t_|\bot_dp_lk\b"
+                       r"|\balways\s*@\s*(?:\*|\(\s*\*\s*\))\s*if\s*\(\s*!?\s*\w*clk\w*\s*\)")
 TYPE_SFX = re.compile(r"\$_[A-Z]+(?:_[A-Z0-9]+)?_$")
 IDX = re.compile(r"^(.*?)((?:\[\d+\])+)$")
 GENBLK = re.compile(r"(?<![^.])genblk\d+\.")
@@ -763,16 +774,30 @@ def icg_to_enable(src, dst, side):
 
 
 def latch_to_wire(src, dst, side):
-    """Lockup-latch abstraction (JSON src -> dst, both sides): a transparent-low latch ($_DLATCH_N_ with E = a
-    primary-input clock, or $_DLATCH_P_ with E = NOT(that clock): the ASAP7 DLL liberty model) whose data cone
-    holds only primary inputs, constants and rising-edge flops on primary-input clocks, and whose Q reaches (through
-    combinational logic only) nothing but synchronous pins (D / E / sync R) of rising-edge flops on primary-input
-    clocks, is a wire in the cycle model: its sources change only at rising edges, it is transparent for the low
-    phase before the next rising edge, and its readers sample only at that edge -> they see D of the same cycle.
-    The high-phase hold value is never sampled (hold / phase timing is STA's).  Refused (Unproven), never
-    approximated: transparent-high latches, an enable that is not a (buffered / inverted) primary input, a data
-    source that is a latch / falling-edge flop / clock net / unknown cell / LEC stub, a Q load that is a clock or
-    async pin, a falling-edge flop, a latch, a module output, a black-box compare pin, memory or unknown cell."""
+    """Latch abstraction (JSON src -> dst, both sides), phase-aware (LATCH-FACE, COORD 11-03 08:25).
+
+    A latch on a primary-input clock (that also clocks a flop) is transparent-low ($_DLATCH_N_ on clk, or
+    $_DLATCH_P_ on NOT(clk): the ASAP7 DLL liberty model) or transparent-high ($_DLATCH_P_ on clk / $_DLATCH_N_ on
+    NOT(clk): DHL, or a DLL on an inverted clock).  When its data cone holds only primary inputs, constants and
+    rising-edge flops on primary-input clocks (a transparent-low latch also other transparent-low latches: a chain),
+    and its Q reaches (through combinational logic only) nothing but synchronous pins (D / E / sync R) of
+    rising-edge flops on primary-input clocks or an output port (the wrapper's lec_po_ capture flop), it is a wire
+    in the cycle model: its sources change only at rising edges and every rising-edge reader sees D of the same
+    cycle (the hold value is never sampled at that edge: hold / phase timing is STA's).
+
+    Phase at the ports (the out-face lockup latch, CLK table row 1): a port bit is 'low' when every path from a
+    source reaches it through a transparent-low latch (the port changes at the falling edge and holds in the high
+    phase), 'edge' when no path does (it changes at the rising edge; a transparent-high latch is transparent while
+    its rising-edge sources change, so it keeps the class), 'const' without sources; a port that mixes 'low' and
+    'edge' paths has a high-phase value no cycle model holds -> Unproven.  Within one class the high-phase value
+    is a function of the same cycle-model values ('low': the previous cycle's port value, 'edge': this cycle's),
+    so cycle equivalence plus equal port classes (check(): latch_phase) is phase equivalence: a dropped, added or
+    wrong-phase face latch is NOT EQUIVALENT.  st['port_phase'] = {lec_po cell: class} for every non-'edge' port.
+
+    Refused (Unproven), never approximated: an enable that is not a (buffered / inverted) primary-input flop clock,
+    a transparent-high latch in a latch chain, a data source that is a falling-edge flop / clock net / unknown cell
+    / LEC stub, a Q load that is a clock or async pin, a falling-edge flop, a black-box compare pin, memory or
+    unknown cell, a latch loop."""
     d = json.loads(Path(src).read_text())
     tops = [k for k, v in d["modules"].items() if str(v.get("attributes", {}).get("top", "0")).strip("0") != ""]
     if len(tops) != 1:
@@ -798,9 +823,6 @@ def latch_to_wire(src, dst, side):
                         loads[b].append((cn, p, i))
     lats = {cn: c for cn, c in cells.items() if LATCH_TYPE.match(c["type"])}
     st = dict(latches=len(lats), to_wire=0, per_latch={})
-    if not lats:
-        Path(dst).write_text(json.dumps(d))
-        return st
 
     def one(cn, p):
         b = cells[cn]["connections"].get(p, ["x"])
@@ -836,6 +858,11 @@ def latch_to_wire(src, dst, side):
         return b, neg
 
     stub = re.compile(r"(^|\.)lec_(bbo|bbi|po)_")
+    po_re = re.compile(r"(^|\.)lec_po_")
+
+    def po_ff(cn):                        # the wrapper's output-port capture flop (lec_po_<port>[i])
+        return bool(FF_TYPE.match(cells[cn]["type"])) and \
+            bool(po_re.search(str(name_of.get(cells[cn]["connections"].get("Q", [None])[0], ""))))
 
     def rise_ff(cn):
         """a rising-edge flop on a primary-input clock (no LEC stub / wrapper flop) -> its FF_TYPE match, else None."""
@@ -848,6 +875,7 @@ def latch_to_wire(src, dst, side):
             return None
         return f
 
+    comb = re.compile(r"^\$_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_$")
     clock_bits = set()
     for cn, c in cells.items():
         if FF_TYPE.match(c["type"]):
@@ -856,6 +884,14 @@ def latch_to_wire(src, dst, side):
     for cn in lats:
         clock_bits.add(through(one(cn, "E"), True)[0])
 
+    phase = {}                           # latch -> "low" (transparent while its clock is 0) / "high"
+    for cn in sorted(lats):
+        t = cells[cn]["type"]
+        e, neg = through(one(cn, "E"), True)
+        if t not in ("$_DLATCH_N_", "$_DLATCH_P_") or e not in pis or e not in ff_clocks:
+            raise Unproven(f"latch {side}: {t} {cn} is not a transparent-low / transparent-high latch on a "
+                           f"primary-input clock")
+        phase[cn] = "low" if (t == "$_DLATCH_P_") == neg else "high"
     # The RTL frontend writes always_latch if (!clk) q = d as D = $_MUX_(S = clk, A = d, B = x / q): a latch only
     # reads D while transparent, so the branch S selects in the transparent phase IS the latch data (S81 R21b
     # u_view c_lk, LEC-FPREG-4 10-27).  Only a $_MUX_ driving D directly whose select is this latch's own enable
@@ -866,20 +902,22 @@ def latch_to_wire(src, dst, side):
         if isinstance(d_in, int) and d_in in drv and cells[drv[d_in][0]]["type"] == "$_MUX_":
             mc = cells[drv[d_in][0]]["connections"]
             sb, sneg = through(mc["S"][0], True)
-            if sb == through(one(cn, "E"), True)[0]:   # transparent while E's clock = 0: S = sneg -> B (1) / A (0)
-                dsel[cn] = mc["B" if sneg else "A"][0]
+            if sb == through(one(cn, "E"), True)[0]:
+                # transparent phase: clock = 0 (low) / 1 (high) -> S = sneg / NOT sneg -> B (1) / A (0)
+                s_val = sneg if phase[cn] == "low" else not sneg
+                dsel[cn] = mc["B" if s_val else "A"][0]
     # Latch chains (S81 R21b: io_clk go lockup latch -> core logic -> ck seam lockup latch, LEC-FPREG-4 10-27): every
-    # latch here is transparent-low on a primary-input clock (each is checked in its own iteration, and any failure
-    # refuses the whole netlist), so in the low phase of one cycle the data of a rising-edge flop passes the whole
-    # chain and the rising-edge readers sample it: the chain is a wire like one latch.  The data cone therefore
-    # passes through another latch to its (phase-resolved) D, the Q fan-out through another latch's D to its Q; a
-    # chain that returns to the latch itself is a combinational loop after the abstraction -> Unproven.
+    # latch in a chain is transparent-low on a primary-input clock, so in the low phase of one cycle the data of a
+    # rising-edge flop passes the whole chain and the rising-edge readers sample it: the chain is a wire like one
+    # latch.  A transparent-high latch next to another latch (high -> low is a master-slave flop, low -> high a
+    # one-cycle delay) is refused.  The data cone therefore passes through another latch to its (phase-resolved) D,
+    # the Q fan-out through another latch's D to its Q; a chain that returns to the latch itself is a
+    # combinational loop after the abstraction -> Unproven.
+    po_sinks = collections.Counter()
     for cn in sorted(lats):
         c = cells[cn]
         t = c["type"]
         e, neg = through(one(cn, "E"), True)
-        if t not in ("$_DLATCH_N_", "$_DLATCH_P_") or e not in pis or e not in ff_clocks or (t == "$_DLATCH_P_") != neg:
-            raise Unproven(f"latch {side}: {t} {cn} is not a transparent-low latch on a primary-input clock")
         d_in = dsel.get(cn, one(cn, "D"))
         seen, todo, srcs = set(), [d_in], 0
         while todo:                        # data cone
@@ -896,6 +934,9 @@ def latch_to_wire(src, dst, side):
             if dn in lats:                 # chained latch: its own transparent-phase data
                 if dn == cn:
                     raise Unproven(f"latch {side}: {cn} data reaches its own Q (latch loop)")
+                if phase[cn] != "low" or phase[dn] != "low":
+                    raise Unproven(f"latch {side}: {cn} ({phase[cn]}) data reads latch {dn} ({phase[dn]}): only "
+                                   f"transparent-low latch chains are modelled")
                 todo.append(dsel.get(dn, one(dn, "D")))
                 continue
             if FF_TYPE.match(cells[dn]["type"]):
@@ -904,13 +945,12 @@ def latch_to_wire(src, dst, side):
                                    f"on a primary-input clock)")
                 srcs += 1
                 continue
-            if not re.match(r"^\$_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_$",
-                            cells[dn]["type"]):
+            if not comb.match(cells[dn]["type"]):
                 raise Unproven(f"latch {side}: {cn} data reads {cells[dn]['type']} {dn}: not modelled")
             todo += [x for p, bits in cells[dn]["connections"].items()
                      if cells[dn].get("port_directions", {}).get(p) != "output" for x in bits]
         q = one(cn, "Q")
-        seen2, todo, sinks = set(), [q], 0
+        seen2, todo, sinks, ports = set(), [q], 0, 0
         while todo:                        # Q fan-out
             b = todo.pop()
             if not isinstance(b, int) or b in seen2:
@@ -923,26 +963,81 @@ def latch_to_wire(src, dst, side):
                 if ln in lats and lp == "D":   # chained latch: continue from its Q
                     if ln == cn:
                         raise Unproven(f"latch {side}: {cn} Q reaches its own D (latch loop)")
+                    if phase[cn] != "low" or phase[ln] != "low":
+                        raise Unproven(f"latch {side}: {cn} ({phase[cn]}) Q reaches latch {ln} ({phase[ln]}): only "
+                                       f"transparent-low latch chains are modelled")
                     todo.append(one(ln, "Q"))
                     continue
                 f = FF_TYPE.match(lt)
+                if f and lp == "D" and po_ff(ln):  # an output port (the wrapper's capture flop): phase class below
+                    ports += 1
+                    po_sinks[ln] += 1
+                    continue
                 if f:
                     ok = rise_ff(ln) and (lp in ("D", "E") or (lp == "R" and f[1].startswith("SDFF")))
                     if not ok:
                         raise Unproven(f"latch {side}: {cn} Q reaches {lt} {ln}.{lp} (only D / E / sync R of "
-                                       f"rising-edge flops on primary-input clocks are modelled)")
+                                       f"rising-edge flops on primary-input clocks and output ports are modelled)")
                     sinks += 1
                     continue
-                if not re.match(r"^\$_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_$",
-                                lt):
+                if not comb.match(lt):
                     raise Unproven(f"latch {side}: {cn} Q reaches {lt} {ln}.{lp}: not modelled")
                 todo += [x for p, bits in cells[ln]["connections"].items()
                          if cells[ln].get("port_directions", {}).get(p) == "output" for x in bits]
         if q in clock_bits:
             raise Unproven(f"latch {side}: {cn} Q is a clock net")
-        st["per_latch"][cn] = dict(type=t, clk=name_of.get(e, str(e)), data_sources=srcs, sinks=sinks,
-                                   phase_mux=cn in dsel)
+        st["per_latch"][cn] = dict(type=t, clk=name_of.get(e, str(e)), phase=phase[cn], data_sources=srcs,
+                                   sinks=sinks, ports=ports, phase_mux=cn in dsel)
     st["phase_mux"] = len(dsel)
+    st["phases"] = dict(collections.Counter(phase.values()))
+
+    # port phase classes: every lec_po capture flop, memoised over the combinational cone (iterative post-order)
+    memo = {}
+
+    def tags(b0):
+        stack = [(b0, False)]
+        while stack:
+            b, done = stack.pop()
+            if not isinstance(b, int) or b in memo and not done:
+                continue
+            if b in pis or b not in drv:
+                memo[b] = frozenset({"E"}) if b in pis else frozenset()
+                continue
+            dn = drv[b][0]
+            ct = cells[dn]["type"]
+            if dn in lats and phase[dn] == "low":
+                memo[b] = frozenset({"L"})
+                continue
+            if dn in lats:                 # transparent-high: transparent while its sources change -> its data
+                ins = [dsel.get(dn, one(dn, "D"))]
+            elif comb.match(ct):
+                ins = [x for p, bits in cells[dn]["connections"].items()
+                       if cells[dn].get("port_directions", {}).get(p) != "output" for x in bits]
+            else:                          # flop / stub / memory / unknown cell: changes at the rising edge
+                memo[b] = frozenset({"E"})
+                continue
+            ins = [x for x in ins if isinstance(x, int)]
+            if done:
+                memo[b] = frozenset().union(*(memo.get(x, frozenset()) for x in ins))
+                continue
+            memo[b] = frozenset()          # cycle guard (a combinational loop adds nothing)
+            stack.append((b, True))
+            stack += [(x, False) for x in ins if x not in memo]
+        return memo[b0]
+
+    pp, cnt = {}, collections.Counter()
+    for cn in sorted(cells):
+        if not po_ff(cn):
+            continue
+        tg = tags(one(cn, "D"))
+        cls = "mixed" if tg == {"L", "E"} else "low" if tg == {"L"} else "edge" if tg == {"E"} else "const"
+        if cls == "mixed":
+            raise Unproven(f"latch {side}: output {cn} mixes transparent-low latch and rising-edge paths (its "
+                           f"high-phase value is in no cycle model)")
+        cnt[cls] += 1
+        if cls != "edge":
+            pp[cn] = cls
+    st["port_phase"], st["port_phase_counts"] = pp, dict(cnt)
     for cn in sorted(lats):               # all checked first: then each latch -> $_BUF_ D -> Q
         c = cells[cn]
         cells[cn] = {"hide_name": c.get("hide_name", 1), "type": "$_BUF_", "parameters": {}, "attributes": {},
@@ -951,6 +1046,18 @@ def latch_to_wire(src, dst, side):
         st["to_wire"] += 1
     Path(dst).write_text(json.dumps(d))
     return st
+
+
+def latch_phase_diff(lk):
+    """gold / gate latch_to_wire records -> [(lec_po cell, gold class, gate class)] for every output bit whose phase
+    class differs ('const' matches any class: a constant port has one value in both phases)."""
+    g, t = (lk.get(s, {}).get("port_phase", {}) for s in ("gold", "gate"))
+    out = []
+    for k in sorted(set(g) | set(t)):
+        a, b = g.get(k, "edge"), t.get(k, "edge")
+        if a != b and "const" not in (a, b):
+            out.append((k, a, b))
+    return out
 
 
 IMPLICIT_NET = re.compile(r"^(\S+?):(\d+):\d+: warning: implicit net '([^']+)' created \[-Wimplicit-net\]")
@@ -2034,7 +2141,7 @@ def run_abc_script(abc, sf, limit):
         return s(e.stdout) + s(e.stderr), True
 
 
-def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runner=None):
+def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runner=None, timeouts=None, solo=False):
     """statuses (aligned with ids) of one &cone -O i; &cec batch.  With a per-cone wall limit (OT_LEC_CONE_S) the
     batch gets limit + CONE_BUDGET_S per cone; on an overrun the cones answered before the hang keep their status
     and the rest is bisected until the hung cone runs alone, which stays 'undecided' (UNRESOLVED, never proved)."""
@@ -2047,7 +2154,7 @@ def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runn
     # kernel per-argument limit (MAX_ARG_STRLEN 128 KiB; OSError E2BIG on the 48k-output kvs_pc miters)
     sf = Path(work) / f"{tag}_cones_{ids[0]}_{ids[-1]}_n{len(ids)}_C{conflicts}{opt.replace(' ', '')}.abc"
     sf.write_text("\n".join(script) + "\n")
-    wall = (limit + CONE_BUDGET_S * len(ids)) if limit else None
+    wall = (limit if solo else limit + CONE_BUDGET_S * len(ids)) if limit else None
     t, timed_out = runner(abc, sf, wall)
     log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]} (&cec {opt} -C {conflicts})"
                f"{' TIMEOUT after %.0f s' % wall if timed_out else ''}\n{t}")
@@ -2056,30 +2163,64 @@ def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runn
         return res
     done = res[:len(ids)]
     rest = ids[len(done):]
-    if len(rest) <= 1 or len(ids) == 1:
-        if rest:
-            log.append(f"LEC CONE TIMEOUT {tag} output {rest[0]}: no answer within {wall:.0f} s -> undecided")
-        return done + ["undecided"] * len(rest)
-    h = (len(rest) + 1) // 2
-    return (done + cone_batch(abc, swept, work, tag, rest[:h], opt, conflicts, log, limit, runner)
-            + cone_batch(abc, swept, work, tag, rest[h:], opt, conflicts, log, limit, runner))
+    if len(ids) == 1:
+        log.append(f"LEC CONE TIMEOUT {tag} output {ids[0]}: no answer within {wall:.0f} s -> undecided")
+        if timeouts is not None:
+            timeouts.add(ids[0])
+        return ["undecided"]
+    # the rest runs ONE cone per ABC call with the bare per-cone limit (DIE-HBM-59 LEC-CONE-BOUND): a piped ABC
+    # block-buffers its stdout, so a killed batch usually returns no text and bisection paid one full wall per tree
+    # node holding a hung cone (HBM tailx: ~190 x 600 s per stage).  Solo calls cost ~1 s per normal cone and
+    # exactly `limit` per hung cone, so a stage costs <= one batch wall + hung x limit.
+    return done + [cone_batch(abc, swept, work, tag, [i], opt, conflicts, log, limit, runner, timeouts, solo=True)[0]
+                   for i in rest]
 
 
-def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
+def raw_prefix_limit_s():
+    """wall seconds for the sweep of one universal raw prefix miter (LEC-RAWPREFIX-BOUND, DIE-HBM-60/LEC 11-03)."""
+    try:
+        return max(0.0, float(os.environ.get("OT_LEC_RAWPREFIX_S", RAWPREFIX_S_DEFAULT)))
+    except ValueError:
+        return float(RAWPREFIX_S_DEFAULT)
+
+
+SWEEP_TIMEOUT = "__sweep_timeout__"
+
+
+def raw_prefix_limit_ands():
+    """AND-node cap of one universal raw prefix miter (LEC-RAWPREFIX-BOUND, DIE-HBM-61/LEC 11-03).  Measured
+    11-03 (intel2 lec dirs): every raw prefix sweep <= 184k ANDs finished in minutes; every one >= 714k (kshare
+    64 edges, vm_calendar 64, kv head_eighth gate 16, tkm tile0 gate 4, q2n2 body 64, S81 ves 64) ran 1-4 h or
+    never finished."""
+    try:
+        return max(0, int(float(os.environ.get("OT_LEC_RAWPREFIX_ANDS", RAWPREFIX_ANDS_DEFAULT))))
+    except ValueError:
+        return RAWPREFIX_ANDS_DEFAULT
+
+
+def prove(m, work, conflicts, log, tag="miter", single_cap=2000, wall=None):
     """per-output status {name: 'proved' | 'differs' | 'undecided'} of the miter outputs of builder m.
     ABC: &fraig (simulation + SAT sweeping of the shared gold / gate structure; proved outputs collapse to 0), then
     &sat -a -z on what is left (each output: UNSAT -> const 0, SAT -> counterexample kept).  When &sat leaves undefined
     outputs, random simulation marks the SAT ones and the rest are re-checked one cone at a time (&cone -O i;
-    &cec -n -m) with 10x the conflicts on the cone query (no recursive per-node proof expansion)."""
+    &cec -n -m) with 10x the conflicts on the cone query (no recursive per-node proof expansion).
+    wall: optional wall limit (s) on that first sweep; on an overrun every output is 'undecided' (never proved)."""
     if not m.outs:
         return {}
     work = Path(work)
     miter, swept = work / f"{tag}.aig", work / f"{tag}_swept.aig"
     m.write(miter)
     abc = abc_bin()
-    r = subprocess.run([abc, "-c", f"&r {miter}; &ps; &fraig -C {conflicts}; &ps; "
-                                   f"&sat -a -z -v -C {conflicts * 10}; &ps; &w {swept}"],
-                       capture_output=True, text=True)
+    try:
+        r = subprocess.run([abc, "-c", f"&r {miter}; &ps; &fraig -C {conflicts}; &ps; "
+                                       f"&sat -a -z -v -C {conflicts * 10}; &ps; &w {swept}"],
+                           capture_output=True, text=True, timeout=wall or None)
+    except subprocess.TimeoutExpired:
+        log.append(f"==== {tag}\nLEC SWEEP TIMEOUT {tag}: no answer within {wall:.0f} s -> "
+                   f"{len(m.outs)} outputs undecided")
+        st = {n: "undecided" for n in m.onames}
+        st[SWEEP_TIMEOUT] = True          # explicit marker for the caller (not an output name)
+        return st
     txt = r.stdout + r.stderr
     log.append(f"==== {tag}\n{txt}")
     if not swept.is_file():
@@ -2107,19 +2248,35 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
     # difference) by SAT sweeping inside the cone (&cec -m without -n, x100 / x1000): wide XOR trees (ECC encoders)
     # that naive SAT cannot finish collapse there (PATH-KV-PC4 10-25: 77 kvs_pc ECC / write-queue cones undecided at
     # 1M naive conflicts, each proved by &cec -m in ~1 s).  Only what no pass answers stays undecided.
+    timed, timed_m = set(), set()    # cones that hit the per-cone wall limit in an earlier stage
     for opt, factor in (("-n -m", 10), ("-m", 100), ("-m", 1000)):
+        if opt == "-m" and factor > 100:
+            # a cone that ran out of WALL time under &cec -m at x100 would only run longer with x1000 conflicts:
+            # it stays undecided (UNRESOLVED, never proved) and goes to xor_sat below (LEC-CONE-BOUND)
+            pending = [i for i in pending if i not in timed_m]
         if not pending:
             break
         from concurrent.futures import ThreadPoolExecutor
         jobs = max(1, PROVE_JOBS)
-        size = len(pending) if jobs == 1 else max(1, (len(pending) + jobs * 4 - 1) // (jobs * 4))
-        batches = [pending[i:i+size] for i in range(0, len(pending), size)]
-        def one_batch(ids, factor=factor, opt=opt):
-            return ids, cone_batch(abc, swept, work, tag, ids, opt, conflicts * factor, log)
+        # cones that timed out in an earlier stage run alone (bare per-cone limit) so that they cannot cost a
+        # whole batch wall again; the rest is batched as before
+        solo = [i for i in pending if i in timed]
+        rest = [i for i in pending if i not in timed]
+        size = len(rest) if jobs == 1 else max(1, (len(rest) + jobs * 4 - 1) // (jobs * 4))
+        batches = [rest[i:i+size] for i in range(0, len(rest), size)] if rest else []
+        stage_to = set()
+        def one_batch(ids, factor=factor, opt=opt, stage_to=stage_to):
+            return ids, cone_batch(abc, swept, work, tag, ids, opt, conflicts * factor, log, timeouts=stage_to)
+        def one_solo(i, factor=factor, opt=opt, stage_to=stage_to):
+            return [i], cone_batch(abc, swept, work, tag, [i], opt, conflicts * factor, log, timeouts=stage_to,
+                                   solo=True)
         with ThreadPoolExecutor(max_workers=jobs) as ex:
-            for ids, res in ex.map(one_batch, batches):
+            for ids, res in list(ex.map(one_batch, batches)) + list(ex.map(one_solo, solo)):
                 for i, status in zip(ids, res):
                     st[m.onames[i]] = status
+        timed = stage_to
+        if opt == "-m":
+            timed_m = stage_to
         pending = [i for i in pending if st[m.onames[i]] == "undecided"]
     unknown = [i for i, n in enumerate(m.onames) if st[n] == "undecided"]
     if unknown:
@@ -2451,6 +2608,59 @@ def cone_sim(m, lits, fixed, words, seed):
 ZH = -2                                  # fsm_proposals: the zero-hot (all gate bits 0) state
 
 
+def _fsm_search(m, var, gk, tk, dl, n, nt, zh, words, log, base):
+    """fsm_proposals: score every (code -> gate bit) map on 64 x `words` random lanes per (code, bit) start state;
+    -> (ok, best, second, map): ok = a unique best map that explains a majority of all sampled transitions."""
+    import math
+    R = {}
+    for c in range(1 << n):
+
+        for j in list(range(nt)) + ([ZH] if zh else []):
+            ones = (1 << (64 * words)) - 1
+            fixed = {var[("gold", k)]: (ones if (c >> b) & 1 else 0) for b, k in enumerate(gk)}
+            fixed.update({var[("gate", k)]: (ones if i == j else 0) for i, k in enumerate(tk)})
+            vals, mask = cone_sim(m, dl, fixed, words, seed=c * 64 + (j if j >= 0 else 63))
+            obs = collections.Counter()
+            for lane in range(64 * words):
+                gn = sum(((vals[b] >> lane) & 1) << b for b in range(n))
+                tn = [(vals[n + i] >> lane) & 1 for i in range(nt)]
+                obs[(gn, tn.index(1) if sum(tn) == 1 else (ZH if sum(tn) == 0 else -1))] += 1
+            R[(c, j)] = obs
+    # the next states also depend on registers not yet paired (a renamed alias of a state flag is a free input
+    # on each side), so a transition agrees only where those agree: pick the map with the most agreeing
+    # transitions (unique best, a majority of all lanes); the induction proof decides
+    import itertools
+    lanes = 64 * words
+    def search(zero_hot):
+        # zero_hot: one more code is the all-zero gate state (yosys fsm one-hot recoding of a reset/idle state
+        # as no bit set); its transitions are scored like the one-hot ones
+        best, second, pi = -1, -1, None
+        for codes in itertools.combinations(range(1 << n), nt):
+            for perm in itertools.permutations(range(nt)):
+                base_ = dict(zip(codes, perm))
+                for z in ([c for c in range(1 << n) if c not in base_] if zero_hot else [None]):
+                    cand = dict(base_)
+                    if z is not None:
+                        cand[z] = ZH
+                    sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
+                             if ti != -1 and cand.get(gn) == ti)
+                    if sc > best:
+                        best, second, pi = sc, best, cand
+                    elif sc > second:
+                        second = sc
+        ok = pi is not None and best != second and 2 * best > len(pi) * lanes
+        return ok, best, second, pi
+    ok, best, second, pi = search(False)
+    if not ok and zh:                  # only when no one-hot map is unique: earlier verdicts are unchanged
+        if math.comb(1 << n, nt) * math.factorial(nt) * ((1 << n) - nt) > 200000:
+            log.append(f"fsm: {base} ({n} gold / {nt} gate bits): zero-hot encoding search too large")
+        else:
+            okz, bz, sz, pz = search(True)
+            if okz:
+                ok, best, second, pi = okz, bz, sz, pz
+    return ok, best, second, pi
+
+
 def fsm_proposals(L, log, words=2, max_bits=4):
     """FSM state recoding (yosys fsm: a binary RTL state vector B[n-1:0] becomes one-hot gate flops B#t[i]).
     For each such vector the code -> one-hot-bit map is found by simulating both next-state functions from every
@@ -2486,55 +2696,17 @@ def fsm_proposals(L, log, words=2, max_bits=4):
             log.append(f"fsm: {base} ({n} gold / {nt} gate bits): encoding search too large, none proposed")
             continue
         dl = [L.dlit[("gold", k)] for k in gk] + [L.dlit[("gate", k)] for k in tk]
-        R = {}
         zh = nt + 1 <= (1 << n)            # room for a zero-hot state (all gate bits 0, LEC-FPREG-4 L3 u_rw.st)
-        for c in range(1 << n):
-            for j in list(range(nt)) + ([ZH] if zh else []):
-                ones = (1 << (64 * words)) - 1
-                fixed = {var[("gold", k)]: (ones if (c >> b) & 1 else 0) for b, k in enumerate(gk)}
-                fixed.update({var[("gate", k)]: (ones if i == j else 0) for i, k in enumerate(tk)})
-                vals, mask = cone_sim(m, dl, fixed, words, seed=c * 64 + (j if j >= 0 else 63))
-                obs = collections.Counter()
-                for lane in range(64 * words):
-                    gn = sum(((vals[b] >> lane) & 1) << b for b in range(n))
-                    tn = [(vals[n + i] >> lane) & 1 for i in range(nt)]
-                    obs[(gn, tn.index(1) if sum(tn) == 1 else (ZH if sum(tn) == 0 else -1))] += 1
-                R[(c, j)] = obs
-        # the next states also depend on registers not yet paired (a renamed alias of a state flag is a free input
-        # on each side), so a transition agrees only where those agree: pick the map with the most agreeing
-        # transitions (unique best, a majority of all lanes); the induction proof decides
-        import itertools
-        lanes = 64 * words
-        def search(zero_hot):
-            # zero_hot: one more code is the all-zero gate state (yosys fsm one-hot recoding of a reset/idle state
-            # as no bit set); its transitions are scored like the one-hot ones
-            best, second, pi = -1, -1, None
-            for codes in itertools.combinations(range(1 << n), nt):
-                for perm in itertools.permutations(range(nt)):
-                    base_ = dict(zip(codes, perm))
-                    for z in ([c for c in range(1 << n) if c not in base_] if zero_hot else [None]):
-                        cand = dict(base_)
-                        if z is not None:
-                            cand[z] = ZH
-                        sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
-                                 if ti != -1 and cand.get(gn) == ti)
-                        if sc > best:
-                            best, second, pi = sc, best, cand
-                        elif sc > second:
-                            second = sc
-            ok = pi is not None and best != second and 2 * best > len(pi) * lanes
-            return ok, best, second, pi
-        ok, best, second, pi = search(False)
-        if not ok and zh:                  # only when no one-hot map is unique: earlier verdicts are unchanged
-            if math.comb(1 << n, nt) * math.factorial(nt) * ((1 << n) - nt) > 200000:
-                log.append(f"fsm: {base} ({n} gold / {nt} gate bits): zero-hot encoding search too large")
-            else:
-                okz, bz, sz, pz = search(True)
-                if okz:
-                    ok, best, second, pi = okz, bz, sz, pz
+        # rare transitions (HBM kshare st 11-02: ISSUE->WAIT on j == 15, WAIT->NORM on got == 63) need more lanes than
+        # the default sample: re-sample with 8x / 32x the lanes while the map is not unique (more evidence only; the
+        # induction proof still decides)
+        for w in (words, 8 * words, 32 * words):
+            ok, best, second, pi = _fsm_search(m, var, gk, tk, dl, n, nt, zh, w, log, base)
+            if ok:
+                break
         if not ok:
             log.append(f"fsm: {base} ({n} gold / {nt} gate bits): no unique encoding (best {best}, next {second} of "
-                       f"{nt * lanes} transitions), none proposed")
+                       f"{nt * 64 * w} transitions), none proposed")
             continue
         for c, j in sorted(pi.items()):
             if j == ZH:                    # zero-hot: implied by the other cubes (every gate bit 0), no flop of its own
@@ -2916,6 +3088,81 @@ def unobservable_keys(L):
             k = v - I - NL - 1
             stack += (ands[2 * k] >> 1, ands[2 * k + 1] >> 1)
     return {k for k, lit in L.gp.items() if k.startswith("ff:") and (lit >> 1) not in seen}
+
+
+def kept_functionally_unobservable(L, missing, all_proved):
+    """DIE-QC-64/SUL 11-02 (QC su_lane l1 routed LEC: 86101/86101 proved, KEEP FAIL 96 = u_u_lrly1.idr[503..598]):
+    a kept bit the gold AIG cone still reaches structurally (so unobservable_keys keeps it) but that ORFS
+    eliminate_dead_logic removed because the synthesized netlist reads it nowhere.  When EVERY compare point is proved
+    with that register an unpaired free gold input -- no accepted correspondence hypothesis names it (not merged into
+    a twin, not paired with a gate flop, not proved constant) -- no output can depend on it in any state, so its
+    removal is dead-logic removal, not a merge.  A merged kept bit either carries an accepted eq hypothesis (stays
+    missing) or, left free, makes the compare points it feeds differ (not all proved): both stay fail-closed."""
+    if not all_proved or not missing:
+        return []
+    named = set()
+    for (side, k), h in L.hyp.items():
+        named.add(k)
+        if h and h[0] == "eq":
+            named.add(h[2])
+        elif h and h[0] == "cube":
+            named.update(h[2])
+    return sorted(k for k in missing if k not in named)
+
+
+def _hyp_keys(x):
+    """every register key string inside a hypothesis payload (cube lists, loaded/fill guards, nested tuples)"""
+    if isinstance(x, str):
+        return {x} if x.startswith(("ff:", "pi:")) else set()
+    if isinstance(x, (list, tuple)):
+        return set().union(*map(_hyp_keys, x)) if x else set()
+    return set()
+
+
+def kept_dead_twin_classes(L, missing):
+    """S81 ve_s 11-03 (routed LEC 43609/43609 proved, KEEP FAIL 447 = chunk_*.term[0].add.u.{u_exp2,u_exp3,u_rc,
+    w_cy,w_difa,...}): kept twin registers that synthesis merged (gold u_exp3[i] proved == u_exp2[i]) and that
+    eliminate_dead_logic then removed TOGETHER with the surviving twin, so no gate flop holds any of them.  The
+    accepted gold-gold eq hypothesis names them, which kept_functionally_unobservable's single-bit rule treats as a
+    merge.  Here the whole equivalence class is the unit: a class is exempt only when (a) every member is a missing
+    kept bit of this check (so no member survives as a flop: no twin was kept in its place), (b) every hypothesis
+    on a member is a plain gold-side 'eq' to another member (no gate/both side, no constant, no cube/loaded/fill
+    form), (c) no other hypothesis or state constraint reads a member, and (d) the class representative itself
+    carries no hypothesis, i.e. it was a free gold input.  Called only when EVERY compare point proved (the caller's
+    all_proved gate), so no output reads the class in any state: dead logic, not a merge.  A class with a surviving
+    member (the real merge the kept check exists for), any gate/both pairing, or any unproved point stays missing."""
+    miss = set(missing)
+    hyp = L.hyp
+    tainted = set()
+    edges = collections.defaultdict(set)
+    for (side, k), h in hyp.items():
+        if side == "gold" and h and h[0] == "eq" and len(h) >= 3 and h[1] == "gold":
+            edges[k].add(h[2])
+            edges[h[2]].add(k)
+            continue
+        tainted.add(k)                       # any other form on the key (const / cube / loaded / fill / gate / both)
+        if h and h[0] == "eq" and len(h) >= 3:
+            tainted.add(h[2])
+        else:
+            tainted |= _hyp_keys(h)
+    for c in getattr(L, "cons", ()) or ():
+        tainted |= _hyp_keys(c)
+    out, seen = set(), set()
+    for k in sorted(miss):
+        if k in seen or k not in edges:
+            continue
+        comp, todo = set(), [k]
+        while todo:
+            x = todo.pop()
+            if x in comp:
+                continue
+            comp.add(x)
+            todo.extend(edges[x] - comp)
+        seen |= comp
+        roots = [x for x in comp if ("gold", x) not in hyp]
+        if comp <= miss and not (comp & tainted) and len(roots) == 1:
+            out |= comp
+    return out
 
 
 def kept_wire_alias_copies(L, declared, aliases_file):
@@ -3858,7 +4105,13 @@ def raw_constant_bases(L, work, conflicts, log):
         m.ands = d["ands"]
         m.outs = [points[k] ^ c for k, c in candidates]
         m.onames = [f"raw-base:{side}:{k}:{c}" for k, c in candidates]
-        status = prove(m, work, conflicts, log, tag=f"rawbase{batch}_{side}")
+        # FLOW-LATCH-1 11-03 (SIGNOFF-SPRINT-24 RAW-PREFIX hang class): this universal sweep gets the same wall
+        # backstop as the raw prefix (OT_LEC_RAWPREFIX_S); an overrun proves no base (undecided -> dropped, sound)
+        wall = raw_prefix_limit_s()
+        status = prove(m, work, conflicts, log, tag=f"rawbase{batch}_{side}", wall=wall)
+        if status.pop(SWEEP_TIMEOUT, False):
+            L.__dict__.setdefault("raw_prefix_bounded", []).append(
+                dict(tag=f"rawbase{batch}_{side}", side=side, steps=1, n=len(candidates), why="wall", limit=wall))
         for (k, c), name in zip(candidates, m.onames):
             cache[(side, k, c)] = status.get(name, "undecided")
         log.append(f"universal raw-D bases {side}: {sum(status.get(n) == 'proved' for n in m.onames)}"
@@ -3937,7 +4190,25 @@ def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
         m.outs = [lit ^ c for lit, (k, c) in zip(m.outs, todo)]
         m.onames = [f"raw-prefix:{side}:{k}:{c}:{steps}" for k, c in todo]
         batch = L.__dict__.get("_raw_prefix_batch", 0)
-        status = prove(m, work, conflicts, log, tag=f"rawprefix{batch}_{side}_{steps}")
+        tag = f"rawprefix{batch}_{side}_{steps}"
+        # LEC-RAWPREFIX-BOUND (DIE-HBM-60/61 LEC 11-03): a 16/64-edge unroll of a large cone (HBM vm_calendar, KV
+        # head_eighth, kshare: 1.5-3.7 h in one &fraig/&sat, FLOW canaries of 19af2d0dd) is bounded.  Primary bound
+        # = miter size (deterministic, no ABC run); the wall limit is a backstop.  Either way no base is proved,
+        # i.e. the pre-C4 behaviour for those constants (dropped, never assumed: fewer assumptions can only turn an
+        # output into a difference / undecided, never into a false EQ), and the bound is recorded explicitly.
+        ands, cap = len(m.ands) // 2, raw_prefix_limit_ands()
+        bounded = L.__dict__.setdefault("raw_prefix_bounded", [])
+        if cap and ands > cap:
+            log.append(f"LEC RAWPREFIX SIZE BOUND {tag}: {ands} ANDs > {cap} (OT_LEC_RAWPREFIX_ANDS) -> "
+                       f"{len(todo)} bases not proved")
+            status = {}
+            bounded.append(dict(tag=tag, side=side, steps=steps, n=len(todo), ands=ands, why="size", limit=cap))
+        else:
+            wall = raw_prefix_limit_s()
+            status = prove(m, work, conflicts, log, tag=tag, wall=wall)
+            if status.pop(SWEEP_TIMEOUT, False):
+                bounded.append(dict(tag=tag, side=side, steps=steps, n=len(todo), ands=ands, why="wall",
+                                    limit=wall))
         L._raw_prefix_batch = batch + 1
         for (k, c), name in zip(todo, m.onames):
             result = status.get(name, "undecided")
@@ -3995,7 +4266,15 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
     eq_const_resolve(L, log)
     if work is not None:
         raw_constant_bases(L, work, conflicts, log)
-        steps = int(os.environ.get("OT_LEC_RAW_BASE_STEPS", "0"))
+        # DIE-HBM-59/LEC C4 (HBM n4ext / fused_lane 11-02): default-on at the reset window itself (OT_LEC_RESET_CYCLES,
+        # the declared die reset length or the default 4, set by reset_contract_gate): a no-reset register that is c
+        # after that many edges from ANY state with fresh free inputs at every edge (x*x products: s2_mr odd bits,
+        # sign y[31]) is c at the end of reset; pure ternary constant propagation calls it X and the constant was
+        # dropped (78 in n4ext, KIT-WAVE-16 loaded proposals need a guard register these pipelines do not have).
+        # No edge beyond the window is used, so no reset-length assumption is added; OT_LEC_RAW_BASE_STEPS stays the
+        # debug override (0 = off).  The final induction still proves every kept constant.
+        dflt = os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT))
+        steps = int(os.environ.get("OT_LEC_RAW_BASE_STEPS", dflt))
         if steps > 1:
             ok = noreset_sound(L)
             candidates = [(s, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok
@@ -4047,7 +4326,11 @@ def noreset_report(L):
                 release=[e for e in kept if e["basis"] == "release"][:500],
                 n_universal_raw_D=sum(1 for e in kept if e["basis"] == "universal_raw_D"),
                 universal_raw_D=[e for e in kept if e["basis"] == "universal_raw_D"][:500],
-                raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS", "0")),
+                raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS",
+                                                  os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT)))),
+                raw_prefix_wall_s=raw_prefix_limit_s(), raw_prefix_ands_cap=raw_prefix_limit_ands(),
+                n_raw_prefix_bounded=len(getattr(L, "raw_prefix_bounded", [])),
+                raw_prefix_bounded=list(getattr(L, "raw_prefix_bounded", []))[:200],
                 n_universal_raw_prefix=sum(1 for e in kept if e["basis"] == "universal_raw_prefix"),
                 universal_raw_prefix=[e for e in kept if e["basis"] == "universal_raw_prefix"][:500],
                 n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
@@ -4801,6 +5084,35 @@ def merged_proposals(L, log, cap=4096):
     # differ).  Pick, per gold-only register, the first candidate whose next state simulates equal to it with the
     # pair's state bound together (a hold path then reads one value, so only the load condition / data decide);
     # the chosen relation is still proved inductively with all the others, a wrong one is dropped, never assumed.
+    # A twin that READS the merged register (HBM kshare 11-02, DIE-HBM-59/LEC C3): an async FIFO's rd_bin[MSB] holds
+    # itself (rd_bin[MSB] ^ carry) while rd_gray[MSB] loads the same rd_next[MSB] from rd_bin[MSB], never from itself;
+    # synthesis merges rd_bin[MSB] into rd_gray[MSB].  With only each flop's OWN state as SELF the two fingerprints
+    # differ, so rd_bin[MSB] stayed free.  A matched c whose support holds gold-only k (or whose k's support holds c)
+    # is a candidate when the two supports agree with BOTH read as SELF; proposed after the same-support candidates,
+    # bound-state simulation chooses, the induction proves (a wrong one is dropped, never assumed).
+    gset = set(gonly)
+    for c in L.matched:
+        if not c.startswith("ff:") or c not in L.gc:
+            continue
+        s_c = support(L.gc[c])
+        for k in [x for x in s_c if x in gset]:
+            if ("gold", k) in L.hyp or c in cands.get(k, ()):
+                continue
+            two = (k, c)
+            if frozenset("SELF" if x in two else x for x in s_c) == \
+                    frozenset("SELF" if x in two else x for x in support(L.gc[k])):
+                cands[k].append(c)
+    for k in gonly:
+        if ("gold", k) in L.hyp:
+            continue
+        s_k = support(L.gc[k])
+        for c in [x for x in s_k if isinstance(x, str) and x in L.matched and x.startswith("ff:") and x in L.gc]:
+            if c in cands.get(k, ()):
+                continue
+            two = (k, c)
+            if frozenset("SELF" if x in two else x for x in s_k) == \
+                    frozenset("SELF" if x in two else x for x in support(L.gc[c])):
+                cands[k].append(c)
     choice = {k: cs[0] for k, cs in cands.items()}
     pending = {k: list(cs) for k, cs in cands.items() if len(cs) > 1}
     rounds = 0
@@ -6196,7 +6508,10 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         for f in env["VERILOG_FILES"].split():
             srcmods |= set(src_modules(kpath(kit, f)))
             try:
-                rtl_cells |= set(re.findall(r"\bICG\w+_ASAP7_75t_[RLS]+\b", Path(kpath(kit, f)).read_text(errors="replace")))
+                txt = Path(kpath(kit, f)).read_text(errors="replace")
+                rtl_cells |= set(re.findall(r"\bICG\w+_ASAP7_75t_[RLS]+\b", txt))
+                if latch_ok and RTL_LATCH.search(txt):   # a latch only in the gold (dropped by the netlist) is
+                    env["_LEC_LATCH"] = "1"              # still modelled, so its port phase is compared
             except OSError:
                 pass
         icg = sorted({c for c in types if ICG_CELLS.match(c)} | (rtl_cells - srcmods))
@@ -6262,6 +6577,11 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                 fg.result()
                 ft.result()
         rec["t_aig_s"] = round(time.time() - t1, 1)
+        # latch phase at the output ports (LATCH-FACE 11-03): cycle equivalence + equal port phase classes
+        phase_diff = latch_phase_diff(rec["lockup_latches"]) if rec.get("lockup_latches") else []
+        if rec.get("lockup_latches"):
+            rec["latch_phase"] = dict(n_differ=len(phase_diff),
+                                      differ=[dict(point=k, gold=a, gate=b) for k, a, b in phase_diff[:500]])
         # 3. key points, register correspondence, miter
         t1 = time.time()
         L = Lec(read_aig(out / "gold.aig"), read_map(out / "gold.map"),
@@ -6347,11 +6667,27 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         if kf.is_file():
             kdecl, kmiss, kconst = kept_registers(L, kf)
             kdead = getattr(L, "kept_unobservable", [])
-            rec["kept_registers"] = dict(declared=len(kdecl), in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead),
+            kfree = kept_functionally_unobservable(L, kmiss, bool(status) and all(v == "proved" for v in status.values()))
+            kmiss = [k for k in kmiss if k not in set(kfree)]
+            ktwin = sorted(kept_dead_twin_classes(L, kmiss)) if bool(status) and \
+                all(v == "proved" for v in status.values()) else []
+            kmiss = [k for k in kmiss if k not in set(ktwin)]
+            rec["kept_registers"] = dict(declared=len(kdecl),
+                                         in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead) - len(kfree)
+                                         - len(ktwin),
                                          constant_proved=lst(kconst), missing=lst(kmiss),
                                          unobservable_removed=lst(kdead),
                                          unobservable_reason="no compare point (output / black-box input) observes "
-                                                             "it in the gold AIG: dead logic, removal is not a merge" if kdead else None)
+                                                             "it in the gold AIG: dead logic, removal is not a merge" if kdead else None,
+                                         functionally_unobservable_removed=lst(kfree),
+                                         functionally_unobservable_reason="every compare point proved with it an "
+                                             "unpaired free input (no correspondence names it): dead logic, not a merge"
+                                             if kfree else None,
+                                         dead_twin_classes_removed=lst(ktwin),
+                                         dead_twin_classes_reason="every compare point proved; each class = kept "
+                                             "registers proved equal only to each other (gold eq), all absent from "
+                                             "the netlist, representative free: removed together as dead logic, no "
+                                             "surviving twin" if ktwin else None)
         else:
             kmiss = None
             rec["kept_registers"] = "not checked (no gold.keep: AIGs reused from an older lec.py)"
@@ -6368,10 +6704,14 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                              + ", ".join(kmiss[:6]) + ")")
             if hard:
                 rec["reason"] += f"; also {len(hard)} compare points differ"
-        elif hard:
+        elif hard or phase_diff:
             rec["verdict"] = "NOT EQUIVALENT"
-            rec["reason"] = f"{len(hard)} compare points differ (first: " + \
-                ", ".join(e["point"] for e in hard[:8]) + ")"
+            rec["reason"] = (f"{len(hard)} compare points differ (first: " + ", ".join(e["point"] for e in hard[:8])
+                             + ")") if hard else ""
+            if phase_diff:
+                rec["reason"] += ("; " if hard else "") + (
+                    f"{len(phase_diff)} output bits differ in latch phase (first: " +
+                    ", ".join(f"{k} gold {a} / gate {b}" for k, a, b in phase_diff[:6]) + ")")
             rm = sorted({k for e in hard for k in e["cone_unmatched_keys"] if k.startswith("ff:")})
             if rm:
                 rec["reason"] += "; RTL registers removed by synthesis although not constant: " + ", ".join(rm[:8])
@@ -6449,6 +6789,9 @@ def via_docker(args, image, mem):
         cmd += ["-e", "OT_LEC_EARLY_COMPARE=1"]
     if "OT_LEC_RAW_BASE_STEPS" in os.environ:
         cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
+    for k in ("OT_LEC_RAWPREFIX_S", "OT_LEC_RAWPREFIX_ANDS"):
+        if k in os.environ:
+            cmd += ["-e", f"{k}={os.environ[k]}"]
     for k in ("OT_LEC_LATCH", "OT_LEC_RESET_CYCLES"):      # model switches (the reset contract is KIT/reset_contract.json)
         if os.environ.get(k):
             cmd += ["-e", f"{k}={os.environ[k]}"]
@@ -6495,6 +6838,30 @@ def _kit_input_identity(kit):
     if not rtl:
         raise ValueError("kit has no staged RTL inputs")
     paths += rtl
+    # Optional source-pinned GEN runtime assets (placement Tcl/CSV), never RTL
+    # or proof exemptions. Inline validation keeps standalone /lec.py complete.
+    freeze = json.loads((kit / "freeze.json").read_text())
+    runtime_seen = set()
+    runtime_files = freeze.get("runtime_files", [])
+    if not isinstance(runtime_files, list):
+        raise ValueError("runtime_files must be a list")
+    for row in runtime_files:
+        if not isinstance(row, dict):
+            raise ValueError("runtime asset identity must be an object")
+        dest = row.get("destination")
+        if (not isinstance(dest, str) or "\\" in dest or
+                any(x in ("", ".", "..") for x in dest.split("/")) or
+                not dest.startswith("runtime/") or dest in runtime_seen or
+                Path(dest).name == "freeze.json" or Path(dest).name.startswith("run_")):
+            raise ValueError("invalid runtime asset destination")
+        p = kit / dest
+        p.resolve(strict=True).relative_to(kit)
+        if p.is_symlink() or not re.fullmatch(r"[0-9a-f]{64}", row.get("sha256") or ""):
+            raise ValueError("invalid runtime asset identity")
+        if hashlib.sha256(p.read_bytes()).hexdigest() != row["sha256"]:
+            raise ValueError("runtime asset bytes differ from GEN readset")
+        runtime_seen.add(dest)
+        paths.append(p)
     result = {}
     for p in paths:
         p.resolve().relative_to(kit)  # no source outside the staged kit
