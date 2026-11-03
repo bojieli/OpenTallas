@@ -180,7 +180,7 @@
       },
       "gen_args": [
         "--hold-ff-margin",
-        "10",
+        "0",
         "--max-wire-um",
         "100",
         "--clock-landing",
@@ -763,7 +763,7 @@
       },
       "gen_args": [
         "--hold-ff-margin",
-        "10",
+        "0",
         "--clock-landing",
         "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/results/qc_die57_1031/bind/sidecar.json"
       ],
