@@ -1,0 +1,87 @@
+{
+ "6_final.v": {
+  "path": "/srv/opentallas-scratch/claude/head-tileio-source-1102/6_final.v",
+  "sha256": "84faebec6157ab4bb45dca2ec6723844227f636ca247aac5b2c73f29389a50d2"
+ },
+ "constraint.sdc": {
+  "path": "/srv/opentallas-scratch/claude/head-tileio-source-1102/constraint.sdc",
+  "sha256": "b93aa71ec2a9ae01b6b7a5c674df5489bc6218efb353b055d7cf2abb56d8fed1"
+ },
+ "straps.json": {
+  "path": "/srv/opentallas-scratch/claude/head-tileio-source-1102/straps.json",
+  "sha256": "ef65415522a0237b4bb9aaab6a6e11c13977aac306983a27c5ecf9fa422b27a9"
+ },
+ "freeze.json": {
+  "path": "/srv/opentallas-scratch/claude/head-tileio-source-1102/freeze.json",
+  "sha256": "7ce71461ea1fb0316c2f7dda1b2f69b497fb17c425a9ebc962c753e2bb22b12e"
+ },
+ "pins.json": {
+  "path": "/srv/opentallas-scratch/claude/head-tileio-source-1102/pins.json",
+  "sha256": "8d8871ec635f7643ede013019546b98d3214b926df943add4a6470cd2d79abc0"
+ },
+ "plan_pins.json": {
+  "path": "/srv/opentallas-scratch/claude/head-tileio-source-1102/plan_pins.json",
+  "sha256": "4d8cf461a9f8013dbfb38be05db5b4be198cec9f1dd33c14da4b211460a15f96"
+ },
+ "budget.json": {
+  "path": "/srv/opentallas-scratch/claude/head-tileio-source-1102/budget.json",
+  "sha256": "eb03515f13e26e5657bda574804d18e06c94b897b77a6ad49489842d58d4ead0"
+ },
+ "config.mk": {
+  "path": "/srv/opentallas-scratch/claude/head-tileio-source-1102/config.mk",
+  "sha256": "f13df0e9057de70d27d0551099def259cae366dd5861ddb1cca484b96b9f504c"
+ },
+ "current_terminal.json": {
+  "path": "/srv/opentallas-scratch/claude/head-tileio-source-1102/current_terminal.json",
+  "sha256": "b638e7b599d943a3c92f4e8ddcd6b940db10826d1293b655a971271a0425afe6"
+ },
+ "scope": "READONLY exact actualsource+SDC+declaredstrap+pin/freeze join; no parenttieproof/coveragewaiver/gatechange",
+ "raw_coverage_tt.log": {
+  "path": "/srv/opentallas-scratch/claude/head-tileio-source-1102/raw_coverage_tt.log",
+  "sha256": "492d5ea70b9e2e0b6257f96c9b27eac4decdb2758077fbc62560005734003a2c"
+ },
+ "tt_native_unconstrained_endpoints": [
+  "u_core.b_en$_DFF_P_/D",
+  "u_core.row0_q[0]$_DFF_P_/D",
+  "u_core.row0_q[10]$_DFF_P_/D",
+  "u_core.row0_q[11]$_DFF_P_/D",
+  "u_core.row0_q[12]$_DFF_P_/D",
+  "u_core.row0_q[13]$_DFF_P_/D",
+  "u_core.row0_q[14]$_DFF_P_/D",
+  "u_core.row0_q[15]$_DFF_P_/D",
+  "u_core.row0_q[16]$_DFF_P_/D",
+  "u_core.row0_q[1]$_DFF_P_/D",
+  "u_core.row0_q[2]$_DFF_P_/D",
+  "u_core.row0_q[3]$_DFF_P_/D",
+  "u_core.row0_q[4]$_DFF_P_/D",
+  "u_core.row0_q[5]$_DFF_P_/D",
+  "u_core.row0_q[6]$_DFF_P_/D",
+  "u_core.row0_q[7]$_DFF_P_/D",
+  "u_core.row0_q[8]$_DFF_P_/D",
+  "u_core.row0_q[9]$_DFF_P_/D"
+ ],
+ "raw_coverage_ff.log": {
+  "path": "/srv/opentallas-scratch/claude/head-tileio-source-1102/raw_coverage_ff.log",
+  "sha256": "3ad3965ad6e2d46b40c82951096b6d0a1793cfd0d8f027791255407ddbd4f22c"
+ },
+ "ff_native_unconstrained_endpoints": [
+  "u_core.b_en$_DFF_P_/D",
+  "u_core.row0_q[0]$_DFF_P_/D",
+  "u_core.row0_q[10]$_DFF_P_/D",
+  "u_core.row0_q[11]$_DFF_P_/D",
+  "u_core.row0_q[12]$_DFF_P_/D",
+  "u_core.row0_q[13]$_DFF_P_/D",
+  "u_core.row0_q[14]$_DFF_P_/D",
+  "u_core.row0_q[15]$_DFF_P_/D",
+  "u_core.row0_q[16]$_DFF_P_/D",
+  "u_core.row0_q[1]$_DFF_P_/D",
+  "u_core.row0_q[2]$_DFF_P_/D",
+  "u_core.row0_q[3]$_DFF_P_/D",
+  "u_core.row0_q[4]$_DFF_P_/D",
+  "u_core.row0_q[5]$_DFF_P_/D",
+  "u_core.row0_q[6]$_DFF_P_/D",
+  "u_core.row0_q[7]$_DFF_P_/D",
+  "u_core.row0_q[8]$_DFF_P_/D",
+  "u_core.row0_q[9]$_DFF_P_/D"
+ ]
+}

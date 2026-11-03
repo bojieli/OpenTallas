@@ -1,0 +1,284 @@
+[
+ {
+  "runtime": "intel2:/srv/opentallas-scratch2/claude/die-head-48/prd53/hd_st_k5_F64",
+  "generated": "2026-11-01T23:34:57-08:00",
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "drv: FAIL TT slew 837.0 cap 0.0, FF slew 92.0 cap 0.0",
+   "io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing"
+  ],
+  "corners": {
+   "tt": {
+    "std_wns_max": 126.62,
+    "std_wns_min": 26.49,
+    "slew_viol": 837.0,
+    "cap_viol": 0.0,
+    "pg_open": 0.0
+   },
+   "ff": {
+    "std_wns_max": 131.19,
+    "std_wns_min": 9.47,
+    "slew_viol": 92.0,
+    "cap_viol": 0.0,
+    "pg_open": 0.0
+   }
+  },
+  "route": {
+   "drc": 0,
+   "antenna_nets": 0,
+   "drc_source": "5_2_route.json",
+   "antenna_source": "5_2_route.json"
+  },
+  "lec": {
+   "verdict": "EQUIVALENT",
+   "counts": {
+    "compare_points": 13835,
+    "proved": 13835,
+    "differs": 0,
+    "undecided": 0
+   },
+   "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": null,
+    "used": 4,
+    "debug_overrides": {}
+   }
+  }
+ },
+ {
+  "runtime": "intel2:/srv/opentallas-scratch2/claude/die-head-48/prd53/hd_st_k5_F48",
+  "generated": "2026-11-01T23:44:13-08:00",
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "drv: FAIL TT slew 221.0 cap 0.0, FF slew 49.0 cap 0.0",
+   "io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing"
+  ],
+  "corners": {
+   "tt": {
+    "std_wns_max": 29.25,
+    "std_wns_min": 26.49,
+    "slew_viol": 221.0,
+    "cap_viol": 0.0,
+    "pg_open": 0.0
+   },
+   "ff": {
+    "std_wns_max": 131.59,
+    "std_wns_min": 9.48,
+    "slew_viol": 49.0,
+    "cap_viol": 0.0,
+    "pg_open": 0.0
+   }
+  },
+  "route": {
+   "drc": 0,
+   "antenna_nets": 0,
+   "drc_source": "5_2_route.json",
+   "antenna_source": "5_2_route.json"
+  },
+  "lec": {
+   "verdict": "EQUIVALENT",
+   "counts": {
+    "compare_points": 13835,
+    "proved": 13835,
+    "differs": 0,
+    "undecided": 0
+   },
+   "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": null,
+    "used": 4,
+    "debug_overrides": {}
+   }
+  }
+ },
+ {
+  "runtime": "intel2:/srv/opentallas-scratch2/claude/die-head-48/prd53/hd_st_turn_F64",
+  "generated": "2026-11-01T23:26:07-08:00",
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "drv: FAIL TT slew 795.0 cap 0.0, FF slew 240.0 cap 0.0",
+   "io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing"
+  ],
+  "corners": {
+   "tt": {
+    "std_wns_max": 132.93,
+    "std_wns_min": 22.76,
+    "slew_viol": 795.0,
+    "cap_viol": 0.0,
+    "pg_open": 0.0
+   },
+   "ff": {
+    "std_wns_max": 160.21,
+    "std_wns_min": 5.97,
+    "slew_viol": 240.0,
+    "cap_viol": 0.0,
+    "pg_open": 0.0
+   }
+  },
+  "route": {
+   "drc": 0,
+   "antenna_nets": 0,
+   "drc_source": "5_2_route.json",
+   "antenna_source": "5_2_route.json"
+  },
+  "lec": {
+   "verdict": "EQUIVALENT",
+   "counts": {
+    "compare_points": 14215,
+    "proved": 14215,
+    "differs": 0,
+    "undecided": 0
+   },
+   "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": null,
+    "used": 4,
+    "debug_overrides": {}
+   }
+  }
+ },
+ {
+  "runtime": "intel2:/srv/opentallas-scratch2/claude/die-head-48/prd53/hd_st_turn_F48",
+  "generated": "2026-11-01T21:18:16-08:00",
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "drv: FAIL TT slew 73.0 cap 0.0",
+   "io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing"
+  ],
+  "corners": {
+   "tt": {
+    "std_wns_max": 89.19,
+    "std_wns_min": 22.76,
+    "slew_viol": 73.0,
+    "cap_viol": 0.0,
+    "pg_open": 0.0
+   },
+   "ff": {
+    "std_wns_max": 160.33,
+    "std_wns_min": 5.97,
+    "slew_viol": 0.0,
+    "cap_viol": 0.0,
+    "pg_open": 0.0
+   }
+  },
+  "route": {
+   "drc": 0,
+   "antenna_nets": 0,
+   "drc_source": "5_2_route.json",
+   "antenna_source": "5_2_route.json"
+  },
+  "lec": {
+   "verdict": "EQUIVALENT",
+   "counts": {
+    "compare_points": 14215,
+    "proved": 14215,
+    "differs": 0,
+    "undecided": 0
+   },
+   "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": null,
+    "used": 4,
+    "debug_overrides": {}
+   }
+  }
+ },
+ {
+  "runtime": "intel2:/srv/opentallas-scratch2/claude/die-head-48/prd53/hd_st_k5_D_p2",
+  "generated": "2026-11-01T14:27:17-08:00",
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "drv: FAIL TT slew 29.0 cap 0.0, FF slew 33.0 cap 0.0",
+   "io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing"
+  ],
+  "corners": {
+   "tt": {
+    "std_wns_max": 127.06,
+    "std_wns_min": 26.49,
+    "slew_viol": 29.0,
+    "cap_viol": 0.0,
+    "pg_open": 0.0
+   },
+   "ff": {
+    "std_wns_max": 131.34,
+    "std_wns_min": 7.95,
+    "slew_viol": 33.0,
+    "cap_viol": 0.0,
+    "pg_open": 0.0
+   }
+  },
+  "route": {
+   "drc": 0,
+   "antenna_nets": 0,
+   "drc_source": "5_2_route.json",
+   "antenna_source": "5_2_route.json"
+  },
+  "lec": {
+   "verdict": "EQUIVALENT",
+   "counts": {
+    "compare_points": 13835,
+    "proved": 13835,
+    "differs": 0,
+    "undecided": 0
+   },
+   "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": null,
+    "used": 4,
+    "debug_overrides": {}
+   }
+  }
+ },
+ {
+  "runtime": "intel2:/srv/opentallas-scratch2/claude/die-head-48/prd53/hd_st_turn_D_p2",
+  "generated": "2026-11-01T14:37:25-08:00",
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "drv: FAIL TT slew 10.0 cap 0.0, FF slew 24.0 cap 0.0",
+   "io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing"
+  ],
+  "corners": {
+   "tt": {
+    "std_wns_max": 146.38,
+    "std_wns_min": 22.76,
+    "slew_viol": 10.0,
+    "cap_viol": 0.0,
+    "pg_open": 0.0
+   },
+   "ff": {
+    "std_wns_max": 160.36,
+    "std_wns_min": 5.98,
+    "slew_viol": 24.0,
+    "cap_viol": 0.0,
+    "pg_open": 0.0
+   }
+  },
+  "route": {
+   "drc": 0,
+   "antenna_nets": 0,
+   "drc_source": "5_2_route.json",
+   "antenna_source": "5_2_route.json"
+  },
+  "lec": {
+   "verdict": "EQUIVALENT",
+   "counts": {
+    "compare_points": 14215,
+    "proved": 14215,
+    "differs": 0,
+    "undecided": 0
+   },
+   "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": null,
+    "used": 4,
+    "debug_overrides": {}
+   }
+  }
+ }
+]

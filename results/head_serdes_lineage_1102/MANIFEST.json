@@ -1,0 +1,28 @@
+{
+ "scope": "Unselected source-lineage export only; no synthesis, physical kit, timing, phase or source adoption",
+ "source_commit": "703c07481fa0bc4eedf4dc79cbdce6784dd2011e",
+ "command": "python3 source703/tools/die_plan/gen.py rtl source_plan.relocated.json --out rtl_export --rtl-root source703 --clock-landing source_sidecar.json",
+ "runtime": "/srv/opentallas-scratch/claude/head-serdes-lineage-1102",
+ "sha256": {
+  "source_plan.json": "0c98a23000ade2c3fb13de073ca3f09eb8868b412e70921870abda21888bac12",
+  "source_sidecar.json": "dfe1fd228189319ff64e70436f884bc138ac0ba43b1632191c5e61c6ddbabb7c",
+  "source_plan.relocated.json": "7e9dca0bbf739718a62512b033285fdf30d2fe0a88d54e81cf17f6b9f97aec0a",
+  "rtl_export/ot_s81hd_serdes.sv": "017967990864c5942eb6ba5ab7d5dad2710c70f8a57a00464f7b798c8fad1009",
+  "rtl_export/s81_head_top.sv": "1a8ea9c1ba7c28f65ba5be7e50bb2c3c7892d31dd8f65d3f45e385d4529c6e2c",
+  "rtl_export/gen_clock_landings.json": "c1f9b99b5b741ae74beec736ee36139614838616e4059e4e88d7394130d76f80",
+  "rtl_export/gen_count_strap_audit.json": "9414d4371bcda50b53532d313552f994efe17ec6788ff89a10be4a7430c5cabe",
+  "source703/tools/die_plan/gen.py": "b4863606d1b99628d11dbbaaa22c85caf71080fc0ed9abcca4c9fed530263904",
+  "source703/tools/die_plan/gen_rtl.py": "099d18ad162cfcd82ff48df9b80bac3dc39e443e7cafe8062067422abb085afb",
+  "source703/tools/die_plan/clock_landings.py": "28e940bb5d9e317cedd2d1d087577786fc2d7ed4ddc09dd26fd49767915c13d3",
+  "source703/tools/die_plan/landing_contract.py": "3c766c63ce8b637f09a2f7493cd08ec9e7f86ff4203e27529cfef695f0bee98d",
+  "source703/rtl/common/ot_dp_clk_landing_ca.sv": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793"
+ },
+ "landing_export_complete": true,
+ "count_strap_audit": {
+  "verdict": "PASS",
+  "severity": null,
+  "checked_bits": 3276,
+  "errors": [],
+  "reason": null
+ }
+}

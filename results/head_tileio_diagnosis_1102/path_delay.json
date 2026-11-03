@@ -1,0 +1,426 @@
+{
+ "source": "6_finish.rpt exact first c_rb31->kh_gt path",
+ "delay_sums_ps": {
+  "wire": 721.35,
+  "buffer": 598.9,
+  "logic": 498.64,
+  "clock_to_q": 90.25
+ },
+ "data_delay_ps": 1909.14,
+ "rows": [
+  {
+   "name": "u_core.c_rb[31]$_DFF_P_",
+   "pin": "QN",
+   "master": "DFFHQNx2_ASAP7_75t_R",
+   "slew": 62.59,
+   "delay": 90.25,
+   "time": 531.96,
+   "kind": "clock_to_q"
+  },
+  {
+   "name": "place11276",
+   "pin": "A",
+   "master": "BUFx8_ASAP7_75t_R",
+   "slew": 63.31,
+   "delay": 3.7,
+   "time": 535.65,
+   "kind": "wire"
+  },
+  {
+   "name": "place11276",
+   "pin": "Y",
+   "master": "BUFx8_ASAP7_75t_R",
+   "slew": 54.65,
+   "delay": 53.86,
+   "time": 589.51,
+   "kind": "buffer"
+  },
+  {
+   "name": "wire37554",
+   "pin": "A",
+   "master": "BUFx24_ASAP7_75t_R",
+   "slew": 64.9,
+   "delay": 11.69,
+   "time": 601.21,
+   "kind": "wire"
+  },
+  {
+   "name": "wire37554",
+   "pin": "Y",
+   "master": "BUFx24_ASAP7_75t_R",
+   "slew": 14.78,
+   "delay": 44.46,
+   "time": 645.67,
+   "kind": "buffer"
+  },
+  {
+   "name": "wire37553",
+   "pin": "A",
+   "master": "BUFx24_ASAP7_75t_R",
+   "slew": 475.83,
+   "delay": 150.21,
+   "time": 795.88,
+   "kind": "wire"
+  },
+  {
+   "name": "wire37553",
+   "pin": "Y",
+   "master": "BUFx24_ASAP7_75t_R",
+   "slew": 32.61,
+   "delay": 107.96,
+   "time": 903.85,
+   "kind": "buffer"
+  },
+  {
+   "name": "_48038_",
+   "pin": "B",
+   "master": "XOR2x2_ASAP7_75t_R",
+   "slew": 53.16,
+   "delay": 14.48,
+   "time": 918.33,
+   "kind": "wire"
+  },
+  {
+   "name": "_48038_",
+   "pin": "Y",
+   "master": "XOR2x2_ASAP7_75t_R",
+   "slew": 18.3,
+   "delay": 48.78,
+   "time": 967.1,
+   "kind": "logic"
+  },
+  {
+   "name": "wire36479",
+   "pin": "A",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 18.31,
+   "delay": 0.18,
+   "time": 967.29,
+   "kind": "wire"
+  },
+  {
+   "name": "wire36479",
+   "pin": "Y",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 10.66,
+   "delay": 22.28,
+   "time": 989.56,
+   "kind": "buffer"
+  },
+  {
+   "name": "wire36478",
+   "pin": "A",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 230.94,
+   "delay": 73.06,
+   "time": 1062.63,
+   "kind": "wire"
+  },
+  {
+   "name": "wire36478",
+   "pin": "Y",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 21.46,
+   "delay": 55.0,
+   "time": 1117.63,
+   "kind": "buffer"
+  },
+  {
+   "name": "_48039_",
+   "pin": "B1",
+   "master": "OAI22x1_ASAP7_75t_R",
+   "slew": 306.28,
+   "delay": 96.24,
+   "time": 1213.87,
+   "kind": "wire"
+  },
+  {
+   "name": "_48039_",
+   "pin": "Y",
+   "master": "OAI22x1_ASAP7_75t_R",
+   "slew": 95.55,
+   "delay": 63.89,
+   "time": 1277.76,
+   "kind": "logic"
+  },
+  {
+   "name": "wire36040",
+   "pin": "A",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 95.65,
+   "delay": 1.77,
+   "time": 1279.53,
+   "kind": "wire"
+  },
+  {
+   "name": "wire36040",
+   "pin": "Y",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 17.17,
+   "delay": 45.8,
+   "time": 1325.34,
+   "kind": "buffer"
+  },
+  {
+   "name": "_48040_",
+   "pin": "B",
+   "master": "AO21x2_ASAP7_75t_R",
+   "slew": 161.95,
+   "delay": 50.86,
+   "time": 1376.19,
+   "kind": "wire"
+  },
+  {
+   "name": "_48040_",
+   "pin": "Y",
+   "master": "AO21x2_ASAP7_75t_R",
+   "slew": 20.75,
+   "delay": 54.85,
+   "time": 1431.05,
+   "kind": "logic"
+  },
+  {
+   "name": "wire36019",
+   "pin": "A",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 20.75,
+   "delay": 0.18,
+   "time": 1431.22,
+   "kind": "wire"
+  },
+  {
+   "name": "wire36019",
+   "pin": "Y",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 10.6,
+   "delay": 25.08,
+   "time": 1456.3,
+   "kind": "buffer"
+  },
+  {
+   "name": "wire36018",
+   "pin": "A",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 200.05,
+   "delay": 63.15,
+   "time": 1519.45,
+   "kind": "wire"
+  },
+  {
+   "name": "wire36018",
+   "pin": "Y",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 18.7,
+   "delay": 59.08,
+   "time": 1578.53,
+   "kind": "buffer"
+  },
+  {
+   "name": "rebuffer37973",
+   "pin": "A",
+   "master": "BUFx12f_ASAP7_75t_R",
+   "slew": 140.15,
+   "delay": 43.5,
+   "time": 1622.03,
+   "kind": "wire"
+  },
+  {
+   "name": "rebuffer37973",
+   "pin": "Y",
+   "master": "BUFx12f_ASAP7_75t_R",
+   "slew": 21.72,
+   "delay": 45.66,
+   "time": 1667.69,
+   "kind": "buffer"
+  },
+  {
+   "name": "_48211_",
+   "pin": "B",
+   "master": "NOR2x2_ASAP7_75t_R",
+   "slew": 57.98,
+   "delay": 16.87,
+   "time": 1684.56,
+   "kind": "wire"
+  },
+  {
+   "name": "_48211_",
+   "pin": "Y",
+   "master": "NOR2x2_ASAP7_75t_R",
+   "slew": 20.41,
+   "delay": 16.88,
+   "time": 1701.44,
+   "kind": "logic"
+  },
+  {
+   "name": "wire35913",
+   "pin": "A",
+   "master": "BUFx12_ASAP7_75t_R",
+   "slew": 20.41,
+   "delay": 0.09,
+   "time": 1701.53,
+   "kind": "wire"
+  },
+  {
+   "name": "wire35913",
+   "pin": "Y",
+   "master": "BUFx12_ASAP7_75t_R",
+   "slew": 18.07,
+   "delay": 28.23,
+   "time": 1729.75,
+   "kind": "buffer"
+  },
+  {
+   "name": "wire35912",
+   "pin": "A",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 60.38,
+   "delay": 17.92,
+   "time": 1747.67,
+   "kind": "wire"
+  },
+  {
+   "name": "wire35912",
+   "pin": "Y",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 16.22,
+   "delay": 33.31,
+   "time": 1780.98,
+   "kind": "buffer"
+  },
+  {
+   "name": "_48213_",
+   "pin": "A1",
+   "master": "OA21x2_ASAP7_75t_R",
+   "slew": 74.91,
+   "delay": 23.01,
+   "time": 1803.99,
+   "kind": "wire"
+  },
+  {
+   "name": "_48213_",
+   "pin": "Y",
+   "master": "OA21x2_ASAP7_75t_R",
+   "slew": 24.96,
+   "delay": 40.62,
+   "time": 1844.6,
+   "kind": "logic"
+  },
+  {
+   "name": "wire35903",
+   "pin": "A",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 24.97,
+   "delay": 0.22,
+   "time": 1844.82,
+   "kind": "wire"
+  },
+  {
+   "name": "wire35903",
+   "pin": "Y",
+   "master": "BUFx16f_ASAP7_75t_R",
+   "slew": 20.03,
+   "delay": 24.72,
+   "time": 1869.54,
+   "kind": "buffer"
+  },
+  {
+   "name": "wire35902",
+   "pin": "A",
+   "master": "BUFx24_ASAP7_75t_R",
+   "slew": 137.92,
+   "delay": 43.76,
+   "time": 1913.3,
+   "kind": "wire"
+  },
+  {
+   "name": "wire35902",
+   "pin": "Y",
+   "master": "BUFx24_ASAP7_75t_R",
+   "slew": 19.77,
+   "delay": 53.46,
+   "time": 1966.77,
+   "kind": "buffer"
+  },
+  {
+   "name": "_48214_",
+   "pin": "A1",
+   "master": "OAI21x1_ASAP7_75t_R",
+   "slew": 190.58,
+   "delay": 59.98,
+   "time": 2026.75,
+   "kind": "wire"
+  },
+  {
+   "name": "_48214_",
+   "pin": "Y",
+   "master": "OAI21x1_ASAP7_75t_R",
+   "slew": 155.04,
+   "delay": 88.7,
+   "time": 2115.45,
+   "kind": "logic"
+  },
+  {
+   "name": "_48216_",
+   "pin": "C",
+   "master": "OA211x2_ASAP7_75t_R",
+   "slew": 165.37,
+   "delay": 21.36,
+   "time": 2136.81,
+   "kind": "wire"
+  },
+  {
+   "name": "_48216_",
+   "pin": "Y",
+   "master": "OA211x2_ASAP7_75t_R",
+   "slew": 39.54,
+   "delay": 100.15,
+   "time": 2236.96,
+   "kind": "logic"
+  },
+  {
+   "name": "_48222_",
+   "pin": "A2",
+   "master": "OAI21x1_ASAP7_75t_R",
+   "slew": 40.15,
+   "delay": 2.7,
+   "time": 2239.66,
+   "kind": "wire"
+  },
+  {
+   "name": "_48222_",
+   "pin": "Y",
+   "master": "OAI21x1_ASAP7_75t_R",
+   "slew": 42.38,
+   "delay": 21.92,
+   "time": 2261.58,
+   "kind": "logic"
+  },
+  {
+   "name": "_48265_",
+   "pin": "A3",
+   "master": "OA31x2_ASAP7_75t_R",
+   "slew": 42.38,
+   "delay": 0.28,
+   "time": 2261.85,
+   "kind": "wire"
+  },
+  {
+   "name": "_48265_",
+   "pin": "Y",
+   "master": "OA31x2_ASAP7_75t_R",
+   "slew": 106.23,
+   "delay": 62.85,
+   "time": 2324.71,
+   "kind": "logic"
+  },
+  {
+   "name": "u_core.kh_gt$_DFF_P_",
+   "pin": "D",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "slew": 129.78,
+   "delay": 26.14,
+   "time": 2350.85,
+   "kind": "wire"
+  }
+ ]
+}

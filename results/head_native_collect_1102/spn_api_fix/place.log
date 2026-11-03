@@ -1,0 +1,43 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+SPN_BAND_SHIFT moved 2941 dy_um 34.56 native_rows 128 PG_periods 4; before CTS
+[INFO DPL-0006] Core area: 1195364.04 um^2
+[INFO DPL-0007] Movable instances area: 11947.16 um^2
+[INFO DPL-0008] Fixed instances area within core: 6919.76 um^2
+[INFO DPL-0009] Utilization: 1.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 217747 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        915 |        83 |       424
+        1 |        895 |        79 |       408
+        2 |        895 |        79 |       408
+        3 |        895 |        79 |       408
+        4 |        895 |        79 |       408
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 895 for 3 consecutive iterations.
+Using old diamond search for 79 remaining illegal cells.
+diamond recovery: recovered 79/79 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          0 |         0 |         0
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 6.79s
+Placement Analysis
+---------------------------------
+total displacement      17076.4 u
+average displacement        0.1 u
+max displacement            5.3 u
+original HPWL         5386501.2 u
+legalized HPWL        5400772.7 u
+delta HPWL                    0 %
+
+SPN_BAND_SHIFT legal placement PASS

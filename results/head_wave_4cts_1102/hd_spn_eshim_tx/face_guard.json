@@ -1,0 +1,58 @@
+{
+ "top": "ot_s81hd_spn_eshim_tx",
+ "checked": 1140,
+ "ok": 1140,
+ "fails": {},
+ "flops": {
+  "rst_o_0": "u_rrl_6/q$_DFF_P_",
+  "start_o_0": "u_srl_6/q$_DFF_P_",
+  "link_i[565]": "u_ft_link_s0/eq$_DFF_PN0_",
+  "link_i[564]": "u_ft_link_s0/q[564]$_DFF_P_",
+  "link_i[563]": "u_ft_link_s0/q[563]$_DFF_P_",
+  "link_i[562]": "u_ft_link_s0/q[562]$_DFF_P_",
+  "link_i[561]": "u_ft_link_s0/q[561]$_DFF_P_",
+  "link_i[560]": "u_ft_link_s0/q[560]$_DFF_P_",
+  "link_i[559]": "u_ft_link_s0/q[559]$_DFF_P_",
+  "link_i[558]": "u_ft_link_s0/q[558]$_DFF_P_",
+  "link_i[557]": "u_ft_link_s0/q[557]$_DFF_P_",
+  "link_i[556]": "u_ft_link_s0/q[556]$_DFF_P_",
+  "link_i[555]": "u_ft_link_s0/q[555]$_DFF_P_",
+  "link_i[554]": "u_ft_link_s0/q[554]$_DFF_P_",
+  "link_i[553]": "u_ft_link_s0/q[553]$_DFF_P_",
+  "link_i[552]": "u_ft_link_s0/q[552]$_DFF_P_",
+  "link_i[551]": "u_ft_link_s0/q[551]$_DFF_P_",
+  "link_i[550]": "u_ft_link_s0/q[550]$_DFF_P_",
+  "link_i[549]": "u_ft_link_s0/q[549]$_DFF_P_",
+  "link_i[548]": "u_ft_link_s0/q[548]$_DFF_P_"
+ },
+ "straps_exempt": [
+  "strap_ca_efall",
+  "strap_ca_pad"
+ ],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {
+  "fclk_out_link_o": "clk_t3"
+ },
+ "ring_start": {
+  "cland_tstart_in": {
+   "ring": [],
+   "ring_clock": [],
+   "writer_flops": 0,
+   "writer_groups": {},
+   "sampler_flops": [
+    "u_cland_origin/s0$_SDFF_PN0_",
+    "u_cland_origin/sf$_DFF_N_"
+   ],
+   "sampler_clock": "u_srl_8/clk"
+  }
+ },
+ "ring_start_bits": 1,
+ "ft1_stations": 566,
+ "pairs_declared": [],
+ "planned_bits": 1132,
+ "missing_ports": 0,
+ "fail_counts": {},
+ "verdict": "PASS",
+ "netlist": "/work/run/results/asap7/dp_hd_spn_eshim_tx/base/1_2_yosys.v"
+}

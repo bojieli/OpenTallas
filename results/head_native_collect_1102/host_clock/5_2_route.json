@@ -1,0 +1,55 @@
+{
+ "scope": "Actual final ODB read-only two forwarded-clock buffers; no source/proof/route/STA change",
+ "source_bterm": "clk_t8",
+ "source_net": "clk_t8",
+ "buffers": [
+  {
+   "instance": "cland_fwd_fclk_out_bu_o",
+   "master": "BUFx24_ASAP7_75t_R",
+   "location": [
+    450630,
+    642060
+   ],
+   "orient": "R0",
+   "status": "LOCKED",
+   "pins": {
+    "A": null,
+    "Y": {
+     "name": "cland_fwd_fclk_out_bu_o",
+     "sigtype": "CLOCK",
+     "special": false,
+     "bterms": [
+      "fclk_out_bu_o"
+     ],
+     "iterm_count": 1
+    }
+   },
+   "A_same_net_as_clk_t8": false,
+   "output_bterm_on_Y": true
+  },
+  {
+   "instance": "cland_fwd_fclk_out_h_rx_ft_o",
+   "master": "BUFx24_ASAP7_75t_R",
+   "location": [
+    450954,
+    640710
+   ],
+   "orient": "MX",
+   "status": "LOCKED",
+   "pins": {
+    "A": null,
+    "Y": {
+     "name": "cland_fwd_fclk_out_h_rx_ft_o",
+     "sigtype": "CLOCK",
+     "special": false,
+     "bterms": [
+      "fclk_out_h_rx_ft_o"
+     ],
+     "iterm_count": 1
+    }
+   },
+   "A_same_net_as_clk_t8": false,
+   "output_bterm_on_Y": true
+  }
+ ]
+}

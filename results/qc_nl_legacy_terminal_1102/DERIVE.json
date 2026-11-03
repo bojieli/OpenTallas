@@ -1,0 +1,36 @@
+{
+ "tool": "derive_icg1_kit.py",
+ "lane": "DIE-QC-58B",
+ "src": "/srv/opentallas-scratch2/claude/die-qc34-a0/kits/qfd_tile_nl_a0c_a0nl14icg2rr2",
+ "src_nickname": "kq_qfd_tile_nl_a0c_a0nl14icg2rr2",
+ "dst_nickname": "kq_qfd_tile_nl_a0c_a0nl14icg1r1",
+ "tile": "nl",
+ "frame_tt_ps": 692.6,
+ "frame_ff_ps": 601.9,
+ "cts_args_added": "-balance_levels -wire_unit 25 -distance_between_buffers 100",
+ "changes": [
+  "config.mk: nickname, ICG 2->1, OT_VCLK_TT/FF, CTS_ARGS V3",
+  "constraint.sdc: vclk source latency 692.6",
+  "vclk_ff.sdc: vclk source latency 601.9",
+  "sdc_lint.json: insertion 692.6/601.9",
+  "rtl_lint.ys: chparam ICG 1",
+  "nl_graph_homes.tsv: -100 g_hop rows, +g_icg.g_root.u_icg at (207.198,681.345)",
+  "lec_hints.json: copied from /srv/opentallas-scratch2/claude/die-qc-58b/a0_nbt_hints.json (sha16 f24d87ca6a81c772)",
+  "nl_graph_homes.tsv: post-synth prune -4 homes absent from 1_synth.v"
+ ],
+ "sha16": {
+  "config.mk": "7dbb43061b7cba9d",
+  "constraint.sdc": "d89667a57a550155",
+  "vclk_ff.sdc": "aaf04dc66dd789b5",
+  "sdc_lint.json": "1bb6d8c6ee3707ee",
+  "rtl_lint.ys": "ce1570cca3a2bf9e",
+  "nl_graph_homes.tsv": "0102f97329dfacea",
+  "rtl/qfd_tile_nl_a0c.sv": "a3e62142f3c5b040"
+ },
+ "pruned_homes": [
+  "u_g.u_tile.u_tile.u_logic.u_me.s1b_gm\\[0\\]$_DFF_P_",
+  "u_g.u_tile.u_tile.u_logic.u_me.s1b_gm\\[1\\]$_DFF_P_",
+  "u_g.u_tile.u_tile.u_logic.u_me.s1b_gm\\[2\\]$_DFF_P_",
+  "u_g.u_tile.u_tile.u_logic.u_me.s1b_gm\\[3\\]$_DFF_P_"
+ ]
+}

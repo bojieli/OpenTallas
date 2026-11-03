@@ -1,0 +1,22 @@
+{
+ "scope": "Exact selected currentNL source reach; no functionalROM or physicalview credit",
+ "top": "qfd_tile_nl_a0c",
+ "selected_params": {
+  "G4_ROOTS": 1,
+  "REGROOT_MODE": 3,
+  "ICG": 1,
+  "ICG_RRST": 1
+ },
+ "path": [
+  "qfd_tile_nl_a0c.u_g=qfd_tile_nl_rp2_45(RPH3)",
+  "u_tile=ot_qwen_rom_tile_nk",
+  "u_tile=ot_qwen_rom_tile_w12(KV_SLICE0)",
+  "u_logic=ot_qwen_rom_tile_logic_w12(KV_LOCAL0,GLOBAL_KV_CONST0=1)"
+ ],
+ "define": "OT_ROM_CONST0_KV",
+ "define_active": true,
+ "effect": "g_kv_global.g_kvgconst0 assigns me_kv_q=0 for wrapper globalKV input already tied literal0; does not tieROMdata",
+ "ROM_path": "RPH3 g_rom_pipe.g_rph.g_rb[0..4].g_single.g_col[0..1].u_leaf,10 ot_qwen_tile_romleaf blackboxes drive r_q and rom_rd",
+ "ROM_native_body": "blackboxed in selected parent, actual child functionality not newly proved",
+ "forbidden_inference": "activeflag does not imply dummy/constantROM payload; no physicalGDS qualification from flag or mappedparentLEC"
+}

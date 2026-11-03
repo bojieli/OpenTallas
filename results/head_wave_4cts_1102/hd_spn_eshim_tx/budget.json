@@ -1,0 +1,146 @@
+{
+ "schema": "opentallas.die_plan.partition_budget.v1",
+ "die": "s81_head",
+ "type": "hd_spn_eshim_tx",
+ "module": "ot_s81hd_spn_eshim_tx",
+ "outline_um": [
+  95.04,
+  1036.8
+ ],
+ "period_ps": 833,
+ "pins": 1132,
+ "signal_max": "M7",
+ "clock": {
+  "tap_um": [
+   47.52,
+   341.28
+  ],
+  "insertion_ps": 450.0,
+  "insertion_ff_ps": 342.0,
+  "insertion_basis": {
+   "tt": "DIE-HEAD-47 l47: FF = 0.76 x TT plan (measured FF/TT 0.757-0.765: hd_spn_wshim_rx 321.29/419.73, hd_mesh_e 342.67/452.60, hd_st_m 336.79/444.87 GRT pin-register means); replaces the parent_budget 380 placeholder",
+   "ff": "DIE-HEAD-47 l47: FF = 0.76 x TT plan (measured FF/TT 0.757-0.765: hd_spn_wshim_rx 321.29/419.73, hd_mesh_e 342.67/452.60, hd_st_m 336.79/444.87 GRT pin-register means); replaces the parent_budget 380 placeholder"
+  },
+  "parent_early_tap_ps": 0.0,
+  "common_latency_ps": 450.0,
+  "insertion_tol_ps": 40,
+  "tap_mode": "density",
+  "tap_pitch_um": 100000.0,
+  "grid_taps": 0,
+  "taps": [
+   {
+    "name": "clk",
+    "xy": [
+     17.28,
+     243.0
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     17.28,
+     17.28
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     60.0,
+     567.0
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     77.76,
+     858.6
+    ],
+    "kind": "density"
+   }
+  ],
+  "sink_taps": [
+   {
+    "name": "clk",
+    "xy": [
+     17.28,
+     243.0
+    ],
+    "planned_sinks": 6,
+    "radius_um": 74.5
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     17.28,
+     17.28
+    ],
+    "planned_sinks": 2,
+    "radius_um": 23.8
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     60.0,
+     567.0
+    ],
+    "planned_sinks": 6,
+    "radius_um": 133.0
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     77.76,
+     858.6
+    ],
+    "planned_sinks": 578,
+    "radius_um": 165.2
+   }
+  ],
+  "taps_snapped": [
+   {
+    "name": "clk",
+    "xy": [
+     17.76,
+     242.976
+    ]
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     17.76,
+     17.312
+    ]
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     60.0,
+     567.008
+    ]
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     77.28,
+     858.592
+    ]
+   }
+  ],
+  "core_taps": [],
+  "uncertainty_split": 0.5
+ },
+ "core_latency": [],
+ "pin_reg_p90_um": 30.0,
+ "io_budget": 0.2,
+ "instances": [
+  "sp0_xe_o_shim",
+  "sp1_xe_o_shim",
+  "sp2_xe_o_shim",
+  "sp3_xe_o_shim",
+  "sp4_xe_o_shim",
+  "sp5_xe_o_shim"
+ ]
+}

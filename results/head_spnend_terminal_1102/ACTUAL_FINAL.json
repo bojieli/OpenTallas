@@ -1,0 +1,550 @@
+{
+ "scope": "Actual final ODB read-only7exports; no STA/repair/source or timing PASS",
+ "rows": [
+  {
+   "port": "fclk_out_ad_o",
+   "instance": "cland_fwd_fclk_out_ad_o",
+   "master": "BUFx24_ASAP7_75t_R",
+   "location": [
+    495450,
+    16740
+   ],
+   "orient": "R0",
+   "status": "LOCKED",
+   "dont_touch": true,
+   "expected_source": "clk_t2",
+   "expected_source_net": {
+    "name": "clk_t2",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "clk_t2"
+    ],
+    "iterm_count": 1
+   },
+   "A": {
+    "name": "clknet_1_1__leaf_clk_t2",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [],
+    "iterm_count": 3
+   },
+   "Y": {
+    "name": "cland_fwd_fclk_out_ad_o",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "fclk_out_ad_o"
+    ],
+    "iterm_count": 1
+   },
+   "A_trace": {
+    "roots": [
+     "clk_t2"
+    ],
+    "steps": [
+     {
+      "instance": "clkbuf_1_1__f_clk_t2",
+      "master": "BUFx24_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clknet_1_1__leaf_clk_t2"
+     },
+     {
+      "instance": "clkbuf_0_clk_t2",
+      "master": "BUFx24_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clknet_0_clk_t2"
+     },
+     {
+      "instance": "clk_t2_tb0_d11",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t2_tb0_tree"
+     },
+     {
+      "instance": "clk_t2_tb0_d10",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t2_tb0_n10"
+     },
+     {
+      "instance": "clk_t2_tb0_d9",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t2_tb0_n9"
+     },
+     {
+      "instance": "clk_t2_tb0_d8",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t2_tb0_n8"
+     },
+     {
+      "instance": "clk_t2_tb0_d7",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t2_tb0_n7"
+     },
+     {
+      "instance": "clk_t2_tb0_d6",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t2_tb0_n6"
+     },
+     {
+      "instance": "clk_t2_tb0_d5",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t2_tb0_n5"
+     },
+     {
+      "instance": "clk_t2_tb0_d4",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t2_tb0_n4"
+     },
+     {
+      "instance": "clk_t2_tb0_d3",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t2_tb0_n3"
+     },
+     {
+      "instance": "clk_t2_tb0_d2",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t2_tb0_n2"
+     },
+     {
+      "instance": "clk_t2_tb0_d1",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t2_tb0_n1"
+     },
+     {
+      "instance": "clk_t2_tb0_d0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t2_tb0_n0"
+     }
+    ],
+    "status": "INPUT_ROOT"
+   },
+   "output_on_Y": true
+  },
+  {
+   "port": "fclk_out_au_o",
+   "instance": "cland_fwd_fclk_out_au_o",
+   "master": "BUFx24_ASAP7_75t_R",
+   "location": [
+    412830,
+    2057670
+   ],
+   "orient": "MX",
+   "status": "LOCKED",
+   "dont_touch": true,
+   "expected_source": "clk_t32",
+   "expected_source_net": {
+    "name": "clk_t32",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "clk_t32"
+    ],
+    "iterm_count": 1
+   },
+   "A": {
+    "name": "clknet_1_1__leaf_clk_t32",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [],
+    "iterm_count": 3
+   },
+   "Y": {
+    "name": "cland_fwd_fclk_out_au_o",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "fclk_out_au_o"
+    ],
+    "iterm_count": 1
+   },
+   "A_trace": {
+    "roots": [
+     "clk_t32"
+    ],
+    "steps": [
+     {
+      "instance": "clkbuf_1_1__f_clk_t32",
+      "master": "BUFx24_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clknet_1_1__leaf_clk_t32"
+     },
+     {
+      "instance": "clkbuf_0_clk_t32",
+      "master": "BUFx24_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clknet_0_clk_t32"
+     },
+     {
+      "instance": "clk_t32_tb0_d10",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t32_tb0_tree"
+     },
+     {
+      "instance": "clk_t32_tb0_d9",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t32_tb0_n9"
+     },
+     {
+      "instance": "clk_t32_tb0_d8",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t32_tb0_n8"
+     },
+     {
+      "instance": "clk_t32_tb0_d7",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t32_tb0_n7"
+     },
+     {
+      "instance": "clk_t32_tb0_d6",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t32_tb0_n6"
+     },
+     {
+      "instance": "clk_t32_tb0_d5",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t32_tb0_n5"
+     },
+     {
+      "instance": "clk_t32_tb0_d4",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t32_tb0_n4"
+     },
+     {
+      "instance": "clk_t32_tb0_d3",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t32_tb0_n3"
+     },
+     {
+      "instance": "clk_t32_tb0_d2",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t32_tb0_n2"
+     },
+     {
+      "instance": "clk_t32_tb0_d1",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t32_tb0_n1"
+     },
+     {
+      "instance": "clk_t32_tb0_d0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t32_tb0_n0"
+     }
+    ],
+    "status": "INPUT_ROOT"
+   },
+   "output_on_Y": true
+  },
+  {
+   "port": "fclk_out_b_o",
+   "instance": "cland_fwd_fclk_out_b_o",
+   "master": "BUFx24_ASAP7_75t_R",
+   "location": [
+    156600,
+    2056320
+   ],
+   "orient": "R0",
+   "status": "LOCKED",
+   "dont_touch": true,
+   "expected_source": "clk_t31",
+   "expected_source_net": {
+    "name": "clk_t31",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "clk_t31"
+    ],
+    "iterm_count": 1
+   },
+   "A": {
+    "name": "clknet_1_0__leaf_clk_t31",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [],
+    "iterm_count": 2
+   },
+   "Y": {
+    "name": "cland_fwd_fclk_out_b_o",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "fclk_out_b_o"
+    ],
+    "iterm_count": 1
+   },
+   "A_trace": {
+    "roots": [
+     "clk_t31"
+    ],
+    "steps": [
+     {
+      "instance": "clkbuf_1_0__f_clk_t31",
+      "master": "BUFx24_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clknet_1_0__leaf_clk_t31"
+     },
+     {
+      "instance": "clkbuf_0_clk_t31",
+      "master": "BUFx24_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clknet_0_clk_t31"
+     },
+     {
+      "instance": "clk_t31_tb0_d10",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t31_tb0_tree"
+     },
+     {
+      "instance": "clk_t31_tb0_d9",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t31_tb0_n9"
+     },
+     {
+      "instance": "clk_t31_tb0_d8",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t31_tb0_n8"
+     },
+     {
+      "instance": "clk_t31_tb0_d7",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t31_tb0_n7"
+     },
+     {
+      "instance": "clk_t31_tb0_d6",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t31_tb0_n6"
+     },
+     {
+      "instance": "clk_t31_tb0_d5",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t31_tb0_n5"
+     },
+     {
+      "instance": "clk_t31_tb0_d4",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t31_tb0_n4"
+     },
+     {
+      "instance": "clk_t31_tb0_d3",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t31_tb0_n3"
+     },
+     {
+      "instance": "clk_t31_tb0_d2",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t31_tb0_n2"
+     },
+     {
+      "instance": "clk_t31_tb0_d1",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t31_tb0_n1"
+     },
+     {
+      "instance": "clk_t31_tb0_d0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t31_tb0_n0"
+     },
+     {
+      "instance": "clk_t31_tb1_d0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "output": "Y",
+      "net": "clk_t31_tb1_tree"
+     }
+    ],
+    "status": "INPUT_ROOT"
+   },
+   "output_on_Y": true
+  },
+  {
+   "port": "fclk_out_bd_o",
+   "instance": "cland_fwd_fclk_out_bd_o",
+   "master": "BUFx24_ASAP7_75t_R",
+   "location": [
+    495450,
+    17010
+   ],
+   "orient": "MX",
+   "status": "LOCKED",
+   "dont_touch": true,
+   "expected_source": "clk_t2",
+   "expected_source_net": {
+    "name": "clk_t2",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "clk_t2"
+    ],
+    "iterm_count": 1
+   },
+   "A": null,
+   "Y": {
+    "name": "cland_fwd_fclk_out_bd_o",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "fclk_out_bd_o"
+    ],
+    "iterm_count": 1
+   },
+   "A_trace": {
+    "status": "NULL_OR_CYCLE",
+    "roots": [],
+    "steps": []
+   },
+   "output_on_Y": true
+  },
+  {
+   "port": "fclk_out_bu_o",
+   "instance": "cland_fwd_fclk_out_bu_o",
+   "master": "BUFx24_ASAP7_75t_R",
+   "location": [
+    413856,
+    2056320
+   ],
+   "orient": "R0",
+   "status": "LOCKED",
+   "dont_touch": true,
+   "expected_source": "clk_t32",
+   "expected_source_net": {
+    "name": "clk_t32",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "clk_t32"
+    ],
+    "iterm_count": 1
+   },
+   "A": null,
+   "Y": {
+    "name": "cland_fwd_fclk_out_bu_o",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "fclk_out_bu_o"
+    ],
+    "iterm_count": 1
+   },
+   "A_trace": {
+    "status": "NULL_OR_CYCLE",
+    "roots": [],
+    "steps": []
+   },
+   "output_on_Y": true
+  },
+  {
+   "port": "fclk_out_hd_o",
+   "instance": "cland_fwd_fclk_out_hd_o",
+   "master": "BUFx24_ASAP7_75t_R",
+   "location": [
+    495450,
+    17820
+   ],
+   "orient": "R0",
+   "status": "LOCKED",
+   "dont_touch": true,
+   "expected_source": "clk_t2",
+   "expected_source_net": {
+    "name": "clk_t2",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "clk_t2"
+    ],
+    "iterm_count": 1
+   },
+   "A": null,
+   "Y": {
+    "name": "cland_fwd_fclk_out_hd_o",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "fclk_out_hd_o"
+    ],
+    "iterm_count": 1
+   },
+   "A_trace": {
+    "status": "NULL_OR_CYCLE",
+    "roots": [],
+    "steps": []
+   },
+   "output_on_Y": true
+  },
+  {
+   "port": "fclk_out_hu_o",
+   "instance": "cland_fwd_fclk_out_hu_o",
+   "master": "BUFx24_ASAP7_75t_R",
+   "location": [
+    412614,
+    2056050
+   ],
+   "orient": "MX",
+   "status": "LOCKED",
+   "dont_touch": true,
+   "expected_source": "clk_t32",
+   "expected_source_net": {
+    "name": "clk_t32",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "clk_t32"
+    ],
+    "iterm_count": 1
+   },
+   "A": null,
+   "Y": {
+    "name": "cland_fwd_fclk_out_hu_o",
+    "sigtype": "CLOCK",
+    "special": false,
+    "bterms": [
+     "fclk_out_hu_o"
+    ],
+    "iterm_count": 1
+   },
+   "A_trace": {
+    "status": "NULL_OR_CYCLE",
+    "roots": [],
+    "steps": []
+   },
+   "output_on_Y": true
+  }
+ ],
+ "open_A": [
+  "fclk_out_bd_o",
+  "fclk_out_bu_o",
+  "fclk_out_hd_o",
+  "fclk_out_hu_o"
+ ]
+}

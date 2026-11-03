@@ -1,0 +1,14 @@
+{
+ "type": "hd_spn_eshim_tx",
+ "insertion_ps": {
+  "tt": 450.0,
+  "ff": 342.0
+ },
+ "insertion_tol_ps": 40.0,
+ "basis": {
+  "tt": "DIE-HEAD-47 l47: FF = 0.76 x TT plan (measured FF/TT 0.757-0.765: hd_spn_wshim_rx 321.29/419.73, hd_mesh_e 342.67/452.60, hd_st_m 336.79/444.87 GRT pin-register means); replaces the parent_budget 380 placeholder",
+  "ff": "DIE-HEAD-47 l47: FF = 0.76 x TT plan (measured FF/TT 0.757-0.765: hd_spn_wshim_rx 321.29/419.73, hd_mesh_e 342.67/452.60, hd_st_m 336.79/444.87 GRT pin-register means); replaces the parent_budget 380 placeholder"
+ },
+ "parent_early_tap_ps": 0.0,
+ "rule": "METHODOLOGY 9.7 / BRIEFING 5e; FLOW 2026-10-25"
+}

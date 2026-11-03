@@ -1,0 +1,14 @@
+[
+ {
+  "file": "s81_head_top.sv",
+  "line_start": 3203,
+  "line_end": 3227,
+  "text": "    ot_s81hd_serdes lk_WN1 (\n        .fclk_out_coll_o0(clock_landing_fwd_lk_WN1__coll_o0),\n        .cland_fstart_out_coll_o0(clock_landing_start_lk_WN1__coll_o0),\n        .cland_tstart_in(pst_lk_WN1),\n        .strap_ca_efall(1'b1),\n        .strap_ca_k_coll_i0(6'b110011),\n        .strap_ca_pad(1'b0),\n        .cland_up_ready_coll_o0(cland_mon_lk_WN1__coll_o0_ready),\n        .cland_up_fault_coll_o0(cland_mon_lk_WN1__coll_o0_fault),\n        .fclk_in_coll_i0(clock_landing_fwd_nst3_turn__d1_o),\n        .cland_fstart_in_coll_i0(clock_landing_start_nst3_turn__d1_o),\n        .cland_dn_ready_coll_i0(cland_mon_nst3_turn__d1_o_ready),\n        .cland_dn_fault_coll_i0(cland_mon_nst3_turn__d1_o_fault),\n        .clk(clk_region_lk_WN1),\n        .arst_n(rstw_lk_WN0_rst_o_0),\n        .rst_o_0(),\n        .start_i(stw_lk_WN0_start_o_0),\n        .start_o_0(),\n        .coll_i0(w_coll_WN1_d__2),\n        .coll_o0(w_coll_WN1_u__0),\n        .pma_tx(lk_WN1_pma_tx),\n        .pma_tck(lk_WN1_pma_tck),\n        .pma_rx(lk_WN1_pma_rx),\n        .pma_rck(lk_WN1_pma_rck)\n    );"
+ },
+ {
+  "file": "s81_head_top.sv",
+  "line_start": 25164,
+  "line_end": 25185,
+  "text": "        .cland_tstart_in(pst_nst3_turn),\n        .strap_ca_efall(1'b0),\n        .strap_ca_k_d1_i(6'b111000),\n        .strap_ca_k_u1_i(6'b001111),\n        .strap_ca_pad(1'b0),\n        .cland_up_ready_d1_o(cland_mon_nst3_turn__d1_o_ready),\n        .cland_up_fault_d1_o(cland_mon_nst3_turn__d1_o_fault),\n        .cland_up_ready_u1_o(cland_mon_nst3_turn__u1_o_ready),\n        .cland_up_fault_u1_o(cland_mon_nst3_turn__u1_o_fault),\n        .fclk_in_d1_i(clock_landing_fwd_nst4__d1_o),\n        .cland_fstart_in_d1_i(clock_landing_start_nst4__d1_o),\n        .cland_dn_ready_d1_i(cland_mon_nst4__d1_o_ready),\n        .cland_dn_fault_d1_i(cland_mon_nst4__d1_o_fault),\n        .fclk_in_u1_i(clock_landing_fwd_lk_WN1__coll_o0),\n        .cland_fstart_in_u1_i(clock_landing_start_lk_WN1__coll_o0),\n        .cland_dn_ready_u1_i(cland_mon_lk_WN1__coll_o0_ready),\n        .cland_dn_fault_u1_i(cland_mon_lk_WN1__coll_o0_fault),\n        .clk(clk_region_nst3_turn),\n        .clk_t1(clk_region_nst3_turn),\n        .clk_t2(clk_region_nst3_turn),\n        .clk_t3(clk_region_nst3_turn),\n        .clk_t4(clk_region_nst3_turn),"
+ }
+]

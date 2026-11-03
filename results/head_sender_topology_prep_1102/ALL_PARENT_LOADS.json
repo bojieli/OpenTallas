@@ -1,0 +1,2038 @@
+{
+ "scope": "Exact frozen source-level parent inventory; no physical load/phase credit",
+ "shared_type": "hd_serdes",
+ "instances": 12,
+ "output_clock_edges": 12,
+ "output_fstart_edges": 12,
+ "physical_typewide_B_requires_every_selected_instance_or_new_typed_variant": true,
+ "rows": [
+  {
+   "part": {
+    "name": "lk_WN2",
+    "type": "hd_serdes",
+    "origin_um": [
+     103.68,
+     16225.92
+    ],
+    "orient": "R0"
+   },
+   "top_source_clock": "clk_region_lk_WN2",
+   "source_reset_start_straps": {
+    "cland_tstart_in": "pst_lk_WN2",
+    "strap_ca_efall": "1'b1",
+    "strap_ca_k_coll_i0": "6'b111000",
+    "strap_ca_pad": "1'b0",
+    "arst_n": "rstw_nst1_rst_o_0",
+    "rst_o_0": "",
+    "start_i": "stw_nst1_start_o_0",
+    "start_o_0": ""
+   },
+   "forwarded_clock_and_start": {
+    "fclk_out_coll_o0": "clock_landing_fwd_lk_WN2__coll_o0",
+    "cland_fstart_out_coll_o0": "clock_landing_start_lk_WN2__coll_o0",
+    "fclk_in_coll_i0": "clock_landing_fwd_nst1__d_o",
+    "cland_fstart_in_coll_i0": "clock_landing_start_nst1__d_o"
+   },
+   "clock_edge": {
+    "id": "cland_clk__coll_WN2_u__0",
+    "src": {
+     "part": "lk_WN2",
+     "bus": "fclk_out_coll_o0"
+    },
+    "dst": {
+     "part": "nst1",
+     "bus": "fclk_in_u_i"
+    },
+    "kind": "clock",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": false,
+    "capture_registered": false
+   },
+   "fstart_edge": {
+    "id": "cland_start__coll_WN2_u__0",
+    "src": {
+     "part": "lk_WN2",
+     "bus": "cland_fstart_out_coll_o0"
+    },
+    "dst": {
+     "part": "nst1",
+     "bus": "cland_fstart_in_u_i"
+    },
+    "kind": "ctl",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": true,
+    "capture_registered": true
+   },
+   "other_declared_parent_landing_edges": [
+    {
+     "id": "cland_mon_ready__coll_WN2_u__0",
+     "src": {
+      "part": "lk_WN2",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "nst1",
+      "bus": "cland_dn_ready_u_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_WN2_u__0",
+     "src": {
+      "part": "lk_WN2",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "nst1",
+      "bus": "cland_dn_fault_u_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_clk__coll_WN2_d__4",
+     "src": {
+      "part": "nst1",
+      "bus": "fclk_out_d_o"
+     },
+     "dst": {
+      "part": "lk_WN2",
+      "bus": "fclk_in_coll_i0"
+     },
+     "kind": "clock",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": false,
+     "capture_registered": false
+    },
+    {
+     "id": "cland_start__coll_WN2_d__4",
+     "src": {
+      "part": "nst1",
+      "bus": "cland_fstart_out_d_o"
+     },
+     "dst": {
+      "part": "lk_WN2",
+      "bus": "cland_fstart_in_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_ready__coll_WN2_d__4",
+     "src": {
+      "part": "nst1",
+      "bus": "cland_up_ready_d_o"
+     },
+     "dst": {
+      "part": "lk_WN2",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_WN2_d__4",
+     "src": {
+      "part": "nst1",
+      "bus": "cland_up_fault_d_o"
+     },
+     "dst": {
+      "part": "lk_WN2",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    }
+   ],
+   "native_launch_ff_identity": null,
+   "native_export_driver_input_cap_tt_ff": null,
+   "native_source_pose_and_delta_receipt": null
+  },
+  {
+   "part": {
+    "name": "lk_WN1",
+    "type": "hd_serdes",
+    "origin_um": [
+     2989.44,
+     16225.92
+    ],
+    "orient": "R0"
+   },
+   "top_source_clock": "clk_region_lk_WN1",
+   "source_reset_start_straps": {
+    "cland_tstart_in": "pst_lk_WN1",
+    "strap_ca_efall": "1'b1",
+    "strap_ca_k_coll_i0": "6'b110011",
+    "strap_ca_pad": "1'b0",
+    "arst_n": "rstw_lk_WN0_rst_o_0",
+    "rst_o_0": "",
+    "start_i": "stw_lk_WN0_start_o_0",
+    "start_o_0": ""
+   },
+   "forwarded_clock_and_start": {
+    "fclk_out_coll_o0": "clock_landing_fwd_lk_WN1__coll_o0",
+    "cland_fstart_out_coll_o0": "clock_landing_start_lk_WN1__coll_o0",
+    "fclk_in_coll_i0": "clock_landing_fwd_nst3_turn__d1_o",
+    "cland_fstart_in_coll_i0": "clock_landing_start_nst3_turn__d1_o"
+   },
+   "clock_edge": {
+    "id": "cland_clk__coll_WN1_u__0",
+    "src": {
+     "part": "lk_WN1",
+     "bus": "fclk_out_coll_o0"
+    },
+    "dst": {
+     "part": "nst3_turn",
+     "bus": "fclk_in_u1_i"
+    },
+    "kind": "clock",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": false,
+    "capture_registered": false
+   },
+   "fstart_edge": {
+    "id": "cland_start__coll_WN1_u__0",
+    "src": {
+     "part": "lk_WN1",
+     "bus": "cland_fstart_out_coll_o0"
+    },
+    "dst": {
+     "part": "nst3_turn",
+     "bus": "cland_fstart_in_u1_i"
+    },
+    "kind": "ctl",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": true,
+    "capture_registered": true
+   },
+   "other_declared_parent_landing_edges": [
+    {
+     "id": "cland_mon_ready__coll_WN1_u__0",
+     "src": {
+      "part": "lk_WN1",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "nst3_turn",
+      "bus": "cland_dn_ready_u1_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_WN1_u__0",
+     "src": {
+      "part": "lk_WN1",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "nst3_turn",
+      "bus": "cland_dn_fault_u1_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_clk__coll_WN1_d__2",
+     "src": {
+      "part": "nst3_turn",
+      "bus": "fclk_out_d1_o"
+     },
+     "dst": {
+      "part": "lk_WN1",
+      "bus": "fclk_in_coll_i0"
+     },
+     "kind": "clock",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": false,
+     "capture_registered": false
+    },
+    {
+     "id": "cland_start__coll_WN1_d__2",
+     "src": {
+      "part": "nst3_turn",
+      "bus": "cland_fstart_out_d1_o"
+     },
+     "dst": {
+      "part": "lk_WN1",
+      "bus": "cland_fstart_in_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_ready__coll_WN1_d__2",
+     "src": {
+      "part": "nst3_turn",
+      "bus": "cland_up_ready_d1_o"
+     },
+     "dst": {
+      "part": "lk_WN1",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_WN1_d__2",
+     "src": {
+      "part": "nst3_turn",
+      "bus": "cland_up_fault_d1_o"
+     },
+     "dst": {
+      "part": "lk_WN1",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    }
+   ],
+   "native_launch_ff_identity": null,
+   "native_export_driver_input_cap_tt_ff": null,
+   "native_source_pose_and_delta_receipt": null
+  },
+  {
+   "part": {
+    "name": "lk_WN0",
+    "type": "hd_serdes",
+    "origin_um": [
+     5875.2,
+     16225.92
+    ],
+    "orient": "R0"
+   },
+   "top_source_clock": "clk_region_lk_WN0",
+   "source_reset_start_straps": {
+    "cland_tstart_in": "pst_lk_WN0",
+    "strap_ca_efall": "1'b1",
+    "strap_ca_k_coll_i0": "6'b110010",
+    "strap_ca_pad": "1'b0",
+    "arst_n": "rstw_ctl_nstrip_rst_o_0",
+    "rst_o_0": "rstw_lk_WN0_rst_o_0",
+    "start_i": "stw_ctl_nstrip_start_o_0",
+    "start_o_0": "stw_lk_WN0_start_o_0"
+   },
+   "forwarded_clock_and_start": {
+    "fclk_out_coll_o0": "clock_landing_fwd_lk_WN0__coll_o0",
+    "cland_fstart_out_coll_o0": "clock_landing_start_lk_WN0__coll_o0",
+    "fclk_in_coll_i0": "clock_landing_fwd_lep0N__coll_o0",
+    "cland_fstart_in_coll_i0": "clock_landing_start_lep0N__coll_o0"
+   },
+   "clock_edge": {
+    "id": "cland_clk__coll_WN0_u__0",
+    "src": {
+     "part": "lk_WN0",
+     "bus": "fclk_out_coll_o0"
+    },
+    "dst": {
+     "part": "lep0N",
+     "bus": "fclk_in_coll_i0"
+    },
+    "kind": "clock",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": false,
+    "capture_registered": false
+   },
+   "fstart_edge": {
+    "id": "cland_start__coll_WN0_u__0",
+    "src": {
+     "part": "lk_WN0",
+     "bus": "cland_fstart_out_coll_o0"
+    },
+    "dst": {
+     "part": "lep0N",
+     "bus": "cland_fstart_in_coll_i0"
+    },
+    "kind": "ctl",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": true,
+    "capture_registered": true
+   },
+   "other_declared_parent_landing_edges": [
+    {
+     "id": "cland_mon_ready__coll_WN0_u__0",
+     "src": {
+      "part": "lk_WN0",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "lep0N",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_WN0_u__0",
+     "src": {
+      "part": "lk_WN0",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "lep0N",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_clk__coll_WN0_d__0",
+     "src": {
+      "part": "lep0N",
+      "bus": "fclk_out_coll_o0"
+     },
+     "dst": {
+      "part": "lk_WN0",
+      "bus": "fclk_in_coll_i0"
+     },
+     "kind": "clock",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": false,
+     "capture_registered": false
+    },
+    {
+     "id": "cland_start__coll_WN0_d__0",
+     "src": {
+      "part": "lep0N",
+      "bus": "cland_fstart_out_coll_o0"
+     },
+     "dst": {
+      "part": "lk_WN0",
+      "bus": "cland_fstart_in_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_ready__coll_WN0_d__0",
+     "src": {
+      "part": "lep0N",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "lk_WN0",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_WN0_d__0",
+     "src": {
+      "part": "lep0N",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "lk_WN0",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    }
+   ],
+   "native_launch_ff_identity": null,
+   "native_export_driver_input_cap_tt_ff": null,
+   "native_source_pose_and_delta_receipt": null
+  },
+  {
+   "part": {
+    "name": "lk_WN3",
+    "type": "hd_serdes",
+    "origin_um": [
+     8760.96,
+     16225.92
+    ],
+    "orient": "MY"
+   },
+   "top_source_clock": "clk_region_lk_WN3",
+   "source_reset_start_straps": {
+    "cland_tstart_in": "pst_lk_WN3",
+    "strap_ca_efall": "1'b1",
+    "strap_ca_k_coll_i0": "6'b110111",
+    "strap_ca_pad": "1'b0",
+    "arst_n": "rstw_ctl_nstrip_rst_o_0",
+    "rst_o_0": "rstw_lk_WN3_rst_o_0",
+    "start_i": "stw_ctl_nstrip_start_o_0",
+    "start_o_0": "stw_lk_WN3_start_o_0"
+   },
+   "forwarded_clock_and_start": {
+    "fclk_out_coll_o0": "clock_landing_fwd_lk_WN3__coll_o0",
+    "cland_fstart_out_coll_o0": "clock_landing_start_lk_WN3__coll_o0",
+    "fclk_in_coll_i0": "clock_landing_fwd_ctl_nstrip__w3d_o",
+    "cland_fstart_in_coll_i0": "clock_landing_start_ctl_nstrip__w3d_o"
+   },
+   "clock_edge": {
+    "id": "cland_clk__coll_WN3_u__0",
+    "src": {
+     "part": "lk_WN3",
+     "bus": "fclk_out_coll_o0"
+    },
+    "dst": {
+     "part": "ctl_nstrip",
+     "bus": "fclk_in_w3u_i"
+    },
+    "kind": "clock",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": false,
+    "capture_registered": false
+   },
+   "fstart_edge": {
+    "id": "cland_start__coll_WN3_u__0",
+    "src": {
+     "part": "lk_WN3",
+     "bus": "cland_fstart_out_coll_o0"
+    },
+    "dst": {
+     "part": "ctl_nstrip",
+     "bus": "cland_fstart_in_w3u_i"
+    },
+    "kind": "ctl",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": true,
+    "capture_registered": true
+   },
+   "other_declared_parent_landing_edges": [
+    {
+     "id": "cland_mon_ready__coll_WN3_u__0",
+     "src": {
+      "part": "lk_WN3",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "ctl_nstrip",
+      "bus": "cland_dn_ready_w3u_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_WN3_u__0",
+     "src": {
+      "part": "lk_WN3",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "ctl_nstrip",
+      "bus": "cland_dn_fault_w3u_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_clk__coll_WN3_d__1",
+     "src": {
+      "part": "ctl_nstrip",
+      "bus": "fclk_out_w3d_o"
+     },
+     "dst": {
+      "part": "lk_WN3",
+      "bus": "fclk_in_coll_i0"
+     },
+     "kind": "clock",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": false,
+     "capture_registered": false
+    },
+    {
+     "id": "cland_start__coll_WN3_d__1",
+     "src": {
+      "part": "ctl_nstrip",
+      "bus": "cland_fstart_out_w3d_o"
+     },
+     "dst": {
+      "part": "lk_WN3",
+      "bus": "cland_fstart_in_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_ready__coll_WN3_d__1",
+     "src": {
+      "part": "ctl_nstrip",
+      "bus": "cland_up_ready_w3d_o"
+     },
+     "dst": {
+      "part": "lk_WN3",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_WN3_d__1",
+     "src": {
+      "part": "ctl_nstrip",
+      "bus": "cland_up_fault_w3d_o"
+     },
+     "dst": {
+      "part": "lk_WN3",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    }
+   ],
+   "native_launch_ff_identity": null,
+   "native_export_driver_input_cap_tt_ff": null,
+   "native_source_pose_and_delta_receipt": null
+  },
+  {
+   "part": {
+    "name": "lk_EN0",
+    "type": "hd_serdes",
+    "origin_um": [
+     11646.72,
+     16225.92
+    ],
+    "orient": "MY"
+   },
+   "top_source_clock": "clk_region_lk_EN0",
+   "source_reset_start_straps": {
+    "cland_tstart_in": "pst_lk_EN0",
+    "strap_ca_efall": "1'b1",
+    "strap_ca_k_coll_i0": "6'b110100",
+    "strap_ca_pad": "1'b0",
+    "arst_n": "rstw_lk_WN3_rst_o_0",
+    "rst_o_0": "",
+    "start_i": "stw_lk_WN3_start_o_0",
+    "start_o_0": ""
+   },
+   "forwarded_clock_and_start": {
+    "fclk_out_coll_o0": "clock_landing_fwd_lk_EN0__coll_o0",
+    "cland_fstart_out_coll_o0": "clock_landing_start_lk_EN0__coll_o0",
+    "fclk_in_coll_i0": "clock_landing_fwd_mesh7N__coll_oa",
+    "cland_fstart_in_coll_i0": "clock_landing_start_mesh7N__coll_oa"
+   },
+   "clock_edge": {
+    "id": "cland_clk__coll_EN0_u__0",
+    "src": {
+     "part": "lk_EN0",
+     "bus": "fclk_out_coll_o0"
+    },
+    "dst": {
+     "part": "mesh7N",
+     "bus": "fclk_in_coll_ia"
+    },
+    "kind": "clock",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": false,
+    "capture_registered": false
+   },
+   "fstart_edge": {
+    "id": "cland_start__coll_EN0_u__0",
+    "src": {
+     "part": "lk_EN0",
+     "bus": "cland_fstart_out_coll_o0"
+    },
+    "dst": {
+     "part": "mesh7N",
+     "bus": "cland_fstart_in_coll_ia"
+    },
+    "kind": "ctl",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": true,
+    "capture_registered": true
+   },
+   "other_declared_parent_landing_edges": [
+    {
+     "id": "cland_mon_ready__coll_EN0_u__0",
+     "src": {
+      "part": "lk_EN0",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "mesh7N",
+      "bus": "cland_dn_ready_coll_ia"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_EN0_u__0",
+     "src": {
+      "part": "lk_EN0",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "mesh7N",
+      "bus": "cland_dn_fault_coll_ia"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_clk__coll_EN0_d__0",
+     "src": {
+      "part": "mesh7N",
+      "bus": "fclk_out_coll_oa"
+     },
+     "dst": {
+      "part": "lk_EN0",
+      "bus": "fclk_in_coll_i0"
+     },
+     "kind": "clock",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": false,
+     "capture_registered": false
+    },
+    {
+     "id": "cland_start__coll_EN0_d__0",
+     "src": {
+      "part": "mesh7N",
+      "bus": "cland_fstart_out_coll_oa"
+     },
+     "dst": {
+      "part": "lk_EN0",
+      "bus": "cland_fstart_in_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_ready__coll_EN0_d__0",
+     "src": {
+      "part": "mesh7N",
+      "bus": "cland_up_ready_coll_oa"
+     },
+     "dst": {
+      "part": "lk_EN0",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_EN0_d__0",
+     "src": {
+      "part": "mesh7N",
+      "bus": "cland_up_fault_coll_oa"
+     },
+     "dst": {
+      "part": "lk_EN0",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    }
+   ],
+   "native_launch_ff_identity": null,
+   "native_export_driver_input_cap_tt_ff": null,
+   "native_source_pose_and_delta_receipt": null
+  },
+  {
+   "part": {
+    "name": "lk_EN1",
+    "type": "hd_serdes",
+    "origin_um": [
+     14532.48,
+     16225.92
+    ],
+    "orient": "MY"
+   },
+   "top_source_clock": "clk_region_lk_EN1",
+   "source_reset_start_straps": {
+    "cland_tstart_in": "pst_lk_EN1",
+    "strap_ca_efall": "1'b1",
+    "strap_ca_k_coll_i0": "6'b110011",
+    "strap_ca_pad": "1'b0",
+    "arst_n": "rstw_nst10_rst_o_0",
+    "rst_o_0": "",
+    "start_i": "stw_nst10_start_o_0",
+    "start_o_0": ""
+   },
+   "forwarded_clock_and_start": {
+    "fclk_out_coll_o0": "clock_landing_fwd_lk_EN1__coll_o0",
+    "cland_fstart_out_coll_o0": "clock_landing_start_lk_EN1__coll_o0",
+    "fclk_in_coll_i0": "clock_landing_fwd_nst10__d_o",
+    "cland_fstart_in_coll_i0": "clock_landing_start_nst10__d_o"
+   },
+   "clock_edge": {
+    "id": "cland_clk__coll_EN1_u__0",
+    "src": {
+     "part": "lk_EN1",
+     "bus": "fclk_out_coll_o0"
+    },
+    "dst": {
+     "part": "nst10",
+     "bus": "fclk_in_u_i"
+    },
+    "kind": "clock",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": false,
+    "capture_registered": false
+   },
+   "fstart_edge": {
+    "id": "cland_start__coll_EN1_u__0",
+    "src": {
+     "part": "lk_EN1",
+     "bus": "cland_fstart_out_coll_o0"
+    },
+    "dst": {
+     "part": "nst10",
+     "bus": "cland_fstart_in_u_i"
+    },
+    "kind": "ctl",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": true,
+    "capture_registered": true
+   },
+   "other_declared_parent_landing_edges": [
+    {
+     "id": "cland_mon_ready__coll_EN1_u__0",
+     "src": {
+      "part": "lk_EN1",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "nst10",
+      "bus": "cland_dn_ready_u_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_EN1_u__0",
+     "src": {
+      "part": "lk_EN1",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "nst10",
+      "bus": "cland_dn_fault_u_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_clk__coll_EN1_d__2",
+     "src": {
+      "part": "nst10",
+      "bus": "fclk_out_d_o"
+     },
+     "dst": {
+      "part": "lk_EN1",
+      "bus": "fclk_in_coll_i0"
+     },
+     "kind": "clock",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": false,
+     "capture_registered": false
+    },
+    {
+     "id": "cland_start__coll_EN1_d__2",
+     "src": {
+      "part": "nst10",
+      "bus": "cland_fstart_out_d_o"
+     },
+     "dst": {
+      "part": "lk_EN1",
+      "bus": "cland_fstart_in_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_ready__coll_EN1_d__2",
+     "src": {
+      "part": "nst10",
+      "bus": "cland_up_ready_d_o"
+     },
+     "dst": {
+      "part": "lk_EN1",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_EN1_d__2",
+     "src": {
+      "part": "nst10",
+      "bus": "cland_up_fault_d_o"
+     },
+     "dst": {
+      "part": "lk_EN1",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    }
+   ],
+   "native_launch_ff_identity": null,
+   "native_export_driver_input_cap_tt_ff": null,
+   "native_source_pose_and_delta_receipt": null
+  },
+  {
+   "part": {
+    "name": "lk_WS1",
+    "type": "hd_serdes",
+    "origin_um": [
+     103.68,
+     103.68
+    ],
+    "orient": "MX"
+   },
+   "top_source_clock": "clk_region_lk_WS1",
+   "source_reset_start_straps": {
+    "cland_tstart_in": "pst_lk_WS1",
+    "strap_ca_efall": "1'b1",
+    "strap_ca_k_coll_i0": "6'b111000",
+    "strap_ca_pad": "1'b0",
+    "arst_n": "rstw_lk_WS0_rst_o_0",
+    "rst_o_0": "",
+    "start_i": "stw_lk_WS0_start_o_0",
+    "start_o_0": ""
+   },
+   "forwarded_clock_and_start": {
+    "fclk_out_coll_o0": "clock_landing_fwd_lk_WS1__coll_o0",
+    "cland_fstart_out_coll_o0": "clock_landing_start_lk_WS1__coll_o0",
+    "fclk_in_coll_i0": "clock_landing_fwd_sst1__d_o",
+    "cland_fstart_in_coll_i0": "clock_landing_start_sst1__d_o"
+   },
+   "clock_edge": {
+    "id": "cland_clk__coll_WS1_u__0",
+    "src": {
+     "part": "lk_WS1",
+     "bus": "fclk_out_coll_o0"
+    },
+    "dst": {
+     "part": "sst1",
+     "bus": "fclk_in_u_i"
+    },
+    "kind": "clock",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": false,
+    "capture_registered": false
+   },
+   "fstart_edge": {
+    "id": "cland_start__coll_WS1_u__0",
+    "src": {
+     "part": "lk_WS1",
+     "bus": "cland_fstart_out_coll_o0"
+    },
+    "dst": {
+     "part": "sst1",
+     "bus": "cland_fstart_in_u_i"
+    },
+    "kind": "ctl",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": true,
+    "capture_registered": true
+   },
+   "other_declared_parent_landing_edges": [
+    {
+     "id": "cland_mon_ready__coll_WS1_u__0",
+     "src": {
+      "part": "lk_WS1",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "sst1",
+      "bus": "cland_dn_ready_u_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_WS1_u__0",
+     "src": {
+      "part": "lk_WS1",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "sst1",
+      "bus": "cland_dn_fault_u_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_clk__coll_WS1_d__2",
+     "src": {
+      "part": "sst1",
+      "bus": "fclk_out_d_o"
+     },
+     "dst": {
+      "part": "lk_WS1",
+      "bus": "fclk_in_coll_i0"
+     },
+     "kind": "clock",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": false,
+     "capture_registered": false
+    },
+    {
+     "id": "cland_start__coll_WS1_d__2",
+     "src": {
+      "part": "sst1",
+      "bus": "cland_fstart_out_d_o"
+     },
+     "dst": {
+      "part": "lk_WS1",
+      "bus": "cland_fstart_in_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_ready__coll_WS1_d__2",
+     "src": {
+      "part": "sst1",
+      "bus": "cland_up_ready_d_o"
+     },
+     "dst": {
+      "part": "lk_WS1",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_WS1_d__2",
+     "src": {
+      "part": "sst1",
+      "bus": "cland_up_fault_d_o"
+     },
+     "dst": {
+      "part": "lk_WS1",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    }
+   ],
+   "native_launch_ff_identity": null,
+   "native_export_driver_input_cap_tt_ff": null,
+   "native_source_pose_and_delta_receipt": null
+  },
+  {
+   "part": {
+    "name": "lk_WS0",
+    "type": "hd_serdes",
+    "origin_um": [
+     2989.44,
+     103.68
+    ],
+    "orient": "MX"
+   },
+   "top_source_clock": "clk_region_lk_WS0",
+   "source_reset_start_straps": {
+    "cland_tstart_in": "pst_lk_WS0",
+    "strap_ca_efall": "1'b1",
+    "strap_ca_k_coll_i0": "6'b101110",
+    "strap_ca_pad": "1'b0",
+    "arst_n": "rstw_lk_HOST0_rst_o_0",
+    "rst_o_0": "rstw_lk_WS0_rst_o_0",
+    "start_i": "stw_lk_HOST0_start_o_0",
+    "start_o_0": "stw_lk_WS0_start_o_0"
+   },
+   "forwarded_clock_and_start": {
+    "fclk_out_coll_o0": "clock_landing_fwd_lk_WS0__coll_o0",
+    "cland_fstart_out_coll_o0": "clock_landing_start_lk_WS0__coll_o0",
+    "fclk_in_coll_i0": "clock_landing_fwd_mesh0S__coll_oa",
+    "cland_fstart_in_coll_i0": "clock_landing_start_mesh0S__coll_oa"
+   },
+   "clock_edge": {
+    "id": "cland_clk__coll_WS0_u__0",
+    "src": {
+     "part": "lk_WS0",
+     "bus": "fclk_out_coll_o0"
+    },
+    "dst": {
+     "part": "mesh0S",
+     "bus": "fclk_in_coll_ia"
+    },
+    "kind": "clock",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": false,
+    "capture_registered": false
+   },
+   "fstart_edge": {
+    "id": "cland_start__coll_WS0_u__0",
+    "src": {
+     "part": "lk_WS0",
+     "bus": "cland_fstart_out_coll_o0"
+    },
+    "dst": {
+     "part": "mesh0S",
+     "bus": "cland_fstart_in_coll_ia"
+    },
+    "kind": "ctl",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": true,
+    "capture_registered": true
+   },
+   "other_declared_parent_landing_edges": [
+    {
+     "id": "cland_mon_ready__coll_WS0_u__0",
+     "src": {
+      "part": "lk_WS0",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "mesh0S",
+      "bus": "cland_dn_ready_coll_ia"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_WS0_u__0",
+     "src": {
+      "part": "lk_WS0",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "mesh0S",
+      "bus": "cland_dn_fault_coll_ia"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_clk__coll_WS0_d__0",
+     "src": {
+      "part": "mesh0S",
+      "bus": "fclk_out_coll_oa"
+     },
+     "dst": {
+      "part": "lk_WS0",
+      "bus": "fclk_in_coll_i0"
+     },
+     "kind": "clock",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": false,
+     "capture_registered": false
+    },
+    {
+     "id": "cland_start__coll_WS0_d__0",
+     "src": {
+      "part": "mesh0S",
+      "bus": "cland_fstart_out_coll_oa"
+     },
+     "dst": {
+      "part": "lk_WS0",
+      "bus": "cland_fstart_in_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_ready__coll_WS0_d__0",
+     "src": {
+      "part": "mesh0S",
+      "bus": "cland_up_ready_coll_oa"
+     },
+     "dst": {
+      "part": "lk_WS0",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_WS0_d__0",
+     "src": {
+      "part": "mesh0S",
+      "bus": "cland_up_fault_coll_oa"
+     },
+     "dst": {
+      "part": "lk_WS0",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    }
+   ],
+   "native_launch_ff_identity": null,
+   "native_export_driver_input_cap_tt_ff": null,
+   "native_source_pose_and_delta_receipt": null
+  },
+  {
+   "part": {
+    "name": "lk_HOST0",
+    "type": "hd_serdes",
+    "origin_um": [
+     5875.2,
+     103.68
+    ],
+    "orient": "MX"
+   },
+   "top_source_clock": "clk_region_lk_HOST0",
+   "source_reset_start_straps": {
+    "cland_tstart_in": "pst_lk_HOST0",
+    "strap_ca_efall": "1'b1",
+    "strap_ca_k_coll_i0": "6'b110110",
+    "strap_ca_pad": "1'b0",
+    "arst_n": "rstw_host_rst_o_0",
+    "rst_o_0": "rstw_lk_HOST0_rst_o_0",
+    "start_i": "stw_host_start_o_0",
+    "start_o_0": "stw_lk_HOST0_start_o_0"
+   },
+   "forwarded_clock_and_start": {
+    "fclk_out_coll_o0": "clock_landing_fwd_lk_HOST0__coll_o0",
+    "cland_fstart_out_coll_o0": "clock_landing_start_lk_HOST0__coll_o0",
+    "fclk_in_coll_i0": "clock_landing_fwd_sst5__d_o",
+    "cland_fstart_in_coll_i0": "clock_landing_start_sst5__d_o"
+   },
+   "clock_edge": {
+    "id": "cland_clk__coll_HOST0_u__0",
+    "src": {
+     "part": "lk_HOST0",
+     "bus": "fclk_out_coll_o0"
+    },
+    "dst": {
+     "part": "sst5",
+     "bus": "fclk_in_u_i"
+    },
+    "kind": "clock",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": false,
+    "capture_registered": false
+   },
+   "fstart_edge": {
+    "id": "cland_start__coll_HOST0_u__0",
+    "src": {
+     "part": "lk_HOST0",
+     "bus": "cland_fstart_out_coll_o0"
+    },
+    "dst": {
+     "part": "sst5",
+     "bus": "cland_fstart_in_u_i"
+    },
+    "kind": "ctl",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": true,
+    "capture_registered": true
+   },
+   "other_declared_parent_landing_edges": [
+    {
+     "id": "cland_mon_ready__coll_HOST0_u__0",
+     "src": {
+      "part": "lk_HOST0",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "sst5",
+      "bus": "cland_dn_ready_u_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_HOST0_u__0",
+     "src": {
+      "part": "lk_HOST0",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "sst5",
+      "bus": "cland_dn_fault_u_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_clk__coll_HOST0_d__1",
+     "src": {
+      "part": "sst5",
+      "bus": "fclk_out_d_o"
+     },
+     "dst": {
+      "part": "lk_HOST0",
+      "bus": "fclk_in_coll_i0"
+     },
+     "kind": "clock",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": false,
+     "capture_registered": false
+    },
+    {
+     "id": "cland_start__coll_HOST0_d__1",
+     "src": {
+      "part": "sst5",
+      "bus": "cland_fstart_out_d_o"
+     },
+     "dst": {
+      "part": "lk_HOST0",
+      "bus": "cland_fstart_in_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_ready__coll_HOST0_d__1",
+     "src": {
+      "part": "sst5",
+      "bus": "cland_up_ready_d_o"
+     },
+     "dst": {
+      "part": "lk_HOST0",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_HOST0_d__1",
+     "src": {
+      "part": "sst5",
+      "bus": "cland_up_fault_d_o"
+     },
+     "dst": {
+      "part": "lk_HOST0",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    }
+   ],
+   "native_launch_ff_identity": null,
+   "native_export_driver_input_cap_tt_ff": null,
+   "native_source_pose_and_delta_receipt": null
+  },
+  {
+   "part": {
+    "name": "lk_HOST1",
+    "type": "hd_serdes",
+    "origin_um": [
+     8760.96,
+     103.68
+    ],
+    "orient": "R180"
+   },
+   "top_source_clock": "clk_region_lk_HOST1",
+   "source_reset_start_straps": {
+    "cland_tstart_in": "pst_lk_HOST1",
+    "strap_ca_efall": "1'b1",
+    "strap_ca_k_coll_i0": "6'b110001",
+    "strap_ca_pad": "1'b0",
+    "arst_n": "rstw_host_rst_o_0",
+    "rst_o_0": "rstw_lk_HOST1_rst_o_0",
+    "start_i": "stw_host_start_o_0",
+    "start_o_0": "stw_lk_HOST1_start_o_0"
+   },
+   "forwarded_clock_and_start": {
+    "fclk_out_coll_o0": "clock_landing_fwd_lk_HOST1__coll_o0",
+    "cland_fstart_out_coll_o0": "clock_landing_start_lk_HOST1__coll_o0",
+    "fclk_in_coll_i0": "clock_landing_fwd_host__coll_o1",
+    "cland_fstart_in_coll_i0": "clock_landing_start_host__coll_o1"
+   },
+   "clock_edge": {
+    "id": "cland_clk__coll_HOST1_u__0",
+    "src": {
+     "part": "lk_HOST1",
+     "bus": "fclk_out_coll_o0"
+    },
+    "dst": {
+     "part": "host",
+     "bus": "fclk_in_coll_i1"
+    },
+    "kind": "clock",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": false,
+    "capture_registered": false
+   },
+   "fstart_edge": {
+    "id": "cland_start__coll_HOST1_u__0",
+    "src": {
+     "part": "lk_HOST1",
+     "bus": "cland_fstart_out_coll_o0"
+    },
+    "dst": {
+     "part": "host",
+     "bus": "cland_fstart_in_coll_i1"
+    },
+    "kind": "ctl",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": true,
+    "capture_registered": true
+   },
+   "other_declared_parent_landing_edges": [
+    {
+     "id": "cland_mon_ready__coll_HOST1_u__0",
+     "src": {
+      "part": "lk_HOST1",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "host",
+      "bus": "cland_dn_ready_coll_i1"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_HOST1_u__0",
+     "src": {
+      "part": "lk_HOST1",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "host",
+      "bus": "cland_dn_fault_coll_i1"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_clk__coll_HOST1_d__0",
+     "src": {
+      "part": "host",
+      "bus": "fclk_out_coll_o1"
+     },
+     "dst": {
+      "part": "lk_HOST1",
+      "bus": "fclk_in_coll_i0"
+     },
+     "kind": "clock",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": false,
+     "capture_registered": false
+    },
+    {
+     "id": "cland_start__coll_HOST1_d__0",
+     "src": {
+      "part": "host",
+      "bus": "cland_fstart_out_coll_o1"
+     },
+     "dst": {
+      "part": "lk_HOST1",
+      "bus": "cland_fstart_in_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_ready__coll_HOST1_d__0",
+     "src": {
+      "part": "host",
+      "bus": "cland_up_ready_coll_o1"
+     },
+     "dst": {
+      "part": "lk_HOST1",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_HOST1_d__0",
+     "src": {
+      "part": "host",
+      "bus": "cland_up_fault_coll_o1"
+     },
+     "dst": {
+      "part": "lk_HOST1",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    }
+   ],
+   "native_launch_ff_identity": null,
+   "native_export_driver_input_cap_tt_ff": null,
+   "native_source_pose_and_delta_receipt": null
+  },
+  {
+   "part": {
+    "name": "lk_ES0",
+    "type": "hd_serdes",
+    "origin_um": [
+     11646.72,
+     103.68
+    ],
+    "orient": "R180"
+   },
+   "top_source_clock": "clk_region_lk_ES0",
+   "source_reset_start_straps": {
+    "cland_tstart_in": "pst_lk_ES0",
+    "strap_ca_efall": "1'b1",
+    "strap_ca_k_coll_i0": "6'b110100",
+    "strap_ca_pad": "1'b0",
+    "arst_n": "rstw_lk_HOST1_rst_o_0",
+    "rst_o_0": "",
+    "start_i": "stw_lk_HOST1_start_o_0",
+    "start_o_0": ""
+   },
+   "forwarded_clock_and_start": {
+    "fclk_out_coll_o0": "clock_landing_fwd_lk_ES0__coll_o0",
+    "cland_fstart_out_coll_o0": "clock_landing_start_lk_ES0__coll_o0",
+    "fclk_in_coll_i0": "clock_landing_fwd_mesh7S__coll_oa",
+    "cland_fstart_in_coll_i0": "clock_landing_start_mesh7S__coll_oa"
+   },
+   "clock_edge": {
+    "id": "cland_clk__coll_ES0_u__0",
+    "src": {
+     "part": "lk_ES0",
+     "bus": "fclk_out_coll_o0"
+    },
+    "dst": {
+     "part": "mesh7S",
+     "bus": "fclk_in_coll_ia"
+    },
+    "kind": "clock",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": false,
+    "capture_registered": false
+   },
+   "fstart_edge": {
+    "id": "cland_start__coll_ES0_u__0",
+    "src": {
+     "part": "lk_ES0",
+     "bus": "cland_fstart_out_coll_o0"
+    },
+    "dst": {
+     "part": "mesh7S",
+     "bus": "cland_fstart_in_coll_ia"
+    },
+    "kind": "ctl",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": true,
+    "capture_registered": true
+   },
+   "other_declared_parent_landing_edges": [
+    {
+     "id": "cland_mon_ready__coll_ES0_u__0",
+     "src": {
+      "part": "lk_ES0",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "mesh7S",
+      "bus": "cland_dn_ready_coll_ia"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_ES0_u__0",
+     "src": {
+      "part": "lk_ES0",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "mesh7S",
+      "bus": "cland_dn_fault_coll_ia"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_clk__coll_ES0_d__0",
+     "src": {
+      "part": "mesh7S",
+      "bus": "fclk_out_coll_oa"
+     },
+     "dst": {
+      "part": "lk_ES0",
+      "bus": "fclk_in_coll_i0"
+     },
+     "kind": "clock",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": false,
+     "capture_registered": false
+    },
+    {
+     "id": "cland_start__coll_ES0_d__0",
+     "src": {
+      "part": "mesh7S",
+      "bus": "cland_fstart_out_coll_oa"
+     },
+     "dst": {
+      "part": "lk_ES0",
+      "bus": "cland_fstart_in_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_ready__coll_ES0_d__0",
+     "src": {
+      "part": "mesh7S",
+      "bus": "cland_up_ready_coll_oa"
+     },
+     "dst": {
+      "part": "lk_ES0",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_ES0_d__0",
+     "src": {
+      "part": "mesh7S",
+      "bus": "cland_up_fault_coll_oa"
+     },
+     "dst": {
+      "part": "lk_ES0",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    }
+   ],
+   "native_launch_ff_identity": null,
+   "native_export_driver_input_cap_tt_ff": null,
+   "native_source_pose_and_delta_receipt": null
+  },
+  {
+   "part": {
+    "name": "lk_ES1",
+    "type": "hd_serdes",
+    "origin_um": [
+     14532.48,
+     103.68
+    ],
+    "orient": "R180"
+   },
+   "top_source_clock": "clk_region_lk_ES1",
+   "source_reset_start_straps": {
+    "cland_tstart_in": "pst_lk_ES1",
+    "strap_ca_efall": "1'b1",
+    "strap_ca_k_coll_i0": "6'b111000",
+    "strap_ca_pad": "1'b0",
+    "arst_n": "rstw_sst10_rst_o_0",
+    "rst_o_0": "",
+    "start_i": "stw_sst10_start_o_0",
+    "start_o_0": ""
+   },
+   "forwarded_clock_and_start": {
+    "fclk_out_coll_o0": "clock_landing_fwd_lk_ES1__coll_o0",
+    "cland_fstart_out_coll_o0": "clock_landing_start_lk_ES1__coll_o0",
+    "fclk_in_coll_i0": "clock_landing_fwd_sst10__d_o",
+    "cland_fstart_in_coll_i0": "clock_landing_start_sst10__d_o"
+   },
+   "clock_edge": {
+    "id": "cland_clk__coll_ES1_u__0",
+    "src": {
+     "part": "lk_ES1",
+     "bus": "fclk_out_coll_o0"
+    },
+    "dst": {
+     "part": "sst10",
+     "bus": "fclk_in_u_i"
+    },
+    "kind": "clock",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": false,
+    "capture_registered": false
+   },
+   "fstart_edge": {
+    "id": "cland_start__coll_ES1_u__0",
+    "src": {
+     "part": "lk_ES1",
+     "bus": "cland_fstart_out_coll_o0"
+    },
+    "dst": {
+     "part": "sst10",
+     "bus": "cland_fstart_in_u_i"
+    },
+    "kind": "ctl",
+    "width": 1,
+    "epoch": false,
+    "max_hop_um": 405,
+    "source_registered": true,
+    "capture_registered": true
+   },
+   "other_declared_parent_landing_edges": [
+    {
+     "id": "cland_mon_ready__coll_ES1_u__0",
+     "src": {
+      "part": "lk_ES1",
+      "bus": "cland_up_ready_coll_o0"
+     },
+     "dst": {
+      "part": "sst10",
+      "bus": "cland_dn_ready_u_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_ES1_u__0",
+     "src": {
+      "part": "lk_ES1",
+      "bus": "cland_up_fault_coll_o0"
+     },
+     "dst": {
+      "part": "sst10",
+      "bus": "cland_dn_fault_u_i"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_clk__coll_ES1_d__2",
+     "src": {
+      "part": "sst10",
+      "bus": "fclk_out_d_o"
+     },
+     "dst": {
+      "part": "lk_ES1",
+      "bus": "fclk_in_coll_i0"
+     },
+     "kind": "clock",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": false,
+     "capture_registered": false
+    },
+    {
+     "id": "cland_start__coll_ES1_d__2",
+     "src": {
+      "part": "sst10",
+      "bus": "cland_fstart_out_d_o"
+     },
+     "dst": {
+      "part": "lk_ES1",
+      "bus": "cland_fstart_in_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_ready__coll_ES1_d__2",
+     "src": {
+      "part": "sst10",
+      "bus": "cland_up_ready_d_o"
+     },
+     "dst": {
+      "part": "lk_ES1",
+      "bus": "cland_dn_ready_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    },
+    {
+     "id": "cland_mon_fault__coll_ES1_d__2",
+     "src": {
+      "part": "sst10",
+      "bus": "cland_up_fault_d_o"
+     },
+     "dst": {
+      "part": "lk_ES1",
+      "bus": "cland_dn_fault_coll_i0"
+     },
+     "kind": "ctl",
+     "width": 1,
+     "epoch": false,
+     "max_hop_um": 405,
+     "source_registered": true,
+     "capture_registered": true
+    }
+   ],
+   "native_launch_ff_identity": null,
+   "native_export_driver_input_cap_tt_ff": null,
+   "native_source_pose_and_delta_receipt": null
+  }
+ ]
+}

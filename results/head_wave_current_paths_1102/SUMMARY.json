@@ -1,0 +1,80 @@
+{
+ "scope": "same exact saved5GRT readonly source-profile failure query; no repair/route/gate reinterpretation",
+ "first_unit": "intel1:oth-ubuntu-1428080-1793626422",
+ "first_exit": 1,
+ "first_failure": "unsupported post-report report_clocks only; EshimTTMAX/MIN complete and retained",
+ "continuation_unit": "intel1:oth-ubuntu-1562608-1793626907",
+ "continuation_exit": 0,
+ "continued_corners": "EshimFF/TurnTT/TurnFF only; no duplicate EshimTT",
+ "request": "8GB2T normal admission, existingfailedinputs rendered/personallyLOOKed beforeSTA",
+ "items": [
+  {
+   "type": "hd_spn_eshim_tx",
+   "corner": "TT",
+   "native_summary": "OT_POSTCTS_GATE TT (global_routing) pinreg n 577 mean 401.85 bound 450.00 dev 48.15 tol 20.0 setup_est -46.51 hold_est -80.73 FAIL",
+   "worst": {
+    "MAX": {
+     "slack": -46.51,
+     "start": "link_i[560] (input port clocked by vclk)",
+     "endpoint": "Endpoint: u_ft_link_s0/q[560]$_DFF_P_"
+    },
+    "MIN": {
+     "slack": -80.73,
+     "start": "link_i[542] (input port clocked by vclk)",
+     "endpoint": "Endpoint: u_ft_link_s0/q[542]$_DFF_P_"
+    }
+   }
+  },
+  {
+   "type": "hd_spn_eshim_tx",
+   "corner": "FF",
+   "native_summary": "OT_POSTCTS_GATE FF (global_routing) pinreg n 577 mean 309.17 bound 342.00 dev 32.83 tol 20.0 setup_est 9.05 hold_est -89.35 FAIL",
+   "worst": {
+    "MAX": {
+     "slack": 9.05,
+     "start": "link_i[560] (input port clocked by vclk)",
+     "endpoint": "Endpoint: u_ft_link_s0/q[560]$_DFF_P_"
+    },
+    "MIN": {
+     "slack": -89.35,
+     "start": "link_i[542] (input port clocked by vclk)",
+     "endpoint": "Endpoint: u_ft_link_s0/q[542]$_DFF_P_"
+    }
+   }
+  },
+  {
+   "type": "hd_st_n3_turn",
+   "corner": "TT",
+   "native_summary": "OT_POSTCTS_GATE TT (global_routing) pinreg n 1146 mean 421.97 bound 450.00 dev 28.03 tol 20.0 setup_est -340.16 hold_est 12.59 FAIL",
+   "worst": {
+    "MAX": {
+     "slack": -340.16,
+     "start": "cland_fstart_in_u1_i (input port clocked by vclk)",
+     "endpoint": "Endpoint: u_cland_u1_i/u_ring.s_d[1][10]$_DFFE_PP_"
+    },
+    "MIN": {
+     "slack": 12.59,
+     "start": "u_ft_u1_s5/q[221]$_DFF_P_",
+     "endpoint": "Endpoint: u1_o[221] (output port clocked by vclk)"
+    }
+   }
+  },
+  {
+   "type": "hd_st_n3_turn",
+   "corner": "FF",
+   "native_summary": "OT_POSTCTS_GATE FF (global_routing) pinreg n 1146 mean 327.65 bound 342.00 dev 14.35 tol 20.0 setup_est -117.99 hold_est 10.01 PASS",
+   "worst": {
+    "MAX": {
+     "slack": -117.99,
+     "start": "cland_fstart_in_u1_i (input port clocked by vclk)",
+     "endpoint": "Endpoint: u_cland_u1_i/u_ring.s_d[1][10]$_DFFE_PP_"
+    },
+    "MIN": {
+     "slack": 10.01,
+     "start": "u_srl_77/q$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)",
+     "endpoint": "Endpoint: u_srl_78/q$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)"
+    }
+   }
+  }
+ ]
+}

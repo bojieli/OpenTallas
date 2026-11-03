@@ -1,0 +1,41 @@
+--- exact_legacy_A
++++ private_B_only_real_clock_profile
+@@ -120,10 +120,16 @@
+ # Forwarded/landing clock roots are real clocks too. Select the IO reference by
+ # its absent source rather than by excluding a single real clock named clk.
+ set ot_pg_virtual {}
++set ot_pg_real {}
+ foreach ot_pg_clock [all_clocks] {
+-  if {![llength [get_property $ot_pg_clock sources]]} {lappend ot_pg_virtual $ot_pg_clock}
++  if {![llength [get_property $ot_pg_clock sources]]} {
++    lappend ot_pg_virtual $ot_pg_clock
++  } else {
++    lappend ot_pg_real $ot_pg_clock
++  }
+ }
+ if {[llength $ot_pg_virtual] != 1} {error "postcts: expected exactly one source-less virtual IO clock"}
++if {![llength $ot_pg_real]} {error "postcts: no declared real clock sources"}
+ set_clock_latency -source $ot_pg_bound $ot_pg_virtual
+ if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARASITICS_FILE)]} {
+   source $::env(LAYER_PARASITICS_FILE)
+@@ -136,7 +142,19 @@
+ # first left the clock tree with no wire RC and read the pin-register CK ~55-62 ps early (KITS-SPARE ve_m 193 vs 316,
+ # FLOW 09:41 10-25; the earlier "placement reads ~75 ps early" rr_h0 note was this).  FLOW-INFRA-2 A/B 10-25 on the
+ # head + KV canary 5_1_grt.odb: -global_routing is order-independent (bit-identical); fixed placement reads +10..+13 ps.
+-set_propagated_clock [get_clocks clk]
++# Optional source-profile diagnostic, default OFF: preserve the original
++# primary-clock-only context until an exact future event enables all real roots.
++if {[info exists ::env(OT_POSTCTS_REAL_CLOCK_PROFILE)] && $::env(OT_POSTCTS_REAL_CLOCK_PROFILE) ni {0 1}} {error "postcts: invalid real-clock profile opt-in"}
++set ot_pg_profile legacy_primary_only
++set ot_pg_propagate [get_clocks clk]
++if {[info exists ::env(OT_POSTCTS_REAL_CLOCK_PROFILE)] && $::env(OT_POSTCTS_REAL_CLOCK_PROFILE) eq "1"} {
++  set ot_pg_profile declared_all_real
++  set ot_pg_propagate $ot_pg_real
++}
++set_propagated_clock $ot_pg_propagate
++set ot_pg_real_names {}
++foreach ot_pg_clock $ot_pg_propagate {lappend ot_pg_real_names [get_full_name $ot_pg_clock]}
++puts "OT_POSTCTS_CLOCK_PROFILE profile=$ot_pg_profile propagated=$ot_pg_real_names ideal_io=[get_full_name $ot_pg_virtual]"
+ # A saved ODB retains wires/guides, not STA parasitic annotations. Explicit
+ # frozen-clock consumers must restore the qualified clock-only RC in THIS process.
+ set ot_pg_frozen_rc [expr {[info exists ::env(OT_POSTCTS_FROZEN_CLOCK_SPEFS)] && $::env(OT_POSTCTS_FROZEN_CLOCK_SPEFS) ne ""}]

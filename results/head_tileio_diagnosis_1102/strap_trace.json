@@ -1,0 +1,656 @@
+{
+ "scope": "read-only finalnativeVerilog structural D fanin trace, no constraint-count waiver",
+ "all18_only_declared_strap_launch": true,
+ "results": {
+  "u_core.b_en$_DFF_P_": {
+   "D": "net37952",
+   "combinational": [
+    {
+     "name": "place11566",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37955",
+      "Y": "net11565"
+     }
+    },
+    {
+     "name": "place11567",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net11567",
+      "Y": "net11566"
+     }
+    },
+    {
+     "name": "place11568",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37968",
+      "Y": "net11567"
+     }
+    },
+    {
+     "name": "wire37953",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net37953",
+      "Y": "net37952"
+     }
+    },
+    {
+     "name": "wire37954",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net11565",
+      "Y": "net37953"
+     }
+    },
+    {
+     "name": "wire37956",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net11566",
+      "Y": "net37955"
+     }
+    },
+    {
+     "name": "wire37969",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7379",
+      "Y": "net37968"
+     }
+    },
+    {
+     "name": "wire7380",
+     "master": "BUFx12f_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_ten[0]",
+      "Y": "net7379"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_ten[0]"
+   ]
+  },
+  "u_core.row0_q[0]$_DFF_P_": {
+   "D": "net11542",
+   "combinational": [
+    {
+     "name": "place11543",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net7419",
+      "Y": "net11542"
+     }
+    },
+    {
+     "name": "wire37970",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[0]",
+      "Y": "net37969"
+     }
+    },
+    {
+     "name": "wire7420",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net37969",
+      "Y": "net7419"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[0]"
+   ]
+  },
+  "u_core.row0_q[1]$_DFF_P_": {
+   "D": "net11555",
+   "combinational": [
+    {
+     "name": "place11556",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37961",
+      "Y": "net11555"
+     }
+    },
+    {
+     "name": "wire37962",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7398",
+      "Y": "net37961"
+     }
+    },
+    {
+     "name": "wire7399",
+     "master": "BUFx12f_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[1]",
+      "Y": "net7398"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[1]"
+   ]
+  },
+  "u_core.row0_q[2]$_DFF_P_": {
+   "D": "net11556",
+   "combinational": [
+    {
+     "name": "place11557",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net7396",
+      "Y": "net11556"
+     }
+    },
+    {
+     "name": "wire7397",
+     "master": "BUFx12f_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[2]",
+      "Y": "net7396"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[2]"
+   ]
+  },
+  "u_core.row0_q[3]$_DFF_P_": {
+   "D": "net11557",
+   "combinational": [
+    {
+     "name": "place11558",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37962",
+      "Y": "net11557"
+     }
+    },
+    {
+     "name": "wire37963",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7394",
+      "Y": "net37962"
+     }
+    },
+    {
+     "name": "wire7395",
+     "master": "BUFx12f_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[3]",
+      "Y": "net7394"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[3]"
+   ]
+  },
+  "u_core.row0_q[4]$_DFF_P_": {
+   "D": "net11558",
+   "combinational": [
+    {
+     "name": "place11559",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net7392",
+      "Y": "net11558"
+     }
+    },
+    {
+     "name": "wire7393",
+     "master": "BUFx12f_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[4]",
+      "Y": "net7392"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[4]"
+   ]
+  },
+  "u_core.row0_q[5]$_DFF_P_": {
+   "D": "net11559",
+   "combinational": [
+    {
+     "name": "place11560",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37963",
+      "Y": "net11559"
+     }
+    },
+    {
+     "name": "wire37964",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7390",
+      "Y": "net37963"
+     }
+    },
+    {
+     "name": "wire7391",
+     "master": "BUFx12f_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[5]",
+      "Y": "net7390"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[5]"
+   ]
+  },
+  "u_core.row0_q[6]$_DFF_P_": {
+   "D": "net11560",
+   "combinational": [
+    {
+     "name": "place11561",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37964",
+      "Y": "net11560"
+     }
+    },
+    {
+     "name": "wire37965",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7388",
+      "Y": "net37964"
+     }
+    },
+    {
+     "name": "wire7389",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[6]",
+      "Y": "net7388"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[6]"
+   ]
+  },
+  "u_core.row0_q[7]$_DFF_P_": {
+   "D": "net11561",
+   "combinational": [
+    {
+     "name": "place11562",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37965",
+      "Y": "net11561"
+     }
+    },
+    {
+     "name": "wire37966",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7386",
+      "Y": "net37965"
+     }
+    },
+    {
+     "name": "wire7387",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[7]",
+      "Y": "net7386"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[7]"
+   ]
+  },
+  "u_core.row0_q[8]$_DFF_P_": {
+   "D": "net11562",
+   "combinational": [
+    {
+     "name": "place11563",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37966",
+      "Y": "net11562"
+     }
+    },
+    {
+     "name": "wire37967",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7384",
+      "Y": "net37966"
+     }
+    },
+    {
+     "name": "wire7385",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[8]",
+      "Y": "net7384"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[8]"
+   ]
+  },
+  "u_core.row0_q[9]$_DFF_P_": {
+   "D": "net11563",
+   "combinational": [
+    {
+     "name": "place11564",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net11564",
+      "Y": "net11563"
+     }
+    },
+    {
+     "name": "place11565",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37967",
+      "Y": "net11564"
+     }
+    },
+    {
+     "name": "wire37968",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7382",
+      "Y": "net37967"
+     }
+    },
+    {
+     "name": "wire7383",
+     "master": "BUFx10_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[9]",
+      "Y": "net7382"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[9]"
+   ]
+  },
+  "u_core.row0_q[10]$_DFF_P_": {
+   "D": "net11543",
+   "combinational": [
+    {
+     "name": "place11544",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net11544",
+      "Y": "net11543"
+     }
+    },
+    {
+     "name": "place11545",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37956",
+      "Y": "net11544"
+     }
+    },
+    {
+     "name": "wire37957",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7417",
+      "Y": "net37956"
+     }
+    },
+    {
+     "name": "wire7418",
+     "master": "BUFx10_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[10]",
+      "Y": "net7417"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[10]"
+   ]
+  },
+  "u_core.row0_q[11]$_DFF_P_": {
+   "D": "net11545",
+   "combinational": [
+    {
+     "name": "place11546",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net11546",
+      "Y": "net11545"
+     }
+    },
+    {
+     "name": "place11547",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37957",
+      "Y": "net11546"
+     }
+    },
+    {
+     "name": "wire37958",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7414",
+      "Y": "net37957"
+     }
+    },
+    {
+     "name": "wire7415",
+     "master": "BUFx10_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[11]",
+      "Y": "net7414"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[11]"
+   ]
+  },
+  "u_core.row0_q[12]$_DFF_P_": {
+   "D": "net11547",
+   "combinational": [
+    {
+     "name": "place11548",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net11548",
+      "Y": "net11547"
+     }
+    },
+    {
+     "name": "place11549",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37958",
+      "Y": "net11548"
+     }
+    },
+    {
+     "name": "wire37959",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7411",
+      "Y": "net37958"
+     }
+    },
+    {
+     "name": "wire7412",
+     "master": "BUFx10_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[12]",
+      "Y": "net7411"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[12]"
+   ]
+  },
+  "u_core.row0_q[13]$_DFF_P_": {
+   "D": "net11549",
+   "combinational": [
+    {
+     "name": "place11550",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net11550",
+      "Y": "net11549"
+     }
+    },
+    {
+     "name": "place11551",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37959",
+      "Y": "net11550"
+     }
+    },
+    {
+     "name": "wire37960",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7408",
+      "Y": "net37959"
+     }
+    },
+    {
+     "name": "wire7409",
+     "master": "BUFx10_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[13]",
+      "Y": "net7408"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[13]"
+   ]
+  },
+  "u_core.row0_q[14]$_DFF_P_": {
+   "D": "net11551",
+   "combinational": [
+    {
+     "name": "place11552",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net11552",
+      "Y": "net11551"
+     }
+    },
+    {
+     "name": "place11553",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net37960",
+      "Y": "net11552"
+     }
+    },
+    {
+     "name": "wire37961",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "net7405",
+      "Y": "net37960"
+     }
+    },
+    {
+     "name": "wire7406",
+     "master": "BUFx10_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[14]",
+      "Y": "net7405"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[14]"
+   ]
+  },
+  "u_core.row0_q[15]$_DFF_P_": {
+   "D": "net11553",
+   "combinational": [
+    {
+     "name": "place11554",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net7402",
+      "Y": "net11553"
+     }
+    },
+    {
+     "name": "wire7403",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[15]",
+      "Y": "net7402"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[15]"
+   ]
+  },
+  "u_core.row0_q[16]$_DFF_P_": {
+   "D": "net11554",
+   "combinational": [
+    {
+     "name": "place11555",
+     "master": "BUFx3_ASAP7_75t_R",
+     "ports": {
+      "A": "net7400",
+      "Y": "net11554"
+     }
+    },
+    {
+     "name": "wire7401",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "ports": {
+      "A": "strap_row0[16]",
+      "Y": "net7400"
+     }
+    }
+   ],
+   "register_boundaries": [],
+   "launch_nets": [
+    "strap_row0[16]"
+   ]
+  }
+ }
+}

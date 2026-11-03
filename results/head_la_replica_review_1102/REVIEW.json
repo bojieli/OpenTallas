@@ -1,0 +1,25 @@
+{
+ "scope": "Independent static source/caller review only; FLOW sole native producer",
+ "caller_path": "/srv/opentallas-scratch/claude/wt/codex-flow-shortpool-1101/results/flow/head_la_replica_prep_0940.py",
+ "caller_sha256": "41f80d4622caaca28fd1836bd80c83cf013eed2afbc8282c9c94bb51708c3e3e",
+ "parent_sha256": "4cae3cf30756a3f857bae2b6e5f102c43f8898477770025f470502ffa32d2ee9",
+ "source_join_sha256": "808db7759772766610f16ceae483d1cd8b6fd414f1501ea784789c4bf27af23f",
+ "candidate_source_commit": "8d3f445c77f5fa6d9c9aff62a293d86064b3507d",
+ "candidate_sha256": "190ce73f74694a6780859166c84021419bd98fbce3b826290f0861194ba55fa3",
+ "static_verdict": "CONCUR_BOUNDED_DIAGNOSTIC_ONLY",
+ "expected_BASE_checks": 4,
+ "expected_joint_outputs": 342,
+ "output_groups": {
+  "LA_gold_gate_NEXT": 4,
+  "retained_auxiliary": 82,
+  "original_matched_only": 256
+ },
+ "native_job_by_reviewer": false,
+ "accepted_hint_or_source_credit": false,
+ "interpretation_refusals": [
+  "COMPLETE is not a PASS label",
+  "older-partner unknown must remain unknown, not fabricated counterexample",
+  "new-relations or retained-auxiliary failure cannot be inferred qualified",
+  "no full84750/source verdict or newgoldX/padding exception"
+ ]
+}

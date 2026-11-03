@@ -1,0 +1,112 @@
+{
+ "status": "OWNER_DECISION_PREP_DEFAULT_OFF",
+ "selected_source": {
+  "die": "s81_head",
+  "type": "hd_serdes",
+  "sender_instance": "lk_WN1",
+  "receiver_instance": "nst3_turn",
+  "edge": "coll_WN1_u__0",
+  "rtl_source_commit": "703c07481fa0bc4eedf4dc79cbdce6784dd2011e",
+  "plan_sha256": "0c98a23000ade2c3fb13de073ca3f09eb8868b412e70921870abda21888bac12",
+  "sidecar_sha256": "dfe1fd228189319ff64e70436f884bc138ac0ba43b1632191c5e61c6ddbabb7c",
+  "wrapper_sha256": "017967990864c5942eb6ba5ab7d5dad2710c70f8a57a00464f7b798c8fad1009",
+  "ff_module_source_sha256": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793"
+ },
+ "fstart": {
+  "source_rtl_instance": "u_cland_fstart_coll_o0",
+  "module": "ot_dp_landing_relay",
+  "state_bit": "q",
+  "output_port": "cland_fstart_out_coll_o0",
+  "D": "cland_start_d = u_cland_origin.s1 for selected strap_pad0",
+  "clock_pin": "clk",
+  "clock_root_port": "clk",
+  "edge": "posedge",
+  "reset_pin": "rst_raw_n",
+  "reset_net": "cland_start_raw = cland_reset_coll_i0",
+  "reset_driver": "u_cland_rst_coll_i0.q (registered rst_rl_5)",
+  "reset_semantics": "synchronous active-low q<=0 on posedge",
+  "selected_straps": {
+   "strap_ca_efall": 1,
+   "strap_ca_pad": 0,
+   "strap_ca_k_coll_i0": 51
+  },
+  "native_ff_instance": null,
+  "native_clock_iterm": null,
+  "native_D_Q_reset_join": null
+ },
+ "fclk": {
+  "output_port": "fclk_out_coll_o0",
+  "logical_source": "clk",
+  "declared_physical_driver": "cland_fwd_fclk_out_coll_o0",
+  "declared_master": "BUFx24_ASAP7_75t_R",
+  "input_pin": "A",
+  "output_pin": "Y",
+  "required_logical_function": "Y=A positive unate; must prove from exact selected TT/FF Lib",
+  "current_declared_input_root": "clk"
+ },
+ "receiver": {
+  "clock_port": "fclk_in_u1_i",
+  "fstart_port": "cland_fstart_in_u1_i",
+  "current_readout": "B5realclocks propagated; old20tol unchanged; TT residual-202.66 conditional frame",
+  "current_data_cone_internal_ps": 589.05,
+  "source_phase_qualified": false
+ },
+ "known_planned_geometry_um": {
+  "source_clk_port": [
+   1442.88,
+   77.76
+  ],
+  "fclk_output_port": [
+   1705.76,
+   2.656
+  ],
+  "fstart_output_port": [
+   1714.4,
+   2.656
+  ],
+  "public_clock_fstart_pitch": 8.64,
+  "root_to_fstart_pin_euclidean": 281.71567442369974,
+  "native_sender_ff_clock_pin": null,
+  "native_sender_export_driver": null
+ },
+ "A": {
+  "name": "Retain declared-root buffered FCLK and authenticate measured paired delta",
+  "physical_clock_ABI_change": false,
+  "requires": [
+   "exact selected sender checkpoint and native FF/driver continuity",
+   "paired TT/FF FSTART launch CK/CQ/output arrival and FCLK A/Y/output arrival",
+   "exact parent seam DATA/CLOCK arrival windows and edge/cycle relation"
+  ],
+  "delta": "T_FSTART_at_receiver_port - T_FCLK_at_receiver_port for the same related sender launch edge",
+  "no_numeric_delta_supplied": true
+ },
+ "B": {
+  "name": "Explicit paired source-FF clock-leaf export",
+  "physical_clock_ABI_change": true,
+  "logical_cycle_change": 0,
+  "proposed_driver_A_source": "the exact dbNet attached to the proved native launch FF CLOCK ITerm, after unique positive-root/polarity/source proof",
+  "source_selector": "same_fstart_launch_ff_clock_endpoint (new typed source ABI; not supported/adopted by current generator)",
+  "requires": [
+   "all A source/native joins",
+   "owner selection of physical source ABI change",
+   "explicit BUFx24 A changed-load census and qualification: either native CTS coassignment or a separately scoped postCTS one-edge topology with fresh RC and complete affected source/parent clock/data timing",
+   "final same-net assertion on selected FF CLOCK pin and export A, no clock reconvergence/cycle",
+   "actual sender FF/export geometry, legal rows/TAP/PG and source/output reach",
+   "paired TT/FF delta after the changed topology; no clkQ credit from names"
+  ],
+  "implementation_vehicles": {
+   "B1_native_must_link": "guaranteed exactFF CLOCK/exportA coassignment during tree build; native source API proposal only",
+   "B2_postCTS_explicit_topology": "owner-selected physicalABI event intentionally moves exactly this A connection onto the proved FF CLOCK dbNet; source/clock freeze exception explicit; fresh allaffected RC/TT/FF/DRV/geometry/parent qualification required; no re-CTS pass inferred"
+  }
+ },
+ "refuse_now": [
+  "no selected qualified hd_serdes sender mapped/native checkpoint",
+  "no exact native one-FF and clock/reset/source/polarity join",
+  "no measured paired sender and seam delta windows"
+ ],
+ "no_execution": [
+  "no RTL/SDC/generator/kit modification",
+  "no P&R/STA/CTS/repair or source adoption",
+  "no assumed450/zero latency, arbitrary root/leaf alias or extra cycle"
+ ]
+}

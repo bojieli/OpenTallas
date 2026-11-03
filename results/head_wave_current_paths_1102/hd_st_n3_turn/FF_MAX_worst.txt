@@ -1,0 +1,35 @@
+Startpoint: cland_fstart_in_u1_i (input port clocked by vclk)
+Endpoint: u_cland_u1_i/u_ring.s_d[1][10]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by fclk_in_u1_i)
+Path Group: fclk_in_u1_i
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock vclk (rise edge)
+                        342.00  342.00   clock network delay (ideal)
+                        126.60  468.60 ^ input external delay
+     1    2.20    8.73    2.32  470.92 ^ cland_fstart_in_u1_i (in)
+    70   68.12   66.88   31.04  501.96 ^ input17/Y (BUFx8_ASAP7_75t_R)
+    67   61.14   30.30   40.72  542.68 ^ u_cland_u1_i/load_slew5641/Y (BUFx24_ASAP7_75t_R)
+     6    6.19   30.07   40.32  583.00 v u_cland_u1_i/_09236_/Y (INVx2_ASAP7_75t_R)
+    49   48.33   81.63   61.13  644.13 v u_cland_u1_i/_09276_/Y (OR3x4_ASAP7_75t_R)
+    45   47.37   17.83   55.87  700.01 v u_cland_u1_i/load_slew2126/Y (BUFx24_ASAP7_75t_R)
+    48   45.98   14.28   50.31  750.32 v u_cland_u1_i/load_slew2123/Y (BUFx24_ASAP7_75t_R)
+    52   47.19   26.37   75.79  826.11 v u_cland_u1_i/wire2122/Y (BUFx24_ASAP7_75t_R)
+    52   47.33   14.92   51.99  878.10 v u_cland_u1_i/load_slew2121/Y (BUFx24_ASAP7_75t_R)
+     1    1.30   11.89   61.35  939.45 v u_cland_u1_i/_11569_/Y (AO21x1_ASAP7_75t_R)
+                 11.90    0.21  939.66 v u_cland_u1_i/u_ring.s_d[1][10]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                                939.66   data arrival time
+
+                  0.00  833.00  833.00   clock fclk_in_u1_i (rise edge)
+                          0.00  833.00   clock network delay (ideal)
+                          0.00  833.00   clock reconvergence pessimism
+                                833.00 ^ u_cland_u1_i/u_ring.s_d[1][10]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                        -11.33  821.67   library setup time
+                                821.67   data required time
+-----------------------------------------------------------------------------
+                                821.67   data required time
+                               -939.66   data arrival time
+-----------------------------------------------------------------------------
+                               -117.99   slack (VIOLATED)

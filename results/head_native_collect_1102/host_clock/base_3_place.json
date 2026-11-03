@@ -1,0 +1,15 @@
+{
+ "scope": "Actual final ODB read-only two forwarded-clock buffers; no source/proof/route/STA change",
+ "source_bterm": "clk_t8",
+ "source_net": "clk_t8",
+ "buffers": [
+  {
+   "instance": "cland_fwd_fclk_out_bu_o",
+   "status": "NOT_PRESENT_IN_CHECKPOINT"
+  },
+  {
+   "instance": "cland_fwd_fclk_out_h_rx_ft_o",
+   "status": "NOT_PRESENT_IN_CHECKPOINT"
+  }
+ ]
+}

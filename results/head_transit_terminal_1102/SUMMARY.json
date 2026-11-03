@@ -1,0 +1,53 @@
+{
+ "queue_id": "4ee813c26cde",
+ "native_unit": "intel2:oth-ubuntu-659885-1793617907",
+ "native_exit": 6,
+ "status": "DONE-STRUCTURAL toolclass post-cts-hold; not an independent DUTfail verdict",
+ "GRT_elapsed_s": 7068,
+ "GRT_peak_MB": 9461,
+ "source_helper_sha256": "ba2fcc93263971237cc9b11058363a27613a1e4220e6bace67bc3f42d4d0a6b1",
+ "shared_source_helper": "byte-identical to frozen eshim/turn helper; propagates only primaryclk",
+ "scope": "actual existing terminal collection only; no rejudge/resume/newSTA/GRT/route",
+ "clock_context": "current exact worst path notqueried; no Turnpath/resultalias",
+ "incoming_declared_sources": {
+  "u2": "nst2 hd_st_str fclk_out_u_o +cland_fstart_out_u_o",
+  "d2": "nst4 hd_st_n4 fclk_out_d2_o +cland_fstart_out_d2_o"
+ },
+ "frames": "incoming realportclocks require actual source/frame join; no assumed offset",
+ "readouts": {
+  "tt": {
+   "corner": "TT",
+   "pinreg_n": 1149,
+   "pinreg_mean_ps": 406.63,
+   "pinreg_min_ps": 374.95,
+   "pinreg_max_ps": 462.62,
+   "bound_ps": 450.0,
+   "dev_ps": 43.37,
+   "tol_ps": 20.0,
+   "setup_wns_est_ps": -326.99,
+   "hold_wns_est_ps": 19.73,
+   "rc": "/work/setRC_rcx.tcl",
+   "parasitics": "global_routing",
+   "verdict": "FAIL",
+   "band_policy": "gate",
+   "band_verdict": "FAIL"
+  },
+  "ff": {
+   "corner": "FF",
+   "pinreg_n": 1149,
+   "pinreg_mean_ps": 314.11,
+   "pinreg_min_ps": 292.15,
+   "pinreg_max_ps": 351.77,
+   "bound_ps": 342.0,
+   "dev_ps": 27.89,
+   "tol_ps": 20.0,
+   "setup_wns_est_ps": -114.55,
+   "hold_wns_est_ps": 10.09,
+   "rc": "/work/setRC_rcx.tcl",
+   "parasitics": "global_routing",
+   "verdict": "FAIL",
+   "band_policy": "gate",
+   "band_verdict": "FAIL"
+  }
+ }
+}
