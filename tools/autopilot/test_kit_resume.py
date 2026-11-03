@@ -442,5 +442,18 @@ class Prepare(unittest.TestCase):
         self.assertFalse((nK / "run").exists())
 
 
+class HoldGuardCapTest(unittest.TestCase):
+    """FLOW-24 11-03: a GRT log whose only [ERROR] is the HOLD-GUARD-GRT caught chunk cap is a passed stage."""
+
+    def test_caught_cap_is_not_an_error_line(self):
+        t = ("[ERROR RSZ-0060] Max buffer count reached.\nTook 5 seconds\n"
+             "OT_HOLD_GUARD_GRT chunk 2: hold ws 0.05 (+48.60) tns 0.0 viol 0, +581 buffers (cap 1478), 361 s\n")
+        self.assertIsNone(KR.ERR_LINE.search(KR.HOLD_GUARD_CAP_RE.sub("", t)))
+
+    def test_uncaught_cap_still_fails(self):
+        t = "[ERROR RSZ-0060] Max buffer count reached.\nmake: *** Error 1\n"
+        self.assertIsNotNone(KR.ERR_LINE.search(KR.HOLD_GUARD_CAP_RE.sub("", t)))
+
+
 if __name__ == "__main__":
     unittest.main()
