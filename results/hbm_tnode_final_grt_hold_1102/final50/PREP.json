@@ -1,0 +1,39 @@
+{
+ "status": "PREP_ONLY_AWAIT_ACTUAL_SCENE_LOOK_AND_COORD_RELEASE",
+ "scope": "ONE fullCLOCK+SIGNAL50 no-birth/no-repair measurement onactualPOSTrepairPG0saved5_1GRT; noCTS/DRT/SIGNED/parentrelease",
+ "source": "Intel1 codex-tnode-normal-grt-hold-0430 terminal806872-1793624456",
+ "input_sha256": {
+  "run/results/asap7/hbc_ot_hnx_fused_tnode/base/5_1_grt.odb": "883b41d5a1755e9ad29eaf3b4b3261f37ea442e128badc0ffcc27163012376ab",
+  "run/results/asap7/hbc_ot_hnx_fused_tnode/base/5_1_grt.sdc": "7be855f87a5355214c27a4cc29fe2fb232b370d612d2b181b911ce0a0e9c4f04",
+  "config.mk": "6ce002f06885330daf078c73fe5245be91275d3406e0f68628c5ebe31e02aa71",
+  "constraint.sdc": "a0affdb5a82a55935063a42c197ae8168e9492682ec3c4f5c4d56ad7643bf9c3",
+  "postcts_gate.tcl": "24ad9bf4222bab9cb0c9b23625450ff13ff2c181972add8b1a45b52d84a46c96",
+  "native_pg_binding.tcl": "e19c5fd9872e37f68d610e2dc46608359c9970b7c9e6de84f546f3b3c3ea3a2d"
+ },
+ "PG": {
+  "checked": 31224,
+  "failure_count": 0,
+  "instances": 15612
+ },
+ "actual_native_birth": {
+  "creates": 1875,
+  "swaps": 58,
+  "bound": 3750,
+  "final_instance_delta": 1871,
+  "hold_buffers": 1796
+ },
+ "clock_input": {
+  "native": 160,
+  "routable": 160,
+  "postrepair_frozen_guard": "PASS3269instances160nets"
+ },
+ "resources": {
+  "memory_gb": 8,
+  "threads": 2,
+  "disk_gb": 5
+ },
+ "deck_changes": "same reviewed0010 no-birth deck; actual5_1GRT input/SDC, exact160 nativeSTA/dbCLOCK join, hardened same e19 PG helper; no source/config/clock-contract changes",
+ "freshRC": "Same postrepair exact TT/FF selector+constraint.sdc under global_routing RC afternewroute; no repair",
+ "prior_capacity": "30iter0 was pre-repair HISTORYONLY; rawpostrepairchannel.781/GRTNA remains",
+ "CAD_launched": false
+}

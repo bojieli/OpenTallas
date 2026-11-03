@@ -1,0 +1,73 @@
+{
+ "schema": "opentallas.hbm_arch.core_freeze.v1",
+ "view": "ot_hnx_fused_tnode@602a107613c5",
+ "module": "ot_hnx_fused_tnode",
+ "design": "ot_hnx_fused_tnode",
+ "rtl_top": "ot_hnx_fused_tnode",
+ "recipe_key": "ot_hnx_fused_tnode",
+ "recipe_sha256": "62482867d0bf7263c64f76e25d919815adc5fbb441e19c46426c02e72a2753c8",
+ "canonical_type": null,
+ "wrapper": null,
+ "outline_um": [
+  125.28,
+  95.04
+ ],
+ "plan": "/srv/opentallas-scratch2/claude/codex-hbm-tnode-compact-kit-r3-1101/plan/die_plan.json",
+ "plan_sha256": "692b9f45078d35a6e9506111bb17750b0a6b09875ccafbeb85d84243318ca069",
+ "pins_file": "plan_pins.json",
+ "pins_sha256": "fea95d2e0e8221f040396f6e751dad8cdc7c9cdd95846ed2b1d70671cd634b4d",
+ "pins_canon_sha256": "f0e01a725f72e5c15ec7a9ff40d42c5d791053db96875f3bbcb514499e36319c",
+ "pins": 1341,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "period_ps": 833.0,
+ "common_latency_ps": 250.0,
+ "corner": "TC",
+ "plan_common_latency_ps": 250.0,
+ "core_clock_contract": null,
+ "orfs_var_overrides": [],
+ "sdc_lint": "PASS (gen)",
+ "macros": [
+  "ot_sram_1r1w_128x256_m1_r2c2",
+  "ot_sram_1r1w2c_32x64_m1"
+ ],
+ "face_shell": null,
+ "kit_hash": "504292885d5f1ab2",
+ "plan_pins_source": "cores/ot_hnx_fused_tnode__125.28x95.04__k41c.json",
+ "plan_pins_source_sha256": "602a107613c5d9da9359c50e4b1efb27830b75ce1071809a18df178422316d57",
+ "plan_pins_source_canon_sha256": "f0e01a725f72e5c15ec7a9ff40d42c5d791053db96875f3bbcb514499e36319c",
+ "flow_defaults": {
+  "rc_cal": true,
+  "f1": {
+   "io_tt_ps": 250.0,
+   "io_ff_ps": 202.5,
+   "mechanism": "two-mode GRT (scene BC vclk_ff.sdc FF hold, scene tc TT setup) + gates",
+   "basis": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "f4": true,
+  "cts_setup_tt": {
+   "previous_post_cts": "/work/f4_chain_leaf.tcl",
+   "repair": "setup only (scene tc / vclk OT_VCLK_TT)",
+   "hold": "GRT step only"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold",
+   "tt": 250.0,
+   "ff": 202.5
+  },
+  "rule": "FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)"
+ },
+ "reset_contract": {
+  "edges": 64,
+  "module": "ot_hnx_fused_tnode",
+  "die": "hbm",
+  "contract": "/srv/opentallas-scratch2/claude/wt/codex-hbm-tnode-compact-kit-1101/physical/die_plan/hbm/reset_contract.json",
+  "contract_sha256": "df3508496db4614c7f07b7e13e9f557ab5263edbbbad7807e93ea9b2584c0418",
+  "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+ },
+ "source_commit": "eb2bc8b561c167053f8307de25330f7c10653dcb"
+}

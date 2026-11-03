@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.tnode_final_grt_hold_join.v1",
+ "input_postrepair_GRT_sha256": "883b41d5a1755e9ad29eaf3b4b3261f37ea442e128badc0ffcc27163012376ab",
+ "output_fullGRT50_sha256": "5c0dd1788a64ec7543d070153b6088fcd1730177ee1f89845e0d2dfc5ebd5f90",
+ "input_SDC_sha256": "7be855f87a5355214c27a4cc29fe2fb232b370d612d2b181b911ce0a0e9c4f04",
+ "guard_before_sha256": "03f013a3b84974dbedb18f29a3e374fc63ed48d38f28be7024952b294e647f63",
+ "guard_after_sha256": "03f013a3b84974dbedb18f29a3e374fc63ed48d38f28be7024952b294e647f63",
+ "guards_byte_equal": true,
+ "guide_census": {
+  "scope": "ACTUAL_SAVED_FULL_GRT50_GUIDES_READ_ONLY",
+  "CLOCK": {
+   "nets": 160,
+   "nets_with_guides": 160,
+   "guide_rectangles": 14985
+  },
+  "SIGNAL": {
+   "nets": 15160,
+   "nets_with_guides": 15040,
+   "guide_rectangles": 114871
+  }
+ },
+ "exported_actual_logical_netlist": {
+  "path": "/srv/opentallas-scratch2/claude/codex-tnode-final-guide-export-0700/final_grt50.v",
+  "sha256": "8f874e8c73bdfedea63fdadcf41426077f8d16e8ec070f2b405d5b9e6648839e",
+  "official_postECO_EQ": "NOTRUN"
+ },
+ "normal_unit": "806872-1793624456 Intel1",
+ "final50_unit": "3091502-1793627145 Intel2",
+ "guide_export_unit": "3928521-1793630611 Intel2",
+ "native_birth": {
+  "creates": 1875,
+  "swaps": 58,
+  "bound": 3750,
+  "final_instance_delta": 1871,
+  "hold_buffers": 1796
+ },
+ "all_actual_guide_nets": 15200,
+ "raw_postrepair_proxy": {
+  "channel_h": 0.781,
+  "grt": null,
+  "history_preserved": true
+ },
+ "source_proof_scope": "Original4730EQ/KEEP358/defaultrequestedUSED4 cache reused onunchangedRTL/SYNTH only; actualpost-ECO/finalrouteEQ separate",
+ "holds": [
+  "NoDRT/fill/SIGNED",
+  "No currentparent/source/reset/calendar/clockcohortadoption",
+  "DRTretainedinput/nativebirthandpostrouteEQ stillseparatereview"
+ ]
+}

@@ -1,0 +1,100 @@
+{
+ "scope": "ROOT review pending normal GRT+hold canary, no DRT or SIGNED",
+ "runner_rc": 0,
+ "SIGNED": false,
+ "PG": {
+  "schema": "native_pg_audit.v1",
+  "status": "PASS",
+  "block": "ot_hnx_fused_tnode",
+  "instance_count": 15612,
+  "pg_master_count": 85,
+  "checked": 31224,
+  "roles": {
+   "POWER": 15612,
+   "GROUND": 15612
+  },
+  "failure_count": 0,
+  "failures": [],
+  "mapping_error": "",
+  "domain_rules": [
+   {
+    "inst_pattern": ".*",
+    "pin_pattern": "^VDD$",
+    "net": "VDD",
+    "role": "POWER",
+    "region": ""
+   },
+   {
+    "inst_pattern": ".*",
+    "pin_pattern": "^VSS$",
+    "net": "VSS",
+    "role": "GROUND",
+    "region": ""
+   }
+  ],
+  "regions": []
+ },
+ "clock_guard": {
+  "details": {},
+  "fixed_nets_post": 0,
+  "inst": [],
+  "missing": [],
+  "mode": "pre_unrouted",
+  "n_insts_changed": 0,
+  "n_insts_pre": 3269,
+  "n_nets_changed": 0,
+  "n_nets_post": 160,
+  "n_nets_pre": 160,
+  "new": [],
+  "pins": [],
+  "post": "/work/post_grt_clock.tsv",
+  "post_header": "#CLKDUMP tag post_grt nets 160 block ot_hnx_fused_tnode",
+  "pre": "/work/pre_grt_clock.tsv",
+  "pre_header": "#CLKDUMP tag pre_grt nets 160 block ot_hnx_fused_tnode",
+  "pre_wired": [],
+  "verdict": "PASS",
+  "wire": []
+ },
+ "corners": {
+  "tt": {
+   "corner": "TT",
+   "pinreg_n": 1343,
+   "pinreg_mean_ps": 251.4,
+   "pinreg_min_ps": 231.41,
+   "pinreg_max_ps": 276.39,
+   "bound_ps": 250.0,
+   "dev_ps": 1.4,
+   "tol_ps": 20.0,
+   "setup_wns_est_ps": 91.64,
+   "hold_wns_est_ps": 26.29,
+   "rc": "/work/setRC_rcx.tcl",
+   "parasitics": "global_routing",
+   "verdict": "PASS",
+   "band_policy": "gate",
+   "band_verdict": "PASS"
+  },
+  "ff": {
+   "corner": "FF",
+   "pinreg_n": 1343,
+   "pinreg_mean_ps": 198.97,
+   "pinreg_min_ps": 180.02,
+   "pinreg_max_ps": 222.21,
+   "bound_ps": 202.5,
+   "dev_ps": 3.53,
+   "tol_ps": 20.0,
+   "setup_wns_est_ps": 306.23,
+   "hold_wns_est_ps": 6.61,
+   "rc": "/work/setRC_rcx.tcl",
+   "parasitics": "global_routing",
+   "verdict": "PASS",
+   "band_policy": "gate",
+   "band_verdict": "PASS"
+  }
+ },
+ "actual_fresh_FF_hold_paths": {
+  "violating_endpoints_reported": 0,
+  "classes": {},
+  "artifact": "/srv/opentallas-scratch2/claude/codex-tnode-normal-grt-hold-0430/kit/postgrt_ff_hold_paths.rpt",
+  "no_old_CTS_classes_borrowed": true
+ }
+}

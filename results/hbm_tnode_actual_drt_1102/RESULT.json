@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.tnode.observational_drt.v1",
+ "host": "intel2",
+ "root": "/srv/opentallas-scratch2/claude/codex-tnode-drt-prep-0620",
+ "unit": "319272-1793632983",
+ "exit": 0,
+ "scope": "EXACT568_OBSERVATIONAL_NO_BIRTH_DRT_ONLY",
+ "drc": 0,
+ "antenna_nets": 0,
+ "antenna_pins": 0,
+ "antenna_diodes": 0,
+ "wirelength_um": 164963,
+ "vias": 144806,
+ "allowed_layers": "M2-M5",
+ "native_events": {
+  "creates": 0,
+  "swaps": 0,
+  "bound": 0
+ },
+ "all_loaded_masters": 214,
+ "core_antennacell": 0,
+ "structure_library_guards": "PASS",
+ "fresh_saved_DB_structure": "EQUAL",
+ "PG_checked": 31224,
+ "PG_open": 0,
+ "elapsed_seconds": 2029.89,
+ "peak_memory_MB": 3179,
+ "sha256": {
+  "kit/run/results/asap7/hbc_ot_hnx_fused_tnode/base/5_2_route.odb": "7e6c897065c60e6b3f731431f731b97311a638746f95744e42432b08412379e0",
+  "kit/run/results/asap7/hbc_ot_hnx_fused_tnode/base/retained_final_grt50.odb": "5c0dd1788a64ec7543d070153b6088fcd1730177ee1f89845e0d2dfc5ebd5f90",
+  "kit/run/results/asap7/hbc_ot_hnx_fused_tnode/base/retained_final_grt50.sdc": "7be855f87a5355214c27a4cc29fe2fb232b370d612d2b181b911ce0a0e9c4f04",
+  "kit/drt_input_structure.tcldata": "dd539955ab3b15c30eddc690e8335520df156f092c4720ea006c45cc4c0838b6",
+  "kit/drt_saved_pg.json": "e6fae516cc4c7abd3091f7ad0597b5c7fb64ca41ca9094292e2c77bdc443618d",
+  "kit/drt_runtime_patch.json": "9d09d83d355b1bb9d22b9ba6be31e778b1b33acbece8459c7f51ac883251c4aa"
+ },
+ "holds": [
+  "No filler/finish dispatched",
+  "Actual detailedRC timing NOTRUN; earlier globalRC is separate",
+  "Postroute functionalEQ NOTRUN",
+  "No genericatomicDRTbirth capability orSIGNED/parent/source adoption"
+ ]
+}
