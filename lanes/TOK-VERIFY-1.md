@@ -1,0 +1,6 @@
+# TOK-VERIFY-1 (token-exact + schedule/tok re-baseline per die RE-FORM batch; never blocks the pipeline)
+
+## 2026-11-03 07:03 PST START
+- Collected predecessors (all dead): TOK-QW-5 QC whole-die build1 (epyc2, hier matvec_part, --mem 160) and build2 (+4 hier, --mem 128) both oom-kill in the TOP verilation (06:3x). TOK-DS-5 V1c3r epyc2 oom-kill at 200 GB (top). LIVE, kept (not mine to relaunch): HBM SOURCE13 resume intel2 (verilator top RSS 173 GB / cap 220, 1h14m), DS IMG2 hier libs intel1 (tok-ds-2/img2).
+- QC vehicle CLASS FIX (sim-only, no RTL): hier_block on all 16 compute-block modules (192 param sets) + matvec_part, so the top keeps only the slices. Hier blocks forbid tb hierarchical $readmemh into them, so the tile ROM macro sim models (vehicle-local override of ot_rom_4096x266_m8/ot_rom_2048x266_m8) load themselves by %m path from a bypath dir (7680 links from TOK-QW-5 rom_load.vh; sim logs each load, expect 7680). Queued intel2 (ot-run --mem 160 die), dir intel2:/srv/opentallas-scratch2/claude/tok-verify-1/qc/build3.
+- Tok models per die: HBM = TOK-13d DS-native S2 (price_d44t.py method, d44x 1666.26); S81/HEAD = compose_tok_ds lane terms (TOK-13/14 method, AR 1258.9 / MTP 3653.8); QC/KV = Qwen record composition (compose_tokfunc, 4403.2) + plan-lane delta bound.
