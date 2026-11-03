@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-**Status 2026-11-03 09:34 PST:** count 63 (+1 S81 gunit_l0): S81 29/54, HEAD 4/4 + 1/25 types, QC 5/16, KV 17/34, HBM 7/84. Merged G9-G13 this hour (main 031b181ba35): TX-face latch + HBM PHY 833 ps, LATCH-FACE tools (face_guard/face_flops/lec latch support) + LEC raw wall, AUTO-GEOM advisory (~36 rows released), HEAD l48rf RTL, S81 reset relay form #7. Flow tags u-* on b62343715e6 (kits must carry the new tool copies). New class: ~60 S81 leaf face_guard dropped/land_slot (DIE-S81-51). intel2 scratch2 99% -> ot-run refuses intel2 (PRUNE-1103D).
+**Status 2026-11-03 10:32 PST:** count 63 in tree + 3 READY-COUNT accepted (S81 mu72_lnland, lnland_nst; KV head_eighth_e6) = 66 (S81 31/54, HEAD 4/4 + 1/25 types, QC 5/16, KV 18/34, HBM 7/84). Merged G14-G16 (main 57107a05a2e): HBM RE-FORM RTL part 1, KV pv view bind (16 kv3_pv* rows released). Approved G17: S81 face_guard spare-bit class fix (68 leaf kits), HBM-RF1 batch (d44v parts 1+2), QC CA +1 value event. Held: S81 nff (105 MB plan file in history). Fleet: epyc4 44 waiters admission-bound, epyc2/intel2 idle-ish -> restage. intel2 scratch2 93% (PRUNE-1103D).
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
