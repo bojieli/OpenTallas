@@ -2467877,7 +2467877,12 @@
   "ft_station_max_um": 405.0,
   "reach_margin": 1.0,
   "cland_fit_resize_off_types": [
-   "kv3_io_cor"
+   "kv3_io_cor",
+   "kv3_io_cor_v1"
+  ],
+  "dpl_legalizer_types": [
+   "kv3_io_cor",
+   "kv3_io_cor_v1"
   ],
   "cland_pinslot_dense_types": [
    "kv3_io_ft",
