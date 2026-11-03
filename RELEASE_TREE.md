@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-_Updated 2026-11-03 03:31 PST by COORD: count 56 (S81 26, HEAD 4, QC 5, KV 15, HBM 6); lanes down 00:40-03:20 (session limit, no Codex cover), 16 fresh successors 03:2x (owners DIE-S81-50, DIE-HEAD-56, DIE-QC-65, DIE-KV-63, DIE-HBM-60); S81 station parent-route pilot S81-PROUTE-2 RUNNING; HBM POR events d44s/d44t/d44u/d44v; KV die clock variant A and HBM hub mesh STRUCTURAL PASS, both BLOCKED(kits); top kit class S81 KIT_PREFLIGHT 69_
+_Updated 2026-11-03 04:3x PST by COORD: count 57 (S81 26, HEAD 4, QC 5/16, KV 16, HBM 6; +1 KV; HBM hcol_h1 SIGNED 04:19 awaiting r-hbm re-sign); main 48c37eca7d3 (trains F5-F7 incl. HEAD headgate l48h0 -> HEAD wave relaunched 04:20); next train: KW-FIX-3 S81 KIT_PREFLIGHT class fix 4a2dae0f548 (69 kits + 41 cancelled, one batch) + class R HBM reset fix d483825fd6e (11 kits); kit FAIL 205 / RUNNING 121; HBM plan classes q3_edge + pslice_c5 (2.6 um macro channels) into d44v; HEAD ctl_e/ctl_n long-empty-slot class to DIE-HEAD-56; S81-PROUTE-2 RUNNING; 17 lanes live_
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -60,7 +60,7 @@ _Updated 2026-11-03 03:31 PST by COORD: count 56 (S81 26, HEAD 4, QC 5, KV 15, H
 
 ## DIE hbm · HBM · rev d44o/d44p current native followups · UNFROZEN (OWNER 11-02: die problems first, no type pilots; mu1 = 3-SRAM) · owner DIE-HBM-60
 - [ ] HBM.BIND Qualified current native production composition · HBM / DIE-HBM-60 · BLOCKED · native source/pin/profile and clock/START joins incomplete; historical wrapped bindings do not qualify current production → HBM.CLK → HBM.TILES
-- [ ] HBM.HUBMESH Hub mesh / production clock integration · HBM / DIE-HBM-60 · STRUCTURAL PASS, BLOCKED(kits) · 11-02 23:16 ranked list: hub mesh a3e6s, NE route of record NE_v2, die TT +93.69, CA 773/773, hold need NW +74.77 / NE +50.50 (hold margin 0); 23 partition GRT50 runs live; next: core plan classes (one-face pins, macro rects, outline shrink) -> kits -> real-view hold
+- [ ] HBM.HUBMESH Hub mesh / production clock integration · HBM / DIE-HBM-60 · STRUCTURAL PASS, BLOCKED(kits) · hub mesh a3e6s, NE_v2, die TT +93.69, CA 773/773 (hold margin 0); next: plan event d44v (q3_edge single-column slot, pslice_c5 2.6-um macro channels, xload ctlx, hnx fused) -> kits -> real-view hold
 - [ ] HBM.CLK Native clock/source/PG composition · HBM / DIE-HBM-60 · BLOCKED · 21 station types planned3077ports pass consumer/S0parity;283plannedhomes,260sourcehomes(16mismatch),23missing; active-role/native pin/net/START joins remain unqualified
 - [ ] HBM.GRT Complete current die global routing · HBM / DIE-HBM-60 · BLOCKED · planned station/clock repairs and historical wrapped probes do not establish joint current signal+clock GRT → HBM.CLK → HBM.TILES
 - [ ] HBM.STA Complete current die real-view TT/FF · HBM / DIE-HBM-60 · BLOCKED · actual native child models and propagated production clock/parent timing incomplete → HBM.GRT → HBM.TILES
@@ -84,9 +84,9 @@ _Updated 2026-11-03 03:31 PST by COORD: count 56 (S81 26, HEAD 4, QC 5, KV 15, H
 - [ ] FLOW.COUNT Exact SIGNED+ownEQ / current-model counts · SIGNOFF-SPRINT · RUNNING · prior reported count50 differs from generated cache; neither is a fresh recount; e13a timingSIGNED waits ownEQ; EX70 HG-only child closure does not release parent
 
 ## INFRA · Merge, hosts, disks
-- [ ] INFRA.MERGE Publish clean gated source/tool trains · ROOT · RUNNING · confirmedmain051340895; pending compoundKVdb76, tokene197, SHIFT4034, PSlice96b and scoped helper followups; SCdefault-mode sinkchangeHELD → OWNER.SOURCE
+- [ ] INFRA.MERGE Publish clean gated source/tool trains · ROOT-MERGE-24 · RUNNING · main 48c37eca7d3 (F5 QC red/HBM POR/TOK-QW-4/KV/S81 lnland/TOK-DS-4, F6 HEAD headgate, F7 TOK-HBM d44u); next: kw-fix-3-s81pf 4a2dae0f548, kw-fix-2 d483825fd6e (class R), die-kv-62-stations 7bbad22d032; FLOW-24 candidate RSZ-3006/RSZ-0074 286030c4f4
 - [ ] INFRA.REVIEW Release concrete reviewed next steps · ROOT · RUNNING · retainedCTSfix/retry, QCnativeclockprefix, T41witness, NLcorrectedprobe, ZHPLACE and compactTnodeGEN; actualLOOK/source/reset/count scope before physical dispatch
-- [ ] INFRA.DISK CRITICAL intel1 31 GB / epyc2 37 GB free (ot-run REFUSED) -> PRUNE-1101F intel1 + PRUNE-1101E epyc2; class fix: hardlinked source-follow snapshots + one worktree per die → KIT-WAVE-15 · COORD · RUNNING
+- [ ] INFRA.DISK Scratch headroom · PRUNE-1103A · RUNNING · 04:3x free: intel2 251 GB (93%, was 63 GB 04:0x; released kit attempts + canary sources, Codex dirs MOVED to epyc2 root), intel1 207 GB (95%), epyc2 scratch2 324 GB; epyc2 root 1.3 TB (keep >=500); target >=300 each
 - [ ] INFRA.LOAD Queue/build turnaround · KITS_FLOW / TOK · RUNNING · onlyepyc2/intel1/intel2 active; conserve progressing jobs, no duplicate proof/build; whole-hierarchy OOM and serial simulation are real schedule risks
 
 ## OWNER · Explicit contract decisions
