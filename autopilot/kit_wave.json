@@ -1289,7 +1289,14 @@
     "hd_spn_wshim_tx@1",
     "hd_spn_wshim_tx@2",
     "hd_turn_b@2",
-    "hd_lep0N@2"
+    "hd_lep0N@2",
+    "hd_st_str@3",
+    "hd_st_n3_transit@4",
+    "hd_st_n3_turn@4",
+    "hd_spn_eshim_tx@3",
+    "hd_spn@1",
+    "hd_turn_a@1",
+    "hd_spn_end@1"
    ],
    "pilot_max": 2,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -1351,7 +1358,14 @@
     "hd_st_n3_turn@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
     "hd_st_str@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
     "hd_turn_b@2": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
-    "hd_lep0N@2": "claude/dh56-lep-1103@82eacd7eac ot_s81hd_lep_pair.lef M6/M7 OBS (PDN-0006 class C); macro LEF sha ad47cc153670 changes"
+    "hd_lep0N@2": "claude/dh56-lep-1103@82eacd7eac ot_s81hd_lep_pair.lef M6/M7 OBS (PDN-0006 class C); macro LEF sha ad47cc153670 changes",
+    "hd_st_str@3": "tapbal root-cause 6bd4a7b2e51 + flowfix 1af320e0861 merged main 88f2e7ecac1 (COORD 12:40) = HEAD wave src kw-fix-4-fl-head2 @e20aedb65fe; DIE-HEAD-58 batch on l48rf (KW-FIX-4 13:2x)",
+    "hd_st_n3_transit@4": "tapbal root-cause 6bd4a7b2e51 + flowfix 1af320e0861 merged main 88f2e7ecac1 (COORD 12:40) = HEAD wave src kw-fix-4-fl-head2 @e20aedb65fe; DIE-HEAD-58 batch on l48rf (KW-FIX-4 13:2x)",
+    "hd_st_n3_turn@4": "tapbal root-cause 6bd4a7b2e51 + flowfix 1af320e0861 merged main 88f2e7ecac1 (COORD 12:40) = HEAD wave src kw-fix-4-fl-head2 @e20aedb65fe; DIE-HEAD-58 batch on l48rf (KW-FIX-4 13:2x)",
+    "hd_spn_eshim_tx@3": "tapbal root-cause 6bd4a7b2e51 + flowfix 1af320e0861 merged main 88f2e7ecac1 (COORD 12:40) = HEAD wave src kw-fix-4-fl-head2 @e20aedb65fe; DIE-HEAD-58 batch on l48rf (KW-FIX-4 13:2x)",
+    "hd_spn@1": "tapbal root-cause 6bd4a7b2e51 + flowfix 1af320e0861 merged main 88f2e7ecac1 (COORD 12:40) = HEAD wave src kw-fix-4-fl-head2 @e20aedb65fe; DIE-HEAD-58 batch on l48rf (KW-FIX-4 13:2x)",
+    "hd_turn_a@1": "DIE-HEAD-58 12:0x release hd_spn*/hd_turn_* on l48rf (prepared l48rf plan + src fl-head2 e20aedb65fe); KW-FIX-4 13:2x",
+    "hd_spn_end@1": "DIE-HEAD-58 12:0x release hd_spn*/hd_turn_* on l48rf (prepared l48rf plan + src fl-head2 e20aedb65fe); KW-FIX-4 13:2x"
    },
    "gen_hosts": [
     "epyc4",
