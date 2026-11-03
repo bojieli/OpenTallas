@@ -10904,3 +10904,4 @@ FAILED [AUTOPILOT 223beb9adad9] 2026-11-03 12:20:57 PST AUTOPILOT -> KIT-WAVE-1:
   - Checks: G0C 0 new ERROR, plan_geom new FAIL 0. Count 84 designs, 8/8 signed records MATCH.
   - KW-FIX-4 released the 2 holds.
   - Helpers live: 2 (RTL, SPLIT).
+- 2026-11-03 12:43 PST RESULT [KW-FIX-4 CANARY u-* tag b62343715e6 -> COORD] 5/5 dies CANARY_REGRESSION NO-REGRESSION vs baseline (runs flow-canary/runs/*_b62343715_1103_110136_836128): qwen_compute, s81_head, s81, qwen_kvsys, hbm. s81 + s81_head canary designs stop at the post-CTS insertion gate (FAIL_POSTCTS) exactly like their baselines (not a regression; kw-fix-4-flowfix@e950490ab6c makes the pinreg band ADVISORY, APPROVED 12:40).
