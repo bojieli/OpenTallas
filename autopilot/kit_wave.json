@@ -175,8 +175,6 @@
     "qkd_hr_core_queue": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
     "qkd_hr_ingest_eng": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
     "qkd_hr_core_guard": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
-    "kv3_pv": "DIE-KV-64 class A re-formed (0832eb14fc5 merged f31a5bdcd70): WAIT source-follow activation of f31a5bdcd705, then KW-FIX-4 drops this hold (rows pre-released in retry)",
-    "kv3_pv_v*": "DIE-KV-64 class A re-formed (0832eb14fc5 merged f31a5bdcd70): WAIT source-follow activation of f31a5bdcd705, then KW-FIX-4 drops this hold (rows pre-released in retry)",
     "kv3_hg_v1": "RE-FORM (OWNER TWO-STRIKES, KW-FIX-4 08:4x): a1/a2/a3 FAIL place PLAN; release on a DIE-KV-64 RE-FORM post"
    },
    "work_root": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/kit-wave",
@@ -1755,7 +1753,7 @@
     "ot_hbm_idx_score_hcol_h1@1"
    ],
    "pilot_max": 2,
-   "owner_lane": "DIE-HBM-60",
+   "owner_lane": "DIE-HBM-61",
    "pilot_mode": "queue",
    "queue_src": "claude/kit-wave-15-hbmtaps-rfh-1102@53d3ca14368",
    "hold_items": {
