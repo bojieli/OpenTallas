@@ -1,0 +1,129 @@
+"""Physical instance paths of a bound kit's placed macros (KW-FIX-1/S81PF 11-02, default on).
+
+bind.py flattens each plan content into the bound partition module: the as-built leaf `<root>.u_r0.u_bn0` becomes the
+bound instance `u_u_r0_u_bn0` (comment `// as-built <path>` above it), and the kit wrapper instantiates the bound module
+as `u_bound`.  A plan hard core / macro content still names its plan path (`u_r0.u_bn0`, `u_lf.u_ve.u_m`), so the kit
+placed macros by names that do not exist in the kit RTL (KIT_PREFLIGHT macro_instances, 42 S81 kit-wave items).
+
+This module derives the bound path of each such macro from the kit's own bound RTL and declares it as the existing
+kit-only physical identity (physical_inst / physical_master, gen_phys.content_physical_identity) in a projected copy
+of the plan.  The plan of record, logical identities, geometry, pins, clocks and cycles are unchanged.  A macro that
+does not map exactly (no unique content root, or a different module at the full path) keeps its plan name, so the
+preflight still reports it.
+"""
+import copy
+import json
+import re
+from pathlib import Path
+
+SCHEMA = "opentallas.die_plan.bound_macro_paths.v1"
+RECEIPT = "bound_macro_paths.json"
+_ASBUILT = re.compile(r"(?m)^[ \t]*// as-built ([^\s]+)[ \t]*\n[ \t]*(\w+)(?:[ \t]*#\(.*?\))?[ \t]+(\w+)[ \t]*\(", re.S)
+
+
+def asbuilt_map(bound_text):
+    """{as-built hierarchical path: (bound instance name, module)} from the bind's `// as-built` comments."""
+    out = {}
+    for m in _ASBUILT.finditer(bound_text):
+        out.setdefault(m.group(1), (m.group(3), m.group(2)))
+    return out
+
+
+def _macro_entries(t):
+    """plan entries the kit places by instance name: hard_cores[] with a lef, contents[] with a lef (not a core)."""
+    cores = [c for c in t.get("hard_cores", []) or [] if c.get("lef")]
+    names = {c["inst"] for c in t.get("hard_cores", []) or []}
+    return cores + [c for c in t.get("contents", []) or [] if c.get("lef") and c["inst"] not in names]
+
+
+def resolve(t, bound_text):
+    """[{inst, physical_inst, physical_master, asbuilt}] for the plan type t's placed macros that carry no physical
+    identity and whose plan path maps to the bound netlist.  A content root (plan content inst -> as-built prefix) is
+    accepted only when every mapped macro under it agrees on one prefix."""
+    ab = asbuilt_map(bound_text)
+    if not ab:
+        return []
+    todo = [c for c in _macro_entries(t)
+            if "physical_inst" not in c and "physical_master" not in c and not c["inst"].startswith("u_bound.")
+            and "." in c["inst"]]
+    groups = {}
+    for c in todo:
+        head, rest = c["inst"].split(".", 1)
+        groups.setdefault(head, []).append((c, rest.split(".")))
+    rows = []
+    for head, members in sorted(groups.items()):
+        # prefix candidates per macro: an as-built path ending in a leading run of its plan components below the root
+        common = None
+        for c, rest in members:
+            cand = set()
+            for j in range(len(rest), 0, -1):
+                tail = "." + ".".join(rest[:j])
+                cand |= {a[:-len(tail)] for a in ab if a.endswith(tail) and len(a) > len(tail)}
+            if cand:                               # a macro with no as-built match stays unmapped, never vetoes
+                common = cand if common is None else common & cand
+        if not common or len(common) != 1:
+            continue
+        root = next(iter(common))
+        for c, rest in members:
+            for j in range(len(rest), 0, -1):
+                hit = ab.get(root + "." + ".".join(rest[:j]))
+                if hit is None:
+                    continue
+                inst, mod = hit
+                if j == len(rest) and mod != c.get("module"):
+                    hit = None                     # same path, different module: not this macro
+                break
+            if hit is None:
+                continue
+            phys = "u_bound." + inst + ("." + ".".join(rest[j:]) if j < len(rest) else "")
+            rows.append(dict(inst=c["inst"], physical_inst=phys, physical_master=c["module"],
+                             asbuilt=root + "." + ".".join(rest[:j])))
+    return rows
+
+
+def _bound_file(filelist):
+    kj = Path(filelist).with_name("kit_rtl.json")
+    if not kj.is_file():
+        return None
+    bmod = json.loads(kj.read_text()).get("bound_module")
+    if not bmod:
+        return None
+    files = [Path(x) for x in Path(filelist).read_text().split() if x and not x.startswith(("+", "-"))]
+    return next((f for f in files if f.name == f"{bmod}.sv" and f.is_file()), None)
+
+
+def project(raw, kit_rtl):
+    """(plan copy with the derived physical identities, {type: rows}); raw itself when nothing maps."""
+    result, receipts = raw, {}
+    for tn, fl in sorted((kit_rtl or {}).items()):
+        t = raw["partition_types"].get(tn)
+        bf = _bound_file(fl) if t else None
+        if bf is None:
+            continue
+        rows = resolve(t, bf.read_text(errors="replace"))
+        if not rows:
+            continue
+        if result is raw:
+            result = copy.deepcopy(raw)
+        by = {r["inst"]: r for r in rows}
+        nt = result["partition_types"][tn]
+        for c in nt.get("hard_cores", []) + nt.get("contents", []):
+            r = by.get(c["inst"])
+            if r and c.get("lef") and "physical_inst" not in c:
+                c["physical_inst"], c["physical_master"] = r["physical_inst"], r["physical_master"]
+        receipts[tn] = dict(schema=SCHEMA, type=tn, bound_rtl=str(bf), rows=rows,
+                            rule="plan macro path -> bound netlist path from the bind's as-built comments; "
+                                 "logical identity, geometry, pins and clocks unchanged")
+    return result, receipts
+
+
+def overlay(kd, entries):
+    """kit_contract._plan_contents helper: add {physical_inst: entry} for the kit's receipt rows (no-op without one)."""
+    p = Path(kd) / RECEIPT
+    if not p.is_file():
+        return entries
+    for r in json.loads(p.read_text()).get("rows", []):
+        e = entries.get(r["inst"])
+        if e is not None and r["physical_inst"] not in entries:
+            entries[r["physical_inst"]] = dict(e, inst=r["physical_inst"], module=r["physical_master"])
+    return entries
