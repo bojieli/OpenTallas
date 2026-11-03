@@ -1,0 +1,3 @@
+# FLOW-23 (flow/tool lane; successor of FLOW-22, which died ~19:5x waiting for the hold0 merge before cutting the tag)
+- 2026-11-02 22:26 PST CLAIM [FLOW-23] items: (1) after ROOT-MERGE-23 lands claude/flow-22-hold0-1102@091882a57: per-die flow tags flow-20261102-r-* on canary NO-REG; kit_wave --hold-ff-margin 0 all dies; (2) resubmit s81_cl canary (hung 44 h, stopped by COORD 19:5x) on the new tag; (3) QC G0C residual 9/119 by class, flow-side fixes; (4) thread caps (epyc2 load 273/128). Branch claude/flow-23-1102.
+- 2026-11-02 22:26 PST DONE [FLOW-23] kit_wave.json s81 + qwen_compute --hold-ff-margin 10 -> 0 (coord 218d6e194); KV/HEAD already 0; HBM has no gen_args (gen_core_kit_hbm default becomes 0 with the FLOW-22 merge).
