@@ -1108,3 +1108,68 @@ def test_face_lockup_latch_polarity_clock_and_logic_mutants():
         .replace("endmodule", "  AND2x2_ASAP7_75t_R g7 (.A(_0_), .B(a[1]), .Y(_7_));\nendmodule")
     v, f = fails(cl)
     assert v == "FAIL" and f and "driven by AND2x2" in f[0], f
+
+
+# ---- DIE-S81-51/SPARE 11-03: spare plan bits of narrow buses (KW-FIX-4 'dropped' / 'land_slot' class) -------------
+NET_LAND_SPARE = r"""
+module top(ck, e, x, o, s);
+  input ck; input e; input [1:0] x; output o; output [1:0] s;
+  wire g0; wire g1; wire q0; wire q1; wire _0_; wire z; wire g;
+  ICGx1_ASAP7_75t_R u_cg0 (.CLK(ck), .ENA(e), .SE(1'b0), .GCLK(g0));
+  ICGx1_ASAP7_75t_R u_cg1 (.CLK(ck), .ENA(e), .SE(1'b0), .GCLK(g1));
+  DFFHQNx1_ASAP7_75t_R s0 (.CLK(g0), .D(x[0]), .QN(q0));
+  DFFHQNx1_ASAP7_75t_R s1 (.CLK(g1), .D(x[0]), .QN(q1));
+  DFFHQNx1_ASAP7_75t_R \u_bout_o.q$_DFF_P_ (.CLK(ck), .D(q0), .QN(_0_));
+  INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(o));
+  TIELOx1_ASAP7_75t_R _4_ (.L(z));
+  BUFx2_ASAP7_75t_R _6_ (.A(z), .Y(s[0]));
+  BUFx2_ASAP7_75t_R _7_ (.A(z), .Y(s[1]));
+endmodule
+"""
+
+
+def test_narrow_input_spare_bit_dead_declared_pass():
+    """narrow plan input: the spare bit a[1] has no load in the kit-rtl wrapper -> declared dead -> PASS."""
+    dropped = NET_OK.replace(".D(a[1])", ".D(q[0])")
+    assert face_guard.guard(dropped)["fail_counts"] == {"dropped": 1}
+    r = face_guard.guard(dropped, dead=["a[1]"])
+    assert r["verdict"] == "PASS" and r["dead_declared"] == ["a[1]"], r
+
+
+def test_narrow_landing_ft_spare_bits_dead_and_spare_out_pass():
+    """narrow ft slot on a declared LANDING bus x (D 2): spare _i bit x[1] unread (dead), spare _o bits s tied 0
+    (spare_out) -> PASS; undeclared it is the KW-FIX-4 land_slot class '0 loads on x[1], declared D 2'."""
+    r = face_guard.guard(NET_LAND_SPARE, "top", skip_re=SKIP_LAND, land={"x": 2})
+    assert r["verdict"] == "FAIL" and "land_slot" in r["fail_counts"], r
+    r = face_guard.guard(NET_LAND_SPARE, "top", skip_re=SKIP_LAND, land={"x": 2}, dead=["x[1]"],
+                         spare=["s[0]", "s[1]"])
+    assert r["verdict"] == "PASS" and r["dead_declared"] == ["x[1]"] and r["land_slot_bits"] == 1, r.get("fails")
+
+
+@pytest.mark.parametrize("mut", [
+    "  AND2x2_ASAP7_75t_R _9_ (.A(x[1]), .B(q0), .Y(g));\n",                  # spare bit wired into logic
+    "  DFFHQNx1_ASAP7_75t_R s9 (.CLK(ck), .D(x[1]), .QN(g));\n",              # spare bit into a (station) flop
+])
+def test_declared_dead_spare_bit_with_a_load_fails(mut):
+    """a declared dead spare bit that still loads anything FAILs class dead (never a silent pass)."""
+    net = NET_LAND_SPARE.replace("endmodule", mut + "endmodule")
+    r = face_guard.guard(net, "top", skip_re=SKIP_LAND, land={"x": 2}, dead=["x[1]"], spare=["s[0]", "s[1]"])
+    assert r["verdict"] == "FAIL" and r["fail_counts"].get("dead") == 1 and r["dead_declared"] == [], r
+    dropped = NET_OK.replace(".D(a[1])", ".D(q[0])").replace("endmodule", mut.replace("x[1]", "a[1]") + "endmodule")
+    r = face_guard.guard(dropped, dead=["a[1]"])
+    assert r["verdict"] == "FAIL" and r["fail_counts"].get("dead") == 1, r
+
+
+def test_main_reads_generated_dead_inputs_beside_pins(tmp_path):
+    """face_guard CLI (run_kit.sh) reads the generated kit dead_inputs.json / spare_out.json beside pins.json."""
+    (tmp_path / "net.v").write_text(NET_OK.replace(".D(a[1])", ".D(q[0])"))
+    (tmp_path / "pins.json").write_text("[]")
+    fg = tmp_path / "fg.json"
+    assert face_guard.main([str(tmp_path / "net.v"), "--pins", str(tmp_path / "pins.json"), "--out", str(fg)]) != 0
+    (tmp_path / "dead_inputs.json").write_text(json.dumps(dict(
+        schema=face_guard.DEAD_SCHEMA, bits=["a[1]"],
+        proof=dict(verdict="PASS", method="bind.py kit-rtl: plan bits beyond the bound payload width are not "
+                   "connected in the generated wrapper", receipt=dict(wrapper="w.sv", sha256="0" * 64,
+                                                                       narrow_buses=[dict(port="a", plan=2, bound=1)])))))
+    assert face_guard.main([str(tmp_path / "net.v"), "--pins", str(tmp_path / "pins.json"), "--out", str(fg)]) == 0
+    assert json.loads(fg.read_text())["dead_declared"] == ["a[1]"]

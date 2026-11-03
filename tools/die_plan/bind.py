@@ -4732,6 +4732,26 @@ def kit_native_glue(tn, fl, out):
     return list(fl) + add, [p.stem for p in add]
 
 
+KIT_DEAD_METHOD = ("bind.py kit-rtl: plan bits beyond the bound payload width are not connected in the generated "
+                   "wrapper")
+_KIT_LAND_INST = re.compile(r"\b(ot_dp_clk_landing\w*)\s*(?:#\s*\((?:[^()]|\([^()]*\))*\)\s*)?(u_\w+)\s*\((.*?)\)\s*;", re.S)
+_KIT_LAND_D = re.compile(r"\.d\s*\(((?:[^()]|\([^()]*\))*)\)")
+
+
+def kit_landed_ports(btxt):
+    """DIE-S81-51/SPARE 11-03: identifiers read by the .d of a forwarded-clock landing ring (ot_dp_clk_landing*) in the
+    bound module text, plus <bus> of every ring instance named u_cland_<bus> -- the buses gen_phys declares as landing
+    (land_slots.json).  Over-approximate on purpose: a landed bus only loses the spare station chain."""
+    out = set()
+    for m in _KIT_LAND_INST.finditer(btxt):
+        if m.group(2).startswith("u_cland_"):
+            out.add(m.group(2)[len("u_cland_"):])
+        d = _KIT_LAND_D.search(m.group(3))
+        if d:
+            out |= set(re.findall(r"\b[A-Za-z_]\w*\b", re.sub(r"\[[^\]]*\]", "", d.group(1))))
+    return out
+
+
 def cmd_kit_rtl(a):
     """bind.py kit-rtl PLAN --out BIND_OUT --type T [--variant V] [--kit DIR]  (COORD 18:04 G3 KIT RTL OWNERSHIP)
     The G3 kit RTL of plan partition type T = the BOUND partition module (bind.py output: as-built leaves, boundary
@@ -4843,12 +4863,20 @@ def cmd_kit_rtl(a):
             bwd = bmap[n][1] - 1 if ep else bmap[n][1]
             if bwd < Wd:
                 spare_in[n] = (bwd, Wd)
-    spare_pass = []
+    # DIE-S81-51/SPARE 11-03 (KW-FIX-4 face_guard class land_slot): the _i of an ft slot that feeds a forwarded-clock
+    # landing ring in the bound module is a declared LANDING bus (gen_phys land_slots.json: D ICG slot flops per bit).
+    # Its spare bits never reach the ring, so a station chain there reads as 1 load against D: they stay unread
+    # (declared dead below) and the _o spare bits stay tied 0 (spare_out_bits).  Other ft slots keep the chain.
+    landed = kit_landed_ports(btxt)
+    spare_pass, spare_landed = [], []
     for sl in t.get("ft_slots", []):
         ni, no = gen_rtl.sv_id(sl["name"] + "_i"), gen_rtl.sv_id(sl["name"] + "_o")
         k = max(1, int(sl.get("stations", 1)))
         so = next((x for x in spare if x["port"] == no), None)
         if ni not in spare_in or so is None:
+            continue
+        if ni in landed:
+            spare_landed.append(dict(slot=sl["name"], bits=spare_in[ni][1] - spare_in[ni][0]))
             continue
         lo, hi = spare_in[ni]
         if hi - lo != so["bits"]:
@@ -4873,6 +4901,12 @@ def cmd_kit_rtl(a):
         body[i:i + 1] = chain
         spare.remove(so)
         spare_pass.append(dict(slot=sl["name"], bits=wd, stations=k))
+    # DIE-S81-51/SPARE 11-03: the spare bits of a NARROW plan input (bound port narrower than the plan bus) that no
+    # spare station chain reads are structurally unconnected in this wrapper: declared proven-dead (kit dead_inputs.json
+    # via gen_phys, face_guard dead_declared = 0 loads + 0 drivers, any load still FAILs class dead).
+    chained = {gen_rtl.sv_id(x["slot"] + "_i") for x in spare_pass}
+    dead_in = [f"{x['port']}[{i}]" for x in narrow if x["port"] not in chained and bmap[x["port"]][0] == "input"
+               for i in range(x["bound"], x["plan"])]
     extra = []
     for d, w, n in bports:
         if n in seen:
@@ -4912,6 +4946,12 @@ def cmd_kit_rtl(a):
                                              enumerate(ports)) + "\n);\n" + "\n".join(body) + "\n" +
            f"    {bmod} {pset + ' ' if pset else ''}u_bound (\n        " + ",\n        ".join(conns) + "\n    );\nendmodule\n`default_nettype wire\n")
     (kd / f"{mod}.sv").write_text(txt)
+    dead_doc = None
+    if dead_in:
+        dead_doc = dict(schema="opentallas.kit_dead_inputs.v1", bits=dead_in, proof=dict(
+            verdict="PASS", method=KIT_DEAD_METHOD,
+            receipt=dict(wrapper=str(kd / f"{mod}.sv"), sha256=hashlib.sha256(txt.encode()).hexdigest(),
+                         narrow_buses=[x for x in narrow if bmap[x["port"]][0] == "input"])))
     if kit_core_clock_rows:
         (kd / "kit_core_clocks.json").write_text(json.dumps(dict(rows=kit_core_clock_rows, cycles_changed=0), indent=1) + "\n")
     # leaf sources: the as-built RTL closure of the bound module's leaves (the same index + closure the verify lint uses)
@@ -4963,7 +5003,8 @@ def cmd_kit_rtl(a):
     bbs = {str(Path(m["bb"])): m["model"] for m in macros.values() if m.get("bb") and m.get("model")}
     (kd / "kit_rtl_sim.f").write_text("\n".join(bbs.get(str(x), str(x)) for x in fl) + "\n")
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
-               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, narrow_buses=narrow,
+               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, spare_ft_landed=spare_landed, narrow_buses=narrow,
+               **({"dead_inputs": dead_doc} if dead_doc else {}),
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())), unindexed_sources=dict(sorted(widened.items())), native_station_geometry=native_geometry,

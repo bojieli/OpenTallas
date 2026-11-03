@@ -882,6 +882,33 @@ def kit_spare_out_bits(kit_rtl_filelist):
     return out
 
 
+def kit_dead_inputs(kit_rtl_filelist):
+    """DIE-S81-51/SPARE 11-03 (COORD 09:3x dead-input declaration form): the kit dead_inputs.json document the bind's
+    kit-rtl step wrote into kit_rtl.json "dead_inputs" (the narrow plan input bits beyond the bound payload width that
+    the generated wrapper leaves unconnected), or None.  Fail-closed: the receipt wrapper must still hash to its sha256
+    and every bit must lie in a declared narrow input range [bound, plan) -- face_guard then proves 0 loads/0 drivers."""
+    import gen_rtl
+    from face_guard import dead_input_list
+    kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
+    if not kj.is_file():
+        return None
+    doc = json.loads(kj.read_text()).get("dead_inputs")
+    if not doc:
+        return None
+    try:
+        bits = dead_input_list(doc)
+    except ValueError as exc:
+        raise gen_rtl.GenError(f"{kj}: {exc}") from exc
+    rc = doc["proof"]["receipt"]
+    wf = Path(rc["wrapper"])
+    if not wf.is_file() or _hashlib.sha256(wf.read_bytes()).hexdigest() != rc["sha256"]:
+        raise gen_rtl.GenError(f"{kj}: dead_inputs receipt wrapper {wf} missing or sha256 changed")
+    ok = {f"{x['port']}[{i}]" for x in rc.get("narrow_buses") or [] for i in range(int(x["bound"]), int(x["plan"]))}
+    if not set(bits) <= ok:
+        raise gen_rtl.GenError(f"{kj}: dead_inputs bits outside the narrow input ranges: {sorted(set(bits) - ok)[:5]}")
+    return doc
+
+
 # S81-SERDES-PHY-3 10-31 (opt-in pads[].macro_pin {inst, pin}): an AS-BUILT type pad that is wired straight to one pin
 # of a placed hard part (physical_parts[].physical_inst / hard_cores[] / contents[] macro view: the S81 PMA line side
 # io_pma_rx/tx/tck) is the same line side as a bound bump: no face register, its top pin ON the macro pin
@@ -2730,7 +2757,8 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
-                   cland_pinslot=(), spare_out=(), private_clock_mesh=None, region_guide=None, dpl_diamond=False):
+                   cland_pinslot=(), spare_out=(), private_clock_mesh=None, region_guide=None, dpl_diamond=False,
+                   dead_inputs=None):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -3344,6 +3372,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if spare_out:                               # DIE-S81-46: declared spare-out bits (kit_rtl.json), face_guard
         from face_guard import SPARE_SCHEMA
         (kd / "spare_out.json").write_text(json.dumps(dict(schema=SPARE_SCHEMA, bits=list(spare_out)), indent=1) + "\n")
+    if dead_inputs:                             # DIE-S81-51/SPARE: narrow plan input bits kit-rtl leaves unconnected
+        (kd / "dead_inputs.json").write_text(json.dumps(dead_inputs, indent=1) + "\n")
     declared_straps = logical_strap_names(t)
     if declared_straps:
         # Logical declaration is required by synthesis/LEC gates even before physical strap sites are planned.
@@ -3970,6 +4000,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                    cland_pinslot=tuple(cland_pinslot or ()),
                                    region_guide=(region_guide or {}).get(tn),
                                    spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else (),
+                                   dead_inputs=kit_dead_inputs(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None,
                                    private_clock_mesh=(private_clock_mesh or {}).get(tn)))
         if tn in macro_paths:
             (Path(kits[-1]) / BMP.RECEIPT).write_text(json.dumps(macro_paths[tn], indent=1) + "\n")
