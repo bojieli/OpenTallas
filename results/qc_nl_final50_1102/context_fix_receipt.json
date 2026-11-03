@@ -1,0 +1,23 @@
+{
+  "scope": "STAGED ONLY, NO RETRY LAUNCH. Trueinput=retained15:02postMMfinalGRT. ExistingnormalMM APIalias4_cts.sdc only, noCTSidentity/proof/geometrycredit. No genericMMhelperchange.",
+  "source": "/srv/opentallas-scratch2/claude/codex-qc-nl-clock50-1504/kit/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg1r1/base/source_snapshot/final_grt.sdc",
+  "source_role": "actual postMMGRT snapshot",
+  "source_sha256": "70adc4066bfb874e684837a86b34c0ce90cf3ee90545077a708348c66aa37d78",
+  "alias": "/srv/opentallas-scratch2/claude/codex-qc-nl-clock50-mmrole-1715/kit/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg1r1/base/source_snapshot/4_cts.sdc",
+  "alias_role": "existing normal GRT MM dispatch/RC role",
+  "alias_sha256": "70adc4066bfb874e684837a86b34c0ce90cf3ee90545077a708348c66aa37d78",
+  "same_bytes": true,
+  "repair_margin": {
+    "failed_wrapper_default": 15,
+    "original_runner_configured": 10,
+    "next_wrapper": 10,
+    "hold_uncertainty": 25
+  },
+  "old_failure": "/srv/opentallas-scratch2/claude/codex-qc-nl-clock50-1504/final50.log",
+  "changes": [
+    "same-byte/hash SDC APIalias",
+    "normal configured HOLD_SLACK_MARGIN10 restored",
+    "pre-GRT actualMMrole guard"
+  ],
+  "new_physical_stages": "NONE; rootmustapproveONEnewGRTcapacityscope beforelaunch"
+}
