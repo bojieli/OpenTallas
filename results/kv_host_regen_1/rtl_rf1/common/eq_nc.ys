@@ -1,12 +1,12 @@
-read_verilog -sv old.sv
-hierarchy -top qkd_kv_hbm_elastic_front_mc
+read_verilog -sv old_nc.sv
+hierarchy -top qkd_kv_hbm_elastic_front_mc_nc
 proc; setattr -mod -unset keep_hierarchy *; flatten; memory -nomap; memory_map; opt_clean; async2sync
-rename qkd_kv_hbm_elastic_front_mc gold
+rename qkd_kv_hbm_elastic_front_mc_nc gold
 design -stash gold
-read_verilog -sv new.sv
-hierarchy -top qkd_kv_hbm_elastic_front_mc
+read_verilog -sv new_nc.sv
+hierarchy -top qkd_kv_hbm_elastic_front_mc_nc
 proc; setattr -mod -unset keep_hierarchy *; flatten; memory -nomap; memory_map; opt_clean; async2sync
-rename qkd_kv_hbm_elastic_front_mc gate
+rename qkd_kv_hbm_elastic_front_mc_nc gate
 design -stash gate
 design -copy-from gold -as gold gold
 design -copy-from gate -as gate gate
