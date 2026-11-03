@@ -1,0 +1,74 @@
+gold JSON Q aliases: 48 gate flops re-keyed to exact gold wire bits
+alias array: gate lr_q#t (176 b) -> gold lr_q (176 b, Q-net alias evidence 176); source memory layout (11, 16, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate lr_q#t (176 b) -> gold lr_q (176 b, Q-net alias evidence 176); source memory layout (11, 16, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate lb_q#t (64 b) -> gold lb_q (64 b, Q-net alias evidence 64); source memory layout (4, 16, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate lb_q#t (64 b) -> gold lb_q (64 b, Q-net alias evidence 64); source memory layout (4, 16, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+replica proposal: 90 generated-register relations (gold input support modulo copy indices)
+merged proposal: 0 of 4 gold-only registers share a matched register's next-state support
+register aliases: 0 same-name / register-output relations proposed
+explicit untrusted hints preseeded before discovery: 36 applied
+fsm: explicit untrusted hints seeded before discovery: 32 applied
+simulation refinement: 90 hypotheses refuted by concrete witnesses in 5 iterations
+==== hyp0
+======== ABC command line "&r /lecout/hyp0.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hyp0_swept.aig"
+[1;37m/lecout/hyp0[0m : i/o = 111842/     36  [1;36mand =     182[0m  [1;35mlev =    5[0m [1;35m(4.17)[0m  mem = 1.71 MB
+[1;37m/lecout/hyp0[0m : i/o = 111842/     36  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.71 MB
+SAT solver statistics:
+CO =       36  AND =        0  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/lecout/hyp0[0m : i/o = 111842/     36  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.71 MB
+
+correspondence round 0: 36 hypotheses, 0 failed (0 undecided) []
+sequential traces: 7624 registers, 4 constant, 2+48 cycles x 256 lanes
+==== hint0
+======== ABC command line "&r /lecout/hint0.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/hint0_swept.aig"
+[1;37m/lecout/hint0[0m : i/o = 108051/   3827  [1;36mand =  238473[0m  [1;35mlev = 1976[0m [1;35m(14.61)[0m  mem = 4.44 MB
+[1;37m/lecout/hint0[0m : i/o = 108051/   3827  [1;36mand =   31166[0m  [1;35mlev =  609[0m [1;35m(0.29)[0m  mem = 2.06 MB
+SAT solver statistics:
+CO =     3827  AND =    31166  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      2  (100.00 %)   Ave conf =  10001.5   Time =     1.36 sec ( 98.88 %)
+Total time =     1.38 sec
+[1;37m/lecout/hint0[0m : i/o = 108051/   3827  [1;36mand =   31166[0m  [1;35mlev =  609[0m [1;35m(0.29)[0m  mem = 2.06 MB
+
+==== hint0 single cones 892..892 (&cec -n -m conflicts x10)
+======== ABC command line "source /lecout/hint0_cones_892_892_x10-n-m.abc"
+Assuming the current network is a single-output miter.
+UNSAT =      1.  SAT =      0.   UNDEC =      0.  Trivial =      0.  Time =     0.94 sec
+
+==== hint0 single cones 1387..1387 (&cec -n -m conflicts x10)
+======== ABC command line "source /lecout/hint0_cones_1387_1387_x10-n-m.abc"
+Assuming the current network is a single-output miter.
+UNSAT =      1.  SAT =      0.   UNDEC =      0.  Trivial =      0.  Time =     0.90 sec
+
+hint refinement round 0: 3827 hypotheses, 0 failed []
+==== miter
+======== ABC command line "&r /lecout/miter.aig; &ps; &fraig -C 1000; &ps; &sat -a -z -v -C 10000; &ps; &w /lecout/miter_swept.aig"
+[1;37m/lecout/miter[0m : i/o = 108051/  28503  [1;36mand = 3513363[0m  [1;35mlev = 1976[0m [1;35m(705.11)[0m  mem =42.29 MB
+[1;37m/lecout/miter[0m : i/o = 108051/  28503  [1;36mand =   52429[0m  [1;35mlev =  610[0m [1;35m(8.88)[0m  mem = 2.68 MB
+SAT solver statistics:
+CO =    28503  AND =    52429  Conf = 10000  MinVar =  2000  MinCalls =   200
+Unsat calls    646  ( 99.54 %)   Ave conf =     47.4   Time =     1.24 sec ( 32.71 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      3  (  0.46 %)   Ave conf =  10001.7   Time =     2.51 sec ( 66.42 %)
+Total time =     3.78 sec
+[1;37m/lecout/miter[0m : i/o = 108051/  28503  [1;36mand =   30402[0m  [1;35mlev =  610[0m [1;35m(0.06)[0m  mem = 2.43 MB
+
+==== miter single cones 21376..21376 (&cec -n -m conflicts x10)
+======== ABC command line "source /lecout/miter_cones_21376_21376_x10-n-m.abc"
+Assuming the current network is a single-output miter.
+UNSAT =      1.  SAT =      0.   UNDEC =      0.  Trivial =      0.  Time =     0.80 sec
+
+==== miter single cones 21873..21873 (&cec -n -m conflicts x10)
+======== ABC command line "source /lecout/miter_cones_21873_21873_x10-n-m.abc"
+Assuming the current network is a single-output miter.
+UNSAT =      1.  SAT =      0.   UNDEC =      0.  Trivial =      0.  Time =     0.69 sec
+
+==== miter single cones 25568..25568 (&cec -n -m conflicts x10)
+======== ABC command line "source /lecout/miter_cones_25568_25568_x10-n-m.abc"
+Assuming the current network is a single-output miter.
+UNSAT =      1.  SAT =      0.   UNDEC =      0.  Trivial =      0.  Time =     0.77 sec
