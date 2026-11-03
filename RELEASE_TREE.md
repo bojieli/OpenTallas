@@ -33,7 +33,7 @@
 - [ ] HEAD.HOSTLEC Current routed HOST qualification · HEAD · WAITS · retained component136216EQ complete; newer routedb2 is a different subject and still needs its own proof+physical closure → HEAD.TILES
 - [ ] HEAD.SEAM Mesh sender/receiver timing contract · HEAD · BLOCKED · finite hold repair hits setup-versus-hold feasibility; any seam rebudget needs actual peer and parent TT/FF qualification, no constraint relaxation → HEAD.STA
 
-## DIE qwen_compute · QC · rev plan_qc52 + y-shrink 25643.52 (e326462580e, fits reticle) · collector_tree re-compose class owed · owner DIE-QC-66
+## DIE qwen_compute · QC · rev plan_qc52 + CA+1 (main); y-shrink 25643.52 APPROVED, NOT merged (conflict with CA+1, re-delta on 4b0a73deb5f pending) · owner DIE-QC-66
 - [ ] QC.BIND Strict native bind · QC / DIE-QC-65 · PASS · 119 types / 377 parts,0 errors; G0C completeness remains FAIL11
 - [ ] QC.CLK Native die clock implementation · QC / DIE-QC-65 · BLOCKED · 51596 planned cells / 10929 taps sourcegeometryPASS; native prefix is unexecuted, no parent PG/GRT/RC/STA or START-freeze credit → QC.CLOCKPREFIX → QC.TILES
 - [ ] QC.CLOCKPREFIX Bounded native clock import/access diagnostic · QC · WAITS · exact current homes/aliases reviewed; staged64GB8T geometry-only import, no legalization/GRT/STA; awaits root scoped release → INFRA.REVIEW

@@ -21,21 +21,21 @@
     "clock": "PASS",
     "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/src/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-kv88/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "intel1",
-   "src": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/src",
-   "src_sha": "54c3c7c9fe7af23ff4561611d44f45cf62601ede",
+   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-kv88",
+   "src_sha": "88f2e7ecac18d44f6bbd736a7d6cb6f89bd5eab8",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/asbuilt.json",
-    "note": "DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
-    "bind_out": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/bind"
+    "asbuilt": "/srv/opentallas-scratch2/claude/die-kv-64/pvrec/asbuilt.json",
+    "note": "KW-FIX-4 13:5x (DIE-KV-64 + COORD 12:40): main 88f2e7ecac1 (ROOT-MERGE-26 H15 incl claude/die-kv-64-pvbind-1103@62b62298941: 256 kv3_pv_pair native composites + plan_c pv_pair physical_inst + bind.py r8 composite alias) as wave src kw-fix-4-kv88; recipe pvrec/asbuilt.json + strict bind bind_pv (intel1, errors 0, 160 parts/2545 crossings/430554 bits/0 unbound). | DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
+    "bind_out": "/srv/opentallas-scratch2/claude/die-kv-64/bind_pv"
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/src/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+    "/srv/opentallas-scratch2/claude/wt/kw-fix-4-kv88/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -122,7 +122,19 @@
     "kv3_pv_v4@1",
     "kv3_pv_v6@1",
     "kv3_pv_v7@1",
-    "kv3_pv_v8@1"
+    "kv3_pv_v8@1",
+    "kv3_pv_v1n@1",
+    "kv3_pv_v3@2",
+    "kv3_pv_v5@2",
+    "kv3_pv_v6@2",
+    "kv3_pv_v7@2",
+    "kv3_pv_v8@2",
+    "kv3_pv_v12@2",
+    "kv3_hgi@2",
+    "kv3_hgi_v3@2",
+    "kv3_hgi_v4@2",
+    "kv3_hgi_v5@2",
+    "kv3_io_cor_v1@2"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -158,11 +170,11 @@
    "pilot_mode": "queue",
    "src_follow": {
     "enabled": true,
-    "root": "/srv/opentallas-scratch2/claude/source-follow",
-    "note": "DIE-KV-61 fresh ELAB+strict0 at 54c3c7c9f adopted (cached efa elab refused: group_r2c_native.sv changed). Fresh canonical efa actual ELAB+strict0 adopted; exact parser full/lib readset guard active on future snapshots, opaque parent BUILD reuse never grants child physical qualification.",
+    "root": "/srv/opentallas-scratch2/claude/source-follow-kv64",
+    "note": "KW-FIX-4 13:5x: follow rebases from the DIE-KV-64 pvrec recipe + bind_pv; fresh root source-follow-kv64 so no snapshot reuses a bind copied from the pre-pvrec 54c3 recipe (old root snapshots 88f2e7ecac18/4b0a73deb5f9 lack kv3_pv_pair map). | DIE-KV-61 fresh ELAB+strict0 at 54c3c7c9f adopted (cached efa elab refused: group_r2c_native.sv changed). Fresh canonical efa actual ELAB+strict0 adopted; exact parser full/lib readset guard active on future snapshots, opaque parent BUILD reuse never grants child physical qualification.",
     "snapshot_kind": "bind",
-    "snapshot_bind": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/bind",
-    "snapshot_asbuilt": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/asbuilt.json",
+    "snapshot_bind": "/srv/opentallas-scratch2/claude/die-kv-64/bind_pv",
+    "snapshot_asbuilt": "/srv/opentallas-scratch2/claude/die-kv-64/pvrec/asbuilt.json",
     "critical": true
    },
    "hold_items": {
@@ -175,12 +187,7 @@
     "qkd_hr_core_queue": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
     "qkd_hr_ingest_eng": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
     "qkd_hr_core_guard": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
-    "kv3_hg_v1": "RE-FORM (OWNER TWO-STRIKES, KW-FIX-4 08:4x): a1/a2/a3 FAIL place PLAN; release on a DIE-KV-64 RE-FORM post",
-    "kv3_pv_v2n": "KW-FIX-4 11:0x pilot first: kv3_pv_v1n pilot (new pv n-type class); v2n..v6n released on the pilot place PASS",
-    "kv3_pv_v3n": "KW-FIX-4 11:0x pilot first: kv3_pv_v1n pilot (new pv n-type class); v2n..v6n released on the pilot place PASS",
-    "kv3_pv_v4n": "KW-FIX-4 11:0x pilot first: kv3_pv_v1n pilot (new pv n-type class); v2n..v6n released on the pilot place PASS",
-    "kv3_pv_v5n": "KW-FIX-4 11:0x pilot first: kv3_pv_v1n pilot (new pv n-type class); v2n..v6n released on the pilot place PASS",
-    "kv3_pv_v6n": "KW-FIX-4 11:0x pilot first: kv3_pv_v1n pilot (new pv n-type class); v2n..v6n released on the pilot place PASS"
+    "kv3_hg_v1": "RE-FORM (OWNER TWO-STRIKES, KW-FIX-4 08:4x): a1/a2/a3 FAIL place PLAN; release on a DIE-KV-64 RE-FORM post"
    },
    "work_root": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/kit-wave",
    "retry_fix": {
@@ -197,16 +204,29 @@
     "kv3_hgi_v8@1": "e6#341b SIGNED (ss24 06:20) + KV-028 strap tie-in 5ab1e935464 + PDN class C 82eacd7eac/50e5dda3118, all in source-follow src 70d93014a8dd (active 08:26); DIE-KV-64 08:10 release; KW-FIX-4 08:4x",
     "kv3_hub_Eo@1": "e6#341b SIGNED (ss24 06:20) + KV-028 strap tie-in 5ab1e935464 + PDN class C 82eacd7eac/50e5dda3118, all in source-follow src 70d93014a8dd (active 08:26); DIE-KV-64 08:10 release; KW-FIX-4 08:4x (current attempt RUNNING on pre-fix src 54c3c7c9fe7: relaunches on a FAIL)",
     "kv3_hub_Wo@1": "e6#341b SIGNED (ss24 06:20) + KV-028 strap tie-in 5ab1e935464 + PDN class C 82eacd7eac/50e5dda3118, all in source-follow src 70d93014a8dd (active 08:26); DIE-KV-64 08:10 release; KW-FIX-4 08:4x (current attempt RUNNING on pre-fix src 54c3c7c9fe7: relaunches on a FAIL)",
-    "kv3_pv@1": "0832eb14fc5 RF-KV1 pv_pair#c9cb zero-build re-form (merged f31a5bdcd70, KV-040); OPERATOR-STOP 06:4x rows (0 strikes); hold kv3_pv/kv3_pv_v* dropped once source-follow activates f31a5bdcd705; KW-FIX-4 08:4x",
-    "kv3_pv_v1@1": "0832eb14fc5 RF-KV1 pv_pair#c9cb zero-build re-form (merged f31a5bdcd70, KV-040); OPERATOR-STOP 06:4x rows (0 strikes); hold kv3_pv/kv3_pv_v* dropped once source-follow activates f31a5bdcd705; KW-FIX-4 08:4x",
+    "kv3_pv@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "kv3_pv_v1@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
     "kv3_pv_v12@1": "0832eb14fc5 RF-KV1 pv_pair#c9cb zero-build re-form (merged f31a5bdcd70, KV-040); OPERATOR-STOP 06:4x rows (0 strikes); hold kv3_pv/kv3_pv_v* dropped once source-follow activates f31a5bdcd705; KW-FIX-4 08:4x",
-    "kv3_pv_v2@1": "0832eb14fc5 RF-KV1 pv_pair#c9cb zero-build re-form (merged f31a5bdcd70, KV-040); OPERATOR-STOP 06:4x rows (0 strikes); hold kv3_pv/kv3_pv_v* dropped once source-follow activates f31a5bdcd705; KW-FIX-4 08:4x",
+    "kv3_pv_v2@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
     "kv3_pv_v3@1": "0832eb14fc5 RF-KV1 pv_pair#c9cb zero-build re-form (merged f31a5bdcd70, KV-040); OPERATOR-STOP 06:4x rows (0 strikes); hold kv3_pv/kv3_pv_v* dropped once source-follow activates f31a5bdcd705; KW-FIX-4 08:4x",
-    "kv3_pv_v4@1": "0832eb14fc5 RF-KV1 pv_pair#c9cb zero-build re-form (merged f31a5bdcd70, KV-040); OPERATOR-STOP 06:4x rows (0 strikes); hold kv3_pv/kv3_pv_v* dropped once source-follow activates f31a5bdcd705; KW-FIX-4 08:4x",
+    "kv3_pv_v4@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
     "kv3_pv_v5@1": "0832eb14fc5 RF-KV1 pv_pair#c9cb zero-build re-form (merged f31a5bdcd70, KV-040); OPERATOR-STOP 06:4x rows (0 strikes); hold kv3_pv/kv3_pv_v* dropped once source-follow activates f31a5bdcd705; KW-FIX-4 08:4x",
     "kv3_pv_v6@1": "0832eb14fc5 RF-KV1 pv_pair#c9cb zero-build re-form (merged f31a5bdcd70, KV-040); OPERATOR-STOP 06:4x rows (0 strikes); hold kv3_pv/kv3_pv_v* dropped once source-follow activates f31a5bdcd705; KW-FIX-4 08:4x",
     "kv3_pv_v7@1": "0832eb14fc5 RF-KV1 pv_pair#c9cb zero-build re-form (merged f31a5bdcd70, KV-040); OPERATOR-STOP 06:4x rows (0 strikes); hold kv3_pv/kv3_pv_v* dropped once source-follow activates f31a5bdcd705; KW-FIX-4 08:4x",
-    "kv3_pv_v8@1": "0832eb14fc5 RF-KV1 pv_pair#c9cb zero-build re-form (merged f31a5bdcd70, KV-040); OPERATOR-STOP 06:4x rows (0 strikes); hold kv3_pv/kv3_pv_v* dropped once source-follow activates f31a5bdcd705; KW-FIX-4 08:4x"
+    "kv3_pv_v8@1": "0832eb14fc5 RF-KV1 pv_pair#c9cb zero-build re-form (merged f31a5bdcd70, KV-040); OPERATOR-STOP 06:4x rows (0 strikes); hold kv3_pv/kv3_pv_v* dropped once source-follow activates f31a5bdcd705; KW-FIX-4 08:4x",
+    "kv3_pv_v1n@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "kv3_pv_v3@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "kv3_pv_v5@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "kv3_pv_v6@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "kv3_pv_v7@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "kv3_pv_v8@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "kv3_pv_v12@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "kv3_hgi@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "kv3_hgi_v3@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "kv3_hgi_v4@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "kv3_hgi_v5@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "kv3_io_cor_v1@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x",
+    "__batch_kv64_pvbind": "16 rows (16 kv3_pv* + kv3_hgi/_v3/_v4/_v5 + kv3_io_cor_v1): DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x"
    },
    "only_items": [
     "kv3_astk",
