@@ -164,7 +164,7 @@ def test_multi_root_postcts_preserves_virtual_selector_and_all_roots(tmp_path):
     t = (tmp_path / "postcts_gate.tcl").read_text()
     assert "get_property $ot_pg_clock sources" in t
     assert "set_clock_latency -source $ot_pg_bound $ot_pg_virtual" in t
-    assert "set_propagated_clock [get_clocks {clk clk_cr_s clk_xk}]" in t
+    assert "set ot_pg_propagate [get_clocks {clk clk_cr_s clk_xk}]" in t   # postcts_gate 91538db4d1f anchor (RF-A 11-03)
     assert "foreach ot_rc [get_clocks {clk clk_cr_s clk_xk}]" in t
     assert "set_propagated_clock [get_clocks vclk]" not in t
 
@@ -178,3 +178,17 @@ def test_multi_root_postcts_rejects_missing_virtual_selector(tmp_path):
     mr = G.multi_root_contract("dsfd_cfifo_crs4", FULL, {"multi_root": True})
     with pytest.raises(AssertionError, match="virtual-clock selector changed"):
         G.multi_root_tcl_patches(tmp_path, mr)
+
+
+def test_multi_root_patch_follows_current_postcts_template(tmp_path):
+    """DIE-S81-51/RF-A 11-03: postcts_gate.tcl names clk in 'set ot_pg_propagate' (91538db4d1f); the multi-root patch
+    propagates every declared root there (bf_front_roots kit gen asserted on the old set_propagated_clock anchor)."""
+    repo = HERE.parents[4]
+    (tmp_path / "core_face_post_synth.tcl").write_text((HERE / "core_face_post_synth.tcl").read_text())
+    (tmp_path / "postcts_gate.tcl").write_text((repo / "tools/die_plan/postcts_gate.tcl").read_text())
+    (tmp_path / "corners.tcl").write_text(G.CORNERS_TCL)
+    mr = {"roots": [{"clock": "clk"}, {"clock": "clk_io_w"}], "domain_of_bus": {"c0": "io_w"}}
+    G.multi_root_tcl_patches(tmp_path, mr)
+    t = (tmp_path / "postcts_gate.tcl").read_text()
+    assert "set ot_pg_propagate [get_clocks {clk clk_io_w}]\n" in t
+    assert "set ot_pg_propagate [get_clocks clk]\n" not in t
