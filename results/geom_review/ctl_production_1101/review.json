@@ -1,0 +1,114 @@
+{
+  "schema": "opentallas.geom_review.v1",
+  "verdict": "PASS-COND for ONE PLACE only after independent LOOK",
+  "kit": "intel1:/srv/opentallas-scratch2/claude/codex-kv-pickup-ctl-2047/gen2/qkd_kvs_ctl__371.52x371.52",
+  "kit_hash": "70b282cb9335c021",
+  "scope": "geometry-only deterministic SRAM sites; same SYNTH/RTL/LEC/pins/SDC",
+  "outline_um": [
+    371.52,
+    371.52
+  ],
+  "mapped_macro_count": 6,
+  "macro_outline_um": [
+    52.296,
+    39.96
+  ],
+  "blocks": [
+    {
+      "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b0",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 103.68,
+      "y": 60.48,
+      "orient": "R0"
+    },
+    {
+      "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b1",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 216.0,
+      "y": 60.48,
+      "orient": "R0"
+    },
+    {
+      "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b0",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 103.68,
+      "y": 155.52,
+      "orient": "R0"
+    },
+    {
+      "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b1",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 216.0,
+      "y": 155.52,
+      "orient": "R0"
+    },
+    {
+      "inst": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b0",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 103.68,
+      "y": 250.56,
+      "orient": "R0"
+    },
+    {
+      "inst": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b1",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 216.0,
+      "y": 250.56,
+      "orient": "R0"
+    }
+  ],
+  "clock_entry": {
+    "bus": "ck",
+    "bit": null,
+    "layer": "M5",
+    "x": 185.736,
+    "y": 185.76,
+    "face": "interior",
+    "size": [
+      0.048,
+      0.48
+    ],
+    "clock": true
+  },
+  "reset_entry": {
+    "bus": "rst_n",
+    "bit": null,
+    "layer": "M5",
+    "x": 186.12,
+    "y": 185.76,
+    "face": "interior",
+    "size": [
+      0.024,
+      0.192
+    ],
+    "clock": false
+  },
+  "power_on_reset": {
+    "bus": "por_n",
+    "bit": null,
+    "layer": "M5",
+    "x": 209.544,
+    "y": 371.52,
+    "face": "N"
+  },
+  "macro_pair_center_max_L1_um": 302.40000000000003,
+  "core_area_um2": 131681.8944,
+  "macro_area_um2": 12538.48896,
+  "total_mapped_area_um2": 22531.31502,
+  "std_area_um2": 9992.826059999998,
+  "pins": 6849,
+  "actual_LEC": {
+    "compare_points": 46454,
+    "proved": 46454,
+    "differs": 0,
+    "undecided": 0
+  },
+  "source_mapped_sha256": "1a2aa0282fe330b941099e6e5656a3041c10dd1e1bf04edc317c53b1c72fd0f6",
+  "physical_OPEN": [
+    "ordinary cell placement/r2r and pin-reg reach",
+    "local clock sinks/tree and reset endpoints",
+    "PG connectivity/IR and actual placed density",
+    "ONE PLACE output review before any route/STA"
+  ],
+  "std_fill_of_core_minus_macro": 0.08387225481004347
+}

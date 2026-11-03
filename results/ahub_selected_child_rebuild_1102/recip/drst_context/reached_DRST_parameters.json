@@ -1,0 +1,98 @@
+[
+  {
+    "instance": "ot_qkh_recip_leaf.u_core.g_nr[0].m_m.u",
+    "type": "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000111",
+    "resolved_parameters": {
+      "LAT": "7",
+      "CUTS": "32's11111111111111111111111111111111",
+      "KCP": "1",
+      "DRST": "1"
+    },
+    "caller_parameters": {}
+  },
+  {
+    "instance": "ot_qkh_recip_leaf.u_core.g_nr[0].a_s.u",
+    "type": "$paramod\\ot_hdc_fp32_add_lat\\LAT=s32'00000000000000000000000000000111",
+    "resolved_parameters": {
+      "LAT": "7",
+      "CUTS": "32's11111111111111111111111111111111",
+      "DRST": "1"
+    },
+    "caller_parameters": {}
+  },
+  {
+    "instance": "ot_qkh_recip_leaf.u_core.g_nr[0].m_y.u",
+    "type": "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000111",
+    "resolved_parameters": {
+      "LAT": "7",
+      "CUTS": "32's11111111111111111111111111111111",
+      "KCP": "1",
+      "DRST": "1"
+    },
+    "caller_parameters": {}
+  },
+  {
+    "instance": "ot_qkh_recip_leaf.u_core.g_nr[1].m_m.u",
+    "type": "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000111",
+    "resolved_parameters": {
+      "LAT": "7",
+      "CUTS": "32's11111111111111111111111111111111",
+      "KCP": "1",
+      "DRST": "1"
+    },
+    "caller_parameters": {}
+  },
+  {
+    "instance": "ot_qkh_recip_leaf.u_core.g_nr[1].a_s.u",
+    "type": "$paramod\\ot_hdc_fp32_add_lat\\LAT=s32'00000000000000000000000000000111",
+    "resolved_parameters": {
+      "LAT": "7",
+      "CUTS": "32's11111111111111111111111111111111",
+      "DRST": "1"
+    },
+    "caller_parameters": {}
+  },
+  {
+    "instance": "ot_qkh_recip_leaf.u_core.g_nr[1].m_y.u",
+    "type": "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000111",
+    "resolved_parameters": {
+      "LAT": "7",
+      "CUTS": "32's11111111111111111111111111111111",
+      "KCP": "1",
+      "DRST": "1"
+    },
+    "caller_parameters": {}
+  },
+  {
+    "instance": "ot_qkh_recip_leaf.u_core.g_nr[2].m_m.u",
+    "type": "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000111",
+    "resolved_parameters": {
+      "LAT": "7",
+      "CUTS": "32's11111111111111111111111111111111",
+      "KCP": "1",
+      "DRST": "1"
+    },
+    "caller_parameters": {}
+  },
+  {
+    "instance": "ot_qkh_recip_leaf.u_core.g_nr[2].a_s.u",
+    "type": "$paramod\\ot_hdc_fp32_add_lat\\LAT=s32'00000000000000000000000000000111",
+    "resolved_parameters": {
+      "LAT": "7",
+      "CUTS": "32's11111111111111111111111111111111",
+      "DRST": "1"
+    },
+    "caller_parameters": {}
+  },
+  {
+    "instance": "ot_qkh_recip_leaf.u_core.g_nr[2].m_y.u",
+    "type": "$paramod\\ot_hdc_fp32_mul_lat\\LAT=s32'00000000000000000000000000000111",
+    "resolved_parameters": {
+      "LAT": "7",
+      "CUTS": "32's11111111111111111111111111111111",
+      "KCP": "1",
+      "DRST": "1"
+    },
+    "caller_parameters": {}
+  }
+]

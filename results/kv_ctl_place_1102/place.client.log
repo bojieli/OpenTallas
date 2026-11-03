@@ -1,0 +1,11 @@
+ot-run: intel1         admits     0 GB (avail 236, reserve 0, fresh 7.1, peak 71.1, headroom 0, waiters 73/2898 GB) load 178/112 running 65 disk 413 GB 
+ot-run: epyc2          admits    25 GB (avail 215, reserve 0, fresh 48.4, peak 77.4, headroom 0, waiters 3/222 GB) load 133/128 running 48 disk 96 GB 
+ot-run: intel2         admits   252 GB (avail 370, reserve 0, fresh 0, peak 53.2, headroom 0, waiters 39/1350 GB) load 183/112 running 51 disk 207 GB 
+ot-run: epyc2 skipped for this die job: DISK 96 GB free - 150 GB running/queued die reservations < 20 GB
+ot-run: intel2 skipped for this die job: DISK 207 GB free - 300 GB running/queued die reservations < 20 GB
+ot-run: -> intel1
+ot-heavy: request 32G is charged 16G (class 'resume_place.sh' measured peak 7.8G, n=3+0 proved); the cap stays 32G
+ot-heavy: admitted on key-cardinal as oth-ubuntu-3427255-1793605837 after 41 s
+CTL_PLACE_SOURCE_GUARD_PASS 19
+CTL_PLACE_ONLY_COMPLETE /srv/opentallas-scratch2/claude/codex-kv-ctl-place-2330/kit/run/results/asap7/hc_qkd_kvs_ctl__371_52x371_52/base/3_place.odb
+ot-run: RAN on intel1 (unit oth-ubuntu-3427255-1793605837): exit 0

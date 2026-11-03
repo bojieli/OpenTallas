@@ -1,0 +1,6 @@
+DIE-KV-60 Eo/Wo receiver port-binding failure diagnosis, 2026-11-01.
+Original failures retained Intel1 /srv/opentallas-scratch2/claude/kit-wave/qwen_kvsys/event28w_c/items/kv3_hub_{Eo,Wo}/attempt_2/gen/kv3_hub_{Eo,Wo}/port_bind.json.
+Both mapped netlists expose 12496bits while old physical inventories declare12492; only extra4 are the two ASTK strap_corner identity inputs, not data/clock/count mismatch.
+Current existing gen_phys.bound_parent_id_plan (introduced d6703ea80, replay tool98a8705cb) validates the actual bind_parent_id_straps manifest against current raw-plan hard_core ID declarations and bound_only_pins, then promotes exactly4 physical logical inventory bits. Raw plan and RTL are unchanged. Owned replay metadata in Intel1 codex-kv-receiver-bind-2050; exact original 1_2_yosys.v read-only.
+Current port_bind_gate.py checks actual retained mapped netlists PASS12496/12496 on both, missing0/extra0/bad_straps0. Original failed files untouched.
+Disposition: stale generated kits; regenerate with the current existing promoted-ID projection. No source/plan fix required. Fresh GEN/freeze, then LOOK and physical gates remain required; this scoped pin inventory result is not placement, routing, or whole-parent qualification. Fresh receiver ODBs are still absent.

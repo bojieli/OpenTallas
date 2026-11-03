@@ -1,0 +1,28 @@
+{
+  "scope": "PREP mathematical FF plan; existing logic/clock/reset connectivity, cycles, pins, macros and source unchanged; no P&R executed",
+  "LP": 385.0,
+  "public_LP": 145.0,
+  "FFs": 18768,
+  "unchanged": 16974,
+  "relocated": 1794,
+  "failed": 0,
+  "failed_names": [],
+  "max_quantization_L1": 8.134000000000015,
+  "grid_um": [
+    0.054,
+    0.27
+  ],
+  "R2R": {
+    "r2r_memory_instances": 6,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 391.61,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 16868,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_leaf.u_lprg.pos_ok_q$_DFF_P_ -> o_attn\\[67\\]$_DFF_PN0_"
+  },
+  "pin_data_max_all_captures": 146.69700000000003,
+  "pin_data_p90_nearest": 15.509999999999941,
+  "pin_data_distinct_over30": 581,
+  "pose_count": 18768
+}

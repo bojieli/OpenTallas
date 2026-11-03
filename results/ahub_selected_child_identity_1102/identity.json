@@ -1,0 +1,76 @@
+{
+  "schema": "opentallas.ahub_selected_child_identity.v1",
+  "actual_parent_kit": "epyc2:/srv/opentallas-scratch2/claude/codex-kv-ahub-cg-2310/post_r3_interior",
+  "actual_core": "core.json",
+  "consumed_receipt": "signoff/{tt,ff}/libraries.json",
+  "views": [
+    {
+      "master": "ot_nhb_zh",
+      "views": {
+        "ot_nhb_zh.lef": {
+          "registered_path": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh.lef",
+          "actual_path": "epyc2:/srv/opentallas-scratch2/claude/codex-kv-ahub-cg-2310/post_r3_interior/macros/ot_nhb_zh.lef",
+          "sha256": "852a52478348722ec2ef181fc548db4fef54b456c512af1a6e41f306b89aec2c",
+          "actual_selected_byte_equal": true
+        },
+        "ot_nhb_zh_tt.lib": {
+          "registered_path": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_tt.lib",
+          "actual_path": "epyc2:/srv/opentallas-scratch2/claude/codex-kv-ahub-cg-2310/post_r3_interior/macros/ot_nhb_zh_tt.lib",
+          "sha256": "95a21129e18dfb2ed567b8781ff1e60a3e0f4ffe6d50287d0c97e975f4a545be",
+          "actual_selected_byte_equal": true
+        },
+        "ot_nhb_zh_ff.lib": {
+          "registered_path": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_ff.lib",
+          "actual_path": "epyc2:/srv/opentallas-scratch2/claude/codex-kv-ahub-cg-2310/post_r3_interior/macros/ot_nhb_zh_ff.lib",
+          "sha256": "b2c4acd4e5a47fb9b7d7230ed7fc97dadd7f60e0b9dccbd0f9f55eaca4d5557f",
+          "actual_selected_byte_equal": true
+        }
+      },
+      "expanded_clock_model": "ABSENT from registered view directory; aggregate ETM only"
+    },
+    {
+      "master": "ot_qkh_recip_leaf",
+      "views": {
+        "ot_qkh_recip_leaf.lef": {
+          "registered_path": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf.lef",
+          "actual_path": "epyc2:/srv/opentallas-scratch2/claude/codex-kv-ahub-cg-2310/post_r3_interior/macros/ot_qkh_recip_leaf.lef",
+          "sha256": "33685dfe99a6e5ce29e301d5968e0ee9735d87a20703a10c234cd4903879ed94",
+          "actual_selected_byte_equal": true
+        },
+        "ot_qkh_recip_leaf_tt.lib": {
+          "registered_path": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf_tt.lib",
+          "actual_path": "epyc2:/srv/opentallas-scratch2/claude/codex-kv-ahub-cg-2310/post_r3_interior/macros/ot_qkh_recip_leaf_tt.lib",
+          "sha256": "93eb25be3a66a597312177e02e8b10abffbee5467707e13d37e8dffaf86e4750",
+          "actual_selected_byte_equal": true
+        },
+        "ot_qkh_recip_leaf_ff.lib": {
+          "registered_path": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf_ff.lib",
+          "actual_path": "epyc2:/srv/opentallas-scratch2/claude/codex-kv-ahub-cg-2310/post_r3_interior/macros/ot_qkh_recip_leaf_ff.lib",
+          "sha256": "6bc1ab172b236ef5a19494bc0b01a19fafa7ac988137f8c1eb920d552bc96893",
+          "actual_selected_byte_equal": true
+        }
+      },
+      "expanded_clock_model": "ABSENT from registered view directory; aggregate ETM only"
+    }
+  ],
+  "parent_clock_gate": "UNEXPANDED_CHILD_ETM / NOT RUN",
+  "clock_endpoint_aliases_created": 0,
+  "core_reruns": 0,
+  "archive_lookup": {
+    "hosts": [
+      "intel1",
+      "intel2",
+      "epyc2"
+    ],
+    "roots": [
+      "/srv/opentallas-scratch2/claude/closure-loop",
+      "/srv/opentallas-scratch/claude/closure-loop"
+    ],
+    "exact_names": [
+      "ot_nhb_zh_m5-m5-e5e8e058b",
+      "qkh_recip_ref-np1-922bf01f4"
+    ],
+    "found": false
+  },
+  "limitation": "Native graph/checkpoint recovery or independently registered exact child clock capsule is required. Current selected ETMs and aggregate insertion statistics cannot fabricate per-flop parent consumption/pair coverage."
+}

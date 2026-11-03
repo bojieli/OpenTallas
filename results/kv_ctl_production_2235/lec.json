@@ -1,0 +1,1751 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-02T07:16:15+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "kv",
+   "edges": 16,
+   "assert_edges": 20,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 16,
+  "debug_overrides": {}
+ },
+ "top": "qkd_kvs_ctl",
+ "netlist": "/work/run/results/asap7/hc_qkd_kvs_ctl__371_52x371_52/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {
+  "ctl_sram_1r1w_64x128_p192": 8
+ },
+ "ports": {
+  "inputs": 1794,
+  "outputs": 5055
+ },
+ "t_aig_s": 65.3,
+ "kit_reset_ports": [
+  "por_n",
+  "rst_n"
+ ],
+ "hint_plan": {
+  "schema": "opentallas.lec_hint_plan.v1",
+  "discovery_rounds": 0,
+  "preseed": 17807,
+  "post": 505
+ },
+ "hints": {
+  "file": "/work/lec_hints.json",
+  "sha256": "93877928da16d441da980e89a0a044f3839dd5e2a423f8d02d94b72a78502fc4",
+  "given": 505,
+  "applied": 505,
+  "skipped": 0,
+  "anon": 10313,
+  "dropped": {
+   "n": 0,
+   "first": []
+  },
+  "kept": 17107,
+  "loaded": [],
+  "loaded_refused": [],
+  "fill": [],
+  "fill_refused": []
+ },
+ "auto_loaded": {
+  "proposed": 0
+ },
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:por_n[0]",
+    "pi:rst_n[0]"
+   ],
+   "gate": [
+    "pi:por_n[0]",
+    "pi:rst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:rst_n[0]": 0,
+    "pi:por_n[0]": 0
+   },
+   "gate": {
+    "pi:rst_n[0]": 0,
+    "pi:por_n[0]": 0
+   }
+  },
+  "reset_cycles": 16,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 0,
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 312,
+  "n_reloaded": 175,
+  "n_dropped": 0,
+  "reloaded": [
+   {
+    "register": "ff:u_dut._3846_[18]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[633]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[634]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[635]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[636]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[637]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[638]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[700]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[709]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[712]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[713]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[714]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[715]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[716]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[717]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[718]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[719]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3846_[720]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[18]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[633]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[634]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[635]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[636]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[637]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[638]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[700]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[709]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[712]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[713]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[714]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[715]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[716]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[717]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[718]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[719]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._3847_[720]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._5143_[47]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._5143_[48]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._5143_[49]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._5143_[50]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._5143_[51]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._6336_[14]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._6336_[15]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._6336_[16]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._6336_[17]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._6336_[18]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut._6336_[19]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.kvi[0]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.kvi[1]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.kvi[2]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.kvi[3]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.kvi[4]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.kvi[5]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_attn[79]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_attn[80]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_attn[81]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_attn[82]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_attn[83]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[18]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[633]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[634]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[635]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[636]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[637]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[638]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[700]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[709]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[712]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[713]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[714]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[715]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[716]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[717]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[718]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[719]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_EN[720]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[18]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[633]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[634]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[635]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[636]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[637]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[638]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[700]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[709]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[712]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[713]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[714]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[715]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[716]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[717]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[718]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[719]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_ES[720]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[18]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[633]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[634]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[635]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[636]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[637]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[638]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[700]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[709]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[712]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[713]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[714]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[715]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[716]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[717]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[718]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[719]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WN[720]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[18]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[633]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[634]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[635]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[636]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[637]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[638]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[700]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[709]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[712]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[713]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[714]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[715]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[716]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[717]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[718]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[719]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.o_hroot_WS[720]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_oobs.cnt[5]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_oobs.cnt[6]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_oobs.cnt[7]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_wrn.u_writer.ci[0]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_wrn.u_writer.ci[1]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_wrn.u_writer.ci[2]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_wrn.u_writer.ci[3]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_wrn.u_writer.ci[4]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_wrn.u_writer.ci[5]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.g_ctx[0].meta[0]",
+    "side": "gate",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.g_ctx[0].meta[1]",
+    "side": "gate",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.g_ctx[0].meta[47]",
+    "side": "gate",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.g_ctx[0].meta[51]",
+    "side": "gate",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.g_ctx[1].meta[1]",
+    "side": "gate",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.g_ctx[1].meta[47]",
+    "side": "gate",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.g_ctx[1].meta[51]",
+    "side": "gate",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.g_ctx[2].meta[0]",
+    "side": "gate",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.g_ctx[2].meta[47]",
+    "side": "gate",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.g_ctx[2].meta[51]",
+    "side": "gate",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.g_ctx[3].meta[47]",
+    "side": "gate",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.g_ctx[3].meta[51]",
+    "side": "gate",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[0]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[115]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[116]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[117]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[118]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[119]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[136]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[183]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[184]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[185]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[186]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[187]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[251]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[252]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[253]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[254]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[255]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[47]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[48]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[49]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[50]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[51]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_leaf.u_lprg.meta_f[69]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   }
+  ],
+  "dropped": [],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case",
+  "listing": {
+   "file": "/work/lec/noreset_constants.tsv",
+   "sha256": "cf872a2d34a7c6414fb8078fc8ee2398b61392d6f7f9af04ab6b65a325167c18",
+   "n_kept": 312,
+   "n_dropped": 0
+  }
+ },
+ "constraint_bases": {
+  "checks": [],
+  "refused": []
+ },
+ "t_corr_s": 311.2,
+ "keypoints": {
+  "gold": {
+   "inputs": 2065,
+   "flops": 27223,
+   "outputs": 0,
+   "ands": 164011
+  },
+  "gate": {
+   "inputs": 38650,
+   "flops": 44985,
+   "outputs": 0,
+   "ands": 273352
+  },
+  "matched": 20229,
+  "gold_constant_flops": {
+   "n": 312,
+   "first": [
+    "ff:u_dut._3283_[69]",
+    "ff:u_dut._3283_[70]",
+    "ff:u_dut._3283_[71]",
+    "ff:u_dut._3284_[69]",
+    "ff:u_dut._3284_[70]",
+    "ff:u_dut._3284_[71]",
+    "ff:u_dut._3285_[67]",
+    "ff:u_dut._3285_[68]",
+    "ff:u_dut._3285_[69]",
+    "ff:u_dut._3285_[70]",
+    "ff:u_dut._3285_[71]",
+    "ff:u_dut._3286_[67]",
+    "ff:u_dut._3286_[68]",
+    "ff:u_dut._3286_[69]",
+    "ff:u_dut._3286_[70]",
+    "ff:u_dut._3286_[71]",
+    "ff:u_dut._3846_[18]",
+    "ff:u_dut._3846_[633]",
+    "ff:u_dut._3846_[634]",
+    "ff:u_dut._3846_[635]",
+    "ff:u_dut._3846_[636]",
+    "ff:u_dut._3846_[637]",
+    "ff:u_dut._3846_[638]",
+    "ff:u_dut._3846_[700]",
+    "ff:u_dut._3846_[709]",
+    "ff:u_dut._3846_[712]",
+    "ff:u_dut._3846_[713]",
+    "ff:u_dut._3846_[714]",
+    "ff:u_dut._3846_[715]",
+    "ff:u_dut._3846_[716]",
+    "ff:u_dut._3846_[717]",
+    "ff:u_dut._3846_[718]",
+    "ff:u_dut._3846_[719]",
+    "ff:u_dut._3846_[720]",
+    "ff:u_dut._3847_[18]",
+    "ff:u_dut._3847_[633]",
+    "ff:u_dut._3847_[634]",
+    "ff:u_dut._3847_[635]",
+    "ff:u_dut._3847_[636]",
+    "ff:u_dut._3847_[637]"
+   ]
+  },
+  "paired_flops": {
+   "n": 16795,
+   "first": [
+    "both:ff:u_dut._3284_[0]=ff:u_dut._3283_[0]",
+    "both:ff:u_dut._3284_[10]=ff:u_dut._3283_[10]",
+    "both:ff:u_dut._3284_[11]=ff:u_dut._3283_[11]",
+    "both:ff:u_dut._3284_[12]=ff:u_dut._3283_[12]",
+    "both:ff:u_dut._3284_[13]=ff:u_dut._3283_[13]",
+    "both:ff:u_dut._3284_[14]=ff:u_dut._3283_[14]",
+    "both:ff:u_dut._3284_[15]=ff:u_dut._3283_[15]",
+    "both:ff:u_dut._3284_[16]=ff:u_dut._3283_[16]",
+    "both:ff:u_dut._3284_[17]=ff:u_dut._3283_[17]",
+    "both:ff:u_dut._3284_[18]=ff:u_dut._3283_[18]",
+    "both:ff:u_dut._3284_[19]=ff:u_dut._3283_[19]",
+    "both:ff:u_dut._3284_[1]=ff:u_dut._3283_[1]",
+    "both:ff:u_dut._3284_[20]=ff:u_dut._3283_[20]",
+    "both:ff:u_dut._3284_[21]=ff:u_dut._3283_[21]",
+    "both:ff:u_dut._3284_[22]=ff:u_dut._3283_[22]",
+    "both:ff:u_dut._3284_[23]=ff:u_dut._3283_[23]",
+    "both:ff:u_dut._3284_[24]=ff:u_dut._3283_[24]",
+    "both:ff:u_dut._3284_[25]=ff:u_dut._3283_[25]",
+    "both:ff:u_dut._3284_[26]=ff:u_dut._3283_[26]",
+    "both:ff:u_dut._3284_[27]=ff:u_dut._3283_[27]",
+    "both:ff:u_dut._3284_[28]=ff:u_dut._3283_[28]",
+    "both:ff:u_dut._3284_[29]=ff:u_dut._3283_[29]",
+    "both:ff:u_dut._3284_[2]=ff:u_dut._3283_[2]",
+    "both:ff:u_dut._3284_[30]=ff:u_dut._3283_[30]",
+    "both:ff:u_dut._3284_[31]=ff:u_dut._3283_[31]",
+    "both:ff:u_dut._3284_[32]=ff:u_dut._3283_[32]",
+    "both:ff:u_dut._3284_[33]=ff:u_dut._3283_[33]",
+    "both:ff:u_dut._3284_[34]=ff:u_dut._3283_[34]",
+    "both:ff:u_dut._3284_[35]=ff:u_dut._3283_[35]",
+    "both:ff:u_dut._3284_[36]=ff:u_dut._3283_[36]",
+    "both:ff:u_dut._3284_[37]=ff:u_dut._3283_[37]",
+    "both:ff:u_dut._3284_[38]=ff:u_dut._3283_[38]",
+    "both:ff:u_dut._3284_[39]=ff:u_dut._3283_[39]",
+    "both:ff:u_dut._3284_[3]=ff:u_dut._3283_[3]",
+    "both:ff:u_dut._3284_[40]=ff:u_dut._3283_[40]",
+    "both:ff:u_dut._3284_[41]=ff:u_dut._3283_[41]",
+    "both:ff:u_dut._3284_[42]=ff:u_dut._3283_[42]",
+    "both:ff:u_dut._3284_[43]=ff:u_dut._3283_[43]",
+    "both:ff:u_dut._3284_[44]=ff:u_dut._3283_[44]",
+    "both:ff:u_dut._3284_[45]=ff:u_dut._3283_[45]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 328,
+   "first": [
+    "ff:u_dut._6336_[0]",
+    "ff:u_dut._6336_[1]",
+    "ff:u_dut._6336_[2]",
+    "ff:u_dut._6336_[3]",
+    "ff:u_dut._6336_[4]",
+    "ff:u_dut._6336_[5]",
+    "ff:u_dut._7051_[10]",
+    "ff:u_dut._7051_[11]",
+    "ff:u_dut._7051_[12]",
+    "ff:u_dut._7051_[13]",
+    "ff:u_dut._7051_[14]",
+    "ff:u_dut._7051_[5]",
+    "ff:u_dut._7051_[6]",
+    "ff:u_dut._7051_[7]",
+    "ff:u_dut._7051_[8]",
+    "ff:u_dut._7051_[9]",
+    "ff:u_dut._7053_[10]",
+    "ff:u_dut._7053_[11]",
+    "ff:u_dut._7053_[12]",
+    "ff:u_dut._7053_[13]",
+    "ff:u_dut._7053_[14]",
+    "ff:u_dut._7053_[5]",
+    "ff:u_dut._7053_[6]",
+    "ff:u_dut._7053_[7]",
+    "ff:u_dut._7053_[8]",
+    "ff:u_dut._7053_[9]",
+    "ff:u_dut._7055_[10]",
+    "ff:u_dut._7055_[11]",
+    "ff:u_dut._7055_[12]",
+    "ff:u_dut._7055_[13]",
+    "ff:u_dut._7055_[14]",
+    "ff:u_dut._7055_[5]",
+    "ff:u_dut._7055_[6]",
+    "ff:u_dut._7055_[7]",
+    "ff:u_dut._7055_[8]",
+    "ff:u_dut._7055_[9]",
+    "ff:u_dut._7057_[10]",
+    "ff:u_dut._7057_[11]",
+    "ff:u_dut._7057_[12]",
+    "ff:u_dut._7057_[13]"
+   ]
+  },
+  "gate_unmatched": {
+   "n": 8862,
+   "first": [
+    "ff:u_dut._84569_",
+    "ff:u_dut._84570_",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_a[0]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_a[1]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_a[2]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_a[3]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_a[4]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_a[5]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_a[6]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_a[7]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_a[8]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[0]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[10]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[11]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[12]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[13]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[14]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[15]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[16]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[17]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[18]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[19]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[1]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[20]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[21]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[22]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[23]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[24]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[25]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[26]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[27]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[28]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[29]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[2]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[30]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[31]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[32]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[33]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[34]",
+    "ff:u_dut.u_leaf.u_boot.g_mu.g_d[35]"
+   ]
+  },
+  "gold_x_sources": 271,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 36856,
+  "gold_only_compare": {
+   "n": 2107,
+   "first": [
+    "ff:u_dut._3729_[0]",
+    "ff:u_dut._3729_[10]",
+    "ff:u_dut._3729_[11]",
+    "ff:u_dut._3729_[12]",
+    "ff:u_dut._3729_[13]",
+    "ff:u_dut._3729_[14]",
+    "ff:u_dut._3729_[1]",
+    "ff:u_dut._3729_[2]",
+    "ff:u_dut._3729_[3]",
+    "ff:u_dut._3729_[4]",
+    "ff:u_dut._3729_[5]",
+    "ff:u_dut._3729_[6]",
+    "ff:u_dut._3729_[7]",
+    "ff:u_dut._3729_[8]",
+    "ff:u_dut._3729_[9]",
+    "ff:u_dut._3730_[0]",
+    "ff:u_dut._3730_[10]",
+    "ff:u_dut._3730_[11]",
+    "ff:u_dut._3730_[12]",
+    "ff:u_dut._3730_[13]",
+    "ff:u_dut._3730_[14]",
+    "ff:u_dut._3730_[1]",
+    "ff:u_dut._3730_[2]",
+    "ff:u_dut._3730_[3]",
+    "ff:u_dut._3730_[4]",
+    "ff:u_dut._3730_[5]",
+    "ff:u_dut._3730_[6]",
+    "ff:u_dut._3730_[7]",
+    "ff:u_dut._3730_[8]",
+    "ff:u_dut._3730_[9]",
+    "ff:u_dut._3731_[0]",
+    "ff:u_dut._3731_[10]",
+    "ff:u_dut._3731_[11]",
+    "ff:u_dut._3731_[12]",
+    "ff:u_dut._3731_[13]",
+    "ff:u_dut._3731_[14]",
+    "ff:u_dut._3731_[15]",
+    "ff:u_dut._3731_[16]",
+    "ff:u_dut._3731_[17]",
+    "ff:u_dut._3731_[18]"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 19869,
+   "first": [
+    "ff:__gate_anon_38661",
+    "ff:__gate_anon_38663",
+    "ff:__gate_anon_38670",
+    "ff:__gate_anon_38672",
+    "ff:__gate_anon_38674",
+    "ff:__gate_anon_38676",
+    "ff:__gate_anon_38678",
+    "ff:__gate_anon_38680",
+    "ff:__gate_anon_38682",
+    "ff:__gate_anon_38684",
+    "ff:__gate_anon_38686",
+    "ff:__gate_anon_38688",
+    "ff:__gate_anon_38690",
+    "ff:__gate_anon_38692",
+    "ff:__gate_anon_38694",
+    "ff:__gate_anon_38696",
+    "ff:__gate_anon_38698",
+    "ff:__gate_anon_38700",
+    "ff:__gate_anon_38702",
+    "ff:__gate_anon_38704",
+    "ff:__gate_anon_38706",
+    "ff:__gate_anon_38708",
+    "ff:__gate_anon_38710",
+    "ff:__gate_anon_38712",
+    "ff:__gate_anon_38714",
+    "ff:__gate_anon_38716",
+    "ff:__gate_anon_38718",
+    "ff:__gate_anon_38720",
+    "ff:__gate_anon_38722",
+    "ff:__gate_anon_38724",
+    "ff:__gate_anon_38726",
+    "ff:__gate_anon_38728",
+    "ff:__gate_anon_38730",
+    "ff:__gate_anon_38732",
+    "ff:__gate_anon_38734",
+    "ff:__gate_anon_38736",
+    "ff:__gate_anon_38738",
+    "ff:__gate_anon_38740",
+    "ff:__gate_anon_38742",
+    "ff:__gate_anon_38744"
+   ]
+  }
+ },
+ "t_prove_s": 18.7,
+ "x_dont_care_points": {
+  "n": 86,
+  "first": [
+   "ff:u_dut._5162_[0]",
+   "ff:u_dut._5162_[1]",
+   "ff:u_dut._5162_[2]",
+   "ff:u_dut._5162_[3]",
+   "ff:u_dut._5162_[4]",
+   "ff:u_dut._5162_[5]",
+   "ff:u_dut._5163_[0]",
+   "ff:u_dut._5163_[1]",
+   "ff:u_dut._5163_[2]",
+   "ff:u_dut._5163_[3]",
+   "ff:u_dut._5163_[4]",
+   "ff:u_dut._5163_[5]",
+   "ff:u_dut._5181_[0]",
+   "ff:u_dut._5181_[1]",
+   "ff:u_dut._5181_[2]",
+   "ff:u_dut._5181_[3]",
+   "ff:u_dut._5181_[4]",
+   "ff:u_dut._5181_[5]",
+   "ff:u_dut.lp[1]",
+   "ff:u_dut.lp[2]",
+   "ff:u_dut.lp[3]",
+   "ff:u_dut.lp[4]",
+   "ff:u_dut.lp[5]",
+   "ff:u_dut.lp[6]",
+   "ff:u_dut.o_attn[84]",
+   "ff:u_dut.o_attn[85]",
+   "ff:u_dut.o_attn[86]",
+   "ff:u_dut.o_attn[87]",
+   "ff:u_dut.o_attn[88]",
+   "ff:u_dut.o_attn[89]",
+   "ff:u_dut.o_hroot_EN[1072]",
+   "ff:u_dut.o_hroot_EN[1073]",
+   "ff:u_dut.o_hroot_EN[1074]",
+   "ff:u_dut.o_hroot_EN[1075]",
+   "ff:u_dut.o_hroot_EN[1076]",
+   "ff:u_dut.o_hroot_EN[1077]",
+   "ff:u_dut.o_hroot_EN[971]",
+   "ff:u_dut.o_hroot_EN[972]",
+   "ff:u_dut.o_hroot_EN[973]",
+   "ff:u_dut.o_hroot_EN[974]"
+  ]
+ },
+ "kept_registers": {
+  "declared": 1111,
+  "in_netlist": 1111,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "counts": {
+  "compare_points": 46454,
+  "proved": 46454,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "46454 compare points proved; 20229 key points matched by name, 16795 register pairs / merges and 312 constant registers proved inductively; 328 RTL and 8862 gate registers unmatched and unobservable (proved as free inputs); 86 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "cycle_dropped": {
+  "n": 79,
+  "first": [
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[128] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[0]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[138] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[10]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[139] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[11]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[140] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[12]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[141] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[13]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[142] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[14]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[143] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[15]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[144] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[16]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[145] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[17]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[146] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[18]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[147] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[19]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[129] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[1]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[148] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[20]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[149] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[21]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[150] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[22]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[151] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[23]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[152] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[24]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[153] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[25]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[154] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[26]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[155] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[27]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[156] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[28]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[157] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[29]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[130] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[2]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[158] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[30]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[159] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[31]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[131] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[3]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[132] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[4]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[133] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[5]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[134] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[6]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[135] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[7]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[136] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[8]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[137] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.stop_q[9]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[21] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.t0[21]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[22] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.t0[22]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[23] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.t0[23]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[24] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.t0[24]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[25] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.t0[25]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[26] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.t0[26]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[27] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.t0[27]', 0]",
+   "gold:ff:u_dut.u_leaf.u_wprg.tv[28] ['eq', 'gate', 'ff:u_dut.u_leaf.u_wprg.t0[28]', 0]"
+  ]
+ },
+ "t_total_s": 413.2,
+ "provenance": {
+  "commit": "98a8705cb78b717bcf2a7cfd59bf14f0da3fc70a",
+  "dirty": false,
+  "source": "validated kit PROVENANCE.json"
+ }
+}

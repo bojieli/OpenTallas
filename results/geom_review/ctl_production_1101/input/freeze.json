@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.kv.core_freeze.v1",
+ "type": "qkd_kvs_ctl__371.52x371.52",
+ "module": "qkd_kvs_ctl",
+ "outline_um": [
+  371.52,
+  371.52
+ ],
+ "plan_sha256": "245ed86e0f1d3c5d6a7784d9ee48b32d5b79d55bd1d4ef401ecad69cc3b2af00",
+ "pins_file": "/srv/opentallas-scratch2/claude/die-kv-60/ctlin/buildC/kvs_ctl_pins.json",
+ "pins_sha256": "a22cf3293c96a17e22f84ae64148aa9e60fc60eca2ac90723bdf0e4c18e8c95b",
+ "core_json_sha256": "8969920c5a7b4ba705ec68b2ea672c44e82e9f22f623fc7c1b70cc768399f655",
+ "pins": 6849,
+ "plan_pins": 6849,
+ "added_pins": 0,
+ "clocks": [
+  "ck"
+ ],
+ "clock_nets": {
+  "clk": "ck[0]"
+ },
+ "clock_rebind": null,
+ "resets": [
+  "rst_n",
+  "por_n"
+ ],
+ "recipe": {
+  "util": 0.6,
+  "sigmax": "M5",
+  "face_flops": true,
+  "synth_keepdc": true,
+  "reset_ports": "por_n",
+  "source": "DIE-KV-60 ctlin 11-01 (KV-FN-7 shared class): keep the constant o_hroot face flops; por_n = the u_dcfg power-on async reset (typed reset port)"
+ },
+ "sdc_lint": "PASS (gen)",
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "macros": [
+  "ctl_sram_1r1w_64x128_p192"
+ ],
+ "signal_max": "M5",
+ "flow_basis": "FLOW-1025: rcx-rc + leaf-affinity + fanout24/slew-cap-margin20 + mcmm tc/bc",
+ "head_lane_taps": false,
+ "head_strap_master": false,
+ "head_lane_s3copy": false,
+ "plan_inst": "kv3_hub_C.kvs_ctl",
+ "island_ft": [],
+ "kit_hash": "70b282cb9335c021",
+ "pins_canon_sha256": "8fbdc53e7dc3c5ba906501e7ff145bc011edc5f04ba8149ad7f85a59791cea6f",
+ "source_commit": "98a8705cb78b717bcf2a7cfd59bf14f0da3fc70a",
+ "synth_keepdc": "opt_dff/wreduce -keepdc (tools/die_plan/synth_keepdc.py), opt_merge default",
+ "reset_contract": {
+  "edges": 16,
+  "module": "qkd_kvs_ctl",
+  "die": "kv",
+  "contract": "/srv/opentallas-scratch2/claude/wt/codex-kv-pickup-ctl-2047/physical/die_plan/qwen_kvsys/reset_contract.json",
+  "contract_sha256": "bd85f6760caf51077074c898907926d12273a6c3152a5dfe4a5ee628cb12acc6",
+  "receipt_sha256": "d7e6ead61764cba9357e416dbd370f6681feaae1dfa07ea670c76c0d0e026001"
+ }
+}

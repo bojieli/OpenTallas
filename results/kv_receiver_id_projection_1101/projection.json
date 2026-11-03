@@ -1,0 +1,52 @@
+{
+  "kv3_hub_Eo": {
+    "old_plan_bits": 12492,
+    "new_plan_bits": 12496,
+    "previous_netlist_bits": 12496,
+    "added": [
+      {
+        "bus": "strap_astk_EN_strap_corner",
+        "bit": 0
+      },
+      {
+        "bus": "strap_astk_EN_strap_corner",
+        "bit": 1
+      },
+      {
+        "bus": "strap_astk_ES_strap_corner",
+        "bit": 0
+      },
+      {
+        "bus": "strap_astk_ES_strap_corner",
+        "bit": 1
+      }
+    ],
+    "straps_declared": true,
+    "raw_plan_unmodified": true
+  },
+  "kv3_hub_Wo": {
+    "old_plan_bits": 12492,
+    "new_plan_bits": 12496,
+    "previous_netlist_bits": 12496,
+    "added": [
+      {
+        "bus": "strap_astk_WN_strap_corner",
+        "bit": 0
+      },
+      {
+        "bus": "strap_astk_WN_strap_corner",
+        "bit": 1
+      },
+      {
+        "bus": "strap_astk_WS_strap_corner",
+        "bit": 0
+      },
+      {
+        "bus": "strap_astk_WS_strap_corner",
+        "bit": 1
+      }
+    ],
+    "straps_declared": true,
+    "raw_plan_unmodified": true
+  }
+}
