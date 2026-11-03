@@ -233,8 +233,15 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
                          and d.get('band_verdict') == 'INFO')
             band_ok = (d['dev_ps'] <= d['tol_ps']
                        and abs(d['pinreg_mean_ps'] - d['bound_ps']) <= d['tol_ps'])
+            # KW-FIX-4 / OWNER 11-03 (only sign-off blocks): a measured band miss the gate marked ADVISORY is reported
+            # and the route continues; OT_POSTCTS_BAND_GATE=1 (seen by postcts_gate.tcl too) restores the blocking band.
+            band_adv = (os.environ.get('OT_POSTCTS_BAND_GATE') != '1' and d.get('band_verdict') == 'ADVISORY'
+                        and not band_ok)
+            if band_adv:
+                print(f'OT_LEGACY_GATE ADVISORY {corner} insertion band dev {d["dev_ps"]:.2f} > tol {d["tol_ps"]:.1f} '
+                      f'(mean {d["pinreg_mean_ps"]:.2f} bound {d["bound_ps"]:.2f}; not a gate, sign-off decides)')
             if (not all(math.isfinite(v) for v in numeric) or not 0 <= d['dev_ps'] or not 0 <= d['tol_ps'] <= 20.0
-                    or not (band_ok or band_info)
+                    or not (band_ok or band_info or band_adv)
                     or result.returncode != 0 or d.get('verdict') != 'PASS' or d.get('corner') != corner
                     or d.get('parasitics') != 'global_routing' or d.get('pinreg_n', 0) <= 0
                     or abs(float(d['bound_ps']) - float(settings[f'OT_VCLK_{corner}'])) > 1e-6):
