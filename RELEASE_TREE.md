@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-_Updated 2026-11-03 04:3x PST by COORD: count 57 (S81 26, HEAD 4, QC 5/16, KV 16, HBM 6; +1 KV; HBM hcol_h1 SIGNED 04:19 awaiting r-hbm re-sign); main 48c37eca7d3 (trains F5-F7 incl. HEAD headgate l48h0 -> HEAD wave relaunched 04:20); next train: KW-FIX-3 S81 KIT_PREFLIGHT class fix 4a2dae0f548 (69 kits + 41 cancelled, one batch) + class R HBM reset fix d483825fd6e (11 kits); kit FAIL 205 / RUNNING 121; HBM plan classes q3_edge + pslice_c5 (2.6 um macro channels) into d44v; HEAD ctl_e/ctl_n long-empty-slot class to DIE-HEAD-56; S81-PROUTE-2 RUNNING; 17 lanes live_
+_Updated 2026-11-03 05:4x PST by COORD: count 60 (S81 28, HEAD 4, QC 5/16, KV 17, HBM 6; +3 since 04:3x); OWNER 05:3x SAFE FORMS ONLY (structural form + pre-build check, no blind retries); stations = FIXED-BAY with lockup latch per relay (hold T/2 by construction, cycle counts unchanged); types with planned cores wait for signed core views (283db3a0cbe); S81 KIT_PREFLIGHT fix merged F10 + relaunched 05:04 (S81 preflight FAIL 69 -> 32); KV PDN class C fix (82eacd7eac/50e5dda3118) in merge; HEAD l48h1 plan of record (GEOM-gated), owner DIE-HEAD-57; kit FAIL 170 / RUNNING 156; CLOSURE lists due 06:00_
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -13,7 +13,7 @@ _Updated 2026-11-03 04:3x PST by COORD: count 57 (S81 26, HEAD 4, QC 5/16, KV 16
 - Status words: RUNNING WAITS TODO NEW COORD OWNER FAIL PASS FROZEN BLOCKED NOT RUN.
 
 ## DIE s81 · S81 · rev current native event2 / plan 6084e6cf0c95 · HARD FROZEN 12.20
-- [ ] S81.PROUTE Station parent-route pilot (OWNER 11-02 23:5x) · S81 / S81-PROUTE-2 (DIE-S81-50) · RUNNING · failing wire-only station types dissolved into the parent slice partition (repeater bays <=405 um, 12.1d); estimate, then one build vs station-type builds on unchanged gates
+- [ ] S81.PROUTE Station safe form (OWNER 11-02 pilot + 11-03 safe forms) · S81 / S81-PROUTE-2 (DIE-S81-50) · RUNNING · MAIN = FIXED-BAY: relay flop + negative-level lockup latch + repeater bays pre-placed <=405 um, local leaf per bay, per-hop delay/slew/hold computed before route; parent-route kit p7S_x11 (GEN_LINT + PREFLIGHT PASS) kept only as comparison; result applies to QC stations as one class
 - [ ] S81.BIND Strict native bind · S81 / DIE-S81-50 · PASS · event2 completed 11:40:42; 398 partitions / 204 types / 873 crossings / 606281 bits, connectivity errors 0; this is not a routing pass
 - [ ] S81.CLK Die clock 12.25 · S81 / DIE-S81-50 · PASS (kits pending) · plan dd2cd280def6 approved 10-31 21:4x: clock-tree GRT0, TT +49.70, CA 0/2330 (older pass counts, OWNER); retained FF +10.75 on 65420 pairs; remaining real-view hold pairs measured as kits sign; hold gate now >= 0 (OWNER 11-02) → S81.TILES
 - [ ] S81.GRT Whole-data-die global routing · S81 / DIE-S81-50 · NOT RUN · no qualified current all-partition signal+clock GRT receipt → S81.TILES → S81.PARENT
@@ -23,11 +23,11 @@ _Updated 2026-11-03 04:3x PST by COORD: count 57 (S81 26, HEAD 4, QC 5/16, KV 16
 - [ ] S81.T41 Forwarded data/K timing witness · S81 / GEOM · WAITS · corrected A/B only placed; default-OFF observer ready4b96673bc; one baseline-A CTS+witness needs review, old GRT4750 remains FAIL → INFRA.REVIEW
 - [ ] S81.RESET SerDes warm-reset sequencer implementation · S81+HEAD / DIE-S81-50 + DIE-HEAD-56 · RUNNING · OWNER 11-02 17:55 closed the choice: local sequencer holds reset >=64 rck edges after PMA clock restart, no running-clock promise; shared module adoption on S81 in progress (helper reset) → READY
 
-## DIE s81_head · HEAD · rev current l48x/l48z cohort · FROZEN 12.20 (l47u exception)
-- [ ] HEAD.BIND Current parent source / child-model composition · HEAD / DIE-HEAD-56 · BLOCKED · exact current source+views must compose before full parent release → HEAD.TILES
-- [ ] HEAD.CLK Current die clock qualification · HEAD / DIE-HEAD-56 · BLOCKED(kits) · clock proof l48w_sth GRT0/TT+252.75 stands (older pass counts); l48w_sth GRT0/TT+252.75/START0of1607; only2 real core views,0 kits plus declared budgets; 530106 hold pairs unmeasured, not current full-die timing → HEAD.TILES
-- [ ] HEAD.GRT Current whole-die signal+clock global routing · HEAD / DIE-HEAD-56 · BLOCKED · retained infrastructure routing is not a complete current parent data-route receipt → HEAD.TILES → HEAD.BIND
-- [ ] HEAD.STA Complete current parent TT/FF and seam timing · HEAD / DIE-HEAD-56 · BLOCKED · actual all-bit parent interface/hold qualification absent → HEAD.GRT → HEAD.TILES
+## DIE s81_head · HEAD · rev l48h1 (prep_v3, plan 8e8ce514127b; launch after plan-time GEOM 0 new FAIL) · FROZEN 12.20 (l47u exception) · owner DIE-HEAD-57
+- [ ] HEAD.BIND Current parent source / child-model composition · HEAD / DIE-HEAD-57 · BLOCKED · exact current source+views must compose before full parent release → HEAD.TILES
+- [ ] HEAD.CLK Current die clock qualification · HEAD / DIE-HEAD-57 · BLOCKED(kits) · clock proof l48w_sth GRT0/TT+252.75 stands (older pass counts); l48w_sth GRT0/TT+252.75/START0of1607; only2 real core views,0 kits plus declared budgets; 530106 hold pairs unmeasured, not current full-die timing → HEAD.TILES
+- [ ] HEAD.GRT Current whole-die signal+clock global routing · HEAD / DIE-HEAD-57 · BLOCKED · retained infrastructure routing is not a complete current parent data-route receipt → HEAD.TILES → HEAD.BIND
+- [ ] HEAD.STA Complete current parent TT/FF and seam timing · HEAD / DIE-HEAD-57 · BLOCKED · actual all-bit parent interface/hold qualification absent → HEAD.GRT → HEAD.TILES
 - [ ] HEAD.SERDES kp4 e13a own routed equivalence · HEAD / SIGNOFF-SPRINT-19 · RUNNING · n-head SIGNED TT+2.48 FF+11.85 DRC0 ANT0 faceguardPASS; existing own routedLEC CPU-active, await actualEQ before count
 - [ ] HEAD.TILES Current partition physical closure · HEAD / KIT-WAVE · RUNNING · STmD route DRC0/antenna0, finishRCX/signoff+EQ pending; original tile/spine/HOST repairs continue; current HOST timing/DRV/neck and meshFF-104.83 unresolved → HEAD.SERDES
 - [ ] HEAD.HOSTLEC Current routed HOST qualification · HEAD · WAITS · retained component136216EQ complete; newer routedb2 is a different subject and still needs its own proof+physical closure → HEAD.TILES
