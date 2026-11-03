@@ -1880,8 +1880,8 @@
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
    "plan": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8g/die_plan.json",
    "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-hbmv",
-   "src_sha": "78e511e3a45b09131cbb14fdc8f2c5b6e6c68a5d",
+   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-hbm2d",
+   "src_sha": "2d0660db1b765149042f7ad6cf0c01f289235a0f",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -2259,12 +2259,23 @@
     "ot_hbm_xp_aq_tree13_fmt@1",
     "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap@2",
     "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap@2",
-    "ot_hnx_fused_tnode@2"
+    "ot_hnx_fused_tnode@2",
+    "hfd_hgi_vms_glue_nw_t@3",
+    "hnx_vms_bank_q0_faces__vecd4ae__v39c3624d7cc9@2",
+    "hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f@2",
+    "hnx_vms_bank_q0_faces__vecd4ae__vb64bbf321780@1",
+    "ot_hbm_su_programme_pslice_c5@3",
+    "ot_hbm_su_static_cxport_ij_q@3",
+    "ot_hbm_su_static_qcore_r13@2",
+    "ot_hbm_xp_aq_tree13_fmt@3",
+    "ot_hfd_coll_q2n2_body_core@4",
+    "ot_hfd_coll_q2n2_vm_core@3",
+    "ot_hgi_qw_dec@2"
    ],
    "pilot_max": 2,
    "owner_lane": "DIE-HBM-61",
    "pilot_mode": "queue",
-   "queue_src": "claude/kw-fix-4-hbmv-1103@78e511e3a45",
+   "queue_src": "main@2d0660db1b7",
    "hold_items": {
     "hnx_vms_bank_q0_faces__vec6293*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)",
     "*_mu1*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)"
@@ -2282,7 +2293,19 @@
     "ot_hbm_svc_vm_kshare_splitstrap__v8e478a@2": "LEC class: 9740a4deacb (G4 raw-prefix bound) + flow-latch-1 8f62e618709/a648c13e71c (G11 lec.py phase-aware latch + raw wall) in wave src kw-fix-4-fl-hbm 89eb1d03dba (DIE-HBM-61 08:43 ASK default, COORD 09:0x item 3); glue_nw_t = KW_PLACE_RC=1 single FLOW strike",
     "ot_hfd_coll_q2n2_body_core@3": "LEC class: 9740a4deacb (G4 raw-prefix bound) + flow-latch-1 8f62e618709/a648c13e71c (G11 lec.py phase-aware latch + raw wall) in wave src kw-fix-4-fl-hbm 89eb1d03dba (DIE-HBM-61 08:43 ASK default, COORD 09:0x item 3); glue_nw_t = KW_PLACE_RC=1 single FLOW strike",
     "ot_hnx_fused_hub_n4ext@3": "LEC class: 9740a4deacb (G4 raw-prefix bound) + flow-latch-1 8f62e618709/a648c13e71c (G11 lec.py phase-aware latch + raw wall) in wave src kw-fix-4-fl-hbm 89eb1d03dba (DIE-HBM-61 08:43 ASK default, COORD 09:0x item 3); glue_nw_t = KW_PLACE_RC=1 single FLOW strike",
-    "ot_hbm_idx_rootctl_static_am@2": "queue REJECTED (kit carries FAIL_PREFLOOR LEC from an earlier run) after GEOM-ADVISORY release; LEC class 9740a4deacb + G11 lec.py in wave src kw-fix-4-fl-hbm 89eb1d03dba; 0 design strikes"
+    "ot_hbm_idx_rootctl_static_am@2": "queue REJECTED (kit carries FAIL_PREFLOOR LEC from an earlier run) after GEOM-ADVISORY release; LEC class 9740a4deacb + G11 lec.py in wave src kw-fix-4-fl-hbm 89eb1d03dba; 0 design strikes",
+    "hfd_hgi_vms_glue_nw_t@3": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "hnx_vms_bank_q0_faces__vecd4ae__v39c3624d7cc9@2": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f@2": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "hnx_vms_bank_q0_faces__vecd4ae__vb64bbf321780@1": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hbm_su_programme_pslice_c5@3": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hbm_su_static_cxport_ij_q@3": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hbm_su_static_qcore_r13@2": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hbm_xp_aq_tree13_fmt@3": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hfd_coll_q2n2_body_core@4": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hfd_coll_q2n2_vm_core@3": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hgi_qw_dec@2": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "__batch_hbm_pins": "11 rows: INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)"
    },
    "plan_note": "KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | "
   }
