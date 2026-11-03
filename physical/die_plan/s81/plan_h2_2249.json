@@ -11743,6 +11743,12 @@
      "dir": "in",
      "width": 1,
      "clock": true
+    },
+    {
+     "name": "io_pma_lock",
+     "dir": "in",
+     "width": 1,
+     "note": "S81.RESET PMA lock authority for the warm-reset sequencer (OWNER 11-02 17:55): low = hold the column in reset; release 2 + 64 recovered-clock edges after lock with the PMA clock running; asynchronous assert, release synchronised to io_pma_rck inside ot_pdie_pma_reset_hold"
     }
    ],
    "outline_um": [
@@ -11795,7 +11801,7 @@
        "name": "io_pma_rck",
        "dir": "in",
        "cdc": "synchronized",
-       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col",
+       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col; S81.RESET: the column reset is held by ot_pdie_pma_reset_hold on pma_rck (async assert on rst low or io_pma_lock low, 2-flop release synchroniser + 64-edge count), then the per-domain rs_t/rs_r synchronisers",
        "period_ps": 833.0,
        "source": "far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period",
        "layer": "M7",
@@ -15095,7 +15101,7 @@
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,365.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,365.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
-   "note": "serdes partition; 2 instance(s) (MX,MY)"
+   "note": "serdes partition; 2 instance(s) (MX,MY); S81.RESET warm-reset sequencer ot_pdie_pma_reset_hold 9 FF/column, 0 mission cycles (DIE-S81-49)"
   },
   "serdes__t3": {
    "module": "s81p_serdes__t3",
@@ -15133,6 +15139,12 @@
      "dir": "in",
      "width": 1,
      "clock": true
+    },
+    {
+     "name": "io_pma_lock",
+     "dir": "in",
+     "width": 1,
+     "note": "S81.RESET PMA lock authority for the warm-reset sequencer (OWNER 11-02 17:55): low = hold the column in reset; release 2 + 64 recovered-clock edges after lock with the PMA clock running; asynchronous assert, release synchronised to io_pma_rck inside ot_pdie_pma_reset_hold"
     }
    ],
    "outline_um": [
@@ -15187,7 +15199,7 @@
        "name": "io_pma_rck",
        "dir": "in",
        "cdc": "synchronized",
-       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col",
+       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col; S81.RESET: the column reset is held by ot_pdie_pma_reset_hold on pma_rck (async assert on rst low or io_pma_lock low, 2-flop release synchroniser + 64-edge count), then the per-domain rs_t/rs_r synchronisers",
        "period_ps": 833.0,
        "source": "far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period",
        "layer": "M7",
@@ -18727,7 +18739,7 @@
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 710.924 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,515.956],"outline_um":[2608.48,710.924],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1173.312,352.092],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1533.6,352.092],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
-   "note": "serdes partition; 1 instance(s) (R0)"
+   "note": "serdes partition; 1 instance(s) (R0); S81.RESET warm-reset sequencer ot_pdie_pma_reset_hold 9 FF/column, 0 mission cycles (DIE-S81-49)"
   },
   "serdes__t2": {
    "module": "s81p_serdes__t2",
@@ -18765,6 +18777,12 @@
      "dir": "in",
      "width": 1,
      "clock": true
+    },
+    {
+     "name": "io_pma_lock",
+     "dir": "in",
+     "width": 1,
+     "note": "S81.RESET PMA lock authority for the warm-reset sequencer (OWNER 11-02 17:55): low = hold the column in reset; release 2 + 64 recovered-clock edges after lock with the PMA clock running; asynchronous assert, release synchronised to io_pma_rck inside ot_pdie_pma_reset_hold"
     }
    ],
    "outline_um": [
@@ -18814,7 +18832,7 @@
        "name": "io_pma_rck",
        "dir": "in",
        "cdc": "synchronized",
-       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col",
+       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col; S81.RESET: the column reset is held by ot_pdie_pma_reset_hold on pma_rck (async assert on rst low or io_pma_lock low, 2-flop release synchroniser + 64-edge count), then the per-domain rs_t/rs_r synchronisers",
        "period_ps": 833.0,
        "source": "far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period",
        "layer": "M7",
@@ -20830,7 +20848,7 @@
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1183.68,62.652],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1373.76,62.652],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
-   "note": "serdes partition; 1 instance(s) (R0) [TYPE-DEDUP: 2 instance(s) after merging ['serdes__t6']]"
+   "note": "serdes partition; 1 instance(s) (R0) [TYPE-DEDUP: 2 instance(s) after merging ['serdes__t6']]; S81.RESET warm-reset sequencer ot_pdie_pma_reset_hold 9 FF/column, 0 mission cycles (DIE-S81-49)"
   },
   "serdes__t4": {
    "module": "s81p_serdes__t4",
@@ -20868,6 +20886,12 @@
      "dir": "in",
      "width": 1,
      "clock": true
+    },
+    {
+     "name": "io_pma_lock",
+     "dir": "in",
+     "width": 1,
+     "note": "S81.RESET PMA lock authority for the warm-reset sequencer (OWNER 11-02 17:55): low = hold the column in reset; release 2 + 64 recovered-clock edges after lock with the PMA clock running; asynchronous assert, release synchronised to io_pma_rck inside ot_pdie_pma_reset_hold"
     }
    ],
    "outline_um": [
@@ -20924,7 +20948,7 @@
        "name": "io_pma_rck",
        "dir": "in",
        "cdc": "synchronized",
-       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col",
+       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col; S81.RESET: the column reset is held by ot_pdie_pma_reset_hold on pma_rck (async assert on rst low or io_pma_lock low, 2-flop release synchroniser + 64-edge count), then the per-domain rs_t/rs_r synchronisers",
        "period_ps": 833.0,
        "source": "far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period",
        "layer": "M7",
@@ -23114,7 +23138,7 @@
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 1854.39 x 1163.24 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); DIE-S81-44 10-31 (delta_serdes_lots_1031): lot = full-width shore band (form of t15/t16) so the PMA pair lies along the shore (OWNER 10-29); + PMA abstracts u_ptx/u_prx + KP4 decoder SRAMs (delta_pma_views_1031 / delta_kp4_srams_1031 placement functions)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,581.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,581.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
-   "note": "serdes partition; 1 instance(s) (R0)"
+   "note": "serdes partition; 1 instance(s) (R0); S81.RESET warm-reset sequencer ot_pdie_pma_reset_hold 9 FF/column, 0 mission cycles (DIE-S81-49)"
   },
   "serdes__t14": {
    "module": "s81p_serdes__t14",
@@ -23152,6 +23176,12 @@
      "dir": "in",
      "width": 1,
      "clock": true
+    },
+    {
+     "name": "io_pma_lock",
+     "dir": "in",
+     "width": 1,
+     "note": "S81.RESET PMA lock authority for the warm-reset sequencer (OWNER 11-02 17:55): low = hold the column in reset; release 2 + 64 recovered-clock edges after lock with the PMA clock running; asynchronous assert, release synchronised to io_pma_rck inside ot_pdie_pma_reset_hold"
     }
    ],
    "outline_um": [
@@ -23201,7 +23231,7 @@
        "name": "io_pma_rck",
        "dir": "in",
        "cdc": "synchronized",
-       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col",
+       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col; S81.RESET: the column reset is held by ot_pdie_pma_reset_hold on pma_rck (async assert on rst low or io_pma_lock low, 2-flop release synchroniser + 64-edge count), then the per-domain rs_t/rs_r synchronisers",
        "period_ps": 833.0,
        "source": "far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period",
        "layer": "M7",
@@ -25043,7 +25073,7 @@
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1183.68,62.652],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1373.76,62.652],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
-   "note": "serdes partition; 2 instance(s) (MX,MY)"
+   "note": "serdes partition; 2 instance(s) (MX,MY); S81.RESET warm-reset sequencer ot_pdie_pma_reset_hold 9 FF/column, 0 mission cycles (DIE-S81-49)"
   },
   "serdes__t12": {
    "module": "s81p_serdes__t12",
@@ -25081,6 +25111,12 @@
      "dir": "in",
      "width": 1,
      "clock": true
+    },
+    {
+     "name": "io_pma_lock",
+     "dir": "in",
+     "width": 1,
+     "note": "S81.RESET PMA lock authority for the warm-reset sequencer (OWNER 11-02 17:55): low = hold the column in reset; release 2 + 64 recovered-clock edges after lock with the PMA clock running; asynchronous assert, release synchronised to io_pma_rck inside ot_pdie_pma_reset_hold"
     }
    ],
    "outline_um": [
@@ -25137,7 +25173,7 @@
        "name": "io_pma_rck",
        "dir": "in",
        "cdc": "synchronized",
-       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col",
+       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col; S81.RESET: the column reset is held by ot_pdie_pma_reset_hold on pma_rck (async assert on rst low or io_pma_lock low, 2-flop release synchroniser + 64-edge count), then the per-domain rs_t/rs_r synchronisers",
        "period_ps": 833.0,
        "source": "far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period",
        "layer": "M7",
@@ -25268,7 +25304,7 @@
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PMA tx/rx pair R90 along the shore (OWNER 10-29), stacked in depth 2246.4 x 259.2 in a 2885.76 x 1226.88 shore lot (DIE-S81-27 WS3 fix-only lot replan); the rest of the lot holds boundary flops and ft stations; DIE-S81-45 10-31 (delta_t12pma_1031): + PMA abstracts u_ptx/u_prx + KP4 decoder SRAMs (delta_pma_views_1031 / delta_serdes_lots_1031.corner_sites placement functions)","origin_um":[63.64,904.04],"outline_um":[2246.4,322.84],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[63.528,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[63.528,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1155.168,676.092],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1345.248,676.092],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
-   "note": "serdes partition; 1 instance(s) (MX); DIE-S81-27 WS3 shore lot 2885.76 x 1226.88 (PMA R90), coll ft windows re-laid"
+   "note": "serdes partition; 1 instance(s) (MX); DIE-S81-27 WS3 shore lot 2885.76 x 1226.88 (PMA R90), coll ft windows re-laid; S81.RESET warm-reset sequencer ot_pdie_pma_reset_hold 9 FF/column, 0 mission cycles (DIE-S81-49)"
   },
   "serdes__t13": {
    "module": "s81p_serdes__t13",
@@ -25306,6 +25342,12 @@
      "dir": "in",
      "width": 1,
      "clock": true
+    },
+    {
+     "name": "io_pma_lock",
+     "dir": "in",
+     "width": 1,
+     "note": "S81.RESET PMA lock authority for the warm-reset sequencer (OWNER 11-02 17:55): low = hold the column in reset; release 2 + 64 recovered-clock edges after lock with the PMA clock running; asynchronous assert, release synchronised to io_pma_rck inside ot_pdie_pma_reset_hold"
     }
    ],
    "outline_um": [
@@ -25362,7 +25404,7 @@
        "name": "io_pma_rck",
        "dir": "in",
        "cdc": "synchronized",
-       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col",
+       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col; S81.RESET: the column reset is held by ot_pdie_pma_reset_hold on pma_rck (async assert on rst low or io_pma_lock low, 2-flop release synchroniser + 64-edge count), then the per-domain rs_t/rs_r synchronisers",
        "period_ps": 833.0,
        "source": "far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period",
        "layer": "M7",
@@ -27537,7 +27579,7 @@
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 1667.96 x 1163.24 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); DIE-S81-44 10-31 (delta_serdes_lots_1031): lot = full-width shore band (form of t15/t16) so the PMA pair lies along the shore (OWNER 10-29); + PMA abstracts u_ptx/u_prx + KP4 decoder SRAMs (delta_pma_views_1031 / delta_kp4_srams_1031 placement functions)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,581.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,581.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
-   "note": "serdes partition; 1 instance(s) (MY)"
+   "note": "serdes partition; 1 instance(s) (MY); S81.RESET warm-reset sequencer ot_pdie_pma_reset_hold 9 FF/column, 0 mission cycles (DIE-S81-49)"
   },
   "phy__t1": {
    "module": "s81p_phy__t1",
@@ -858525,6 +858567,12 @@
      "dir": "in",
      "width": 1,
      "clock": true
+    },
+    {
+     "name": "io_pma_lock",
+     "dir": "in",
+     "width": 1,
+     "note": "S81.RESET PMA lock authority for the warm-reset sequencer (OWNER 11-02 17:55): low = hold the column in reset; release 2 + 64 recovered-clock edges after lock with the PMA clock running; asynchronous assert, release synchronised to io_pma_rck inside ot_pdie_pma_reset_hold"
     }
    ],
    "outline_um": [
@@ -858579,7 +858627,7 @@
        "name": "io_pma_rck",
        "dir": "in",
        "cdc": "synchronized",
-       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col",
+       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col; S81.RESET: the column reset is held by ot_pdie_pma_reset_hold on pma_rck (async assert on rst low or io_pma_lock low, 2-flop release synchroniser + 64-edge count), then the per-domain rs_t/rs_r synchronisers",
        "period_ps": 833.0,
        "source": "far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period",
        "layer": "M7",
@@ -862329,7 +862377,7 @@
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,365.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,365.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
-   "note": "serdes partition; 2 instance(s) (MX,MY);clock landing cohort fromserdes__t15 (exact local monitor children)",
+   "note": "serdes partition; 2 instance(s) (MX,MY);clock landing cohort fromserdes__t15 (exact local monitor children); S81.RESET warm-reset sequencer ot_pdie_pma_reset_hold 9 FF/column, 0 mission cycles (DIE-S81-49)",
    "landing_base_type": "serdes__t15"
   },
   "serdes__t15__cla3d02796": {
@@ -862368,6 +862416,12 @@
      "dir": "in",
      "width": 1,
      "clock": true
+    },
+    {
+     "name": "io_pma_lock",
+     "dir": "in",
+     "width": 1,
+     "note": "S81.RESET PMA lock authority for the warm-reset sequencer (OWNER 11-02 17:55): low = hold the column in reset; release 2 + 64 recovered-clock edges after lock with the PMA clock running; asynchronous assert, release synchronised to io_pma_rck inside ot_pdie_pma_reset_hold"
     }
    ],
    "outline_um": [
@@ -862422,7 +862476,7 @@
        "name": "io_pma_rck",
        "dir": "in",
        "cdc": "synchronized",
-       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col",
+       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col; S81.RESET: the column reset is held by ot_pdie_pma_reset_hold on pma_rck (async assert on rst low or io_pma_lock low, 2-flop release synchroniser + 64-edge count), then the per-domain rs_t/rs_r synchronisers",
        "period_ps": 833.0,
        "source": "far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period",
        "layer": "M7",
@@ -866737,7 +866791,7 @@
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,365.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,365.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
-   "note": "serdes partition; 2 instance(s) (MX,MY);clock landing cohort fromserdes__t15 (exact local monitor children)",
+   "note": "serdes partition; 2 instance(s) (MX,MY);clock landing cohort fromserdes__t15 (exact local monitor children); S81.RESET warm-reset sequencer ot_pdie_pma_reset_hold 9 FF/column, 0 mission cycles (DIE-S81-49)",
    "landing_base_type": "serdes__t15"
   },
   "serdes__t1__clfe1f0815": {
@@ -866776,6 +866830,12 @@
      "dir": "in",
      "width": 1,
      "clock": true
+    },
+    {
+     "name": "io_pma_lock",
+     "dir": "in",
+     "width": 1,
+     "note": "S81.RESET PMA lock authority for the warm-reset sequencer (OWNER 11-02 17:55): low = hold the column in reset; release 2 + 64 recovered-clock edges after lock with the PMA clock running; asynchronous assert, release synchronised to io_pma_rck inside ot_pdie_pma_reset_hold"
     }
    ],
    "outline_um": [
@@ -866828,7 +866888,7 @@
        "name": "io_pma_rck",
        "dir": "in",
        "cdc": "synchronized",
-       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col",
+       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col; S81.RESET: the column reset is held by ot_pdie_pma_reset_hold on pma_rck (async assert on rst low or io_pma_lock low, 2-flop release synchroniser + 64-edge count), then the per-domain rs_t/rs_r synchronisers",
        "period_ps": 833.0,
        "source": "far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period",
        "layer": "M7",
@@ -869892,7 +869952,7 @@
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1173.312,62.652],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1533.6,62.652],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
-   "note": "serdes partition; 1 instance(s) (R0) [TYPE-DEDUP: 2 instance(s) after merging ['serdes__t5']];clock landing cohort fromserdes__t1 (exact local monitor children)",
+   "note": "serdes partition; 1 instance(s) (R0) [TYPE-DEDUP: 2 instance(s) after merging ['serdes__t5']];clock landing cohort fromserdes__t1 (exact local monitor children); S81.RESET warm-reset sequencer ot_pdie_pma_reset_hold 9 FF/column, 0 mission cycles (DIE-S81-49)",
    "landing_base_type": "serdes__t1"
   },
   "serdes__t1__clb45db5be": {
@@ -869931,6 +869991,12 @@
      "dir": "in",
      "width": 1,
      "clock": true
+    },
+    {
+     "name": "io_pma_lock",
+     "dir": "in",
+     "width": 1,
+     "note": "S81.RESET PMA lock authority for the warm-reset sequencer (OWNER 11-02 17:55): low = hold the column in reset; release 2 + 64 recovered-clock edges after lock with the PMA clock running; asynchronous assert, release synchronised to io_pma_rck inside ot_pdie_pma_reset_hold"
     }
    ],
    "outline_um": [
@@ -869983,7 +870049,7 @@
        "name": "io_pma_rck",
        "dir": "in",
        "cdc": "synchronized",
-       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col",
+       "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col; S81.RESET: the column reset is held by ot_pdie_pma_reset_hold on pma_rck (async assert on rst low or io_pma_lock low, 2-flop release synchroniser + 64-edge count), then the per-domain rs_t/rs_r synchronisers",
        "period_ps": 833.0,
        "source": "far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period",
        "layer": "M7",
@@ -872792,7 +872858,7 @@
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1173.312,62.652],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1533.6,62.652],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
-   "note": "serdes partition; 1 instance(s) (R0) [TYPE-DEDUP: 2 instance(s) after merging ['serdes__t5']];clock landing cohort fromserdes__t1 (exact local monitor children)",
+   "note": "serdes partition; 1 instance(s) (R0) [TYPE-DEDUP: 2 instance(s) after merging ['serdes__t5']];clock landing cohort fromserdes__t1 (exact local monitor children); S81.RESET warm-reset sequencer ot_pdie_pma_reset_hold 9 FF/column, 0 mission cycles (DIE-S81-49)",
    "landing_base_type": "serdes__t1"
   },
   "slice_station__t50__cl39451317": {
