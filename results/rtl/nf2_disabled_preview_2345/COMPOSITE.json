@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.nf2.composite_source_qualification.v1",
+  "verdict": "EQUIVALENT_COMPOSITE_6370_OF_6370",
+  "status": "QUALIFIED_DISABLED_SOURCE_ONLY",
+  "normal_source_sha256": "dbff40e4b29d0fa1a81ec75167557dce3dbb9a06194c3c5eab77c99ce216a14b",
+  "baseline_source_sha256": "1c69d14295082971b00d7c808dd018eed6433313cd2eda0ad3ebdee1ba43f384",
+  "reference_netlist_sha256": "c137ce5c31b84b1ce7d8c09f6d3a9ee5dad4cbf4d50383cb259310e4d91da766",
+  "helper_sha256": "18a2c392f5de09dded850e503e1a1d449a9e50d8064c0b9f9925f496df1b1a09",
+  "checked_identity_files": 68,
+  "identity_mismatches": [],
+  "unchanged_normal_readset": 47,
+  "old_proved_coverage": 6369,
+  "newly_proved_points": [
+    "ff:u_dut.u_leaf.u_core.fault"
+  ],
+  "combined_coverage": 6370,
+  "constraints": 0,
+  "old_hypotheses": 944,
+  "joint_reproved_hypotheses": 945,
+  "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/work/reset_contract.json",
+      "die": "kv",
+      "edges": 16,
+      "assert_edges": 20,
+      "receipt": "/work/reset_contract/receipt.txt"
+    },
+    "used": 16,
+    "debug_overrides": {}
+  },
+  "coverage_argument": "Same native graphs/readset/reset. All944 original hypotheses remain unchanged and are jointly reproved with the one new relation. The original6369 covered points remain valid under this true strengthened invariant; the sole omitted point is now proved. Coverage is disjoint and complete.",
+  "preserved_original": {
+    "path": "/srv/opentallas-scratch2/claude/codex-kv-ahub-fault-full-2055/proof/normal/lec.json",
+    "sha256": "4bd61a90e28530a1f0477dac19a9f8ddfcd49277f1e50b78587fd2a4563a157b",
+    "verdict": "UNPROVEN",
+    "counts": {
+      "compare_points": 6370,
+      "proved": 6369,
+      "differs": 1,
+      "undecided": 0
+    }
+  },
+  "replay": "/srv/opentallas-scratch2/claude/codex-nf2-profile-replay-2338",
+  "no_full_rerun": true,
+  "activation": "OFF; no canonical source/recipe/plan changes",
+  "physical_status": "NOT RUN; source proof gives no timing/clock/tree/model qualification",
+  "full_mutant_status": "running; existing job preserved"
+}

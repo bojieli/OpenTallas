@@ -1,0 +1,13 @@
+# Disabled NF2 source qualification and synthesis preview
+
+The exact candidate source is qualified by a complete composite proof: the original6,369 covered points remain valid under all944 unchanged correspondence hypotheses, jointly re-proved with the new inverse-cube relation; the sole missing fault point is now proved. The join checks68 source/graph/context hashes, the47-file actual RTL readset, the original16-edge reset contract and the helper transform itself. Original `UNPROVEN` is preserved byte for byte. This does not rewrite or relabel that failed record.
+
+`COMPOSITE.json` is the source-owner coverage join. `FLOW_REPLAY.json` and `SOURCE_GRAPH_IDENTITY.json` preserve FLOW's scoped proof and identity records. `join_coverage.py` reproduces the join against the protected Epyc2 source packet. Existing full mutant remains running at `codex-kv-ahub-fault-full-2055/proof/mutant`; no duplicate or cancellation occurred. The previously completed smallest-source-fragment omitted-group mutant was rejected.
+
+One fresh synthesis preview passed under normal RTL/SDC/SELRANGE/adder and RAW+ODB boundary gates. It stopped at SYNTH. Physical source flip-flops grow3,625->3,641; the fault bank grows5->21. All16 additional clock sinks are on `ck[0]` (2,782->2,798), an increase of0.575% on that existing input. The other register clock roles and cell masters are identical. No cycles, macros or pin ABI are added. The five real macros and604.8x440.64um outline are retained; mapped stdcell area is2,064.6um2, macro area138,102um2. The image was personally viewed.
+
+The first price comparison used an older CodexG ODB without20 pre-existing NF2 keeper flip-flops. That comparison is retained as an explicitly rejected vehicle. Correct baseline is `intel2:die-kv-60/ahub/G`, whose1_2_yosys.v hash is the qualified reference `c137ce5c...`. Only the correct existing baseline ODB was read afterwards; synthesis was not repeated.
+
+Canonical source/recipe/plan activation remains OFF. No floorplan, PLACE, CTS, GRT, DRT or STA ran. Source proof does not qualify the new mapped netlist or child clock expansion; final own mapped proof and normal timing/clock gates remain open.
+
+Runtime packet: `epyc2:/srv/opentallas-scratch2/claude/codex-nf2-disabled-preview-2345`. Synthesis unit `codex-nf2-synth-preview-2350` admitted as `oth-ubuntu-3567251-1793606402` with8GB/2T. Correct-reference census-only unit `codex-nf2-baseline-census-0008` admitted as `oth-ubuntu-3621479-1793606711` with4GB/1T. Builders in this directory retain the exact source and SYNTH-only stage boundary; use the qualified NF2G baseline, never the older CodexG route variant.

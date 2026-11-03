@@ -1,0 +1,138 @@
+{
+  "verdict": "UNPROVEN",
+  "counts": {
+    "compare_points": 6355,
+    "proved": 6354,
+    "differs": 1,
+    "undecided": 0
+  },
+  "failing": [],
+  "unproven_points": [
+    {
+      "point": "ff:u_dut.u_leaf.u_core.fault",
+      "status": "differs",
+      "cone_unmatched": [
+        "gate_only",
+        "gold_only",
+        "gold_x"
+      ],
+      "cone_unmatched_keys": [
+        "ff:u_dut.u_leaf.u_core.gqv[2]",
+        "ff:u_dut.u_leaf.u_core.gqv_groups[10]",
+        "ff:u_dut.u_leaf.u_core.gqv_groups[11]",
+        "ff:u_dut.u_leaf.u_core.gqv_groups[12]",
+        "ff:u_dut.u_leaf.u_core.gqv_groups[13]",
+        "ff:u_dut.u_leaf.u_core.gqv_groups[14]",
+        "ff:u_dut.u_leaf.u_core.gqv_groups[15]",
+        "ff:u_dut.u_leaf.u_core.gqv_groups[16]"
+      ],
+      "cone_support_count": 35,
+      "cone_state_keys": [
+        "gate_only:ff:u_dut.u_leaf.u_core.gqv[2]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[10]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[11]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[12]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[13]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[14]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[15]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[16]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[17]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[18]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[19]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[2]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[5]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[6]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[7]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[8]",
+        "gold_only:ff:u_dut.u_leaf.u_core.gqv_groups[9]",
+        "gold_x:x31",
+        "matched:ff:u_dut.u_leaf.u_core.act_q",
+        "matched:ff:u_dut.u_leaf.u_core.fault",
+        "matched:ff:u_dut.u_leaf.u_core.gz[0]",
+        "matched:ff:u_dut.u_leaf.u_core.gz[1]",
+        "matched:ff:u_dut.u_leaf.u_core.gz[2]",
+        "matched:ff:u_dut.u_leaf.u_core.gz[3]",
+        "matched:ff:u_dut.u_leaf.u_core.sq",
+        "matched:ff:u_dut.u_leaf.u_core.start_b",
+        "matched:ff:u_dut.u_leaf.u_core.tq[0]",
+        "matched:ff:u_dut.u_leaf.u_core.tq[1]",
+        "matched:ff:u_dut.u_leaf.u_core.tq[2]",
+        "matched:ff:u_dut.u_leaf.u_core.tq[3]",
+        "matched:ff:u_dut.u_leaf.u_core.u_rr.rst_n[0]",
+        "paired:ff:u_dut.u_leaf.u_core.gqv_groups[0]",
+        "paired:ff:u_dut.u_leaf.u_core.gqv_groups[1]",
+        "paired:ff:u_dut.u_leaf.u_core.gqv_groups[3]",
+        "paired:ff:u_dut.u_leaf.u_core.gqv_groups[4]"
+      ]
+    }
+  ],
+  "reason": "1 compare points not proved; each depends on X (don't-care) sources, synthesis-only registers or hit the solver limit (first: ff:u_dut.u_leaf.u_core.fault)",
+  "note": null,
+  "t_total_s": 8542.5,
+  "provenance": {
+    "commit": null,
+    "dirty": null,
+    "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/lec.py'"
+  },
+  "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/work/reset_contract.json",
+      "die": "kv",
+      "edges": 16,
+      "assert_edges": 20,
+      "receipt": "/work/reset_contract/receipt.txt"
+    },
+    "used": 16,
+    "debug_overrides": {}
+  },
+  "constraints": null,
+  "path": "/srv/opentallas-scratch2/claude/codex-kv-ahub-fault-full-2055/proof/mutant/lec.json",
+  "sha256": "267f9bfd0853ef6c169b124654b4e017a937b745804a3b0e5da1402232b27e2d",
+  "root_keys": [
+    "schema",
+    "kit",
+    "generated",
+    "verdict",
+    "reset_contract",
+    "top",
+    "netlist",
+    "synth_frontend",
+    "gold_frontend",
+    "implicit_nets",
+    "black_boxes",
+    "ports",
+    "t_aig_s",
+    "kit_reset_ports",
+    "auto_loaded",
+    "noreset_constants",
+    "constraint_bases",
+    "t_corr_s",
+    "keypoints",
+    "t_prove_s",
+    "x_dont_care_points",
+    "kept_registers",
+    "counts",
+    "failing",
+    "unproven_points",
+    "reason",
+    "t_total_s",
+    "provenance"
+  ],
+  "interpretation": "Not decisive negative rejection. Sole SAT fault point has unproved gate-only gqv2 and is therefore UNPROVEN, not a hard functional failure.",
+  "actual_mutation": "gqv_groups[20] forced0 for fg_a=3,fg_s=3; removes issue-gated zseen[3][63:48] != zmask[63:48] capture.",
+  "mutant_source_sha256": "afef408aacfa699e7d58acb25544204b34ba8618c877efc92c59a03d4b36096d",
+  "retained_profile": {
+    "sha256": "a19a51d48ace12b67176667d69b83c6c65d82628f83ecfa723aeb4b60303066b",
+    "n": 945,
+    "group20": [
+      "gold",
+      "ff:u_dut.u_leaf.u_core.gqv_groups[20]",
+      [
+        "const",
+        0
+      ]
+    ]
+  }
+}

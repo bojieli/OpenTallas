@@ -1,0 +1,151 @@
+{
+  "outline_um": [
+    604.8,
+    440.64
+  ],
+  "macros": [
+    {
+      "inst": "g_zh[0].u_zh",
+      "master": "ot_nhb_zh",
+      "orient": "R180",
+      "x": 25.908,
+      "y": 69.108,
+      "w": 151.2,
+      "h": 151.2
+    },
+    {
+      "inst": "g_zh[1].u_zh",
+      "master": "ot_nhb_zh",
+      "orient": "MX",
+      "x": 198.732,
+      "y": 69.108,
+      "w": 151.2,
+      "h": 151.2
+    },
+    {
+      "inst": "g_zh[2].u_zh",
+      "master": "ot_nhb_zh",
+      "orient": "MY",
+      "x": 25.908,
+      "y": 263.532,
+      "w": 151.2,
+      "h": 151.2
+    },
+    {
+      "inst": "g_zh[3].u_zh",
+      "master": "ot_nhb_zh",
+      "orient": "R0",
+      "x": 198.732,
+      "y": 263.532,
+      "w": 151.2,
+      "h": 151.2
+    },
+    {
+      "inst": "u_recip",
+      "master": "ot_qkh_recip_leaf",
+      "orient": "R0",
+      "x": 371.532,
+      "y": 133.932,
+      "w": 216.0,
+      "h": 216.0
+    }
+  ],
+  "clock_pins": [
+    {
+      "bus": "ck",
+      "bit": 0,
+      "layer": "M5",
+      "x": 302.376,
+      "y": 241.92,
+      "face": "interior",
+      "size": [
+        0.048,
+        0.48
+      ],
+      "clock": true
+    },
+    {
+      "bus": "ck",
+      "bit": 1,
+      "layer": "M5",
+      "x": 190.056,
+      "y": 73.44,
+      "face": "interior",
+      "size": [
+        0.048,
+        0.48
+      ],
+      "clock": true
+    },
+    {
+      "bus": "ck",
+      "bit": 2,
+      "layer": "M5",
+      "x": 190.056,
+      "y": 410.4,
+      "face": "interior",
+      "size": [
+        0.048,
+        0.48
+      ],
+      "clock": true
+    },
+    {
+      "bus": "ck",
+      "bit": 3,
+      "layer": "M5",
+      "x": 149.976,
+      "y": 50.0,
+      "face": "interior",
+      "size": [
+        0.048,
+        0.48
+      ],
+      "clock": true
+    },
+    {
+      "bus": "ck",
+      "bit": 4,
+      "layer": "M5",
+      "x": 449.976,
+      "y": 50.0,
+      "face": "interior",
+      "size": [
+        0.048,
+        0.48
+      ],
+      "clock": true
+    },
+    {
+      "bus": "ck",
+      "bit": 5,
+      "layer": "M5",
+      "x": 580.008,
+      "y": 110.0,
+      "face": "interior",
+      "size": [
+        0.048,
+        0.48
+      ],
+      "clock": true
+    },
+    {
+      "bus": "ck",
+      "bit": 6,
+      "layer": "M5",
+      "x": 596.184,
+      "y": 330.0,
+      "face": "interior",
+      "size": [
+        0.048,
+        0.48
+      ],
+      "clock": true
+    }
+  ],
+  "signal_pin_count": 631,
+  "source_ff_delta": 16,
+  "added_cycles": 0,
+  "physical_new_ff_sites": "not placed",
+  "macro_placement_sha256": "b67de8540be03178bf5ae5442039f77fa13133dd527718c42c342f0043f3674e"
+}
