@@ -57,7 +57,15 @@
    "origin_note": "origin kept (lower-left); the freed slot area returns to hub_Wi glue",
    "rtl_delta": "reset release +1 edge on every reset port; service_ready next-state = clean&&!activity&&!bad_noactivity&&!wait_advert&&quiet>=4 (exact, same cycle)",
    "form": "negmid tk half-cycle copies + service_ready exact retime (activity-free bad terms) + inline_alias",
-   "pg_added_bits_per_mm2": 12800
+   "pg_added_bits_per_mm2": 12800,
+   "signoff": {
+    "verdict": "SIGNED",
+    "db": "epyc2:/srv/opentallas-scratch2/claude/die-kv-64-rfc/cg.eco/i1",
+    "tt": 15.73,
+    "ff": 5.37,
+    "lec": "EQUIVALENT",
+    "via": "1 eco_loop (v5 negmid + exact service_ready retime + inline_alias)"
+   }
   },
   "kv3_hub_Wi.host__qkd_hr_core_queue": {
    "module": "qkd_hr_core_queue",
