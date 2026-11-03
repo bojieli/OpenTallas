@@ -1152,7 +1152,12 @@
     "hd_st_str@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
     "hd_turn_b@2": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
     "hd_lep0N@2": "claude/dh56-lep-1103@82eacd7eac ot_s81hd_lep_pair.lef M6/M7 OBS (PDN-0006 class C); macro LEF sha ad47cc153670 changes"
-   }
+   },
+   "gen_hosts": [
+    "intel2",
+    "epyc4"
+   ],
+   "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)"
   },
   "qwen_compute": {
    "enabled": true,
@@ -1515,7 +1520,12 @@
     "sle_hc2__clcc5e3e61@2": "DPL-STALL class: gen phys --dpl-diamond (merged main 08542fa9d7d via 1b76e9abd9a = a589a3fea9; wave src kit-wave-qc-dpl-1103 f75b8a10890 port) in type_args; diamond legalizer proved on the same 3_4 DBs; launched 04:52 by DIE-QC-65/KITS, resume_from prev attempt",
     "sle_sc_v3@3": "DPL-STALL class: gen phys --dpl-diamond (merged main 08542fa9d7d via 1b76e9abd9a = a589a3fea9; wave src kit-wave-qc-dpl-1103 f75b8a10890 port) in type_args; diamond legalizer proved on the same 3_4 DBs; launched 04:52 by DIE-QC-65/KITS, resume_from prev attempt",
     "coll_ucie@1": "14c84655d0b (DIE-QC-66/PLAN coll_ucie physical_inst u_bound.u_io_ucie: certain macro_instances tool failure) applied to the wave plan -> plan_qc52_ucie1103.json (sha256 3d22325b04a5; only coll_ucie changed vs plan_qc52 9695f75fa95c); KW-FIX-4 08:4x"
-   }
+   },
+   "gen_hosts": [
+    "intel2",
+    "epyc4"
+   ],
+   "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)"
   },
   "hbm": {
    "enabled": true,
@@ -1751,7 +1761,12 @@
    "hold_items": {
     "hnx_vms_bank_q0_faces__vec6293*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)",
     "*_mu1*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)"
-   }
+   },
+   "gen_hosts": [
+    "intel2",
+    "epyc4"
+   ],
+   "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)"
   }
  },
  "place_prefer": [],
