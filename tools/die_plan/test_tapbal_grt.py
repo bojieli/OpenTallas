@@ -34,7 +34,7 @@ def test_run_kit_runs_prepass_after_cts_before_hold_gate_and_ff_grt():
     i_cts = rk.index("\\$M cts SKIP_CTS_REPAIR_TIMING=1")
     i_pre = rk.index("RUN_SCRIPT=/work/tapbal_grt.tcl")
     i_hg = rk.index("/work/hold_gate.tcl")
-    i_grt = rk.index("OT_VCLK_CORNER=ff \\$MF grt")  # macro_ff_repair.mk form (MF = M [+ DESIGN_CONFIG])
+    i_grt = rk.index("OT_VCLK_CORNER=ff \\$M grt")  # HEAD src form (main: \$MF)
     assert i_cts < i_pre < i_hg < i_grt
     assert "grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk" in rk
     assert "CORNER=TC CORNERS=tc" in rk[i_pre - 200:i_pre + 200]

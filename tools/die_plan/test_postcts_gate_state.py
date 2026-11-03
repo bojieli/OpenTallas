@@ -55,7 +55,8 @@ def _run(text, tmp_path, corner, policy=None, pinreg=PINREG, extra_env=None):
     (work / "pinreg_measure.tcl").write_text(pinreg)
     # band_policy() runs from /work as in the kit (gen_phys copies core_clock_band.py); signoff is stubbed to a kit
     # without a hard-core latency contract (its own import chain is covered by the signoff tests)
-    shutil.copyfile(HERE / "core_clock_band.py", work / "core_clock_band.py")
+    if (HERE / "core_clock_band.py").exists():   # HEAD src (older) has no core_clock_band.py
+        shutil.copyfile(HERE / "core_clock_band.py", work / "core_clock_band.py")
     (work / "signoff.py").write_text("def hard_core_latency_contract(_kit):\n    return False\n")
     if policy is not None:
         (work / "master_slice.json").write_text(json.dumps({"core_tree": {"model_qualification": {"band_policy": policy}}}))
