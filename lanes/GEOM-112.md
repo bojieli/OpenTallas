@@ -1,0 +1,3 @@
+# GEOM-112 independent geometry reviewer (successor of GEOM-111, died ~00:40 11-03)
+
+2026-11-03 03:25 PST GEOM-112: CLAIM/START. Read GEOM-111.md + queue lines naming GEOM since 11-02 22:20. Scope: kit-wave AUTO-GEOM FAIL renders by class (R/S/G/D/L-F-T/E + wire-only station -> S81-PROUTE), GEOM REQ, 1-in-5 PASS samples. Watcher = GEOM-111 geom111_watch.py, seen file /srv/opentallas-scratch/claude/geom112/seen.txt (copy of geom111). Class D region-guide helper: no probe record found in GEOM-111.md/queue/FLOW-23 -> will check fused_lane class D evidence and start a short helper if no live owner.
