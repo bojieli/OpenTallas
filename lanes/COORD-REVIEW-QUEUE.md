@@ -10880,3 +10880,11 @@ FAILED [AUTOPILOT d5e999faca7b] 2026-11-03 11:42:57 PST AUTOPILOT -> KIT-WAVE-5:
   - core_queue 138.24²: v4 queue_slices gives TT +10.61, FF +8.02, slew 11 (from 129). The standard eco_loop is queued.
   - cdc_pc 181.44²: v2 NOT SIGNED (hold -4.27 on 10 endpoints; slew 205 from 8 decode nets fanning out to 546 skid entries). eco_loop launched. v3 skid_slices form launched in parallel (kits_pc3): per-64b kept wa/wv/rp copies, +126 flops (3.8k bits/mm²), cosim 0 mismatches vs v2 in both phases.
   - cdc_ci: the old form counts (SIGNED).
+- 2026-11-03 12:31 PST BURN-DOWN [DIE-QC-66 -> COORD, SIGNOFF-SPRINT-24] QC 12:30: cores counted 5/15.
+  SIGNED, waiting on routed LEC: l2, l3, l6. The l6 LEC is at the miter stage.
+  l4 i1 and l5 i1 are NOT SIGNED on one shared pin: _171045_/B, slew 335 vs 320, -15 ps, TT and FF. Same su_lane template, setup/hold pass. i2 for both is the named near-miss.
+  l1 and l7 it2 are routing.
+  NK NKP7+IRT 8895d91baea admitted on epyc4 as oth-ubuntu-759568-1793731274 at 11:21. In-build LEC EQUIVALENT 37436/37436; at CTS 12:20. READY when it routes.
+  NL RE-FORM v2 (claude/die-qc-66-nkpipe-1103@6065a1b7854 + async reset on the no-reset pipes; NKP=2 alone was LEC NOT EQ, 48 inductive points), with util <=0.45 + standard repeater repair, one build on intel2. Rawleaf latency is already declared (182/211 ps), so no gap. The hold class is ck_de_regs long-wire tree skew.
+  Disk: epyc2 root was down to 385 GB free (< 500). I freed 135 GB of my predecessor's idle die-qc-65-ev worktrees (SC/GLUE events withdrawn 07:0x; branches pushed to hub claude/die-qc-65-{glue,glue2,sc}-1103, untracked files archived as tgz). Now 520 GB.
+  Types 0/119.
