@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
 // DIE-HBM-61/RTL-ST32: lockstep new (SFR) subtree32 master vs the 10-31 master, declared shift map:
-// sum / valid_out / node_fault: new(t) == old(t - SH), SH = 2.  sum compared when valid.
+// sum / valid_out / node_fault: new(t) == old(t - SH), SH = 17 (face 2 + 5 levels x 3 adder cuts).  sum compared when valid.
 module tb;
-  localparam int SH = 2, NCYC = 6000;
+  parameter int SH = 17; localparam int NCYC = 6000;
   reg clk = 0, rst_n = 0, valid_in = 0; reg [1023:0] data = 0;
   wire [31:0] s_o, s_n; wire v_o, v_n; wire [30:0] f_o, f_n;
   old_ot_hbm_hc_subtree32_core u_old (.clk(clk), .data(data), .node_fault(f_o), .rst_n(rst_n), .sum(s_o), .valid_in(valid_in), .valid_out(v_o));
@@ -22,9 +22,10 @@ module tb;
   always #1 clk = ~clk;
   initial begin
     repeat (5) @(negedge clk); rst_n = 1;
+    repeat (3) @(negedge clk);  // declared map: new rst_n release +3 (face reset relay); no valid_in before it
     for (cyc = 0; cyc < NCYC; cyc++) begin
       @(negedge clk);
-      valid_in = (cyc < 10) ? 1'b0 : (cyc % 300 < 200) ? ($urandom % 3 != 0) : 1'b0;
+      valid_in = (cyc % 300 < 200) ? ($urandom % 3 != 0) : 1'b0;
       for (int w = 0; w < 32; w++) data[w*32 +: 32] = rf(0);
     end
     repeat (60) @(negedge clk);

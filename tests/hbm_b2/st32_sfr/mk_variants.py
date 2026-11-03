@@ -26,6 +26,10 @@ muts['mut_word_swap']=n.replace('.d({ valid_in, data }),','.d({ valid_in, data[1
 # node fault order: node_fault[0] <-> node_fault[16] at the face register output
 assert n.count('.q(node_fault),')==1
 muts['mut_nf_order']=n.replace('.q(node_fault),','.q({ node_fault[30:17], node_fault[0], node_fault[15:1], node_fault[16] }),')
+# node-fault balance: level-1 faults leave one edge early (last stage of the level-1 delay chain skipped)
+o='else q[15:0] <= \\g_l[1].r [31:16];'
+assert n.count(o)==1,o
+muts['mut_nf_balance']=n.replace(o,'else q[15:0] <= \\g_l[1].r [47:32];')
 for k,v in muts.items():
     assert v!=n,k
     open(f'{out}/{k}.v','w').write(v)

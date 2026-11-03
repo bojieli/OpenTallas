@@ -3,27 +3,72 @@
  "lane": "DIE-HBM-61/RTL-ST32",
  "date": "2026-11-03",
  "master": "ot_hbm_hc_subtree32_core",
- "form": "SFR=1 face registers (input/output/node-fault) + subtree reset relay",
- "generator": "SFR=1 tools/hbm_b2/hc128_subtree32_gen.sh OUT HEAD (src a581d69118) -> sha256 d5c41a4c43a0... == committed",
- "generator_sfr0": "SFR=0 -> sha256 f1971bc0c0e2... == the 10-31 master bit for bit (default off unchanged)",
+ "form": "SFR=1 SXC=7: face registers (input/output/node-fault) + subtree reset relay + 3 opt-in adder cuts (E align, F LZC, G final select) in levels 1-5",
+ "generator": "SFR=1 SXC=7 tools/hbm_b2/hc128_subtree32_gen.sh OUT HEAD (src fdd22197cf) -> sha256 b8a7484704a0... == committed",
+ "generator_sfr0": "SFR=0 at fdd22197cf -> sha256 f1971bc0c0e2... == the 10-31 master bit for bit (default off unchanged)",
  "shift_map": {
-  "sum": 2,
-  "valid_out": 2,
-  "node_fault": 2,
-  "rst_n_release": 3
+  "sum": 17,
+  "valid_out": 17,
+  "node_fault": 17,
+  "rst_n_release": 3,
+  "ot_hdc_fp32_add_lat_XCUTS7_y_err": 3
  },
  "master_lockstep_vs_1031": [
-  "mut_nf_nodelay expect=fail rc=1: ST32_LOCKSTEP SH=2 checks=6055 errors=1184 valid=2647 fault_cycles=656 FAIL",
-  "mut_word_swap expect=fail rc=1: ST32_LOCKSTEP SH=2 checks=6055 errors=141 valid=2647 fault_cycles=656 FAIL",
-  "mut_fi_bypass expect=fail rc=1: ST32_LOCKSTEP SH=2 checks=6055 errors=3771 valid=2647 fault_cycles=656 FAIL",
-  "new expect=pass rc=0: ST32_LOCKSTEP SH=2 checks=6055 errors=0 valid=2647 fault_cycles=656 PASS",
-  "mut_nf_order expect=fail rc=1: ST32_LOCKSTEP SH=2 checks=6055 errors=43 valid=2647 fault_cycles=656 FAIL"
+  "mut_fi_bypass expect=fail rc=1: ST32_LOCKSTEP SH=17 checks=6043 errors=3777 valid=2651 fault_cycles=657 FAIL",
+  "mut_nf_balance expect=fail rc=1: ST32_LOCKSTEP SH=17 checks=6043 errors=1059 valid=2651 fault_cycles=657 FAIL",
+  "mut_nf_nodelay expect=fail rc=1: ST32_LOCKSTEP SH=17 checks=6043 errors=1203 valid=2651 fault_cycles=657 FAIL",
+  "mut_nf_order expect=fail rc=1: ST32_LOCKSTEP SH=17 checks=6043 errors=43 valid=2651 fault_cycles=657 FAIL",
+  "mut_word_swap expect=fail rc=1: ST32_LOCKSTEP SH=17 checks=6043 errors=141 valid=2651 fault_cycles=657 FAIL",
+  "new expect=pass rc=0: ST32_LOCKSTEP SH=17 checks=6043 errors=0 valid=2651 fault_cycles=657 PASS"
  ],
- "qcen_lockstep_sfr0_vs_sfr1": [
-  "base: QCEN_LOCKSTEP SH=2 checks=4115 errors=0 ps_valid=989 ps_f=374 PASS",
-  "sh1: QCEN_LOCKSTEP SH=1 checks=4116 errors=2123 ps_valid=989 ps_f=374 FAIL",
-  "sh3: QCEN_LOCKSTEP SH=3 checks=4114 errors=2123 ps_valid=989 ps_f=374 FAIL",
-  "mut_lfd: QCEN_LOCKSTEP SH=2 checks=4115 errors=6 ps_valid=989 ps_f=374 FAIL"
+ "sim": "verilator 5.050 epyc2, memory-capped scopes; tests/hbm_b2/st32_sfr",
+ "qcen_lockstep_sfr0_vs_sfr1_sxc7": [
+  "base expect=pass rc=0: QCEN_LOCKSTEP SH=17 checks=4100 errors=0 ps_valid=986 ps_f=372 PASS",
+  "mut_lfd expect=fail rc=1: QCEN_LOCKSTEP SH=17 checks=4100 errors=6 ps_valid=986 ps_f=372 FAIL",
+  "sh16 expect=fail rc=1: QCEN_LOCKSTEP SH=16 checks=4101 errors=2116 ps_valid=986 ps_f=373 FAIL",
+  "sh18 expect=fail rc=1: QCEN_LOCKSTEP SH=18 checks=4099 errors=2115 ps_valid=986 ps_f=372 FAIL"
  ],
- "sim": "verilator 5.050 epyc2, memory-capped scopes; tests/hbm_b2/st32_sfr"
+ "adder_xcuts_lockstep_vs_xcuts0": [
+  "mut_gover expect=fail rc=1: ADD_LOCKSTEP X=4 DRST=0 SH=1 checks=200004 errors=203 valid=149621 err=8901 FAIL",
+  "mut_sentinel expect=fail rc=1: ADD_LOCKSTEP X=2 DRST=0 SH=1 checks=200004 errors=2497 valid=149621 err=8901 FAIL",
+  "mut_sticky expect=fail rc=1: ADD_LOCKSTEP X=1 DRST=0 SH=1 checks=200004 errors=609 valid=149621 err=8901 FAIL",
+  "x1_d0 expect=pass rc=0: ADD_LOCKSTEP X=1 DRST=0 SH=1 checks=200004 errors=0 valid=149621 err=8901 PASS",
+  "x1_d1 expect=pass rc=0: ADD_LOCKSTEP X=1 DRST=1 SH=1 checks=200004 errors=0 valid=149621 err=8901 PASS",
+  "x2_d0 expect=pass rc=0: ADD_LOCKSTEP X=2 DRST=0 SH=1 checks=200004 errors=0 valid=149621 err=8901 PASS",
+  "x2_d1 expect=pass rc=0: ADD_LOCKSTEP X=2 DRST=1 SH=1 checks=200004 errors=0 valid=149621 err=8901 PASS",
+  "x4_d0 expect=pass rc=0: ADD_LOCKSTEP X=4 DRST=0 SH=1 checks=200004 errors=0 valid=149621 err=8901 PASS",
+  "x4_d1 expect=pass rc=0: ADD_LOCKSTEP X=4 DRST=1 SH=1 checks=200004 errors=0 valid=149621 err=8901 PASS",
+  "x7_d0 expect=pass rc=0: ADD_LOCKSTEP X=7 DRST=0 SH=3 checks=200004 errors=0 valid=149621 err=8901 PASS",
+  "x7_d1 expect=pass rc=0: ADD_LOCKSTEP X=7 DRST=1 SH=3 checks=200004 errors=0 valid=149621 err=8901 PASS"
+ ],
+ "adder_equivalent_mutant_note": "mut_gzero (drop the -0 guard after cut G) survives in the old form too: exact cancellation already takes g_zero; replaced by mut_gover",
+ "adder_default_identity": "addeq.sh: XCUTS=0 vs main file at LAT 3/4/5/6/7, CUTS -1/1, DRST 0/1: identical sorted netlist line sets (statement order only)",
+ "committed_users_of_adder": "git grep: only ot_hbm_hc_subtree32_core master instantiates ot_hdc_fp32_add_lat among generated cores; SFR=0 regen byte-identical",
+ "tb_note": "tb_master holds valid_in 3 cycles after rst_n release (declared rst release +3); without it 1 mismatch at t=59 (first post-reset beat), as declared",
+ "adder_default_identity_rows": [
+  "LAT=3 CUTS=-1 DRST=1 old 1d845bb19400 new 1d845bb19400 SAME_NETLIST_LINES",
+  "LAT=4 CUTS=-1 DRST=1 old c02d5e43a871 new c02d5e43a871 SAME_NETLIST_LINES",
+  "LAT=4 CUTS=1 DRST=1 old 0d70491167ed new 0d70491167ed SAME_NETLIST_LINES",
+  "LAT=5 CUTS=-1 DRST=1 old b60a39160593 new b60a39160593 SAME_NETLIST_LINES",
+  "LAT=6 CUTS=-1 DRST=1 old c0253713f9ed new c0253713f9ed SAME_NETLIST_LINES",
+  "LAT=7 CUTS=-1 DRST=1 old 9ffd4fb62af0 new 9ffd4fb62af0 SAME_NETLIST_LINES",
+  "LAT=7 CUTS=-1 DRST=0 old 71d5db790c14 new 71d5db790c14 SAME_NETLIST_LINES",
+  "LAT=5 CUTS=-1 DRST=0 old 865277aa7797 new 865277aa7797 SAME_NETLIST_LINES",
+  "LAT=3 CUTS=-1 DRST=0 old edfcba0c3a9b new edfcba0c3a9b SAME_NETLIST_LINES"
+ ],
+ "prebuild_gate": {
+  "tool": "die-hbm-61-rtl tools/prebuild_gate a86b00925b5",
+  "verdict": "PASS",
+  "stage": "place_resized",
+  "cells": 114458,
+  "stdcell_area_um2": 16196.1,
+  "wns_clk_ps": 264.0,
+  "worst_stage_ps": 569.0,
+  "stage_limit_ps": 583.1,
+  "endpoints_over_583": 0,
+  "pin_unreg": 0,
+  "strict_face_guard_fails": 0,
+  "rst_n_landing_pins": 3,
+  "history": "SXC=0 (face only): +54.7; SXC=7 swap-before-shift: +240.9 (u_ca->u_ce 592 ps); final: +264.0"
+ }
 }
