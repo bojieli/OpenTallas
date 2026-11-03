@@ -2457,7 +2457,13 @@ def early_core_map(plan, taps, plan_path=None):
         tn = prt["type"]
         if (P.types[tn].get("clock", {}) or {}).get("core_taps") != "early":
             continue
-        hc = {h["inst"]: h for h in P.types[tn].get("hard_cores", []) or []}
+        # a bound macro may be named by its placed physical_inst (S81 SVC u_bound.* identities, e1cb82cd5ce):
+        # gen_phys.core_tap_rows reports that name, so index the hard core by both or its module reads as None
+        hc = {}
+        for h in P.types[tn].get("hard_cores", []) or []:
+            hc[h["inst"]] = h
+            if h.get("physical_inst"):
+                hc.setdefault(h["physical_inst"], h)
         rows = {c: G.core_tap_rows(P, tn, c, pending=[]) for c in ("TT", "FF")}
         for (pn, inst, pin, e_tt, i_tt), (_, _, _, e_ff, i_ff) in zip(rows["TT"], rows["FF"]):
             port = byname.get(n, {}).get(pn)
