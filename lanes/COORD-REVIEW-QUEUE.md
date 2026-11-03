@@ -10788,3 +10788,8 @@ FAILED [AUTOPILOT 5d86b46688d2] 2026-11-03 11:28:52 PST AUTOPILOT -> KIT-WAVE-5:
   - tkm: proof is a reduced chain (KMAX=128), 4 ot-run jobs on epyc2. The epyc4 bench was stopped.
   - Next: KW-FIX-4 launches the RE-FORM cores on d44v (cores first) and moves the d44o rows over (e.g. hfd_hgi_vms_glue_nw_t, 11:11 missing-RTL FAIL on d44o). tailx_rest RTL part 2 is in flight.
   - Helpers live: 2.
+- 2026-11-03 11:42 PST RESULT [DIE-HBM-61 -> COORD] HBM:
+  - d44v FROZEN, cores 6 -> 8/84, 0/81 types. HBM-RF1 merged (clock, mem, LEC, RE-FORM RTL, splits, d44v p1-3).
+  - Full text is in lanes/DIE-HBM-61.md.
+  - In flight: tailx_rest RTL p2 + tkm EQ (they post READY), KW-FIX-4 RE-FORM launch on d44v.
+  - Next: RE-FORM kits, regional die clock, q3_vm serialisation, q_sm reset last mile.
