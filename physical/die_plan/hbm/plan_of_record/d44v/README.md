@@ -1,4 +1,4 @@
-# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1 + 2 (DIE-HBM-61/PLAN, 2026-11-03)
+# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1 + 2 + 3 (DIE-HBM-61/PLAN, 2026-11-03)
 
 OWNER 11-03: TWO-STRIKES -> RE-FORM, ONE batch per die. Rules are design targets: plan GEOM, fill, aspect and channels
 are ADVISORY. Only sign-off blocks.
@@ -130,6 +130,34 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
     - hcol_h0: the ra->rb seam is +2, internal and compensated (0 at the ports).
     - MEM: +0.
 
+## Part 3 (one-block plan fix after freeze: hcol_h1 mesh-island ft pins; builder step after 2d)
+
+- **Why**: SS24 10:06. The signed ot_hbm_idx_score_hcol_h1 (hcol_h1_w90 routed DB, re-signed in ss23/hcol_w90_r_hbm,
+  flow-20261102-r-hbm) has 1228 pins. The plan table (d35a `__canon__codex_g21`) has 1216. The 12 extra pins are
+  the 12.2a1 pushdown island ft ports `mp_isl{0,1,2}_{ck,rst}_{i,o}` that the kit adds from core_infra_plan.json
+  (the d35a master-plan form). So the record matched no plan design.
+- **Event** (`mk_mpisl.py`, `mpisl_event.json`): the new table `cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21__mpisl.json`
+  is the 1216 rows + the 12 pins. Each pin is M5, at the signed-DEF centre with its w/h (DEF sha256 8ce38d2e9978acd4).
+  All 128 hcol_h1 `pins_file` refs point to it. No other row moves.
+
+  | island (role) | ck_i | ck_o | rst_i | rst_o |
+  |---|---|---|---|---|
+  | isl0 (clock entry) | 106.92, 97.2 | 109.08, 97.2 | 106.92, 92.88 | 109.08, 92.88 |
+  | isl1 (tree leaf) | 55.08, 97.2 | 57.24, 97.2 | 55.08, 92.88 | 57.24, 92.88 |
+  | isl2 (tree leaf) | 163.08, 97.2 | 165.24, 97.2 | 163.08, 92.88 | 165.24, 92.88 |
+
+- **Parent connection** (`cores/ot_hbm_idx_score_hcol_h1__d44v_mpisl_parent.json`, d35a / 12.2a1 form). Island rects are
+  the plan `clock.mesh.core_islands` ones.
+  - `_ck_i` connects to the die clock tap: the M9->M5 stack at the island centre.
+  - `_ck_o` connects to the die mesh/tree feed-through net, independent of the core clock pin clk_pair[0].
+  - `_rst_i` connects to the die regional reset stack (M9->M5).
+  - `_rst_o` connects to the die reset feed-through net.
+  - Arcs: ck via the fixed BUFx8 `mp_islK_ck0`, rst via the fixed BUFx4 `mp_islK_rst0`. There is no core logic on
+    these arcs (LEC-exempt).
+  - Signed ft_interface delays: TT ck 23.2-26.4 ps, rst 25.0-28.2 ps.
+- **Result**: the signed record now gives DESIGN-MATCH: 1228/1228 pins match, 0 by convention. With d44v part 2 it
+  gave "12/1228 pins: extra pin (record only)".
+
 ## Checks (epyc2 die-hbm-60-plan, same tools for every plan: main 08542fa9d7d + d44v tools)
 
 - **G0+G0C** (`tools/die_plan/check.py --completeness`):
@@ -138,13 +166,15 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
   |---|---|---|
   | d44t | 74 | 128 |
   | d44v part 1 | 51 | 128 |
-  | **d44v part 2** | **24** | 128 |
+  | d44v part 2 | 24 | 128 |
+  | **d44v part 3** | **24** | 128 |
 
   - Against part 1, 27 are gone and **0 are new**.
   - Against d44t, the 3 "new" are pre-existing items under a new message:
     - u_vmb_Q6/Q7_mu1 dq core_faces: mu1s3 282 -> 281 pins.
     - L701 reach: hop index shift, still 392 um.
-  - Diffs: g0/g0_diff_d44t_d44v.txt and g0/g0_diff_d44v_p1_p2.txt.
+  - Part 3 against part 2: gone 0, **new 0**, and the warnings stay at 1148 = 1148.
+  - Diffs: g0/g0_diff_d44t_d44v.txt, g0/g0_diff_d44v_p1_p2.txt and g0/g0_diff_d44v_p2_p3.txt.
 - **Plan-time GEOM** (`plan_geom.py`, 74 types): **new FAIL = 0**, and the FAIL count is 225 -> 225. All of these
   are advisory, and every type already fails clock_tap_sinks or clock_reach.
   - Values worse on rules that already fail (clock_tap_sinks):
@@ -152,8 +182,12 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
     - q_su11pv1: 5654 -> 6403;
     - q_su01: 8890 -> 9194;
     - q_su20: +1.
+  - Part 3 against part 2: identical (new 0, worse 0, better 0).
   - Diff: geom/geom_diff_d44t_d44v.txt.
-- **Count**: 84 -> 84 designs, and the 6 signed cores keep their design key. See g0/count_check.txt.
+- **Count**: 84 -> 84 designs, and the 6 signed cores keep their design key (SAME). See g0/count_check.txt.
+  - The signed hcol_h1 record (signed-DEF pins) gives **MATCH** against the plan design: 1228/1228 pins.
+    count_check.py uses the release counter's `design_pin_cmp` / `pins_equiv`.
+  - hcol_h1 now has a new design key (the 12 pins), so 27 of 84 design keys are unchanged against d44c (was 28).
 - **Census** (ext/census_summary.json):
   - (a) 81/81 types carry PG + clock tap + reset relays.
     - 379/1028 core slots are complete.
