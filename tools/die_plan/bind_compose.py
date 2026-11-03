@@ -190,6 +190,26 @@ def compose(F, rules, spec, Cell):
     return sources,dict(schema='opentallas.bind.compose.v1',cores=records,terminal_equality=True,primitive_splits=primitive_receipt)
 
 
+def port_alias(spec,widths):
+    """({(member leaf, port): (composite inst, composite port)}, {member leaf: composite inst}) for member ports that
+    map whole and bit-identical onto one composite port (DIE-KV-64 11-03: tables written on the uncomposed bind, e.g.
+    the KV r8 pad tables naming pv slices, follow the composite; any other mapping has no alias and stays stale)."""
+    alias,cells={},{}
+    for core in spec.get('cores',[]):
+        tm=defaultdict(set)
+        for pn,pd in core.get('ports',{}).items():
+            bits=pd['bits']; idx=pd.get('indices',list(range(pd.get('lo',0),pd.get('lo',0)+len(bits))))
+            for i,anchors in enumerate(bits):
+                for a in ([anchors] if isinstance(anchors,dict) else anchors):
+                    tm[(a['member'],a['port'])].add((pn,idx[i],a['bit']))
+        for (m,p),ts in tm.items():
+            if (len({t[0] for t in ts})==1 and all(t[1]==t[2] for t in ts) and len(ts)==len({t[2] for t in ts})
+                    and len(ts)==widths.get(m,{}).get(p,-1)):
+                alias[(m,p)]=(core['inst'],next(iter(ts))[0])
+        cells.update({m:core['inst'] for m in core.get('members',[])})
+    return alias,cells
+
+
 def apply(binder, spec_path):
     path=Path(spec_path)
     if not path.is_absolute(): path=Path(binder.base)/path
@@ -201,7 +221,9 @@ def apply(binder, spec_path):
         path=gz.with_name(gz.name[:-3])
     else:
         spec=json.loads(path.read_text())
+    widths={c.path:{p:len(bs) for p,bs in c.ports.items()} for c in getattr(binder.F,'cells',None) or []}
     sources,receipt=compose(binder.F,binder.R,spec,__import__('bind_elab').Cell)
+    binder.composition_alias,binder.composition_cells=port_alias(spec,widths)
     # Keep source paths outside the repository tree, immutable content-addressed.
     out=path.parent/'composed_rtl';out.mkdir(exist_ok=True)
     for mod,rtl in sources:
