@@ -1,0 +1,429 @@
+{
+  "status": "ROOT_AUTHORIZED_DISTINCT_NORMAL_PARENT_RESIDUAL_SYNTH_ONLY_PREP",
+  "scope": "Distinct normal parent-residual SYNTH sizing with24 exact direct source boundaries; no hard-view/source-plan adoption",
+  "root_authorization": "Parent residual with23 matched hard source blackboxes if needed, distinct minimalvehicle",
+  "input_native_GEN_readset": "intel1 kit-wave/s81/e8cbe5f6c70/items/ot_s81sl_kv_leaf__t2/gen/ot_s81sl_kv_leaf__t2/rtl",
+  "native_bound_before_sha256": "9b3766c3f816c666cd7438cc9dc7b5a75fc3a23cb02188bb500d07634f2aa7ff",
+  "native_bound_after_sha256": "004cb21b4d4ce3c3cd71f4c342b41b4a3d2467fc7d117d1b6c64bf3cfdaaecbc",
+  "cuts": [
+    {
+      "bound_instance": "u_u_ve_u_m",
+      "original_module": "ot_s81sl_ve_m",
+      "alias_module": "ot_s81_resid_cut_u_u_ve_u_m",
+      "exact_selected_parameters": {
+        "LA": "4",
+        "LM": "5",
+        "MUT": "0"
+      },
+      "header_source": "ot_s81sl_ve.sv",
+      "source_header_sha256": "ec94875f7270b6dfbd378cdec583e787315263a3d7a8e0f4767d598832d0587b",
+      "new_header_sha256": "8078c3bc710dca73e4e9f03cc3b818b141d49207cc39176b59acd3a01a76a1e7"
+    },
+    {
+      "bound_instance": "u_u_ve_u_s",
+      "original_module": "ot_s81sl_ve_s",
+      "alias_module": "ot_s81_resid_cut_u_u_ve_u_s",
+      "exact_selected_parameters": {
+        "LA": "4",
+        "LM": "5",
+        "MUT": "0"
+      },
+      "header_source": "ot_s81sl_ve.sv",
+      "source_header_sha256": "144c5a071b2864991b0723089822f9c9193d428e4c78360c3e0c1fa0940b3a8c",
+      "new_header_sha256": "bcfdc346a1b805464c1a64d8b490a25034d25817978007e83ff528a1d7b6b443"
+    },
+    {
+      "bound_instance": "u_u_vsw",
+      "original_module": "ot_s81sl_vsw",
+      "alias_module": "ot_s81_resid_cut_u_u_vsw",
+      "exact_selected_parameters": {
+        "LA": "4",
+        "LM": "5",
+        "LR": "1"
+      },
+      "header_source": "ot_s81sl_vsw.sv",
+      "source_header_sha256": "e9a299cf4d17aa7ab80e6680c4afdd5909c368ffbb8f8c90420ae0cf038af582",
+      "new_header_sha256": "d87f893b923b647331fd0f2ea1bd78919b6d5badd29001d5a17074b1d2d7cf96"
+    },
+    {
+      "bound_instance": "u_u_vs",
+      "original_module": "ot_s81sl_vs",
+      "alias_module": "ot_s81_resid_cut_u_u_vs",
+      "exact_selected_parameters": {
+        "MUT": "0",
+        "XL": "6"
+      },
+      "header_source": "ot_s81sl_vs.sv",
+      "source_header_sha256": "f8e6e34ebb2dc8856ec86285f973fac4141eab21d105f0fd7a6bd9b88ff2fa53",
+      "new_header_sha256": "bac64f4b8dfd7cfdfe7f6e780c84061b4179096def1349ac844b3ef0b03a9b09"
+    },
+    {
+      "bound_instance": "u_u_vn_u_a",
+      "original_module": "ot_s81sl_vn_a",
+      "alias_module": "ot_s81_resid_cut_u_u_vn_u_a",
+      "exact_selected_parameters": {
+        "LA": "6",
+        "LM": "5"
+      },
+      "header_source": "ot_s81sl_vn.sv",
+      "source_header_sha256": "7ddd6c93f79e3bed994c25128c22f51892d83fbade3353ee314473fec7487bfd",
+      "new_header_sha256": "3d1b7785f5dee52fe28ad99b26140077aee8b20f0d8c2464ce5a0f1cdcc6af25"
+    },
+    {
+      "bound_instance": "u_u_rxsb",
+      "original_module": "dsfd_su_t_rxsb",
+      "alias_module": "ot_s81_resid_cut_u_u_rxsb",
+      "exact_selected_parameters": {},
+      "header_source": "ot_s81_su_rxh.sv",
+      "source_header_sha256": "9c9f0d9e8d56fde2e85c35d42a4b03008b97742efff37fd6a7f00be06b9f1ef3",
+      "new_header_sha256": "b354d63b28d8e76351c94c3324ba8a31f91c435f01fe9b59c43b7f0f73fd5235"
+    },
+    {
+      "bound_instance": "u_u_rxsf",
+      "original_module": "dsfd_su_t_rxsf",
+      "alias_module": "ot_s81_resid_cut_u_u_rxsf",
+      "exact_selected_parameters": {},
+      "header_source": "ot_s81_su_rxh.sv",
+      "source_header_sha256": "5da9ae999e8e9b2ef9d57dbe0574272427aa8550bef8079bee230970c3f8893d",
+      "new_header_sha256": "2765727c9c09ae944529182b40e2c3cd7b50e4d6ca6c89c0cedb1bfde53f04a3"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_0_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_0_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "1fe7f1b52f219c16c970f90a85ea36b39b4a284530933b0c2669048afead6a29"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_10_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_10_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "fe4d4ab306583ef6ab2312878a0e82d6181e2a31a4d38a644832ea78d97be675"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_11_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_11_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "8168552812cbf77203e13cb575d1d575a05e3830598289a7d6c1dcf39875a952"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_12_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_12_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "d45325e8df2cd74005f0ddea57741375ea55e2e0e05d88781bf8c1e92d6bbd53"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_13_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_13_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "01203a8db4e9cbe504f608476e55dff9ace535d08550e20ec72a65c37aed24f0"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_14_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_14_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "7eb615bf6322741dbb70d5c32a32cc25a827ca5ee7303351283124e7295cf096"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_15_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_15_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "55f1eb4b85a9b8b41cb8825530b00a24a1e36b3ddac2cc3a5d7237530927a92d"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_1_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_1_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "27fd1a7ec1bfc28dc13a26c4be0876ed3fd4692c2747303061aacdbdcc42a331"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_2_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_2_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "5504036fcbe605e376f2b94b9d041d4cd9d295b35ea6b39264dc58d3c2553f27"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_3_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_3_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "03acf87c0d8d02474a26826ed42811cdd46c977433093cc3c7b7f5938ef5ae3a"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_4_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_4_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "2d31b221fc6e21a66e32f1e3c91e206d4f44f36db8df6c61cbab320a7c5f9d5c"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_5_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_5_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "0640f76af19c119886d88a5adb5cd09d30d09914787a67ede9cd11e45fdecfd6"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_6_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_6_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "44ef0bbab590a5e00fd89fb0675c3f3a30e42e5f4a50128845853b8f85ab8ea0"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_7_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_7_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "53f37350e0870f7843bc1f5e03e3b372977d7e80ecf42abdc554869aa8662aaf"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_8_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_8_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "55ad5e9d1adb03a7432acf285605f9f63f591d07d2b48d85fc196fc356d72c13"
+    },
+    {
+      "bound_instance": "u_u_vp_g_ln_9_u_l",
+      "original_module": "ot_dsrom_su_hcpost_lane_pr",
+      "alias_module": "ot_s81_resid_cut_u_u_vp_g_ln_9_u_l",
+      "exact_selected_parameters": {
+        "AL": "6",
+        "ML": "7",
+        "MUTANT": "0"
+      },
+      "header_source": "ot_dsrom_su_hcpost_lane_pr.sv",
+      "source_header_sha256": "2923cb0e679c205a5b825218ce7d2f1bb74160f6a671b5c0058e0659a129ebe2",
+      "new_header_sha256": "3dda98d5d3a414e8350ef7567c2554b63a2badc887013d527d75eadac3c4be09"
+    },
+    {
+      "bound_instance": "u_g_kv_u_kv",
+      "original_module": "ot_s81sl_kv_leaf",
+      "alias_module": "ot_s81_resid_cut_u_g_kv_u_kv",
+      "exact_selected_parameters": {
+        "CNIK": "1",
+        "CNIK_MUT": "0",
+        "CP": "1",
+        "CP_MUT": "0",
+        "HARD_RQ": "0"
+      },
+      "header_source": "ot_s81sl_kv_leaf.sv",
+      "source_header_sha256": "a8212048584dc64698a9017d27f69b84a7e1ea15988a80f7a0399b1c2d4bf6d9",
+      "new_header_sha256": "c1c0557ff1e82e3a478ab4d3723c982e462eb0666adf5cbb415b78372fcc9fa7"
+    }
+  ],
+  "expected_cut_instances": 24,
+  "source_files": [
+    "/work/rtl/bind_cells.sv",
+    "/work/rtl/ot_reset_sync.sv",
+    "/work/rtl/ot_sram_1r1w_512x128_m4_r0c0_bb.v",
+    "/work/rtl/ot_s81sl_vsw.sv",
+    "/work/rtl/ot_s81_su_sw.sv",
+    "/work/rtl/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+    "/work/rtl/ot_hdc_sfu.sv",
+    "/work/rtl/ot_hdc_fastfp_lat_f12.sv",
+    "/work/rtl/ot_hdc_fp32_mul_lat.sv",
+    "/work/rtl/ot_hdc_fp32_add_lat.sv",
+    "/work/rtl/ot_hdc_fastfp.sv",
+    "/work/rtl/ot_hdc_prefix.sv",
+    "/work/rtl/ot_hdc_fp32_f12.sv",
+    "/work/rtl/ot_hdc_delay.sv",
+    "/work/rtl/ot_dsrom_su_f12.sv",
+    "/work/rtl/ot_dsrom_su_add6.sv",
+    "/work/rtl/ot_rst_relay.sv",
+    "/work/rtl/ot_dsrom_su_swiglu.sv",
+    "/work/rtl/ot_s81sl_vs.sv",
+    "/work/rtl/ot_sram_1r1w_32x128_m1_bb.v",
+    "/work/rtl/ot_s81sl_fp_n32.sv",
+    "/work/rtl/ot_rst_relay_tree3.sv",
+    "/work/rtl/ot_dsrom_su_norm.sv",
+    "/work/rtl/ot_dsrom_fp32_add_l6.sv",
+    "/work/rtl/ot_s81sl_vq.sv",
+    "/work/rtl/ot_s81sl_aq12x.sv",
+    "/work/rtl/ot_dsrom_aq12.sv",
+    "/work/rtl/ot_s81sl_vn.sv",
+    "/work/rtl/ot_s81sl_ve.sv",
+    "/work/rtl/ot_s81sl_ve_fp.sv",
+    "/work/rtl/ot_s81sl_kv_leaf.sv",
+    "/work/rtl/ot_sram_1r1w2c_32x64_m1_bb.v",
+    "/work/rtl/ot_s81sl_kv_bank.sv",
+    "/work/rtl/ot_s81_su_qn.sv",
+    "/work/rtl/ot_dsrom_divc.sv",
+    "/work/rtl/ot_s81_su_kv.sv",
+    "/work/rtl/ot_sram_dline.sv",
+    "/work/rtl/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+    "/work/rtl/ot_s81_su_cn_ik.sv",
+    "/work/rtl/ot_hgi_fp4qdq.sv",
+    "/work/rtl/dsfd_su_t_kv.sv",
+    "/work/rtl/pool_safe_alternate.sv",
+    "/work/rtl/ot_dsrom_su_hcpost_lane_pr.sv",
+    "/work/rtl/ot_dsrom_su_hcpost.sv",
+    "/work/rtl/ot_dp_clk_landing.sv",
+    "/work/rtl/ot_meso_fifo.sv",
+    "/work/rtl/ot_s81_su_rxh.sv",
+    "/work/rtl/ot_hdc_v41x_spshort.sv",
+    "/work/rtl/ot_bind_native_24076fd5ce13e3ea617f1ab3.sv",
+    "/work/rtl/ot_bind_native_26d67271036ecfc92fb654f4.sv",
+    "/work/rtl/ot_bind_native_2e6517bf5402ecaef7785f25.sv",
+    "/work/rtl/ot_bind_native_31209e6ad8a400e04b5b111a.sv",
+    "/work/rtl/ot_bind_native_319a0d1b9721503ed2462315.sv",
+    "/work/rtl/ot_bind_native_395d6732aa9cc3d35be8e583.sv",
+    "/work/rtl/ot_bind_native_39b9e3fe1cd7efcfcfd3db16.sv",
+    "/work/rtl/ot_bind_native_4d7c87f000604a04230a07ae.sv",
+    "/work/rtl/ot_bind_native_4ee6006e6a5bb9ff1c0dff1c.sv",
+    "/work/rtl/ot_bind_native_50cbf650117b18109931fc8d.sv",
+    "/work/rtl/ot_bind_native_59eef9c9b92b48ded184e946.sv",
+    "/work/rtl/ot_bind_native_65880f83d3582120795cb765.sv",
+    "/work/rtl/ot_bind_native_775a930c14e15dd48d984174.sv",
+    "/work/rtl/ot_bind_native_7ce6b622cd5fe9844d787515.sv",
+    "/work/rtl/ot_bind_native_846a0a11200ccbd4f9c06b4a.sv",
+    "/work/rtl/ot_bind_native_84c0d55376a6e0e383bdd427.sv",
+    "/work/rtl/ot_bind_native_84fc6383df3ba9f637fabdf0.sv",
+    "/work/rtl/ot_bind_native_8623bff6f848089815f40aa4.sv",
+    "/work/rtl/ot_bind_native_899391864996adab14b568bc.sv",
+    "/work/rtl/ot_bind_native_a6535089d7c1b9f128d59f9c.sv",
+    "/work/rtl/ot_bind_native_c26b45f449df7c50af9e7914.sv",
+    "/work/rtl/ot_bind_native_d43476578c7ac19ed9dff190.sv",
+    "/work/rtl/ot_bind_native_db91ccbb29501a117867f061.sv",
+    "/work/rtl/ot_bind_native_ef43a60e66ff14b226b73408.sv",
+    "/work/rtl/s81p_ot_s81sl_kv_leaf__t2.sv",
+    "/work/rtl/s81p_ot_s81sl_kv_leaf__t2_bound.sv",
+    "/work/rtl/ot_s81_resid_cut_u_u_ve_u_m_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_ve_u_s_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vsw_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vs_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vn_u_a_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_rxsb_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_rxsf_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_0_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_10_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_11_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_12_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_13_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_14_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_15_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_1_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_2_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_3_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_4_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_5_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_6_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_7_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_8_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_u_vp_g_ln_9_u_l_bb.v",
+    "/work/rtl/ot_s81_resid_cut_u_g_kv_u_kv_bb.v"
+  ],
+  "top": "s81p_ot_s81sl_kv_leaf__t2",
+  "added_ff": 0,
+  "added_cycles": 0,
+  "holds": [
+    "Normal RTL_LINT/current alias registry acceptance",
+    "Measured residual count excludes all24 abstract children; wholeKV mapped count remains separate",
+    "No physical blackbox/LEF/timing contract or canonical cut adoption",
+    "Native parent source epoch differs bind_ev2 census hash; exact direct24 parameter/instance mapping matched, source semantics currentcohort join still required"
+  ],
+  "proposed_memory_gb": 16,
+  "proposed_threads": 4,
+  "memory_basis": "Conservative frontend sizing; no measured residual peak. Existing wholeKV32GB has17GB live,176SRAM hardlogic excluded here; report actual peak.",
+  "normal_entry": "ssh intel2 ~/.local/bin/ot-run --mem-gb16 --threads4 ... bash run_synth.sh",
+  "source_cut_receipt": "24 unique alias masters; original module bodies untouched, only selected24 direct bound instance types renamed; eager *_bb.v exact native ANSIheaders with selected defaults"
+}
