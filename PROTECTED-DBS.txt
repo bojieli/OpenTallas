@@ -57,3 +57,7 @@ intel1	/srv/opentallas-scratch2/claude/die-s81-50/nparent/qbank_S/eco_m0	S81 dsf
 intel1	/srv/opentallas-scratch2/claude/die-s81-50/nparent/sstn_base566/eco_m0	S81 ot_s81_sstn_base566 bodyA legacy-IO ECO chain, routed DB eco_m0/i3 (DIE-S81-50/nparent, r-s81 re-sign)
 intel1	/srv/opentallas-scratch2/claude/die-s81-50/nparent/sstn_base566/sign_r-s81_m0	S81 ot_s81_sstn_base566 r-s81 re-sign + LEC (PROVENANCE)
 intel1	/srv/opentallas-scratch2/claude/die-s81-50/nparent/sstn_base566/kitL	S81 ot_s81_sstn_base566 bodyA legacy-IO kit copy
+epyc2	/home/ubuntu/scratch-root/claude/die-hbm-58-cores/hcol_h1_w90	HBM hcol_h1 w90 routed DB (counted, SS24 r-hbm re-sign)
+epyc2	/home/ubuntu/scratch-root/claude/ss23/hcol_w90_r_hbm	HBM hcol_h1 r-hbm re-sign + LEC (PROVENANCE)
+epyc2	/home/ubuntu/scratch-root/claude/ss23/e6kA_eco	KV e6k A eco i1 routed DB (SS24 s-kv re-sign)
+epyc2	/home/ubuntu/scratch-root/claude/ss24	SS24 re-sign dirs + pgslice kit copy
