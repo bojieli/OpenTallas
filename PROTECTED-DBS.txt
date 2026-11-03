@@ -1,2 +1,37 @@
 intel1	/srv/opentallas-scratch2/claude/s81ck13x/kits/dsdv_gunit_l1_ck13D1M70_E6_S10	S81 dsdv_gunit_l1 kit (S81-CORES-KITS-13, counted)
 intel1	/srv/opentallas-scratch2/claude/s81ck13x/gl1_D1M70_E6_S10_h-s81	S81 dsdv_gunit_l1 re-sign
+
+intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-frontend-1131 CODEX KV-FN-7 live supported-frontend CTL diagnostic; keep source/results until handed back
+intel1 /srv/opentallas-scratch2/claude/codex-kv-veh60-gen1-1131 CODEX KV-FN-7 prepared independent fresh veh60 gen1 top-only rebuild; not launched yet
+
+intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-replica-1131 CODEX KV-FN-7 live exact mapped nofsm plus12untrusted replica/state hints; preserve source/results
+
+intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-replica18-1131 CODEX KV-FN-7 live exact mapped nofsm plus18untrusted copy/state hints; preserve source/results
+
+intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-keepn-1131 CODEX KV-FN-7 live existing-hook source-replica mapped diagnostic; preserve source/results
+
+intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-keepw-1131 CODEX KV-FN-7 live existing-hook source-replica mapped diagnostic; preserve source/results
+
+intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-keepn-r1-1131 CODEX KV-FN-7 live mapped guard/LEC diagnostic; preserve source/results
+
+intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-keepw-r1-1131 CODEX KV-FN-7 live mapped guard/LEC diagnostic; preserve source/results
+
+intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-keepx-1131 CODEX KV-FN-7 live mapped guard/LEC diagnostic; preserve source/results
+
+intel1 /srv/opentallas-scratch2/claude/codex-kv-veh60-gen1-mt8-1131 CODEX KV-FN-7 prepared independent8thread gen1top, not launched; source identity gate preserved
+
+intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-alias-coupon-1131 CODEX KV-FN-7 actual AIG alias proof/control receipts; preserve
+intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-alias-full-1131 CODEX KV-FN-7 normal full alias correspondence diagnostic queued; preserve
+intel1 /srv/opentallas-scratch2/claude/codex-kv-ctl-profile-record-1131 CODEX KV-FN-7 corrected boot2 source reference; preserve
+
+intel2 /srv/opentallas-scratch2/claude/codex-kv-ctl-alias-replay-1131 CODEX KV-FN-7 untrusted prior-hyp replay through original prover; preserve live inputs/results
+
+epyc2 /srv/opentallas-scratch2/claude/codex-kv-ctl-alias-replay-1131 CODEX KV-FN-7 live untrusted-replay proof scope2489729; preserve source and results
+
+intel1 /srv/opentallas-scratch2/claude/codex-kv-ctl-production-1131 CODEX KV-FN-7 fresh current-source CTL inputs prepared; awaiting merged checker before GEN/freeze
+
+CODEX HEAD STmD intel2:/srv/opentallas-scratch2/claude/codex-head-stm-prd-1131/D/run/results/asap7/dp_hd_st_m/base/6_final.odb (+.spef/.v), localTT+111.12 FF+7.77 DRC0/DRV0/PG0, exactclockPASS, nativeEQ1734 KEEP856. LOCAL_PASS_NEEDS_PARENT; missingcurrentrealparentreceipt/final295pin_auditpending, sourceoriginalPROVENANCEmissingreported. .keep set atDandbase.
+
+intel1 /srv/opentallas-scratch2/claude/codex-kvfn-monitor-1815 CODEX KV-FN-7 live readonly GEN1 event monitor service; preserve
+intel1 /srv/opentallas-scratch2/claude/codex-kvfn-perf-1755 CODEX KV-FN-7 denied single perf sample receipt; no permission changes
+intel2 /srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1 DIE-S81-48/nnfu S81 dsfd_node_NNfu routed DB (r1/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.odb sha 6a9459a0) + q-s81 sign dir r1/sign_q-s81 (SIGNED TT +9.62/FF +4.03, LEC EQ 2066, PROVENANCE) + tag tools ../t_q-s81; preserve (count candidate)
