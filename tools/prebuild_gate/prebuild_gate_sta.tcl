@@ -22,7 +22,9 @@ puts "GATE cells $n macros $nm stdcell_area_um2 [format %.1f [expr {$a/$dbu/$dbu
 proc worst {tag args} {
   set p [find_timing_paths -path_delay max -group_path_count 1 {*}$args]
   if {[llength $p] == 0} { puts "GATE group $tag none"; return }
+  # one path per path group (clock groups, async recovery/removal): take the worst over ALL groups
   set x [lindex $p 0]
+  foreach y $p { if {[get_property $y slack] < [get_property $x slack]} { set x $y } }
   puts "GATE group $tag slack [format %.1f [get_property $x slack]] start [get_full_name [get_property $x startpoint]] end [get_full_name [get_property $x endpoint]]"
 }
 puts "GATE period [get_property [lindex [all_clocks] 0] period]"
