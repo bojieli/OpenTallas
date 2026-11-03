@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-**Status 2026-11-03 14:34 PST:** count 65 (+1 QC su_lane l6): S81 31/54, HEAD 4/4 + 1/25 types, QC 6/16, KV 16/32, HBM 8/84. Pending counts: KV 5 HR cores (rf_kv1_hr merged H18 main 2d0660db1b7; post-route re-sign + LEC running), S81 ve_s + QC l2 (LEC-KEEP-1 merged-twin proof), QC y-shrink re-delta on main (CA+1 conflict). Merged H17/H18: KV plan schema fix (every KV kit was failing), HBM RE-FORM RTL p2, KV HR delta; KV 22-kit batch relaunched 14:06. Open classes: S81 OT_RESET_CORE (DIE-S81-51), HBM gen stale src + HEAD kit_rtl staging (KW-FIX-4). Disks OK (>=265 GB scratch).
+**Status 2026-11-03 15:34 PST:** count 65 flat (S81 31/54, HEAD 4/4 + 1/25 types, QC 6/16, KV 16/32, HBM 8/84). Pending counts: S81 ve_s (LEC EQUIVALENT with lec-keep-1 merged-twin proof; needs merge + new flow tags), KV 5 HR cores (post-route receipts), QC l2 (LEC running). ROOT-MERGE-27 live: approved QC shrink2 c17afd75bd6, lec-keep-1, spillmark; HEAD turn_a/b HELD for face-register form. Open classes: KV pv PORT_BIND reset-in naming, S81 OT_RESET_CORE, HBM bank128_pair top-SRAM channel (GRT ov 7646). intel2 scratch 209 GB falling -> die-head-48 prune.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
