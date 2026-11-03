@@ -1,0 +1,54 @@
+{
+  "scope": "Existing old compiler assets, not current mission source qualification",
+  "root": "/srv/opentallas-scratch2/claude/tok-ds-2/l0prog/try3/prog/xs",
+  "programme_sets": [
+    {
+      "directory": "/srv/opentallas-scratch2/claude/tok-ds-2/l0prog/try3/prog/xs/layer_calendar",
+      "metadata": "/srv/opentallas-scratch2/claude/tok-ds-2/l0prog/try3/prog/xs/layer_calendar/manifest.json",
+      "metadata_sha256": "1f067a2808c4c6d909a0ae6c86267e2d0b066fe44789dab70bf932156b4cb23f",
+      "metadata_scalars": {
+        "schema": "opentallas.s81_dv.xs_shared_calendar.v1",
+        "layer": "L0",
+        "slice": "u_s_0S",
+        "rows": 1365,
+        "unique_intervals": 21,
+        "action_edges_preserved": true,
+        "physical_roms": "existing 2x4096x72 calendar + 1x4096x72 phase + 4x4096x72 stream"
+      },
+      "all_seven_files_present": true
+    },
+    {
+      "directory": "/srv/opentallas-scratch2/claude/tok-ds-2/l0prog/try3/prog/xs/native/L0.attn.a_proj/u_s_0S",
+      "metadata": "/srv/opentallas-scratch2/claude/tok-ds-2/l0prog/try3/prog/xs/native/L0.attn.a_proj/u_s_0S/programme.json",
+      "metadata_sha256": "f8ec83fb28f1b2f24da50db69ad73129912340ea9b68a4047e790b3358a616b6",
+      "metadata_scalars": {
+        "schema": "opentallas.s81.aproj_native_programme.v1",
+        "op": "L0.attn.a_proj",
+        "slice": "u_s_0S",
+        "status": "PARTIAL",
+        "sealed_programme_held": true,
+        "lifetime_qualified": false,
+        "source": "actual frame MAT/phase/stream + xs_calendar.compile_phase; real XRT CTL targets2/3",
+        "native_rows": 6,
+        "field_phase": 0,
+        "frame_operation_tag": 1,
+        "xs_tag": 0,
+        "actual_gather_data_emitted": false,
+        "synthetic_frame_returns_emitted": false,
+        "HOST_KS_assumed": false,
+        "CTL_pin_to_XR_command_pin_edges": 5,
+        "programme_origin": 686,
+        "origin_definition": "op native issue anchor + ctl_path event age - RSTOP_HOP + source XRT5",
+        "retire_not_before": 1459,
+        "source_frame_minimum": 1459,
+        "source_last_return_pin_minimum": 1458,
+        "gather_source_path": "ot_s81sl_slice_lepw_mab_tp_mu_72 -> ot_s81sl_slice_c1x_k8_cap5r_lp_e6 -> ot_s81sl_xgt_xo -> ot_s81sl_rstopt_xo gather -> ot_s81sl_xs4"
+      },
+      "all_seven_files_present": true
+    }
+  ],
+  "actual_slices_represented": [
+    "u_s_0S"
+  ],
+  "cloned_to_other_slices": false
+}

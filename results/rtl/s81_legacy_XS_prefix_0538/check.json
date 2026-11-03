@@ -1,0 +1,32 @@
+{
+  "status": "PASS_NATIVE_LEGACY_XG_XS_DEFAULT_PREFIX_GATE",
+  "unit": "oth-ubuntu-3216025-1793627676",
+  "raw_launcher_exit": 1,
+  "raw_launcher_failure": "Over-specific negative-control grep expected image-oracle failure; actual one-bit corrupt image correctly triggered whole native output mismatch instead",
+  "classification_corrected_without_rerun": true,
+  "compiler_exit": 0,
+  "miter_cycles": 1180,
+  "cycles": 1200,
+  "clock_ps": 833,
+  "port_bits_compared": 6419,
+  "default_SID": 7,
+  "distinct_namespace_SIDs": [
+    7,
+    6
+  ],
+  "default_empty_and_identical_prefix_all_outputs_equal": true,
+  "native_input_capture_and_issuer_states_equal": true,
+  "gathers": 88,
+  "decoded_GO": 369,
+  "frame_words": 82,
+  "default_scope_fault": 0,
+  "native_ROM_models": 7,
+  "distinct_namespaces": 2,
+  "native_wrong_prefix_caught": true,
+  "native_wrong_image_caught_at_cycle": 457,
+  "XS4_in_closure": false,
+  "added_capture_edges": 0,
+  "added_state_or_cycles": 0,
+  "SYNTHESIS_body_equivalent": true,
+  "physical_or_mission_qualification": false
+}

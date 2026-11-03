@@ -1,0 +1,1825 @@
+{
+  "producer_classes": [
+    {
+      "module": "s81p_dsdv_slice_lepw_mus_C__t1",
+      "parameter_text": ".S_u_s_0S_u_sl_u_xf_sid(4'b0000), .S_u_s_0S_u_sl_u_xg_sid(4'b0000), .S_u_s_0S_u_sl_u_xr_sid(4'b0000)",
+      "source_parts": [
+        "s_0S_C"
+      ],
+      "sink_groups": [
+        "u_f_0L01.u_r0.$3",
+        "u_f_0R01.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_lepw_mu_C__t1",
+      "parameter_text": ".S_u_s_0N_u_sl_u_xf_sid(4'b0001), .S_u_s_0N_u_sl_u_xg_sid(4'b0001), .S_u_s_0N_u_sl_u_xr_sid(4'b0001)",
+      "source_parts": [
+        "s_0N_C"
+      ],
+      "sink_groups": [
+        "u_f_0L10.u_r0.$3",
+        "u_f_0R10.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_col_h9_r0_p5__t1",
+      "parameter_text": ".P_u_r0_u_c0_0_INSTANCE(\"u_f_0R02.u_r0.u_c0_0\"), .P_u_r0_u_c0_1_INSTANCE(\"u_f_0R02.u_r0.u_c0_1\"), .P_u_r0_u_c0_2_INSTANCE(\"u_f_0R02.u_r0.u_c0_2\"), .P_u_r0_u_c0_3_INSTANCE(\"u_f_0R02.u_r0.u_c0_3\"), .P_u_r0_u_c0_4_INSTANCE(\"u_f_0R02.u_r0.u_c0_4\"), .P_u_r0_u_c0_5_INSTANCE(\"u_f_0R02.u_r0.u_c0_5\"), .P_u_r0_u_c0_6_INSTANCE(\"u_f_0R02.u_r0.u_c0_6\"), .P_u_r0_u_c1_0_INSTANCE(\"u_f_0R02.u_r0.u_c1_0\"), .P_u_r0_u_c1_1_INSTANCE(\"u_f_0R02.u_r0.u_c1_1\"), .P_u_r0_u_c1_2_INSTANCE(\"u_f_0R02.u_r0.u_c1_2\"), .P_u_r0_u_c1_3_INSTANCE(\"u_f_0R02.u_r0.u_c1_3\"), .P_u_r0_u_c1_4_INSTANCE(\"u_f_0R02.u_r0.u_c1_4\"), .P_u_r0_u_c1_5_INSTANCE(\"u_f_0R02.u_r0.u_c1_5\"), .P_u_r0_u_c1_6_INSTANCE(\"u_f_0R02.u_r0.u_c1_6\"), .P_u_r0_u_c2_0_INSTANCE(\"u_f_0R02.u_r0.u_c2_0\"), .P_u_r0_u_c2_1_INSTANCE(\"u_f_0R02.u_r0.u_c2_1\"), .P_u_r0_u_c2_2_INSTANCE(\"u_f_0R02.u_r0.u_c2_2\"), .P_u_r0_u_c2_3_INSTANCE(\"u_f_0R02.u_r0.u_c2_3\"), .P_u_r0_u_c2_4_INSTANCE(\"u_f_0R02.u_r0.u_c2_4\"), .P_u_r0_u_c2_5_INSTANCE(\"u_f_0R02.u_r0.u_c2_5\"), .P_u_r0_u_c2_6_INSTANCE(\"u_f_0R02.u_r0.u_c2_6\"), .P_u_r0_u_c3_0_INSTANCE(\"u_f_0R02.u_r0.u_c3_0\"), .P_u_r0_u_c3_1_INSTANCE(\"u_f_0R02.u_r0.u_c3_1\"), .P_u_r0_u_c3_2_INSTANCE(\"u_f_0R02.u_r0.u_c3_2\"), .P_u_r0_u_c3_3_INSTANCE(\"u_f_0R02.u_r0.u_c3_3\"), .P_u_r0_u_c3_4_INSTANCE(\"u_f_0R02.u_r0.u_c3_4\"), .P_u_r0_u_c3_5_INSTANCE(\"u_f_0R02.u_r0.u_c3_5\"), .P_u_r0_u_c3_6_INSTANCE(\"u_f_0R02.u_r0.u_c3_6\"), .P_u_r0_u_c4_0_INSTANCE(\"u_f_0R02.u_r0.u_c4_0\"), .P_u_r0_u_c4_1_INSTANCE(\"u_f_0R02.u_r0.u_c4_1\"), .P_u_r0_u_c4_2_INSTANCE(\"u_f_0R02.u_r0.u_c4_2\"), .P_u_r0_u_c4_3_INSTANCE(\"u_f_0R02.u_r0.u_c4_3\"), .P_u_r0_u_c4_4_INSTANCE(\"u_f_0R02.u_r0.u_c4_4\"), .P_u_r0_u_c4_5_INSTANCE(\"u_f_0R02.u_r0.u_c4_5\"), .P_u_r0_u_c4_6_INSTANCE(\"u_f_0R02.u_r0.u_c4_6\"), .P_u_r0_u_e0_INSTANCE(\"u_f_0R02.u_r0.u_e0\"), .P_u_r0_u_e1_INSTANCE(\"u_f_0R02.u_r0.u_e1\"), .P_u_r0_u_e2_INSTANCE(\"u_f_0R02.u_r0.u_e2\"), .P_u_r0_u_e3_INSTANCE(\"u_f_0R02.u_r0.u_e3\"), .S_u_r0_u_cf_lk(12'b010010010010)",
+      "source_parts": [
+        "fW0_p5_b0"
+      ],
+      "sink_groups": [
+        "u_f_0R03.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_c1x_C__t1",
+      "parameter_text": ".S_u_s_1S_u_lp_u_xf_sid(4'b0010), .S_u_s_1S_u_lp_u_xg_sid(4'b0010), .S_u_s_1S_u_lp_u_xr_sid(4'b0010)",
+      "source_parts": [
+        "s_1S_C"
+      ],
+      "sink_groups": [
+        "u_f_1L01.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_c1x_C__t10",
+      "parameter_text": ".S_u_s_1N_u_lp_u_xf_sid(4'b0011), .S_u_s_1N_u_lp_u_xg_sid(4'b0011), .S_u_s_1N_u_lp_u_xr_sid(4'b0011)",
+      "source_parts": [
+        "s_1N_C"
+      ],
+      "sink_groups": [
+        "u_f_1L10.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_c1x_C__t3",
+      "parameter_text": ".S_u_s_2S_u_lp_u_xf_sid(4'b0100), .S_u_s_2S_u_lp_u_xg_sid(4'b0100), .S_u_s_2S_u_lp_u_xr_sid(4'b0100)",
+      "source_parts": [
+        "s_2S_C"
+      ],
+      "sink_groups": [
+        "u_f_2L01.u_r0.$3",
+        "u_f_2R01.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_c1x_C__t4",
+      "parameter_text": ".S_u_s_2N_u_lp_u_xf_sid(4'b0101), .S_u_s_2N_u_lp_u_xg_sid(4'b0101), .S_u_s_2N_u_lp_u_xr_sid(4'b0101)",
+      "source_parts": [
+        "s_2N_C"
+      ],
+      "sink_groups": [
+        "u_f_2L10.u_r0.$3",
+        "u_f_2R10.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_col_h9_r0_p5__t1",
+      "parameter_text": ".P_u_r0_u_c0_0_INSTANCE(\"u_f_2R12.u_r0.u_c0_0\"), .P_u_r0_u_c0_1_INSTANCE(\"u_f_2R12.u_r0.u_c0_1\"), .P_u_r0_u_c0_2_INSTANCE(\"u_f_2R12.u_r0.u_c0_2\"), .P_u_r0_u_c0_3_INSTANCE(\"u_f_2R12.u_r0.u_c0_3\"), .P_u_r0_u_c0_4_INSTANCE(\"u_f_2R12.u_r0.u_c0_4\"), .P_u_r0_u_c0_5_INSTANCE(\"u_f_2R12.u_r0.u_c0_5\"), .P_u_r0_u_c0_6_INSTANCE(\"u_f_2R12.u_r0.u_c0_6\"), .P_u_r0_u_c1_0_INSTANCE(\"u_f_2R12.u_r0.u_c1_0\"), .P_u_r0_u_c1_1_INSTANCE(\"u_f_2R12.u_r0.u_c1_1\"), .P_u_r0_u_c1_2_INSTANCE(\"u_f_2R12.u_r0.u_c1_2\"), .P_u_r0_u_c1_3_INSTANCE(\"u_f_2R12.u_r0.u_c1_3\"), .P_u_r0_u_c1_4_INSTANCE(\"u_f_2R12.u_r0.u_c1_4\"), .P_u_r0_u_c1_5_INSTANCE(\"u_f_2R12.u_r0.u_c1_5\"), .P_u_r0_u_c1_6_INSTANCE(\"u_f_2R12.u_r0.u_c1_6\"), .P_u_r0_u_c2_0_INSTANCE(\"u_f_2R12.u_r0.u_c2_0\"), .P_u_r0_u_c2_1_INSTANCE(\"u_f_2R12.u_r0.u_c2_1\"), .P_u_r0_u_c2_2_INSTANCE(\"u_f_2R12.u_r0.u_c2_2\"), .P_u_r0_u_c2_3_INSTANCE(\"u_f_2R12.u_r0.u_c2_3\"), .P_u_r0_u_c2_4_INSTANCE(\"u_f_2R12.u_r0.u_c2_4\"), .P_u_r0_u_c2_5_INSTANCE(\"u_f_2R12.u_r0.u_c2_5\"), .P_u_r0_u_c2_6_INSTANCE(\"u_f_2R12.u_r0.u_c2_6\"), .P_u_r0_u_c3_0_INSTANCE(\"u_f_2R12.u_r0.u_c3_0\"), .P_u_r0_u_c3_1_INSTANCE(\"u_f_2R12.u_r0.u_c3_1\"), .P_u_r0_u_c3_2_INSTANCE(\"u_f_2R12.u_r0.u_c3_2\"), .P_u_r0_u_c3_3_INSTANCE(\"u_f_2R12.u_r0.u_c3_3\"), .P_u_r0_u_c3_4_INSTANCE(\"u_f_2R12.u_r0.u_c3_4\"), .P_u_r0_u_c3_5_INSTANCE(\"u_f_2R12.u_r0.u_c3_5\"), .P_u_r0_u_c3_6_INSTANCE(\"u_f_2R12.u_r0.u_c3_6\"), .P_u_r0_u_c4_0_INSTANCE(\"u_f_2R12.u_r0.u_c4_0\"), .P_u_r0_u_c4_1_INSTANCE(\"u_f_2R12.u_r0.u_c4_1\"), .P_u_r0_u_c4_2_INSTANCE(\"u_f_2R12.u_r0.u_c4_2\"), .P_u_r0_u_c4_3_INSTANCE(\"u_f_2R12.u_r0.u_c4_3\"), .P_u_r0_u_c4_4_INSTANCE(\"u_f_2R12.u_r0.u_c4_4\"), .P_u_r0_u_c4_5_INSTANCE(\"u_f_2R12.u_r0.u_c4_5\"), .P_u_r0_u_c4_6_INSTANCE(\"u_f_2R12.u_r0.u_c4_6\"), .P_u_r0_u_e0_INSTANCE(\"u_f_2R12.u_r0.u_e0\"), .P_u_r0_u_e1_INSTANCE(\"u_f_2R12.u_r0.u_e1\"), .P_u_r0_u_e2_INSTANCE(\"u_f_2R12.u_r0.u_e2\"), .P_u_r0_u_e3_INSTANCE(\"u_f_2R12.u_r0.u_e3\"), .S_u_r0_u_cf_lk(12'b010010010010)",
+      "source_parts": [
+        "fW4_p5_b0"
+      ],
+      "sink_groups": [
+        "u_f_2R13.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_iq_C__t1",
+      "parameter_text": ".S_ld_pv_W_k(3'b010), .S_ld_pv_W_nw(8'b10100000), .S_ld_pv_W_rb(10'b0000000000), .S_u_s_3S_u_sl_g_c3_u_xr_sid(4'b0110), .S_u_s_3S_u_sl_u_xf_sid(4'b0110), .S_u_s_3S_u_sl_u_xg_sid(4'b0110)",
+      "source_parts": [
+        "s_3S_C"
+      ],
+      "sink_groups": [
+        "u_f_3L01.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_kv512_C__t1",
+      "parameter_text": ".S_u_s_3N_u_slice_g_c1_u_xr_sid(4'b0111), .S_u_s_3N_u_slice_u_xf_sid(4'b0111), .S_u_s_3N_u_slice_u_xg_sid(4'b0111)",
+      "source_parts": [
+        "s_3N_C"
+      ],
+      "sink_groups": [
+        "u_f_3L10.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_c3x_C__t1",
+      "parameter_text": ".S_ld_pv_E_k(3'b010), .S_ld_pv_E_nw(8'b10100000), .S_ld_pv_E_rb(10'b0000000000), .S_u_s_4S_u_lp_u_xf_sid(4'b1000), .S_u_s_4S_u_lp_u_xg_sid(4'b1000), .S_u_s_4S_u_lp_u_xr_sid(4'b1000)",
+      "source_parts": [
+        "s_4S_C"
+      ],
+      "sink_groups": [
+        "u_f_4R01.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_c1x_C__t5",
+      "parameter_text": ".S_u_s_4N_u_lp_u_xf_sid(4'b1001), .S_u_s_4N_u_lp_u_xg_sid(4'b1001), .S_u_s_4N_u_lp_u_xr_sid(4'b1001)",
+      "source_parts": [
+        "s_4N_C"
+      ],
+      "sink_groups": [
+        "u_f_4R10.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_c1x_C__t6",
+      "parameter_text": ".S_u_s_5S_u_lp_u_xf_sid(4'b1010), .S_u_s_5S_u_lp_u_xg_sid(4'b1010), .S_u_s_5S_u_lp_u_xr_sid(4'b1010)",
+      "source_parts": [
+        "s_5S_C"
+      ],
+      "sink_groups": [
+        "u_f_5L01.u_r0.$3",
+        "u_f_5R01.u_r0.$3"
+      ]
+    },
+    {
+      "module": "col_h9_r0_p2__t1__cl9f71e63d",
+      "parameter_text": ".P_u_r0_u_c0_0_INSTANCE(\"u_f_5L02.u_r0.u_c0_0\"), .P_u_r0_u_c0_1_INSTANCE(\"u_f_5L02.u_r0.u_c0_1\"), .P_u_r0_u_c0_2_INSTANCE(\"u_f_5L02.u_r0.u_c0_2\"), .P_u_r0_u_c0_3_INSTANCE(\"u_f_5L02.u_r0.u_c0_3\"), .P_u_r0_u_c0_4_INSTANCE(\"u_f_5L02.u_r0.u_c0_4\"), .P_u_r0_u_c0_5_INSTANCE(\"u_f_5L02.u_r0.u_c0_5\"), .P_u_r0_u_c0_6_INSTANCE(\"u_f_5L02.u_r0.u_c0_6\"), .P_u_r0_u_c1_0_INSTANCE(\"u_f_5L02.u_r0.u_c1_0\"), .P_u_r0_u_c1_1_INSTANCE(\"u_f_5L02.u_r0.u_c1_1\"), .P_u_r0_u_c1_2_INSTANCE(\"u_f_5L02.u_r0.u_c1_2\"), .P_u_r0_u_c1_3_INSTANCE(\"u_f_5L02.u_r0.u_c1_3\"), .P_u_r0_u_c1_4_INSTANCE(\"u_f_5L02.u_r0.u_c1_4\"), .P_u_r0_u_c1_5_INSTANCE(\"u_f_5L02.u_r0.u_c1_5\"), .P_u_r0_u_c1_6_INSTANCE(\"u_f_5L02.u_r0.u_c1_6\"), .P_u_r0_u_c2_0_INSTANCE(\"u_f_5L02.u_r0.u_c2_0\"), .P_u_r0_u_c2_1_INSTANCE(\"u_f_5L02.u_r0.u_c2_1\"), .P_u_r0_u_c2_2_INSTANCE(\"u_f_5L02.u_r0.u_c2_2\"), .P_u_r0_u_c2_3_INSTANCE(\"u_f_5L02.u_r0.u_c2_3\"), .P_u_r0_u_c2_4_INSTANCE(\"u_f_5L02.u_r0.u_c2_4\"), .P_u_r0_u_c2_5_INSTANCE(\"u_f_5L02.u_r0.u_c2_5\"), .P_u_r0_u_c2_6_INSTANCE(\"u_f_5L02.u_r0.u_c2_6\"), .P_u_r0_u_c3_0_INSTANCE(\"u_f_5L02.u_r0.u_c3_0\"), .P_u_r0_u_c3_1_INSTANCE(\"u_f_5L02.u_r0.u_c3_1\"), .P_u_r0_u_c3_2_INSTANCE(\"u_f_5L02.u_r0.u_c3_2\"), .P_u_r0_u_c3_3_INSTANCE(\"u_f_5L02.u_r0.u_c3_3\"), .P_u_r0_u_c3_4_INSTANCE(\"u_f_5L02.u_r0.u_c3_4\"), .P_u_r0_u_c3_5_INSTANCE(\"u_f_5L02.u_r0.u_c3_5\"), .P_u_r0_u_c3_6_INSTANCE(\"u_f_5L02.u_r0.u_c3_6\"), .P_u_r0_u_c4_0_INSTANCE(\"u_f_5L02.u_r0.u_c4_0\"), .P_u_r0_u_c4_1_INSTANCE(\"u_f_5L02.u_r0.u_c4_1\"), .P_u_r0_u_c4_2_INSTANCE(\"u_f_5L02.u_r0.u_c4_2\"), .P_u_r0_u_c4_3_INSTANCE(\"u_f_5L02.u_r0.u_c4_3\"), .P_u_r0_u_c4_4_INSTANCE(\"u_f_5L02.u_r0.u_c4_4\"), .P_u_r0_u_c4_5_INSTANCE(\"u_f_5L02.u_r0.u_c4_5\"), .P_u_r0_u_c4_6_INSTANCE(\"u_f_5L02.u_r0.u_c4_6\"), .P_u_r0_u_e0_INSTANCE(\"u_f_5L02.u_r0.u_e0\"), .P_u_r0_u_e1_INSTANCE(\"u_f_5L02.u_r0.u_e1\"), .P_u_r0_u_e2_INSTANCE(\"u_f_5L02.u_r0.u_e2\"), .P_u_r0_u_e3_INSTANCE(\"u_f_5L02.u_r0.u_e3\"), .S_u_r0_u_cf_lk(12'b010010010010)",
+      "source_parts": [
+        "fE1_p2_b0"
+      ],
+      "sink_groups": [
+        "u_f_5L03.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_c1x_C__t7",
+      "parameter_text": ".S_u_s_5N_u_lp_u_xf_sid(4'b1011), .S_u_s_5N_u_lp_u_xg_sid(4'b1011), .S_u_s_5N_u_lp_u_xr_sid(4'b1011)",
+      "source_parts": [
+        "s_5N_C"
+      ],
+      "sink_groups": [
+        "u_f_5L10.u_r0.$3",
+        "u_f_5R10.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_c1x_C__t8",
+      "parameter_text": ".S_u_s_6S_u_lp_u_xf_sid(4'b1100), .S_u_s_6S_u_lp_u_xg_sid(4'b1100), .S_u_s_6S_u_lp_u_xr_sid(4'b1100)",
+      "source_parts": [
+        "s_6S_C"
+      ],
+      "sink_groups": [
+        "u_f_6R01.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_c1x_C__t9",
+      "parameter_text": ".S_u_s_6N_u_lp_u_xf_sid(4'b1101), .S_u_s_6N_u_lp_u_xg_sid(4'b1101), .S_u_s_6N_u_lp_u_xr_sid(4'b1101)",
+      "source_parts": [
+        "s_6N_C"
+      ],
+      "sink_groups": [
+        "u_f_6R10.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_lepe_nh_mus_C__t1",
+      "parameter_text": ".S_u_s_7S_u_sl_u_xf_sid(4'b1110), .S_u_s_7S_u_sl_u_xg_sid(4'b1110), .S_u_s_7S_u_sl_u_xr_sid(4'b1110)",
+      "source_parts": [
+        "s_7S_C"
+      ],
+      "sink_groups": [
+        "u_f_7L01.u_r0.$3",
+        "u_f_7R01.u_r0.$3"
+      ]
+    },
+    {
+      "module": "s81p_dsdv_slice_lepe_mu_C__t1",
+      "parameter_text": ".S_u_s_7N_u_sl_u_xf_sid(4'b1111), .S_u_s_7N_u_sl_u_xg_sid(4'b1111), .S_u_s_7N_u_sl_u_xr_sid(4'b1111)",
+      "source_parts": [
+        "s_7N_C"
+      ],
+      "sink_groups": [
+        "u_f_7L10.u_r0.$3",
+        "u_f_7R10.u_r0.$3"
+      ]
+    },
+    {
+      "module": "col_h9_r0_p2__t1__cl9f71e63d",
+      "parameter_text": ".P_u_r0_u_c0_0_INSTANCE(\"u_f_7L12.u_r0.u_c0_0\"), .P_u_r0_u_c0_1_INSTANCE(\"u_f_7L12.u_r0.u_c0_1\"), .P_u_r0_u_c0_2_INSTANCE(\"u_f_7L12.u_r0.u_c0_2\"), .P_u_r0_u_c0_3_INSTANCE(\"u_f_7L12.u_r0.u_c0_3\"), .P_u_r0_u_c0_4_INSTANCE(\"u_f_7L12.u_r0.u_c0_4\"), .P_u_r0_u_c0_5_INSTANCE(\"u_f_7L12.u_r0.u_c0_5\"), .P_u_r0_u_c0_6_INSTANCE(\"u_f_7L12.u_r0.u_c0_6\"), .P_u_r0_u_c1_0_INSTANCE(\"u_f_7L12.u_r0.u_c1_0\"), .P_u_r0_u_c1_1_INSTANCE(\"u_f_7L12.u_r0.u_c1_1\"), .P_u_r0_u_c1_2_INSTANCE(\"u_f_7L12.u_r0.u_c1_2\"), .P_u_r0_u_c1_3_INSTANCE(\"u_f_7L12.u_r0.u_c1_3\"), .P_u_r0_u_c1_4_INSTANCE(\"u_f_7L12.u_r0.u_c1_4\"), .P_u_r0_u_c1_5_INSTANCE(\"u_f_7L12.u_r0.u_c1_5\"), .P_u_r0_u_c1_6_INSTANCE(\"u_f_7L12.u_r0.u_c1_6\"), .P_u_r0_u_c2_0_INSTANCE(\"u_f_7L12.u_r0.u_c2_0\"), .P_u_r0_u_c2_1_INSTANCE(\"u_f_7L12.u_r0.u_c2_1\"), .P_u_r0_u_c2_2_INSTANCE(\"u_f_7L12.u_r0.u_c2_2\"), .P_u_r0_u_c2_3_INSTANCE(\"u_f_7L12.u_r0.u_c2_3\"), .P_u_r0_u_c2_4_INSTANCE(\"u_f_7L12.u_r0.u_c2_4\"), .P_u_r0_u_c2_5_INSTANCE(\"u_f_7L12.u_r0.u_c2_5\"), .P_u_r0_u_c2_6_INSTANCE(\"u_f_7L12.u_r0.u_c2_6\"), .P_u_r0_u_c3_0_INSTANCE(\"u_f_7L12.u_r0.u_c3_0\"), .P_u_r0_u_c3_1_INSTANCE(\"u_f_7L12.u_r0.u_c3_1\"), .P_u_r0_u_c3_2_INSTANCE(\"u_f_7L12.u_r0.u_c3_2\"), .P_u_r0_u_c3_3_INSTANCE(\"u_f_7L12.u_r0.u_c3_3\"), .P_u_r0_u_c3_4_INSTANCE(\"u_f_7L12.u_r0.u_c3_4\"), .P_u_r0_u_c3_5_INSTANCE(\"u_f_7L12.u_r0.u_c3_5\"), .P_u_r0_u_c3_6_INSTANCE(\"u_f_7L12.u_r0.u_c3_6\"), .P_u_r0_u_c4_0_INSTANCE(\"u_f_7L12.u_r0.u_c4_0\"), .P_u_r0_u_c4_1_INSTANCE(\"u_f_7L12.u_r0.u_c4_1\"), .P_u_r0_u_c4_2_INSTANCE(\"u_f_7L12.u_r0.u_c4_2\"), .P_u_r0_u_c4_3_INSTANCE(\"u_f_7L12.u_r0.u_c4_3\"), .P_u_r0_u_c4_4_INSTANCE(\"u_f_7L12.u_r0.u_c4_4\"), .P_u_r0_u_c4_5_INSTANCE(\"u_f_7L12.u_r0.u_c4_5\"), .P_u_r0_u_c4_6_INSTANCE(\"u_f_7L12.u_r0.u_c4_6\"), .P_u_r0_u_e0_INSTANCE(\"u_f_7L12.u_r0.u_e0\"), .P_u_r0_u_e1_INSTANCE(\"u_f_7L12.u_r0.u_e1\"), .P_u_r0_u_e2_INSTANCE(\"u_f_7L12.u_r0.u_e2\"), .P_u_r0_u_e3_INSTANCE(\"u_f_7L12.u_r0.u_e3\"), .S_u_r0_u_cf_lk(12'b010010010010)",
+      "source_parts": [
+        "fE5_p2_b0"
+      ],
+      "sink_groups": [
+        "u_f_7L13.u_r0.$3"
+      ]
+    }
+  ],
+  "status": "CURRENT_BOUND_PRODUCER_SOURCE_ALIAS_JOIN_NO_PHYSICAL_ADOPTION",
+  "actual_bound_top_sha256": "7dcc944c1d951d28fba997d4cdd5ee88175b8f2d84c1bbf947eb60a40e63c176",
+  "groups": 28,
+  "literal_duplicates": 24,
+  "remaining_nonliteral": 4,
+  "actual_source_types": 18,
+  "actual_source_module_parameter_classes": 20,
+  "rows": [
+    {
+      "sink": "u_f_0L01.u_r0.$3",
+      "sink_part": "fW0_p1_b0",
+      "source_part": "s_0S_C",
+      "original_source": "u_s_0S.u_sl.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_lepw_mus_C__t1",
+      "actual_top_parameter_bindings": ".S_u_s_0S_u_sl_u_xf_sid(4'b0000), .S_u_s_0S_u_sl_u_xg_sid(4'b0000), .S_u_s_0S_u_sl_u_xr_sid(4'b0000)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_lepw_mus_C__t1.sv",
+      "actual_source_sha256": "923e856bcf90c38af41b7403e9d5719e61ca608ee085b368241f7e7165ec6a6a",
+      "typed_source_wire": "w_u_s_0S_u_sl_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_0S_u_sl_u_xg_xw_d[1100:565], w_u_s_0S_u_sl_u_xg_xw_d[0], w_u_s_0S_u_sl_u_mk_mk[1], w_u_s_0S_u_sl_u_xg_xw_d[564:0], w_u_s_0S_u_sl_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_0S_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_0S_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_0S_u_sl_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_0S_u_sl_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": true
+    },
+    {
+      "sink": "u_f_0L10.u_r0.$3",
+      "sink_part": "fW5_p1_b0",
+      "source_part": "s_0N_C",
+      "original_source": "u_s_0N.u_sl.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_lepw_mu_C__t1",
+      "actual_top_parameter_bindings": ".S_u_s_0N_u_sl_u_xf_sid(4'b0001), .S_u_s_0N_u_sl_u_xg_sid(4'b0001), .S_u_s_0N_u_sl_u_xr_sid(4'b0001)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_lepw_mu_C__t1.sv",
+      "actual_source_sha256": "37720b3862871c9b3fd7a039082e47bf1cf607ebf25402f1a430628c21c43a7f",
+      "typed_source_wire": "w_u_s_0N_u_sl_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_0N_u_sl_u_xg_xw_d[1100:565], w_u_s_0N_u_sl_u_xg_xw_d[0], w_u_s_0N_u_sl_u_mk_mk[1], w_u_s_0N_u_sl_u_xg_xw_d[564:0], w_u_s_0N_u_sl_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_0N_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_0N_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_0N_u_sl_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_0N_u_sl_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_0R01.u_r0.$3",
+      "sink_part": "fW0_p4_b0",
+      "source_part": "s_0S_C",
+      "original_source": "u_s_0S.u_sl.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_lepw_mus_C__t1",
+      "actual_top_parameter_bindings": ".S_u_s_0S_u_sl_u_xf_sid(4'b0000), .S_u_s_0S_u_sl_u_xg_sid(4'b0000), .S_u_s_0S_u_sl_u_xr_sid(4'b0000)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_lepw_mus_C__t1.sv",
+      "actual_source_sha256": "923e856bcf90c38af41b7403e9d5719e61ca608ee085b368241f7e7165ec6a6a",
+      "typed_source_wire": "w_u_s_0S_u_sl_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_0S_u_sl_u_xg_xw_d[1100:565], w_u_s_0S_u_sl_u_xg_xw_d[0], w_u_s_0S_u_sl_u_mk_mk[1], w_u_s_0S_u_sl_u_xg_xw_d[564:0], w_u_s_0S_u_sl_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_0S_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_0S_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_0S_u_sl_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_0S_u_sl_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_0R03.u_r0.$3",
+      "sink_part": "fW0_p6_b0",
+      "source_part": "fW0_p5_b0",
+      "original_source": "u_f_0R02.u_r0.$4.Y",
+      "actual_source_type": "s81p_col_h9_r0_p5__t1",
+      "actual_top_parameter_bindings": ".P_u_r0_u_c0_0_INSTANCE(\"u_f_0R02.u_r0.u_c0_0\"), .P_u_r0_u_c0_1_INSTANCE(\"u_f_0R02.u_r0.u_c0_1\"), .P_u_r0_u_c0_2_INSTANCE(\"u_f_0R02.u_r0.u_c0_2\"), .P_u_r0_u_c0_3_INSTANCE(\"u_f_0R02.u_r0.u_c0_3\"), .P_u_r0_u_c0_4_INSTANCE(\"u_f_0R02.u_r0.u_c0_4\"), .P_u_r0_u_c0_5_INSTANCE(\"u_f_0R02.u_r0.u_c0_5\"), .P_u_r0_u_c0_6_INSTANCE(\"u_f_0R02.u_r0.u_c0_6\"), .P_u_r0_u_c1_0_INSTANCE(\"u_f_0R02.u_r0.u_c1_0\"), .P_u_r0_u_c1_1_INSTANCE(\"u_f_0R02.u_r0.u_c1_1\"), .P_u_r0_u_c1_2_INSTANCE(\"u_f_0R02.u_r0.u_c1_2\"), .P_u_r0_u_c1_3_INSTANCE(\"u_f_0R02.u_r0.u_c1_3\"), .P_u_r0_u_c1_4_INSTANCE(\"u_f_0R02.u_r0.u_c1_4\"), .P_u_r0_u_c1_5_INSTANCE(\"u_f_0R02.u_r0.u_c1_5\"), .P_u_r0_u_c1_6_INSTANCE(\"u_f_0R02.u_r0.u_c1_6\"), .P_u_r0_u_c2_0_INSTANCE(\"u_f_0R02.u_r0.u_c2_0\"), .P_u_r0_u_c2_1_INSTANCE(\"u_f_0R02.u_r0.u_c2_1\"), .P_u_r0_u_c2_2_INSTANCE(\"u_f_0R02.u_r0.u_c2_2\"), .P_u_r0_u_c2_3_INSTANCE(\"u_f_0R02.u_r0.u_c2_3\"), .P_u_r0_u_c2_4_INSTANCE(\"u_f_0R02.u_r0.u_c2_4\"), .P_u_r0_u_c2_5_INSTANCE(\"u_f_0R02.u_r0.u_c2_5\"), .P_u_r0_u_c2_6_INSTANCE(\"u_f_0R02.u_r0.u_c2_6\"), .P_u_r0_u_c3_0_INSTANCE(\"u_f_0R02.u_r0.u_c3_0\"), .P_u_r0_u_c3_1_INSTANCE(\"u_f_0R02.u_r0.u_c3_1\"), .P_u_r0_u_c3_2_INSTANCE(\"u_f_0R02.u_r0.u_c3_2\"), .P_u_r0_u_c3_3_INSTANCE(\"u_f_0R02.u_r0.u_c3_3\"), .P_u_r0_u_c3_4_INSTANCE(\"u_f_0R02.u_r0.u_c3_4\"), .P_u_r0_u_c3_5_INSTANCE(\"u_f_0R02.u_r0.u_c3_5\"), .P_u_r0_u_c3_6_INSTANCE(\"u_f_0R02.u_r0.u_c3_6\"), .P_u_r0_u_c4_0_INSTANCE(\"u_f_0R02.u_r0.u_c4_0\"), .P_u_r0_u_c4_1_INSTANCE(\"u_f_0R02.u_r0.u_c4_1\"), .P_u_r0_u_c4_2_INSTANCE(\"u_f_0R02.u_r0.u_c4_2\"), .P_u_r0_u_c4_3_INSTANCE(\"u_f_0R02.u_r0.u_c4_3\"), .P_u_r0_u_c4_4_INSTANCE(\"u_f_0R02.u_r0.u_c4_4\"), .P_u_r0_u_c4_5_INSTANCE(\"u_f_0R02.u_r0.u_c4_5\"), .P_u_r0_u_c4_6_INSTANCE(\"u_f_0R02.u_r0.u_c4_6\"), .P_u_r0_u_e0_INSTANCE(\"u_f_0R02.u_r0.u_e0\"), .P_u_r0_u_e1_INSTANCE(\"u_f_0R02.u_r0.u_e1\"), .P_u_r0_u_e2_INSTANCE(\"u_f_0R02.u_r0.u_e2\"), .P_u_r0_u_e3_INSTANCE(\"u_f_0R02.u_r0.u_e3\"), .S_u_r0_u_cf_lk(12'b010010010010)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_col_h9_r0_p5__t1.sv",
+      "actual_source_sha256": "347bc4d29bd94eeccd22a79529715775c8c22e8ce48971ac7e787fab0e482012",
+      "typed_source_wire": "w_u_r0_4_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_r0_u_y_xo3_1_o[275:0], w_u_r0_u_y_xo2_1_o[275:0], w_u_r0_u_y_xo1_1_o[275:0], w_u_r0_u_y_xo0_1_o[275:0]}",
+      "source_export_faces": [],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": {
+        "1": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo0_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo0_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo0_1_o"
+            },
+            {
+              "instance": "u_u_r0_u_y_xo0_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[275:0]",
+              "output": "w_u_r0_u_y_xo0_0_o"
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            1
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        },
+        "567": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo2_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo2_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo2_1_o"
+            },
+            {
+              "instance": "u_u_r0_u_y_xo2_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[827:552]",
+              "output": "w_u_r0_u_y_xo2_0_o"
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            567
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        }
+      },
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_r0_u_y_xo0_1_o",
+        1
+      ],
+      "bit567_origin": [
+        "w_u_r0_u_y_xo2_1_o",
+        15
+      ],
+      "literal_duplicate_valid_proven": false,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_0R10.u_r0.$3",
+      "sink_part": "fW5_p4_b0",
+      "source_part": "s_0N_C",
+      "original_source": "u_s_0N.u_sl.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_lepw_mu_C__t1",
+      "actual_top_parameter_bindings": ".S_u_s_0N_u_sl_u_xf_sid(4'b0001), .S_u_s_0N_u_sl_u_xg_sid(4'b0001), .S_u_s_0N_u_sl_u_xr_sid(4'b0001)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_lepw_mu_C__t1.sv",
+      "actual_source_sha256": "37720b3862871c9b3fd7a039082e47bf1cf607ebf25402f1a430628c21c43a7f",
+      "typed_source_wire": "w_u_s_0N_u_sl_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_0N_u_sl_u_xg_xw_d[1100:565], w_u_s_0N_u_sl_u_xg_xw_d[0], w_u_s_0N_u_sl_u_mk_mk[1], w_u_s_0N_u_sl_u_xg_xw_d[564:0], w_u_s_0N_u_sl_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_0N_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_0N_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_0N_u_sl_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_0N_u_sl_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_1L01.u_r0.$3",
+      "sink_part": "fW2_p1_b0",
+      "source_part": "s_1S_C",
+      "original_source": "u_s_1S.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t1",
+      "actual_top_parameter_bindings": ".S_u_s_1S_u_lp_u_xf_sid(4'b0010), .S_u_s_1S_u_lp_u_xg_sid(4'b0010), .S_u_s_1S_u_lp_u_xr_sid(4'b0010)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t1.sv",
+      "actual_source_sha256": "12744ddc90dccec6e356a5713d8bae1abeea3bd5ee7043a485bffcb5e891e8b1",
+      "typed_source_wire": "w_u_s_1S_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_1S_u_lp_u_xg_xw_d[1100:565], w_u_s_1S_u_lp_u_xg_xw_d[0], w_u_s_1S_u_lp_u_mk_mk[1], w_u_s_1S_u_lp_u_xg_xw_d[564:0], w_u_s_1S_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_1S_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_1S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_1S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_1L10.u_r0.$3",
+      "sink_part": "fW3_p1_b0",
+      "source_part": "s_1N_C",
+      "original_source": "u_s_1N.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t10",
+      "actual_top_parameter_bindings": ".S_u_s_1N_u_lp_u_xf_sid(4'b0011), .S_u_s_1N_u_lp_u_xg_sid(4'b0011), .S_u_s_1N_u_lp_u_xr_sid(4'b0011)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t10.sv",
+      "actual_source_sha256": "5529e0f4df226c8ec89ff0557ed2916e24192c27f6afdd233f0bc64d4affe66c",
+      "typed_source_wire": "w_u_s_1N_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_1N_u_lp_u_xg_xw_d[1100:565], w_u_s_1N_u_lp_u_xg_xw_d[0], w_u_s_1N_u_lp_u_mk_mk[1], w_u_s_1N_u_lp_u_xg_xw_d[564:0], w_u_s_1N_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_1N_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_1N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_1N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_2L01.u_r0.$3",
+      "sink_part": "fW1_p1_b0",
+      "source_part": "s_2S_C",
+      "original_source": "u_s_2S.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t3",
+      "actual_top_parameter_bindings": ".S_u_s_2S_u_lp_u_xf_sid(4'b0100), .S_u_s_2S_u_lp_u_xg_sid(4'b0100), .S_u_s_2S_u_lp_u_xr_sid(4'b0100)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t3.sv",
+      "actual_source_sha256": "a95b04c12bd1364e7f653903d974b43c5531c212b0a540bbabc3be028a00eeca",
+      "typed_source_wire": "w_u_s_2S_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_2S_u_lp_u_xg_xw_d[1100:565], w_u_s_2S_u_lp_u_xg_xw_d[0], w_u_s_2S_u_lp_u_mk_mk[1], w_u_s_2S_u_lp_u_xg_xw_d[564:0], w_u_s_2S_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_2S_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_2S_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_2S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_2S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_2L10.u_r0.$3",
+      "sink_part": "fW4_p1_b0",
+      "source_part": "s_2N_C",
+      "original_source": "u_s_2N.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t4",
+      "actual_top_parameter_bindings": ".S_u_s_2N_u_lp_u_xf_sid(4'b0101), .S_u_s_2N_u_lp_u_xg_sid(4'b0101), .S_u_s_2N_u_lp_u_xr_sid(4'b0101)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t4.sv",
+      "actual_source_sha256": "2623f0fa5fb6607674605dad2e0e2a744a73b5f9d9bfa28c44d70885fa8f5f76",
+      "typed_source_wire": "w_u_s_2N_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_2N_u_lp_u_xg_xw_d[1100:565], w_u_s_2N_u_lp_u_xg_xw_d[0], w_u_s_2N_u_lp_u_mk_mk[1], w_u_s_2N_u_lp_u_xg_xw_d[564:0], w_u_s_2N_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_2N_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_2N_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_2N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_2N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_2R01.u_r0.$3",
+      "sink_part": "fW1_p4_b0",
+      "source_part": "s_2S_C",
+      "original_source": "u_s_2S.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t3",
+      "actual_top_parameter_bindings": ".S_u_s_2S_u_lp_u_xf_sid(4'b0100), .S_u_s_2S_u_lp_u_xg_sid(4'b0100), .S_u_s_2S_u_lp_u_xr_sid(4'b0100)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t3.sv",
+      "actual_source_sha256": "a95b04c12bd1364e7f653903d974b43c5531c212b0a540bbabc3be028a00eeca",
+      "typed_source_wire": "w_u_s_2S_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_2S_u_lp_u_xg_xw_d[1100:565], w_u_s_2S_u_lp_u_xg_xw_d[0], w_u_s_2S_u_lp_u_mk_mk[1], w_u_s_2S_u_lp_u_xg_xw_d[564:0], w_u_s_2S_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_2S_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_2S_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_2S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_2S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_2R10.u_r0.$3",
+      "sink_part": "fW4_p4_b0",
+      "source_part": "s_2N_C",
+      "original_source": "u_s_2N.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t4",
+      "actual_top_parameter_bindings": ".S_u_s_2N_u_lp_u_xf_sid(4'b0101), .S_u_s_2N_u_lp_u_xg_sid(4'b0101), .S_u_s_2N_u_lp_u_xr_sid(4'b0101)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t4.sv",
+      "actual_source_sha256": "2623f0fa5fb6607674605dad2e0e2a744a73b5f9d9bfa28c44d70885fa8f5f76",
+      "typed_source_wire": "w_u_s_2N_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_2N_u_lp_u_xg_xw_d[1100:565], w_u_s_2N_u_lp_u_xg_xw_d[0], w_u_s_2N_u_lp_u_mk_mk[1], w_u_s_2N_u_lp_u_xg_xw_d[564:0], w_u_s_2N_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_2N_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_2N_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_2N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_2N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_2R13.u_r0.$3",
+      "sink_part": "fW4_p6_b0",
+      "source_part": "fW4_p5_b0",
+      "original_source": "u_f_2R12.u_r0.$4.Y",
+      "actual_source_type": "s81p_col_h9_r0_p5__t1",
+      "actual_top_parameter_bindings": ".P_u_r0_u_c0_0_INSTANCE(\"u_f_2R12.u_r0.u_c0_0\"), .P_u_r0_u_c0_1_INSTANCE(\"u_f_2R12.u_r0.u_c0_1\"), .P_u_r0_u_c0_2_INSTANCE(\"u_f_2R12.u_r0.u_c0_2\"), .P_u_r0_u_c0_3_INSTANCE(\"u_f_2R12.u_r0.u_c0_3\"), .P_u_r0_u_c0_4_INSTANCE(\"u_f_2R12.u_r0.u_c0_4\"), .P_u_r0_u_c0_5_INSTANCE(\"u_f_2R12.u_r0.u_c0_5\"), .P_u_r0_u_c0_6_INSTANCE(\"u_f_2R12.u_r0.u_c0_6\"), .P_u_r0_u_c1_0_INSTANCE(\"u_f_2R12.u_r0.u_c1_0\"), .P_u_r0_u_c1_1_INSTANCE(\"u_f_2R12.u_r0.u_c1_1\"), .P_u_r0_u_c1_2_INSTANCE(\"u_f_2R12.u_r0.u_c1_2\"), .P_u_r0_u_c1_3_INSTANCE(\"u_f_2R12.u_r0.u_c1_3\"), .P_u_r0_u_c1_4_INSTANCE(\"u_f_2R12.u_r0.u_c1_4\"), .P_u_r0_u_c1_5_INSTANCE(\"u_f_2R12.u_r0.u_c1_5\"), .P_u_r0_u_c1_6_INSTANCE(\"u_f_2R12.u_r0.u_c1_6\"), .P_u_r0_u_c2_0_INSTANCE(\"u_f_2R12.u_r0.u_c2_0\"), .P_u_r0_u_c2_1_INSTANCE(\"u_f_2R12.u_r0.u_c2_1\"), .P_u_r0_u_c2_2_INSTANCE(\"u_f_2R12.u_r0.u_c2_2\"), .P_u_r0_u_c2_3_INSTANCE(\"u_f_2R12.u_r0.u_c2_3\"), .P_u_r0_u_c2_4_INSTANCE(\"u_f_2R12.u_r0.u_c2_4\"), .P_u_r0_u_c2_5_INSTANCE(\"u_f_2R12.u_r0.u_c2_5\"), .P_u_r0_u_c2_6_INSTANCE(\"u_f_2R12.u_r0.u_c2_6\"), .P_u_r0_u_c3_0_INSTANCE(\"u_f_2R12.u_r0.u_c3_0\"), .P_u_r0_u_c3_1_INSTANCE(\"u_f_2R12.u_r0.u_c3_1\"), .P_u_r0_u_c3_2_INSTANCE(\"u_f_2R12.u_r0.u_c3_2\"), .P_u_r0_u_c3_3_INSTANCE(\"u_f_2R12.u_r0.u_c3_3\"), .P_u_r0_u_c3_4_INSTANCE(\"u_f_2R12.u_r0.u_c3_4\"), .P_u_r0_u_c3_5_INSTANCE(\"u_f_2R12.u_r0.u_c3_5\"), .P_u_r0_u_c3_6_INSTANCE(\"u_f_2R12.u_r0.u_c3_6\"), .P_u_r0_u_c4_0_INSTANCE(\"u_f_2R12.u_r0.u_c4_0\"), .P_u_r0_u_c4_1_INSTANCE(\"u_f_2R12.u_r0.u_c4_1\"), .P_u_r0_u_c4_2_INSTANCE(\"u_f_2R12.u_r0.u_c4_2\"), .P_u_r0_u_c4_3_INSTANCE(\"u_f_2R12.u_r0.u_c4_3\"), .P_u_r0_u_c4_4_INSTANCE(\"u_f_2R12.u_r0.u_c4_4\"), .P_u_r0_u_c4_5_INSTANCE(\"u_f_2R12.u_r0.u_c4_5\"), .P_u_r0_u_c4_6_INSTANCE(\"u_f_2R12.u_r0.u_c4_6\"), .P_u_r0_u_e0_INSTANCE(\"u_f_2R12.u_r0.u_e0\"), .P_u_r0_u_e1_INSTANCE(\"u_f_2R12.u_r0.u_e1\"), .P_u_r0_u_e2_INSTANCE(\"u_f_2R12.u_r0.u_e2\"), .P_u_r0_u_e3_INSTANCE(\"u_f_2R12.u_r0.u_e3\"), .S_u_r0_u_cf_lk(12'b010010010010)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_col_h9_r0_p5__t1.sv",
+      "actual_source_sha256": "347bc4d29bd94eeccd22a79529715775c8c22e8ce48971ac7e787fab0e482012",
+      "typed_source_wire": "w_u_r0_4_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_r0_u_y_xo3_1_o[275:0], w_u_r0_u_y_xo2_1_o[275:0], w_u_r0_u_y_xo1_1_o[275:0], w_u_r0_u_y_xo0_1_o[275:0]}",
+      "source_export_faces": [],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": {
+        "1": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo0_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo0_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo0_1_o"
+            },
+            {
+              "instance": "u_u_r0_u_y_xo0_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[275:0]",
+              "output": "w_u_r0_u_y_xo0_0_o"
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            1
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        },
+        "567": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo2_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo2_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo2_1_o"
+            },
+            {
+              "instance": "u_u_r0_u_y_xo2_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[827:552]",
+              "output": "w_u_r0_u_y_xo2_0_o"
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            567
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        }
+      },
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_r0_u_y_xo0_1_o",
+        1
+      ],
+      "bit567_origin": [
+        "w_u_r0_u_y_xo2_1_o",
+        15
+      ],
+      "literal_duplicate_valid_proven": false,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_3L01.u_r0.$3",
+      "sink_part": "fW2_p4_b0",
+      "source_part": "s_3S_C",
+      "original_source": "u_s_3S.u_sl.$7.Y",
+      "actual_source_type": "s81p_dsdv_slice_iq_C__t1",
+      "actual_top_parameter_bindings": ".S_ld_pv_W_k(3'b010), .S_ld_pv_W_nw(8'b10100000), .S_ld_pv_W_rb(10'b0000000000), .S_u_s_3S_u_sl_g_c3_u_xr_sid(4'b0110), .S_u_s_3S_u_sl_u_xf_sid(4'b0110), .S_u_s_3S_u_sl_u_xg_sid(4'b0110)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_iq_C__t1.sv",
+      "actual_source_sha256": "2e3d7199139ef988e62cf8dde6c7be610c399e42ab8435b7664678696e1f5c10",
+      "typed_source_wire": "w_u_s_3S_u_sl_7_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_3S_u_sl_u_xg_xw_d[1100:565], w_u_s_3S_u_sl_u_xg_xw_d[0], w_u_s_3S_u_sl_src_ae0d228c03ef9e2ddadd_Q[1], w_u_s_3S_u_sl_u_xg_xw_d[564:0], w_u_s_3S_u_sl_src_ae0d228c03ef9e2ddadd_Q[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_3S_u_sl_7_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_3S_u_sl_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_3S_u_sl_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_3L10.u_r0.$3",
+      "sink_part": "fW3_p4_b0",
+      "source_part": "s_3N_C",
+      "original_source": "u_s_3N.u_slice.$8.Y",
+      "actual_source_type": "s81p_dsdv_slice_kv512_C__t1",
+      "actual_top_parameter_bindings": ".S_u_s_3N_u_slice_g_c1_u_xr_sid(4'b0111), .S_u_s_3N_u_slice_u_xf_sid(4'b0111), .S_u_s_3N_u_slice_u_xg_sid(4'b0111)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_kv512_C__t1.sv",
+      "actual_source_sha256": "a6073e8d30fe213d03dce6229bf95ebde450e933b1bc3588fc6a5ffa849eeea7",
+      "typed_source_wire": "w_u_s_3N_u_slice_8_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_3N_u_slice_u_xg_xw_d[1100:565], w_u_s_3N_u_slice_u_xg_xw_d[0], w_u_s_3N_u_slice_src_ae0d228c03ef9e2ddadd_Q[1], w_u_s_3N_u_slice_u_xg_xw_d[564:0], w_u_s_3N_u_slice_src_ae0d228c03ef9e2ddadd_Q[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_3N_u_slice_8_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_3N_u_slice_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_3N_u_slice_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_4R01.u_r0.$3",
+      "sink_part": "fE2_p4_b0",
+      "source_part": "s_4S_C",
+      "original_source": "u_s_4S.u_lp.$15.Y",
+      "actual_source_type": "s81p_dsdv_slice_c3x_C__t1",
+      "actual_top_parameter_bindings": ".S_ld_pv_E_k(3'b010), .S_ld_pv_E_nw(8'b10100000), .S_ld_pv_E_rb(10'b0000000000), .S_u_s_4S_u_lp_u_xf_sid(4'b1000), .S_u_s_4S_u_lp_u_xg_sid(4'b1000), .S_u_s_4S_u_lp_u_xr_sid(4'b1000)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c3x_C__t1.sv",
+      "actual_source_sha256": "1d68229262634e68d237e0dc2f19861afe70c003e0329d64de4ad83dea49f281",
+      "typed_source_wire": "w_u_s_4S_u_lp_15_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_4S_u_lp_u_xg_xw_d[1100:565], w_u_s_4S_u_lp_u_xg_xw_d[0], w_u_s_4S_u_lp_u_mk_mk[1], w_u_s_4S_u_lp_u_xg_xw_d[564:0], w_u_s_4S_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_4S_u_lp_15_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_4S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_4S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_4R10.u_r0.$3",
+      "sink_part": "fE3_p4_b0",
+      "source_part": "s_4N_C",
+      "original_source": "u_s_4N.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t5",
+      "actual_top_parameter_bindings": ".S_u_s_4N_u_lp_u_xf_sid(4'b1001), .S_u_s_4N_u_lp_u_xg_sid(4'b1001), .S_u_s_4N_u_lp_u_xr_sid(4'b1001)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t5.sv",
+      "actual_source_sha256": "5ab123f964f29be6fd01cd57f0d9ac52e9f0ccffad3870132652bef358e5f06f",
+      "typed_source_wire": "w_u_s_4N_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_4N_u_lp_u_xg_xw_d[1100:565], w_u_s_4N_u_lp_u_xg_xw_d[0], w_u_s_4N_u_lp_u_mk_mk[1], w_u_s_4N_u_lp_u_xg_xw_d[564:0], w_u_s_4N_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_4N_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_4N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_4N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_5L01.u_r0.$3",
+      "sink_part": "fE1_p1_b0",
+      "source_part": "s_5S_C",
+      "original_source": "u_s_5S.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t6",
+      "actual_top_parameter_bindings": ".S_u_s_5S_u_lp_u_xf_sid(4'b1010), .S_u_s_5S_u_lp_u_xg_sid(4'b1010), .S_u_s_5S_u_lp_u_xr_sid(4'b1010)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t6.sv",
+      "actual_source_sha256": "6bea96f520877181c55bd19de1b9e00ff3a05a80f5a3ecddb4030faab1873a52",
+      "typed_source_wire": "w_u_s_5S_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_5S_u_lp_u_xg_xw_d[1100:565], w_u_s_5S_u_lp_u_xg_xw_d[0], w_u_s_5S_u_lp_u_mk_mk[1], w_u_s_5S_u_lp_u_xg_xw_d[564:0], w_u_s_5S_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_5S_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_5S_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_5S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_5S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_5L03.u_r0.$3",
+      "sink_part": "fE1_p3_b0",
+      "source_part": "fE1_p2_b0",
+      "original_source": "u_f_5L02.u_r0.$4.Y",
+      "actual_source_type": "col_h9_r0_p2__t1__cl9f71e63d",
+      "actual_top_parameter_bindings": ".P_u_r0_u_c0_0_INSTANCE(\"u_f_5L02.u_r0.u_c0_0\"), .P_u_r0_u_c0_1_INSTANCE(\"u_f_5L02.u_r0.u_c0_1\"), .P_u_r0_u_c0_2_INSTANCE(\"u_f_5L02.u_r0.u_c0_2\"), .P_u_r0_u_c0_3_INSTANCE(\"u_f_5L02.u_r0.u_c0_3\"), .P_u_r0_u_c0_4_INSTANCE(\"u_f_5L02.u_r0.u_c0_4\"), .P_u_r0_u_c0_5_INSTANCE(\"u_f_5L02.u_r0.u_c0_5\"), .P_u_r0_u_c0_6_INSTANCE(\"u_f_5L02.u_r0.u_c0_6\"), .P_u_r0_u_c1_0_INSTANCE(\"u_f_5L02.u_r0.u_c1_0\"), .P_u_r0_u_c1_1_INSTANCE(\"u_f_5L02.u_r0.u_c1_1\"), .P_u_r0_u_c1_2_INSTANCE(\"u_f_5L02.u_r0.u_c1_2\"), .P_u_r0_u_c1_3_INSTANCE(\"u_f_5L02.u_r0.u_c1_3\"), .P_u_r0_u_c1_4_INSTANCE(\"u_f_5L02.u_r0.u_c1_4\"), .P_u_r0_u_c1_5_INSTANCE(\"u_f_5L02.u_r0.u_c1_5\"), .P_u_r0_u_c1_6_INSTANCE(\"u_f_5L02.u_r0.u_c1_6\"), .P_u_r0_u_c2_0_INSTANCE(\"u_f_5L02.u_r0.u_c2_0\"), .P_u_r0_u_c2_1_INSTANCE(\"u_f_5L02.u_r0.u_c2_1\"), .P_u_r0_u_c2_2_INSTANCE(\"u_f_5L02.u_r0.u_c2_2\"), .P_u_r0_u_c2_3_INSTANCE(\"u_f_5L02.u_r0.u_c2_3\"), .P_u_r0_u_c2_4_INSTANCE(\"u_f_5L02.u_r0.u_c2_4\"), .P_u_r0_u_c2_5_INSTANCE(\"u_f_5L02.u_r0.u_c2_5\"), .P_u_r0_u_c2_6_INSTANCE(\"u_f_5L02.u_r0.u_c2_6\"), .P_u_r0_u_c3_0_INSTANCE(\"u_f_5L02.u_r0.u_c3_0\"), .P_u_r0_u_c3_1_INSTANCE(\"u_f_5L02.u_r0.u_c3_1\"), .P_u_r0_u_c3_2_INSTANCE(\"u_f_5L02.u_r0.u_c3_2\"), .P_u_r0_u_c3_3_INSTANCE(\"u_f_5L02.u_r0.u_c3_3\"), .P_u_r0_u_c3_4_INSTANCE(\"u_f_5L02.u_r0.u_c3_4\"), .P_u_r0_u_c3_5_INSTANCE(\"u_f_5L02.u_r0.u_c3_5\"), .P_u_r0_u_c3_6_INSTANCE(\"u_f_5L02.u_r0.u_c3_6\"), .P_u_r0_u_c4_0_INSTANCE(\"u_f_5L02.u_r0.u_c4_0\"), .P_u_r0_u_c4_1_INSTANCE(\"u_f_5L02.u_r0.u_c4_1\"), .P_u_r0_u_c4_2_INSTANCE(\"u_f_5L02.u_r0.u_c4_2\"), .P_u_r0_u_c4_3_INSTANCE(\"u_f_5L02.u_r0.u_c4_3\"), .P_u_r0_u_c4_4_INSTANCE(\"u_f_5L02.u_r0.u_c4_4\"), .P_u_r0_u_c4_5_INSTANCE(\"u_f_5L02.u_r0.u_c4_5\"), .P_u_r0_u_c4_6_INSTANCE(\"u_f_5L02.u_r0.u_c4_6\"), .P_u_r0_u_e0_INSTANCE(\"u_f_5L02.u_r0.u_e0\"), .P_u_r0_u_e1_INSTANCE(\"u_f_5L02.u_r0.u_e1\"), .P_u_r0_u_e2_INSTANCE(\"u_f_5L02.u_r0.u_e2\"), .P_u_r0_u_e3_INSTANCE(\"u_f_5L02.u_r0.u_e3\"), .S_u_r0_u_cf_lk(12'b010010010010)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/col_h9_r0_p2__t1__cl9f71e63d.sv",
+      "actual_source_sha256": "b79499683d530e9b7321580c26bd38c5055d7e5cc0ae83b1c6e2991e9585378b",
+      "typed_source_wire": "w_u_r0_4_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_r0_u_y_xo3_1_o[275:0], w_u_r0_u_y_xo2_1_o[275:0], w_u_r0_u_y_xo1_1_o[275:0], w_u_r0_u_y_xo0_1_o[275:0]}",
+      "source_export_faces": [],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": {
+        "1": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo0_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo0_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo0_1_o"
+            },
+            {
+              "instance": "u_u_r0_u_y_xo0_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[275:0]",
+              "output": "w_u_r0_u_y_xo0_0_o"
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            1
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        },
+        "567": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo2_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo2_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo2_1_o"
+            },
+            {
+              "instance": "u_u_r0_u_y_xo2_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[827:552]",
+              "output": "w_u_r0_u_y_xo2_0_o"
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            567
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        }
+      },
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_r0_u_y_xo0_1_o",
+        1
+      ],
+      "bit567_origin": [
+        "w_u_r0_u_y_xo2_1_o",
+        15
+      ],
+      "literal_duplicate_valid_proven": false,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_5L10.u_r0.$3",
+      "sink_part": "fE4_p1_b0",
+      "source_part": "s_5N_C",
+      "original_source": "u_s_5N.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t7",
+      "actual_top_parameter_bindings": ".S_u_s_5N_u_lp_u_xf_sid(4'b1011), .S_u_s_5N_u_lp_u_xg_sid(4'b1011), .S_u_s_5N_u_lp_u_xr_sid(4'b1011)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t7.sv",
+      "actual_source_sha256": "e1e096cf7c6578e6fe722856fb4e45248cbce584715ec8d8c2a2b3d0f90a8721",
+      "typed_source_wire": "w_u_s_5N_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_5N_u_lp_u_xg_xw_d[1100:565], w_u_s_5N_u_lp_u_xg_xw_d[0], w_u_s_5N_u_lp_u_mk_mk[1], w_u_s_5N_u_lp_u_xg_xw_d[564:0], w_u_s_5N_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_5N_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_5N_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_5N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_5N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_5R01.u_r0.$3",
+      "sink_part": "fE1_p4_b0",
+      "source_part": "s_5S_C",
+      "original_source": "u_s_5S.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t6",
+      "actual_top_parameter_bindings": ".S_u_s_5S_u_lp_u_xf_sid(4'b1010), .S_u_s_5S_u_lp_u_xg_sid(4'b1010), .S_u_s_5S_u_lp_u_xr_sid(4'b1010)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t6.sv",
+      "actual_source_sha256": "6bea96f520877181c55bd19de1b9e00ff3a05a80f5a3ecddb4030faab1873a52",
+      "typed_source_wire": "w_u_s_5S_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_5S_u_lp_u_xg_xw_d[1100:565], w_u_s_5S_u_lp_u_xg_xw_d[0], w_u_s_5S_u_lp_u_mk_mk[1], w_u_s_5S_u_lp_u_xg_xw_d[564:0], w_u_s_5S_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_5S_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_5S_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_5S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_5S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_5R10.u_r0.$3",
+      "sink_part": "fE4_p4_b0",
+      "source_part": "s_5N_C",
+      "original_source": "u_s_5N.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t7",
+      "actual_top_parameter_bindings": ".S_u_s_5N_u_lp_u_xf_sid(4'b1011), .S_u_s_5N_u_lp_u_xg_sid(4'b1011), .S_u_s_5N_u_lp_u_xr_sid(4'b1011)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t7.sv",
+      "actual_source_sha256": "e1e096cf7c6578e6fe722856fb4e45248cbce584715ec8d8c2a2b3d0f90a8721",
+      "typed_source_wire": "w_u_s_5N_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_5N_u_lp_u_xg_xw_d[1100:565], w_u_s_5N_u_lp_u_xg_xw_d[0], w_u_s_5N_u_lp_u_mk_mk[1], w_u_s_5N_u_lp_u_xg_xw_d[564:0], w_u_s_5N_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_5N_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_5N_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_5N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_5N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_6R01.u_r0.$3",
+      "sink_part": "fE2_p1_b0",
+      "source_part": "s_6S_C",
+      "original_source": "u_s_6S.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t8",
+      "actual_top_parameter_bindings": ".S_u_s_6S_u_lp_u_xf_sid(4'b1100), .S_u_s_6S_u_lp_u_xg_sid(4'b1100), .S_u_s_6S_u_lp_u_xr_sid(4'b1100)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t8.sv",
+      "actual_source_sha256": "5330398eeea359cbcf27e5b13d1f61895cd3fe2ef438c99fb2bf4667f934e1e2",
+      "typed_source_wire": "w_u_s_6S_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_6S_u_lp_u_xg_xw_d[1100:565], w_u_s_6S_u_lp_u_xg_xw_d[0], w_u_s_6S_u_lp_u_mk_mk[1], w_u_s_6S_u_lp_u_xg_xw_d[564:0], w_u_s_6S_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_6S_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_6S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_6S_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_6R10.u_r0.$3",
+      "sink_part": "fE3_p1_b0",
+      "source_part": "s_6N_C",
+      "original_source": "u_s_6N.u_lp.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_c1x_C__t9",
+      "actual_top_parameter_bindings": ".S_u_s_6N_u_lp_u_xf_sid(4'b1101), .S_u_s_6N_u_lp_u_xg_sid(4'b1101), .S_u_s_6N_u_lp_u_xr_sid(4'b1101)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t9.sv",
+      "actual_source_sha256": "14801150e2904d77940ba565259504e4628acc8961696509a861bec699425ef1",
+      "typed_source_wire": "w_u_s_6N_u_lp_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_6N_u_lp_u_xg_xw_d[1100:565], w_u_s_6N_u_lp_u_xg_xw_d[0], w_u_s_6N_u_lp_u_mk_mk[1], w_u_s_6N_u_lp_u_xg_xw_d[564:0], w_u_s_6N_u_lp_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_6N_u_lp_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_6N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_6N_u_lp_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_7L01.u_r0.$3",
+      "sink_part": "fE0_p1_b0",
+      "source_part": "s_7S_C",
+      "original_source": "u_s_7S.u_sl.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_lepe_nh_mus_C__t1",
+      "actual_top_parameter_bindings": ".S_u_s_7S_u_sl_u_xf_sid(4'b1110), .S_u_s_7S_u_sl_u_xg_sid(4'b1110), .S_u_s_7S_u_sl_u_xr_sid(4'b1110)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_lepe_nh_mus_C__t1.sv",
+      "actual_source_sha256": "b165ae5dbb137cf8fca857708709254b9f80386f9a62405c72ebf40d1d5a34ce",
+      "typed_source_wire": "w_u_s_7S_u_sl_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_7S_u_sl_u_xg_xw_d[1100:565], w_u_s_7S_u_sl_u_xg_xw_d[0], w_u_s_7S_u_sl_u_mk_mk[1], w_u_s_7S_u_sl_u_xg_xw_d[564:0], w_u_s_7S_u_sl_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_7S_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_7S_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_7S_u_sl_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_7S_u_sl_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_7L10.u_r0.$3",
+      "sink_part": "fE5_p1_b0",
+      "source_part": "s_7N_C",
+      "original_source": "u_s_7N.u_sl.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_lepe_mu_C__t1",
+      "actual_top_parameter_bindings": ".S_u_s_7N_u_sl_u_xf_sid(4'b1111), .S_u_s_7N_u_sl_u_xg_sid(4'b1111), .S_u_s_7N_u_sl_u_xr_sid(4'b1111)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_lepe_mu_C__t1.sv",
+      "actual_source_sha256": "abbe5023621eec0b1a1b9d2b1e78eecbd6d8e7ec15a37a8e18ebd196b2ea527b",
+      "typed_source_wire": "w_u_s_7N_u_sl_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_7N_u_sl_u_xg_xw_d[1100:565], w_u_s_7N_u_sl_u_xg_xw_d[0], w_u_s_7N_u_sl_u_mk_mk[1], w_u_s_7N_u_sl_u_xg_xw_d[564:0], w_u_s_7N_u_sl_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_7N_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_7N_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_7N_u_sl_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_7N_u_sl_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_7L13.u_r0.$3",
+      "sink_part": "fE5_p3_b0",
+      "source_part": "fE5_p2_b0",
+      "original_source": "u_f_7L12.u_r0.$4.Y",
+      "actual_source_type": "col_h9_r0_p2__t1__cl9f71e63d",
+      "actual_top_parameter_bindings": ".P_u_r0_u_c0_0_INSTANCE(\"u_f_7L12.u_r0.u_c0_0\"), .P_u_r0_u_c0_1_INSTANCE(\"u_f_7L12.u_r0.u_c0_1\"), .P_u_r0_u_c0_2_INSTANCE(\"u_f_7L12.u_r0.u_c0_2\"), .P_u_r0_u_c0_3_INSTANCE(\"u_f_7L12.u_r0.u_c0_3\"), .P_u_r0_u_c0_4_INSTANCE(\"u_f_7L12.u_r0.u_c0_4\"), .P_u_r0_u_c0_5_INSTANCE(\"u_f_7L12.u_r0.u_c0_5\"), .P_u_r0_u_c0_6_INSTANCE(\"u_f_7L12.u_r0.u_c0_6\"), .P_u_r0_u_c1_0_INSTANCE(\"u_f_7L12.u_r0.u_c1_0\"), .P_u_r0_u_c1_1_INSTANCE(\"u_f_7L12.u_r0.u_c1_1\"), .P_u_r0_u_c1_2_INSTANCE(\"u_f_7L12.u_r0.u_c1_2\"), .P_u_r0_u_c1_3_INSTANCE(\"u_f_7L12.u_r0.u_c1_3\"), .P_u_r0_u_c1_4_INSTANCE(\"u_f_7L12.u_r0.u_c1_4\"), .P_u_r0_u_c1_5_INSTANCE(\"u_f_7L12.u_r0.u_c1_5\"), .P_u_r0_u_c1_6_INSTANCE(\"u_f_7L12.u_r0.u_c1_6\"), .P_u_r0_u_c2_0_INSTANCE(\"u_f_7L12.u_r0.u_c2_0\"), .P_u_r0_u_c2_1_INSTANCE(\"u_f_7L12.u_r0.u_c2_1\"), .P_u_r0_u_c2_2_INSTANCE(\"u_f_7L12.u_r0.u_c2_2\"), .P_u_r0_u_c2_3_INSTANCE(\"u_f_7L12.u_r0.u_c2_3\"), .P_u_r0_u_c2_4_INSTANCE(\"u_f_7L12.u_r0.u_c2_4\"), .P_u_r0_u_c2_5_INSTANCE(\"u_f_7L12.u_r0.u_c2_5\"), .P_u_r0_u_c2_6_INSTANCE(\"u_f_7L12.u_r0.u_c2_6\"), .P_u_r0_u_c3_0_INSTANCE(\"u_f_7L12.u_r0.u_c3_0\"), .P_u_r0_u_c3_1_INSTANCE(\"u_f_7L12.u_r0.u_c3_1\"), .P_u_r0_u_c3_2_INSTANCE(\"u_f_7L12.u_r0.u_c3_2\"), .P_u_r0_u_c3_3_INSTANCE(\"u_f_7L12.u_r0.u_c3_3\"), .P_u_r0_u_c3_4_INSTANCE(\"u_f_7L12.u_r0.u_c3_4\"), .P_u_r0_u_c3_5_INSTANCE(\"u_f_7L12.u_r0.u_c3_5\"), .P_u_r0_u_c3_6_INSTANCE(\"u_f_7L12.u_r0.u_c3_6\"), .P_u_r0_u_c4_0_INSTANCE(\"u_f_7L12.u_r0.u_c4_0\"), .P_u_r0_u_c4_1_INSTANCE(\"u_f_7L12.u_r0.u_c4_1\"), .P_u_r0_u_c4_2_INSTANCE(\"u_f_7L12.u_r0.u_c4_2\"), .P_u_r0_u_c4_3_INSTANCE(\"u_f_7L12.u_r0.u_c4_3\"), .P_u_r0_u_c4_4_INSTANCE(\"u_f_7L12.u_r0.u_c4_4\"), .P_u_r0_u_c4_5_INSTANCE(\"u_f_7L12.u_r0.u_c4_5\"), .P_u_r0_u_c4_6_INSTANCE(\"u_f_7L12.u_r0.u_c4_6\"), .P_u_r0_u_e0_INSTANCE(\"u_f_7L12.u_r0.u_e0\"), .P_u_r0_u_e1_INSTANCE(\"u_f_7L12.u_r0.u_e1\"), .P_u_r0_u_e2_INSTANCE(\"u_f_7L12.u_r0.u_e2\"), .P_u_r0_u_e3_INSTANCE(\"u_f_7L12.u_r0.u_e3\"), .S_u_r0_u_cf_lk(12'b010010010010)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/col_h9_r0_p2__t1__cl9f71e63d.sv",
+      "actual_source_sha256": "b79499683d530e9b7321580c26bd38c5055d7e5cc0ae83b1c6e2991e9585378b",
+      "typed_source_wire": "w_u_r0_4_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_r0_u_y_xo3_1_o[275:0], w_u_r0_u_y_xo2_1_o[275:0], w_u_r0_u_y_xo1_1_o[275:0], w_u_r0_u_y_xo0_1_o[275:0]}",
+      "source_export_faces": [],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": {
+        "1": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo0_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo0_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo0_1_o"
+            },
+            {
+              "instance": "u_u_r0_u_y_xo0_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[275:0]",
+              "output": "w_u_r0_u_y_xo0_0_o"
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            1
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        },
+        "567": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo2_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo2_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo2_1_o"
+            },
+            {
+              "instance": "u_u_r0_u_y_xo2_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[827:552]",
+              "output": "w_u_r0_u_y_xo2_0_o"
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            567
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        }
+      },
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_r0_u_y_xo0_1_o",
+        1
+      ],
+      "bit567_origin": [
+        "w_u_r0_u_y_xo2_1_o",
+        15
+      ],
+      "literal_duplicate_valid_proven": false,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_7R01.u_r0.$3",
+      "sink_part": "fE0_p4_b0",
+      "source_part": "s_7S_C",
+      "original_source": "u_s_7S.u_sl.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_lepe_nh_mus_C__t1",
+      "actual_top_parameter_bindings": ".S_u_s_7S_u_sl_u_xf_sid(4'b1110), .S_u_s_7S_u_sl_u_xg_sid(4'b1110), .S_u_s_7S_u_sl_u_xr_sid(4'b1110)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_lepe_nh_mus_C__t1.sv",
+      "actual_source_sha256": "b165ae5dbb137cf8fca857708709254b9f80386f9a62405c72ebf40d1d5a34ce",
+      "typed_source_wire": "w_u_s_7S_u_sl_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_7S_u_sl_u_xg_xw_d[1100:565], w_u_s_7S_u_sl_u_xg_xw_d[0], w_u_s_7S_u_sl_u_mk_mk[1], w_u_s_7S_u_sl_u_xg_xw_d[564:0], w_u_s_7S_u_sl_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_7S_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_7S_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_7S_u_sl_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_7S_u_sl_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_7R10.u_r0.$3",
+      "sink_part": "fE5_p4_b0",
+      "source_part": "s_7N_C",
+      "original_source": "u_s_7N.u_sl.$16.Y",
+      "actual_source_type": "s81p_dsdv_slice_lepe_mu_C__t1",
+      "actual_top_parameter_bindings": ".S_u_s_7N_u_sl_u_xf_sid(4'b1111), .S_u_s_7N_u_sl_u_xg_sid(4'b1111), .S_u_s_7N_u_sl_u_xr_sid(4'b1111)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_lepe_mu_C__t1.sv",
+      "actual_source_sha256": "abbe5023621eec0b1a1b9d2b1e78eecbd6d8e7ec15a37a8e18ebd196b2ea527b",
+      "typed_source_wire": "w_u_s_7N_u_sl_16_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_s_7N_u_sl_u_xg_xw_d[1100:565], w_u_s_7N_u_sl_u_xg_xw_d[0], w_u_s_7N_u_sl_u_mk_mk[1], w_u_s_7N_u_sl_u_xg_xw_d[564:0], w_u_s_7N_u_sl_u_mk_mk[1]}",
+      "source_export_faces": [
+        {
+          "instance": "u_bout_x_o0",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_7N_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o0[1103:0]",
+            "eq": "x_o0[1104]"
+          }
+        },
+        {
+          "instance": "u_bout_x_o1",
+          "type": "ot_dp_st",
+          "parameters": ".W(1104)",
+          "ports": {
+            "clk": "clk",
+            "rst_n": "rst_n",
+            "d": "w_u_s_7N_u_sl_16_Y[1103:0]",
+            "ea": "rst_n",
+            "q": "x_o1[1103:0]",
+            "eq": "x_o1[1104]"
+          }
+        }
+      ],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": null,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_s_7N_u_sl_u_xg_xw_d",
+        0
+      ],
+      "bit567_origin": [
+        "w_u_s_7N_u_sl_u_xg_xw_d",
+        0
+      ],
+      "literal_duplicate_valid_proven": true,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    }
+  ],
+  "source_native_measurements": 1,
+  "physical_corrections_C": null,
+  "R8_qualified": false,
+  "provider_or_cohort_flags_changed": false
+}

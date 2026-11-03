@@ -1,0 +1,7 @@
+# V1c3 inherited96GiB OOM, one serial cache continuation
+
+The actual Epyc2 unit182056-1793588951 terminated MEMCG-OOM01:24:07, peak96GiB/J12, exit143, wall4h13m17.729s. Stale BUILD_START concealed this until direct unit/client collection.395archive targets,377complete, sixteen service and two slice-leaf masters unfinished. All cache/failure logs preserved; no duplicate active original.
+
+One normal ot-run64GiB/J1 successor unit783691-1793611608 began01:30:13 after205s wait, Intel2client2156339. It resumes existing generated hierarchy/make targets and top, with logs/launcher on scratch2/claude/codex-ds-v1c3-serial-0128. The same existing125GB root cache retains the inherited OWNER19:0x exception recorded in original v1c3_all.sh; no new root worktree/cache or relocated frontend. No top-level Verilator regeneration/source edit/cache deletion. Collected live peak6.85GB while compiling the remaining leaf; final service frontend resource not yet measured. Native result pending.
+
+Both IMG2 and V1c3 continuation runners now invoke the exact existing native base/mut/noks/rom cases in sequence (only shell background ampersands removed), with the original checker and inputs. This avoids four unmeasured whole-die instances running concurrently under the serial build reservation. No native inputs/checks/clock/contracts changed. IMG2one serial64GiB/J1 successor remains queued on Intel1; no duplicate.

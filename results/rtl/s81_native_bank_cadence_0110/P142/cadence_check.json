@@ -1,0 +1,119 @@
+{
+  "period": 142,
+  "clock_ps": 833,
+  "period_ps": 118286,
+  "cases": {
+    "original_direct": {
+      "status": "PASS",
+      "errors": [],
+      "terminal": "PAIR_END partials=10 q_fault=0 busy=0 walking=0 bank_free=1 sh_free=1",
+      "GO": [
+        [
+          763,
+          1
+        ],
+        [
+          905,
+          2
+        ],
+        [
+          1047,
+          3
+        ],
+        [
+          1189,
+          0
+        ],
+        [
+          1331,
+          1
+        ]
+      ],
+      "partial_edges": [
+        934,
+        934,
+        1076,
+        1076,
+        1218,
+        1218,
+        1360,
+        1360,
+        1502,
+        1502
+      ],
+      "partial_edge_offsets_from_GO": [
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171
+      ]
+    },
+    "current_direct": {
+      "status": "PASS",
+      "errors": [],
+      "terminal": "PAIR_END partials=10 q_fault=0 busy=0 walking=0 bank_free=1 sh_free=1",
+      "GO": [
+        [
+          763,
+          1
+        ],
+        [
+          905,
+          2
+        ],
+        [
+          1047,
+          3
+        ],
+        [
+          1189,
+          0
+        ],
+        [
+          1331,
+          1
+        ]
+      ],
+      "partial_edges": [
+        934,
+        934,
+        1076,
+        1076,
+        1218,
+        1218,
+        1360,
+        1360,
+        1502,
+        1502
+      ],
+      "partial_edge_offsets_from_GO": [
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171
+      ]
+    }
+  },
+  "exact_original_current": {
+    "core": true,
+    "partial_words": true,
+    "feedback": true,
+    "cfg": true,
+    "stream": true
+  },
+  "native_provider_qualified": false,
+  "production_enabled": false,
+  "extra_FF": 0
+}

@@ -1,0 +1,189 @@
+{
+  "status": "PREPARED_NATIVE_GO_BOUNDARY_EXPERIMENT",
+  "production_enabled": false,
+  "native_provider_qualified": false,
+  "under_test_flag_used": false,
+  "field": "/srv/opentallas-scratch2/claude/codex-ds-native-go-pair-2355/retry2/field",
+  "fixture_input": "ops/attn.norm.scale.bin",
+  "fixture_sha256": "d3ee639f5701851a549e46720ac38075b195fda29a5eaa25eb94caebc0141805",
+  "native_gb_source_sha256": "b2988f08b50d33e59a245e5855794ac2ba7e8c4a64e5944d531aaba6094b3450",
+  "boundary_exact_source_logic": true,
+  "declarations_lifted_to_ports": true,
+  "programmes": {
+    "old": {
+      "calendar_rows": 248,
+      "source_commands": {
+        "277": "258000000000000000000000000000000",
+        "533": "7c000200000000000000000000000",
+        "553": "7c000400000000000000000000000",
+        "576": "1",
+        "1088": "d5",
+        "1600": "1",
+        "310": "1000000000000000000000000000000",
+        "800": "3000000000000000000000000000000"
+      },
+      "expected_issuer_pin": {
+        "280": "0000000258000000000000000000000000000000",
+        "536": "000000000007c000200000000000000000000000",
+        "556": "000000000007c000400000000000000000000000",
+        "579": "0000000000000000000000000000000000000001",
+        "1091": "00000000000000000000000000000000000000d5",
+        "1603": "0000000000000000000000000000000000000001",
+        "313": "0000000001000000000000000000000000000000",
+        "803": "0000000003000000000000000000000000000000"
+      },
+      "q_issue_advance": 0,
+      "phases": [
+        {
+          "phase": 0,
+          "tag": 0,
+          "accept": 20,
+          "cfg": 40,
+          "launch": 103,
+          "stream": [
+            103,
+            201
+          ],
+          "retire": 233,
+          "nb": 80,
+          "stall_edges": 19,
+          "D": 321,
+          "shift": 0
+        },
+        {
+          "phase": 106,
+          "tag": 2,
+          "accept": 532,
+          "cfg": 552,
+          "launch": 615,
+          "stream": [
+            615,
+            678
+          ],
+          "retire": 710,
+          "nb": 64,
+          "stall_edges": 0,
+          "D": 321,
+          "shift": 512
+        },
+        {
+          "phase": 0,
+          "tag": 0,
+          "accept": 1044,
+          "cfg": 1064,
+          "launch": 1127,
+          "stream": [
+            1127,
+            1225
+          ],
+          "retire": 1257,
+          "nb": 80,
+          "stall_edges": 19,
+          "D": 321,
+          "shift": 1024
+        }
+      ],
+      "end": 2200
+    },
+    "advance1": {
+      "calendar_rows": 250,
+      "source_commands": {
+        "277": "258000000000000000000000000000000",
+        "533": "7d000200000000000000000000000",
+        "553": "7d000400000000000000000000000",
+        "576": "1",
+        "1088": "d5",
+        "1600": "1",
+        "310": "1000000000000000000000000000000",
+        "800": "3000000000000000000000000000000"
+      },
+      "expected_issuer_pin": {
+        "280": "0000000258000000000000000000000000000000",
+        "536": "000000000007d000200000000000000000000000",
+        "556": "000000000007d000400000000000000000000000",
+        "579": "0000000000000000000000000000000000000001",
+        "1091": "00000000000000000000000000000000000000d5",
+        "1603": "0000000000000000000000000000000000000001",
+        "313": "0000000001000000000000000000000000000000",
+        "803": "0000000003000000000000000000000000000000"
+      },
+      "q_issue_advance": 1,
+      "phases": [
+        {
+          "phase": 0,
+          "tag": 0,
+          "accept": 20,
+          "cfg": 40,
+          "launch": 103,
+          "stream": [
+            103,
+            201
+          ],
+          "retire": 233,
+          "nb": 80,
+          "stall_edges": 19,
+          "D": 321,
+          "shift": 0
+        },
+        {
+          "phase": 106,
+          "tag": 2,
+          "accept": 532,
+          "cfg": 552,
+          "launch": 615,
+          "stream": [
+            615,
+            678
+          ],
+          "retire": 710,
+          "nb": 64,
+          "stall_edges": 0,
+          "D": 321,
+          "shift": 512
+        },
+        {
+          "phase": 0,
+          "tag": 0,
+          "accept": 1044,
+          "cfg": 1064,
+          "launch": 1127,
+          "stream": [
+            1127,
+            1225
+          ],
+          "retire": 1257,
+          "nb": 80,
+          "stall_edges": 19,
+          "D": 321,
+          "shift": 1024
+        }
+      ],
+      "end": 2200
+    }
+  },
+  "scope": "Actual dated producer and GO/TAG capture boundary; Q arithmetic/EF residency/production clocks remain unqualified",
+  "parallel_tag_candidate": {
+    "extra_reset_free_FF": 4,
+    "tag_bits": 2,
+    "depth": 2,
+    "added_GO_CFG_XS_cycles": 0
+  },
+  "conditional_hold_candidate": {
+    "extra_reset_free_FF": 2,
+    "tested_period_only": 512
+  },
+  "native_ring_fixture": {
+    "actual_producer": "ot_s81sl_rstopt_xo own xf_v[2] four-fragment assembly",
+    "authoritative_family": "native header kind K_XQ=1/K_XB=2, decoded by production rstop",
+    "Q_beats": 80,
+    "BF_beats": 64,
+    "Q_start": 370,
+    "Q_window_source_date": 310,
+    "BF_start": 900,
+    "BF_window_source_date": 800,
+    "BF_payload": "checkpoint norm-scale prefix4096, golden BF16 conversion; component fixture only",
+    "checkpoint_input_sha256": "d3ee639f5701851a549e46720ac38075b195fda29a5eaa25eb94caebc0141805",
+    "phase106_mission_operand_qualified": false,
+    "production_enabled": false
+  }
+}

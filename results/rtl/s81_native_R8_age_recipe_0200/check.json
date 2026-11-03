@@ -1,0 +1,95 @@
+{
+  "status": "PASS_NATIVE_R8_RECIPE_DIAGNOSTIC",
+  "uniform41_status": {
+    "uniform_original": "PASS",
+    "uniform_current": "PASS"
+  },
+  "asbuilt_age_status": {
+    "asbuilt_original": "FAIL",
+    "asbuilt_current": "FAIL"
+  },
+  "asbuilt_age_recipe_passes_selected_literal_oracle": false,
+  "asbuilt_errors": {
+    "asbuilt_original": [
+      "producer/landing/sequencer fault",
+      "actual GO tag sequence differs from original OPTAG1 contract",
+      "partial count differs for (0, 224, 0, 5, 0)",
+      "partial operation tags differ for (0, 224, 0, 5, 0)",
+      "literal checkpoint partial/error differs for (0, 224, 0, 5, 0)",
+      "partial count differs for (1, 225, 0, 5, 0)",
+      "partial operation tags differ for (1, 225, 0, 5, 0)",
+      "literal checkpoint partial/error differs for (1, 225, 0, 5, 0)",
+      "native Q capture dates differ from fixed current calendar"
+    ],
+    "asbuilt_current": [
+      "producer/landing/sequencer fault",
+      "actual GO tag sequence differs from original OPTAG1 contract",
+      "partial count differs for (0, 224, 0, 5, 0)",
+      "partial operation tags differ for (0, 224, 0, 5, 0)",
+      "literal checkpoint partial/error differs for (0, 224, 0, 5, 0)",
+      "partial count differs for (1, 225, 0, 5, 0)",
+      "partial operation tags differ for (1, 225, 0, 5, 0)",
+      "literal checkpoint partial/error differs for (1, 225, 0, 5, 0)",
+      "native Q capture dates differ from fixed current calendar"
+    ]
+  },
+  "actual_lane_ages": [
+    46,
+    41,
+    45,
+    47
+  ],
+  "current_uniform_lane_ages": [
+    41,
+    41,
+    41,
+    41
+  ],
+  "disabled_added_ages": [
+    5,
+    0,
+    4,
+    6
+  ],
+  "hypothetical_packet_FF": 4140,
+  "hypothetical_FF_include_existing_packet_valid_bits": true,
+  "original_current_uniform_equal": {
+    "core": true,
+    "partial_words": true,
+    "feedback": true,
+    "cfg": true,
+    "stream": true
+  },
+  "original_current_asbuilt_equal": {
+    "core": true,
+    "partial_words": true,
+    "feedback": true,
+    "cfg": true,
+    "stream": true
+  },
+  "controls_caught": {
+    "wrong_lane": true,
+    "wrong_date": true,
+    "wrong_tag": true
+  },
+  "independent_expected_Q_tags": [
+    1,
+    3
+  ],
+  "independent_expected_capture_edges": [
+    763,
+    1787
+  ],
+  "independent_checkpoint_gold_unchanged": true,
+  "actual_current_calendar_CFG_images_unchanged": true,
+  "source_readiness": "same earlier held-constant source/ring fixture as77eadd758",
+  "clock_ps": 833,
+  "native_provider_qualified": false,
+  "R8_qualified": false,
+  "production_enabled": false,
+  "actual_mission_source_epochs_qualified": false,
+  "physical_clock_phase_qualified": false,
+  "BF_arithmetic_or_all_lane_payload_qualified": false,
+  "production_FF_or_cycles_added": 0,
+  "scope": "One native selected Q pair and actual original/current source paths; recipe is a disabled TB counterfactual, no metadata relabel or physical padding adoption"
+}

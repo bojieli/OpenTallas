@@ -1,0 +1,26 @@
+{
+  "status": "MEASURED_DIAGNOSTIC_TEMPLATE_NOT_SOURCE_COHORT_ADOPTION",
+  "exact_args": "../s81_hierarchy_substitution_0310/service/candidate_args.f",
+  "changes": [
+    {
+      "option": "-Mdir",
+      "from_value": "/home/ubuntu/scratch-root/claude/tok-ds-2/build_v1c3/obj/Vs81p_svc_lo_dsdv_svc_rs_w___05Ft1_9",
+      "to_value": "/srv/opentallas-scratch2/claude/codex-ds-service-hier-0340/out"
+    },
+    {
+      "option": "source/include paths",
+      "change": "Relocate unchanged captured readset under isolated Intel2 fs/"
+    },
+    {
+      "option": "--build-jobs",
+      "from_value": "12",
+      "to_value": "1"
+    },
+    {
+      "option": "--hierarchical-params-file",
+      "change": "append comment-only empty_types.sv"
+    }
+  ],
+  "changed_RTL_or_parameters": false,
+  "successor_condition": "Must first regenerate source args using selected BF+XS namespaces and real ROM/profile receipt; this old-cohort template is not a token successor"
+}

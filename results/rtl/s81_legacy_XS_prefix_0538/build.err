@@ -1,0 +1,68 @@
+%Warning-MULTIDRIVEN: xs_candidate.sv:177:16: Signal has multiple driving blocks with different clocking: 'tb.defx.u_s.tq_v'
+                      xs_candidate.sv:369:61: ... Location of first driving block
+  369 |                 if (o_gw && !o_gw_fam && o_gw_par == gp[0]) tq_v[gp] <= '0;
+      |                                                             ^~~~
+                      xs_candidate.sv:369:61: ... Location of other driving block
+  369 |                 if (o_gw && !o_gw_fam && o_gw_par == gp[0]) tq_v[gp] <= '0;
+      |                                                             ^~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: xs_candidate.sv:178:16: Signal has multiple driving blocks with different clocking: 'tb.defx.u_s.tb_v'
+                      xs_candidate.sv:377:60: ... Location of first driving block
+  377 |                 if (o_gw && o_gw_fam && o_gw_par == gp[0]) tb_v[gp] <= '0;
+      |                                                            ^~~~
+                      xs_candidate.sv:377:60: ... Location of other driving block
+  377 |                 if (o_gw && o_gw_fam && o_gw_par == gp[0]) tb_v[gp] <= '0;
+      |                                                            ^~~~
+%Warning-MULTIDRIVEN: xs_reference.sv:177:16: Signal has multiple driving blocks with different clocking: 'tb.refx.u_s.tq_v'
+                      xs_reference.sv:369:61: ... Location of first driving block
+  369 |                 if (o_gw && !o_gw_fam && o_gw_par == gp[0]) tq_v[gp] <= '0;
+      |                                                             ^~~~
+                      xs_reference.sv:369:61: ... Location of other driving block
+  369 |                 if (o_gw && !o_gw_fam && o_gw_par == gp[0]) tq_v[gp] <= '0;
+      |                                                             ^~~~
+%Warning-MULTIDRIVEN: xs_reference.sv:178:16: Signal has multiple driving blocks with different clocking: 'tb.refx.u_s.tb_v'
+                      xs_reference.sv:377:60: ... Location of first driving block
+  377 |                 if (o_gw && o_gw_fam && o_gw_par == gp[0]) tb_v[gp] <= '0;
+      |                                                            ^~~~
+                      xs_reference.sv:377:60: ... Location of other driving block
+  377 |                 if (o_gw && o_gw_fam && o_gw_par == gp[0]) tb_v[gp] <= '0;
+      |                                                            ^~~~
+%Warning-MULTIDRIVEN: xs_candidate.sv:177:16: Signal has multiple driving blocks with different clocking: 'tb.eqx.u_s.tq_v'
+                      xs_candidate.sv:369:61: ... Location of first driving block
+  369 |                 if (o_gw && !o_gw_fam && o_gw_par == gp[0]) tq_v[gp] <= '0;
+      |                                                             ^~~~
+                      xs_candidate.sv:369:61: ... Location of other driving block
+  369 |                 if (o_gw && !o_gw_fam && o_gw_par == gp[0]) tq_v[gp] <= '0;
+      |                                                             ^~~~
+%Warning-MULTIDRIVEN: xs_candidate.sv:178:16: Signal has multiple driving blocks with different clocking: 'tb.eqx.u_s.tb_v'
+                      xs_candidate.sv:377:60: ... Location of first driving block
+  377 |                 if (o_gw && o_gw_fam && o_gw_par == gp[0]) tb_v[gp] <= '0;
+      |                                                            ^~~~
+                      xs_candidate.sv:377:60: ... Location of other driving block
+  377 |                 if (o_gw && o_gw_fam && o_gw_par == gp[0]) tb_v[gp] <= '0;
+      |                                                            ^~~~
+ot-heavy: verilator build -j2 capped to -j1 (8 GB / 30 GB per cc1plus)
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -j 2 --x-assign 0 --x-initial 0 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-lint -Wno-style -Wno-MULTITOP --output-split 20000 --output-split-cfuncs 2000 +define+DSFD_PQ_STATIC_X2 +define+S81CTRL_SRAM_FIFO +define+S81CTRL_SRAM_P192 +define+S81CTRL_NATIVE32 +define+OT_COLL_NATIVE32 +define+OT_COLL_NATIVE32_OFF +define+OT_S81ENG_TAP_N32R2 +define+OT_S81SL_KV_TRANSPORT +define+OT_SVC_ALLQ +define+SU_SMU_T +define+OT_ATTN_HCORE +define+OT_S81ENG_RR_N32 +define+OT_S81C_HCORE_CTLA +define+OT_S81C_HCORE_RST_TIMED +define+S81_HOSTB_LAND_OBS +define+OT_S81_SH_SRAM +define+OT_S81_SH_RSZ +define+OT_S81_SH_P192 +define+OT_S81_SH_APIPE9 +define+OT_S81_SH_APIPE10 --top-module tb -Mdir /srv/opentallas-scratch2/claude/codex-ds-legacy-xs-gate-0538/obj -f sources.f"
+	User time (seconds): 55.78
+	System time (seconds): 5.43
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:00.93
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 452284
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 13
+	Minor (reclaiming a frame) page faults: 1207198
+	Voluntary context switches: 496
+	Involuntary context switches: 351
+	Swaps: 0
+	File system inputs: 3000
+	File system outputs: 435800
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

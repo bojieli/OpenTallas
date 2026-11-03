@@ -1,0 +1,31 @@
+{
+  "scope": "Only if separate legacy namespace patch is selected and passes gate",
+  "previous_conditional_candidates": 150,
+  "newly_affected": 2,
+  "remaining_conditional_candidates": 148,
+  "affected": [
+    {
+      "class_key": "s81p_dsdv_slice_iq_C___05Ft1_9",
+      "source_type": "s81p_dsdv_slice_iq_C__t1",
+      "archive": [
+        {
+          "path": "/home/ubuntu/scratch-root/claude/tok-ds-2/build_v1c3/obj/Vs81p_dsdv_slice_iq_C___05Ft1_9/libs81p_dsdv_slice_iq_C___05Ft1_9.a",
+          "bytes": 4084840,
+          "mtime_ns": 1793608381486236039
+        }
+      ]
+    },
+    {
+      "class_key": "s81p_dsdv_slice_kv512_C___05Ft1_3",
+      "source_type": "s81p_dsdv_slice_kv512_C__t1",
+      "archive": [
+        {
+          "path": "/home/ubuntu/scratch-root/claude/tok-ds-2/build_v1c3/obj/Vs81p_dsdv_slice_kv512_C___05Ft1_3/libs81p_dsdv_slice_kv512_C___05Ft1_3.a",
+          "bytes": 4091870,
+          "mtime_ns": 1793607996688260299
+        }
+      ]
+    }
+  ],
+  "actual_reused": 0
+}

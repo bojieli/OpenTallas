@@ -1,0 +1,123 @@
+{
+  "period": 141,
+  "clock_ps": 833,
+  "period_ps": 117453,
+  "cases": {
+    "original_direct": {
+      "status": "FAIL",
+      "errors": [
+        "native pair fault/not idle at terminal: PAIR_END partials=10 q_fault=1 busy=0 walking=0 bank_free=1 sh_free=1"
+      ],
+      "terminal": "PAIR_END partials=10 q_fault=1 busy=0 walking=0 bank_free=1 sh_free=1",
+      "GO": [
+        [
+          763,
+          1
+        ],
+        [
+          904,
+          2
+        ],
+        [
+          1045,
+          3
+        ],
+        [
+          1186,
+          0
+        ],
+        [
+          1327,
+          1
+        ]
+      ],
+      "partial_edges": [
+        934,
+        934,
+        1075,
+        1075,
+        1216,
+        1216,
+        1357,
+        1357,
+        1498,
+        1498
+      ],
+      "partial_edge_offsets_from_GO": [
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171
+      ]
+    },
+    "current_direct": {
+      "status": "FAIL",
+      "errors": [
+        "native pair fault/not idle at terminal: PAIR_END partials=10 q_fault=1 busy=0 walking=0 bank_free=1 sh_free=1"
+      ],
+      "terminal": "PAIR_END partials=10 q_fault=1 busy=0 walking=0 bank_free=1 sh_free=1",
+      "GO": [
+        [
+          763,
+          1
+        ],
+        [
+          904,
+          2
+        ],
+        [
+          1045,
+          3
+        ],
+        [
+          1186,
+          0
+        ],
+        [
+          1327,
+          1
+        ]
+      ],
+      "partial_edges": [
+        934,
+        934,
+        1075,
+        1075,
+        1216,
+        1216,
+        1357,
+        1357,
+        1498,
+        1498
+      ],
+      "partial_edge_offsets_from_GO": [
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171,
+        171
+      ]
+    }
+  },
+  "exact_original_current": {
+    "core": true,
+    "partial_words": true,
+    "feedback": true,
+    "cfg": true,
+    "stream": true
+  },
+  "native_provider_qualified": false,
+  "production_enabled": false,
+  "extra_FF": 0
+}

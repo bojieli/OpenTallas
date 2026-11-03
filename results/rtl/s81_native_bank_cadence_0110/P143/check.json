@@ -1,0 +1,64 @@
+{
+  "status": "PASS_FULL_SELECTED_NB2_NATIVE_GO_PROVIDER_COMPONENT",
+  "operations": 5,
+  "independent_first_tag": 1,
+  "independent_operation_tags": [
+    1,
+    2,
+    3,
+    0,
+    1
+  ],
+  "original_status": "PASS",
+  "current_status": "PASS",
+  "original_errors": [],
+  "current_errors": [],
+  "exact_original_current": {
+    "core": true,
+    "partial_words": true,
+    "feedback": true,
+    "cfg": true,
+    "stream": true
+  },
+  "controls_caught": {
+    "counterfactual_retime": true,
+    "wrong_date": true,
+    "wrong_tag": true
+  },
+  "control_differences": {
+    "counterfactual_retime": {
+      "core": true,
+      "partial_words": true,
+      "feedback": false,
+      "cfg": false,
+      "stream": false
+    },
+    "wrong_date": {
+      "core": true,
+      "partial_words": false,
+      "feedback": true,
+      "cfg": false,
+      "stream": false
+    },
+    "wrong_tag": {
+      "core": true,
+      "partial_words": true,
+      "feedback": false,
+      "cfg": false,
+      "stream": false
+    }
+  },
+  "wrong_date_arithmetic_changed": false,
+  "wrong_date_GO_capture_changed": true,
+  "arithmetic_core_exercised": true,
+  "real_walking_bank_shadow_feedback": true,
+  "constant_checkpoint_activation": true,
+  "fresh_version_or_production_epoch_qualified": false,
+  "source_period": 143,
+  "clock_ps": 833,
+  "native_provider_qualified": false,
+  "production_enabled": false,
+  "added_RTL_FF": 0,
+  "source_tag_retime_needed": false,
+  "scope": "One actual0L01/e0 NB2 source pair with actual images and controlled common-phase/L3 startup; no fullframe/token/capturefold/production clock qualification"
+}

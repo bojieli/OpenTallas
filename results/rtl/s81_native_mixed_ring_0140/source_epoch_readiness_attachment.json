@@ -1,0 +1,77 @@
+{
+  "schema": "opentallas.s81.native_gather_readiness_attachment.v1",
+  "status": "PASS_CONDITIONAL_COMPONENT_READINESS_ATTACH_GLOBAL_EPOCHS_HELD",
+  "clock_ps": 833,
+  "existing_source_epoch_contract": "results/rtl/s81_qf_producer_1019/return_calendar/source_epoch_contract.json",
+  "existing_ledger_join": {
+    "head": 0,
+    "slice": "u_s_0S",
+    "frame": "u_f_0L01",
+    "lane": 1,
+    "selected_Q_leaf": "u_f_0L01.u_r0.u_e0"
+  },
+  "source_epoch": null,
+  "production_phase_epoch": null,
+  "actual_native_sample_phase": null,
+  "production_first_arr": null,
+  "production_last_arr": null,
+  "equations": {
+    "native_fragment": "gather_edge(beat)=first_fragment_edge(beat)+6 with four contiguous276b fragments",
+    "arrival_metadata": "arrival_table_valid_edge=actual_gather_edge+3 (XS capture, set-onehot, valid commit)",
+    "readiness": "Every demanded beat must have arrival_table_valid_edge < its actual native read-comparison edge; same-edge validity is not available to that comparison",
+    "source_availability": "actual producer source_epoch + fragment emission age +6+3 < corresponding XS read comparison; source_epoch and mission emission ages remain unknown",
+    "reuse": "Preserve family/parity/row contents through last corresponding native XS read; issuer/calendar RETIRE alone does not prove that release",
+    "source_epoch_end": "max(lastXS_tag_use, lastframe_return_and_capture_pipeline, lastCAP_write_commit, lastdependent_QR/read/gather_use)"
+  },
+  "measured_failure": {
+    "Q_gather_first": 462,
+    "Q_gather_last": 778,
+    "Q_last_metadata_ready": 781,
+    "first_XS_fault_output_edge": 733,
+    "derived_first_failing_read_compare": 732,
+    "derivation": "XS fault register samples sticky rd_fault on following edge",
+    "inequality_last_ready_before_known_failing_compare": false,
+    "exact_missing_beat_not_instrumented": true,
+    "selected_Q_partials_still_correct": true,
+    "overall_native_XS_failed": true
+  },
+  "measured_safe_fixture": {
+    "Q_fragment_start": 370,
+    "Q_GW_source_issue": 310,
+    "Q_gather_first": 376,
+    "Q_gather_last": 692,
+    "Q_last_metadata_ready": 695,
+    "known_failing_comparison_edge_unchanged": 732,
+    "inequality": "695 < 732",
+    "BF_fragment_start": 900,
+    "BF_GW_source_issue": 800,
+    "BF_gather_first": 906,
+    "BF_gather_last": 1158,
+    "BF_last_metadata_ready": 1161,
+    "all_native_read_guards_clear": true,
+    "last_selected_Q_external_stream": 1887,
+    "fixture_data_retained_through_terminal": true
+  },
+  "source_programme_changes": {
+    "Q_window_issue_advance_edges": 93,
+    "Q_fragment_train_start_advance_edges": 86,
+    "Q_fragment_train_edges": 320,
+    "earlier_Q_source_availability_required": true,
+    "GO_CFG_calendar_stream_words_changed": false,
+    "RTL_FF_added": 0,
+    "RTL_cycles_added": 0
+  },
+  "scope": "Held-constant checkpoint component fixture only; bound to existing semantic source ledger entry, no reused old route/sample phase imported",
+  "native_provider_qualified": false,
+  "fresh_source_versions_qualified": false,
+  "physical_clock_reset_qualified": false,
+  "production_programme_adopted": false,
+  "full_token": false,
+  "holds": [
+    "actual upstream producer commit and four-fragment emission dates",
+    "actual mission phase epochs and tag/buffer lifetime across different inputs",
+    "all other eleven provider classes",
+    "production clock/reset sample phases and source/destination SRAM leases",
+    "BF arithmetic and actual phase106 operand source"
+  ]
+}

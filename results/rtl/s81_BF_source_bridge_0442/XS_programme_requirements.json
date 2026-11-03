@@ -1,0 +1,577 @@
+{
+  "status": "MISSING_PROGRAMME_INPUT_AND_TWO_LEGACY_SELECTOR_GAPS",
+  "bind_names_sha256": "8437a725f7078e68ebeb117f5511ff355cf63972e41f0e5904a7a0a22ff0928e",
+  "ROM_directory": "/srv/opentallas-scratch2/claude/codex-ds-bf-selectors-2200/romdir_bf_candidate",
+  "selectors": 16,
+  "selected_module_counts": {
+    "ot_s81sl_xg": 2,
+    "ot_s81sl_xgt_xo": 14
+  },
+  "rows": [
+    {
+      "emitted": "s_0N_C.u_u_s_0N_u_sl_u_xg",
+      "original_selector": "u_s_0N.u_sl.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_lepw_mu_C__t1.sv",
+      "source_sha256": "37720b3862871c9b3fd7a039082e47bf1cf607ebf25402f1a430628c21c43a7f",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_0N.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_0N.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_0N.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_0N.u_sl.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_0S_C.u_u_s_0S_u_sl_u_xg",
+      "original_selector": "u_s_0S.u_sl.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_lepw_mus_C__t1.sv",
+      "source_sha256": "923e856bcf90c38af41b7403e9d5719e61ca608ee085b368241f7e7165ec6a6a",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_0S.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_0S.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_0S.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_0S.u_sl.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_1N_C.u_u_s_1N_u_lp_u_xg",
+      "original_selector": "u_s_1N.u_lp.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t10.sv",
+      "source_sha256": "5529e0f4df226c8ec89ff0557ed2916e24192c27f6afdd233f0bc64d4affe66c",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_1N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_1N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_1N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_1N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_1S_C.u_u_s_1S_u_lp_u_xg",
+      "original_selector": "u_s_1S.u_lp.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t1.sv",
+      "source_sha256": "12744ddc90dccec6e356a5713d8bae1abeea3bd5ee7043a485bffcb5e891e8b1",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_1S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_1S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_1S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_1S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_2N_C.u_u_s_2N_u_lp_u_xg",
+      "original_selector": "u_s_2N.u_lp.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t4.sv",
+      "source_sha256": "2623f0fa5fb6607674605dad2e0e2a744a73b5f9d9bfa28c44d70885fa8f5f76",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_2N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_2N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_2N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_2N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_2S_C.u_u_s_2S_u_lp_u_xg",
+      "original_selector": "u_s_2S.u_lp.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t3.sv",
+      "source_sha256": "a95b04c12bd1364e7f653903d974b43c5531c212b0a540bbabc3be028a00eeca",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_2S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_2S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_2S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_2S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_3N_C.u_u_s_3N_u_slice_u_xg",
+      "original_selector": "u_s_3N.u_slice.u_xg",
+      "module": "ot_s81sl_xg",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_kv512_C__t1.sv",
+      "source_sha256": "a6073e8d30fe213d03dce6229bf95ebde450e933b1bc3588fc6a5ffa849eeea7",
+      "per_slice_selector_supported_by_4ba_candidate": false,
+      "desired_per_slice_files": [
+        "u_s_3N.u_slice.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_3N.u_slice.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_3N.u_slice.u_xg.pq_phase0.viamap.hex",
+        "u_s_3N.u_slice.u_xg.pq_stream0.viamap.hex",
+        "u_s_3N.u_slice.u_xg.pq_stream1.viamap.hex",
+        "u_s_3N.u_slice.u_xg.pq_stream2.viamap.hex",
+        "u_s_3N.u_slice.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "pq_calendar_action.viamap.hex",
+        "pq_calendar_time.viamap.hex",
+        "pq_phase0.viamap.hex",
+        "pq_stream0.viamap.hex",
+        "pq_stream1.viamap.hex",
+        "pq_stream2.viamap.hex",
+        "pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "pq_calendar_action.viamap.hex",
+        "pq_calendar_time.viamap.hex",
+        "pq_phase0.viamap.hex",
+        "pq_stream0.viamap.hex",
+        "pq_stream1.viamap.hex",
+        "pq_stream2.viamap.hex",
+        "pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_3S_C.u_u_s_3S_u_sl_u_xg",
+      "original_selector": "u_s_3S.u_sl.u_xg",
+      "module": "ot_s81sl_xg",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_iq_C__t1.sv",
+      "source_sha256": "2e3d7199139ef988e62cf8dde6c7be610c399e42ab8435b7664678696e1f5c10",
+      "per_slice_selector_supported_by_4ba_candidate": false,
+      "desired_per_slice_files": [
+        "u_s_3S.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_3S.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_3S.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_3S.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_3S.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_3S.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_3S.u_sl.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "pq_calendar_action.viamap.hex",
+        "pq_calendar_time.viamap.hex",
+        "pq_phase0.viamap.hex",
+        "pq_stream0.viamap.hex",
+        "pq_stream1.viamap.hex",
+        "pq_stream2.viamap.hex",
+        "pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "pq_calendar_action.viamap.hex",
+        "pq_calendar_time.viamap.hex",
+        "pq_phase0.viamap.hex",
+        "pq_stream0.viamap.hex",
+        "pq_stream1.viamap.hex",
+        "pq_stream2.viamap.hex",
+        "pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_4N_C.u_u_s_4N_u_lp_u_xg",
+      "original_selector": "u_s_4N.u_lp.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t5.sv",
+      "source_sha256": "5ab123f964f29be6fd01cd57f0d9ac52e9f0ccffad3870132652bef358e5f06f",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_4N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_4N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_4N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_4N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_4S_C.u_u_s_4S_u_lp_u_xg",
+      "original_selector": "u_s_4S.u_lp.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c3x_C__t1.sv",
+      "source_sha256": "1d68229262634e68d237e0dc2f19861afe70c003e0329d64de4ad83dea49f281",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_4S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_4S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_4S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_4S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_5N_C.u_u_s_5N_u_lp_u_xg",
+      "original_selector": "u_s_5N.u_lp.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t7.sv",
+      "source_sha256": "e1e096cf7c6578e6fe722856fb4e45248cbce584715ec8d8c2a2b3d0f90a8721",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_5N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_5N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_5N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_5N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_5S_C.u_u_s_5S_u_lp_u_xg",
+      "original_selector": "u_s_5S.u_lp.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t6.sv",
+      "source_sha256": "6bea96f520877181c55bd19de1b9e00ff3a05a80f5a3ecddb4030faab1873a52",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_5S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_5S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_5S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_5S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_6N_C.u_u_s_6N_u_lp_u_xg",
+      "original_selector": "u_s_6N.u_lp.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t9.sv",
+      "source_sha256": "14801150e2904d77940ba565259504e4628acc8961696509a861bec699425ef1",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_6N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_6N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_6N.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_6N.u_lp.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_6S_C.u_u_s_6S_u_lp_u_xg",
+      "original_selector": "u_s_6S.u_lp.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_c1x_C__t8.sv",
+      "source_sha256": "5330398eeea359cbcf27e5b13d1f61895cd3fe2ef438c99fb2bf4667f934e1e2",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_6S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_6S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_6S.u_lp.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_phase0.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_stream0.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_stream1.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_stream2.viamap.hex",
+        "u_s_6S.u_lp.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_7N_C.u_u_s_7N_u_sl_u_xg",
+      "original_selector": "u_s_7N.u_sl.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_lepe_mu_C__t1.sv",
+      "source_sha256": "abbe5023621eec0b1a1b9d2b1e78eecbd6d8e7ec15a37a8e18ebd196b2ea527b",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_7N.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_7N.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_7N.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_7N.u_sl.u_xg.pq_stream3.viamap.hex"
+      ]
+    },
+    {
+      "emitted": "s_7S_C.u_u_s_7S_u_sl_u_xg",
+      "original_selector": "u_s_7S.u_sl.u_xg",
+      "module": "ot_s81sl_xgt_xo",
+      "source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_dsdv_slice_lepe_nh_mus_C__t1.sv",
+      "source_sha256": "b165ae5dbb137cf8fca857708709254b9f80386f9a62405c72ebf40d1d5a34ce",
+      "per_slice_selector_supported_by_4ba_candidate": true,
+      "desired_per_slice_files": [
+        "u_s_7S.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_expected_files": [
+        "u_s_7S.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_stream3.viamap.hex"
+      ],
+      "current_candidate_missing_files": [
+        "u_s_7S.u_sl.u_xg.pq_calendar_action.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_calendar_time.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_phase0.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_stream0.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_stream1.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_stream2.viamap.hex",
+        "u_s_7S.u_sl.u_xg.pq_stream3.viamap.hex"
+      ]
+    }
+  ],
+  "cloned_programmes": false,
+  "full_mission_programme_qualified": false,
+  "desired_prefixed_count_after_future_legacy_fix": 112,
+  "supported_prefixed_count_under_4ba": 98,
+  "legacy_shared_key_count": 7
+}

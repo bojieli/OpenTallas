@@ -1,0 +1,6 @@
+LEGACY_NATIVE_DECODED_GO 369
+PASS_NATIVE_LEGACY_XG_XS_PREFIX cycles=1200 checks=1180 gathers=88 go=1 xwords=82 fault=0 defaultempty_and_identicalprefix_exact distinct_namespaces2 native_ROMs7 added_capture0
+- tb.sv:66: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1000ns; walltime 0.453 s; speed 2.209 us/s
+- Verilator: cpu 0.451 s on 1 threads; allocated 10 MB

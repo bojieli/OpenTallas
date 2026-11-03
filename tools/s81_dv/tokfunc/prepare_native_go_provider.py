@@ -9,6 +9,7 @@ def main():
  p.add_argument('--gb-source',type=Path)
  p.add_argument('--phases',type=int,default=2)
  p.add_argument('--period',type=int,default=512)
+ p.add_argument('--phase-sequence',help='Explicit comma-separated current field phases; default repeats phase0')
  a=p.parse_args();assert not a.out.exists();a.out.mkdir(parents=True)
  sys.path[:0]=[str(a.source/'tools'),str(a.source/'tools/s81_dv'),str(a.source/'tools/s81_dv/layer_prog'),str(a.source/'tools/s81_static_control')]
  import lower_xs as L
@@ -23,10 +24,12 @@ def main():
  files=json.loads((a.fixture/'files.json').read_text());name='ops/attn.norm.scale.bin';meta=files[name]
  x=np.fromfile(a.fixture/name,dtype=np.dtype(meta['dtype'])).reshape(-1);assert len(x)==5120
  q,e=G.quant_fp8(x);codes={float(f):i for i,f in enumerate(G.E4M3)if np.isfinite(f)};qb=[codes[float(f)]if f!=0 else 0 for f in q]
+ phase_sequence=[int(v)for v in a.phase_sequence.split(',')]if a.phase_sequence else [0]*a.phases
+ assert phase_sequence and phase_sequence[0]==0 and all(0<=v<field['nphases']for v in phase_sequence)
  epoch=256;receipts={}
  for label,lead in [('old',0),('advance1',1)]:
   os.environ['OT_XS_Q_CPR']=str(lead)
-  c=X.compile_pipeline(P,S,[0]*a.phases,0,a.period,cfg_lead=63,acc_gap=20,retire_gap=30)
+  c=X.compile_pipeline(P,S,phase_sequence,0,a.period,cfg_lead=63,acc_gap=20,retire_gap=30)
   d=a.out/label;d.mkdir();L.xs_roms(raw,d)
   (d/'pq_calendar_action.viamap.hex').write_text(viamap([v&((1<<72)-1)for v in c['packed']]))
   (d/'pq_calendar_time.viamap.hex').write_text(viamap([v>>72 for v in c['packed']]))

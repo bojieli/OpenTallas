@@ -1,0 +1,5 @@
+ot-run: -> epyc2 (will queue: admits 15 GB < 96 GB)
+ot-heavy: waiting for memory on dear-crayfish: need 0.7 x 96 = 67 GB, admissible 15 GB: available 205 GB, growth charged 75 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 75 GB at x1), young 35 GB, floor 50 GB; invariant: committed 929 GB (in use 803, other 257, units max(now, peak) 599, + reserve 0 + fresh 73) vs physical - 64 = 944 GB -> headroom 15 GB
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-182056-1793588951 after 7304 s
+Terminated                 grep -q -- '--exit-report' /usr/local/bin/ot-heavy-reconcile 2> /dev/null
+ot-run: RAN on epyc2 (unit oth-ubuntu-182056-1793588951): exit 143

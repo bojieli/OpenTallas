@@ -1,0 +1,18 @@
+{
+  "status": "DISABLED_RULE_FRAGMENT_NOT_ADOPTED",
+  "append_instance_path_params": [
+    {
+      "module": "ot_s81sl_xg",
+      "param": "INSTANCE"
+    }
+  ],
+  "requires": "this exact source commit/native gate, coherent root manifest/ROM/profile event",
+  "actual_original_paths": [
+    "u_s_3N.u_slice.u_xg",
+    "u_s_3S.u_sl.u_xg"
+  ],
+  "needed_input_files": 14,
+  "missing_mission_images_still_separate": true,
+  "canonical_manifest_changed": false,
+  "active_cohort_changed": false
+}

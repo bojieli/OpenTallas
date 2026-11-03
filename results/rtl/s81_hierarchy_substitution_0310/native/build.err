@@ -1,0 +1,24 @@
+ot-heavy: verilator build -j2 capped to -j1 (8 GB / 30 GB per cc1plus)
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -j 2 --x-assign fast --x-initial fast -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD +define+OT_S81C_HCORE_CTLA +define+OT_S81C_HCORE_RST_TIMED --output-split 20000 --output-split-cfuncs 2000 -CFLAGS -O1 -fno-var-tracking --top-module tb -Mdir /srv/opentallas-scratch2/claude/codex-ds-hier-native-0320/obj v41x/ot_s81c_attn_hcore.sv v41x/ot_hdc_v41x_attn_tile_s.sv v41x/ot_hdc_v41x_kreg.sv v41x/ot_hdc_v41x_attn_tile.sv v41x/ot_hdc_v41x_attn_tile_lat.sv ot_hdc_fp32_f12.sv ot_hdc_fp32_add_lat.sv ot_hdc_prefix.sv ot_hdc_fastfp.sv v41x/ot_dsrom_su_add6.sv ot_s81c_attn_hcore_5.sv tb.sv -LDFLAGS /srv/opentallas-scratch2/claude/codex-ds-hier-native-0320/libot_s81c_attn_hcore_5.a"
+	User time (seconds): 110.69
+	System time (seconds): 6.55
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:57.19
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 422332
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 26
+	Minor (reclaiming a frame) page faults: 1506508
+	Voluntary context switches: 437
+	Involuntary context switches: 1462
+	Swaps: 0
+	File system inputs: 7976
+	File system outputs: 474896
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
