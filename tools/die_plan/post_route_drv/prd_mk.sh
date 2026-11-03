@@ -31,11 +31,28 @@ FROM=${OT_PRD_FROM:-grt}
 case $FROM in grt) SRC=5_1_grt.odb ;; route) SRC=5_2_route.odb ;; final) SRC=6_final.odb ;;
   *) echo "prd_mk: OT_PRD_FROM=$FROM: want grt|route|final"; exit 2 ;; esac
 test -f $RS/$SRC -a -f "$SPEF" || { echo "prd_mk: $RS lacks $SRC / $SPEF"; exit 2; }
+# FLOW-24 11-03 (stale-seed class, before the session; with DIE-S81-50's in-hook stage check as the backstop): the
+# routed SPEF and the seed must carry ONE netlist.  A kit whose 6_final.{odb,spef} were rewritten by a later post-route
+# ECO keeps pre-ECO 5_1_grt/5_2_route DBs (S81 l4: 1327 hxeco_*/slweco_* cells; l0 3341, caprt 33 lweco_*).  prd_seed.py
+# proves it in ~20 s from the DB/SPEF name tables, so the session is staged as OT_PRD_FROM=final (route-keeping from the
+# signed 6_final.odb) at once instead of failing STAGE_MISMATCH after pin access + GRT and being retried.
+SEEDCHK=
+if [ -f $RS/6_final.odb ] && [ $FROM != final ] && [ "${OT_PRD_SEED_CHECK:-1}" != 0 ]; then
+  src=0; SEEDCHK=$(python3 -I "$HERE/prd_seed.py" $RS/$SRC $RS/6_final.odb "$SPEF") || src=$?
+  case $src in
+    0) ;;
+    3) echo "prd_mk: STALE SEED $RS/$SRC lacks netlist objects of $SPEF that 6_final.odb has ($SEEDCHK);" \
+            "seeding the route-keeping ECO from $RS/6_final.odb (OT_PRD_FROM=final, was $FROM)"
+       SRC=6_final.odb; FROM=final ;;
+    *) echo "prd_mk: seed check failed rc $src: $SEEDCHK"; exit 2 ;;
+  esac
+fi
 # Stage policies distinguish GRT from CTS by the ORIGINAL CTS checkpoint.
 # Preserve that checkpoint through every PRD pass; never manufacture it from GRT.
 test -f "$RS/4_1_cts.odb" || { echo "prd_mk: $RS lacks original 4_1_cts.odb (GRT stage identity)"; exit 2; }
 HM=${V:1}; [[ "$HM" =~ ^[0-9]+$ && ${V:0:1} =~ ^[bmt]$ ]] || { echo "prd_mk: variant $V: want b<hold margin ps>, m<hold margin ps> or t<N>"; exit 2; }
 mkdir -p $OUT
+test -z "$SEEDCHK" || echo "$SEEDCHK" > $OUT/prd_seed.json
 rsync -a --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' \
   --exclude '/run_*.log' --exclude /rc.txt --exclude '/pass[0-9]*' --exclude '/prd_*.json' --exclude '/prd_*.log' \
   --exclude '/eco_[0-9]*' --exclude '/lec_routed_autopilot_*' $KIT/ $OUT/
