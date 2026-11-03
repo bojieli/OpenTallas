@@ -10,3 +10,8 @@
 - Flattened-node census: one compute block = 19.5M flattened nodes, 88% in 4 x ot_qwen_w12_matvec_part (4.27M each, no ROM, no xref). Whole die ~3.97G flattened nodes: 192 blocks 3.74G + slices 0.23G. build0 (flat, plus 768 ROM_TILE tile specialisations) OOM 360 GiB.
 - Class fix (sim/tb-only, no RTL change): (1) Verilator hier_block ot_qwen_w12_matvec_part via hier.vlt; (2) tb ROM loads by hierarchical $readmemh (tools/qwen_tokfunc/current_path/qc_rom_load.py -> rom_load.vh, 7732 loads: 7680 tile + opseg + 51 programme) under +OT_TB_ROM_DIR, ROM_TILE stays -1 (Verilator rejects defparam through g_rb[] arrays, so leaf-level defparams are impossible).
 - A/B unit test (one compute block, tiles 708..711: defparam+OT_ROM_DIR vs readmemh) running intel2; build1 whole-QC hierarchical build ADMITTED epyc2 oth-ubuntu-3153048-1793709264 (--mem 160, die, /home/ubuntu/scratch-root/claude/tok-qw-5/build1, chained 6000-cycle bring-up run).
+
+## 2026-11-03 05:33 PST builds
+- READY claude/tok-qw-5-1103@c4a885207 posted (results + qc_rom_load.py + test). A/B 40/40 ROM arrays identical.
+- build1 (hier matvec_part only) epyc2 oth-ubuntu-3153048: top verilation at 129 GB at 05:32 (cap 160), growing ~1.5 GB/min.
+- Hedge build2 (+ hier ot_hdc_fp32_add_lat_nr, qfd_dv_s8s_station_add_data_g, ot_qfd_xs_leaf, qfd_dv_s8s_station_mul_data_g7z) ADMITTED epyc2 oth-ubuntu-4118416-1793712179 (--mem 128), /home/ubuntu/scratch-root/claude/tok-qw-5/build2.
