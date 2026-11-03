@@ -1,0 +1,5 @@
+RESET_READY epoch=0 recovered_edges=66
+RESET_READY epoch=1 recovered_edges=66
+RESET_READY epoch=2 recovered_edges=66
+LOCKSAFE_RESET PASS cold/stopped/warm/relock/actual_fifo_nonzero_pointer_reset
+/home/ubuntu/scratch-root/claude/die-s81-49/reset/src/rtl/dsrom_sys/s81_link/tb_pdie_locksafe_reset.sv:46: $finish called at 3592000 (1ps)

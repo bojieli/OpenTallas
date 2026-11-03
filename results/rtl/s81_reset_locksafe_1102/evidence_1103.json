@@ -1,0 +1,13 @@
+{
+ "lane": "DIE-S81-50/reset",
+ "date": "2026-11-03",
+ "rtl_gate_on_main_65396c58159": {"dir": "epyc2:/home/ubuntu/scratch-root/claude/die-s81-50/reset/gate", "logs": "results/rtl/s81_reset_locksafe_1102/gate_main65396c5", "verdict": "S81_LOCKSAFE_ADOPT_GATE_PASS", "s81col": "2276 lockstep, 5 epochs, release rck 66/68", "s81loop_live_samples": 1163, "mutants_caught": ["early(HOLD63)", "ignorelock", "defaultmut", "s81early", "s81nolock", "s81default"]},
+ "pytest": "physical/die_plan/s81/test_delta_serdes_locksafe_1102.py + tools/s81_head/test_head_serdes_locksafe_delta.py: 6 passed",
+ "g0c_base_vs_delta": {"dir": "intel1:/srv/opentallas-scratch2/claude/die-s81-49/reset/g0c", "plan_h2_2249": "findings 1934 -> 1934, 0 new, 0 gone", "plan_source39_clockset_t49": "findings 1936 -> 1936, 0 new, 0 gone", "errors": "1 pre-existing (same in base)"},
+ "strict_bind_source39_t49": {
+   "delta": {"dir": "intel1:/srv/opentallas-scratch2/claude/die-s81-49/reset/bind", "summary": "398 partitions / 204 types / 873 crossings / 606281 bits, unbound 0, tied 0, undriven 0, multiply_bound 0, errors 1"},
+   "base_control_same_tools_all_gaps": {"dir": "intel1:/srv/opentallas-scratch2/claude/die-s81-50/reset/bind_base", "summary": "identical: 398/204/873/606281, errors 1"},
+   "error": "EMIT collector rst_rl_25: raw reset parent rst_rl_24 absent (same in base: stale plan collector_tree class after main 74080dbb8 reset obstacle re-solve; not caused by this delta; collector_tree identical base vs delta in all 194 types)"},
+ "shared_file": "rtl/dsrom_sys/s81_link/ot_pdie_serdes_locksafe.sv unchanged vs main (HEAD shares ot_pdie_pma_reset_hold)",
+ "kit_regen_types_plan_h2_2249": ["serdes__t12", "serdes__t13", "serdes__t14", "serdes__t15__cla2127225", "serdes__t15__cla3d02796", "serdes__t16", "serdes__t1__clb45db5be", "serdes__t1__clfe1f0815", "serdes__t2", "serdes__t3", "serdes__t4"]
+}

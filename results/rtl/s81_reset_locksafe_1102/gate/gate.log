@@ -1,0 +1,12 @@
+Running as unit: run-p3932187-i221960988.scope; invocation ID: bc29b334c1da445abe2cb55342e7be4f
+GATE base rc=0 OK
+GATE early rc=1 OK
+GATE ignorelock rc=1 OK
+GATE flat rc=0 OK
+GATE col rc=0 OK
+GATE defaultmut rc=1 OK
+GATE s81col rc=0 OK
+GATE s81early rc=1 OK
+GATE s81nolock rc=1 OK
+GATE s81default rc=1 OK
+S81_LOCKSAFE_ADOPT_GATE_PASS

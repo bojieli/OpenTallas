@@ -1,0 +1,5 @@
+S81_COL_RELEASE epoch=0 guard_edge=66 native_rck_edge=68
+S81_COL_RELEASE epoch=1 guard_edge=66 native_rck_edge=68
+S81_COL_RELEASE epoch=2 guard_edge=66 native_rck_edge=68
+FATAL: /home/ubuntu/scratch-root/claude/die-s81-49/reset/src/rtl/dsrom_sys/s81_link/col/tb_s81_col_locksafe.sv:42: in-column LOCKSAFE not held epoch=3
+       Time: 504956500  Scope: tb_s81_col_locksafe.held

@@ -16,7 +16,16 @@
 //   3 = pad 0 short, 4 = syn reset run long); 8 = TX relay one row short (PMA sees the lane one cycle early: no effect on
 //   data, kept as a probe only).
 // ---------------------------------------------------------------------------------------------------------------
-module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL = 2, parameter integer MUT = 0) (
+// LOCKSAFE (S81.RESET, OWNER 2026-11-02 17:55 "SerDes soft warm reset = a local reset sequencer holding reset >= 64 edges
+//   after the PMA clock restarts"; default 0 = the released column, pma_lock unused): 1 = the SHARED, gated sequencer
+//   ot_pdie_pma_reset_hold (rtl/dsrom_sys/s81_link/ot_pdie_serdes_locksafe.sv, codex/serdes-locksafe-2047, the same module
+//   HEAD's ot_s81hd_serdes_link_ls uses) holds the whole column reset: async assert on rst low or pma_lock low, release 2
+//   recovered-clock (pma_rck) synchroniser edges + HOLD_EDGES recovered edges later (guard rck edge 66, native rs_r 68).
+//   It sits inside the column so every child path (u_ptx, u_prx, u_enc, u_dec.*, u_rm) is unchanged; == the gated wrapper
+//   ot_pdie_serdes_col_locksafe(LOCKSAFE=1) every edge (results/rtl/s81_reset_locksafe_1102).  9 FF, 0 mission cycles.
+//   pma_lock = the PMA lock authority (S81 die IO lk_*_pma_lock from the modelled PMA, as HEAD's hd_serdes pad pma_lock).
+module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL = 2, parameter integer MUT = 0,
+                            parameter integer LOCKSAFE = 0, parameter integer HOLD_EDGES = 64) (
     input  wire          clk,
     input  wire          rst,
     input  wire [511:0]  tx,
@@ -25,12 +34,22 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     output wire [543:0]  pma_tx,
     output wire          pma_tck,
     input  wire [543:0]  pma_rx,
-    input  wire          pma_rck
+    input  wire          pma_rck,
+    input  wire          pma_lock
 );
+    // ---- S81.RESET warm-reset sequencer (LOCKSAFE=1 only; region syn, on pma_rck)
+    wire rst_g;
+    generate if (LOCKSAFE != 0) begin : g_locksafe
+        wire hold_ready;
+        ot_pdie_pma_reset_hold #(.HOLD_EDGES(HOLD_EDGES)) u_hold
+            (.rst_n(rst), .pma_lock(pma_lock), .pma_rck(pma_rck), .core_rst_n(rst_g), .hold_ready(hold_ready));
+    end else begin : g_legacy
+        assign rst_g = rst;
+    end endgenerate
     // ---- resets: one synchroniser per clock domain (rs_t in region tx, rs_r in region syn beside the PMA)
     reg [1:0] rs_t, rs_r;
-    always @(posedge clk or negedge rst) if (!rst) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
-    always @(posedge pma_rck or negedge rst) if (!rst) rs_r <= 2'b00; else rs_r <= {rs_r[0], 1'b1};
+    always @(posedge clk or negedge rst_g) if (!rst_g) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
+    always @(posedge pma_rck or negedge rst_g) if (!rst_g) rs_r <= 2'b00; else rs_r <= {rs_r[0], 1'b1};
     wire rn_t = rs_t[1], rn_r = rs_r[1];
     // ---- transmit: FEC encoder (closed tile) -> TX lane relay rows (clk) -> PMA TX
     wire e_v; wire [543:0] e_d; wire e_flt;
