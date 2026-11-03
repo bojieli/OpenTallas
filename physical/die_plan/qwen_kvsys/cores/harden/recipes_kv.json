@@ -169,6 +169,47 @@
  },
  "qkd_hr_core_guard": {
   "hard_children": "physical/die_plan/qwen_kvsys/cores/harden/qkd_hr_core_guard_macro_plan.json",
-  "source": "DIE-KV-61/hr 11-02: GEN_LINT macro_tcl (no static site for the one ot_sram_1r1w_128x64_m1_p192) -> explicit core macro plan"
+  "source": "DIE-KV-61/hr 11-02: GEN_LINT macro_tcl (no static site for the one ot_sram_1r1w_128x64_m1_p192) -> explicit core macro plan",
+  "timed_face": {
+   "buses": [
+    "u_guard__diag_raw",
+    "u_guard__status",
+    "u_native__cancel_release_gen",
+    "u_native__cancel_release_tag",
+    "u_native__cancel_release_v",
+    "u_native__context_owned",
+    "u_native__hc",
+    "u_native__legacy_tk",
+    "u_native__por_n",
+    "u_native__recovery_clear"
+   ],
+   "ruling": "DIE-KV-62/hr 11-02, same class as COORD GRANT 19:2x of DIE-KV-61/hr (declared buses = timed faces, 166.6 ps kit IO budget, no mask, no added cycle)",
+   "reason": "guard diag/status outputs whose flops also feed core logic and native cancel/context/legacy-token inputs read through logic (shared 94 / dropped 93); mapped CORE_PREFLIGHT census epyc2 /home/ubuntu/scratch-root/claude/die-kv-62-hr/census/<core>.json (DIE-KV-61/hr efa6a9b9 kits)"
+  }
+ },
+ "qkd_hr_core_order": {
+  "timed_face": {
+   "buses": [
+    "u_chain__slice_ack",
+    "u_dispatch__boot_release",
+    "u_dispatch__fault",
+    "u_dispatch__hb_cr",
+    "u_dispatch__ing"
+   ],
+   "ruling": "DIE-KV-62/hr 11-02, same class as COORD GRANT 19:2x of DIE-KV-61/hr (declared buses = timed faces, 166.6 ps kit IO budget, no mask, no added cycle)",
+   "reason": "slice_ack inputs with 2 loads each and dispatch boot/fault/credit faces (shared 131 / unregistered 1); mapped CORE_PREFLIGHT census epyc2 /home/ubuntu/scratch-root/claude/die-kv-62-hr/census/<core>.json (DIE-KV-61/hr efa6a9b9 kits)"
+  },
+  "ft_face_regs": {
+   "regs": [
+    {
+     "out": "u_chain__chain_fault",
+     "clock": "ck",
+     "reset_n": "u_chain__rst_n",
+     "reset_value": 0
+    }
+   ],
+   "ruling": "DIE-KV-62/hr 11-02 (KV die-owner sub-lane; precedent COORD ruling 2 head_port_regs frontq fault pin flop +1 edge, OWNER CAP_ED +1 fault cycle 10-30): a wire feed-through is not a timed face; register it",
+   "reason": "u_chain__chain_fault[3:0] = u_chain__chain_fault_i[3:0] is a pure wire across the core (face_guard feedthrough 8); it is the slice-chain fault status read by core_guard service_faults[19:16]: one face register (+1 fault edge, reset 0 = no fault) gives both pins a flop; mapped CORE_PREFLIGHT census epyc2 /home/ubuntu/scratch-root/claude/die-kv-62-hr/census/<core>.json (DIE-KV-61/hr efa6a9b9 kits)"
+  }
  }
 }
