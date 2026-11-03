@@ -1332,6 +1332,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="opt-in (HBM-CORES-KITS-36/opstore, COORD 10-31 15:05): K extra free-placed pipeline register "
                          "stages before the face flop of every shell OUTPUT bus matching BUSRE (read data +K cycles on "
                          "that bus, recorded in face_shell.json out_extra_stages + freeze.json); default none = unchanged")
+    ap.add_argument("--face-lockup", action="append", default=[], metavar="BUSRE",
+                    help="opt-in (DIE-HBM-61/CLOCK, OWNER 11-03 RE-FORM hold-safe crossings; default for the HBM-RF1 "
+                         "recipe): every shell OUTPUT bus matching BUSRE ('.*' = all) gets a negative-edge lockup "
+                         "stage after its face flop that drives the port (hold +T/2 at the receiver, cycle count "
+                         "unchanged, face_guard registered); recorded in face_shell.json out_lockup + freeze.json")
     ap.add_argument("--face-shell-drop", default="on", choices=["on", "off"],
                     help="drop unread input bits (top-of-bus / whole bus) from the shelled pin table; default on")
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
@@ -1638,7 +1643,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         try:
             shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
                              drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
-                             stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None)
+                             stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None,
+                             lockup=a.face_lockup or None)
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
         for f_ in shell["files"]:
@@ -2168,7 +2174,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                dropped=len(shell["dropped"]), unread_kept=len(shell["unread_kept"]),
                                const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],
                                plan_pins=len(names) + len(shell["dropped"]),
-                               **({"out_extra_stages": shell["out_extra_stages"]} if shell.get("out_extra_stages") else {}))
+                               **({"out_extra_stages": shell["out_extra_stages"]} if shell.get("out_extra_stages") else {}),
+                               **({"out_lockup": shell["out_lockup"]} if shell.get("out_lockup") else {}))
                           if shell else None),
               kit_hash=kit_hash(kd))
     if runtime_files:
