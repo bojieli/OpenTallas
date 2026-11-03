@@ -1,0 +1,15 @@
+{
+  "scope": "R1_SOURCE_INPUT_BUNDLE_NOT_RESUME_OVERRIDE",
+  "parts": {
+    "CTS_SOURCE_INPUTS.json": "89ffc5d1bb6fa697c39b383ead01b1110551600daae9298a14a9424c7795113c",
+    "CTS_INSTRUMENT_INPUTS.json": "f8ebc4ca206e68b051f13808fe16c6772cbe8807d7ca174f208d69e107bc696b",
+    "CTS_ENTRY_PATCH.json": "ec49437d41e35b0ba51471007ed2f9acf42cca01086042f63b53a8767195805f",
+    "R1_MINIMAL_DELTA.json": "de371b881bbb34cdea05da83d42871722432e8161e0fe8fe6d88efbfb05bb8ee"
+  },
+  "digest": "fc9655aba1fff9e5cada56ecd20698a2b5f38edbe8023e979f061404e3391999",
+  "constructor_release": "NONE",
+  "requested_flags": [
+    "-sink_clustering_enable",
+    "-repair_clock_nets"
+  ]
+}

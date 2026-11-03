@@ -1,0 +1,44 @@
+{
+  "status": "R1_DEPENDENCY_COMPLETE_SOURCE_PROPOSAL_NOT_RELEASED",
+  "original94_and_saved_PLACE_identical": true,
+  "MM_loader_helper_body_native_flags_unchanged": true,
+  "functional_delta": "Only the exact already-frozen normal macro file at the canonical source include path; run launcher root path changes to fresh r1, and a source-only check is added",
+  "changed_metadata_files": {
+    "run_cts_proposal.sh": {
+      "r0": "17230f31679a7286b4f889425059ca5eb0fac002d42c8cd6eef24dbf5366e2e4",
+      "r1": "38ffa9ba183f4bf541622bb5fd518249f8e5ed37128ba38cc7a823286ea552c1"
+    },
+    "source/physical/common_flow/macro_cts_cluster.tcl": {
+      "r0": null,
+      "r1": "a7af2ec6314ea96d71c966704e0ecae1f9dc3715a6519063fe151c0d1ebac798"
+    },
+    "check_alias_closure.tcl": {
+      "r0": null,
+      "r1": "c95588fdeed46e83a9cbce4a7301d2ad3ab19427b8f1bc432b4448e0fe43c2ab"
+    }
+  },
+  "macro_transitive_source_includes": [],
+  "source_data_closure": "Pinned normal loader + canonical macro file, exact image/config/library environment, existing unchanged94 inputs/current saved PLACE",
+  "normal_helper_sha256": "45e004f796e67435f9539914dcc3594e2267e8a0616c8d59623d290cad983ab1",
+  "macro_sha256": "a7af2ec6314ea96d71c966704e0ecae1f9dc3715a6519063fe151c0d1ebac798",
+  "normal_requested_and_zero_macro_transformed_args": [
+    "-sink_clustering_enable",
+    "-repair_clock_nets"
+  ],
+  "real_API_body_sha256": "88e5ffc56d1708e538e5387cc0eab4a2b7287e0ba82edfec4fb1344945c66ef5",
+  "entry_patch": {
+    "status": "SOURCE_ONLY_NO_CTS_RELEASE",
+    "original_entry_sha256": "1831283f0c9fd1aa51dc3eb5432534ce4905daf9668535829bb7d6ae9f13fa48",
+    "whole_original_entry_body_preserved": true,
+    "body_sha256": "ce205999638b52c3e79bd9f746c1bf9e525b30aa3e0815b827dc43702fe31fa9",
+    "outer_wrapper_sha256": "7dd7a90935469784d2e180d3eb1cf04e665898f269b28b410f9ef2a327626cad",
+    "begin": "after actual load before entire PRE",
+    "after_pre": "after complete original PRE before inverter repair",
+    "before_post": "before entire original POST",
+    "finish": "after entire original POST before primary save, and idempotent outer cleanup on every completion",
+    "flags_source_geometry_modified": false
+  },
+  "source_check_native_CTS_calls": 0,
+  "new_case": "/srv/opentallas-scratch2/claude/codex-recip-cts-lifecycle-prep-1102r1",
+  "failed_r0_preserved": "/srv/opentallas-scratch2/claude/codex-recip-cts-lifecycle-prep-1102r0"
+}

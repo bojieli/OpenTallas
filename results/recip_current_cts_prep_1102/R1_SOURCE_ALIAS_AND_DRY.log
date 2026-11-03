@@ -1,0 +1,19 @@
+ot-run: intel2         admits   355 GB (avail 472, reserve 0, fresh 1.7, peak 50.9, headroom 0, waiters 1/360 GB) load 75/112 running 45 disk 103 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2081727-1793639621 after 0 s
+PASS_CTS_CURRENT_INPUT_GUARD pre 94 source inputs plus exact current PLACE and pinned instruments; no stage5+
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+OT_MACRO_CTS skipped: 0 clocked macro(s)
+SOURCE_ALIAS_CLOSURE_PASS canonical_include /src/physical/common_flow/macro_cts_cluster.tcl original_public_API_preserved 1 zero_macros 0 requested {-sink_clustering_enable -repair_clock_nets} transformed {-sink_clustering_enable -repair_clock_nets} native_CTS_calls 0
+PASS_CTS_CURRENT_INPUT_GUARD pre 94 source inputs plus exact current PLACE and pinned instruments; no stage5+
+/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 1  /OpenROAD-flow-scripts/flow/scripts/noop.tcl
+mkdir -p /work/run/objects/asap7/hc_ot_qkh_recip_leaf__216x216/base
+touch /work/run/objects/asap7/hc_ot_qkh_recip_leaf__216x216/base/copyright.txt
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+cp /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/4_1_cts.odb /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/4_cts.odb
+PASS_CTS_CURRENT_INPUT_GUARD dry 94 source inputs plus exact current PLACE and pinned instruments; no stage5+
+ot-run: RAN on intel2 (unit oth-ubuntu-2081727-1793639621): exit 0
