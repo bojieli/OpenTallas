@@ -1,148 +1,165 @@
 {
-  "schema": "opentallas.qwen.stage37-lease-ledger.v1",
-  "status": "LEDGER_ONLY_NO_DATES_ADOPTED",
-  "owner_decision": "2026-11-02 OWNER adopted Codex native stage37 design (77576b626/64c8e29ec/e0ae07be2/G5/GME); enable only after the token run matches golden",
-  "base": "origin/main e94117444+ (all cited main receipts) and origin/codex/qwen-headlease-candidate-2145@36c29aceb",
-  "rule": "every value below is MEASURED in the cited run or is derived structurally from frozen source; anything else is UNMEASURED. Component-local edges are NOT global calendar dates.",
-  "items": {
-    "a_gain_prog_lease": {
-      "measured": [
-        {
-          "what": "free-region allocation from all 8 actual native 36-stage manifests: CROM writes end <=1023, CROM reads end <=1087, PROG 0..11, monitor 12..15; gain CROM [1088,1472) 3-block / [1088,1344) 2-block slice; per user +2048 ([1088,1472),[3136,3520),[5184,5568),[7232,7616)); pidx 16/144/272/400 (+17 upper); prior last use NONE",
-          "kind": "structural from actual manifests (no reuse)",
-          "src": "results/token_pass/qwen_head_resident_lease_1101 (main)"
-        },
-        {
-          "what": "native loader 1048 exact writes stages 1/36/37, 4 users; standalone loader first4/last93/done93 edges with monitor (done91 without); monitor +2 edges",
-          "kind": "component-local (synthetic payloads)",
-          "src": "results/token_pass/qwen_head_stage37_1101 gate2, intel1 oth-ubuntu-4071704-1793596277, commit 77576b626"
-        },
-        {
-          "what": "106 source rows (24 PROG + 50 shared BTAB + 32 CROM), 8 cohorts/384 masks, 3816-row prefix unchanged; free 166 after monitor 3922",
-          "kind": "source volume",
-          "src": "64c8e29ec source_volume"
-        },
-        {
-          "what": "pidx17 upper-half store rows: only 4 words added vs pidx16 baseline",
-          "kind": "source fixture, NOT executed",
-          "src": "qwen_head37_native_loader_fixture_1102 (778d13ecf, status SOURCE_FIXTURE_NOT_ACTIVATED_NOT_EXECUTED)"
-        }
-      ],
-      "unmeasured": [
-        "HEAD_TABLE_INSTALL_START date and the exclusive loader/stream window against stage36 traffic in the real calendar",
-        "loader occupancy with genuine (not synthetic) gain/PROG payload in the bound QC front"
-      ],
-      "vehicle": "the existing native loader gate (qwen_head_stage37_1101 gate2) fed with the actual 64c8e29ec rank0 payload, then the live-calendar vehicle below for the window",
-      "resource_from_receipts": "loader gate small (normal <=8GB/1T); see c for the calendar vehicle"
+ "schema": "opentallas.qwen.stage37-lease-ledger.v1",
+ "status": "LEDGER_ONLY_NO_DATES_ADOPTED",
+ "owner_decision": "2026-11-02 OWNER adopted Codex native stage37 design (77576b626/64c8e29ec/e0ae07be2/G5/GME); enable only after the token run matches golden",
+ "base": "origin/main e94117444+ (all cited main receipts) and origin/codex/qwen-headlease-candidate-2145@36c29aceb",
+ "rule": "every value below is MEASURED in the cited run or is derived structurally from frozen source; anything else is UNMEASURED. Component-local edges are NOT global calendar dates.",
+ "items": {
+  "a_gain_prog_lease": {
+   "measured": [
+    {
+     "what": "free-region allocation from all 8 actual native 36-stage manifests: CROM writes end <=1023, CROM reads end <=1087, PROG 0..11, monitor 12..15; gain CROM [1088,1472) 3-block / [1088,1344) 2-block slice; per user +2048 ([1088,1472),[3136,3520),[5184,5568),[7232,7616)); pidx 16/144/272/400 (+17 upper); prior last use NONE",
+     "kind": "structural from actual manifests (no reuse)",
+     "src": "results/token_pass/qwen_head_resident_lease_1101 (main)"
     },
-    "b_root_psum_lifetime": {
-      "measured": [
-        {
-          "what": "ROOT cfg-to-write 208 edges, RSTD bits identical baseline amnb0 vs prearm amnb6, 6-candidate AMAX winner idx101",
-          "kind": "component-local, external PSUM fixture",
-          "src": "results/token_pass/qwen_root_prearm_1101 (d339c3c0b), epyc2 gate1, build 590.6s/3.30GB"
-        },
-        {
-          "what": "causal native RES2->RED->ROOT->H, 4 users, 48 kernels, 128 partials, 32 tags/user, canonical RSTD 3cffffff/3c7fffff/3bffffff/3b7fffff; 3 controls caught",
-          "kind": "component, sequential context reuse; CFG-to-return span includes 12 serial fixture contexts and is NOT a production latency",
-          "src": "results/token_pass/qwen_causal_res2_root_head_1102 (95a67d4d3), intel1 oth-ubuntu-270641-1793622914, 16GB/1T, 10.3GiB peak, 4559s"
-        },
-        {
-          "what": "selected calendar edges: final-residual ROOT cfg edge 5057 (index 361, amnb0->6 patch), residual2 pidx1 calls 5264..5353, raw-X stream calls 5372..5522, HEAD ROOT cfg HEAD-relative 248",
-          "kind": "selected 59P calendar edges (old caller; pidx2 correction RES2 ff04db62b)",
-          "src": "qwen_head_resident_lease_1101 README, qwen_head_current_front_1102/calendar_rank0.json"
-        }
-      ],
-      "unmeasured": [
-        "arrival edge of the 32nd PSUM per user in the composed programme",
-        "RSTD publication edge vs last apply-H operand read (lease end)",
-        "absence of any other PSUM-slot writer between cfg and last read in the real calendar"
-      ],
-      "vehicle": "live calendar + native FDN/RP/CTL/SU vehicle (mu_calendar1340 / monitor replay1) extended with residual2 pidx2 + ROOT prearm + 12 apply-H calls",
-      "resource_from_receipts": "monitor native replay1 build 2911s, maxRSS 15.7GB (intel1 codex-monitor-native-1101); ROOT inline build ~15 min at 64GB request"
+    {
+     "what": "native loader 1048 exact writes stages 1/36/37, 4 users; standalone loader first4/last93/done93 edges with monitor (done91 without); monitor +2 edges",
+     "kind": "component-local (synthetic payloads)",
+     "src": "results/token_pass/qwen_head_stage37_1101 gate2, intel1 oth-ubuntu-4071704-1793596277, commit 77576b626"
     },
-    "c_issue_and_h_publication": {
-      "measured": [
-        {
-          "what": "TTcmd -> native SU command ages slices 0..11 = 49,56,63,70,77,84,90,96,102,108,114,120 edges",
-          "kind": "structural from frozen bind_complete4/f79 bus_groups (source equations, not executed)",
-          "src": "qwen_head_current_front_1102 (0c430bc2c)"
-        },
-        {
-          "what": "native H BF16 beats per slice at command-relative offsets 70,78,86,94,102,110 (slices 0..7), 70..94 (slices 8..11); 48 cases/16384 FP32",
-          "kind": "component-local; direct combinational SU adapter + direct STREAM tile, cannot be added to global dates",
-          "src": "qwen_head_apply_native_1101/result/emission_profile.json (4e5521b06), epyc2, build 1117s/5.2GB, run 327s"
-        },
-        {
-          "what": "STREAM write tuples: lanes 0..3 land 17 edges, lanes 4..7 18 edges (frozen 821)",
-          "kind": "structural; phase compensation unproven",
-          "src": "qwen_head_stream_alignment_source_1102"
-        },
-        {
-          "what": "ring transport: producer phase -1/0+pad pass, 0/+1 fault at 228",
-          "kind": "component under count-frame premise",
-          "src": "qwen_head_stream_ring_cut (4703f5073, headlease branch), epyc2 oth-ubuntu-1490632-1793616727"
-        },
-        {
-          "what": "native tail station result_age raw8 106..113, keep3 106..108, round16 106..177; bad3/cfg_between faults as predicted, wrong_keep caught",
-          "kind": "component control witness (replayed TG4 words, not L6)",
-          "src": "intel1 /srv/opentallas-scratch2/claude/codex-native-tail-control-1102/gate1 (terminal 11-02 09:06; receipt on branch still says DISPATCHED_NOT_READY)"
-        },
-        {
-          "what": "S8: 298 STN per rank, KC8, receivers 1,3,5,6,8,10, 6 receiver clears (+5 cmds), 18992 rows/149 blocks",
-          "kind": "source only",
-          "src": "qwen_head_s8_station_source_1102 (68f56e2ee)"
-        },
-        {
-          "what": "WTN: 49 cases plain/select/SAFE_PHYS, digest d24441af3d8d3139 epoch8, 0 added frames/boot cycles; GME 11 replay cases (old contract faults at GO2198/3222, opt-in clears); XPF 12 calls",
-          "kind": "component",
-          "src": "772fed27c/9e518a517, 7ce84273c, 545953d93"
-        }
-      ],
-      "unmeasured": [
-        "HEAD_APPLY_S0..S11_ISSUE (= desired SU start - slice age) against the per-user SU lease",
-        "bound SU internal lane/VM, SUwrite->CTL->STREAM crossings",
-        "headtap/Xfill readiness and repriced retained-HEAD consumer dates",
-        "S8 per-chunk dates",
-        "producer phase vs STREAM 17/18 split in the bound wrapper"
-      ],
-      "vehicle": "same live-calendar vehicle with the bound HEAD producer cut (53e487fce/prepare_bound_head_producer_cut.py) attached; measure first/last H beat per slice and headtap consumption",
-      "resource_from_receipts": "native H build 1117s/5.2GB alone; combined estimate >=16GB/1T, ~1 h build (UNVERIFIED sum)"
+    {
+     "what": "106 source rows (24 PROG + 50 shared BTAB + 32 CROM), 8 cohorts/384 masks, 3816-row prefix unchanged; free 166 after monitor 3922",
+     "kind": "source volume",
+     "src": "64c8e29ec source_volume"
     },
-    "d_calendar_entries": {
-      "measured": [
-        {
-          "what": "layout old nent1009 -> 1021: HEAD first476, 307 retained + 12 apply + 1 GME start = 326, LOCAL4 stage37 first1020/count1, later ranges +8 entries (4-alignment), capacity 2 left",
-          "kind": "relocatable object, executable=false, mask emission REFUSED until relocations linked",
-          "src": "qwen_head_current_front_1102/calendar_rank0.json"
-        },
-        {
-          "what": "CTLM37: 144 stage/user loads lockstep, 4 HEAD requests (1012/count1/nent1013 then), default-off rejects stage37, MUT_USER caught",
-          "kind": "component (old nent1013 layout)",
-          "src": "qwen_head_ctlm37_1101 (e0ae07be2), epyc2 build 99.7s/0.36GB"
-        }
-      ],
-      "unmeasured": [
-        "CTLM37 at the final nent1021/first1020 layout",
-        "all four unresolved relocations in calendar_rank0.json: apply issue, table-install window, RSTD publication through last H read, headtap/Xfill"
-      ],
-      "vehicle": "re-run CTLM37 gate (2GB/1T, ~2 min) on the 1021 layout; then link relocations from the c/b measurements and emit masks",
-      "resource_from_receipts": "CTLM37 normal 2GB/1T/disk2"
+    {
+     "what": "pidx17 upper-half store rows: only 4 words added vs pidx16 baseline",
+     "kind": "source fixture, NOT executed",
+     "src": "qwen_head37_native_loader_fixture_1102 (778d13ecf, status SOURCE_FIXTURE_NOT_ACTIVATED_NOT_EXECUTED)"
+    },
+    {
+     "what": "HEAD_TABLE_INSTALL_START window: loader occupancy 90 edges request-to-request on all 12 slices (89 faults all 12; same/cross user), through the actual CTLM + nent1021 image range start to range start >= 90 (CTLM never faults; the CTLM37 gate's 65-edge spacing faults all 12 slices); stage37 single load CTLM start E -> table_load E+9 -> writes E+15..E+94 (T_die 0); stream-write collision faults exactly on loader edges 3..84 after the face edge, clean >= 85; 148-range boot install 4 users x stages 1..37 at spacing 90: 0 faults, exact writes 12484 (3-block) / 9572 (2-block slice 11), last write E+13324",
+     "kind": "component, main RTL + genuine rank0 HEAD37 ROMs + actual CTLM/nent1021 image (T_die modelled 0)",
+     "src": "results/token_pass/qwen_head37_install_window_1102 (epyc2 tokqw4-tloadwin 6 s / tokqw4-tloade2e 100 s, 8G cap)"
+    },
+    {
+     "what": "native stream carries no table words: nent1021 image has 0 LOCAL kind-3 TLOAD entries (dst14: 37 LOCAL4, 2 kind1, 2 kind2), slice own stream words are kind 0 -> s_we never asserts; the stream/loader exclusive window is vacuous in the native programme",
+     "kind": "structural from the actual image + frozen RTL",
+     "src": "qwen_head37_install_window_1102/receipt.json structural"
     }
+   ],
+   "unmeasured": [
+    "loader occupancy inside the bound whole-QC front (T_die lane age per slice; a constant shift)",
+    "the production OPSEG/TREQ schedule (held, not on main) must place LOCAL37 per user at BOOT after LOCAL4 stage36 with >= 90 edges between any two range starts"
+   ],
+   "vehicle": "the existing native loader gate (qwen_head_stage37_1101 gate2) fed with the actual 64c8e29ec rank0 payload, then the live-calendar vehicle below for the window",
+   "resource_from_receipts": "loader gate small (normal <=8GB/1T); see c for the calendar vehicle",
+   "ruling": "TOK-QW-4: HEAD_TABLE_INSTALL_START = BOOT install (resident, rows disjoint from all transformer stages), after stage36, range-start spacing >= 90; no runtime install, so no stage36 traffic overlap"
   },
-  "enable_gate": "stage37 enable stays default-off until a composed token run (QC HEAD over the 36-layer residual) matches tools/qwen_tp8_token_oracle.py / hdc_golden.py bit-exactly",
-  "updates": [
+  "b_root_psum_lifetime": {
+   "measured": [
     {
-      "item": "d",
-      "measured": "CTLM37 PASS at nent1021 (LOCAL37 1020/count1, stage LOCAL4 876.., 144 lockstep loads, 4 HEAD loads, default-off reject, MUT_USER caught)",
-      "receipt": "results/token_pass/qwen_head_ctlm37_1021_1102/receipt.json",
-      "remaining": "link the 4 execution relocations (HEAD_APPLY_S*_ISSUE, HEAD_TABLE_INSTALL_START, RSTD publication->last H read, headtap/Xfill) then emit masks"
+     "what": "ROOT cfg-to-write 208 edges, RSTD bits identical baseline amnb0 vs prearm amnb6, 6-candidate AMAX winner idx101",
+     "kind": "component-local, external PSUM fixture",
+     "src": "results/token_pass/qwen_root_prearm_1101 (d339c3c0b), epyc2 gate1, build 590.6s/3.30GB"
     },
     {
-      "item": "a",
-      "measured": "genuine rank0 payload through main loader, 12 slices x 4 users: payload exact (2264 writes), first4/done91, gain CROM writes 60..83 (3-block) / 60..75 (2-block), prefix lockstep, default-off reject, MUT_GAIN caught",
-      "receipt": "results/token_pass/qwen_head37_loader_realpayload_1102/receipt.json",
-      "remaining": "HEAD_TABLE_INSTALL_START date vs stage36 traffic in the live calendar (needs live-calendar vehicle)"
+     "what": "causal native RES2->RED->ROOT->H, 4 users, 48 kernels, 128 partials, 32 tags/user, canonical RSTD 3cffffff/3c7fffff/3bffffff/3b7fffff; 3 controls caught",
+     "kind": "component, sequential context reuse; CFG-to-return span includes 12 serial fixture contexts and is NOT a production latency",
+     "src": "results/token_pass/qwen_causal_res2_root_head_1102 (95a67d4d3), intel1 oth-ubuntu-270641-1793622914, 16GB/1T, 10.3GiB peak, 4559s"
+    },
+    {
+     "what": "selected calendar edges: final-residual ROOT cfg edge 5057 (index 361, amnb0->6 patch), residual2 pidx1 calls 5264..5353, raw-X stream calls 5372..5522, HEAD ROOT cfg HEAD-relative 248",
+     "kind": "selected 59P calendar edges (old caller; pidx2 correction RES2 ff04db62b)",
+     "src": "qwen_head_resident_lease_1101 README, qwen_head_current_front_1102/calendar_rank0.json"
     }
-  ]
+   ],
+   "unmeasured": [
+    "arrival edge of the 32nd PSUM per user in the composed programme",
+    "RSTD publication edge vs last apply-H operand read (lease end)",
+    "absence of any other PSUM-slot writer between cfg and last read in the real calendar"
+   ],
+   "vehicle": "live calendar + native FDN/RP/CTL/SU vehicle (mu_calendar1340 / monitor replay1) extended with residual2 pidx2 + ROOT prearm + 12 apply-H calls",
+   "resource_from_receipts": "monitor native replay1 build 2911s, maxRSS 15.7GB (intel1 codex-monitor-native-1101); ROOT inline build ~15 min at 64GB request"
+  },
+  "c_issue_and_h_publication": {
+   "measured": [
+    {
+     "what": "TTcmd -> native SU command ages slices 0..11 = 49,56,63,70,77,84,90,96,102,108,114,120 edges",
+     "kind": "structural from frozen bind_complete4/f79 bus_groups (source equations, not executed)",
+     "src": "qwen_head_current_front_1102 (0c430bc2c)"
+    },
+    {
+     "what": "native H BF16 beats per slice at command-relative offsets 70,78,86,94,102,110 (slices 0..7), 70..94 (slices 8..11); 48 cases/16384 FP32",
+     "kind": "component-local; direct combinational SU adapter + direct STREAM tile, cannot be added to global dates",
+     "src": "qwen_head_apply_native_1101/result/emission_profile.json (4e5521b06), epyc2, build 1117s/5.2GB, run 327s"
+    },
+    {
+     "what": "STREAM write tuples: lanes 0..3 land 17 edges, lanes 4..7 18 edges (frozen 821)",
+     "kind": "structural; phase compensation unproven",
+     "src": "qwen_head_stream_alignment_source_1102"
+    },
+    {
+     "what": "ring transport: producer phase -1/0+pad pass, 0/+1 fault at 228",
+     "kind": "component under count-frame premise",
+     "src": "qwen_head_stream_ring_cut (4703f5073, headlease branch), epyc2 oth-ubuntu-1490632-1793616727"
+    },
+    {
+     "what": "native tail station result_age raw8 106..113, keep3 106..108, round16 106..177; bad3/cfg_between faults as predicted, wrong_keep caught",
+     "kind": "component control witness (replayed TG4 words, not L6)",
+     "src": "intel1 /srv/opentallas-scratch2/claude/codex-native-tail-control-1102/gate1 (terminal 11-02 09:06; receipt on branch still says DISPATCHED_NOT_READY)"
+    },
+    {
+     "what": "S8: 298 STN per rank, KC8, receivers 1,3,5,6,8,10, 6 receiver clears (+5 cmds), 18992 rows/149 blocks",
+     "kind": "source only",
+     "src": "qwen_head_s8_station_source_1102 (68f56e2ee)"
+    },
+    {
+     "what": "WTN: 49 cases plain/select/SAFE_PHYS, digest d24441af3d8d3139 epoch8, 0 added frames/boot cycles; GME 11 replay cases (old contract faults at GO2198/3222, opt-in clears); XPF 12 calls",
+     "kind": "component",
+     "src": "772fed27c/9e518a517, 7ce84273c, 545953d93"
+    }
+   ],
+   "unmeasured": [
+    "HEAD_APPLY_S0..S11_ISSUE (= desired SU start - slice age) against the per-user SU lease",
+    "bound SU internal lane/VM, SUwrite->CTL->STREAM crossings",
+    "headtap/Xfill readiness and repriced retained-HEAD consumer dates",
+    "S8 per-chunk dates",
+    "producer phase vs STREAM 17/18 split in the bound wrapper"
+   ],
+   "vehicle": "same live-calendar vehicle with the bound HEAD producer cut (53e487fce/prepare_bound_head_producer_cut.py) attached; measure first/last H beat per slice and headtap consumption",
+   "resource_from_receipts": "native H build 1117s/5.2GB alone; combined estimate >=16GB/1T, ~1 h build (UNVERIFIED sum)"
+  },
+  "d_calendar_entries": {
+   "measured": [
+    {
+     "what": "layout old nent1009 -> 1021: HEAD first476, 307 retained + 12 apply + 1 GME start = 326, LOCAL4 stage37 first1020/count1, later ranges +8 entries (4-alignment), capacity 2 left",
+     "kind": "relocatable object, executable=false, mask emission REFUSED until relocations linked",
+     "src": "qwen_head_current_front_1102/calendar_rank0.json"
+    },
+    {
+     "what": "CTLM37: 144 stage/user loads lockstep, 4 HEAD requests (1012/count1/nent1013 then), default-off rejects stage37, MUT_USER caught",
+     "kind": "component (old nent1013 layout)",
+     "src": "qwen_head_ctlm37_1101 (e0ae07be2), epyc2 build 99.7s/0.36GB"
+    }
+   ],
+   "unmeasured": [
+    "CTLM37 at the final nent1021/first1020 layout",
+    "all four unresolved relocations in calendar_rank0.json: apply issue, table-install window, RSTD publication through last H read, headtap/Xfill"
+   ],
+   "vehicle": "re-run CTLM37 gate (2GB/1T, ~2 min) on the 1021 layout; then link relocations from the c/b measurements and emit masks",
+   "resource_from_receipts": "CTLM37 normal 2GB/1T/disk2"
+  }
+ },
+ "enable_gate": "stage37 enable stays default-off until a composed token run (QC HEAD over the 36-layer residual) matches tools/qwen_tp8_token_oracle.py / hdc_golden.py bit-exactly",
+ "updates": [
+  {
+   "item": "d",
+   "measured": "CTLM37 PASS at nent1021 (LOCAL37 1020/count1, stage LOCAL4 876.., 144 lockstep loads, 4 HEAD loads, default-off reject, MUT_USER caught)",
+   "receipt": "results/token_pass/qwen_head_ctlm37_1021_1102/receipt.json",
+   "remaining": "link the 4 execution relocations (HEAD_APPLY_S*_ISSUE, HEAD_TABLE_INSTALL_START, RSTD publication->last H read, headtap/Xfill) then emit masks"
+  },
+  {
+   "item": "a",
+   "measured": "genuine rank0 payload through main loader, 12 slices x 4 users: payload exact (2264 writes), first4/done91, gain CROM writes 60..83 (3-block) / 60..75 (2-block), prefix lockstep, default-off reject, MUT_GAIN caught",
+   "receipt": "results/token_pass/qwen_head37_loader_realpayload_1102/receipt.json",
+   "remaining": "HEAD_TABLE_INSTALL_START date vs stage36 traffic in the live calendar (needs live-calendar vehicle)"
+  },
+  {
+   "item": "a",
+   "measured": "install window: occupancy 90 edges (89 faults), e2e CTLM->slice writes E+15..E+94, collision only on loader edges, boot 148 ranges at 90 clean; native s_we structurally 0",
+   "receipt": "results/token_pass/qwen_head37_install_window_1102/receipt.json",
+   "remaining": "T_die in the bound front; held production TREQ schedule must honour the 90-edge rule"
+  }
+ ]
 }

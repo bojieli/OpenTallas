@@ -1,0 +1,14 @@
+{
+  "status": "MEASURED_FAIL_BOOT_START (native veh60 vehicles); D2H replay check done",
+  "lane": "TOK-QW-4 2026-11-02 23:xx PST",
+  "runs_read": {
+    "nowait": "intel1 /srv/opentallas-scratch2/claude/tok-qw-3/kv_nowait/runs/full_nowait/sim.log (class-credit ELF codex-kv-hostcredit-top-2100 b/obj, unit oth-ubuntu-2990777-1793672394, still running)",
+    "veh60_nwB": "intel1 kv-fn-7/veh60/runs/tok_gen1_nwB/nwB/sim.log (old consumer, terminal FAIL 0/36)",
+    "veh60_tok_gen1": "intel1 kv-fn-7/veh60/runs/tok_gen1/gen1/sim.log (ready-wait)",
+    "reference_fx": "intel1 kv-fn-7/w_fx/sim.log and w_es145/sim.log (old non-native es145/FX vehicle)"
+  },
+  "d2h_during_boot_replay": "identical in all runs: 4 die->host words, all CTRL STATUS class 1 op 21 ver 2 src 1 ready 0 sepoch 0, seq 0..3 at cyc 1191/1193/1855/1872 (FX 1175/1176/1839/1855); NO word during image replay (1872..38485, 7376 boot_pr changes), none at SETUP_READY 38493, none at KVSLICE_START 38623, none after HOSTTOK_SENT 38688 (checked to cyc 40494). FX alone sends word n4 class 7 at 40274 (after token_epoch 0004 at 40205).",
+  "boot_start": "FX/es145: BOOTOBS boot_go_d1_hgi_WN_7 pulses at 38641 = KVSLICE_START + 18 (before the START frame), sys_c POSTOBS boot_go 38707, fwd_epoch 38718, adm_done 40050, program_ready 40136, token_epoch 0004 40205. All three native veh60 runs (pad start = mission_start at 38623): boot_go_d1_hgi_WN_7 NEVER rises after 1706 and sys_c boot_go never pulses, so no fwd_epoch / dcal admission / FAR_CAL; HOST frame form (ready-wait, nowait old consumer, nowait class-credit) makes no difference.",
+  "localisation": "the defect is upstream of the host frame: native pad START -> hub_Wi HOST boot event (o_host_boot_go_d1) in the veh60 (geom2 native pad) vehicle. Matches the Codex 11-01 note: 'Production START provider / first observer join remains explicitly HELD; the selected efa bind exposes independent pst_hroot_* inputs, whereas the vehicle has a separate provider'. TOK-QWEN-7's C45 bridge fix (program_installed_local, f4fc168ee on main) IS in the veh60 source, so this is not the 10-29 deadlock predicate.",
+  "verdict": "the class-credit NOWAIT run will fail gate 1 (boot_go after START) like nwB; it cannot reach token_epoch 0004. Next owner action: KV die/vehicle owner joins the native START provider (pst_hroot_*) into hub_Wi before any further KV token run."
+}
