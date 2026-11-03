@@ -1,0 +1,37 @@
+{
+  "module": "kv3_pc__cl5a95b461",
+  "outline_um": [
+    1036.8,
+    1520.64
+  ],
+  "children": {
+    "qkd_kvs_pc": "/srv/opentallas-scratch2/claude/codex-hhp-historical-boundary-0600/actual_views"
+  },
+  "blocks": [
+    {
+      "inst": "u_core_kvpc1",
+      "master": "qkd_kvs_pc",
+      "x": 552.576,
+      "y": 198.72,
+      "orient": "R0"
+    },
+    {
+      "inst": "u_core_kvpc2",
+      "master": "qkd_kvs_pc",
+      "x": 552.576,
+      "y": 959.04,
+      "orient": "R0"
+    },
+    {
+      "inst": "u_core_kvpc3",
+      "master": "qkd_kvs_pc",
+      "x": 85.44000000000001,
+      "y": 959.04,
+      "orient": "MY"
+    }
+  ],
+  "static_rows": true,
+  "qualification": "PC_NOT_SIGNED",
+  "source_equivalence": "FULL_EVENT_PARENT_HOLD; actual mapped post proof pending",
+  "cohort": "PRIVATE_HISTORICAL_D25_FULLM25"
+}

@@ -1,0 +1,72 @@
+{
+  "status": "INPUTS_ONLY_NO_GEN",
+  "qualified": false,
+  "rows": [
+    {
+      "part": "pc_EN_0",
+      "normal_resolve": true,
+      "normal_static_placement_emitted": true,
+      "files": {
+        "/srv/opentallas-scratch2/claude/codex-hhp-historical-boundary-0600/actual_views/qkd_kvs_pc.lef": "b6a6b09f21cc43f2c1dc35f58514fbf86744935e1b7611795cb0c6b3552dab78",
+        "/srv/opentallas-scratch2/claude/codex-hhp-historical-boundary-0600/actual_views/qkd_kvs_pc_tt.lib": "581c4f2e427b16aca2d495e6284e75038f0329b77a82602b3d4b44f6d8858304",
+        "/srv/opentallas-scratch2/claude/codex-hhp-historical-boundary-0600/actual_views/qkd_kvs_pc_ff.lib": "235388ad7f0e2f7928329254a390780f9989c44a3acde569954a25d655f381e7"
+      },
+      "blocks": [
+        {
+          "inst": "u_core_kvpc1",
+          "master": "qkd_kvs_pc",
+          "x": 552.576,
+          "y": 198.72,
+          "orient": "R0"
+        },
+        {
+          "inst": "u_core_kvpc2",
+          "master": "qkd_kvs_pc",
+          "x": 552.576,
+          "y": 959.04,
+          "orient": "R0"
+        },
+        {
+          "inst": "u_core_kvpc3",
+          "master": "qkd_kvs_pc",
+          "x": 85.44000000000001,
+          "y": 959.04,
+          "orient": "MY"
+        }
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "normal_resolve": true,
+      "normal_static_placement_emitted": true,
+      "files": {
+        "/srv/opentallas-scratch2/claude/codex-hhp-historical-boundary-0600/actual_views/qkd_kvs_pc.lef": "b6a6b09f21cc43f2c1dc35f58514fbf86744935e1b7611795cb0c6b3552dab78",
+        "/srv/opentallas-scratch2/claude/codex-hhp-historical-boundary-0600/actual_views/qkd_kvs_pc_tt.lib": "581c4f2e427b16aca2d495e6284e75038f0329b77a82602b3d4b44f6d8858304",
+        "/srv/opentallas-scratch2/claude/codex-hhp-historical-boundary-0600/actual_views/qkd_kvs_pc_ff.lib": "235388ad7f0e2f7928329254a390780f9989c44a3acde569954a25d655f381e7"
+      },
+      "blocks": [
+        {
+          "inst": "u_core_kvpc1",
+          "master": "qkd_kvs_pc",
+          "x": 552.576,
+          "y": 198.72,
+          "orient": "R0"
+        },
+        {
+          "inst": "u_core_kvpc2",
+          "master": "qkd_kvs_pc",
+          "x": 552.576,
+          "y": 959.04,
+          "orient": "R0"
+        },
+        {
+          "inst": "u_core_kvpc3",
+          "master": "qkd_kvs_pc",
+          "x": 85.44000000000001,
+          "y": 959.04,
+          "orient": "MY"
+        }
+      ]
+    }
+  ]
+}

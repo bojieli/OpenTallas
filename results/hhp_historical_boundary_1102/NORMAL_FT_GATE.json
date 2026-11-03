@@ -1,0 +1,216 @@
+{
+  "status": "BLOCKED_NORMAL_FT_DECLARATION",
+  "qualified": false,
+  "normal_helper": "tools/die_plan/ft_ports.py",
+  "helper_sha256": "cfaf90e8d771239362084eb2cfe493000925e43c6ffc1ac9e2e14baaa4547ec2",
+  "parts": [
+    {
+      "part": "pc_EN_0",
+      "status": "BLOCKED_NORMAL_FT_DECLARATION",
+      "error": "an ft output is driven by two declared arcs",
+      "actual_arcs_attempted": [
+        {
+          "cell": "u_core_kvpc0.mp_isl0_ck0",
+          "source": "ckm_w_ckm_n10_h1111111101",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc0.mp_isl0_ck1",
+          "source": "ckm_w_ckm_n10_h1111111101",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc0.mp_isl1_ck0",
+          "source": "ckm_w_ckm_n10_h1111111100",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc0.mp_isl1_ck1",
+          "source": "ckm_w_ckm_n10_h1111111100",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc1.mp_isl0_ck0",
+          "source": "ckm_w_ckm_n10_h1111111101",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc1.mp_isl0_ck1",
+          "source": "ckm_w_ckm_n10_h1111111101",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc1.mp_isl1_ck0",
+          "source": "ckm_w_ckm_n10_h1111111100",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc1.mp_isl1_ck1",
+          "source": "ckm_w_ckm_n10_h1111111100",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc2.mp_isl0_ck0",
+          "source": "ckm_w_ckm_n10_h1111111001",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc2.mp_isl0_ck1",
+          "source": "ckm_w_ckm_n10_h1111111001",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc2.mp_isl1_ck0",
+          "source": "ckm_w_ckm_n10_h1111111000",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc2.mp_isl1_ck1",
+          "source": "ckm_w_ckm_n10_h1111111000",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc3.mp_isl0_ck0",
+          "source": "ckm_w_ckm_n10_h1111111001",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc3.mp_isl0_ck1",
+          "source": "ckm_w_ckm_n10_h1111111001",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc3.mp_isl1_ck0",
+          "source": "ckm_w_ckm_n10_h1111111000",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc3.mp_isl1_ck1",
+          "source": "ckm_w_ckm_n10_h1111111000",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        }
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "status": "BLOCKED_NORMAL_FT_DECLARATION",
+      "error": "an ft output is driven by two declared arcs",
+      "actual_arcs_attempted": [
+        {
+          "cell": "u_core_kvpc0.mp_isl0_ck0",
+          "source": "ckm_w_ckm_n10_h1101010111",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc0.mp_isl0_ck1",
+          "source": "ckm_w_ckm_n10_h1101010111",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc0.mp_isl1_ck0",
+          "source": "ckm_w_ckm_n10_h1101010110",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc0.mp_isl1_ck1",
+          "source": "ckm_w_ckm_n10_h1101010110",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc1.mp_isl0_ck0",
+          "source": "ckm_w_ckm_n10_h1101010111",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc1.mp_isl0_ck1",
+          "source": "ckm_w_ckm_n10_h1101010111",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc1.mp_isl1_ck0",
+          "source": "ckm_w_ckm_n10_h1101010110",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc1.mp_isl1_ck1",
+          "source": "ckm_w_ckm_n10_h1101010110",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc2.mp_isl0_ck0",
+          "source": "ckm_w_ckm_n10_h1101010011",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc2.mp_isl0_ck1",
+          "source": "ckm_w_ckm_n10_h1101010011",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc2.mp_isl1_ck0",
+          "source": "ckm_w_ckm_n10_h1101010010",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc2.mp_isl1_ck1",
+          "source": "ckm_w_ckm_n10_h1101010010",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc3.mp_isl0_ck0",
+          "source": "ckm_w_ckm_n10_h1101010011",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc3.mp_isl0_ck1",
+          "source": "ckm_w_ckm_n10_h1101010011",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc3.mp_isl1_ck0",
+          "source": "ckm_w_ckm_n10_h1101010010",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        },
+        {
+          "cell": "u_core_kvpc3.mp_isl1_ck1",
+          "source": "ckm_w_ckm_n10_h1101010010",
+          "sink": "ck_mesh",
+          "kind": "clock"
+        }
+      ]
+    }
+  ],
+  "rtl_lint_frontend": "NOT_RUN: GEN/CAD/frontend not authorized; generic conflicting-driver check remains required",
+  "normal_gate_waived": false
+}
