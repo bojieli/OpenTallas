@@ -2,7 +2,7 @@
 # OWNER 11-03 RE-FORM pre-build gate (die-agnostic): ORFS synth + floorplan + global place + resize (no CTS, no route)
 # on a kit dir, then OpenSTA TT setup with ideal clocks at the kit's planned insertion latency, then gen-time lint.
 #   prebuild_gate.sh KIT_DIR OUT_DIR [CPUS] [MEM_GB]
-# PASS iff worst setup >= +10% of the clock period AND the lint passes (see prebuild_gate.py).
+# ADVISORY report (OWNER 07:0x, never blocks a launch). PASS iff worst setup >= +10% of the clock period AND the lint passes (see prebuild_gate.py).
 # Runs in docker (openroad/orfs:asap7lock) with a memory cap; never run it on the coordinator host.
 set -u
 KIT=$(cd "$1" && pwd -P); OUT=$(mkdir -p "$2" && cd "$2" && pwd -P); CPUS=${3:-4}; MEM=${4:-24}

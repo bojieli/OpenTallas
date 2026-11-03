@@ -1,4 +1,5 @@
-"""OWNER 11-03 RE-FORM pre-build gate verdict (die-agnostic). Reads OUT/work written by prebuild_gate.sh and writes
+"""OWNER 11-03 RE-FORM pre-build gate verdict (die-agnostic). ADVISORY (OWNER 07:0x): a report, it never blocks a launch
+(exit code 0 unless the tool itself fails). Reads OUT/work written by prebuild_gate.sh and writes
 OUT/prebuild_gate.json.  PASS iff ALL of:
   timing  worst TT setup (ideal clocks at the planned insertion latency, placement RC) >= +10% of the period
   cells   std cells after resize <= 150,000
@@ -128,14 +129,15 @@ def main(out):
         for k in ("face", "straps", "reset"):
             checks[k] = {"ok": False, "why": "no synth netlist"}
     res["checks"] = checks
+    res["advisory"] = True
     res["verdict"] = "PASS" if all(c["ok"] for c in checks.values()) else "FAIL"
     res["fails"] = [k for k, c in checks.items() if not c["ok"]]
     res["needs_stage_cut"] = res["stage_ps"] is not None and res["stage_ps"] > res["stage_limit_ps"]
     res["worst_path"] = s.get("worst_path")
     (out / "prebuild_gate.json").write_text(json.dumps(res, indent=1) + "\n")
-    print(f"PREBUILD_GATE {res['verdict']} {top} wns {wns} stage_ps {res['stage_ps']} cells {s.get('cells')} "
+    print(f"PREBUILD_GATE(advisory) {res['verdict']} {top} wns {wns} stage_ps {res['stage_ps']} cells {s.get('cells')} "
           f"pin_unreg {checks['face'].get('pin_unreg')} mem_max {checks['memory']['largest']} fails {res['fails']}")
-    return 0 if res["verdict"] == "PASS" else 1
+    return 0
 
 
 if __name__ == "__main__":
