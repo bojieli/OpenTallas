@@ -1,0 +1,4051 @@
+{
+ "status": "DIAGNOSED_NATIVE_GROUP_ALIGNMENT_UNQUALIFIED",
+ "source": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/bus_groups.json",
+ "counts": {
+  "BETWEEN_LANE_OFFSET_MISMATCH": 1,
+  "WITHIN_LANE_FIXED_OFFSET_COLLAPSE": 99
+ },
+ "landing_groups": [
+  {
+   "sink": "u_bk_sel",
+   "sink_part": "bk_sel",
+   "src_part": "s_0N_LP",
+   "failure_class": "BETWEEN_LANE_OFFSET_MISMATCH",
+   "within_lane_conflicts": [],
+   "members": [
+    {
+     "sink_port": "ca",
+     "source": "u_s_0N.u_lep.ca",
+     "asbuilt_stages": 0,
+     "bound_stages": 59,
+     "landed_stages": 59,
+     "lane": "ca__s_0N_LP__bk_sel"
+    },
+    {
+     "sink_port": "cb",
+     "source": "u_s_0N.u_lep.cb",
+     "asbuilt_stages": 0,
+     "bound_stages": 58,
+     "landed_stages": 58,
+     "lane": "cb__s_0N_LP__bk_sel"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_0L01.u_r0.$3",
+   "sink_part": "fW0_p1_b0",
+   "src_part": "s_0S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_W0_in"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_0S.u_sl.$16.Y",
+     "asbuilt_stages": 41,
+     "bound_stages": 41,
+     "landed_stages": 41,
+     "lane": "x_W0_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_0S.u_sl.$16.Y",
+     "asbuilt_stages": 45,
+     "bound_stages": 41,
+     "landed_stages": 41,
+     "lane": "x_W0_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_0S.u_sl.$16.Y",
+     "asbuilt_stages": 46,
+     "bound_stages": 41,
+     "landed_stages": 41,
+     "lane": "x_W0_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_0S.u_sl.$16.Y",
+     "asbuilt_stages": 47,
+     "bound_stages": 41,
+     "landed_stages": 41,
+     "lane": "x_W0_in"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_0L10.u_r0.$3",
+   "sink_part": "fW5_p1_b0",
+   "src_part": "s_0N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_W5_in"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_0N.u_sl.$16.Y",
+     "asbuilt_stages": 65,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_W5_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_0N.u_sl.$16.Y",
+     "asbuilt_stages": 66,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_W5_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_0N.u_sl.$16.Y",
+     "asbuilt_stages": 67,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_W5_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_0N.u_sl.$16.Y",
+     "asbuilt_stages": 68,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_W5_in"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_0R01.u_r0.$3",
+   "sink_part": "fW0_p4_b0",
+   "src_part": "s_0S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_W0_out"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_0S.u_sl.$16.Y",
+     "asbuilt_stages": 51,
+     "bound_stages": 66,
+     "landed_stages": 66,
+     "lane": "x_W0_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_0S.u_sl.$16.Y",
+     "asbuilt_stages": 53,
+     "bound_stages": 66,
+     "landed_stages": 66,
+     "lane": "x_W0_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_0S.u_sl.$16.Y",
+     "asbuilt_stages": 55,
+     "bound_stages": 66,
+     "landed_stages": 66,
+     "lane": "x_W0_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_0S.u_sl.$16.Y",
+     "asbuilt_stages": 56,
+     "bound_stages": 66,
+     "landed_stages": 66,
+     "lane": "x_W0_out"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_0R03.u_r0.$3",
+   "sink_part": "fW0_p6_b0",
+   "src_part": "fW0_p5_b0",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xo_W0_out_b"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_f_0R02.u_r0.$4.Y",
+     "asbuilt_stages": 80,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "xo_W0_out_b"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_f_0R02.u_r0.$4.Y",
+     "asbuilt_stages": 81,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "xo_W0_out_b"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_f_0R02.u_r0.$4.Y",
+     "asbuilt_stages": 84,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "xo_W0_out_b"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_0R10.u_r0.$3",
+   "sink_part": "fW5_p4_b0",
+   "src_part": "s_0N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_W5_out"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_0N.u_sl.$16.Y",
+     "asbuilt_stages": 85,
+     "bound_stages": 58,
+     "landed_stages": 58,
+     "lane": "x_W5_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_0N.u_sl.$16.Y",
+     "asbuilt_stages": 86,
+     "bound_stages": 58,
+     "landed_stages": 58,
+     "lane": "x_W5_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_0N.u_sl.$16.Y",
+     "asbuilt_stages": 90,
+     "bound_stages": 58,
+     "landed_stages": 58,
+     "lane": "x_W5_out"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_1L01.u_r0.$3",
+   "sink_part": "fW2_p1_b0",
+   "src_part": "s_1S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_W2_in"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_1S.u_lp.$16.Y",
+     "asbuilt_stages": 65,
+     "bound_stages": 25,
+     "landed_stages": 25,
+     "lane": "x_W2_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_1S.u_lp.$16.Y",
+     "asbuilt_stages": 66,
+     "bound_stages": 25,
+     "landed_stages": 25,
+     "lane": "x_W2_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_1S.u_lp.$16.Y",
+     "asbuilt_stages": 69,
+     "bound_stages": 25,
+     "landed_stages": 25,
+     "lane": "x_W2_in"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_1L10.u_r0.$3",
+   "sink_part": "fW3_p1_b0",
+   "src_part": "s_1N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_W3_in"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_1N.u_lp.$16.Y",
+     "asbuilt_stages": 75,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_W3_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_1N.u_lp.$16.Y",
+     "asbuilt_stages": 77,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_W3_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_1N.u_lp.$16.Y",
+     "asbuilt_stages": 79,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_W3_in"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_2L01.u_r0.$3",
+   "sink_part": "fW1_p1_b0",
+   "src_part": "s_2S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_W1_in"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_2S.u_lp.$16.Y",
+     "asbuilt_stages": 58,
+     "bound_stages": 38,
+     "landed_stages": 38,
+     "lane": "x_W1_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_2S.u_lp.$16.Y",
+     "asbuilt_stages": 63,
+     "bound_stages": 38,
+     "landed_stages": 38,
+     "lane": "x_W1_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_2S.u_lp.$16.Y",
+     "asbuilt_stages": 64,
+     "bound_stages": 38,
+     "landed_stages": 38,
+     "lane": "x_W1_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_2S.u_lp.$16.Y",
+     "asbuilt_stages": 70,
+     "bound_stages": 38,
+     "landed_stages": 38,
+     "lane": "x_W1_in"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_2L10.u_r0.$3",
+   "sink_part": "fW4_p1_b0",
+   "src_part": "s_2N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_W4_in"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_2N.u_lp.$16.Y",
+     "asbuilt_stages": 62,
+     "bound_stages": 35,
+     "landed_stages": 35,
+     "lane": "x_W4_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_2N.u_lp.$16.Y",
+     "asbuilt_stages": 63,
+     "bound_stages": 35,
+     "landed_stages": 35,
+     "lane": "x_W4_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_2N.u_lp.$16.Y",
+     "asbuilt_stages": 64,
+     "bound_stages": 35,
+     "landed_stages": 35,
+     "lane": "x_W4_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_2N.u_lp.$16.Y",
+     "asbuilt_stages": 65,
+     "bound_stages": 35,
+     "landed_stages": 35,
+     "lane": "x_W4_in"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_2R01.u_r0.$3",
+   "sink_part": "fW1_p4_b0",
+   "src_part": "s_2S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_W1_out"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_2S.u_lp.$16.Y",
+     "asbuilt_stages": 60,
+     "bound_stages": 62,
+     "landed_stages": 62,
+     "lane": "x_W1_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_2S.u_lp.$16.Y",
+     "asbuilt_stages": 64,
+     "bound_stages": 62,
+     "landed_stages": 62,
+     "lane": "x_W1_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_2S.u_lp.$16.Y",
+     "asbuilt_stages": 67,
+     "bound_stages": 62,
+     "landed_stages": 62,
+     "lane": "x_W1_out"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_2R10.u_r0.$3",
+   "sink_part": "fW4_p4_b0",
+   "src_part": "s_2N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_W4_out"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_2N.u_lp.$16.Y",
+     "asbuilt_stages": 48,
+     "bound_stages": 53,
+     "landed_stages": 53,
+     "lane": "x_W4_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_2N.u_lp.$16.Y",
+     "asbuilt_stages": 50,
+     "bound_stages": 53,
+     "landed_stages": 53,
+     "lane": "x_W4_out"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_2R13.u_r0.$3",
+   "sink_part": "fW4_p6_b0",
+   "src_part": "fW4_p5_b0",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xo_W4_out_b"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_f_2R12.u_r0.$4.Y",
+     "asbuilt_stages": 79,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "xo_W4_out_b"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_f_2R12.u_r0.$4.Y",
+     "asbuilt_stages": 81,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "xo_W4_out_b"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_f_2R12.u_r0.$4.Y",
+     "asbuilt_stages": 86,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "xo_W4_out_b"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_f_2R12.u_r0.$4.Y",
+     "asbuilt_stages": 92,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "xo_W4_out_b"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_3L01.u_r0.$3",
+   "sink_part": "fW2_p4_b0",
+   "src_part": "s_3S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_W2_out"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_3S.u_sl.$7.Y",
+     "asbuilt_stages": 39,
+     "bound_stages": 60,
+     "landed_stages": 60,
+     "lane": "x_W2_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_3S.u_sl.$7.Y",
+     "asbuilt_stages": 43,
+     "bound_stages": 60,
+     "landed_stages": 60,
+     "lane": "x_W2_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_3S.u_sl.$7.Y",
+     "asbuilt_stages": 45,
+     "bound_stages": 60,
+     "landed_stages": 60,
+     "lane": "x_W2_out"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_3L10.u_r0.$3",
+   "sink_part": "fW3_p4_b0",
+   "src_part": "s_3N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_W3_out"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_3N.u_slice.$8.Y",
+     "asbuilt_stages": 46,
+     "bound_stages": 64,
+     "landed_stages": 64,
+     "lane": "x_W3_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_3N.u_slice.$8.Y",
+     "asbuilt_stages": 47,
+     "bound_stages": 64,
+     "landed_stages": 64,
+     "lane": "x_W3_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_3N.u_slice.$8.Y",
+     "asbuilt_stages": 48,
+     "bound_stages": 64,
+     "landed_stages": 64,
+     "lane": "x_W3_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_3N.u_slice.$8.Y",
+     "asbuilt_stages": 51,
+     "bound_stages": 64,
+     "landed_stages": 64,
+     "lane": "x_W3_out"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_4R01.u_r0.$3",
+   "sink_part": "fE2_p4_b0",
+   "src_part": "s_4S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_E2_out"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_4S.u_lp.$15.Y",
+     "asbuilt_stages": 47,
+     "bound_stages": 59,
+     "landed_stages": 59,
+     "lane": "x_E2_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_4S.u_lp.$15.Y",
+     "asbuilt_stages": 48,
+     "bound_stages": 59,
+     "landed_stages": 59,
+     "lane": "x_E2_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_4S.u_lp.$15.Y",
+     "asbuilt_stages": 51,
+     "bound_stages": 59,
+     "landed_stages": 59,
+     "lane": "x_E2_out"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_4R10.u_r0.$3",
+   "sink_part": "fE3_p4_b0",
+   "src_part": "s_4N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_E3_out"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_4N.u_lp.$16.Y",
+     "asbuilt_stages": 56,
+     "bound_stages": 69,
+     "landed_stages": 69,
+     "lane": "x_E3_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_4N.u_lp.$16.Y",
+     "asbuilt_stages": 57,
+     "bound_stages": 69,
+     "landed_stages": 69,
+     "lane": "x_E3_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_4N.u_lp.$16.Y",
+     "asbuilt_stages": 58,
+     "bound_stages": 69,
+     "landed_stages": 69,
+     "lane": "x_E3_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_4N.u_lp.$16.Y",
+     "asbuilt_stages": 61,
+     "bound_stages": 69,
+     "landed_stages": 69,
+     "lane": "x_E3_out"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_5L01.u_r0.$3",
+   "sink_part": "fE1_p1_b0",
+   "src_part": "s_5S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_E1_in"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_5S.u_lp.$16.Y",
+     "asbuilt_stages": 61,
+     "bound_stages": 38,
+     "landed_stages": 38,
+     "lane": "x_E1_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_5S.u_lp.$16.Y",
+     "asbuilt_stages": 62,
+     "bound_stages": 38,
+     "landed_stages": 38,
+     "lane": "x_E1_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_5S.u_lp.$16.Y",
+     "asbuilt_stages": 65,
+     "bound_stages": 38,
+     "landed_stages": 38,
+     "lane": "x_E1_in"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_5L03.u_r0.$3",
+   "sink_part": "fE1_p3_b0",
+   "src_part": "fE1_p2_b0",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xo_E1_in_b"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_f_5L02.u_r0.$4.Y",
+     "asbuilt_stages": 77,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xo_E1_in_b"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_f_5L02.u_r0.$4.Y",
+     "asbuilt_stages": 80,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xo_E1_in_b"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_f_5L02.u_r0.$4.Y",
+     "asbuilt_stages": 81,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xo_E1_in_b"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_f_5L02.u_r0.$4.Y",
+     "asbuilt_stages": 82,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xo_E1_in_b"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_5L10.u_r0.$3",
+   "sink_part": "fE4_p1_b0",
+   "src_part": "s_5N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_E4_in"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_5N.u_lp.$16.Y",
+     "asbuilt_stages": 68,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_E4_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_5N.u_lp.$16.Y",
+     "asbuilt_stages": 70,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_E4_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_5N.u_lp.$16.Y",
+     "asbuilt_stages": 72,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_E4_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_5N.u_lp.$16.Y",
+     "asbuilt_stages": 75,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_E4_in"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_5R01.u_r0.$3",
+   "sink_part": "fE1_p4_b0",
+   "src_part": "s_5S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_E1_out"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_5S.u_lp.$16.Y",
+     "asbuilt_stages": 63,
+     "bound_stages": 63,
+     "landed_stages": 63,
+     "lane": "x_E1_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_5S.u_lp.$16.Y",
+     "asbuilt_stages": 65,
+     "bound_stages": 63,
+     "landed_stages": 63,
+     "lane": "x_E1_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_5S.u_lp.$16.Y",
+     "asbuilt_stages": 66,
+     "bound_stages": 63,
+     "landed_stages": 63,
+     "lane": "x_E1_out"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_5R10.u_r0.$3",
+   "sink_part": "fE4_p4_b0",
+   "src_part": "s_5N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_E4_out"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_5N.u_lp.$16.Y",
+     "asbuilt_stages": 88,
+     "bound_stages": 51,
+     "landed_stages": 51,
+     "lane": "x_E4_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_5N.u_lp.$16.Y",
+     "asbuilt_stages": 89,
+     "bound_stages": 51,
+     "landed_stages": 51,
+     "lane": "x_E4_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_5N.u_lp.$16.Y",
+     "asbuilt_stages": 91,
+     "bound_stages": 51,
+     "landed_stages": 51,
+     "lane": "x_E4_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_5N.u_lp.$16.Y",
+     "asbuilt_stages": 96,
+     "bound_stages": 51,
+     "landed_stages": 51,
+     "lane": "x_E4_out"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_6R01.u_r0.$3",
+   "sink_part": "fE2_p1_b0",
+   "src_part": "s_6S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_E2_in"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_6S.u_lp.$16.Y",
+     "asbuilt_stages": 62,
+     "bound_stages": 25,
+     "landed_stages": 25,
+     "lane": "x_E2_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_6S.u_lp.$16.Y",
+     "asbuilt_stages": 66,
+     "bound_stages": 25,
+     "landed_stages": 25,
+     "lane": "x_E2_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_6S.u_lp.$16.Y",
+     "asbuilt_stages": 69,
+     "bound_stages": 25,
+     "landed_stages": 25,
+     "lane": "x_E2_in"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_6R10.u_r0.$3",
+   "sink_part": "fE3_p1_b0",
+   "src_part": "s_6N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_E3_in"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_6N.u_lp.$16.Y",
+     "asbuilt_stages": 61,
+     "bound_stages": 35,
+     "landed_stages": 35,
+     "lane": "x_E3_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_6N.u_lp.$16.Y",
+     "asbuilt_stages": 64,
+     "bound_stages": 35,
+     "landed_stages": 35,
+     "lane": "x_E3_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_6N.u_lp.$16.Y",
+     "asbuilt_stages": 65,
+     "bound_stages": 35,
+     "landed_stages": 35,
+     "lane": "x_E3_in"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_7L01.u_r0.$3",
+   "sink_part": "fE0_p1_b0",
+   "src_part": "s_7S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_E0_in"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_7S.u_sl.$16.Y",
+     "asbuilt_stages": 46,
+     "bound_stages": 38,
+     "landed_stages": 38,
+     "lane": "x_E0_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_7S.u_sl.$16.Y",
+     "asbuilt_stages": 48,
+     "bound_stages": 38,
+     "landed_stages": 38,
+     "lane": "x_E0_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_7S.u_sl.$16.Y",
+     "asbuilt_stages": 51,
+     "bound_stages": 38,
+     "landed_stages": 38,
+     "lane": "x_E0_in"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_7L10.u_r0.$3",
+   "sink_part": "fE5_p1_b0",
+   "src_part": "s_7N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_E5_in"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_7N.u_sl.$16.Y",
+     "asbuilt_stages": 40,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_E5_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_7N.u_sl.$16.Y",
+     "asbuilt_stages": 41,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_E5_in"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_7N.u_sl.$16.Y",
+     "asbuilt_stages": 42,
+     "bound_stages": 33,
+     "landed_stages": 33,
+     "lane": "x_E5_in"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_7L13.u_r0.$3",
+   "sink_part": "fE5_p3_b0",
+   "src_part": "fE5_p2_b0",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xo_E5_in_b"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_f_7L12.u_r0.$4.Y",
+     "asbuilt_stages": 77,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xo_E5_in_b"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_f_7L12.u_r0.$4.Y",
+     "asbuilt_stages": 80,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xo_E5_in_b"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_f_7L12.u_r0.$4.Y",
+     "asbuilt_stages": 81,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xo_E5_in_b"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_f_7L12.u_r0.$4.Y",
+     "asbuilt_stages": 82,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xo_E5_in_b"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_7R01.u_r0.$3",
+   "sink_part": "fE0_p4_b0",
+   "src_part": "s_7S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_E0_out"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_7S.u_sl.$16.Y",
+     "asbuilt_stages": 39,
+     "bound_stages": 62,
+     "landed_stages": 62,
+     "lane": "x_E0_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_7S.u_sl.$16.Y",
+     "asbuilt_stages": 41,
+     "bound_stages": 62,
+     "landed_stages": 62,
+     "lane": "x_E0_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_7S.u_sl.$16.Y",
+     "asbuilt_stages": 42,
+     "bound_stages": 62,
+     "landed_stages": 62,
+     "lane": "x_E0_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_7S.u_sl.$16.Y",
+     "asbuilt_stages": 43,
+     "bound_stages": 62,
+     "landed_stages": 62,
+     "lane": "x_E0_out"
+    }
+   ]
+  },
+  {
+   "sink": "u_f_7R10.u_r0.$3",
+   "sink_part": "fE5_p4_b0",
+   "src_part": "s_7N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "x_E5_out"
+   ],
+   "members": [
+    {
+     "sink_port": "A",
+     "source": "u_s_7N.u_sl.$16.Y",
+     "asbuilt_stages": 38,
+     "bound_stages": 58,
+     "landed_stages": 58,
+     "lane": "x_E5_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_7N.u_sl.$16.Y",
+     "asbuilt_stages": 40,
+     "bound_stages": 58,
+     "landed_stages": 58,
+     "lane": "x_E5_out"
+    },
+    {
+     "sink_port": "A",
+     "source": "u_s_7N.u_sl.$16.Y",
+     "asbuilt_stages": 41,
+     "bound_stages": 58,
+     "landed_stages": 58,
+     "lane": "x_E5_out"
+    }
+   ]
+  },
+  {
+   "sink": "u_iqf",
+   "sink_part": "iqf",
+   "src_part": "s_3S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "idx__s_3S_C__iqf"
+   ],
+   "members": [
+    {
+     "sink_port": "qs",
+     "source": "u_s_3S.u_bs.o_i",
+     "asbuilt_stages": 102,
+     "bound_stages": 62,
+     "landed_stages": 62,
+     "lane": "idx__s_3S_C__iqf"
+    },
+    {
+     "sink_port": "qs",
+     "source": "u_s_3S.u_bs.o_i",
+     "asbuilt_stages": 106,
+     "bound_stages": 62,
+     "landed_stages": 62,
+     "lane": "idx__s_3S_C__iqf"
+    }
+   ]
+  },
+  {
+   "sink": "u_irg_01",
+   "sink_part": "svc_2",
+   "src_part": "svc_0",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "idx__svc_0__svc_2"
+   ],
+   "members": [
+    {
+     "sink_port": "qi",
+     "source": "u_irg_00.qo",
+     "asbuilt_stages": 13,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "idx__svc_0__svc_2"
+    },
+    {
+     "sink_port": "qi",
+     "source": "u_irg_00.qo",
+     "asbuilt_stages": 14,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "idx__svc_0__svc_2"
+    },
+    {
+     "sink_port": "si",
+     "source": "u_irg_00.so",
+     "asbuilt_stages": 13,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "idx__svc_0__svc_2"
+    },
+    {
+     "sink_port": "si",
+     "source": "u_irg_00.so",
+     "asbuilt_stages": 13,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "unit__svc_0__svc_2"
+    },
+    {
+     "sink_port": "si",
+     "source": "u_irg_00.so",
+     "asbuilt_stages": 13,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "vid_svc_0__svc_2"
+    }
+   ]
+  },
+  {
+   "sink": "u_irg_03",
+   "sink_part": "svc_6",
+   "src_part": "svc_4",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "attn__svc_4__svc_6"
+   ],
+   "members": [
+    {
+     "sink_port": "qi",
+     "source": "u_irg_02.qo",
+     "asbuilt_stages": 6,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "attn__svc_4__svc_6"
+    },
+    {
+     "sink_port": "qi",
+     "source": "u_irg_02.qo",
+     "asbuilt_stages": 7,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "attn__svc_4__svc_6"
+    },
+    {
+     "sink_port": "si",
+     "source": "u_irg_02.so",
+     "asbuilt_stages": 6,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "attn__svc_4__svc_6"
+    }
+   ]
+  },
+  {
+   "sink": "u_irg_04",
+   "sink_part": "svc_8",
+   "src_part": "svc_6",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "idx__svc_6__svc_8"
+   ],
+   "members": [
+    {
+     "sink_port": "qi",
+     "source": "u_irg_03.qo",
+     "asbuilt_stages": 44,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "idx__svc_6__svc_8"
+    },
+    {
+     "sink_port": "si",
+     "source": "u_irg_03.so",
+     "asbuilt_stages": 45,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "idx__svc_6__svc_8"
+    },
+    {
+     "sink_port": "si",
+     "source": "u_irg_03.so",
+     "asbuilt_stages": 45,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "unit__svc_6__svc_8"
+    },
+    {
+     "sink_port": "si",
+     "source": "u_irg_03.so",
+     "asbuilt_stages": 45,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "vid_svc_6__svc_8"
+    }
+   ]
+  },
+  {
+   "sink": "u_irg_05",
+   "sink_part": "svc_10",
+   "src_part": "svc_8",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "attn__svc_8__svc_10"
+   ],
+   "members": [
+    {
+     "sink_port": "qi",
+     "source": "u_irg_04.qo",
+     "asbuilt_stages": 15,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "attn__svc_8__svc_10"
+    },
+    {
+     "sink_port": "qi",
+     "source": "u_irg_04.qo",
+     "asbuilt_stages": 16,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "attn__svc_8__svc_10"
+    },
+    {
+     "sink_port": "si",
+     "source": "u_irg_04.so",
+     "asbuilt_stages": 17,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "attn__svc_8__svc_10"
+    }
+   ]
+  },
+  {
+   "sink": "u_irg_06",
+   "sink_part": "svc_12",
+   "src_part": "svc_10",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "attn__svc_10__svc_12"
+   ],
+   "members": [
+    {
+     "sink_port": "qi",
+     "source": "u_irg_05.qo",
+     "asbuilt_stages": 8,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "attn__svc_10__svc_12"
+    },
+    {
+     "sink_port": "qi",
+     "source": "u_irg_05.qo",
+     "asbuilt_stages": 9,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "attn__svc_10__svc_12"
+    },
+    {
+     "sink_port": "si",
+     "source": "u_irg_05.so",
+     "asbuilt_stages": 10,
+     "bound_stages": 3,
+     "landed_stages": 3,
+     "lane": "attn__svc_10__svc_12"
+    }
+   ]
+  },
+  {
+   "sink": "u_irg_07",
+   "sink_part": "svc_14",
+   "src_part": "svc_12",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "idx__svc_12__svc_14"
+   ],
+   "members": [
+    {
+     "sink_port": "qi",
+     "source": "u_irg_06.qo",
+     "asbuilt_stages": 13,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "idx__svc_12__svc_14"
+    },
+    {
+     "sink_port": "qi",
+     "source": "u_irg_06.qo",
+     "asbuilt_stages": 14,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "idx__svc_12__svc_14"
+    },
+    {
+     "sink_port": "si",
+     "source": "u_irg_06.so",
+     "asbuilt_stages": 13,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "idx__svc_12__svc_14"
+    },
+    {
+     "sink_port": "si",
+     "source": "u_irg_06.so",
+     "asbuilt_stages": 13,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "unit__svc_12__svc_14"
+    },
+    {
+     "sink_port": "si",
+     "source": "u_irg_06.so",
+     "asbuilt_stages": 13,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "vid_svc_12__svc_14"
+    }
+   ]
+  },
+  {
+   "sink": "u_rsv_05.u.u.$driver$g_host.hp[291:1]",
+   "sink_part": "svc_5",
+   "src_part": "seqhost",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "unit__seqhost__svc_5"
+   ],
+   "members": [
+    {
+     "sink_port": "D",
+     "source": "u_seqhost.u_seqhost.s_hw_w",
+     "asbuilt_stages": 71,
+     "bound_stages": 9,
+     "landed_stages": 9,
+     "lane": "unit__seqhost__svc_5"
+    },
+    {
+     "sink_port": "D",
+     "source": "u_seqhost.u_seqhost.s_hw_w",
+     "asbuilt_stages": 77,
+     "bound_stages": 9,
+     "landed_stages": 9,
+     "lane": "unit__seqhost__svc_5"
+    }
+   ]
+  },
+  {
+   "sink": "u_rsv_05.u.u_program",
+   "sink_part": "svc_5",
+   "src_part": "s_3S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "attn__s_3S_C__svc_5"
+   ],
+   "members": [
+    {
+     "sink_port": "q",
+     "source": "u_s_3S.u_bs.o_s",
+     "asbuilt_stages": 33,
+     "bound_stages": 26,
+     "landed_stages": 26,
+     "lane": "attn__s_3S_C__svc_5"
+    },
+    {
+     "sink_port": "q",
+     "source": "u_s_3S.u_bs.o_s",
+     "asbuilt_stages": 35,
+     "bound_stages": 26,
+     "landed_stages": 26,
+     "lane": "attn__s_3S_C__svc_5"
+    }
+   ]
+  },
+  {
+   "sink": "u_rsv_11.u.u.$driver$g_host.hp[291:1]",
+   "sink_part": "svc_11",
+   "src_part": "seqhost",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "unit__seqhost__svc_11"
+   ],
+   "members": [
+    {
+     "sink_port": "D",
+     "source": "u_seqhost.u_seqhost.s_hw_e",
+     "asbuilt_stages": 63,
+     "bound_stages": 15,
+     "landed_stages": 15,
+     "lane": "unit__seqhost__svc_11"
+    },
+    {
+     "sink_port": "D",
+     "source": "u_seqhost.u_seqhost.s_hw_e",
+     "asbuilt_stages": 70,
+     "bound_stages": 15,
+     "landed_stages": 15,
+     "lane": "unit__seqhost__svc_11"
+    }
+   ]
+  },
+  {
+   "sink": "u_rsv_11.u.u_program",
+   "sink_part": "svc_11",
+   "src_part": "s_4S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "attn__s_4S_C__svc_11"
+   ],
+   "members": [
+    {
+     "sink_port": "q",
+     "source": "u_s_4S.u_lp.u_xr.bo",
+     "asbuilt_stages": 42,
+     "bound_stages": 32,
+     "landed_stages": 32,
+     "lane": "attn__s_4S_C__svc_11"
+    },
+    {
+     "sink_port": "q",
+     "source": "u_s_4S.u_lp.u_xr.bo",
+     "asbuilt_stages": 46,
+     "bound_stages": 32,
+     "landed_stages": 32,
+     "lane": "attn__s_4S_C__svc_11"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_0N.u_sl.u_lf2.u_vn.u_a",
+   "sink_part": "s_0N_L2",
+   "src_part": "s_0N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_0N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_0N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_0N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_0N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_0N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_0N.u_sl.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_0N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_0N.u_sl.u_lf2.u_vn.u_b",
+   "sink_part": "s_0N_L2",
+   "src_part": "s_0N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_0N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_0N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_0N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_0N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_0N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_0N.u_sl.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_0N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_0N.u_sl.u_lf2.u_vs",
+   "sink_part": "s_0N_L2",
+   "src_part": "s_0N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_0N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_0N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_0N_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_0N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_0N_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_0N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_0N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_0N.u_sl.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_0N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_0S.u_sl.u_lf2.u_vn.u_a",
+   "sink_part": "s_0S_L2",
+   "src_part": "s_0S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_0S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_0S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_0S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_0S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_0S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_0S.u_sl.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_0S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_0S.u_sl.u_lf2.u_vn.u_b",
+   "sink_part": "s_0S_L2",
+   "src_part": "s_0S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_0S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_0S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_0S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_0S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_0S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_0S.u_sl.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_0S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_0S.u_sl.u_lf2.u_vs",
+   "sink_part": "s_0S_L2",
+   "src_part": "s_0S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_0S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_0S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_0S_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_0S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_0S_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_0S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_0S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_0S.u_sl.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_0S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_0S.u_sl.u_xg",
+   "sink_part": "s_0S_C",
+   "src_part": "s_1S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_1S_C__s_0S_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_e",
+     "source": "u_s_1S.u_lp.u_xg.ro_w",
+     "asbuilt_stages": 26,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_1S_C__s_0S_C"
+    },
+    {
+     "sink_port": "ri_e",
+     "source": "u_s_1S.u_lp.u_xg.ro_w",
+     "asbuilt_stages": 31,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_1S_C__s_0S_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_1N.u_lp.u_lf2.u_vn.u_a",
+   "sink_part": "s_1N_L2",
+   "src_part": "s_1N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_1N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_1N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_1N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_1N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_1N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_1N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_1N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_1N.u_lp.u_lf2.u_vn.u_b",
+   "sink_part": "s_1N_L2",
+   "src_part": "s_1N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_1N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_1N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_1N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_1N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_1N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_1N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_1N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_1N.u_lp.u_lf2.u_vs",
+   "sink_part": "s_1N_L2",
+   "src_part": "s_1N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_1N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_1N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_1N_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_1N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_1N_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_1N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_1N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_1N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_1N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_1N.u_lp.u_xg",
+   "sink_part": "s_1N_C",
+   "src_part": "s_0N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_0N_C__s_1N_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_0N.u_sl.u_xg.ro_e",
+     "asbuilt_stages": 29,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_0N_C__s_1N_C"
+    },
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_0N.u_sl.u_xg.ro_e",
+     "asbuilt_stages": 30,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_0N_C__s_1N_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_1S.u_lp.u_lf2.u_vn.u_a",
+   "sink_part": "s_1S_L2",
+   "src_part": "s_1S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_1S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_1S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_1S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_1S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_1S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_1S.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_1S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_1S.u_lp.u_lf2.u_vn.u_b",
+   "sink_part": "s_1S_L2",
+   "src_part": "s_1S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_1S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_1S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_1S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_1S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_1S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_1S.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_1S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_1S.u_lp.u_lf2.u_vs",
+   "sink_part": "s_1S_L2",
+   "src_part": "s_1S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_1S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_1S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_1S_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_1S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_1S_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_1S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_1S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_1S.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_1S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_1S.u_lp.u_xg",
+   "sink_part": "s_1S_C",
+   "src_part": "s_0S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_0S_C__s_1S_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_0S.u_sl.u_xg.ro_e",
+     "asbuilt_stages": 24,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_0S_C__s_1S_C"
+    },
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_0S.u_sl.u_xg.ro_e",
+     "asbuilt_stages": 25,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_0S_C__s_1S_C"
+    },
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_0S.u_sl.u_xg.ro_e",
+     "asbuilt_stages": 29,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_0S_C__s_1S_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_2N.u_lp.u_lf2.u_vn.u_a",
+   "sink_part": "s_2N_L2",
+   "src_part": "s_2N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_2N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_2N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_2N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_2N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_2N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_2N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_2N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_2N.u_lp.u_lf2.u_vn.u_b",
+   "sink_part": "s_2N_L2",
+   "src_part": "s_2N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_2N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_2N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_2N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_2N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_2N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_2N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_2N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_2N.u_lp.u_lf2.u_vs",
+   "sink_part": "s_2N_L2",
+   "src_part": "s_2N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_2N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_2N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_2N_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_2N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_2N_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_2N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_2N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_2N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_2N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_2N.u_lp.u_xg",
+   "sink_part": "s_2N_C",
+   "src_part": "s_1N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_1N_C__s_2N_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_1N.u_lp.u_xg.ro_e",
+     "asbuilt_stages": 6,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "xring__s_1N_C__s_2N_C"
+    },
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_1N.u_lp.u_xg.ro_e",
+     "asbuilt_stages": 7,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "xring__s_1N_C__s_2N_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_2N.u_lp.u_xg",
+   "sink_part": "s_2N_C",
+   "src_part": "s_3N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_3N_C__s_2N_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_e",
+     "source": "u_s_3N.u_slice.u_xg.ro_w",
+     "asbuilt_stages": 8,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_3N_C__s_2N_C"
+    },
+    {
+     "sink_port": "ri_e",
+     "source": "u_s_3N.u_slice.u_xg.ro_w",
+     "asbuilt_stages": 9,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_3N_C__s_2N_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_2S.u_lp.u_lf2.u_vn.u_a",
+   "sink_part": "s_2S_L2",
+   "src_part": "s_2S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_2S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_2S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_2S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_2S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_2S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_2S.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_2S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_2S.u_lp.u_lf2.u_vn.u_b",
+   "sink_part": "s_2S_L2",
+   "src_part": "s_2S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_2S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_2S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_2S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_2S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_2S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_2S.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_2S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_2S.u_lp.u_lf2.u_vs",
+   "sink_part": "s_2S_L2",
+   "src_part": "s_2S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_2S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_2S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_2S_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_2S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_2S_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_2S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_2S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_2S.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 11,
+     "landed_stages": 11,
+     "lane": "dn_s_2S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_3N.u_slice.u_xg",
+   "sink_part": "s_3N_C",
+   "src_part": "s_4N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_4N_C__s_3N_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_e",
+     "source": "u_s_4N.u_lp.u_xg.ro_w",
+     "asbuilt_stages": 7,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "xring__s_4N_C__s_3N_C"
+    },
+    {
+     "sink_port": "ri_e",
+     "source": "u_s_4N.u_lp.u_xg.ro_w",
+     "asbuilt_stages": 8,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "xring__s_4N_C__s_3N_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_3S.u_sl.u_xg",
+   "sink_part": "s_3S_C",
+   "src_part": "s_2S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_2S_C__s_3S_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_2S.u_lp.u_xg.ro_e",
+     "asbuilt_stages": 6,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_2S_C__s_3S_C"
+    },
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_2S.u_lp.u_xg.ro_e",
+     "asbuilt_stages": 10,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_2S_C__s_3S_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_4N.u_lp.u_lf2.u_vn.u_a",
+   "sink_part": "s_4N_L2",
+   "src_part": "s_4N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_4N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_4N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_4N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_4N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_4N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_4N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_4N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_4N.u_lp.u_lf2.u_vn.u_b",
+   "sink_part": "s_4N_L2",
+   "src_part": "s_4N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_4N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_4N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_4N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_4N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_4N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_4N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_4N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_4N.u_lp.u_lf2.u_vs",
+   "sink_part": "s_4N_L2",
+   "src_part": "s_4N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_4N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_4N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_4N_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_4N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_4N_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_4N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_4N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_4N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_4N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_4N.u_lp.u_xg",
+   "sink_part": "s_4N_C",
+   "src_part": "s_5N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_5N_C__s_4N_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_e",
+     "source": "u_s_5N.u_lp.u_xg.ro_w",
+     "asbuilt_stages": 7,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_5N_C__s_4N_C"
+    },
+    {
+     "sink_port": "ri_e",
+     "source": "u_s_5N.u_lp.u_xg.ro_w",
+     "asbuilt_stages": 8,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_5N_C__s_4N_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_4S.u_lp.u_lf2.u_vn.u_a",
+   "sink_part": "s_4S_L2",
+   "src_part": "s_4S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_4S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_4S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_4S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_4S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_4S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_4S.u_lp.$16.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_4S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_4S.u_lp.u_lf2.u_vn.u_b",
+   "sink_part": "s_4S_L2",
+   "src_part": "s_4S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_4S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_4S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_4S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_4S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_4S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_4S.u_lp.$16.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_4S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_4S.u_lp.u_lf2.u_vs",
+   "sink_part": "s_4S_L2",
+   "src_part": "s_4S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_4S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_4S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_4S_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_4S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_4S_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_4S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_4S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_4S.u_lp.$16.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 10,
+     "landed_stages": 10,
+     "lane": "dn_s_4S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_4S.u_lp.u_xg",
+   "sink_part": "s_4S_C",
+   "src_part": "s_3S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_3S_C__s_4S_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_3S.u_sl.u_xg.ro_e",
+     "asbuilt_stages": 8,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "xring__s_3S_C__s_4S_C"
+    },
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_3S.u_sl.u_xg.ro_e",
+     "asbuilt_stages": 9,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "xring__s_3S_C__s_4S_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_5N.u_lp.u_lf2.u_vn.u_a",
+   "sink_part": "s_5N_L2",
+   "src_part": "s_5N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_5N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_5N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_5N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_5N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_5N.u_lp.u_lf2.u_vn.u_b",
+   "sink_part": "s_5N_L2",
+   "src_part": "s_5N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_5N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_5N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_5N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_5N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_5N.u_lp.u_lf2.u_vs",
+   "sink_part": "s_5N_L2",
+   "src_part": "s_5N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_5N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_5N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5N_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_5N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5N_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_5N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_5N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_5N.u_lp.u_xg",
+   "sink_part": "s_5N_C",
+   "src_part": "s_6N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_6N_C__s_5N_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_e",
+     "source": "u_s_6N.u_lp.u_xg.ro_w",
+     "asbuilt_stages": 6,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "xring__s_6N_C__s_5N_C"
+    },
+    {
+     "sink_port": "ri_e",
+     "source": "u_s_6N.u_lp.u_xg.ro_w",
+     "asbuilt_stages": 7,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "xring__s_6N_C__s_5N_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_5S.u_lp.u_lf2.u_vn.u_a",
+   "sink_part": "s_5S_L2",
+   "src_part": "s_5S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_5S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_5S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_5S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_5S.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_5S.u_lp.u_lf2.u_vn.u_b",
+   "sink_part": "s_5S_L2",
+   "src_part": "s_5S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_5S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_5S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_5S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_5S.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_5S.u_lp.u_lf2.u_vs",
+   "sink_part": "s_5S_L2",
+   "src_part": "s_5S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_5S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_5S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5S_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_5S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5S_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_5S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_5S.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_5S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_5S.u_lp.u_xg",
+   "sink_part": "s_5S_C",
+   "src_part": "s_4S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_4S_C__s_5S_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_4S.u_lp.u_xg.ro_e",
+     "asbuilt_stages": 6,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_4S_C__s_5S_C"
+    },
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_4S.u_lp.u_xg.ro_e",
+     "asbuilt_stages": 7,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_4S_C__s_5S_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_6N.u_lp.u_lf2.u_vn.u_a",
+   "sink_part": "s_6N_L2",
+   "src_part": "s_6N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_6N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_6N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_6N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_6N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_6N.u_lp.u_lf2.u_vn.u_b",
+   "sink_part": "s_6N_L2",
+   "src_part": "s_6N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_6N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_6N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_6N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_6N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_6N.u_lp.u_lf2.u_vs",
+   "sink_part": "s_6N_L2",
+   "src_part": "s_6N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_6N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_6N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6N_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_6N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6N_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_6N.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_6N.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_6S.u_lp.u_lf2.u_vn.u_a",
+   "sink_part": "s_6S_L2",
+   "src_part": "s_6S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_6S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_6S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_6S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_6S.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_6S.u_lp.u_lf2.u_vn.u_b",
+   "sink_part": "s_6S_L2",
+   "src_part": "s_6S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_6S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_6S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_6S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_6S.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_6S.u_lp.u_lf2.u_vs",
+   "sink_part": "s_6S_L2",
+   "src_part": "s_6S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_6S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_6S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6S_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_6S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6S_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_6S.u_lp.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_6S.u_lp.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_6S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_6S.u_lp.u_xg",
+   "sink_part": "s_6S_C",
+   "src_part": "s_5S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_5S_C__s_6S_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_5S.u_lp.u_xg.ro_e",
+     "asbuilt_stages": 7,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "xring__s_5S_C__s_6S_C"
+    },
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_5S.u_lp.u_xg.ro_e",
+     "asbuilt_stages": 8,
+     "bound_stages": 2,
+     "landed_stages": 2,
+     "lane": "xring__s_5S_C__s_6S_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_6S.u_lp.u_xg",
+   "sink_part": "s_6S_C",
+   "src_part": "s_7S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_7S_C__s_6S_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_e",
+     "source": "u_s_7S.u_sl.u_xg.ro_w",
+     "asbuilt_stages": 23,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_7S_C__s_6S_C"
+    },
+    {
+     "sink_port": "ri_e",
+     "source": "u_s_7S.u_sl.u_xg.ro_w",
+     "asbuilt_stages": 24,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_7S_C__s_6S_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_7N.u_sl.u_lf2.u_vn.u_a",
+   "sink_part": "s_7N_L2",
+   "src_part": "s_7N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_7N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_7N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_7N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_7N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_7N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_7N.u_sl.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_7N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_7N.u_sl.u_lf2.u_vn.u_b",
+   "sink_part": "s_7N_L2",
+   "src_part": "s_7N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_7N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_7N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_7N_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_7N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_7N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_7N.u_sl.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_7N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_7N.u_sl.u_lf2.u_vs",
+   "sink_part": "s_7N_L2",
+   "src_part": "s_7N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_7N_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_7N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_7N_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_7N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_7N_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_7N.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_7N_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_7N.u_sl.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 12,
+     "landed_stages": 12,
+     "lane": "dn_s_7N_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_7N.u_sl.u_xg",
+   "sink_part": "s_7N_C",
+   "src_part": "s_6N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_6N_C__s_7N_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_6N.u_lp.u_xg.ro_e",
+     "asbuilt_stages": 28,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_6N_C__s_7N_C"
+    },
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_6N.u_lp.u_xg.ro_e",
+     "asbuilt_stages": 29,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_6N_C__s_7N_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_7S.u_sl.u_lf2.u_vn.u_a",
+   "sink_part": "s_7S_L2",
+   "src_part": "s_7S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_7S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_7S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_7S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_7S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_7S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_7S.u_sl.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_7S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_7S.u_sl.u_lf2.u_vn.u_b",
+   "sink_part": "s_7S_L2",
+   "src_part": "s_7S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_7S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "rb_d",
+     "source": "u_s_7S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_7S_L2"
+    },
+    {
+     "sink_port": "rb_v",
+     "source": "u_s_7S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_7S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_7S.u_sl.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_7S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_7S.u_sl.u_lf2.u_vs",
+   "sink_part": "s_7S_L2",
+   "src_part": "s_7S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "dn_s_7S_L2"
+   ],
+   "members": [
+    {
+     "sink_port": "g_c",
+     "source": "u_s_7S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_7S_L2"
+    },
+    {
+     "sink_port": "g_d",
+     "source": "u_s_7S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_7S_L2"
+    },
+    {
+     "sink_port": "g_v",
+     "source": "u_s_7S.u_sl.$2.Y",
+     "asbuilt_stages": 4,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_7S_L2"
+    },
+    {
+     "sink_port": "rst_n",
+     "source": "u_s_7S.u_sl.$17.Y",
+     "asbuilt_stages": 7,
+     "bound_stages": 13,
+     "landed_stages": 13,
+     "lane": "dn_s_7S_L2"
+    }
+   ]
+  },
+  {
+   "sink": "u_s_7S.u_sl.u_xg",
+   "sink_part": "s_7S_C",
+   "src_part": "s_6S_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "xring__s_6S_C__s_7S_C"
+   ],
+   "members": [
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_6S.u_lp.u_xg.ro_e",
+     "asbuilt_stages": 24,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_6S_C__s_7S_C"
+    },
+    {
+     "sink_port": "ri_w",
+     "source": "u_s_6S.u_lp.u_xg.ro_e",
+     "asbuilt_stages": 25,
+     "bound_stages": 5,
+     "landed_stages": 5,
+     "lane": "xring__s_6S_C__s_7S_C"
+    }
+   ]
+  },
+  {
+   "sink": "u_seqhost.u_seqhost",
+   "sink_part": "seqhost",
+   "src_part": "s_7N_LP",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "unit__s_7N_LP__seqhost"
+   ],
+   "members": [
+    {
+     "sink_port": "f_lf",
+     "source": "u_s_7N.u_lep.f_lf",
+     "asbuilt_stages": 47,
+     "bound_stages": 88,
+     "landed_stages": 88,
+     "lane": "unit__s_7N_LP__seqhost"
+    },
+    {
+     "sink_port": "mu_rt_7n",
+     "source": "u_s_7N.u_lep.mu_rt",
+     "asbuilt_stages": 48,
+     "bound_stages": 88,
+     "landed_stages": 88,
+     "lane": "unit__s_7N_LP__seqhost"
+    }
+   ]
+  },
+  {
+   "sink": "u_seqhost.u_source",
+   "sink_part": "seqhost",
+   "src_part": "s_0N_C",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "ctrl__s_0N_C__seqhost"
+   ],
+   "members": [
+    {
+     "sink_port": "hbe_f_host",
+     "source": "u_s_0N.u_hbc.f_host",
+     "asbuilt_stages": 43,
+     "bound_stages": 77,
+     "landed_stages": 77,
+     "lane": "ctrl__s_0N_C__seqhost"
+    },
+    {
+     "sink_port": "hbe_f_host",
+     "source": "u_s_0N.u_hbc.f_host",
+     "asbuilt_stages": 44,
+     "bound_stages": 77,
+     "landed_stages": 77,
+     "lane": "ctrl__s_0N_C__seqhost"
+    },
+    {
+     "sink_port": "hbe_ks_slot",
+     "source": "u_s_0N.u_hbc.ks_slot",
+     "asbuilt_stages": 43,
+     "bound_stages": 77,
+     "landed_stages": 77,
+     "lane": "ctrl__s_0N_C__seqhost"
+    },
+    {
+     "sink_port": "starter_f_ks",
+     "source": "u_s_0N.u_hbc.ks_descriptor",
+     "asbuilt_stages": 43,
+     "bound_stages": 77,
+     "landed_stages": 77,
+     "lane": "ctrl__s_0N_C__seqhost"
+    },
+    {
+     "sink_port": "starter_f_ks",
+     "source": "u_s_0N.u_hbc.ks_descriptor",
+     "asbuilt_stages": 44,
+     "bound_stages": 77,
+     "landed_stages": 77,
+     "lane": "ctrl__s_0N_C__seqhost"
+    }
+   ]
+  },
+  {
+   "sink": "u_seqhost.u_source",
+   "sink_part": "seqhost",
+   "src_part": "s_7N_LP",
+   "failure_class": "WITHIN_LANE_FIXED_OFFSET_COLLAPSE",
+   "within_lane_conflicts": [
+    "unit__s_7N_LP__seqhost"
+   ],
+   "members": [
+    {
+     "sink_port": "f_host",
+     "source": "u_s_7N.u_lep.f_host",
+     "asbuilt_stages": 47,
+     "bound_stages": 88,
+     "landed_stages": 88,
+     "lane": "unit__s_7N_LP__seqhost"
+    },
+    {
+     "sink_port": "f_ks",
+     "source": "u_s_7N.u_lep.f_ks",
+     "asbuilt_stages": 47,
+     "bound_stages": 88,
+     "landed_stages": 88,
+     "lane": "unit__s_7N_LP__seqhost"
+    },
+    {
+     "sink_port": "f_ks",
+     "source": "u_s_7N.u_lep.f_ks",
+     "asbuilt_stages": 48,
+     "bound_stages": 88,
+     "landed_stages": 88,
+     "lane": "unit__s_7N_LP__seqhost"
+    }
+   ]
+  }
+ ],
+ "unequal_replicas": [
+  {
+   "source": "u_s_3N.u_slice.g_c1.u_xr.c_d",
+   "source_bits": [
+    [
+     0,
+     159
+    ]
+   ],
+   "asbuilt_stages": 4,
+   "sink_parts": [
+    "s_3N_L0",
+    "s_3N_L1",
+    "s_3N_L2",
+    "s_3N_L3",
+    "s_3N_L4"
+   ],
+   "bound_depths": {
+    "s_3N_L0": [
+     5
+    ],
+    "s_3N_L1": [
+     2
+    ],
+    "s_3N_L2": [
+     9
+    ],
+    "s_3N_L3": [
+     9
+    ],
+    "s_3N_L4": [
+     13
+    ]
+   },
+   "equal": false
+  },
+  {
+   "source": "u_s_3N.u_slice.g_c1.u_xr.g_c",
+   "source_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "asbuilt_stages": 4,
+   "sink_parts": [
+    "s_3N_L0",
+    "s_3N_L1",
+    "s_3N_L2",
+    "s_3N_L3",
+    "s_3N_L4"
+   ],
+   "bound_depths": {
+    "s_3N_L0": [
+     5
+    ],
+    "s_3N_L1": [
+     2
+    ],
+    "s_3N_L2": [
+     9
+    ],
+    "s_3N_L3": [
+     9
+    ],
+    "s_3N_L4": [
+     13
+    ]
+   },
+   "equal": false
+  },
+  {
+   "source": "u_s_3N.u_slice.g_c1.u_xr.g_d",
+   "source_bits": [
+    [
+     0,
+     31
+    ]
+   ],
+   "asbuilt_stages": 4,
+   "sink_parts": [
+    "s_3N_L0",
+    "s_3N_L1",
+    "s_3N_L2",
+    "s_3N_L3",
+    "s_3N_L4"
+   ],
+   "bound_depths": {
+    "s_3N_L0": [
+     5
+    ],
+    "s_3N_L1": [
+     2
+    ],
+    "s_3N_L2": [
+     9
+    ],
+    "s_3N_L3": [
+     9
+    ],
+    "s_3N_L4": [
+     13
+    ]
+   },
+   "equal": false
+  },
+  {
+   "source": "u_s_3N.u_slice.g_c1.u_xr.g_v",
+   "source_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "asbuilt_stages": 4,
+   "sink_parts": [
+    "s_3N_L0",
+    "s_3N_L1",
+    "s_3N_L2",
+    "s_3N_L3",
+    "s_3N_L4"
+   ],
+   "bound_depths": {
+    "s_3N_L0": [
+     5
+    ],
+    "s_3N_L1": [
+     2
+    ],
+    "s_3N_L2": [
+     9
+    ],
+    "s_3N_L3": [
+     9
+    ],
+    "s_3N_L4": [
+     13
+    ]
+   },
+   "equal": false
+  },
+  {
+   "source": "u_s_3N.u_slice.g_c1.u_xr.rb_d",
+   "source_bits": [
+    [
+     0,
+     31
+    ]
+   ],
+   "asbuilt_stages": 4,
+   "sink_parts": [
+    "s_3N_L0",
+    "s_3N_L1",
+    "s_3N_L2",
+    "s_3N_L3",
+    "s_3N_L4"
+   ],
+   "bound_depths": {
+    "s_3N_L0": [
+     5
+    ],
+    "s_3N_L1": [
+     2
+    ],
+    "s_3N_L2": [
+     9
+    ],
+    "s_3N_L3": [
+     9
+    ],
+    "s_3N_L4": [
+     13
+    ]
+   },
+   "equal": false
+  },
+  {
+   "source": "u_s_3N.u_slice.g_c1.u_xr.rb_v",
+   "source_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "asbuilt_stages": 4,
+   "sink_parts": [
+    "s_3N_L0",
+    "s_3N_L1",
+    "s_3N_L2",
+    "s_3N_L3",
+    "s_3N_L4"
+   ],
+   "bound_depths": {
+    "s_3N_L0": [
+     5
+    ],
+    "s_3N_L1": [
+     2
+    ],
+    "s_3N_L2": [
+     9
+    ],
+    "s_3N_L3": [
+     9
+    ],
+    "s_3N_L4": [
+     13
+    ]
+   },
+   "equal": false
+  },
+  {
+   "source": "u_s_3S.u_sl.g_c3.u_xr.c_d",
+   "source_bits": [
+    [
+     0,
+     159
+    ]
+   ],
+   "asbuilt_stages": 4,
+   "sink_parts": [
+    "s_3S_L0",
+    "s_3S_L1",
+    "s_3S_L2",
+    "s_3S_L3",
+    "s_3S_L4"
+   ],
+   "bound_depths": {
+    "s_3S_L0": [
+     5
+    ],
+    "s_3S_L1": [
+     2
+    ],
+    "s_3S_L2": [
+     11
+    ],
+    "s_3S_L3": [
+     12
+    ],
+    "s_3S_L4": [
+     17
+    ]
+   },
+   "equal": false
+  },
+  {
+   "source": "u_s_3S.u_sl.g_c3.u_xr.g_c",
+   "source_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "asbuilt_stages": 4,
+   "sink_parts": [
+    "s_3S_L0",
+    "s_3S_L1",
+    "s_3S_L2",
+    "s_3S_L3",
+    "s_3S_L4"
+   ],
+   "bound_depths": {
+    "s_3S_L0": [
+     5
+    ],
+    "s_3S_L1": [
+     2
+    ],
+    "s_3S_L2": [
+     11
+    ],
+    "s_3S_L3": [
+     12
+    ],
+    "s_3S_L4": [
+     17
+    ]
+   },
+   "equal": false
+  },
+  {
+   "source": "u_s_3S.u_sl.g_c3.u_xr.g_d",
+   "source_bits": [
+    [
+     0,
+     31
+    ]
+   ],
+   "asbuilt_stages": 4,
+   "sink_parts": [
+    "s_3S_L0",
+    "s_3S_L1",
+    "s_3S_L2",
+    "s_3S_L3",
+    "s_3S_L4"
+   ],
+   "bound_depths": {
+    "s_3S_L0": [
+     5
+    ],
+    "s_3S_L1": [
+     2
+    ],
+    "s_3S_L2": [
+     11
+    ],
+    "s_3S_L3": [
+     12
+    ],
+    "s_3S_L4": [
+     17
+    ]
+   },
+   "equal": false
+  },
+  {
+   "source": "u_s_3S.u_sl.g_c3.u_xr.g_v",
+   "source_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "asbuilt_stages": 4,
+   "sink_parts": [
+    "s_3S_L0",
+    "s_3S_L1",
+    "s_3S_L2",
+    "s_3S_L3",
+    "s_3S_L4"
+   ],
+   "bound_depths": {
+    "s_3S_L0": [
+     5
+    ],
+    "s_3S_L1": [
+     2
+    ],
+    "s_3S_L2": [
+     11
+    ],
+    "s_3S_L3": [
+     12
+    ],
+    "s_3S_L4": [
+     17
+    ]
+   },
+   "equal": false
+  },
+  {
+   "source": "u_s_3S.u_sl.g_c3.u_xr.rb_d",
+   "source_bits": [
+    [
+     0,
+     31
+    ]
+   ],
+   "asbuilt_stages": 4,
+   "sink_parts": [
+    "s_3S_L0",
+    "s_3S_L1",
+    "s_3S_L2",
+    "s_3S_L3",
+    "s_3S_L4"
+   ],
+   "bound_depths": {
+    "s_3S_L0": [
+     5
+    ],
+    "s_3S_L1": [
+     2
+    ],
+    "s_3S_L2": [
+     11
+    ],
+    "s_3S_L3": [
+     12
+    ],
+    "s_3S_L4": [
+     17
+    ]
+   },
+   "equal": false
+  },
+  {
+   "source": "u_s_3S.u_sl.g_c3.u_xr.rb_v",
+   "source_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "asbuilt_stages": 4,
+   "sink_parts": [
+    "s_3S_L0",
+    "s_3S_L1",
+    "s_3S_L2",
+    "s_3S_L3",
+    "s_3S_L4"
+   ],
+   "bound_depths": {
+    "s_3S_L0": [
+     5
+    ],
+    "s_3S_L1": [
+     2
+    ],
+    "s_3S_L2": [
+     11
+    ],
+    "s_3S_L3": [
+     12
+    ],
+    "s_3S_L4": [
+     17
+    ]
+   },
+   "equal": false
+  },
+  {
+   "source": "u_s_5S.u_lp.$16.Y",
+   "source_bits": [
+    [
+     276,
+     551
+    ]
+   ],
+   "asbuilt_stages": 65,
+   "sink_parts": [
+    "fE1_p1_b0",
+    "fE1_p4_b0"
+   ],
+   "bound_depths": {
+    "fE1_p1_b0": [
+     38
+    ],
+    "fE1_p4_b0": [
+     63
+    ]
+   },
+   "equal": false
+  }
+ ],
+ "applied_padding": false,
+ "latency_or_RTL_changed": false
+}
