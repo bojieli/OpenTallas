@@ -1118,7 +1118,11 @@
       "pilot_max": 2,
       "owner_lane": "DIE-HBM-57",
       "pilot_mode": "queue",
-      "queue_src": "claude/kit-wave-15-hbmtaps-cc-1101@e96f241822a"
+      "queue_src": "claude/kit-wave-15-hbmtaps-cc-1101@e96f241822a",
+      "hold_items": {
+        "hnx_vms_bank_q0_faces__vec6293*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)",
+        "*_mu1*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)"
+      }
     }
   },
   "place_prefer": [
