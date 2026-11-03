@@ -875,6 +875,21 @@ def _lef_sizes(kd, cfg):
     return sizes
 
 
+def _lef_metal_tops(kd, cfg):
+    """{master: highest metal index carrying OBS or PIN geometry} of the kit macro LEFs (a master without any LAYER
+    Mn geometry maps to 0).  S81-49/kits 11-02: clock_entry_clear judges a partition clock entry over a macro by it."""
+    tops = {}
+    files = list((Path(kd) / "macros").glob("*.lef")) if (Path(kd) / "macros").is_dir() else []
+    for w in cfg.get("ADDITIONAL_LEFS", "").split():
+        f = _kfile(kd, w)
+        if f is not None and f.is_file() and f not in files:
+            files.append(f)
+    for f in files:
+        for m in re.finditer(r"^MACRO\s+(\S+)(.*?)^END\s+\1", f.read_text(errors="replace"), re.M | re.S):
+            tops[m.group(1)] = max([int(x) for x in re.findall(r"\bLAYER\s+M(\d+)\b", m.group(2))] or [0])
+    return tops
+
+
 def _tcl_list(s):
     """split a Tcl list (brace groups kept as one element, outer braces stripped)."""
     out, i, s = [], 0, s.strip()
@@ -940,6 +955,10 @@ def _plan_contents(kd, plan_dir):
         # physical_parts inventory gen_phys.type_macros() places, including SRAMs inside soft logic.
         for q in e.get("physical_parts") or []:
             out[q["physical_inst"]] = dict(q, inst=q["physical_inst"], module=q["physical_master"])
+    # KW-FIX-1/S81PF 11-02: gen_phys declared bound netlist paths for plan macros (kit receipt bound_macro_paths.json)
+    if (Path(kd) / "bound_macro_paths.json").is_file():
+        import bound_macro_paths
+        out = bound_macro_paths.overlay(kd, out)
     return out
 
 
@@ -1061,7 +1080,22 @@ def macro_channels(kd, plan_dir=None, min_um=MIN_CHANNEL_UM):
     for e in (_plan_contents(kd, plan_dir) or {}).values():
         if e.get("abut_core_edge"):
             abut[e.get("module", e["inst"])] = set(e["abut_core_edge"])
-    declared = []
+    declared, facing_ok = [], []
+
+    def facing_gap(a_col, b_col):
+        """S81-49/kits 11-02: smallest x gap between a macro of column a_col and one of the next column b_col that
+        FACE each other (y intervals overlapping or closer than min_um).  x-overlap clusters of irregular (non-grid)
+        placements put macros in one column whose x extents do not face the next column's macros at all
+        (S81 leaf: vn_a ends 6.48 um left of the hcpost column but 200 um away in y); a channel is judged where two
+        macros face.  None: no facing pair (the boundary has no channel to judge)."""
+        g = None
+        for a in a_col:
+            for b in b_col:
+                if min(a[4], b[4]) - max(a[2], b[2]) > -min_um + 1e-6:
+                    d = b[1] - a[3]
+                    g = d if g is None else min(g, d)
+        return g
+
     for i, c in enumerate(cols):
         lo, hi = min(b[1] for b in c), max(b[3] for b in c)
         wgap, egap = lo - edges[2 * i], edges[2 * i + 3] - hi
@@ -1070,6 +1104,14 @@ def macro_channels(kd, plan_dir=None, min_um=MIN_CHANNEL_UM):
             if edge and abs(g) <= 1e-6 and all(side in abut.get(b[0].rsplit("#", 1)[0], ()) for b in c):
                 declared.append(f"column {i} {side}")
                 continue
+            if g < min_um - 1e-6 and not edge:
+                # an interior column boundary: the channel is the gap between macros that face across it
+                fg = facing_gap(cols[i - 1], c) if side == "W" else facing_gap(c, cols[i + 1])
+                if fg is None or fg >= min_um - 1e-6:
+                    facing_ok.append(f"column {i} {side}: extent gap {g:.3f} um, facing gap "
+                                     f"{'none' if fg is None else f'{fg:.3f} um'}")
+                    continue
+                g = fg
             if g < min_um - 1e-6:
                 err.append(f"macro column {i} x[{lo:g},{hi:g}]: {side} vertical channel {g:.3f} um < {min_um:g}")
         stack = sorted(c, key=lambda b: b[2])
@@ -1082,6 +1124,8 @@ def macro_channels(kd, plan_dir=None, min_um=MIN_CHANNEL_UM):
                 min_channel_note="10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling")
     if declared:
         info["declared_core_edge_abutment"] = declared
+    if facing_ok:
+        info["boundary_judged_on_facing_macros"] = facing_ok
     return err, info
 
 
@@ -1102,12 +1146,28 @@ def clock_entry_clear(kd, plan_dir=None, entries=None):
                 pts.append(("master_slice.json", isl.get("name"), *map(float, cp["xy_um"])))
     if not pts:
         return ["no clock entry coordinates found"], dict(applies=True)
-    err = []
+    # S81-49/kits 11-02 (12.3 v5.0 early core taps): a gen_phys partition's early core tap port (budget.json
+    # clock.core_taps) is the die clock's drop onto ONE hard-core clock pin.  Over a macro whose LEF has no OBS/PIN
+    # metal on the partition entry layer (budget signal_max, M7) nor the via layer below it (M6), the entry is a
+    # plain via stack through free metal (S81 vsw: M5 interior pin, OBS M1-M5) -> legal, recorded in info.  Any
+    # other entry over a macro, or a core tap over a macro that obstructs M6/M7, still FAILs.
+    bud = partition_budget(kd) or {}
+    core_ports = {d.get("port") for d in ((bud.get("clock") or {}).get("core_taps") or []) if isinstance(d, dict)}
+    top = str(bud.get("signal_max") or "")
+    tops = _lef_metal_tops(kd, _mk(kd)) if core_ports and re.fullmatch(r"M\d+", top) else {}
+    err, through = [], []
     for src, name, x, y in pts:
         for b in boxes:
             if b[1] - 1e-6 <= x <= b[3] + 1e-6 and b[2] - 1e-6 <= y <= b[4] + 1e-6:
+                master = b[0].rsplit("#", 1)[0]
+                if name in core_ports and master in tops and tops[master] < int(top[1:]) - 1:
+                    through.append(f"{name} over {b[0]} (macro metal <= M{tops[master]}, entry {top})")
+                    continue
                 err.append(f"{src}: clock entry {name} ({x:g}, {y:g}) over macro {b[0]} {[round(v, 3) for v in b[1:]]}")
-    return list(dict.fromkeys(err)), dict(applies=True, entries=len(pts), macros=len(boxes))
+    info = dict(applies=True, entries=len(pts), macros=len(boxes))
+    if through:
+        info["core_tap_via_stack_over_macro"] = list(dict.fromkeys(through))
+    return list(dict.fromkeys(err)), info
 
 
 def _island_rects(kd):

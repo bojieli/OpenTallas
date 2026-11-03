@@ -21,6 +21,7 @@ no standard cells besides the die top's own (none), PDN = die.pg grid on M8/M9 s
 routing of the clock spine and the abutment nets only, then a die STA script over the partitions' routed netlists +
 SPEF (sta_die.tcl): timing paths through the face boundary flops.
 """
+import hashlib as _hashlib
 import json
 import math
 import re
@@ -492,8 +493,104 @@ def tap_points(P, tn):
 
 
 def core_tap_pins(P, tn):
-    """CP2 early core taps of a type (schema.core_taps; clock.core_taps 'early'), snapped: [(port, x, y)]."""
-    return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y, _ in S.core_taps(P, tn)]
+    """CP2 early core taps of a type (schema.core_taps; clock.core_taps 'early'), snapped: [(port, x, y)].
+    S81-49/kits 11-02: a tap the plan puts on a hard core's edge pin can snap a few tracks INTO a macro whose LEF
+    obstructs the entry layer or the via layer below (S81 ve_m/vn_a/vn_b/vq: M5 edge pin, OBS M1-M7, port 0.02-0.4 um
+    inside); such a pin is moved to the nearest PG-legal track position whose pin metal clears every obstructing
+    macro (<= ENTRY_CLEAR_MAX_UM).  Taps clear of such macros are byte-identical."""
+    pg = not P.types[tn].get("hard")
+    taps = S.core_taps(P, tn)
+    blocks = entry_block_boxes(P, tn) if taps else []
+    out = []
+    for n, x, y, _ in taps:
+        sx, sy = _snap_tap(P, x, y, pg_legal=pg)
+        if blocks and _pin_hits(P, tn, n, sx, sy, blocks):
+            sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), blocks, pg)
+        out.append((n, sx, sy))
+    return out
+
+
+ENTRY_CLEAR_MAX_UM = 2.0       # an entry is moved off a macro edge by snapping distance only, never re-planned
+
+
+def _lef_metal_top(lef_text):
+    """highest LAYER Mn carrying OBS or PIN geometry in a one-macro LEF (0: none)."""
+    return max([int(v) for v in re.findall(r"\bLAYER\s+M(\d+)\b", lef_text)] or [0])
+
+
+def entry_block_boxes(P, tn, root=None):
+    """[(x0, y0, x1, y1)] type-frame boxes of the placed macros (type_macros) whose metal reaches the partition entry
+    layer (layer_budget partition_signal_max) or the via layer below it: LEF OBS/PIN layers, else plan obs_max."""
+    t = P.types[tn]
+    top = int(P.layer_budget["partition_signal_max"][1:])
+    ents = {}
+    for c in (t.get("contents", []) or []) + (t.get("hard_cores", []) or []):
+        ents.setdefault(c.get("physical_inst") or c["inst"], c)
+        ents.setdefault(c["inst"], c)
+    base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
+    out = []
+    for inst, mod, lef, lib, x, y, o in type_macros(P, tn):
+        c = ents.get(inst) or {}
+        if not c.get("outline_um"):
+            continue
+        # the staged LEF is the truth (S81 vq: plan obs_max M5, LEF OBS M1-M7); plan obs_max only without a LEF
+        om = re.fullmatch(r"M(\d+)", str(c.get("obs_max") or ""))
+        try:
+            f = _CR.resolve(lef, base)
+            mtop = _lef_metal_top(f.read_text(errors="replace")) if f.is_file() else None
+        except (OSError, ValueError):
+            mtop = None
+        if mtop is None:
+            mtop = int(om.group(1)) if om else top      # unknown view: treat as obstructing (fail closed)
+        if mtop < top - 1:
+            continue
+        w, h = map(float, c["outline_um"])
+        if o in ("R90", "R270", "MXR90", "MYR90"):
+            w, h = h, w
+        out.append((float(x), float(y), float(x) + w, float(y) + h))
+    return out
+
+
+def _pin_box(P, tn, name, x, y):
+    top = P.layer_budget["partition_signal_max"]
+    L = P.layers[top]
+    hw = float(L.get("width_um", 0.032)) / 2
+    hl = (tap_pin_height(P, tn, name) if name in P.types[tn].get("clock", {}).get("tap_pin_heights_um", {})
+          else 4 * PIN_LEN_UM) / 2
+    return (x - hw, y - hl, x + hw, y + hl) if L["dir"] == "V" else (x - hl, y - hw, x + hl, y + hw)
+
+
+def _pin_hits(P, tn, name, x, y, blocks, eps=1e-6):
+    a = _pin_box(P, tn, name, x, y)
+    return any(min(a[2], b[2]) - max(a[0], b[0]) > -eps and min(a[3], b[3]) - max(a[1], b[1]) > -eps for b in blocks)
+
+
+def _clear_core_tap(P, tn, name, x, y, snapped, blocks, pg):
+    """nearest PG-legal snapped centre (plan tap x, y moved straight out of the obstructing macro) whose pin clears
+    every block, within ENTRY_CLEAR_MAX_UM of the plan tap; else the original snap (kit_contract still FAILs it)."""
+    a = _pin_box(P, tn, name, x, y)
+    hx, hy = (a[2] - a[0]) / 2, (a[3] - a[1]) / 2
+    best = None
+    for b in blocks:
+        if not (min(a[2], b[2]) - max(a[0], b[0]) > -1e-6 and min(a[3], b[3]) - max(a[1], b[1]) > -1e-6):
+            continue
+        for step in range(0, 40):
+            d = 0.012 * step
+            for tx, ty in ((x, b[3] + hy + d), (x, b[1] - hy - d), (b[0] - hx - d, y), (b[2] + hx + d, y)):
+                if math.hypot(tx - x, ty - y) > ENTRY_CLEAR_MAX_UM:
+                    continue
+                try:
+                    q = _snap_tap(P, tx, ty, pg_legal=pg)
+                except ValueError:
+                    continue
+                if _pin_hits(P, tn, name, q[0], q[1], blocks) or math.hypot(q[0] - x, q[1] - y) > ENTRY_CLEAR_MAX_UM:
+                    continue
+                w, h = P.types[tn]["outline_um"]
+                if not (0 < q[0] < w and 0 < q[1] < h):
+                    continue
+                k = (math.hypot(q[0] - x, q[1] - y), q)
+                best = k if best is None or k < best else best
+    return best[1] if best else snapped
 
 
 def clock_tap_pin_metadata(P, tn):
@@ -2582,7 +2679,7 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
-                   cland_pinslot=(), spare_out=(), private_clock_mesh=None):
+                   cland_pinslot=(), spare_out=(), private_clock_mesh=None, region_guide=None):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -3036,6 +3133,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             f.write("\nsource /work/reset_physical_stages.tcl\n")
         with (kd / "face_flops_release.tcl").open("a") as f:
             f.write("\nsource /work/reset_physical_stages_release.tcl\n")
+    if region_guide:
+        # FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D, opt-in gen phys --region-guide TYPE=SPEC): soft GPL region
+        # guides per failing r2r bit slice (tools/die_plan/region_guide.py plan of the kit's last AUTO-GEOM), sourced
+        # LAST in face_flops.tcl, released at the end of face_flops_release.tcl (before DPL); no spec = kit unchanged.
+        import region_guide as RG
+        RG.install(kd, json.loads(Path(region_guide).read_text()), outline=(w, h),
+                   src=dict(file=str(region_guide), sha256=_hashlib.sha256(Path(region_guide).read_bytes()).hexdigest()))
     if rc_cal:
         import core_flow   # FLOW-RC-1: fail-closed per-class (signal + clock) RC calibration guard
         core_flow.install_rc(kd, Path(__file__).with_name(RC_CAL_FILE))
@@ -3682,7 +3786,8 @@ def bound_parent_id_plan(raw, kit_rtl):
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=(), private_clock_mesh=None):
+               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=(), private_clock_mesh=None,
+               region_guide=None):
     """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain)."""
     """landing (opt-in, DIE-HEAD-4b, gen phys --clock-landing): the clock_landing_plan sidecar of a composed landed plan.
     The kit wrapper is the SAME landed wrapper gen rtl --clock-landing emits (clock_landings.type_rtl: rings, ring
@@ -3757,6 +3862,12 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     # Only the bound kit metadata receives promoted child inputs. The plan-only
     # die emitter retains its original parent declarations and tie values.
     P = S.Plan(bound_parent_id_plan(raw, kit_rtl), plan_path)
+    # KW-FIX-1/S81PF 11-02 (default on): a bound kit places its plan macros by their bound netlist path (bind flattens
+    # u_r0.u_bn0 -> u_bound.u_u_r0_u_bn0); declared as the kit-only physical identity, receipt in each kit.
+    import bound_macro_paths as BMP
+    praw, macro_paths = BMP.project(P.raw, kit_rtl)
+    if macro_paths:
+        P = S.Plan(praw, plan_path)
     lands = None
     if landing is not None:    # DIE-HEAD-21: the same Landings write_rtl just validated -> per-type land_slots.json
         import clock_landings as CL
@@ -3798,8 +3909,11 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                    plain_rings=bool(kit_rtl and tn in kit_rtl),
                                    kit_defines=kit_rtl_defines(kit_rtl[tn], mine) if kit_rtl and tn in kit_rtl else None,
                                    cland_pinslot=tuple(cland_pinslot or ()),
+                                   region_guide=(region_guide or {}).get(tn),
                                    spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else (),
                                    private_clock_mesh=(private_clock_mesh or {}).get(tn)))
+        if tn in macro_paths:
+            (Path(kits[-1]) / BMP.RECEIPT).write_text(json.dumps(macro_paths[tn], indent=1) + "\n")
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits

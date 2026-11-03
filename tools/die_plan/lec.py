@@ -2973,6 +2973,61 @@ def kept_functionally_unobservable(L, missing, all_proved):
     return sorted(k for k in missing if k not in named)
 
 
+def _hyp_keys(x):
+    """every register key string inside a hypothesis payload (cube lists, loaded/fill guards, nested tuples)"""
+    if isinstance(x, str):
+        return {x} if x.startswith(("ff:", "pi:")) else set()
+    if isinstance(x, (list, tuple)):
+        return set().union(*map(_hyp_keys, x)) if x else set()
+    return set()
+
+
+def kept_dead_twin_classes(L, missing):
+    """S81 ve_s 11-03 (routed LEC 43609/43609 proved, KEEP FAIL 447 = chunk_*.term[0].add.u.{u_exp2,u_exp3,u_rc,
+    w_cy,w_difa,...}): kept twin registers that synthesis merged (gold u_exp3[i] proved == u_exp2[i]) and that
+    eliminate_dead_logic then removed TOGETHER with the surviving twin, so no gate flop holds any of them.  The
+    accepted gold-gold eq hypothesis names them, which kept_functionally_unobservable's single-bit rule treats as a
+    merge.  Here the whole equivalence class is the unit: a class is exempt only when (a) every member is a missing
+    kept bit of this check (so no member survives as a flop: no twin was kept in its place), (b) every hypothesis
+    on a member is a plain gold-side 'eq' to another member (no gate/both side, no constant, no cube/loaded/fill
+    form), (c) no other hypothesis or state constraint reads a member, and (d) the class representative itself
+    carries no hypothesis, i.e. it was a free gold input.  Called only when EVERY compare point proved (the caller's
+    all_proved gate), so no output reads the class in any state: dead logic, not a merge.  A class with a surviving
+    member (the real merge the kept check exists for), any gate/both pairing, or any unproved point stays missing."""
+    miss = set(missing)
+    hyp = L.hyp
+    tainted = set()
+    edges = collections.defaultdict(set)
+    for (side, k), h in hyp.items():
+        if side == "gold" and h and h[0] == "eq" and len(h) >= 3 and h[1] == "gold":
+            edges[k].add(h[2])
+            edges[h[2]].add(k)
+            continue
+        tainted.add(k)                       # any other form on the key (const / cube / loaded / fill / gate / both)
+        if h and h[0] == "eq" and len(h) >= 3:
+            tainted.add(h[2])
+        else:
+            tainted |= _hyp_keys(h)
+    for c in getattr(L, "cons", ()) or ():
+        tainted |= _hyp_keys(c)
+    out, seen = set(), set()
+    for k in sorted(miss):
+        if k in seen or k not in edges:
+            continue
+        comp, todo = set(), [k]
+        while todo:
+            x = todo.pop()
+            if x in comp:
+                continue
+            comp.add(x)
+            todo.extend(edges[x] - comp)
+        seen |= comp
+        roots = [x for x in comp if ("gold", x) not in hyp]
+        if comp <= miss and not (comp & tainted) and len(roots) == 1:
+            out |= comp
+    return out
+
+
 def kept_wire_alias_copies(L, declared, aliases_file):
     """Recognize RTL Q-wire aliases while requiring one distinct gate FF per kept bit.
 
@@ -6442,8 +6497,12 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             kdead = getattr(L, "kept_unobservable", [])
             kfree = kept_functionally_unobservable(L, kmiss, bool(status) and all(v == "proved" for v in status.values()))
             kmiss = [k for k in kmiss if k not in set(kfree)]
+            ktwin = sorted(kept_dead_twin_classes(L, kmiss)) if bool(status) and \
+                all(v == "proved" for v in status.values()) else []
+            kmiss = [k for k in kmiss if k not in set(ktwin)]
             rec["kept_registers"] = dict(declared=len(kdecl),
-                                         in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead) - len(kfree),
+                                         in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead) - len(kfree)
+                                         - len(ktwin),
                                          constant_proved=lst(kconst), missing=lst(kmiss),
                                          unobservable_removed=lst(kdead),
                                          unobservable_reason="no compare point (output / black-box input) observes "
@@ -6451,7 +6510,12 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                                          functionally_unobservable_removed=lst(kfree),
                                          functionally_unobservable_reason="every compare point proved with it an "
                                              "unpaired free input (no correspondence names it): dead logic, not a merge"
-                                             if kfree else None)
+                                             if kfree else None,
+                                         dead_twin_classes_removed=lst(ktwin),
+                                         dead_twin_classes_reason="every compare point proved; each class = kept "
+                                             "registers proved equal only to each other (gold eq), all absent from "
+                                             "the netlist, representative free: removed together as dead logic, no "
+                                             "surviving twin" if ktwin else None)
         else:
             kmiss = None
             rec["kept_registers"] = "not checked (no gold.keep: AIGs reused from an older lec.py)"
