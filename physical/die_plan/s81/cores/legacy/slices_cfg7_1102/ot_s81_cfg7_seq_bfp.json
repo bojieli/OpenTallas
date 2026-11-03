@@ -1,0 +1,63 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "kind": "core",
+ "die": "s81",
+ "type": "ot_s81_cfg7_seq_bfp",
+ "module": "ot_s81_cfg7_seq_bfp",
+ "instances": [],
+ "master_plan_sha256": "TRIAL-no-frozen-master-plan",
+ "frozen": false,
+ "outline_um": [
+  30.24,
+  60.48
+ ],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250,
+   "FF": 202.5
+  },
+  "tol_ps": 20,
+  "early_taps": false
+ },
+ "keepouts": [],
+ "bays": [],
+ "entry_pins": [],
+ "hard_cores": [],
+ "corridors": [],
+ "gates": {},
+ "core_clock_port": "clk[0]",
+ "islands": [
+  {
+   "name": "ck_entry",
+   "rect_um": [
+    14.052,
+    29.16,
+    16.212,
+    31.32
+   ],
+   "centre_um": [
+    15.132,
+    30.24
+   ],
+   "use": "clock_driver",
+   "via_stack": [
+    "M7",
+    "M5"
+   ],
+   "clock_pin": {
+    "layer": "M5",
+    "xy_um": [
+     15.132,
+     30.24
+    ]
+   },
+   "note": "DIE-S81-49 11-02: explicit 12.8a centre clock entry for the existing plan pin clk[0] M5 (15.132,30.24) = plan LEF rect 15.108 30 15.156 30.48 (CODEX1029 prospective centre entry); no plan/pin/LEF change"
+  }
+ ],
+ "pushdown": {
+  "islands": [],
+  "clock_repeaters": [],
+  "note": "in-core clock tree built by CTS from the centre entry; no feedthrough ports"
+ },
+ "event": "DIE-S81-49/gen 11-02 die-local cfg7 clock-entry slice (GEN refused interior clk[0] without a master slice)"
+}
