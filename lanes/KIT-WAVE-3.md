@@ -166,3 +166,8 @@ Elapsed time: 25:29.28[h:]min:sec. CPU time: user 4562.97 sys 14.74 (299%). Peak
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hbm_hc_bank128_pair_first_core/base/5_1_grt.odb] Error 2
  | kit intel1:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_hc_bank128_pair_first_core/attempt_3/gen/ot_hbm_hc_bank128_pair_first_core_3762e7b21fc5 src claude/kw-fix-4-hbmv-1103@78e511e3a45 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-03 15:19:03 PST AUTOPILOT -> KIT-WAVE-3: FAILED 727452c21f6d hbm/ot_hbm_su_static_sfustore_hw (CRASH/flow-error): gn-off band FAIL; fix the clock, not the hold)
+Elapsed time: 5:20.01[h:]min:sec. CPU time: user 688.90 sys 9.01 (218%). Peak memory: 1961068KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hbm_su_static_sfustore_hw/base/5_1_grt.odb] Error 2
+ | kit epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_su_static_sfustore_hw/attempt_2/gen/ot_hbm_su_static_sfustore_hw_14918cf926c8 src claude/kw-fix-4-hbmv-1103@78e511e3a45 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
