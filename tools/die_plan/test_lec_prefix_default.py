@@ -42,3 +42,29 @@ def test_two_edge_constant_kept_by_default(tmp_path, monkeypatch, env, control, 
     L.hyp = {("gold", k): ("const", 0), ("gold", "ff:u_dut.r1b"): ("eq", "gold", "ff:u_dut.r1", 0)}
     lec.noreset_filter(L, [], collections.Counter(), work=tmp_path, conflicts=100)
     assert (("gold", k) in L.hyp) is kept
+
+
+@pytest.mark.parametrize("env,steps", [
+    ({}, 4), ({"OT_LEC_RESET_CYCLES": "2"}, 2), ({"OT_LEC_RESET_CYCLES": "64"}, 8),
+    ({"OT_LEC_RESET_CYCLES": "64", "OT_LEC_RAW_BASE_STEPS": "24"}, 24), ({"OT_LEC_RAW_BASE_STEPS": "0"}, 0)])
+def test_default_prefix_is_bounded_at_long_reset_windows(monkeypatch, env, steps):
+    """FLOW-24 11-03: a 64-edge reset window unrolled a 6 MB prefix miter that ABC never finished (hbm_sram LEC NOT
+    RUN); the default prefix stops at 8 edges, the explicit debug override is exact."""
+    for k in ("OT_LEC_RAW_BASE_STEPS", "OT_LEC_RESET_CYCLES"):
+        monkeypatch.delenv(k, raising=False)
+    for k, v in env.items():
+        monkeypatch.setenv(k, v)
+    assert lec.raw_base_steps() == steps
+
+
+def test_two_edge_constant_kept_at_long_window(tmp_path, monkeypatch):
+    """the capped default still proves the n4ext two-edge constant at a 64-edge window"""
+    for k in ("OT_LEC_RAW_BASE_STEPS",):
+        monkeypatch.delenv(k, raising=False)
+    monkeypatch.setenv("OT_LEC_RESET_CYCLES", "64")
+    monkeypatch.setattr(lec, "prove", _exact)
+    L = _design(tmp_path)
+    k = "ff:u_dut.s"
+    L.hyp = {("gold", k): ("const", 0), ("gold", "ff:u_dut.r1b"): ("eq", "gold", "ff:u_dut.r1", 0)}
+    lec.noreset_filter(L, [], collections.Counter(), work=tmp_path, conflicts=100)
+    assert ("gold", k) in L.hyp

@@ -4037,6 +4037,22 @@ def eq_const_resolve(L, log=None):
     return n
 
 
+RAW_BASE_DEFAULT_MAX = 8
+
+
+def raw_base_steps():
+    """Edges of the default universal raw prefix base (DIE-HBM-59/LEC C4).  FLOW-24 11-03: the default unrolls at most
+    RAW_BASE_DEFAULT_MAX (8) edges, not the whole reset window: at a 64-edge HBM window (reset_contract_gate) the
+    hbm_sram canary prefix miter was 6 MB and ABC &sat ran > 2 h 49 m with no verdict (19af2d0dd canary LEC NOT RUN;
+    5-6 min before C4, 6 min 50 s with the prefix off).  Sound for any s <= window: a register that is c after s
+    edges from ANY state with free inputs at every edge is c at every edge >= s, so at the end of the window.  A
+    constant that needs more than 8 edges stays free (fail-closed, reported as differs), never assumed.
+    OT_LEC_RAW_BASE_STEPS stays the exact debug override (0 = off)."""
+    if "OT_LEC_RAW_BASE_STEPS" in os.environ:
+        return int(os.environ["OT_LEC_RAW_BASE_STEPS"])
+    return min(int(os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT))), RAW_BASE_DEFAULT_MAX)
+
+
 def noreset_filter(L, log, tried, work=None, conflicts=1000):
     """Constant hypotheses on registers that are not that constant in the reset state (LEC-TOOL-4 10-27, COORD
     ruling on no-reset constants).  The correspondence induction proves Q == c -> D(Q) == c; its base case is the
@@ -4057,8 +4073,7 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
         # dropped (78 in n4ext, KIT-WAVE-16 loaded proposals need a guard register these pipelines do not have).
         # No edge beyond the window is used, so no reset-length assumption is added; OT_LEC_RAW_BASE_STEPS stays the
         # debug override (0 = off).  The final induction still proves every kept constant.
-        dflt = os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT))
-        steps = int(os.environ.get("OT_LEC_RAW_BASE_STEPS", dflt))
+        steps = raw_base_steps()
         if steps > 1:
             ok = noreset_sound(L)
             candidates = [(s, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok
@@ -4110,8 +4125,7 @@ def noreset_report(L):
                 release=[e for e in kept if e["basis"] == "release"][:500],
                 n_universal_raw_D=sum(1 for e in kept if e["basis"] == "universal_raw_D"),
                 universal_raw_D=[e for e in kept if e["basis"] == "universal_raw_D"][:500],
-                raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS",
-                                                  os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT)))),
+                raw_base_steps=raw_base_steps(),
                 n_universal_raw_prefix=sum(1 for e in kept if e["basis"] == "universal_raw_prefix"),
                 universal_raw_prefix=[e for e in kept if e["basis"] == "universal_raw_prefix"][:500],
                 n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
