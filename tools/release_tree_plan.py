@@ -151,7 +151,9 @@ def fetch_results_refs(root, plan_path, rev='origin/main'):
 
 
 HOSTS = ['local', 'epyc2', 'intel1', 'intel2']
-SCAN_ROOTS = '/srv/opentallas-scratch /srv/opentallas-scratch2'
+# SIGNOFF-SPRINT-22 11-02: + epyc2 root scratch (OWNER 11-01: /home/ubuntu/scratch-root/claude = 2nd scratch root); KV
+# qkd_ectlk_q2 q-kv re-sign (DIE-KV-62) and the S81-48/49 ECO/kits live there and were never scanned.
+SCAN_ROOTS = '/srv/opentallas-scratch /srv/opentallas-scratch2 /home/ubuntu/scratch-root'
 # RETIRED sign-offs (HEAD-CORE-R13 2026-10-27): a SIGNED record of a superseded build (older RTL / flow) that must not
 # count for the current design. One line per record: '<scan_host>:<path>\t<date>\t<lane>\t<reason>' ('#' = comment).
 # Matching records are dropped from signed_records / signed_* and listed in retired_records (visible, not deleted).
@@ -592,7 +594,7 @@ def accept_die_owned_ft(cmp_, design):
 # {module: {pin: (layer, x_nm, y_nm, why)}}.  Remove an entry once the plan of record carries the event.
 APPROVED_PIN_EVENTS = {
     m: {'clk[0]': ('M5', 21612, 38892, 'QBS centre-M5 clock event (Codex root-approved 30428e20f; COORD 11-02 18:2x)')}
-    for m in ('dsfd_node_NNfu', 'dsfd_node_LLfu', 'dsfd_node_LLfd')}
+    for m in ('dsfd_node_LLfu', 'dsfd_node_LLfd')}   # NNfu retired SS22 11-02: plan event merged (main 60905360932)
 
 
 def accept_pin_events(cmp_, design, got_rows, events=None):
