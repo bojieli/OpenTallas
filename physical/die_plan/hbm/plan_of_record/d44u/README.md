@@ -1,4 +1,4 @@
-# HBM plan event d44s = mu1-3sram (TOK-HBM-2, from TOK-HBM-1's event; 2026-11-02)
+# HBM plan event d44u = mu1-3sram (TOK-HBM-2, from TOK-HBM-1's event; 2026-11-02; renamed from d44s, which belongs to DIE-HBM-59 hub tap_window)
 
 OWNER 2026-11-02 19:19 PST ("agree with 3-SRAM layout", mu1 option A): mu1 = 3-SRAM. This replaces the 4-SRAM
 (vec6293 / r2048 grown bank) plan of record.
@@ -30,9 +30,9 @@ Tool: `tools/hbm_b2/mu1_3sram_event.py <d44q plan dir> <out dir>` (re-run byte-i
 - Capacity: the compiled programme VM is 262,144 words = 32 banks x 1024 rows x 8 words. Static high-water is
   255,168, plus the 1,024-word scratch at 261,120. No instruction addresses a regular row >= 1024.
 
-## G0 / G0C (tools/die_plan/check.py at origin/main 7cf44d5c0d3, same tools on d44q and d44s)
-- G0: d44q 184 ERROR / 1003 WARN; d44s 184 / 1003.
-- G0C (--completeness): d44q 250 ERROR / 128 pending / 1162 WARN; d44s 250 / 128 / 1162.
+## G0 / G0C (tools/die_plan/check.py at origin/main 7cf44d5c0d3, same tools on d44q and d44u)
+- G0: d44q 184 ERROR / 1003 WARN; d44u 184 / 1003.
+- G0C (--completeness): d44q 250 ERROR / 128 pending / 1162 WARN; d44u 250 / 128 / 1162.
 - Message-set delta: exactly 2 messages change and no message is new or gone. These are the pre-existing core_faces
   findings on `q_hub_nw u_vmb_Q6_mu1` / `u_vmb_Q7_mu1` port dq (face away from u_vmdel_Q6/7), where the count goes
   282 -> 281 pins because dq[281] is dropped.

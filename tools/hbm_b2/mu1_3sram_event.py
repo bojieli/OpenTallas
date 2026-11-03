@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""TOK-HBM-1/TOK-HBM-2 plan event mu1-3sram (HBM d44q -> d44s) (OWNER 11-02 19:19 "agree with 3-SRAM layout", option A).
+"""TOK-HBM-1/TOK-HBM-2 plan event mu1-3sram (HBM d44q -> d44u) (OWNER 11-02 19:19 "agree with 3-SRAM layout", option A).
 Retypes the 16 u_vmb_Q*_mu1 hard cores of q_hub_nw/q_hub_ne from hnx_vms_bank_q0_faces__vec6293 (4-SRAM r2048
 grown bank, rq 18 b, clk_macro0..3) to hnx_vms_bank_q0_faces__vecd4ae (3-SRAM native bank = the module the
 selected source already instantiates for every u_u_vmb_Q*_mu1).  Geometry is unchanged: same origin, orient and
