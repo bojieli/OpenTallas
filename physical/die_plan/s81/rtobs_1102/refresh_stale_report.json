@@ -1,0 +1,212 @@
+{
+ "plan": "physical/die_plan/s81/plan_h2_2249.json",
+ "types": [
+  {
+   "type": "iqf__t1",
+   "old_hits": [],
+   "moved": [
+    [
+     "u_rrl_109",
+     [
+      1425.6,
+      613.512
+     ]
+    ]
+   ],
+   "skip": "re-sited relays overlap [('u_rrl_109', 'band:idx_i0')]: not refreshed"
+  },
+  {
+   "type": "ot_s81sl_leaf__t29",
+   "old_hits": [
+    [
+     "u_rrl_108",
+     "obst:u_lf.u_ve.u_s"
+    ],
+    [
+     "u_rrl_109",
+     "obst:u_lf.u_ve.u_s"
+    ],
+    [
+     "u_rrl_110",
+     "obst:u_lf.u_ve.u_s"
+    ],
+    [
+     "u_rrl_111",
+     "obst:u_lf.u_ve.u_s"
+    ],
+    [
+     "u_rrl_112",
+     "obst:u_lf.u_ve.u_s"
+    ],
+    [
+     "u_rrl_51",
+     "obst:u_lf.u_ve.u_s"
+    ],
+    [
+     "u_rrl_52",
+     "obst:u_lf.u_ve.u_s"
+    ],
+    [
+     "u_rrl_53",
+     "obst:u_lf.u_ve.u_s"
+    ],
+    [
+     "u_rrl_54",
+     "obst:u_lf.u_ve.u_s"
+    ],
+    [
+     "u_rrl_55",
+     "obst:u_lf.u_ve.u_s"
+    ]
+   ],
+   "moved": [
+    [
+     "u_rrl_7",
+     [
+      1144.8,
+      30.240000000000002
+     ]
+    ],
+    [
+     "u_rrl_50",
+     [
+      1239.8,
+      30.240000000000002
+     ]
+    ],
+    [
+     "u_rrl_51",
+     [
+      1144.8,
+      315.24
+     ]
+    ],
+    [
+     "u_rrl_52",
+     [
+      1144.8,
+      315.24
+     ]
+    ],
+    [
+     "u_rrl_53",
+     [
+      1144.8,
+      315.24
+     ]
+    ],
+    [
+     "u_rrl_54",
+     [
+      1144.8,
+      315.24
+     ]
+    ],
+    [
+     "u_rrl_55",
+     [
+      1144.8,
+      315.24
+     ]
+    ],
+    [
+     "u_rrl_108",
+     [
+      1144.8,
+      207.0
+     ]
+    ],
+    [
+     "u_rrl_109",
+     [
+      1144.8,
+      207.0
+     ]
+    ],
+    [
+     "u_rrl_110",
+     [
+      1144.8,
+      207.0
+     ]
+    ],
+    [
+     "u_rrl_111",
+     [
+      1144.8,
+      207.0
+     ]
+    ],
+    [
+     "u_rrl_112",
+     [
+      1144.8,
+      207.0
+     ]
+    ]
+   ],
+   "republished": {
+    "relays_before": 158,
+    "relays_after": 158,
+    "relays_changed": 12
+   },
+   "n_old_rects": 95
+  },
+  {
+   "type": "ot_s81sl_leaf__t73",
+   "old_hits": [
+    [
+     "u_rrl_127",
+     "obst:u_lf.u_ve.u_s"
+    ],
+    [
+     "u_rrl_39",
+     "obst:u_lf.u_ve.u_s"
+    ]
+   ],
+   "moved": [
+    [
+     "u_rrl_35",
+     [
+      534.6,
+      153.36
+     ]
+    ],
+    [
+     "u_rrl_36",
+     [
+      534.6,
+      153.36
+     ]
+    ],
+    [
+     "u_rrl_39",
+     [
+      540.0,
+      133.88
+     ]
+    ],
+    [
+     "u_rrl_52",
+     [
+      540.0,
+      38.88
+     ]
+    ],
+    [
+     "u_rrl_127",
+     [
+      540.0,
+      215.64
+     ]
+    ]
+   ],
+   "republished": {
+    "relays_before": 177,
+    "relays_after": 177,
+    "relays_changed": 5
+   },
+   "n_old_rects": 87
+  }
+ ]
+}

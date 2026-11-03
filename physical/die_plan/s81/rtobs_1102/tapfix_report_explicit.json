@@ -1,0 +1,64 @@
+{
+ "plan": "plan_h2_2249.json",
+ "out": "plan_h2_2249.json",
+ "failing": 2,
+ "fixed": 2,
+ "types": [
+  {
+   "type": "slice_station__t18",
+   "moves": [
+    {
+     "tap": "clk_t16",
+     "old_xy": [
+      196.6712,
+      294.8172
+     ],
+     "new_xy": [
+      197.694,
+      293.76
+     ],
+     "move_um": 2.08,
+     "sinks": 419,
+     "after": null
+    }
+   ],
+   "before": "slice_station__t18: explicit tap clk_t16 load=419/1500, radius=151.093/150.0, empty=False",
+   "published_tree": true,
+   "tree_matched_before": true,
+   "after": null,
+   "republished": {
+    "relays_before": 153,
+    "relays_after": 153,
+    "relays_changed": 3
+   }
+  },
+  {
+   "type": "slice_station__t49",
+   "moves": [
+    {
+     "tap": "clk_t25",
+     "old_xy": [
+      400.1757,
+      307.2182
+     ],
+     "new_xy": [
+      401.004,
+      308.34
+     ],
+     "move_um": 1.95,
+     "sinks": 936,
+     "after": null
+    }
+   ],
+   "before": "slice_station__t49: explicit tap clk_t25 load=936/1500, radius=150.963/150.0, empty=False",
+   "published_tree": true,
+   "tree_matched_before": true,
+   "after": null,
+   "republished": {
+    "relays_before": 228,
+    "relays_after": 233,
+    "relays_changed": 157
+   }
+  }
+ ]
+}
